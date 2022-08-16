@@ -25,7 +25,7 @@ import { ConfirmModal } from '@app/common/components/ConfirmModal';
 import { ConditionalTooltip } from '@app/common/components/ConditionalTooltip';
 import { areAssociatedProvidersReady } from '@app/queries/helpers';
 import { PlanDetailsModal } from './PlanDetailsModal';
-import { PlanState } from '@app/common/constants';
+import { PATH_PREFIX, PlanState } from '@app/common/constants';
 import { MigrationConfirmModal } from './MigrationConfirmModal';
 
 interface IPlansActionDropdownProps {
@@ -48,7 +48,7 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
   const history = useHistory();
   const onMigrationStarted = (migration: IMigration) => {
     toggleRestartModal();
-    history.push(`/plans/${migration.spec.plan.name}`);
+    history.push(`${PATH_PREFIX}/plans/${migration.spec.plan.name}`);
   };
   const createMigrationMutation = useCreateMigrationMutation(onMigrationStarted);
   const setCutoverMutation = useSetCutoverMutation();
@@ -106,7 +106,7 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
               isDisabled={isPlanStarted || !areProvidersReady || isPlanArchived || isPlanGathering}
               onClick={() => {
                 setKebabIsOpen(false);
-                history.push(`/plans/${plan.metadata.name}/edit`);
+                history.push(`${PATH_PREFIX}/plans/${plan.metadata.name}/edit`);
               }}
             >
               Edit
@@ -121,7 +121,7 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
               isDisabled={!areProvidersReady}
               onClick={() => {
                 setKebabIsOpen(false);
-                history.push(`/plans/${plan.metadata.name}/duplicate`);
+                history.push(`${PATH_PREFIX}/plans/${plan.metadata.name}/duplicate`);
               }}
             >
               Duplicate

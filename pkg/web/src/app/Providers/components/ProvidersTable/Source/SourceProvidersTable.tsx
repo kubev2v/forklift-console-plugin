@@ -28,7 +28,7 @@ import {
   numStr,
 } from '@app/common/helpers';
 
-import { ProviderType, PROVIDER_TYPE_NAMES } from '@app/common/constants';
+import { PATH_PREFIX, ProviderType, PROVIDER_TYPE_NAMES } from '@app/common/constants';
 import { Link } from 'react-router-dom';
 import OutlinedHddIcon from '@patternfly/react-icons/dist/esm/icons/outlined-hdd-icon';
 
@@ -158,7 +158,7 @@ export const SourceProvidersTable: React.FunctionComponent<ISourceProvidersTable
             );
             return {
               title: hasCondition(provider.status?.conditions || [], 'Ready') ? (
-                <Link to={`/providers/vsphere/${provider.metadata.name}`}>{hostCountWithIcon}</Link>
+                <Link to={`${PATH_PREFIX}/providers/vsphere/${provider.metadata.name}`}>{hostCountWithIcon}</Link>
               ) : (
                 hostCountWithIcon
               ),

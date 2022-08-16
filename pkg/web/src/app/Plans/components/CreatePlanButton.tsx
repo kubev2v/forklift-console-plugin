@@ -3,7 +3,7 @@ import { Button, ButtonProps } from '@patternfly/react-core';
 import { ConditionalTooltip } from '@app/common/components/ConditionalTooltip';
 import { useHasSufficientProvidersQuery } from '@app/queries';
 import { useHistory } from 'react-router-dom';
-import { PROVIDER_TYPE_NAMES } from '@app/common/constants';
+import { PATH_PREFIX, PROVIDER_TYPE_NAMES } from '@app/common/constants';
 
 interface ICreatePlanButtonProps {
   variant?: ButtonProps['variant'];
@@ -22,7 +22,7 @@ export const CreatePlanButton: React.FunctionComponent<ICreatePlanButtonProps> =
     >
       <Button
         isSmall
-        onClick={() => history.push('/plans/create')}
+        onClick={() => history.push(`${PATH_PREFIX}/plans/create`)}
         isAriaDisabled={!hasSufficientProviders}
         variant={variant}
         id="create-plan-button"

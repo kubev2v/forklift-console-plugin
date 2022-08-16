@@ -2,6 +2,7 @@ import { Alert, AlertActionLink } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import React, { useEffect } from 'react';
 import { useLocation, Redirect, useHistory } from 'react-router-dom';
+import { PATH_PREFIX } from './constants';
 import { ICurrentUser, useNetworkContext } from './context/NetworkContext';
 
 interface ILoginError {
@@ -43,7 +44,7 @@ export const LoginHandlerComponent: React.FunctionComponent = () => {
         title="Cannot log in"
         className={spacing.mLg}
         actionLinks={
-          <AlertActionLink onClick={() => history.replace('/')}>Try again</AlertActionLink>
+          <AlertActionLink onClick={() => history.replace(`${PATH_PREFIX}/`)}>Try again</AlertActionLink>
         }
       >
         {loginError.message}

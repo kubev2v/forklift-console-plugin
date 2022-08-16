@@ -18,7 +18,7 @@ import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-i
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useHistory } from 'react-router-dom';
 
-import { ProviderType, PROVIDER_TYPE_NAMES, PROVIDER_TYPES } from '@app/common/constants';
+import { ProviderType, PROVIDER_TYPE_NAMES, PROVIDER_TYPES, PATH_PREFIX } from '@app/common/constants';
 import { useClusterProvidersQuery, useInventoryProvidersQuery, usePlansQuery } from '@app/queries';
 
 import { ProvidersTable } from './components/ProvidersTable';
@@ -42,7 +42,7 @@ export interface IProvidersMatchParams {
 export const ProvidersPage: React.FunctionComponent = () => {
   const history = useHistory();
   const match = useRouteMatch<IProvidersMatchParams>({
-    path: '/providers/:providerType',
+    path: `${PATH_PREFIX}/providers/:providerType`,
     strict: true,
     sensitive: true,
   });
@@ -76,7 +76,7 @@ export const ProvidersPage: React.FunctionComponent = () => {
 
   React.useEffect(() => {
     if ((!isValidProviderType || !activeProviderType) && availableProviderTypes.length > 0) {
-      history.replace(`/providers/${availableProviderTypes[0]}`);
+      history.replace(`${PATH_PREFIX}/providers/${availableProviderTypes[0]}`);
     }
   }, [activeProviderType, availableProviderTypes, history, isValidProviderType]);
 
@@ -89,7 +89,7 @@ export const ProvidersPage: React.FunctionComponent = () => {
     setProviderBeingEdited(null);
     toggleAddEditModal();
     if (navToProviderType) {
-      history.push(`/providers/${navToProviderType}`);
+      history.push(`${PATH_PREFIX}/providers/${navToProviderType}`);
     }
   };
 
@@ -117,7 +117,7 @@ export const ProvidersPage: React.FunctionComponent = () => {
         {areTabsVisible && (
           <Tabs
             activeKey={activeProviderType || ''}
-            onSelect={(_event, tabKey) => history.push(`/providers/${tabKey}`)}
+            onSelect={(_event, tabKey) => history.push(`${PATH_PREFIX}/providers/${tabKey}`)}
             className={spacing.mtSm}
           >
             {availableProviderTypes.map((providerType) => (

@@ -152,3 +152,6 @@ export const usernameSchema = yup
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = () => {};
+
+// Base URL path for forklift pages.
+export const PATH_PREFIX = '/mtv';

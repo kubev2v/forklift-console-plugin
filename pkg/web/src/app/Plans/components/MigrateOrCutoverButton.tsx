@@ -7,6 +7,7 @@ import { IPlan } from '@app/queries/types';
 import { PlanActionButtonType } from './PlansTable';
 import { MigrationConfirmModal } from './MigrationConfirmModal';
 import { CutoverConfirmModal } from './CutoverConfirmModal';
+import { PATH_PREFIX } from '@app/common/constants';
 
 interface IMigrateOrCutoverButtonProps {
   plan: IPlan;
@@ -23,7 +24,7 @@ export const MigrateOrCutoverButton: React.FunctionComponent<IMigrateOrCutoverBu
   const [isConfirmModalOpen, toggleConfirmModal] = React.useReducer((isOpen) => !isOpen, false);
   const onMigrationStarted = () => {
     toggleConfirmModal();
-    history.push(`/plans/${plan.metadata.name}`);
+    history.push(`${PATH_PREFIX}/plans/${plan.metadata.name}`);
   };
   const createMigrationMutation = useCreateMigrationMutation(onMigrationStarted);
   const setCutoverMutation = useSetCutoverMutation(toggleConfirmModal);

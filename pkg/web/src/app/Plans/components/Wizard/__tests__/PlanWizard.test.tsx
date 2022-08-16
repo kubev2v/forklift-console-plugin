@@ -7,6 +7,8 @@ import { Router } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { NetworkContextProvider } from '@app/common/context';
 import { PlanWizard } from '../PlanWizard';
+import { PATH_PREFIX } from '@app/common/constants';
+
 const queryClient = new QueryClient();
 
 describe('<AddEditProviderModal />', () => {
@@ -85,7 +87,7 @@ describe('<AddEditProviderModal />', () => {
 
   it('allows to edit a plan', async () => {
     const history = createMemoryHistory();
-    history.push('/plans/plantest-02/edit');
+    history.push(`${PATH_PREFIX}/plans/plantest-02/edit`);
     render(
       <QueryClientProvider client={queryClient}>
         <NetworkContextProvider>
