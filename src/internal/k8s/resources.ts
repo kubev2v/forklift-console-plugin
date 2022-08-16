@@ -1,0 +1,27 @@
+import { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+
+/**
+ * Get reference group version kind string forgroup version kind strings
+ * @param  {string} group
+ * @param  {string} version
+ * @param  {string} kind
+ */
+export const referenceFor = (group: string, version: string, kind: string) =>
+  `${group}~${version}~${kind}`;
+/**
+ * Get the group version kind object from a k8s object
+ * @param  {K8sResourceCommon} obj
+ */
+export const groupVersionKindForObj = (obj: K8sResourceCommon) => {
+  const [group, version] = obj.apiVersion.split('/');
+  return { group, version, kind: obj.kind };
+};
+
+/**
+ * Get reference group version kind string for k8s objects
+ * @param  {K8sResourceCommon} obj
+ */
+export const referenceForObj = (obj: K8sResourceCommon) => {
+  const { group, version, kind } = groupVersionKindForObj(obj);
+  return referenceFor(group, version, kind);
+};
