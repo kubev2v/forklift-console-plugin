@@ -1,0 +1,5 @@
+plugin: forklift-console-plugin
+name: forklift-console-plugin
+image: quay.io/yaacov/forklift-console-plugin:latest
+
+forkliftNamespace: konveyor-forklift
