@@ -2,7 +2,7 @@
   "name": "forklift-console-plugin",
   "version": "0.0.1",
   "private": true,
-  "repository": "git@github.com:yaacov/forklift-console-plugin.git",
+  "repository": "git@github.com:konveyor/forklift-console-plugin.git",
   "scripts": {
     "clean": "rm -rf dist",
     "build": "yarn clean && NODE_ENV=production yarn ts-node node_modules/.bin/webpack",
@@ -17,7 +17,10 @@
     "test": "jest",
     "test:i18n": "./scripts/test-i18n.sh",
     "test:coverage": "jest --coverage",
-    "test:updateSnapshot": "jest --updateSnapshot"
+    "test:updateSnapshot": "jest --updateSnapshot",
+    "helm:lint": "helm lint deployment/forklift-console-plugin/",
+    "helm:index": "helm repo index ./tmp/ --url https://konveyor.github.io/forklift-console-plugin",
+    "helm:build": "mkdir -p tmp && helm package -d tmp deployment/forklift-console-plugin/ && yarn helm:index"
   },
   "devDependencies": {
     "@konveyor/lib-ui": "^8.3.2",
