@@ -9,6 +9,7 @@ const { compilerOptions } = require('./tsconfig');
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'jest-environment-jsdom',
+  testMatch: ['<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   moduleNameMapper: {
     '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
     ...pathsToModuleNameMapper(compilerOptions.paths, {
@@ -19,7 +20,6 @@ const config: Config.InitialOptions = {
   transform: {
     '^.+\\.[t|j]sx?$': 'ts-jest',
   },
-  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/'],
   transformIgnorePatterns: [
     '<rootDir>/node_modules/(?!(@patternfly|@openshift-console\\S*?)/.*)',
   ],
