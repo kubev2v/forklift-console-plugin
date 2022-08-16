@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@patternfly/react-core';
 import { IPlan } from '@app/queries/types';
+import { PATH_PREFIX } from '@app/common/constants';
 
 interface IPlanStatusNavLinkProps {
   plan: IPlan;
@@ -18,7 +19,7 @@ export const PlanStatusNavLink: React.FunctionComponent<IPlanStatusNavLinkProps>
   return (
     <Button
       variant="link"
-      onClick={() => history.push(`/plans/${plan.metadata.name}`)}
+      onClick={() => history.push(`${PATH_PREFIX}/plans/${plan.metadata.name}`)}
       isInline={isInline}
       className={!isInline ? 'clickable-progress-bar' : ''}
     >

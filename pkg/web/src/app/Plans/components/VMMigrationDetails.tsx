@@ -62,6 +62,7 @@ import { LONG_LOADING_MESSAGE } from '@app/queries/constants';
 import '@app/Plans/components/VMMigrationDetails.css';
 import { MustGatherBtn } from '@app/common/components/MustGatherBtn';
 import { VMNameWithPowerState } from '@app/common/components/VMNameWithPowerState';
+import { PATH_PREFIX } from '@app/common/constants';
 
 export interface IPlanMatchParams {
   url: string;
@@ -336,7 +337,6 @@ export const VMMigrationDetails: React.FunctionComponent = () => {
             ) : (
               <VMStatusPrecopyTable status={vmStatus} isCanceled={isCanceled} />
             ),
-            columnTransforms: [classNamesTransform(alignment.textAlignRight)],
           },
         ],
       });
@@ -348,7 +348,7 @@ export const VMMigrationDetails: React.FunctionComponent = () => {
       <PageSection variant="light">
         <Breadcrumb className={`${spacing.mbLg} ${spacing.prLg}`}>
           <BreadcrumbItem>
-            <Link to={`/plans`}>Migration plans</Link>
+            <Link to={`${PATH_PREFIX}/plans`}>Migration plans</Link>
           </BreadcrumbItem>
           <BreadcrumbItem>{match?.params.planName}</BreadcrumbItem>
         </Breadcrumb>

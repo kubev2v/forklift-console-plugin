@@ -4,7 +4,11 @@ import * as path from 'path';
 
 import CopyPlugin from 'copy-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
-import { Configuration as WebpackConfiguration } from 'webpack';
+import {
+  Configuration as WebpackConfiguration,
+  DefinePlugin,
+  WebpackPluginInstance,
+} from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
 import { ConsoleRemotePlugin } from '@openshift-console/dynamic-plugin-sdk-webpack';
@@ -80,6 +84,10 @@ const config: Configuration = {
     new CopyPlugin({
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),
+    new DefinePlugin({
+      'process.env.DATA_SOURCE': JSON.stringify('mock'),
+      'process.env.BRAND_TYPE': JSON.stringify('Konveyor'),
+    }) as unknown as WebpackPluginInstance,
   ],
   devtool: 'source-map',
   optimization: {

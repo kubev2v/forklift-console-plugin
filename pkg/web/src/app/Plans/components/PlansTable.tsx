@@ -62,6 +62,7 @@ import { PlanStatusNavLink } from './PlanStatusNavLink';
 import { MustGatherBtn } from '@app/common/components/MustGatherBtn';
 import { ScheduledCutoverTime } from './ScheduledCutoverTime';
 import { hasCondition } from '@app/common/helpers';
+import { PATH_PREFIX } from '@app/common/constants';
 
 export type PlanActionButtonType = 'Start' | 'Cutover' | 'ScheduledCutover' | 'MustGather';
 interface IPlansTableProps {
@@ -237,7 +238,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
         {
           title: (
             <>
-              <Link to={`/plans/${plan.metadata.name}`}>{plan.metadata.name}</Link>
+              <Link to={`${PATH_PREFIX}/plans/${plan.metadata.name}`}>{plan.metadata.name}</Link>
               <Flex>
                 <Text component="small">{plan.spec.description}</Text>
               </Flex>

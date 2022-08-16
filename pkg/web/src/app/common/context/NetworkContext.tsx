@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AxiosError } from 'axios';
 import { History } from 'history';
 import { useLocalStorage } from '@konveyor/lib-ui';
+import { PATH_PREFIX } from '../constants';
 
 export interface ICurrentUser {
   access_token?: string;
@@ -35,14 +36,14 @@ export const NetworkContextProvider: React.FunctionComponent<INetworkContextProv
 
   const saveLoginToken = (user: ICurrentUser | null, history: History) => {
     setCurrentUser(user);
-    history.replace('/');
+    history.replace(`${PATH_PREFIX}/`);
   };
 
   const checkExpiry = (error: Response | AxiosError<unknown> | unknown, history: History) => {
     const status = (error as Response).status || (error as AxiosError<unknown>).response?.status;
     if (status === 401) {
       setCurrentUser(null);
-      history.replace('/');
+      history.replace(`${PATH_PREFIX}/`);
     }
   };
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dropdown, KebabToggle, DropdownItem, DropdownPosition } from '@patternfly/react-core';
 import { useDeleteProviderMutation } from '@app/queries';
 import { ICorrelatedProvider, InventoryProvider } from '@app/queries/types';
-import { ProviderType, PROVIDER_TYPE_NAMES } from '@app/common/constants';
+import { PATH_PREFIX, ProviderType, PROVIDER_TYPE_NAMES } from '@app/common/constants';
 import { ConfirmModal } from '@app/common/components/ConfirmModal';
 import { EditProviderContext } from '@app/Providers/ProvidersPage';
 import { ConditionalTooltip } from '@app/common/components/ConditionalTooltip';
@@ -33,7 +33,7 @@ export const ProviderActionsDropdown: React.FunctionComponent<IProviderActionsDr
       (clusterProvider) => clusterProvider.spec.type === providerType
     ).length;
     if (numProviders === 1) {
-      history.replace(`/providers`);
+      history.replace(`${PATH_PREFIX}/providers`);
     }
   });
 

@@ -13,6 +13,6 @@
       "@app/*": ["pkg/web/src/app/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "pkg"],
   "exclude": ["node_modules", "dist"]
 }
