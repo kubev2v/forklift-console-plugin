@@ -94,14 +94,6 @@
     "version": "0.0.1",
     "displayName": "OpenShift Console Plugin For Forklift",
     "description": "Forklift is a suite of migration tools that facilitate the migration of VM workloads to KubeVirt.",
-    "exposedModules": {
-      "ProvidersPage": "./extentions/ProvidersWrapper",
-      "PlansPage": "./extentions/PlansWrapper",
-      "MappingsPage": "./extentions/MappingsWrapper",
-      "HostsPage": "./extentions/HostsPageWrapper",
-      "PlanWizard": "./extentions/PlanWizardWrapper",
-      "VMMigrationDetails": "./extentions/VMMigrationDetailsWrapper"
-    },
     "dependencies": {
       "@console/pluginAPI": "*"
     }
