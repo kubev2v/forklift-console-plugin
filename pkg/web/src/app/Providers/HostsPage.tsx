@@ -3,8 +3,6 @@ import {
   PageSection,
   Level,
   LevelItem,
-  Card,
-  CardBody,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
@@ -69,26 +67,21 @@ export const HostsPage: React.FunctionComponent = () => {
         >
           {!match?.params?.providerName ? (
             <Alert variant="danger" title="No matching host found" />
-          ) : (
-            <Card>
-              <CardBody>
-                {!hostsQuery.data ? null : hostsQuery?.data?.length === 0 ? (
-                  <EmptyState className={spacing.my_2xl}>
-                    <EmptyStateIcon icon={PlusCircleIcon} />
-                    <Title headingLevel="h2" size="lg">
-                      No hosts
-                    </Title>
-                    <EmptyStateBody>No hosts available for this provider.</EmptyStateBody>
-                  </EmptyState>
-                ) : (
-                  <VMwareProviderHostsTable
-                    provider={provider as IVMwareProvider}
-                    hosts={hostsQuery?.data}
-                  />
-                )}
-              </CardBody>
-            </Card>
-          )}
+          ) : !hostsQuery.data ? null : hostsQuery?.data?.length === 0 ? (
+                <EmptyState className={spacing.my_2xl}>
+                  <EmptyStateIcon icon={PlusCircleIcon} />
+                  <Title headingLevel="h2" size="lg">
+                    No hosts
+                  </Title>
+                  <EmptyStateBody>No hosts available for this provider.</EmptyStateBody>
+                </EmptyState>
+              ) : (
+                <VMwareProviderHostsTable
+                  provider={provider as IVMwareProvider}
+                  hosts={hostsQuery?.data}
+                />
+              )
+          }
         </ResolvedQueries>
       </PageSection>
     </>

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import {
-  Card,
   PageSection,
-  CardBody,
   EmptyState,
   EmptyStateIcon,
   EmptyStateBody,
@@ -51,25 +49,21 @@ export const PlansPage: React.FunctionComponent = () => {
           ]}
           errorsInline={false}
         >
-          <Card>
-            <CardBody>
-              {!plansQuery.data ? null : plansQuery.data.items.length === 0 ? (
-                <EmptyState className={spacing.my_2xl}>
-                  <EmptyStateIcon icon={PlusCircleIcon} />
-                  <Title size="lg" headingLevel="h2">
-                    No migration plans
-                  </Title>
-                  <EmptyStateBody>
-                    Create a migration plan to select VMs to migrate to{' '}
-                    {PROVIDER_TYPE_NAMES.openshift}.
-                  </EmptyStateBody>
-                  <CreatePlanButton />
-                </EmptyState>
-              ) : (
-                <PlansTable plans={plansQuery.data?.items || []} />
-              )}
-            </CardBody>
-          </Card>
+          {!plansQuery.data ? null : plansQuery.data.items.length === 0 ? (
+            <EmptyState className={spacing.my_2xl}>
+              <EmptyStateIcon icon={PlusCircleIcon} />
+              <Title size="lg" headingLevel="h2">
+                No migration plans
+              </Title>
+              <EmptyStateBody>
+                Create a migration plan to select VMs to migrate to{' '}
+                {PROVIDER_TYPE_NAMES.openshift}.
+              </EmptyStateBody>
+              <CreatePlanButton />
+            </EmptyState>
+          ) : (
+            <PlansTable plans={plansQuery.data?.items || []} />
+          )}
         </ResolvedQueries>
       </PageSection>
       <MustGatherModal />
