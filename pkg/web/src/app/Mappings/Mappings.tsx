@@ -2,8 +2,6 @@ import * as React from 'react';
 import {
   Title,
   EmptyState,
-  Card,
-  CardBody,
   EmptyStateIcon,
   EmptyStateBody,
 } from '@patternfly/react-core';
@@ -46,30 +44,26 @@ export const Mappings: React.FunctionComponent<IMappingsProps> = ({
       ]}
       errorsInline={false}
     >
-      <Card>
-        <CardBody>
-          {!filteredMappings ? null : filteredMappings.length === 0 ? (
-            <EmptyState className={spacing.my_2xl}>
-              <EmptyStateIcon icon={PlusCircleIcon} />
-              <Title headingLevel="h2" size="lg">
-                No {mappingType.toLowerCase()} mappings
-              </Title>
-              <EmptyStateBody>
-                {mappingType === MappingType.Network
-                  ? 'Map source provider networks to target provider networks.'
-                  : 'Map source provider datastores or storage domains to target provider storage classes.'}
-              </EmptyStateBody>
-              <CreateMappingButton onClick={toggleModalAndResetEdit} />
-            </EmptyState>
-          ) : (
-            <MappingsTable
-              mappings={filteredMappings || []}
-              mappingType={mappingType}
-              openEditMappingModal={openEditMappingModal}
-            />
-          )}
-        </CardBody>
-      </Card>
+      {!filteredMappings ? null : filteredMappings.length === 0 ? (
+        <EmptyState className={spacing.my_2xl}>
+          <EmptyStateIcon icon={PlusCircleIcon} />
+          <Title headingLevel="h2" size="lg">
+            No {mappingType.toLowerCase()} mappings
+          </Title>
+          <EmptyStateBody>
+            {mappingType === MappingType.Network
+              ? 'Map source provider networks to target provider networks.'
+              : 'Map source provider datastores or storage domains to target provider storage classes.'}
+          </EmptyStateBody>
+          <CreateMappingButton onClick={toggleModalAndResetEdit} />
+        </EmptyState>
+      ) : (
+        <MappingsTable
+          mappings={filteredMappings || []}
+          mappingType={mappingType}
+          openEditMappingModal={openEditMappingModal}
+        />
+      )}
     </ResolvedQueries>
   );
 };

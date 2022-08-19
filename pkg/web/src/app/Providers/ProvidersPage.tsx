@@ -3,8 +3,6 @@ import {
   PageSection,
   Title,
   EmptyState,
-  Card,
-  CardBody,
   EmptyStateIcon,
   Button,
   EmptyStateBody,
@@ -132,37 +130,33 @@ export const ProvidersPage: React.FunctionComponent = () => {
       </PageSection>
       <PageSection>
         <ResolvedQueries results={allQueries} errorTitles={allErrorTitles} errorsInline={false}>
-          <Card>
-            <CardBody>
-              {!clusterProvidersQuery.data ||
-              !inventoryProvidersQuery.data ||
-              areProvidersEmpty ||
-              !clusterProvidersQuery.data?.items
-                .map((provider) => provider.spec.type)
-                .includes(activeProviderType) ? (
-                <EmptyState className={spacing.my_2xl}>
-                  <EmptyStateIcon icon={PlusCircleIcon} />
-                  <Title headingLevel="h2" size="lg">
-                    No providers
-                  </Title>
-                  <EmptyStateBody>Add source and target providers for migrations.</EmptyStateBody>
-                  <Button onClick={() => toggleModalAndResetEdit()} variant="primary">
-                    Add provider
-                  </Button>
-                </EmptyState>
-              ) : !activeProviderType ? null : (
-                <EditProviderContext.Provider
-                  value={{ openEditProviderModal, plans: plansQuery.data?.items || [] }}
-                >
-                  <ProvidersTable
-                    inventoryProvidersByType={inventoryProvidersQuery.data}
-                    clusterProviders={clusterProviders}
-                    activeProviderType={activeProviderType}
-                  />
-                </EditProviderContext.Provider>
-              )}
-            </CardBody>
-          </Card>
+          {!clusterProvidersQuery.data ||
+          !inventoryProvidersQuery.data ||
+          areProvidersEmpty ||
+          !clusterProvidersQuery.data?.items
+            .map((provider) => provider.spec.type)
+            .includes(activeProviderType) ? (
+            <EmptyState className={spacing.my_2xl}>
+              <EmptyStateIcon icon={PlusCircleIcon} />
+              <Title headingLevel="h2" size="lg">
+                No providers
+              </Title>
+              <EmptyStateBody>Add source and target providers for migrations.</EmptyStateBody>
+              <Button onClick={() => toggleModalAndResetEdit()} variant="primary">
+                Add provider
+              </Button>
+            </EmptyState>
+          ) : !activeProviderType ? null : (
+            <EditProviderContext.Provider
+              value={{ openEditProviderModal, plans: plansQuery.data?.items || [] }}
+            >
+              <ProvidersTable
+                inventoryProvidersByType={inventoryProvidersQuery.data}
+                clusterProviders={clusterProviders}
+                activeProviderType={activeProviderType}
+              />
+            </EditProviderContext.Provider>
+          )}
         </ResolvedQueries>
       </PageSection>
       {isAddEditModalOpen ? (

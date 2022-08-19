@@ -3,8 +3,6 @@ import { useRouteMatch } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbItem,
-  Card,
-  CardBody,
   Pagination,
   PageSection,
   Title,
@@ -361,67 +359,63 @@ export const VMMigrationDetails: React.FunctionComponent = () => {
           errorsInline={false}
           emptyStateBody={LONG_LOADING_MESSAGE}
         >
-          <Card>
-            <CardBody>
-              <FilterToolbar<IVMStatus>
-                filterCategories={filterCategories}
-                filterValues={filterValues}
-                setFilterValues={setFilterValues}
-                endToolbarItems={
-                  <ToolbarItem>
-                    <Button
-                      variant="secondary"
-                      isDisabled={selectedItems.length === 0 || cancelVMsMutation.isLoading}
-                      onClick={toggleCancelModal}
-                    >
-                      Cancel
-                    </Button>
-                  </ToolbarItem>
-                }
-                pagination={
-                  <Pagination
-                    className={spacing.mtMd}
-                    {...paginationProps}
-                    widgetId="migration-vms-table-pagination-top"
-                  />
-                }
-              />
-              {filteredItems.length > 0 ? (
-                <Table
-                  className="migration-details-table"
-                  aria-label="Migration VMs table"
-                  cells={columns}
-                  rows={rows}
-                  sortBy={sortBy}
-                  onSort={onSort}
-                  onCollapse={(event, rowKey, isOpen, rowData) => {
-                    toggleVMExpanded(rowData.meta.vmStatus);
-                  }}
-                  onSelect={(_event, isSelected, rowIndex, rowData) => {
-                    if (rowIndex === -1) {
-                      selectAllCancelable(isSelected);
-                    } else {
-                      toggleItemSelected(rowData.meta.vmStatus, isSelected);
-                    }
-                  }}
-                  canSelectAll={cancelableVMs.length > 0}
+          <FilterToolbar<IVMStatus>
+            filterCategories={filterCategories}
+            filterValues={filterValues}
+            setFilterValues={setFilterValues}
+            endToolbarItems={
+              <ToolbarItem>
+                <Button
+                  variant="secondary"
+                  isDisabled={selectedItems.length === 0 || cancelVMsMutation.isLoading}
+                  onClick={toggleCancelModal}
                 >
-                  <TableHeader />
-                  <TableBody />
-                </Table>
-              ) : (
-                <TableEmptyState
-                  titleText="No migration details found"
-                  bodyText="No results match your filter."
-                />
-              )}
+                  Cancel
+                </Button>
+              </ToolbarItem>
+            }
+            pagination={
               <Pagination
+                className={spacing.mtMd}
                 {...paginationProps}
-                widgetId="migration-vms-table-pagination-bottom"
-                variant="bottom"
+                widgetId="migration-vms-table-pagination-top"
               />
-            </CardBody>
-          </Card>
+            }
+          />
+          {filteredItems.length > 0 ? (
+            <Table
+              className="migration-details-table"
+              aria-label="Migration VMs table"
+              cells={columns}
+              rows={rows}
+              sortBy={sortBy}
+              onSort={onSort}
+              onCollapse={(event, rowKey, isOpen, rowData) => {
+                toggleVMExpanded(rowData.meta.vmStatus);
+              }}
+              onSelect={(_event, isSelected, rowIndex, rowData) => {
+                if (rowIndex === -1) {
+                  selectAllCancelable(isSelected);
+                } else {
+                  toggleItemSelected(rowData.meta.vmStatus, isSelected);
+                }
+              }}
+              canSelectAll={cancelableVMs.length > 0}
+            >
+              <TableHeader />
+              <TableBody />
+            </Table>
+          ) : (
+            <TableEmptyState
+              titleText="No migration details found"
+              bodyText="No results match your filter."
+            />
+          )}
+          <Pagination
+            {...paginationProps}
+            widgetId="migration-vms-table-pagination-bottom"
+            variant="bottom"
+          />
         </ResolvedQueries>
       </PageSection>
       <MustGatherModal />
