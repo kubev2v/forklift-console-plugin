@@ -44,7 +44,9 @@ export const LoginHandlerComponent: React.FunctionComponent = () => {
         title="Cannot log in"
         className={spacing.mLg}
         actionLinks={
-          <AlertActionLink onClick={() => history.replace(`${PATH_PREFIX}/`)}>Try again</AlertActionLink>
+          <AlertActionLink onClick={() => history.replace(`${PATH_PREFIX}/`)}>
+            Try again
+          </AlertActionLink>
         }
       >
         {loginError.message}

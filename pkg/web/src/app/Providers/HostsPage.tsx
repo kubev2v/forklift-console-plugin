@@ -68,20 +68,19 @@ export const HostsPage: React.FunctionComponent = () => {
           {!match?.params?.providerName ? (
             <Alert variant="danger" title="No matching host found" />
           ) : !hostsQuery.data ? null : hostsQuery?.data?.length === 0 ? (
-                <EmptyState className={spacing.my_2xl}>
-                  <EmptyStateIcon icon={PlusCircleIcon} />
-                  <Title headingLevel="h2" size="lg">
-                    No hosts
-                  </Title>
-                  <EmptyStateBody>No hosts available for this provider.</EmptyStateBody>
-                </EmptyState>
-              ) : (
-                <VMwareProviderHostsTable
-                  provider={provider as IVMwareProvider}
-                  hosts={hostsQuery?.data}
-                />
-              )
-          }
+            <EmptyState className={spacing.my_2xl}>
+              <EmptyStateIcon icon={PlusCircleIcon} />
+              <Title headingLevel="h2" size="lg">
+                No hosts
+              </Title>
+              <EmptyStateBody>No hosts available for this provider.</EmptyStateBody>
+            </EmptyState>
+          ) : (
+            <VMwareProviderHostsTable
+              provider={provider as IVMwareProvider}
+              hosts={hostsQuery?.data}
+            />
+          )}
         </ResolvedQueries>
       </PageSection>
     </>
