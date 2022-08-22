@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  Title,
-  EmptyState,
-  EmptyStateIcon,
-  EmptyStateBody,
-} from '@patternfly/react-core';
+import { Title, EmptyState, EmptyStateIcon, EmptyStateBody } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { Mapping, MappingType } from '@app/queries/types';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';

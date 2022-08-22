@@ -56,8 +56,7 @@ export const PlansPage: React.FunctionComponent = () => {
                 No migration plans
               </Title>
               <EmptyStateBody>
-                Create a migration plan to select VMs to migrate to{' '}
-                {PROVIDER_TYPE_NAMES.openshift}.
+                Create a migration plan to select VMs to migrate to {PROVIDER_TYPE_NAMES.openshift}.
               </EmptyStateBody>
               <CreatePlanButton />
             </EmptyState>

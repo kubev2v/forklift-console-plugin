@@ -16,7 +16,12 @@ import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-i
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useHistory } from 'react-router-dom';
 
-import { ProviderType, PROVIDER_TYPE_NAMES, PROVIDER_TYPES, PATH_PREFIX } from '@app/common/constants';
+import {
+  ProviderType,
+  PROVIDER_TYPE_NAMES,
+  PROVIDER_TYPES,
+  PATH_PREFIX,
+} from '@app/common/constants';
 import { useClusterProvidersQuery, useInventoryProvidersQuery, usePlansQuery } from '@app/queries';
 
 import { ProvidersTable } from './components/ProvidersTable';
