@@ -9,10 +9,13 @@ set -euo pipefail
 #curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 #sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
+# Default minkube home to user home, if MINIKUBE_HOME is not defined
+MINIKUBE_HOME_=${MINIKUBE_HOME:=$HOME}
 
 export BRIDGE_K8S_AUTH_BEARER_TOKEN=${BRIDGE_K8S_AUTH_BEARER_TOKEN:="31ada4fd-adec-460c-809a-9e56ceb75269"}
 # Prepare user with token
-echo "${BRIDGE_K8S_AUTH_BEARER_TOKEN},forklift,0" > ~/.minikube/files/etc/ca-certificates/token.csv
+mkdir -p ${MINIKUBE_HOME_}/.minikube/files/etc/ca-certificates
+echo "${BRIDGE_K8S_AUTH_BEARER_TOKEN},forklift,0" > ${MINIKUBE_HOME_}/.minikube/files/etc/ca-certificates/token.csv
 
 echo "Starting local minikube console..."
 
