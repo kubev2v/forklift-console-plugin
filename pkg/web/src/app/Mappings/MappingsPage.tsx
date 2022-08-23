@@ -45,7 +45,7 @@ const MappingsPage: React.FunctionComponent = () => {
           <LevelItem>
             <CreateMappingButton
               aria-label={`Create ${activeMapType} mapping`}
-              variant="secondary"
+              variant="primary"
               label="Create mapping"
               onClick={toggleModalAndResetEdit}
             />
