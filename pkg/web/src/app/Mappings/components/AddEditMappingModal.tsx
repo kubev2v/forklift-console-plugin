@@ -11,7 +11,7 @@ import {
   FormGroup,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { useFormField, useFormState, ValidatedTextInput } from '@konveyor/lib-ui';
+import { useFormField, useFormState, ValidatedTextInput } from '@migtools/lib-ui';
 import { SimpleSelect, OptionWithValue } from '@app/common/components/SimpleSelect';
 import { MappingBuilder, IMappingBuilderItem, mappingBuilderItemsSchema } from './MappingBuilder';
 import { getMappingFromBuilderItems } from './MappingBuilder/helpers';

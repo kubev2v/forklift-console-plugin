@@ -6,7 +6,7 @@ import {
   IProviderObject,
   SourceInventoryProvider,
 } from '@app/queries/types';
-import { getFormGroupProps, IValidatedFormField } from '@konveyor/lib-ui';
+import { getFormGroupProps, IValidatedFormField } from '@migtools/lib-ui';
 import {
   Divider,
   FormGroup,

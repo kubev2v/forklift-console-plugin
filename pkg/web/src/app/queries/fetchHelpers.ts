@@ -3,7 +3,7 @@ import { QueryFunction } from 'react-query/types/core/types';
 import { useHistory } from 'react-router-dom';
 import { History, LocationState } from 'history';
 import { useClientInstance } from '@app/client/helpers';
-import { KubeResource } from '@konveyor/lib-ui';
+import { KubeResource } from '@migtools/lib-ui';
 import { IKubeResponse, IKubeStatus } from '@app/client/types';
 import { ENV } from '@app/common/constants';
 

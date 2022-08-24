@@ -10,7 +10,7 @@ import {
   TextContent,
   Text,
 } from '@patternfly/react-core';
-import { useFormState, useFormField, getFormGroupProps } from '@konveyor/lib-ui';
+import { useFormState, useFormField, getFormGroupProps } from '@migtools/lib-ui';
 
 import { SimpleSelect, OptionWithValue } from '@app/common/components/SimpleSelect';
 import {

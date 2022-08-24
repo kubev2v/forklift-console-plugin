@@ -28,7 +28,7 @@ import {
   getFormGroupProps,
   ValidatedTextInput,
   ValidatedPasswordInput,
-} from '@konveyor/lib-ui';
+} from '@migtools/lib-ui';
 
 import { SimpleSelect, OptionWithValue } from '@app/common/components/SimpleSelect';
 import {

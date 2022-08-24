@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StatusIcon, StatusType } from '@konveyor/lib-ui';
+import { StatusIcon, StatusType } from '@migtools/lib-ui';
 import { getMostSeriousCondition } from '@app/common/helpers';
 import { StatusCategoryType } from '@app/common/constants';
 import { IStatusCondition } from '@app/queries/types';

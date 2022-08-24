@@ -618,19 +618,19 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@konveyor/lib-ui@^8.3.2":
-  version "8.3.2"
-  resolved "https://registry.yarnpkg.com/@konveyor/lib-ui/-/lib-ui-8.3.2.tgz#f7b5ac010ff96e505227ed9b5ae98ac0d1c26287"
-  integrity sha512-AZD00BB5Ju46OL2zci5qSdkxgull/UF5M9T2oUKOzxLa+af43/49Xvz9JTU1gBZFixJYDuWRWqblRlWxP9s6jw==
-  dependencies:
-    fast-deep-equal "^3.1.3"
-    react-query "^3.26.0"
-    yup "^0.32.9"
-
 "@leichtgewicht/ip-codec@^2.0.1":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
+
+"@migtools/lib-ui@^8.4.1":
+  version "8.4.1"
+  resolved "https://registry.yarnpkg.com/@migtools/lib-ui/-/lib-ui-8.4.1.tgz#d10e33ab03ee9cd87ccb01e181451d2b79c5ec0b"
+  integrity sha512-QJEh3Vq7IkHcRCiOQh3NhX30b8BvHB1XBBkbGyp+lcwP90pPl/ateOJzac1v44OIa7DAgK4iNS+v+hay3EK5cg==
+  dependencies:
+    fast-deep-equal "^3.1.3"
+    react-query "^3.26.0"
+    yup "^0.32.9"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StatusIcon } from '@konveyor/lib-ui';
+import { StatusIcon } from '@migtools/lib-ui';
 import { QuerySpinnerMode, ResolvedQueries } from '@app/common/components/ResolvedQuery';
 import { useResourceQueriesForMapping } from '@app/queries';
 import { MappingType, Mapping } from '@app/queries/types';

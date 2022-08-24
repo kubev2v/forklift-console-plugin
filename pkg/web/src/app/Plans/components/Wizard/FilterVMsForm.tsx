@@ -12,7 +12,7 @@ import {
   TreeViewSearch,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { useSelectionState } from '@konveyor/lib-ui';
+import { useSelectionState } from '@migtools/lib-ui';
 import { IndexedTree, useSourceVMsQuery } from '@app/queries';
 import {
   IPlan,
