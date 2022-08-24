@@ -109,7 +109,7 @@ export const ProvidersPage: React.FunctionComponent = () => {
             <Title headingLevel="h1">Providers</Title>
           </LevelItem>
           <LevelItem>
-            <Button variant="secondary" onClick={() => toggleModalAndResetEdit()}>
+            <Button variant="primary" onClick={() => toggleModalAndResetEdit()}>
               Add provider
             </Button>
           </LevelItem>
