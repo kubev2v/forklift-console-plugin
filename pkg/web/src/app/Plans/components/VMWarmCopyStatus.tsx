@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IVMStatus } from '@app/queries/types';
-import { StatusIcon, StatusType } from '@konveyor/lib-ui';
+import { StatusIcon, StatusType } from '@migtools/lib-ui';
 import { Button, Popover } from '@patternfly/react-core';
 import { getMinutesUntil } from '@app/common/helpers';
 import { CanceledIcon } from '@app/common/components/CanceledIcon';

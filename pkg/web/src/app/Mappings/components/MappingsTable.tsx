@@ -13,7 +13,7 @@ import {
   truncate,
 } from '@patternfly/react-table';
 import tableStyles from '@patternfly/react-styles/css/components/Table/table';
-import { useSelectionState } from '@konveyor/lib-ui';
+import { useSelectionState } from '@migtools/lib-ui';
 import { useSortState, usePaginationState } from '@app/common/hooks';
 import { IMetaObjectMeta, Mapping, MappingType } from '@app/queries/types';
 import { MappingsActionsDropdown } from './MappingsActionsDropdown';

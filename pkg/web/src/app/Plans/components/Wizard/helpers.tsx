@@ -52,7 +52,7 @@ import {
   IDisk,
 } from '@app/queries';
 import { UseQueryResult, QueryStatus } from 'react-query';
-import { StatusType } from '@konveyor/lib-ui';
+import { StatusType } from '@migtools/lib-ui';
 import { PlanHookInstance } from './PlanAddEditHookModal';
 import { IKubeList } from '@app/client/types';
 import { getObjectRef } from '@app/common/helpers';

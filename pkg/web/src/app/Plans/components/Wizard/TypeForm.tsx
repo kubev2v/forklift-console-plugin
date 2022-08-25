@@ -4,7 +4,7 @@ import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { PlanWizardFormState } from './PlanWizard';
 import { warmCriticalConcerns, someVMHasConcern } from './helpers';
 import { SourceVM } from '@app/queries/types';
-import { StatusIcon } from '@konveyor/lib-ui';
+import { StatusIcon } from '@migtools/lib-ui';
 
 interface ITypeFormProps {
   form: PlanWizardFormState['type'];

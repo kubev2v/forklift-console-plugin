@@ -31,7 +31,7 @@ import ArchiveIcon from '@patternfly/react-icons/dist/esm/icons/archive-icon';
 import alignment from '@patternfly/react-styles/css/utilities/Alignment/alignment';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { Link } from 'react-router-dom';
-import { StatusIcon, useSelectionState } from '@konveyor/lib-ui';
+import { StatusIcon, useSelectionState } from '@migtools/lib-ui';
 
 import { PlanActionsDropdown } from './PlanActionsDropdown';
 import { useSortState, usePaginationState } from '@app/common/hooks';

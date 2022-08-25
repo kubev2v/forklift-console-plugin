@@ -13,7 +13,7 @@ import {
   Popover,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { getFormGroupProps, ValidatedTextInput } from '@konveyor/lib-ui';
+import { getFormGroupProps, ValidatedTextInput } from '@migtools/lib-ui';
 
 import { POD_NETWORK } from '@app/queries/types';
 import {

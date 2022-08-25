@@ -4,7 +4,7 @@ import KubeClient, {
   NamespacedResource,
   CoreNamespacedResourceKind,
   CoreNamespacedResource,
-} from '@konveyor/lib-ui';
+} from '@migtools/lib-ui';
 import { META, ProviderType, CLUSTER_API_VERSION } from '@app/common/constants';
 import { IProviderObject, ISecret } from '@app/queries/types';
 import { useNetworkContext } from '@app/common/context';

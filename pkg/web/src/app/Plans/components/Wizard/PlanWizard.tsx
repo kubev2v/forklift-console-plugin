@@ -14,7 +14,7 @@ import {
 import { Link, Redirect, useHistory, useRouteMatch } from 'react-router-dom';
 import { UseQueryResult } from 'react-query';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { useFormField, useFormState } from '@konveyor/lib-ui';
+import { useFormField, useFormState } from '@migtools/lib-ui';
 import { RouteGuard } from '@app/common/components/RouteGuard';
 import { WizardStepContainer } from './WizardStepContainer';
 import { GeneralForm } from './GeneralForm';

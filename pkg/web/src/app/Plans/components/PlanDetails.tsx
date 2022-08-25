@@ -14,7 +14,7 @@ import {
   DescriptionListTerm,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { StatusIcon } from '@konveyor/lib-ui';
+import { StatusIcon } from '@migtools/lib-ui';
 import text from '@patternfly/react-styles/css/utilities/Text/text';
 
 import { MappingDetailView } from '@app/Mappings/components/MappingDetailView';

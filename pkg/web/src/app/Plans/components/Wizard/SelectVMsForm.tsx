@@ -38,7 +38,7 @@ import {
   InventoryTree,
   InventoryTreeType,
 } from '@app/queries/types';
-import { useSelectionState } from '@konveyor/lib-ui';
+import { useSelectionState } from '@migtools/lib-ui';
 
 import { useSortState, usePaginationState, useFilterState } from '@app/common/hooks';
 import { PlanWizardFormState } from './PlanWizard';

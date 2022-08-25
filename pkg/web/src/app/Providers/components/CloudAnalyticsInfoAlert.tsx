@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Alert, AlertActionCloseButton, Text } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { useLocalStorage } from '@konveyor/lib-ui';
+import { useLocalStorage } from '@migtools/lib-ui';
 import { CLOUD_MA_LINK, PROVIDER_TYPE_NAMES } from '@app/common/constants';
 
 export const CloudAnalyticsInfoAlert: React.FunctionComponent = () => {

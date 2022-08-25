@@ -25,7 +25,7 @@
     "helm:build": "mkdir -p tmp && helm package -d tmp deployment/forklift-console-plugin/ && yarn helm:index"
   },
   "devDependencies": {
-    "@konveyor/lib-ui": "^8.3.2",
+    "@migtools/lib-ui": "^8.4.1",
     "@openshift-console/dynamic-plugin-sdk": "0.0.12",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.7",
     "@patternfly/react-core": "4.175.4",

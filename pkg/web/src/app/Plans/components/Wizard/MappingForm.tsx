@@ -16,7 +16,7 @@ import {
   Divider,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { ValidatedTextInput } from '@konveyor/lib-ui';
+import { ValidatedTextInput } from '@migtools/lib-ui';
 import { OptionWithValue } from '@app/common/components/SimpleSelect';
 import {
   MappingType,

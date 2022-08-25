@@ -7,7 +7,7 @@ import {
   useFormField,
   useFormState,
   ValidatedTextInput,
-} from '@konveyor/lib-ui';
+} from '@migtools/lib-ui';
 import {
   Modal,
   Stack,

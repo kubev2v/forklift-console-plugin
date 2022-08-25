@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SourceVM } from '@app/queries/types';
-import { StatusIcon } from '@konveyor/lib-ui';
+import { StatusIcon } from '@migtools/lib-ui';
 
 import { getMostSevereVMConcern, getVMConcernStatusLabel, getVMConcernStatusType } from './helpers';
 interface IVMConcernsIconProps {

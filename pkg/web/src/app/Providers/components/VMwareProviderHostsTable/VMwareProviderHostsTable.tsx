@@ -11,7 +11,7 @@ import {
   truncate,
 } from '@patternfly/react-table';
 import { usePaginationState, useSortState } from '@app/common/hooks';
-import { StatusIcon, useSelectionState } from '@konveyor/lib-ui';
+import { StatusIcon, useSelectionState } from '@migtools/lib-ui';
 import { IHost, IVMwareProvider } from '@app/queries/types';
 import { SelectNetworkModal } from './SelectNetworkModal';
 import { useHostConfigsQuery } from '@app/queries';

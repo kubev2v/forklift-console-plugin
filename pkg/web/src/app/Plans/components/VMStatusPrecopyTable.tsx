@@ -12,7 +12,7 @@ import {
 
 import { IVMStatus } from '@app/queries/types';
 import { TickingElapsedTime } from '@app/common/components/TickingElapsedTime';
-import { StatusIcon } from '@konveyor/lib-ui';
+import { StatusIcon } from '@migtools/lib-ui';
 import { CanceledIcon } from '@app/common/components/CanceledIcon';
 
 interface IVMStatusPrecopyTableProps {
