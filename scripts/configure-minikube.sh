@@ -21,7 +21,11 @@ echo "${K8S_AUTH_BEARER_TOKEN},forklift,0" > ${MINIKUBE_HOME_}/.minikube/files/e
 echo "Starting local minikube console..."
 
 # Start minikube
-minikube start --extra-config=apiserver.token-auth-file=/etc/ca-certificates/token.csv
+if [ -x "$(command -v podman)" ]; then
+    minikube start --extra-config=apiserver.token-auth-file=/etc/ca-certificates/token.csv --memory=6G --cpus=4 --driver=podman
+else
+    minikube start --extra-config=apiserver.token-auth-file=/etc/ca-certificates/token.csv
+fi
 
 # Install CRDs
 kubectl apply -f $(pwd)/deployment/hack/crds
