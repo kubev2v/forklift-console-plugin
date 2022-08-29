@@ -4,10 +4,9 @@ import { UseQueryResult } from 'react-query';
 import { IMustGatherResponse, mustGatherStatus } from '@app/client/types';
 import { MustGatherWatcher } from '@app/common/components/MustGatherWatcher';
 import { NotificationContext } from '@app/common/context';
-import { useNetworkContext } from '@app/common/context';
-import { authorizedFetch, useFetchContext } from '@app/queries/fetchHelpers';
-import { getMustGatherApiUrl } from '@app/queries/helpers';
 import { saveAs } from 'file-saver';
+import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
+import { getMustGatherApiUrl } from '@app/queries/helpers';
 
 export type MustGatherObjType = {
   displayName: string;
@@ -49,16 +48,14 @@ export const MustGatherContextProvider: React.FunctionComponent<IMustGatherConte
   children,
 }: IMustGatherContextProvider) => {
   const { pushNotification } = React.useContext(NotificationContext);
-  const fetchContext = useFetchContext();
   const [mustGatherModalOpen, setMustGatherModalOpen] = React.useState(false);
   const [mustGatherList, setMustGatherList] = React.useState<mustGatherListType>([]);
   const [activeMustGather, setActiveMustGather] = React.useState<MustGatherObjType>();
   const [errorNotified, setErrorNotified] = React.useState(false);
-  const { currentUser } = useNetworkContext();
 
   const mustGathersQuery = useMustGathersQuery(
     'must-gather',
-    !!currentUser?.access_token,
+    true,
     (data) => {
       const updatedMgList: mustGatherListType = data?.map((mg): MustGatherObjType => {
         return {
@@ -103,14 +100,15 @@ export const MustGatherContextProvider: React.FunctionComponent<IMustGatherConte
   const withoutNs = (namespacedResourceName: string, type: 'plan' | 'vm') =>
     namespacedResourceName.replace(`${type}:`, '');
 
-  const fetchMustGatherResult = async (mg: IMustGatherResponse) =>
-    await authorizedFetch<Blob>(
-      getMustGatherApiUrl(`must-gather/${mg?.['id']}/data`),
-      fetchContext,
-      {},
-      'get',
-      'blob'
-    );
+  const fetchMustGatherResult = async (mg: IMustGatherResponse) => {
+    const response = await consoleFetch(getMustGatherApiUrl(`must-gather/${mg?.['id']}/data`));
+
+    if (!response.ok || !response.blob) {
+      throw response;
+    }
+
+    return response.blob();
+  };
 
   const downloadMustGatherResult = (tarBall: Blob, fileName: string) => {
     const file = new File([tarBall], fileName, { type: 'text/plain;charset=utf-8' });

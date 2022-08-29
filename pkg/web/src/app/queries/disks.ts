@@ -1,9 +1,9 @@
 import { usePollingContext } from '@app/common/context';
 import { UseQueryResult } from 'react-query';
-import { useAuthorizedFetch } from './fetchHelpers';
-import { useMockableQuery, getInventoryApiUrl } from './helpers';
+import { getInventoryApiUrl, useMockableQuery } from './helpers';
 import { SourceInventoryProvider } from './types';
 import { MOCK_DISKS } from '@app/queries/mocks/disks.mock';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface IDisk {
   id: string;
@@ -20,7 +20,8 @@ export const useDisksQuery = (
   return useMockableQuery<IDisk[], unknown>(
     {
       queryKey: ['disks', provider?.selfLink],
-      queryFn: useAuthorizedFetch(getInventoryApiUrl(`${provider?.selfLink || ''}/disks?detail=1`)),
+      queryFn: async () =>
+        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}/disks?detail=1`)),
       enabled: !!provider && provider.type === 'ovirt',
       refetchInterval: usePollingContext().refetchInterval,
     },

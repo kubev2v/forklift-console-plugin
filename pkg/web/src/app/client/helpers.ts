@@ -1,13 +1,12 @@
 import Q from 'q';
 import KubeClient, {
-  ClientFactory,
   NamespacedResource,
   CoreNamespacedResourceKind,
   CoreNamespacedResource,
+  KubeResource,
 } from '@migtools/lib-ui';
 import { META, ProviderType, CLUSTER_API_VERSION } from '@app/common/constants';
 import { IProviderObject, ISecret } from '@app/queries/types';
-import { useNetworkContext } from '@app/common/context';
 import {
   AddProviderFormValues,
   OpenshiftProviderFormValues,
@@ -30,6 +29,12 @@ export class ForkliftResource extends NamespacedResource {
   }
   gvk(): KubeClient.IGroupVersionKindPlural {
     return this._gvk;
+  }
+  listPath(): string {
+    return listPath(this, this.namespace);
+  }
+  namedPath(name: string): string {
+    return namedPath(this, name, this.namespace);
   }
 }
 export enum ForkliftResourceKind {
@@ -200,11 +205,33 @@ export const checkIfResourceExists = async (
   }
 };
 
-export const useClientInstance = (): KubeClient.ClusterClient => {
-  const { currentUser } = useNetworkContext();
-  const user = {
-    access_token: currentUser?.access_token || '',
-    expiry_time: currentUser?.expiry_time || 0,
-  };
-  return ClientFactory.cluster(user, '/cluster-api');
+/** Translate resource into namespaced k8s api ptch */
+export const listPath = (resource: KubeResource, namespace: string = META.namespace) => {
+  const isCRD = !!resource.gvk().group;
+
+  return isCRD
+    ? [
+        '/api/kubernetes/apis',
+        resource.gvk().group,
+        resource.gvk().version,
+        'namespaces',
+        namespace || META.namespace,
+        resource.gvk().kindPlural,
+      ].join('/')
+    : [
+        '/api/kubernetes/api',
+        resource.gvk().version,
+        'namespaces',
+        namespace || META.namespace,
+        resource.gvk().kindPlural,
+      ].join('/');
+};
+
+/** Translate resource into named k8s api path */
+export const namedPath = (
+  resource: KubeResource,
+  name: string,
+  namespace: string = META.namespace
+) => {
+  return [listPath(resource, namespace), name].join('/');
 };

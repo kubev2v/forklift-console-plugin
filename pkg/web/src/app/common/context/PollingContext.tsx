@@ -10,7 +10,7 @@ interface IPollingContext {
 
 const PollingContext = React.createContext<IPollingContext>({
   isPollingEnabled: true,
-  refetchInterval: false,
+  refetchInterval: POLLING_INTERVAL,
   pausePolling: () => undefined,
   resumePolling: () => undefined,
 });

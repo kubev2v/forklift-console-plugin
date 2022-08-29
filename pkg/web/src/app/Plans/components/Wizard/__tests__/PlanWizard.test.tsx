@@ -5,7 +5,6 @@ import { createMemoryHistory } from 'history';
 import '@testing-library/jest-dom';
 import { Router } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
-import { NetworkContextProvider } from '@app/common/context';
 import { PlanWizard } from '../PlanWizard';
 import { PATH_PREFIX } from '@app/common/constants';
 
@@ -17,11 +16,9 @@ describe('<AddEditProviderModal />', () => {
   it('allows to cancel a plan wizard', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <PlanWizard />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <PlanWizard />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -32,11 +29,9 @@ describe('<AddEditProviderModal />', () => {
   it('allows to create a plan', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <PlanWizard />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <PlanWizard />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -90,11 +85,9 @@ describe('<AddEditProviderModal />', () => {
     history.push(`${PATH_PREFIX}/plans/plantest-02/edit`);
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <PlanWizard />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <PlanWizard />
+        </Router>
       </QueryClientProvider>
     );
 

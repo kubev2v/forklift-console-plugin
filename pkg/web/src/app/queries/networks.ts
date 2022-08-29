@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { usePollingContext } from '@app/common/context';
-import { useMockableQuery, getInventoryApiUrl, sortByName } from './helpers';
+import { useMockableQuery, sortByName, getInventoryApiUrl } from './helpers';
 import {
   MOCK_OPENSHIFT_NETWORKS,
   MOCK_RHV_NETWORKS,
@@ -14,7 +14,7 @@ import {
   InventoryProvider,
   SourceInventoryProvider,
 } from './types';
-import { useAuthorizedFetch } from './fetchHelpers';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export const useNetworksQuery = <T extends ISourceNetwork | IOpenShiftNetwork>(
   provider: InventoryProvider | null,
@@ -27,7 +27,8 @@ export const useNetworksQuery = <T extends ISourceNetwork | IOpenShiftNetwork>(
   const result = useMockableQuery<T[]>(
     {
       queryKey: ['networks', providerRole, provider?.name],
-      queryFn: useAuthorizedFetch(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)),
+      queryFn: async () =>
+        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)),
       enabled: !!provider && (!mappingType || mappingType === MappingType.Network),
       refetchInterval: usePollingContext().refetchInterval,
       select: sortByNameCallback,

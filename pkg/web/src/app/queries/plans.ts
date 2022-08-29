@@ -20,6 +20,7 @@ import { getMappingResource } from './mappings';
 import { PlanWizardFormState, PlanWizardMode } from '@app/Plans/components/Wizard/PlanWizard';
 import { generateHook, generateMappings, generatePlan } from '@app/Plans/components/Wizard/helpers';
 import { IMetaObjectMeta } from '@app/queries/types/common.types';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 const planResource = new ForkliftResource(ForkliftResourceKind.Plan, META.namespace);
 const networkMapResource = getMappingResource(MappingType.Network).resource;
@@ -27,15 +28,15 @@ const storageMapResource = getMappingResource(MappingType.Storage).resource;
 const hookResource = new ForkliftResource(ForkliftResourceKind.Hook, META.namespace);
 
 export const usePlansQuery = (): UseQueryResult<IKubeList<IPlan>> => {
-  const client = useAuthorizedK8sClient();
   const sortKubeListByNameCallback = React.useCallback(
     (data): IKubeList<IPlan> => sortKubeListByName(data),
     []
   );
+
   const result = useMockableQuery<IKubeList<IPlan>>(
     {
       queryKey: 'plans',
-      queryFn: async () => (await client.list<IKubeList<IPlan>>(planResource)).data,
+      queryFn: async () => await consoleFetchJSON(planResource.listPath()),
       refetchInterval: usePollingContext().refetchInterval,
       select: sortKubeListByNameCallback,
     },

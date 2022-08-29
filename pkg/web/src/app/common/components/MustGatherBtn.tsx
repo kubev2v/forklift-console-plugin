@@ -18,9 +18,9 @@ export const MustGatherBtn: React.FunctionComponent<IMustGatherBtn> = ({
     setMustGatherModalOpen,
     setActiveMustGather,
     mustGathersQuery,
-    latestAssociatedMustGather,
-    withNs,
     withoutNs,
+    withNs,
+    latestAssociatedMustGather,
     downloadMustGatherResult,
     fetchMustGatherResult,
     notifyDownloadFailed,
@@ -32,14 +32,14 @@ export const MustGatherBtn: React.FunctionComponent<IMustGatherBtn> = ({
   return mustGather?.status === 'completed' && mustGather?.['archive-name'] ? (
     <Tooltip
       content={
-        !mustGathersQuery.isSuccess
+        !mustGathersQuery?.isSuccess
           ? `Cannot reach must gather service.`
           : `must-gather-${type}_${displayName} available for download.`
       }
     >
       <Button
         aria-label={`Download logs for ${displayName}`}
-        isAriaDisabled={!mustGathersQuery.isSuccess}
+        isAriaDisabled={!mustGathersQuery?.isSuccess}
         variant="secondary"
         onClick={() => {
           fetchMustGatherResult(mustGather)
@@ -57,7 +57,7 @@ export const MustGatherBtn: React.FunctionComponent<IMustGatherBtn> = ({
       content={
         !isCompleted
           ? 'Cannot run must gather until the migration is finished.'
-          : !mustGathersQuery.isSuccess
+          : !mustGathersQuery?.isSuccess
           ? `Cannot reach must gather service.`
           : mustGather?.status === 'inprogress'
           ? `Collecting ${type === 'plan' ? 'migration plan' : 'VM migration'} logs.`
@@ -73,13 +73,13 @@ export const MustGatherBtn: React.FunctionComponent<IMustGatherBtn> = ({
       <Button
         icon={mustGather?.status === 'error' ? <WarningTriangleIcon /> : null}
         isLoading={
-          !mustGathersQuery.isError &&
+          !mustGathersQuery?.isError &&
           (mustGather?.status === 'inprogress' || mustGather?.status === 'new')
         }
         isAriaDisabled={
           mustGather?.status === 'inprogress' ||
           mustGather?.status === 'new' ||
-          !mustGathersQuery.isSuccess ||
+          !mustGathersQuery?.isSuccess ||
           !isCompleted
         }
         variant="secondary"

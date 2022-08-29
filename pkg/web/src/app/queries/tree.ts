@@ -4,7 +4,7 @@ import { getInventoryApiUrl, useMockableQuery } from './helpers';
 import { MOCK_RHV_HOST_TREE, MOCK_VMWARE_HOST_TREE, MOCK_VMWARE_VM_TREE } from './mocks/tree.mock';
 import { SourceInventoryProvider } from './types';
 import { InventoryTree, InventoryTreeType } from './types/tree.types';
-import { useAuthorizedFetch } from './fetchHelpers';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 const sortTreeItemsByName = <T extends InventoryTree>(tree: T): T => ({
   ...tree,
@@ -96,7 +96,8 @@ export const useInventoryTreeQuery = <T extends InventoryTree>(
   return useMockableQuery<T, unknown, IndexedTree<T>>(
     {
       queryKey: ['inventory-tree', provider?.name, treeType],
-      queryFn: useAuthorizedFetch(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)),
+      queryFn: async () =>
+        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)),
       enabled: isValidQuery && !!provider,
       keepPreviousData: true,
       cacheTime: 0,

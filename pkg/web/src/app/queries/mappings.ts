@@ -34,6 +34,7 @@ import {
   findProvidersByRefs,
   useInventoryProvidersQuery,
 } from '@app/queries';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export const getMappingResource = (
   mappingType: MappingType
@@ -47,16 +48,15 @@ export const getMappingResource = (
 };
 
 export const useMappingsQuery = (mappingType: MappingType): UseQueryResult<IKubeList<Mapping>> => {
-  const client = useAuthorizedK8sClient();
   const sortKubeListByNameCallback = React.useCallback(
     (data): IKubeList<Mapping> => sortKubeListByName(data),
     []
   );
+  const { resource } = getMappingResource(mappingType);
   const result = useMockableQuery<IKubeList<Mapping>>(
     {
       queryKey: ['mappings', mappingType],
-      queryFn: async () =>
-        (await client.list<IKubeList<Mapping>>(getMappingResource(mappingType).resource)).data,
+      queryFn: async () => await consoleFetchJSON(resource.listPath()),
       refetchInterval: usePollingContext().refetchInterval,
       select: sortKubeListByNameCallback,
     },

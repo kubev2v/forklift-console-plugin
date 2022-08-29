@@ -3,23 +3,24 @@ import { UseMutationResult, UseQueryResult, useQueryClient } from 'react-query';
 import { usePollingContext } from '@app/common/context';
 import {
   useMockableQuery,
-  getInventoryApiUrl,
   isSameResource,
   useMockableMutation,
   nameAndNamespace,
   mockKubeList,
   sortByName,
   truncateK8sString,
+  getInventoryApiUrl,
 } from './helpers';
 import { MOCK_HOSTS, MOCK_HOST_CONFIGS } from './mocks/hosts.mock';
 import { IHost, IHostConfig, INameNamespaceRef, ISecret, IVMwareProvider } from './types';
-import { useAuthorizedFetch, useAuthorizedK8sClient } from './fetchHelpers';
+import { useAuthorizedK8sClient } from './fetchHelpers';
 import { IKubeList, IKubeResponse, KubeClientError } from '@app/client/types';
 import { SelectNetworkFormValues } from '@app/Providers/components/VMwareProviderHostsTable/SelectNetworkModal';
 import { secretResource, ForkliftResource, ForkliftResourceKind } from '@app/client/helpers';
 import { CLUSTER_API_VERSION, META } from '@app/common/constants';
 import { getObjectRef } from '@app/common/helpers';
 import { isManagementNetworkSelected } from '@app/Providers/components/VMwareProviderHostsTable/helpers';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export const hostConfigResource = new ForkliftResource(ForkliftResourceKind.Host, META.namespace);
 
@@ -28,7 +29,8 @@ export const useHostsQuery = (provider: IVMwareProvider | null) => {
   const result = useMockableQuery<IHost[]>(
     {
       queryKey: ['hosts', provider?.selfLink],
-      queryFn: useAuthorizedFetch(getInventoryApiUrl(`${provider?.selfLink || ''}/hosts?detail=1`)),
+      queryFn: async () =>
+        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}/hosts?detail=1`)),
       enabled: !!provider,
       refetchInterval: usePollingContext().refetchInterval,
       select: sortByNameCallback,
@@ -39,11 +41,10 @@ export const useHostsQuery = (provider: IVMwareProvider | null) => {
 };
 
 export const useHostConfigsQuery = (): UseQueryResult<IKubeList<IHostConfig>> => {
-  const client = useAuthorizedK8sClient();
   return useMockableQuery<IKubeList<IHostConfig>>(
     {
       queryKey: 'host-configs',
-      queryFn: async () => (await client.list<IKubeList<IHostConfig>>(hostConfigResource)).data,
+      queryFn: async () => await consoleFetchJSON(hostConfigResource.listPath()),
       refetchInterval: usePollingContext().refetchInterval,
     },
     mockKubeList(MOCK_HOST_CONFIGS, 'Host')

@@ -4,7 +4,6 @@ import { NotificationContext } from '@app/common/context';
 import { useMustGatherQuery } from '@app/queries';
 import { mustGatherStatus } from '@app/client/types';
 import { MustGatherContext } from '@app/common/context';
-import { useFetchContext } from '@app/queries/fetchHelpers';
 
 interface IMustGatherWatcherProps {
   name: string;
@@ -23,7 +22,6 @@ export const MustGatherWatcher: React.FunctionComponent<IMustGatherWatcherProps>
   const { data, isSuccess } = useMustGatherQuery(name, hasCompleted);
   const { withoutNs, fetchMustGatherResult, downloadMustGatherResult, notifyDownloadFailed } =
     React.useContext(MustGatherContext);
-  const fetchContext = useFetchContext();
 
   React.useEffect(() => {
     const type = data?.command.toLowerCase().includes('plan') ? 'plan' : 'vm';
@@ -94,7 +92,6 @@ export const MustGatherWatcher: React.FunctionComponent<IMustGatherWatcherProps>
     hasCompleted,
     completedPreviously,
     erroredPreviously,
-    fetchContext,
     withoutNs,
     setNotified,
     setHasCompleted,

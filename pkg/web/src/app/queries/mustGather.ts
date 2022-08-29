@@ -1,9 +1,9 @@
 import { usePollingContext } from '@app/common/context';
 import { useQueryClient } from 'react-query';
-import { getMustGatherApiUrl, useMockableQuery, useMockableMutation } from './helpers';
-import { authorizedFetch, useAuthorizedFetch, useFetchContext } from './fetchHelpers';
+import { useMockableQuery, useMockableMutation, getMustGatherApiUrl } from './helpers';
 import { IMustGatherResponse } from '@app/client/types';
 import { MOCK_MUST_GATHERS } from '@app/queries/mocks/mustGather.mock';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 // triggers a single must gather execution
 export const useMustGatherMutation = (
@@ -12,22 +12,13 @@ export const useMustGatherMutation = (
   onError?: (error: unknown) => void
 ) => {
   const queryClient = useQueryClient();
-  const fetchContext = useFetchContext();
 
   const result = useMockableMutation<IMustGatherResponse>(
     async (options) => {
       return new Promise((res, rej) => {
-        authorizedFetch<IMustGatherResponse>(
-          getMustGatherApiUrl(url),
-          fetchContext,
-          { 'Content-Type': 'application/json' },
-          'post',
-          'json',
-          true,
-          options
-        )
+        consoleFetchJSON(getMustGatherApiUrl(url), 'POST', { body: JSON.stringify(options) })
           .then((mustGatherData) => {
-            res(mustGatherData);
+            res(mustGatherData.json());
           })
           .catch((error) => {
             rej({
@@ -60,7 +51,7 @@ export const useMustGathersQuery = (
   const result = useMockableQuery<IMustGatherResponse[], Response>(
     {
       queryKey: ['must-gather-list'],
-      queryFn: useAuthorizedFetch(getMustGatherApiUrl(url), true),
+      queryFn: async () => await consoleFetchJSON(getMustGatherApiUrl(url)),
       enabled: isReady,
       refetchInterval: usePollingContext().refetchInterval,
       onError: (error) => {
@@ -87,7 +78,7 @@ export const useMustGatherQuery = (
   const result = useMockableQuery<IMustGatherResponse, Response>(
     {
       queryKey: ['must-gather-entity', customName],
-      queryFn: useAuthorizedFetch(getMustGatherApiUrl(`must-gather/${customName}`), true),
+      queryFn: async () => await consoleFetchJSON(getMustGatherApiUrl(`must-gather/${customName}`)),
       enabled: shouldPoll,
       refetchInterval: usePollingContext().refetchInterval,
       onError: () => {
