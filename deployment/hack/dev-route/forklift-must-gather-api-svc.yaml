@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.openshift.io/serving-cert-secret-name: forklift-must-gather-api-serving-cert
+  name: forklift-must-gather-api
+  namespace: konveyor-forklift
+spec:
+  ports:
+  - name: api-http
+    nodePort: 30090
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: forklift
+    service: forklift-must-gather-api
+  sessionAffinity: None
+  type: NodePort
