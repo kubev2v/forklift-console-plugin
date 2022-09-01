@@ -2,13 +2,15 @@
 
 set -euo pipefail
 
-# Set minikube IP and token (see scripts/configure-minikube.shcut)
-export BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=${BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT:=https://$(minikube ip):8443}
+# Get current cluster API server for defualt cluster endpoint
+DEFAULT_CLUSTER_ENDPOINT=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$(kubectl config current-context)\")].cluster.server}")
 
-# Default minkube home to user home, if MINIKUBE_HOME is not defined
-MINIKUBE_HOME_=${MINIKUBE_HOME:=$HOME}
-token=$(cat ${MINIKUBE_HOME_}/.minikube/files/etc/ca-certificates/token.csv 2>/dev/null | cut -f 1 -d,)
-export BRIDGE_K8S_AUTH_BEARER_TOKEN=${BRIDGE_K8S_AUTH_BEARER_TOKEN:=${token}}
+# Set IP and token (see scripts/configure-minikube/kind)
+export BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=${BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT:=${DEFAULT_CLUSTER_ENDPOINT}}
+
+# Default passwaed (see scripts/configure-minikube/kind)
+DEFAULT_TOKEN=abcdef.0123456789abcdef
+export BRIDGE_K8S_AUTH_BEARER_TOKEN=${BRIDGE_K8S_AUTH_BEARER_TOKEN:=${DEFAULT_TOKEN}}
 
 # Run console
 # -----------
@@ -16,8 +18,8 @@ export BRIDGE_K8S_AUTH_BEARER_TOKEN=${BRIDGE_K8S_AUTH_BEARER_TOKEN:=${token}}
 PLUGIN_NAME="forklift-console-plugin"
 CONSOLE_IMAGE=${CONSOLE_IMAGE:="quay.io/openshift/origin-console:latest"}
 CONSOLE_PORT=${CONSOLE_PORT:=9000}
-INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:="http://localhost:8080"}
-MUST_GATHER_API_SERVER_HOST=${MUST_GATHER_API_SERVER_HOST:="http://localhost:9200"}
+INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:="http://127.0.0.1:8080"}
+MUST_GATHER_API_SERVER_HOST=${MUST_GATHER_API_SERVER_HOST:="http://127.0.0.1:8090"}
 
 export BRIDGE_K8S_AUTH=bearer-token
 export BRIDGE_K8S_MODE=off-cluster

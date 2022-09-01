@@ -3,7 +3,7 @@ kind: Route
 metadata:
   name: forklift-mustgather
 spec:
-  host: forklift-mustgather-openshift-mtv.apps.mtv.rhev.lab.eng.brq.redhat.com
+  host: forklift-mustgather-openshift-mtv.apps.example.com
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: reencrypt
