@@ -1,5 +1,5 @@
 # Builder container
-FROM registry.access.redhat.com/ubi8/nodejs-16 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-16 AS build
 
 # Install yarn
 RUN npm install -g yarn -s &>/dev/null
@@ -13,7 +13,7 @@ USER 0
 RUN yarn install --frozen-lockfile && yarn build
 
 # Web server container
-FROM registry.access.redhat.com/ubi8/nginx-120
+FROM registry.access.redhat.com/ubi9/nginx-120
 
 # Use none root user
 USER 1001
@@ -37,7 +37,7 @@ USER 1001
 #    ssi on;
 # }
 
-# When using ubi8/nginx-120 defaults:
+# When using ubi9/nginx-120 defaults:
 #  listen       8080 default_server;
 #  root         /opt/app-root/src;
 
