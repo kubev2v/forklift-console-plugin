@@ -4,7 +4,7 @@
     "properties": {
       "id": "migrationtoolkit",
       "perspective": "admin",
-      "name": "%plugin__forklift-console-plugin~Migration Toolkit%",
+      "name": "%plugin__forklift-console-plugin~VM Import%",
       "insertAfter": "workloads"
     }
   },
