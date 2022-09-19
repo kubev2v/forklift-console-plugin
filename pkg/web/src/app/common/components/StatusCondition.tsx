@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { StatusIcon, StatusType } from '@migtools/lib-ui';
-import { getMostSeriousCondition } from '@app/common/helpers';
+import { StatusIcon } from '@migtools/lib-ui';
+import { getMostSeriousCondition, getStatusType } from '@app/common/helpers';
 import { StatusCategoryType } from '@app/common/constants';
 import { IStatusCondition } from '@app/queries/types';
 import { Button, Popover } from '@patternfly/react-core';
@@ -21,22 +21,6 @@ export const StatusCondition: React.FunctionComponent<IStatusConditionProps> = (
   popoverBodyId,
 }: IStatusConditionProps) => {
   if (!status) return <StatusIcon status="Loading" label="Validating" />;
-
-  const getStatusType = (severity: string): StatusType => {
-    if (severity === 'Ready' || severity === StatusCategoryType.Required) {
-      return 'Ok';
-    }
-    if (severity === StatusCategoryType.Advisory) {
-      return 'Info';
-    }
-    if (severity === 'Pending') {
-      return 'Loading';
-    }
-    if (severity === StatusCategoryType.Critical || severity === StatusCategoryType.Error) {
-      return 'Error';
-    }
-    return 'Warning';
-  };
 
   const conditions = status?.conditions || [];
   const mostSeriousCondition = getMostSeriousCondition(conditions);

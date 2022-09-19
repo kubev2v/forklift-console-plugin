@@ -13,6 +13,7 @@ import {
 } from '@app/queries/types';
 import { UseQueryResult } from 'react-query';
 import { IKubeList } from '@app/client/types';
+import { StatusType } from '@migtools/lib-ui';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -27,6 +28,22 @@ export const findConditionByCategory = (
   category: string
 ): IStatusCondition | undefined => {
   return conditions.find((condition) => condition.category === category);
+};
+
+export const getStatusType = (severity: string): StatusType => {
+  if (severity === 'Ready' || severity === StatusCategoryType.Required) {
+    return 'Ok';
+  }
+  if (severity === StatusCategoryType.Advisory) {
+    return 'Info';
+  }
+  if (severity === 'Pending') {
+    return 'Loading';
+  }
+  if (severity === StatusCategoryType.Critical || severity === StatusCategoryType.Error) {
+    return 'Error';
+  }
+  return 'Warning';
 };
 
 export const getMostSeriousCondition = (conditions: IStatusCondition[]): string => {
