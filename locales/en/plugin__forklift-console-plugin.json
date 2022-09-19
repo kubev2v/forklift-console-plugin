@@ -1,7 +1,6 @@
 {
-  "NetworkMaps": "NetworkMaps",
-  "Plans": "Plans",
-  "Providers": "Providers",
-  "StorageMaps": "StorageMaps",
-  "VM Import": "VM Import"
+  "Mappings for VM Import": "Mappings for VM Import",
+  "Plans for VM Import": "Plans for VM Import",
+  "Providers for VM Import": "Providers for VM Import",
+  "Virtualization": "Virtualization"
 }
