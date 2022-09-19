@@ -2,39 +2,65 @@
   {
     "type": "console.navigation/section",
     "properties": {
-      "id": "migrationtoolkit",
+      "id": "virtualization",
+      "name": "%plugin__kubevirt-plugin~Virtualization%",
+      "insertAfter": "workloads",
+      "dataAttributes": {
+        "data-quickstart-id": "qs-nav-sec-virtualization",
+        "data-test-id": "virtualization-nav-item"
+      }
+    },
+    "flags": {
+      "disallowed": [
+        "KUBEVIRT_DYNAMIC"
+      ]
+    }
+  },
+  {
+    "type": "console.navigation/separator",
+    "properties": {
       "perspective": "admin",
-      "name": "%plugin__forklift-console-plugin~VM Import%",
-      "insertAfter": "workloads"
+      "section": "virtualization",
+      "id": "importSeparator",
+      "insertAfter": "migrationpolicies",
+      "testID": "ImportSeparator"
+    },
+    "flags": {
+      "required": [
+        "KUBEVIRT_DYNAMIC"
+      ]
     }
   },
   {
     "type": "console.navigation/href",
     "properties": {
       "id": "providers",
+      "insertAfter": "importSeparator",
       "perspective": "admin",
-      "section": "migrationtoolkit",
-      "name": "%plugin__forklift-console-plugin~Providers%",
+      "section": "virtualization",
+      "name": "%plugin__forklift-console-plugin~Providers for VM Import%",
       "href": "/mtv/providers"
     }
   },
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "mappings",
-      "perspective": "admin",
-      "section": "migrationtoolkit",
-      "name": "%plugin__forklift-console-plugin~Mappings%",
-      "href": "/mtv/mappings"
+      "id": "plans",
+      "insertAfter": "providers",
+      "section": "virtualization",
+      "name": "%plugin__forklift-console-plugin~Plans for VM Import%",
+      "href": "/mtv/plans"
     }
   },
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "plans",
-      "section": "migrationtoolkit",
-      "name": "%plugin__forklift-console-plugin~Plans%",
-      "href": "/mtv/plans"
+      "id": "mappings",
+      "insertAfter": "plans",
+      "perspective": "admin",
+      "section": "virtualization",
+      "name": "%plugin__forklift-console-plugin~Mappings for VM Import%",
+      "href": "/mtv/mappings"
     }
   },
   {
