@@ -2,21 +2,42 @@
 
 set -ex
 
+# When updating the componenets versions folow HCO recomendations:
+# HCO:
+#   https://github.com/kubevirt/hyperconverged-cluster-operator
+# HCO configuration file:
+#   https://github.com/kubevirt/hyperconverged-cluster-operator/blob/<release tag>/hack/config
+
+# Default version values
+CDI_VERSION=v1.54.0
+NETWORK_ADDONS_VERSION=v0.78.0 
+KUBEVIRT_VERSION=v0.57.1
+
+# If user run script with 'auto-versions' arg, fetch versions from HCO config file
+if [ $1 = "auto-versions" ]; then
+  HCO_RELEASE=main
+  eval $(
+      curl --no-progress-meter \
+          "https://raw.githubusercontent.com/kubevirt/hyperconverged-cluster-operator/${HCO_RELEASE}/hack/config" |
+      sed -n \
+          -e '/CDI_VERSION/p' \
+          -e '/NETWORK_ADDONS_VERSION/p' \
+          -e '/KUBEKUBEVIRT_VERSION/p'
+  )
+fi
+
 # Install CDI
-export CDI_VERSION=$(curl -s https://api.github.com/repos/kubevirt/containerized-data-importer/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/$CDI_VERSION/cdi-operator.yaml
-kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/$CDI_VERSION/cdi-cr.yaml
+kubectl apply -f https://github.com/kubevirt/containerized-data-importer/releases/download/$CDI_VERSION/cdi-operator.yaml
+kubectl apply -f https://github.com/kubevirt/containerized-data-importer/releases/download/$CDI_VERSION/cdi-cr.yaml
 
 # Install CNA
-export CNA_VERSION=$(curl -s https://api.github.com/repos/kubevirt/cluster-network-addons-operator/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/$CNA_VERSION/namespace.yaml
-kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/$CNA_VERSION/network-addons-config.crd.yaml
-kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/$CNA_VERSION/operator.yaml
+kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/$NETWORK_ADDONS_VERSION/namespace.yaml
+kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/$NETWORK_ADDONS_VERSION/network-addons-config.crd.yaml
+kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/$NETWORK_ADDONS_VERSION/operator.yaml
 
 # Install kubevirt
-export VIRT_VERSION=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases | grep tag_name | grep -v -- '-rc' | sort -r | head -1 | awk -F': ' '{print $2}' | sed 's/,//' | xargs)
-kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/${VIRT_VERSION}/kubevirt-operator.yaml
-kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/${VIRT_VERSION}/kubevirt-cr.yaml
+kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_VERSION}/kubevirt-operator.yaml
+kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_VERSION}/kubevirt-cr.yaml
 
 # --------------------
 
@@ -51,5 +72,5 @@ spec:
 EOF
 
 echo CDI:  $CDI_VERSION
-echo CNA:  $CNA_VERSION
-echo Virt: $VIRT_VERSION
+echo CNA:  $NETWORK_ADDONS_VERSION
+echo Virt: $KUBEVIRT_VERSION
