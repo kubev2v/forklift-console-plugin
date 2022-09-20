@@ -3,6 +3,7 @@
 # OpenShift Console Plugin For Forklift
 
 [![Operator Repository on Quay](https://quay.io/repository/kubevirt-ui/forklift-console-plugin/status "Plugin Repository on Quay")](https://quay.io/repository/kubevirt-ui/forklift-console-plugin)
+[![codecov](https://codecov.io/gh/konveyor/forklift-console-plugin/branch/main/graph/badge.svg?token=NsQ3mmCTNw)](https://codecov.io/gh/konveyor/forklift-console-plugin)
 
 Forklift is a suite of migration tools that facilitate the migration of VM workloads to [OpenShift Virtualization](https://cloud.redhat.com/learn/topics/virtualization/).
 
