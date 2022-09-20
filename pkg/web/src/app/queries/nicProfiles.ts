@@ -1,9 +1,9 @@
 import { usePollingContext } from '@app/common/context';
 import { UseQueryResult } from 'react-query';
-import { useAuthorizedFetch } from './fetchHelpers';
-import { useMockableQuery, getInventoryApiUrl } from './helpers';
+import { getInventoryApiUrl, useMockableQuery } from './helpers';
 import { SourceInventoryProvider } from './types';
 import { MOCK_NIC_PROFILES } from '@app/queries/mocks/nicProfiles.mock';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface INicProfile {
   id: string;
@@ -20,9 +20,10 @@ export const useNicProfilesQuery = (
   return useMockableQuery<INicProfile[], unknown>(
     {
       queryKey: ['nicProfiles', provider?.selfLink],
-      queryFn: useAuthorizedFetch(
-        getInventoryApiUrl(`${provider?.selfLink || ''}/nicprofiles?detail=1`)
-      ),
+      queryFn: async () =>
+        await consoleFetchJSON(
+          getInventoryApiUrl(`${provider?.selfLink || ''}/nicprofiles?detail=1`)
+        ),
       enabled: !!provider && provider.type === 'ovirt',
       refetchInterval: usePollingContext().refetchInterval,
     },

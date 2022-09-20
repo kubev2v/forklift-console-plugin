@@ -1,100 +1,85 @@
-import { INetworkContext, useNetworkContext } from '@app/common/context/NetworkContext';
-import { QueryFunction } from 'react-query/types/core/types';
-import { useHistory } from 'react-router-dom';
-import { History, LocationState } from 'history';
-import { useClientInstance } from '@app/client/helpers';
 import { KubeResource } from '@migtools/lib-ui';
 import { IKubeResponse, IKubeStatus } from '@app/client/types';
-import { ENV } from '@app/common/constants';
+import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
+import { listPath, namedPath } from '@app/client/helpers';
 
-interface IFetchContext {
-  history: History<LocationState>;
-  checkExpiry: INetworkContext['checkExpiry'];
-  currentUser: INetworkContext['currentUser'];
-}
+/** Simulate an axios fetch call */
+const authorizedK8sRequest = async <T>({
+  method = 'GET',
+  url,
+  data,
+  options = {},
+}: {
+  method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+  url: string;
+  data?: object;
+  options?: object;
+}): Promise<IKubeResponse<T>> => {
+  const headers =
+    method === 'PATCH' && data
+      ? { 'Content-Type': 'application/merge-patch+json', Accept: 'application/json' }
+      : { 'Content-Type': 'application/json', Accept: 'application/json' };
+  const body = method !== 'GET' && data ? JSON.stringify(data) : undefined;
 
-export const useFetchContext = (): IFetchContext => {
-  const { checkExpiry, currentUser } = useNetworkContext();
-  return { history: useHistory(), checkExpiry, currentUser };
-};
+  const requestOptions = {
+    ...options,
+    method: method,
+    headers: headers,
+    body: body,
+  };
 
-export const authorizedFetch = async <TResponse, TData = unknown>(
-  url: string,
-  fetchContext: IFetchContext,
-  extraHeaders: RequestInit['headers'] = {},
-  method: 'get' | 'post' = 'get',
-  returnMode: 'json' | 'blob' = 'json',
-  bypassRedirect = false,
-  data?: TData
-): Promise<TResponse> => {
-  const { history, checkExpiry } = fetchContext;
+  const response = await consoleFetch(url, requestOptions);
+  const resData = await response.json();
 
-  if (ENV.AUTH_REQUIRED !== 'false' && fetchContext.currentUser?.access_token) {
-    extraHeaders['Authorization'] = `Bearer ${fetchContext.currentUser.access_token}`;
-  }
-
-  try {
-    const response = await fetch(url, {
-      headers: extraHeaders,
-      method,
-      ...(data &&
-        method !== 'get' && {
-          body: JSON.stringify(data),
-        }),
-    });
-    if (response.ok && response.json) {
-      return returnMode === 'json' ? response.json() : response.blob();
-    } else {
-      throw response;
-    }
-  } catch (error: unknown) {
-    !bypassRedirect && checkExpiry(error, history);
-    throw error;
-  }
-};
-
-export const useAuthorizedFetch = <T>(url: string, bypassRedirect?: boolean): QueryFunction<T> => {
-  const fetchContext = useFetchContext();
-  return () => authorizedFetch(url, fetchContext, {}, 'get', 'json', bypassRedirect);
-};
-
-export const authorizedK8sRequest = async <T>(
-  fetchContext: IFetchContext,
-  requestFn: () => Promise<IKubeResponse<T>>
-): Promise<IKubeResponse<T>> => {
-  const { history, checkExpiry } = fetchContext;
-
-  try {
-    const response = await requestFn();
-    if (response && response.data) {
-      return response;
-    } else {
-      throw response;
-    }
-  } catch (error: unknown) {
-    checkExpiry(error, history);
-    throw error;
+  if (response.ok) {
+    return {
+      data: resData,
+      status: response.status,
+      statusText: response.statusText,
+      config: requestOptions,
+      headers: headers,
+      request: null,
+    };
+  } else {
+    return Promise.reject(response.statusText);
   }
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useAuthorizedK8sClient = () => {
-  const fetchContext = useFetchContext();
-  const client = useClientInstance();
   /* eslint-disable @typescript-eslint/ban-types */
   return {
     get: <T>(resource: KubeResource, name: string, params?: object) =>
-      authorizedK8sRequest<T>(fetchContext, () => client.get(resource, name, params)),
+      authorizedK8sRequest<T>({ method: 'GET', url: namedPath(resource, name), data: params }),
     list: <T>(resource: KubeResource, params?: object) =>
-      authorizedK8sRequest<T>(fetchContext, () => client.list(resource, params)),
+      authorizedK8sRequest<T>({ method: 'GET', url: listPath(resource), data: params }),
     create: <T>(resource: KubeResource, newObject: object, params?: object) =>
-      authorizedK8sRequest<T>(fetchContext, () => client.create(resource, newObject, params)),
+      authorizedK8sRequest<T>({
+        method: 'POST',
+        url: listPath(resource),
+        data: newObject,
+        options: params,
+      }),
     delete: <T = IKubeStatus>(resource: KubeResource, name: string, params?: object) =>
-      authorizedK8sRequest<T>(fetchContext, () => client.delete(resource, name, params)),
+      authorizedK8sRequest<T>({
+        method: 'DELETE',
+        url: namedPath(resource, name),
+        options: params,
+      }),
     patch: <T>(resource: KubeResource, name: string, patch: object, params?: object) =>
-      authorizedK8sRequest<T>(fetchContext, () => client.patch(resource, name, patch, params)),
+      authorizedK8sRequest<T>({
+        method: 'PATCH',
+        url: namedPath(resource, name),
+        data: patch,
+        options: params,
+      }),
     put: <T>(resource: KubeResource, name: string, object: object, params?: object) =>
-      authorizedK8sRequest<T>(fetchContext, () => client.put(resource, name, object, params)),
+      authorizedK8sRequest<T>({
+        method: 'PUT',
+        url: namedPath(resource, name),
+        data: object,
+        options: params,
+      }),
   };
   /* eslint-enable @typescript-eslint/ban-types */
 };

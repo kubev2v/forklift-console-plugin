@@ -10,8 +10,6 @@ import {
   useMutation,
   MutationFunction,
 } from 'react-query';
-import { useHistory } from 'react-router-dom';
-import { useFetchContext } from './fetchHelpers';
 import { INameNamespaceRef, IProviderObject, ISrcDestRefs } from './types';
 import { UnknownResult } from '@app/common/types';
 
@@ -62,8 +60,6 @@ export const useMockableMutation = <
   mutationFn: MutationFunction<TQueryFnData, TVariables>,
   config: UseMutationOptions<TQueryFnData, TError, TVariables, TSnapshot> | undefined
 ) => {
-  const { checkExpiry } = useFetchContext();
-  const history = useHistory();
   return useMutation<TQueryFnData, TError, TVariables, TSnapshot>(
     process.env.DATA_SOURCE !== 'mock'
       ? async (vars: TVariables) => {
@@ -72,7 +68,6 @@ export const useMockableMutation = <
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             console.error(error.response);
-            checkExpiry(error, history);
             throw error;
           }
         }
@@ -83,11 +78,12 @@ export const useMockableMutation = <
     config
   );
 };
-export const getInventoryApiUrl = (relativePath: string): string =>
-  `/inventory-api/${relativePath}`;
+
+export const getInventoryApiUrl = (relativePath?: string): string =>
+  `/api/proxy/plugin/forklift-console-plugin/forklift-inventory/${relativePath || ''}`;
 
 export const getMustGatherApiUrl = (relativePath?: string): string =>
-  `/must-gather-api/${relativePath || ''}`;
+  `/api/proxy/plugin/forklift-console-plugin/must-gather-api/${relativePath || ''}`;
 
 export const getAggregateQueryStatus = (queryResults: UnknownResult[]): QueryStatus => {
   if (queryResults.some((result) => result.isError)) return 'error';

@@ -78,7 +78,10 @@ export enum StepType {
 
 export const META: IMetaVars =
   process.env.DATA_SOURCE !== 'mock' && process.env.NODE_ENV !== 'test'
-    ? window['_meta']
+    ? {
+        ...(window['_meta'] || {}),
+        namespace: process.env.NAMESPACE || 'konveyor-forklift',
+      }
     : {
         clusterApi: '/mock/api',
         devServerPort: 'mock-port',
@@ -89,7 +92,6 @@ export const META: IMetaVars =
           clientSecret: 'mock-client-secret',
         },
         namespace: 'mock-namespace',
-        configNamespace: 'mock-namespace',
         inventoryApi: '/mock/api',
         inventoryPayloadApi: '/mock/api',
       };

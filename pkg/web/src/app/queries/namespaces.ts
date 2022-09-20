@@ -2,9 +2,9 @@ import * as React from 'react';
 import { usePollingContext } from '@app/common/context';
 import { getInventoryApiUrl, sortByName, useMockableQuery } from './helpers';
 import { IOpenShiftProvider } from './types';
-import { useAuthorizedFetch } from './fetchHelpers';
 import { IOpenShiftNamespace } from './types/namespaces.types';
 import { MOCK_OPENSHIFT_NAMESPACES } from './mocks/namespaces.mock';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export const useNamespacesQuery = (provider: IOpenShiftProvider | null) => {
   const sortByNameCallback = React.useCallback(
@@ -14,7 +14,8 @@ export const useNamespacesQuery = (provider: IOpenShiftProvider | null) => {
   const result = useMockableQuery<IOpenShiftNamespace[]>(
     {
       queryKey: ['namespaces', provider?.name],
-      queryFn: useAuthorizedFetch(getInventoryApiUrl(`${provider?.selfLink || ''}/namespaces`)),
+      queryFn: async () =>
+        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}/namespaces`)),
       enabled: !!provider,
       refetchInterval: usePollingContext().refetchInterval,
       select: sortByNameCallback,

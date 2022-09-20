@@ -5,11 +5,10 @@ import { createMemoryHistory } from 'history';
 import '@testing-library/jest-dom';
 import { Router } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
-const queryClient = new QueryClient();
-
-import { NetworkContextProvider } from '@app/common/context';
 import { AddEditProviderModal } from '../AddEditProviderModal';
 import { MOCK_CLUSTER_PROVIDERS } from '@app/queries/mocks/providers.mock';
+
+const queryClient = new QueryClient();
 
 describe('<AddEditProviderModal />', () => {
   beforeAll(() => (window.HTMLElement.prototype.scrollIntoView = jest.fn()));
@@ -26,11 +25,9 @@ describe('<AddEditProviderModal />', () => {
   it('allows to cancel addition/edition of a provider', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <AddEditProviderModal {...props} providerBeingEdited={null} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <AddEditProviderModal {...props} providerBeingEdited={null} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -43,11 +40,9 @@ describe('<AddEditProviderModal />', () => {
   it('allows adding a oVirt provider', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <AddEditProviderModal {...props} providerBeingEdited={null} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <AddEditProviderModal {...props} providerBeingEdited={null} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -85,11 +80,9 @@ describe('<AddEditProviderModal />', () => {
   it('allows adding a vsphere provider', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <AddEditProviderModal {...props} providerBeingEdited={null} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <AddEditProviderModal {...props} providerBeingEdited={null} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -143,11 +136,9 @@ describe('<AddEditProviderModal />', () => {
   it('fails to add a vsphere provider with wrong values', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <AddEditProviderModal {...props} providerBeingEdited={null} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <AddEditProviderModal {...props} providerBeingEdited={null} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -184,11 +175,9 @@ describe('<AddEditProviderModal />', () => {
   it('allows editing a vsphere provider', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <AddEditProviderModal {...props} providerBeingEdited={MOCK_CLUSTER_PROVIDERS[0]} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <AddEditProviderModal {...props} providerBeingEdited={MOCK_CLUSTER_PROVIDERS[0]} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -203,11 +192,9 @@ describe('<AddEditProviderModal />', () => {
   it('allows to add an openshift provider', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <AddEditProviderModal {...props} providerBeingEdited={null} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <AddEditProviderModal {...props} providerBeingEdited={null} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -240,11 +227,9 @@ describe('<AddEditProviderModal />', () => {
   it('fails to add an openshift provider with wrong values', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <AddEditProviderModal {...props} providerBeingEdited={null} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <AddEditProviderModal {...props} providerBeingEdited={null} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -277,11 +262,9 @@ describe('<AddEditProviderModal />', () => {
   it('allows editing an openshift provider', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <AddEditProviderModal {...props} providerBeingEdited={MOCK_CLUSTER_PROVIDERS[4]} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <AddEditProviderModal {...props} providerBeingEdited={MOCK_CLUSTER_PROVIDERS[4]} />
+        </Router>
       </QueryClientProvider>
     );
 

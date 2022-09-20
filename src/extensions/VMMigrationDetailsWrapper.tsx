@@ -2,7 +2,11 @@ import * as React from 'react';
 import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
-import { VMMigrationDetails } from '@app/Plans/components/VMMigrationDetails';
+import { MustGatherContextProvider } from '@app/common/context';
+import {
+  VMMigrationDetails,
+  VMMigrationDetailsProps,
+} from '@app/Plans/components/VMMigrationDetails';
 
 const queryCache = new QueryCache();
 const queryClient = new QueryClient({
@@ -15,10 +19,12 @@ const queryClient = new QueryClient({
   },
 });
 
-const App: React.FunctionComponent = () => (
+const App: React.FunctionComponent = (props: VMMigrationDetailsProps) => (
   <QueryClientProvider client={queryClient}>
-    <VMMigrationDetails />
-    {process.env.NODE_ENV !== 'test' ? <ReactQueryDevtools /> : null}
+    <MustGatherContextProvider>
+      <VMMigrationDetails match={props.match} />
+      {process.env.NODE_ENV !== 'test' ? <ReactQueryDevtools /> : null}
+    </MustGatherContextProvider>
   </QueryClientProvider>
 );
 

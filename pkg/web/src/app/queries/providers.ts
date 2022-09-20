@@ -6,12 +6,12 @@ import Q from 'q';
 import { usePollingContext } from '@app/common/context';
 import {
   useMockableQuery,
-  getInventoryApiUrl,
   useMockableMutation,
   isSameResource,
   nameAndNamespace,
   mockKubeList,
   sortIndexedDataByName,
+  getInventoryApiUrl,
 } from './helpers';
 import { MOCK_CLUSTER_PROVIDERS, MOCK_INVENTORY_PROVIDERS } from './mocks/providers.mock';
 import { MOCK_TLS_CERTIFICATE } from './mocks/tlsCertificates.mock';
@@ -28,7 +28,7 @@ import {
   SourceInventoryProvider,
   ITLSCertificate,
 } from './types';
-import { useAuthorizedFetch, useAuthorizedK8sClient } from './fetchHelpers';
+import { useAuthorizedK8sClient } from './fetchHelpers';
 import {
   ForkliftResourceKind,
   providerResource,
@@ -40,13 +40,13 @@ import {
 import { AddProviderFormValues } from '@app/Providers/components/AddEditProviderModal/AddEditProviderModal';
 import { dnsLabelNameSchema, ProviderType, SOURCE_PROVIDER_TYPES } from '@app/common/constants';
 import { IKubeList, IKubeResponse, IKubeStatus, KubeClientError } from '@app/client/types';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export const useClusterProvidersQuery = (): UseQueryResult<IKubeList<IProviderObject>> => {
-  const client = useAuthorizedK8sClient();
   return useMockableQuery<IKubeList<IProviderObject>>(
     {
       queryKey: 'cluster-providers',
-      queryFn: async () => (await client.list<IKubeList<IProviderObject>>(providerResource)).data,
+      queryFn: async () => await consoleFetchJSON(providerResource.listPath()),
       refetchInterval: usePollingContext().refetchInterval,
     },
     mockKubeList(MOCK_CLUSTER_PROVIDERS, 'Providers')
@@ -61,7 +61,7 @@ export const useInventoryProvidersQuery = () => {
   const result = useMockableQuery<IProvidersByType>(
     {
       queryKey: 'inventory-providers',
-      queryFn: useAuthorizedFetch(getInventoryApiUrl('/providers?detail=1')),
+      queryFn: async () => await consoleFetchJSON(getInventoryApiUrl('/providers?detail=1')),
       refetchInterval: usePollingContext().refetchInterval,
       select: sortIndexedDataByNameCallback,
     },

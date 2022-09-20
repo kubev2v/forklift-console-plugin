@@ -6,8 +6,7 @@ import CopyPlugin from 'copy-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import {
   Configuration as WebpackConfiguration,
-  DefinePlugin,
-  WebpackPluginInstance,
+  EnvironmentPlugin,
 } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
@@ -84,10 +83,11 @@ const config: Configuration = {
     new CopyPlugin({
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),
-    new DefinePlugin({
-      'process.env.DATA_SOURCE': JSON.stringify('mock'),
-      'process.env.BRAND_TYPE': JSON.stringify('Konveyor'),
-    }) as unknown as WebpackPluginInstance,
+    new EnvironmentPlugin({
+      DATA_SOURCE: 'remote',
+      BRAND_TYPE: 'Konveyor',
+      NAMESPACE: 'konveyor-forklift',
+    }),
   ],
   devtool: 'source-map',
   optimization: {

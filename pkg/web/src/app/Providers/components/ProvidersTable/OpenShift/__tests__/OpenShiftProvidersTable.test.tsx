@@ -7,7 +7,6 @@ import { Router } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
 const queryClient = new QueryClient();
 
-import { NetworkContextProvider } from '@app/common/context';
 import { OpenShiftProvidersTable } from '../OpenShiftProvidersTable';
 import {
   MOCK_CLUSTER_PROVIDERS,
@@ -28,11 +27,9 @@ describe('<OpenShiftProvidersTable />', () => {
   it('renders openshift table', () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <OpenShiftProvidersTable {...props} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <OpenShiftProvidersTable {...props} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -46,11 +43,9 @@ describe('<OpenShiftProvidersTable />', () => {
   it.skip('renders storage classes', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <OpenShiftProvidersTable {...props} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <OpenShiftProvidersTable {...props} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -65,11 +60,9 @@ describe('<OpenShiftProvidersTable />', () => {
   it('renders status condition', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <OpenShiftProvidersTable {...props} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <OpenShiftProvidersTable {...props} />
+        </Router>
       </QueryClientProvider>
     );
 
@@ -83,11 +76,9 @@ describe('<OpenShiftProvidersTable />', () => {
   it('renders action menu', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <Router history={history}>
-            <OpenShiftProvidersTable {...props} />
-          </Router>
-        </NetworkContextProvider>
+        <Router history={history}>
+          <OpenShiftProvidersTable {...props} />
+        </Router>
       </QueryClientProvider>
     );
 

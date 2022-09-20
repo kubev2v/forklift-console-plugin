@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useRouteMatch } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -78,13 +77,13 @@ const getTotalCopiedRatio = (vmStatus: IVMStatus) => {
   return { completed, total };
 };
 
-export const VMMigrationDetails: React.FunctionComponent = () => {
-  const match = useRouteMatch<IPlanMatchParams>({
-    path: '/plans/:planName',
-    strict: true,
-    sensitive: true,
-  });
+export type VMMigrationDetailsProps = {
+  match: {
+    params: IPlanMatchParams;
+  };
+};
 
+export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps> = ({ match }) => {
   const plansQuery = usePlansQuery();
   const plan = plansQuery.data?.items.find((item) => item.metadata.name === match?.params.planName);
   const planStarted = !!plan?.status?.migration?.started;

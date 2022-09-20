@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { usePollingContext } from '@app/common/context';
 import { UseQueryResult } from 'react-query';
-import { useAuthorizedFetch } from './fetchHelpers';
-import { useMockableQuery, getInventoryApiUrl, sortByName } from './helpers';
+import { useMockableQuery, sortByName, getInventoryApiUrl } from './helpers';
 import { MOCK_RHV_VMS, MOCK_VMWARE_VMS } from './mocks/vms.mock';
 import { IdOrNameRef, SourceInventoryProvider } from './types';
 import { SourceVM, IVMwareVM } from './types/vms.types';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 type SourceVMsRecord = Record<string, SourceVM | undefined>;
 
@@ -57,7 +57,8 @@ export const useSourceVMsQuery = (
   return useMockableQuery<SourceVM[], unknown, IndexedSourceVMs>(
     {
       queryKey: ['vms', provider?.name],
-      queryFn: useAuthorizedFetch(getInventoryApiUrl(`${provider?.selfLink || ''}/vms?detail=1`)),
+      queryFn: async () =>
+        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}/vms?detail=1`)),
       enabled: !!provider,
       refetchInterval: usePollingContext().refetchInterval,
       select: indexVmsCallback,

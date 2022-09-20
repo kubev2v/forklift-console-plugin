@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { usePollingContext } from '@app/common/context';
-import { useMockableQuery, getInventoryApiUrl, sortByName } from './helpers';
+import { useMockableQuery, sortByName, getInventoryApiUrl } from './helpers';
 import {
   IAnnotatedStorageClass,
   IByProvider,
@@ -12,7 +12,7 @@ import {
 } from './types';
 import { MOCK_VMWARE_DATASTORES, MOCK_RHV_STORAGE_DOMAINS } from './mocks/storages.mock';
 import { MOCK_STORAGE_CLASSES_BY_PROVIDER } from './mocks/storages.mock';
-import { authorizedFetch, useAuthorizedFetch, useFetchContext } from './fetchHelpers';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export const useSourceStoragesQuery = (
   provider: SourceInventoryProvider | null,
@@ -23,7 +23,8 @@ export const useSourceStoragesQuery = (
   const result = useMockableQuery<ISourceStorage[]>(
     {
       queryKey: ['source-storages', provider?.name],
-      queryFn: useAuthorizedFetch(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)),
+      queryFn: async () =>
+        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)),
       enabled: !!provider && mappingType === MappingType.Storage,
       refetchInterval: usePollingContext().refetchInterval,
       select: sortByNameCallback,
@@ -55,7 +56,6 @@ export const useStorageClassesQuery = (
   providers: (IOpenShiftProvider | null)[] | null,
   mappingType: MappingType
 ) => {
-  const fetchContext = useFetchContext();
   const definedProviders = providers
     ? (providers.filter((provider) => !!provider) as IOpenShiftProvider[])
     : [];
@@ -67,9 +67,8 @@ export const useStorageClassesQuery = (
       queryFn: async () => {
         const storageClassLists: IStorageClass[][] = await Promise.all(
           (providers || []).map((provider) =>
-            authorizedFetch<IStorageClass[]>(
-              getInventoryApiUrl(`${provider?.selfLink || ''}/storageclasses?detail=1`),
-              fetchContext
+            consoleFetchJSON(
+              getInventoryApiUrl(`${provider?.selfLink || ''}/storageclasses?detail=1`)
             )
           )
         );

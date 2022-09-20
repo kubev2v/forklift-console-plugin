@@ -18,6 +18,7 @@ import { usePollingContext } from '@app/common/context';
 import { getObjectRef } from '@app/common/helpers';
 import { SourceVM } from './types/vms.types';
 import { MOCK_MIGRATIONS } from './mocks/migrations.mock';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 const migrationResource = new ForkliftResource(ForkliftResourceKind.Migration, META.namespace);
 
@@ -59,7 +60,6 @@ export const useCreateMigrationMutation = (
 };
 
 export const useMigrationsQuery = (): UseQueryResult<IKubeList<IMigration>> => {
-  const client = useAuthorizedK8sClient();
   const sortKubeListByNameCallback = React.useCallback(
     (data): IKubeList<IMigration> => sortKubeListByName(data),
     []
@@ -67,7 +67,7 @@ export const useMigrationsQuery = (): UseQueryResult<IKubeList<IMigration>> => {
   const result = useMockableQuery<IKubeList<IMigration>>(
     {
       queryKey: 'migrations',
-      queryFn: async () => (await client.list<IKubeList<IMigration>>(migrationResource)).data,
+      queryFn: async () => await consoleFetchJSON(migrationResource.listPath()),
       refetchInterval: usePollingContext().refetchInterval,
       select: sortKubeListByNameCallback,
     },

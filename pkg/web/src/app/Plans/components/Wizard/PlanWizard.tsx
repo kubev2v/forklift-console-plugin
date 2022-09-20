@@ -152,12 +152,12 @@ export const PlanWizard: React.FunctionComponent = () => {
   const storageMappingsQuery = useMappingsQuery(MappingType.Storage);
 
   const editRouteMatch = useRouteMatch<{ planName: string }>({
-    path: '/plans/:planName/edit',
+    path: '/mtv/plans/:planName/edit',
     strict: true,
     sensitive: true,
   });
   const duplicateRouteMatch = useRouteMatch<{ planName: string }>({
-    path: '/plans/:planName/duplicate',
+    path: '/mtv/plans/:planName/duplicate',
     strict: true,
     sensitive: true,
   });
