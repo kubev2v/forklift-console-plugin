@@ -1,5 +1,5 @@
 plugin: forklift-console-plugin
 name: forklift-console-plugin
-image: quay.io/kubevirt-ui/forklift-console-plugin:latest
+image: quay.io/kubevirt-ui/forklift-console-plugin:release-v0.1
 
 forkliftNamespace: konveyor-forklift
