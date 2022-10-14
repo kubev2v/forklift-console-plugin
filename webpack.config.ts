@@ -4,10 +4,7 @@ import * as path from 'path';
 
 import CopyPlugin from 'copy-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
-import {
-  Configuration as WebpackConfiguration,
-  EnvironmentPlugin,
-} from 'webpack';
+import { Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
 import { ConsoleRemotePlugin } from '@openshift-console/dynamic-plugin-sdk-webpack';
@@ -71,8 +68,7 @@ const config: Configuration = {
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'Access-Control-Allow-Headers':
-        'X-Requested-With, Content-Type, Authorization',
+      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization',
     },
     devMiddleware: {
       writeToDisk: true,
