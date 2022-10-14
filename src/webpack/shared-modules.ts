@@ -1,7 +1,7 @@
 // Copied from https://github.com/openshift/console/blob/c74203c9e768ca80f589d2e36572c9932837b6d2/frontend/packages/console-dynamic-plugin-sdk/src/shared-modules.ts
 // TODO: Remove once this version is published in @openshift-console/dynamic-plugin-sdk-webpack > 0.0.8
 
-type SharedModuleMetadata = Partial<{
+export type SharedModuleMetadata = Partial<{
   /**
    * If `true`, only a single version of the module can be loaded at runtime.
    *

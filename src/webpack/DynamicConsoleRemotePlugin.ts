@@ -12,6 +12,7 @@ import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sd
 
 import { PatchManifestJson } from './PatchManifestJsonPlugin';
 import {
+  type SharedModuleMetadata,
   sharedPluginModules,
   sharedPluginModulesMetadata,
 } from './shared-modules';
@@ -38,13 +39,16 @@ function buildPluginId(pluginMetadata: ConsolePluginMetadata): string {
  * This function has be adapted from:
  *   https://github.com/openshift/console/blob/master/frontend/packages/console-dynamic-plugin-sdk/src/webpack/ConsoleRemotePlugin.ts#L88-L108
  *
- * TODO: Keep aligned with how console handles its modules.
+ * TODO 1: Keep aligned with how console handles its modules.
+ * TODO 2: Do we need to add '@openshift/dynamic-plugin-sdk' in for any reason?
  */
-function processConsoleSharedModules(): WebpackSharedObject {
+function processConsoleSharedModules(
+  modules: typeof sharedPluginModules,
+  metadata: Record<string, SharedModuleMetadata>,
+): WebpackSharedObject {
   return Object.fromEntries(
-    // TODO: Do we need to add '@openshift/dynamic-plugin-sdk' in for any reason?
-    sharedPluginModules.map((module) => {
-      const moduleMetadata = sharedPluginModulesMetadata[module] ?? {};
+    modules.map((module) => {
+      const moduleMetadata = metadata[module] ?? {};
 
       const config: WebpackSharedConfig = {
         singleton: moduleMetadata?.singleton ?? true,
@@ -90,7 +94,10 @@ export class DynamicConsoleRemotePlugin implements WebpackPluginInstance {
 
   apply(compiler: Compiler) {
     const pluginMetadata = getPluginMetadata(this.pluginMetadataFilename);
-    const sharedModules = processConsoleSharedModules();
+    const sharedModules = processConsoleSharedModules(
+      sharedPluginModules,
+      sharedPluginModulesMetadata,
+    );
 
     // Do the federated module build and generate the core SDK `plugin-manifest.json` file
     new DynamicRemotePlugin({
