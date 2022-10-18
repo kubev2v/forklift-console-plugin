@@ -1,18 +1,33 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "baseUrl": ".",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "target": "es2020",
-    "jsx": "react",
     "allowJs": true,
     "strict": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "noUnusedLocals": true,
+
+    "target": "es2020",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "jsx": "react",
+
+    "baseUrl": "./",
+    "outDir": "dist",
     "paths": {
-      "@app/*": ["pkg/web/src/app/*"]
+      "@app/*": ["pkg/web/src/app/*"],
+      "_/*": ["src/*"]
     }
   },
   "include": ["src", "pkg"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "ts-node": {
+    "files": true,
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }

@@ -20,8 +20,6 @@ const config: Config.InitialOptions = {
   transform: {
     '^.+\\.[t|j]sx?$': 'ts-jest',
   },
-  transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!(@patternfly|@openshift-console\\S*?)/.*)',
-  ],
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@patternfly|@openshift-console\\S*?)/.*)'],
 };
 export default config;
