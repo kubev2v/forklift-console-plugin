@@ -67,7 +67,7 @@ yarn helm:build
 
 ```bash
 # add the forklift helm repo
-helm repo add forklift https://konveyor.github.io/forklift-console-plugin
+helm repo add forklift https://kubev2v.github.io/forklift-console-plugin
 
 # install the chart using the repository package
 helm install forklift forklift/forklift-console-plugin

@@ -3,13 +3,13 @@
 # OpenShift Console Plugin For Forklift
 
 [![Operator Repository on Quay](https://quay.io/repository/kubevirt-ui/forklift-console-plugin/status "Plugin Repository on Quay")](https://quay.io/repository/kubevirt-ui/forklift-console-plugin)
-[![codecov](https://codecov.io/gh/konveyor/forklift-console-plugin/branch/main/graph/badge.svg?token=NsQ3mmCTNw)](https://codecov.io/gh/konveyor/forklift-console-plugin)
+[![codecov](https://codecov.io/gh/kubev2v/forklift-console-plugin/branch/main/graph/badge.svg?token=NsQ3mmCTNw)](https://codecov.io/gh/kubev2v/forklift-console-plugin)
 
 Forklift is a suite of migration tools that facilitate the migration of VM workloads to [OpenShift Virtualization](https://cloud.redhat.com/learn/topics/virtualization/).
 
 ## Prerequisites
 
-* [__Forklift Operator__](https://https://github.com/konveyor/forklift-operator/)
+* [__Forklift Operator__](https://github.com/kubev2v/forklift-operator/)
 * [__OpenShift Console 4.12+__](https://www.openshift.com/)
 
 ## Development
@@ -53,7 +53,7 @@ plugin to a cluster by using [helm](https://helm.sh/).
 
 ```bash
 # Add the forklift helm repo
-helm repo add forklift https://konveyor.github.io/forklift-console-plugin
+helm repo add forklift https://kubev2v.github.io/forklift-console-plugin
 
 # Install the forklift console plugin using current namespace
 helm install forklift-console-plugin forklift/forklift-console-plugin
