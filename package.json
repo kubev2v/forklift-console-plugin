@@ -2,7 +2,7 @@
   "name": "forklift-console-plugin",
   "version": "0.0.1",
   "private": true,
-  "repository": "git@github.com:konveyor/forklift-console-plugin.git",
+  "repository": "git@github.com:kubev2v/forklift-console-plugin.git",
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf dist",
@@ -22,7 +22,7 @@
     "test:coverage": "jest --coverage",
     "test:updateSnapshot": "jest --updateSnapshot",
     "helm:lint": "helm lint deployment/forklift-console-plugin/",
-    "helm:index": "helm repo index ./tmp/ --url https://konveyor.github.io/forklift-console-plugin",
+    "helm:index": "helm repo index ./tmp/ --url https://kubev2v.github.io/forklift-console-plugin",
     "helm:build": "mkdir -p tmp && helm package -d tmp deployment/forklift-console-plugin/ && yarn helm:index"
   },
   "devDependencies": {
