@@ -12,14 +12,22 @@ const config: Config.InitialOptions = {
   testMatch: ['<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   moduleNameMapper: {
     '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
+    '@console/*': '<rootDir>/src/__mocks__/dummy.ts',
+    'react-i18next': '<rootDir>/src/__mocks__/react-i18next.ts',
     ...pathsToModuleNameMapper(compilerOptions.paths, {
       prefix: '<rootDir>/',
     }),
   },
+  modulePaths: ['<rootDir>'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   transform: {
     '^.+\\.[t|j]sx?$': 'ts-jest',
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@patternfly|@openshift-console\\S*?)/.*)'],
+  globals: {
+    'ts-jest': {
+      isolatedModules: true,
+    },
+  },
 };
 export default config;
