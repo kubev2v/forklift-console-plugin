@@ -5,4 +5,7 @@
  */
 export const useTranslation = () => ({
   t: (k: string) => k,
+  i18n: {
+    resolvedLanguage: 'en',
+  },
 });
