@@ -6,7 +6,7 @@ set -euo pipefail
 # ------------
 
 # Hint - install kind [ linux-amd64 ]
-#curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+#curl -LO https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
 #sudo install kind-linux-amd64 /usr/local/bin/kind
 
 echo "Starting local kind cluster..."
