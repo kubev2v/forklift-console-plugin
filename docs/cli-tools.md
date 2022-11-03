@@ -65,6 +65,8 @@ Example (v0.17.0):
 go install sigs.k8s.io/kind@v0.17.0
 ```
 
+Note: for kubevirt to run virtual machines on kind cluster, kind need to run from root acount.
+
 ## CRC
 
 Red Hat CodeReady Containers allows you to spin up a small Red Hat OpenShift cluster on your local PC, without the need for a server, a cloud, or a team of operations people.
