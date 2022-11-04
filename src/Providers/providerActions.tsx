@@ -6,9 +6,23 @@ import { useTranslation } from 'src/internal/i18n';
 import { ConfirmModal } from '@app/common/components/ConfirmModal';
 import { ProviderType } from '@app/common/constants';
 import { useDeleteProviderMutation } from '@app/queries';
-import { ActionServiceProvider, useModal } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  ActionServiceProvider,
+  K8sResourceCommon,
+  useModal,
+} from '@openshift-console/dynamic-plugin-sdk';
 
-import { MergedProvider } from './data';
+import { MergedProvider, useProvidersWithInventory } from './data';
+
+export const useProviderResourceActions = (resource: K8sResourceCommon) => {
+  const [[provider]] = useProvidersWithInventory({
+    kind: resource?.kind ?? '',
+    namespace: resource?.metadata?.namespace ?? '',
+    name: resource?.metadata?.name ?? '',
+  });
+
+  return useMergedProviderActions(provider);
+};
 
 export const useMergedProviderActions = (entity: MergedProvider) => {
   const { t } = useTranslation();

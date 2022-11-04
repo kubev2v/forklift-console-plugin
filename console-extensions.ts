@@ -76,6 +76,38 @@ const extensions: EncodedExtension[] = [
   } as EncodedExtension<ResourceListPage>,
 
   {
+    type: 'console.page/resource/details',
+    properties: {
+      model: {
+        group: 'forklift.konveyor.io',
+        kind: 'Provider',
+        version: 'v1beta1',
+      },
+      component: {
+        $codeRef: 'EmptyDetailPage',
+      },
+    },
+  } as EncodedExtension<ResourceDetailsPage>,
+
+  {
+    type: 'console.tab/horizontalNav',
+    properties: {
+      model: {
+        group: 'forklift.konveyor.io',
+        kind: 'Provider',
+        version: 'v1beta1',
+      },
+      page: {
+        name: 'Inventory',
+        href: 'inventory',
+      },
+      component: {
+        $codeRef: 'ProviderInventoryTab',
+      },
+    },
+  } as EncodedExtension<HorizontalNavTab>,
+
+  {
     type: 'console.action/provider',
     properties: {
       contextId: 'mergedProvider',
@@ -84,6 +116,19 @@ const extensions: EncodedExtension[] = [
       },
     },
   } as EncodedExtension<ActionProvider>,
+  {
+    type: 'console.action/resource-provider',
+    properties: {
+      model: {
+        group: 'forklift.konveyor.io',
+        kind: 'Provider',
+        version: 'v1beta1',
+      },
+      provider: {
+        $codeRef: 'useProviders',
+      },
+    },
+  } as EncodedExtension<ResourceActionProvider>,
 
   {
     type: 'console.navigation/href',
