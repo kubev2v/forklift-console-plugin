@@ -1,7 +1,13 @@
 import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import type {
+  ActionProvider,
+  HorizontalNavTab,
   HrefNavItem,
   NavSection,
+  ResourceActionProvider,
+  ResourceDetailsPage,
+  ResourceListPage,
+  ResourceNSNavItem,
   RoutePage,
   Separator,
 } from '@openshift-console/dynamic-plugin-sdk';
@@ -38,16 +44,46 @@ const extensions: EncodedExtension[] = [
   } as EncodedExtension<Separator>,
 
   {
-    type: 'console.navigation/href',
+    type: 'console.navigation/resource-ns',
     properties: {
       id: 'providers',
-      insertAfter: 'importSeparator',
-      perspective: 'admin',
       section: 'virtualization',
       name: '%plugin__forklift-console-plugin~Providers for VM Import%',
-      href: '/mtv/providers',
+      model: {
+        group: 'forklift.konveyor.io',
+        kind: 'Provider',
+        version: 'v1beta1',
+      },
+      dataAttributes: {
+        'data-quickstart-id': 'qs-nav-providers',
+        'data-test-id': 'providers-nav-item',
+      },
     },
-  } as EncodedExtension<HrefNavItem>,
+  } as EncodedExtension<ResourceNSNavItem>,
+
+  {
+    type: 'console.page/resource/list',
+    properties: {
+      component: {
+        $codeRef: 'ProvidersPage',
+      },
+      model: {
+        group: 'forklift.konveyor.io',
+        kind: 'Provider',
+        version: 'v1beta1',
+      },
+    },
+  } as EncodedExtension<ResourceListPage>,
+
+  {
+    type: 'console.action/provider',
+    properties: {
+      contextId: 'mergedProvider',
+      provider: {
+        $codeRef: 'useMergedProviders',
+      },
+    },
+  } as EncodedExtension<ActionProvider>,
 
   {
     type: 'console.navigation/href',

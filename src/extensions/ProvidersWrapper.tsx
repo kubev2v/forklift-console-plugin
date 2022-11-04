@@ -1,4 +1,4 @@
-import { ProvidersPage } from '@app/Providers/ProvidersPage';
+import ProvidersPage from 'src/Providers/ProvidersPage';
 
 import withQueryClient from './QueryClientHoc';
 
