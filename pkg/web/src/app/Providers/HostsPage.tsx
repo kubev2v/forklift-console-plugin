@@ -26,7 +26,7 @@ export interface IHostsMatchParams {
 
 export const HostsPage: React.FunctionComponent = () => {
   const match = useRouteMatch<IHostsMatchParams>({
-    path: '/providers/vsphere/:providerName',
+    path: `${PATH_PREFIX}/providers/vsphere/:providerName`,
     strict: true,
     sensitive: true,
   });
