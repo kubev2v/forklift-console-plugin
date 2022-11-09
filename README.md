@@ -2,7 +2,7 @@
 
 # OpenShift Console Plugin For Forklift
 
-[![Operator Repository on Quay](https://quay.io/repository/kubevirt-ui/forklift-console-plugin/status "Plugin Repository on Quay")](https://quay.io/repository/kubevirt-ui/forklift-console-plugin)
+[![Operator Repository on Quay](https://quay.io/repository/kubev2v/forklift-console-plugin/status "Plugin Repository on Quay")](https://quay.io/repository/kubev2v/forklift-console-plugin)
 [![codecov](https://codecov.io/gh/kubev2v/forklift-console-plugin/branch/main/graph/badge.svg?token=NsQ3mmCTNw)](https://codecov.io/gh/kubev2v/forklift-console-plugin)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kubev2v_forklift-console-plugin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kubev2v_forklift-console-plugin)
 

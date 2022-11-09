@@ -17,7 +17,7 @@
 |-----------|-------------|---------------|
 | plugin | name of "app" label used for objects |  forklift-console-plugin
 | name | the deployment name | forklift-console-plugin
-| image | the plugin container image | quay.io/kubevirt-ui/forklift-console-plugin:[latest release branch]
+| image | the plugin container image | quay.io/kubev2v/forklift-console-plugin:[latest release branch]
 | forkliftNamespace | forklift-operator namespace | konveyor-forklift
 
 ## Running the helm chart locally
