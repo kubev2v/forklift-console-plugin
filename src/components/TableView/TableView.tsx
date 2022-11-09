@@ -28,8 +28,8 @@ export function TableView<T>({
   children,
 }: TableViewProps<T>) {
   const { t } = useTranslation();
-
   const [activeSort, setActiveSort, comparator] = useSort(allColumns);
+  const hasChildren = children.filter(Boolean).length > 0;
 
   entities.sort(comparator);
 
@@ -56,14 +56,14 @@ export function TableView<T>({
         </Tr>
       </Thead>
       <Tbody>
-        {children.length > 0 && (
+        {hasChildren && (
           <Tr>
             <Td colSpan={visibleColumns.length || 1}>
               <Bullseye>{children}</Bullseye>
             </Td>
           </Tr>
         )}
-        {children.length === 0 &&
+        {!hasChildren &&
           entities.map((entity, index) => (
             <Row key={entity?.[uidFieldId] ?? index} entity={entity} columns={visibleColumns} />
           ))}
