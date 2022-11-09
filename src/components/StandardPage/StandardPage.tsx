@@ -146,15 +146,13 @@ export function StandardPage<T>({
           aria-label={title}
           Row={RowMapper}
         >
-          {[
-            !loaded && <Loading key="loading" />,
-            errorFetchingData && <ErrorState key="error" />,
-            noResults && (customNoResultsFound ?? <NoResultsFound key="no_result" />),
-            noMatchingResults &&
-              (customNoResultsMatchFilter ?? (
-                <NoResultsMatchFilter key="no_match" clearAllFilters={clearAllFilters} />
-              )),
-          ].filter(Boolean)}
+          {!loaded && <Loading key="loading" />}
+          {errorFetchingData && <ErrorState key="error" />}
+          {noResults && (customNoResultsFound ?? <NoResultsFound key="no_result" />)}
+          {noMatchingResults &&
+            (customNoResultsMatchFilter ?? (
+              <NoResultsMatchFilter key="no_match" clearAllFilters={clearAllFilters} />
+            ))}
         </TableView>
       </PageSection>
     </>
