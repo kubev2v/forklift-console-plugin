@@ -9,7 +9,7 @@ push it to an image registry.
 
 ```sh
 # build the image and tag it
-podman build -t quay.io/kubevirt-ui/forklift-console-plugin:latest .
+podman build -t quay.io/kubev2v/forklift-console-plugin:latest .
 ```
 
 ### Push the image
@@ -19,7 +19,7 @@ podman build -t quay.io/kubevirt-ui/forklift-console-plugin:latest .
 podman login quay.io
 
 # push the image 
-podman push quay.io/kubevirt-ui/forklift-console-plugin:latest
+podman push quay.io/kubev2v/forklift-console-plugin:latest
 ```
 
 NOTE: If you have a Mac with Apple silicon, you will need to add the flag
@@ -31,5 +31,5 @@ to run in-cluster.
 Run the local image, expose and proxy the server to port 9001 (nginx default port is 8080).
 
 ```sh
-podman run -it --rm -p 9001:8080 quay.io/kubevirt-ui/forklift-console-plugin:latest
+podman run -it --rm -p 9001:8080 quay.io/kubev2v/forklift-console-plugin:latest
 ```
