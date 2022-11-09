@@ -74,7 +74,7 @@ export const useSort = (
         i18n.resolvedLanguage,
         fields.find((field) => field.id === activeSort.id)?.comparator,
       ),
-    [fields],
+    [fields, activeSort],
   );
 
   return [activeSort, setActiveSort, comparator];
