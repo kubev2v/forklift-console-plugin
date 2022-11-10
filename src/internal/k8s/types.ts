@@ -30,3 +30,8 @@ export type ProviderResource = {
     conditions?: Condition[];
   };
 } & K8sResourceCommon;
+
+export type ResourceConsolePageProps = {
+  kind: string;
+  namespace: string;
+};

@@ -9,7 +9,11 @@
     "MappingsPage": "./extensions/MappingsWrapper",
     "HostsPage": "./extensions/HostsPageWrapper",
     "PlanWizard": "./extensions/PlanWizardWrapper",
-    "VMMigrationDetails": "./extensions/VMMigrationDetailsWrapper"
+    "VMMigrationDetails": "./extensions/VMMigrationDetailsWrapper",
+    "ProviderInventoryTab": "./extensions/ProviderInventoryTabWrapper",
+    "EmptyDetailPage": "./extensions/EmptyDetailPageWrapper",
+    "useMergedProviders": "./extensions/UseMergedProviders",
+    "useProviders": "./extensions/UseProviders"
   },
   "dependencies": {
     "@console/pluginAPI": "*"

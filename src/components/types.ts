@@ -16,3 +16,6 @@ export interface Field {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   comparator?: (a: any, b: any, locale: string) => number;
 }
+
+export const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
+export type K8sConditionStatus = typeof K8sConditionStatusValues[number];
