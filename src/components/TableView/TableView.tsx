@@ -5,9 +5,9 @@ import { UID } from 'src/utils/constants';
 import { Bullseye } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-import { Field } from '../types';
+import { Field, SortType } from '../types';
 
-import { buildSort, useSort } from './sort';
+import { buildSort } from './sort';
 import { RowProps } from './types';
 
 /**
@@ -20,18 +20,16 @@ import { RowProps } from './types';
  */
 export function TableView<T>({
   uidFieldId = UID,
-  allColumns,
   visibleColumns,
   entities,
   'aria-label': ariaLabel,
   Row,
   children,
+  activeSort,
+  setActiveSort,
 }: TableViewProps<T>) {
   const { t } = useTranslation();
-  const [activeSort, setActiveSort, comparator] = useSort(allColumns);
   const hasChildren = children.filter(Boolean).length > 0;
-
-  entities.sort(comparator);
 
   return (
     <TableComposable aria-label={ariaLabel} variant="compact" isStickyHeader>
@@ -73,10 +71,6 @@ export function TableView<T>({
 }
 
 interface TableViewProps<T> {
-  /**
-   * Both visible and hidden columns. Note that hidden columns are required for maintaining sort order.
-   */
-  allColumns: Field[];
   visibleColumns: Field[];
   entities: T[];
   'aria-label': string;
@@ -93,4 +87,6 @@ interface TableViewProps<T> {
    * Extension point to handle empty state and related cases.
    */
   children?: ReactNode[];
+  activeSort: SortType;
+  setActiveSort: (sort: SortType) => void;
 }
