@@ -9,9 +9,9 @@ set -ex
 #   https://github.com/kubevirt/hyperconverged-cluster-operator/blob/<release tag>/hack/config
 
 # Default version values
-KUBEVIRT_VERSION="v0.58.0"
+KUBEVIRT_VERSION="v0.59.0-alpha.0"
 CDI_VERSION="v1.55.0"
-NETWORK_ADDONS_VERSION="v0.79.0"
+NETWORK_ADDONS_VERSION="v0.80.0"
 
 # If user run script with 'auto-versions' arg, fetch versions from HCO config file
 if [ $1 = "auto-versions" ]; then
