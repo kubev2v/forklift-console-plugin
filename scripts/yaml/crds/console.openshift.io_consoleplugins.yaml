@@ -1,0 +1,542 @@
+kind: CustomResourceDefinition
+apiVersion: apiextensions.k8s.io/v1
+metadata:
+  name: consoleplugins.console.openshift.io
+  uid: eca2b102-d35c-47d3-8ef8-174cd8329946
+  resourceVersion: '59357481'
+  generation: 17948
+  creationTimestamp: '2022-10-23T13:32:26Z'
+  annotations:
+    api-approved.openshift.io: 'https://github.com/openshift/api/pull/764'
+    capability.openshift.io/name: Console
+    description: Extension for configuring openshift web console plugins.
+    displayName: ConsolePlugin
+    include.release.openshift.io/ibm-cloud-managed: 'true'
+    include.release.openshift.io/self-managed-high-availability: 'true'
+    include.release.openshift.io/single-node-developer: 'true'
+    service.beta.openshift.io/inject-cabundle: 'true'
+  ownerReferences:
+    - apiVersion: config.openshift.io/v1
+      kind: ClusterVersion
+      name: version
+      uid: 533fc320-1a49-4016-bd63-e7a84946577a
+  managedFields:
+    - manager: cluster-version-operator
+      operation: Update
+      apiVersion: apiextensions.k8s.io/v1
+      time: '2022-10-23T13:32:26Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:description': {}
+            'f:include.release.openshift.io/self-managed-high-availability': {}
+            'f:api-approved.openshift.io': {}
+            .: {}
+            'f:include.release.openshift.io/single-node-developer': {}
+            'f:displayName': {}
+            'f:service.beta.openshift.io/inject-cabundle': {}
+            'f:capability.openshift.io/name': {}
+            'f:include.release.openshift.io/ibm-cloud-managed': {}
+          'f:ownerReferences':
+            .: {}
+            'k:{"uid":"533fc320-1a49-4016-bd63-e7a84946577a"}': {}
+        'f:spec':
+          'f:conversion':
+            .: {}
+            'f:strategy': {}
+            'f:webhook':
+              .: {}
+              'f:clientConfig':
+                .: {}
+                'f:service':
+                  .: {}
+                  'f:name': {}
+                  'f:namespace': {}
+                  'f:path': {}
+                  'f:port': {}
+              'f:conversionReviewVersions': {}
+          'f:group': {}
+          'f:names':
+            'f:kind': {}
+            'f:listKind': {}
+            'f:plural': {}
+            'f:singular': {}
+          'f:scope': {}
+          'f:versions': {}
+    - manager: kube-apiserver
+      operation: Update
+      apiVersion: apiextensions.k8s.io/v1
+      time: '2022-10-23T13:32:26Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          'f:acceptedNames':
+            'f:kind': {}
+            'f:listKind': {}
+            'f:plural': {}
+            'f:singular': {}
+          'f:conditions':
+            'k:{"type":"Established"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:message': {}
+              'f:reason': {}
+              'f:status': {}
+              'f:type': {}
+            'k:{"type":"NamesAccepted"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:message': {}
+              'f:reason': {}
+              'f:status': {}
+              'f:type': {}
+      subresource: status
+    - manager: service-ca-operator
+      operation: Update
+      apiVersion: apiextensions.k8s.io/v1
+      time: '2022-11-16T12:39:16Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:conversion':
+            'f:webhook':
+              'f:clientConfig':
+                'f:caBundle': {}
+spec:
+  group: console.openshift.io
+  names:
+    plural: consoleplugins
+    singular: consoleplugin
+    kind: ConsolePlugin
+    listKind: ConsolePluginList
+  scope: Cluster
+  versions:
+    - name: v1
+      served: true
+      storage: false
+      schema:
+        openAPIV3Schema:
+          description: >-
+            ConsolePlugin is an extension for customizing OpenShift web console
+            by dynamically loading code from another service running on the
+            cluster. 
+             Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+          type: object
+          required:
+            - metadata
+            - spec
+          properties:
+            apiVersion:
+              description: >-
+                APIVersion defines the versioned schema of this representation
+                of an object. Servers should convert recognized schemas to the
+                latest internal value, and may reject unrecognized values. More
+                info:
+                https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+              type: string
+            kind:
+              description: >-
+                Kind is a string value representing the REST resource this
+                object represents. Servers may infer this from the endpoint the
+                client submits requests to. Cannot be updated. In CamelCase.
+                More info:
+                https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: ConsolePluginSpec is the desired plugin configuration.
+              type: object
+              required:
+                - backend
+                - displayName
+              properties:
+                backend:
+                  description: >-
+                    backend holds the configuration of backend which is serving
+                    console's plugin .
+                  type: object
+                  required:
+                    - type
+                  properties:
+                    service:
+                      description: >-
+                        service is a Kubernetes Service that exposes the plugin
+                        using a deployment with an HTTP server. The Service must
+                        use HTTPS and Service serving certificate. The console
+                        backend will proxy the plugins assets from the Service
+                        using the service CA bundle.
+                      type: object
+                      required:
+                        - name
+                        - namespace
+                        - port
+                      properties:
+                        basePath:
+                          description: >-
+                            basePath is the path to the plugin's assets. The
+                            primary asset it the manifest file called
+                            `plugin-manifest.json`, which is a JSON document
+                            that contains metadata about the plugin and the
+                            extensions.
+                          type: string
+                          default: /
+                          maxLength: 256
+                          minLength: 1
+                          pattern: '^[a-zA-Z0-9.\-_~!$&''()*+,;=:@\/]*$'
+                        name:
+                          description: name of Service that is serving the plugin assets.
+                          type: string
+                          maxLength: 128
+                          minLength: 1
+                        namespace:
+                          description: >-
+                            namespace of Service that is serving the plugin
+                            assets.
+                          type: string
+                          maxLength: 128
+                          minLength: 1
+                        port:
+                          description: >-
+                            port on which the Service that is serving the plugin
+                            is listening to.
+                          type: integer
+                          format: int32
+                          maximum: 65535
+                          minimum: 1
+                    type:
+                      description: >-
+                        type is the backend type which servers the console's
+                        plugin. Currently only "Service" is supported. 
+                         ---
+                      type: string
+                      enum:
+                        - Service
+                displayName:
+                  description: >-
+                    displayName is the display name of the plugin. The
+                    dispalyName should be between 1 and 128 characters.
+                  type: string
+                  maxLength: 128
+                  minLength: 1
+                i18n:
+                  description: >-
+                    i18n is the configuration of plugin's localization
+                    resources.
+                  type: object
+                  required:
+                    - loadType
+                  properties:
+                    loadType:
+                      description: >-
+                        loadType indicates how the plugin's localization
+                        resource should be loaded.
+                      type: string
+                      enum:
+                        - Preload
+                        - Lazy
+                proxy:
+                  description: >-
+                    proxy is a list of proxies that describe various service
+                    type to which the plugin needs to connect to.
+                  type: array
+                  items:
+                    description: >-
+                      ConsolePluginProxy holds information on various service
+                      types to which console's backend will proxy the plugin's
+                      requests.
+                    type: object
+                    required:
+                      - alias
+                      - endpoint
+                    properties:
+                      alias:
+                        description: >-
+                          alias is a proxy name that identifies the plugin's
+                          proxy. An alias name should be unique per plugin. The
+                          console backend exposes following proxy endpoint: 
+                           /api/proxy/plugin/<plugin-name>/<proxy-alias>/<request-path>?<optional-query-parameters> 
+                           Request example path: 
+                           /api/proxy/plugin/acm/search/pods?namespace=openshift-apiserver
+                        type: string
+                        maxLength: 128
+                        minLength: 1
+                        pattern: '^[A-Za-z0-9-_]+$'
+                      authorization:
+                        description: >-
+                          authorization provides information about authorization
+                          type, which the proxied request should contain
+                        type: string
+                        default: None
+                        enum:
+                          - UserToken
+                          - None
+                      caCertificate:
+                        description: >-
+                          caCertificate provides the cert authority certificate
+                          contents, in case the proxied Service is using custom
+                          service CA. By default, the service CA bundle provided
+                          by the service-ca operator is used.
+                        type: string
+                        pattern: >-
+                          ^-----BEGIN CERTIFICATE-----([\s\S]*)-----END
+                          CERTIFICATE-----\s?$
+                      endpoint:
+                        description: >-
+                          endpoint provides information about endpoint to which
+                          the request is proxied to.
+                        type: object
+                        required:
+                          - type
+                        properties:
+                          service:
+                            description: >-
+                              service is an in-cluster Service that the plugin
+                              will connect to. The Service must use HTTPS. The
+                              console backend exposes an endpoint in order to
+                              proxy communication between the plugin and the
+                              Service. Note: service field is required for now,
+                              since currently only "Service" type is supported.
+                            type: object
+                            required:
+                              - name
+                              - namespace
+                              - port
+                            properties:
+                              name:
+                                description: >-
+                                  name of Service that the plugin needs to
+                                  connect to.
+                                type: string
+                                maxLength: 128
+                                minLength: 1
+                              namespace:
+                                description: >-
+                                  namespace of Service that the plugin needs to
+                                  connect to
+                                type: string
+                                maxLength: 128
+                                minLength: 1
+                              port:
+                                description: >-
+                                  port on which the Service that the plugin
+                                  needs to connect to is listening on.
+                                type: integer
+                                format: int32
+                                maximum: 65535
+                                minimum: 1
+                          type:
+                            description: >-
+                              type is the type of the console plugin's proxy.
+                              Currently only "Service" is supported. 
+                               ---
+                            type: string
+                            enum:
+                              - Service
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          description: >-
+            ConsolePlugin is an extension for customizing OpenShift web console
+            by dynamically loading code from another service running on the
+            cluster. 
+             Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+          type: object
+          required:
+            - metadata
+            - spec
+          properties:
+            apiVersion:
+              description: >-
+                APIVersion defines the versioned schema of this representation
+                of an object. Servers should convert recognized schemas to the
+                latest internal value, and may reject unrecognized values. More
+                info:
+                https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+              type: string
+            kind:
+              description: >-
+                Kind is a string value representing the REST resource this
+                object represents. Servers may infer this from the endpoint the
+                client submits requests to. Cannot be updated. In CamelCase.
+                More info:
+                https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: ConsolePluginSpec is the desired plugin configuration.
+              type: object
+              required:
+                - service
+              properties:
+                displayName:
+                  description: displayName is the display name of the plugin.
+                  type: string
+                  minLength: 1
+                proxy:
+                  description: >-
+                    proxy is a list of proxies that describe various service
+                    type to which the plugin needs to connect to.
+                  type: array
+                  items:
+                    description: >-
+                      ConsolePluginProxy holds information on various service
+                      types to which console's backend will proxy the plugin's
+                      requests.
+                    type: object
+                    required:
+                      - alias
+                      - type
+                    properties:
+                      alias:
+                        description: >-
+                          alias is a proxy name that identifies the plugin's
+                          proxy. An alias name should be unique per plugin. The
+                          console backend exposes following proxy endpoint: 
+                           /api/proxy/plugin/<plugin-name>/<proxy-alias>/<request-path>?<optional-query-parameters> 
+                           Request example path: 
+                           /api/proxy/plugin/acm/search/pods?namespace=openshift-apiserver
+                        type: string
+                        maxLength: 128
+                        minLength: 1
+                        pattern: '^[A-Za-z0-9-_]+$'
+                      authorize:
+                        description: >-
+                          authorize indicates if the proxied request should
+                          contain the logged-in user's OpenShift access token in
+                          the "Authorization" request header. For example: 
+                           Authorization: Bearer sha256~kV46hPnEYhCWFnB85r5NrprAxggzgb6GOeLbgcKNsH0 
+                           By default the access token is not part of the proxied request.
+                        type: boolean
+                        default: false
+                      caCertificate:
+                        description: >-
+                          caCertificate provides the cert authority certificate
+                          contents, in case the proxied Service is using custom
+                          service CA. By default, the service CA bundle provided
+                          by the service-ca operator is used.
+                        type: string
+                        pattern: >-
+                          ^-----BEGIN CERTIFICATE-----([\s\S]*)-----END
+                          CERTIFICATE-----\s?$
+                      service:
+                        description: >-
+                          service is an in-cluster Service that the plugin will
+                          connect to. The Service must use HTTPS. The console
+                          backend exposes an endpoint in order to proxy
+                          communication between the plugin and the Service.
+                          Note: service field is required for now, since
+                          currently only "Service" type is supported.
+                        type: object
+                        required:
+                          - name
+                          - namespace
+                          - port
+                        properties:
+                          name:
+                            description: >-
+                              name of Service that the plugin needs to connect
+                              to.
+                            type: string
+                            maxLength: 128
+                            minLength: 1
+                          namespace:
+                            description: >-
+                              namespace of Service that the plugin needs to
+                              connect to
+                            type: string
+                            maxLength: 128
+                            minLength: 1
+                          port:
+                            description: >-
+                              port on which the Service that the plugin needs to
+                              connect to is listening on.
+                            type: integer
+                            format: int32
+                            maximum: 65535
+                            minimum: 1
+                      type:
+                        description: >-
+                          type is the type of the console plugin's proxy.
+                          Currently only "Service" is supported.
+                        type: string
+                        pattern: ^(Service)$
+                service:
+                  description: >-
+                    service is a Kubernetes Service that exposes the plugin
+                    using a deployment with an HTTP server. The Service must use
+                    HTTPS and Service serving certificate. The console backend
+                    will proxy the plugins assets from the Service using the
+                    service CA bundle.
+                  type: object
+                  required:
+                    - basePath
+                    - name
+                    - namespace
+                    - port
+                  properties:
+                    basePath:
+                      description: >-
+                        basePath is the path to the plugin's assets. The primary
+                        asset it the manifest file called
+                        `plugin-manifest.json`, which is a JSON document that
+                        contains metadata about the plugin and the extensions.
+                      type: string
+                      default: /
+                      minLength: 1
+                      pattern: ^/
+                    name:
+                      description: name of Service that is serving the plugin assets.
+                      type: string
+                      maxLength: 128
+                      minLength: 1
+                    namespace:
+                      description: namespace of Service that is serving the plugin assets.
+                      type: string
+                      maxLength: 128
+                      minLength: 1
+                    port:
+                      description: >-
+                        port on which the Service that is serving the plugin is
+                        listening to.
+                      type: integer
+                      format: int32
+                      maximum: 65535
+                      minimum: 1
+  conversion:
+    strategy: Webhook
+    webhook:
+      clientConfig:
+        service:
+          namespace: openshift-console-operator
+          name: webhook
+          path: /crdconvert
+          port: 9443
+        caBundle: >-
+          LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURVVENDQWptZ0F3SUJBZ0lJZXRGYTN2WlNKUVl3RFFZSktvWklodmNOQVFFTEJRQXdOakUwTURJR0ExVUUKQXd3cmIzQmxibk5vYVdaMExYTmxjblpwWTJVdGMyVnlkbWx1WnkxemFXZHVaWEpBTVRZMk5qVXpNekEzTURBZQpGdzB5TWpFd01qTXhNelV4TURsYUZ3MHlOREV5TWpFeE16VXhNVEJhTURZeE5EQXlCZ05WQkFNTUsyOXdaVzV6CmFHbG1kQzF6WlhKMmFXTmxMWE5sY25acGJtY3RjMmxuYm1WeVFERTJOalkxTXpNd056QXdnZ0VpTUEwR0NTcUcKU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRQzExamRrV09ZUnIvS2hJZ0hMRUVNcUkvSnJiQW8zdncvawpsVERzTGpmSldHdHVWTGUvQnYzbXpaak1jTWZlaWEwUE40Rm5pUmRNS3VCZi8yQ3AvNzJmb3llWU1DekFKcE10CmI0WFNHaHI2dWNXZVlwOFFZLytuUDhWR3ZrVTQwY3pmUlNQbmlvY2xjOU5XSFFYNlZ1dmtpTHhSTUtndEMxaXQKWWlhQkJPajlBQy9zdi9Nc2xzMmFYK1QvcTc2R2FUY0ZRQnpkaldCZTZLYXNtdmNlVVloQy9uWDVzallXR0dndApnaXVTamlIV0hhM2Z1QmtXNGVxdVVWcjF2OEttUTliQk1YZW9hUjFkMUQzMG9qVnYrbjROV282WDBHblpSZW1HCnJnRWZwQ2FMVWJzTkh0S0JzNGg5TldXTXpkenJqOVNDQkZWSEw3Qkg5NmE1YnkwSGNQUy9BZ01CQUFHall6QmgKTUE0R0ExVWREd0VCL3dRRUF3SUNwREFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQjBHQTFVZERnUVdCQlNtWkJHVAozUVpBc2J5VEtTRzN5WHllVzY5UExUQWZCZ05WSFNNRUdEQVdnQlNtWkJHVDNRWkFzYnlUS1NHM3lYeWVXNjlQCkxUQU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFSUkFicUNmdTNkakRtd1krOEtwd2I3UU1Gb2NnK1FkRUluVlQKaytkai9lekFGVy85TlMrYzRYbnNaSCtqdGxIck5kWU9PZHBUNUpIdDBBVFFaS1BQM05lVzA1MTVZWVZ3aEptSwp5L2ZSS04zRktLT2NjVkQ4KzAwSlJ0MWsvUktsTU9VVlRBVFA3L1hneVE2bENadDJjdGwvOEk2UkR4L2RQOWpzCmh1eU5wNE5NbFJTV01PaHUrOUhpd0VIOHF2ZzJlbW9wbGJVcmNncXJ5Rm0rY1VhQUVJbUhpQXlwNGNNZHIxN3IKUFlyaEx4cVpyMHUrRVQxcTZWTzBpaFQxaHh2ejlmNVdDSVVML3pub0swWUJaS3Y4UE44Q3lxcEpuaWZHU3UrMAoxV0xFWlN3K1ZUS3YyUm8xYTNYN0ZjeWVpSm1tMkorQWhGQ3JPbXhLbnkrSHM5c1U0QT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+      conversionReviewVersions:
+        - v1
+        - v1alpha1
+status:
+  conditions:
+    - type: NamesAccepted
+      status: 'True'
+      lastTransitionTime: '2022-10-23T13:32:26Z'
+      reason: NoConflicts
+      message: no conflicts found
+    - type: Established
+      status: 'True'
+      lastTransitionTime: '2022-10-23T13:32:26Z'
+      reason: InitialNamesAccepted
+      message: the initial names have been accepted
+  acceptedNames:
+    plural: consoleplugins
+    singular: consoleplugin
+    kind: ConsolePlugin
+    listKind: ConsolePluginList
+  storedVersions:
+    - v1alpha1

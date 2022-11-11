@@ -16,9 +16,9 @@
 | Parameter | Description | Default value |
 |-----------|-------------|---------------|
 | plugin | name of "app" label used for objects |  forklift-console-plugin
-| name | the deployment name | forklift-console-plugin
+| namespace | the deployment namespace | konveyor-forklift
 | image | the plugin container image | quay.io/kubev2v/forklift-console-plugin:[latest release branch]
-| forkliftNamespace | forklift-operator namespace | konveyor-forklift
+| forklift.namespace | forklift-operator namespace | konveyor-forklift
 
 ## Running the helm chart locally
 
@@ -39,7 +39,7 @@ When you are logged in, and using the instalation project, you can use the local
 helm install forklift ./deployment/forklift-console-plugin
 
 # install using custom values
-helm install forklift ./deployment/forklift-console-plugin --set forkliftNamespace=openshift-mtv
+helm install forklift ./deployment/forklift-console-plugin --set forklift.namespace=openshift-mtv
 
 # list all installed helm charts
 helm list
@@ -73,5 +73,5 @@ helm repo add forklift https://kubev2v.github.io/forklift-console-plugin
 helm install forklift forklift/forklift-console-plugin
 
 # use optional vaiables
-helm install forklift-console-plugin forklift/forklift-console-plugin --set forkliftNamespace=openshift-mtv
+helm install forklift-console-plugin forklift/forklift-console-plugin --set forklift.namespace=openshift-mtv
 ```

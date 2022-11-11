@@ -2,25 +2,24 @@
 
 set -ex
 
-FORKLIFT_IMAGE=${FORKLIFT_IMAGE:=quay.io/konveyor/forklift-operator-index:latest}
+# NOTE: this script requires OLM installed
+if ! kubectl get CatalogSource 2>/dev/null; then
+  echo "Error: Can't find OLM, OLM must be installed on the cluster, exit"
+  exit 1
+fi
+
+FORKLIFT_IMAGE=quay.io/konveyor/forklift-operator-index:latest
 FORKLIFT_NAMESPACE=konveyor-forklift
 
-# Install olm
-kubectl apply -f https://raw.githubusercontent.com/operator-framework/operator-lifecycle-manager/master/deploy/upstream/quickstart/crds.yaml
-kubectl apply -f https://raw.githubusercontent.com/operator-framework/operator-lifecycle-manager/master/deploy/upstream/quickstart/olm.yaml
-
-# Wait for olm operator to start
-while ! kubectl get deployment -n olm olm-operator; do sleep 10; done
-kubectl wait deployment -n olm olm-operator --for condition=Available=True --timeout=180s
-
-# Install forklift-operator
-
-cat << EOF | kubectl -n ${FORKLIFT_NAMESPACE} apply -f -
+cat << EOF | kubectl apply -f -
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: ${FORKLIFT_NAMESPACE}
+EOF
+
+cat << EOF | kubectl -n ${FORKLIFT_NAMESPACE} apply -f -
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
@@ -58,7 +57,7 @@ EOF
 # --------------------
 
 # Wait for forklift operator to start, and create a controller instance
-while ! kubectl get deployment -n ${FORKLIFT_NAMESPACE} forklift-operator; do sleep 10; done
+while ! kubectl get deployment -n ${FORKLIFT_NAMESPACE} forklift-operator; do sleep 30; done
 kubectl wait deployment -n ${FORKLIFT_NAMESPACE} forklift-operator --for condition=Available=True --timeout=180s
 
 cat << EOF | kubectl -n ${FORKLIFT_NAMESPACE} apply -f -
@@ -69,11 +68,10 @@ metadata:
   namespace: ${FORKLIFT_NAMESPACE}
 spec:
   feature_ui: false
+  feature_auth_required: false
   feature_validation: true
   inventory_tls_enabled: false
   validation_tls_enabled: false
   must_gather_api_tls_enabled: false
   ui_tls_enabled: false
 EOF
-
-echo Forklift: $FORK_RELEASE

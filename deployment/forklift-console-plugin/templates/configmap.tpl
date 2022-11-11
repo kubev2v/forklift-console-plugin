@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nginx-conf
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Values.plugin }}
     app.kubernetes.io/part-of: {{ .Values.plugin }}

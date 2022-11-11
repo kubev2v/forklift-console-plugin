@@ -3,26 +3,26 @@ kind: ConsolePlugin
 metadata:
   name: {{ .Values.plugin }}
   annotations:
-    console.openshift.io/use-i18n: "true" 
+    console.openshift.io/use-i18n: "true"
 spec:
   displayName: 'Console Plugin Template'
   service:
     name: {{ .Values.plugin }}
-    namespace: {{ .Release.Namespace }}
+    namespace: {{ .Values.namespace }}
     port: 9443
     basePath: '/'
   proxy:
-    - type: Service
-      alias: forklift-inventory
-      authorize: true
-      service:
-        name: forklift-inventory
-        namespace: {{ .Values.forkliftNamespace }}
-        port: 8443
     - type: Service
       alias: forklift-must-gather-api
       authorize: true
       service:
         name: forklift-must-gather-api
-        namespace: {{ .Values.forkliftNamespace }}
+        namespace: {{ .Values.forklift.namespace }}
+        port: 8443
+    - type: Service
+      alias: forklift-inventory
+      authorize: true
+      service:
+        name: forklift-inventory
+        namespace: {{ .Values.forklift.namespace }}
         port: 8443
