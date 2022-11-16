@@ -15,14 +15,17 @@ import {
   Level,
   LevelItem,
   PageSection,
+  Pagination,
   Title,
   Toolbar,
   ToolbarContent,
+  ToolbarItem,
   ToolbarToggleGroup,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
 import { toFieldFilter } from '../Filter/helpers';
+import { useSort } from '../TableView/sort';
 
 import { ErrorState, Loading, NoResultsFound, NoResultsMatchFilter } from './ResultStates';
 import { useFields } from './useFields';
@@ -70,7 +73,19 @@ export interface StandardPageProps<T> {
    * Information displayed when the data source returned some items but due to applied filters no items can be shown.
    */
   customNoResultsMatchFilter?: JSX.Element;
+
+  /**
+   * 'on' - always show pagination controls
+   * 'off' - disable
+   * 'auto' - display if unfiltered number of items is greater then current 'items per page' value
+   */
+  pagination?: 'auto' | 'on' | 'off';
 }
+
+// counting from one seems recommneded - zero breaks some cases
+const DEFAULT_FIRST_PAGE = 1;
+// first option in the default "per page" dropdown
+const DEFAULT_PER_PAGE = 10;
 
 /**
  * Standard list page.
@@ -88,15 +103,29 @@ export function StandardPage<T>({
   },
   customNoResultsFound,
   customNoResultsMatchFilter,
+  pagination = 'auto',
 }: StandardPageProps<T>) {
   const { t } = useTranslation();
   const [selectedFilters, setSelectedFilters] = useState({});
   const clearAllFilters = () => setSelectedFilters({});
   const [fields, setFields] = useFields(namespace, fieldsMetadata);
+  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
+  const [page, setPage] = useState(DEFAULT_FIRST_PAGE);
+  const [activeSort, setActiveSort, comparator] = useSort(fields);
 
   const filteredData = useMemo(
-    () => flattenData.filter(createMetaMatcher(selectedFilters, fields)),
-    [flattenData, selectedFilters, fields],
+    () => flattenData.filter(createMetaMatcher(selectedFilters, fields)).sort(comparator),
+    [flattenData, selectedFilters, fields, comparator],
+  );
+
+  const lastPage = Math.ceil(filteredData.length / perPage);
+  const effectivePage = Math.min(page, lastPage);
+  const showPagination =
+    pagination === 'on' || (pagination === 'auto' && flattenData.length > perPage);
+
+  const pageData = useMemo(
+    () => filteredData.slice((effectivePage - 1) * perPage, effectivePage * perPage),
+    [filteredData, effectivePage, perPage],
   );
 
   const errorFetchingData = loaded && error;
@@ -137,14 +166,30 @@ export function StandardPage<T>({
                 setColumns={setFields}
               />
             </ToolbarToggleGroup>
+            {showPagination && (
+              <ToolbarItem variant="pagination">
+                <Pagination
+                  variant="top"
+                  perPage={perPage}
+                  page={effectivePage}
+                  itemCount={filteredData.length}
+                  onSetPage={(even, page) => setPage(page)}
+                  onPerPageSelect={(even, perPage, page) => {
+                    setPerPage(perPage);
+                    setPage(page);
+                  }}
+                />
+              </ToolbarItem>
+            )}
           </ToolbarContent>
         </Toolbar>
         <TableView<T>
-          entities={filteredData}
-          allColumns={fields}
+          entities={showPagination ? pageData : filteredData}
           visibleColumns={fields.filter(({ isVisible }) => isVisible)}
           aria-label={title}
           Row={RowMapper}
+          activeSort={activeSort}
+          setActiveSort={setActiveSort}
         >
           {!loaded && <Loading key="loading" />}
           {errorFetchingData && <ErrorState key="error" />}
@@ -154,6 +199,19 @@ export function StandardPage<T>({
               <NoResultsMatchFilter key="no_match" clearAllFilters={clearAllFilters} />
             ))}
         </TableView>
+        {showPagination && (
+          <Pagination
+            variant="bottom"
+            perPage={perPage}
+            page={effectivePage}
+            itemCount={filteredData.length}
+            onSetPage={(event, page) => setPage(page)}
+            onPerPageSelect={(event, perPage, page) => {
+              setPerPage(perPage);
+              setPage(page);
+            }}
+          />
+        )}
       </PageSection>
     </>
   );
