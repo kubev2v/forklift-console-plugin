@@ -1,12 +1,11 @@
 import * as React from 'react';
+import withQueryClient from 'src/components/QueryClientHoc';
 
 import { MustGatherContextProvider } from '@app/common/context';
 import {
   VMMigrationDetails,
   VMMigrationDetailsProps,
 } from '@app/Plans/components/VMMigrationDetails';
-
-import withQueryClient from './QueryClientHoc';
 
 const Page = withQueryClient((props: VMMigrationDetailsProps) => (
   <MustGatherContextProvider>
