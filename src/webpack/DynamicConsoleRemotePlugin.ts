@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 import { type WebpackPluginInstance, Compiler } from 'webpack';
 
@@ -20,8 +21,9 @@ import {
 const parseJSONFile = <TValue = unknown>(filePath: string) =>
   JSON.parse(fs.readFileSync(filePath, 'utf-8')) as TValue;
 
-function getPluginMetadata(filename: string) {
-  const contents = parseJSONFile<ConsolePluginMetadata>(filename);
+function getPluginMetadata(filename: string, baseDir = process.cwd()) {
+  const filePath = path.resolve(baseDir, filename);
+  const contents = parseJSONFile<ConsolePluginMetadata>(filePath);
   return contents;
 }
 
@@ -62,11 +64,13 @@ function processConsoleSharedModules(
 
 export type DynamicConsoleRemotePluginOptions = Partial<{
   /**
-   * Plugin metadata JSON file name.
+   * Plugin metadata.
+   *
+   * The value is either a Plugin metadata JSON file name, or the parsed plugin metadata.
    *
    * Default value: `plugin.json`
    */
-  pluginMetadataFilename: string;
+  pluginMetadata: string | ConsolePluginMetadata;
 
   /**
    * List of extensions contributed by the plugin.
@@ -83,17 +87,19 @@ export type DynamicConsoleRemotePluginOptions = Partial<{
  * Wrap the core SDK plugin so the output can be patched as necessary to run in console.
  */
 export class DynamicConsoleRemotePlugin implements WebpackPluginInstance {
-  private readonly pluginMetadataFilename: string;
+  private readonly pluginMetadata: ConsolePluginMetadata;
 
   private readonly extensions: string | EncodedExtension[];
 
   constructor(options: DynamicConsoleRemotePluginOptions = {}) {
-    this.pluginMetadataFilename = options.pluginMetadataFilename ?? 'plugin.json';
+    const _pluginMetadata = options.pluginMetadata ?? 'plugin.json';
+    this.pluginMetadata =
+      typeof _pluginMetadata === 'string' ? getPluginMetadata(_pluginMetadata) : _pluginMetadata;
+
     this.extensions = options.extensions ?? 'console-extensions.json';
   }
 
   apply(compiler: Compiler) {
-    const pluginMetadata = getPluginMetadata(this.pluginMetadataFilename);
     const sharedModules = processConsoleSharedModules(
       sharedPluginModules,
       sharedPluginModulesMetadata,
@@ -101,7 +107,7 @@ export class DynamicConsoleRemotePlugin implements WebpackPluginInstance {
 
     // Do the federated module build and generate the core SDK `plugin-manifest.json` file
     new DynamicRemotePlugin({
-      pluginMetadata: { ...pluginMetadata }, // PluginBuildMetadata type isn't exported so we do this!
+      pluginMetadata: { ...this.pluginMetadata }, // PluginBuildMetadata type isn't exported so we do this!
       extensions: this.extensions,
       sharedModules,
 
@@ -109,11 +115,11 @@ export class DynamicConsoleRemotePlugin implements WebpackPluginInstance {
       // the current console runtime openshift/origin-console:latest (as of 7-Sep-2022).
       entryCallbackSettings: {
         name: 'window.loadPluginEntry',
-        pluginID: buildPluginId(pluginMetadata),
+        pluginID: buildPluginId(this.pluginMetadata),
       },
     }).apply(compiler);
 
     // Patch core SDK manifest to be console SDK manifest compatible
-    new PatchManifestJson('plugin-manifest.json', pluginMetadata).apply(compiler);
+    new PatchManifestJson('plugin-manifest.json', this.pluginMetadata).apply(compiler);
   }
 }
