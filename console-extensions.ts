@@ -1,10 +1,11 @@
 import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
-import type {
-  HrefNavItem,
-  NavSection,
-  RoutePage,
-  Separator,
-} from '@openshift-console/dynamic-plugin-sdk';
+import type { HrefNavItem, NavSection, Separator } from '@openshift-console/dynamic-plugin-sdk';
+
+import { extensions as hostExtensions } from './src/modules/Hosts/dynamic-plugin';
+import { extensions as mappingExtensions } from './src/modules/Mappings/dynamic-plugin';
+import { extensions as planExtensions } from './src/modules/Plans/dynamic-plugin';
+import { extensions as providerExtensions } from './src/modules/Providers/dynamic-plugin';
+import { extensions as vmMigrationDetailExtensions } from './src/modules/VmMigrationDetails/dynamic-plugin';
 
 const extensions: EncodedExtension[] = [
   {
@@ -72,82 +73,11 @@ const extensions: EncodedExtension[] = [
     },
   } as EncodedExtension<HrefNavItem>,
 
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'ProvidersPage',
-      },
-      path: ['/mtv/providers', '/mtv/providers/:providerType'],
-      exact: true,
-    },
-  } as EncodedExtension<RoutePage>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'HostsPage',
-      },
-      path: '/mtv/providers/vsphere/:providerName',
-      exact: false,
-    },
-  } as EncodedExtension<RoutePage>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'PlansPage',
-      },
-      path: '/mtv/plans',
-      exact: true,
-    },
-  } as EncodedExtension<RoutePage>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'PlanWizard',
-      },
-      path: '/mtv/plans/create',
-      exact: true,
-    },
-  } as EncodedExtension<RoutePage>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'PlanWizard',
-      },
-      path: ['/mtv/plans/:planName/edit', '/mtv/plans/:planName/duplicate'],
-      exact: false,
-    },
-  } as EncodedExtension<RoutePage>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'VMMigrationDetails',
-      },
-      path: '/mtv/plans/:planName',
-      exact: false,
-    },
-  } as EncodedExtension<RoutePage>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'MappingsPage',
-      },
-      path: '/mtv/mappings',
-      exact: true,
-    },
-  } as EncodedExtension<RoutePage>,
+  ...providerExtensions,
+  ...hostExtensions,
+  ...planExtensions,
+  ...mappingExtensions,
+  ...vmMigrationDetailExtensions,
 ];
 
 export default extensions;
