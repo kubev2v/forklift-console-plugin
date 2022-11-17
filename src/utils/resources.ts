@@ -8,6 +8,7 @@ import { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
  */
 export const referenceFor = (group: string, version: string, kind: string) =>
   `${group}~${version}~${kind}`;
+
 /**
  * Get the group version kind object from a k8s object
  * @param  {K8sResourceCommon} obj
