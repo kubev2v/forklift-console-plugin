@@ -87,7 +87,7 @@ const config: WebpackConfiguration & {
     new EnvironmentPlugin({
       DATA_SOURCE: 'remote',
       BRAND_TYPE: 'Konveyor',
-      NAMESPACE: 'openshift-mtv',
+      NAMESPACE: 'konveyor-forklift',
       NODE_ENV: isProd ? 'production' : 'development',
     }),
   ],

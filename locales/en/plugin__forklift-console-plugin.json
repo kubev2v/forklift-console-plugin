@@ -6,21 +6,17 @@
   "Loading": "Loading",
   "Manage Columns": "Manage Columns",
   "Mappings for Import": "Mappings for Import",
-  "Mappings for VM Import": "Mappings for VM Import",
   "Name": "Name",
   "Namespace": "Namespace",
   "No results found": "No results found",
   "No results match the filter criteria. Clear all filters and try again.": "No results match the filter criteria. Clear all filters and try again.",
   "Plans for Import": "Plans for Import",
-  "Plans for VM Import": "Plans for VM Import",
   "Providers for Import": "Providers for Import",
-  "Providers for VM Import": "Providers for VM Import",
   "Reorder": "Reorder",
   "Restore default colums": "Restore default colums",
   "Save": "Save",
   "Select Filter": "Select Filter",
   "Selected columns will be displayed in the table.": "Selected columns will be displayed in the table.",
   "Table column management": "Table column management",
-  "Unable to retrieve data": "Unable to retrieve data",
-  "Virtualization": "Virtualization"
+  "Unable to retrieve data": "Unable to retrieve data"
 }

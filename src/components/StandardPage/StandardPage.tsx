@@ -9,7 +9,7 @@ import {
 import { FilterTypeProps } from 'src/components/Filter/types';
 import { ManageColumnsToolbar, RowProps, TableView } from 'src/components/TableView';
 import { Field } from 'src/components/types';
-import { useTranslation } from 'src/internal/i18n';
+import { useTranslation } from 'src/utils/i18n';
 
 import {
   Level,

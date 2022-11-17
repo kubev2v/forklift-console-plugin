@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'src/internal/i18n';
 import { localeCompare } from 'src/utils/helpers';
+import { useTranslation } from 'src/utils/i18n';
 
 import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base';
 

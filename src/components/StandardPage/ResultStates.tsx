@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'src/internal/i18n';
+import { useTranslation } from 'src/utils/i18n';
 
 import {
   Button,
