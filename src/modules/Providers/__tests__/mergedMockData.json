@@ -1,0 +1,248 @@
+[
+    {
+        "apiVersion": "12345",
+        "clusterCount": 2,
+        "conditions": {
+            "connected": {
+                "message": "Connection test, succeeded.",
+                "status": "True"
+            },
+            "inventory": {
+                "message": "The inventory has been loaded.",
+                "status": "True"
+            },
+            "ready": {
+                "message": "The provider is ready.",
+                "status": "True"
+            },
+            "validated": {
+                "message": "Validation has been completed.",
+                "status": "True"
+            }
+        },
+        "hostCount": 2,
+        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "name": "vcenter-1",
+        "namespace": "openshift-migration",
+        "networkCount": 8,
+        "ready": "True",
+        "secretName": "boston",
+        "storageCount": 3,
+        "type": "vsphere",
+        "uid": "mock-uid-vcenter-1",
+        "url": "https://vcenter.v2v.bos.redhat.com/sdk",
+        "vmCount": 41
+    },
+    {
+        "apiVersion": "12345",
+        "clusterCount": 2,
+        "conditions": {},
+        "hostCount": 2,
+        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "name": "vcenter-2",
+        "namespace": "openshift-migration",
+        "networkCount": 8,
+        "ready": "Unknown",
+        "secretName": "boston",
+        "storageCount": 3,
+        "type": "vsphere",
+        "uid": "mock-uid-vcenter-2",
+        "url": "https://vcenter.v2v.bos.redhat.com/sdk",
+        "vmCount": 41
+    },
+    {
+        "apiVersion": "12345",
+        "clusterCount": 2,
+        "conditions": {
+            "connected": {
+                "message": "Connection test, succeeded.",
+                "status": "True"
+            },
+            "validated": {
+                "message": "Validation has been completed.",
+                "status": "True"
+            }
+        },
+        "hostCount": 2,
+        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "name": "vcenter-3",
+        "namespace": "openshift-migration",
+        "networkCount": 8,
+        "ready": "Unknown",
+        "secretName": "boston",
+        "storageCount": 3,
+        "type": "vsphere",
+        "uid": "mock-uid-vcenter-3",
+        "url": "https://vcenter.v2v.bos.redhat.com/sdk",
+        "vmCount": 41
+    },
+    {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "clusterCount": 2,
+        "conditions": {
+            "inventory": {
+                "message": "The inventory has been loaded.",
+                "status": "True"
+            },
+            "ready": {
+                "message": "The provider is ready.",
+                "status": "True"
+            },
+            "validated": {
+                "message": "Validation has been completed.",
+                "status": "True"
+            }
+        },
+        "hostCount": 4,
+        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "name": "rhv-1",
+        "namespace": "konveyor-forklift",
+        "networkCount": 15,
+        "ready": "True",
+        "secretName": "rhv",
+        "storageCount": 9,
+        "type": "ovirt",
+        "uid": "mock-uid-rhv-1",
+        "url": "https://rhvm.v2v.bos.redhat.com/ovirt-engine/api",
+        "vmCount": 36
+    },
+    {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "clusterCount": 2,
+        "conditions": {
+            "inventory": {
+                "message": "The inventory has been loaded.",
+                "status": "True"
+            },
+            "ready": {
+                "message": "The provider is ready.",
+                "status": "True"
+            },
+            "validated": {
+                "message": "Validation has been completed.",
+                "status": "True"
+            }
+        },
+        "hostCount": 4,
+        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "name": "rhv-2",
+        "namespace": "konveyor-forklift",
+        "networkCount": 15,
+        "ready": "True",
+        "secretName": "rhv",
+        "storageCount": 9,
+        "type": "ovirt",
+        "uid": "mock-uid-rhv-2",
+        "url": "https://rhvm.v2v.bos.redhat.com/ovirt-engine/api",
+        "vmCount": 36
+    },
+    {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "clusterCount": 2,
+        "conditions": {
+            "inventory": {
+                "message": "The inventory has been loaded.",
+                "status": "True"
+            },
+            "ready": {
+                "message": "The provider is ready.",
+                "status": "True"
+            },
+            "validated": {
+                "message": "Validation has been completed.",
+                "status": "True"
+            }
+        },
+        "hostCount": 4,
+        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "name": "rhv-3",
+        "namespace": "konveyor-forklift",
+        "networkCount": 15,
+        "ready": "True",
+        "secretName": "rhv",
+        "storageCount": 9,
+        "type": "ovirt",
+        "uid": "mock-uid-rhv-3",
+        "url": "https://rhvm.v2v.bos.redhat.com/ovirt-engine/api",
+        "vmCount": 36
+    },
+    {
+        "apiVersion": "12345",
+        "conditions": {
+            "connected": {
+                "message": "Connection test, succeeded.",
+                "status": "True"
+            },
+            "inventory": {
+                "message": "The inventory has been loaded.",
+                "status": "True"
+            },
+            "ready": {
+                "message": "The provider is ready.",
+                "status": "True"
+            },
+            "validated": {
+                "message": "Validation has been completed.",
+                "status": "True"
+            }
+        },
+        "defaultTransferNetwork": "ocp-network-3",
+        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "name": "ocpv-1",
+        "namespace": "openshift-migration",
+        "networkCount": 8,
+        "ready": "True",
+        "secretName": "boston",
+        "type": "openshift",
+        "uid": "mock-uid-ocpv-1",
+        "url": "https://my_OCPv_url",
+        "vmCount": 26
+    },
+    {
+        "apiVersion": "12345",
+        "conditions": {},
+        "defaultTransferNetwork": "ocp-network-3",
+        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "name": "ocpv-2",
+        "namespace": "openshift-migration",
+        "networkCount": 8,
+        "ready": "Unknown",
+        "secretName": "boston",
+        "type": "openshift",
+        "uid": "mock-uid-ocpv-2",
+        "url": "https://my_OCPv_url",
+        "vmCount": 26
+    },
+    {
+        "apiVersion": "12345",
+        "conditions": {
+            "connected": {
+                "message": "Connection test, succeeded.",
+                "status": "True"
+            },
+            "inventory": {
+                "message": "The inventory has been loaded.",
+                "status": "True"
+            },
+            "ready": {
+                "message": "The provider is ready.",
+                "status": "True"
+            },
+            "validated": {
+                "message": "Validation has been completed.",
+                "status": "True"
+            }
+        },
+        "defaultTransferNetwork": "ocp-network-3",
+        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "name": "ocpv-3",
+        "namespace": "openshift-migration",
+        "networkCount": 8,
+        "ready": "True",
+        "secretName": "boston",
+        "type": "openshift",
+        "uid": "mock-uid-ocpv-3",
+        "url": "https://my_OCPv_url",
+        "vmCount": 26
+    }
+]

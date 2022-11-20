@@ -1,6 +1,6 @@
 import withQueryClient from 'src/components/QueryClientHoc';
 
-import { ProvidersPage } from '@app/Providers/ProvidersPage';
+import ProvidersPage from './ProvidersPage';
 
 const Page = withQueryClient(ProvidersPage);
 

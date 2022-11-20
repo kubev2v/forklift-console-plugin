@@ -1,15 +1,21 @@
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
-import { HrefNavItem, RoutePage } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  ActionProvider,
+  ResourceListPage,
+  ResourceNSNavItem,
+  RoutePage,
+} from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
   ProvidersPage: './modules/Providers/ProvidersWrapper',
   HostsPage: './modules/Providers/HostsPageWrapper',
+  useMergedProviders: './modules/Providers/UseMergedProviders',
 };
 
 export const extensions: EncodedExtension[] = [
   {
-    type: 'console.navigation/href',
+    type: 'console.navigation/resource-ns',
     properties: {
       id: 'providers',
       insertAfter: 'importSeparator',
@@ -17,20 +23,31 @@ export const extensions: EncodedExtension[] = [
       section: 'virtualization',
       // t('plugin__forklift-console-plugin~Providers for Import')
       name: '%plugin__forklift-console-plugin~Providers for Import%',
-      href: '/mtv/providers',
+      model: {
+        group: 'forklift.konveyor.io',
+        kind: 'Provider',
+        version: 'v1beta1',
+      },
+      dataAttributes: {
+        'data-quickstart-id': 'qs-nav-providers',
+        'data-test-id': 'providers-nav-item',
+      },
     },
-  } as EncodedExtension<HrefNavItem>,
+  } as EncodedExtension<ResourceNSNavItem>,
 
   {
-    type: 'console.page/route',
+    type: 'console.page/resource/list',
     properties: {
       component: {
         $codeRef: 'ProvidersPage',
       },
-      path: ['/mtv/providers', '/mtv/providers/:providerType'],
-      exact: true,
+      model: {
+        group: 'forklift.konveyor.io',
+        kind: 'Provider',
+        version: 'v1beta1',
+      },
     },
-  } as EncodedExtension<RoutePage>,
+  } as EncodedExtension<ResourceListPage>,
 
   {
     type: 'console.page/route',
@@ -42,4 +59,14 @@ export const extensions: EncodedExtension[] = [
       exact: false,
     },
   } as EncodedExtension<RoutePage>,
+
+  {
+    type: 'console.action/provider',
+    properties: {
+      contextId: 'forklift-merged-provider',
+      provider: {
+        $codeRef: 'useMergedProviders',
+      },
+    },
+  } as EncodedExtension<ActionProvider>,
 ];
