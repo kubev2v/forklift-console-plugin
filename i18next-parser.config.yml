@@ -1,7 +1,0 @@
-sort: true
-createOldCatalogs: false
-keySeparator: false
-locales: ["en"]
-namespaceSeparator: "~"
-reactNamespace: false
-defaultNamespace: "plugin__forklift-console-plugin"
