@@ -8,6 +8,7 @@ import { CONDITIONS, PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
+import { ProviderType, SOURCE_PROVIDER_TYPES } from '@app/common/constants';
 import { AddEditProviderModal } from '@app/Providers/components/AddEditProviderModal';
 import { EditProviderContext } from '@app/Providers/ProvidersPage';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
@@ -66,10 +67,18 @@ const fieldsMetadata: Field[] = [
     toLabel: (t) => t('Type'),
     isVisible: true,
     filter: {
-      type: 'enum',
+      type: 'groupedEnum',
       primary: true,
       toPlaceholderLabel: (t) => t('Type'),
-      values: fromI18nEnum(PROVIDERS),
+      values: fromI18nEnum(PROVIDERS).map(({ id, ...rest }) => ({
+        id,
+        groupId: SOURCE_PROVIDER_TYPES.includes(id as ProviderType) ? 'source' : 'target',
+        ...rest,
+      })),
+      groups: [
+        { groupId: 'target', toLabel: (t) => t('Target') },
+        { groupId: 'source', toLabel: (t) => t('Source') },
+      ],
     },
     sortable: true,
   },
