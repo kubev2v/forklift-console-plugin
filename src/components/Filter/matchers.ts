@@ -47,7 +47,12 @@ const enumMatcher = {
   matchValue: (value: string) => (filter: string) => value === filter,
 };
 
-const defaultValueMatchers = [freetextMatcher, enumMatcher];
+const groupedEnumMatcher = {
+  filterType: 'groupedEnum',
+  matchValue: enumMatcher.matchValue,
+};
+
+const defaultValueMatchers = [freetextMatcher, enumMatcher, groupedEnumMatcher];
 
 /**
  * Create matcher for multiple filter types.

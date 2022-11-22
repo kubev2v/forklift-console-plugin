@@ -1,9 +1,21 @@
+interface EnumGroup {
+  groupId: string;
+  toLabel(t: (key: string) => string): string;
+}
+
+export interface EnumValue {
+  id: string;
+  groupId?: string;
+  toLabel(t: (key: string) => string): string;
+}
+
 export interface FilterDef {
   type: string;
   toPlaceholderLabel(t: (key: string) => string): string;
-  values?: { id: string; toLabel(t: (key: string) => string): string }[];
+  values?: EnumValue[];
   toLabel?(t: (key: string) => string): string;
   primary?: boolean;
+  groups?: EnumGroup[];
 }
 
 /**
@@ -29,10 +41,11 @@ export interface FilterTypeProps {
   /**
    * (Optional) List of supported values (if limited)
    */
-  supportedValues?: {
-    id: string;
-    toLabel(t: (key: string) => string): string;
-  }[];
+  supportedValues?: EnumValue[];
+  /**
+   * (Optional) groups for supported values (if exist)
+   */
+  supportedGroups?: EnumGroup[];
 }
 
 /**

@@ -93,8 +93,15 @@ export const useUnique = ({
 
 /**
  * Select one or many enum values from the list.
+ *
+ * Enum contract:
+ * 1) enum IDs(not translated identifiers) are required to be constant and unique within the enum
+ * 2) the translated labels might be duplicated (one label may map to multiple enum IDs).
+ *  In such case enums with duplicated labels will be grouped as one option.
+ *  The common scenario are values not known at the compile time represented by one label i.e. 'Unknown'.
+ *
  * FilterTypeProps are interpeted as follows:
- * 1) selectedFilters - selected enum IDs (not translated constant identifiers)
+ * 1) selectedFilters - selected enum IDs
  * 2) onFilterUpdate - accepts the list of selected enum IDs
  * 3) supportedValues - supported enum values
  */

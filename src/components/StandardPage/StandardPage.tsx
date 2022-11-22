@@ -3,10 +3,12 @@ import {
   AttributeValueFilter,
   createMetaMatcher,
   EnumFilter,
+  FilterTypeProps,
   FreetextFilter,
+  GroupedEnumFilter,
   PrimaryFilters,
+  toFieldFilter,
 } from 'src/components/Filter';
-import { FilterTypeProps } from 'src/components/Filter/types';
 import { ManageColumnsToolbar, RowProps, TableView } from 'src/components/TableView';
 import { Field } from 'src/components/types';
 import { useTranslation } from 'src/utils/i18n';
@@ -24,7 +26,6 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
-import { toFieldFilter } from '../Filter/helpers';
 import { useSort } from '../TableView/sort';
 
 import { ErrorState, Loading, NoResultsFound, NoResultsMatchFilter } from './ResultStates';
@@ -100,6 +101,7 @@ export function StandardPage<T>({
   supportedFilters = {
     enum: EnumFilter,
     freetext: FreetextFilter,
+    groupedEnum: GroupedEnumFilter,
   },
   customNoResultsFound,
   customNoResultsMatchFilter,
