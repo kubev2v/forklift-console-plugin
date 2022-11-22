@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-console
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: console
+  namespace: openshift-console
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: console-console-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: console
+    namespace: openshift-console
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: console
+  namespace: openshift-console
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: console
+  template:
+    metadata:
+      labels:
+        name: console
+    spec:
+      serviceAccountName: console
+      containers:
+      - name: console
+        image: quay.io/openshift/origin-console:latest
+        env:
+        - name: BRIDGE_PLUGINS
+          value: forklift-console-plugin=http://forklift-console-plugin.konveyor-forklift.svc.cluster.local:9001
+        - name: BRIDGE_PLUGIN_PROXY
+          value: |
+            {"services":[
+              {
+                  "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/forklift-inventory/",
+                  "endpoint":"http://forklift-inventory.konveyor-forklift.svc.cluster.local:8080",
+                  "authorize":true
+              },
+              {
+                  "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/must-gather-api/",
+                  "endpoint":"http://must-gather-api.konveyor-forklift.svc.cluster.local:8080",
+                  "authorize":true
+              }]}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: console
+  namespace: openshift-console
+spec:
+  ports:
+  - name: api-http
+    nodePort: 30080
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    name: console
+  sessionAffinity: None
+  type: NodePort

@@ -21,22 +21,6 @@ USER 1001
 # Set nginx configuration
 # COPY nginx.conf /etc/nginx/nginx.conf
 
-# Example nginx.conf:
-# server {
-#    listen       9443 ssl;
-#    ssl_certificate /var/serving-cert/tls.crt;
-#    ssl_certificate_key /var/serving-cert/tls.key;
-#    ssl_protocols TLSv1.2 TLSv1.3;
-#    location / {
-#        root   /opt/app-root/src;
-#    }
-#    error_page   500 502 503 504  /50x.html;
-#    location = /50x.html {
-#        root   /usr/share/nginx/html;
-#    }
-#    ssi on;
-# }
-
 # When using ubi9/nginx-120 defaults:
 #  listen       8080 default_server;
 #  root         /opt/app-root/src;

@@ -4,7 +4,7 @@ metadata:
   annotations:
     service.alpha.openshift.io/serving-cert-secret-name: plugin-serving-cert
   name: {{ .Values.plugin }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Values.plugin }}
     app.kubernetes.io/component: {{ .Values.plugin }}

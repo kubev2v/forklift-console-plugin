@@ -61,8 +61,9 @@ Installation/Documentation: https://kind.sigs.k8s.io/docs/user/quick-start/
 Example (v0.17.0):
 
 ``` bash
-# Requires go installed and go bin included in path
-go install sigs.k8s.io/kind@v0.17.0
+export VERSION=v0.17.0
+curl -LO https://kind.sigs.k8s.io/dl/${VERSION}/kind-linux-amd64
+sudo install kind-linux-amd64 /usr/local/bin/kind
 ```
 
 Note: for kubevirt to run virtual machines on kind cluster, kind need to run from root acount.

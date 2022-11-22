@@ -31,7 +31,7 @@ Available enviorment varialbles
 | CONSOLE_IMAGE | The console image to run ( default `quay.io/openshift/origin-console:latest` )|
 | CONSOLE_PORT | Expose the console web application on port ( default `9000` )|
 | INVENTORY_SERVER_HOST | URL of Forklift inventory server ( default `http://localhost:8080` )|
-| MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `http://localhost:9200` )|
+| MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `http://localhost:8090` )|
 | BRIDGE_K8S_AUTH_BEARER_TOKEN | Bearer token of user account ( on openshift token default to `$(oc whoami -t)` )|
 
 ## Deploy Forklift and Kubevirt
