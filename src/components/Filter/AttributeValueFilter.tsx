@@ -85,6 +85,7 @@ export const AttributeValueFilter = ({
               showFilter={currentFilter?.fieldId === id}
               title={filter?.toLabel?.(t) ?? toFieldLabel(t)}
               supportedValues={filter.values}
+              supportedGroups={filter.groups}
             />
           )
         );

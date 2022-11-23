@@ -39,6 +39,7 @@ export const PrimaryFilters = ({
               title={filter?.toLabel?.(t) ?? toFieldLabel(t)}
               showFilter={true}
               supportedValues={filter.values}
+              supportedGroups={filter.groups}
             />
           )
         );
