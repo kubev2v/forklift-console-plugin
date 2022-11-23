@@ -66,7 +66,7 @@ curl -LO https://kind.sigs.k8s.io/dl/${VERSION}/kind-linux-amd64
 sudo install kind-linux-amd64 /usr/local/bin/kind
 ```
 
-Note: for kubevirt to run virtual machines on kind cluster, kind need to run from root acount.
+Note: for kubevirt to run virtual machines on kind cluster, kind need to run from root account.
 
 ## CRC
 

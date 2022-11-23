@@ -10,8 +10,8 @@ should be created manually.
 
 | Script | Description  |
 | -------|--------------|
-| [configure-kind.sh](./configure-kind.sh) | Start K8S kind cluster with a cluster admin user and bearer toekn. |
-| [configure-minikube.sh](./configure-minikube.sh) | Start K8S Minikube cluster with a cluster admin user and bearer toekn. |
+| [deploy-cluster.sh](./deploy-cluster.sh) | Start K8S kind cluster with a cluster admin user and bearer toekn. |
+| [clean-cluster.sh](./clean-cluster.sh) | Delete the cluster. |
 
 ## Start Openshift console
 
@@ -20,19 +20,19 @@ you are using before running this script. After running this script, the Openshi
 
 | Script | Description  |
 | -------|--------------|
-| [start-console-k8s.sh](./start-console-k8s.sh) | Start Openshift web console when logged into a K8S cluster. |
 | [start-console.sh](./start-console.sh) | Start Openshift web console when logged into a Openshift. |
-| [start-console-with-oauth.sh](./start-console-with-oauth.sh) | Start Openshift web console when logged into a Openshift, requires the user to log into the web console. |
 
-Available enviorment varialbles
+Available environment varialbles
 
-| Enviorment varialbles | Description  |
+| Environment varialbles | Description  |
 | -------|--------------|
 | CONSOLE_IMAGE | The console image to run ( default `quay.io/openshift/origin-console:latest` )|
 | CONSOLE_PORT | Expose the console web application on port ( default `9000` )|
-| INVENTORY_SERVER_HOST | URL of Forklift inventory server ( default `http://localhost:8080` )|
-| MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `http://localhost:8090` )|
+| INVENTORY_SERVER_HOST | URL of Forklift inventory server ( default `http://localhost:30088` )|
+| MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `http://localhost:30089` )|
 | BRIDGE_K8S_AUTH_BEARER_TOKEN | Bearer token of user account ( on openshift token default to `$(oc whoami -t)` )|
+
+Scripts for pre-setting this environment varialbles are available in the [configure](./configure) directory.
 
 ## Deploy Forklift and Kubevirt
 
@@ -41,8 +41,9 @@ and OLM to install them when Operator Hub is available.  The following scripts a
 
 | Script | Description  |
 | -------|--------------|
-| [k8s-deploy-forklift.sh](./k8s-deploy-forklift.sh) | Deploy Forklift operator using OLM. |
-| [k8s-deploy-kubevirt.sh](./k8s-deploy-kubevirt.sh) | Deploy CDI, CNA and Kubevirt. |
+| [deploy-olm.sh](./deploy-olm.sh) | Deploy OLM operaotr. |
+| [deploy-forklift.sh](./deploy-forklift.sh) | Deploy Forklift operator using OLM (must install OLM before runnin this script). |
+| [deploy-kubevirt.sh](./deploy-kubevirt.sh) | Deploy CDI, CNA and Kubevirt. |
 
 Kubevirt components versions should follow HCO versions per [HCO](https://github.com/kubevirt/hyperconverged-cluster-operator)
 release.  To get a valid combination of Kubevirt components, we can use HCO recommendation found in this
@@ -59,7 +60,7 @@ https://github.com/openshift/console
 ## Forklift CI
 
 Scripts and tools for creating and deploying forklift cluster infrastructure and running integration tests against it.
-Instructions about how to [install forklift on kind](https://github.com/kubev2v/forkliftci/blob/main/INSTALL_FORKLIFT_ON_KIND.md).
+See instructions about how to [install forklift on kind](https://github.com/kubev2v/forkliftci).
 
 https://github.com/kubev2v/forkliftci
 

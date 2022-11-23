@@ -5,7 +5,7 @@ metadata:
   annotations:
     console.openshift.io/use-i18n: "true"
 spec:
-  displayName: 'Console Plugin Template'
+  displayName: 'Console Plugin for Forklift'
   service:
     name: {{ .Values.plugin }}
     namespace: {{ .Values.namespace }}
