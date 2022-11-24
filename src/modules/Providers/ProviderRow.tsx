@@ -5,10 +5,10 @@ import * as C from 'src/utils/constants';
 import { CONDITIONS, PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 
-import { PATH_PREFIX } from '@app/common/constants';
+import { PATH_PREFIX, ProviderType, SOURCE_PROVIDER_TYPES } from '@app/common/constants';
 import { StatusIcon } from '@migtools/lib-ui';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, Popover } from '@patternfly/react-core';
+import { Button, Label, Popover } from '@patternfly/react-core';
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
@@ -83,11 +83,25 @@ const HostCell = ({ value, entity: { ready, name, type } }: CellProps) => (
   </>
 );
 
+const TypeCell = ({ value, t }: CellProps) => (
+  <>
+    {PROVIDERS?.[value]?.(t)}
+    {SOURCE_PROVIDER_TYPES.includes(value as ProviderType) && (
+      <>
+        {' '}
+        <Label isCompact color="green">
+          {t('Source').toLowerCase()}
+        </Label>
+      </>
+    )}
+  </>
+);
+
 const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   [C.NAME]: ProviderLink,
   [C.READY]: StatusCell,
   [C.URL]: TextCell,
-  [C.TYPE]: ({ value, t }: CellProps) => <TextCell value={PROVIDERS?.[value]?.(t)} />,
+  [C.TYPE]: TypeCell,
   [C.NAMESPACE]: ({ value }: CellProps) => <ResourceLink kind="Namespace" name={value} />,
   [C.ACTIONS]: ProviderActions,
   [C.NETWORK_COUNT]: ({ value }: CellProps) => <TextWithIcon Icon={NetworkIcon} value={value} />,
