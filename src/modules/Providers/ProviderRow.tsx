@@ -67,8 +67,15 @@ const TextWithIcon = ({ value, Icon }: { value: string; Icon: JSXElementConstruc
   </>
 );
 
-const ProviderLink = ({ value, entity }: CellProps) => (
-  <ResourceLink kind={entity.kind} name={value} namespace={entity?.namespace} />
+const ProviderLink = ({ value, entity, t }: CellProps) => (
+  <>
+    <ResourceLink kind={entity.kind} name={value} namespace={entity?.namespace} />{' '}
+    {!entity.url && (
+      <Label isCompact color="grey">
+        {t('default')}
+      </Label>
+    )}
+  </>
 );
 
 const HostCell = ({ value, entity: { ready, name, type } }: CellProps) => (

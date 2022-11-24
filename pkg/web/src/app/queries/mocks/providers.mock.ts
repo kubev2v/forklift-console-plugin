@@ -365,6 +365,10 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         name: 'ocpv-3',
         uid: 'mock-uid-ocpv-3',
       },
+      spec: {
+        ...openshiftProvider1.object.spec,
+        url: '',
+      },
     },
   };
 

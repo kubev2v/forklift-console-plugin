@@ -242,7 +242,7 @@
         "secretName": "boston",
         "type": "openshift",
         "uid": "mock-uid-ocpv-3",
-        "url": "https://my_OCPv_url",
+        "url": "",
         "vmCount": 26
     }
 ]
