@@ -5,7 +5,12 @@ import * as C from 'src/utils/constants';
 import { CONDITIONS, PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 
-import { PATH_PREFIX, ProviderType, SOURCE_PROVIDER_TYPES } from '@app/common/constants';
+import {
+  PATH_PREFIX,
+  ProviderType,
+  SOURCE_PROVIDER_TYPES,
+  TARGET_PROVIDER_TYPES,
+} from '@app/common/constants';
 import { StatusIcon } from '@migtools/lib-ui';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Label, Popover } from '@patternfly/react-core';
@@ -98,6 +103,14 @@ const TypeCell = ({ value, t }: CellProps) => (
         {' '}
         <Label isCompact color="green">
           {t('Source').toLowerCase()}
+        </Label>
+      </>
+    )}
+    {TARGET_PROVIDER_TYPES.includes(value as ProviderType) && (
+      <>
+        {' '}
+        <Label isCompact color="blue">
+          {t('Target').toLowerCase()}
         </Label>
       </>
     )}
