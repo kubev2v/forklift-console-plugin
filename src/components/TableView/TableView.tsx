@@ -30,7 +30,7 @@ export function TableView<T>({
 }: TableViewProps<T>) {
   const { t } = useTranslation();
   const hasChildren = children.filter(Boolean).length > 0;
-
+  const columnSignature = visibleColumns.map(({ id }) => id).join();
   return (
     <TableComposable aria-label={ariaLabel} variant="compact" isStickyHeader>
       <Thead>
@@ -63,7 +63,11 @@ export function TableView<T>({
         )}
         {!hasChildren &&
           entities.map((entity, index) => (
-            <Row key={entity?.[uidFieldId] ?? index} entity={entity} columns={visibleColumns} />
+            <Row
+              key={`${columnSignature}_${entity?.[uidFieldId] ?? index}`}
+              entity={entity}
+              columns={visibleColumns}
+            />
           ))}
       </Tbody>
     </TableComposable>
