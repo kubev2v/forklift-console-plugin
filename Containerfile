@@ -15,7 +15,7 @@ RUN yarn install --frozen-lockfile && yarn build
 # Web server container
 FROM registry.access.redhat.com/ubi9/nginx-120
 
-# Use none root user
+# Use none-root user
 USER 1001
 
 # Set nginx configuration

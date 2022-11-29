@@ -5,8 +5,8 @@ set -euo pipefail
 PLUGIN_NAME="forklift-console-plugin"
 CONSOLE_IMAGE=${CONSOLE_IMAGE:="quay.io/openshift/origin-console:latest"}
 CONSOLE_PORT=${CONSOLE_PORT:=9000}
-INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:="http://localhost:8080"}
-MUST_GATHER_API_SERVER_HOST=${MUST_GATHER_API_SERVER_HOST:="http://localhost:8090"}
+INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:="http://localhost:30088"}
+MUST_GATHER_API_SERVER_HOST=${MUST_GATHER_API_SERVER_HOST:="http://localhost:30089"}
 
 echo "Starting local OpenShift console..."
 echo "==================================="

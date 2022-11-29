@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: forklift-console-plugin
-          image: quay.io/kubev2v/forklift-console-plugin-dev:latest
+          image: localhost:5001/kubev2v/forklift-console-plugin-dev
           stdin: true
           tty: true
           ports:

@@ -85,6 +85,10 @@ nodes:
   extraPortMappings:
   - containerPort: 30080
     hostPort: 30080
+  - containerPort: 30088
+    hostPort: 30088
+  - containerPort: 30089
+    hostPort: 30089
   - containerPort: 30022
     hostPort: 30022
   extraMounts:
@@ -107,7 +111,7 @@ echo "waiting for kind cluster coredns service..."
 kubectl wait deployment -n kube-system coredns --for condition=Available=True --timeout=180s
 
 echo ""
-echo "deploy Openshift console (with forklift proxy, tls: false, auth: flase, port: 8080)..."
+echo "deploy Openshift console (with forklift proxy, tls: false, auth: flase, port: 30088)..."
 kubectl apply -f ${script_dir}/yaml/openshift-console.yaml
 
 echo ""
@@ -135,6 +139,7 @@ echo "Routes:"
 echo "  server:      https://127.0.0.1:6443/"
 echo "  registry:    http://localhost:${reg_port}/"
 echo "  web console: http://localhost:30080/"
+echo "  ( optional, ports 30088 and 30089 are open for forklift APIs )"
 
 echo ""
 echo "Local registry usage example:"
@@ -151,4 +156,4 @@ echo "if this was run by a different user, make sure your current user can use t
 echo "if needed copy the kubernetes config file to your local home directory, or"
 echo "use the KUBECONFIG environment variable to point to the new config file."
 echo "For example:"
-echo "  cp <home direcotory of user running this script>/config ~/.kube/config"
+echo "  cp <home directory of user running this script>/config ~/.kube/config"

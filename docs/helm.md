@@ -24,7 +24,7 @@
 
 Running helm requires to be looged into the cluster, and using the namespace for the instalation:
 
-```bash
+``` bash
 # login into the cluster
 oc login ... 
 
@@ -34,7 +34,7 @@ oc project forklift-console-plugin
 
 When you are logged in, and using the instalation project, you can use the local helm chart:
 
-```bash
+``` bash
 # install local
 helm install forklift ./deployment/forklift-console-plugin
 
@@ -65,7 +65,7 @@ yarn helm:build
 
 [ Running helm requires to be looged into the cluster, and using the namespace for the instalation ]
 
-```bash
+``` bash
 # add the forklift helm repo
 helm repo add forklift https://kubev2v.github.io/forklift-console-plugin
 
