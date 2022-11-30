@@ -6,3 +6,4 @@ export * from './helpers';
 export * from './matchers';
 export * from './PrimaryFilters';
 export * from './types';
+export * from './useUrlFilters';

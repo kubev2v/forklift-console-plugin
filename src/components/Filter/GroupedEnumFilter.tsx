@@ -46,17 +46,21 @@ export const GroupedEnumFilter = ({
 
   const deleteGroup = (groupId: string): void =>
     onSelectedEnumIdsChange(
-      selectedEnumIds.filter((enumId) => id2enum?.[enumId]?.groupId !== groupId),
+      selectedEnumIds
+        .filter((id) => id2enum[id])
+        .filter((enumId) => id2enum[enumId].groupId !== groupId),
     );
 
   const deleteFilter = (id: string): void =>
-    onSelectedEnumIdsChange(selectedEnumIds.filter((enumId) => enumId !== id));
+    onSelectedEnumIdsChange(
+      selectedEnumIds.filter((id) => id2enum[id]).filter((enumId) => enumId !== id),
+    );
 
   const hasFilter = (id: string): boolean =>
     !!id2enum[id] && !!selectedEnumIds.find((enumId) => enumId === id);
 
   const addFilter = (id: string): void => {
-    onSelectedEnumIdsChange([...selectedEnumIds, id]);
+    onSelectedEnumIdsChange([...selectedEnumIds.filter((id) => id2enum[id]), id]);
   };
 
   // put the IDs needed for compareTo (although not part of the interface)
@@ -79,6 +83,7 @@ export const GroupedEnumFilter = ({
         (acc, { toLabel, groupId }) => (
           <ToolbarFilter
             chips={selectedEnumIds
+              .filter((id) => id2enum[id])
               .map((id) => id2enum[id])
               .filter((enumVal) => enumVal.groupId === groupId)
               .map(({ id, toLabel }) => ({ key: id, node: toLabel(t) }))}

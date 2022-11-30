@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   AttributeValueFilter,
   createMetaMatcher,
@@ -8,8 +8,9 @@ import {
   GroupedEnumFilter,
   PrimaryFilters,
   toFieldFilter,
+  useUrlFilters,
 } from 'src/components/Filter';
-import { ManageColumnsToolbar, RowProps, TableView } from 'src/components/TableView';
+import { ManageColumnsToolbar, RowProps, TableView, useSort } from 'src/components/TableView';
 import { Field } from 'src/components/types';
 import { useTranslation } from 'src/utils/i18n';
 
@@ -25,8 +26,6 @@ import {
   ToolbarToggleGroup,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
-
-import { useSort } from '../TableView/sort';
 
 import { ErrorState, Loading, NoResultsFound, NoResultsMatchFilter } from './ResultStates';
 import { UserSettings } from './types';
@@ -87,6 +86,12 @@ export interface StandardPageProps<T> {
   pagination?: number | 'on' | 'off';
 
   /**
+   * Prefix for filters stored in the query params part of the URL.
+   * By default no prefix is used - the field ID is used directly.
+   */
+  filterPrefix?: string;
+
+  /**
    * User settings store to initialize the page according to user preferences.
    */
   userSettings?: UserSettings;
@@ -111,9 +116,13 @@ export function StandardPage<T>({
   customNoResultsMatchFilter,
   pagination = DEFAULT_PER_PAGE,
   userSettings,
+  filterPrefix = '',
 }: StandardPageProps<T>) {
   const { t } = useTranslation();
-  const [selectedFilters, setSelectedFilters] = useState({});
+  const [selectedFilters, setSelectedFilters] = useUrlFilters({
+    fields: fieldsMetadata,
+    filterPrefix,
+  });
   const clearAllFilters = () => setSelectedFilters({});
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
   const [activeSort, setActiveSort, comparator] = useSort(fields);
