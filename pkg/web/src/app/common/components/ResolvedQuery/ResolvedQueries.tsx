@@ -101,11 +101,15 @@ export const ResolvedQueries: React.FunctionComponent<IResolvedQueriesProps> = (
                       {(result.error as KubeClientError).response?.data?.message}
                     </>
                   ) : null}
-                  {(result.error as Response).status
-                    ? `${(result.error as Response).status}: ${
-                        (result.error as Response).statusText
-                      }`
-                    : null}
+                  {(result.error as Response).headers?.has('forklift-error-message') ? (
+                    <>
+                      Request failed with status code {(result.error as Response).status}
+                      <br />
+                      {(result.error as Response).headers.get('forklift-error-message')}
+                    </>
+                  ) : (result.error as Response).status ? (
+                    `${(result.error as Response).status}: ${(result.error as Response).statusText}`
+                  ) : null}
                   {typeof result.error === 'string' ? result.error : null}
                 </>
               ) : null}
