@@ -2,6 +2,7 @@ import { IMetaObjectGenerateName, IMetaTypeMeta, IMetaObjectMeta } from './commo
 
 export interface ISecret extends IMetaTypeMeta {
   data: {
+    url?: string;
     user?: string;
     password?: string;
     thumbprint?: string;

@@ -25,6 +25,7 @@ export interface IMetaObjectMeta {
   labels?: {
     createdForResourceType?: string;
     createdForResource?: string;
+    createdForProviderType?: string;
   };
   ownerReferences?: IObjectReference[];
 }
