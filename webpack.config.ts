@@ -89,6 +89,7 @@ const config: WebpackConfiguration & {
       BRAND_TYPE: 'Konveyor',
       NAMESPACE: 'konveyor-forklift',
       NODE_ENV: isProd ? 'production' : 'development',
+      PLUGIN_NAME: 'forklift-console-plugin',
     }),
   ],
   devtool: 'source-map',
