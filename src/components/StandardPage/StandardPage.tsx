@@ -29,6 +29,7 @@ import { FilterIcon } from '@patternfly/react-icons';
 import { useSort } from '../TableView/sort';
 
 import { ErrorState, Loading, NoResultsFound, NoResultsMatchFilter } from './ResultStates';
+import { UserSettings } from './types';
 import { useFields } from './useFields';
 
 /**
@@ -81,6 +82,11 @@ export interface StandardPageProps<T> {
    * 'auto' - display if unfiltered number of items is greater then current 'items per page' value
    */
   pagination?: 'auto' | 'on' | 'off';
+
+  /**
+   * User settings store to initialize the page according to user preferences.
+   */
+  userSettings?: UserSettings;
 }
 
 // counting from one seems recommneded - zero breaks some cases
@@ -106,11 +112,12 @@ export function StandardPage<T>({
   customNoResultsFound,
   customNoResultsMatchFilter,
   pagination = 'auto',
+  userSettings,
 }: StandardPageProps<T>) {
   const { t } = useTranslation();
   const [selectedFilters, setSelectedFilters] = useState({});
   const clearAllFilters = () => setSelectedFilters({});
-  const [fields, setFields] = useFields(namespace, fieldsMetadata);
+  const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
   const [page, setPage] = useState(DEFAULT_FIRST_PAGE);
   const [activeSort, setActiveSort, comparator] = useSort(fields);
