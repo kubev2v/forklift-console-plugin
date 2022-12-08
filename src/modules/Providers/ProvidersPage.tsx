@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { fromI18nEnum } from '_/components/Filter/helpers';
 import withQueryClient from '_/components/QueryClientHoc';
-import { StandardPage } from 'src/components/StandardPage';
+import { loadUserSettings, StandardPage, UserSettings } from 'src/components/StandardPage';
 import { Field } from 'src/components/types';
 import * as C from 'src/utils/constants';
 import { CONDITIONS, PROVIDERS } from 'src/utils/enums';
@@ -122,7 +122,7 @@ const fieldsMetadata: Field[] = [
 
 export const ProvidersPage = ({ namespace, kind }: ResourceConsolePageProps) => {
   const { t } = useTranslation();
-
+  const [userSettings] = useState(() => loadUserSettings({ pageId: 'Providers' }));
   const dataSource = useProvidersWithInventory({
     kind,
     namespace,
@@ -130,17 +130,26 @@ export const ProvidersPage = ({ namespace, kind }: ResourceConsolePageProps) => 
 
   // data hook triggers frequent re-renders although data remains the same:
   // both the content content and object reference
-  return <PageMemo dataSource={dataSource} namespace={namespace} title={t('Providers')} />;
+  return (
+    <PageMemo
+      dataSource={dataSource}
+      namespace={namespace}
+      title={t('Providers')}
+      userSettings={userSettings}
+    />
+  );
 };
 
 const Page = ({
   dataSource,
   namespace,
   title,
+  userSettings,
 }: {
   dataSource: [MergedProvider[], boolean, boolean];
   namespace: string;
   title: string;
+  userSettings: UserSettings;
 }) => (
   <StandardPage<MergedProvider>
     addButton={<AddProviderButton />}
@@ -149,6 +158,7 @@ const Page = ({
     fieldsMetadata={fieldsMetadata}
     namespace={namespace}
     title={title}
+    userSettings={userSettings}
   />
 );
 
