@@ -31,6 +31,7 @@ import { useSort } from '../TableView/sort';
 import { ErrorState, Loading, NoResultsFound, NoResultsMatchFilter } from './ResultStates';
 import { UserSettings } from './types';
 import { useFields } from './useFields';
+import { DEFAULT_PER_PAGE, usePagination } from './usePagination';
 
 /**
  * @param T type to be displayed in the list
@@ -77,22 +78,19 @@ export interface StandardPageProps<T> {
   customNoResultsMatchFilter?: JSX.Element;
 
   /**
-   * 'on' - always show pagination controls
-   * 'off' - disable
-   * 'auto' - display if unfiltered number of items is greater then current 'items per page' value
+   * 1. 'on' - always show pagination controls
+   * 2. 'off' - disable
+   * 3.  auto -  display if unfiltered number of items is greater than provided threshold
+   *
+   * Default value: 10
    */
-  pagination?: 'auto' | 'on' | 'off';
+  pagination?: number | 'on' | 'off';
 
   /**
    * User settings store to initialize the page according to user preferences.
    */
   userSettings?: UserSettings;
 }
-
-// counting from one seems recommneded - zero breaks some cases
-const DEFAULT_FIRST_PAGE = 1;
-// first option in the default "per page" dropdown
-const DEFAULT_PER_PAGE = 10;
 
 /**
  * Standard list page.
@@ -111,15 +109,13 @@ export function StandardPage<T>({
   },
   customNoResultsFound,
   customNoResultsMatchFilter,
-  pagination = 'auto',
+  pagination = DEFAULT_PER_PAGE,
   userSettings,
 }: StandardPageProps<T>) {
   const { t } = useTranslation();
   const [selectedFilters, setSelectedFilters] = useState({});
   const clearAllFilters = () => setSelectedFilters({});
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
-  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
-  const [page, setPage] = useState(DEFAULT_FIRST_PAGE);
   const [activeSort, setActiveSort, comparator] = useSort(fields);
 
   const filteredData = useMemo(
@@ -127,15 +123,8 @@ export function StandardPage<T>({
     [flattenData, selectedFilters, fields, comparator],
   );
 
-  const lastPage = Math.ceil(filteredData.length / perPage);
-  const effectivePage = Math.min(page, lastPage);
-  const showPagination =
-    pagination === 'on' || (pagination === 'auto' && flattenData.length > perPage);
-
-  const pageData = useMemo(
-    () => filteredData.slice((effectivePage - 1) * perPage, effectivePage * perPage),
-    [filteredData, effectivePage, perPage],
-  );
+  const { pageData, showPagination, itemsPerPage, currentPage, setPage, setPerPage } =
+    usePagination({ pagination, filteredData, flattenData });
 
   const errorFetchingData = loaded && error;
   const noResults = loaded && !error && flattenData.length == 0;
@@ -179,8 +168,8 @@ export function StandardPage<T>({
               <ToolbarItem variant="pagination">
                 <Pagination
                   variant="top"
-                  perPage={perPage}
-                  page={effectivePage}
+                  perPage={itemsPerPage}
+                  page={currentPage}
                   itemCount={filteredData.length}
                   onSetPage={(even, page) => setPage(page)}
                   onPerPageSelect={(even, perPage, page) => {
@@ -211,8 +200,8 @@ export function StandardPage<T>({
         {showPagination && (
           <Pagination
             variant="bottom"
-            perPage={perPage}
-            page={effectivePage}
+            perPage={itemsPerPage}
+            page={currentPage}
             itemCount={filteredData.length}
             onSetPage={(event, page) => setPage(page)}
             onPerPageSelect={(event, perPage, page) => {
