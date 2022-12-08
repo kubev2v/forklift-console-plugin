@@ -124,7 +124,12 @@ export function StandardPage<T>({
   );
 
   const { pageData, showPagination, itemsPerPage, currentPage, setPage, setPerPage } =
-    usePagination({ pagination, filteredData, flattenData });
+    usePagination({
+      pagination,
+      filteredData,
+      flattenData,
+      userSettings: userSettings?.pagination,
+    });
 
   const errorFetchingData = loaded && error;
   const noResults = loaded && !error && flattenData.length == 0;
