@@ -99,7 +99,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
 
   const migrationsQuery = useMigrationsQuery();
   const latestMigration = findLatestMigration(plan || null, migrationsQuery.data?.items || null);
-  const planState = getPlanState(plan || null, latestMigration, migrationsQuery);
+  const planState = getPlanState(plan || null, latestMigration, migrationsQuery.data?.items);
   const isShowingPrecopyView =
     !!plan?.spec.warm &&
     (planState === 'Starting' ||

@@ -1,0 +1,6 @@
+.clickable-progress-bar {
+  margin: calc(0px - var(--pf-global--spacer--form-element))
+    calc(0px - var(--pf-global--spacer--md));
+  width: 100%;
+  text-align: left;
+}

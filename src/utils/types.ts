@@ -1,3 +1,4 @@
+import { IMigration, IPlan } from '@app/queries/types';
 import { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
 export type Condition = {
@@ -30,6 +31,10 @@ export type ProviderResource = {
     conditions?: Condition[];
   };
 } & K8sResourceCommon;
+
+export type PlanResource = IPlan & K8sResourceCommon;
+
+export type MigrationResource = IMigration & K8sResourceCommon;
 
 export type ResourceConsolePageProps = {
   kind: string;

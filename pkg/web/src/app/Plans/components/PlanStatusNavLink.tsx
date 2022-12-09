@@ -10,16 +10,20 @@ interface IPlanStatusNavLinkProps {
   children: React.ReactNode;
 }
 
-export const PlanStatusNavLink: React.FunctionComponent<IPlanStatusNavLinkProps> = ({
-  plan,
+export const PlanNameNavLink = ({
+  name,
   isInline = true,
   children,
-}: IPlanStatusNavLinkProps) => {
+}: {
+  name: string;
+  isInline?: boolean;
+  children: React.ReactNode;
+}) => {
   const history = useHistory();
   return (
     <Button
       variant="link"
-      onClick={() => history.push(`${PATH_PREFIX}/plans/${plan.metadata.name}`)}
+      onClick={() => history.push(`${PATH_PREFIX}/plans/${name}`)}
       isInline={isInline}
       className={!isInline ? 'clickable-progress-bar' : ''}
     >
@@ -27,3 +31,13 @@ export const PlanStatusNavLink: React.FunctionComponent<IPlanStatusNavLinkProps>
     </Button>
   );
 };
+
+export const PlanStatusNavLink: React.FunctionComponent<IPlanStatusNavLinkProps> = ({
+  plan,
+  isInline = true,
+  children,
+}: IPlanStatusNavLinkProps) => (
+  <PlanNameNavLink name={plan.metadata.name} isInline={isInline}>
+    {children}
+  </PlanNameNavLink>
+);
