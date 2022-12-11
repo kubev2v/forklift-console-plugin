@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 
+import { PaginationSettings } from './types';
+
 // counting from one seems recommneded - zero breaks some cases
 const DEFAULT_FIRST_PAGE = 1;
 // first option in the default "per page" dropdown
@@ -9,6 +11,7 @@ export interface PaginationHookProps<T> {
   pagination?: number | 'on' | 'off';
   filteredData: T[];
   flattenData: T[];
+  userSettings?: PaginationSettings;
 }
 
 export interface PaginationHookResult<T> {
@@ -24,8 +27,14 @@ export function usePagination<T>({
   pagination,
   filteredData,
   flattenData,
+  userSettings,
 }: PaginationHookProps<T>): PaginationHookResult<T> {
-  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
+  const {
+    perPage: defaultPerPage = DEFAULT_PER_PAGE,
+    save: savePerPage = () => undefined,
+    clear: clearSavedPerPage = () => undefined,
+  } = userSettings || {};
+  const [perPage, setPerPage] = useState(defaultPerPage);
   const [page, setPage] = useState(DEFAULT_FIRST_PAGE);
 
   const lastPage = Math.ceil(filteredData.length / perPage);
@@ -38,12 +47,24 @@ export function usePagination<T>({
     [filteredData, effectivePage, perPage],
   );
 
+  const setPerPageInStateAndSettings = useMemo(
+    () => (perPage: number) => {
+      setPerPage(perPage);
+      if (perPage !== DEFAULT_PER_PAGE) {
+        savePerPage(perPage);
+      } else {
+        clearSavedPerPage();
+      }
+    },
+    [setPerPage, savePerPage, clearSavedPerPage],
+  );
+
   return {
     pageData,
     showPagination,
     itemsPerPage: perPage,
     currentPage: effectivePage,
     setPage,
-    setPerPage,
+    setPerPage: setPerPageInStateAndSettings,
   };
 }

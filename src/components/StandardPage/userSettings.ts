@@ -15,6 +15,14 @@ const parseOrClean = (key) => {
   return {};
 };
 
+const saveRestOrRemoveKey = (key: string, { rest }: { [k: string]: { [n: string]: unknown } }) => {
+  if (!Object.keys(rest).length) {
+    removeFromLocalStorage(key);
+  } else {
+    saveToLocalStorage(key, JSON.stringify({ ...rest }));
+  }
+};
+
 const toField = ({ id, isVisible }) => ({ id, isVisible });
 
 const sanitizeFields = (fields: unknown): { id: string; isVisible?: boolean }[] =>
@@ -38,7 +46,7 @@ const sanitizeFields = (fields: unknown): { id: string; isVisible?: boolean }[] 
  */
 export const loadUserSettings = ({ pageId }): UserSettings => {
   const key = `${process.env.PLUGIN_NAME}-${pageId}`;
-  const { fields } = parseOrClean(key);
+  const { fields, perPage } = parseOrClean(key);
 
   return {
     fields: {
@@ -49,13 +57,16 @@ export const loadUserSettings = ({ pageId }): UserSettings => {
           JSON.stringify({ ...parseOrClean(key), fields: fields.map(toField) }),
         ),
       clear: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { fields, ...rest } = parseOrClean(key);
-        if (!Object.keys(rest).length) {
-          removeFromLocalStorage(key);
-        } else {
-          saveToLocalStorage(JSON.stringify({ ...rest }), key);
-        }
+        saveRestOrRemoveKey(key, { fields, rest });
+      },
+    },
+    pagination: {
+      perPage: typeof perPage === 'number' ? perPage : undefined,
+      save: (perPage) => saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), perPage })),
+      clear: () => {
+        const { perPage, ...rest } = parseOrClean(key);
+        saveRestOrRemoveKey(key, { perPage, rest });
       },
     },
   };

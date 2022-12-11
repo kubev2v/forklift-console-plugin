@@ -161,3 +161,74 @@ describe('pagination hook with filtering', () => {
     expect(third.pageData).toEqual(flattenData.slice(0, 10));
   });
 });
+
+describe('pagination hook with user settings', () => {
+  it('loads "per page" from user settings', () => {
+    const {
+      result: {
+        current: { itemsPerPage },
+      },
+    } = renderHook(() =>
+      usePagination<Simple>({
+        pagination: 'on',
+        flattenData,
+        filteredData: flattenData,
+        userSettings: {
+          perPage: 3,
+          save: () => undefined,
+          clear: () => undefined,
+        },
+      }),
+    );
+
+    expect(itemsPerPage).toEqual(3);
+  });
+
+  it('clears the "per page" setting if it is the same as the defaults', () => {
+    const clear = jest.fn();
+    const {
+      result: {
+        current: { setPerPage },
+      },
+    } = renderHook(() =>
+      usePagination<Simple>({
+        pagination: 'on',
+        flattenData,
+        filteredData: flattenData,
+        userSettings: {
+          perPage: 3,
+          save: () => undefined,
+          clear,
+        },
+      }),
+    );
+
+    act(() => setPerPage(10));
+
+    expect(clear).toBeCalled();
+  });
+
+  it('saves the "per page" to the setting', () => {
+    const save = jest.fn();
+    const {
+      result: {
+        current: { setPerPage },
+      },
+    } = renderHook(() =>
+      usePagination<Simple>({
+        pagination: 'on',
+        flattenData,
+        filteredData: flattenData,
+        userSettings: {
+          perPage: 10,
+          save,
+          clear: () => undefined,
+        },
+      }),
+    );
+
+    act(() => setPerPage(3));
+
+    expect(save).toHaveBeenCalledWith(3);
+  });
+});
