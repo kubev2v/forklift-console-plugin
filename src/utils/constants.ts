@@ -18,3 +18,4 @@ export const SECRET_NAME = 'secretName';
 export const API_VERSION = 'apiVersion';
 export const DEFAULT_TRANSFER_NETWORK = 'defaultTransferNetwork';
 export const DEFAULT_TRANSFER_NETWORK_ANNOTATION = 'forklift.konveyor.io/defaultTransferNetwork';
+export const GVK = 'gvk'; // group version kin

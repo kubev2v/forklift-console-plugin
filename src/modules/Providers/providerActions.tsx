@@ -186,8 +186,7 @@ const toIProviderObject = ({
   type,
   url,
   secretName,
-  kind,
-  apiVersion,
+  gvk: { group, version, kind },
 }: MergedProvider): IProviderObject => ({
   metadata: {
     name,
@@ -195,7 +194,7 @@ const toIProviderObject = ({
   },
   spec: { type: type as ProviderType, url, secret: { name: secretName, namespace } },
   kind,
-  apiVersion,
+  apiVersion: `${group}/${version}`,
 });
 
 const toIOpenShiftProvider = (

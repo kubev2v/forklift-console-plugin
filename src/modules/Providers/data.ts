@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { groupVersionKindForObj } from '_/utils/resources';
 import * as C from 'src/utils/constants';
 import { useProviders } from 'src/utils/fetch';
 import { Condition, ProviderResource } from 'src/utils/types';
@@ -10,6 +11,7 @@ import {
   IRHVProvider,
   IVMwareProvider,
 } from '@app/queries/types';
+import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
 const conditionState = (state: string) =>
   state === 'True' || state === 'False' ? state : 'Unknown';
@@ -26,14 +28,13 @@ interface SupportedConditions {
 }
 
 export interface MergedProvider {
-  [C.KIND]: string;
   [C.NAME]: string;
   [C.NAMESPACE]: string;
   [C.URL]: string;
   [C.TYPE]: string;
   [C.UID]: string;
   [C.SECRET_NAME]: string;
-  [C.API_VERSION]: string;
+  [C.GVK]: K8sGroupVersionKind;
   [C.DEFAULT_TRANSFER_NETWORK]: string;
   [C.CLUSTER_COUNT]: number;
   [C.HOST_COUNT]: number;
@@ -73,19 +74,26 @@ export const groupPairs = (
 
 export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
   pairs
-    .map(([resource, inventory]): [ProviderResource, FlattenedInventory, SupportedConditions] => [
-      resource,
-      inventory,
-      toSupportedConditions(resource.status?.conditions ?? []),
-    ])
+    .map(
+      ([resource, inventory]): [
+        ProviderResource,
+        K8sGroupVersionKind,
+        FlattenedInventory,
+        SupportedConditions,
+      ] => [
+        resource,
+        groupVersionKindForObj(resource),
+        inventory,
+        toSupportedConditions(resource.status?.conditions ?? []),
+      ],
+    )
     .map(
       ([
         {
           metadata: { name = '', namespace = '', uid = '', annotations = [] } = {},
           spec: { url = '', type = '', secret: { name: secretName = '' } = {} } = {},
-          kind,
-          apiVersion,
         },
+        gvk,
         { clusterCount, hostCount, vmCount, networkCount, datastoreCount, storageDomainCount },
         { Ready, Validated, ConnectionTested, InventoryCreated },
       ]): MergedProvider => ({
@@ -94,9 +102,8 @@ export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
         url,
         type,
         uid,
-        kind,
+        gvk,
         secretName,
-        apiVersion,
         defaultTransferNetwork: annotations?.[C.DEFAULT_TRANSFER_NETWORK_ANNOTATION],
         clusterCount,
         hostCount,

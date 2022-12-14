@@ -22,8 +22,8 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     selfLink: '/foo/vmwareprovider/1',
     type: 'vsphere',
     object: {
-      apiVersion: '12345',
-      kind: 'forklift.konveyor.io~v1beta1~Provider',
+      apiVersion: 'forklift.konveyor.io/v1beta1',
+      kind: 'Provider',
       metadata: {
         name: 'vcenter-1',
         namespace: 'openshift-migration',
@@ -164,7 +164,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     selfLink: 'providers/ovirt/foo1',
     type: 'ovirt',
     object: {
-      kind: 'forklift.konveyor.io~v1beta1~Provider',
+      kind: 'Provider',
       apiVersion: 'forklift.konveyor.io/v1beta1',
       metadata: {
         name: 'rhv-1',
@@ -266,8 +266,8 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     selfLink: '/foo/openshiftprovider/1',
     type: 'openshift',
     object: {
-      apiVersion: '12345',
-      kind: 'forklift.konveyor.io~v1beta1~Provider',
+      apiVersion: 'forklift.konveyor.io/v1beta1',
+      kind: 'Provider',
       metadata: {
         name: 'ocpv-1',
         namespace: 'openshift-migration',

@@ -1,6 +1,5 @@
 [
     {
-        "apiVersion": "12345",
         "clusterCount": 2,
         "conditions": {
             "connected": {
@@ -21,7 +20,11 @@
             }
         },
         "hostCount": 2,
-        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
         "name": "vcenter-1",
         "namespace": "openshift-migration",
         "networkCount": 8,
@@ -34,11 +37,14 @@
         "vmCount": 41
     },
     {
-        "apiVersion": "12345",
         "clusterCount": 2,
         "conditions": {},
         "hostCount": 2,
-        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
         "name": "vcenter-2",
         "namespace": "openshift-migration",
         "networkCount": 8,
@@ -51,7 +57,6 @@
         "vmCount": 41
     },
     {
-        "apiVersion": "12345",
         "clusterCount": 2,
         "conditions": {
             "connected": {
@@ -64,7 +69,11 @@
             }
         },
         "hostCount": 2,
-        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
         "name": "vcenter-3",
         "namespace": "openshift-migration",
         "networkCount": 8,
@@ -77,7 +86,6 @@
         "vmCount": 41
     },
     {
-        "apiVersion": "forklift.konveyor.io/v1beta1",
         "clusterCount": 2,
         "conditions": {
             "inventory": {
@@ -94,7 +102,11 @@
             }
         },
         "hostCount": 4,
-        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
         "name": "rhv-1",
         "namespace": "konveyor-forklift",
         "networkCount": 15,
@@ -107,7 +119,6 @@
         "vmCount": 36
     },
     {
-        "apiVersion": "forklift.konveyor.io/v1beta1",
         "clusterCount": 2,
         "conditions": {
             "inventory": {
@@ -124,7 +135,11 @@
             }
         },
         "hostCount": 4,
-        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
         "name": "rhv-2",
         "namespace": "konveyor-forklift",
         "networkCount": 15,
@@ -137,7 +152,6 @@
         "vmCount": 36
     },
     {
-        "apiVersion": "forklift.konveyor.io/v1beta1",
         "clusterCount": 2,
         "conditions": {
             "inventory": {
@@ -154,7 +168,11 @@
             }
         },
         "hostCount": 4,
-        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
         "name": "rhv-3",
         "namespace": "konveyor-forklift",
         "networkCount": 15,
@@ -167,7 +185,6 @@
         "vmCount": 36
     },
     {
-        "apiVersion": "12345",
         "conditions": {
             "connected": {
                 "message": "Connection test, succeeded.",
@@ -187,7 +204,11 @@
             }
         },
         "defaultTransferNetwork": "ocp-network-3",
-        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
         "name": "ocpv-1",
         "namespace": "openshift-migration",
         "networkCount": 8,
@@ -199,10 +220,13 @@
         "vmCount": 26
     },
     {
-        "apiVersion": "12345",
         "conditions": {},
         "defaultTransferNetwork": "ocp-network-3",
-        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
         "name": "ocpv-2",
         "namespace": "openshift-migration",
         "networkCount": 8,
@@ -214,7 +238,6 @@
         "vmCount": 26
     },
     {
-        "apiVersion": "12345",
         "conditions": {
             "connected": {
                 "message": "Connection test, succeeded.",
@@ -234,7 +257,11 @@
             }
         },
         "defaultTransferNetwork": "ocp-network-3",
-        "kind": "forklift.konveyor.io~v1beta1~Provider",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
         "name": "ocpv-3",
         "namespace": "openshift-migration",
         "networkCount": 8,
