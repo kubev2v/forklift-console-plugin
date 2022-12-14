@@ -76,7 +76,7 @@ const ProviderLink = ({ value, entity, t }: CellProps) => {
   const isHostProvider = entity.type === 'openshift' && !entity.url;
   return (
     <>
-      <ResourceLink kind={entity.kind} name={value} namespace={entity?.namespace} />{' '}
+      <ResourceLink groupVersionKind={entity.gvk} name={value} namespace={entity?.namespace} />{' '}
       {isHostProvider && (
         <Label isCompact color="grey">
           {t('default')}
