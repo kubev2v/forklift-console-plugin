@@ -1,14 +1,24 @@
 import { IPlan, IVMStatus } from '../types';
 import { MOCK_INVENTORY_PROVIDERS } from '@app/queries/mocks/providers.mock';
 import { CLUSTER_API_VERSION, META } from '@app/common/constants';
-import { nameAndNamespace } from '../helpers';
 import { MOCK_NETWORK_MAPPINGS, MOCK_STORAGE_MAPPINGS } from './mappings.mock';
 import { MOCK_OPENSHIFT_NAMESPACES } from './namespaces.mock';
 import { MOCK_HOOKS } from './hooks.mock';
+import { getObjectRef } from '@app/common/helpers';
+import { nameAndNamespace } from '../helpers';
 
 export let MOCK_PLANS: IPlan[];
 
 if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
+  const vsphereZeroToOpenshiftZero = {
+    source: getObjectRef(MOCK_INVENTORY_PROVIDERS.vsphere[0].object),
+    destination: getObjectRef(MOCK_INVENTORY_PROVIDERS.openshift[0].object),
+  };
+  const vsphereZeroToOpenshiftOne = {
+    source: getObjectRef(MOCK_INVENTORY_PROVIDERS.vsphere[0].object),
+    destination: getObjectRef(MOCK_INVENTORY_PROVIDERS.openshift[1].object),
+  };
+
   const vm1 = {
     id: 'vm-1630', // fdupont-test-migration
   };
@@ -188,10 +198,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     spec: {
       description: 'my first plan',
-      provider: {
-        source: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.vsphere[0]),
-        destination: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.openshift[0]),
-      },
+      provider: vsphereZeroToOpenshiftZero,
       targetNamespace: MOCK_OPENSHIFT_NAMESPACES[0].name,
       transferNetwork: null,
       archived: false,
@@ -272,10 +279,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     spec: {
       description: 'my 2nd plan',
-      provider: {
-        source: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.vsphere[0]),
-        destination: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.openshift[0]),
-      },
+      provider: vsphereZeroToOpenshiftZero,
       targetNamespace: MOCK_OPENSHIFT_NAMESPACES[0].name,
       transferNetwork: {
         name: 'ocp-network-2',
@@ -347,10 +351,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     spec: {
       description: 'my 3rd plan',
-      provider: {
-        source: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.vsphere[0]),
-        destination: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.openshift[0]),
-      },
+      provider: vsphereZeroToOpenshiftZero,
       targetNamespace: MOCK_OPENSHIFT_NAMESPACES[0].name,
       transferNetwork: null,
       archived: false,
@@ -415,10 +416,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     spec: {
       description: 'my 4th plan',
-      provider: {
-        source: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.vsphere[0]),
-        destination: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.openshift[0]),
-      },
+      provider: vsphereZeroToOpenshiftZero,
       targetNamespace: MOCK_OPENSHIFT_NAMESPACES[0].name,
       transferNetwork: null,
       archived: false,
@@ -578,10 +576,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     spec: {
       description: 'newly created warm plan',
-      provider: {
-        source: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.vsphere[0]),
-        destination: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.openshift[1]),
-      },
+      provider: vsphereZeroToOpenshiftOne,
       targetNamespace: MOCK_OPENSHIFT_NAMESPACES[0].name,
       transferNetwork: null,
       archived: false,
