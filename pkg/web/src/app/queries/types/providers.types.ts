@@ -1,5 +1,11 @@
 import { ProviderType } from '@app/common/constants';
-import { ICR, IMetaObjectMeta, INameNamespaceRef, IStatusCondition } from '@app/queries/types';
+import {
+  ICR,
+  IMetaObjectMeta,
+  INameNamespaceRef,
+  IStatusCondition,
+  IObjectReference,
+} from '@app/queries/types';
 
 interface IProviderMetadata extends IMetaObjectMeta {
   annotations?: {
@@ -68,8 +74,8 @@ export interface ICorrelatedProvider<T extends InventoryProvider> extends IProvi
 }
 
 export interface ISrcDestRefs {
-  source: INameNamespaceRef;
-  destination: INameNamespaceRef;
+  source: IObjectReference;
+  destination: IObjectReference;
 }
 
 export interface IByProvider<T> {
