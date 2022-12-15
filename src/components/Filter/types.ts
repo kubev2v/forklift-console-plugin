@@ -64,10 +64,14 @@ export interface MetaFilterProps {
    * 2) value: a string array with filter-specific interpretation.
    * i.e. { NAME: ["foo", "bar"]}
    */
-  selectedFilters: { [id: string]: string[] };
+  selectedFilters: GlobalFilters;
   fieldFilters: FieldFilter[];
-  onFilterUpdate(filters: { [id: string]: string[] }): void;
+  onFilterUpdate(filters: GlobalFilters): void;
   supportedFilterTypes: {
     [type: string]: (props: FilterTypeProps) => JSX.Element;
   };
+}
+
+export interface GlobalFilters {
+  [id: string]: string[];
 }

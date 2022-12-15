@@ -24,13 +24,16 @@ export const toMap = (search: string): MappedSearchParams => {
 export const useSearchParams = (): [MappedSearchParams, SetURLSearchParams] => {
   const [searchParams, internalSetSearchParams] = React.useState(toMap(location.search));
 
+  const removeUndefinedKeys = (obj: { [k: string]: string }): { [k: string]: string } =>
+    Object.fromEntries(Object.entries(obj).filter(([, value]) => value !== undefined));
+
   /**
-   * Update and add to the existing search parameters on the URL and the internal state.
+   * Merge new search parameter into existing parameters. Any key with an undefined value will be removed from the existing params.
    *
    * @param {MappedSearchParams} params
    */
   const updateSearchParams: SetURLSearchParams = (params) => {
-    const combinedPrams = { ...searchParams, ...params };
+    const combinedPrams = removeUndefinedKeys({ ...searchParams, ...params });
     const urlSearchParams = new URLSearchParams(combinedPrams);
     history.pushState({}, '', location.pathname + '?' + urlSearchParams.toString());
 
