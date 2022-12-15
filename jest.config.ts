@@ -30,5 +30,6 @@ const config: Config.InitialOptions = {
       isolatedModules: true,
     },
   },
+  setupFiles: ['<rootDir>/src/__mocks__/envvars.ts'],
 };
 export default config;

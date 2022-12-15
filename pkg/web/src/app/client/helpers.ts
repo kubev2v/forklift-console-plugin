@@ -5,7 +5,7 @@ import KubeClient, {
   CoreNamespacedResource,
   KubeResource,
 } from '@migtools/lib-ui';
-import { META, ProviderType, CLUSTER_API_VERSION } from '@app/common/constants';
+import { ENV, ProviderType, CLUSTER_API_VERSION } from '@app/common/constants';
 import { IProviderObject, ISecret } from '@app/queries/types';
 import {
   AddProviderFormValues,
@@ -49,11 +49,11 @@ export enum ForkliftResourceKind {
 
 export const secretResource = new CoreNamespacedResource(
   CoreNamespacedResourceKind.Secret,
-  META.namespace
+  ENV.NAMESPACE
   //are we moving the secrets to the config namespace?
 );
 
-export const providerResource = new ForkliftResource(ForkliftResourceKind.Provider, META.namespace);
+export const providerResource = new ForkliftResource(ForkliftResourceKind.Provider, ENV.NAMESPACE);
 
 export function convertFormValuesToSecret(
   values: AddProviderFormValues,
@@ -94,7 +94,7 @@ export function convertFormValuesToSecret(
       ...(!providerBeingEdited
         ? {
             generateName: `${values.name}-`,
-            namespace: META.namespace,
+            namespace: ENV.NAMESPACE,
           }
         : nameAndNamespace(providerBeingEdited.spec.secret)),
       labels: {
@@ -153,7 +153,7 @@ export const convertFormValuesToProvider = (
     kind: 'Provider',
     metadata: {
       name,
-      namespace: META.namespace,
+      namespace: ENV.NAMESPACE,
     },
     spec: {
       type: values.providerType,
@@ -210,7 +210,7 @@ export const checkIfResourceExists = async (
 };
 
 /** Translate resource into namespaced k8s api ptch */
-export const listPath = (resource: KubeResource, namespace: string = META.namespace) => {
+export const listPath = (resource: KubeResource, namespace: string = ENV.NAMESPACE) => {
   const isCRD = !!resource.gvk().group;
 
   return isCRD
@@ -219,14 +219,14 @@ export const listPath = (resource: KubeResource, namespace: string = META.namesp
         resource.gvk().group,
         resource.gvk().version,
         'namespaces',
-        namespace || META.namespace,
+        namespace || ENV.NAMESPACE,
         resource.gvk().kindPlural,
       ].join('/')
     : [
         '/api/kubernetes/api',
         resource.gvk().version,
         'namespaces',
-        namespace || META.namespace,
+        namespace || ENV.NAMESPACE,
         resource.gvk().kindPlural,
       ].join('/');
 };
@@ -235,7 +235,7 @@ export const listPath = (resource: KubeResource, namespace: string = META.namesp
 export const namedPath = (
   resource: KubeResource,
   name: string,
-  namespace: string = META.namespace
+  namespace: string = ENV.NAMESPACE
 ) => {
   return [listPath(resource, namespace), name].join('/');
 };

@@ -28,7 +28,7 @@ import {
   getMappingFromBuilderItems,
 } from '@app/Mappings/components/MappingBuilder/helpers';
 import { PlanWizardFormState, PlanWizardMode } from './PlanWizard';
-import { CLUSTER_API_VERSION, META, ProviderType } from '@app/common/constants';
+import { CLUSTER_API_VERSION, ENV, ProviderType } from '@app/common/constants';
 import {
   getAggregateQueryStatus,
   getFirstQueryError,
@@ -516,7 +516,7 @@ export const generatePlan = (
   kind: 'Plan',
   metadata: {
     name: forms.general.values.planName,
-    namespace: META.namespace,
+    namespace: ENV.NAMESPACE,
   },
   spec: {
     description: forms.general.values.planDescription,
@@ -784,7 +784,7 @@ export const generateHook = (
   kind: 'Hook',
   metadata: {
     ...(existingHook ? { name: existingHook.name } : { generateName: generateName || '' }),
-    namespace: META.namespace,
+    namespace: ENV.NAMESPACE,
     ...(owner ? { ownerReferences: [getObjectRef(owner)] } : {}),
   },
   spec: {

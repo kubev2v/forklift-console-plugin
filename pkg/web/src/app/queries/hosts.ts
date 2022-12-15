@@ -17,12 +17,12 @@ import { useAuthorizedK8sClient } from './fetchHelpers';
 import { IKubeList, IKubeResponse, KubeClientError } from '@app/client/types';
 import { SelectNetworkFormValues } from '@app/Providers/components/VMwareProviderHostsTable/SelectNetworkModal';
 import { secretResource, ForkliftResource, ForkliftResourceKind } from '@app/client/helpers';
-import { CLUSTER_API_VERSION, META } from '@app/common/constants';
+import { CLUSTER_API_VERSION, ENV } from '@app/common/constants';
 import { getObjectRef } from '@app/common/helpers';
 import { isManagementNetworkSelected } from '@app/Providers/components/VMwareProviderHostsTable/helpers';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-export const hostConfigResource = new ForkliftResource(ForkliftResourceKind.Host, META.namespace);
+export const hostConfigResource = new ForkliftResource(ForkliftResourceKind.Host, ENV.NAMESPACE);
 
 export const useHostsQuery = (provider: IVMwareProvider | null) => {
   const sortByNameCallback = React.useCallback((data): IHost[] => sortByName(data), []);
@@ -68,7 +68,7 @@ export const getExistingHostConfigs = (
 
 const getHostConfigRef = (provider: IVMwareProvider, host: IHost) => ({
   name: truncateK8sString(provider.name, `-${host.id}-config`),
-  namespace: META.namespace,
+  namespace: ENV.NAMESPACE,
 });
 
 const generateSecret = (
@@ -87,7 +87,7 @@ const generateSecret = (
   metadata: {
     ...(secretBeingReusedRef || {
       generateName: truncateK8sString(provider.name, `-${host.id}-`, true),
-      namespace: META.namespace,
+      namespace: ENV.NAMESPACE,
     }),
     labels: {
       createdForResourceType: ForkliftResourceKind.Host,

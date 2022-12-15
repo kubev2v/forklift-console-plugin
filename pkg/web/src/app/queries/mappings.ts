@@ -21,7 +21,7 @@ import {
 } from './helpers';
 
 import { checkIfResourceExists, ForkliftResource, ForkliftResourceKind } from '@app/client/helpers';
-import { dnsLabelNameSchema, META } from '@app/common/constants';
+import { dnsLabelNameSchema, ENV } from '@app/common/constants';
 import { KubeClientError, IKubeList, IKubeResponse, IKubeStatus } from '@app/client/types';
 import { MOCK_NETWORK_MAPPINGS, MOCK_STORAGE_MAPPINGS } from './mocks/mappings.mock';
 import { usePollingContext } from '@app/common/context';
@@ -43,7 +43,7 @@ export const getMappingResource = (
     mappingType === MappingType.Network
       ? ForkliftResourceKind.NetworkMap
       : ForkliftResourceKind.StorageMap;
-  const resource = new ForkliftResource(kind, META.namespace);
+  const resource = new ForkliftResource(kind, ENV.NAMESPACE);
   return { kind, resource };
 };
 
