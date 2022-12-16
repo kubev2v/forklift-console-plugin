@@ -1,8 +1,25 @@
 import * as yup from 'yup';
+import { BrandType, IEnvVars } from './types';
 
-import { IEnvVars, IMetaVars } from './types';
+/**
+ * Collect and expose the various webpack `EnvironmentPlugin` values to the app.  Since
+ * the webpack plugin does straight simple string replace, the values need to be full
+ * identifiers.  Default values aren't needed since the default values are given in
+ * `EnvironmentPlugin`'s definition in __webpack.config.js__.
+ */
+export const ENV: IEnvVars = {
+  DATA_SOURCE: process.env.DATA_SOURCE,
+  BRAND_TYPE: process.env.BRAND_TYPE as BrandType,
+  NAMESPACE: process.env.NAMESPACE,
+  NODE_ENV: process.env.NODE_ENV,
+  PLUGIN_NAME: process.env.PLUGIN_NAME,
+};
 
-export const ENV: IEnvVars = window['_env'] || {};
+if (ENV.NODE_ENV === 'development') {
+  console.info('forklift-console-plugin ENV:', JSON.stringify(ENV));
+}
+
+export const APP_BRAND: BrandType = (process.env.BRAND_TYPE as BrandType) || BrandType.Konveyor;
 
 export const APP_TITLE =
   ENV.BRAND_TYPE === 'RedHat' ? 'Migration Toolkit for Virtualization' : 'Forklift';
@@ -75,26 +92,6 @@ export enum StepType {
   Empty = 'Empty',
   Canceled = 'Canceled',
 }
-
-export const META: IMetaVars =
-  process.env.DATA_SOURCE !== 'mock' && process.env.NODE_ENV !== 'test'
-    ? {
-        ...(window['_meta'] || {}),
-        namespace: process.env.NAMESPACE || 'konveyor-forklift',
-      }
-    : {
-        clusterApi: '/mock/api',
-        devServerPort: 'mock-port',
-        oauth: {
-          clientId: 'mock-client-id',
-          redirectUrl: '/mock/redirect/uri',
-          userScope: '/mock/user-scope',
-          clientSecret: 'mock-client-secret',
-        },
-        namespace: 'mock-namespace',
-        inventoryApi: '/mock/api',
-        inventoryPayloadApi: '/mock/api',
-      };
 
 export const dnsLabelNameSchema = yup
   .string()

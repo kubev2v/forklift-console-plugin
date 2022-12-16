@@ -1,4 +1,4 @@
-import { CLUSTER_API_VERSION, META } from '@app/common/constants';
+import { CLUSTER_API_VERSION, ENV } from '@app/common/constants';
 import { nameAndNamespace } from '../helpers';
 import { IHost, IHostConfig } from '../types/hosts.types';
 import { MOCK_INVENTORY_PROVIDERS } from './providers.mock';
@@ -66,7 +66,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
       kind: 'Host',
       metadata: {
         name: `host-${host1.id}-config`,
-        namespace: META.namespace,
+        namespace: ENV.NAMESPACE,
       },
       spec: {
         id: host1.id,
@@ -83,7 +83,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
       kind: 'Host',
       metadata: {
         name: `host-${host3.id}-config`,
-        namespace: META.namespace,
+        namespace: ENV.NAMESPACE,
       },
       spec: {
         id: host3.id,

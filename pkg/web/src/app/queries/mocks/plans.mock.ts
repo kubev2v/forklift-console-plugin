@@ -1,6 +1,6 @@
 import { IPlan, IVMStatus } from '../types';
 import { MOCK_INVENTORY_PROVIDERS } from '@app/queries/mocks/providers.mock';
-import { CLUSTER_API_VERSION, META } from '@app/common/constants';
+import { CLUSTER_API_VERSION, ENV } from '@app/common/constants';
 import { MOCK_NETWORK_MAPPINGS, MOCK_STORAGE_MAPPINGS } from './mappings.mock';
 import { MOCK_OPENSHIFT_NAMESPACES } from './namespaces.mock';
 import { MOCK_HOOKS } from './hooks.mock';
@@ -253,7 +253,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             conditions: [],
             migration: {
               name: 'plan-0-mock-migration',
-              namespace: META.namespace,
+              namespace: ENV.NAMESPACE,
             },
             plan: {
               name: 'plantest-01',
@@ -390,7 +390,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             conditions: [],
             migration: {
               name: 'plan-2-mock-migration',
-              namespace: META.namespace,
+              namespace: ENV.NAMESPACE,
             },
             plan: {
               name: 'plantest-03',
@@ -456,7 +456,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             conditions: [],
             migration: {
               name: 'plan-3-mock-migration',
-              namespace: META.namespace,
+              namespace: ENV.NAMESPACE,
             },
             plan: {
               name: 'plantest-04',
@@ -550,7 +550,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             conditions: [],
             migration: {
               name: 'plan-4-mock-migration',
-              namespace: META.namespace,
+              namespace: ENV.NAMESPACE,
             },
             plan: {
               name: 'plantest-05',
@@ -758,7 +758,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             conditions: [],
             migration: {
               name: 'plan-6-mock-migration',
-              namespace: META.namespace,
+              namespace: ENV.NAMESPACE,
             },
             plan: {
               name: 'plantest-07',
@@ -791,7 +791,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             conditions: [],
             migration: {
               name: 'plan-7-mock-migration',
-              namespace: META.namespace,
+              namespace: ENV.NAMESPACE,
             },
             plan: {
               name: 'plantest-08',
@@ -820,7 +820,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             conditions: [],
             migration: {
               name: 'plan-8-mock-migration',
-              namespace: META.namespace,
+              namespace: ENV.NAMESPACE,
             },
             plan: {
               name: 'plantest-09',
@@ -869,7 +869,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             conditions: [],
             migration: {
               name: 'plan-9-mock-migration',
-              namespace: META.namespace,
+              namespace: ENV.NAMESPACE,
             },
             plan: {
               name: 'plantest-10',
@@ -907,7 +907,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             conditions: [],
             migration: {
               name: 'plan-10-mock-migration',
-              namespace: META.namespace,
+              namespace: ENV.NAMESPACE,
             },
             plan: {
               name: 'plantest-11',

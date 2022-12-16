@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as yup from 'yup';
 import { checkIfResourceExists, ForkliftResource, ForkliftResourceKind } from '@app/client/helpers';
 import { IKubeList, IKubeResponse, IKubeStatus, KubeClientError } from '@app/client/types';
-import { dnsLabelNameSchema, META } from '@app/common/constants';
+import { dnsLabelNameSchema, ENV } from '@app/common/constants';
 import { usePollingContext } from '@app/common/context';
 import { UseMutationResult, UseQueryResult, useQueryClient } from 'react-query';
 import {
@@ -22,10 +22,10 @@ import { generateHook, generateMappings, generatePlan } from '@app/Plans/compone
 import { IMetaObjectMeta } from '@app/queries/types/common.types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-const planResource = new ForkliftResource(ForkliftResourceKind.Plan, META.namespace);
+const planResource = new ForkliftResource(ForkliftResourceKind.Plan, ENV.NAMESPACE);
 const networkMapResource = getMappingResource(MappingType.Network).resource;
 const storageMapResource = getMappingResource(MappingType.Storage).resource;
-const hookResource = new ForkliftResource(ForkliftResourceKind.Hook, META.namespace);
+const hookResource = new ForkliftResource(ForkliftResourceKind.Hook, ENV.NAMESPACE);
 
 export const usePlansQuery = (): UseQueryResult<IKubeList<IPlan>> => {
   const sortKubeListByNameCallback = React.useCallback(

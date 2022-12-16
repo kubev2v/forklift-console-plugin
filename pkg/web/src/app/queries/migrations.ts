@@ -2,7 +2,7 @@ import * as React from 'react';
 import { UseMutationResult, UseQueryResult, useQueryClient } from 'react-query';
 import { ForkliftResource, ForkliftResourceKind, checkIfResourceExists } from '@app/client/helpers';
 import { IKubeList, IKubeResponse, KubeClientError } from '@app/client/types';
-import { CLUSTER_API_VERSION, META } from '@app/common/constants';
+import { CLUSTER_API_VERSION, ENV } from '@app/common/constants';
 import {
   isSameResource,
   mockKubeList,
@@ -20,7 +20,7 @@ import { SourceVM } from './types/vms.types';
 import { MOCK_MIGRATIONS } from './mocks/migrations.mock';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-const migrationResource = new ForkliftResource(ForkliftResourceKind.Migration, META.namespace);
+const migrationResource = new ForkliftResource(ForkliftResourceKind.Migration, ENV.NAMESPACE);
 
 export const useCreateMigrationMutation = (
   onSuccess?: (migration: IMigration) => void
@@ -34,7 +34,7 @@ export const useCreateMigrationMutation = (
         kind: 'Migration',
         metadata: {
           name: `${plan.metadata.name}-${Date.now()}`,
-          namespace: META.namespace,
+          namespace: ENV.NAMESPACE,
           ownerReferences: [getObjectRef(plan)],
         },
         spec: {

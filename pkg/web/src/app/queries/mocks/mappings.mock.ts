@@ -4,7 +4,7 @@ import { MOCK_INVENTORY_PROVIDERS } from './providers.mock';
 import { MOCK_OPENSHIFT_NETWORKS, MOCK_VMWARE_NETWORKS } from './networks.mock';
 import { MOCK_VMWARE_DATASTORES } from './storages.mock';
 import { nameAndNamespace } from '../helpers';
-import { CLUSTER_API_VERSION, META } from '@app/common/constants';
+import { CLUSTER_API_VERSION, ENV } from '@app/common/constants';
 
 export let MOCK_NETWORK_MAPPINGS: INetworkMapping[] = [];
 export let MOCK_STORAGE_MAPPINGS: IStorageMapping[] = [];
@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     kind: 'StorageMap',
     metadata: {
       name: 'vcenter1-datastore-to-ocpv-storageclass1',
-      namespace: META.namespace,
+      namespace: ENV.NAMESPACE,
       annotations: { 'forklift.konveyor.io/shared': 'true' },
     },
     spec: {
@@ -59,7 +59,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     kind: 'StorageMap',
     metadata: {
       name: 'vcenter3-datastore-to-ocpv-storageclass2',
-      namespace: META.namespace,
+      namespace: ENV.NAMESPACE,
       annotations: { 'forklift.konveyor.io/shared': 'true' },
     },
     spec: {
@@ -85,7 +85,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     kind: 'StorageMap',
     metadata: {
       name: 'vcenter1-invalid-storage-mapping',
-      namespace: META.namespace,
+      namespace: ENV.NAMESPACE,
       annotations: { 'forklift.konveyor.io/shared': 'true' },
     },
     spec: {
@@ -118,7 +118,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     kind: 'NetworkMap',
     metadata: {
       name: 'vcenter1-netstore-to-ocp1-network1',
-      namespace: META.namespace,
+      namespace: ENV.NAMESPACE,
       annotations: { 'forklift.konveyor.io/shared': 'true' },
     },
     spec: {
@@ -163,7 +163,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     kind: 'NetworkMap',
     metadata: {
       name: 'vcenter1-netstore-to-ocp1-network2',
-      namespace: META.namespace,
+      namespace: ENV.NAMESPACE,
       annotations: { 'forklift.konveyor.io/shared': 'true' },
     },
     spec: {
@@ -199,7 +199,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     kind: 'NetworkMap',
     metadata: {
       name: 'vcenter3-invalid-network-map',
-      namespace: META.namespace,
+      namespace: ENV.NAMESPACE,
       annotations: { 'forklift.konveyor.io/shared': 'true' },
     },
     spec: {
