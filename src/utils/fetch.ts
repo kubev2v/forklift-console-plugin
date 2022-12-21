@@ -3,6 +3,7 @@ import { ProviderResource } from 'src/utils/types';
 
 import { MOCK_CLUSTER_PROVIDERS } from '@app/queries/mocks/providers.mock';
 import {
+  K8sGroupVersionKind,
   useK8sWatchResource,
   WatchK8sResource,
   WatchK8sResult,
@@ -10,18 +11,23 @@ import {
 
 const IS_MOCK = process.env.DATA_SOURCE === 'mock';
 
-function useRealK8sWatchResource<T>({
-  kind,
-  namespace,
-  name,
-}: WatchK8sResource): WatchK8sResult<T[]> {
-  return useK8sWatchResource<T[]>({
-    kind,
-    isList: true,
-    namespaced: true,
-    namespace,
-    name,
-  });
+function createRealK8sWatchResourceHook<T>(kind: string) {
+  return function useRealHook(
+    { namespace, name }: WatchK8sResource,
+    { group, version }: Omit<K8sGroupVersionKind, 'kind'>,
+  ): WatchK8sResult<T[]> {
+    return useK8sWatchResource<T[]>({
+      groupVersionKind: {
+        group,
+        version,
+        kind,
+      },
+      isList: true,
+      namespaced: true,
+      namespace,
+      name,
+    });
+  };
 }
 
 const useMockProviders = ({ name }: WatchK8sResource): WatchK8sResult<ProviderResource[]> => {
@@ -37,4 +43,6 @@ const useMockProviders = ({ name }: WatchK8sResource): WatchK8sResult<ProviderRe
   return [mockData, true, false];
 };
 
-export const useProviders = IS_MOCK ? useMockProviders : useRealK8sWatchResource;
+export const useProviders = IS_MOCK
+  ? useMockProviders
+  : createRealK8sWatchResourceHook<ProviderResource>('Provider');

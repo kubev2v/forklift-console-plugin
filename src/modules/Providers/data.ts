@@ -20,12 +20,23 @@ interface SupportedCondition {
   status: string;
   message: string;
 }
-interface SupportedConditions {
+
+interface PositiveConditions {
   Ready?: SupportedCondition;
   Validated?: SupportedCondition;
-  ConnectionTested?: SupportedCondition;
+  ConnectionTestSucceeded?: SupportedCondition;
   InventoryCreated?: SupportedCondition;
+  LoadInventory?: SupportedCondition;
 }
+interface NegativeConditions {
+  URLNotValid?: SupportedCondition;
+  ProviderTypeNotSupported?: SupportedCondition;
+  SecretNotValid?: SupportedCondition;
+  SettingsNotValid?: SupportedCondition;
+  ConnectionTestFailed?: SupportedCondition;
+}
+
+export type SupportedConditions = PositiveConditions & NegativeConditions;
 
 export interface MergedProvider {
   [C.NAME]: string;
@@ -42,14 +53,12 @@ export interface MergedProvider {
   [C.NETWORK_COUNT]: number;
   [C.STORAGE_COUNT]: number;
   [C.READY]: string;
-  conditions: {
-    [C.READY]: SupportedCondition;
-    [C.CONNECTED]: SupportedCondition;
-    [C.VALIDATED]: SupportedCondition;
-    [C.INVENTORY]: SupportedCondition;
-  };
+  positiveConditions: PositiveConditions;
+  negativeConditions: NegativeConditions;
 }
-type FlattenedInventory = IVMwareProvider & IRHVProvider & IOpenShiftProvider;
+
+// may be empty when there is no inventory (yet)
+type FlattenedInventory = Partial<IVMwareProvider & IRHVProvider & IOpenShiftProvider>;
 
 export const groupPairs = (
   resources: ProviderResource[],
@@ -63,13 +72,13 @@ export const groupPairs = (
   );
 
   return resources
+    .filter(Boolean)
     .map((resource): [string, ProviderResource] => [resource?.metadata?.uid, resource])
     .filter(([uid, resource]) => uid && resource)
     .map(([uid, resource]): [ProviderResource, FlattenedInventory] => [
       resource,
-      uid2inventory[uid],
-    ])
-    .filter(([resource, inventory]) => resource && inventory);
+      uid2inventory[uid] ?? {},
+    ]);
 };
 
 export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
@@ -95,7 +104,18 @@ export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
         },
         gvk,
         { clusterCount, hostCount, vmCount, networkCount, datastoreCount, storageDomainCount },
-        { Ready, Validated, ConnectionTested, InventoryCreated },
+        {
+          Ready,
+          Validated,
+          ConnectionTestSucceeded,
+          ConnectionTestFailed,
+          InventoryCreated,
+          LoadInventory,
+          URLNotValid,
+          ProviderTypeNotSupported,
+          SecretNotValid,
+          SettingsNotValid,
+        },
       ]): MergedProvider => ({
         name,
         namespace,
@@ -111,11 +131,19 @@ export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
         networkCount,
         storageCount: storageDomainCount ?? datastoreCount,
         ready: Ready?.status ?? 'Unknown',
-        conditions: {
-          ready: Ready,
-          inventory: InventoryCreated,
-          validated: Validated,
-          connected: ConnectionTested,
+        positiveConditions: {
+          Ready,
+          InventoryCreated,
+          Validated,
+          ConnectionTestSucceeded,
+          LoadInventory,
+        },
+        negativeConditions: {
+          ConnectionTestFailed,
+          URLNotValid,
+          ProviderTypeNotSupported,
+          SecretNotValid,
+          SettingsNotValid,
         },
       }),
     );
@@ -130,11 +158,11 @@ export const toSupportedConditions = (conditions: Condition[]) =>
   );
 
 export const useProvidersWithInventory = ({
-  kind,
   namespace,
   name = undefined,
+  groupVersionKind: { group, version },
 }): [MergedProvider[], boolean, boolean] => {
-  const [resources, loaded, error] = useProviders({ kind, namespace, name });
+  const [resources, loaded, error] = useProviders({ namespace, name }, { group, version });
   const { data, isSuccess, isError } = useInventoryProvidersQuery();
   const providersWithInventory = useMemo(
     () => (resources && data ? mergeData(groupPairs(resources, data)) : []),

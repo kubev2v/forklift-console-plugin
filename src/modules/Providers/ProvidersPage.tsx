@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { fromI18nEnum } from '_/components/Filter/helpers';
 import withQueryClient from '_/components/QueryClientHoc';
+import { groupVersionKindForReference } from '_/utils/resources';
 import { loadUserSettings, StandardPage, UserSettings } from 'src/components/StandardPage';
 import { Field } from 'src/components/types';
 import * as C from 'src/utils/constants';
@@ -120,12 +121,12 @@ const fieldsMetadata: Field[] = [
   },
 ];
 
-export const ProvidersPage = ({ namespace, kind }: ResourceConsolePageProps) => {
+export const ProvidersPage = ({ namespace, kind: reference }: ResourceConsolePageProps) => {
   const { t } = useTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'Providers' }));
   const dataSource = useProvidersWithInventory({
-    kind,
     namespace,
+    groupVersionKind: groupVersionKindForReference(reference),
   });
 
   // data hook triggers frequent re-renders although data remains the same:
