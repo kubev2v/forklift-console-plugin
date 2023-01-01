@@ -61,7 +61,7 @@ export const useInventoryProvidersQuery = () => {
   const result = useMockableQuery<IProvidersByType>(
     {
       queryKey: 'inventory-providers',
-      queryFn: async () => await consoleFetchJSON(getInventoryApiUrl('/providers?detail=1')),
+      queryFn: async () => await consoleFetchJSON(getInventoryApiUrl('providers?detail=1')),
       refetchInterval: usePollingContext().refetchInterval,
       select: sortIndexedDataByNameCallback,
     },
