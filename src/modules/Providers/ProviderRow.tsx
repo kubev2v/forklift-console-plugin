@@ -17,7 +17,7 @@ import { Button, Label, Popover } from '@patternfly/react-core';
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { MergedProvider } from './data';
+import { MergedProvider, SupportedConditions } from './data';
 import { ProviderActions } from './providerActions';
 
 interface CellProps {
@@ -26,35 +26,62 @@ interface CellProps {
   t?: (k: string) => string;
 }
 
-const StatusCell = ({ value, entity: { conditions }, t }: CellProps) => {
-  const existingConditions = Object.values(conditions).filter(Boolean);
-  const toState = (value) => {
-    switch (value) {
-      case 'True':
-        return 'Ok';
-      case 'False':
-        return 'Error';
-      default:
-        return 'Unknown';
-    }
-  };
+/**
+ * assumes that if condition is 'True' then
+ * this is a positive state (success, "green")
+ * i.e. ConnectionTestSucceeded
+ */
+const toPositiveState = (conditionValue: string): 'Error' | 'Ok' | 'Unknown' => {
+  switch (conditionValue) {
+    case 'True':
+      return 'Ok';
+    case 'False':
+      return 'Error';
+    default:
+      return 'Unknown';
+  }
+};
+
+const toNegativeState = (conditionValue: string): 'Error' | 'Ok' | 'Unknown' => {
+  switch (conditionValue) {
+    case 'True':
+      return 'Error';
+    case 'False':
+      return 'Ok';
+    default:
+      return 'Unknown';
+  }
+};
+
+const StatusCell = ({
+  value,
+  entity: { positiveConditions, negativeConditions },
+  t,
+}: CellProps) => {
+  const allConditions = [
+    [positiveConditions, toPositiveState],
+    [negativeConditions, toNegativeState],
+  ].flatMap(
+    ([conditions, toState]: [
+      SupportedConditions,
+      (value: string) => 'Error' | 'Ok' | 'Unknown',
+    ]) => [
+      ...Object.values(conditions)
+        .filter(Boolean)
+        .map(({ message, status }) => {
+          return <StatusIcon key={message} status={toState(status)} label={message} />;
+        }),
+    ],
+  );
 
   const label = CONDITIONS[value]?.(t) ?? t('Unknown');
   return (
     <Popover
       hasAutoWidth
-      bodyContent={
-        <div>
-          {existingConditions.length > 0
-            ? existingConditions.map(({ message, status }) => {
-                return <StatusIcon key={message} status={toState(status)} label={message} />;
-              })
-            : t('No information')}
-        </div>
-      }
+      bodyContent={<div>{allConditions.length > 0 ? allConditions : t('No information')}</div>}
     >
       <Button variant="link" isInline aria-label={label}>
-        <StatusIcon status={toState(value)} label={label} />
+        <StatusIcon status={toPositiveState(value)} label={label} />
       </Button>
     </Popover>
   );

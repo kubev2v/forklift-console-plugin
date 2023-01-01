@@ -56,14 +56,16 @@ describe('grouping pairs', () => {
   test('empty input', () => {
     expect(groupPairs([], { openshift: [], ovirt: [], vsphere: [] })).toHaveLength(0);
   });
-  it('skipps items without pairs', () => {
-    expect(
-      groupPairs([MOCK_INVENTORY_PROVIDERS.openshift[0].object as ProviderResource], {
-        openshift: [MOCK_INVENTORY_PROVIDERS.openshift[1]],
-        ovirt: [],
-        vsphere: [],
-      }),
-    ).toHaveLength(0);
+  it('skipps inventory without resource', () => {
+    const result = groupPairs([MOCK_INVENTORY_PROVIDERS.openshift[0].object as ProviderResource], {
+      openshift: [MOCK_INVENTORY_PROVIDERS.openshift[1]],
+      ovirt: [],
+      vsphere: [],
+    });
+    expect(result).toHaveLength(1);
+    const [[provider, inventory]] = result;
+    expect(inventory).toStrictEqual({});
+    expect(provider).toEqual(MOCK_INVENTORY_PROVIDERS.openshift[0].object);
   });
   it('skipps items without UID', () => {
     const provider = MOCK_INVENTORY_PROVIDERS.openshift[0];

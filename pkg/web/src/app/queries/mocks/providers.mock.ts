@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             message: 'Connection test, succeeded.',
             reason: 'Tested',
             status: 'True',
-            type: 'ConnectionTested',
+            type: 'ConnectionTestSucceeded',
           },
           {
             category: 'Advisory',
@@ -134,7 +134,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             message: 'Connection test, succeeded.',
             reason: 'Tested',
             status: 'True',
-            type: 'ConnectionTested',
+            type: 'ConnectionTestSucceeded',
           },
           {
             category: 'Advisory',
@@ -150,7 +150,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             message: 'Loading the inventory.',
             reason: 'Started',
             status: 'True',
-            type: 'InventoryLoading',
+            type: 'LoadInventory',
           },
         ],
       },
@@ -294,7 +294,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             message: 'Connection test, succeeded.',
             reason: 'Tested',
             status: 'True',
-            type: 'ConnectionTested',
+            type: 'ConnectionTestSucceeded',
           },
           {
             category: 'Advisory',

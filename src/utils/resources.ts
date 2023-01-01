@@ -19,6 +19,15 @@ export const groupVersionKindForObj = (obj: K8sResourceCommon) => {
 };
 
 /**
+ * Get the group version kind object from a k8s reference
+ * @param  {K8sResourceCommon} reference in format "group~version~kind"
+ */
+export const groupVersionKindForReference = (reference: string) => {
+  const [group, version, kind] = reference.split('~');
+  return { group, version, kind };
+};
+
+/**
  * Get reference group version kind string for k8s objects
  * @param  {K8sResourceCommon} obj
  */
