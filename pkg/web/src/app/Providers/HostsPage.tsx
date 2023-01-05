@@ -17,7 +17,8 @@ import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-i
 import { useHostsQuery, useInventoryProvidersQuery } from '@app/queries';
 import { IVMwareProvider } from '@app/queries/types';
 import { ResolvedQueries } from '@app/common/components/ResolvedQuery';
-import { PATH_PREFIX, PROVIDER_TYPE_NAMES } from '@app/common/constants';
+import { PATH_PREFIX, PROVIDERS_REFERENCE, PROVIDER_TYPE_NAMES } from '@app/common/constants';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface IHostsMatchParams {
   url: string;
@@ -44,7 +45,9 @@ export const HostsPage: React.FunctionComponent = () => {
         <Level>
           <LevelItem>
             <Breadcrumb>
-              <BreadcrumbItem>Providers</BreadcrumbItem>
+              <BreadcrumbItem>
+                <ResourceLink kind={PROVIDERS_REFERENCE} hideIcon displayName="Providers" />
+              </BreadcrumbItem>
               <BreadcrumbItem>{PROVIDER_TYPE_NAMES.vsphere}</BreadcrumbItem>
               <BreadcrumbItem>{match?.params.providerName}</BreadcrumbItem>
               <BreadcrumbItem isActive>Hosts</BreadcrumbItem>
