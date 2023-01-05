@@ -35,3 +35,10 @@ export const referenceForObj = (obj: K8sResourceCommon) => {
   const { group, version, kind } = groupVersionKindForObj(obj);
   return referenceFor(group, version, kind);
 };
+
+/**
+ * @param reference in format "group~version~kind"
+ * @param namespace (optional)
+ */
+export const createK8sPath = (reference: string, namespace?: string) =>
+  namespace ? `/k8s/ns/${namespace}/${reference}` : `/k8s/all-namespaces/${reference}`;

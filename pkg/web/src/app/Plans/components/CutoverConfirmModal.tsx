@@ -48,6 +48,7 @@ export const CutoverConfirmModal: React.FunctionComponent<ICutoverConfirmModalPr
   return (
     <ConfirmModal
       variant="medium"
+      position="top"
       isOpen={isOpen}
       toggleOpen={toggleOpen}
       mutateFn={() => {

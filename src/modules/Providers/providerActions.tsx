@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { createActions } from 'src/components/ActionServiceDropdown';
+import { withActionContext } from 'src/components/ActionServiceDropdown';
 import withQueryClient from 'src/components/QueryClientHoc';
 import { useTranslation } from 'src/utils/i18n';
 
@@ -15,7 +15,7 @@ import {
   usePlansQuery,
 } from '@app/queries';
 import { IOpenShiftProvider, IPlan, IProviderObject } from '@app/queries/types';
-import { ActionServiceProvider, useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 
 import { type MergedProvider } from './data';
 
@@ -166,19 +166,11 @@ const DeleteModal = ({
     />
   );
 };
-export interface ProviderActionsProps {
-  entity: MergedProvider;
-  variant?: 'kebab' | 'dropdown';
-}
 
-export const ProviderActions = ({ entity, variant = 'kebab' }: ProviderActionsProps) => {
-  const ActionsComponent = useMemo(() => createActions(variant), [variant]);
-  return (
-    <ActionServiceProvider context={{ 'forklift-merged-provider': entity }}>
-      {ActionsComponent}
-    </ActionServiceProvider>
-  );
-};
+export const ProviderActions = withActionContext<MergedProvider>(
+  'kebab',
+  'forklift-merged-provider',
+);
 
 const toIProviderObject = ({
   name,

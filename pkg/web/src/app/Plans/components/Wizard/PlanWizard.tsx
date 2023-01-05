@@ -11,7 +11,7 @@ import {
   WizardStep,
   WizardStepFunctionType,
 } from '@patternfly/react-core';
-import { Link, Redirect, useHistory, useRouteMatch } from 'react-router-dom';
+import { Redirect, useHistory, useRouteMatch } from 'react-router-dom';
 import { UseQueryResult } from 'react-query';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useFormField, useFormState } from '@migtools/lib-ui';
@@ -53,7 +53,7 @@ import {
   IndexedTree,
 } from '@app/queries';
 import { getAggregateQueryStatus } from '@app/queries/helpers';
-import { dnsLabelNameSchema, PATH_PREFIX } from '@app/common/constants';
+import { dnsLabelNameSchema, PATH_PREFIX, PLANS_REFERENCE } from '@app/common/constants';
 import { IKubeList } from '@app/client/types';
 import { LoadingEmptyState } from '@app/common/components/LoadingEmptyState';
 import { ResolvedQueries } from '@app/common/components/ResolvedQuery';
@@ -61,6 +61,8 @@ import { PlanHookInstance } from './PlanAddEditHookModal';
 
 import './PlanWizard.css';
 import { LONG_LOADING_MESSAGE } from '@app/queries/constants';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { createK8sPath } from '_/utils/resources';
 
 export type PlanWizardMode = 'create' | 'edit' | 'duplicate';
 
@@ -207,7 +209,7 @@ export const PlanWizard: React.FunctionComponent = () => {
   const stepIdReached: StepId =
     firstInvalidFormIndex === -1 ? StepId.Review : firstInvalidFormIndex;
 
-  const onClose = () => history.push(`${PATH_PREFIX}/plans`);
+  const onClose = () => history.push(createK8sPath(PLANS_REFERENCE));
 
   const createPlanMutation = useCreatePlanMutation();
   const patchPlanMutation = usePatchPlanMutation();
@@ -439,7 +441,7 @@ export const PlanWizard: React.FunctionComponent = () => {
         <LoadingEmptyState />
       ) : wizardMode === 'edit' &&
         (!planBeingPrefilled || planBeingPrefilled?.status?.migration?.started) ? (
-        <Redirect to="/plans" />
+        <Redirect to={createK8sPath(PLANS_REFERENCE)} />
       ) : (
         <>
           <RouteGuard
@@ -450,7 +452,7 @@ export const PlanWizard: React.FunctionComponent = () => {
           <PageSection title={wizardTitle} variant="light">
             <Breadcrumb className={`${spacing.mbLg} ${spacing.prLg}`}>
               <BreadcrumbItem>
-                <Link to={`${PATH_PREFIX}/plans`}>Migration plans</Link>
+                <ResourceLink kind={PLANS_REFERENCE} hideIcon displayName="Migration plans" />
               </BreadcrumbItem>
               {planBeingPrefilled ? (
                 <BreadcrumbItem>{planBeingPrefilled.metadata.name}</BreadcrumbItem>

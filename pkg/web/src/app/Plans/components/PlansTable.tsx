@@ -138,7 +138,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
           migrationsQuery.data?.items || null
         );
         return getMigStatusState(
-          getPlanState(plan, latestMigration, migrationsQuery),
+          getPlanState(plan, latestMigration, migrationsQuery.data?.items),
           plan.spec.warm
         ).filterValue;
       },
@@ -216,7 +216,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
     const latestMigration = findLatestMigration(plan, migrationsQuery.data?.items || null);
     const isWarmPlan = plan.spec.warm;
 
-    const planState = getPlanState(plan, latestMigration, migrationsQuery);
+    const planState = getPlanState(plan, latestMigration, migrationsQuery.data?.items);
     const canRestart = canBeRestarted(planState);
     const buttonType = getButtonState(planState);
     const { title, variant } = getMigStatusState(planState, isWarmPlan);
@@ -299,7 +299,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
                     displayName={plan.metadata.name}
                   />
                 ) : buttonType === 'ScheduledCutover' ? (
-                  <ScheduledCutoverTime migration={latestMigration} />
+                  <ScheduledCutoverTime cutover={latestMigration?.spec.cutover} />
                 ) : buttonType === 'Start' || buttonType === 'Cutover' ? (
                   <MigrateOrCutoverButton
                     plan={plan}

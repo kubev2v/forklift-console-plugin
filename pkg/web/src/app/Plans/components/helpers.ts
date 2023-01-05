@@ -3,8 +3,6 @@ import { PlanState } from '@app/common/constants';
 import { hasCondition } from '@app/common/helpers';
 import { IPlan, IMigration } from '@app/queries/types';
 import { PlanActionButtonType } from '@app/Plans/components/PlansTable';
-import { IKubeList } from '@app/client/types';
-import { UseQueryResult } from 'react-query';
 import { isSameResource } from '@app/queries/helpers';
 
 export const getPlanStatusTitle = (plan: IPlan): string => {
@@ -131,7 +129,7 @@ export const getButtonState = (state: PlanState | null): PlanActionButtonType | 
 export const getPlanState = (
   plan: IPlan | null,
   migration: IMigration | null,
-  migrationQuery: UseQueryResult<IKubeList<IMigration>>
+  migrations: IMigration[]
 ): PlanState | null => {
   if (!plan) return null;
   // Give the controller 30 seconds to fill in status data before we consider the status to be unknown
@@ -154,7 +152,7 @@ export const getPlanState = (
     return 'Archiving';
   }
 
-  if (isPlanBeingStarted(plan, migration, migrationQuery) && !hasCondition(conditions, 'Succeeded'))
+  if (isPlanBeingStarted(plan, migration, migrations) && !hasCondition(conditions, 'Succeeded'))
     return 'Starting';
 
   if (!migration || !plan.status?.migration?.started) {
@@ -224,7 +222,7 @@ export const getPlanState = (
 export const isPlanBeingStarted = (
   plan: IPlan,
   latestMigrationInHistory: IMigration | null,
-  migrationsQuery: UseQueryResult<IKubeList<IMigration>>
+  migrations: IMigration[] = []
 ): boolean => {
   // True if we just don't have any status data yet
   if (
@@ -234,9 +232,7 @@ export const isPlanBeingStarted = (
     return true;
   }
   const migrationsMatchingPlan =
-    migrationsQuery.data?.items?.filter((migration) =>
-      isSameResource(migration.spec.plan, plan.metadata)
-    ) || [];
+    migrations.filter((migration) => isSameResource(migration.spec.plan, plan.metadata)) || [];
   const latestMatchingMigration = migrationsMatchingPlan.sort((a, b) => {
     const { creationTimestamp: aTimestamp } = a.metadata;
     const { creationTimestamp: bTimestamp } = b.metadata;

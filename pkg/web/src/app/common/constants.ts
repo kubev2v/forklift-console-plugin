@@ -154,3 +154,7 @@ export const noop = () => {};
 
 // Base URL path for forklift pages.
 export const PATH_PREFIX = '/mtv';
+
+// constant references to create links in the legacy code
+export const PLANS_REFERENCE = 'forklift.konveyor.io~v1beta1~Plan';
+export const PROVIDERS_REFERENCE = 'forklift.konveyor.io~v1beta1~Provider';

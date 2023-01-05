@@ -229,6 +229,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
     <Modal
       className="AddEditProviderModal"
       variant="small"
+      position="top"
       title={`${!providerBeingEdited ? 'Add' : 'Edit'} provider`}
       isOpen
       onClose={() => onClose()}

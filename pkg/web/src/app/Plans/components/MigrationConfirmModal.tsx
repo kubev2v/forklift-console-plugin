@@ -24,6 +24,7 @@ export const MigrationConfirmModal: React.FunctionComponent<IMigrationConfirmMod
   return (
     <ConfirmModal
       isOpen={isOpen}
+      position="top"
       toggleOpen={toggleOpen}
       mutateFn={() => createMigrationMutation.mutate(plan)}
       mutateResult={createMigrationMutation}
