@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { fromI18nEnum } from '_/components/Filter/helpers';
 import withQueryClient from '_/components/QueryClientHoc';
+import { loadUserSettings, StandardPage, UserSettings } from '_/components/StandardPage';
+import { Field } from '_/components/types';
+import * as C from '_/utils/constants';
+import { CONDITIONS, PROVIDERS } from '_/utils/enums';
+import { useTranslation } from '_/utils/i18n';
 import { groupVersionKindForReference } from '_/utils/resources';
-import { loadUserSettings, StandardPage, UserSettings } from 'src/components/StandardPage';
-import { Field } from 'src/components/types';
-import * as C from 'src/utils/constants';
-import { CONDITIONS, PROVIDERS } from 'src/utils/enums';
-import { useTranslation } from 'src/utils/i18n';
-import { ResourceConsolePageProps } from 'src/utils/types';
+import { ResourceConsolePageProps } from '_/utils/types';
 
 import { ProviderType, SOURCE_PROVIDER_TYPES } from '@app/common/constants';
 import { AddEditProviderModal } from '@app/Providers/components/AddEditProviderModal';
@@ -16,6 +16,7 @@ import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button } from '@patternfly/react-core';
 
 import { MergedProvider, useProvidersWithInventory } from './data';
+import EmptyStateProviders from './EmptyStateProviders';
 import ProviderRow from './ProviderRow';
 
 const fieldsMetadata: Field[] = [
@@ -121,7 +122,7 @@ const fieldsMetadata: Field[] = [
   },
 ];
 
-export const ProvidersPage = ({ namespace, kind: reference }: ResourceConsolePageProps) => {
+const ProvidersPage: React.FC<ResourceConsolePageProps> = ({ namespace, kind: reference }) => {
   const { t } = useTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'Providers' }));
   const dataSource = useProvidersWithInventory({
@@ -141,31 +142,32 @@ export const ProvidersPage = ({ namespace, kind: reference }: ResourceConsolePag
   );
 };
 
-const Page = ({
-  dataSource,
-  namespace,
-  title,
-  userSettings,
-}: {
+const Page: React.FC<{
   dataSource: [MergedProvider[], boolean, boolean];
   namespace: string;
   title: string;
   userSettings: UserSettings;
-}) => (
-  <StandardPage<MergedProvider>
-    addButton={<AddProviderButton />}
-    dataSource={dataSource}
-    RowMapper={ProviderRow}
-    fieldsMetadata={fieldsMetadata}
-    namespace={namespace}
-    title={title}
-    userSettings={userSettings}
-  />
-);
+}> = ({ dataSource, namespace, title, userSettings }) => {
+  const showEmptyState = (dataSource[0]?.length ?? 0) === 0;
+
+  return showEmptyState ? (
+    <EmptyStateProviders />
+  ) : (
+    <StandardPage<MergedProvider>
+      addButton={<AddProviderButton />}
+      dataSource={dataSource}
+      RowMapper={ProviderRow}
+      fieldsMetadata={fieldsMetadata}
+      namespace={namespace}
+      title={title}
+      userSettings={userSettings}
+    />
+  );
+};
 
 const PageMemo = React.memo(Page);
 
-const AddProviderButton = () => {
+const AddProviderButton: React.FC = () => {
   const { t } = useTranslation();
   const launchModal = useModal();
 
@@ -176,7 +178,9 @@ const AddProviderButton = () => {
   );
 };
 
-const AddProviderModal = ({ closeModal }: { closeModal: () => void }) => {
+const AddProviderModal: React.FC<{
+  closeModal: () => void;
+}> = ({ closeModal }) => {
   return (
     <EditProviderContext.Provider value={{ openEditProviderModal: () => undefined, plans: [] }}>
       <AddEditProviderModal onClose={closeModal} providerBeingEdited={null} />
@@ -185,3 +189,4 @@ const AddProviderModal = ({ closeModal }: { closeModal: () => void }) => {
 };
 
 export default ProvidersPage;
+export { AddProviderButton };
