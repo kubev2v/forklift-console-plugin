@@ -1,7 +1,9 @@
+import * as React from 'react';
 import withQueryClient from 'src/components/QueryClientHoc';
 
 import ProvidersPage from './ProvidersPage';
 
-const Page = withQueryClient(ProvidersPage);
+const ProvidersWrapper: React.FC = withQueryClient(ProvidersPage);
+ProvidersWrapper.displayName = 'ProvidersWrapper';
 
-export default Page;
+export default ProvidersWrapper;

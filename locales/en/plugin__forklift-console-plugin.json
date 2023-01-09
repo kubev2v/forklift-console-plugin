@@ -3,10 +3,12 @@
   "{{type}} provider {{name}} will no longer be selectable as a migration target.": "{{type}} provider {{name}} will no longer be selectable as a migration target.",
   "Actions": "Actions",
   "Add Provider": "Add Provider",
+  "Add source and target providers for the migration.": "Add source and target providers for the migration.",
   "Cancel": "Cancel",
   "Cannot remove provider": "Cannot remove provider",
   "Clear all filters": "Clear all filters",
   "Clusters": "Clusters",
+  "Create a migration plan and select VMs from the source provider for migration.": "Create a migration plan and select VMs from the source provider for migration.",
   "default": "default",
   "Delete": "Delete",
   "Delete Provider": "Delete Provider",
@@ -20,7 +22,9 @@
   "KubeVirt": "KubeVirt",
   "Loading": "Loading",
   "Manage Columns": "Manage Columns",
+  "Map source datastores or storage domains and networks to target storage classes and networks.": "Map source datastores or storage domains and networks to target storage classes and networks.",
   "Mappings for Import": "Mappings for Import",
+  "Migrating workloads to {{openshift}} is a multi-step process.": "Migrating workloads to {{openshift}} is a multi-step process.",
   "Name": "Name",
   "Namespace": "Namespace",
   "Networks": "Networks",
@@ -35,6 +39,7 @@
   "Ready": "Ready",
   "Reorder": "Reorder",
   "Restore default colums": "Restore default colums",
+  "Run the migration plan.": "Run the migration plan.",
   "Save": "Save",
   "Select a default migration network for the provider. This network will be used for migrating data to all namespaces to which it is attached.": "Select a default migration network for the provider. This network will be used for migrating data to all namespaces to which it is attached.",
   "Select Filter": "Select Filter",
@@ -51,5 +56,6 @@
   "Unable to retrieve data": "Unable to retrieve data",
   "Unknown": "Unknown",
   "VMs": "VMs",
-  "VMware": "VMware"
+  "VMware": "VMware",
+  "Welcome to {{appTitle}}": "Welcome to {{appTitle}}"
 }
