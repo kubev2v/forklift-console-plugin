@@ -4,8 +4,10 @@ import KubeClient, {
   CoreNamespacedResourceKind,
   CoreNamespacedResource,
   KubeResource,
+  ClusterResource,
+  CoreClusterResource,
 } from '@migtools/lib-ui';
-import { ENV, ProviderType, CLUSTER_API_VERSION } from '@app/common/constants';
+import { ProviderType, CLUSTER_API_VERSION } from '@app/common/constants';
 import { IProviderObject, ISecret } from '@app/queries/types';
 import {
   AddProviderFormValues,
@@ -16,7 +18,7 @@ import {
 import { AuthorizedClusterClient } from './types';
 import { nameAndNamespace } from '@app/queries/helpers';
 
-export class ForkliftResource extends NamespacedResource {
+class ForkliftResource extends NamespacedResource {
   private _gvk: KubeClient.IGroupVersionKindPlural;
   constructor(kind: ForkliftResourceKind, namespace: string) {
     super(namespace);
@@ -31,12 +33,43 @@ export class ForkliftResource extends NamespacedResource {
     return this._gvk;
   }
   listPath(): string {
-    return listPath(this, this.namespace);
+    return listPath(this);
   }
   namedPath(name: string): string {
-    return namedPath(this, name, this.namespace);
+    return namedPath(this, name);
   }
 }
+
+class ForkliftAllNamespaceResource extends ClusterResource {
+  private _gvk: KubeClient.IGroupVersionKindPlural;
+  constructor(kind: ForkliftResourceKind) {
+    super();
+
+    this._gvk = {
+      group: 'forklift.konveyor.io',
+      version: 'v1beta1',
+      kindPlural: kind,
+    };
+  }
+  gvk(): KubeClient.IGroupVersionKindPlural {
+    return this._gvk;
+  }
+  listPath(): string {
+    return listPath(this);
+  }
+  namedPath(name: string): string {
+    return namedPath(this, name);
+  }
+}
+
+export const createResource = (kind: ForkliftResourceKind, namespace: string): KubeResource =>
+  namespace ? new ForkliftResource(kind, namespace) : new ForkliftAllNamespaceResource(kind);
+
+export const createSecretResource = (namespace: string) =>
+  namespace
+    ? new CoreNamespacedResource(CoreNamespacedResourceKind.Secret, namespace)
+    : new CoreClusterResource(CoreNamespacedResourceKind.Secret);
+
 export enum ForkliftResourceKind {
   Provider = 'providers',
   NetworkMap = 'networkmaps',
@@ -47,18 +80,11 @@ export enum ForkliftResourceKind {
   Hook = 'hooks',
 }
 
-export const secretResource = new CoreNamespacedResource(
-  CoreNamespacedResourceKind.Secret,
-  ENV.NAMESPACE
-  //are we moving the secrets to the config namespace?
-);
-
-export const providerResource = new ForkliftResource(ForkliftResourceKind.Provider, ENV.NAMESPACE);
-
 export function convertFormValuesToSecret(
   values: AddProviderFormValues,
   createdForResourceType: ForkliftResourceKind,
-  providerBeingEdited: IProviderObject | null
+  providerBeingEdited: IProviderObject | null,
+  namespace: string
 ): ISecret {
   let secretData: ISecret['data'] = {};
   if (values.providerType === 'vsphere') {
@@ -94,7 +120,7 @@ export function convertFormValuesToSecret(
       ...(!providerBeingEdited
         ? {
             generateName: `${values.name}-`,
-            namespace: ENV.NAMESPACE,
+            namespace,
           }
         : nameAndNamespace(providerBeingEdited.spec.secret)),
       labels: {
@@ -132,6 +158,7 @@ export const ovirtHostnameToUrl = (hostname: string): string =>
   `https://${hostname}/ovirt-engine/api`;
 
 export const convertFormValuesToProvider = (
+  namespace: string,
   values: AddProviderFormValues,
   providerType: ProviderType | null
 ): IProviderObject => {
@@ -153,7 +180,7 @@ export const convertFormValuesToProvider = (
     kind: 'Provider',
     metadata: {
       name,
-      namespace: ENV.NAMESPACE,
+      namespace,
     },
     spec: {
       type: values.providerType,
@@ -174,10 +201,13 @@ export const getTokenSecretLabelSelector = (
 
 export const checkIfResourceExists = async (
   client: AuthorizedClusterClient,
-  resourceKind: ForkliftResourceKind | CoreNamespacedResourceKind,
-  resource: ForkliftResource,
+  resourceKind: ForkliftResourceKind,
+  resource: KubeResource,
   resourceName: string
 ): Promise<void> => {
+  const secretResource = createSecretResource(
+    resource instanceof NamespacedResource ? resource.namespace : undefined
+  );
   const results = await Q.allSettled([
     client.list(secretResource, getTokenSecretLabelSelector(resourceKind, resourceName)),
     client.get(resource, resourceName),
@@ -210,32 +240,36 @@ export const checkIfResourceExists = async (
 };
 
 /** Translate resource into namespaced k8s api ptch */
-export const listPath = (resource: KubeResource, namespace: string = ENV.NAMESPACE) => {
+export const listPath = (resource: KubeResource) => {
   const isCRD = !!resource.gvk().group;
-
-  return isCRD
-    ? [
-        '/api/kubernetes/apis',
-        resource.gvk().group,
-        resource.gvk().version,
-        'namespaces',
-        namespace || ENV.NAMESPACE,
-        resource.gvk().kindPlural,
-      ].join('/')
-    : [
-        '/api/kubernetes/api',
-        resource.gvk().version,
-        'namespaces',
-        namespace || ENV.NAMESPACE,
-        resource.gvk().kindPlural,
-      ].join('/');
+  if (resource instanceof NamespacedResource) {
+    return isCRD
+      ? [
+          '/api/kubernetes/apis',
+          resource.gvk().group,
+          resource.gvk().version,
+          'namespaces',
+          resource.namespace,
+          resource.gvk().kindPlural,
+        ].join('/')
+      : [
+          '/api/kubernetes/api',
+          resource.gvk().version,
+          'namespaces',
+          resource.namespace,
+          resource.gvk().kindPlural,
+        ].join('/');
+  } else {
+    return [
+      '/api/kubernetes/apis',
+      resource.gvk().group,
+      resource.gvk().version,
+      resource.gvk().kindPlural,
+    ].join('/');
+  }
 };
 
 /** Translate resource into named k8s api path */
-export const namedPath = (
-  resource: KubeResource,
-  name: string,
-  namespace: string = ENV.NAMESPACE
-) => {
-  return [listPath(resource, namespace), name].join('/');
+export const namedPath = (resource: KubeResource, name: string) => {
+  return [listPath(resource), name].join('/');
 };

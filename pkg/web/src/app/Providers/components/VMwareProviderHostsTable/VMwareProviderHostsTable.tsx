@@ -20,6 +20,7 @@ import { ResolvedQuery } from '@app/common/components/ResolvedQuery';
 import { StatusCondition } from '@app/common/components/StatusCondition';
 import '@app/Providers/components/VMwareProviderHostsTable/VMwareProviderHostsTable.css';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
+import { ENV } from '@app/common/constants';
 
 interface IVMwareProviderHostsTableProps {
   provider: IVMwareProvider;
@@ -30,7 +31,8 @@ export const VMwareProviderHostsTable: React.FunctionComponent<IVMwareProviderHo
   provider,
   hosts,
 }: IVMwareProviderHostsTableProps) => {
-  const hostConfigsQuery = useHostConfigsQuery();
+  const namespace = ENV.DEFAULT_NAMESPACE;
+  const hostConfigsQuery = useHostConfigsQuery(namespace);
   const hostConfigs = hostConfigsQuery.data?.items || [];
 
   const columns: ICell[] = [

@@ -62,14 +62,20 @@ const deleteDisabledTooltip = ({ t, isPlanExecuting, isPlanGathering, isArchivin
   return '';
 };
 
-export const useFlatPlanActions = (plan: FlatPlan) => {
+export const useFlatPlanActions = ({
+  entity: plan,
+  namespace,
+}: {
+  entity: FlatPlan;
+  namespace: string;
+}) => {
   const { migrationStarted, archived: isPlanArchived, name } = plan;
   const isPlanStarted = !!migrationStarted;
   const { t } = useTranslation();
   const launchModal = useModal();
   const { withNs, latestAssociatedMustGather } = React.useContext(MustGatherContext);
   const mustGather = latestAssociatedMustGather(withNs(plan.name, 'plan'));
-  const cutoverMutation = useSetCutoverMutation();
+  const cutoverMutation = useSetCutoverMutation(plan.namespace);
 
   const isPlanGathering = mustGather?.status === 'inprogress' || mustGather?.status === 'new';
   const areProvidersReady = plan.sourceReady && plan.targetReady;
@@ -89,7 +95,11 @@ export const useFlatPlanActions = (plan: FlatPlan) => {
   const editAction = useMemo(
     () => ({
       id: 'edit',
-      cta: { href: `${PATH_PREFIX}/plans/${name}/edit` },
+      cta: {
+        href: namespace
+          ? `${PATH_PREFIX}/plans/ns/${namespace}/${name}/edit`
+          : `${PATH_PREFIX}/plans/${name}/edit`,
+      },
       label: t('Edit'),
       disabled: editingDisabled,
       disabledTooltip: editingDisabledTooltip({
@@ -100,13 +110,26 @@ export const useFlatPlanActions = (plan: FlatPlan) => {
         areProvidersReady,
       }),
     }),
-    [t, editingDisabled, isPlanArchived, isPlanStarted, isPlanGathering, areProvidersReady, name],
+    [
+      t,
+      editingDisabled,
+      isPlanArchived,
+      isPlanStarted,
+      isPlanGathering,
+      areProvidersReady,
+      name,
+      namespace,
+    ],
   );
 
   const duplicateAction = useMemo(
     () => ({
       id: 'duplicate',
-      cta: { href: `${PATH_PREFIX}/plans/${name}/duplicate` },
+      cta: {
+        href: namespace
+          ? `${PATH_PREFIX}/plans/ns/${namespace}/${name}/duplicate`
+          : `${PATH_PREFIX}/plans/${name}/duplicate`,
+      },
       label: t('Duplicate'),
       disabled: !areProvidersReady,
       disabledTooltip: !areProvidersReady
@@ -115,7 +138,7 @@ export const useFlatPlanActions = (plan: FlatPlan) => {
           )
         : '',
     }),
-    [t, areProvidersReady, name],
+    [t, areProvidersReady, name, namespace],
   );
 
   const archiveAction = useMemo(
@@ -233,7 +256,7 @@ const DeleteModal = ({
     setIsOpen(false);
     closeModal();
   };
-  const deletePlanMutation = useDeletePlanMutation(exit);
+  const deletePlanMutation = useDeletePlanMutation(plan.namespace, exit);
   return (
     <ConfirmModal
       titleIconVariant="warning"
@@ -272,7 +295,7 @@ const RestartModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
     setIsOpen(false);
     closeModal();
   };
-  const createMigrationMutation = useCreateMigrationMutation();
+  const createMigrationMutation = useCreateMigrationMutation(plan.namespace);
   return (
     <MigrationConfirmModal
       isOpen={isOpen}
@@ -319,7 +342,7 @@ const ArchiveModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
     closeModal();
   };
 
-  const archivePlanMutation = useArchivePlanMutation(exit);
+  const archivePlanMutation = useArchivePlanMutation(plan.namespace, exit);
   return (
     <ConfirmModal
       position="top"

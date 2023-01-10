@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { UseMutationResult, UseQueryResult, useQueryClient } from 'react-query';
-import { ForkliftResource, ForkliftResourceKind, checkIfResourceExists } from '@app/client/helpers';
+import { createResource, ForkliftResourceKind, checkIfResourceExists } from '@app/client/helpers';
 import { IKubeList, IKubeResponse, KubeClientError } from '@app/client/types';
-import { CLUSTER_API_VERSION, ENV } from '@app/common/constants';
+import { CLUSTER_API_VERSION } from '@app/common/constants';
 import {
   isSameResource,
   mockKubeList,
@@ -20,13 +20,13 @@ import { SourceVM } from './types/vms.types';
 import { MOCK_MIGRATIONS } from './mocks/migrations.mock';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-const migrationResource = new ForkliftResource(ForkliftResourceKind.Migration, ENV.NAMESPACE);
-
 export const useCreateMigrationMutation = (
+  namespace: string,
   onSuccess?: (migration: IMigration) => void
 ): UseMutationResult<IKubeResponse<IMigration>, KubeClientError, IPlan, unknown> => {
   const client = useAuthorizedK8sClient();
   const queryClient = useQueryClient();
+  const migrationResource = createResource(ForkliftResourceKind.Migration, namespace);
   return useMockableMutation<IKubeResponse<IMigration>, KubeClientError, IPlan>(
     async (plan: IPlan) => {
       const migration: IMigration = {
@@ -34,7 +34,7 @@ export const useCreateMigrationMutation = (
         kind: 'Migration',
         metadata: {
           name: `${plan.metadata.name}-${Date.now()}`,
-          namespace: ENV.NAMESPACE,
+          namespace,
           ownerReferences: [getObjectRef(plan)],
         },
         spec: {
@@ -59,7 +59,8 @@ export const useCreateMigrationMutation = (
   );
 };
 
-export const useMigrationsQuery = (): UseQueryResult<IKubeList<IMigration>> => {
+export const useMigrationsQuery = (namespace: string): UseQueryResult<IKubeList<IMigration>> => {
+  const migrationResource = createResource(ForkliftResourceKind.Migration, namespace);
   const sortKubeListByNameCallback = React.useCallback(
     (data): IKubeList<IMigration> => sortKubeListByName(data),
     []
@@ -80,6 +81,9 @@ export const findLatestMigration = (
   plan: IPlan | null,
   migrations: IMigration[] | null
 ): IMigration | null => {
+  if (!plan) {
+    return null;
+  }
   const history = plan?.status?.migration?.history;
   const latestMigrationMeta = history ? history[history.length - 1].migration : null;
   if (migrations && latestMigrationMeta) {
@@ -91,18 +95,20 @@ export const findLatestMigration = (
   return null;
 };
 
-export const useLatestMigrationQuery = (plan: IPlan | null): IMigration | null => {
-  const migrationsQuery = useMigrationsQuery();
+const useLatestMigrationQuery = (plan: IPlan | null, namespace: string): IMigration | null => {
+  const migrationsQuery = useMigrationsQuery(namespace);
   return findLatestMigration(plan, migrationsQuery.data?.items || null);
 };
 
 export const useCancelVMsMutation = (
   plan: IPlan | null,
+  namespace: string,
   onSuccess?: () => void
 ): UseMutationResult<IKubeResponse<IMigration>, KubeClientError, SourceVM[], unknown> => {
-  const latestMigration = useLatestMigrationQuery(plan);
+  const latestMigration = useLatestMigrationQuery(plan, namespace);
   const client = useAuthorizedK8sClient();
   const queryClient = useQueryClient();
+  const migrationResource = createResource(ForkliftResourceKind.Migration, namespace);
   return useMockableMutation<IKubeResponse<IMigration>, KubeClientError, SourceVM[]>(
     (vms: SourceVM[]) => {
       if (!latestMigration) return Promise.reject('Cannot find active Migration CR');
@@ -149,11 +155,13 @@ export interface ISetCutoverArgs {
 }
 
 export const useSetCutoverMutation = (
+  namespace: string,
   onSuccess?: () => void
 ): UseMutationResult<IKubeResponse<IMigration>, KubeClientError, ISetCutoverArgs, unknown> => {
-  const migrationsQuery = useMigrationsQuery();
+  const migrationsQuery = useMigrationsQuery(namespace);
   const client = useAuthorizedK8sClient();
   const queryClient = useQueryClient();
+  const migrationResource = createResource(ForkliftResourceKind.Migration, namespace);
   return useMockableMutation<IKubeResponse<IMigration>, KubeClientError, ISetCutoverArgs>(
     ({ plan, cutover }) => {
       const latestMigration = findLatestMigration(plan, migrationsQuery.data?.items || null);

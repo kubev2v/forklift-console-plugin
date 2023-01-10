@@ -3,12 +3,28 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import '@testing-library/jest-dom';
-import { Router } from 'react-router-dom';
+import { RouteComponentProps, Router } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { PlanWizard } from '../PlanWizard';
-import { PATH_PREFIX } from '@app/common/constants';
+import { ENV, PATH_PREFIX } from '@app/common/constants';
 
 const queryClient = new QueryClient();
+
+const routeProps: RouteComponentProps<{ ns: string }> = {
+  match: {
+    params: { ns: ENV.NAMESPACE },
+    isExact: true,
+    path: '',
+    url: '',
+  },
+  history: createMemoryHistory(),
+  location: {
+    hash: '',
+    pathname: '',
+    search: '',
+    state: '',
+  },
+};
 
 describe('<AddEditProviderModal />', () => {
   const history = createMemoryHistory();
@@ -17,7 +33,7 @@ describe('<AddEditProviderModal />', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <Router history={history}>
-          <PlanWizard />
+          <PlanWizard {...routeProps} />
         </Router>
       </QueryClientProvider>
     );
@@ -30,7 +46,7 @@ describe('<AddEditProviderModal />', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <Router history={history}>
-          <PlanWizard />
+          <PlanWizard {...routeProps} />
         </Router>
       </QueryClientProvider>
     );
@@ -86,7 +102,7 @@ describe('<AddEditProviderModal />', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <Router history={history}>
-          <PlanWizard />
+          <PlanWizard {...routeProps} />
         </Router>
       </QueryClientProvider>
     );

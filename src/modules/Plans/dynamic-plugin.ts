@@ -55,8 +55,8 @@ export const extensions: EncodedExtension[] = [
       component: {
         $codeRef: 'PlanWizard',
       },
-      path: '/mtv/plans/create',
-      exact: true,
+      path: ['/mtv/plans/ns/:ns/create', '/mtv/plans/create'],
+      exact: false,
     },
   } as EncodedExtension<RoutePage>,
 
@@ -66,7 +66,12 @@ export const extensions: EncodedExtension[] = [
       component: {
         $codeRef: 'PlanWizard',
       },
-      path: ['/mtv/plans/:planName/edit', '/mtv/plans/:planName/duplicate'],
+      path: [
+        '/mtv/plans/ns/:ns/:planName/edit',
+        '/mtv/plans/:planName/edit',
+        '/mtv/plans/ns/:ns/:planName/duplicate',
+        '/mtv/plans/:planName/duplicate',
+      ],
       exact: false,
     },
   } as EncodedExtension<RoutePage>,
@@ -77,7 +82,7 @@ export const extensions: EncodedExtension[] = [
       component: {
         $codeRef: 'VMMigrationDetails',
       },
-      path: '/mtv/plans/:planName',
+      path: ['/mtv/plans/ns/:ns/:planName', '/mtv/plans/:planName'],
       exact: false,
     },
   } as EncodedExtension<RoutePage>,

@@ -64,6 +64,7 @@ import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 export interface IPlanMatchParams {
   url: string;
   planName: string;
+  ns?: string;
 }
 
 const getTotalCopiedRatio = (vmStatus: IVMStatus) => {
@@ -84,9 +85,11 @@ export type VMMigrationDetailsProps = {
 };
 
 export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps> = ({ match }) => {
-  const plansQuery = usePlansQuery();
+  const currentNamespace = match?.params?.ns;
+  const plansQuery = usePlansQuery(currentNamespace);
   const plan = plansQuery.data?.items.find((item) => item.metadata.name === match?.params.planName);
   const planStarted = !!plan?.status?.migration?.started;
+  const effectiveNamespace = plan?.metadata?.namespace || currentNamespace;
 
   const providersQuery = useInventoryProvidersQuery();
   const { sourceProvider } = findProvidersByRefs(plan?.spec.provider || null, providersQuery);
@@ -97,7 +100,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
     return nameFromInventory || vmStatus.name;
   };
 
-  const migrationsQuery = useMigrationsQuery();
+  const migrationsQuery = useMigrationsQuery(effectiveNamespace);
   const latestMigration = findLatestMigration(plan || null, migrationsQuery.data?.items || null);
   const planState = getPlanState(plan || null, latestMigration, migrationsQuery.data?.items);
   const isShowingPrecopyView =
@@ -225,7 +228,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
 
   const [isCancelModalOpen, toggleCancelModal] = React.useReducer((isOpen) => !isOpen, false);
 
-  const cancelVMsMutation = useCancelVMsMutation(plan || null, () => {
+  const cancelVMsMutation = useCancelVMsMutation(plan || null, effectiveNamespace, () => {
     toggleCancelModal();
     setSelectedItems([]);
   });

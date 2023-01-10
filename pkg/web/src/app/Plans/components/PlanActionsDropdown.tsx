@@ -39,6 +39,7 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
   planState,
   canRestart,
 }: IPlansActionDropdownProps) => {
+  const namespace = plan.metadata.namespace;
   const { withNs, latestAssociatedMustGather } = React.useContext(MustGatherContext);
 
   const mustGather = latestAssociatedMustGather(withNs(plan.metadata.name, 'plan'));
@@ -50,8 +51,8 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
     toggleRestartModal();
     history.push(`${PATH_PREFIX}/plans/${migration.spec.plan.name}`);
   };
-  const createMigrationMutation = useCreateMigrationMutation(onMigrationStarted);
-  const setCutoverMutation = useSetCutoverMutation();
+  const createMigrationMutation = useCreateMigrationMutation(namespace, onMigrationStarted);
+  const setCutoverMutation = useSetCutoverMutation(namespace);
   const [kebabIsOpen, setKebabIsOpen] = React.useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = React.useReducer((isOpen) => !isOpen, false);
   const [isRestartModalOpen, toggleRestartModal] = React.useReducer((isOpen) => !isOpen, false);
@@ -60,10 +61,10 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
     (isOpen) => !isOpen,
     false
   );
-  const deletePlanMutation = useDeletePlanMutation(toggleDeleteModal);
-  const archivePlanMutation = useArchivePlanMutation(toggleArchivePlanModal);
+  const deletePlanMutation = useDeletePlanMutation(namespace, toggleDeleteModal);
+  const archivePlanMutation = useArchivePlanMutation(namespace, toggleArchivePlanModal);
   const conditions = plan.status?.conditions || [];
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const clusterProvidersQuery = useClusterProvidersQuery(namespace);
   const areProvidersReady = React.useMemo(
     () => kebabIsOpen && areAssociatedProvidersReady(clusterProvidersQuery, plan.spec.provider),
     [kebabIsOpen, clusterProvidersQuery, plan.spec.provider]

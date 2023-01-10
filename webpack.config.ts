@@ -89,6 +89,7 @@ const config: WebpackConfiguration & {
       DATA_SOURCE: 'remote',
       BRAND_TYPE: 'Konveyor',
       NAMESPACE: 'konveyor-forklift',
+      DEFAULT_NAMESPACE: 'default',
       NODE_ENV: isProd ? 'production' : 'development',
       PLUGIN_NAME: 'forklift-console-plugin',
     }),

@@ -44,6 +44,7 @@ import {
   QuerySpinnerMode,
 } from '@app/common/components/ResolvedQuery';
 import { ProviderSelect } from '@app/common/components/ProviderSelect';
+import { ENV } from '@app/common/constants';
 
 interface IAddEditMappingModalProps {
   title: string;
@@ -86,10 +87,11 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
   setActiveMapType,
 }: IAddEditMappingModalProps) => {
   usePausedPollingEffect();
+  const namespace = ENV.DEFAULT_NAMESPACE;
 
-  const mappingsQuery = useMappingsQuery(mappingType);
+  const mappingsQuery = useMappingsQuery(mappingType, namespace);
   const inventoryProvidersQuery = useInventoryProvidersQuery();
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const clusterProvidersQuery = useClusterProvidersQuery(namespace);
 
   const form = useMappingFormState(mappingsQuery, mappingBeingEdited);
 
@@ -121,8 +123,8 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values.sourceProvider, form.values.targetProvider]);
 
-  const createMappingMutation = useCreateMappingMutation(mappingType, onClose);
-  const patchMappingMutation = usePatchMappingMutation(mappingType, onClose);
+  const createMappingMutation = useCreateMappingMutation(mappingType, namespace, onClose);
+  const patchMappingMutation = usePatchMappingMutation(mappingType, namespace, onClose);
 
   const mutateMapping = !mappingBeingEdited
     ? createMappingMutation.mutate
@@ -230,6 +232,7 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                     notReadyTooltipPosition="right"
                     menuAppendTo="parent"
                     maxHeight="40vh"
+                    namespace={namespace}
                   />
                 </GridItem>
                 <GridItem md={6}>
@@ -238,6 +241,7 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                     field={form.fields.targetProvider}
                     menuAppendTo="parent"
                     maxHeight="40vh"
+                    namespace={namespace}
                   />
                 </GridItem>
               </Grid>

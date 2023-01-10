@@ -11,27 +11,24 @@ import {
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
-import { useRouteMatch } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { VMwareProviderHostsTable } from './components/VMwareProviderHostsTable';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 import { useHostsQuery, useInventoryProvidersQuery } from '@app/queries';
 import { IVMwareProvider } from '@app/queries/types';
 import { ResolvedQueries } from '@app/common/components/ResolvedQuery';
-import { PATH_PREFIX, PROVIDERS_REFERENCE, PROVIDER_TYPE_NAMES } from '@app/common/constants';
+import { PROVIDERS_REFERENCE, PROVIDER_TYPE_NAMES } from '@app/common/constants';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface IHostsMatchParams {
   url: string;
   providerName: string;
+  ns: string;
 }
 
-export const HostsPage: React.FunctionComponent = () => {
-  const match = useRouteMatch<IHostsMatchParams>({
-    path: `${PATH_PREFIX}/providers/vsphere/:providerName`,
-    strict: true,
-    sensitive: true,
-  });
-
+export const HostsPage: React.FunctionComponent<RouteComponentProps<IHostsMatchParams>> = ({
+  match,
+}) => {
   const providersQuery = useInventoryProvidersQuery();
   const provider =
     providersQuery.data?.vsphere.find((provider) => provider.name === match?.params.providerName) ||
@@ -46,7 +43,12 @@ export const HostsPage: React.FunctionComponent = () => {
           <LevelItem>
             <Breadcrumb>
               <BreadcrumbItem>
-                <ResourceLink kind={PROVIDERS_REFERENCE} hideIcon displayName="Providers" />
+                <ResourceLink
+                  kind={PROVIDERS_REFERENCE}
+                  namespace={match?.params?.ns}
+                  hideIcon
+                  displayName="Providers"
+                />
               </BreadcrumbItem>
               <BreadcrumbItem>{PROVIDER_TYPE_NAMES.vsphere}</BreadcrumbItem>
               <BreadcrumbItem>{match?.params.providerName}</BreadcrumbItem>

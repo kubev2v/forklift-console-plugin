@@ -12,6 +12,7 @@ import {
 } from '@app/queries';
 import { CreateMappingButton } from './components/CreateMappingButton';
 import { ResolvedQueries } from '@app/common/components/ResolvedQuery';
+import { ENV } from '@app/common/constants';
 
 interface IMappingsProps {
   mappingType: MappingType;
@@ -24,9 +25,10 @@ export const Mappings: React.FunctionComponent<IMappingsProps> = ({
   toggleModalAndResetEdit,
   openEditMappingModal,
 }: IMappingsProps) => {
+  const namespace = ENV.DEFAULT_NAMESPACE;
   const sufficientProvidersQuery = useHasSufficientProvidersQuery();
-  const clusterProvidersQuery = useClusterProvidersQuery();
-  const mappingsQuery = useMappingsQuery(mappingType);
+  const clusterProvidersQuery = useClusterProvidersQuery(namespace);
+  const mappingsQuery = useMappingsQuery(mappingType, namespace);
   const filteredMappings = filterSharedMappings(mappingsQuery.data?.items);
 
   return (

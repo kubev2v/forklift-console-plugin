@@ -21,6 +21,7 @@ import {
   PROVIDER_TYPE_NAMES,
   PROVIDER_TYPES,
   PATH_PREFIX,
+  ENV,
 } from '@app/common/constants';
 import { useClusterProvidersQuery, useInventoryProvidersQuery, usePlansQuery } from '@app/queries';
 
@@ -43,6 +44,7 @@ export interface IProvidersMatchParams {
 }
 
 export const ProvidersPage: React.FunctionComponent = () => {
+  const namespace = ENV.DEFAULT_NAMESPACE;
   const history = useHistory();
   const match = useRouteMatch<IProvidersMatchParams>({
     path: `${PATH_PREFIX}/providers/:providerType`,
@@ -50,9 +52,9 @@ export const ProvidersPage: React.FunctionComponent = () => {
     sensitive: true,
   });
 
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const clusterProvidersQuery = useClusterProvidersQuery(namespace);
   const inventoryProvidersQuery = useInventoryProvidersQuery();
-  const plansQuery = usePlansQuery();
+  const plansQuery = usePlansQuery(namespace);
 
   const allQueries = [clusterProvidersQuery, inventoryProvidersQuery, plansQuery];
   const allErrorTitles = [
@@ -168,6 +170,7 @@ export const ProvidersPage: React.FunctionComponent = () => {
         <AddEditProviderModal
           onClose={toggleModalAndResetEdit}
           providerBeingEdited={providerBeingEdited}
+          namespace={namespace}
         />
       ) : null}
     </>

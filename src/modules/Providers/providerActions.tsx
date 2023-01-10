@@ -19,10 +19,10 @@ import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 
 import { type MergedProvider } from './data';
 
-export const useMergedProviderActions = (entity: MergedProvider) => {
+export const useMergedProviderActions = ({ entity }: { entity: MergedProvider }) => {
   const { t } = useTranslation();
   const launchModal = useModal();
-  const plansQuery = usePlansQuery();
+  const plansQuery = usePlansQuery(entity.namespace);
   const isHostProvider = entity.type === 'openshift' && !entity.url;
   const editingDisabled =
     isHostProvider ||
@@ -81,7 +81,11 @@ const EditModal = ({
 }) => {
   return (
     <EditProviderContext.Provider value={{ openEditProviderModal: () => undefined, plans }}>
-      <AddEditProviderModal onClose={closeModal} providerBeingEdited={toIProviderObject(entity)} />
+      <AddEditProviderModal
+        onClose={closeModal}
+        providerBeingEdited={toIProviderObject(entity)}
+        namespace={entity.namespace}
+      />
     </EditProviderContext.Provider>
   );
 };
@@ -94,7 +98,7 @@ const SelectNetworkForOpenshift = ({
   entity: MergedProvider;
 }) => {
   const { t } = useTranslation();
-  const migrationNetworkMutation = useOCPMigrationNetworkMutation(closeModal);
+  const migrationNetworkMutation = useOCPMigrationNetworkMutation(entity.namespace, closeModal);
   const inventory = toIOpenShiftProvider(entity, toIProviderObject(entity));
   return (
     <SelectOpenShiftNetworkModal
@@ -131,6 +135,7 @@ const DeleteModal = ({
 
   const toggleDeleteModal = () => setIsDeleteModalOpen(!isDeleteModalOpen);
   const deleteProviderMutation = useDeleteProviderMutation(
+    entity.namespace,
     entity.type as ProviderType,
     toggleDeleteModal,
   );

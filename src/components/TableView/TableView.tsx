@@ -27,6 +27,7 @@ export function TableView<T>({
   children,
   activeSort,
   setActiveSort,
+  currentNamespace,
 }: TableViewProps<T>) {
   const { t } = useTranslation();
   const hasChildren = children.filter(Boolean).length > 0;
@@ -67,6 +68,7 @@ export function TableView<T>({
               key={`${columnSignature}_${entity?.[uidFieldId] ?? index}`}
               entity={entity}
               columns={visibleColumns}
+              currentNamespace={currentNamespace}
             />
           ))}
       </Tbody>
@@ -93,4 +95,5 @@ interface TableViewProps<T> {
   children?: ReactNode[];
   activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
+  currentNamespace: string;
 }

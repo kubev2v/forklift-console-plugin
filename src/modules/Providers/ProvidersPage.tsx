@@ -151,10 +151,10 @@ const Page: React.FC<{
   const showEmptyState = (dataSource[0]?.length ?? 0) === 0;
 
   return showEmptyState ? (
-    <EmptyStateProviders />
+    <EmptyStateProviders namespace={namespace} />
   ) : (
     <StandardPage<MergedProvider>
-      addButton={<AddProviderButton />}
+      addButton={<AddProviderButton namespace={namespace} />}
       dataSource={dataSource}
       RowMapper={ProviderRow}
       fieldsMetadata={fieldsMetadata}
@@ -167,23 +167,33 @@ const Page: React.FC<{
 
 const PageMemo = React.memo(Page);
 
-const AddProviderButton: React.FC = () => {
+const AddProviderButton: React.FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useTranslation();
   const launchModal = useModal();
 
   return (
-    <Button variant="primary" onClick={() => launchModal(withQueryClient(AddProviderModal), {})}>
+    <Button
+      variant="primary"
+      onClick={() =>
+        launchModal(withQueryClient(AddProviderModal), { currentNamespace: namespace })
+      }
+    >
       {t('Add Provider')}
     </Button>
   );
 };
 
 const AddProviderModal: React.FC<{
+  currentNamespace: string;
   closeModal: () => void;
-}> = ({ closeModal }) => {
+}> = ({ closeModal, currentNamespace }) => {
   return (
     <EditProviderContext.Provider value={{ openEditProviderModal: () => undefined, plans: [] }}>
-      <AddEditProviderModal onClose={closeModal} providerBeingEdited={null} />
+      <AddEditProviderModal
+        onClose={closeModal}
+        providerBeingEdited={null}
+        namespace={currentNamespace}
+      />
     </EditProviderContext.Provider>
   );
 };

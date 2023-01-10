@@ -28,7 +28,7 @@ import {
   getMappingFromBuilderItems,
 } from '@app/Mappings/components/MappingBuilder/helpers';
 import { PlanWizardFormState, PlanWizardMode } from './PlanWizard';
-import { CLUSTER_API_VERSION, ENV, ProviderType } from '@app/common/constants';
+import { CLUSTER_API_VERSION, ProviderType } from '@app/common/constants';
 import {
   getAggregateQueryStatus,
   getFirstQueryError,
@@ -510,13 +510,14 @@ export const generatePlan = (
   forms: PlanWizardFormState,
   networkMappingRef: INameNamespaceRef,
   storageMappingRef: INameNamespaceRef,
+  namespace: string,
   hooksRef?: IHookRef[]
 ): IPlan => ({
   apiVersion: CLUSTER_API_VERSION,
   kind: 'Plan',
   metadata: {
     name: forms.general.values.planName,
-    namespace: ENV.NAMESPACE,
+    namespace,
   },
   spec: {
     description: forms.general.values.planDescription,
@@ -567,7 +568,8 @@ interface IPlanWizardPrefillResults {
 export const usePlanWizardPrefillEffect = (
   forms: PlanWizardFormState,
   planBeingPrefilled: IPlan | null,
-  wizardMode: PlanWizardMode
+  wizardMode: PlanWizardMode,
+  namespace: string
 ): IPlanWizardPrefillResults => {
   const providersQuery = useInventoryProvidersQuery();
   const { sourceProvider, targetProvider } = findProvidersByRefs(
@@ -588,11 +590,11 @@ export const usePlanWizardPrefillEffect = (
     MappingType.Storage
   );
 
-  const networkMappingsQuery = useMappingsQuery(MappingType.Network);
-  const storageMappingsQuery = useMappingsQuery(MappingType.Storage);
+  const networkMappingsQuery = useMappingsQuery(MappingType.Network, namespace);
+  const storageMappingsQuery = useMappingsQuery(MappingType.Storage, namespace);
 
-  const hooksQuery = useHooksQuery();
-  const plansQuery = usePlansQuery();
+  const hooksQuery = useHooksQuery(namespace);
+  const plansQuery = usePlansQuery(namespace);
 
   const queries = [
     providersQuery,
@@ -774,17 +776,24 @@ export const concernMatchesFilter = (concern: ISourceVMConcern, filterText?: str
 export const vmMatchesConcernFilter = (vm: SourceVM, filterText?: string): boolean =>
   !!filterText && vm.concerns.some((concern) => concernMatchesFilter(concern, filterText));
 
-export const generateHook = (
-  instance: PlanHookInstance,
-  existingHook: INameNamespaceRef | null,
-  generateName?: string,
-  owner?: IPlan
-): IHook => ({
+export const generateHook = ({
+  instance,
+  existingHook,
+  namespace,
+  generateName,
+  owner,
+}: {
+  instance: PlanHookInstance;
+  existingHook: INameNamespaceRef | null;
+  namespace: string;
+  generateName?: string;
+  owner?: IPlan;
+}): IHook => ({
   apiVersion: CLUSTER_API_VERSION,
   kind: 'Hook',
   metadata: {
     ...(existingHook ? { name: existingHook.name } : { generateName: generateName || '' }),
-    namespace: ENV.NAMESPACE,
+    namespace,
     ...(owner ? { ownerReferences: [getObjectRef(owner)] } : {}),
   },
   spec: {

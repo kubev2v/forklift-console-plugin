@@ -17,7 +17,7 @@ import {
 
 import { AddProviderButton } from './ProvidersPage';
 
-const EmptyStateProviders: React.FC = () => {
+const EmptyStateProviders: React.FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useTranslation();
 
   return (
@@ -50,7 +50,7 @@ const EmptyStateProviders: React.FC = () => {
         </Bullseye>
       </EmptyStateBody>
 
-      <AddProviderButton />
+      <AddProviderButton namespace={namespace} />
     </EmptyState>
   );
 };

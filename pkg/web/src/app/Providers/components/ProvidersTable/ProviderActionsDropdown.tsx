@@ -45,18 +45,22 @@ export const ProviderActionsDropdown: React.FunctionComponent<IProviderActionsDr
   const [kebabIsOpen, setKebabIsOpen] = React.useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = React.useReducer((isOpen) => !isOpen, false);
   const { openEditProviderModal, plans } = React.useContext(EditProviderContext);
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const clusterProvidersQuery = useClusterProvidersQuery(provider.metadata.namespace);
   const clusterProviders = clusterProvidersQuery.data?.items || [];
 
-  const deleteProviderMutation = useDeleteProviderMutation(providerType, () => {
-    toggleDeleteModal();
-    const numProviders = clusterProviders.filter(
-      (clusterProvider) => clusterProvider.spec.type === providerType
-    ).length;
-    if (numProviders === 1) {
-      history.replace(`${PATH_PREFIX}/providers`);
+  const deleteProviderMutation = useDeleteProviderMutation(
+    provider.metadata.namespace,
+    providerType,
+    () => {
+      toggleDeleteModal();
+      const numProviders = clusterProviders.filter(
+        (clusterProvider) => clusterProvider.spec.type === providerType
+      ).length;
+      if (numProviders === 1) {
+        history.replace(`${PATH_PREFIX}/providers`);
+      }
     }
-  });
+  );
 
   const isEditDeleteDisabled =
     !provider.spec.url || hasRunningMigration({ plans, providerMetadata: provider.metadata });

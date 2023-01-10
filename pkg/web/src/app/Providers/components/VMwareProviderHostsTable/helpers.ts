@@ -65,7 +65,7 @@ export const usePrefillHostConfigEffect = (
       existingHostConfigs[0] &&
       existingHostConfigs[0].spec.secret?.name) ||
     null;
-  const secretQuery = useSecretQuery(existingSecretName);
+  const secretQuery = useSecretQuery(existingSecretName, provider.namespace);
   React.useEffect(() => {
     if (!isStartedPrefilling && (!existingSecretName || secretQuery.isSuccess)) {
       setIsStartedPrefilling(true);

@@ -32,6 +32,7 @@ import {
 
 import { SimpleSelect, OptionWithValue } from '@app/common/components/SimpleSelect';
 import {
+  ENV,
   fingerprintSchema,
   hostnameSchema,
   ProviderType,
@@ -58,6 +59,7 @@ import { LoadingEmptyState } from '@app/common/components/LoadingEmptyState';
 interface IAddEditProviderModalProps {
   onClose: (navToProviderType?: ProviderType | null) => void;
   providerBeingEdited: IProviderObject | null;
+  namespace: string;
 }
 
 const PROVIDER_TYPE_OPTIONS = PROVIDER_TYPES.map((type) => ({
@@ -169,14 +171,21 @@ export type AddProviderFormValues =
 export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModalProps> = ({
   onClose,
   providerBeingEdited,
+  namespace,
 }: IAddEditProviderModalProps) => {
   usePausedPollingEffect();
+  const prefillNamespace =
+    providerBeingEdited?.metadata?.namespace || namespace || ENV.DEFAULT_NAMESPACE;
 
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const clusterProvidersQuery = useClusterProvidersQuery(prefillNamespace);
 
   const forms = useAddProviderFormState(clusterProvidersQuery, providerBeingEdited);
 
-  const { isDonePrefilling } = useAddEditProviderPrefillEffect(forms, providerBeingEdited);
+  const { isDonePrefilling } = useAddEditProviderPrefillEffect(
+    forms,
+    providerBeingEdited,
+    prefillNamespace
+  );
 
   const providerTypeField = forms.vsphere.fields.providerType;
   const providerType = providerTypeField.value;
@@ -199,9 +208,10 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
     openshift: undefined,
   }[providerType || ''];
 
-  const createProviderMutation = useCreateProviderMutation(providerType, onClose);
+  const createProviderMutation = useCreateProviderMutation(prefillNamespace, providerType, onClose);
 
   const patchProviderMutation = usePatchProviderMutation(
+    prefillNamespace,
     providerType,
     providerBeingEdited,
     onClose

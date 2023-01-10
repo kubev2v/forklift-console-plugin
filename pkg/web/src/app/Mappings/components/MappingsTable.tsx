@@ -21,6 +21,7 @@ import { MappingDetailView } from './MappingDetailView';
 import { MappingStatus } from './MappingStatus';
 import { isSameResource } from '@app/queries/helpers';
 import { useClusterProvidersQuery } from '@app/queries';
+import { ENV } from '@app/common/constants';
 
 interface IMappingsTableProps {
   mappings: Mapping[];
@@ -33,7 +34,8 @@ export const MappingsTable: React.FunctionComponent<IMappingsTableProps> = ({
   mappingType,
   openEditMappingModal,
 }: IMappingsTableProps) => {
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const namespace = ENV.DEFAULT_NAMESPACE;
+  const clusterProvidersQuery = useClusterProvidersQuery(namespace);
 
   const getSortValues = (mapping: Mapping) => {
     const {

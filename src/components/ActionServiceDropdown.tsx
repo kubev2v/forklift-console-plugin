@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'src/utils/i18n';
 
@@ -10,14 +10,33 @@ import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly
  * we are limted to Action interface. However we can pass the parameters indirectly:
  * 1. via clousure - works best for near constant props like "variant"
  * 2. via context - works better for frequently changing props i.e. "ignoreList"
+ * @param variant drop down variant to be used - defaults to 'kebab'
+ * @param ignoreList list of actions that should be ignored(filtered out). Main use case is to exlude primary actions.
  */
 export const ActionContext = createContext({ variant: 'kebab', ignoreList: [] });
 
 export function withActionContext<T>(variant: 'kebab' | 'dropdown', contextId: string) {
-  const Enhanced = ({ entity, ignoreList = [] }: { entity: T; ignoreList?: string[] }) => {
+  const Enhanced = ({
+    entity,
+    ignoreList = [],
+    namespace,
+  }: {
+    entity: T;
+    ignoreList?: string[];
+    namespace?: string;
+  }) => {
+    const outerProviderData = useMemo(
+      () => ({ variant, ignoreList: [...ignoreList] }),
+      // check if data inside the array has changed
+      [variant, ...ignoreList],
+    );
+    const innerProviderData = useMemo(
+      () => ({ [contextId]: { entity, namespace } }),
+      [contextId, entity, namespace],
+    );
     return (
-      <ActionContext.Provider value={{ variant, ignoreList }}>
-        <ActionServiceProvider context={{ [contextId]: entity }}>
+      <ActionContext.Provider value={outerProviderData}>
+        <ActionServiceProvider context={innerProviderData}>
           {ActionsComponent}
         </ActionServiceProvider>
       </ActionContext.Provider>

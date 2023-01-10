@@ -16,7 +16,7 @@ import {
 } from '@app/queries/types';
 import { IMappingBuilderItem } from './MappingBuilder';
 import { getMappingSourceByRef, getMappingTargetByRef } from '../helpers';
-import { CLUSTER_API_VERSION, ENV, ProviderType } from '@app/common/constants';
+import { CLUSTER_API_VERSION, ProviderType } from '@app/common/constants';
 import { nameAndNamespace } from '@app/queries/helpers';
 import { filterSourcesBySelectedVMs } from '@app/Plans/components/Wizard/helpers';
 import { IDisk, IMappingResourcesResult, INicProfile } from '@app/queries';
@@ -112,7 +112,7 @@ export const getMappingFromBuilderItems = ({
         : mappingName
         ? { name: mappingName }
         : { generateName: '' }),
-      namespace: ENV.NAMESPACE,
+      namespace: sourceProvider.namespace,
       ...(owner
         ? {
             ownerReferences: [getObjectRef(owner)],

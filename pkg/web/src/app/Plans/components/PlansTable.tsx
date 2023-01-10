@@ -62,7 +62,7 @@ import { PlanStatusNavLink } from './PlanStatusNavLink';
 import { MustGatherBtn } from '@app/common/components/MustGatherBtn';
 import { ScheduledCutoverTime } from './ScheduledCutoverTime';
 import { hasCondition } from '@app/common/helpers';
-import { PATH_PREFIX } from '@app/common/constants';
+import { ENV, PATH_PREFIX } from '@app/common/constants';
 
 export type PlanActionButtonType = 'Start' | 'Cutover' | 'ScheduledCutover' | 'MustGather';
 interface IPlansTableProps {
@@ -72,9 +72,10 @@ interface IPlansTableProps {
 export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
   plans,
 }: IPlansTableProps) => {
+  const namespace = ENV.DEFAULT_NAMESPACE;
   const [showArchivedPlans, toggleShowArchivedPlans] = React.useReducer((show) => !show, false);
   const providersQuery = useInventoryProvidersQuery();
-  const migrationsQuery = useMigrationsQuery();
+  const migrationsQuery = useMigrationsQuery(namespace);
   const filterCategories: FilterCategory<IPlan>[] = [
     {
       key: 'name',

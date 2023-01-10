@@ -9,4 +9,5 @@ export interface Column {
 export interface RowProps<T> {
   columns: Field[];
   entity: T;
+  currentNamespace: string;
 }

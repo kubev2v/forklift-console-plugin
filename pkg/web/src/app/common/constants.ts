@@ -11,6 +11,7 @@ export const ENV: IEnvVars = {
   DATA_SOURCE: process.env.DATA_SOURCE,
   BRAND_TYPE: process.env.BRAND_TYPE as BrandType,
   NAMESPACE: process.env.NAMESPACE,
+  DEFAULT_NAMESPACE: process.env.DEFAULT_NAMESPACE,
   NODE_ENV: process.env.NODE_ENV,
   PLUGIN_NAME: process.env.PLUGIN_NAME,
 };

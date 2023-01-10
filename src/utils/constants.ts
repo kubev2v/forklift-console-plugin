@@ -1,4 +1,5 @@
 export const ACTIONS = 'actions';
+export const ALL_NAMESPECES = 'all-namespaces';
 export const API_VERSION = 'apiVersion';
 export const ARCHIVED = 'archived';
 export const CLUSTER_COUNT = 'clusterCount';

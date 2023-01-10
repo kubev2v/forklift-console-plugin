@@ -13,21 +13,30 @@ interface IMigrateOrCutoverButtonProps {
   plan: IPlan;
   buttonType: PlanActionButtonType;
   isBeingStarted: boolean;
+  currentNamespace?: string;
 }
 
 export const MigrateOrCutoverButton: React.FunctionComponent<IMigrateOrCutoverButtonProps> = ({
   plan,
   buttonType,
   isBeingStarted,
+  currentNamespace,
 }: IMigrateOrCutoverButtonProps) => {
   const history = useHistory();
   const [isConfirmModalOpen, toggleConfirmModal] = React.useReducer((isOpen) => !isOpen, false);
   const onMigrationStarted = () => {
     toggleConfirmModal();
-    history.push(`${PATH_PREFIX}/plans/${plan.metadata.name}`);
+    history.push(
+      currentNamespace
+        ? `${PATH_PREFIX}/plans/ns/${currentNamespace}/${plan.metadata.name}`
+        : `${PATH_PREFIX}/plans/${plan.metadata.name}`
+    );
   };
-  const createMigrationMutation = useCreateMigrationMutation(onMigrationStarted);
-  const setCutoverMutation = useSetCutoverMutation(toggleConfirmModal);
+  const createMigrationMutation = useCreateMigrationMutation(
+    plan.metadata.namespace,
+    onMigrationStarted
+  );
+  const setCutoverMutation = useSetCutoverMutation(plan.metadata.namespace, toggleConfirmModal);
 
   return (
     <>

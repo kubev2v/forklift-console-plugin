@@ -10,12 +10,13 @@ interface IEditProviderPrefillEffect {
 
 export const useAddEditProviderPrefillEffect = (
   forms: AddProviderFormState,
-  providerBeingEdited: IProviderObject | null
+  providerBeingEdited: IProviderObject | null,
+  namespace: string
 ): IEditProviderPrefillEffect => {
   const [isStartedPrefilling, setIsStartedPrefilling] = React.useState(false);
   const [isDonePrefilling, setIsDonePrefilling] = React.useState(false);
-  const secretQuery = useSecretQuery(providerBeingEdited?.spec.secret?.name || null);
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const secretQuery = useSecretQuery(providerBeingEdited?.spec.secret?.name || null, namespace);
+  const clusterProvidersQuery = useClusterProvidersQuery(namespace);
   const providerType = forms.vsphere.values.providerType || providerBeingEdited?.spec.type;
   React.useEffect(() => {
     if (

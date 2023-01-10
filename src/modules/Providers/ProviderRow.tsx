@@ -24,6 +24,7 @@ interface CellProps {
   value: string;
   entity: MergedProvider;
   t?: (k: string) => string;
+  currentNamespace?: string;
 }
 
 /**
@@ -113,10 +114,16 @@ const ProviderLink = ({ value, entity, t }: CellProps) => {
   );
 };
 
-const HostCell = ({ value, entity: { ready, name, type } }: CellProps) => (
+const HostCell = ({ value, entity: { ready, name, type }, currentNamespace }: CellProps) => (
   <>
     {ready === 'True' && value && type === 'vsphere' ? (
-      <Link to={`${PATH_PREFIX}/providers/vsphere/${name}`}>
+      <Link
+        to={
+          currentNamespace
+            ? `${PATH_PREFIX}/providers/vsphere/ns/${currentNamespace}/${name}`
+            : `${PATH_PREFIX}/providers/vsphere/${name}`
+        }
+      >
         <TextWithIcon Icon={OutlinedHddIcon} value={value} />
       </Link>
     ) : (
@@ -159,7 +166,7 @@ const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   [C.HOST_COUNT]: HostCell,
 };
 
-const ProviderRow = ({ columns, entity }: RowProps<MergedProvider>) => {
+const ProviderRow = ({ columns, entity, currentNamespace }: RowProps<MergedProvider>) => {
   const { t } = useTranslation();
   return (
     <Tr>
@@ -169,6 +176,7 @@ const ProviderRow = ({ columns, entity }: RowProps<MergedProvider>) => {
             value: entity[id],
             entity,
             t,
+            currentNamespace,
           }) ?? <TextCell value={String(entity[id] ?? '')} />}
         </Td>
       ))}
