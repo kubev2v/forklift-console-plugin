@@ -3,6 +3,7 @@
 import * as path from 'path';
 
 import CopyPlugin from 'copy-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import { type Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
 import { type Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
@@ -96,6 +97,15 @@ const config: WebpackConfiguration & {
   optimization: {
     chunkIds: isProd ? 'deterministic' : 'named',
     minimize: isProd ? true : false,
+    minimizer: [
+      // Keep class names and function names in sources to aid debug and diagnostics of prod builds
+      new TerserPlugin({
+        terserOptions: {
+          keep_classnames: true,
+          keep_fnames: true,
+        },
+      }),
+    ],
   },
 };
 
