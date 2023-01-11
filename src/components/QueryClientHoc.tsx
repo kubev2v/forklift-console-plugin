@@ -13,7 +13,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const withQueryClient = (Component) =>
+const withQueryClient = (Component) => {
   function QueryClientHoc(props) {
     return (
       <QueryClientProvider client={queryClient}>
@@ -21,6 +21,12 @@ const withQueryClient = (Component) =>
         {process.env.NODE_ENV !== 'test' ? <ReactQueryDevtools /> : null}
       </QueryClientProvider>
     );
-  };
+  }
+
+  const componentName = Component.displayName || Component.name || 'Component';
+  QueryClientHoc.displayName = `QueryClientHoc(${componentName})`;
+
+  return QueryClientHoc;
+};
 
 export default withQueryClient;
