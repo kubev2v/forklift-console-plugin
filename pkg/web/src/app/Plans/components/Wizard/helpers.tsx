@@ -595,8 +595,12 @@ export const usePlanWizardPrefillEffect = (
 
   const hooksQuery = useHooksQuery(namespace);
   const plansQuery = usePlansQuery(namespace);
+  const nicProfilesQuery = useNicProfilesQuery(sourceProvider);
+  const disksQuery = useDisksQuery(sourceProvider);
 
   const queries = [
+    nicProfilesQuery,
+    disksQuery,
     providersQuery,
     vmsQuery,
     hostTreeQuery,
@@ -629,8 +633,6 @@ export const usePlanWizardPrefillEffect = (
 
   const defaultTreeType = InventoryTreeType.Cluster;
   const isNodeSelectable = useIsNodeSelectableCallback(defaultTreeType);
-  const nicProfilesQuery = useNicProfilesQuery(sourceProvider);
-  const disksQuery = useDisksQuery(sourceProvider);
 
   React.useEffect(() => {
     if (
