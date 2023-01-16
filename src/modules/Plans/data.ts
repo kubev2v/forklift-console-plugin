@@ -51,7 +51,7 @@ interface ProviderSpec {
   ready: boolean;
 }
 
-const findObjectRef = (
+export const findObjectRef = (
   { name, namespace }: ObjectReference,
   providers: ProviderResource[],
 ): ProviderSpec => {
@@ -72,7 +72,7 @@ const findObjectRef = (
   };
 };
 
-const mergeData = (
+export const mergeData = (
   plans: PlanResource[],
   migrations: MigrationResource[],
   providers: ProviderResource[],
