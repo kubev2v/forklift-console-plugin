@@ -287,6 +287,7 @@ const DeleteModal = ({
     />
   );
 };
+DeleteModal.displayName = 'DeleteModal';
 
 const RestartModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => void }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -306,6 +307,7 @@ const RestartModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
     />
   );
 };
+RestartModal.displayName = 'RestartModal';
 
 const DetailsModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => void }) => {
   const { t } = useTranslation();
@@ -332,6 +334,7 @@ const DetailsModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
     </Modal>
   );
 };
+DetailsModal.displayName = 'DetailsModal';
 
 const ArchiveModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => void }) => {
   const { t } = useTranslation();
@@ -366,5 +369,7 @@ const ArchiveModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
     />
   );
 };
+ArchiveModal.displayName = 'ArchiveModal';
 
 export const PlanActions = withActionContext<FlatPlan>('kebab', 'forklift-flat-plan');
+PlanActions.displayName = 'PlanActions';

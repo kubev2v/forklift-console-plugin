@@ -89,6 +89,7 @@ const EditModal = ({
     </EditProviderContext.Provider>
   );
 };
+EditModal.displayName = 'EditModal';
 
 const SelectNetworkForOpenshift = ({
   entity,
@@ -122,6 +123,7 @@ const SelectNetworkForOpenshift = ({
     />
   );
 };
+SelectNetworkForOpenshift.displayName = 'SelectNetworkForOpenshift';
 
 const DeleteModal = ({
   entity,
@@ -171,11 +173,13 @@ const DeleteModal = ({
     />
   );
 };
+DeleteModal.displayName = 'DeleteModal';
 
 export const ProviderActions = withActionContext<MergedProvider>(
   'kebab',
   'forklift-merged-provider',
 );
+ProviderActions.displayName = 'ProviderActions';
 
 const toIProviderObject = ({
   name,

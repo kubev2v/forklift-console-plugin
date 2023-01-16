@@ -141,6 +141,7 @@ const ProvidersPage: React.FC<ResourceConsolePageProps> = ({ namespace, kind: re
     />
   );
 };
+ProvidersPage.displayName = 'ProvidersPage';
 
 const Page: React.FC<{
   dataSource: [MergedProvider[], boolean, boolean];
@@ -182,6 +183,7 @@ const AddProviderButton: React.FC<{ namespace: string }> = ({ namespace }) => {
     </Button>
   );
 };
+AddProviderButton.displayName = 'AddProviderButton';
 
 const AddProviderModal: React.FC<{
   currentNamespace: string;
@@ -197,6 +199,7 @@ const AddProviderModal: React.FC<{
     </EditProviderContext.Provider>
   );
 };
+AddProviderModal.displayName = 'AddProviderModal';
 
 export default ProvidersPage;
 export { AddProviderButton };

@@ -73,6 +73,7 @@ const StatusCell = ({ entity: { status, type, vmCount, vmDone, name, object } }:
     );
   }
 };
+StatusCell.displayName = 'StatusCell';
 
 const Actions = ({ primaryAction, entity, currentNamespace }: CellProps) => {
   const isBeingStarted = entity.status === 'Starting';
@@ -119,6 +120,7 @@ const Actions = ({ primaryAction, entity, currentNamespace }: CellProps) => {
     </Flex>
   );
 };
+Actions.displayName = 'Actions';
 
 const Ref = ({
   gvk,
@@ -148,6 +150,7 @@ const NameCell = ({ entity: e }: CellProps) => {
     </>
   );
 };
+NameCell.displayName = 'NameCell';
 
 const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   [C.NAME]: NameCell,
@@ -192,5 +195,6 @@ const PlanRow = ({ columns, entity, currentNamespace }: RowProps<FlatPlan>) => {
     </Tr>
   );
 };
+PlanRow.displayName = 'PlanRow';
 
 export default PlanRow;

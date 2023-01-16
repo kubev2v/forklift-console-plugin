@@ -54,5 +54,6 @@ const EmptyStateProviders: React.FC<{ namespace: string }> = ({ namespace }) => 
     </EmptyState>
   );
 };
+EmptyStateProviders.displayName = 'EmptyStateProviders';
 
 export default EmptyStateProviders;

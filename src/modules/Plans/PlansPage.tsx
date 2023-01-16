@@ -105,6 +105,7 @@ export const PlansPage = ({ namespace, kind: reference }: ResourceConsolePagePro
     />
   );
 };
+PlansPage.displayName = 'PlansPage';
 
 const Page = ({
   dataSource,

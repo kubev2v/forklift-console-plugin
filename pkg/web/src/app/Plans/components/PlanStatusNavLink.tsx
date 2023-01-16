@@ -36,7 +36,7 @@ export const PlanStatusNavLink: React.FunctionComponent<IPlanStatusNavLinkProps>
   plan,
   isInline = true,
   children,
-}: IPlanStatusNavLinkProps) => (
+}) => (
   <PlanNameNavLink name={plan.metadata.name} isInline={isInline}>
     {children}
   </PlanNameNavLink>

@@ -15,16 +15,17 @@ import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly
  */
 export const ActionContext = createContext({ variant: 'kebab', ignoreList: [] });
 
-export function withActionContext<T>(variant: 'kebab' | 'dropdown', contextId: string) {
-  const Enhanced = ({
-    entity,
-    ignoreList = [],
-    namespace,
-  }: {
-    entity: T;
-    ignoreList?: string[];
-    namespace?: string;
-  }) => {
+interface EhancedActionsComponentProps<T> {
+  entity: T;
+  ignoreList?: string[];
+  namespace?: string;
+}
+
+export function withActionContext<T>(
+  variant: 'kebab' | 'dropdown',
+  contextId: string,
+): React.ComponentType<EhancedActionsComponentProps<T>> {
+  const Enhanced = ({ entity, ignoreList = [], namespace }: EhancedActionsComponentProps<T>) => {
     const outerProviderData = useMemo(
       () => ({ variant, ignoreList: [...ignoreList] }),
       // check if data inside the array has changed
@@ -81,3 +82,4 @@ const ActionsComponent = ({ actions }: ActionService) => {
     </>
   );
 };
+ActionsComponent.displayName = 'ActionsComponent';

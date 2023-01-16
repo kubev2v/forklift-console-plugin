@@ -2,6 +2,7 @@ import withQueryClient from 'src/components/QueryClientHoc';
 
 import { HostsPage } from '@app/Providers/HostsPage';
 
-const Page = withQueryClient(HostsPage);
+const HostsPageWrapper = withQueryClient(HostsPage);
+HostsPageWrapper.displayName = 'HostsPageWrapper';
 
-export default Page;
+export default HostsPageWrapper;
