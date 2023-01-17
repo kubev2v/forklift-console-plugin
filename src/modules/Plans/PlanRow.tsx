@@ -14,7 +14,14 @@ import { PlanNameNavLink as Link } from '@app/Plans/components/PlanStatusNavLink
 import { ScheduledCutoverTime } from '@app/Plans/components/ScheduledCutoverTime';
 import { StatusIcon } from '@migtools/lib-ui';
 import { K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Flex, FlexItem, Label, Progress, ProgressMeasureLocation } from '@patternfly/react-core';
+import {
+  Flex,
+  FlexItem,
+  Label,
+  Progress,
+  ProgressMeasureLocation,
+  Truncate,
+} from '@patternfly/react-core';
 import { ArchiveIcon, VirtualMachineIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
@@ -177,12 +184,17 @@ const PlanRow = ({ columns, entity, currentNamespace }: RowProps<FlatPlan>) => {
     <Tr>
       {columns.map(({ id, toLabel }) => {
         const Cell = cellCreator[id] ?? TextCell;
-        return (
-          <Td
-            key={id}
-            dataLabel={toLabel(t)}
-            modifier={id === 'description' ? 'breakWord' : undefined}
-          >
+        return id === C.DESCRIPTION ? (
+          [
+            <Td key={`${C.DESCRIPTION}_large`} visibility={['hidden', 'visibleOnMd']} width={20}>
+              <Truncate content={entity.description ?? ''} />
+            </Td>,
+            <Td dataLabel={toLabel(t)} key={`${C.DESCRIPTION}_small`} visibility={['hiddenOnMd']}>
+              {entity.description ?? ''}
+            </Td>,
+          ]
+        ) : (
+          <Td key={id} dataLabel={toLabel(t)}>
             <Cell
               value={String(entity[id] ?? '')}
               entity={entity}
