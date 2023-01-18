@@ -63,7 +63,11 @@ describe('merging k8s resources:Plans, Migrations, Providers', () => {
   test('standard mock data', () => {
     const plans = MOCK_PLANS as PlanResource[];
     // set dynamically generated prop to static value (matching stored json)
-    MOCK_MIGRATIONS[5].spec.cutover = '2023-01-18T05:27:28.820Z';
+    const NOW = '2023-01-18T05:27:28.820Z';
+    MOCK_MIGRATIONS[5].spec.cutover = NOW;
+    // plan state calculations compare against new Date().getTime()
+    jest.useFakeTimers().setSystemTime(new Date(NOW));
+
     const migrations = MOCK_MIGRATIONS as MigrationResource[];
     const providers = MOCK_CLUSTER_PROVIDERS as ProviderResource[];
     const merged = mergeData(plans, migrations, providers);
