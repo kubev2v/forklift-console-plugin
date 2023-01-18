@@ -61,6 +61,7 @@ export const SelectNetworkModal: React.FunctionComponent<ISelectNetworkModalProp
     provider,
     selectedHosts,
     hostConfigs,
+    provider.namespace,
     onClose
   );
 

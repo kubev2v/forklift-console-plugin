@@ -182,14 +182,17 @@ export const OpenShiftProvidersTable: React.FunctionComponent<IOpenShiftProvider
     false
   );
 
-  const migrationNetworkMutation = useOCPMigrationNetworkMutation(() => {
-    toggleSelectNetworkModal();
-    setExpandedItem({
-      provider: selectedProvider as ICorrelatedProvider<IOpenShiftProvider>,
-      column: 'Networks',
-    });
-    setSelectedProvider(null);
-  });
+  const migrationNetworkMutation = useOCPMigrationNetworkMutation(
+    selectedProvider.metadata.namespace,
+    () => {
+      toggleSelectNetworkModal();
+      setExpandedItem({
+        provider: selectedProvider as ICorrelatedProvider<IOpenShiftProvider>,
+        column: 'Networks',
+      });
+      setSelectedProvider(null);
+    }
+  );
 
   const selectedNetworkName =
     (selectedProvider?.metadata.annotations &&

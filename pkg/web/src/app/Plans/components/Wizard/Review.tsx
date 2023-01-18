@@ -33,6 +33,7 @@ export const Review: React.FunctionComponent<IReviewProps> = ({
     forms,
     { name: '', namespace: '' },
     { name: '', namespace: '' },
+    '',
     []
   );
 

@@ -169,3 +169,12 @@ export const truncateK8sString = (prefix: string, suffix = '', generateName = fa
   const targetPrefixLength = 63 - (generateName ? 5 : 0) - suffix.length;
   return `${prefix.slice(0, targetPrefixLength)}${suffix}`;
 };
+
+const ALL_NAMESPECES = 'all-namespaces';
+
+/**
+ * @param reference in format "group~version~kind"
+ * @param namespace (optional)
+ */
+export const createK8sPath = (reference: string, namespace?: string) =>
+  namespace ? `/k8s/ns/${namespace}/${reference}` : `/k8s/${ALL_NAMESPECES}/${reference}`;

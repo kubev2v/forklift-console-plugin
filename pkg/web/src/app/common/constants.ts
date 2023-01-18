@@ -11,6 +11,7 @@ export const ENV: IEnvVars = {
   DATA_SOURCE: process.env.DATA_SOURCE,
   BRAND_TYPE: process.env.BRAND_TYPE as BrandType,
   NAMESPACE: process.env.NAMESPACE,
+  DEFAULT_NAMESPACE: process.env.DEFAULT_NAMESPACE,
   NODE_ENV: process.env.NODE_ENV,
   PLUGIN_NAME: process.env.PLUGIN_NAME,
 };
@@ -154,3 +155,7 @@ export const noop = () => {};
 
 // Base URL path for forklift pages.
 export const PATH_PREFIX = '/mtv';
+
+// constant references to create links in the legacy code
+export const PLANS_REFERENCE = 'forklift.konveyor.io~v1beta1~Plan';
+export const PROVIDERS_REFERENCE = 'forklift.konveyor.io~v1beta1~Provider';

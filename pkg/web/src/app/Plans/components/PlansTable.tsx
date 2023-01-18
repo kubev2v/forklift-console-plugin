@@ -62,7 +62,7 @@ import { PlanStatusNavLink } from './PlanStatusNavLink';
 import { MustGatherBtn } from '@app/common/components/MustGatherBtn';
 import { ScheduledCutoverTime } from './ScheduledCutoverTime';
 import { hasCondition } from '@app/common/helpers';
-import { PATH_PREFIX } from '@app/common/constants';
+import { ENV, PATH_PREFIX } from '@app/common/constants';
 
 export type PlanActionButtonType = 'Start' | 'Cutover' | 'ScheduledCutover' | 'MustGather';
 interface IPlansTableProps {
@@ -72,9 +72,10 @@ interface IPlansTableProps {
 export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
   plans,
 }: IPlansTableProps) => {
+  const namespace = ENV.DEFAULT_NAMESPACE;
   const [showArchivedPlans, toggleShowArchivedPlans] = React.useReducer((show) => !show, false);
   const providersQuery = useInventoryProvidersQuery();
-  const migrationsQuery = useMigrationsQuery();
+  const migrationsQuery = useMigrationsQuery(namespace);
   const filterCategories: FilterCategory<IPlan>[] = [
     {
       key: 'name',
@@ -138,7 +139,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
           migrationsQuery.data?.items || null
         );
         return getMigStatusState(
-          getPlanState(plan, latestMigration, migrationsQuery),
+          getPlanState(plan, latestMigration, migrationsQuery.data?.items),
           plan.spec.warm
         ).filterValue;
       },
@@ -216,7 +217,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
     const latestMigration = findLatestMigration(plan, migrationsQuery.data?.items || null);
     const isWarmPlan = plan.spec.warm;
 
-    const planState = getPlanState(plan, latestMigration, migrationsQuery);
+    const planState = getPlanState(plan, latestMigration, migrationsQuery.data?.items);
     const canRestart = canBeRestarted(planState);
     const buttonType = getButtonState(planState);
     const { title, variant } = getMigStatusState(planState, isWarmPlan);
@@ -299,7 +300,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
                     displayName={plan.metadata.name}
                   />
                 ) : buttonType === 'ScheduledCutover' ? (
-                  <ScheduledCutoverTime migration={latestMigration} />
+                  <ScheduledCutoverTime cutover={latestMigration?.spec.cutover} />
                 ) : buttonType === 'Start' || buttonType === 'Cutover' ? (
                   <MigrateOrCutoverButton
                     plan={plan}

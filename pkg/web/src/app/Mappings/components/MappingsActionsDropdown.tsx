@@ -10,6 +10,7 @@ import { ConfirmModal } from '@app/common/components/ConfirmModal';
 import { areAssociatedProvidersReady } from '@app/queries/helpers';
 import { ConditionalTooltip } from '@app/common/components/ConditionalTooltip';
 import { isMappingValid } from './helpers';
+import { ENV } from '@app/common/constants';
 
 interface IMappingsActionsDropdownProps {
   mappingType: MappingType;
@@ -22,11 +23,12 @@ export const MappingsActionsDropdown: React.FunctionComponent<IMappingsActionsDr
   mapping,
   openEditMappingModal,
 }: IMappingsActionsDropdownProps) => {
+  const namespace = ENV.DEFAULT_NAMESPACE;
   const [kebabIsOpen, setKebabIsOpen] = React.useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = React.useReducer((isOpen) => !isOpen, false);
 
-  const deleteMappingMutation = useDeleteMappingMutation(mappingType, toggleDeleteModal);
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const deleteMappingMutation = useDeleteMappingMutation(mappingType, namespace, toggleDeleteModal);
+  const clusterProvidersQuery = useClusterProvidersQuery(namespace);
   const areProvidersReady = React.useMemo(
     () => kebabIsOpen && areAssociatedProvidersReady(clusterProvidersQuery, mapping.spec.provider),
     [kebabIsOpen, clusterProvidersQuery, mapping.spec.provider]

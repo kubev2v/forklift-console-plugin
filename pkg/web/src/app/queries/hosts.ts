@@ -16,13 +16,11 @@ import { IHost, IHostConfig, INameNamespaceRef, ISecret, IVMwareProvider } from 
 import { useAuthorizedK8sClient } from './fetchHelpers';
 import { IKubeList, IKubeResponse, KubeClientError } from '@app/client/types';
 import { SelectNetworkFormValues } from '@app/Providers/components/VMwareProviderHostsTable/SelectNetworkModal';
-import { secretResource, ForkliftResource, ForkliftResourceKind } from '@app/client/helpers';
-import { CLUSTER_API_VERSION, ENV } from '@app/common/constants';
+import { createResource, createSecretResource, ForkliftResourceKind } from '@app/client/helpers';
+import { CLUSTER_API_VERSION } from '@app/common/constants';
 import { getObjectRef } from '@app/common/helpers';
 import { isManagementNetworkSelected } from '@app/Providers/components/VMwareProviderHostsTable/helpers';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
-
-export const hostConfigResource = new ForkliftResource(ForkliftResourceKind.Host, ENV.NAMESPACE);
 
 export const useHostsQuery = (provider: IVMwareProvider | null) => {
   const sortByNameCallback = React.useCallback((data): IHost[] => sortByName(data), []);
@@ -40,7 +38,8 @@ export const useHostsQuery = (provider: IVMwareProvider | null) => {
   return result;
 };
 
-export const useHostConfigsQuery = (): UseQueryResult<IKubeList<IHostConfig>> => {
+export const useHostConfigsQuery = (namespace: string): UseQueryResult<IKubeList<IHostConfig>> => {
+  const hostConfigResource = createResource(ForkliftResourceKind.Host, namespace);
   return useMockableQuery<IKubeList<IHostConfig>>(
     {
       queryKey: 'host-configs',
@@ -68,7 +67,7 @@ export const getExistingHostConfigs = (
 
 const getHostConfigRef = (provider: IVMwareProvider, host: IHost) => ({
   name: truncateK8sString(provider.name, `-${host.id}-config`),
-  namespace: ENV.NAMESPACE,
+  namespace: provider.namespace,
 });
 
 const generateSecret = (
@@ -87,7 +86,7 @@ const generateSecret = (
   metadata: {
     ...(secretBeingReusedRef || {
       generateName: truncateK8sString(provider.name, `-${host.id}-`, true),
-      namespace: ENV.NAMESPACE,
+      namespace: provider.namespace,
     }),
     labels: {
       createdForResourceType: ForkliftResourceKind.Host,
@@ -132,6 +131,7 @@ export const useConfigureHostsMutation = (
   provider: IVMwareProvider,
   selectedHosts: IHost[],
   allHostConfigs: IHostConfig[],
+  namespace: string,
   onSuccess?: () => void
 ): UseMutationResult<
   (IKubeResponse<IHostConfig> | null)[],
@@ -141,6 +141,8 @@ export const useConfigureHostsMutation = (
 > => {
   const client = useAuthorizedK8sClient();
   const queryClient = useQueryClient();
+  const secretResource = createSecretResource(namespace);
+  const hostConfigResource = createResource(ForkliftResourceKind.Host, namespace);
 
   const configureHosts = (values: SelectNetworkFormValues) => {
     const existingHostConfigs = getExistingHostConfigs(selectedHosts, allHostConfigs, provider);

@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
-import { ProviderResource } from 'src/utils/types';
+import { MigrationResource, PlanResource, ProviderResource } from 'src/utils/types';
 
+import { MOCK_MIGRATIONS } from '@app/queries/mocks/migrations.mock';
+import { MOCK_PLANS } from '@app/queries/mocks/plans.mock';
 import { MOCK_CLUSTER_PROVIDERS } from '@app/queries/mocks/providers.mock';
 import {
   K8sGroupVersionKind,
@@ -46,3 +48,35 @@ const useMockProviders = ({ name }: WatchK8sResource): WatchK8sResult<ProviderRe
 export const useProviders = IS_MOCK
   ? useMockProviders
   : createRealK8sWatchResourceHook<ProviderResource>('Provider');
+
+const useMockPlans = ({ name }: WatchK8sResource): WatchK8sResult<PlanResource[]> => {
+  const mockData: PlanResource[] = useMemo(
+    () =>
+      !name
+        ? (MOCK_PLANS as PlanResource[])
+        : (MOCK_PLANS?.filter((provider) => provider?.metadata?.name === name) as PlanResource[]),
+    [name],
+  );
+  return [mockData, true, false];
+};
+
+const useMockMigrations = ({ name }: WatchK8sResource): WatchK8sResult<MigrationResource[]> => {
+  const mockData: MigrationResource[] = useMemo(
+    () =>
+      !name
+        ? (MOCK_MIGRATIONS as MigrationResource[])
+        : (MOCK_MIGRATIONS?.filter(
+            (provider) => provider?.metadata?.name === name,
+          ) as MigrationResource[]),
+    [name],
+  );
+  return [mockData, true, false];
+};
+
+export const usePlans = IS_MOCK
+  ? useMockPlans
+  : createRealK8sWatchResourceHook<PlanResource>('Plan');
+
+export const useMigrations = IS_MOCK
+  ? useMockMigrations
+  : createRealK8sWatchResourceHook<MigrationResource>('Migration');

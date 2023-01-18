@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { createActions } from 'src/components/ActionServiceDropdown';
+import { withActionContext } from 'src/components/ActionServiceDropdown';
 import withQueryClient from 'src/components/QueryClientHoc';
 import { useTranslation } from 'src/utils/i18n';
 
@@ -15,14 +15,14 @@ import {
   usePlansQuery,
 } from '@app/queries';
 import { IOpenShiftProvider, IPlan, IProviderObject } from '@app/queries/types';
-import { ActionServiceProvider, useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 
 import { type MergedProvider } from './data';
 
-export const useMergedProviderActions = (entity: MergedProvider) => {
+export const useMergedProviderActions = ({ entity }: { entity: MergedProvider }) => {
   const { t } = useTranslation();
   const launchModal = useModal();
-  const plansQuery = usePlansQuery();
+  const plansQuery = usePlansQuery(entity.namespace);
   const isHostProvider = entity.type === 'openshift' && !entity.url;
   const editingDisabled =
     isHostProvider ||
@@ -81,10 +81,15 @@ const EditModal = ({
 }) => {
   return (
     <EditProviderContext.Provider value={{ openEditProviderModal: () => undefined, plans }}>
-      <AddEditProviderModal onClose={closeModal} providerBeingEdited={toIProviderObject(entity)} />
+      <AddEditProviderModal
+        onClose={closeModal}
+        providerBeingEdited={toIProviderObject(entity)}
+        namespace={entity.namespace}
+      />
     </EditProviderContext.Provider>
   );
 };
+EditModal.displayName = 'EditModal';
 
 const SelectNetworkForOpenshift = ({
   entity,
@@ -94,7 +99,7 @@ const SelectNetworkForOpenshift = ({
   entity: MergedProvider;
 }) => {
   const { t } = useTranslation();
-  const migrationNetworkMutation = useOCPMigrationNetworkMutation(closeModal);
+  const migrationNetworkMutation = useOCPMigrationNetworkMutation(entity.namespace, closeModal);
   const inventory = toIOpenShiftProvider(entity, toIProviderObject(entity));
   return (
     <SelectOpenShiftNetworkModal
@@ -118,6 +123,7 @@ const SelectNetworkForOpenshift = ({
     />
   );
 };
+SelectNetworkForOpenshift.displayName = 'SelectNetworkForOpenshift';
 
 const DeleteModal = ({
   entity,
@@ -131,6 +137,7 @@ const DeleteModal = ({
 
   const toggleDeleteModal = () => setIsDeleteModalOpen(!isDeleteModalOpen);
   const deleteProviderMutation = useDeleteProviderMutation(
+    entity.namespace,
     entity.type as ProviderType,
     toggleDeleteModal,
   );
@@ -166,19 +173,13 @@ const DeleteModal = ({
     />
   );
 };
-export interface ProviderActionsProps {
-  entity: MergedProvider;
-  variant?: 'kebab' | 'dropdown';
-}
+DeleteModal.displayName = 'DeleteModal';
 
-export const ProviderActions = ({ entity, variant = 'kebab' }: ProviderActionsProps) => {
-  const ActionsComponent = useMemo(() => createActions(variant), [variant]);
-  return (
-    <ActionServiceProvider context={{ 'forklift-merged-provider': entity }}>
-      {ActionsComponent}
-    </ActionServiceProvider>
-  );
-};
+export const ProviderActions = withActionContext<MergedProvider>(
+  'kebab',
+  'forklift-merged-provider',
+);
+ProviderActions.displayName = 'ProviderActions';
 
 const toIProviderObject = ({
   name,

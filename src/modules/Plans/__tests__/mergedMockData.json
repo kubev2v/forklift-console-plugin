@@ -1,0 +1,2349 @@
+[
+    {
+        "archived": false,
+        "name": "plantest-01",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "my first plan",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Cold",
+        "status": "PipelineRunning",
+        "vmCount": 2,
+        "vmDone": 0,
+        "migrationStarted": "2020-10-10T14:04:10Z",
+        "latestMigration": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-01",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-01",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "my first plan",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630"
+                    },
+                    {
+                        "id": "vm-2844"
+                    }
+                ],
+                "warm": false
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Critical",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "The destination provider is not valid.",
+                        "reason": "TypeNotValid",
+                        "status": "True",
+                        "type": "DestinationProviderNotValid"
+                    },
+                    {
+                        "category": "Critical",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Source network not valid.",
+                        "reason": "NotFound",
+                        "status": "True",
+                        "type": "SourceNetworkNotValid"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "In progress",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Executing"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "migration": {
+                    "active": "",
+                    "started": "2020-10-10T14:04:10Z",
+                    "vms": [
+                        {
+                            "id": "vm-1630",
+                            "name": "fdupont-test-migration",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 31141
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z"
+                        },
+                        {
+                            "id": "vm-2844",
+                            "name": "fdupont-test",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 65536
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 1,
+                                        "completed": 0
+                                    },
+                                    "phase": "Pending",
+                                    "reason": "AwaitingVDDK"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z"
+                        }
+                    ],
+                    "history": [
+                        {
+                            "conditions": [],
+                            "migration": {
+                                "name": "plan-0-mock-migration",
+                                "namespace": "konveyor-forklift"
+                            },
+                            "plan": {
+                                "name": "plantest-01",
+                                "namespace": "openshift-migration"
+                            },
+                            "provider": {
+                                "name": "ocpv-1",
+                                "namespace": "openshift-migration"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "archived": false,
+        "name": "plantest-02",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "my 2nd plan",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Cold",
+        "status": "NotStarted-Ready",
+        "vmCount": 1,
+        "vmDone": 0,
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-02",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-02",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "my 2nd plan",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": {
+                    "name": "ocp-network-2",
+                    "namespace": "openshift-migration"
+                },
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630",
+                        "hooks": [
+                            {
+                                "hook": {
+                                    "name": "hooktest-01",
+                                    "namespace": "openshift-migration"
+                                },
+                                "step": "PreHook"
+                            },
+                            {
+                                "hook": {
+                                    "name": "hooktest-02",
+                                    "namespace": "openshift-migration"
+                                },
+                                "step": "PostHook"
+                            }
+                        ]
+                    }
+                ],
+                "warm": false
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "archived": false,
+        "name": "plantest-03",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "my 3rd plan",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Cold",
+        "status": "Finished-Failed",
+        "vmCount": 4,
+        "vmDone": 1,
+        "migrationStarted": "2020-10-10T14:04:10Z",
+        "latestMigration": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-03",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-03",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "my 3rd plan",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630"
+                    },
+                    {
+                        "id": "vm-2844"
+                    },
+                    {
+                        "id": "vm-1008"
+                    },
+                    {
+                        "name": "pemcg-discovery01"
+                    }
+                ],
+                "warm": false
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-10T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Failed"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "migration": {
+                    "active": "",
+                    "started": "2020-10-10T14:04:10Z",
+                    "vms": [
+                        {
+                            "id": "vm-1630",
+                            "name": "fdupont-test-migration",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 31141
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z",
+                                    "completed": "2020-10-10T17:34:10Z"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "conditions": [
+                                {
+                                    "type": "Canceled",
+                                    "category": "Information",
+                                    "status": "True",
+                                    "message": "Canceled by user",
+                                    "lastTransitionTime": "2020-10-10T17:34:10Z"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "vm-2844",
+                            "name": "fdupont-test",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 0
+                                    },
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 1,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "completed": "2020-10-11T14:04:10Z",
+                            "error": {
+                                "phase": "ImportCreated",
+                                "reasons": [
+                                    "Import CR not found."
+                                ]
+                            }
+                        },
+                        {
+                            "id": "vm-1008",
+                            "name": "fdupont-test-migration-centos",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 65536
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 3,
+                                        "completed": 3
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z",
+                                    "completed": "2020-10-10T15:58:43Z"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "completed": "2020-10-10T15:58:43Z",
+                            "conditions": [
+                                {
+                                    "category": "Advisory",
+                                    "durable": true,
+                                    "lastTransitionTime": "2020-10-10T15:58:43Z",
+                                    "message": "The VM migration has SUCCEEDED.",
+                                    "status": "True",
+                                    "type": "Succeeded"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "vm-2685",
+                            "name": "pemcg-discovery01",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 65536
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 3,
+                                        "completed": 1
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z",
+                                    "error": {
+                                        "phase": "ImportCreated",
+                                        "reasons": [
+                                            "Failed to initialize the source provider (Failed to connect to source provider): Post https://172.31.2.12/sdk: context deadline exceeded"
+                                        ]
+                                    }
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "completed": "",
+                            "error": {
+                                "phase": "ImageConversion",
+                                "reasons": [
+                                    "Failed to initialize the source provider (Failed to connect to source provider): Post https://172.31.2.12/sdk: context deadline exceeded"
+                                ]
+                            }
+                        }
+                    ],
+                    "history": [
+                        {
+                            "conditions": [],
+                            "migration": {
+                                "name": "plan-2-mock-migration",
+                                "namespace": "konveyor-forklift"
+                            },
+                            "plan": {
+                                "name": "plantest-03",
+                                "namespace": "openshift-migration"
+                            },
+                            "provider": {
+                                "name": "ocpv-1",
+                                "namespace": "openshift-migration"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "archived": false,
+        "name": "plantest-04",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "my 4th plan",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Cold",
+        "status": "Finished-Succeeded",
+        "vmCount": 1,
+        "vmDone": 1,
+        "migrationCompleted": "2020-10-10T15:58:43Z",
+        "migrationStarted": "2020-10-10T14:04:10Z",
+        "latestMigration": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-04",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-04",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "my 4th plan",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1008"
+                    }
+                ],
+                "warm": false
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-10T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Succeeded"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "migration": {
+                    "active": "",
+                    "started": "2020-10-10T14:04:10Z",
+                    "completed": "2020-10-10T15:58:43Z",
+                    "vms": [
+                        {
+                            "id": "vm-1008",
+                            "name": "fdupont-test-migration-centos",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 65536
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 3,
+                                        "completed": 3
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z",
+                                    "completed": "2020-10-10T15:58:43Z"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "completed": "2020-10-10T15:58:43Z",
+                            "conditions": [
+                                {
+                                    "category": "Advisory",
+                                    "durable": true,
+                                    "lastTransitionTime": "2020-10-10T15:58:43Z",
+                                    "message": "The VM migration has SUCCEEDED.",
+                                    "status": "True",
+                                    "type": "Succeeded"
+                                }
+                            ]
+                        }
+                    ],
+                    "history": [
+                        {
+                            "conditions": [],
+                            "migration": {
+                                "name": "plan-3-mock-migration",
+                                "namespace": "konveyor-forklift"
+                            },
+                            "plan": {
+                                "name": "plantest-04",
+                                "namespace": "openshift-migration"
+                            },
+                            "provider": {
+                                "name": "ocpv-1",
+                                "namespace": "openshift-migration"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "archived": true,
+        "name": "plantest-05",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "completed with errors",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Cold",
+        "status": "Archived",
+        "vmCount": 2,
+        "vmDone": 0,
+        "migrationStarted": "2020-10-10T14:04:10Z",
+        "latestMigration": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-05",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-01",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "completed with errors",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": true,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630"
+                    },
+                    {
+                        "id": "vm-2844"
+                    }
+                ],
+                "warm": false
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Advisory",
+                        "lastTransitionTime": "2021-10-12T00:33:36Z",
+                        "message": "The migration plan has been archived.",
+                        "reason": "UserRequested",
+                        "status": "True",
+                        "type": "Archived"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-10T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Failed"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "migration": {
+                    "active": "",
+                    "started": "2020-10-10T14:04:10Z",
+                    "vms": [
+                        {
+                            "id": "vm-1630",
+                            "name": "fdupont-test-migration",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 31141
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z",
+                                    "error": {
+                                        "phase": "DiskTransferFailed",
+                                        "reasons": [
+                                            "Could not transfer disks"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "error": {
+                                "phase": "DiskTransfer",
+                                "reasons": [
+                                    "Could not transfer disks"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "vm-1630",
+                            "name": "fdupont-test-migration",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 31141
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z",
+                                    "completed": "2020-10-10T15:58:10Z",
+                                    "error": {
+                                        "phase": "ImageConversionFailed",
+                                        "reasons": [
+                                            "Could not convert image"
+                                        ]
+                                    }
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "error": {
+                                "phase": "ImageConversion",
+                                "reasons": [
+                                    "Could not convert image"
+                                ]
+                            }
+                        }
+                    ],
+                    "history": [
+                        {
+                            "conditions": [],
+                            "migration": {
+                                "name": "plan-4-mock-migration",
+                                "namespace": "konveyor-forklift"
+                            },
+                            "plan": {
+                                "name": "plantest-05",
+                                "namespace": "openshift-migration"
+                            },
+                            "provider": {
+                                "name": "ocpv-1",
+                                "namespace": "openshift-migration"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "archived": false,
+        "name": "plantest-06",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "newly created warm plan",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-2",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": false,
+        "type": "Warm",
+        "status": "NotStarted-Ready",
+        "vmCount": 1,
+        "vmDone": 0,
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-06",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-06",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "newly created warm plan",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-2",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-2"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630"
+                    }
+                ],
+                "warm": true
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "archived": false,
+        "name": "plantest-07",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "various precopy states",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Warm",
+        "status": "Copying",
+        "vmCount": 3,
+        "vmDone": 0,
+        "migrationStarted": "2020-10-10T14:04:10Z",
+        "latestMigration": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-07",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-01",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "various precopy states",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630"
+                    },
+                    {
+                        "id": "vm-2844"
+                    },
+                    {
+                        "id": "vm-1008"
+                    }
+                ],
+                "warm": true
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "In progress",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Executing"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "migration": {
+                    "active": "",
+                    "started": "2020-10-10T14:04:10Z",
+                    "vms": [
+                        {
+                            "id": "vm-1630",
+                            "name": "fdupont-test-migration",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    }
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "warm": {
+                                "consecutiveFailures": 0,
+                                "failures": 0,
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z"
+                                    }
+                                ],
+                                "successes": 0
+                            },
+                            "completed": "2021-03-16T19:12:48Z",
+                            "conditions": [
+                                {
+                                    "type": "Canceled",
+                                    "category": "Information",
+                                    "status": "True",
+                                    "message": "Canceled by user",
+                                    "lastTransitionTime": "2020-10-10T17:34:10Z"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "vm-2844",
+                            "name": "fdupont-test",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    }
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "warm": {
+                                "consecutiveFailures": 2,
+                                "failures": 0,
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z",
+                                        "end": "2021-03-16T17:29:42Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:29:20Z",
+                                        "end": "2021-03-16T18:30:38Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:30:38Z"
+                                    }
+                                ],
+                                "successes": 0
+                            }
+                        },
+                        {
+                            "id": "vm-1008",
+                            "name": "fdupont-test-migration-centos",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    }
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "conditions": [
+                                {
+                                    "category": "Advisory",
+                                    "durable": true,
+                                    "lastTransitionTime": "2020-10-10T15:58:43Z",
+                                    "message": "The VM migration has SUCCEEDED.",
+                                    "status": "True",
+                                    "type": "Succeeded"
+                                }
+                            ],
+                            "warm": {
+                                "consecutiveFailures": 0,
+                                "failures": 0,
+                                "nextPrecopyAt": "2021-03-16T18:29:20Z",
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z",
+                                        "end": "2021-03-16T17:29:42Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:29:20Z",
+                                        "end": "2021-03-16T18:30:38Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:30:38Z",
+                                        "end": "2021-03-16T18:31:48Z"
+                                    }
+                                ],
+                                "successes": 3
+                            }
+                        }
+                    ],
+                    "history": [
+                        {
+                            "conditions": [],
+                            "migration": {
+                                "name": "plan-6-mock-migration",
+                                "namespace": "konveyor-forklift"
+                            },
+                            "plan": {
+                                "name": "plantest-07",
+                                "namespace": "openshift-migration"
+                            },
+                            "provider": {
+                                "name": "ocpv-1",
+                                "namespace": "openshift-migration"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "archived": false,
+        "name": "plantest-08",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "cutover scheduled",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Warm",
+        "status": "Copying-CutoverScheduled",
+        "vmCount": 3,
+        "vmDone": 0,
+        "migrationStarted": "2020-10-10T14:04:10Z",
+        "latestMigration": {
+            "cutover": "2023-01-18T05:27:28.820Z"
+        },
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-08",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-01",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "cutover scheduled",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630"
+                    },
+                    {
+                        "id": "vm-2844"
+                    },
+                    {
+                        "id": "vm-1008"
+                    }
+                ],
+                "warm": true
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "In progress",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Executing"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "migration": {
+                    "active": "",
+                    "started": "2020-10-10T14:04:10Z",
+                    "vms": [
+                        {
+                            "id": "vm-1630",
+                            "name": "fdupont-test-migration",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    }
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "warm": {
+                                "consecutiveFailures": 0,
+                                "failures": 0,
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z"
+                                    }
+                                ],
+                                "successes": 0
+                            },
+                            "completed": "2021-03-16T19:12:48Z",
+                            "conditions": [
+                                {
+                                    "type": "Canceled",
+                                    "category": "Information",
+                                    "status": "True",
+                                    "message": "Canceled by user",
+                                    "lastTransitionTime": "2020-10-10T17:34:10Z"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "vm-2844",
+                            "name": "fdupont-test",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    }
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "warm": {
+                                "consecutiveFailures": 2,
+                                "failures": 0,
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z",
+                                        "end": "2021-03-16T17:29:42Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:29:20Z",
+                                        "end": "2021-03-16T18:30:38Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:30:38Z"
+                                    }
+                                ],
+                                "successes": 0
+                            }
+                        },
+                        {
+                            "id": "vm-1008",
+                            "name": "fdupont-test-migration-centos",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    }
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "conditions": [
+                                {
+                                    "category": "Advisory",
+                                    "durable": true,
+                                    "lastTransitionTime": "2020-10-10T15:58:43Z",
+                                    "message": "The VM migration has SUCCEEDED.",
+                                    "status": "True",
+                                    "type": "Succeeded"
+                                }
+                            ],
+                            "warm": {
+                                "consecutiveFailures": 0,
+                                "failures": 0,
+                                "nextPrecopyAt": "2021-03-16T18:29:20Z",
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z",
+                                        "end": "2021-03-16T17:29:42Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:29:20Z",
+                                        "end": "2021-03-16T18:30:38Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:30:38Z",
+                                        "end": "2021-03-16T18:31:48Z"
+                                    }
+                                ],
+                                "successes": 3
+                            }
+                        }
+                    ],
+                    "history": [
+                        {
+                            "conditions": [],
+                            "migration": {
+                                "name": "plan-7-mock-migration",
+                                "namespace": "konveyor-forklift"
+                            },
+                            "plan": {
+                                "name": "plantest-08",
+                                "namespace": "openshift-migration"
+                            },
+                            "provider": {
+                                "name": "ocpv-1",
+                                "namespace": "openshift-migration"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "archived": false,
+        "name": "plantest-09",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "cutover started",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Warm",
+        "status": "PipelineRunning",
+        "vmCount": 3,
+        "vmDone": 1,
+        "migrationStarted": "2020-10-10T14:04:10Z",
+        "latestMigration": {
+            "cutover": "2021-03-16T18:31:30Z"
+        },
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-09",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-01",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "cutover started",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630"
+                    },
+                    {
+                        "id": "vm-2844"
+                    },
+                    {
+                        "id": "vm-1008"
+                    }
+                ],
+                "warm": true
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "In progress",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Executing"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "migration": {
+                    "active": "",
+                    "started": "2020-10-10T14:04:10Z",
+                    "vms": [
+                        {
+                            "id": "vm-1630",
+                            "name": "fdupont-test-migration",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 31141
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "warm": {
+                                "consecutiveFailures": 0,
+                                "failures": 0,
+                                "nextPrecopyAt": "2021-03-16T18:29:20Z",
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z",
+                                        "end": "2021-03-16T17:29:42Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:29:20Z",
+                                        "end": "2021-03-16T18:30:38Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:30:38Z",
+                                        "end": "2021-03-16T18:31:48Z"
+                                    }
+                                ],
+                                "successes": 3
+                            }
+                        },
+                        {
+                            "id": "vm-2844",
+                            "name": "fdupont-test",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 65536
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 1,
+                                        "completed": 0
+                                    },
+                                    "phase": "Pending",
+                                    "reason": "AwaitingVDDK"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "warm": {
+                                "consecutiveFailures": 0,
+                                "failures": 0,
+                                "nextPrecopyAt": "2021-03-16T18:29:20Z",
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z",
+                                        "end": "2021-03-16T17:29:42Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:29:20Z",
+                                        "end": "2021-03-16T18:30:38Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:30:38Z",
+                                        "end": "2021-03-16T18:31:48Z"
+                                    }
+                                ],
+                                "successes": 3
+                            }
+                        },
+                        {
+                            "id": "vm-1008",
+                            "name": "fdupont-test-migration-centos",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 65536
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 3,
+                                        "completed": 3
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z",
+                                    "completed": "2020-10-10T15:58:43Z"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "completed": "2020-10-10T15:58:43Z",
+                            "conditions": [
+                                {
+                                    "category": "Advisory",
+                                    "durable": true,
+                                    "lastTransitionTime": "2020-10-10T15:58:43Z",
+                                    "message": "The VM migration has SUCCEEDED.",
+                                    "status": "True",
+                                    "type": "Succeeded"
+                                }
+                            ],
+                            "warm": {
+                                "consecutiveFailures": 0,
+                                "failures": 0,
+                                "nextPrecopyAt": "2021-03-16T18:29:20Z",
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z",
+                                        "end": "2021-03-16T17:29:42Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:29:20Z",
+                                        "end": "2021-03-16T18:30:38Z"
+                                    },
+                                    {
+                                        "start": "2021-03-16T18:30:38Z",
+                                        "end": "2021-03-16T18:31:48Z"
+                                    }
+                                ],
+                                "successes": 3
+                            }
+                        }
+                    ],
+                    "history": [
+                        {
+                            "conditions": [],
+                            "migration": {
+                                "name": "plan-8-mock-migration",
+                                "namespace": "konveyor-forklift"
+                            },
+                            "plan": {
+                                "name": "plantest-09",
+                                "namespace": "openshift-migration"
+                            },
+                            "provider": {
+                                "name": "ocpv-1",
+                                "namespace": "openshift-migration"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "archived": false,
+        "name": "plantest-10",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "failed before cutover",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Warm",
+        "status": "Copying-Failed",
+        "vmCount": 3,
+        "vmDone": 0,
+        "migrationCompleted": "2020-10-10T15:04:10Z",
+        "migrationStarted": "2020-10-10T14:04:10Z",
+        "latestMigration": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-10",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-01",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "failed before cutover",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630"
+                    },
+                    {
+                        "id": "vm-2844"
+                    },
+                    {
+                        "id": "vm-1008"
+                    }
+                ],
+                "warm": true
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-10-10T15:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Failed"
+                    },
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "migration": {
+                    "active": "",
+                    "started": "2020-10-10T14:04:10Z",
+                    "completed": "2020-10-10T15:04:10Z",
+                    "vms": [
+                        {
+                            "id": "vm-1630",
+                            "name": "fdupont-test-migration",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    }
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "warm": {
+                                "consecutiveFailures": 0,
+                                "failures": 0,
+                                "precopies": [
+                                    {
+                                        "start": "2021-03-16T17:28:48Z"
+                                    }
+                                ],
+                                "successes": 0
+                            },
+                            "completed": "2021-03-16T19:13:48Z",
+                            "error": {
+                                "phase": "Mock Error",
+                                "reasons": [
+                                    "Something went wrong with a precopy?"
+                                ]
+                            }
+                        }
+                    ],
+                    "history": [
+                        {
+                            "conditions": [],
+                            "migration": {
+                                "name": "plan-9-mock-migration",
+                                "namespace": "konveyor-forklift"
+                            },
+                            "plan": {
+                                "name": "plantest-10",
+                                "namespace": "openshift-migration"
+                            },
+                            "provider": {
+                                "name": "ocpv-1",
+                                "namespace": "openshift-migration"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "archived": false,
+        "name": "plantest-11",
+        "namespace": "openshift-migration",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Plan"
+        },
+        "description": "finished with some canceled VMs",
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "sourceReady": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "targetReady": true,
+        "type": "Cold",
+        "status": "Finished-Incomplete",
+        "vmCount": 2,
+        "vmDone": 1,
+        "migrationCompleted": "2020-10-10T15:04:10Z",
+        "migrationStarted": "2020-10-10T14:04:10Z",
+        "latestMigration": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Plan",
+            "metadata": {
+                "name": "plantest-11",
+                "namespace": "openshift-migration",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-migration/plans/plantest-01",
+                "uid": "28fde094-b667-4d21-8f29-27c18f22178c",
+                "creationTimestamp": "2020-08-27T19:40:49Z"
+            },
+            "spec": {
+                "description": "finished with some canceled VMs",
+                "provider": {
+                    "source": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-vcenter-1"
+                    },
+                    "destination": {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "Provider",
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration",
+                        "uid": "mock-uid-ocpv-1"
+                    }
+                },
+                "targetNamespace": "openshift-migration",
+                "transferNetwork": null,
+                "archived": false,
+                "map": {
+                    "network": {
+                        "name": "vcenter1-netstore-to-ocp1-network1",
+                        "namespace": "konveyor-forklift"
+                    },
+                    "storage": {
+                        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                        "namespace": "konveyor-forklift"
+                    }
+                },
+                "vms": [
+                    {
+                        "id": "vm-1630"
+                    },
+                    {
+                        "id": "vm-2844"
+                    }
+                ],
+                "warm": false
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Info",
+                        "lastTransitionTime": "2020-09-18T16:04:10Z",
+                        "message": "Ready for migration",
+                        "reason": "Valid",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "migration": {
+                    "active": "",
+                    "started": "2020-10-10T14:04:10Z",
+                    "completed": "2020-10-10T15:04:10Z",
+                    "vms": [
+                        {
+                            "id": "vm-1630",
+                            "name": "fdupont-test-migration",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 31141
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 2,
+                                        "completed": 0
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z",
+                                    "completed": "2020-10-10T17:34:10Z"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "conditions": [
+                                {
+                                    "type": "Canceled",
+                                    "category": "Information",
+                                    "status": "True",
+                                    "message": "Canceled by user",
+                                    "lastTransitionTime": "2020-10-10T17:34:10Z"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "vm-1008",
+                            "name": "fdupont-test-migration-centos",
+                            "pipeline": [
+                                {
+                                    "name": "DiskTransfer",
+                                    "description": "Transfer disks.",
+                                    "progress": {
+                                        "total": 65536,
+                                        "completed": 65536
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "annotations": {
+                                        "unit": "MB"
+                                    },
+                                    "started": "2020-10-10T14:21:10Z",
+                                    "completed": "2020-10-10T15:57:10Z"
+                                },
+                                {
+                                    "name": "ImageConversion",
+                                    "description": "Convert image to kubevirt.",
+                                    "progress": {
+                                        "total": 3,
+                                        "completed": 3
+                                    },
+                                    "phase": "Mock Step Phase",
+                                    "started": "2020-10-10T15:57:10Z",
+                                    "completed": "2020-10-10T15:58:43Z"
+                                }
+                            ],
+                            "phase": "Mock VM Phase",
+                            "started": "2020-10-10T14:04:10Z",
+                            "completed": "2020-10-10T15:58:43Z",
+                            "conditions": [
+                                {
+                                    "category": "Advisory",
+                                    "durable": true,
+                                    "lastTransitionTime": "2020-10-10T15:58:43Z",
+                                    "message": "The VM migration has SUCCEEDED.",
+                                    "status": "True",
+                                    "type": "Succeeded"
+                                }
+                            ]
+                        }
+                    ],
+                    "history": [
+                        {
+                            "conditions": [],
+                            "migration": {
+                                "name": "plan-10-mock-migration",
+                                "namespace": "konveyor-forklift"
+                            },
+                            "plan": {
+                                "name": "plantest-11",
+                                "namespace": "openshift-migration"
+                            },
+                            "provider": {
+                                "name": "ocpv-1",
+                                "namespace": "openshift-migration"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+]

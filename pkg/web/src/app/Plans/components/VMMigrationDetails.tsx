@@ -27,7 +27,6 @@ import {
   fitContent,
 } from '@patternfly/react-table';
 import { centerCellTransform } from '@app/utils/utils';
-import { Link } from 'react-router-dom';
 import { useSelectionState } from '@migtools/lib-ui';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import alignment from '@patternfly/react-styles/css/utilities/Alignment/alignment';
@@ -59,11 +58,13 @@ import { LONG_LOADING_MESSAGE } from '@app/queries/constants';
 import '@app/Plans/components/VMMigrationDetails.css';
 import { MustGatherBtn } from '@app/common/components/MustGatherBtn';
 import { VMNameWithPowerState } from '@app/common/components/VMNameWithPowerState';
-import { PATH_PREFIX } from '@app/common/constants';
+import { PLANS_REFERENCE } from '@app/common/constants';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface IPlanMatchParams {
   url: string;
   planName: string;
+  ns?: string;
 }
 
 const getTotalCopiedRatio = (vmStatus: IVMStatus) => {
@@ -84,9 +85,11 @@ export type VMMigrationDetailsProps = {
 };
 
 export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps> = ({ match }) => {
-  const plansQuery = usePlansQuery();
+  const currentNamespace = match?.params?.ns;
+  const plansQuery = usePlansQuery(currentNamespace);
   const plan = plansQuery.data?.items.find((item) => item.metadata.name === match?.params.planName);
   const planStarted = !!plan?.status?.migration?.started;
+  const effectiveNamespace = plan?.metadata?.namespace || currentNamespace;
 
   const providersQuery = useInventoryProvidersQuery();
   const { sourceProvider } = findProvidersByRefs(plan?.spec.provider || null, providersQuery);
@@ -97,9 +100,9 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
     return nameFromInventory || vmStatus.name;
   };
 
-  const migrationsQuery = useMigrationsQuery();
+  const migrationsQuery = useMigrationsQuery(effectiveNamespace);
   const latestMigration = findLatestMigration(plan || null, migrationsQuery.data?.items || null);
-  const planState = getPlanState(plan || null, latestMigration, migrationsQuery);
+  const planState = getPlanState(plan || null, latestMigration, migrationsQuery.data?.items);
   const isShowingPrecopyView =
     !!plan?.spec.warm &&
     (planState === 'Starting' ||
@@ -225,7 +228,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
 
   const [isCancelModalOpen, toggleCancelModal] = React.useReducer((isOpen) => !isOpen, false);
 
-  const cancelVMsMutation = useCancelVMsMutation(plan || null, () => {
+  const cancelVMsMutation = useCancelVMsMutation(plan || null, effectiveNamespace, () => {
     toggleCancelModal();
     setSelectedItems([]);
   });
@@ -345,7 +348,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
       <PageSection variant="light">
         <Breadcrumb className={`${spacing.mbLg} ${spacing.prLg}`}>
           <BreadcrumbItem>
-            <Link to={`${PATH_PREFIX}/plans`}>Migration plans</Link>
+            <ResourceLink kind={PLANS_REFERENCE} hideIcon displayName="Migration plans" />
           </BreadcrumbItem>
           <BreadcrumbItem>{match?.params.planName}</BreadcrumbItem>
         </Breadcrumb>

@@ -24,6 +24,7 @@ interface CellProps {
   value: string;
   entity: MergedProvider;
   t?: (k: string) => string;
+  currentNamespace?: string;
 }
 
 /**
@@ -86,8 +87,10 @@ const StatusCell = ({
     </Popover>
   );
 };
+StatusCell.displayName = 'StatusCell';
 
 const TextCell = ({ value }: { value: string }) => <>{value ?? ''}</>;
+TextCell.displayName = 'TextCell';
 
 const TextWithIcon = ({ value, Icon }: { value: string; Icon: JSXElementConstructor<unknown> }) => (
   <>
@@ -98,6 +101,7 @@ const TextWithIcon = ({ value, Icon }: { value: string; Icon: JSXElementConstruc
     )}
   </>
 );
+TextWithIcon.displayName = 'TextWithIcon';
 
 const ProviderLink = ({ value, entity, t }: CellProps) => {
   const isHostProvider = entity.type === 'openshift' && !entity.url;
@@ -112,11 +116,18 @@ const ProviderLink = ({ value, entity, t }: CellProps) => {
     </>
   );
 };
+ProviderLink.displayName = 'ProviderLink';
 
-const HostCell = ({ value, entity: { ready, name, type } }: CellProps) => (
+const HostCell = ({ value, entity: { ready, name, type }, currentNamespace }: CellProps) => (
   <>
     {ready === 'True' && value && type === 'vsphere' ? (
-      <Link to={`${PATH_PREFIX}/providers/vsphere/${name}`}>
+      <Link
+        to={
+          currentNamespace
+            ? `${PATH_PREFIX}/providers/vsphere/ns/${currentNamespace}/${name}`
+            : `${PATH_PREFIX}/providers/vsphere/${name}`
+        }
+      >
         <TextWithIcon Icon={OutlinedHddIcon} value={value} />
       </Link>
     ) : (
@@ -124,6 +135,7 @@ const HostCell = ({ value, entity: { ready, name, type } }: CellProps) => (
     )}
   </>
 );
+HostCell.displayName = 'HostCell';
 
 const TypeCell = ({ value, t }: CellProps) => (
   <>
@@ -146,6 +158,7 @@ const TypeCell = ({ value, t }: CellProps) => (
     )}
   </>
 );
+TypeCell.displayName = 'TypeCell';
 
 const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   [C.NAME]: ProviderLink,
@@ -153,13 +166,13 @@ const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   [C.URL]: TextCell,
   [C.TYPE]: TypeCell,
   [C.NAMESPACE]: ({ value }: CellProps) => <ResourceLink kind="Namespace" name={value} />,
-  [C.ACTIONS]: ProviderActions,
+  [C.ACTIONS]: ({ entity }: CellProps) => <ProviderActions entity={entity} />,
   [C.NETWORK_COUNT]: ({ value }: CellProps) => <TextWithIcon Icon={NetworkIcon} value={value} />,
   [C.STORAGE_COUNT]: ({ value }: CellProps) => <TextWithIcon Icon={DatabaseIcon} value={value} />,
   [C.HOST_COUNT]: HostCell,
 };
 
-const ProviderRow = ({ columns, entity }: RowProps<MergedProvider>) => {
+const ProviderRow = ({ columns, entity, currentNamespace }: RowProps<MergedProvider>) => {
   const { t } = useTranslation();
   return (
     <Tr>
@@ -169,11 +182,13 @@ const ProviderRow = ({ columns, entity }: RowProps<MergedProvider>) => {
             value: entity[id],
             entity,
             t,
+            currentNamespace,
           }) ?? <TextCell value={String(entity[id] ?? '')} />}
         </Td>
       ))}
     </Tr>
   );
 };
+ProviderRow.displayName = 'ProviderRow';
 
 export default ProviderRow;

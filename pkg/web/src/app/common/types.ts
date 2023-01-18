@@ -8,6 +8,7 @@ export enum BrandType {
 export interface IEnvVars {
   NODE_ENV: string;
   DATA_SOURCE: string;
+  DEFAULT_NAMESPACE: string;
   BRAND_TYPE: BrandType;
   NAMESPACE: string;
   PLUGIN_NAME: string;

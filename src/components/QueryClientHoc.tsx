@@ -13,7 +13,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const withQueryClient = (Component) => {
+const withQueryClient = <T extends object>(Component: React.ComponentType<T>): React.FC<T> => {
   function QueryClientHoc(props) {
     return (
       <QueryClientProvider client={queryClient}>

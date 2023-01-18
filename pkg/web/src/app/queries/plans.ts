@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as yup from 'yup';
-import { checkIfResourceExists, ForkliftResource, ForkliftResourceKind } from '@app/client/helpers';
+import { checkIfResourceExists, createResource, ForkliftResourceKind } from '@app/client/helpers';
 import { IKubeList, IKubeResponse, IKubeStatus, KubeClientError } from '@app/client/types';
-import { dnsLabelNameSchema, ENV } from '@app/common/constants';
+import { dnsLabelNameSchema } from '@app/common/constants';
 import { usePollingContext } from '@app/common/context';
 import { UseMutationResult, UseQueryResult, useQueryClient } from 'react-query';
 import {
@@ -22,12 +22,8 @@ import { generateHook, generateMappings, generatePlan } from '@app/Plans/compone
 import { IMetaObjectMeta } from '@app/queries/types/common.types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-const planResource = new ForkliftResource(ForkliftResourceKind.Plan, ENV.NAMESPACE);
-const networkMapResource = getMappingResource(MappingType.Network).resource;
-const storageMapResource = getMappingResource(MappingType.Storage).resource;
-const hookResource = new ForkliftResource(ForkliftResourceKind.Hook, ENV.NAMESPACE);
-
-export const usePlansQuery = (): UseQueryResult<IKubeList<IPlan>> => {
+export const usePlansQuery = (namespace: string): UseQueryResult<IKubeList<IPlan>> => {
+  const planResource = createResource(ForkliftResourceKind.Plan, namespace);
   const sortKubeListByNameCallback = React.useCallback(
     (data): IKubeList<IPlan> => sortKubeListByName(data),
     []
@@ -46,10 +42,15 @@ export const usePlansQuery = (): UseQueryResult<IKubeList<IPlan>> => {
 };
 
 export const useCreatePlanMutation = (
+  namespace: string,
   onSuccess?: () => void
 ): UseMutationResult<IKubeResponse<IPlan>, KubeClientError, PlanWizardFormState, unknown> => {
   const client = useAuthorizedK8sClient();
   const queryClient = useQueryClient();
+  const networkMapResource = getMappingResource(MappingType.Network, namespace).resource;
+  const storageMapResource = getMappingResource(MappingType.Storage, namespace).resource;
+  const hookResource = createResource(ForkliftResourceKind.Hook, namespace);
+  const planResource = createResource(ForkliftResourceKind.Plan, namespace);
   return useMockableMutation<IKubeResponse<IPlan>, KubeClientError, PlanWizardFormState>(
     async (forms) => {
       await checkIfResourceExists(
@@ -73,7 +74,12 @@ export const useCreatePlanMutation = (
 
       // Create hooks CRs with generated names and collect their refs
       const planHooks = forms.hooks.values.instances.map((instance) => ({
-        cr: generateHook(instance, null, `${forms.general.values.planName}-hook-`),
+        cr: generateHook({
+          instance,
+          existingHook: null,
+          namespace,
+          generateName: `${forms.general.values.planName}-hook-`,
+        }),
         instance: instance,
       }));
       const newHooksRef = planHooks.map(async (newHook) => {
@@ -86,7 +92,7 @@ export const useCreatePlanMutation = (
       // Create plan referencing new mappings and new hooks for plan's VMs
       const planResponse = await client.create<IPlan>(
         planResource,
-        generatePlan(forms, networkMappingRef, storageMappingRef, hooksRef)
+        generatePlan(forms, networkMappingRef, storageMappingRef, namespace, hooksRef)
       );
 
       // Patch mappings with ownerReferences to new plan
@@ -104,7 +110,13 @@ export const useCreatePlanMutation = (
 
       // Patch hooks with ownerReferences to the new plan
       const hooksWithOwnerRef = hooksRef.map((hook) =>
-        generateHook(hook.instance, hook.ref, '', planResponse?.data)
+        generateHook({
+          instance: hook.instance,
+          existingHook: hook.ref,
+          namespace,
+          generateName: '',
+          owner: planResponse?.data,
+        })
       );
       const newHooksWithOwnerRef = hooksWithOwnerRef.map(async (hookWithOwnerRef) => {
         const response = await client.patch<IHook>(
@@ -135,10 +147,15 @@ interface IPatchPlanArgs {
 }
 
 export const usePatchPlanMutation = (
+  namespace: string,
   onSuccess?: () => void
 ): UseMutationResult<IKubeResponse<IPlan>, KubeClientError, IPatchPlanArgs, unknown> => {
   const client = useAuthorizedK8sClient();
   const queryClient = useQueryClient();
+  const networkMapResource = getMappingResource(MappingType.Network, namespace).resource;
+  const storageMapResource = getMappingResource(MappingType.Storage, namespace).resource;
+  const hookResource = createResource(ForkliftResourceKind.Hook, namespace);
+  const planResource = createResource(ForkliftResourceKind.Plan, namespace);
 
   return useMockableMutation<IKubeResponse<IPlan>, KubeClientError, IPatchPlanArgs>(
     async ({ planBeingEdited, forms }) => {
@@ -152,17 +169,23 @@ export const usePatchPlanMutation = (
       const planHooks = forms.hooks.values.instances.map((instance) => {
         if (instance.prefilledFromHook) {
           return {
-            cr: generateHook(
+            cr: generateHook({
               instance,
-              nameAndNamespace(instance.prefilledFromHook.metadata),
-              `${forms.general.values.planName}-hook-`
-            ),
+              existingHook: nameAndNamespace(instance.prefilledFromHook.metadata),
+              namespace,
+              generateName: `${forms.general.values.planName}-hook-`,
+            }),
             existingHook: true,
             instance: instance,
           };
         }
         return {
-          cr: generateHook(instance, null, `${forms.general.values.planName}-hook-`),
+          cr: generateHook({
+            instance,
+            existingHook: null,
+            namespace,
+            generateName: `${forms.general.values.planName}-hook-`,
+          }),
           existingHook: false,
           instance: instance,
         };
@@ -183,7 +206,13 @@ export const usePatchPlanMutation = (
 
       const hooksRef = await Promise.all(updatedHooksRef);
 
-      const updatedPlan = generatePlan(forms, networkMappingRef, storageMappingRef, hooksRef);
+      const updatedPlan = generatePlan(
+        forms,
+        networkMappingRef,
+        storageMappingRef,
+        namespace,
+        hooksRef
+      );
       const [, , planResponse] = await Promise.all([
         networkMapping &&
           client.patch<Mapping>(networkMapResource, networkMappingRef.name, networkMapping),
@@ -198,7 +227,13 @@ export const usePatchPlanMutation = (
       for (let i = 0; i < hooksRef.length; i++) {
         if (!hooksRef[i].instance.prefilledFromHook) {
           hooksWithOwnerRef.push(
-            generateHook(hooksRef[i].instance, hooksRef[i].ref, '', planBeingEdited)
+            generateHook({
+              instance: hooksRef[i].instance,
+              existingHook: hooksRef[i].ref,
+              namespace,
+              generateName: '',
+              owner: planBeingEdited,
+            })
           );
         }
       }
@@ -240,9 +275,11 @@ export const usePatchPlanMutation = (
 };
 
 export const useDeletePlanMutation = (
+  namespace: string,
   onSuccess?: () => void
 ): UseMutationResult<IKubeResponse<IKubeStatus>, KubeClientError, IPlan, unknown> => {
   const client = useAuthorizedK8sClient();
+  const planResource = createResource(ForkliftResourceKind.Plan, namespace);
   const queryClient = useQueryClient();
   return useMockableMutation<IKubeResponse<IKubeStatus>, KubeClientError, IPlan>(
     (plan: IPlan) => client.delete(planResource, plan.metadata.name),
@@ -257,10 +294,12 @@ export const useDeletePlanMutation = (
 };
 
 export const useArchivePlanMutation = (
+  namespace: string,
   onSuccess?: () => void
 ): UseMutationResult<IKubeResponse<IKubeStatus>, KubeClientError, IPlan, unknown> => {
   const client = useAuthorizedK8sClient();
   const queryClient = useQueryClient();
+  const planResource = createResource(ForkliftResourceKind.Plan, namespace);
   return useMockableMutation<IKubeResponse<IKubeStatus>, KubeClientError, IPlan>(
     (plan: IPlan) => {
       const planWithArchiveFlag: IPlan = {

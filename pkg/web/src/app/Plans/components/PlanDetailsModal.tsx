@@ -28,14 +28,14 @@ export const PlanDetailsModal: React.FunctionComponent<IPlanDetailsModalProps> =
   plan,
 }: IPlanDetailsModalProps) => {
   usePausedPollingEffect();
-
-  const networkMappingsQuery = useMappingsQuery(MappingType.Network);
+  const namespace = plan.metadata.namespace;
+  const networkMappingsQuery = useMappingsQuery(MappingType.Network, namespace);
   const networkMapping =
     networkMappingsQuery.data?.items.find((mapping) =>
       isSameResource(mapping.metadata as IMetaObjectMeta, plan.spec.map.network)
     ) || null;
 
-  const storageMappingsQuery = useMappingsQuery(MappingType.Storage);
+  const storageMappingsQuery = useMappingsQuery(MappingType.Storage, namespace);
   const storageMapping =
     storageMappingsQuery.data?.items.find((mapping) =>
       isSameResource(mapping.metadata as IMetaObjectMeta, plan.spec.map.storage)
@@ -53,7 +53,7 @@ export const PlanDetailsModal: React.FunctionComponent<IPlanDetailsModalProps> =
   const vmsQuery = useSourceVMsQuery(provider);
   const selectedVMs = vmsQuery.data?.findVMsByRefs(plan.spec.vms) || [];
 
-  const hooksQuery = useHooksQuery();
+  const hooksQuery = useHooksQuery(namespace);
   const selectedHooks =
     hooksQuery.data?.items.filter((hook) =>
       plan.spec.vms.find((vm) =>

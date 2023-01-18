@@ -50,7 +50,11 @@ export const useAuthorizedK8sClient = () => {
   /* eslint-disable @typescript-eslint/ban-types */
   return {
     get: <T>(resource: KubeResource, name: string, params?: object) =>
-      authorizedK8sRequest<T>({ method: 'GET', url: namedPath(resource, name), data: params }),
+      authorizedK8sRequest<T>({
+        method: 'GET',
+        url: namedPath(resource, name),
+        data: params,
+      }),
     list: <T>(resource: KubeResource, params?: object) =>
       authorizedK8sRequest<T>({ method: 'GET', url: listPath(resource), data: params }),
     create: <T>(resource: KubeResource, newObject: object, params?: object) =>

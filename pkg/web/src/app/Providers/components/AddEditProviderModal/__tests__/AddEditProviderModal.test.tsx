@@ -7,6 +7,7 @@ import { Router } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { AddEditProviderModal } from '../AddEditProviderModal';
 import { MOCK_CLUSTER_PROVIDERS } from '@app/queries/mocks/providers.mock';
+import { ENV } from '@app/common/constants';
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ describe('<AddEditProviderModal />', () => {
   const history = createMemoryHistory();
   const props = {
     onClose: toggleModalAndResetEdit,
+    namespace: ENV.NAMESPACE,
   };
 
   it('allows to cancel addition/edition of a provider', async () => {

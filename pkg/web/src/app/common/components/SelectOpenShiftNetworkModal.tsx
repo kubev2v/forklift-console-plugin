@@ -87,6 +87,7 @@ export const SelectOpenShiftNetworkModal: React.FunctionComponent<
     <Modal
       className="SelectOpenShiftNetworkModal"
       variant="small"
+      position="top"
       title="Select migration network"
       isOpen
       onClose={onClose}

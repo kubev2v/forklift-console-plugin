@@ -32,6 +32,7 @@ interface IProviderSelectBaseProps<T> extends Partial<SelectProps> {
   notReadyTooltipPosition?: 'left' | 'right';
   field: IValidatedFormField<T | null>;
   afterChange?: () => void;
+  namespace: string;
 }
 
 interface ISourceProviderSelectProps extends IProviderSelectBaseProps<SourceInventoryProvider> {
@@ -49,10 +50,11 @@ export const ProviderSelect: React.FunctionComponent<ProviderSelectProps> = ({
   field,
   notReadyTooltipPosition = 'left',
   afterChange,
+  namespace,
   ...props
 }: ProviderSelectProps) => {
   const inventoryProvidersQuery = useInventoryProvidersQuery();
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const clusterProvidersQuery = useClusterProvidersQuery(namespace);
   const { data: inventoryData } = inventoryProvidersQuery;
 
   const getMatchingInventoryProvider = (clusterProvider: IProviderObject) => {

@@ -7,10 +7,11 @@ import {
   VMMigrationDetailsProps,
 } from '@app/Plans/components/VMMigrationDetails';
 
-const Page = withQueryClient((props: VMMigrationDetailsProps) => (
+const VMMigrationDetailsWrapper = withQueryClient((props: VMMigrationDetailsProps) => (
   <MustGatherContextProvider>
     <VMMigrationDetails match={props.match} />
   </MustGatherContextProvider>
 ));
+VMMigrationDetailsWrapper.displayName = 'VMMigrationDetailsWrapper';
 
-export default Page;
+export default VMMigrationDetailsWrapper;

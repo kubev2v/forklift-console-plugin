@@ -36,6 +36,7 @@ interface IGeneralFormProps {
   wizardMode: PlanWizardMode;
   afterProviderChange: () => void;
   afterTargetNamespaceChange: () => void;
+  namespace: string;
 }
 
 export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
@@ -43,9 +44,10 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
   wizardMode,
   afterProviderChange,
   afterTargetNamespaceChange,
+  namespace,
 }: IGeneralFormProps) => {
   const inventoryProvidersQuery = useInventoryProvidersQuery();
-  const clusterProvidersQuery = useClusterProvidersQuery();
+  const clusterProvidersQuery = useClusterProvidersQuery(namespace);
   const namespacesQuery = useNamespacesQuery(form.values.targetProvider);
   const targetNsFoundInQueriesNs = !!namespacesQuery.data?.find(
     (namespace) => form.values.targetNamespace === namespace.name
@@ -128,11 +130,13 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
           providerRole="source"
           field={form.fields.sourceProvider}
           afterChange={afterProviderChange}
+          namespace={namespace}
         />
         <ProviderSelect
           providerRole="target"
           field={form.fields.targetProvider}
           afterChange={afterProviderChange}
+          namespace={namespace}
         />
         <FormGroup
           label="Target namespace"

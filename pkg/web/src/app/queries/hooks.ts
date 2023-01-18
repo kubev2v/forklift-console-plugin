@@ -4,17 +4,15 @@ import * as yup from 'yup';
 import yaml from 'js-yaml';
 
 import { IKubeList } from '@app/client/types';
-import { ENV } from '@app/common/constants';
 import { usePollingContext } from '@app/common/context';
 import { mockKubeList, sortKubeListByName, useMockableQuery } from './helpers';
 import { MOCK_HOOKS } from './mocks/hooks.mock';
 import { IHook } from './types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
-import { ForkliftResource, ForkliftResourceKind } from '@app/client/helpers';
+import { createResource, ForkliftResourceKind } from '@app/client/helpers';
 
-const hookResource = new ForkliftResource(ForkliftResourceKind.Hook, ENV.NAMESPACE);
-
-export const useHooksQuery = (): UseQueryResult<IKubeList<IHook>> => {
+export const useHooksQuery = (namespace: string): UseQueryResult<IKubeList<IHook>> => {
+  const hookResource = createResource(ForkliftResourceKind.Hook, namespace);
   const sortKubeListByNameCallback = React.useCallback(
     (data): IKubeList<IHook> => sortKubeListByName(data),
     []

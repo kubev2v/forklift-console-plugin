@@ -58,6 +58,7 @@ interface IMappingFormProps {
   targetNamespace: string | null;
   selectedVMs: SourceVM[];
   planBeingPrefilled: IPlan | null;
+  namespace: string;
 }
 
 export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
@@ -68,6 +69,7 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
   targetNamespace,
   selectedVMs,
   planBeingPrefilled,
+  namespace,
 }: IMappingFormProps) => {
   usePausedPollingEffect();
 
@@ -120,7 +122,7 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
     nicProfilesQuery?.data,
   ]);
 
-  const mappingsQuery = useMappingsQuery(mappingType);
+  const mappingsQuery = useMappingsQuery(mappingType, namespace);
 
   const filteredMappings = filterSharedMappings(mappingsQuery.data?.items).filter(
     ({

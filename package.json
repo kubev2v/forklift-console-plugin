@@ -27,7 +27,7 @@
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.8",
     "@openshift/dynamic-plugin-sdk": "~1.0.0",
     "@openshift/dynamic-plugin-sdk-webpack": "~1.0.0",
-    "@patternfly/react-core": "4.175.4",
+    "@patternfly/react-core": "4.221.3",
     "@patternfly/react-table": "^4.93.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.0.0",

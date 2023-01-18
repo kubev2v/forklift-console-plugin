@@ -202,6 +202,7 @@ export function StandardPage<T>({
           Row={RowMapper}
           activeSort={activeSort}
           setActiveSort={setActiveSort}
+          currentNamespace={namespace}
         >
           {!loaded && <Loading key="loading" />}
           {errorFetchingData && <ErrorState key="error" />}
