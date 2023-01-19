@@ -15,7 +15,7 @@ import {
   usePlansQuery,
 } from '@app/queries';
 import { IOpenShiftProvider, IPlan, IProviderObject } from '@app/queries/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useModal } from '@shim/dynamic-plugin-sdk';
 
 import { type MergedProvider } from './data';
 

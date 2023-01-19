@@ -2,8 +2,8 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'src/utils/i18n';
 
-import { ActionService, ActionServiceProvider } from '@openshift-console/dynamic-plugin-sdk';
 import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly/react-core';
+import { ActionService, ActionServiceProvider } from '@shim/dynamic-plugin-sdk';
 
 /**
  * It's not possible to pass directly parameters to the Action components -
