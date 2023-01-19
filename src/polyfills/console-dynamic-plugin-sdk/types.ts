@@ -101,7 +101,7 @@ export type ResolvedCodeRefProperties<O extends {}> = {
  */
 export type Update<O extends {}, U extends {}> = {
   [K in keyof O]: K extends keyof U ? U[K] : O[K];
-} & {};
+};
 
 /**
  * Infer the properties of extension `E`.

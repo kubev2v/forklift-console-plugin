@@ -1,11 +1,13 @@
 import {
   Action,
   ActionGroup,
+} from '@openshift-console/dynamic-plugin-sdk';
+import {
   GroupedMenuOption,
   MenuOption,
   MenuOptionType,
-} from '@console/dynamic-plugin-sdk';
-import { LoadedExtension } from '@console/plugin-sdk';
+} from '../../../console-dynamic-plugin-sdk';
+import { LoadedExtension } from '@openshift/dynamic-plugin-sdk';
 
 export const createMenuOptions = (
   actions: Action[],

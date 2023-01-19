@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as _ from 'lodash';
 
 type CloseModal = () => void;
 
@@ -16,8 +15,8 @@ type ModalContextValue = {
 };
 
 export const ModalContext = React.createContext<ModalContextValue>({
-  launchModal: _.noop,
-  closeModal: _.noop,
+  launchModal: () => undefined,
+  closeModal: () => undefined,
 });
 
 export const ModalProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {

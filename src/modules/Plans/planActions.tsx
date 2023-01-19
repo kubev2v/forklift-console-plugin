@@ -16,8 +16,8 @@ import {
   useDeletePlanMutation,
   useSetCutoverMutation,
 } from '@app/queries';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Modal, Text, TextContent } from '@patternfly/react-core';
+import { useModal } from '@shim/dynamic-plugin-sdk';
 
 import { type FlatPlan } from './data';
 

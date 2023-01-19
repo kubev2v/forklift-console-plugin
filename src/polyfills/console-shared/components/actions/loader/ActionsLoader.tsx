@@ -10,9 +10,27 @@ import {
   ExtensionK8sGroupModel,
   isActionFilter,
   ActionFilter,
+  K8sGroupVersionKind,
+  K8sResourceKindReference,
+  GroupVersionKind,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { referenceForExtensionModel } from '@console/internal/module/k8s';
 import ActionsHookResolver from './ActionsHookResolver';
+
+/** START Internal helper methods */
+export const getReference = ({
+  group,
+  version,
+  kind,
+}: K8sGroupVersionKind): K8sResourceKindReference => [group || 'core', version, kind].join('~');
+
+export const referenceForGroupVersionKind =
+  (group: string) => (version: string) => (kind: string) =>
+    getReference({ group, version, kind });
+
+export const referenceForExtensionModel = (model: ExtensionK8sGroupModel): GroupVersionKind =>
+  referenceForGroupVersionKind(model?.group || 'core')(model?.version)(model?.kind);
+
+/** END Internal helper methods */
 
 type ActionsLoaderProps = {
   contextId: string;

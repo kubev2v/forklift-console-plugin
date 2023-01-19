@@ -12,8 +12,8 @@ import { ResourceConsolePageProps } from '_/utils/types';
 import { ProviderType, SOURCE_PROVIDER_TYPES } from '@app/common/constants';
 import { AddEditProviderModal } from '@app/Providers/components/AddEditProviderModal';
 import { EditProviderContext } from '@app/Providers/ProvidersPage';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button } from '@patternfly/react-core';
+import { useModal } from '@shim/dynamic-plugin-sdk';
 
 import { MergedProvider, useProvidersWithInventory } from './data';
 import EmptyStateProviders from './EmptyStateProviders';

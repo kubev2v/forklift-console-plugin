@@ -2,13 +2,10 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import {
   Action,
-  ActionGroup,
   ActionService,
   ActionServiceProviderProps,
-  isActionGroup,
   MenuOption,
-} from '@openshift-console/dynamic-plugin-sdk';
-import { useExtensions } from '@console/plugin-sdk';
+} from '../../../console-dynamic-plugin-sdk';
 import { useDeepCompareMemoize } from '../../hooks';
 import ActionsLoader from './loader/ActionsLoader';
 import { ActionContext } from './types';
@@ -31,7 +28,7 @@ const ActionServiceProvider: React.FC<ActionServiceProviderProps> = ({ context, 
 
   const actions: Action[] = React.useMemo(() => _.flatten(Object.values(actionsMap)), [actionsMap]);
 
-  const groupExtensions = useExtensions<ActionGroup>(isActionGroup);
+  const groupExtensions = [];
 
   const options: MenuOption[] = React.useMemo(() => createMenuOptions(actions, groupExtensions), [
     actions,
