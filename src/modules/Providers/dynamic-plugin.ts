@@ -20,9 +20,9 @@ export const extensions: EncodedExtension[] = [
       id: 'providers',
       insertAfter: 'importSeparator',
       perspective: 'admin',
-      section: 'virtualization',
-      // t('plugin__forklift-console-plugin~Providers for Import')
-      name: '%plugin__forklift-console-plugin~Providers for Import%',
+      section: 'migration',
+      // t('plugin__forklift-console-plugin~Providers for virtualization')
+      name: '%plugin__forklift-console-plugin~Providers for virtualization%',
       model: {
         group: 'forklift.konveyor.io',
         kind: 'Provider',

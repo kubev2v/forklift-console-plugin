@@ -13,9 +13,9 @@ export const extensions: EncodedExtension[] = [
       id: 'mappings',
       insertAfter: 'plans',
       perspective: 'admin',
-      section: 'virtualization',
-      // t('plugin__forklift-console-plugin~Mappings for Import')
-      name: '%plugin__forklift-console-plugin~Mappings for Import%',
+      section: 'migration',
+      // t('plugin__forklift-console-plugin~Mappings for virtualization')
+      name: '%plugin__forklift-console-plugin~Mappings for virtualization%',
       href: '/mtv/mappings',
     },
   } as EncodedExtension<HrefNavItem>,
