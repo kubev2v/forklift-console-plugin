@@ -28,9 +28,9 @@ export const extensions: EncodedExtension[] = [
       id: 'plans',
       insertAfter: 'providers',
       perspective: 'admin',
-      section: 'virtualization',
-      // t('plugin__forklift-console-plugin~Plans for Import')
-      name: '%plugin__forklift-console-plugin~Plans for Import%',
+      section: 'migration',
+      // t('plugin__forklift-console-plugin~Plans for virtualization')
+      name: '%plugin__forklift-console-plugin~Plans for virtualization%',
       model,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-plans',
