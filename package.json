@@ -13,7 +13,7 @@
     "i18n": "i18next \"src/**/*.{js,jsx,ts,tsx}\" [-oc] -c i18next-parser.config.mjs",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
-    "test": "jest",
+    "test": "TZ=UTC jest",
     "test:i18n": "./scripts/test-i18n.sh",
     "test:coverage": "jest --coverage",
     "test:updateSnapshot": "jest --updateSnapshot",

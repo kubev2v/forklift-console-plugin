@@ -39,7 +39,9 @@ interface CellProps {
 
 const TextCell = ({ value }: CellProps) => <>{value ?? ''}</>;
 
-const StatusCell = ({ entity: { status, type, vmCount, vmDone, name, object } }: CellProps) => {
+const StatusCell = ({
+  entity: { status, type, vmCount, vmDone, name, object, namespace },
+}: CellProps) => {
   const { t } = useTranslation();
   const isBeingStarted = status === 'Starting';
   const isWarmPlan = type === 'Warm';
@@ -69,6 +71,7 @@ const StatusCell = ({ entity: { status, type, vmCount, vmDone, name, object } }:
     return (
       <Link name={name} isInline={false}>
         <Progress
+          id={`progress_for_${name}_in_${namespace}`}
           title={title}
           value={vmCount ? (vmDone * 100) / vmCount : 0}
           label={t('{{vmDone}} of {{vmCount}} VMs migrated', { vmDone, vmCount })}

@@ -13,7 +13,7 @@ import { CreatePlanButton } from '@app/Plans/components/CreatePlanButton';
 import { FlatPlan, useFlatPlans } from './data';
 import PlanRow from './PlanRow';
 
-const fieldsMetadata: Field[] = [
+export const fieldsMetadata: Field[] = [
   {
     id: C.NAME,
     toLabel: (t) => t('Name'),

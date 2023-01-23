@@ -20,7 +20,7 @@ export type mgWatchListType = {
 }[];
 
 export type mustGatherListType = MustGatherObjType[];
-interface IMustGatherContext {
+export interface IMustGatherContext {
   mustGatherModalOpen: boolean;
   setMustGatherModalOpen: (isOpen: boolean) => void;
   mustGatherList: mustGatherListType;

@@ -43,7 +43,11 @@ export const MigrateOrCutoverButton: React.FunctionComponent<IMigrateOrCutoverBu
       {isBeingStarted ? (
         <Spinner size="md" className={spacing.mxLg} />
       ) : (
-        <Button variant="secondary" onClick={toggleConfirmModal}>
+        <Button
+          ouiaId={`${buttonType}_for_plan_${plan.metadata.name}_in_${plan.metadata.namespace}`}
+          variant="secondary"
+          onClick={toggleConfirmModal}
+        >
           {buttonType}
         </Button>
       )}
