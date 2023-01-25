@@ -19,7 +19,7 @@ import { MergedProvider, useProvidersWithInventory } from './data';
 import EmptyStateProviders from './EmptyStateProviders';
 import ProviderRow from './ProviderRow';
 
-const fieldsMetadata: Field[] = [
+export const fieldsMetadata: Field[] = [
   {
     id: C.NAME,
     toLabel: (t) => t('Name'),
