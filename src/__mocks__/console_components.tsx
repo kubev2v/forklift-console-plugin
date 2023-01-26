@@ -1,11 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 
 import { ResourceLinkProps } from '@openshift-console/dynamic-plugin-sdk';
-
-// This dummy file is used to resolve @Console imports from @openshift-console for JEST
-// You can add any exports needed by your tests here
-// Check "moduleNameMapper" in package.json
 
 export const ResourceLink = ({
   name,
