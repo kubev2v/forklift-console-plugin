@@ -4,56 +4,9 @@ import { MOCK_MIGRATIONS } from '@app/queries/mocks/migrations.mock';
 import { MOCK_PLANS } from '@app/queries/mocks/plans.mock';
 import { MOCK_CLUSTER_PROVIDERS } from '@app/queries/mocks/providers.mock';
 
-import { findObjectRef, mergeData } from '../data';
+import { mergeData } from '../data';
 
 import MERGED_MOCK_DATA from './mergedMockData.json';
-
-describe('finding object ref', () => {
-  test('fallback to default ref if no matching provider', () => {
-    expect(findObjectRef({ name: 'Foo', namespace: 'Bar' }, [])).toEqual({
-      name: 'Foo',
-      gvk: {
-        group: 'forklift.konveyor.io',
-        version: 'v1beta1',
-        kind: 'Provider',
-      },
-      ready: false,
-    });
-  });
-  test('finding matching provider', () => {
-    expect(
-      findObjectRef({ name: 'test', namespace: 'openshift-migration' }, [
-        {
-          apiVersion: 'foo.io/v2',
-          kind: 'Provider',
-          metadata: {
-            name: 'test',
-            namespace: 'openshift-migration',
-          },
-          status: {
-            conditions: [
-              {
-                category: 'Required',
-                lastTransitionTime: '2021-03-23T16:58:23Z',
-                message: 'The provider is ready.',
-                status: 'True',
-                type: 'Ready',
-              },
-            ],
-          },
-        },
-      ]),
-    ).toEqual({
-      name: 'test',
-      gvk: {
-        group: 'foo.io',
-        version: 'v2',
-        kind: 'Provider',
-      },
-      ready: true,
-    });
-  });
-});
 
 describe('merging k8s resources:Plans, Migrations, Providers', () => {
   test('empty input', () => {

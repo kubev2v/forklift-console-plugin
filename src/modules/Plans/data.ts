@@ -1,15 +1,14 @@
 import { useMemo } from 'react';
 import * as C from '_/utils/constants';
 import { useMigrations, usePlans, useProviders } from '_/utils/fetch';
-import { groupVersionKindForObj } from '_/utils/resources';
-import { MigrationResource, PlanResource, ProviderResource } from '_/utils/types';
+import { groupVersionKindForObj, resolveProviderRef } from '_/utils/resources';
+import { MigrationResource, PlanResource, ProviderRef, ProviderResource } from '_/utils/types';
 
-import { CLUSTER_API_VERSION, PlanState } from '@app/common/constants';
-import { hasCondition } from '@app/common/helpers';
+import { PlanState } from '@app/common/constants';
 import { getPlanState } from '@app/Plans/components/helpers';
 import { findLatestMigration } from '@app/queries';
-import { IPlan, IStatusCondition, PlanType } from '@app/queries/types';
-import { K8sGroupVersionKind, ObjectReference } from '@openshift-console/dynamic-plugin-sdk';
+import { IPlan, PlanType } from '@app/queries/types';
+import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 export interface FlatPlan {
   //plan.metadata.name
   [C.NAME]: string;
@@ -45,33 +44,6 @@ interface LatestMigration {
   [C.CUTOVER]?: string;
 }
 
-interface ProviderSpec {
-  name: string;
-  gvk: K8sGroupVersionKind;
-  ready: boolean;
-}
-
-export const findObjectRef = (
-  { name, namespace }: ObjectReference,
-  providers: ProviderResource[],
-): ProviderSpec => {
-  // fallback is required if provider reference inside plan is obsolete/out-of-synch
-  const fallbackProvider: Partial<ProviderResource> = {
-    apiVersion: CLUSTER_API_VERSION,
-    kind: 'Provider',
-  };
-
-  const provider =
-    providers.find((p) => p.metadata?.namespace === namespace && p.metadata?.name === name) ??
-    fallbackProvider;
-
-  return {
-    name,
-    gvk: groupVersionKindForObj(provider),
-    ready: hasCondition((provider.status?.conditions ?? []) as IStatusCondition[], 'Ready'),
-  };
-};
-
 export const mergeData = (
   plans: PlanResource[],
   migrations: MigrationResource[],
@@ -87,8 +59,8 @@ export const mergeData = (
         PlanState,
         K8sGroupVersionKind,
         LatestMigration,
-        ProviderSpec,
-        ProviderSpec,
+        ProviderRef,
+        ProviderRef,
       ] => {
         const latestMigration = findLatestMigration(plan, migrations);
         return [
@@ -97,8 +69,8 @@ export const mergeData = (
           getPlanState(plan, latestMigration, migrations),
           groupVersionKindForObj(plan),
           latestMigration ? { cutover: latestMigration.spec?.cutover } : undefined,
-          findObjectRef(plan.spec.provider.source, providers),
-          findObjectRef(plan.spec.provider.destination, providers),
+          resolveProviderRef(plan.spec.provider.source, providers),
+          resolveProviderRef(plan.spec.provider.destination, providers),
         ];
       },
     )

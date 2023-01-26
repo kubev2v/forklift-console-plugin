@@ -1,5 +1,5 @@
 import { IMigration, IPlan } from '@app/queries/types';
-import { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import { K8sGroupVersionKind, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
 export type Condition = {
   /** identification string for the condition */
@@ -40,3 +40,10 @@ export type ResourceConsolePageProps = {
   kind: string;
   namespace: string;
 };
+
+export interface ProviderRef {
+  name: string;
+  gvk: K8sGroupVersionKind;
+  ready: boolean;
+  resolved: boolean;
+}
