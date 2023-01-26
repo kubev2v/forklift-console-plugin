@@ -190,6 +190,24 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             type: 'multus',
           },
         },
+        {
+          source: {
+            name: MOCK_VMWARE_NETWORKS[0].name,
+          },
+          destination: {
+            ...nameAndNamespace(MOCK_OPENSHIFT_NETWORKS[0]),
+            type: 'multus',
+          },
+        },
+        {
+          source: {
+            id: MOCK_VMWARE_NETWORKS[3].id,
+          },
+          destination: {
+            ...nameAndNamespace(MOCK_OPENSHIFT_NETWORKS[2]),
+            type: 'multus',
+          },
+        },
       ],
     },
   };
@@ -204,7 +222,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     spec: {
       provider: {
-        source: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.vsphere[0]),
+        source: {namespace: 'unknown-ns', name: 'unknown-provider'},
         destination: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.openshift[0]),
       },
       map: [

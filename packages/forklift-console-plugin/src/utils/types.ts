@@ -1,4 +1,4 @@
-import { IMigration, IPlan } from '@kubev2v/legacy/queries/types';
+import { IMigration, INetworkMapping, IPlan } from '@kubev2v/legacy/queries/types';
 import { K8sGroupVersionKind, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
 export type Condition = {
@@ -35,6 +35,8 @@ export type ProviderResource = {
 export type PlanResource = IPlan & K8sResourceCommon;
 
 export type MigrationResource = IMigration & K8sResourceCommon;
+
+export type NetworkMapResource = INetworkMapping & K8sResourceCommon & { kind: 'NetworkMap' };
 
 export type ResourceConsolePageProps = {
   kind: string;

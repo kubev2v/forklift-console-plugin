@@ -16,7 +16,7 @@ import { ProviderType } from 'legacy/src/common/constants';
 
 interface IMappingDetailViewProps {
   mappingType: MappingType;
-  sourceProviderType: ProviderType;
+  sourceProviderType?: ProviderType;
   mapping: Mapping | null;
   className?: string;
 }
