@@ -39,6 +39,9 @@ export interface IProvidersMatchParams {
   providerType: ProviderType;
 }
 
+/**
+ * @deprecated
+ */
 export const ProvidersPage: React.FunctionComponent = () => {
   const namespace = ENV.DEFAULT_NAMESPACE;
   const history = useHistory();

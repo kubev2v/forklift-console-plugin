@@ -13,6 +13,9 @@ interface IOpenShiftStorageClassListProps {
   storageClasses: IAnnotatedStorageClass[];
 }
 
+/**
+ * @deprecated
+ */
 export const OpenShiftStorageClassList: React.FunctionComponent<
   IOpenShiftStorageClassListProps
 > = ({ provider, storageClasses }: IOpenShiftStorageClassListProps) => {
