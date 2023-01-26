@@ -1,42 +1,23 @@
 import * as React from 'react';
 import { Dropdown, KebabToggle, DropdownItem, DropdownPosition } from '@patternfly/react-core';
 import { useDeleteProviderMutation } from '@app/queries';
-import {
-  ICorrelatedProvider,
-  INameNamespaceRef,
-  InventoryProvider,
-  IPlan,
-} from '@app/queries/types';
+import { ICorrelatedProvider, InventoryProvider } from '@app/queries/types';
 import { PATH_PREFIX, ProviderType, PROVIDER_TYPE_NAMES } from '@app/common/constants';
 import { ConfirmModal } from '@app/common/components/ConfirmModal';
 import { EditProviderContext } from '@app/Providers/EditProviderContext';
 import { ConditionalTooltip } from '@app/common/components/ConditionalTooltip';
-import { hasCondition } from '@app/common/helpers';
-import { isSameResource } from '@app/queries/helpers';
 import { useHistory } from 'react-router-dom';
 import { useClusterProvidersQuery } from '@app/queries';
-
-export const hasRunningMigration = ({
-  plans = [],
-  providerMetadata,
-}: {
-  plans: IPlan[];
-  providerMetadata: INameNamespaceRef;
-}): boolean =>
-  !!plans
-    .filter((plan) => hasCondition(plan.status?.conditions || [], 'Executing'))
-    .find((runningPlan) => {
-      const { source, destination } = runningPlan.spec.provider;
-      return (
-        isSameResource(providerMetadata, source) || isSameResource(providerMetadata, destination)
-      );
-    });
+import { hasRunningMigration } from './helpers';
 
 interface IProviderActionsDropdownProps {
   provider: ICorrelatedProvider<InventoryProvider>;
   providerType: ProviderType;
 }
 
+/**
+ * @deprecated
+ */
 export const ProviderActionsDropdown: React.FunctionComponent<IProviderActionsDropdownProps> = ({
   provider,
   providerType,

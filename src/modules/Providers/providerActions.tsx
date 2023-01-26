@@ -7,7 +7,7 @@ import { ConfirmModal } from '@app/common/components/ConfirmModal';
 import { SelectOpenShiftNetworkModal } from '@app/common/components/SelectOpenShiftNetworkModal';
 import { ProviderType } from '@app/common/constants';
 import { AddEditProviderModal } from '@app/Providers/components/AddEditProviderModal';
-import { hasRunningMigration } from '@app/Providers/components/ProvidersTable/ProviderActionsDropdown';
+import { hasRunningMigration } from '@app/Providers/components/ProvidersTable';
 import {
   useDeleteProviderMutation,
   useOCPMigrationNetworkMutation,
