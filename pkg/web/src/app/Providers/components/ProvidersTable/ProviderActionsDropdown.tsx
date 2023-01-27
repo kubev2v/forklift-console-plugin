@@ -9,7 +9,7 @@ import {
 } from '@app/queries/types';
 import { PATH_PREFIX, ProviderType, PROVIDER_TYPE_NAMES } from '@app/common/constants';
 import { ConfirmModal } from '@app/common/components/ConfirmModal';
-import { EditProviderContext } from '@app/Providers/ProvidersPage';
+import { EditProviderContext } from '@app/Providers/EditProviderContext';
 import { ConditionalTooltip } from '@app/common/components/ConditionalTooltip';
 import { hasCondition } from '@app/common/helpers';
 import { isSameResource } from '@app/queries/helpers';
