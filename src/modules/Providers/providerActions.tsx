@@ -7,14 +7,13 @@ import { ConfirmModal } from '@app/common/components/ConfirmModal';
 import { SelectOpenShiftNetworkModal } from '@app/common/components/SelectOpenShiftNetworkModal';
 import { ProviderType } from '@app/common/constants';
 import { AddEditProviderModal } from '@app/Providers/components/AddEditProviderModal';
-import { hasRunningMigration } from '@app/Providers/components/ProvidersTable/ProviderActionsDropdown';
-import { EditProviderContext } from '@app/Providers/ProvidersPage';
+import { hasRunningMigration } from '@app/Providers/components/ProvidersTable';
 import {
   useDeleteProviderMutation,
   useOCPMigrationNetworkMutation,
   usePlansQuery,
 } from '@app/queries';
-import { IOpenShiftProvider, IPlan, IProviderObject } from '@app/queries/types';
+import { IOpenShiftProvider, IProviderObject } from '@app/queries/types';
 import { useModal } from '@shim/dynamic-plugin-sdk';
 
 import { type MergedProvider } from './data';
@@ -42,11 +41,7 @@ export const useMergedProviderActions = ({ entity }: { entity: MergedProvider })
       [
         {
           id: 'edit',
-          cta: () =>
-            launchModal(withQueryClient(EditModal), {
-              entity,
-              plans: plansQuery?.data?.items,
-            }),
+          cta: () => launchModal(withQueryClient(EditModal), { entity }),
           label: t('Edit Provider'),
           disabled: editingDisabled,
           disabledTooltip: editingDisabled ? disabledTooltip : '',
@@ -70,23 +65,13 @@ export const useMergedProviderActions = ({ entity }: { entity: MergedProvider })
   return [actions, true, undefined];
 };
 
-const EditModal = ({
-  entity,
-  closeModal,
-  plans = [],
-}: {
-  closeModal: () => void;
-  entity: MergedProvider;
-  plans: IPlan[];
-}) => {
+const EditModal = ({ entity, closeModal }: { closeModal: () => void; entity: MergedProvider }) => {
   return (
-    <EditProviderContext.Provider value={{ openEditProviderModal: () => undefined, plans }}>
-      <AddEditProviderModal
-        onClose={closeModal}
-        providerBeingEdited={toIProviderObject(entity)}
-        namespace={entity.namespace}
-      />
-    </EditProviderContext.Provider>
+    <AddEditProviderModal
+      onClose={closeModal}
+      providerBeingEdited={toIProviderObject(entity)}
+      namespace={entity.namespace}
+    />
   );
 };
 EditModal.displayName = 'EditModal';

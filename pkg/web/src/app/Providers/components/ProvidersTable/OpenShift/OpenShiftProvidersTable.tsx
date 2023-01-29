@@ -41,6 +41,9 @@ interface IExpandedItem {
   column: 'Networks' | 'Storage classes';
 }
 
+/**
+ * @deprecated
+ */
 export const OpenShiftProvidersTable: React.FunctionComponent<IOpenShiftProvidersTableProps> = ({
   providers,
 }: IOpenShiftProvidersTableProps) => {

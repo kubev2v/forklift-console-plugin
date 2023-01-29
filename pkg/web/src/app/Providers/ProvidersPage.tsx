@@ -27,22 +27,21 @@ import { useClusterProvidersQuery, useInventoryProvidersQuery, usePlansQuery } f
 
 import { ProvidersTable } from './components/ProvidersTable';
 import { AddEditProviderModal } from './components/AddEditProviderModal';
+import { EditProviderContext } from './EditProviderContext';
 
-import { IPlan, IProviderObject } from '@app/queries/types';
+import { IProviderObject } from '@app/queries/types';
 import { ResolvedQueries } from '@app/common/components/ResolvedQuery';
 import { getAggregateQueryStatus } from '@app/queries/helpers';
 import { useRouteMatch } from 'react-router';
 
-export const EditProviderContext = React.createContext({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  openEditProviderModal: (_provider: IProviderObject): void => undefined,
-  plans: [] as IPlan[],
-});
 export interface IProvidersMatchParams {
   url: string;
   providerType: ProviderType;
 }
 
+/**
+ * @deprecated
+ */
 export const ProvidersPage: React.FunctionComponent = () => {
   const namespace = ENV.DEFAULT_NAMESPACE;
   const history = useHistory();

@@ -4,6 +4,9 @@ import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useLocalStorage } from '@migtools/lib-ui';
 import { CLOUD_MA_LINK, PROVIDER_TYPE_NAMES } from '@app/common/constants';
 
+/**
+ * @deprecated
+ */
 export const CloudAnalyticsInfoAlert: React.FunctionComponent = () => {
   const [isAlertHidden, setIsAlertHidden] = useLocalStorage('isProvidersPageMAAlertHidden', false);
 

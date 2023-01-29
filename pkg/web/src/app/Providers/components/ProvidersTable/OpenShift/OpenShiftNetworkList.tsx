@@ -14,6 +14,9 @@ interface IOpenShiftNetworkListProps {
   provider: ICorrelatedProvider<IOpenShiftProvider>;
 }
 
+/**
+ * @deprecated
+ */
 export const OpenShiftNetworkList: React.FunctionComponent<IOpenShiftNetworkListProps> = ({
   provider,
 }: IOpenShiftNetworkListProps) => {

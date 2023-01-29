@@ -11,6 +11,9 @@ interface IProvidersTableProps {
   activeProviderType: ProviderType;
 }
 
+/**
+ * @deprecated
+ */
 export const ProvidersTable: React.FunctionComponent<IProvidersTableProps> = ({
   inventoryProvidersByType,
   clusterProviders,

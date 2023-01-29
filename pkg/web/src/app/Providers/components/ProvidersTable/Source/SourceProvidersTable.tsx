@@ -37,6 +37,9 @@ interface ISourceProvidersTableProps {
   providerType: ProviderType;
 }
 
+/**
+ * @deprecated
+ */
 export const SourceProvidersTable: React.FunctionComponent<ISourceProvidersTableProps> = ({
   providers,
   providerType,

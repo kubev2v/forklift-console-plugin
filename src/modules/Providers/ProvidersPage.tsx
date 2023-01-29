@@ -11,7 +11,6 @@ import { ResourceConsolePageProps } from '_/utils/types';
 
 import { ProviderType, SOURCE_PROVIDER_TYPES } from '@app/common/constants';
 import { AddEditProviderModal } from '@app/Providers/components/AddEditProviderModal';
-import { EditProviderContext } from '@app/Providers/ProvidersPage';
 import { Button } from '@patternfly/react-core';
 import { useModal } from '@shim/dynamic-plugin-sdk';
 
@@ -190,13 +189,11 @@ const AddProviderModal: React.FC<{
   closeModal: () => void;
 }> = ({ closeModal, currentNamespace }) => {
   return (
-    <EditProviderContext.Provider value={{ openEditProviderModal: () => undefined, plans: [] }}>
-      <AddEditProviderModal
-        onClose={closeModal}
-        providerBeingEdited={null}
-        namespace={currentNamespace}
-      />
-    </EditProviderContext.Provider>
+    <AddEditProviderModal
+      onClose={closeModal}
+      providerBeingEdited={null}
+      namespace={currentNamespace}
+    />
   );
 };
 AddProviderModal.displayName = 'AddProviderModal';
