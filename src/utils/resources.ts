@@ -1,4 +1,9 @@
-import { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import { CLUSTER_API_VERSION } from '@app/common/constants';
+import { hasCondition } from '@app/common/helpers';
+import { IStatusCondition } from '@app/queries/types';
+import { K8sResourceCommon, ObjectReference } from '@openshift-console/dynamic-plugin-sdk';
+
+import { ProviderRef, ProviderResource } from './types';
 
 /**
  * Get reference group version kind string forgroup version kind strings
@@ -34,4 +39,29 @@ export const groupVersionKindForReference = (reference: string) => {
 export const referenceForObj = (obj: K8sResourceCommon) => {
   const { group, version, kind } = groupVersionKindForObj(obj);
   return referenceFor(group, version, kind);
+};
+
+/**
+ * Resolve GVK based on the provided list (or fallback if matching provider is missing).
+ */
+export const resolveProviderRef = (
+  { name, namespace }: ObjectReference,
+  providers: ProviderResource[],
+): ProviderRef => {
+  // fallback is required if provider reference inside plan is obsolete/out-of-synch
+  const fallbackProvider: Partial<ProviderResource> = {
+    apiVersion: CLUSTER_API_VERSION,
+    kind: 'Provider',
+  };
+
+  const provider = providers.find(
+    (p) => p.metadata?.namespace === namespace && p.metadata?.name === name,
+  );
+
+  return {
+    resolved: !!provider,
+    name,
+    gvk: groupVersionKindForObj(provider ?? fallbackProvider),
+    ready: hasCondition((provider?.status?.conditions ?? []) as IStatusCondition[], 'Ready'),
+  };
 };
