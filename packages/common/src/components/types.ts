@@ -18,4 +18,4 @@ export interface Field {
 }
 
 export const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
-export type K8sConditionStatus = typeof K8sConditionStatusValues[number];
+export type K8sConditionStatus = (typeof K8sConditionStatusValues)[number];

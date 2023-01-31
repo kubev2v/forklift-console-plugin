@@ -2,6 +2,7 @@ export * from './providers';
 export * from './networks';
 export * from './storages';
 export * from './mappings';
+export * from './migrations';
 export * from './hooks';
 export * from './hosts';
 export * from './tree';

@@ -1,3 +1,5 @@
 # @kubev2v/webpack
 
-Helper webpack methods to allow usage of general @openshift dynamic plugin by @openshift-console app.
+Webpack plugins to allow building `@openshift-console/dynamic-plugin-sdk` plugins using the more general `@openshift/dynamic-plugin-sdk` plugin sdk.
+
+The primary advantage in this configuration is to allow use of typed and compiled TypeScript files instead of a single JSON file.

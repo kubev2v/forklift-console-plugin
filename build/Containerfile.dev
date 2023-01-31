@@ -6,8 +6,7 @@ FROM quay.io/fedora/fedora:37
 USER root
 
 # Install dev requirements
-RUN dnf install openssh-clients openssh-server procps tmux vim git nodejs -y && \
-    npm install -g yarn
+RUN dnf install openssh-clients openssh-server procps tmux vim git nodejs -y
 
 # Add dev user ( password: dev)
 RUN useradd dev -p $(perl -e "print crypt('dev','salt')") && \
@@ -21,7 +20,7 @@ RUN echo "cat /home/dev/welcome" >>  /home/dev/.bashrc
 # Git clone initial code
 RUN git clone https://github.com/kubev2v/forklift-console-plugin.git /home/dev/forklift-console-plugin && \
     cd /home/dev/forklift-console-plugin/ && \
-    yarn install && \
+    npm install && \
     chown -R dev:users /home/dev
 
 # Start development sshd

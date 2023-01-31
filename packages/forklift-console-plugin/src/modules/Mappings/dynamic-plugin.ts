@@ -3,7 +3,7 @@ import { HrefNavItem, RoutePage } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
-  MappingsPage: './forklift-console-plugin/src/modules/Mappings/MappingsWrapper',
+  MappingsPage: './modules/Mappings/MappingsWrapper',
 };
 
 export const extensions: EncodedExtension[] = [

@@ -1,0 +1,15 @@
+{
+  "extends": "@kubev2v/config/tsconfig.json",
+
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"],
+
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "dist",
+
+    "paths": {
+      "@kubev2v/webpack/*": ["./src/*"],
+    }
+  }
+}

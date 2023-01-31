@@ -7,8 +7,8 @@
     "jsx": true,
     "js": true,
     "useJSXTextNode": true,
-    "project": ["./tsconfig.json"],
-    "tsconfigRootDir": "."
+    "project": ["tsconfig.json"],
+    "tsconfigRootDir": "./"
   },
   "extends": [
     "eslint:recommended",

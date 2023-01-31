@@ -113,6 +113,7 @@ kubectl wait deployment -n kube-system coredns --for condition=Available=True --
 echo ""
 echo "deploy Openshift console (with forklift proxy, tls: false, auth: flase, port: 30088)..."
 kubectl apply -f ${script_dir}/yaml/openshift-console.yaml
+kubectl create namespace konveyor-forklift
 
 echo ""
 echo "deploy forklift CRDs + deploy console CRDs"
@@ -143,7 +144,7 @@ echo "  ( optional, ports 30088 and 30089 are open for forklift APIs )"
 
 echo ""
 echo "Local registry usage example:"
-echo "  podman build -t localhost:5001/forklift-console-plugin -f Containerfile"
+echo "  podman build -t localhost:5001/forklift-console-plugin -f ./build/Containerfile"
 echo "  podman push localhost:5001/forklift-console-plugin --tls-verify=false"
 echo "  kubectl apply -f scripts/yaml/forklift-plugin.yaml"
 

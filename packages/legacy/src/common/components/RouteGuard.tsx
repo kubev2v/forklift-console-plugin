@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
-import { UnregisterCallback } from 'history';
+import { UnregisterCallback } from 'react-router';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 
 const blockUnload = (event: BeforeUnloadEvent) => {

@@ -9,7 +9,7 @@ push it to an image registry.
 
 ```sh
 # build the image and tag it
-podman build -t quay.io/kubev2v/forklift-console-plugin -f Containerfile
+podman build -t quay.io/kubev2v/forklift-console-plugin -f ./build/Containerfile
 ```
 
 ### Push the image to a local repository

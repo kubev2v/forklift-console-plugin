@@ -17,22 +17,22 @@ jobs:
           node-version: 16
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Lint, eslint and stylelint
-        run: yarn lint
+        run: npm run lint
 
       - name: Lint, test i18n files and helm
-        run: yarn test:i18n
+        run: npm run test:i18n
 
       - name: Lint, helm
-        run: yarn helm:lint
-
-      - name: Test
-        run: yarn test:coverage
+        run: npm run helm:lint
 
       - name: Test build
-        run: yarn build
+        run: npm run build
+
+      - name: Test
+        run: npm run test:coverage
 
       - name: Test coverage
         uses: codecov/codecov-action@v3

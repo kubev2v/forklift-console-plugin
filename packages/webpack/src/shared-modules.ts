@@ -44,7 +44,7 @@ export const sharedPluginModules = [
  * Metadata associated with the shared modules.
  */
 export const sharedPluginModulesMetadata: Record<
-  typeof sharedPluginModules[number],
+  (typeof sharedPluginModules)[number],
   SharedModuleMetadata
 > = {
   '@openshift-console/dynamic-plugin-sdk': {},

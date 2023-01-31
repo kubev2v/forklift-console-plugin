@@ -76,7 +76,7 @@ kubectl patch service forklift-must-gather-api --type='merge' -p '{"spec":{"port
 Create a development container image, and push it to the local registry
 
 ``` bash
-podman build -t localhost:5001/kubev2v/forklift-console-plugin-dev -f Containerfile.dev
+podman build -t localhost:5001/kubev2v/forklift-console-plugin-dev -f ./build/Containerfile.dev
 podman push localhost:5001/kubev2v/forklift-console-plugin-dev --tls-verify=false
 ```
 

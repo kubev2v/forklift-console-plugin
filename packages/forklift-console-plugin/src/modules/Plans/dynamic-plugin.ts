@@ -9,10 +9,10 @@ import {
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
-  PlansPage: './forklift-console-plugin/src/modules/Plans/PlansWrapper',
-  PlanWizard: './forklift-console-plugin/src/modules/Plans/PlanWizardWrapper',
-  VMMigrationDetails: './forklift-console-plugin/src/modules/Plans/VMMigrationDetailsWrapper',
-  usePlanActions: './forklift-console-plugin/src/modules/Plans/UsePlanActions',
+  PlansPage: './modules/Plans/PlansWrapper',
+  PlanWizard: './modules/Plans/PlanWizardWrapper',
+  VMMigrationDetails: './modules/Plans/VMMigrationDetailsWrapper',
+  usePlanActions: './modules/Plans/UsePlanActions',
 };
 
 const model = {

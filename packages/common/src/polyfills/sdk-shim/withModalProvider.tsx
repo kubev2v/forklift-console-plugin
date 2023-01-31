@@ -10,7 +10,7 @@ import { ModalProvider } from '../console-dynamic-plugin-sdk/app/modal-support/M
  * Componenet {React.FC} is the component that will be wrapped with
  * the modal provider context.
  */
-export const withModalProvider = (Component: React.FC) => {
+export const withModalProvider = <T extends object>(Component: React.ComponentType<T>): React.FC<T> => {
   function ModalProviderHoc(props) {
     return (
       <ModalProvider>

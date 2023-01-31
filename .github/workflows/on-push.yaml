@@ -24,7 +24,7 @@ jobs:
       # the tmp directory then save them in the runner temporary
       # directory so we can copy them to the gh-pages branch.
       run: |
-        yarn helm:build
+        npm run helm:build
         cp tmp/* ${{ runner.temp }}
 
     - name: Checkout gh-pages branch

@@ -8,9 +8,9 @@ import {
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
-  ProvidersPage: './forklift-console-plugin/src/modules/Providers/ProvidersWrapper',
-  HostsPage: './forklift-console-plugin/src/modules/Providers/HostsPageWrapper',
-  useMergedProviders: './forklift-console-plugin/src/modules/Providers/UseMergedProviders',
+  ProvidersPage: './modules/Providers/ProvidersWrapper',
+  HostsPage: './modules/Providers/HostsPageWrapper',
+  useMergedProviders: './modules/Providers/UseMergedProviders',
 };
 
 export const extensions: EncodedExtension[] = [

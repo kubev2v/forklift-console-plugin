@@ -3,17 +3,13 @@
  * `EnvironmentPlugin` definitions
  */
 
-import { EnvironmentPlugin } from 'webpack';
-
-import config from '../../webpack.config';
-
-const environmentPlugin = config.plugins.find(
-  (plugin) => plugin.constructor.name === 'EnvironmentPlugin',
-) as EnvironmentPlugin;
-
 const environmentDefaults = {
-  ...environmentPlugin.defaultValues,
   NODE_ENV: 'test',
+  DATA_SOURCE: 'remote',
+  BRAND_TYPE: 'Konveyor',
+  NAMESPACE: 'konveyor-forklift',
+  DEFAULT_NAMESPACE: 'default',
+  PLUGIN_NAME: 'forklift-console-plugin',
 };
 
 for (const envKey in environmentDefaults) {
