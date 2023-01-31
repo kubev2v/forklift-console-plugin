@@ -17,12 +17,13 @@
     "baseUrl": "./",
     "outDir": "dist",
     "paths": {
-      "@app/*": ["pkg/web/src/app/*"],
-      "@shim/dynamic-plugin-sdk": ["src/polyfills/sdk-shim"],
-      "_/*": ["src/*"]
+      "@kubev2v/legacy/*": ["packages/legacy/src/*"],
+      "@kubev2v/common/*": ["packages/common/src/*"],
+      "@kubev2v/webpack/*": ["packages/webpack/src/*"],
+      "@kubev2v/forklift-console-plugin/*": ["packages/forklift-console-plugin/src/*"]
     }
   },
-  "include": ["src", "pkg"],
+  "include": ["packages"],
   "exclude": ["node_modules", "dist"],
   "ts-node": {
     "files": true,

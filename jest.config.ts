@@ -9,12 +9,14 @@ const { compilerOptions } = require('./tsconfig');
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'jest-environment-jsdom',
-  testMatch: ['<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
+  testMatch: [
+    '<rootDir>/packages/{forklift-console-plugin,common}/src/**/*.{test,spec}.{js,jsx,ts,tsx}',
+  ],
   moduleNameMapper: {
-    '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
-    '@console/*': '<rootDir>/src/__mocks__/dummy.ts',
-    '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
-    'react-i18next': '<rootDir>/src/__mocks__/react-i18next.ts',
+    '\\.(css|less|scss|svg)$': '<rootDir>/packages/forklift-console-plugin/src/__mocks__/dummy.ts',
+    '@console/*': '<rootDir>/packages/forklift-console-plugin/src/__mocks__/dummy.ts',
+    '@openshift-console/*': '<rootDir>/packages/forklift-console-plugin/src/__mocks__/dummy.ts',
+    'react-i18next': '<rootDir>/packages/forklift-console-plugin/src/__mocks__/react-i18next.ts',
     ...pathsToModuleNameMapper(compilerOptions.paths, {
       prefix: '<rootDir>/',
     }),
@@ -30,6 +32,6 @@ const config: Config.InitialOptions = {
       isolatedModules: true,
     },
   },
-  setupFiles: ['<rootDir>/src/__mocks__/envvars.ts'],
+  setupFiles: ['<rootDir>/packages/forklift-console-plugin/src/__mocks__/envvars.ts'],
 };
 export default config;
