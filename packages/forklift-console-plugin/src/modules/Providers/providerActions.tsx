@@ -14,7 +14,7 @@ import {
   useOCPMigrationNetworkMutation,
   usePlansQuery,
 } from '@kubev2v/legacy/queries';
-import { IOpenShiftProvider, IProviderObject } from '@kubev2v/legacy/queries/types';
+import { IOpenShiftProvider } from '@kubev2v/legacy/queries/types';
 
 import { type MergedProvider } from './data';
 
@@ -59,7 +59,7 @@ export const useMergedProviderActions = ({ entity }: { entity: MergedProvider })
           label: t('Select migration network'),
         },
       ].filter(Boolean),
-    [t, editingDisabled, disabledTooltip],
+    [t, editingDisabled, disabledTooltip, entity],
   );
 
   return [actions, true, undefined];
@@ -69,7 +69,7 @@ const EditModal = ({ entity, closeModal }: { closeModal: () => void; entity: Mer
   return (
     <AddEditProviderModal
       onClose={closeModal}
-      providerBeingEdited={toIProviderObject(entity)}
+      providerBeingEdited={entity.object}
       namespace={entity.namespace}
     />
   );
@@ -85,7 +85,7 @@ const SelectNetworkForOpenshift = ({
 }) => {
   const { t } = useTranslation();
   const migrationNetworkMutation = useOCPMigrationNetworkMutation(entity.namespace, closeModal);
-  const inventory = toIOpenShiftProvider(entity, toIProviderObject(entity));
+  const inventory = toIOpenShiftProvider(entity, entity.object);
   return (
     <SelectOpenShiftNetworkModal
       targetProvider={inventory}
@@ -138,7 +138,7 @@ const DeleteModal = ({
         toggleDeleteModal();
         closeModal();
       }}
-      mutateFn={() => deleteProviderMutation.mutate(toIProviderObject(entity))}
+      mutateFn={() => deleteProviderMutation.mutate(entity.object)}
       mutateResult={deleteProviderMutation}
       title={t('Permanently delete provider?')}
       body={
@@ -166,25 +166,8 @@ export const ProviderActions = withActionContext<MergedProvider>(
 );
 ProviderActions.displayName = 'ProviderActions';
 
-const toIProviderObject = ({
-  name,
-  namespace,
-  type,
-  url,
-  secretName,
-  gvk: { group, version, kind },
-}: MergedProvider): IProviderObject => ({
-  metadata: {
-    name,
-    namespace,
-  },
-  spec: { type: type as ProviderType, url, secret: { name: secretName, namespace } },
-  kind,
-  apiVersion: `${group}/${version}`,
-});
-
 const toIOpenShiftProvider = (
-  { name, namespace, networkCount, selfLink = 'foo', type, uid, vmCount },
+  { name, namespace, networkCount, selfLink, type, uid, vmCount },
   object,
 ): IOpenShiftProvider => ({
   object,

@@ -35,7 +35,65 @@
                 "message": "Connection test, succeeded."
             }
         },
-        "negativeConditions": {}
+        "negativeConditions": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Provider",
+            "metadata": {
+                "name": "vcenter-1",
+                "namespace": "openshift-migration",
+                "selfLink": "/foo/bar",
+                "uid": "mock-uid-vcenter-1",
+                "creationTimestamp": "2020-08-21T18:36:41.468Z"
+            },
+            "spec": {
+                "type": "vsphere",
+                "url": "https://vcenter.v2v.bos.redhat.com/sdk",
+                "secret": {
+                    "namespace": "openshift-migration",
+                    "name": "boston"
+                },
+                "settings": {
+                    "vddkInitImage": "quay.io/username/vddk"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-18T21:01:10Z",
+                        "message": "Connection test, succeeded.",
+                        "reason": "Tested",
+                        "status": "True",
+                        "type": "ConnectionTestSucceeded"
+                    },
+                    {
+                        "category": "Advisory",
+                        "lastTransitionTime": "2021-02-08T19:36:55Z",
+                        "message": "Validation has been completed.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "Validated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The inventory has been loaded.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "InventoryCreated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The provider is ready.",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ]
+            }
+        },
+        "selfLink": "/foo/vmwareprovider/1"
     },
     {
         "name": "vcenter-2",
@@ -61,7 +119,42 @@
                 "status": "True",
                 "message": "The provider is not responding."
             }
-        }
+        },
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Provider",
+            "metadata": {
+                "name": "vcenter-2",
+                "namespace": "openshift-migration",
+                "selfLink": "/foo/bar",
+                "uid": "mock-uid-vcenter-2",
+                "creationTimestamp": "2020-08-22T18:36:41.468Z"
+            },
+            "spec": {
+                "type": "vsphere",
+                "url": "https://vcenter.v2v.bos.redhat.com/sdk",
+                "secret": {
+                    "namespace": "openshift-migration",
+                    "name": "boston"
+                },
+                "settings": {
+                    "vddkInitImage": "quay.io/username/vddk"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "type": "URLNotValid",
+                        "status": "True",
+                        "category": "Critical",
+                        "message": "The provider is not responding.",
+                        "lastTransitionTime": "2020-08-21T18:36:41.468Z",
+                        "reason": ""
+                    }
+                ]
+            }
+        },
+        "selfLink": "/foo/vmwareprovider/2"
     },
     {
         "name": "vcenter-3",
@@ -95,7 +188,58 @@
                 "message": "Loading the inventory."
             }
         },
-        "negativeConditions": {}
+        "negativeConditions": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Provider",
+            "metadata": {
+                "name": "vcenter-3",
+                "namespace": "openshift-migration",
+                "selfLink": "/foo/bar",
+                "uid": "mock-uid-vcenter-3",
+                "creationTimestamp": "2020-08-23T18:36:41.468Z"
+            },
+            "spec": {
+                "type": "vsphere",
+                "url": "https://vcenter.v2v.bos.redhat.com/sdk",
+                "secret": {
+                    "namespace": "openshift-migration",
+                    "name": "boston"
+                },
+                "settings": {
+                    "vddkInitImage": "quay.io/username/vddk"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-18T21:01:10Z",
+                        "message": "Connection test, succeeded.",
+                        "reason": "Tested",
+                        "status": "True",
+                        "type": "ConnectionTestSucceeded"
+                    },
+                    {
+                        "category": "Advisory",
+                        "lastTransitionTime": "2021-02-08T19:36:55Z",
+                        "message": "Validation has been completed.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "Validated"
+                    },
+                    {
+                        "category": "Advisory",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "Loading the inventory.",
+                        "reason": "Started",
+                        "status": "True",
+                        "type": "LoadInventory"
+                    }
+                ]
+            }
+        },
+        "selfLink": "/foo/vmwareprovider/3"
     },
     {
         "name": "rhv-1",
@@ -133,7 +277,65 @@
                 "message": "Connection test, succeeded."
             }
         },
-        "negativeConditions": {}
+        "negativeConditions": {},
+        "object": {
+            "kind": "Provider",
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "metadata": {
+                "name": "rhv-1",
+                "namespace": "konveyor-forklift",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/rhv-1/status",
+                "uid": "mock-uid-rhv-1",
+                "creationTimestamp": "2021-05-06T13:35:06Z",
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"name\":\"rhv\",\"namespace\":\"konveyor-forklift\"},\"spec\":{\"secret\":{\"name\":\"rhv\",\"namespace\":\"konveyor-forklift\"},\"type\":\"ovirt\",\"url\":\"https://rhvm.v2v.bos.redhat.com/ovirt-engine/api\"}}\n"
+                }
+            },
+            "spec": {
+                "type": "ovirt",
+                "url": "https://rhvm.v2v.bos.redhat.com/ovirt-engine/api",
+                "secret": {
+                    "namespace": "konveyor-forklift",
+                    "name": "rhv"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "type": "ConnectionTestSucceeded",
+                        "status": "True",
+                        "reason": "Tested",
+                        "category": "Required",
+                        "message": "Connection test, succeeded.",
+                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                    },
+                    {
+                        "type": "Validated",
+                        "status": "True",
+                        "reason": "Completed",
+                        "category": "Advisory",
+                        "message": "Validation has been completed.",
+                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                    },
+                    {
+                        "type": "InventoryCreated",
+                        "status": "True",
+                        "reason": "Completed",
+                        "category": "Required",
+                        "message": "The inventory has been loaded.",
+                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                    },
+                    {
+                        "type": "Ready",
+                        "status": "True",
+                        "category": "Required",
+                        "message": "The provider is ready.",
+                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                    }
+                ]
+            }
+        },
+        "selfLink": "providers/ovirt/foo1"
     },
     {
         "name": "rhv-2",
@@ -171,7 +373,65 @@
                 "message": "Connection test, succeeded."
             }
         },
-        "negativeConditions": {}
+        "negativeConditions": {},
+        "object": {
+            "kind": "Provider",
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "metadata": {
+                "name": "rhv-2",
+                "namespace": "konveyor-forklift",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/rhv-1/status",
+                "uid": "mock-uid-rhv-2",
+                "creationTimestamp": "2021-05-06T13:35:06Z",
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"name\":\"rhv\",\"namespace\":\"konveyor-forklift\"},\"spec\":{\"secret\":{\"name\":\"rhv\",\"namespace\":\"konveyor-forklift\"},\"type\":\"ovirt\",\"url\":\"https://rhvm.v2v.bos.redhat.com/ovirt-engine/api\"}}\n"
+                }
+            },
+            "spec": {
+                "type": "ovirt",
+                "url": "https://rhvm.v2v.bos.redhat.com/ovirt-engine/api",
+                "secret": {
+                    "namespace": "konveyor-forklift",
+                    "name": "rhv"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "type": "ConnectionTestSucceeded",
+                        "status": "True",
+                        "reason": "Tested",
+                        "category": "Required",
+                        "message": "Connection test, succeeded.",
+                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                    },
+                    {
+                        "type": "Validated",
+                        "status": "True",
+                        "reason": "Completed",
+                        "category": "Advisory",
+                        "message": "Validation has been completed.",
+                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                    },
+                    {
+                        "type": "InventoryCreated",
+                        "status": "True",
+                        "reason": "Completed",
+                        "category": "Required",
+                        "message": "The inventory has been loaded.",
+                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                    },
+                    {
+                        "type": "Ready",
+                        "status": "True",
+                        "category": "Required",
+                        "message": "The provider is ready.",
+                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                    }
+                ]
+            }
+        },
+        "selfLink": "providers/ovirt/foo2"
     },
     {
         "name": "rhv-3",
@@ -209,7 +469,65 @@
                 "message": "Connection test, succeeded."
             }
         },
-        "negativeConditions": {}
+        "negativeConditions": {},
+        "object": {
+            "kind": "Provider",
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "metadata": {
+                "name": "rhv-3",
+                "namespace": "konveyor-forklift",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/rhv-1/status",
+                "uid": "mock-uid-rhv-3",
+                "creationTimestamp": "2021-05-06T13:35:06Z",
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"name\":\"rhv\",\"namespace\":\"konveyor-forklift\"},\"spec\":{\"secret\":{\"name\":\"rhv\",\"namespace\":\"konveyor-forklift\"},\"type\":\"ovirt\",\"url\":\"https://rhvm.v2v.bos.redhat.com/ovirt-engine/api\"}}\n"
+                }
+            },
+            "spec": {
+                "type": "ovirt",
+                "url": "https://rhvm.v2v.bos.redhat.com/ovirt-engine/api",
+                "secret": {
+                    "namespace": "konveyor-forklift",
+                    "name": "rhv"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "type": "ConnectionTestSucceeded",
+                        "status": "True",
+                        "reason": "Tested",
+                        "category": "Required",
+                        "message": "Connection test, succeeded.",
+                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                    },
+                    {
+                        "type": "Validated",
+                        "status": "True",
+                        "reason": "Completed",
+                        "category": "Advisory",
+                        "message": "Validation has been completed.",
+                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                    },
+                    {
+                        "type": "InventoryCreated",
+                        "status": "True",
+                        "reason": "Completed",
+                        "category": "Required",
+                        "message": "The inventory has been loaded.",
+                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                    },
+                    {
+                        "type": "Ready",
+                        "status": "True",
+                        "category": "Required",
+                        "message": "The provider is ready.",
+                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                    }
+                ]
+            }
+        },
+        "selfLink": "providers/ovirt/foo3"
     },
     {
         "name": "ocpv-1",
@@ -245,7 +563,65 @@
                 "message": "Connection test, succeeded."
             }
         },
-        "negativeConditions": {}
+        "negativeConditions": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Provider",
+            "metadata": {
+                "name": "ocpv-1",
+                "namespace": "openshift-migration",
+                "selfLink": "/foo/bar",
+                "uid": "mock-uid-ocpv-1",
+                "creationTimestamp": "2020-08-21T18:36:41.468Z",
+                "annotations": {
+                    "forklift.konveyor.io/defaultTransferNetwork": "ocp-network-3"
+                }
+            },
+            "spec": {
+                "type": "openshift",
+                "url": "https://my_OCPv_url",
+                "secret": {
+                    "namespace": "openshift-migration",
+                    "name": "boston"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-18T21:01:10Z",
+                        "message": "Connection test, succeeded.",
+                        "reason": "Tested",
+                        "status": "True",
+                        "type": "ConnectionTestSucceeded"
+                    },
+                    {
+                        "category": "Advisory",
+                        "lastTransitionTime": "2021-02-08T19:36:55Z",
+                        "message": "Validation has been completed.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "Validated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The inventory has been loaded.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "InventoryCreated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The provider is ready.",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ]
+            }
+        },
+        "selfLink": "/foo/openshiftprovider/1"
     },
     {
         "name": "ocpv-2",
@@ -269,7 +645,42 @@
                 "status": "True",
                 "message": "The provider is not responding."
             }
-        }
+        },
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Provider",
+            "metadata": {
+                "name": "ocpv-2",
+                "namespace": "openshift-migration",
+                "selfLink": "/foo/bar",
+                "uid": "mock-uid-ocpv-2",
+                "creationTimestamp": "2020-08-21T18:36:41.468Z",
+                "annotations": {
+                    "forklift.konveyor.io/defaultTransferNetwork": "ocp-network-3"
+                }
+            },
+            "spec": {
+                "type": "openshift",
+                "url": "https://my_OCPv_url",
+                "secret": {
+                    "namespace": "openshift-migration",
+                    "name": "boston"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "type": "URLNotValid",
+                        "status": "True",
+                        "category": "Critical",
+                        "message": "The provider is not responding.",
+                        "lastTransitionTime": "2020-08-21T18:36:41.468Z",
+                        "reason": ""
+                    }
+                ]
+            }
+        },
+        "selfLink": "/foo/openshiftprovider/2"
     },
     {
         "name": "ocpv-3",
@@ -305,6 +716,64 @@
                 "message": "Connection test, succeeded."
             }
         },
-        "negativeConditions": {}
+        "negativeConditions": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Provider",
+            "metadata": {
+                "name": "ocpv-3",
+                "namespace": "openshift-migration",
+                "selfLink": "/foo/bar",
+                "uid": "mock-uid-ocpv-3",
+                "creationTimestamp": "2020-08-21T18:36:41.468Z",
+                "annotations": {
+                    "forklift.konveyor.io/defaultTransferNetwork": "ocp-network-3"
+                }
+            },
+            "spec": {
+                "type": "openshift",
+                "url": "",
+                "secret": {
+                    "namespace": "openshift-migration",
+                    "name": "boston"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-18T21:01:10Z",
+                        "message": "Connection test, succeeded.",
+                        "reason": "Tested",
+                        "status": "True",
+                        "type": "ConnectionTestSucceeded"
+                    },
+                    {
+                        "category": "Advisory",
+                        "lastTransitionTime": "2021-02-08T19:36:55Z",
+                        "message": "Validation has been completed.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "Validated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The inventory has been loaded.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "InventoryCreated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The provider is ready.",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ]
+            }
+        },
+        "selfLink": "/foo/openshiftprovider/3"
     }
 ]
