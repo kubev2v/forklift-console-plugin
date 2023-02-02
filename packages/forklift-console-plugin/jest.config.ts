@@ -3,7 +3,7 @@ import { pathsToModuleNameMapper } from 'ts-jest';
 import type { Config } from '@jest/types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { compilerOptions } = require('./tsconfig');
+const { compilerOptions } = require('./tsconfig.jest.json');
 
 // Sync object
 export const config: Config.InitialOptions = {

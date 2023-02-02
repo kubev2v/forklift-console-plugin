@@ -1,35 +1,18 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "compilerOptions": {
-    "allowJs": true,
-    "strict": false,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "noUnusedLocals": true,
+  "extends": "@kubev2v/config/tsconfig.json",
 
-    "target": "es2020",
-    "module": "es2020",
-    "moduleResolution": "node",
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"],
+  
+  "compilerOptions": {
     "sourceMap": true,
-    "jsx": "react",
+    "declaration": false,
 
     "baseUrl": "./",
     "outDir": "dist",
+
     "paths": {
-      "@kubev2v/legacy/*": ["../legacy/src/*"],
-      "@kubev2v/common/*": ["../common/src/*"],
-      "@kubev2v/webpack/*": ["../webpack/src/*"],
       "@kubev2v/forklift-console-plugin/*": ["src/*"]
     }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"],
-  "ts-node": {
-    "files": true,
-    "transpileOnly": true,
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
 }

@@ -17,6 +17,9 @@
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot"
   },
   "devDependencies": {
+    "@kubev2v/webpack": "*",
+    "@kubev2v/legacy": "*",
+    "@kubev2v/common": "*",
     "@migtools/lib-ui": "^8.4.1",
     "@openshift-console/dynamic-plugin-sdk": "0.0.17",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.8",

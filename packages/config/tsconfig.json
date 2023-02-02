@@ -10,7 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
 
     "target": "es2020",
     "module": "es2020",
