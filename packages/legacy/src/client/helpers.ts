@@ -18,47 +18,58 @@ import {
 import { AuthorizedClusterClient } from './types';
 import { nameAndNamespace } from '@kubev2v/legacy/queries/helpers';
 
+// prefix with standard OpenShift console proxy path
+export const withProxy = (path: string) => ['api/kubernetes', path].join('');
+
 class ForkliftResource extends NamespacedResource {
-  private _gvk: KubeClient.IGroupVersionKindPlural;
+  kindPlural: ForkliftResourceKind;
+
   constructor(kind: ForkliftResourceKind, namespace: string) {
     super(namespace);
+    this.kindPlural = kind;
+  }
 
-    this._gvk = {
+  gvk(): KubeClient.IGroupVersionKindPlural {
+    return {
       group: 'forklift.konveyor.io',
       version: 'v1beta1',
-      kindPlural: kind,
+      kindPlural: this.kindPlural,
     };
   }
-  gvk(): KubeClient.IGroupVersionKindPlural {
-    return this._gvk;
-  }
   listPath(): string {
-    return listPath(this);
-  }
-  namedPath(name: string): string {
-    return namedPath(this, name);
+    return withProxy(super.listPath());
   }
 }
 
 class ForkliftAllNamespaceResource extends ClusterResource {
-  private _gvk: KubeClient.IGroupVersionKindPlural;
+  kindPlural: ForkliftResourceKind;
+
   constructor(kind: ForkliftResourceKind) {
     super();
+    this.kindPlural = kind;
+  }
 
-    this._gvk = {
+  gvk(): KubeClient.IGroupVersionKindPlural {
+    return {
       group: 'forklift.konveyor.io',
       version: 'v1beta1',
-      kindPlural: kind,
+      kindPlural: this.kindPlural,
     };
   }
-  gvk(): KubeClient.IGroupVersionKindPlural {
-    return this._gvk;
-  }
   listPath(): string {
-    return listPath(this);
+    return withProxy(super.listPath());
   }
-  namedPath(name: string): string {
-    return namedPath(this, name);
+}
+
+class ForkliftCoreNamespacedResource extends CoreNamespacedResource {
+  listPath(): string {
+    return withProxy(super.listPath());
+  }
+}
+
+class ForkliftCoreClusterResource extends CoreClusterResource {
+  listPath(): string {
+    return withProxy(super.listPath());
   }
 }
 
@@ -67,8 +78,8 @@ export const createResource = (kind: ForkliftResourceKind, namespace: string): K
 
 export const createSecretResource = (namespace: string) =>
   namespace
-    ? new CoreNamespacedResource(CoreNamespacedResourceKind.Secret, namespace)
-    : new CoreClusterResource(CoreNamespacedResourceKind.Secret);
+    ? new ForkliftCoreNamespacedResource(CoreNamespacedResourceKind.Secret, namespace)
+    : new ForkliftCoreClusterResource(CoreNamespacedResourceKind.Secret);
 
 export enum ForkliftResourceKind {
   Provider = 'providers',
@@ -237,39 +248,4 @@ export const checkIfResourceExists = async (
       }, 'Some cluster objects already exist ')
     );
   }
-};
-
-/** Translate resource into namespaced k8s api ptch */
-export const listPath = (resource: KubeResource) => {
-  const isCRD = !!resource.gvk().group;
-  if (resource instanceof NamespacedResource) {
-    return isCRD
-      ? [
-          '/api/kubernetes/apis',
-          resource.gvk().group,
-          resource.gvk().version,
-          'namespaces',
-          resource.namespace,
-          resource.gvk().kindPlural,
-        ].join('/')
-      : [
-          '/api/kubernetes/api',
-          resource.gvk().version,
-          'namespaces',
-          resource.namespace,
-          resource.gvk().kindPlural,
-        ].join('/');
-  } else {
-    return [
-      '/api/kubernetes/apis',
-      resource.gvk().group,
-      resource.gvk().version,
-      resource.gvk().kindPlural,
-    ].join('/');
-  }
-};
-
-/** Translate resource into named k8s api path */
-export const namedPath = (resource: KubeResource, name: string) => {
-  return [listPath(resource), name].join('/');
 };
