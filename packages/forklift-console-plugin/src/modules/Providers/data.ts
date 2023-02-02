@@ -7,6 +7,7 @@ import { Condition, ProviderResource } from '@kubev2v/forklift-console-plugin/ut
 import { useInventoryProvidersQuery } from '@kubev2v/legacy/queries';
 import {
   IOpenShiftProvider,
+  IProviderObject,
   IProvidersByType,
   IRHVProvider,
   IVMwareProvider,
@@ -55,6 +56,8 @@ export interface MergedProvider {
   [C.READY]: string;
   positiveConditions: PositiveConditions;
   negativeConditions: NegativeConditions;
+  object: IProviderObject;
+  selfLink: string;
 }
 
 // may be empty when there is no inventory (yet)
@@ -86,10 +89,12 @@ export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
     .map(
       ([resource, inventory]): [
         ProviderResource,
+        ProviderResource,
         K8sGroupVersionKind,
         FlattenedInventory,
         SupportedConditions,
       ] => [
+        resource,
         resource,
         groupVersionKindForObj(resource),
         inventory,
@@ -102,8 +107,17 @@ export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
           metadata: { name = '', namespace = '', uid = '', annotations = [] } = {},
           spec: { url = '', type = '', secret: { name: secretName = '' } = {} } = {},
         },
+        provider,
         gvk,
-        { clusterCount, hostCount, vmCount, networkCount, datastoreCount, storageDomainCount },
+        {
+          clusterCount,
+          hostCount,
+          vmCount,
+          networkCount,
+          datastoreCount,
+          storageDomainCount,
+          selfLink,
+        },
         {
           Ready,
           Validated,
@@ -145,6 +159,8 @@ export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
           SecretNotValid,
           SettingsNotValid,
         },
+        object: provider as IProviderObject,
+        selfLink,
       }),
     );
 

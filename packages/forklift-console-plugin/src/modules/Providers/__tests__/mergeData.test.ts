@@ -101,6 +101,6 @@ describe('merging k8s Provider with inventory Provider', () => {
     const merged = mergeData(
       groupPairs(MOCK_CLUSTER_PROVIDERS as ProviderResource[], MOCK_INVENTORY_PROVIDERS),
     );
-    expect(merged).toEqual(MERGED_MOCK_DATA);
+    expect(JSON.parse(JSON.stringify(merged))).toEqual(MERGED_MOCK_DATA);
   });
 });
