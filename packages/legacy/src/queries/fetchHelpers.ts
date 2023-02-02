@@ -1,7 +1,6 @@
 import { KubeResource } from '@migtools/lib-ui';
 import { IKubeResponse, IKubeStatus } from '@kubev2v/legacy/client/types';
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
-import { listPath, namedPath } from '@kubev2v/legacy/client/helpers';
 
 /** Simulate an axios fetch call */
 const authorizedK8sRequest = async <T>({
@@ -52,35 +51,35 @@ export const useAuthorizedK8sClient = () => {
     get: <T>(resource: KubeResource, name: string, params?: object) =>
       authorizedK8sRequest<T>({
         method: 'GET',
-        url: namedPath(resource, name),
+        url: resource.namedPath(name),
         data: params,
       }),
     list: <T>(resource: KubeResource, params?: object) =>
-      authorizedK8sRequest<T>({ method: 'GET', url: listPath(resource), data: params }),
+      authorizedK8sRequest<T>({ method: 'GET', url: resource.listPath(), data: params }),
     create: <T>(resource: KubeResource, newObject: object, params?: object) =>
       authorizedK8sRequest<T>({
         method: 'POST',
-        url: listPath(resource),
+        url: resource.listPath(),
         data: newObject,
         options: params,
       }),
     delete: <T = IKubeStatus>(resource: KubeResource, name: string, params?: object) =>
       authorizedK8sRequest<T>({
         method: 'DELETE',
-        url: namedPath(resource, name),
+        url: resource.namedPath(name),
         options: params,
       }),
     patch: <T>(resource: KubeResource, name: string, patch: object, params?: object) =>
       authorizedK8sRequest<T>({
         method: 'PATCH',
-        url: namedPath(resource, name),
+        url: resource.namedPath(name),
         data: patch,
         options: params,
       }),
     put: <T>(resource: KubeResource, name: string, object: object, params?: object) =>
       authorizedK8sRequest<T>({
         method: 'PUT',
-        url: namedPath(resource, name),
+        url: resource.namedPath(name),
         data: object,
         options: params,
       }),
