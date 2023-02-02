@@ -113,7 +113,6 @@ kubectl wait deployment -n kube-system coredns --for condition=Available=True --
 echo ""
 echo "deploy Openshift console (with forklift proxy, tls: false, auth: flase, port: 30088)..."
 kubectl apply -f ${script_dir}/yaml/openshift-console.yaml
-kubectl create namespace konveyor-forklift
 
 echo ""
 echo "deploy forklift CRDs + deploy console CRDs"
