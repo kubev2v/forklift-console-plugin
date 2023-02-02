@@ -87,7 +87,7 @@ Deploy the development template
 NAMESPACE=openshift-mtv
 IMAGE=image-registry.openshift-image-registry.svc:5000/kubev2v/forklift-console-plugin-dev
 
-oc process -f scripts/yaml/forklift-plugin-dev.tpl.yaml -p=NAMESPACE=${NAMESPACE} -p=IMAGE=${IMAGE} | oc apply -f -
+oc process -f ci/yaml/forklift-plugin-dev.tpl.yaml -p=NAMESPACE=${NAMESPACE} -p=IMAGE=${IMAGE} | oc apply -f -
 ```
 
 ### SSH into the development environment

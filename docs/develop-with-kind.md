@@ -8,10 +8,10 @@ See kind installation instructions in the [cli-tools](cli-tools.md) section.
 
 ``` bash
 # optional, this step will delete any data currently on the cluster
-bash scripts/clean-cluster.sh
+bash ci/clean-cluster.sh
 
 # run the cluster deployment script as a none root user
-bash scripts/deploy-cluster.sh
+bash ci/deploy-cluster.sh
 ```
 
 ### Deploy using the root user
@@ -21,10 +21,10 @@ for example the `kubevirt` operator will not run currectly without root permissi
 
 ``` bash
 # optional, this step will delete any data currently on the cluster
-sudo bash scripts/clean-cluster.sh
+sudo bash ci/clean-cluster.sh
 
 # run the cluster deployment script as a none root user
-sudo bash scripts/deploy-cluster.sh
+sudo bash ci/deploy-cluster.sh
 
 # when running multiple Openshift/Kubernetes environment, you can also [re-]login
 # to your local KinD cluster using oc command:
@@ -51,12 +51,12 @@ instructions.
 Optionally you can deploy the released versions forklift and kubevirt
 
 ``` bash
-bash scripts/deploy-olm.sh
-bash scripts/deploy-forklift.sh
+bash ci/deploy-olm.sh
+bash ci/deploy-forklift.sh
 
 # optionaly, if the cluster was deployed using root permissions
 # you can also install the kubevirt operator
-bash scripts/deploy-kubevirt.sh
+bash ci/deploy-kubevirt.sh
 ```
 
 Optionally, you can use NodePort to expose forklift APIs on ports 30089 and 30088.
@@ -87,7 +87,7 @@ podman push localhost:5001/kubev2v/forklift-console-plugin-dev --tls-verify=fals
 kubectl create namespace konveyor-forklift
 
 # deploy the devlopment environment
-kubectl apply -f scripts/yaml/forklift-plugin-dev.yaml
+kubectl apply -f ci/yaml/forklift-plugin-dev.yaml
 ```
 
 ### SSH into the development environment

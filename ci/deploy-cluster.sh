@@ -145,7 +145,7 @@ echo ""
 echo "Local registry usage example:"
 echo "  podman build -t localhost:5001/forklift-console-plugin -f ./build/Containerfile"
 echo "  podman push localhost:5001/forklift-console-plugin --tls-verify=false"
-echo "  kubectl apply -f scripts/yaml/forklift-plugin.yaml"
+echo "  kubectl apply -f ci/yaml/forklift-plugin.yaml"
 
 echo ""
 echo "==========================================="
