@@ -58,7 +58,7 @@ We serve github pages using `gh-pages` branch, the repository include a `forklif
 # creating a package file and pushing it into a local `tmp` directory
 # once the package files are ready in the tmp direcoty, you can copy them to the gh-pages branch
 # and publish the package using githup pages.
-yarn helm:build
+npm run helm:build
 ```
 
 ## Using the public repository

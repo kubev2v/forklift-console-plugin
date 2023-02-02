@@ -67,7 +67,7 @@ REGISTRY_ROUTE=$(oc get route default-route -n openshift-image-registry --templa
 NAMESPACE=kubev2v
 IMAGE_NAME=forklift-console-plugin-dev
 
-podman build -t ${REGISTRY_ROUTE}/${NAMESPACE}/${IMAGE_NAME} -f Containerfile.dev
+podman build -t ${REGISTRY_ROUTE}/${NAMESPACE}/${IMAGE_NAME} -f ./build/Containerfile.dev
 podman push ${REGISTRY_ROUTE}/${NAMESPACE}/${IMAGE_NAME} --tls-verify=false
 ```
 

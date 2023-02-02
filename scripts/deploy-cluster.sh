@@ -143,7 +143,7 @@ echo "  ( optional, ports 30088 and 30089 are open for forklift APIs )"
 
 echo ""
 echo "Local registry usage example:"
-echo "  podman build -t localhost:5001/forklift-console-plugin -f Containerfile"
+echo "  podman build -t localhost:5001/forklift-console-plugin -f ./build/Containerfile"
 echo "  podman push localhost:5001/forklift-console-plugin --tls-verify=false"
 echo "  kubectl apply -f scripts/yaml/forklift-plugin.yaml"
 

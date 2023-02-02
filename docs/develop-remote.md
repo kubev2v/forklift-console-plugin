@@ -9,7 +9,7 @@ Example of buiding the development image and pushing into the local registry,
 ``` bash
 HOST=localhost:5001 # for KinD internal registry
 
-podman build -t quay.io/kubev2v/forklift-console-plugin-dev -f Containerfile.dev 
+podman build -t quay.io/kubev2v/forklift-console-plugin-dev -f ./build/Containerfile.dev 
 podman tag quay.io/kubev2v/forklift-console-plugin-dev $HOST/kubev2v/forklift-console-plugin-dev
 podman push $HOST/kubev2v/forklift-console-plugin-dev:latest --tls-verify=false
 ```
@@ -79,10 +79,10 @@ cd forklift-console-plugin
 # ....
 
 # start the development server
-yarn start
+npm run start
 
 # or, if running an https seever
-yarn start --port 9443 --server-type https --server-options-key /var/serving-cert/tls.key --server-options-cert /var/serving-cert/tls.crt
+npm run start --port 9443 --server-type https --server-options-key /var/serving-cert/tls.key --server-options-cert /var/serving-cert/tls.crt
 ```
 
 ## Mount the development pod files

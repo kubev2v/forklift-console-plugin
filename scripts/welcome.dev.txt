@@ -11,13 +11,13 @@ To start developing:
 
   # If you are running Openshift web console manually using http,
   # Run the http development server.
-  yarn start
+  npm run start
 
   # run with mock data (when forklift operator is not available)
-  DATA_SOURCE=mock yarn start
+  DATA_SOURCE=mock npm run start
 
   # On Openshift clusters run https development server
-  yarn start --port 9443 --server-type https \
+  npm run start --port 9443 --server-type https \
     --server-options-key /var/serving-cert/tls.key \
     --server-options-cert /var/serving-cert/tls.crt
 

@@ -1,0 +1,30 @@
+{
+  "name": "@kubev2v/webpack",
+  "version": "0.0.1",
+  "description": "Allow building openshift console dynamic plugins using the openshift dynamic plugin sdk.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kubev2v/forklift-console-plugin.git",
+    "directory": "packages/lib-webpack"
+  },
+  "files": ["./dist/*"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf ./dist && rm -rf ./coverage",
+    "clean:all": "npm run clean && rm -rf ./node_modules",
+    "build": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "@openshift-console/dynamic-plugin-sdk": "0.0.17",
+    "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.8",
+    "@openshift/dynamic-plugin-sdk": "~1.0.0",
+    "@openshift/dynamic-plugin-sdk-webpack": "~1.0.0"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

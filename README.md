@@ -77,7 +77,7 @@ cd forklift-console-plugin
 # edit the code
 
 # start a develoment server on port 9443
-yarn start --port 9443 \
+npm run start --port 9443 \
   --server-type https \
   --server-options-key /var/serving-cert/tls.key \
   --server-options-cert /var/serving-cert/tls.crt
@@ -96,7 +96,6 @@ forklift-console-plugin development require web development tools, and a kuberne
 | requirements        |     |
 |---|----|
 | [nodejs](https://nodejs.org/) | JavaScript runtime environment |
-| [yarn](https://yarnpkg.com/) | package manager for nodejs |
 | [kubernetes]() | An [Openshift]((https://www.openshift.com/)) or kubernetes cluster for development |
 | [kubectl](https://kubernetes.io/docs/tasks/tools/) | The Kubernetes command-line tool |
 
@@ -133,8 +132,8 @@ See [cli docs](https://github.com/kubev2v/forklift-console-plugin/blob/main/docs
 
 In one terminal window, run:
 
-1. `yarn install`
-2. `DATA_SOURCE=mock yarn start`
+1. `npm install`
+2. `DATA_SOURCE=mock npm run start`
 
 This will install the node modules needed for development and start the plugin development server,
 the `start` script uses this environment varialbles:
@@ -146,9 +145,9 @@ the `start` script uses this environment varialbles:
 
 Make sure you are connected to your kubernetes cluster and in another terminal window, run:
 
-1. `yarn run start:console`
+1. `npm run start:console`
 
-[ Optional, if running using Openshift cluster you can use `yarn run start:console:oauth`, this command will run the Openshift console using the clusters oAuth server. ]
+[ Optional, if running using Openshift cluster you can use `npm run start:console:oauth`, this command will run the Openshift console using the clusters oAuth server. ]
 
 This will run the OpenShift console in a container connected to the cluster you are currently logged into. The plugin HTTP server runs on port 9001 with CORS enabled, the development server will be available at http://localhost:9000
 
@@ -188,10 +187,10 @@ export MUST_GATHER_API_SERVER_HOST=https://$(oc get routes -o custom-columns=HOS
 # NOTE:
 # when using forklift API server with authentication feature turned on
 # we need to run the development server using openshift oauth service
-yarn start:console:oauth
+npm run start:console:oauth
 
 # start the forklift console plugin (default is DATA_SOURCE=remote)
-yarn start
+npm run start
 ```
 
 For more information about plugin development options, see the [forklift-console-plugin docs](https://github.com/kubev2v/forklift-console-plugin/tree/main/docs).
