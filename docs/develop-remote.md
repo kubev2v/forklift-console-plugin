@@ -34,7 +34,7 @@ This example uses Openshift internal registry, see how to push images to the int
 ``` bash
 NAMESPACE=openshift-mtv
 IMAGE=image-registry.openshift-image-registry.svc:5000/kubev2v/forklift-console-plugin-dev
-oc process -f scripts/yaml/forklift-plugin-dev.tpl.yaml -p=NAMESPACE=${NAMESPACE} -p=IMAGE=${IMAGE} | oc apply -f -
+oc process -f ci/yaml/forklift-plugin-dev.tpl.yaml -p=NAMESPACE=${NAMESPACE} -p=IMAGE=${IMAGE} | oc apply -f -
 ```
 
 ### KinD
@@ -48,16 +48,16 @@ An example using the local development cluster deployed using KinD is available.
 
 ``` bash
 # install forklift [ optional, install kubevirt ]
-bash scripts/deploy-olm.sh
-bash scripts/deploy-forklift.sh
+bash ci/deploy-olm.sh
+bash ci/deploy-forklift.sh
 # If the kind cluster was installed using root permissions, you can also
 # install kubevirt operator
-bash scripts/deploy-kubevirt.sh
+bash ci/deploy-kubevirt.sh
 
 # This example define:
 #   namespace:       konveyor-forklift
 #   cluster port:    30022
-kubectl apply -f scripts/yaml/forklift-plugin-dev.yaml
+kubectl apply -f ci/yaml/forklift-plugin-dev.yaml
 
 # wait for the pod phase to be running
 ```

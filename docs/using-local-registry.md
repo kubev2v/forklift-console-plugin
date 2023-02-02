@@ -63,7 +63,7 @@ Inside the cluster the image will get an internal name using the cluster interna
 IMAGE=image-registry.openshift-image-registry.svc:5000/${NAMESPACE}/${IMAGE_NAME}
 
 # now we can use the image for deployments inside our cluster
-oc process -f scripts/yaml/forklift-plugin-dev.tpl.yaml -p=NAMESPACE=openshift-mtv -p=IMAGE=${IMAGE} | oc apply -f -
+oc process -f ci/yaml/forklift-plugin-dev.tpl.yaml -p=NAMESPACE=openshift-mtv -p=IMAGE=${IMAGE} | oc apply -f -
 ```
 
 ### KinD

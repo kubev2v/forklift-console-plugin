@@ -14,7 +14,7 @@ RUN useradd dev -p $(perl -e "print crypt('dev','salt')") && \
     usermod -aG wheel dev && \
     echo '%wheel ALL=(ALL)       NOPASSWD: ALL' >> /etc/sudoers
 
-COPY ./scripts/welcome.dev.txt /home/dev/welcome
+COPY ./ci/welcome.dev.txt /home/dev/welcome
 RUN echo "cat /home/dev/welcome" >>  /home/dev/.bashrc
 
 # Git clone initial code
@@ -25,7 +25,7 @@ RUN git clone https://github.com/kubev2v/forklift-console-plugin.git /home/dev/f
 
 # Start development sshd
 # ----------------------
-COPY ./scripts/entrypoint.dev.sh /entrypoint.sh
+COPY ./ci/entrypoint.dev.sh /entrypoint.sh
 RUN chmod ugo+rwx /entrypoint.sh
 
 WORKDIR /home/dev/forklift-console-plugin
