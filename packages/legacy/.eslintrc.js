@@ -1,4 +1,4 @@
-{
+module.export = {
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -8,7 +8,7 @@
     "js": true,
     "useJSXTextNode": true,
     "project": ["tsconfig.json"],
-    "tsconfigRootDir": "./"
+    "tsconfigRootDir": __dirname,
   },
   "extends": [
     "eslint:recommended",
@@ -58,4 +58,4 @@
     "browser": true,
     "node": true
   }
-}
+};
