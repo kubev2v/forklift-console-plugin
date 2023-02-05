@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as yup from 'yup';
-import { usePausedPollingEffect } from '@kubev2v/legacy/common/context';
-import { playbookSchema } from '@kubev2v/legacy/queries';
+import { usePausedPollingEffect } from 'legacy/src/common/context';
+import { playbookSchema } from 'legacy/src/queries';
 import {
   getFormGroupProps,
   useFormField,
@@ -21,12 +21,12 @@ import {
   Popover,
   Radio,
 } from '@patternfly/react-core';
-import { LoadingEmptyState } from '@kubev2v/legacy/common/components/LoadingEmptyState';
-import { SimpleSelect, OptionWithValue } from '@kubev2v/legacy/common/components/SimpleSelect';
-import { ConditionalTooltip } from '@kubev2v/legacy/common/components/ConditionalTooltip';
+import { LoadingEmptyState } from 'legacy/src/common/components/LoadingEmptyState';
+import { SimpleSelect, OptionWithValue } from 'legacy/src/common/components/SimpleSelect';
+import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { HookStep, IHook } from '@kubev2v/legacy/queries/types';
+import { HookStep, IHook } from 'legacy/src/queries/types';
 
 const usePlanHookInstanceFormState = () => {
   const type = useFormField('playbook', yup.mixed<'playbook' | 'image'>().required());

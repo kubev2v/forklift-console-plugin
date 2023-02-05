@@ -1,4 +1,4 @@
-import { UnknownResult } from '@kubev2v/legacy/common/types';
+import { UnknownResult } from 'legacy/src/common/types';
 import * as React from 'react';
 import { ResolvedQueries, IResolvedQueriesProps } from './ResolvedQueries';
 

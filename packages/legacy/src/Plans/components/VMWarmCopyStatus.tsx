@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { IVMStatus } from '@kubev2v/legacy/queries/types';
+import { IVMStatus } from 'legacy/src/queries/types';
 import { StatusIcon, StatusType } from '@migtools/lib-ui';
 import { Button, Popover } from '@patternfly/react-core';
-import { getMinutesUntil } from '@kubev2v/legacy/common/helpers';
-import { CanceledIcon } from '@kubev2v/legacy/common/components/CanceledIcon';
+import { getMinutesUntil } from 'legacy/src/common/helpers';
+import { CanceledIcon } from 'legacy/src/common/components/CanceledIcon';
 
 interface IWarmVMCopyState {
   state: 'Starting' | 'Copying' | 'Idle' | 'Failed' | 'Warning';

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Button, ButtonProps } from '@patternfly/react-core';
-import { ConditionalTooltip } from '@kubev2v/legacy/common/components/ConditionalTooltip';
-import { useHasSufficientProvidersQuery } from '@kubev2v/legacy/queries';
+import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
+import { useHasSufficientProvidersQuery } from 'legacy/src/queries';
 import { useHistory } from 'react-router-dom';
-import { PATH_PREFIX, PROVIDER_TYPE_NAMES } from '@kubev2v/legacy/common/constants';
+import { PATH_PREFIX, PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 
 interface ICreatePlanButtonProps {
   variant?: ButtonProps['variant'];

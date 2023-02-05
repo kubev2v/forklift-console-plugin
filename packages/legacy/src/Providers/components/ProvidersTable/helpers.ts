@@ -1,13 +1,13 @@
-import { ProviderType } from '@kubev2v/legacy/common/constants';
-import { hasCondition } from '@kubev2v/legacy/common/helpers';
-import { isSameResource } from '@kubev2v/legacy/queries/helpers';
+import { ProviderType } from 'legacy/src/common/constants';
+import { hasCondition } from 'legacy/src/common/helpers';
+import { isSameResource } from 'legacy/src/queries/helpers';
 import {
   InventoryProvider,
   ICorrelatedProvider,
   IProviderObject,
   IPlan,
   INameNamespaceRef,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 
 /**
  * @deprecated

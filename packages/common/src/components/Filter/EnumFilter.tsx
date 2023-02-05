@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'common/src/utils/i18n';
+import { localeCompare } from 'common/src/utils/localCompare';
 
-import { useTranslation } from '@kubev2v/common/utils/i18n';
-import { localeCompare } from '@kubev2v/common/utils/localCompare';
 import {
   Select,
   SelectOption,

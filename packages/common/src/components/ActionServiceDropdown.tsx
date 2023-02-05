@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
+import { ActionService, ActionServiceProvider } from 'common/src/polyfills/sdk-shim';
+import { useTranslation } from 'common/src/utils/i18n';
 
-import { ActionService, ActionServiceProvider } from '@kubev2v/common/polyfills/sdk-shim';
-import { useTranslation } from '@kubev2v/common/utils/i18n';
 import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly/react-core';
 
 /**

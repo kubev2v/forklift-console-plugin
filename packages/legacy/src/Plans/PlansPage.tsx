@@ -8,19 +8,19 @@ import {
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
-import { MustGatherModal } from '@kubev2v/legacy/common/components/MustGatherModal';
+import { MustGatherModal } from 'legacy/src/common/components/MustGatherModal';
 
 import {
   useHasSufficientProvidersQuery,
   usePlansQuery,
   useClusterProvidersQuery,
   useMigrationsQuery,
-} from '@kubev2v/legacy/queries';
+} from 'legacy/src/queries';
 
 import { PlansTable } from './components/PlansTable';
 import { CreatePlanButton } from './components/CreatePlanButton';
-import { ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { ENV, PROVIDER_TYPE_NAMES } from '@kubev2v/legacy/common/constants';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
+import { ENV, PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 
 export const PlansPage: React.FunctionComponent = () => {
   const namespace = ENV.DEFAULT_NAMESPACE;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { isSameResource } from '@kubev2v/legacy/queries/helpers';
+import { isSameResource } from 'legacy/src/queries/helpers';
 import {
   IdOrNameRef,
   IMetaObjectMeta,
@@ -13,13 +13,13 @@ import {
   MappingTarget,
   MappingType,
   SourceInventoryProvider,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { MappingFormState } from './AddEditMappingModal';
 import { UseQueryResult } from 'react-query';
-import { IMappingResourcesResult } from '@kubev2v/legacy/queries';
+import { IMappingResourcesResult } from 'legacy/src/queries';
 import { getBuilderItemsFromMapping } from './MappingBuilder/helpers';
-import { ProviderType } from '@kubev2v/legacy/common/constants';
-import { getStorageTitle } from '@kubev2v/legacy/common/helpers';
+import { ProviderType } from 'legacy/src/common/constants';
+import { getStorageTitle } from 'legacy/src/common/helpers';
 
 export const getMappingSourceByRef = (
   sources: MappingSource[],

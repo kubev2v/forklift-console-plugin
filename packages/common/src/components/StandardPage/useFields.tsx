@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
-
-import { NAMESPACE } from '@kubev2v/common/utils/constants';
+import { NAMESPACE } from 'common/src/utils/constants';
 
 import { Field } from '../types';
 

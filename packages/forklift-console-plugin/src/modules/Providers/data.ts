@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
+import * as C from 'src/utils/constants';
+import { useProviders } from 'src/utils/fetch';
+import { groupVersionKindForObj } from 'src/utils/resources';
+import { Condition, ProviderResource } from 'src/utils/types';
 
-import * as C from '@kubev2v/forklift-console-plugin/utils/constants';
-import { useProviders } from '@kubev2v/forklift-console-plugin/utils/fetch';
-import { groupVersionKindForObj } from '@kubev2v/forklift-console-plugin/utils/resources';
-import { Condition, ProviderResource } from '@kubev2v/forklift-console-plugin/utils/types';
 import { useInventoryProvidersQuery } from '@kubev2v/legacy/queries';
 import {
   IOpenShiftProvider,

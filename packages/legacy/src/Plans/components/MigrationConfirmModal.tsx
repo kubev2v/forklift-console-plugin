@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ConfirmModal, IConfirmModalProps } from '@kubev2v/legacy/common/components/ConfirmModal';
-import { IPlan } from '@kubev2v/legacy/queries/types';
+import { ConfirmModal, IConfirmModalProps } from 'legacy/src/common/components/ConfirmModal';
+import { IPlan } from 'legacy/src/queries/types';
 import { TextContent, Text } from '@patternfly/react-core';
-import { useCreateMigrationMutation } from '@kubev2v/legacy/queries';
+import { useCreateMigrationMutation } from 'legacy/src/queries';
 
 interface IMigrationConfirmModalProps
   extends Pick<IConfirmModalProps, 'isOpen' | 'toggleOpen' | 'mutateResult'> {

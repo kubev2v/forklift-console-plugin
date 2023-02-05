@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useClusterProvidersQuery, useInventoryProvidersQuery } from '@kubev2v/legacy/queries';
+import { useClusterProvidersQuery, useInventoryProvidersQuery } from 'legacy/src/queries';
 import {
   InventoryProvider,
   IOpenShiftProvider,
   IProviderObject,
   SourceInventoryProvider,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { getFormGroupProps, IValidatedFormField } from '@migtools/lib-ui';
 import {
   Divider,
@@ -25,7 +25,7 @@ import { getAvailableProviderTypes, hasCondition } from '../helpers';
 import { ConditionalTooltip } from './ConditionalTooltip';
 import { QuerySpinnerMode, ResolvedQueries } from './ResolvedQuery';
 
-import { isSameResource } from '@kubev2v/legacy/queries/helpers';
+import { isSameResource } from 'legacy/src/queries/helpers';
 import { OptionWithValue } from './SimpleSelect';
 
 interface IProviderSelectBaseProps<T> extends Partial<SelectProps> {

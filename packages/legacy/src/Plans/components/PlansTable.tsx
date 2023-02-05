@@ -34,22 +34,22 @@ import { Link } from 'react-router-dom';
 import { StatusIcon, useSelectionState } from '@migtools/lib-ui';
 
 import { PlanActionsDropdown } from './PlanActionsDropdown';
-import { useSortState, usePaginationState } from '@kubev2v/legacy/common/hooks';
-import { IPlan } from '@kubev2v/legacy/queries/types';
-import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
+import { useSortState, usePaginationState } from 'legacy/src/common/hooks';
+import { IPlan } from 'legacy/src/queries/types';
+import { CreatePlanButton } from 'legacy/src/Plans/components/CreatePlanButton';
 import {
   FilterToolbar,
   FilterType,
   FilterCategory,
-} from '@kubev2v/legacy/common/components/FilterToolbar';
-import { useFilterState } from '@kubev2v/legacy/common/hooks/useFilterState';
-import { TableEmptyState } from '@kubev2v/legacy/common/components/TableEmptyState';
+} from 'legacy/src/common/components/FilterToolbar';
+import { useFilterState } from 'legacy/src/common/hooks/useFilterState';
+import { TableEmptyState } from 'legacy/src/common/components/TableEmptyState';
 import {
   findLatestMigration,
   findProvidersByRefs,
   useInventoryProvidersQuery,
   useMigrationsQuery,
-} from '@kubev2v/legacy/queries';
+} from 'legacy/src/queries';
 
 import './PlansTable.css';
 import {
@@ -59,14 +59,14 @@ import {
   getMigStatusState,
   canBeRestarted,
 } from './helpers';
-import { isSameResource } from '@kubev2v/legacy/queries/helpers';
-import { StatusCondition } from '@kubev2v/legacy/common/components/StatusCondition';
+import { isSameResource } from 'legacy/src/queries/helpers';
+import { StatusCondition } from 'legacy/src/common/components/StatusCondition';
 import { MigrateOrCutoverButton } from './MigrateOrCutoverButton';
 import { PlanStatusNavLink } from './PlanStatusNavLink';
-import { MustGatherBtn } from '@kubev2v/legacy/common/components/MustGatherBtn';
+import { MustGatherBtn } from 'legacy/src/common/components/MustGatherBtn';
 import { ScheduledCutoverTime } from './ScheduledCutoverTime';
-import { hasCondition } from '@kubev2v/legacy/common/helpers';
-import { ENV, PATH_PREFIX } from '@kubev2v/legacy/common/constants';
+import { hasCondition } from 'legacy/src/common/helpers';
+import { ENV, PATH_PREFIX } from 'legacy/src/common/constants';
 
 export type PlanActionButtonType = 'Start' | 'Cutover' | 'ScheduledCutover' | 'MustGather';
 interface IPlansTableProps {

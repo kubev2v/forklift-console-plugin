@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { ProviderType } from '@kubev2v/legacy/common/constants';
+import { ProviderType } from 'legacy/src/common/constants';
 import { SourceProvidersTable } from './Source/SourceProvidersTable';
 import { OpenShiftProvidersTable } from './OpenShift/OpenShiftProvidersTable';
 import {
   IProviderObject,
   IProvidersByType,
   SourceInventoryProvider,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { correlateProviders } from './helpers';
 
 interface IProvidersTableProps {

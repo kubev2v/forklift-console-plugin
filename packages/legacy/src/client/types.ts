@@ -1,4 +1,4 @@
-import { IMetaObjectMeta, IMetaTypeMeta } from '@kubev2v/legacy/queries/types';
+import { IMetaObjectMeta, IMetaTypeMeta } from 'legacy/src/queries/types';
 import { ClusterClient } from '@migtools/lib-ui';
 import { AxiosError } from 'axios';
 

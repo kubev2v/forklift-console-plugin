@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { MappingSource } from '@kubev2v/legacy/queries/types';
+import { MappingSource } from 'legacy/src/queries/types';
 import {
   SimpleSelect,
   ISimpleSelectProps,
   OptionWithValue,
-} from '@kubev2v/legacy/common/components/SimpleSelect';
+} from 'legacy/src/common/components/SimpleSelect';
 import { IMappingBuilderItem } from './MappingBuilder';
-import { TruncatedText } from '@kubev2v/legacy/common/components/TruncatedText';
+import { TruncatedText } from 'legacy/src/common/components/TruncatedText';
 
 interface IMappingSourceSelectProps extends Partial<ISimpleSelectProps> {
   id: string;

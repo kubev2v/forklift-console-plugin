@@ -1,8 +1,8 @@
-import { usePollingContext } from '@kubev2v/legacy/common/context';
+import { usePollingContext } from 'legacy/src/common/context';
 import { useQueryClient } from 'react-query';
 import { useMockableQuery, useMockableMutation, getMustGatherApiUrl } from './helpers';
-import { IMustGatherResponse } from '@kubev2v/legacy/client/types';
-import { MOCK_MUST_GATHERS } from '@kubev2v/legacy/queries/mocks/mustGather.mock';
+import { IMustGatherResponse } from 'legacy/src/client/types';
+import { MOCK_MUST_GATHERS } from 'legacy/src/queries/mocks/mustGather.mock';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 // triggers a single must gather execution

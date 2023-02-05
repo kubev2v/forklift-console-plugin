@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Title, EmptyState, EmptyStateIcon, EmptyStateBody } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { Mapping, MappingType } from '@kubev2v/legacy/queries/types';
+import { Mapping, MappingType } from 'legacy/src/queries/types';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 import { MappingsTable } from './components/MappingsTable';
 import {
@@ -9,10 +9,10 @@ import {
   useClusterProvidersQuery,
   useHasSufficientProvidersQuery,
   useMappingsQuery,
-} from '@kubev2v/legacy/queries';
+} from 'legacy/src/queries';
 import { CreateMappingButton } from './components/CreateMappingButton';
-import { ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { ENV } from '@kubev2v/legacy/common/constants';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
+import { ENV } from 'legacy/src/common/constants';
 
 interface IMappingsProps {
   mappingType: MappingType;

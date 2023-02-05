@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'common/src/utils/i18n';
 
-import { useTranslation } from '@kubev2v/common/utils/i18n';
 import {
   Select,
   SelectGroup,

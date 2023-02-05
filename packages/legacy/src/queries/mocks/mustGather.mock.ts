@@ -1,4 +1,4 @@
-import { IMustGatherResponse } from '@kubev2v/legacy/client/types';
+import { IMustGatherResponse } from 'legacy/src/client/types';
 
 export const MOCK_MUST_GATHERS: IMustGatherResponse[] = [
   {

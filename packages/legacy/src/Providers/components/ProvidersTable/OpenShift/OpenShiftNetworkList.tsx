@@ -3,15 +3,11 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import CheckIcon from '@patternfly/react-icons/dist/esm/icons/check-icon';
 import alignment from '@patternfly/react-styles/css/utilities/Alignment/alignment';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { ResolvedQuery } from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { useOpenShiftNetworksQuery } from '@kubev2v/legacy/queries';
-import {
-  ICorrelatedProvider,
-  IOpenShiftProvider,
-  POD_NETWORK,
-} from '@kubev2v/legacy/queries/types';
-import { isSameResource } from '@kubev2v/legacy/queries/helpers';
-import { getUniqueItemsByName, hasCondition } from '@kubev2v/legacy/common/helpers';
+import { ResolvedQuery } from 'legacy/src/common/components/ResolvedQuery';
+import { useOpenShiftNetworksQuery } from 'legacy/src/queries';
+import { ICorrelatedProvider, IOpenShiftProvider, POD_NETWORK } from 'legacy/src/queries/types';
+import { isSameResource } from 'legacy/src/queries/helpers';
+import { getUniqueItemsByName, hasCondition } from 'legacy/src/common/helpers';
 import { Alert } from '@patternfly/react-core';
 
 interface IOpenShiftNetworkListProps {

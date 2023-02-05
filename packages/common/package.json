@@ -36,25 +36,26 @@
   "scripts": {
     "clean": "rm -rf ./dist && rm -rf ./coverage",
     "clean:all": "npm run clean && rm -rf ./node_modules",
-    "build": "tsc && npm run copy:css",
+    "build": "rm -rf ./dist && tsc && npm run copy:css",
     "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
-    "lint": "eslint . && stylelint \"packages/**/*.css\" --allow-empty-input",
-    "lint:fix": "eslint . --fix && stylelint \"packages/**/*.css\" --allow-empty-input --fix",
+    "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
+    "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "test": "TZ=UTC jest",
     "test:coverage": "TZ=UTC jest --coverage",
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot"
   },
-  "devDependencies": {
+  "peerDependencies": {
     "@openshift-console/dynamic-plugin-sdk": "0.0.17",
     "@openshift/dynamic-plugin-sdk": "~1.0.0",
     "@patternfly/react-core": "4.221.3",
     "@patternfly/react-table": "4.90.3",
-    "@types/immutable": "^3.8.7",
-    "@types/node": "^18.0.0",
     "immutable": "3.x",
     "react": "^17.0.1",
     "react-i18next": "^11.7.3",
     "react-query": "^3.39.2",
     "react-router": "5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0"
   }
 }

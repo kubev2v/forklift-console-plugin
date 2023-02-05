@@ -1,5 +1,5 @@
-import { IDisk } from '@kubev2v/legacy/queries';
-import { IRHVDiskAttachment } from '@kubev2v/legacy/queries/types';
+import { IDisk } from 'legacy/src/queries';
+import { IRHVDiskAttachment } from 'legacy/src/queries/types';
 
 const disk1DaId = '10564686-1464-4baa-b65a-0dc2eb4645a8';
 const disk2DaId = '2d948af7-11be-4817-a9b9-36d7330586b1';

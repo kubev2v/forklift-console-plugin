@@ -1,4 +1,4 @@
-import { CLUSTER_API_VERSION, ENV } from '@kubev2v/legacy/common/constants';
+import { CLUSTER_API_VERSION, ENV } from 'legacy/src/common/constants';
 import { nameAndNamespace } from '../helpers';
 import { IMigration } from '../types/migrations.types';
 import { MOCK_PLANS } from './plans.mock';

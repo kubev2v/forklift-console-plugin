@@ -1,18 +1,13 @@
 {
-  "extends": "@kubev2v/config/tsconfig.json",
+  "extends": "./tsconfig.production.json",
 
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"],
-  
   "compilerOptions": {
-    "sourceMap": true,
-    "declaration": false,
-
-    "baseUrl": "./",
-    "outDir": "dist",
-
     "paths": {
-      "@kubev2v/forklift-console-plugin/*": ["src/*"]
+      "legacy/src/*": ["../legacy/src/*"],
+      "common/src/*": ["../common/src/*"],
+      "@kubev2v/legacy/*": ["../legacy/src/*"],
+      "@kubev2v/common/*": ["../common/src/*"],
+      "@kubev2v/webpack/*": ["../webpack/src/*"]
     }
-  },
+  }
 }

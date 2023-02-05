@@ -11,7 +11,7 @@ import { OpenShiftProvidersTable } from '../OpenShiftProvidersTable';
 import {
   MOCK_CLUSTER_PROVIDERS,
   MOCK_INVENTORY_PROVIDERS,
-} from '@kubev2v/legacy/queries/mocks/providers.mock';
+} from 'legacy/src/queries/mocks/providers.mock';
 import { correlateProviders } from '../../helpers';
 
 describe('<OpenShiftProvidersTable />', () => {

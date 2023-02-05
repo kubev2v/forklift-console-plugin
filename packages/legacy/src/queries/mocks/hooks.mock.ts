@@ -1,5 +1,5 @@
 import { IHook } from '../types';
-import { CLUSTER_API_VERSION } from '@kubev2v/legacy/common/constants';
+import { CLUSTER_API_VERSION } from 'legacy/src/common/constants';
 
 export let MOCK_HOOKS: IHook[];
 

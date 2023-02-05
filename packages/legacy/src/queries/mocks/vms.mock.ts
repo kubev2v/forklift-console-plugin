@@ -1,6 +1,6 @@
 import { IVMwareVM, IRHVVM } from '../types/vms.types';
-import { MOCK_DISK_ATTACHMENTS } from '@kubev2v/legacy/queries/mocks/disks.mock';
-import { MOCK_NICS } from '@kubev2v/legacy/queries/mocks/nicProfiles.mock';
+import { MOCK_DISK_ATTACHMENTS } from 'legacy/src/queries/mocks/disks.mock';
+import { MOCK_NICS } from 'legacy/src/queries/mocks/nicProfiles.mock';
 export let MOCK_VMWARE_VMS: IVMwareVM[] = [];
 export let MOCK_RHV_VMS: IRHVVM[] = [];
 

@@ -8,10 +8,10 @@ import {
   Tab,
   TabTitleText,
 } from '@patternfly/react-core';
-import { Mapping, MappingType } from '@kubev2v/legacy/queries/types';
-import { CreateMappingButton } from '@kubev2v/legacy/Mappings/components/CreateMappingButton';
-import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
-import { Mappings } from '@kubev2v/legacy/Mappings/Mappings';
+import { Mapping, MappingType } from 'legacy/src/queries/types';
+import { CreateMappingButton } from 'legacy/src/Mappings/components/CreateMappingButton';
+import { AddEditMappingModal } from 'legacy/src/Mappings/components/AddEditMappingModal';
+import { Mappings } from 'legacy/src/Mappings/Mappings';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 
 const MappingsPage: React.FunctionComponent = () => {

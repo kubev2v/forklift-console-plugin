@@ -13,13 +13,13 @@ import {
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useSelectionState } from '@migtools/lib-ui';
-import { IndexedTree, useSourceVMsQuery } from '@kubev2v/legacy/queries';
+import { IndexedTree, useSourceVMsQuery } from 'legacy/src/queries';
 import {
   IPlan,
   SourceInventoryProvider,
   InventoryTree,
   InventoryTreeType,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import {
   filterAndConvertInventoryTree,
   findMatchingSelectableDescendants,
@@ -31,9 +31,9 @@ import {
 } from './helpers';
 import { PlanWizardFormState } from './PlanWizard';
 
-import { ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { usePausedPollingEffect } from '@kubev2v/legacy/common/context';
-import { LONG_LOADING_MESSAGE } from '@kubev2v/legacy/queries/constants';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
+import { usePausedPollingEffect } from 'legacy/src/common/context';
+import { LONG_LOADING_MESSAGE } from 'legacy/src/queries/constants';
 import { UseQueryResult } from 'react-query';
 
 interface IFilterVMsFormProps {

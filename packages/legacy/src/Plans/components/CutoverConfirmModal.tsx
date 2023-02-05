@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ConfirmModal, IConfirmModalProps } from '@kubev2v/legacy/common/components/ConfirmModal';
-import { IPlan } from '@kubev2v/legacy/queries/types';
+import { ConfirmModal, IConfirmModalProps } from 'legacy/src/common/components/ConfirmModal';
+import { IPlan } from 'legacy/src/queries/types';
 import {
   TextContent,
   Text,
@@ -13,7 +13,7 @@ import {
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import text from '@patternfly/react-styles/css/utilities/Text/text';
-import { useSetCutoverMutation } from '@kubev2v/legacy/queries';
+import { useSetCutoverMutation } from 'legacy/src/queries';
 
 interface ICutoverConfirmModalProps
   extends Pick<IConfirmModalProps, 'isOpen' | 'toggleOpen' | 'mutateResult'> {

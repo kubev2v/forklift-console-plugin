@@ -1,10 +1,10 @@
 import { IPlan, IVMStatus } from '../types';
-import { MOCK_INVENTORY_PROVIDERS } from '@kubev2v/legacy/queries/mocks/providers.mock';
-import { CLUSTER_API_VERSION, ENV } from '@kubev2v/legacy/common/constants';
+import { MOCK_INVENTORY_PROVIDERS } from 'legacy/src/queries/mocks/providers.mock';
+import { CLUSTER_API_VERSION, ENV } from 'legacy/src/common/constants';
 import { MOCK_NETWORK_MAPPINGS, MOCK_STORAGE_MAPPINGS } from './mappings.mock';
 import { MOCK_OPENSHIFT_NAMESPACES } from './namespaces.mock';
 import { MOCK_HOOKS } from './hooks.mock';
-import { getObjectRef } from '@kubev2v/legacy/common/helpers';
+import { getObjectRef } from 'legacy/src/common/helpers';
 import { nameAndNamespace } from '../helpers';
 
 export let MOCK_PLANS: IPlan[];

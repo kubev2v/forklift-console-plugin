@@ -15,21 +15,21 @@ import {
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { getFormGroupProps, ValidatedTextInput } from '@migtools/lib-ui';
 
-import { POD_NETWORK } from '@kubev2v/legacy/queries/types';
+import { POD_NETWORK } from 'legacy/src/queries/types';
 import {
   useClusterProvidersQuery,
   useInventoryProvidersQuery,
   useOpenShiftNetworksQuery,
   useNamespacesQuery,
-} from '@kubev2v/legacy/queries';
+} from 'legacy/src/queries';
 import { PlanWizardFormState, PlanWizardMode } from './PlanWizard';
-import { QuerySpinnerMode, ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { ProviderSelect } from '@kubev2v/legacy/common/components/ProviderSelect';
-import { SelectOpenShiftNetworkModal } from '@kubev2v/legacy/common/components/SelectOpenShiftNetworkModal';
+import { QuerySpinnerMode, ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
+import { ProviderSelect } from 'legacy/src/common/components/ProviderSelect';
+import { SelectOpenShiftNetworkModal } from 'legacy/src/common/components/SelectOpenShiftNetworkModal';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
-import { usePausedPollingEffect } from '@kubev2v/legacy/common/context';
-import { isSameResource } from '@kubev2v/legacy/queries/helpers';
-import { PROVIDER_TYPE_NAMES } from '@kubev2v/legacy/common/constants';
+import { usePausedPollingEffect } from 'legacy/src/common/context';
+import { isSameResource } from 'legacy/src/queries/helpers';
+import { PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 
 interface IGeneralFormProps {
   form: PlanWizardFormState['general'];

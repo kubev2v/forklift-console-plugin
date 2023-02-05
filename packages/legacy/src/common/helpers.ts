@@ -7,7 +7,7 @@ import {
   ConditionType,
   StepType,
   ProviderType,
-} from '@kubev2v/legacy/common/constants';
+} from 'legacy/src/common/constants';
 import {
   ICR,
   IObjectReference,
@@ -15,9 +15,9 @@ import {
   IStatusCondition,
   IStep,
   IVMStatus,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { UseQueryResult } from 'react-query';
-import { IKubeList } from '@kubev2v/legacy/client/types';
+import { IKubeList } from 'legacy/src/client/types';
 import { StatusType } from '@migtools/lib-ui';
 
 dayjs.extend(utc);

@@ -28,7 +28,7 @@ import {
 import AngleDownIcon from '@patternfly/react-icons/dist/esm/icons/angle-down-icon';
 import AngleRightIcon from '@patternfly/react-icons/dist/esm/icons/angle-right-icon';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import '@kubev2v/legacy/Plans/components/Wizard/SelectVMsForm.css';
+import './SelectVMsForm.css';
 
 import {
   SourceVM,
@@ -37,10 +37,10 @@ import {
   SourceInventoryProvider,
   InventoryTree,
   InventoryTreeType,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { useSelectionState } from '@migtools/lib-ui';
 
-import { useSortState, usePaginationState, useFilterState } from '@kubev2v/legacy/common/hooks';
+import { useSortState, usePaginationState, useFilterState } from 'legacy/src/common/hooks';
 import { PlanWizardFormState } from './PlanWizard';
 import {
   getAvailableVMs,
@@ -49,23 +49,23 @@ import {
   getVMTreePathInfo,
   vmMatchesConcernFilter,
 } from './helpers';
-import { IndexedTree, useSourceVMsQuery } from '@kubev2v/legacy/queries';
-import { TableEmptyState } from '@kubev2v/legacy/common/components/TableEmptyState';
+import { IndexedTree, useSourceVMsQuery } from 'legacy/src/queries';
+import { TableEmptyState } from 'legacy/src/common/components/TableEmptyState';
 import {
   FilterToolbar,
   FilterType,
   FilterCategory,
-} from '@kubev2v/legacy/common/components/FilterToolbar';
-import { ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
+} from 'legacy/src/common/components/FilterToolbar';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
 import { VMConcernsIcon } from './VMConcernsIcon';
 import { VMConcernsDescription } from './VMConcernsDescription';
-import { LONG_LOADING_MESSAGE } from '@kubev2v/legacy/queries/constants';
-import { PROVIDER_TYPE_NAMES } from '@kubev2v/legacy/common/constants';
+import { LONG_LOADING_MESSAGE } from 'legacy/src/queries/constants';
+import { PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 import { UseQueryResult } from 'react-query';
 import {
   getVMPowerState,
   VMNameWithPowerState,
-} from '@kubev2v/legacy/common/components/VMNameWithPowerState';
+} from 'legacy/src/common/components/VMNameWithPowerState';
 
 interface ISelectVMsFormProps {
   form: PlanWizardFormState['selectVMs'];

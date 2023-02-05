@@ -52,24 +52,17 @@
   "scripts": {
     "clean": "rm -rf ./dist && rm -rf ./coverage",
     "clean:all": "npm run clean && rm -rf ./node_modules",
-    "build": "tsc && npm run copy:css",
+    "build": "rm -rf ./dist && tsc && npm run copy:css",
     "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
-    "lint": "eslint . && stylelint \"packages/**/*.css\" --allow-empty-input",
-    "lint:fix": "eslint . --fix && stylelint \"packages/**/*.css\" --allow-empty-input --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "echo 'this package is untested'; exit 0"
   },
-  "devDependencies": {
+  "peerDependencies": {
     "@migtools/lib-ui": "^8.4.1",
     "@openshift-console/dynamic-plugin-sdk": "0.0.17",
     "@patternfly/react-core": "4.221.3",
     "@patternfly/react-table": "4.90.3",
-    "@types/ejs": "^3.0.6",
-    "@types/file-saver": "^2.0.3",
-    "@types/netmask": "^1.0.30",
-    "@types/node": "^18.0.0",
-    "@types/q": "^1.5.4",
-    "@typescript-eslint/eslint-plugin": "^5.29.0",
-    "@typescript-eslint/parser": "^5.29.0",
     "axios": "^0.21.2",
     "classnames": "2.x",
     "dayjs": "^1.11.5",
@@ -81,5 +74,14 @@
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
     "react-syntax-highlighter": "^15.5.0"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.0.6",
+    "@types/file-saver": "^2.0.3",
+    "@types/netmask": "^1.0.30",
+    "@types/node": "^18.0.0",
+    "@types/q": "^1.5.4",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0"
   }
 }

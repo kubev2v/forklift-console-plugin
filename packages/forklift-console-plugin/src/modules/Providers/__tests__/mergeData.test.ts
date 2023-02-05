@@ -1,4 +1,5 @@
-import { ProviderResource } from '@kubev2v/forklift-console-plugin/utils/types';
+import { ProviderResource } from 'src/utils/types';
+
 import {
   MOCK_CLUSTER_PROVIDERS,
   MOCK_INVENTORY_PROVIDERS,

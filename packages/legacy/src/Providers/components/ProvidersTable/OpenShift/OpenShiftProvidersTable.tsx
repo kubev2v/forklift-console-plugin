@@ -15,24 +15,21 @@ import {
 import DatabaseIcon from '@patternfly/react-icons/dist/esm/icons/database-icon';
 import NetworkIcon from '@patternfly/react-icons/dist/esm/icons/network-icon';
 import tableStyles from '@patternfly/react-styles/css/components/Table/table';
-import { useSortState, usePaginationState } from '@kubev2v/legacy/common/hooks';
-import { useOCPMigrationNetworkMutation, useStorageClassesQuery } from '@kubev2v/legacy/queries';
-import {
-  ICorrelatedProvider,
-  IOpenShiftProvider,
-} from '@kubev2v/legacy/queries/types/providers.types';
+import { useSortState, usePaginationState } from 'legacy/src/common/hooks';
+import { useOCPMigrationNetworkMutation, useStorageClassesQuery } from 'legacy/src/queries';
+import { ICorrelatedProvider, IOpenShiftProvider } from 'legacy/src/queries/types/providers.types';
 import { ProviderActionsDropdown } from '../ProviderActionsDropdown';
-import { StatusCondition } from '@kubev2v/legacy/common/components/StatusCondition';
-import { MappingType } from '@kubev2v/legacy/queries/types';
-import { getMostSeriousCondition, hasCondition, numStr } from '@kubev2v/legacy/common/helpers';
-import { centerCellTransform } from '@kubev2v/legacy/utils/utils';
+import { StatusCondition } from 'legacy/src/common/components/StatusCondition';
+import { MappingType } from 'legacy/src/queries/types';
+import { getMostSeriousCondition, hasCondition, numStr } from 'legacy/src/common/helpers';
+import { centerCellTransform } from 'legacy/src/utils/utils';
 
 import './OpenShiftProvidersTable.css';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { PROVIDER_TYPE_NAMES } from '@kubev2v/legacy/common/constants';
-import { isSameResource } from '@kubev2v/legacy/queries/helpers';
+import { PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
+import { isSameResource } from 'legacy/src/queries/helpers';
 import { OpenShiftNetworkList } from './OpenShiftNetworkList';
-import { SelectOpenShiftNetworkModal } from '@kubev2v/legacy/common/components/SelectOpenShiftNetworkModal';
+import { SelectOpenShiftNetworkModal } from 'legacy/src/common/components/SelectOpenShiftNetworkModal';
 import { OpenShiftStorageClassList } from './OpenShiftStorageClassList';
 
 interface IOpenShiftProvidersTableProps {

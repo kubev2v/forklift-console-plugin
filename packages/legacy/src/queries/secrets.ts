@@ -1,5 +1,5 @@
-import { createSecretResource } from '@kubev2v/legacy/client/helpers';
-import { usePollingContext } from '@kubev2v/legacy/common/context';
+import { createSecretResource } from 'legacy/src/client/helpers';
+import { usePollingContext } from 'legacy/src/common/context';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { UseQueryResult } from 'react-query';
 import { useMockableQuery } from './helpers';

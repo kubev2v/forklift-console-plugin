@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Tooltip } from '@patternfly/react-core';
 import WarningTriangleIcon from '@patternfly/react-icons/dist/esm/icons/warning-triangle-icon';
-import { MustGatherContext } from '@kubev2v/legacy/common/context';
+import { MustGatherContext } from 'legacy/src/common/context';
 
 interface IMustGatherBtn {
   displayName: string;

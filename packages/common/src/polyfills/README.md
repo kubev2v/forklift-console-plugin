@@ -13,7 +13,7 @@ API:
 
 Example:
 ``` ts
-import { withModalProvider } from '@kubev2v/common/polyfills/sdk-shim';
+import { withModalProvider } from 'common/src/polyfills/sdk-shim';
 
 ...
 const PageWrapper = withModalProvider(Page);

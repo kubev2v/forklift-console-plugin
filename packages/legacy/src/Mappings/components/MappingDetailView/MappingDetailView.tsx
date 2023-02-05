@@ -3,16 +3,16 @@ import { Grid, GridItem, Text, TextContent } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import text from '@patternfly/react-styles/css/utilities/Text/text';
 
-import { Mapping, MappingType } from '@kubev2v/legacy/queries/types';
-import { LineArrow } from '@kubev2v/legacy/common/components/LineArrow';
-import { useResourceQueriesForMapping } from '@kubev2v/legacy/queries';
-import { TruncatedText } from '@kubev2v/legacy/common/components/TruncatedText';
-import { ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
+import { Mapping, MappingType } from 'legacy/src/queries/types';
+import { LineArrow } from 'legacy/src/common/components/LineArrow';
+import { useResourceQueriesForMapping } from 'legacy/src/queries';
+import { TruncatedText } from 'legacy/src/common/components/TruncatedText';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
 import { getMappingSourceByRef, getMappingSourceTitle, getMappingTargetTitle } from '../helpers';
 import { getMappingItemTargetName, groupMappingItemsByTarget } from './helpers';
 
 import './MappingDetailView.css';
-import { ProviderType } from '@kubev2v/legacy/common/constants';
+import { ProviderType } from 'legacy/src/common/constants';
 
 interface IMappingDetailViewProps {
   mappingType: MappingType;

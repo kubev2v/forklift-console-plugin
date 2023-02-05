@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Alert, AlertActionCloseButton, Text } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useLocalStorage } from '@migtools/lib-ui';
-import { CLOUD_MA_LINK, PROVIDER_TYPE_NAMES } from '@kubev2v/legacy/common/constants';
+import { CLOUD_MA_LINK, PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 
 /**
  * @deprecated

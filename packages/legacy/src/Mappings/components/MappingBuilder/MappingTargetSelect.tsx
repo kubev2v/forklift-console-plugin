@@ -3,17 +3,17 @@ import {
   SimpleSelect,
   ISimpleSelectProps,
   OptionWithValue,
-} from '@kubev2v/legacy/common/components/SimpleSelect';
+} from 'legacy/src/common/components/SimpleSelect';
 import {
   IAnnotatedStorageClass,
   IOpenShiftNetwork,
   MappingTarget,
   MappingType,
   POD_NETWORK,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { IMappingBuilderItem } from './MappingBuilder';
 import { getMappingTargetName } from '../MappingDetailView/helpers';
-import { TruncatedText } from '@kubev2v/legacy/common/components/TruncatedText';
+import { TruncatedText } from 'legacy/src/common/components/TruncatedText';
 
 interface IMappingTargetSelectProps extends Partial<ISimpleSelectProps> {
   id: string;

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useMustGathersQuery } from '@kubev2v/legacy/queries';
+import { useMustGathersQuery } from 'legacy/src/queries';
 import { UseQueryResult } from 'react-query';
-import { IMustGatherResponse, mustGatherStatus } from '@kubev2v/legacy/client/types';
-import { MustGatherWatcher } from '@kubev2v/legacy/common/components/MustGatherWatcher';
-import { NotificationContext } from '@kubev2v/legacy/common/context';
+import { IMustGatherResponse, mustGatherStatus } from 'legacy/src/client/types';
+import { MustGatherWatcher } from 'legacy/src/common/components/MustGatherWatcher';
+import { NotificationContext } from 'legacy/src/common/context';
 import { saveAs } from 'file-saver';
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
-import { getMustGatherApiUrl } from '@kubev2v/legacy/queries/helpers';
+import { getMustGatherApiUrl } from 'legacy/src/queries/helpers';
 
 export type MustGatherObjType = {
   displayName: string;

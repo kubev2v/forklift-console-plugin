@@ -1,10 +1,10 @@
 import React, { JSXElementConstructor } from 'react';
 import { Link } from 'react-router-dom';
+import * as C from 'src/utils/constants';
+import { CONDITIONS, PROVIDERS } from 'src/utils/enums';
+import { useTranslation } from 'src/utils/i18n';
 
 import { RowProps } from '@kubev2v/common/components/TableView';
-import * as C from '@kubev2v/forklift-console-plugin/utils/constants';
-import { CONDITIONS, PROVIDERS } from '@kubev2v/forklift-console-plugin/utils/enums';
-import { useTranslation } from '@kubev2v/forklift-console-plugin/utils/i18n';
 import {
   PATH_PREFIX,
   ProviderType,

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { Mappings } from '@kubev2v/legacy/Mappings/Mappings';
-import { MappingType } from '@kubev2v/legacy/queries/types';
+import { Mappings } from 'legacy/src/Mappings/Mappings';
+import { MappingType } from 'legacy/src/queries/types';
 import { QueryClientProvider, QueryClient } from 'react-query';
 const queryClient = new QueryClient();
 

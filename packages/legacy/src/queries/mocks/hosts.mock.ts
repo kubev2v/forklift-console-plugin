@@ -1,4 +1,4 @@
-import { CLUSTER_API_VERSION, ENV } from '@kubev2v/legacy/common/constants';
+import { CLUSTER_API_VERSION, ENV } from 'legacy/src/common/constants';
 import { nameAndNamespace } from '../helpers';
 import { IHost, IHostConfig } from '../types/hosts.types';
 import { MOCK_INVENTORY_PROVIDERS } from './providers.mock';

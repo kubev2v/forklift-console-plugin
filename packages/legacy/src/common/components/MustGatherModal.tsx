@@ -4,8 +4,8 @@ import {
   MustGatherContext,
   NotificationContext,
   MustGatherObjType,
-} from '@kubev2v/legacy/common/context';
-import { useMustGatherMutation } from '@kubev2v/legacy/queries';
+} from 'legacy/src/common/context';
+import { useMustGatherMutation } from 'legacy/src/queries';
 
 export const MustGatherModal: React.FunctionComponent = () => {
   const { activeMustGather, withNs, setMustGatherModalOpen, mustGatherModalOpen } =

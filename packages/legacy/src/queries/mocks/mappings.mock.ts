@@ -4,7 +4,7 @@ import { MOCK_INVENTORY_PROVIDERS } from './providers.mock';
 import { MOCK_OPENSHIFT_NETWORKS, MOCK_VMWARE_NETWORKS } from './networks.mock';
 import { MOCK_VMWARE_DATASTORES } from './storages.mock';
 import { nameAndNamespace } from '../helpers';
-import { CLUSTER_API_VERSION, ENV } from '@kubev2v/legacy/common/constants';
+import { CLUSTER_API_VERSION, ENV } from 'legacy/src/common/constants';
 
 export let MOCK_NETWORK_MAPPINGS: INetworkMapping[] = [];
 export let MOCK_STORAGE_MAPPINGS: IStorageMapping[] = [];

@@ -1,4 +1,4 @@
-import { POLLING_INTERVAL } from '@kubev2v/legacy/queries/constants';
+import { POLLING_INTERVAL } from 'legacy/src/queries/constants';
 import * as React from 'react';
 
 interface IPollingContext {

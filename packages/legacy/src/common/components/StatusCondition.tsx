@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { StatusIcon } from '@migtools/lib-ui';
-import { getMostSeriousCondition, getStatusType } from '@kubev2v/legacy/common/helpers';
-import { StatusCategoryType } from '@kubev2v/legacy/common/constants';
-import { IStatusCondition } from '@kubev2v/legacy/queries/types';
+import { getMostSeriousCondition, getStatusType } from 'legacy/src/common/helpers';
+import { StatusCategoryType } from 'legacy/src/common/constants';
+import { IStatusCondition } from 'legacy/src/queries/types';
 import { Button, Popover } from '@patternfly/react-core';
 
 interface IStatusConditionProps {

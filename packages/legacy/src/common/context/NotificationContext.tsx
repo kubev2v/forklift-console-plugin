@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { INotification } from '@kubev2v/legacy/common/components/Notifications';
+import { INotification } from 'legacy/src/common/components/Notifications';
 
 interface INotificationContext {
   pushNotification: (notification: INotification) => void;

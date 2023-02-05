@@ -3,7 +3,7 @@ import { List, ListItem, Radio } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { PlanWizardFormState } from './PlanWizard';
 import { warmCriticalConcerns, someVMHasConcern } from './helpers';
-import { SourceVM } from '@kubev2v/legacy/queries/types';
+import { SourceVM } from 'legacy/src/queries/types';
 import { StatusIcon } from '@migtools/lib-ui';
 
 interface ITypeFormProps {
