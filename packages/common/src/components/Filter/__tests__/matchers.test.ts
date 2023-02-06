@@ -1,4 +1,4 @@
-import { NAME, NAMESPACE } from '@kubev2v/common/utils/constants';
+import { NAME, NAMESPACE } from 'common/src/utils/constants';
 
 import { createMatcher, createMetaMatcher, freetextMatcher } from '../matchers';
 

@@ -6,8 +6,8 @@ import '@testing-library/jest-dom';
 import { Router } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { AddEditProviderModal } from '../AddEditProviderModal';
-import { MOCK_CLUSTER_PROVIDERS } from '@kubev2v/legacy/queries/mocks/providers.mock';
-import { ENV } from '@kubev2v/legacy/common/constants';
+import { MOCK_CLUSTER_PROVIDERS } from 'legacy/src/queries/mocks/providers.mock';
+import { ENV } from 'legacy/src/common/constants';
 
 const queryClient = new QueryClient();
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Alert, AlertGroup, AlertActionCloseButton } from '@patternfly/react-core';
-import { NotificationContext } from '@kubev2v/legacy/common/context';
+import { NotificationContext } from 'legacy/src/common/context';
 
 export type notificationType = 'success' | 'info' | 'warning' | 'danger' | 'default';
 

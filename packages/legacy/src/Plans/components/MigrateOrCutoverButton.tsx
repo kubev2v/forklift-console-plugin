@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Spinner } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { useCreateMigrationMutation, useSetCutoverMutation } from '@kubev2v/legacy/queries';
-import { IPlan } from '@kubev2v/legacy/queries/types';
+import { useCreateMigrationMutation, useSetCutoverMutation } from 'legacy/src/queries';
+import { IPlan } from 'legacy/src/queries/types';
 import { PlanActionButtonType } from './PlansTable';
 import { MigrationConfirmModal } from './MigrationConfirmModal';
 import { CutoverConfirmModal } from './CutoverConfirmModal';
-import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
+import { PATH_PREFIX } from 'legacy/src/common/constants';
 
 interface IMigrateOrCutoverButtonProps {
   plan: IPlan;

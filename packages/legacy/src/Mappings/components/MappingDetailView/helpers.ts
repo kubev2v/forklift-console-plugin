@@ -7,7 +7,7 @@ import {
   MappingTarget,
   MappingType,
   POD_NETWORK,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { doesTargetExist } from '../helpers';
 
 export const getMappingItemTargetName = (

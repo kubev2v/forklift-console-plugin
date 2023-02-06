@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'src/utils/i18n';
 
 import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
-import { useTranslation } from '@kubev2v/forklift-console-plugin/utils/i18n';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import { MustGatherContext } from '@kubev2v/legacy/common/context';

@@ -3,13 +3,13 @@ import { UseQueryResult } from 'react-query';
 import * as yup from 'yup';
 import yaml from 'js-yaml';
 
-import { IKubeList } from '@kubev2v/legacy/client/types';
-import { usePollingContext } from '@kubev2v/legacy/common/context';
+import { IKubeList } from 'legacy/src/client/types';
+import { usePollingContext } from 'legacy/src/common/context';
 import { mockKubeList, sortKubeListByName, useMockableQuery } from './helpers';
 import { MOCK_HOOKS } from './mocks/hooks.mock';
 import { IHook } from './types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
-import { createResource, ForkliftResourceKind } from '@kubev2v/legacy/client/helpers';
+import { createResource, ForkliftResourceKind } from 'legacy/src/client/helpers';
 
 export const useHooksQuery = (namespace: string): UseQueryResult<IKubeList<IHook>> => {
   const hookResource = createResource(ForkliftResourceKind.Hook, namespace);

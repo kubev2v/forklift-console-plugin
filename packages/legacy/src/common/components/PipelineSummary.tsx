@@ -11,8 +11,8 @@ import {
   global_success_color_100 as successColor,
 } from '@patternfly/react-tokens';
 
-import { IVMStatus } from '@kubev2v/legacy/queries/types';
-import { StepType } from '@kubev2v/legacy/common/constants';
+import { IVMStatus } from 'legacy/src/queries/types';
+import { StepType } from 'legacy/src/common/constants';
 import './PipelineSummary.css';
 import { findCurrentStep, getStepType, isStepOnError } from '../helpers';
 import { TruncatedText } from './TruncatedText';

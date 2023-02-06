@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Button } from '@patternfly/react-core';
-import { NotificationContext } from '@kubev2v/legacy/common/context';
-import { useMustGatherQuery } from '@kubev2v/legacy/queries';
-import { mustGatherStatus } from '@kubev2v/legacy/client/types';
-import { MustGatherContext } from '@kubev2v/legacy/common/context';
+import { NotificationContext, MustGatherContext } from 'legacy/src/common/context';
+import { useMustGatherQuery } from 'legacy/src/queries';
+import { mustGatherStatus } from 'legacy/src/client/types';
 
 interface IMustGatherWatcherProps {
   name: string;

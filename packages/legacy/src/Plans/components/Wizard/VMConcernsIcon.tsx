@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SourceVM } from '@kubev2v/legacy/queries/types';
+import { SourceVM } from 'legacy/src/queries/types';
 import { StatusIcon } from '@migtools/lib-ui';
 
 import { getMostSevereVMConcern, getVMConcernStatusLabel, getVMConcernStatusType } from './helpers';

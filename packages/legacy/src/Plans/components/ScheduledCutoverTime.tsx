@@ -1,6 +1,6 @@
 import * as React from 'react';
 import text from '@patternfly/react-styles/css/utilities/Text/text';
-import { formatTimestamp } from '@kubev2v/legacy/common/helpers';
+import { formatTimestamp } from 'legacy/src/common/helpers';
 import alignment from '@patternfly/react-styles/css/utilities/Alignment/alignment';
 
 interface IScheduledCutoverTimeProps {

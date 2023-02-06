@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import * as C from 'src/utils/constants';
+import { PLAN_TYPE } from 'src/utils/enums';
+import { useTranslation } from 'src/utils/i18n';
 
 import { RowProps } from '@kubev2v/common/components/TableView';
-import * as C from '@kubev2v/forklift-console-plugin/utils/constants';
-import { PLAN_TYPE } from '@kubev2v/forklift-console-plugin/utils/enums';
-import { useTranslation } from '@kubev2v/forklift-console-plugin/utils/i18n';
 import { MustGatherBtn } from '@kubev2v/legacy/common/components/MustGatherBtn';
 import { StatusCondition } from '@kubev2v/legacy/common/components/StatusCondition';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';

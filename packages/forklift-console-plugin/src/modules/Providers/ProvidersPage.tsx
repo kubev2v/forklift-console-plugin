@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import * as C from 'src/utils/constants';
+import { CONDITIONS, PROVIDERS } from 'src/utils/enums';
+import { useTranslation } from 'src/utils/i18n';
+import { groupVersionKindForReference } from 'src/utils/resources';
+import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { fromI18nEnum } from '@kubev2v/common/components/Filter/helpers';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
@@ -9,11 +14,6 @@ import {
 } from '@kubev2v/common/components/StandardPage';
 import { Field } from '@kubev2v/common/components/types';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
-import * as C from '@kubev2v/forklift-console-plugin/utils/constants';
-import { CONDITIONS, PROVIDERS } from '@kubev2v/forklift-console-plugin/utils/enums';
-import { useTranslation } from '@kubev2v/forklift-console-plugin/utils/i18n';
-import { groupVersionKindForReference } from '@kubev2v/forklift-console-plugin/utils/resources';
-import { ResourceConsolePageProps } from '@kubev2v/forklift-console-plugin/utils/types';
 import { ProviderType, SOURCE_PROVIDER_TYPES } from '@kubev2v/legacy/common/constants';
 import { AddEditProviderModal } from '@kubev2v/legacy/Providers/components/AddEditProviderModal';
 import { Button } from '@patternfly/react-core';

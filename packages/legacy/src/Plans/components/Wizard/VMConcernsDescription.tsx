@@ -2,8 +2,8 @@ import * as React from 'react';
 import { StatusIcon } from '@migtools/lib-ui';
 import { TextContent, Text, List, ListItem, Flex, FlexItem } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { PRODUCT_DOCO_LINK } from '@kubev2v/legacy/common/constants';
-import { SourceVM } from '@kubev2v/legacy/queries/types';
+import { PRODUCT_DOCO_LINK } from 'legacy/src/common/constants';
+import { SourceVM } from 'legacy/src/queries/types';
 import { concernMatchesFilter, getMostSevereVMConcern, getVMConcernStatusType } from './helpers';
 import './VMConcernsDescription.css';
 

@@ -26,26 +26,26 @@ import {
   textCenter,
   fitContent,
 } from '@patternfly/react-table';
-import { centerCellTransform } from '@kubev2v/legacy/utils/utils';
+import { centerCellTransform } from 'legacy/src/utils/utils';
 import { useSelectionState } from '@migtools/lib-ui';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import alignment from '@patternfly/react-styles/css/utilities/Alignment/alignment';
 
-import { MustGatherModal } from '@kubev2v/legacy/common/components/MustGatherModal';
-import { useSortState, usePaginationState, useFilterState } from '@kubev2v/legacy/common/hooks';
+import { MustGatherModal } from 'legacy/src/common/components/MustGatherModal';
+import { useSortState, usePaginationState, useFilterState } from 'legacy/src/common/hooks';
 import { VMStatusPipelineTable } from './VMStatusPipelineTable';
 import {
   PipelineSummary,
   getPipelineSummaryTitle,
-} from '@kubev2v/legacy/common/components/PipelineSummary';
+} from 'legacy/src/common/components/PipelineSummary';
 
 import {
   FilterCategory,
   FilterToolbar,
   FilterType,
-} from '@kubev2v/legacy/common/components/FilterToolbar';
-import { TableEmptyState } from '@kubev2v/legacy/common/components/TableEmptyState';
-import { IVMStatus } from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/common/components/FilterToolbar';
+import { TableEmptyState } from 'legacy/src/common/components/TableEmptyState';
+import { IVMStatus } from 'legacy/src/queries/types';
 import {
   findLatestMigration,
   useCancelVMsMutation,
@@ -54,18 +54,18 @@ import {
   useInventoryProvidersQuery,
   findProvidersByRefs,
   useSourceVMsQuery,
-} from '@kubev2v/legacy/queries';
-import { formatTimestamp, hasCondition } from '@kubev2v/legacy/common/helpers';
-import { ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
+} from 'legacy/src/queries';
+import { formatTimestamp, hasCondition } from 'legacy/src/common/helpers';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
+import { ConfirmModal } from 'legacy/src/common/components/ConfirmModal';
 import { getPlanState } from './helpers';
 import { VMStatusPrecopyTable } from './VMStatusPrecopyTable';
 import { VMWarmCopyStatus, getWarmVMCopyState } from './VMWarmCopyStatus';
-import { LONG_LOADING_MESSAGE } from '@kubev2v/legacy/queries/constants';
-import '@kubev2v/legacy/Plans/components/VMMigrationDetails.css';
-import { MustGatherBtn } from '@kubev2v/legacy/common/components/MustGatherBtn';
-import { VMNameWithPowerState } from '@kubev2v/legacy/common/components/VMNameWithPowerState';
-import { PLANS_REFERENCE } from '@kubev2v/legacy/common/constants';
+import { LONG_LOADING_MESSAGE } from 'legacy/src/queries/constants';
+import './VMMigrationDetails.css';
+import { MustGatherBtn } from 'legacy/src/common/components/MustGatherBtn';
+import { VMNameWithPowerState } from 'legacy/src/common/components/VMNameWithPowerState';
+import { PLANS_REFERENCE } from 'legacy/src/common/constants';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface IPlanMatchParams {

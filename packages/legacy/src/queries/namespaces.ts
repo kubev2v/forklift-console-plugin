@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { usePollingContext } from '@kubev2v/legacy/common/context';
+import { usePollingContext } from 'legacy/src/common/context';
 import { getInventoryApiUrl, sortByName, useMockableQuery } from './helpers';
 import { IOpenShiftProvider } from './types';
 import { IOpenShiftNamespace } from './types/namespaces.types';

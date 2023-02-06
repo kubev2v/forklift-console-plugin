@@ -14,10 +14,10 @@ import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
 import { RouteComponentProps } from 'react-router-dom';
 import { VMwareProviderHostsTable } from './components/VMwareProviderHostsTable';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
-import { useHostsQuery, useInventoryProvidersQuery } from '@kubev2v/legacy/queries';
-import { IVMwareProvider } from '@kubev2v/legacy/queries/types';
-import { ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { PROVIDERS_REFERENCE, PROVIDER_TYPE_NAMES } from '@kubev2v/legacy/common/constants';
+import { useHostsQuery, useInventoryProvidersQuery } from 'legacy/src/queries';
+import { IVMwareProvider } from 'legacy/src/queries/types';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
+import { PROVIDERS_REFERENCE, PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface IHostsMatchParams {

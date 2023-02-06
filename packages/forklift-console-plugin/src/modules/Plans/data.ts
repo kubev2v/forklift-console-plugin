@@ -1,21 +1,9 @@
 import { useMemo } from 'react';
+import * as C from 'src/utils/constants';
+import { useMigrations, usePlans, useProviders } from 'src/utils/fetch';
+import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
+import { MigrationResource, PlanResource, ProviderRef, ProviderResource } from 'src/utils/types';
 
-import * as C from '@kubev2v/forklift-console-plugin/utils/constants';
-import {
-  useMigrations,
-  usePlans,
-  useProviders,
-} from '@kubev2v/forklift-console-plugin/utils/fetch';
-import {
-  groupVersionKindForObj,
-  resolveProviderRef,
-} from '@kubev2v/forklift-console-plugin/utils/resources';
-import {
-  MigrationResource,
-  PlanResource,
-  ProviderRef,
-  ProviderResource,
-} from '@kubev2v/forklift-console-plugin/utils/types';
 import { PlanState } from '@kubev2v/legacy/common/constants';
 import { getPlanState } from '@kubev2v/legacy/Plans/components/helpers';
 import { findLatestMigration } from '@kubev2v/legacy/queries';

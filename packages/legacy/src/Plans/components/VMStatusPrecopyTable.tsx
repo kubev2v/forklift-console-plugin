@@ -10,10 +10,10 @@ import {
   fitContent,
 } from '@patternfly/react-table';
 
-import { IVMStatus } from '@kubev2v/legacy/queries/types';
-import { TickingElapsedTime } from '@kubev2v/legacy/common/components/TickingElapsedTime';
+import { IVMStatus } from 'legacy/src/queries/types';
+import { TickingElapsedTime } from 'legacy/src/common/components/TickingElapsedTime';
 import { StatusIcon } from '@migtools/lib-ui';
-import { CanceledIcon } from '@kubev2v/legacy/common/components/CanceledIcon';
+import { CanceledIcon } from 'legacy/src/common/components/CanceledIcon';
 
 interface IVMStatusPrecopyTableProps {
   status: IVMStatus;

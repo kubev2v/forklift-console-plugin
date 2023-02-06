@@ -7,16 +7,16 @@ import KubeClient, {
   ClusterResource,
   CoreClusterResource,
 } from '@migtools/lib-ui';
-import { ProviderType, CLUSTER_API_VERSION } from '@kubev2v/legacy/common/constants';
-import { IProviderObject, ISecret } from '@kubev2v/legacy/queries/types';
+import { ProviderType, CLUSTER_API_VERSION } from 'legacy/src/common/constants';
+import { IProviderObject, ISecret } from 'legacy/src/queries/types';
 import {
   AddProviderFormValues,
   OpenshiftProviderFormValues,
   RHVProviderFormValues,
   VMwareProviderFormValues,
-} from '@kubev2v/legacy/Providers/components/AddEditProviderModal/AddEditProviderModal';
+} from 'legacy/src/Providers/components/AddEditProviderModal/AddEditProviderModal';
 import { AuthorizedClusterClient } from './types';
-import { nameAndNamespace } from '@kubev2v/legacy/queries/helpers';
+import { nameAndNamespace } from 'legacy/src/queries/helpers';
 
 // prefix with standard OpenShift console proxy path
 export const withProxy = (path: string) => ['api/kubernetes', path].join('');

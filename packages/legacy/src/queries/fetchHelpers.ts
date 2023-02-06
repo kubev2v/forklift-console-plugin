@@ -1,5 +1,5 @@
 import { KubeResource } from '@migtools/lib-ui';
-import { IKubeResponse, IKubeStatus } from '@kubev2v/legacy/client/types';
+import { IKubeResponse, IKubeStatus } from 'legacy/src/client/types';
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
 
 /** Simulate an axios fetch call */

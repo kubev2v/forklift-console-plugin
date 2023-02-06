@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UseMutationResult, UseQueryResult, useQueryClient } from 'react-query';
-import { usePollingContext } from '@kubev2v/legacy/common/context';
+import { usePollingContext } from 'legacy/src/common/context';
 import {
   useMockableQuery,
   isSameResource,
@@ -14,16 +14,16 @@ import {
 import { MOCK_HOSTS, MOCK_HOST_CONFIGS } from './mocks/hosts.mock';
 import { IHost, IHostConfig, INameNamespaceRef, ISecret, IVMwareProvider } from './types';
 import { useAuthorizedK8sClient } from './fetchHelpers';
-import { IKubeList, IKubeResponse, KubeClientError } from '@kubev2v/legacy/client/types';
-import { SelectNetworkFormValues } from '@kubev2v/legacy/Providers/components/VMwareProviderHostsTable/SelectNetworkModal';
+import { IKubeList, IKubeResponse, KubeClientError } from 'legacy/src/client/types';
+import { SelectNetworkFormValues } from 'legacy/src/Providers/components/VMwareProviderHostsTable/SelectNetworkModal';
 import {
   createResource,
   createSecretResource,
   ForkliftResourceKind,
-} from '@kubev2v/legacy/client/helpers';
-import { CLUSTER_API_VERSION } from '@kubev2v/legacy/common/constants';
-import { getObjectRef } from '@kubev2v/legacy/common/helpers';
-import { isManagementNetworkSelected } from '@kubev2v/legacy/Providers/components/VMwareProviderHostsTable/helpers';
+} from 'legacy/src/client/helpers';
+import { CLUSTER_API_VERSION } from 'legacy/src/common/constants';
+import { getObjectRef } from 'legacy/src/common/helpers';
+import { isManagementNetworkSelected } from 'legacy/src/Providers/components/VMwareProviderHostsTable/helpers';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export const useHostsQuery = (provider: IVMwareProvider | null) => {

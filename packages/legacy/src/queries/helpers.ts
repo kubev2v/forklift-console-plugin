@@ -1,6 +1,6 @@
-import { KubeClientError, IKubeList } from '@kubev2v/legacy/client/types';
-import { CLUSTER_API_VERSION } from '@kubev2v/legacy/common/constants';
-import { hasCondition } from '@kubev2v/legacy/common/helpers';
+import { KubeClientError, IKubeList } from 'legacy/src/client/types';
+import { CLUSTER_API_VERSION } from 'legacy/src/common/constants';
+import { hasCondition } from 'legacy/src/common/helpers';
 import {
   UseQueryOptions,
   UseQueryResult,
@@ -11,7 +11,7 @@ import {
   MutationFunction,
 } from 'react-query';
 import { INameNamespaceRef, IProviderObject, ISrcDestRefs } from './types';
-import { UnknownResult } from '@kubev2v/legacy/common/types';
+import { UnknownResult } from 'legacy/src/common/types';
 
 // TODO what about usePaginatedQuery, useInfiniteQuery?
 

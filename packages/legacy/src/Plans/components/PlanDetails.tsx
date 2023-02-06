@@ -17,7 +17,7 @@ import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { StatusIcon } from '@migtools/lib-ui';
 import text from '@patternfly/react-styles/css/utilities/Text/text';
 
-import { MappingDetailView } from '@kubev2v/legacy/Mappings/components/MappingDetailView';
+import { MappingDetailView } from 'legacy/src/Mappings/components/MappingDetailView';
 import {
   HookStep,
   IPlan,
@@ -26,10 +26,10 @@ import {
   MappingType,
   POD_NETWORK,
   SourceInventoryProvider,
-} from '@kubev2v/legacy/queries/types';
-import { MappingStatus } from '@kubev2v/legacy/Mappings/components/MappingStatus';
+} from 'legacy/src/queries/types';
+import { MappingStatus } from 'legacy/src/Mappings/components/MappingStatus';
 import { warmCriticalConcerns, someVMHasConcern } from './Wizard/helpers';
-import { VMNameWithPowerState } from '@kubev2v/legacy/common/components/VMNameWithPowerState';
+import { VMNameWithPowerState } from 'legacy/src/common/components/VMNameWithPowerState';
 
 interface IHookDetails {
   step: HookStep | null;

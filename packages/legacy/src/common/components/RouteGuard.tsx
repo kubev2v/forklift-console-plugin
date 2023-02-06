@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 import { UnregisterCallback } from 'react-router';
-import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
+import { ConfirmModal } from 'legacy/src/common/components/ConfirmModal';
 
 const blockUnload = (event: BeforeUnloadEvent) => {
   // The beforeunload event is weird in different browsers.

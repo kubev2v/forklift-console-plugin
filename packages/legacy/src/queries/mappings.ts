@@ -24,16 +24,11 @@ import {
   checkIfResourceExists,
   createResource,
   ForkliftResourceKind,
-} from '@kubev2v/legacy/client/helpers';
-import { dnsLabelNameSchema } from '@kubev2v/legacy/common/constants';
-import {
-  KubeClientError,
-  IKubeList,
-  IKubeResponse,
-  IKubeStatus,
-} from '@kubev2v/legacy/client/types';
+} from 'legacy/src/client/helpers';
+import { dnsLabelNameSchema } from 'legacy/src/common/constants';
+import { KubeClientError, IKubeList, IKubeResponse, IKubeStatus } from 'legacy/src/client/types';
 import { MOCK_NETWORK_MAPPINGS, MOCK_STORAGE_MAPPINGS } from './mocks/mappings.mock';
-import { usePollingContext } from '@kubev2v/legacy/common/context';
+import { usePollingContext } from 'legacy/src/common/context';
 import { useAuthorizedK8sClient } from './fetchHelpers';
 import {
   useOpenShiftNetworksQuery,
@@ -42,7 +37,7 @@ import {
   useStorageClassesQuery,
   findProvidersByRefs,
   useInventoryProvidersQuery,
-} from '@kubev2v/legacy/queries';
+} from 'legacy/src/queries';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { KubeResource } from '@migtools/lib-ui';
 

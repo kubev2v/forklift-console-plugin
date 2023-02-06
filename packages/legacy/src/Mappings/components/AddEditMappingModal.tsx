@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useFormField, useFormState, ValidatedTextInput } from '@migtools/lib-ui';
-import { SimpleSelect, OptionWithValue } from '@kubev2v/legacy/common/components/SimpleSelect';
+import { SimpleSelect, OptionWithValue } from 'legacy/src/common/components/SimpleSelect';
 import { MappingBuilder, IMappingBuilderItem, mappingBuilderItemsSchema } from './MappingBuilder';
 import { getMappingFromBuilderItems } from './MappingBuilder/helpers';
 import {
@@ -20,7 +20,7 @@ import {
   IOpenShiftProvider,
   Mapping,
   SourceInventoryProvider,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import {
   useInventoryProvidersQuery,
   useMappingResourceQueries,
@@ -30,21 +30,21 @@ import {
   usePatchMappingMutation,
   findProvidersByRefs,
   useClusterProvidersQuery,
-} from '@kubev2v/legacy/queries';
-import { usePausedPollingEffect } from '@kubev2v/legacy/common/context';
-import { LoadingEmptyState } from '@kubev2v/legacy/common/components/LoadingEmptyState';
+} from 'legacy/src/queries';
+import { usePausedPollingEffect } from 'legacy/src/common/context';
+import { LoadingEmptyState } from 'legacy/src/common/components/LoadingEmptyState';
 
 import './AddEditMappingModal.css';
 import { UseQueryResult } from 'react-query';
 import { useEditingMappingPrefillEffect } from './helpers';
-import { IKubeList } from '@kubev2v/legacy/client/types';
+import { IKubeList } from 'legacy/src/client/types';
 import {
   ResolvedQuery,
   ResolvedQueries,
   QuerySpinnerMode,
-} from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { ProviderSelect } from '@kubev2v/legacy/common/components/ProviderSelect';
-import { ENV } from '@kubev2v/legacy/common/constants';
+} from 'legacy/src/common/components/ResolvedQuery';
+import { ProviderSelect } from 'legacy/src/common/components/ProviderSelect';
+import { ENV } from 'legacy/src/common/constants';
 
 interface IAddEditMappingModalProps {
   title: string;

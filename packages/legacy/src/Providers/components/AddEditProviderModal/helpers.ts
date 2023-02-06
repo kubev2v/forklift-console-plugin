@@ -1,8 +1,8 @@
-import { useClusterProvidersQuery, useSecretQuery } from '@kubev2v/legacy/queries';
+import { useClusterProvidersQuery, useSecretQuery } from 'legacy/src/queries';
 import * as React from 'react';
-import { IProviderObject } from '@kubev2v/legacy/queries/types';
+import { IProviderObject } from 'legacy/src/queries/types';
 import { AddProviderFormState } from './AddEditProviderModal';
-import { ovirtUrlToHostname, vmwareUrlToHostname } from '@kubev2v/legacy/client/helpers';
+import { ovirtUrlToHostname, vmwareUrlToHostname } from 'legacy/src/client/helpers';
 
 interface IEditProviderPrefillEffect {
   isDonePrefilling: boolean;

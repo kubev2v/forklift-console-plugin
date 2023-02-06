@@ -1,9 +1,9 @@
 import { ProgressVariant } from '@patternfly/react-core';
-import { PlanState } from '@kubev2v/legacy/common/constants';
-import { hasCondition } from '@kubev2v/legacy/common/helpers';
-import { IPlan, IMigration } from '@kubev2v/legacy/queries/types';
-import { PlanActionButtonType } from '@kubev2v/legacy/Plans/components/PlansTable';
-import { isSameResource } from '@kubev2v/legacy/queries/helpers';
+import { PlanState } from 'legacy/src/common/constants';
+import { hasCondition } from 'legacy/src/common/helpers';
+import { IPlan, IMigration } from 'legacy/src/queries/types';
+import { PlanActionButtonType } from 'legacy/src/Plans/components/PlansTable';
+import { isSameResource } from 'legacy/src/queries/helpers';
 
 export const getPlanStatusTitle = (plan: IPlan): string => {
   const condition = plan.status?.conditions.find(

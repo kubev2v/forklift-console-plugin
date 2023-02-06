@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { usePollingContext } from '@kubev2v/legacy/common/context';
+import { usePollingContext } from 'legacy/src/common/context';
 import { UseQueryResult } from 'react-query';
 import { useMockableQuery, sortByName, getInventoryApiUrl } from './helpers';
 import { MOCK_RHV_VMS, MOCK_VMWARE_VMS } from './mocks/vms.mock';
@@ -18,7 +18,7 @@ export interface IndexedSourceVMs {
 }
 
 const findVMsInRecord = (record: SourceVMsRecord, keys: string[]) =>
-  keys.flatMap((key) => (record[key] ? [record[key]] : [])) as SourceVM[];
+  keys.flatMap((key) => (record[key] ? [record[key]] : []));
 
 export const indexVMs = (vms: SourceVM[]): IndexedSourceVMs => {
   const sortedVMs = sortByName(vms.filter((vm) => !(vm as IVMwareVM).isTemplate));

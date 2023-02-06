@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import * as C from 'src/utils/constants';
+import { PLAN_STATUS_FILTER } from 'src/utils/enums';
+import { useTranslation } from 'src/utils/i18n';
+import { groupVersionKindForReference } from 'src/utils/resources';
+import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { fromI18nEnum } from '@kubev2v/common/components/Filter/helpers';
 import {
@@ -7,11 +12,6 @@ import {
   UserSettings,
 } from '@kubev2v/common/components/StandardPage';
 import { Field } from '@kubev2v/common/components/types';
-import * as C from '@kubev2v/forklift-console-plugin/utils/constants';
-import { PLAN_STATUS_FILTER } from '@kubev2v/forklift-console-plugin/utils/enums';
-import { useTranslation } from '@kubev2v/forklift-console-plugin/utils/i18n';
-import { groupVersionKindForReference } from '@kubev2v/forklift-console-plugin/utils/resources';
-import { ResourceConsolePageProps } from '@kubev2v/forklift-console-plugin/utils/types';
 import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
 
 import { FlatPlan, useFlatPlans } from './data';

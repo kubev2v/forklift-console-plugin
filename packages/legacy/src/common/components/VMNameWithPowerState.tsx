@@ -10,8 +10,8 @@ import {
   SourceInventoryProvider,
   SourceVM,
   IVMStatus,
-} from '@kubev2v/legacy/queries/types';
-import { ProviderType } from '@kubev2v/legacy/common/constants';
+} from 'legacy/src/queries/types';
+import { ProviderType } from 'legacy/src/common/constants';
 
 interface IVMNameWithPowerState {
   sourceProvider: SourceInventoryProvider | null;

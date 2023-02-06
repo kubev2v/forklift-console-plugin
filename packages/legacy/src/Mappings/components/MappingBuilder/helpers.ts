@@ -13,14 +13,14 @@ import {
   IPlan,
   SourceVM,
   SourceInventoryProvider,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { IMappingBuilderItem } from './MappingBuilder';
 import { getMappingSourceByRef, getMappingTargetByRef } from '../helpers';
-import { CLUSTER_API_VERSION, ProviderType } from '@kubev2v/legacy/common/constants';
-import { nameAndNamespace } from '@kubev2v/legacy/queries/helpers';
-import { filterSourcesBySelectedVMs } from '@kubev2v/legacy/Plans/components/Wizard/helpers';
-import { IDisk, IMappingResourcesResult, INicProfile } from '@kubev2v/legacy/queries';
-import { getObjectRef } from '@kubev2v/legacy/common/helpers';
+import { CLUSTER_API_VERSION, ProviderType } from 'legacy/src/common/constants';
+import { nameAndNamespace } from 'legacy/src/queries/helpers';
+import { filterSourcesBySelectedVMs } from 'legacy/src/Plans/components/Wizard/helpers';
+import { IDisk, IMappingResourcesResult, INicProfile } from 'legacy/src/queries';
+import { getObjectRef } from 'legacy/src/common/helpers';
 
 export const getBuilderItemsFromMappingItems = (
   items: MappingItem[] | null,

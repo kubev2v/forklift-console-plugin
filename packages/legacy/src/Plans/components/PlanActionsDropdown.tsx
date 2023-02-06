@@ -11,21 +11,21 @@ import {
 } from '@patternfly/react-core';
 import { useHistory } from 'react-router-dom';
 
-import { IPlan, IMigration } from '@kubev2v/legacy/queries/types';
-import { hasCondition } from '@kubev2v/legacy/common/helpers';
+import { IPlan, IMigration } from 'legacy/src/queries/types';
+import { hasCondition } from 'legacy/src/common/helpers';
 import {
   useClusterProvidersQuery,
   useDeletePlanMutation,
   useArchivePlanMutation,
   useCreateMigrationMutation,
   useSetCutoverMutation,
-} from '@kubev2v/legacy/queries';
-import { MustGatherContext } from '@kubev2v/legacy/common/context';
-import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
-import { ConditionalTooltip } from '@kubev2v/legacy/common/components/ConditionalTooltip';
-import { areAssociatedProvidersReady } from '@kubev2v/legacy/queries/helpers';
+} from 'legacy/src/queries';
+import { MustGatherContext } from 'legacy/src/common/context';
+import { ConfirmModal } from 'legacy/src/common/components/ConfirmModal';
+import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
+import { areAssociatedProvidersReady } from 'legacy/src/queries/helpers';
 import { PlanDetailsModal } from './PlanDetailsModal';
-import { PATH_PREFIX, PlanState } from '@kubev2v/legacy/common/constants';
+import { PATH_PREFIX, PlanState } from 'legacy/src/common/constants';
 import { MigrationConfirmModal } from './MigrationConfirmModal';
 
 interface IPlansActionDropdownProps {

@@ -18,8 +18,8 @@ import { PlanWizardFormState } from './PlanWizard';
 import { PlanAddEditHookModal, PlanHookInstance } from './PlanAddEditHookModal';
 
 import './HooksForm.css';
-import { ConditionalTooltip } from '@kubev2v/legacy/common/components/ConditionalTooltip';
-import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
+import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
+import { ConfirmModal } from 'legacy/src/common/components/ConfirmModal';
 
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import yaml from 'react-syntax-highlighter/dist/cjs/languages/hljs/yaml';

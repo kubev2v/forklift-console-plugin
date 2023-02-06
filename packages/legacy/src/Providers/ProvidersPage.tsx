@@ -22,20 +22,20 @@ import {
   PROVIDER_TYPES,
   PATH_PREFIX,
   ENV,
-} from '@kubev2v/legacy/common/constants';
+} from 'legacy/src/common/constants';
 import {
   useClusterProvidersQuery,
   useInventoryProvidersQuery,
   usePlansQuery,
-} from '@kubev2v/legacy/queries';
+} from 'legacy/src/queries';
 
 import { ProvidersTable } from './components/ProvidersTable';
 import { AddEditProviderModal } from './components/AddEditProviderModal';
 import { EditProviderContext } from './EditProviderContext';
 
-import { IProviderObject } from '@kubev2v/legacy/queries/types';
-import { ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { getAggregateQueryStatus } from '@kubev2v/legacy/queries/helpers';
+import { IProviderObject } from 'legacy/src/queries/types';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
+import { getAggregateQueryStatus } from 'legacy/src/queries/helpers';
 import { useRouteMatch } from 'react-router';
 
 export interface IProvidersMatchParams {

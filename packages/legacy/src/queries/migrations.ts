@@ -4,9 +4,9 @@ import {
   createResource,
   ForkliftResourceKind,
   checkIfResourceExists,
-} from '@kubev2v/legacy/client/helpers';
-import { IKubeList, IKubeResponse, KubeClientError } from '@kubev2v/legacy/client/types';
-import { CLUSTER_API_VERSION } from '@kubev2v/legacy/common/constants';
+} from 'legacy/src/client/helpers';
+import { IKubeList, IKubeResponse, KubeClientError } from 'legacy/src/client/types';
+import { CLUSTER_API_VERSION } from 'legacy/src/common/constants';
 import {
   isSameResource,
   mockKubeList,
@@ -18,8 +18,8 @@ import {
 import { ICanceledVM, IMigration } from './types/migrations.types';
 import { IPlan } from './types/plans.types';
 import { useAuthorizedK8sClient } from './fetchHelpers';
-import { usePollingContext } from '@kubev2v/legacy/common/context';
-import { getObjectRef } from '@kubev2v/legacy/common/helpers';
+import { usePollingContext } from 'legacy/src/common/context';
+import { getObjectRef } from 'legacy/src/common/helpers';
 import { SourceVM } from './types/vms.types';
 import { MOCK_MIGRATIONS } from './mocks/migrations.mock';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';

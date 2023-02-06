@@ -1,5 +1,5 @@
-import { INicProfile } from '@kubev2v/legacy/queries';
-import { IRHVNIC } from '@kubev2v/legacy/queries/types';
+import { INicProfile } from 'legacy/src/queries';
+import { IRHVNIC } from 'legacy/src/queries/types';
 
 const np1Id = '2ef3e5a3-974c-4a9c-9185-861cb049c966';
 const np2Id = '5d69b6cd-6610-44e2-a55f-425035a260da';

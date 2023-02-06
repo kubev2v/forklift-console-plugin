@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Button, ButtonProps } from '@patternfly/react-core';
-import { ConditionalTooltip } from '@kubev2v/legacy/common/components/ConditionalTooltip';
-import { useHasSufficientProvidersQuery } from '@kubev2v/legacy/queries';
-import { PROVIDER_TYPE_NAMES } from '@kubev2v/legacy/common/constants';
+import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
+import { useHasSufficientProvidersQuery } from 'legacy/src/queries';
+import { PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 
 interface ICreateMappingButtonProps {
   onClick: () => void;

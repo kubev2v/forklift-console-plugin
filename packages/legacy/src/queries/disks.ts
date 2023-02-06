@@ -1,8 +1,8 @@
-import { usePollingContext } from '@kubev2v/legacy/common/context';
+import { usePollingContext } from 'legacy/src/common/context';
 import { UseQueryResult } from 'react-query';
 import { getInventoryApiUrl, useMockableQuery } from './helpers';
 import { SourceInventoryProvider } from './types';
-import { MOCK_DISKS } from '@kubev2v/legacy/queries/mocks/disks.mock';
+import { MOCK_DISKS } from 'legacy/src/queries/mocks/disks.mock';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface IDisk {

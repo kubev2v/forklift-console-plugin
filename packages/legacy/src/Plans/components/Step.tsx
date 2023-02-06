@@ -10,8 +10,8 @@ import {
   global_success_color_100 as successColor,
 } from '@patternfly/react-tokens';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { StepType } from '@kubev2v/legacy/common/constants';
-import { IVMStatus } from '@kubev2v/legacy/queries/types';
+import { StepType } from 'legacy/src/common/constants';
+import { IVMStatus } from 'legacy/src/queries/types';
 
 interface IStepProps {
   vmStatus: IVMStatus;

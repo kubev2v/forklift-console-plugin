@@ -1,9 +1,9 @@
-import { hasCondition } from '@kubev2v/legacy/common/helpers';
+import { hasCondition } from 'legacy/src/common/helpers';
 import {
   IAnnotatedStorageClass,
   ICorrelatedProvider,
   IOpenShiftProvider,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { Alert, List, ListItem } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import * as React from 'react';

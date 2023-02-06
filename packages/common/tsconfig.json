@@ -1,5 +1,5 @@
 {
-  "extends": "@kubev2v/config/tsconfig.json",
+  "extends": "../config/tsconfig.base.json",
 
   "include": ["src"],
   "exclude": ["node_modules", "dist"],
@@ -9,7 +9,7 @@
     "outDir": "dist",
 
     "paths": {
-      "@kubev2v/common/*": ["src/*"]
+      "common/src/*": ["src/*"]
     }
   }
 }

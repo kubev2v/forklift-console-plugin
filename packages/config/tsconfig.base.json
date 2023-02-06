@@ -20,9 +20,7 @@
     "jsx": "react",
 
     "lib": ["dom", "es2020"],
-    "esModuleInterop": true,
-
-    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    "esModuleInterop": true
   },
   "ts-node": {
     "files": true,

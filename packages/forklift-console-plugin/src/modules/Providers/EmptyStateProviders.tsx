@@ -1,7 +1,7 @@
 import React from 'react';
+import { useTranslation } from 'src/utils/i18n';
 
 import RedHatProgressionIcon from '@kubev2v/common/components/RedHatProgressionIcon';
-import { useTranslation } from '@kubev2v/forklift-console-plugin/utils/i18n';
 import {
   Bullseye,
   EmptyState,

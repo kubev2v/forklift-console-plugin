@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 import { RouteComponentProps, Router } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { PlanWizard } from '../PlanWizard';
-import { ENV, PATH_PREFIX } from '@kubev2v/legacy/common/constants';
+import { ENV, PATH_PREFIX } from 'legacy/src/common/constants';
 
 const queryClient = new QueryClient();
 

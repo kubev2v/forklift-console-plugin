@@ -3,7 +3,7 @@ import { useQueryClient, UseQueryResult, UseMutationResult } from 'react-query';
 import * as yup from 'yup';
 import Q from 'q';
 
-import { usePollingContext } from '@kubev2v/legacy/common/context';
+import { usePollingContext } from 'legacy/src/common/context';
 import {
   useMockableQuery,
   useMockableMutation,
@@ -36,19 +36,14 @@ import {
   checkIfResourceExists,
   createResource,
   createSecretResource,
-} from '@kubev2v/legacy/client/helpers';
-import { AddProviderFormValues } from '@kubev2v/legacy/Providers/components/AddEditProviderModal/AddEditProviderModal';
+} from 'legacy/src/client/helpers';
+import { AddProviderFormValues } from 'legacy/src/Providers/components/AddEditProviderModal/AddEditProviderModal';
 import {
   dnsLabelNameSchema,
   ProviderType,
   SOURCE_PROVIDER_TYPES,
-} from '@kubev2v/legacy/common/constants';
-import {
-  IKubeList,
-  IKubeResponse,
-  IKubeStatus,
-  KubeClientError,
-} from '@kubev2v/legacy/client/types';
+} from 'legacy/src/common/constants';
+import { IKubeList, IKubeResponse, IKubeStatus, KubeClientError } from 'legacy/src/client/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 export const useClusterProvidersQuery = (

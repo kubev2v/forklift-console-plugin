@@ -12,20 +12,20 @@ import {
 } from '@patternfly/react-core';
 import { useFormState, useFormField, getFormGroupProps } from '@migtools/lib-ui';
 
-import { SimpleSelect, OptionWithValue } from '@kubev2v/legacy/common/components/SimpleSelect';
+import { SimpleSelect, OptionWithValue } from 'legacy/src/common/components/SimpleSelect';
 import {
   IOpenShiftNetwork,
   IOpenShiftProvider,
   IProviderObject,
   POD_NETWORK,
-} from '@kubev2v/legacy/queries/types';
-import { IProviderMigrationNetworkMutationVars } from '@kubev2v/legacy/queries/providers';
+} from 'legacy/src/queries/types';
+import { IProviderMigrationNetworkMutationVars } from 'legacy/src/queries/providers';
 
 import { UseMutationResult } from 'react-query';
-import { IKubeResponse, KubeClientError } from '@kubev2v/legacy/client/types';
+import { IKubeResponse, KubeClientError } from 'legacy/src/client/types';
 import { QuerySpinnerMode, ResolvedQuery } from './ResolvedQuery';
-import { useOpenShiftNetworksQuery } from '@kubev2v/legacy/queries';
-import { isSameResource } from '@kubev2v/legacy/queries/helpers';
+import { useOpenShiftNetworksQuery } from 'legacy/src/queries';
+import { isSameResource } from 'legacy/src/queries/helpers';
 import { getUniqueItemsByName } from '../helpers';
 
 interface ISelectOpenShiftNetworkModalProps {

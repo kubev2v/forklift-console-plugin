@@ -12,23 +12,23 @@ import {
 } from '@patternfly/react-table';
 import tableStyles from '@patternfly/react-styles/css/components/Table/table';
 
-import { useSortState, usePaginationState } from '@kubev2v/legacy/common/hooks';
+import { useSortState, usePaginationState } from 'legacy/src/common/hooks';
 import {
   ICorrelatedProvider,
   IRHVProvider,
   IVMwareProvider,
   SourceInventoryProvider,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import { ProviderActionsDropdown } from '../ProviderActionsDropdown';
-import { StatusCondition } from '@kubev2v/legacy/common/components/StatusCondition';
+import { StatusCondition } from 'legacy/src/common/components/StatusCondition';
 import {
   getMostSeriousCondition,
   getStorageTitle,
   hasCondition,
   numStr,
-} from '@kubev2v/legacy/common/helpers';
+} from 'legacy/src/common/helpers';
 
-import { PATH_PREFIX, ProviderType, PROVIDER_TYPE_NAMES } from '@kubev2v/legacy/common/constants';
+import { PATH_PREFIX, ProviderType, PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 import { Link } from 'react-router-dom';
 import OutlinedHddIcon from '@patternfly/react-icons/dist/esm/icons/outlined-hdd-icon';
 

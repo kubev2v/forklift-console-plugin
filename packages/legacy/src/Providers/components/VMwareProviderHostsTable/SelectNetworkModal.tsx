@@ -9,23 +9,18 @@ import {
   ValidatedPasswordInput,
 } from '@migtools/lib-ui';
 
-import { SimpleSelect, OptionWithValue } from '@kubev2v/legacy/common/components/SimpleSelect';
-import {
-  IHost,
-  IHostConfig,
-  IHostNetworkAdapter,
-  IVMwareProvider,
-} from '@kubev2v/legacy/queries/types';
+import { SimpleSelect, OptionWithValue } from 'legacy/src/common/components/SimpleSelect';
+import { IHost, IHostConfig, IHostNetworkAdapter, IVMwareProvider } from 'legacy/src/queries/types';
 
 import {
   formatHostNetworkAdapter,
   isManagementNetworkSelected,
   usePrefillHostConfigEffect,
 } from './helpers';
-import { useConfigureHostsMutation } from '@kubev2v/legacy/queries';
-import { QuerySpinnerMode, ResolvedQuery } from '@kubev2v/legacy/common/components/ResolvedQuery';
-import { LoadingEmptyState } from '@kubev2v/legacy/common/components/LoadingEmptyState';
-import { ConditionalTooltip } from '@kubev2v/legacy/common/components/ConditionalTooltip';
+import { useConfigureHostsMutation } from 'legacy/src/queries';
+import { QuerySpinnerMode, ResolvedQuery } from 'legacy/src/common/components/ResolvedQuery';
+import { LoadingEmptyState } from 'legacy/src/common/components/LoadingEmptyState';
+import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
 
 interface ISelectNetworkModalProps {
   selectedHosts: IHost[];

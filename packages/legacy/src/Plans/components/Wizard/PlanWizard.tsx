@@ -15,7 +15,7 @@ import { Redirect, RouteComponentProps, useHistory, useRouteMatch } from 'react-
 import { UseQueryResult } from 'react-query';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useFormField, useFormState } from '@migtools/lib-ui';
-import { RouteGuard } from '@kubev2v/legacy/common/components/RouteGuard';
+import { RouteGuard } from 'legacy/src/common/components/RouteGuard';
 import { WizardStepContainer } from './WizardStepContainer';
 import { GeneralForm } from './GeneralForm';
 import { FilterVMsForm } from './FilterVMsForm';
@@ -34,11 +34,11 @@ import {
   InventoryTree,
   InventoryTreeType,
   IVMwareFolderTree,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import {
   IMappingBuilderItem,
   mappingBuilderItemsSchema,
-} from '@kubev2v/legacy/Mappings/components/MappingBuilder';
+} from 'legacy/src/Mappings/components/MappingBuilder';
 import { generateMappings, usePlanWizardPrefillEffect } from './helpers';
 import {
   getMappingNameSchema,
@@ -51,21 +51,16 @@ import {
   useSourceVMsQuery,
   useInventoryTreeQuery,
   IndexedTree,
-} from '@kubev2v/legacy/queries';
-import { createK8sPath, getAggregateQueryStatus } from '@kubev2v/legacy/queries/helpers';
-import {
-  dnsLabelNameSchema,
-  ENV,
-  PATH_PREFIX,
-  PLANS_REFERENCE,
-} from '@kubev2v/legacy/common/constants';
-import { IKubeList } from '@kubev2v/legacy/client/types';
-import { LoadingEmptyState } from '@kubev2v/legacy/common/components/LoadingEmptyState';
-import { ResolvedQueries } from '@kubev2v/legacy/common/components/ResolvedQuery';
+} from 'legacy/src/queries';
+import { createK8sPath, getAggregateQueryStatus } from 'legacy/src/queries/helpers';
+import { dnsLabelNameSchema, ENV, PATH_PREFIX, PLANS_REFERENCE } from 'legacy/src/common/constants';
+import { IKubeList } from 'legacy/src/client/types';
+import { LoadingEmptyState } from 'legacy/src/common/components/LoadingEmptyState';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
 import { PlanHookInstance } from './PlanAddEditHookModal';
 
 import './PlanWizard.css';
-import { LONG_LOADING_MESSAGE } from '@kubev2v/legacy/queries/constants';
+import { LONG_LOADING_MESSAGE } from 'legacy/src/queries/constants';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 export type PlanWizardMode = 'create' | 'edit' | 'duplicate';

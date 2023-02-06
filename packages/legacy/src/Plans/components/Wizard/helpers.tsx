@@ -17,7 +17,7 @@ import {
   InventoryTreeType,
   IVMwareVM,
   IRHVVM,
-} from '@kubev2v/legacy/queries/types';
+} from 'legacy/src/queries/types';
 import EnterpriseIcon from '@patternfly/react-icons/dist/esm/icons/enterprise-icon';
 import ClusterIcon from '@patternfly/react-icons/dist/esm/icons/cluster-icon';
 import FolderIcon from '@patternfly/react-icons/dist/esm/icons/folder-icon';
@@ -26,15 +26,15 @@ import {
   getBuilderItemsFromMappingItems,
   getBuilderItemsWithMissingSources,
   getMappingFromBuilderItems,
-} from '@kubev2v/legacy/Mappings/components/MappingBuilder/helpers';
+} from 'legacy/src/Mappings/components/MappingBuilder/helpers';
 import { PlanWizardFormState, PlanWizardMode } from './PlanWizard';
-import { CLUSTER_API_VERSION, ProviderType } from '@kubev2v/legacy/common/constants';
+import { CLUSTER_API_VERSION, ProviderType } from 'legacy/src/common/constants';
 import {
   getAggregateQueryStatus,
   getFirstQueryError,
   isSameResource,
   nameAndNamespace,
-} from '@kubev2v/legacy/queries/helpers';
+} from 'legacy/src/queries/helpers';
 import {
   findProvidersByRefs,
   useMappingResourceQueries,
@@ -50,12 +50,12 @@ import {
   useDisksQuery,
   INicProfile,
   IDisk,
-} from '@kubev2v/legacy/queries';
+} from 'legacy/src/queries';
 import { UseQueryResult, QueryStatus } from 'react-query';
 import { StatusType } from '@migtools/lib-ui';
 import { PlanHookInstance } from './PlanAddEditHookModal';
-import { IKubeList } from '@kubev2v/legacy/client/types';
-import { getObjectRef } from '@kubev2v/legacy/common/helpers';
+import { IKubeList } from 'legacy/src/client/types';
+import { getObjectRef } from 'legacy/src/common/helpers';
 
 // Exclude VMs and Hosts from the rendered tree entirely
 export const isIncludedNode = (node: InventoryTree): boolean =>
