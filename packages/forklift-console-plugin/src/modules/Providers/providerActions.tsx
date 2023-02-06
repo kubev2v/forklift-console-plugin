@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'src/utils/i18n';
 
 import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
@@ -120,7 +120,11 @@ const DeleteModal = ({
   const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(true);
 
-  const toggleDeleteModal = () => setIsDeleteModalOpen(!isDeleteModalOpen);
+  const toggleDeleteModal = useCallback(() => {
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+    closeModal();
+  }, [closeModal, isDeleteModalOpen, setIsDeleteModalOpen]);
+
   const deleteProviderMutation = useDeleteProviderMutation(
     entity.namespace,
     entity.type as ProviderType,
@@ -134,10 +138,7 @@ const DeleteModal = ({
       confirmButtonVariant="danger"
       position="top"
       isOpen={true}
-      toggleOpen={() => {
-        toggleDeleteModal();
-        closeModal();
-      }}
+      toggleOpen={toggleDeleteModal}
       mutateFn={() => deleteProviderMutation.mutate(entity.object)}
       mutateResult={deleteProviderMutation}
       title={t('Permanently delete provider?')}

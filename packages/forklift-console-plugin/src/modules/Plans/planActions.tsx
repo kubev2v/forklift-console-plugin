@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'src/utils/i18n';
 
 import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
@@ -252,10 +252,11 @@ const DeleteModal = ({
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(true);
 
-  const exit = () => {
+  const exit = useCallback(() => {
     setIsOpen(false);
     closeModal();
-  };
+  }, [closeModal, setIsOpen]);
+
   const deletePlanMutation = useDeletePlanMutation(plan.namespace, exit);
   return (
     <ConfirmModal
@@ -292,11 +293,12 @@ DeleteModal.displayName = 'DeleteModal';
 const RestartModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => void }) => {
   const [isOpen, setIsOpen] = useState(true);
 
-  const exit = () => {
+  const exit = useCallback(() => {
     setIsOpen(false);
     closeModal();
-  };
-  const createMigrationMutation = useCreateMigrationMutation(plan.namespace);
+  }, [closeModal, setIsOpen]);
+
+  const createMigrationMutation = useCreateMigrationMutation(plan.namespace, exit);
   return (
     <MigrationConfirmModal
       isOpen={isOpen}
@@ -313,10 +315,11 @@ const DetailsModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(true);
 
-  const exit = () => {
+  const exit = useCallback(() => {
     setIsOpen(false);
     closeModal();
-  };
+  }, [closeModal, setIsOpen]);
+
   return (
     <Modal
       variant="medium"
@@ -340,10 +343,10 @@ const ArchiveModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(true);
 
-  const exit = () => {
+  const exit = useCallback(() => {
     setIsOpen(false);
     closeModal();
-  };
+  }, [closeModal, setIsOpen]);
 
   const archivePlanMutation = useArchivePlanMutation(plan.namespace, exit);
   return (
