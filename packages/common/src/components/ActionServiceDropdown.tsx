@@ -15,7 +15,7 @@ import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly
  */
 export const ActionContext = createContext({ variant: 'kebab', ignoreList: [] });
 
-interface EhancedActionsComponentProps<T> {
+export interface EhancedActionsComponentProps<T> {
   entity: T;
   ignoreList?: string[];
   namespace?: string;
