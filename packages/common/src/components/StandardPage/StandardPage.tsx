@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import {
   AttributeValueFilter,
   createMetaMatcher,
+  defaultValueMatchers,
   EnumFilter,
   FilterTypeProps,
   FreetextFilter,
@@ -9,6 +10,7 @@ import {
   PrimaryFilters,
   toFieldFilter,
   useUrlFilters,
+  ValueMatcher,
 } from 'common/src/components/Filter';
 import {
   ManageColumnsToolbar,
@@ -71,6 +73,13 @@ export interface StandardPageProps<T> {
   supportedFilters?: {
     [type: string]: (props: FilterTypeProps) => JSX.Element;
   };
+
+  /**
+   * Extract value from fields and compare to selected filter.
+   * The default matchers support the default filters.
+   */
+  supportedMatchers?: ValueMatcher[];
+
   title: string;
   /**
    * Information displayed when the data source returned no items.
@@ -122,6 +131,7 @@ export function StandardPage<T>({
   pagination = DEFAULT_PER_PAGE,
   userSettings,
   filterPrefix = '',
+  supportedMatchers = defaultValueMatchers,
 }: StandardPageProps<T>) {
   const { t } = useTranslation();
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
@@ -133,7 +143,10 @@ export function StandardPage<T>({
   const [activeSort, setActiveSort, comparator] = useSort(fields);
 
   const filteredData = useMemo(
-    () => flattenData.filter(createMetaMatcher(selectedFilters, fields)).sort(comparator),
+    () =>
+      flattenData
+        .filter(createMetaMatcher(selectedFilters, fields, supportedMatchers))
+        .sort(comparator),
     [flattenData, selectedFilters, fields, comparator],
   );
 

@@ -75,3 +75,8 @@ export interface MetaFilterProps {
 export interface GlobalFilters {
   [id: string]: string[];
 }
+
+export interface ValueMatcher {
+  filterType: string;
+  matchValue: (value: unknown) => (filter: string) => boolean;
+}
