@@ -149,6 +149,8 @@ export function StandardPage<T>({
   const noResults = loaded && !error && flattenData.length == 0;
   const noMatchingResults = loaded && !error && filteredData.length === 0 && flattenData.length > 0;
 
+  const primaryFilters = fields.filter((field) => field.filter?.primary).map(toFieldFilter);
+
   return (
     <>
       <PageSection variant="light">
@@ -163,12 +165,14 @@ export function StandardPage<T>({
         <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
           <ToolbarContent>
             <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
-              <PrimaryFilters
-                fieldFilters={fields.filter((field) => field.filter?.primary).map(toFieldFilter)}
-                onFilterUpdate={setSelectedFilters}
-                selectedFilters={selectedFilters}
-                supportedFilterTypes={supportedFilters}
-              />
+              {primaryFilters.length > 0 && (
+                <PrimaryFilters
+                  fieldFilters={primaryFilters}
+                  onFilterUpdate={setSelectedFilters}
+                  selectedFilters={selectedFilters}
+                  supportedFilterTypes={supportedFilters}
+                />
+              )}
               <AttributeValueFilter
                 fieldFilters={fields
                   .filter(({ filter }) => filter && !filter.primary)

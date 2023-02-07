@@ -70,9 +70,6 @@ exports[`empty result set returned, no filters  1`] = `
             </div>
             <div
               class="pf-c-toolbar__group pf-m-filter-group"
-            />
-            <div
-              class="pf-c-toolbar__group pf-m-filter-group"
             >
               <div
                 class="pf-c-toolbar__item"
