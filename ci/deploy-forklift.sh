@@ -8,7 +8,7 @@ if ! kubectl get CatalogSource 2>/dev/null; then
   exit 1
 fi
 
-FORKLIFT_IMAGE=quay.io/konveyor/forklift-operator-index:latest
+FORKLIFT_IMAGE=quay.io/kubev2v/forklift-operator-index:latest
 FORKLIFT_NAMESPACE=konveyor-forklift
 
 cat << EOF | kubectl apply -f -
