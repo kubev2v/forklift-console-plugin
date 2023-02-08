@@ -4,8 +4,8 @@
     "description": "Common config files used by monorepo packages",
     "private": true,
     "scripts": {
-      "clean": "rm -rf ./dist && rm -rf ./coverage",
-      "clean:all": "npm run clean && rm -rf ./node_modules",
-      "test": "echo 'this package is untested'; exit 0"
+        "clean": "rm -rf ./dist && rm -rf ./coverage",
+        "clean:all": "npm run clean && rm -rf ./node_modules",
+        "test": "echo 'this package is untested'; exit 0"
     }
-  }
+}

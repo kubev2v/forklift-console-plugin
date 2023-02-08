@@ -1,4 +1,3 @@
-import Q from 'q';
 import KubeClient, {
   NamespacedResource,
   CoreNamespacedResourceKind,
@@ -219,7 +218,7 @@ export const checkIfResourceExists = async (
   const secretResource = createSecretResource(
     resource instanceof NamespacedResource ? resource.namespace : undefined
   );
-  const results = await Q.allSettled([
+  const results = await Promise.allSettled([
     client.list(secretResource, getTokenSecretLabelSelector(resourceKind, resourceName)),
     client.get(resource, resourceName),
   ]);

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useQueryClient, UseQueryResult, UseMutationResult } from 'react-query';
 import * as yup from 'yup';
-import Q from 'q';
 
 import { usePollingContext } from 'legacy/src/common/context';
 import {
@@ -180,7 +179,7 @@ export const useCreateProviderMutation = (
         []
       );
 
-      const rollbackResultPromises = await Q.allSettled(
+      const rollbackResultPromises = await Promise.allSettled(
         rollbackObjs.map((r) => {
           return client.delete(kindToResourceMap[r.kind], r.name);
         })
