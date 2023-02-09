@@ -17,7 +17,7 @@ export const HostModel = {
   crd: true,
 };
 
-export const HostModelGroupVersionKind ={
+export const HostModelGroupVersionKind = {
   version: 'v1beta1',
   kind: 'Host',
   group: 'forklift.konveyor.io',

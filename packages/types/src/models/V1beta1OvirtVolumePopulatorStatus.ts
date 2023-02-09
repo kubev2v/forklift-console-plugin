@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,55 +10,58 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
 /**
- * 
+ *
  * @export
  * @interface V1beta1OvirtVolumePopulatorStatus
  */
 export interface V1beta1OvirtVolumePopulatorStatus {
-    /**
-     * 
-     * @type {any}
-     * @memberof V1beta1OvirtVolumePopulatorStatus
-     */
-    progress: any | null;
+  /**
+   *
+   * @type {any}
+   * @memberof V1beta1OvirtVolumePopulatorStatus
+   */
+  progress: any | null;
 }
 
 /**
  * Check if a given object implements the V1beta1OvirtVolumePopulatorStatus interface.
  */
 export function instanceOfV1beta1OvirtVolumePopulatorStatus(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "progress" in value;
+  let isInstance = true;
+  isInstance = isInstance && 'progress' in value;
 
-    return isInstance;
+  return isInstance;
 }
 
-export function V1beta1OvirtVolumePopulatorStatusFromJSON(json: any): V1beta1OvirtVolumePopulatorStatus {
-    return V1beta1OvirtVolumePopulatorStatusFromJSONTyped(json, false);
+export function V1beta1OvirtVolumePopulatorStatusFromJSON(
+  json: any,
+): V1beta1OvirtVolumePopulatorStatus {
+  return V1beta1OvirtVolumePopulatorStatusFromJSONTyped(json, false);
 }
 
-export function V1beta1OvirtVolumePopulatorStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1OvirtVolumePopulatorStatus {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'progress': json['progress'],
-    };
+export function V1beta1OvirtVolumePopulatorStatusFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1OvirtVolumePopulatorStatus {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    progress: json['progress'],
+  };
 }
 
-export function V1beta1OvirtVolumePopulatorStatusToJSON(value?: V1beta1OvirtVolumePopulatorStatus | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'progress': value.progress,
-    };
+export function V1beta1OvirtVolumePopulatorStatusToJSON(
+  value?: V1beta1OvirtVolumePopulatorStatus | null,
+): any {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    progress: value.progress,
+  };
 }
-

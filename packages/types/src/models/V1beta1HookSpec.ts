@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,79 +10,79 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
 /**
  * Hook specification.
  * @export
  * @interface V1beta1HookSpec
  */
 export interface V1beta1HookSpec {
-    /**
-     * Hook deadline in seconds.
-     * @type {any}
-     * @memberof V1beta1HookSpec
-     */
-    deadline?: any | null;
-    /**
-     * Image to run.
-     * @type {any}
-     * @memberof V1beta1HookSpec
-     */
-    image: any | null;
-    /**
-     * A base64 encoded Ansible playbook.
-     * @type {any}
-     * @memberof V1beta1HookSpec
-     */
-    playbook?: any | null;
-    /**
-     * Service account.
-     * @type {any}
-     * @memberof V1beta1HookSpec
-     */
-    serviceAccount?: any | null;
+  /**
+   * Hook deadline in seconds.
+   * @type {any}
+   * @memberof V1beta1HookSpec
+   */
+  deadline?: any | null;
+  /**
+   * Image to run.
+   * @type {any}
+   * @memberof V1beta1HookSpec
+   */
+  image: any | null;
+  /**
+   * A base64 encoded Ansible playbook.
+   * @type {any}
+   * @memberof V1beta1HookSpec
+   */
+  playbook?: any | null;
+  /**
+   * Service account.
+   * @type {any}
+   * @memberof V1beta1HookSpec
+   */
+  serviceAccount?: any | null;
 }
 
 /**
  * Check if a given object implements the V1beta1HookSpec interface.
  */
 export function instanceOfV1beta1HookSpec(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "image" in value;
+  let isInstance = true;
+  isInstance = isInstance && 'image' in value;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1HookSpecFromJSON(json: any): V1beta1HookSpec {
-    return V1beta1HookSpecFromJSONTyped(json, false);
+  return V1beta1HookSpecFromJSONTyped(json, false);
 }
 
-export function V1beta1HookSpecFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1HookSpec {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'deadline': !exists(json, 'deadline') ? undefined : json['deadline'],
-        'image': json['image'],
-        'playbook': !exists(json, 'playbook') ? undefined : json['playbook'],
-        'serviceAccount': !exists(json, 'serviceAccount') ? undefined : json['serviceAccount'],
-    };
+export function V1beta1HookSpecFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1HookSpec {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    deadline: !exists(json, 'deadline') ? undefined : json['deadline'],
+    image: json['image'],
+    playbook: !exists(json, 'playbook') ? undefined : json['playbook'],
+    serviceAccount: !exists(json, 'serviceAccount') ? undefined : json['serviceAccount'],
+  };
 }
 
 export function V1beta1HookSpecToJSON(value?: V1beta1HookSpec | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'deadline': value.deadline,
-        'image': value.image,
-        'playbook': value.playbook,
-        'serviceAccount': value.serviceAccount,
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    deadline: value.deadline,
+    image: value.image,
+    playbook: value.playbook,
+    serviceAccount: value.serviceAccount,
+  };
 }
-

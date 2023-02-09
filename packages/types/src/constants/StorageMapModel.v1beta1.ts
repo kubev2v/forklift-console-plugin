@@ -10,14 +10,14 @@ export const StorageMapModel = {
   kind: 'StorageMap',
   plural: 'storagemaps',
 
-  abbr: 'ST',
-  color: undefined,
+  abbr: 'SM',
+  color: '#f7b525',
   id: 'storagemaps.forklift.konveyor.io',
   namespaced: true,
   crd: true,
 };
 
-export const StorageMapModelGroupVersionKind ={
+export const StorageMapModelGroupVersionKind = {
   version: 'v1beta1',
   kind: 'StorageMap',
   group: 'forklift.konveyor.io',

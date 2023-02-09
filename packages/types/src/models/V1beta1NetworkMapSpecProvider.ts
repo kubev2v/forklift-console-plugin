@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,18 +10,15 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
 import type { V1beta1NetworkMapSpecProviderDestination } from './V1beta1NetworkMapSpecProviderDestination';
 import {
-    V1beta1NetworkMapSpecProviderDestinationFromJSON,
-    V1beta1NetworkMapSpecProviderDestinationFromJSONTyped,
-    V1beta1NetworkMapSpecProviderDestinationToJSON,
+  V1beta1NetworkMapSpecProviderDestinationFromJSON,
+  V1beta1NetworkMapSpecProviderDestinationToJSON,
 } from './V1beta1NetworkMapSpecProviderDestination';
 import type { V1beta1NetworkMapSpecProviderSource } from './V1beta1NetworkMapSpecProviderSource';
 import {
-    V1beta1NetworkMapSpecProviderSourceFromJSON,
-    V1beta1NetworkMapSpecProviderSourceFromJSONTyped,
-    V1beta1NetworkMapSpecProviderSourceToJSON,
+  V1beta1NetworkMapSpecProviderSourceFromJSON,
+  V1beta1NetworkMapSpecProviderSourceToJSON,
 } from './V1beta1NetworkMapSpecProviderSource';
 
 /**
@@ -32,57 +27,59 @@ import {
  * @interface V1beta1NetworkMapSpecProvider
  */
 export interface V1beta1NetworkMapSpecProvider {
-    /**
-     * 
-     * @type {V1beta1NetworkMapSpecProviderDestination}
-     * @memberof V1beta1NetworkMapSpecProvider
-     */
-    destination: V1beta1NetworkMapSpecProviderDestination;
-    /**
-     * 
-     * @type {V1beta1NetworkMapSpecProviderSource}
-     * @memberof V1beta1NetworkMapSpecProvider
-     */
-    source: V1beta1NetworkMapSpecProviderSource;
+  /**
+   *
+   * @type {V1beta1NetworkMapSpecProviderDestination}
+   * @memberof V1beta1NetworkMapSpecProvider
+   */
+  destination: V1beta1NetworkMapSpecProviderDestination;
+  /**
+   *
+   * @type {V1beta1NetworkMapSpecProviderSource}
+   * @memberof V1beta1NetworkMapSpecProvider
+   */
+  source: V1beta1NetworkMapSpecProviderSource;
 }
 
 /**
  * Check if a given object implements the V1beta1NetworkMapSpecProvider interface.
  */
 export function instanceOfV1beta1NetworkMapSpecProvider(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "destination" in value;
-    isInstance = isInstance && "source" in value;
+  let isInstance = true;
+  isInstance = isInstance && 'destination' in value;
+  isInstance = isInstance && 'source' in value;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1NetworkMapSpecProviderFromJSON(json: any): V1beta1NetworkMapSpecProvider {
-    return V1beta1NetworkMapSpecProviderFromJSONTyped(json, false);
+  return V1beta1NetworkMapSpecProviderFromJSONTyped(json, false);
 }
 
-export function V1beta1NetworkMapSpecProviderFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1NetworkMapSpecProvider {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'destination': V1beta1NetworkMapSpecProviderDestinationFromJSON(json['destination']),
-        'source': V1beta1NetworkMapSpecProviderSourceFromJSON(json['source']),
-    };
+export function V1beta1NetworkMapSpecProviderFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1NetworkMapSpecProvider {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    destination: V1beta1NetworkMapSpecProviderDestinationFromJSON(json['destination']),
+    source: V1beta1NetworkMapSpecProviderSourceFromJSON(json['source']),
+  };
 }
 
-export function V1beta1NetworkMapSpecProviderToJSON(value?: V1beta1NetworkMapSpecProvider | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'destination': V1beta1NetworkMapSpecProviderDestinationToJSON(value.destination),
-        'source': V1beta1NetworkMapSpecProviderSourceToJSON(value.source),
-    };
+export function V1beta1NetworkMapSpecProviderToJSON(
+  value?: V1beta1NetworkMapSpecProvider | null,
+): any {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    destination: V1beta1NetworkMapSpecProviderDestinationToJSON(value.destination),
+    source: V1beta1NetworkMapSpecProviderSourceToJSON(value.source),
+  };
 }
-

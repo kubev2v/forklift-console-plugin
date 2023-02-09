@@ -17,7 +17,7 @@ export const OvirtVolumePopulatorModel = {
   crd: true,
 };
 
-export const OvirtVolumePopulatorModelGroupVersionKind ={
+export const OvirtVolumePopulatorModelGroupVersionKind = {
   version: 'v1beta1',
   kind: 'OvirtVolumePopulator',
   group: 'forklift.konveyor.io',

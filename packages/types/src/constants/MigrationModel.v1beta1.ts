@@ -17,7 +17,7 @@ export const MigrationModel = {
   crd: true,
 };
 
-export const MigrationModelGroupVersionKind ={
+export const MigrationModelGroupVersionKind = {
   version: 'v1beta1',
   kind: 'Migration',
   group: 'forklift.konveyor.io',

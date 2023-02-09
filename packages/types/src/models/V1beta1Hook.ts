@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,19 +10,12 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
+
 import type { V1beta1HookSpec } from './V1beta1HookSpec';
-import {
-    V1beta1HookSpecFromJSON,
-    V1beta1HookSpecFromJSONTyped,
-    V1beta1HookSpecToJSON,
-} from './V1beta1HookSpec';
+import { V1beta1HookSpecFromJSON, V1beta1HookSpecToJSON } from './V1beta1HookSpec';
 import type { V1beta1HookStatus } from './V1beta1HookStatus';
-import {
-    V1beta1HookStatusFromJSON,
-    V1beta1HookStatusFromJSONTyped,
-    V1beta1HookStatusToJSON,
-} from './V1beta1HookStatus';
+import { V1beta1HookStatusFromJSON, V1beta1HookStatusToJSON } from './V1beta1HookStatus';
 
 /**
  * Hook is the Schema for the hooks API
@@ -32,79 +23,76 @@ import {
  * @interface V1beta1Hook
  */
 export interface V1beta1Hook {
-    /**
-     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-     * @type {any}
-     * @memberof V1beta1Hook
-     */
-    apiVersion?: any | null;
-    /**
-     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-     * @type {any}
-     * @memberof V1beta1Hook
-     */
-    kind?: any | null;
-    /**
-     * 
-     * @type {any}
-     * @memberof V1beta1Hook
-     */
-    metadata?: any | null;
-    /**
-     * 
-     * @type {V1beta1HookSpec}
-     * @memberof V1beta1Hook
-     */
-    spec?: V1beta1HookSpec;
-    /**
-     * 
-     * @type {V1beta1HookStatus}
-     * @memberof V1beta1Hook
-     */
-    status?: V1beta1HookStatus;
+  /**
+   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   * @type {any}
+   * @memberof V1beta1Hook
+   */
+  apiVersion?: any | null;
+  /**
+   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   * @type {any}
+   * @memberof V1beta1Hook
+   */
+  kind?: any | null;
+  /**
+   *
+   * @type {any}
+   * @memberof V1beta1Hook
+   */
+  metadata?: any | null;
+  /**
+   *
+   * @type {V1beta1HookSpec}
+   * @memberof V1beta1Hook
+   */
+  spec?: V1beta1HookSpec;
+  /**
+   *
+   * @type {V1beta1HookStatus}
+   * @memberof V1beta1Hook
+   */
+  status?: V1beta1HookStatus;
 }
 
 /**
  * Check if a given object implements the V1beta1Hook interface.
  */
 export function instanceOfV1beta1Hook(value: object): boolean {
-    let isInstance = true;
+  const isInstance = true;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1HookFromJSON(json: any): V1beta1Hook {
-    return V1beta1HookFromJSONTyped(json, false);
+  return V1beta1HookFromJSONTyped(json, false);
 }
 
 export function V1beta1HookFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1Hook {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'apiVersion': !exists(json, 'apiVersion') ? undefined : json['apiVersion'],
-        'kind': !exists(json, 'kind') ? undefined : json['kind'],
-        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
-        'spec': !exists(json, 'spec') ? undefined : V1beta1HookSpecFromJSON(json['spec']),
-        'status': !exists(json, 'status') ? undefined : V1beta1HookStatusFromJSON(json['status']),
-    };
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    apiVersion: !exists(json, 'apiVersion') ? undefined : json['apiVersion'],
+    kind: !exists(json, 'kind') ? undefined : json['kind'],
+    metadata: !exists(json, 'metadata') ? undefined : json['metadata'],
+    spec: !exists(json, 'spec') ? undefined : V1beta1HookSpecFromJSON(json['spec']),
+    status: !exists(json, 'status') ? undefined : V1beta1HookStatusFromJSON(json['status']),
+  };
 }
 
 export function V1beta1HookToJSON(value?: V1beta1Hook | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'apiVersion': value.apiVersion,
-        'kind': value.kind,
-        'metadata': value.metadata,
-        'spec': V1beta1HookSpecToJSON(value.spec),
-        'status': V1beta1HookStatusToJSON(value.status),
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    apiVersion: value.apiVersion,
+    kind: value.kind,
+    metadata: value.metadata,
+    spec: V1beta1HookSpecToJSON(value.spec),
+    status: V1beta1HookStatusToJSON(value.status),
+  };
 }
-

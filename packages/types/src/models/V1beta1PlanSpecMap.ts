@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,18 +10,15 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
 import type { V1beta1PlanSpecMapNetwork } from './V1beta1PlanSpecMapNetwork';
 import {
-    V1beta1PlanSpecMapNetworkFromJSON,
-    V1beta1PlanSpecMapNetworkFromJSONTyped,
-    V1beta1PlanSpecMapNetworkToJSON,
+  V1beta1PlanSpecMapNetworkFromJSON,
+  V1beta1PlanSpecMapNetworkToJSON,
 } from './V1beta1PlanSpecMapNetwork';
 import type { V1beta1PlanSpecMapStorage } from './V1beta1PlanSpecMapStorage';
 import {
-    V1beta1PlanSpecMapStorageFromJSON,
-    V1beta1PlanSpecMapStorageFromJSONTyped,
-    V1beta1PlanSpecMapStorageToJSON,
+  V1beta1PlanSpecMapStorageFromJSON,
+  V1beta1PlanSpecMapStorageToJSON,
 } from './V1beta1PlanSpecMapStorage';
 
 /**
@@ -32,57 +27,57 @@ import {
  * @interface V1beta1PlanSpecMap
  */
 export interface V1beta1PlanSpecMap {
-    /**
-     * 
-     * @type {V1beta1PlanSpecMapNetwork}
-     * @memberof V1beta1PlanSpecMap
-     */
-    network: V1beta1PlanSpecMapNetwork;
-    /**
-     * 
-     * @type {V1beta1PlanSpecMapStorage}
-     * @memberof V1beta1PlanSpecMap
-     */
-    storage: V1beta1PlanSpecMapStorage;
+  /**
+   *
+   * @type {V1beta1PlanSpecMapNetwork}
+   * @memberof V1beta1PlanSpecMap
+   */
+  network: V1beta1PlanSpecMapNetwork;
+  /**
+   *
+   * @type {V1beta1PlanSpecMapStorage}
+   * @memberof V1beta1PlanSpecMap
+   */
+  storage: V1beta1PlanSpecMapStorage;
 }
 
 /**
  * Check if a given object implements the V1beta1PlanSpecMap interface.
  */
 export function instanceOfV1beta1PlanSpecMap(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "network" in value;
-    isInstance = isInstance && "storage" in value;
+  let isInstance = true;
+  isInstance = isInstance && 'network' in value;
+  isInstance = isInstance && 'storage' in value;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1PlanSpecMapFromJSON(json: any): V1beta1PlanSpecMap {
-    return V1beta1PlanSpecMapFromJSONTyped(json, false);
+  return V1beta1PlanSpecMapFromJSONTyped(json, false);
 }
 
-export function V1beta1PlanSpecMapFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1PlanSpecMap {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'network': V1beta1PlanSpecMapNetworkFromJSON(json['network']),
-        'storage': V1beta1PlanSpecMapStorageFromJSON(json['storage']),
-    };
+export function V1beta1PlanSpecMapFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1PlanSpecMap {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    network: V1beta1PlanSpecMapNetworkFromJSON(json['network']),
+    storage: V1beta1PlanSpecMapStorageFromJSON(json['storage']),
+  };
 }
 
 export function V1beta1PlanSpecMapToJSON(value?: V1beta1PlanSpecMap | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'network': V1beta1PlanSpecMapNetworkToJSON(value.network),
-        'storage': V1beta1PlanSpecMapStorageToJSON(value.storage),
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    network: V1beta1PlanSpecMapNetworkToJSON(value.network),
+    storage: V1beta1PlanSpecMapStorageToJSON(value.storage),
+  };
 }
-

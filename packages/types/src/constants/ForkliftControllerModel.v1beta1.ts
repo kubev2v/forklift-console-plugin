@@ -17,7 +17,7 @@ export const ForkliftControllerModel = {
   crd: true,
 };
 
-export const ForkliftControllerModelGroupVersionKind ={
+export const ForkliftControllerModelGroupVersionKind = {
   version: 'v1beta1',
   kind: 'ForkliftController',
   group: 'forklift.konveyor.io',

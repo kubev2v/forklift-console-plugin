@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,99 +10,89 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
+
 import type { V1beta1HostSpec } from './V1beta1HostSpec';
-import {
-    V1beta1HostSpecFromJSON,
-    V1beta1HostSpecFromJSONTyped,
-    V1beta1HostSpecToJSON,
-} from './V1beta1HostSpec';
+import { V1beta1HostSpecFromJSON, V1beta1HostSpecToJSON } from './V1beta1HostSpec';
 import type { V1beta1HostStatus } from './V1beta1HostStatus';
-import {
-    V1beta1HostStatusFromJSON,
-    V1beta1HostStatusFromJSONTyped,
-    V1beta1HostStatusToJSON,
-} from './V1beta1HostStatus';
+import { V1beta1HostStatusFromJSON, V1beta1HostStatusToJSON } from './V1beta1HostStatus';
 
 /**
- * 
+ *
  * @export
  * @interface V1beta1Host
  */
 export interface V1beta1Host {
-    /**
-     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-     * @type {any}
-     * @memberof V1beta1Host
-     */
-    apiVersion?: any | null;
-    /**
-     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-     * @type {any}
-     * @memberof V1beta1Host
-     */
-    kind?: any | null;
-    /**
-     * 
-     * @type {any}
-     * @memberof V1beta1Host
-     */
-    metadata?: any | null;
-    /**
-     * 
-     * @type {V1beta1HostSpec}
-     * @memberof V1beta1Host
-     */
-    spec?: V1beta1HostSpec;
-    /**
-     * 
-     * @type {V1beta1HostStatus}
-     * @memberof V1beta1Host
-     */
-    status?: V1beta1HostStatus;
+  /**
+   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   * @type {any}
+   * @memberof V1beta1Host
+   */
+  apiVersion?: any | null;
+  /**
+   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   * @type {any}
+   * @memberof V1beta1Host
+   */
+  kind?: any | null;
+  /**
+   *
+   * @type {any}
+   * @memberof V1beta1Host
+   */
+  metadata?: any | null;
+  /**
+   *
+   * @type {V1beta1HostSpec}
+   * @memberof V1beta1Host
+   */
+  spec?: V1beta1HostSpec;
+  /**
+   *
+   * @type {V1beta1HostStatus}
+   * @memberof V1beta1Host
+   */
+  status?: V1beta1HostStatus;
 }
 
 /**
  * Check if a given object implements the V1beta1Host interface.
  */
 export function instanceOfV1beta1Host(value: object): boolean {
-    let isInstance = true;
+  const isInstance = true;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1HostFromJSON(json: any): V1beta1Host {
-    return V1beta1HostFromJSONTyped(json, false);
+  return V1beta1HostFromJSONTyped(json, false);
 }
 
 export function V1beta1HostFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1Host {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'apiVersion': !exists(json, 'apiVersion') ? undefined : json['apiVersion'],
-        'kind': !exists(json, 'kind') ? undefined : json['kind'],
-        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
-        'spec': !exists(json, 'spec') ? undefined : V1beta1HostSpecFromJSON(json['spec']),
-        'status': !exists(json, 'status') ? undefined : V1beta1HostStatusFromJSON(json['status']),
-    };
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    apiVersion: !exists(json, 'apiVersion') ? undefined : json['apiVersion'],
+    kind: !exists(json, 'kind') ? undefined : json['kind'],
+    metadata: !exists(json, 'metadata') ? undefined : json['metadata'],
+    spec: !exists(json, 'spec') ? undefined : V1beta1HostSpecFromJSON(json['spec']),
+    status: !exists(json, 'status') ? undefined : V1beta1HostStatusFromJSON(json['status']),
+  };
 }
 
 export function V1beta1HostToJSON(value?: V1beta1Host | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'apiVersion': value.apiVersion,
-        'kind': value.kind,
-        'metadata': value.metadata,
-        'spec': V1beta1HostSpecToJSON(value.spec),
-        'status': V1beta1HostStatusToJSON(value.status),
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    apiVersion: value.apiVersion,
+    kind: value.kind,
+    metadata: value.metadata,
+    spec: V1beta1HostSpecToJSON(value.spec),
+    status: V1beta1HostStatusToJSON(value.status),
+  };
 }
-

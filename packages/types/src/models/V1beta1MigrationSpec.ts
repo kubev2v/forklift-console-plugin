@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,12 +10,12 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
+
 import type { V1beta1MigrationSpecPlan } from './V1beta1MigrationSpecPlan';
 import {
-    V1beta1MigrationSpecPlanFromJSON,
-    V1beta1MigrationSpecPlanFromJSONTyped,
-    V1beta1MigrationSpecPlanToJSON,
+  V1beta1MigrationSpecPlanFromJSON,
+  V1beta1MigrationSpecPlanToJSON,
 } from './V1beta1MigrationSpecPlan';
 
 /**
@@ -26,64 +24,64 @@ import {
  * @interface V1beta1MigrationSpec
  */
 export interface V1beta1MigrationSpec {
-    /**
-     * List of VMs which will have their imports canceled.
-     * @type {any}
-     * @memberof V1beta1MigrationSpec
-     */
-    cancel?: any | null;
-    /**
-     * Date and time to finalize a warm migration. If present, this will override the value set on the Plan.
-     * @type {any}
-     * @memberof V1beta1MigrationSpec
-     */
-    cutover?: any | null;
-    /**
-     * 
-     * @type {V1beta1MigrationSpecPlan}
-     * @memberof V1beta1MigrationSpec
-     */
-    plan: V1beta1MigrationSpecPlan;
+  /**
+   * List of VMs which will have their imports canceled.
+   * @type {any}
+   * @memberof V1beta1MigrationSpec
+   */
+  cancel?: any | null;
+  /**
+   * Date and time to finalize a warm migration. If present, this will override the value set on the Plan.
+   * @type {any}
+   * @memberof V1beta1MigrationSpec
+   */
+  cutover?: any | null;
+  /**
+   *
+   * @type {V1beta1MigrationSpecPlan}
+   * @memberof V1beta1MigrationSpec
+   */
+  plan: V1beta1MigrationSpecPlan;
 }
 
 /**
  * Check if a given object implements the V1beta1MigrationSpec interface.
  */
 export function instanceOfV1beta1MigrationSpec(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "plan" in value;
+  let isInstance = true;
+  isInstance = isInstance && 'plan' in value;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1MigrationSpecFromJSON(json: any): V1beta1MigrationSpec {
-    return V1beta1MigrationSpecFromJSONTyped(json, false);
+  return V1beta1MigrationSpecFromJSONTyped(json, false);
 }
 
-export function V1beta1MigrationSpecFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1MigrationSpec {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'cancel': !exists(json, 'cancel') ? undefined : json['cancel'],
-        'cutover': !exists(json, 'cutover') ? undefined : json['cutover'],
-        'plan': V1beta1MigrationSpecPlanFromJSON(json['plan']),
-    };
+export function V1beta1MigrationSpecFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1MigrationSpec {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    cancel: !exists(json, 'cancel') ? undefined : json['cancel'],
+    cutover: !exists(json, 'cutover') ? undefined : json['cutover'],
+    plan: V1beta1MigrationSpecPlanFromJSON(json['plan']),
+  };
 }
 
 export function V1beta1MigrationSpecToJSON(value?: V1beta1MigrationSpec | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'cancel': value.cancel,
-        'cutover': value.cutover,
-        'plan': V1beta1MigrationSpecPlanToJSON(value.plan),
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    cancel: value.cancel,
+    cutover: value.cutover,
+    plan: V1beta1MigrationSpecPlanToJSON(value.plan),
+  };
 }
-

@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,18 +10,17 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
+
 import type { V1beta1HostSpecProvider } from './V1beta1HostSpecProvider';
 import {
-    V1beta1HostSpecProviderFromJSON,
-    V1beta1HostSpecProviderFromJSONTyped,
-    V1beta1HostSpecProviderToJSON,
+  V1beta1HostSpecProviderFromJSON,
+  V1beta1HostSpecProviderToJSON,
 } from './V1beta1HostSpecProvider';
 import type { V1beta1HostSpecSecret } from './V1beta1HostSpecSecret';
 import {
-    V1beta1HostSpecSecretFromJSON,
-    V1beta1HostSpecSecretFromJSONTyped,
-    V1beta1HostSpecSecretToJSON,
+  V1beta1HostSpecSecretFromJSON,
+  V1beta1HostSpecSecretToJSON,
 } from './V1beta1HostSpecSecret';
 
 /**
@@ -32,98 +29,98 @@ import {
  * @interface V1beta1HostSpec
  */
 export interface V1beta1HostSpec {
-    /**
-     * The object ID. vsphere: The managed object ID.
-     * @type {any}
-     * @memberof V1beta1HostSpec
-     */
-    id?: any | null;
-    /**
-     * IP address used for disk transfer.
-     * @type {any}
-     * @memberof V1beta1HostSpec
-     */
-    ipAddress: any | null;
-    /**
-     * An object Name. vsphere: A qualified name.
-     * @type {any}
-     * @memberof V1beta1HostSpec
-     */
-    name?: any | null;
-    /**
-     * 
-     * @type {V1beta1HostSpecProvider}
-     * @memberof V1beta1HostSpec
-     */
-    provider: V1beta1HostSpecProvider;
-    /**
-     * 
-     * @type {V1beta1HostSpecSecret}
-     * @memberof V1beta1HostSpec
-     */
-    secret: V1beta1HostSpecSecret;
-    /**
-     * Certificate SHA-1 fingerprint, called thumbprint by VMware.
-     * @type {any}
-     * @memberof V1beta1HostSpec
-     */
-    thumbprint?: any | null;
-    /**
-     * Type used to qualify the name.
-     * @type {any}
-     * @memberof V1beta1HostSpec
-     */
-    type?: any | null;
+  /**
+   * The object ID. vsphere: The managed object ID.
+   * @type {any}
+   * @memberof V1beta1HostSpec
+   */
+  id?: any | null;
+  /**
+   * IP address used for disk transfer.
+   * @type {any}
+   * @memberof V1beta1HostSpec
+   */
+  ipAddress: any | null;
+  /**
+   * An object Name. vsphere: A qualified name.
+   * @type {any}
+   * @memberof V1beta1HostSpec
+   */
+  name?: any | null;
+  /**
+   *
+   * @type {V1beta1HostSpecProvider}
+   * @memberof V1beta1HostSpec
+   */
+  provider: V1beta1HostSpecProvider;
+  /**
+   *
+   * @type {V1beta1HostSpecSecret}
+   * @memberof V1beta1HostSpec
+   */
+  secret: V1beta1HostSpecSecret;
+  /**
+   * Certificate SHA-1 fingerprint, called thumbprint by VMware.
+   * @type {any}
+   * @memberof V1beta1HostSpec
+   */
+  thumbprint?: any | null;
+  /**
+   * Type used to qualify the name.
+   * @type {any}
+   * @memberof V1beta1HostSpec
+   */
+  type?: any | null;
 }
 
 /**
  * Check if a given object implements the V1beta1HostSpec interface.
  */
 export function instanceOfV1beta1HostSpec(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "ipAddress" in value;
-    isInstance = isInstance && "provider" in value;
-    isInstance = isInstance && "secret" in value;
+  let isInstance = true;
+  isInstance = isInstance && 'ipAddress' in value;
+  isInstance = isInstance && 'provider' in value;
+  isInstance = isInstance && 'secret' in value;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1HostSpecFromJSON(json: any): V1beta1HostSpec {
-    return V1beta1HostSpecFromJSONTyped(json, false);
+  return V1beta1HostSpecFromJSONTyped(json, false);
 }
 
-export function V1beta1HostSpecFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1HostSpec {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'ipAddress': json['ipAddress'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'provider': V1beta1HostSpecProviderFromJSON(json['provider']),
-        'secret': V1beta1HostSpecSecretFromJSON(json['secret']),
-        'thumbprint': !exists(json, 'thumbprint') ? undefined : json['thumbprint'],
-        'type': !exists(json, 'type') ? undefined : json['type'],
-    };
+export function V1beta1HostSpecFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1HostSpec {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    id: !exists(json, 'id') ? undefined : json['id'],
+    ipAddress: json['ipAddress'],
+    name: !exists(json, 'name') ? undefined : json['name'],
+    provider: V1beta1HostSpecProviderFromJSON(json['provider']),
+    secret: V1beta1HostSpecSecretFromJSON(json['secret']),
+    thumbprint: !exists(json, 'thumbprint') ? undefined : json['thumbprint'],
+    type: !exists(json, 'type') ? undefined : json['type'],
+  };
 }
 
 export function V1beta1HostSpecToJSON(value?: V1beta1HostSpec | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'id': value.id,
-        'ipAddress': value.ipAddress,
-        'name': value.name,
-        'provider': V1beta1HostSpecProviderToJSON(value.provider),
-        'secret': V1beta1HostSpecSecretToJSON(value.secret),
-        'thumbprint': value.thumbprint,
-        'type': value.type,
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    id: value.id,
+    ipAddress: value.ipAddress,
+    name: value.name,
+    provider: V1beta1HostSpecProviderToJSON(value.provider),
+    secret: V1beta1HostSpecSecretToJSON(value.secret),
+    thumbprint: value.thumbprint,
+    type: value.type,
+  };
 }
-

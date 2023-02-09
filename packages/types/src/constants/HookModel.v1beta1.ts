@@ -17,7 +17,7 @@ export const HookModel = {
   crd: true,
 };
 
-export const HookModelGroupVersionKind ={
+export const HookModelGroupVersionKind = {
   version: 'v1beta1',
   kind: 'Hook',
   group: 'forklift.konveyor.io',

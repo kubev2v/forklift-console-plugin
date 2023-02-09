@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,24 +10,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
+
 import type { V1beta1PlanSpecMap } from './V1beta1PlanSpecMap';
-import {
-    V1beta1PlanSpecMapFromJSON,
-    V1beta1PlanSpecMapFromJSONTyped,
-    V1beta1PlanSpecMapToJSON,
-} from './V1beta1PlanSpecMap';
+import { V1beta1PlanSpecMapFromJSON, V1beta1PlanSpecMapToJSON } from './V1beta1PlanSpecMap';
 import type { V1beta1PlanSpecProvider } from './V1beta1PlanSpecProvider';
 import {
-    V1beta1PlanSpecProviderFromJSON,
-    V1beta1PlanSpecProviderFromJSONTyped,
-    V1beta1PlanSpecProviderToJSON,
+  V1beta1PlanSpecProviderFromJSON,
+  V1beta1PlanSpecProviderToJSON,
 } from './V1beta1PlanSpecProvider';
 import type { V1beta1PlanSpecTransferNetwork } from './V1beta1PlanSpecTransferNetwork';
 import {
-    V1beta1PlanSpecTransferNetworkFromJSON,
-    V1beta1PlanSpecTransferNetworkFromJSONTyped,
-    V1beta1PlanSpecTransferNetworkToJSON,
+  V1beta1PlanSpecTransferNetworkFromJSON,
+  V1beta1PlanSpecTransferNetworkToJSON,
 } from './V1beta1PlanSpecTransferNetwork';
 
 /**
@@ -38,107 +31,109 @@ import {
  * @interface V1beta1PlanSpec
  */
 export interface V1beta1PlanSpec {
-    /**
-     * Whether this plan should be archived.
-     * @type {any}
-     * @memberof V1beta1PlanSpec
-     */
-    archived?: any | null;
-    /**
-     * Description
-     * @type {any}
-     * @memberof V1beta1PlanSpec
-     */
-    description?: any | null;
-    /**
-     * 
-     * @type {V1beta1PlanSpecMap}
-     * @memberof V1beta1PlanSpec
-     */
-    map: V1beta1PlanSpecMap;
-    /**
-     * 
-     * @type {V1beta1PlanSpecProvider}
-     * @memberof V1beta1PlanSpec
-     */
-    provider: V1beta1PlanSpecProvider;
-    /**
-     * Target namespace.
-     * @type {any}
-     * @memberof V1beta1PlanSpec
-     */
-    targetNamespace: any | null;
-    /**
-     * 
-     * @type {V1beta1PlanSpecTransferNetwork}
-     * @memberof V1beta1PlanSpec
-     */
-    transferNetwork?: V1beta1PlanSpecTransferNetwork;
-    /**
-     * List of VMs.
-     * @type {any}
-     * @memberof V1beta1PlanSpec
-     */
-    vms: any | null;
-    /**
-     * Whether this is a warm migration.
-     * @type {any}
-     * @memberof V1beta1PlanSpec
-     */
-    warm?: any | null;
+  /**
+   * Whether this plan should be archived.
+   * @type {any}
+   * @memberof V1beta1PlanSpec
+   */
+  archived?: any | null;
+  /**
+   * Description
+   * @type {any}
+   * @memberof V1beta1PlanSpec
+   */
+  description?: any | null;
+  /**
+   *
+   * @type {V1beta1PlanSpecMap}
+   * @memberof V1beta1PlanSpec
+   */
+  map: V1beta1PlanSpecMap;
+  /**
+   *
+   * @type {V1beta1PlanSpecProvider}
+   * @memberof V1beta1PlanSpec
+   */
+  provider: V1beta1PlanSpecProvider;
+  /**
+   * Target namespace.
+   * @type {any}
+   * @memberof V1beta1PlanSpec
+   */
+  targetNamespace: any | null;
+  /**
+   *
+   * @type {V1beta1PlanSpecTransferNetwork}
+   * @memberof V1beta1PlanSpec
+   */
+  transferNetwork?: V1beta1PlanSpecTransferNetwork;
+  /**
+   * List of VMs.
+   * @type {any}
+   * @memberof V1beta1PlanSpec
+   */
+  vms: any | null;
+  /**
+   * Whether this is a warm migration.
+   * @type {any}
+   * @memberof V1beta1PlanSpec
+   */
+  warm?: any | null;
 }
 
 /**
  * Check if a given object implements the V1beta1PlanSpec interface.
  */
 export function instanceOfV1beta1PlanSpec(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "map" in value;
-    isInstance = isInstance && "provider" in value;
-    isInstance = isInstance && "targetNamespace" in value;
-    isInstance = isInstance && "vms" in value;
+  let isInstance = true;
+  isInstance = isInstance && 'map' in value;
+  isInstance = isInstance && 'provider' in value;
+  isInstance = isInstance && 'targetNamespace' in value;
+  isInstance = isInstance && 'vms' in value;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1PlanSpecFromJSON(json: any): V1beta1PlanSpec {
-    return V1beta1PlanSpecFromJSONTyped(json, false);
+  return V1beta1PlanSpecFromJSONTyped(json, false);
 }
 
-export function V1beta1PlanSpecFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1PlanSpec {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'archived': !exists(json, 'archived') ? undefined : json['archived'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'map': V1beta1PlanSpecMapFromJSON(json['map']),
-        'provider': V1beta1PlanSpecProviderFromJSON(json['provider']),
-        'targetNamespace': json['targetNamespace'],
-        'transferNetwork': !exists(json, 'transferNetwork') ? undefined : V1beta1PlanSpecTransferNetworkFromJSON(json['transferNetwork']),
-        'vms': json['vms'],
-        'warm': !exists(json, 'warm') ? undefined : json['warm'],
-    };
+export function V1beta1PlanSpecFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1PlanSpec {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    archived: !exists(json, 'archived') ? undefined : json['archived'],
+    description: !exists(json, 'description') ? undefined : json['description'],
+    map: V1beta1PlanSpecMapFromJSON(json['map']),
+    provider: V1beta1PlanSpecProviderFromJSON(json['provider']),
+    targetNamespace: json['targetNamespace'],
+    transferNetwork: !exists(json, 'transferNetwork')
+      ? undefined
+      : V1beta1PlanSpecTransferNetworkFromJSON(json['transferNetwork']),
+    vms: json['vms'],
+    warm: !exists(json, 'warm') ? undefined : json['warm'],
+  };
 }
 
 export function V1beta1PlanSpecToJSON(value?: V1beta1PlanSpec | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'archived': value.archived,
-        'description': value.description,
-        'map': V1beta1PlanSpecMapToJSON(value.map),
-        'provider': V1beta1PlanSpecProviderToJSON(value.provider),
-        'targetNamespace': value.targetNamespace,
-        'transferNetwork': V1beta1PlanSpecTransferNetworkToJSON(value.transferNetwork),
-        'vms': value.vms,
-        'warm': value.warm,
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    archived: value.archived,
+    description: value.description,
+    map: V1beta1PlanSpecMapToJSON(value.map),
+    provider: V1beta1PlanSpecProviderToJSON(value.provider),
+    targetNamespace: value.targetNamespace,
+    transferNetwork: V1beta1PlanSpecTransferNetworkToJSON(value.transferNetwork),
+    vms: value.vms,
+    warm: value.warm,
+  };
 }
-

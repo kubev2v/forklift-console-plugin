@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,86 +10,88 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
 /**
  * MigrationStatus defines the observed state of Migration
  * @export
  * @interface V1beta1MigrationStatus
  */
 export interface V1beta1MigrationStatus {
-    /**
-     * Completed timestamp.
-     * @type {any}
-     * @memberof V1beta1MigrationStatus
-     */
-    completed?: any | null;
-    /**
-     * List of conditions.
-     * @type {any}
-     * @memberof V1beta1MigrationStatus
-     */
-    conditions?: any | null;
-    /**
-     * The most recent generation observed by the controller.
-     * @type {any}
-     * @memberof V1beta1MigrationStatus
-     */
-    observedGeneration?: any | null;
-    /**
-     * Started timestamp.
-     * @type {any}
-     * @memberof V1beta1MigrationStatus
-     */
-    started?: any | null;
-    /**
-     * VM status
-     * @type {any}
-     * @memberof V1beta1MigrationStatus
-     */
-    vms?: any | null;
+  /**
+   * Completed timestamp.
+   * @type {any}
+   * @memberof V1beta1MigrationStatus
+   */
+  completed?: any | null;
+  /**
+   * List of conditions.
+   * @type {any}
+   * @memberof V1beta1MigrationStatus
+   */
+  conditions?: any | null;
+  /**
+   * The most recent generation observed by the controller.
+   * @type {any}
+   * @memberof V1beta1MigrationStatus
+   */
+  observedGeneration?: any | null;
+  /**
+   * Started timestamp.
+   * @type {any}
+   * @memberof V1beta1MigrationStatus
+   */
+  started?: any | null;
+  /**
+   * VM status
+   * @type {any}
+   * @memberof V1beta1MigrationStatus
+   */
+  vms?: any | null;
 }
 
 /**
  * Check if a given object implements the V1beta1MigrationStatus interface.
  */
 export function instanceOfV1beta1MigrationStatus(value: object): boolean {
-    let isInstance = true;
+  const isInstance = true;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1MigrationStatusFromJSON(json: any): V1beta1MigrationStatus {
-    return V1beta1MigrationStatusFromJSONTyped(json, false);
+  return V1beta1MigrationStatusFromJSONTyped(json, false);
 }
 
-export function V1beta1MigrationStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1MigrationStatus {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'completed': !exists(json, 'completed') ? undefined : json['completed'],
-        'conditions': !exists(json, 'conditions') ? undefined : json['conditions'],
-        'observedGeneration': !exists(json, 'observedGeneration') ? undefined : json['observedGeneration'],
-        'started': !exists(json, 'started') ? undefined : json['started'],
-        'vms': !exists(json, 'vms') ? undefined : json['vms'],
-    };
+export function V1beta1MigrationStatusFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1MigrationStatus {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    completed: !exists(json, 'completed') ? undefined : json['completed'],
+    conditions: !exists(json, 'conditions') ? undefined : json['conditions'],
+    observedGeneration: !exists(json, 'observedGeneration')
+      ? undefined
+      : json['observedGeneration'],
+    started: !exists(json, 'started') ? undefined : json['started'],
+    vms: !exists(json, 'vms') ? undefined : json['vms'],
+  };
 }
 
 export function V1beta1MigrationStatusToJSON(value?: V1beta1MigrationStatus | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'completed': value.completed,
-        'conditions': value.conditions,
-        'observedGeneration': value.observedGeneration,
-        'started': value.started,
-        'vms': value.vms,
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    completed: value.completed,
+    conditions: value.conditions,
+    observedGeneration: value.observedGeneration,
+    started: value.started,
+    vms: value.vms,
+  };
 }
-

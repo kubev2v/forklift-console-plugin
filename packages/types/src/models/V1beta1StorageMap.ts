@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,99 +10,98 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
+
 import type { V1beta1NetworkMapStatus } from './V1beta1NetworkMapStatus';
 import {
-    V1beta1NetworkMapStatusFromJSON,
-    V1beta1NetworkMapStatusFromJSONTyped,
-    V1beta1NetworkMapStatusToJSON,
+  V1beta1NetworkMapStatusFromJSON,
+  V1beta1NetworkMapStatusToJSON,
 } from './V1beta1NetworkMapStatus';
 import type { V1beta1StorageMapSpec } from './V1beta1StorageMapSpec';
 import {
-    V1beta1StorageMapSpecFromJSON,
-    V1beta1StorageMapSpecFromJSONTyped,
-    V1beta1StorageMapSpecToJSON,
+  V1beta1StorageMapSpecFromJSON,
+  V1beta1StorageMapSpecToJSON,
 } from './V1beta1StorageMapSpec';
 
 /**
- * 
+ *
  * @export
  * @interface V1beta1StorageMap
  */
 export interface V1beta1StorageMap {
-    /**
-     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-     * @type {any}
-     * @memberof V1beta1StorageMap
-     */
-    apiVersion?: any | null;
-    /**
-     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-     * @type {any}
-     * @memberof V1beta1StorageMap
-     */
-    kind?: any | null;
-    /**
-     * 
-     * @type {any}
-     * @memberof V1beta1StorageMap
-     */
-    metadata?: any | null;
-    /**
-     * 
-     * @type {V1beta1StorageMapSpec}
-     * @memberof V1beta1StorageMap
-     */
-    spec?: V1beta1StorageMapSpec;
-    /**
-     * 
-     * @type {V1beta1NetworkMapStatus}
-     * @memberof V1beta1StorageMap
-     */
-    status?: V1beta1NetworkMapStatus;
+  /**
+   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   * @type {any}
+   * @memberof V1beta1StorageMap
+   */
+  apiVersion?: any | null;
+  /**
+   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   * @type {any}
+   * @memberof V1beta1StorageMap
+   */
+  kind?: any | null;
+  /**
+   *
+   * @type {any}
+   * @memberof V1beta1StorageMap
+   */
+  metadata?: any | null;
+  /**
+   *
+   * @type {V1beta1StorageMapSpec}
+   * @memberof V1beta1StorageMap
+   */
+  spec?: V1beta1StorageMapSpec;
+  /**
+   *
+   * @type {V1beta1NetworkMapStatus}
+   * @memberof V1beta1StorageMap
+   */
+  status?: V1beta1NetworkMapStatus;
 }
 
 /**
  * Check if a given object implements the V1beta1StorageMap interface.
  */
 export function instanceOfV1beta1StorageMap(value: object): boolean {
-    let isInstance = true;
+  const isInstance = true;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1StorageMapFromJSON(json: any): V1beta1StorageMap {
-    return V1beta1StorageMapFromJSONTyped(json, false);
+  return V1beta1StorageMapFromJSONTyped(json, false);
 }
 
-export function V1beta1StorageMapFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1StorageMap {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'apiVersion': !exists(json, 'apiVersion') ? undefined : json['apiVersion'],
-        'kind': !exists(json, 'kind') ? undefined : json['kind'],
-        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
-        'spec': !exists(json, 'spec') ? undefined : V1beta1StorageMapSpecFromJSON(json['spec']),
-        'status': !exists(json, 'status') ? undefined : V1beta1NetworkMapStatusFromJSON(json['status']),
-    };
+export function V1beta1StorageMapFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1StorageMap {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    apiVersion: !exists(json, 'apiVersion') ? undefined : json['apiVersion'],
+    kind: !exists(json, 'kind') ? undefined : json['kind'],
+    metadata: !exists(json, 'metadata') ? undefined : json['metadata'],
+    spec: !exists(json, 'spec') ? undefined : V1beta1StorageMapSpecFromJSON(json['spec']),
+    status: !exists(json, 'status') ? undefined : V1beta1NetworkMapStatusFromJSON(json['status']),
+  };
 }
 
 export function V1beta1StorageMapToJSON(value?: V1beta1StorageMap | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'apiVersion': value.apiVersion,
-        'kind': value.kind,
-        'metadata': value.metadata,
-        'spec': V1beta1StorageMapSpecToJSON(value.spec),
-        'status': V1beta1NetworkMapStatusToJSON(value.status),
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    apiVersion: value.apiVersion,
+    kind: value.kind,
+    metadata: value.metadata,
+    spec: V1beta1StorageMapSpecToJSON(value.spec),
+    status: V1beta1NetworkMapStatusToJSON(value.status),
+  };
 }
-

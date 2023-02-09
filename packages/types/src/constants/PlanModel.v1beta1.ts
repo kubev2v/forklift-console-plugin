@@ -11,13 +11,13 @@ export const PlanModel = {
   plural: 'plans',
 
   abbr: 'PL',
-  color: undefined,
+  color: '#0f930b',
   id: 'plans.forklift.konveyor.io',
   namespaced: true,
   crd: true,
 };
 
-export const PlanModelGroupVersionKind ={
+export const PlanModelGroupVersionKind = {
   version: 'v1beta1',
   kind: 'Plan',
   group: 'forklift.konveyor.io',

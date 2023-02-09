@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,12 +10,12 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
+
 import type { V1beta1PlanStatusMigration } from './V1beta1PlanStatusMigration';
 import {
-    V1beta1PlanStatusMigrationFromJSON,
-    V1beta1PlanStatusMigrationFromJSONTyped,
-    V1beta1PlanStatusMigrationToJSON,
+  V1beta1PlanStatusMigrationFromJSON,
+  V1beta1PlanStatusMigrationToJSON,
 } from './V1beta1PlanStatusMigration';
 
 /**
@@ -26,63 +24,67 @@ import {
  * @interface V1beta1PlanStatus
  */
 export interface V1beta1PlanStatus {
-    /**
-     * List of conditions.
-     * @type {any}
-     * @memberof V1beta1PlanStatus
-     */
-    conditions?: any | null;
-    /**
-     * 
-     * @type {V1beta1PlanStatusMigration}
-     * @memberof V1beta1PlanStatus
-     */
-    migration?: V1beta1PlanStatusMigration;
-    /**
-     * The most recent generation observed by the controller.
-     * @type {any}
-     * @memberof V1beta1PlanStatus
-     */
-    observedGeneration?: any | null;
+  /**
+   * List of conditions.
+   * @type {any}
+   * @memberof V1beta1PlanStatus
+   */
+  conditions?: any | null;
+  /**
+   *
+   * @type {V1beta1PlanStatusMigration}
+   * @memberof V1beta1PlanStatus
+   */
+  migration?: V1beta1PlanStatusMigration;
+  /**
+   * The most recent generation observed by the controller.
+   * @type {any}
+   * @memberof V1beta1PlanStatus
+   */
+  observedGeneration?: any | null;
 }
 
 /**
  * Check if a given object implements the V1beta1PlanStatus interface.
  */
 export function instanceOfV1beta1PlanStatus(value: object): boolean {
-    let isInstance = true;
+  const isInstance = true;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1PlanStatusFromJSON(json: any): V1beta1PlanStatus {
-    return V1beta1PlanStatusFromJSONTyped(json, false);
+  return V1beta1PlanStatusFromJSONTyped(json, false);
 }
 
-export function V1beta1PlanStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1PlanStatus {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'conditions': !exists(json, 'conditions') ? undefined : json['conditions'],
-        'migration': !exists(json, 'migration') ? undefined : V1beta1PlanStatusMigrationFromJSON(json['migration']),
-        'observedGeneration': !exists(json, 'observedGeneration') ? undefined : json['observedGeneration'],
-    };
+export function V1beta1PlanStatusFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1PlanStatus {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    conditions: !exists(json, 'conditions') ? undefined : json['conditions'],
+    migration: !exists(json, 'migration')
+      ? undefined
+      : V1beta1PlanStatusMigrationFromJSON(json['migration']),
+    observedGeneration: !exists(json, 'observedGeneration')
+      ? undefined
+      : json['observedGeneration'],
+  };
 }
 
 export function V1beta1PlanStatusToJSON(value?: V1beta1PlanStatus | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'conditions': value.conditions,
-        'migration': V1beta1PlanStatusMigrationToJSON(value.migration),
-        'observedGeneration': value.observedGeneration,
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    conditions: value.conditions,
+    migration: V1beta1PlanStatusMigrationToJSON(value.migration),
+    observedGeneration: value.observedGeneration,
+  };
 }
-

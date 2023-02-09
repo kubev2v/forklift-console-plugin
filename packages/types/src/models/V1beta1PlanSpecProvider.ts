@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,18 +10,15 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
 import type { V1beta1NetworkMapSpecProviderDestination } from './V1beta1NetworkMapSpecProviderDestination';
 import {
-    V1beta1NetworkMapSpecProviderDestinationFromJSON,
-    V1beta1NetworkMapSpecProviderDestinationFromJSONTyped,
-    V1beta1NetworkMapSpecProviderDestinationToJSON,
+  V1beta1NetworkMapSpecProviderDestinationFromJSON,
+  V1beta1NetworkMapSpecProviderDestinationToJSON,
 } from './V1beta1NetworkMapSpecProviderDestination';
 import type { V1beta1NetworkMapSpecProviderSource } from './V1beta1NetworkMapSpecProviderSource';
 import {
-    V1beta1NetworkMapSpecProviderSourceFromJSON,
-    V1beta1NetworkMapSpecProviderSourceFromJSONTyped,
-    V1beta1NetworkMapSpecProviderSourceToJSON,
+  V1beta1NetworkMapSpecProviderSourceFromJSON,
+  V1beta1NetworkMapSpecProviderSourceToJSON,
 } from './V1beta1NetworkMapSpecProviderSource';
 
 /**
@@ -32,57 +27,57 @@ import {
  * @interface V1beta1PlanSpecProvider
  */
 export interface V1beta1PlanSpecProvider {
-    /**
-     * 
-     * @type {V1beta1NetworkMapSpecProviderDestination}
-     * @memberof V1beta1PlanSpecProvider
-     */
-    destination: V1beta1NetworkMapSpecProviderDestination;
-    /**
-     * 
-     * @type {V1beta1NetworkMapSpecProviderSource}
-     * @memberof V1beta1PlanSpecProvider
-     */
-    source: V1beta1NetworkMapSpecProviderSource;
+  /**
+   *
+   * @type {V1beta1NetworkMapSpecProviderDestination}
+   * @memberof V1beta1PlanSpecProvider
+   */
+  destination: V1beta1NetworkMapSpecProviderDestination;
+  /**
+   *
+   * @type {V1beta1NetworkMapSpecProviderSource}
+   * @memberof V1beta1PlanSpecProvider
+   */
+  source: V1beta1NetworkMapSpecProviderSource;
 }
 
 /**
  * Check if a given object implements the V1beta1PlanSpecProvider interface.
  */
 export function instanceOfV1beta1PlanSpecProvider(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "destination" in value;
-    isInstance = isInstance && "source" in value;
+  let isInstance = true;
+  isInstance = isInstance && 'destination' in value;
+  isInstance = isInstance && 'source' in value;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1PlanSpecProviderFromJSON(json: any): V1beta1PlanSpecProvider {
-    return V1beta1PlanSpecProviderFromJSONTyped(json, false);
+  return V1beta1PlanSpecProviderFromJSONTyped(json, false);
 }
 
-export function V1beta1PlanSpecProviderFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1PlanSpecProvider {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'destination': V1beta1NetworkMapSpecProviderDestinationFromJSON(json['destination']),
-        'source': V1beta1NetworkMapSpecProviderSourceFromJSON(json['source']),
-    };
+export function V1beta1PlanSpecProviderFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1PlanSpecProvider {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    destination: V1beta1NetworkMapSpecProviderDestinationFromJSON(json['destination']),
+    source: V1beta1NetworkMapSpecProviderSourceFromJSON(json['source']),
+  };
 }
 
 export function V1beta1PlanSpecProviderToJSON(value?: V1beta1PlanSpecProvider | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'destination': V1beta1NetworkMapSpecProviderDestinationToJSON(value.destination),
-        'source': V1beta1NetworkMapSpecProviderSourceToJSON(value.source),
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    destination: V1beta1NetworkMapSpecProviderDestinationToJSON(value.destination),
+    source: V1beta1NetworkMapSpecProviderSourceToJSON(value.source),
+  };
 }
-

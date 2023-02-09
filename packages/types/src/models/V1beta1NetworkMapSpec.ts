@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Forklift API
  * Migration toolkit for virtualization (Forklift) API definitions.
@@ -12,12 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
 import type { V1beta1NetworkMapSpecProvider } from './V1beta1NetworkMapSpecProvider';
 import {
-    V1beta1NetworkMapSpecProviderFromJSON,
-    V1beta1NetworkMapSpecProviderFromJSONTyped,
-    V1beta1NetworkMapSpecProviderToJSON,
+  V1beta1NetworkMapSpecProviderFromJSON,
+  V1beta1NetworkMapSpecProviderToJSON,
 } from './V1beta1NetworkMapSpecProvider';
 
 /**
@@ -26,57 +22,57 @@ import {
  * @interface V1beta1NetworkMapSpec
  */
 export interface V1beta1NetworkMapSpec {
-    /**
-     * Map.
-     * @type {any}
-     * @memberof V1beta1NetworkMapSpec
-     */
-    map: any | null;
-    /**
-     * 
-     * @type {V1beta1NetworkMapSpecProvider}
-     * @memberof V1beta1NetworkMapSpec
-     */
-    provider: V1beta1NetworkMapSpecProvider;
+  /**
+   * Map.
+   * @type {any}
+   * @memberof V1beta1NetworkMapSpec
+   */
+  map: any | null;
+  /**
+   *
+   * @type {V1beta1NetworkMapSpecProvider}
+   * @memberof V1beta1NetworkMapSpec
+   */
+  provider: V1beta1NetworkMapSpecProvider;
 }
 
 /**
  * Check if a given object implements the V1beta1NetworkMapSpec interface.
  */
 export function instanceOfV1beta1NetworkMapSpec(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "map" in value;
-    isInstance = isInstance && "provider" in value;
+  let isInstance = true;
+  isInstance = isInstance && 'map' in value;
+  isInstance = isInstance && 'provider' in value;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function V1beta1NetworkMapSpecFromJSON(json: any): V1beta1NetworkMapSpec {
-    return V1beta1NetworkMapSpecFromJSONTyped(json, false);
+  return V1beta1NetworkMapSpecFromJSONTyped(json, false);
 }
 
-export function V1beta1NetworkMapSpecFromJSONTyped(json: any, ignoreDiscriminator: boolean): V1beta1NetworkMapSpec {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'map': json['map'],
-        'provider': V1beta1NetworkMapSpecProviderFromJSON(json['provider']),
-    };
+export function V1beta1NetworkMapSpecFromJSONTyped(
+  json: any,
+  ignoreDiscriminator: boolean,
+): V1beta1NetworkMapSpec {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    map: json['map'],
+    provider: V1beta1NetworkMapSpecProviderFromJSON(json['provider']),
+  };
 }
 
 export function V1beta1NetworkMapSpecToJSON(value?: V1beta1NetworkMapSpec | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'map': value.map,
-        'provider': V1beta1NetworkMapSpecProviderToJSON(value.provider),
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    map: value.map,
+    provider: V1beta1NetworkMapSpecProviderToJSON(value.provider),
+  };
 }
-

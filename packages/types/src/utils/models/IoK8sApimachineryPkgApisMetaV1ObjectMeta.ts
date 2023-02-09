@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-import { IoK8sApimachineryPkgApisMetaV1OwnerReference } from "./IoK8sApimachineryPkgApisMetaV1OwnerReference";
+import { IoK8sApimachineryPkgApisMetaV1OwnerReference } from './IoK8sApimachineryPkgApisMetaV1OwnerReference';
 
 /**
  * ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
