@@ -17,7 +17,7 @@
   "scripts": {
     "clean": "rm -rf ./dist && rm -rf ./coverage",
     "clean:all": "npm run clean && rm -rf ./node_modules",
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && npx rollup -c --bundleConfigAsCjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   }

@@ -1,6 +1,8 @@
+import { ProviderModel, ProviderModelGroupVersionKind } from '@kubev2v/types';
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import {
   ActionProvider,
+  ModelMetadata,
   ResourceListPage,
   ResourceNSNavItem,
   RoutePage,
@@ -23,11 +25,7 @@ export const extensions: EncodedExtension[] = [
       section: 'migration',
       // t('plugin__forklift-console-plugin~Providers for virtualization')
       name: '%plugin__forklift-console-plugin~Providers for virtualization%',
-      model: {
-        group: 'forklift.konveyor.io',
-        kind: 'Provider',
-        version: 'v1beta1',
-      },
+      model: ProviderModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-providers',
         'data-test-id': 'providers-nav-item',
@@ -41,11 +39,7 @@ export const extensions: EncodedExtension[] = [
       component: {
         $codeRef: 'ProvidersPage',
       },
-      model: {
-        group: 'forklift.konveyor.io',
-        kind: 'Provider',
-        version: 'v1beta1',
-      },
+      model: ProviderModelGroupVersionKind,
     },
   } as EncodedExtension<ResourceListPage>,
 
@@ -69,4 +63,12 @@ export const extensions: EncodedExtension[] = [
       },
     },
   } as EncodedExtension<ActionProvider>,
+
+  {
+    type: 'console.model-metadata',
+    properties: {
+      model: ProviderModelGroupVersionKind,
+      ...ProviderModel,
+    },
+  } as EncodedExtension<ModelMetadata>,
 ];
