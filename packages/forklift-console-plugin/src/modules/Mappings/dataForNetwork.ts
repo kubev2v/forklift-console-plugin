@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import {
   IdOrNameRef,
   INameNamespaceRef,
@@ -6,29 +5,17 @@ import {
   INetworkMappingItem,
 } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
-import { useNetworkMappings, useProviders } from 'src/utils/fetch';
-import { groupVersionKindForObj, resolveProviderRef, ResourceKind } from 'src/utils/resources';
+import { useNetworkMappings } from 'src/utils/fetch';
+import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
 import { NetworkMapResource, ProviderRef, ProviderResource } from 'src/utils/types';
 
-import { K8sGroupVersionKind, OwnerReference } from '@openshift-console/dynamic-plugin-sdk';
+import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
-export interface FlatNetworkMapping {
-  [C.NAME]: string;
-  [C.NAMESPACE]: string;
-  [C.GVK]: K8sGroupVersionKind;
-  [C.SOURCE]: string;
-  [C.SOURCE_GVK]: K8sGroupVersionKind;
-  [C.SOURCE_RESOLVED]: boolean;
-  [C.SOURCE_READY]: boolean;
-  [C.TARGET]: string;
-  [C.TARGET_GVK]: K8sGroupVersionKind;
-  [C.TARGET_RESOLVED]: boolean;
-  [C.TARGET_READY]: boolean;
+import { CommonMapping, OwnerRef, resolveOwnerRef, useMappings } from './dataCommon';
+
+export interface FlatNetworkMapping extends CommonMapping {
   [C.FROM]: [Network, IdOrNameRef[]][];
   [C.TO]: Network[];
-  [C.TEMPLATE]: boolean;
-  [C.OWNER]: string;
-  [C.OWNER_GVK]: K8sGroupVersionKind;
   [C.OBJECT]: INetworkMapping;
 }
 
@@ -84,20 +71,6 @@ const groupByTarget = (m: NetworkMapResource): [Network, IdOrNameRef[]][] => {
       ]),
     ),
   ];
-};
-
-interface OwnerRef {
-  name?: string;
-  gvk?: K8sGroupVersionKind;
-}
-
-const resolveOwnerRef = ([first, second]: OwnerReference[] = []): OwnerRef => {
-  // expect only one owner - the plan
-  if (!first || first.kind != ResourceKind.Plan || second) {
-    return {};
-  }
-
-  return { name: first.name, gvk: groupVersionKindForObj(first) };
 };
 
 const mergeData = (
@@ -186,17 +159,11 @@ export type Network = LocalNetworkResource | RemoteNetworkResource | PodNetwork;
 export const useFlatNetworkMappings = ({
   namespace,
   name = undefined,
-  groupVersionKind: { group, version },
+  groupVersionKind,
 }): [FlatNetworkMapping[], boolean, boolean] => {
-  const [providers] = useProviders({ namespace }, { group, version });
-  const [mappings, loaded, error] = useNetworkMappings({ namespace, name }, { group, version });
-
-  const merged = useMemo(
-    () => (mappings && providers ? mergeData(mappings, providers) : []),
-    [mappings, providers],
+  return useMappings<NetworkMapResource, FlatNetworkMapping>(
+    { namespace, name, groupVersionKind },
+    useNetworkMappings,
+    mergeData,
   );
-  // extra memo to keep the tuple reference stable
-  // the tuple is used as data source and passed as prop
-  // which triggres unnecessary re-renders
-  return useMemo(() => [merged, loaded, error], [merged, loaded, error]);
 };

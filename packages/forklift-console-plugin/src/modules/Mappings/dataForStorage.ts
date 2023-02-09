@@ -1,0 +1,104 @@
+import { IdOrNameRef, IStorageMapping } from 'legacy/src/queries/types';
+import * as C from 'src/utils/constants';
+import { useStorageMappings } from 'src/utils/fetch';
+import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
+import { ProviderRef, ProviderResource, StorageMapResource } from 'src/utils/types';
+
+import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
+
+import { CommonMapping, OwnerRef, resolveOwnerRef, useMappings } from './dataCommon';
+
+export interface Storage {
+  name: string;
+}
+
+export interface FlatStorageMapping extends CommonMapping {
+  [C.FROM]: [Storage, IdOrNameRef[]][];
+  [C.TO]: Storage[];
+  [C.OBJECT]: IStorageMapping;
+}
+
+const groupByTarget = (tuples: [string, IdOrNameRef][]): [Storage, IdOrNameRef[]][] =>
+  Object.entries(
+    tuples.reduce(
+      (acc, [targetStorageName, sourceStorage]) => ({
+        ...acc,
+        [targetStorageName]: [...(acc[targetStorageName] ?? []), sourceStorage],
+      }),
+      {} as { [k: string]: IdOrNameRef[] },
+    ),
+  ).map(([targetStorageName, sources]) => [{ name: targetStorageName }, sources]);
+
+const mergeData = (
+  mappings: StorageMapResource[],
+  providers: ProviderResource[],
+): FlatStorageMapping[] => {
+  return mappings
+    .map(
+      (
+        mapping,
+      ): [
+        StorageMapResource,
+        StorageMapResource,
+        K8sGroupVersionKind,
+        ProviderRef,
+        ProviderRef,
+        OwnerRef,
+        [Storage, IdOrNameRef[]][],
+      ] => [
+        mapping, // to extract props
+        mapping, // to pass as object blob
+        groupVersionKindForObj(mapping),
+        resolveProviderRef(mapping.spec.provider.source, providers),
+        resolveProviderRef(mapping.spec.provider.destination, providers),
+        resolveOwnerRef(mapping.metadata.ownerReferences),
+        groupByTarget(
+          mapping.spec.map.map(({ destination, source }) => [destination.storageClass, source]),
+        ),
+      ],
+    )
+    .map(
+      ([
+        {
+          metadata: { name, namespace, annotations = [] },
+        },
+        mapping,
+        gvk,
+        sourceProvider,
+        targetProvider,
+        owner,
+        groupedStorages,
+      ]): FlatStorageMapping => ({
+        name,
+        namespace,
+        template: annotations?.[C.SHARED_MAPPING_ANNOTATION] !== 'false',
+        gvk,
+        owner: owner.name,
+        ownerGvk: owner.gvk,
+        source: sourceProvider.name,
+        sourceGvk: sourceProvider.gvk,
+        sourceResolved: sourceProvider.resolved,
+        sourceReady: sourceProvider.ready,
+        target: targetProvider.name,
+        targetGvk: targetProvider.gvk,
+        targetResolved: targetProvider.resolved,
+        targetReady: targetProvider.ready,
+        object: mapping,
+        to: groupedStorages.map(([storage]) => storage),
+        from: groupedStorages,
+      }),
+    )
+    .filter((it) => it.template);
+};
+
+export const useFlatStorageMappings = ({
+  namespace,
+  name = undefined,
+  groupVersionKind,
+}): [FlatStorageMapping[], boolean, boolean] => {
+  return useMappings<StorageMapResource, FlatStorageMapping>(
+    { namespace, name, groupVersionKind },
+    useStorageMappings,
+    mergeData,
+  );
+};

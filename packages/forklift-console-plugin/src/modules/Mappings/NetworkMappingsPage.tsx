@@ -13,53 +13,12 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { Button } from '@patternfly/react-core';
 
-import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './data';
+import { commonFieldsMetadata } from './CommonPage';
+import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './dataForNetwork';
 import NetworkMappingRow from './NetworkMappingRow';
 
-const byName = {
-  isVisible: true,
-  filter: {
-    type: 'freetext',
-    toPlaceholderLabel: (t) => t('Filter by name'),
-  },
-  sortable: true,
-};
-
 export const fieldsMetadata: Field[] = [
-  {
-    id: C.NAME,
-    toLabel: (t) => t('Name'),
-    ...byName,
-    isIdentity: true,
-  },
-  {
-    id: C.NAMESPACE,
-    toLabel: (t) => t('Namespace'),
-    isVisible: true,
-    isIdentity: true,
-    filter: {
-      toPlaceholderLabel: (t) => t('Filter by namespace'),
-      type: 'freetext',
-    },
-    sortable: true,
-  },
-  {
-    id: C.SOURCE,
-    toLabel: (t) => t('Source provider'),
-    ...byName,
-  },
-  {
-    id: C.TARGET,
-    toLabel: (t) => t('Target provider'),
-    ...byName,
-  },
-
-  {
-    id: C.FROM,
-    toLabel: (t) => t('From'),
-    isVisible: true,
-    sortable: false,
-  },
+  ...commonFieldsMetadata,
   {
     id: C.TO,
     toLabel: (t) => t('To'),
@@ -91,7 +50,7 @@ export const NetworkMappingsPage = ({ namespace, kind: reference }: ResourceCons
     <PageMemo
       dataSource={dataSource}
       namespace={namespace}
-      title={t('Network Mappings')}
+      title={t('NetworkMaps')}
       userSettings={userSettings}
     />
   );
