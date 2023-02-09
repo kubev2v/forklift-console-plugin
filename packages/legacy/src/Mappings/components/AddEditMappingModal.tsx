@@ -52,6 +52,8 @@ interface IAddEditMappingModalProps {
   mappingType: MappingType;
   mappingBeingEdited: Mapping | null;
   setActiveMapType: React.Dispatch<React.SetStateAction<MappingType>>;
+  namespace?:string;
+  isFixed?:boolean;
 }
 
 const useMappingFormState = (
@@ -85,9 +87,10 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
   mappingType,
   mappingBeingEdited,
   setActiveMapType,
+  namespace = ENV.DEFAULT_NAMESPACE,
+  isFixed = false,
 }: IAddEditMappingModalProps) => {
   usePausedPollingEffect();
-  const namespace = ENV.DEFAULT_NAMESPACE;
 
   const mappingsQuery = useMappingsQuery(mappingType, namespace);
   const inventoryProvidersQuery = useInventoryProvidersQuery();
@@ -209,7 +212,7 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                         setActiveMapType(MappingType[selection.toString()]);
                       }}
                       placeholderText="Select a mapping type..."
-                      isDisabled={!!mappingBeingEdited}
+                      isDisabled={!!mappingBeingEdited || isFixed}
                       menuAppendTo="parent"
                       maxHeight="40vh"
                     />

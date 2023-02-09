@@ -65,3 +65,13 @@ export const resolveProviderRef = (
     ready: hasCondition((provider?.status?.conditions ?? []) as IStatusCondition[], 'Ready'),
   };
 };
+
+export enum ResourceKind {
+  Provider = 'Provider',
+  NetworkMap = 'NetworkMap',
+  StorageMap = 'StorageMap',
+  Plan = 'Plan',
+  Migration = 'Migration',
+  Host = 'Host',
+  Hook = 'Hook',
+}
