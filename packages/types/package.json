@@ -1,0 +1,24 @@
+{
+  "name": "@kubev2v/types",
+  "version": "0.0.1",
+  "description": "Typescript interfaces and types for forklift",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kubev2v/forklift-console-plugin.git",
+    "directory": "packages/types"
+  },
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf ./dist && rm -rf ./coverage",
+    "clean:all": "npm run clean && rm -rf ./node_modules",
+    "build": "rm -rf dist && tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  }
+}

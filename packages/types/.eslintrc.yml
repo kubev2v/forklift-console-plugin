@@ -1,0 +1,7 @@
+extends:
+  - "../config/.eslintrc.yml"
+rules:
+  "@typescript-eslint/no-explicit-any":
+    - off
+  "@typescript-eslint/prefer-as-const":
+    - off
