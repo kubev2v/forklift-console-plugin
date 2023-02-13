@@ -1,3 +1,4 @@
+import { PlanModel, PlanModelGroupVersionKind } from '@kubev2v/types';
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import {
   ActionProvider,
@@ -15,12 +16,6 @@ export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
   usePlanActions: './modules/Plans/UsePlanActions',
 };
 
-const model = {
-  group: 'forklift.konveyor.io',
-  kind: 'Plan',
-  version: 'v1beta1',
-};
-
 export const extensions: EncodedExtension[] = [
   {
     type: 'console.navigation/resource-ns',
@@ -31,7 +26,7 @@ export const extensions: EncodedExtension[] = [
       section: 'migration',
       // t('plugin__forklift-console-plugin~Plans for virtualization')
       name: '%plugin__forklift-console-plugin~Plans for virtualization%',
-      model,
+      model: PlanModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-plans',
         'data-test-id': 'plans-nav-item',
@@ -45,7 +40,7 @@ export const extensions: EncodedExtension[] = [
       component: {
         $codeRef: 'PlansPage',
       },
-      model,
+      model: PlanModelGroupVersionKind,
     },
   } as EncodedExtension<ResourceListPage>,
 
@@ -100,9 +95,8 @@ export const extensions: EncodedExtension[] = [
   {
     type: 'console.model-metadata',
     properties: {
-      model,
-      color: '#0f930b',
-      abbr: 'PL',
+      model: PlanModelGroupVersionKind,
+      ...PlanModel,
     },
   } as EncodedExtension<ModelMetadata>,
 ];

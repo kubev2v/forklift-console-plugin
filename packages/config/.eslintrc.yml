@@ -17,8 +17,11 @@ plugins:
   - react
   - '@typescript-eslint'
   - simple-import-sort
+  - unused-imports
 rules:
   prettier/prettier:
+    - error
+  unused-imports/no-unused-imports:
     - error
   simple-import-sort/exports:
     - error
