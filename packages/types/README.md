@@ -1,6 +1,6 @@
 # @kubev2v/types
 
-Auto generated typescript models and constants for Forklift constroller.
+Auto generated typescript models and constants for Forklift controller.
 
 ## Auto generating new version
 
@@ -38,7 +38,7 @@ After auto generation is done, some manual tweeks can be done.
 ### Setting the models color and abbr.
 
 The model constant is auto generated with `abbr` that defaults to first two letters of the kind, and undefined `color`.
-It is sometimes advisable to manual change the defualts.
+It is sometimes advisable to manual change the defaults.
 
 for example:
 
@@ -52,7 +52,7 @@ export const HostModel = {
   ...
 };
 ```
-can be amually edited to:
+can be manually edited to:
 
 ``` ts
 export const HostModel = {

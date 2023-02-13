@@ -1,6 +1,6 @@
 # models
 
-Auto genereted constants for Forlklift k8s resources
+Auto generated constants for Forlklift k8s resources
 
 Each auto generated interface include the full model, GVK and a Ref.
 

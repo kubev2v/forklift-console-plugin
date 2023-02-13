@@ -1,6 +1,6 @@
 # models
 
-Auto genereted typescript interfaces for Forlklift k8s resources
+Auto generated typescript interfaces for Forlklift k8s resources
 
 Example:
 

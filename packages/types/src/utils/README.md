@@ -2,7 +2,7 @@
 
 ## Helper methods
 
-K8s utilites for converting resource constantns to the different types used in console method calls.
+K8s utilites for converting resource constants to the different types used in console method calls.
 Some SDK methods use Ref other use GVK.
 
 New methods should use GroupVersionKind (9 Feb 2023)
