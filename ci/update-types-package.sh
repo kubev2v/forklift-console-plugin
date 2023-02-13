@@ -20,9 +20,6 @@ npx crdtomodel \
   -m "forklift.konveyor.io" \
   -o ${types_package_dir}/constants
 
-#   npm i --location=global @openapitools/openapi-generator-cli
-npx openapi-generator-cli generate \
-  -g typescript-fetch \
-  --skip-validate-spec \
-  -o ${types_package_dir} \
+npx crdtotypes \
+  -o ${types_package_dir}/models \
   -i ${script_dir}/yaml/openapi.yaml

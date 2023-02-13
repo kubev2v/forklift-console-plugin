@@ -27,7 +27,6 @@
     "helm:build": "mkdir -p tmp && helm package -d tmp deployment/forklift-console-plugin/ && npm run helm:index"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.5.2",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
@@ -39,7 +38,7 @@
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "copyfiles": "^2.4.1",
-    "crdtoapi": "^0.0.11",
+    "crdtoapi": "^0.0.14",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.1.0",

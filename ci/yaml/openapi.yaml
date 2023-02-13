@@ -5,9 +5,9 @@ info:
   version: 2.4.0
   contact:
     email: kubev2v-dev@redhat.com
-license:
-  name: Apache-2.0
-  url: http://www.apache.org/licenses/
+  license:
+    name: Apache-2.0
+    url: http://www.apache.org/licenses/
 components:
   schemas:
     v1beta1ForkliftController:
