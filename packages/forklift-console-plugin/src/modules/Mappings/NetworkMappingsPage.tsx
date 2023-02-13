@@ -73,6 +73,7 @@ export const fieldsMetadata: Field[] = [
   {
     id: C.ACTIONS,
     toLabel: () => '',
+    isAction: true,
     isVisible: true,
     sortable: false,
   },
