@@ -18,7 +18,23 @@ export interface FlatStorageMapping extends CommonMapping {
   [C.OBJECT]: IStorageMapping;
 }
 
-const groupByTarget = (tuples: [string, IdOrNameRef][]): [Storage, IdOrNameRef[]][] =>
+/**
+ * Group networks by target network. It's many(sources)-to-one(target) mapping.
+ *
+ * @example
+ * Input: [
+ *  ["large", { id: "123" }],
+ *  ["large", { name: "foo" }]
+ * ]
+ * Output: [
+ *  [{ name: "large"} , [
+ *      { id: "123" },
+ *      { name: "foo" }
+ *    ]
+ *  ]
+ * ]
+ */
+export const groupByTarget = (tuples: [string, IdOrNameRef][]): [Storage, IdOrNameRef[]][] =>
   Object.entries(
     tuples.reduce(
       (acc, [targetStorageName, sourceStorage]) => ({
@@ -29,7 +45,7 @@ const groupByTarget = (tuples: [string, IdOrNameRef][]): [Storage, IdOrNameRef[]
     ),
   ).map(([targetStorageName, sources]) => [{ name: targetStorageName }, sources]);
 
-const mergeData = (
+export const mergeData = (
   mappings: StorageMapResource[],
   providers: ProviderResource[],
 ): FlatStorageMapping[] => {
