@@ -10,7 +10,7 @@ import MappingRow, { CellCreator, CellProps, commonCells, SourceCell } from './C
 import { FlatNetworkMapping, Network } from './dataForNetwork';
 import { NetworkMappingActions } from './mappingActions';
 
-const SourceNetworksCell = ({ t, entity }: CellProps<FlatNetworkMapping>) => {
+const SourceNetworksCell = ({ entity }: CellProps<FlatNetworkMapping>) => {
   return (
     <SourceCell Icon={NetworkIcon} groups={entity.from} itemsInFirstGroup={entity.from?.[0]?.[1]} />
   );
