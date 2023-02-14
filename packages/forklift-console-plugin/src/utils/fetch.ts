@@ -4,9 +4,13 @@ import {
   NetworkMapResource,
   PlanResource,
   ProviderResource,
+  StorageMapResource,
 } from 'src/utils/types';
 
-import { MOCK_NETWORK_MAPPINGS } from '@kubev2v/legacy/queries/mocks/mappings.mock';
+import {
+  MOCK_NETWORK_MAPPINGS,
+  MOCK_STORAGE_MAPPINGS,
+} from '@kubev2v/legacy/queries/mocks/mappings.mock';
 import { MOCK_MIGRATIONS } from '@kubev2v/legacy/queries/mocks/migrations.mock';
 import { MOCK_PLANS } from '@kubev2v/legacy/queries/mocks/plans.mock';
 import { MOCK_CLUSTER_PROVIDERS } from '@kubev2v/legacy/queries/mocks/providers.mock';
@@ -97,6 +101,21 @@ const useMockNetworkMappings = ({
   return [mockData, true, false];
 };
 
+const useMockStorageMappings = ({
+  name,
+}: WatchK8sResource): WatchK8sResult<StorageMapResource[]> => {
+  const mockData: StorageMapResource[] = useMemo(
+    () =>
+      !name
+        ? (MOCK_STORAGE_MAPPINGS as StorageMapResource[])
+        : (MOCK_STORAGE_MAPPINGS?.filter(
+            (map) => (map as K8sResourceCommon)?.metadata?.name === name,
+          ) as StorageMapResource[]),
+    [name],
+  );
+  return [mockData, true, false];
+};
+
 export const usePlans = IS_MOCK
   ? useMockPlans
   : createRealK8sWatchResourceHook<PlanResource>(ResourceKind.Plan);
@@ -108,3 +127,7 @@ export const useMigrations = IS_MOCK
 export const useNetworkMappings = IS_MOCK
   ? useMockNetworkMappings
   : createRealK8sWatchResourceHook<NetworkMapResource>(ResourceKind.NetworkMap);
+
+export const useStorageMappings = IS_MOCK
+  ? useMockStorageMappings
+  : createRealK8sWatchResourceHook<StorageMapResource>(ResourceKind.StorageMap);

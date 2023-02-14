@@ -1,7 +1,14 @@
+import {
+  NetworkMapModel,
+  NetworkMapModelGroupVersionKind,
+  StorageMapModel,
+  StorageMapModelGroupVersionKind,
+} from '@kubev2v/types';
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import {
   ActionProvider,
   HrefNavItem,
+  ModelMetadata,
   ResourceListPage,
   ResourceNSNavItem,
   RoutePage,
@@ -12,12 +19,8 @@ export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
   MappingsPage: './modules/Mappings/MappingsWrapper',
   NetworkMappingsPage: './modules/Mappings/NetworkMappingsWrapper',
   useNetworkMappingActions: './modules/Mappings/UseNetworkMappingActions',
-};
-
-const networkModel = {
-  group: 'forklift.konveyor.io',
-  kind: 'NetworkMap',
-  version: 'v1beta1',
+  StorageMappingsPage: './modules/Mappings/StorageMappingsWrapper',
+  useStorageMappingActions: './modules/Mappings/UseStorageMappingActions',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -44,6 +47,7 @@ export const extensions: EncodedExtension[] = [
       exact: true,
     },
   } as EncodedExtension<RoutePage>,
+
   {
     type: 'console.navigation/resource-ns',
     properties: {
@@ -51,9 +55,9 @@ export const extensions: EncodedExtension[] = [
       insertAfter: 'plans',
       perspective: 'admin',
       section: 'migration',
-      // t('plugin__forklift-console-plugin~Network Mappings for virtualization')
-      name: '%plugin__forklift-console-plugin~Network Mappings for virtualization%',
-      model: networkModel,
+      // t('plugin__forklift-console-plugin~NetworkMaps for virtualization')
+      name: '%plugin__forklift-console-plugin~NetworkMaps for virtualization%',
+      model: NetworkMapModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-network-mappings',
         'data-test-id': 'network-mappings-nav-item',
@@ -67,7 +71,7 @@ export const extensions: EncodedExtension[] = [
       component: {
         $codeRef: 'NetworkMappingsPage',
       },
-      model: networkModel,
+      model: NetworkMapModelGroupVersionKind,
     },
   } as EncodedExtension<ResourceListPage>,
   {
@@ -79,4 +83,54 @@ export const extensions: EncodedExtension[] = [
       },
     },
   } as EncodedExtension<ActionProvider>,
+
+  {
+    type: 'console.navigation/resource-ns',
+    properties: {
+      id: 'storageMappings',
+      insertAfter: 'networkMappings',
+      perspective: 'admin',
+      section: 'migration',
+      // t('plugin__forklift-console-plugin~StorageMaps for virtualization')
+      name: '%plugin__forklift-console-plugin~StorageMaps for virtualization%',
+      model: StorageMapModelGroupVersionKind,
+      dataAttributes: {
+        'data-quickstart-id': 'qs-nav-storage-mappings',
+        'data-test-id': 'storage-mappings-nav-item',
+      },
+    },
+  } as EncodedExtension<ResourceNSNavItem>,
+
+  {
+    type: 'console.page/resource/list',
+    properties: {
+      component: {
+        $codeRef: 'StorageMappingsPage',
+      },
+      model: StorageMapModelGroupVersionKind,
+    },
+  } as EncodedExtension<ResourceListPage>,
+  {
+    type: 'console.action/provider',
+    properties: {
+      contextId: 'forklift-flat-storage-mapping',
+      provider: {
+        $codeRef: 'useStorageMappingActions',
+      },
+    },
+  } as EncodedExtension<ActionProvider>,
+  {
+    type: 'console.model-metadata',
+    properties: {
+      model: StorageMapModelGroupVersionKind,
+      ...StorageMapModel,
+    },
+  } as EncodedExtension<ModelMetadata>,
+  {
+    type: 'console.model-metadata',
+    properties: {
+      model: NetworkMapModelGroupVersionKind,
+      ...NetworkMapModel,
+    },
+  } as EncodedExtension<ModelMetadata>,
 ];
