@@ -7,16 +7,13 @@ import {
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import {
   ActionProvider,
-  HrefNavItem,
   ModelMetadata,
   ResourceListPage,
   ResourceNSNavItem,
-  RoutePage,
 } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
-  MappingsPage: './modules/Mappings/MappingsWrapper',
   NetworkMappingsPage: './modules/Mappings/NetworkMappingsWrapper',
   useNetworkMappingActions: './modules/Mappings/UseNetworkMappingActions',
   StorageMappingsPage: './modules/Mappings/StorageMappingsWrapper',
@@ -24,30 +21,6 @@ export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
 };
 
 export const extensions: EncodedExtension[] = [
-  {
-    type: 'console.navigation/href',
-    properties: {
-      id: 'mappings',
-      insertAfter: 'plans',
-      perspective: 'admin',
-      section: 'migration',
-      // t('plugin__forklift-console-plugin~Mappings for virtualization')
-      name: '%plugin__forklift-console-plugin~Mappings for virtualization%',
-      href: '/mtv/mappings',
-    },
-  } as EncodedExtension<HrefNavItem>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'MappingsPage',
-      },
-      path: '/mtv/mappings',
-      exact: true,
-    },
-  } as EncodedExtension<RoutePage>,
-
   {
     type: 'console.navigation/resource-ns',
     properties: {

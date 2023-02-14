@@ -45,7 +45,6 @@
   "KubeVirt": "KubeVirt",
   "Map source datastores or storage domains and networks to target storage classes and networks.": "Map source datastores or storage domains and networks to target storage classes and networks.",
   "Mapping graph": "Mapping graph",
-  "Mappings for virtualization": "Mappings for virtualization",
   "Migrating virtualization workloads is a multi-step process.": "Migrating virtualization workloads is a multi-step process.",
   "Migration plan \"{{name}}\" will be deleted. However, deleting a migration plan does not remove temporary resources such as failed VMs and data volumes, conversion pods, importer pods, secrets, or config maps.": "Migration plan \"{{name}}\" will be deleted. However, deleting a migration plan does not remove temporary resources such as failed VMs and data volumes, conversion pods, importer pods, secrets, or config maps.",
   "Name": "Name",
