@@ -38,7 +38,7 @@ export const useSearchParams = (): [MappedSearchParams, SetURLSearchParams] => {
     history.pushState(
       {},
       '',
-      location.pathname + (urlSearchParams.length ? '?' + urlSearchParams : ''),
+      location.pathname + (urlSearchParams.length ? `?${urlSearchParams}` : ''),
     );
 
     // Update search params state
