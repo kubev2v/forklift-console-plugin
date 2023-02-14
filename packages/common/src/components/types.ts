@@ -11,6 +11,7 @@ export interface Field {
   toLabel(t: (key: string) => string): string;
   isVisible?: boolean;
   isIdentity?: boolean;
+  isAction?: boolean;
   sortable?: boolean;
   filter?: FilterDef;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

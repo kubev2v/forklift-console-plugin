@@ -74,6 +74,9 @@ interface ManagedColumnsProps {
   /** Read only. The defaults used for initialization.*/
   defaultColumns: Field[];
 }
+
+const filterActions = (columns: Field[]) => columns.filter((col) => !col.isAction);
+
 /**
  * Modal dialog for managing columns.
  * Supported features:
@@ -89,8 +92,8 @@ const ManageColumns = ({
   defaultColumns,
 }: ManagedColumnsProps) => {
   const { t } = useTranslation();
-  const [editedColumns, setEditedColumns] = useState(columns);
-  const restoreDefaults = () => setEditedColumns([...defaultColumns]);
+  const [editedColumns, setEditedColumns] = useState(filterActions(columns));
+  const restoreDefaults = () => setEditedColumns([...filterActions(defaultColumns)]);
   const onDrop = (source: { index: number }, dest: { index: number }) => {
     const draggedItem = editedColumns[source?.index];
     const itemCurrentlyAtDestination = editedColumns[dest?.index];
@@ -115,7 +118,8 @@ const ManageColumns = ({
     );
   };
   const onSave = () => {
-    onChange(editedColumns);
+    // assume that action columns are always at the end
+    onChange([...editedColumns, ...columns.filter((col) => col.isAction)]);
     onClose();
   };
 
