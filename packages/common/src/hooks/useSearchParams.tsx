@@ -34,8 +34,12 @@ export const useSearchParams = (): [MappedSearchParams, SetURLSearchParams] => {
    */
   const updateSearchParams: SetURLSearchParams = (params) => {
     const combinedPrams = removeUndefinedKeys({ ...searchParams, ...params });
-    const urlSearchParams = new URLSearchParams(combinedPrams);
-    history.pushState({}, '', location.pathname + '?' + urlSearchParams.toString());
+    const urlSearchParams = new URLSearchParams(combinedPrams).toString();
+    history.pushState(
+      {},
+      '',
+      location.pathname + (urlSearchParams.length ? `?${urlSearchParams}` : ''),
+    );
 
     // Update search params state
     internalSetSearchParams(combinedPrams);
