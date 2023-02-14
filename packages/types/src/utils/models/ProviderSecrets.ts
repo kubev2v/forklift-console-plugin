@@ -1,5 +1,19 @@
 /** Unified file containing typed provider secrets */
 
+export type ProviderType = 'openshift' | 'vsphere' | 'ovirt' | 'openstack';
+
+/**
+ * Provider secret containing credentials and other confidential information
+ *
+ * @export
+ * @interface ProviderSecret
+ */
+export type ProviderSecret =
+  | OpenShiftProviderSecret
+  | VSphereProviderSecret
+  | OVirtProviderSecret
+  | OpenstackProviderSecret;
+
 /**
  * Provider secret containing credentials and other confidential information
  * for OpenShift.
@@ -8,6 +22,7 @@
  * @interface OpenShiftProviderSecret
  */
 export interface OpenShiftProviderSecret {
+  providerType: 'openshift';
   /**
    * k8s token for a user that can admin kubevirt on the k8s cluster
    *
@@ -31,6 +46,7 @@ export interface OpenShiftProviderSecret {
  * @interface VSphereProviderSecret
  */
 export interface VSphereProviderSecret {
+  providerType: 'vsphere';
   /**
    * VSphere user name
    *
@@ -56,7 +72,22 @@ export interface VSphereProviderSecret {
   password: string;
 
   /**
+   * Indicate that the client can ignore certifacte verification.
+   *
+   * Provider type: OVirt
+   * Conditions: Optional
+   *
+   * @type {boolean}
+   * @memberof ProviderSecret
+   */
+  insecureSkipVerify?: boolean;
+
+  /**
    * VSphere server thumbprint
+   *
+   * NOTE: thumbprint is not optional because CDI does not currently
+   *       implement `insecureSkipVerify`. The `vddkImage` is using CDI
+   *       and we can't remove this dependency at this point.
    *
    * Provider type: VSphere
    * Conditions: Required
@@ -77,6 +108,7 @@ export interface VSphereProviderSecret {
  * @interface OVirtProviderSecret
  */
 export interface OVirtProviderSecret {
+  providerType: 'ovirt';
   /**
    * OVirt user name
    *
@@ -104,6 +136,9 @@ export interface OVirtProviderSecret {
   /**
    * OVirt server cacerts, can be a linked list of multple certifications.
    *
+   * NOTE: ATM cacert is not optional because
+   *       insecureSkipVerify is not implemented in our ovirt image-io client
+   *
    * Provider type: OVirt
    * Conditions: Required if insecureSkipVerify is false
    * Validation Regexp:
@@ -112,7 +147,7 @@ export interface OVirtProviderSecret {
    * @type {string}
    * @memberof ProviderSecret
    */
-  cacert: string;
+  cacert?: string;
 
   /**
    * Indicate that the client can ignore certifacte verification.
@@ -134,6 +169,7 @@ export interface OVirtProviderSecret {
  * @interface OpenstackProviderSecret
  */
 export interface OpenstackProviderSecret {
+  providerType: 'openstack';
   /**
    * openstack user name
    *
@@ -168,7 +204,7 @@ export interface OpenstackProviderSecret {
    * @type {string}
    * @memberof ProviderSecret
    */
-  domainName: string;
+  domainName?: string;
 
   /**
    * openstack region name
@@ -180,7 +216,7 @@ export interface OpenstackProviderSecret {
    * @type {string}
    * @memberof ProviderSecret
    */
-  region: string;
+  region?: string;
 
   /**
    * openstack domain name
@@ -192,7 +228,7 @@ export interface OpenstackProviderSecret {
    * @type {string}
    * @memberof ProviderSecret
    */
-  projectName: string;
+  projectName?: string;
 
   /**
    * Indicate that the client can ignore certifacte verification.
@@ -203,7 +239,7 @@ export interface OpenstackProviderSecret {
    * @type {boolean}
    * @memberof ProviderSecret
    */
-  insecure: boolean;
+  insecure?: boolean;
 
   /**
    * openstack server cacerts, can be a linked list of multple certifications.
@@ -216,5 +252,5 @@ export interface OpenstackProviderSecret {
    * @type {string}
    * @memberof ProviderSecret
    */
-  cacert: string;
+  cacert?: string;
 }
