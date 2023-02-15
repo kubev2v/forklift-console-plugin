@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import * as React from 'react';
 import { ModalProvider } from '../console-dynamic-plugin-sdk/app/modal-support/ModalProvider';
+import { IS_CONSOLE_VERSION_4_11 } from 'common/src/polyfills/version/release-version';
 
 /** withModalProvider
  *
@@ -10,8 +12,13 @@ import { ModalProvider } from '../console-dynamic-plugin-sdk/app/modal-support/M
  * Componenet {React.FC} is the component that will be wrapped with
  * the modal provider context.
  */
-export const withModalProvider = <T extends object>(Component: React.ComponentType<T>): React.FC<T> => {
-  function ModalProviderHoc(props) {
+export const withModalProvider = <T extends object>(Component: React.ComponentType<T>): React.ComponentType<T> => {
+  // On console version 4.12 and above we do not need the modal provider.
+  if (!IS_CONSOLE_VERSION_4_11) {
+    return Component;
+  }
+
+  const ModalProviderHoc = (props) => {
     return (
       <ModalProvider>
         <Component {...props} />

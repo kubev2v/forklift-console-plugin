@@ -21,7 +21,7 @@
     "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
-    "@openshift-console/dynamic-plugin-sdk": "0.0.17",
+    "@openshift-console/dynamic-plugin-sdk": "0.0.18",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.8",
     "@openshift/dynamic-plugin-sdk": "~1.0.0",
     "@openshift/dynamic-plugin-sdk-webpack": "~1.0.0"

@@ -45,7 +45,7 @@
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot"
   },
   "peerDependencies": {
-    "@openshift-console/dynamic-plugin-sdk": "0.0.17",
+    "@openshift-console/dynamic-plugin-sdk": "0.0.18",
     "@openshift/dynamic-plugin-sdk": "~1.0.0",
     "@patternfly/react-core": "4.221.3",
     "@patternfly/react-table": "4.90.3",
