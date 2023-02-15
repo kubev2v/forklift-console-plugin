@@ -20,6 +20,8 @@ import { Td, Tr } from '@patternfly/react-table';
 import { MergedProvider, SupportedConditions } from './data';
 import { ProviderActions } from './providerActions';
 
+import './styles.css';
+
 interface CellProps {
   value: string;
   entity: MergedProvider;
@@ -138,25 +140,23 @@ const HostCell = ({ value, entity: { ready, name, type }, currentNamespace }: Ce
 HostCell.displayName = 'HostCell';
 
 const TypeCell = ({ value, t }: CellProps) => (
-  <>
+  <span className="forklift-table__flex-cell">
     {PROVIDERS?.[value]?.(t)}
     {SOURCE_PROVIDER_TYPES.includes(value as ProviderType) && (
       <>
-        {' '}
-        <Label isCompact color="green">
+        <Label isCompact color="green" className="forklift-table__flex-cell-label">
           {t('Source').toLowerCase()}
         </Label>
       </>
     )}
     {TARGET_PROVIDER_TYPES.includes(value as ProviderType) && (
       <>
-        {' '}
-        <Label isCompact color="blue">
+        <Label isCompact color="blue" className="forklift-table__flex-cell-label">
           {t('Target').toLowerCase()}
         </Label>
       </>
     )}
-  </>
+  </span>
 );
 TypeCell.displayName = 'TypeCell';
 

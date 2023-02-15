@@ -145,19 +145,19 @@ const Ref = ({
 const NameCell = ({ entity: e }: CellProps) => {
   const { t } = useTranslation();
   return (
-    <>
-      <Ref gvk={e.gvk} name={e.name} namespace={e.namespace} />{' '}
+    <span className="forklift-table__flex-cell">
+      <Ref gvk={e.gvk} name={e.name} namespace={e.namespace} />
       {e.type === 'Cold' && (
-        <Label isCompact color="blue">
+        <Label isCompact color="blue" className="forklift-table__flex-cell-label">
           {PLAN_TYPE.Cold(t).toLowerCase()}
         </Label>
       )}
       {e.type === 'Warm' && (
-        <Label isCompact color="orange">
+        <Label isCompact color="orange" className="forklift-table__flex-cell-label">
           {PLAN_TYPE.Warm(t).toLowerCase()}
         </Label>
       )}
-    </>
+    </span>
   );
 };
 NameCell.displayName = 'NameCell';

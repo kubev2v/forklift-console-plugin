@@ -14,19 +14,22 @@ exports[`Plan rows plantest-01 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-01, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-blue pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              cold
+              name: plantest-01, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-blue pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                cold
+              </span>
             </span>
           </span>
         </td>
@@ -218,19 +221,22 @@ exports[`Plan rows plantest-02 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-02, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-blue pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              cold
+              name: plantest-02, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-blue pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                cold
+              </span>
             </span>
           </span>
         </td>
@@ -425,19 +431,22 @@ exports[`Plan rows plantest-03 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-03, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-blue pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              cold
+              name: plantest-03, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-blue pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                cold
+              </span>
             </span>
           </span>
         </td>
@@ -660,19 +669,22 @@ exports[`Plan rows plantest-04 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-04, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-blue pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              cold
+              name: plantest-04, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-blue pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                cold
+              </span>
             </span>
           </span>
         </td>
@@ -895,19 +907,22 @@ exports[`Plan rows plantest-05 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-05, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-blue pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              cold
+              name: plantest-05, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-blue pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                cold
+              </span>
             </span>
           </span>
         </td>
@@ -1087,19 +1102,22 @@ exports[`Plan rows plantest-06 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-06, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-orange pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              warm
+              name: plantest-06, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-orange pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                warm
+              </span>
             </span>
           </span>
         </td>
@@ -1294,19 +1312,22 @@ exports[`Plan rows plantest-07 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-07, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-orange pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              warm
+              name: plantest-07, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-orange pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                warm
+              </span>
             </span>
           </span>
         </td>
@@ -1473,19 +1494,22 @@ exports[`Plan rows plantest-08 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-08, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-orange pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              warm
+              name: plantest-08, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-orange pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                warm
+              </span>
             </span>
           </span>
         </td>
@@ -1653,19 +1677,22 @@ exports[`Plan rows plantest-09 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-09, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-orange pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              warm
+              name: plantest-09, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-orange pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                warm
+              </span>
             </span>
           </span>
         </td>
@@ -1857,19 +1884,22 @@ exports[`Plan rows plantest-10 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-10, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-orange pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              warm
+              name: plantest-10, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-orange pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                warm
+              </span>
             </span>
           </span>
         </td>
@@ -2092,19 +2122,22 @@ exports[`Plan rows plantest-11 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest-11, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-blue pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              cold
+              name: plantest-11, gvk: forklift.konveyor.io~v1beta1~Plan, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-blue pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                cold
+              </span>
             </span>
           </span>
         </td>
