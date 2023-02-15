@@ -11,6 +11,7 @@ import { IProviderObject, ISecret } from 'legacy/src/queries/types';
 import {
   AddProviderFormValues,
   OpenshiftProviderFormValues,
+  OpenStackProviderFormValues,
   RHVProviderFormValues,
   VMwareProviderFormValues,
 } from 'legacy/src/Providers/components/AddEditProviderModal/AddEditProviderModal';
@@ -115,10 +116,23 @@ export function convertFormValuesToSecret(
       cacert: btoa(rhvValues.caCert),
     };
   }
+  if (values.providerType === 'openstack') {
+    const openstackValues = values as OpenStackProviderFormValues;
+    secretData = {
+      url: btoa(openstackValues.openstackUrl),
+      username: btoa(openstackValues.username),
+      password: btoa(openstackValues.password),
+      domainName:btoa(openstackValues.domainName),
+      projectName:btoa(openstackValues.projectName),
+      region:btoa(openstackValues.region),
+      insecure:btoa(String((openstackValues.insecure))),
+      cacert: !openstackValues.insecure ? btoa(openstackValues.caCertIfSecure) : null
+    };
+  }
   if (values.providerType === 'openshift') {
     const openshiftValues = values as OpenshiftProviderFormValues;
     secretData = {
-      url: btoa((values as OpenshiftProviderFormValues).url),
+      url: btoa(openshiftValues.openshiftUrl),
       token: btoa(openshiftValues.saToken),
     };
   }
@@ -182,8 +196,11 @@ export const convertFormValuesToProvider = (
   if (providerType === 'ovirt') {
     url = ovirtHostnameToUrl((values as RHVProviderFormValues).hostname);
   }
+  if (providerType === 'openstack') {
+    url = (values as OpenStackProviderFormValues).openstackUrl;
+  }
   if (providerType === 'openshift') {
-    url = (values as OpenshiftProviderFormValues).url;
+    url = (values as OpenshiftProviderFormValues).openshiftUrl;
   }
   return {
     apiVersion: CLUSTER_API_VERSION,

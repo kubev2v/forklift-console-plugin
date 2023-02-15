@@ -10,6 +10,7 @@ import {
   Popover,
   FileUpload,
   TextInput,
+  Checkbox,
 } from '@patternfly/react-core';
 import {
   useFormState,
@@ -57,11 +58,16 @@ const PROVIDER_TYPE_OPTIONS = PROVIDER_TYPES.map((type) => ({
 
 const oVirtLabelPrefix = process.env.BRAND_TYPE === 'RedHat' ? 'RHV Manager' : 'oVirt Engine';
 const vmwareLabelPrefix = 'vCenter';
-const getLabelName = (type: 'hostname' | 'username' | 'pwd', prefix?: string) => {
+const openStackLabelPrefix = 'OpenStack Identity (Keystone)';
+const getLabelName = (type: 'hostname' | 'URL' | 'username' | 'pwd', prefix?: string) => {
   let label = '';
   switch (type) {
     case 'hostname': {
       label = prefix ? `${prefix} host name or IP address` : 'Host name or IP address';
+      break;
+    }
+    case 'URL': {
+      label = prefix ? `${prefix} URL` : 'URL';
       break;
     }
     case 'username': {
@@ -81,8 +87,11 @@ const getLabelName = (type: 'hostname' | 'username' | 'pwd', prefix?: string) =>
 
 const isVmWare = (providerType: ProviderType | null) => providerType === 'vsphere';
 const isOvirt = (providerType: ProviderType | null) => providerType === 'ovirt';
+const isOpenStack = (providerType: ProviderType | null) => providerType === 'openstack';
 const brandPrefix = (providerType: ProviderType | null) =>
-  isOvirt(providerType) ? oVirtLabelPrefix : isVmWare(providerType) ? vmwareLabelPrefix : undefined;
+  isOvirt(providerType) ? oVirtLabelPrefix :
+  isVmWare(providerType) ? vmwareLabelPrefix :
+  isOpenStack(providerType) ? openStackLabelPrefix: undefined;
 
 const useAddProviderFormState = (
   clusterProvidersQuery: ReturnType<typeof useClusterProvidersQuery>,
@@ -139,9 +148,21 @@ const useAddProviderFormState = (
       caCert: useFormField('', yup.string().label('CA certificate').required()),
       caCertFilename: useFormField('', yup.string()),
     }),
+    openstack: useFormState({
+      ...commonProviderFields,
+      openstackUrl: useFormField('', urlSchema.required().label(getLabelName('URL', brandPrefix(providerTypeField.value)))),
+      username: useFormField('', usernameSchema.required().label(getLabelName('username', brandPrefix(providerTypeField.value)))),
+      password: useFormField('', yup.string().max(256).label(getLabelName('pwd', brandPrefix(providerTypeField.value))).required()),
+      domainName: useFormField('', yup.string().label('Domain').required()),
+      projectName: useFormField('', yup.string().label('Project').required()),
+      region: useFormField('', yup.string().label('Region').required()),
+      insecure: useFormField(false, yup.boolean()),
+      caCertIfSecure: useFormField('', yup.string().label('CA certificate')),
+      caCertFilenameIfSecure: useFormField('', yup.string()),
+    }),
     openshift: useFormState({
       ...commonProviderFields,
-      url: useFormField('', urlSchema.label('URL').required()),
+      openshiftUrl: useFormField('', urlSchema.label('URL').required()),
       saToken: useFormField('', yup.string().label('Service account token').required()),
     }),
   };
@@ -150,10 +171,12 @@ const useAddProviderFormState = (
 export type AddProviderFormState = ReturnType<typeof useAddProviderFormState>; // ✨ Magic
 export type VMwareProviderFormValues = AddProviderFormState['vsphere']['values'];
 export type RHVProviderFormValues = AddProviderFormState['ovirt']['values'];
+export type OpenStackProviderFormValues = AddProviderFormState['openstack']['values'];
 export type OpenshiftProviderFormValues = AddProviderFormState['openshift']['values'];
 export type AddProviderFormValues =
   | VMwareProviderFormValues
   | RHVProviderFormValues
+  | OpenStackProviderFormValues
   | OpenshiftProviderFormValues;
 
 export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModalProps> = ({
@@ -179,6 +202,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
   const providerType = providerTypeField.value;
   const formValues = providerType ? forms[providerType].values : null;
   const isFormValid = providerType ? forms[providerType].isValid : false;
+  const isOpenStackButtonEnabled = forms["openstack"].fields.insecure.value || forms["openstack"].fields.caCertIfSecure.value;
   const isFormDirty = providerType ? forms[providerType].isDirty : false;
 
   // Combines fields of all 3 forms into one type with all properties as optional.
@@ -186,14 +210,22 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
   // instead of duplicating the logic of which providers have which fields.
   const fields = providerType
     ? (forms[providerType].fields as Partial<
-        typeof forms.vsphere.fields & typeof forms.ovirt.fields & typeof forms.openshift.fields
+        typeof forms.vsphere.fields & typeof forms.ovirt.fields & typeof forms.openstack.fields & typeof forms.openshift.fields
       >)
     : null;
 
   const usernamePlaceholder = {
     vsphere: 'Example, administrator@vsphere.local',
     ovirt: 'Example, admin@internal',
+    openstack: 'Example, admin',
     openshift: undefined,
+  }[providerType || ''];
+
+  const urlPlaceholder = {
+    vsphere: undefined,
+    ovirt: undefined,
+    openstack: 'Example, http://controller:5000/v3',
+    openshift: 'Example, https://api.clusterName.domain:6443',
   }[providerType || ''];
 
   const createProviderMutation = useCreateProviderMutation(prefillNamespace, providerType, onClose);
@@ -237,7 +269,9 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
               id="modal-confirm-button"
               key="confirm"
               variant="primary"
-              isDisabled={!isFormDirty || !isFormValid || mutateProviderResult.isLoading}
+              isDisabled={providerType === 'openstack' ?
+                !isFormDirty || !isFormValid || mutateProviderResult.isLoading || !isOpenStackButtonEnabled:
+                !isFormDirty || !isFormValid || mutateProviderResult.isLoading}
               onClick={() => {
                 if (formValues) {
                   mutateProvider(formValues);
@@ -308,6 +342,40 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     }}
                   />
                 ) : null}
+                {fields?.openstackUrl ? (
+                  <ValidatedTextInput
+                    field={fields.openstackUrl}
+                    isRequired
+                    fieldId="openstack-url"
+                    inputProps={{
+                      placeholder: urlPlaceholder,
+                    }}
+                    formGroupProps={{
+                      labelIcon: (
+                        <Popover
+                          bodyContent={
+                            <>
+                              OpenStack Identity (Keystone) endpoint.
+                              <br />
+                              For example: <i>http://controller:5000/v3</i>
+                            </>
+                          }
+                        >
+                          <Button
+                            variant="plain"
+                            aria-label="More info for URL field"
+                            onClick={(e) => e.preventDefault()}
+                            aria-describedby="openstack-url-info"
+                            className="pf-c-form__group-label-help"
+                          >
+                            <HelpIcon noVerticalAlign />
+                          </Button>
+                        </Popover>
+                      ),
+                    }}
+                  />
+                ) : null}
+
                 {fields?.hostname ? (
                   <ValidatedTextInput
                     field={fields.hostname}
@@ -402,6 +470,27 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                   }}
                 />
                 ) : null }
+                {fields?.domainName ? (
+                  <ValidatedTextInput
+                    field={fields.domainName}
+                    isRequired
+                    fieldId="domain-name"
+                  />
+                ) : null}
+                {fields?.projectName ? (
+                  <ValidatedTextInput
+                    field={fields.projectName}
+                    isRequired
+                    fieldId="project-name"
+                  />
+                ) : null}
+                {fields?.region? (
+                  <ValidatedTextInput
+                    field={fields.region}
+                    isRequired
+                    fieldId="region"
+                  />
+                ) : null}
                 {fields?.caCert && fields?.caCertFilename ? (
                   <FormGroup
                     label="CA certificate"
@@ -444,11 +533,65 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     />
                   </FormGroup>
                 ) : null}
-                {fields?.url ? (
+                {fields?.insecure? (
+                  <Checkbox
+                    label="Skip certificate validation (if checked, the CA certificate won't be validated)"
+                    aria-label="Insecure connection checkbox"
+                    id="insecure-check"
+                    isChecked={fields.insecure.value}
+                    onChange={() =>
+                      fields.insecure?.setValue(!fields.insecure.value)
+                    }
+                  />
+                ) : null}
+                {fields?.insecure && !fields?.insecure?.value && fields?.caCertIfSecure && fields?.caCertFilenameIfSecure ? (
+                  <FormGroup
+                    label="CA certificate"
+                    labelIcon={
+                      <Popover
+                        bodyContent={
+                          <div>
+                            The CA certificate file to validate before connecting to the OpenStack Identity server.
+                          </div>
+                        }
+                      >
+                        <Button
+                          variant="plain"
+                          aria-label="More info for CA certificate field"
+                          onClick={(e) => e.preventDefault()}
+                          aria-describedby="caCertIfSecure"
+                          className="pf-c-form__group-label-help"
+                        >
+                          <HelpIcon noVerticalAlign />
+                        </Button>
+                      </Popover>
+                    }
+                    fieldId="caCertIfSecure"
+                    {...getFormGroupProps(fields.caCertIfSecure)}
+                  >
+                    <FileUpload
+                      id="caCertIfSecure"
+                      type="text"
+                      value={fields.caCertIfSecure.value}
+                      filename={fields.caCertFilenameIfSecure.value}
+                      onChange={(value, filename) => {
+                        fields.caCertIfSecure?.setValue(value as string);
+                        fields.caCertIfSecure?.setIsTouched(true);
+                        fields.caCertFilenameIfSecure?.setValue(filename);
+                      }}
+                      onBlur={() => fields.caCertIfSecure?.setIsTouched(true)}
+                      validated={fields.caCertIfSecure?.shouldShowError ? 'error' : 'default'}
+                    />
+                  </FormGroup>
+                ) : null}
+                {fields?.openshiftUrl ? (
                   <ValidatedTextInput
-                    field={fields.url}
+                    field={fields.openshiftUrl}
                     isRequired
                     fieldId="openshift-url"
+                    inputProps={{
+                      placeholder: urlPlaceholder,
+                    }}
                     formGroupProps={{
                       labelIcon: (
                         <Popover

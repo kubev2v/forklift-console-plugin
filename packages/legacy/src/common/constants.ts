@@ -37,14 +37,15 @@ export const PRODUCT_DOCO_LINK = {
   label: 'product documentation',
 };
 
-export const PROVIDER_TYPES = ['vsphere', 'ovirt', 'openshift'] as const;
+export const PROVIDER_TYPES = ['vsphere', 'ovirt', 'openstack', 'openshift'] as const;
 export type ProviderType = (typeof PROVIDER_TYPES)[number];
-export const SOURCE_PROVIDER_TYPES: ProviderType[] = ['vsphere', 'ovirt'];
+export const SOURCE_PROVIDER_TYPES: ProviderType[] = ['vsphere', 'ovirt', 'openstack'];
 export const TARGET_PROVIDER_TYPES: ProviderType[] = ['openshift'];
 
 export const PROVIDER_TYPE_NAMES: Record<ProviderType, string> = {
   vsphere: 'VMware',
   ovirt: ENV.BRAND_TYPE === 'RedHat' ? 'Red Hat Virtualization' : 'oVirt',
+  openstack: ENV.BRAND_TYPE === 'RedHat' ? 'Red Hat OpenStack Platform' : 'OpenStack',
   openshift: ENV.BRAND_TYPE === 'RedHat' ? 'OpenShift Virtualization' : 'KubeVirt',
 };
 

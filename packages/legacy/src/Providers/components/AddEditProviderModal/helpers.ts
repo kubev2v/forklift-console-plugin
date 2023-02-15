@@ -46,8 +46,8 @@ export const useAddEditProviderPrefillEffect = (
         const { fields } = forms[providerType];
         fields.providerType.prefill(providerType);
         fields.name.prefill(providerBeingEdited.metadata.name);
-        if (providerType === 'vsphere' || providerType === 'ovirt') {
-          const sourceFields = fields as typeof forms.vsphere.fields | typeof forms.ovirt.fields;
+        if (providerType === 'vsphere' || providerType === 'ovirt' || providerType === 'openstack') {
+          const sourceFields = fields as typeof forms.vsphere.fields | typeof forms.ovirt.fields | typeof forms.openstack.fields;
           sourceFields.username.prefill(atob(secret?.data.user || ''));
           sourceFields.password.prefill(atob(secret?.data.password || ''));
         }
@@ -69,8 +69,18 @@ export const useAddEditProviderPrefillEffect = (
         }
         if (providerType === 'openshift') {
           const openshiftFields = forms.openshift.fields;
-          openshiftFields.url.prefill(providerBeingEdited.spec.url || '');
+          openshiftFields.openshiftUrl.prefill(providerBeingEdited.spec.url || '');
           openshiftFields.saToken.prefill(atob(secret?.data.token || ''));
+        }
+        if (providerType === 'openstack') {
+          const openstackFields = forms.openstack.fields;
+          openstackFields.username.prefill(atob(secret?.data.username || ''));
+          openstackFields.openstackUrl.prefill(providerBeingEdited.spec.url || '');
+          openstackFields.domainName.prefill(atob(secret?.data.domainName || ''));
+          openstackFields.projectName.prefill(atob(secret?.data.projectName || ''));
+          openstackFields.region.prefill(atob(secret?.data.region || ''));
+          openstackFields.insecure.prefill(Boolean(atob(secret?.data.insecure || btoa("true")) === "true"));
+          openstackFields.caCertIfSecure.prefill(atob(secret?.data.cacert || ''));
         }
       }
       // Wait for effects to run based on field changes first
