@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { QuickStart } from '@patternfly/quickstarts';
-import { Map as ImmutableMap } from 'immutable';
 import {
   FirehoseResult,
   HealthState,
@@ -243,16 +242,6 @@ export enum ActionMenuVariant {
   DROPDOWN = 'default',
 }
 
-type Request<R> = {
-  active: boolean;
-  timeout: NodeJS.Timer;
-  inFlight: boolean;
-  data: R;
-  error: any;
-};
-
-export type RequestMap<R> = ImmutableMap<string, Request<R>>;
-
 export type Fetch = (url: string) => Promise<any>;
 export type WatchURLProps = {
   url: string;
@@ -263,20 +252,6 @@ export type WatchPrometheusQueryProps = {
   query: string;
   namespace?: string;
   timespan?: number;
-};
-
-export type UseDashboardResources = ({
-  prometheusQueries,
-  urls,
-  notificationAlertLabelSelectors,
-}: {
-  prometheusQueries?: WatchPrometheusQueryProps[];
-  urls?: WatchURLProps[];
-  notificationAlertLabelSelectors?: { [k: string]: string };
-}) => {
-  urlResults: RequestMap<any>;
-  prometheusResults: RequestMap<PrometheusResponse>;
-  notificationAlerts: { alerts: Alert[]; loaded: boolean; loadError: Error };
 };
 
 export type UseUserSettings = <T>(
