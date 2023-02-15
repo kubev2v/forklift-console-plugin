@@ -43,8 +43,10 @@ const groupMultusNetworks = (
   );
 };
 
-const groupByTarget = (m: NetworkMapResource): [Network, IdOrNameRef[]][] => {
-  const types = m.spec.map.reduce(
+export const groupByTarget = (
+  networkItems: INetworkMappingItem[] = [],
+): [Network, IdOrNameRef[]][] => {
+  const types = networkItems.reduce(
     (acc, it) => ({
       pod: [...acc.pod, ...(it.destination.type === 'pod' ? [it] : [])],
       multus: [...acc.multus, ...(it.destination.type === 'multus' ? [it] : [])],
@@ -73,7 +75,7 @@ const groupByTarget = (m: NetworkMapResource): [Network, IdOrNameRef[]][] => {
   ];
 };
 
-const mergeData = (
+export const mergeData = (
   mappings: NetworkMapResource[],
   providers: ProviderResource[],
 ): FlatNetworkMapping[] => {
@@ -98,7 +100,7 @@ const mergeData = (
         // future improvement: resolve GVK for local networks:
         // 1. target provider needs to be local
         // 2. fetch available networks - requires 'kind' of CRDs created by Multus CNI
-        groupByTarget(mapping),
+        groupByTarget(mapping.spec.map),
         resolveOwnerRef(mapping.metadata.ownerReferences),
       ],
     )

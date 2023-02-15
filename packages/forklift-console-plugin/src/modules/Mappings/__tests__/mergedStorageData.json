@@ -1,0 +1,230 @@
+[
+    {
+        "from": [
+            [
+                {
+                    "name": "large"
+                },
+                [
+                    {
+                        "id": "1"
+                    }
+                ]
+            ]
+        ],
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "StorageMap",
+            "version": "v1beta1"
+        },
+        "name": "vcenter1-datastore-to-ocpv-storageclass1",
+        "namespace": "konveyor-forklift",
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "StorageMap",
+            "metadata": {
+                "annotations": {
+                    "forklift.konveyor.io/shared": "true"
+                },
+                "name": "vcenter1-datastore-to-ocpv-storageclass1",
+                "namespace": "konveyor-forklift"
+            },
+            "spec": {
+                "map": [
+                    {
+                        "destination": {
+                            "storageClass": "large"
+                        },
+                        "source": {
+                            "id": "1"
+                        }
+                    }
+                ],
+                "provider": {
+                    "destination": {
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration"
+                    },
+                    "source": {
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration"
+                    }
+                }
+            }
+        },
+        "source": "vcenter-1",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
+        "sourceReady": true,
+        "sourceResolved": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
+        "targetReady": true,
+        "targetResolved": true,
+        "template": true,
+        "to": [
+            {
+                "name": "large"
+            }
+        ]
+    },
+    {
+        "from": [
+            [
+                {
+                    "name": "large"
+                },
+                [
+                    {
+                        "name": "vmware-datastore-2"
+                    }
+                ]
+            ]
+        ],
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "StorageMap",
+            "version": "v1beta1"
+        },
+        "name": "vcenter3-datastore-to-ocpv-storageclass2",
+        "namespace": "konveyor-forklift",
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "StorageMap",
+            "metadata": {
+                "annotations": {
+                    "forklift.konveyor.io/shared": "true"
+                },
+                "name": "vcenter3-datastore-to-ocpv-storageclass2",
+                "namespace": "konveyor-forklift"
+            },
+            "spec": {
+                "map": [
+                    {
+                        "destination": {
+                            "storageClass": "large"
+                        },
+                        "source": {
+                            "name": "vmware-datastore-2"
+                        }
+                    }
+                ],
+                "provider": {
+                    "destination": {
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration"
+                    },
+                    "source": {
+                        "name": "vcenter-3",
+                        "namespace": "openshift-migration"
+                    }
+                }
+            }
+        },
+        "source": "vcenter-3",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
+        "sourceReady": false,
+        "sourceResolved": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
+        "targetReady": true,
+        "targetResolved": true,
+        "template": true,
+        "to": [
+            {
+                "name": "large"
+            }
+        ]
+    },
+    {
+        "from": [
+            [
+                {
+                    "name": "large"
+                },
+                [
+                    {
+                        "id": "invalid-id"
+                    }
+                ]
+            ]
+        ],
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "StorageMap",
+            "version": "v1beta1"
+        },
+        "name": "vcenter1-invalid-storage-mapping",
+        "namespace": "konveyor-forklift",
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "StorageMap",
+            "metadata": {
+                "annotations": {
+                    "forklift.konveyor.io/shared": "true"
+                },
+                "name": "vcenter1-invalid-storage-mapping",
+                "namespace": "konveyor-forklift"
+            },
+            "spec": {
+                "map": [
+                    {
+                        "destination": {
+                            "storageClass": "large"
+                        },
+                        "source": {
+                            "id": "invalid-id"
+                        }
+                    }
+                ],
+                "provider": {
+                    "destination": {
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration"
+                    },
+                    "source": {
+                        "name": "vcenter-3",
+                        "namespace": "openshift-migration"
+                    }
+                }
+            }
+        },
+        "source": "vcenter-3",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
+        "sourceReady": false,
+        "sourceResolved": true,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
+        "targetReady": true,
+        "targetResolved": true,
+        "template": true,
+        "to": [
+            {
+                "name": "large"
+            }
+        ]
+    }
+]
