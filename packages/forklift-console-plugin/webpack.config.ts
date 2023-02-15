@@ -10,8 +10,8 @@ import { type Configuration as WebpackDevServerConfiguration } from 'webpack-dev
 
 import { DynamicConsoleRemotePlugin } from '@kubev2v/webpack';
 
-import extensions from './console-extensions';
-import pluginMetadata from './plugin';
+import extensions from './plugin-extensions';
+import pluginMetadata from './plugin-metadata.';
 
 const pathTo = (relativePath: string) => path.resolve(__dirname, relativePath);
 
