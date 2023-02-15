@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import * as React from 'react';
 import { LaunchModal, ModalContext } from './ModalProvider';
+import { useModal as useModalSDK} from '@openshift-console/dynamic-plugin-sdk'
+import { IS_CONSOLE_VERSION_4_11 } from 'common/src/polyfills/version/release-version';
 
 type UseModalLauncher = () => LaunchModal;
 
@@ -16,7 +19,12 @@ type UseModalLauncher = () => LaunchModal;
  * }
  * ```
  */
-export const useModal: UseModalLauncher = () => {
+const useModalPolyfill: UseModalLauncher = () => {
   const { launchModal } = React.useContext(ModalContext);
   return launchModal;
 };
+
+/**
+ * Test console version and fallback to poyfill on older versions
+ */
+export const useModal = IS_CONSOLE_VERSION_4_11 ? useModalPolyfill : useModalSDK;
