@@ -124,7 +124,7 @@ const Page = ({
   userSettings: UserSettings;
 }) => (
   <StandardPage<FlatPlan>
-    addButton={<CreatePlanButton variant="secondary" namespace={namespace} />}
+    addButton={<CreatePlanButton namespace={namespace} />}
     dataSource={dataSource}
     RowMapper={PlanRow}
     fieldsMetadata={fieldsMetadata}
