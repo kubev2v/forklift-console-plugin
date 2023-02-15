@@ -221,14 +221,14 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
       className="AddEditProviderModal"
       variant="small"
       position="top"
-      title={`${!providerBeingEdited ? 'Add' : 'Edit'} provider`}
+      title={`${!providerBeingEdited ? 'Create' : 'Edit'} provider`}
       isOpen
       onClose={() => onClose()}
       footer={
         <Stack hasGutter>
           <ResolvedQuery
             result={mutateProviderResult}
-            errorTitle={`Cannot ${!providerBeingEdited ? 'add' : 'edit'} provider`}
+            errorTitle={`Cannot ${!providerBeingEdited ? 'create' : 'edit'} provider`}
             spinnerMode={QuerySpinnerMode.Inline}
           />
           <Flex spaceItems={{ default: 'spaceItemsSm' }}>
@@ -243,7 +243,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                 }
               }}
             >
-              {!providerBeingEdited ? 'Add' : 'Save'}
+              {!providerBeingEdited ? 'Create' : 'Save'}
             </Button>
             <Button
               id="modal-cancel-button"

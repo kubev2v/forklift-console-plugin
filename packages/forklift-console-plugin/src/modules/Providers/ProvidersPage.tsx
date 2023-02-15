@@ -183,7 +183,7 @@ const AddProviderButton: React.FC<{ namespace: string }> = ({ namespace }) => {
         launchModal(withQueryClient(AddProviderModal), { currentNamespace: namespace })
       }
     >
-      {t('Add Provider')}
+      {t('Create Provider')}
     </Button>
   );
 };
