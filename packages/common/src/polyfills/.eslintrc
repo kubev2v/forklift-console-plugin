@@ -6,9 +6,7 @@
     "tsx": true,
     "jsx": true,
     "js": true,
-    "useJSXTextNode": true,
-    "project": ["./tsconfig.json", "./qe-tests/tsconfig.json"],
-    "tsconfigRootDir": "."
+    "useJSXTextNode": true
   },
   "extends": [
     "eslint:recommended",
