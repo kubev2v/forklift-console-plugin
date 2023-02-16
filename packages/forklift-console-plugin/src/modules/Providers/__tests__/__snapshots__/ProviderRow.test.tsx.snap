@@ -84,14 +84,18 @@ exports[`Provider rows ocpv-1 1`] = `
           class=""
           data-label="Type"
         >
-          KubeVirt 
           <span
-            class="pf-c-label pf-m-blue pf-m-compact"
+            class="forklift-table__flex-cell"
           >
+            KubeVirt
             <span
-              class="pf-c-label__content"
+              class="pf-c-label pf-m-blue pf-m-compact forklift-table__flex-cell-label"
             >
-              target
+              <span
+                class="pf-c-label__content"
+              >
+                target
+              </span>
             </span>
           </span>
         </td>
@@ -256,14 +260,18 @@ exports[`Provider rows ocpv-2 1`] = `
           class=""
           data-label="Type"
         >
-          KubeVirt 
           <span
-            class="pf-c-label pf-m-blue pf-m-compact"
+            class="forklift-table__flex-cell"
           >
+            KubeVirt
             <span
-              class="pf-c-label__content"
+              class="pf-c-label pf-m-blue pf-m-compact forklift-table__flex-cell-label"
             >
-              target
+              <span
+                class="pf-c-label__content"
+              >
+                target
+              </span>
             </span>
           </span>
         </td>
@@ -435,14 +443,18 @@ exports[`Provider rows ocpv-3 1`] = `
           class=""
           data-label="Type"
         >
-          KubeVirt 
           <span
-            class="pf-c-label pf-m-blue pf-m-compact"
+            class="forklift-table__flex-cell"
           >
+            KubeVirt
             <span
-              class="pf-c-label__content"
+              class="pf-c-label pf-m-blue pf-m-compact forklift-table__flex-cell-label"
             >
-              target
+              <span
+                class="pf-c-label__content"
+              >
+                target
+              </span>
             </span>
           </span>
         </td>
@@ -607,14 +619,18 @@ exports[`Provider rows rhv-1 1`] = `
           class=""
           data-label="Type"
         >
-          oVirt 
           <span
-            class="pf-c-label pf-m-green pf-m-compact"
+            class="forklift-table__flex-cell"
           >
+            oVirt
             <span
-              class="pf-c-label__content"
+              class="pf-c-label pf-m-green pf-m-compact forklift-table__flex-cell-label"
             >
-              source
+              <span
+                class="pf-c-label__content"
+              >
+                source
+              </span>
             </span>
           </span>
         </td>
@@ -811,14 +827,18 @@ exports[`Provider rows rhv-2 1`] = `
           class=""
           data-label="Type"
         >
-          oVirt 
           <span
-            class="pf-c-label pf-m-green pf-m-compact"
+            class="forklift-table__flex-cell"
           >
+            oVirt
             <span
-              class="pf-c-label__content"
+              class="pf-c-label pf-m-green pf-m-compact forklift-table__flex-cell-label"
             >
-              source
+              <span
+                class="pf-c-label__content"
+              >
+                source
+              </span>
             </span>
           </span>
         </td>
@@ -1015,14 +1035,18 @@ exports[`Provider rows rhv-3 1`] = `
           class=""
           data-label="Type"
         >
-          oVirt 
           <span
-            class="pf-c-label pf-m-green pf-m-compact"
+            class="forklift-table__flex-cell"
           >
+            oVirt
             <span
-              class="pf-c-label__content"
+              class="pf-c-label pf-m-green pf-m-compact forklift-table__flex-cell-label"
             >
-              source
+              <span
+                class="pf-c-label__content"
+              >
+                source
+              </span>
             </span>
           </span>
         </td>
@@ -1219,14 +1243,18 @@ exports[`Provider rows vcenter-1 1`] = `
           class=""
           data-label="Type"
         >
-          VMware 
           <span
-            class="pf-c-label pf-m-green pf-m-compact"
+            class="forklift-table__flex-cell"
           >
+            VMware
             <span
-              class="pf-c-label__content"
+              class="pf-c-label pf-m-green pf-m-compact forklift-table__flex-cell-label"
             >
-              source
+              <span
+                class="pf-c-label__content"
+              >
+                source
+              </span>
             </span>
           </span>
         </td>
@@ -1427,14 +1455,18 @@ exports[`Provider rows vcenter-2 1`] = `
           class=""
           data-label="Type"
         >
-          VMware 
           <span
-            class="pf-c-label pf-m-green pf-m-compact"
+            class="forklift-table__flex-cell"
           >
+            VMware
             <span
-              class="pf-c-label__content"
+              class="pf-c-label pf-m-green pf-m-compact forklift-table__flex-cell-label"
             >
-              source
+              <span
+                class="pf-c-label__content"
+              >
+                source
+              </span>
             </span>
           </span>
         </td>
@@ -1631,14 +1663,18 @@ exports[`Provider rows vcenter-3 1`] = `
           class=""
           data-label="Type"
         >
-          VMware 
           <span
-            class="pf-c-label pf-m-green pf-m-compact"
+            class="forklift-table__flex-cell"
           >
+            VMware
             <span
-              class="pf-c-label__content"
+              class="pf-c-label pf-m-green pf-m-compact forklift-table__flex-cell-label"
             >
-              source
+              <span
+                class="pf-c-label__content"
+              >
+                source
+              </span>
             </span>
           </span>
         </td>
