@@ -55,17 +55,26 @@ export interface IRHVProvider extends ICommonProvider {
   storageDomainCount: number;
 }
 
+export interface IOpenStackProvider extends ICommonProvider {
+  // TODO: Still need to decide about the additional counts
+  clusterCount: number;
+  hostCount: number;
+  vmCount: number;
+  networkCount: number;
+}
+
 export interface IOpenShiftProvider extends ICommonProvider {
   vmCount: number;
   networkCount: number;
 }
 
-export type InventoryProvider = IVMwareProvider | IRHVProvider | IOpenShiftProvider;
-export type SourceInventoryProvider = IVMwareProvider | IRHVProvider;
+export type InventoryProvider = IVMwareProvider | IRHVProvider | IOpenStackProvider| IOpenShiftProvider;
+export type SourceInventoryProvider = IVMwareProvider | IRHVProvider | IOpenStackProvider;
 
 export interface IProvidersByType {
   vsphere: IVMwareProvider[];
   ovirt: IRHVProvider[];
+  openstack: IOpenStackProvider[];
   openshift: IOpenShiftProvider[];
 }
 

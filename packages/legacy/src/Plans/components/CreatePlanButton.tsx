@@ -3,7 +3,7 @@ import { Button, ButtonProps } from '@patternfly/react-core';
 import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
 import { useHasSufficientProvidersQuery } from 'legacy/src/queries';
 import { useHistory } from 'react-router-dom';
-import { PATH_PREFIX, PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
+import { PATH_PREFIX } from 'legacy/src/common/constants';
 
 interface ICreatePlanButtonProps {
   variant?: ButtonProps['variant'];
@@ -20,7 +20,7 @@ export const CreatePlanButton: React.FunctionComponent<ICreatePlanButtonProps> =
   return (
     <ConditionalTooltip
       isTooltipEnabled={!hasSufficientProviders}
-      content={`You must add at least one ${PROVIDER_TYPE_NAMES.vsphere} or ${PROVIDER_TYPE_NAMES.ovirt} provider and one ${PROVIDER_TYPE_NAMES.openshift} provider in order to create a migration plan.`}
+      content={`You must add at least one source and one target provider in order to create a migration plan.`}
     >
       <Button
         onClick={() =>

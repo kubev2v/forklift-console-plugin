@@ -54,12 +54,15 @@ describe('extracting conditions', () => {
 
 describe('grouping pairs', () => {
   test('empty input', () => {
-    expect(groupPairs([], { openshift: [], ovirt: [], vsphere: [] })).toHaveLength(0);
+    expect(groupPairs([], { openshift: [], ovirt: [], openstack: [], vsphere: [] })).toHaveLength(
+      0,
+    );
   });
   it('skipps inventory without resource', () => {
     const result = groupPairs([MOCK_INVENTORY_PROVIDERS.openshift[0].object as ProviderResource], {
       openshift: [MOCK_INVENTORY_PROVIDERS.openshift[1]],
       ovirt: [],
+      openstack: [],
       vsphere: [],
     });
     expect(result).toHaveLength(1);
@@ -77,6 +80,7 @@ describe('grouping pairs', () => {
       groupPairs([k8sNoUid], {
         openshift: [{ ...provider, uid: undefined }],
         ovirt: [],
+        openstack: [],
         vsphere: [],
       }),
     ).toHaveLength(0);
@@ -87,6 +91,7 @@ describe('grouping pairs', () => {
       groupPairs([provider.object as ProviderResource], {
         openshift: [provider],
         ovirt: [],
+        openstack: [],
         vsphere: [],
       }),
     ).toEqual([[provider.object, provider]]);

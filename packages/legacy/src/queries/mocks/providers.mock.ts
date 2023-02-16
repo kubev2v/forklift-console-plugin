@@ -9,6 +9,7 @@ import {
 export let MOCK_INVENTORY_PROVIDERS: IProvidersByType = {
   vsphere: [],
   ovirt: [],
+  openstack: [],
   openshift: [],
 };
 
@@ -375,6 +376,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
   MOCK_INVENTORY_PROVIDERS = {
     vsphere: [vmwareProvider1, vmwareProvider2, vmwareProvider3],
     ovirt: [rhvProvider1, rhvProvider2, rhvProvider3],
+    openstack: [],
     openshift: [openshiftProvider1, openshiftProvider2, openshiftProvider3],
   };
 

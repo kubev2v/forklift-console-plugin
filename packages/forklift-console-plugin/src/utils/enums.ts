@@ -5,6 +5,7 @@ import { PlanType } from '@kubev2v/legacy/queries/types';
 export const PROVIDERS: Record<ProviderType, (t: (k: string) => string) => string> = {
   vsphere: (t) => t('VMware'),
   ovirt: (t) => t('oVirt'),
+  openstack: (t) => t('OpenStack'),
   openshift: (t) => t('KubeVirt'),
 };
 
