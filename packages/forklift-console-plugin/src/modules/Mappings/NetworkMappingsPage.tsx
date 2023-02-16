@@ -95,7 +95,7 @@ const AddNetworkMappingButton: React.FC<{ namespace: string }> = ({ namespace })
       variant="primary"
       onClick={() => launchModal(withQueryClient(AddMappingModal), { currentNamespace: namespace })}
     >
-      {t('Create Mapping')}
+      {t('Create NetworkMap')}
     </Button>
   );
 };
@@ -112,7 +112,7 @@ const AddMappingModal: React.FC<{
       mappingBeingEdited={null}
       namespace={currentNamespace}
       isFixed
-      title={t('Create Mapping')}
+      title={t('Create NetworkMap')}
       mappingType={MappingType.Network}
       setActiveMapType={() => undefined}
     />

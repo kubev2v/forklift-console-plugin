@@ -5,7 +5,7 @@ import { exposedModules as planModules } from './src/modules/Plans/dynamic-plugi
 import { exposedModules as providerModules } from './src/modules/Providers/dynamic-plugin';
 
 export default {
-  name: 'forklift-console-plugin',
+  name: process.env.PLUGIN_NAME || 'forklift-console-plugin',
   version: '0.0.1',
   displayName: 'OpenShift Console Plugin For Forklift',
   description:

@@ -84,9 +84,10 @@ const EditMappingModal = ({
   namespace: string;
 }) => {
   const { t } = useTranslation();
+  const title = mappingType === 'Network' ? t('Edit NetworkMap') : t('Edit StorageMap');
   return (
     <AddEditMappingModal
-      title={t('Edit Mapping')}
+      title={title}
       onClose={closeModal}
       mappingType={mappingType}
       mappingBeingEdited={mapping}

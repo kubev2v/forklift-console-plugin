@@ -9,6 +9,7 @@ import {
   Stack,
   Popover,
   FileUpload,
+  TextInput,
 } from '@patternfly/react-core';
 import {
   useFormState,
@@ -263,6 +264,14 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
           <LoadingEmptyState />
         ) : (
           <Form>
+            <FormGroup label="Provider resource namespace (default to migration operator namespace)" fieldId="formgroup-plan-namespace">
+              <TextInput
+                id="plan-namespace"
+                aria-label="Plan Namespace"
+                value={prefillNamespace}
+                isDisabled={true}
+              />
+            </FormGroup> 
             <FormGroup
               label="Type"
               isRequired

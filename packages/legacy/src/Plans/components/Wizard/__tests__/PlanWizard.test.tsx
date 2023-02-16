@@ -12,7 +12,7 @@ const queryClient = new QueryClient();
 
 const routeProps: RouteComponentProps<{ ns: string }> = {
   match: {
-    params: { ns: ENV.NAMESPACE },
+    params: { ns: ENV.DEFAULT_NAMESPACE },
     isExact: true,
     path: '',
     url: '',
