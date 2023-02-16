@@ -69,7 +69,7 @@ const Page = ({
         <AddMappingButton
           namespace={namespace}
           mappingType={MappingType.Storage}
-          label={t('Create Mapping')}
+          label={t('Create StorageMap')}
         />
       }
       dataSource={dataSource}

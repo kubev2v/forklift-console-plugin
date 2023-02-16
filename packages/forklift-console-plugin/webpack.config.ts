@@ -88,12 +88,23 @@ const config: WebpackConfiguration & {
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),
     new EnvironmentPlugin({
+      // DATA_SOURCE: used for testing when no api servers are available
+      // if set to mock, network api calls will be mocked
       DATA_SOURCE: 'remote',
+      // can be 'RedHat' or 'Konveyor',
+      // note: downstream build are set to: 'RedHat'
       BRAND_TYPE: 'Konveyor',
+      // NAMESPACE: used only on mock data
       NAMESPACE: 'konveyor-forklift',
-      DEFAULT_NAMESPACE: 'default',
+      // DEFAULT_NAMESPACE: UI forms and modals will fallback to this namespace
+      //                    if no namespace is given by user.
+      // note: downstream build are set to: 'openshift-mtv'
+      DEFAULT_NAMESPACE: 'konveyor-forklift',
+      // NODE_ENV: used to bake debugging information on development builds.
       NODE_ENV: production ? 'production' : 'development',
-      PLUGIN_NAME: 'forklift-console-plugin',
+      // PLUGIN_NAME: should be set to the plugin name hardcoded in the
+      //              instalation scripts, defaults to 'forklift-console-plugin'.
+      PLUGIN_NAME: pluginMetadata.name,
     }),
   ],
   devtool: 'source-map',

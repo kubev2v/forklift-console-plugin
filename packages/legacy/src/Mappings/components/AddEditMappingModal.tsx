@@ -9,10 +9,10 @@ import {
   Stack,
   Flex,
   FormGroup,
+  TextInput,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useFormField, useFormState, ValidatedTextInput } from '@migtools/lib-ui';
-import { SimpleSelect, OptionWithValue } from 'legacy/src/common/components/SimpleSelect';
 import { MappingBuilder, IMappingBuilderItem, mappingBuilderItemsSchema } from './MappingBuilder';
 import { getMappingFromBuilderItems } from './MappingBuilder/helpers';
 import {
@@ -134,11 +134,6 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
     : patchMappingMutation.mutate;
   const mutationResult = !mappingBeingEdited ? createMappingMutation : patchMappingMutation;
 
-  const MAPPING_TYPE_OPTIONS = Object.values(MappingType).map((type) => ({
-    toString: () => MappingType[type],
-    value: type,
-  })) as OptionWithValue<MappingType>[];
-
   return (
     <Modal
       className="addEditMappingModal"
@@ -202,19 +197,12 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
             <>
               <Grid hasGutter className={spacing.mbMd}>
                 <GridItem md={6}>
-                  <FormGroup label="Type" isRequired fieldId="mapping-type">
-                    <SimpleSelect
-                      id="mapping-type"
-                      aria-label="Mapping type"
-                      options={MAPPING_TYPE_OPTIONS}
-                      value={[MAPPING_TYPE_OPTIONS.find((option) => option.value === mappingType)]}
-                      onChange={(selection) => {
-                        setActiveMapType(MappingType[selection.toString()]);
-                      }}
-                      placeholderText="Select a mapping type..."
-                      isDisabled={!!mappingBeingEdited || isFixed}
-                      menuAppendTo="parent"
-                      maxHeight="40vh"
+                  <FormGroup label="Namespace (default to migration operator namespace)" fieldId="mapping-namespace">
+                    <TextInput
+                      id="mapping-namespace"
+                      aria-label="Mapping namespace"
+                      value={namespace}
+                      isDisabled={true}
                     />
                   </FormGroup>
                 </GridItem>

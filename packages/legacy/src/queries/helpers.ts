@@ -1,5 +1,5 @@
 import { KubeClientError, IKubeList } from 'legacy/src/client/types';
-import { CLUSTER_API_VERSION } from 'legacy/src/common/constants';
+import { CLUSTER_API_VERSION, ENV } from 'legacy/src/common/constants';
 import { hasCondition } from 'legacy/src/common/helpers';
 import {
   UseQueryOptions,
@@ -80,10 +80,10 @@ export const useMockableMutation = <
 };
 
 export const getInventoryApiUrl = (relativePath?: string): string =>
-  `/api/proxy/plugin/forklift-console-plugin/forklift-inventory/${relativePath || ''}`;
+  `/api/proxy/plugin/${ENV.PLUGIN_NAME}/forklift-inventory/${relativePath || ''}`;
 
 export const getMustGatherApiUrl = (relativePath?: string): string =>
-  `/api/proxy/plugin/forklift-console-plugin/must-gather-api/${relativePath || ''}`;
+  `/api/proxy/plugin/${ENV.PLUGIN_NAME}/must-gather-api/${relativePath || ''}`;
 
 export const getAggregateQueryStatus = (queryResults: UnknownResult[]): QueryStatus => {
   if (queryResults.some((result) => result.isError)) return 'error';

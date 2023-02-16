@@ -21,7 +21,7 @@ describe('<AddEditProviderModal />', () => {
   const history = createMemoryHistory();
   const props = {
     onClose: toggleModalAndResetEdit,
-    namespace: ENV.NAMESPACE,
+    namespace: ENV.DEFAULT_NAMESPACE,
   };
 
   it('allows to cancel addition/edition of a provider', async () => {

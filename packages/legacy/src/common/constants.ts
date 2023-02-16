@@ -17,7 +17,7 @@ export const ENV: IEnvVars = {
 };
 
 if (ENV.NODE_ENV === 'development') {
-  console.info('forklift-console-plugin ENV:', JSON.stringify(ENV));
+  console.info('console-plugin ENV:', JSON.stringify(ENV));
 }
 
 export const APP_BRAND: BrandType = (process.env.BRAND_TYPE as BrandType) || BrandType.Konveyor;

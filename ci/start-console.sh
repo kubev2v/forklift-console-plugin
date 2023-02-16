@@ -21,12 +21,12 @@ echo "Must gather API server URL: ${MUST_GATHER_API_SERVER_HOST}"
 PLUGIN_PROXY=$(cat << END
 {"services":[
     {
-        "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/forklift-inventory/",
+        "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/forklift-inventory/",
         "endpoint":"${INVENTORY_SERVER_HOST}",
         "authorize":true
     },
     {
-        "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/must-gather-api/",
+        "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/must-gather-api/",
         "endpoint":"${MUST_GATHER_API_SERVER_HOST}",
         "authorize":true
     }]}

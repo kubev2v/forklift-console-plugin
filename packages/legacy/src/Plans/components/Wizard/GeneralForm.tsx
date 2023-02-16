@@ -11,6 +11,7 @@ import {
   Title,
   Button,
   Popover,
+  TextInput,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { getFormGroupProps, ValidatedTextInput } from '@migtools/lib-ui';
@@ -112,6 +113,14 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
         <Title headingLevel="h2" size="md">
           Give your plan a name and a description
         </Title>
+        <FormGroup label="Plan resource namespace (default to migration operator namespace)" fieldId="formgroup-plan-namespace">
+          <TextInput
+            id="plan-namespace"
+            aria-label="Plan Namespace"
+            value={namespace}
+            isDisabled={true}
+          />
+        </FormGroup> 
         <ValidatedTextInput
           field={form.fields.planName}
           isRequired
