@@ -4,4 +4,5 @@
 
 .forklift-table__flex-cell-label {
   margin-left: var(--pf-global--spacer--sm);
+  height: fit-content;
 }
