@@ -244,11 +244,6 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
     ? createProviderMutation
     : patchProviderMutation;
 
-  const certificateConfirmButtonRef = React.useRef<HTMLElement>(null);
-
-  const scrollVerifyButtonIntoView = () =>
-    certificateConfirmButtonRef.current?.scrollIntoView({ behavior: 'smooth' });
-
   return (
     <Modal
       className="AddEditProviderModal"
@@ -393,7 +388,6 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                   <ValidatedTextInput
                     inputProps={{
                       placeholder: usernamePlaceholder,
-                      onFocus: scrollVerifyButtonIntoView,
                     }}
                     field={fields.username}
                     isRequired
@@ -402,7 +396,6 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                 ) : null}
                 {fields?.password ? (
                   <ValidatedPasswordInput
-                    inputProps={{ onFocus: scrollVerifyButtonIntoView }}
                     field={fields.password}
                     isRequired
                     fieldId="password"
