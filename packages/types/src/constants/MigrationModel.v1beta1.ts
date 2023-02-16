@@ -14,7 +14,7 @@ export const MigrationModel = {
   plural: 'migrations',
 
   abbr: 'MI',
-  color: undefined,
+  color: '#db7c1d',
   id: 'migrations.forklift.konveyor.io',
   namespaced: true,
   crd: true,

@@ -1,7 +1,10 @@
 import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import type { NavSection } from '@openshift-console/dynamic-plugin-sdk';
 
+import { extensions as hookExtensions } from './src/modules/Hooks/dynamic-plugin';
+import { extensions as hostExtensions } from './src/modules/Hosts/dynamic-plugin';
 import { extensions as mappingExtensions } from './src/modules/Mappings/dynamic-plugin';
+import { extensions as migrationExtensions } from './src/modules/Migrations/dynamic-plugin';
 import { extensions as planExtensions } from './src/modules/Plans/dynamic-plugin';
 import { extensions as providerExtensions } from './src/modules/Providers/dynamic-plugin';
 
@@ -22,6 +25,20 @@ const extensions: EncodedExtension[] = [
   ...providerExtensions,
   ...planExtensions,
   ...mappingExtensions,
+
+  {
+    type: 'console.navigation/separator',
+    properties: {
+      perspective: 'admin',
+      section: 'migration',
+      insertAfter: 'storageMappings',
+      id: 'forklift-utilities-seperator',
+    },
+  },
+
+  ...migrationExtensions,
+  ...hookExtensions,
+  ...hostExtensions,
 ];
 
 export default extensions;
