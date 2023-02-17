@@ -13,9 +13,11 @@ import {
   ValueMatcher,
 } from 'common/src/components/Filter';
 import {
+  DefaultHeader,
   ManageColumnsToolbar,
   RowProps,
   TableView,
+  TableViewHeaderProps,
   useSort,
 } from 'common/src/components/TableView';
 import { Field } from 'common/src/components/types';
@@ -66,6 +68,13 @@ export interface StandardPageProps<T> {
    * Maps entity of type T to a table row.
    */
   RowMapper: React.FunctionComponent<RowProps<T>>;
+
+  /**
+   * (optional) Maps field list to table header.
+   * Defaults to all visible fields.
+   */
+  HeaderMapper?: (props: TableViewHeaderProps) => JSX.Element;
+
   /**
    * Filter types that will be used.
    * Default are: EnumFilter and FreetextFilter
@@ -132,6 +141,7 @@ export function StandardPage<T>({
   userSettings,
   filterPrefix = '',
   supportedMatchers = defaultValueMatchers,
+  HeaderMapper = DefaultHeader,
 }: StandardPageProps<T>) {
   const { t } = useTranslation();
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
@@ -222,6 +232,7 @@ export function StandardPage<T>({
           visibleColumns={fields.filter(({ isVisible }) => isVisible)}
           aria-label={title}
           Row={RowMapper}
+          Header={HeaderMapper}
           activeSort={activeSort}
           setActiveSort={setActiveSort}
           currentNamespace={namespace}
