@@ -23,6 +23,7 @@ describe('Provider rows', () => {
               columns={fieldsMetadata}
               currentNamespace={undefined}
               entity={provider as MergedProvider}
+              rowIndex={0}
             />
           </tbody>
         </table>
