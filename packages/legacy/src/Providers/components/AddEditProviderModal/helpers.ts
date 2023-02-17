@@ -3,6 +3,8 @@ import * as React from 'react';
 import { IProviderObject } from 'legacy/src/queries/types';
 import { AddProviderFormState } from './AddEditProviderModal';
 import { ovirtUrlToHostname, vmwareUrlToHostname } from 'legacy/src/client/helpers';
+import { stringToBoolean } from 'legacy/src/common/helpers';
+
 
 interface IEditProviderPrefillEffect {
   isDonePrefilling: boolean;
@@ -26,63 +28,76 @@ export const useAddEditProviderPrefillEffect = (
       providerType
     ) {
       setIsStartedPrefilling(true);
+
       if (!providerBeingEdited) {
         if (providerType === 'vsphere') {
+          // For a new provider, prefill the vddkInitImage from the most recently created vmware provider
+          const lastCreatedVmwareProvider = (clusterProvidersQuery.data.items || [])
+            .filter((provider) => provider.spec.type === 'vsphere')
+            .sort((a, b) => (a.metadata.creationTimestamp || '') > (b.metadata.creationTimestamp || '') ? -1 : 1)
+            .shift();
+
           const vmwareFields = forms.vsphere.fields;
-          const vmwareProviders = (clusterProvidersQuery.data.items || []).filter(
-            (provider) => provider.spec.type === 'vsphere'
+          vmwareFields.vddkInitImage.prefill(
+            lastCreatedVmwareProvider?.spec?.settings?.vddkInitImage ?? ''
           );
-          if (vmwareProviders.length > 0) {
-            const lastCreatedVmwareProvider = vmwareProviders.sort((a, b) =>
-              (a.metadata.creationTimestamp || '') > (b.metadata.creationTimestamp || '') ? -1 : 1
-            )[0];
-            vmwareFields.vddkInitImage.prefill(
-              lastCreatedVmwareProvider.spec.settings?.vddkInitImage || ''
-            );
-          }
         }
       } else {
+        const spec = providerBeingEdited.spec;
         const secret = secretQuery.data;
         const { fields } = forms[providerType];
+
+        // TODO: prefill namespace from the provider?
         fields.providerType.prefill(providerType);
         fields.name.prefill(providerBeingEdited.metadata.name);
-        if (providerType === 'vsphere' || providerType === 'ovirt' || providerType === 'openstack') {
-          const sourceFields = fields as typeof forms.vsphere.fields | typeof forms.ovirt.fields | typeof forms.openstack.fields;
-          sourceFields.username.prefill(atob(secret?.data.user || ''));
-          sourceFields.password.prefill(atob(secret?.data.password || ''));
-        }
-        if (providerType === 'ovirt') {
-          const sourceFields = fields as typeof forms.ovirt.fields;
-          sourceFields.caCert.prefill(atob(secret?.data.cacert || ''));
-        }
+
         if (providerType === 'vsphere') {
           const vmwareFields = forms.vsphere.fields;
-          vmwareFields.hostname.prefill(vmwareUrlToHostname(providerBeingEdited.spec.url || ''));
+          vmwareFields.username.prefill(atob(secret?.data.user || ''));
+          vmwareFields.password.prefill(atob(secret?.data.password || ''));
+          vmwareFields.hostname.prefill(vmwareUrlToHostname(spec.url || ''));
           vmwareFields.fingerprint.prefill(atob(secret?.data.thumbprint || ''));
-          vmwareFields.vddkInitImage.prefill(
-            providerBeingEdited.spec.settings?.vddkInitImage || ''
+          vmwareFields.vddkInitImage.prefill(spec.settings?.vddkInitImage || '');
+          vmwareFields.insecureSkipVerify.prefill(
+            secret?.data.insecureSkipVerify
+              ? stringToBoolean(atob(secret?.data.insecureSkipVerify))
+              : false
           );
         }
         if (providerType === 'ovirt') {
-          const rhvFields = forms.ovirt.fields;
-          rhvFields.hostname.prefill(ovirtUrlToHostname(providerBeingEdited.spec.url || ''));
-        }
-        if (providerType === 'openshift') {
-          const openshiftFields = forms.openshift.fields;
-          openshiftFields.openshiftUrl.prefill(providerBeingEdited.spec.url || '');
-          openshiftFields.saToken.prefill(atob(secret?.data.token || ''));
+          const ovirtFields = fields as typeof forms.ovirt.fields;
+          ovirtFields.username.prefill(atob(secret?.data.user || ''));
+          ovirtFields.password.prefill(atob(secret?.data.password || ''));
+          ovirtFields.hostname.prefill(ovirtUrlToHostname(spec.url || ''));
+          ovirtFields.caCert.prefill(atob(secret?.data.cacert || ''));
+          ovirtFields.insecureSkipVerify.prefill(
+            secret?.data.insecureSkipVerify
+              ? stringToBoolean(atob(secret?.data.insecureSkipVerify))
+              : false
+          );
         }
         if (providerType === 'openstack') {
           const openstackFields = forms.openstack.fields;
           openstackFields.username.prefill(atob(secret?.data.username || ''));
-          openstackFields.openstackUrl.prefill(providerBeingEdited.spec.url || '');
+          openstackFields.password.prefill(atob(secret?.data.password || ''));
+          openstackFields.openstackUrl.prefill(spec.url || '');
           openstackFields.domainName.prefill(atob(secret?.data.domainName || ''));
           openstackFields.projectName.prefill(atob(secret?.data.projectName || ''));
           openstackFields.region.prefill(atob(secret?.data.region || ''));
-          openstackFields.insecure.prefill(Boolean(atob(secret?.data.insecure || btoa("true")) === "true"));
+          openstackFields.insecureSkipVerify.prefill(
+            secret?.data.insecure
+              ? stringToBoolean(atob(secret?.data.insecure))
+              : true
+          );
           openstackFields.caCertIfSecure.prefill(atob(secret?.data.cacert || ''));
         }
+        if (providerType === 'openshift') {
+          const openshiftFields = forms.openshift.fields;
+          openshiftFields.openshiftUrl.prefill(spec.url || '');
+          openshiftFields.saToken.prefill(atob(secret?.data.token || ''));
+        }
       }
+
       // Wait for effects to run based on field changes first
       window.setTimeout(() => {
         setIsDonePrefilling(true);

@@ -136,15 +136,18 @@ const useAddProviderFormState = (
     ),
   };
 
+  const insecureSkipVerify = useFormField(false, yup.boolean().label('skip server SSL certificate verification'));
+
   return {
     vsphere: useFormState({
       ...sourceProviderFields,
+      insecureSkipVerify,
       fingerprint: useFormField('', fingerprintSchema.required()),
-      isCertificateValid: useFormField(false, yup.boolean()),
       vddkInitImage: useFormField('', yup.string().label('VDDK init image').required()),
     }),
     ovirt: useFormState({
       ...sourceProviderFields,
+      insecureSkipVerify,
       caCert: useFormField('', yup.string().label('CA certificate').required()),
       caCertFilename: useFormField('', yup.string()),
     }),
@@ -156,7 +159,7 @@ const useAddProviderFormState = (
       domainName: useFormField('', yup.string().label('Domain').required()),
       projectName: useFormField('', yup.string().label('Project').required()),
       region: useFormField('', yup.string().label('Region').required()),
-      insecure: useFormField(false, yup.boolean()),
+      insecureSkipVerify,
       caCertIfSecure: useFormField('', yup.string().label('CA certificate')),
       caCertFilenameIfSecure: useFormField('', yup.string()),
     }),
@@ -202,8 +205,8 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
   const providerType = providerTypeField.value;
   const formValues = providerType ? forms[providerType].values : null;
   const isFormValid = providerType ? forms[providerType].isValid : false;
-  const isOpenStackButtonEnabled = forms["openstack"].fields.insecure.value || forms["openstack"].fields.caCertIfSecure.value;
   const isFormDirty = providerType ? forms[providerType].isDirty : false;
+  const isOpenStackButtonEnabled = forms.openstack.fields.insecureSkipVerify.value || forms.openstack.fields.caCertIfSecure.value;
 
   // Combines fields of all 3 forms into one type with all properties as optional.
   // This way, we can conditionally show fields based on whether they are defined in form state
@@ -293,14 +296,18 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
           <LoadingEmptyState />
         ) : (
           <Form>
-            <FormGroup label="Provider resource namespace (default to migration operator namespace)" fieldId="formgroup-plan-namespace">
+            <FormGroup
+              label="Provider resource namespace (default to migration operator namespace)"
+              fieldId="plan-namespace"
+            >
               <TextInput
                 id="plan-namespace"
                 aria-label="Plan Namespace"
                 value={prefillNamespace}
                 isDisabled={true}
               />
-            </FormGroup> 
+            </FormGroup>
+
             <FormGroup
               label="Type"
               isRequired
@@ -322,6 +329,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                 maxHeight="40vh"
               />
             </FormGroup>
+
             {providerType ? (
               <>
                 {fields?.name ? (
@@ -337,6 +345,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     }}
                   />
                 ) : null}
+
                 {fields?.openstackUrl ? (
                   <ValidatedTextInput
                     field={fields.openstackUrl}
@@ -376,14 +385,9 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     field={fields.hostname}
                     isRequired
                     fieldId="hostname"
-                    inputProps={{
-                      onChange: (field: string) => {
-                        fields.isCertificateValid?.setValue(false);
-                        fields.hostname?.setValue(field);
-                      },
-                    }}
                   />
                 ) : null}
+
                 {fields?.username ? (
                   <ValidatedTextInput
                     inputProps={{
@@ -394,6 +398,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     fieldId="username"
                   />
                 ) : null}
+
                 {fields?.password ? (
                   <ValidatedPasswordInput
                     field={fields.password}
@@ -401,6 +406,31 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     fieldId="password"
                   />
                 ) : null}
+
+                {fields?.domainName ? (
+                  <ValidatedTextInput
+                    field={fields.domainName}
+                    isRequired
+                    fieldId="domain-name"
+                  />
+                ) : null}
+
+                {fields?.projectName ? (
+                  <ValidatedTextInput
+                    field={fields.projectName}
+                    isRequired
+                    fieldId="project-name"
+                  />
+                ) : null}
+
+                {fields?.region? (
+                  <ValidatedTextInput
+                    field={fields.region}
+                    isRequired
+                    fieldId="region"
+                  />
+                ) : null}
+
                 {fields?.vddkInitImage ? (
                   <ValidatedTextInput
                     field={fields.vddkInitImage}
@@ -434,6 +464,17 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     }}
                   />
                 ) : null}
+
+                {fields?.insecureSkipVerify? (
+                  <Checkbox
+                    label="Skip certificate validation (if checked, the provider's certificate won't be validated)"
+                    aria-label="Insecure connection checkbox"
+                    id="insecure-check"
+                    isChecked={fields.insecureSkipVerify.value}
+                    onChange={(checked) => fields.insecureSkipVerify.setValue(checked)}
+                  />
+                ) : null}
+
                 {fields?.fingerprint ? (
                   <ValidatedTextInput
                   field={fields.fingerprint}
@@ -463,27 +504,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                   }}
                 />
                 ) : null }
-                {fields?.domainName ? (
-                  <ValidatedTextInput
-                    field={fields.domainName}
-                    isRequired
-                    fieldId="domain-name"
-                  />
-                ) : null}
-                {fields?.projectName ? (
-                  <ValidatedTextInput
-                    field={fields.projectName}
-                    isRequired
-                    fieldId="project-name"
-                  />
-                ) : null}
-                {fields?.region? (
-                  <ValidatedTextInput
-                    field={fields.region}
-                    isRequired
-                    fieldId="region"
-                  />
-                ) : null}
+
                 {fields?.caCert && fields?.caCertFilename ? (
                   <FormGroup
                     label="CA certificate"
@@ -526,18 +547,8 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     />
                   </FormGroup>
                 ) : null}
-                {fields?.insecure? (
-                  <Checkbox
-                    label="Skip certificate validation (if checked, the CA certificate won't be validated)"
-                    aria-label="Insecure connection checkbox"
-                    id="insecure-check"
-                    isChecked={fields.insecure.value}
-                    onChange={() =>
-                      fields.insecure?.setValue(!fields.insecure.value)
-                    }
-                  />
-                ) : null}
-                {fields?.insecure && !fields?.insecure?.value && fields?.caCertIfSecure && fields?.caCertFilenameIfSecure ? (
+
+                {fields?.insecureSkipVerify && !fields?.insecureSkipVerify?.value && fields?.caCertIfSecure && fields?.caCertFilenameIfSecure ? (
                   <FormGroup
                     label="CA certificate"
                     labelIcon={
@@ -577,6 +588,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     />
                   </FormGroup>
                 ) : null}
+
                 {fields?.openshiftUrl ? (
                   <ValidatedTextInput
                     field={fields.openshiftUrl}
@@ -610,6 +622,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     }}
                   />
                 ) : null}
+
                 {fields?.saToken ? (
                   <ValidatedPasswordInput
                     field={fields.saToken}
