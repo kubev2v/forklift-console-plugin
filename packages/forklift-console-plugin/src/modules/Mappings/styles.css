@@ -1,0 +1,5 @@
+.forklift-table__flex-labels-with-gaps {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--pf-global--spacer--sm);
+}
