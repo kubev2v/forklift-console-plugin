@@ -121,7 +121,7 @@ const TextWithIcon = ({ value, Icon }: { value: string; Icon: JSXElementConstruc
 TextWithIcon.displayName = 'TextWithIcon';
 
 const ProviderLink = ({ value, entity, t }: CellProps) => {
-  const ownerReferences = entity.object?.metadata?.ownerReferences;
+  const { ownerReferences, namespace, gvk } = entity;
   const isOwnedByForkliftCOntroller =
     ownerReferences && ownerReferences[0]?.kind === 'ForkliftController';
   return (

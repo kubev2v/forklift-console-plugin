@@ -24,6 +24,7 @@ export const OWNER = 'owner';
 export const OWNER_GVK = 'ownerGvk';
 export const READY = 'ready';
 export const PHASE = 'phase';
+export const OWNER_REFERENCE = 'ownerReferences';
 export const SECRET_NAME = 'secretName';
 export const SHARED_MAPPING_ANNOTATION = 'forklift.konveyor.io/shared';
 export const SOURCE = 'source';

@@ -18,6 +18,7 @@ export type Condition = {
   reason?: string;
 };
 
+    phase?: string;
 export type PlanResource = IPlan & K8sResourceCommon;
 
 export type MigrationResource = IMigration & K8sResourceCommon;
