@@ -10,6 +10,8 @@ import MappingRow, { CellCreator, CellProps, commonCells, SourceCell } from './C
 import { FlatStorageMapping } from './dataForStorage';
 import { StorageMappingActions } from './mappingActions';
 
+import './styles.css';
+
 const SourceStorageCell = ({ entity }: CellProps<FlatStorageMapping>) => {
   return (
     <SourceCell
@@ -21,15 +23,13 @@ const SourceStorageCell = ({ entity }: CellProps<FlatStorageMapping>) => {
 };
 
 const TargetStorageCell = ({ entity }: CellProps<FlatStorageMapping>) => (
-  <>
+  <span className="forklift-table__flex-labels-with-gaps">
     {entity.to.map(({ name }) => (
-      <>
-        <Label key={name} color="blue">
-          {name}
-        </Label>{' '}
-      </>
+      <Label key={name} color="blue">
+        {name}
+      </Label>
     ))}
-  </>
+  </span>
 );
 
 const storageCells: CellCreator<FlatStorageMapping> = {

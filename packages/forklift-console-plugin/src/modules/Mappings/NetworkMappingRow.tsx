@@ -10,6 +10,8 @@ import MappingRow, { CellCreator, CellProps, commonCells, SourceCell } from './C
 import { FlatNetworkMapping, Network } from './dataForNetwork';
 import { NetworkMappingActions } from './mappingActions';
 
+import './styles.css';
+
 const SourceNetworksCell = ({ entity }: CellProps<FlatNetworkMapping>) => {
   return (
     <SourceCell Icon={NetworkIcon} groups={entity.from} itemsInFirstGroup={entity.from?.[0]?.[1]} />
@@ -20,17 +22,15 @@ const networkName = (n: Network, t: (k: string) => string) =>
   n.type === 'pod' ? t('Pod network') : `${n.namespace}/${n.name}`;
 
 const TargetNetworksCell = ({ t, entity }: CellProps<FlatNetworkMapping>) => (
-  <>
+  <span className="forklift-table__flex-labels-with-gaps">
     {entity.to.map((n) => {
       return (
-        <>
-          <Label key={networkName(n, t)} color="blue">
-            {networkName(n, t)}
-          </Label>{' '}
-        </>
+        <Label key={networkName(n, t)} color="blue">
+          {networkName(n, t)}
+        </Label>
       );
     })}
-  </>
+  </span>
 );
 
 const networkCells: CellCreator<FlatNetworkMapping> = {
