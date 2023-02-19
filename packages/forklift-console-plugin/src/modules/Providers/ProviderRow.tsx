@@ -108,14 +108,14 @@ TextWithIcon.displayName = 'TextWithIcon';
 const ProviderLink = ({ value, entity, t }: CellProps) => {
   const isHostProvider = entity.type === 'openshift' && !entity.url;
   return (
-    <>
-      <ResourceLink groupVersionKind={entity.gvk} name={value} namespace={entity?.namespace} />{' '}
+    <span className="forklift-table__flex-cell">
+      <ResourceLink groupVersionKind={entity.gvk} name={value} namespace={entity?.namespace} />
       {isHostProvider && (
-        <Label isCompact color="grey">
+        <Label isCompact color="grey" className="forklift-table__flex-cell-label">
           {t('default')}
         </Label>
       )}
-    </>
+    </span>
   );
 };
 ProviderLink.displayName = 'ProviderLink';
