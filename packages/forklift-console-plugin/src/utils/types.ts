@@ -29,6 +29,7 @@ export type ProviderResource = {
   };
   status?: {
     conditions?: Condition[];
+    phase?: string;
   };
 } & K8sResourceCommon;
 

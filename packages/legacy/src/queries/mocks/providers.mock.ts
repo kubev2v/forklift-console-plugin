@@ -373,11 +373,37 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
   };
 
+  const openshiftProvider4: IOpenShiftProvider = {
+    ...openshiftProvider1,
+    uid: 'mock-uid-host',
+    name: 'host',
+    selfLink: '/foo/openshiftprovider/3',
+    object: {
+      ...openshiftProvider1.object,
+      metadata: {
+        ...openshiftProvider1.object.metadata,
+        name: 'host',
+        uid: 'mock-uid-host',
+        ownerReferences: [{
+          apiVersion: "forklift.konveyor.io/v1beta1",
+          kind: "ForkliftController",
+          name: "forklift-controller",
+          namespace: "openshift-migration",
+          uid: "2d0a80a3-94a7-4fe5-b0cb-225cf5e24eac"
+      }]
+      },
+      spec: {
+        ...openshiftProvider1.object.spec,
+        url: '',
+      },
+    },
+  };
+
   MOCK_INVENTORY_PROVIDERS = {
     vsphere: [vmwareProvider1, vmwareProvider2, vmwareProvider3],
     ovirt: [rhvProvider1, rhvProvider2, rhvProvider3],
     openstack: [],
-    openshift: [openshiftProvider1, openshiftProvider2, openshiftProvider3],
+    openshift: [openshiftProvider1, openshiftProvider2, openshiftProvider3, openshiftProvider4],
   };
 
   MOCK_CLUSTER_PROVIDERS = [

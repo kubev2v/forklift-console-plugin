@@ -12,7 +12,7 @@ import {
   IRHVProvider,
   IVMwareProvider,
 } from '@kubev2v/legacy/queries/types';
-import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
+import { K8sGroupVersionKind, OwnerReference } from '@openshift-console/dynamic-plugin-sdk';
 
 const conditionState = (state: string) =>
   state === 'True' || state === 'False' ? state : 'Unknown';
@@ -54,6 +54,8 @@ export interface MergedProvider {
   [C.NETWORK_COUNT]: number;
   [C.STORAGE_COUNT]: number;
   [C.READY]: string;
+  [C.PHASE]: string;
+  [C.OWNER_REFERENCE]: OwnerReference[];
   positiveConditions: PositiveConditions;
   negativeConditions: NegativeConditions;
   object: IProviderObject;
@@ -145,6 +147,8 @@ export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
         networkCount,
         storageCount: storageDomainCount ?? datastoreCount,
         ready: Ready?.status ?? 'Unknown',
+        phase: provider?.status?.phase ?? 'Unknoen',
+        ownerReferences: provider.metadata.ownerReferences,
         positiveConditions: {
           Ready,
           InventoryCreated,

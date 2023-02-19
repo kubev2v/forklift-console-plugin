@@ -15,14 +15,20 @@ import {
   usePlansQuery,
 } from '@kubev2v/legacy/queries';
 import { IOpenShiftProvider } from '@kubev2v/legacy/queries/types';
+import { OwnerReference } from '@openshift-console/dynamic-plugin-sdk';
 
 import { type MergedProvider } from './data';
 
-export const useMergedProviderActions = ({ entity }: { entity: MergedProvider }) => {
+export const useMergedProviderActions = ({
+  entity,
+  ownerReferences,
+}: {
+  entity: MergedProvider;
+  ownerReferences: OwnerReference[];
+}) => {
   const { t } = useTranslation();
   const launchModal = useModal();
   const plansQuery = usePlansQuery(entity.namespace);
-  const ownerReferences = entity.object?.metadata?.ownerReferences;
   const isOwnedByForkliftCOntroller =
     ownerReferences && ownerReferences[0]?.kind === 'ForkliftController';
   const editingDisabled =

@@ -775,5 +775,106 @@
             }
         },
         "selfLink": "/foo/openshiftprovider/3"
+    },
+    {
+        "name": "host",
+        "namespace": "openshift-migration",
+        "url": "",
+        "type": "openshift",
+        "uid": "mock-uid-host",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "secretName": "boston",
+        "defaultTransferNetwork": "ocp-network-3",
+        "vmCount": 26,
+        "networkCount": 8,
+        "ready": "True",
+        "positiveConditions": {
+            "Ready": {
+                "status": "True",
+                "message": "The provider is ready."
+            },
+            "InventoryCreated": {
+                "status": "True",
+                "message": "The inventory has been loaded."
+            },
+            "Validated": {
+                "status": "True",
+                "message": "Validation has been completed."
+            },
+            "ConnectionTestSucceeded": {
+                "status": "True",
+                "message": "Connection test, succeeded."
+            }
+        },
+        "negativeConditions": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Provider",
+            "metadata": {
+                "name": "host",
+                "namespace": "openshift-migration",
+                "selfLink": "/foo/bar",
+                "uid": "mock-uid-host",
+                "creationTimestamp": "2020-08-21T18:36:41.468Z",
+                "annotations": {
+                    "forklift.konveyor.io/defaultTransferNetwork": "ocp-network-3"
+                },
+                "ownerReferences": [{
+                    "apiVersion": "forklift.konveyor.io/v1beta1",
+                    "kind": "ForkliftController",
+                    "name": "forklift-controller",
+                    "namespace": "openshift-migration",
+                    "uid": "2d0a80a3-94a7-4fe5-b0cb-225cf5e24eac"
+                }]
+            },
+            "spec": {
+                "type": "openshift",
+                "url": "",
+                "secret": {
+                    "namespace": "openshift-migration",
+                    "name": "boston"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-18T21:01:10Z",
+                        "message": "Connection test, succeeded.",
+                        "reason": "Tested",
+                        "status": "True",
+                        "type": "ConnectionTestSucceeded"
+                    },
+                    {
+                        "category": "Advisory",
+                        "lastTransitionTime": "2021-02-08T19:36:55Z",
+                        "message": "Validation has been completed.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "Validated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The inventory has been loaded.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "InventoryCreated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The provider is ready.",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ]
+            }
+        },
+        "selfLink": "/foo/openshiftprovider/3"
     }
 ]
