@@ -52,6 +52,7 @@ export function TableView<T>({
               entity={entity}
               columns={visibleColumns}
               currentNamespace={currentNamespace}
+              rowIndex={index}
             />
           ))}
       </Tbody>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { RowProps } from 'common/src/components/TableView';
 import { MappingDetailView } from 'legacy/src/Mappings/components/MappingDetailView';
 import { Mapping, MappingType } from 'legacy/src/queries/types';
@@ -86,7 +86,7 @@ export const commonCells: CellCreator<CommonMapping> = {
 };
 
 function MappingRow<T extends CommonMapping>({
-  rowProps: { columns, entity, currentNamespace },
+  rowProps: { columns, entity, currentNamespace, rowIndex },
   cellCreator,
   mappingType,
   mapping,
@@ -97,10 +97,21 @@ function MappingRow<T extends CommonMapping>({
   mapping: Mapping;
 }) {
   const { t } = useTranslation();
-  const [isRowExpanded, setiIsRowExpanded] = useState(false);
+  const [isRowExpanded, setIsRowExpanded] = useState(false);
+  const toggleExpand = useCallback(
+    () => setIsRowExpanded(!isRowExpanded),
+    [isRowExpanded, setIsRowExpanded],
+  );
   return (
     <>
       <Tr>
+        <Td
+          expand={{
+            rowIndex,
+            isExpanded: isRowExpanded,
+            onToggle: toggleExpand,
+          }}
+        />
         {columns.map(({ id, toLabel }) => {
           const Cell = cellCreator[id] ?? TextCell;
           return (
@@ -109,7 +120,7 @@ function MappingRow<T extends CommonMapping>({
               dataLabel={toLabel(t)}
               compoundExpand={
                 id === C.FROM || id === C.TO
-                  ? { isExpanded: isRowExpanded, onToggle: () => setiIsRowExpanded(!isRowExpanded) }
+                  ? { isExpanded: isRowExpanded, onToggle: toggleExpand }
                   : undefined
               }
             >
@@ -123,19 +134,17 @@ function MappingRow<T extends CommonMapping>({
           );
         })}
       </Tr>
-      {isRowExpanded ? (
-        <Tr isExpanded={isRowExpanded}>
-          <Td dataLabel={t('Mapping graph')} noPadding colSpan={columns.length}>
-            <ExpandableRowContent>
-              <MappingDetailView
-                mappingType={mappingType}
-                mapping={mapping}
-                className={spacing.mLg}
-              />
-            </ExpandableRowContent>
-          </Td>
-        </Tr>
-      ) : null}
+      <Tr isExpanded={isRowExpanded}>
+        <Td dataLabel={t('Mapping graph')} noPadding colSpan={columns.length}>
+          <ExpandableRowContent>
+            <MappingDetailView
+              mappingType={mappingType}
+              mapping={mapping}
+              className={spacing.mLg}
+            />
+          </ExpandableRowContent>
+        </Td>
+      </Tr>
     </>
   );
 }

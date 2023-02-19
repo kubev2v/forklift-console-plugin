@@ -1,5 +1,6 @@
 import React from 'react';
 import withQueryClient from 'common/src/components/QueryClientHoc';
+import { DefaultHeader, TableViewHeaderProps } from 'common/src/components/TableView';
 import { Field } from 'common/src/components/types';
 import { useModal } from 'common/src/polyfills/console-dynamic-plugin-sdk';
 import { AddEditMappingModal } from 'legacy/src/Mappings/components/AddEditMappingModal';
@@ -7,6 +8,7 @@ import { MappingType } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 
 import { Button } from '@patternfly/react-core';
+import { Th } from '@patternfly/react-table';
 
 export const AddMappingButton: React.FC<{
   namespace: string;
@@ -97,3 +99,10 @@ export const commonFieldsMetadata: Field[] = [
     sortable: false,
   },
 ];
+
+export const StartWithEmptyColumnMapper = (props: TableViewHeaderProps) => (
+  <>
+    <Th />
+    <DefaultHeader {...props} />
+  </>
+);
