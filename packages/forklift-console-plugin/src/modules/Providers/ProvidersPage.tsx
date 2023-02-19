@@ -153,9 +153,10 @@ const Page: React.FC<{
   title: string;
   userSettings: UserSettings;
 }> = ({ dataSource, namespace, title, userSettings }) => {
-  const showEmptyState = (dataSource[0]?.length ?? 0) === 0;
+  const [data, loaded, error] = dataSource;
+  const loadedDataIsEmpty = loaded && !error && data?.length === 0;
 
-  return showEmptyState ? (
+  return loadedDataIsEmpty ? (
     <EmptyStateProviders namespace={namespace} />
   ) : (
     <StandardPage<MergedProvider>
