@@ -121,11 +121,13 @@ const TextWithIcon = ({ value, Icon }: { value: string; Icon: JSXElementConstruc
 TextWithIcon.displayName = 'TextWithIcon';
 
 const ProviderLink = ({ value, entity, t }: CellProps) => {
-  const isHostProvider = entity.type === 'openshift' && !entity.url;
+  const ownerReferences = entity.object?.metadata?.ownerReferences;
+  const isOwnedByForkliftCOntroller =
+    ownerReferences && ownerReferences[0]?.kind === 'ForkliftController';
   return (
     <span className="forklift-table__flex-cell">
       <ResourceLink groupVersionKind={entity.gvk} name={value} namespace={entity?.namespace} />
-      {isHostProvider && (
+      {isOwnedByForkliftCOntroller && (
         <Label isCompact color="grey" className="forklift-table__flex-cell-label">
           {t('default')}
         </Label>
