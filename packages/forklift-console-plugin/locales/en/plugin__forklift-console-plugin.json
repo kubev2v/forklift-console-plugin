@@ -46,7 +46,6 @@
   "From": "From",
   "Hooks for virtualization": "Hooks for virtualization",
   "Hosts": "Hosts",
-  "Hosts for virtualization": "Hosts for virtualization",
   "KubeVirt": "KubeVirt",
   "Map source datastores or storage domains and networks to target storage classes and networks.": "Map source datastores or storage domains and networks to target storage classes and networks.",
   "Mapping graph": "Mapping graph",
