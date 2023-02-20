@@ -13,7 +13,7 @@ export const HostModel = {
   kind: 'Host',
   plural: 'hosts',
 
-  abbr: 'HO',
+  abbr: 'H',
   color: undefined,
   id: 'hosts.forklift.konveyor.io',
   namespaced: true,

@@ -14,7 +14,7 @@ export const ProviderModel = {
   plural: 'providers',
 
   abbr: 'PR',
-  color: '#b51cb8',
+  color: '#d5515e',
   id: 'providers.forklift.konveyor.io',
   namespaced: true,
   crd: true,

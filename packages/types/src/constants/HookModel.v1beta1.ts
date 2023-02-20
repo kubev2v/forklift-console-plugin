@@ -14,7 +14,7 @@ export const HookModel = {
   plural: 'hooks',
 
   abbr: 'HO',
-  color: undefined,
+  color: '#afb345',
   id: 'hooks.forklift.konveyor.io',
   namespaced: true,
   crd: true,
