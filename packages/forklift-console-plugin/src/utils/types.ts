@@ -18,20 +18,6 @@ export type Condition = {
   reason?: string;
 };
 
-export type ProviderResource = {
-  spec?: {
-    type: string;
-    url?: string;
-    secret?: {
-      name: string;
-      namespace: string;
-    };
-  };
-  status?: {
-    conditions?: Condition[];
-  };
-} & K8sResourceCommon;
-
 export type PlanResource = IPlan & K8sResourceCommon;
 
 export type MigrationResource = IMigration & K8sResourceCommon;

@@ -1,8 +1,9 @@
-import { MigrationResource, PlanResource, ProviderResource } from 'src/utils/types';
+import { MigrationResource, PlanResource } from 'src/utils/types';
 
 import { MOCK_MIGRATIONS } from '@kubev2v/legacy/queries/mocks/migrations.mock';
 import { MOCK_PLANS } from '@kubev2v/legacy/queries/mocks/plans.mock';
 import { MOCK_CLUSTER_PROVIDERS } from '@kubev2v/legacy/queries/mocks/providers.mock';
+import { V1beta1Provider } from '@kubev2v/types';
 
 import { mergeData } from '../data';
 
@@ -22,7 +23,7 @@ describe('merging k8s resources:Plans, Migrations, Providers', () => {
     jest.useFakeTimers().setSystemTime(new Date(NOW));
 
     const migrations = MOCK_MIGRATIONS as MigrationResource[];
-    const providers = MOCK_CLUSTER_PROVIDERS as ProviderResource[];
+    const providers = MOCK_CLUSTER_PROVIDERS as V1beta1Provider[];
     const merged = mergeData(plans, migrations, providers);
     // do a stringify-parse run to remove undefined properties which clutter the results(if mismatch happens)
     expect(JSON.parse(JSON.stringify(merged))).toEqual(MERGED_MOCK_DATA);

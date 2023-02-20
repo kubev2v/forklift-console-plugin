@@ -2,12 +2,13 @@ import { useMemo } from 'react';
 import * as C from 'src/utils/constants';
 import { useMigrations, usePlans, useProviders } from 'src/utils/fetch';
 import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
-import { MigrationResource, PlanResource, ProviderRef, ProviderResource } from 'src/utils/types';
+import { MigrationResource, PlanResource, ProviderRef } from 'src/utils/types';
 
 import { PlanState } from '@kubev2v/legacy/common/constants';
 import { getPlanState } from '@kubev2v/legacy/Plans/components/helpers';
 import { findLatestMigration } from '@kubev2v/legacy/queries';
 import { IPlan, PlanType } from '@kubev2v/legacy/queries/types';
+import { V1beta1Provider } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 export interface FlatPlan {
   //plan.metadata.name
@@ -47,7 +48,7 @@ interface LatestMigration {
 export const mergeData = (
   plans: PlanResource[],
   migrations: MigrationResource[],
-  providers: ProviderResource[],
+  providers: V1beta1Provider[],
 ): FlatPlan[] =>
   plans
     .map(

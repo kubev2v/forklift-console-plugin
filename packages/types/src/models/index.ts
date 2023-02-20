@@ -19,4 +19,5 @@ export * from './V1beta1NetworkMap';
 export * from './V1beta1OvirtVolumePopulator';
 export * from './V1beta1Plan';
 export * from './V1beta1Provider';
+export * from './V1beta1ProviderStatusConditions';
 export * from './V1beta1StorageMap';

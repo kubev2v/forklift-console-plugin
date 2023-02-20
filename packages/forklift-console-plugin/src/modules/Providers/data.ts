@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import * as C from 'src/utils/constants';
 import { useProviders } from 'src/utils/fetch';
 import { groupVersionKindForObj } from 'src/utils/resources';
-import { Condition, ProviderResource } from 'src/utils/types';
 
 import { useInventoryProvidersQuery } from '@kubev2v/legacy/queries';
 import {
@@ -12,6 +11,7 @@ import {
   IRHVProvider,
   IVMwareProvider,
 } from '@kubev2v/legacy/queries/types';
+import { V1beta1Provider, V1beta1ProviderStatusConditions } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
 const conditionState = (state: string) =>
@@ -64,9 +64,9 @@ export interface MergedProvider {
 type FlattenedInventory = Partial<IVMwareProvider & IRHVProvider & IOpenShiftProvider>;
 
 export const groupPairs = (
-  resources: ProviderResource[],
+  resources: V1beta1Provider[],
   inventory: IProvidersByType,
-): [ProviderResource, FlattenedInventory][] => {
+): [V1beta1Provider, FlattenedInventory][] => {
   const uid2inventory: { [key: string]: FlattenedInventory } = Object.fromEntries(
     Object.values(inventory)
       .flat()
@@ -76,20 +76,20 @@ export const groupPairs = (
 
   return resources
     .filter(Boolean)
-    .map((resource): [string, ProviderResource] => [resource?.metadata?.uid, resource])
+    .map((resource): [string, V1beta1Provider] => [resource?.metadata?.uid, resource])
     .filter(([uid, resource]) => uid && resource)
-    .map(([uid, resource]): [ProviderResource, FlattenedInventory] => [
+    .map(([uid, resource]): [V1beta1Provider, FlattenedInventory] => [
       resource,
       uid2inventory[uid] ?? {},
     ]);
 };
 
-export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
+export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
   pairs
     .map(
       ([resource, inventory]): [
-        ProviderResource,
-        ProviderResource,
+        V1beta1Provider,
+        V1beta1Provider,
         K8sGroupVersionKind,
         FlattenedInventory,
         SupportedConditions,
@@ -164,7 +164,7 @@ export const mergeData = (pairs: [ProviderResource, FlattenedInventory][]) =>
       }),
     );
 
-export const toSupportedConditions = (conditions: Condition[]) =>
+export const toSupportedConditions = (conditions: V1beta1ProviderStatusConditions[]) =>
   conditions.reduce(
     (acc: SupportedConditions, { type, status, message }) => ({
       ...acc,
