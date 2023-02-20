@@ -14,12 +14,15 @@ exports[`Provider rows ocpv-1 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: ocpv-1, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
-          </div>
-           
+            <div
+              class="ResourceLink_mock"
+            >
+              name: ocpv-1, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -190,12 +193,15 @@ exports[`Provider rows ocpv-2 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: ocpv-2, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
-          </div>
-           
+            <div
+              class="ResourceLink_mock"
+            >
+              name: ocpv-2, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -366,19 +372,22 @@ exports[`Provider rows ocpv-3 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: ocpv-3, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
-          </div>
-           
           <span
-            class="pf-c-label pf-m-compact"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              default
+              name: ocpv-3, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
+            </div>
+            <span
+              class="pf-c-label pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                default
+              </span>
             </span>
           </span>
         </td>
@@ -549,12 +558,15 @@ exports[`Provider rows rhv-1 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: rhv-1, gvk: forklift.konveyor.io~v1beta1~Provider, ns: konveyor-forklift
-          </div>
-           
+            <div
+              class="ResourceLink_mock"
+            >
+              name: rhv-1, gvk: forklift.konveyor.io~v1beta1~Provider, ns: konveyor-forklift
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -757,12 +769,15 @@ exports[`Provider rows rhv-2 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: rhv-2, gvk: forklift.konveyor.io~v1beta1~Provider, ns: konveyor-forklift
-          </div>
-           
+            <div
+              class="ResourceLink_mock"
+            >
+              name: rhv-2, gvk: forklift.konveyor.io~v1beta1~Provider, ns: konveyor-forklift
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -965,12 +980,15 @@ exports[`Provider rows rhv-3 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: rhv-3, gvk: forklift.konveyor.io~v1beta1~Provider, ns: konveyor-forklift
-          </div>
-           
+            <div
+              class="ResourceLink_mock"
+            >
+              name: rhv-3, gvk: forklift.konveyor.io~v1beta1~Provider, ns: konveyor-forklift
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -1173,12 +1191,15 @@ exports[`Provider rows vcenter-1 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: vcenter-1, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
-          </div>
-           
+            <div
+              class="ResourceLink_mock"
+            >
+              name: vcenter-1, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -1385,12 +1406,15 @@ exports[`Provider rows vcenter-2 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: vcenter-2, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
-          </div>
-           
+            <div
+              class="ResourceLink_mock"
+            >
+              name: vcenter-2, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -1593,12 +1617,15 @@ exports[`Provider rows vcenter-3 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: vcenter-3, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
-          </div>
-           
+            <div
+              class="ResourceLink_mock"
+            >
+              name: vcenter-3, gvk: forklift.konveyor.io~v1beta1~Provider, ns: openshift-migration
+            </div>
+          </span>
         </td>
         <td
           class=""
