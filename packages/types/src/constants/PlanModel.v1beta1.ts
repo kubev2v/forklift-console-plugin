@@ -14,7 +14,7 @@ export const PlanModel = {
   plural: 'plans',
 
   abbr: 'PL',
-  color: '#0f930b',
+  color: '#6f6d42',
   id: 'plans.forklift.konveyor.io',
   namespaced: true,
   crd: true,
