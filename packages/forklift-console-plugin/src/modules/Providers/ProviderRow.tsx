@@ -1,8 +1,9 @@
 import React, { JSXElementConstructor } from 'react';
 import { Link } from 'react-router-dom';
 import * as C from 'src/utils/constants';
-import { CONDITIONS, PROVIDERS } from 'src/utils/enums';
+import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
+import { ProviderStatus } from 'src/utils/types';
 
 import { RowProps } from '@kubev2v/common/components/TableView';
 import {
@@ -45,6 +46,20 @@ const toPositiveState = (conditionValue: string): 'Error' | 'Ok' | 'Unknown' => 
   }
 };
 
+const fromProviderState = (status: ProviderStatus): 'Error' | 'Ok' | 'Unknown' | 'Loading' => {
+  switch (status) {
+    case 'Ready':
+      return 'Ok';
+    case 'ConnectionFailed':
+    case 'ValidationFailed':
+      return 'Error';
+    case 'Staging':
+      return 'Loading';
+    default:
+      return 'Unknown';
+  }
+};
+
 const toNegativeState = (conditionValue: string): 'Error' | 'Ok' | 'Unknown' => {
   switch (conditionValue) {
     case 'True':
@@ -58,7 +73,7 @@ const toNegativeState = (conditionValue: string): 'Error' | 'Ok' | 'Unknown' => 
 
 const StatusCell = ({
   value,
-  entity: { positiveConditions, negativeConditions },
+  entity: { positiveConditions, negativeConditions, phase },
   t,
 }: CellProps) => {
   const allConditions = [
@@ -77,14 +92,14 @@ const StatusCell = ({
     ],
   );
 
-  const label = CONDITIONS[value]?.(t) ?? t('Unknown');
+  const label = PROVIDER_STATUS[value]?.(t) ?? t('Unknown');
   return (
     <Popover
       hasAutoWidth
       bodyContent={<div>{allConditions.length > 0 ? allConditions : t('No information')}</div>}
     >
       <Button variant="link" isInline aria-label={label}>
-        <StatusIcon status={toPositiveState(value)} label={label} />
+        <StatusIcon status={fromProviderState(phase)} label={label} />
       </Button>
     </Popover>
   );
@@ -120,9 +135,9 @@ const ProviderLink = ({ value, entity, t }: CellProps) => {
 };
 ProviderLink.displayName = 'ProviderLink';
 
-const HostCell = ({ value, entity: { ready, name, type }, currentNamespace }: CellProps) => (
+const HostCell = ({ value, entity: { phase, name, type }, currentNamespace }: CellProps) => (
   <>
-    {ready === 'True' && value && type === 'vsphere' ? (
+    {phase === 'Ready' && value && type === 'vsphere' ? (
       <Link
         to={
           currentNamespace
@@ -162,7 +177,7 @@ TypeCell.displayName = 'TypeCell';
 
 const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   [C.NAME]: ProviderLink,
-  [C.READY]: StatusCell,
+  [C.PHASE]: StatusCell,
   [C.URL]: TextCell,
   [C.TYPE]: TypeCell,
   [C.NAMESPACE]: ({ value }: CellProps) => <ResourceLink kind="Namespace" name={value} />,

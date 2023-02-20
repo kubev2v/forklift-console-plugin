@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import * as C from 'src/utils/constants';
 import { useProviders } from 'src/utils/fetch';
 import { groupVersionKindForObj } from 'src/utils/resources';
+import { ProviderStatus } from 'src/utils/types';
 
 import { useInventoryProvidersQuery } from '@kubev2v/legacy/queries';
 import {
@@ -53,7 +54,7 @@ export interface MergedProvider {
   [C.VM_COUNT]: number;
   [C.NETWORK_COUNT]: number;
   [C.STORAGE_COUNT]: number;
-  [C.READY]: string;
+  [C.PHASE]: ProviderStatus;
   positiveConditions: PositiveConditions;
   negativeConditions: NegativeConditions;
   object: IProviderObject;
@@ -106,6 +107,7 @@ export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
         {
           metadata: { name = '', namespace = '', uid = '', annotations = [] } = {},
           spec: { url = '', type = '', secret: { name: secretName = '' } = {} } = {},
+          status: { phase = 'Unknown' } = {},
         },
         provider,
         gvk,
@@ -144,7 +146,6 @@ export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
         vmCount,
         networkCount,
         storageCount: storageDomainCount ?? datastoreCount,
-        ready: Ready?.status ?? 'Unknown',
         positiveConditions: {
           Ready,
           InventoryCreated,
@@ -161,6 +162,7 @@ export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
         },
         object: provider as IProviderObject,
         selfLink,
+        phase: phase as ProviderStatus,
       }),
     );
 

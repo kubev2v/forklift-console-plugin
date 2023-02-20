@@ -16,7 +16,6 @@
         "vmCount": 41,
         "networkCount": 8,
         "storageCount": 3,
-        "ready": "True",
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -90,10 +89,12 @@
                         "status": "True",
                         "type": "Ready"
                     }
-                ]
+                ],
+                "phase": "Ready"
             }
         },
-        "selfLink": "/foo/vmwareprovider/1"
+        "selfLink": "/foo/vmwareprovider/1",
+        "phase": "Ready"
     },
     {
         "name": "vcenter-2",
@@ -112,7 +113,6 @@
         "vmCount": 41,
         "networkCount": 8,
         "storageCount": 3,
-        "ready": "Unknown",
         "positiveConditions": {},
         "negativeConditions": {
             "URLNotValid": {
@@ -151,10 +151,12 @@
                         "lastTransitionTime": "2020-08-21T18:36:41.468Z",
                         "reason": ""
                     }
-                ]
+                ],
+                "phase": "ConnectionFailed"
             }
         },
-        "selfLink": "/foo/vmwareprovider/2"
+        "selfLink": "/foo/vmwareprovider/2",
+        "phase": "ConnectionFailed"
     },
     {
         "name": "vcenter-3",
@@ -173,7 +175,6 @@
         "vmCount": 41,
         "networkCount": 8,
         "storageCount": 3,
-        "ready": "Unknown",
         "positiveConditions": {
             "Validated": {
                 "status": "True",
@@ -236,10 +237,12 @@
                         "status": "True",
                         "type": "LoadInventory"
                     }
-                ]
+                ],
+                "phase": "Staging"
             }
         },
-        "selfLink": "/foo/vmwareprovider/3"
+        "selfLink": "/foo/vmwareprovider/3",
+        "phase": "Staging"
     },
     {
         "name": "rhv-1",
@@ -258,7 +261,6 @@
         "vmCount": 36,
         "networkCount": 15,
         "storageCount": 9,
-        "ready": "True",
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -332,10 +334,12 @@
                         "message": "The provider is ready.",
                         "lastTransitionTime": "2021-05-17T00:54:58Z"
                     }
-                ]
+                ],
+                "phase": "Ready"
             }
         },
-        "selfLink": "providers/ovirt/foo1"
+        "selfLink": "providers/ovirt/foo1",
+        "phase": "Ready"
     },
     {
         "name": "rhv-2",
@@ -354,7 +358,6 @@
         "vmCount": 36,
         "networkCount": 15,
         "storageCount": 9,
-        "ready": "True",
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -428,10 +431,12 @@
                         "message": "The provider is ready.",
                         "lastTransitionTime": "2021-05-17T00:54:58Z"
                     }
-                ]
+                ],
+                "phase": "Ready"
             }
         },
-        "selfLink": "providers/ovirt/foo2"
+        "selfLink": "providers/ovirt/foo2",
+        "phase": "Ready"
     },
     {
         "name": "rhv-3",
@@ -450,7 +455,6 @@
         "vmCount": 36,
         "networkCount": 15,
         "storageCount": 9,
-        "ready": "True",
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -524,10 +528,12 @@
                         "message": "The provider is ready.",
                         "lastTransitionTime": "2021-05-17T00:54:58Z"
                     }
-                ]
+                ],
+                "phase": "Ready"
             }
         },
-        "selfLink": "providers/ovirt/foo3"
+        "selfLink": "providers/ovirt/foo3",
+        "phase": "Ready"
     },
     {
         "name": "ocpv-1",
@@ -544,7 +550,6 @@
         "defaultTransferNetwork": "ocp-network-3",
         "vmCount": 26,
         "networkCount": 8,
-        "ready": "True",
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -618,10 +623,12 @@
                         "status": "True",
                         "type": "Ready"
                     }
-                ]
+                ],
+                "phase": "Ready"
             }
         },
-        "selfLink": "/foo/openshiftprovider/1"
+        "selfLink": "/foo/openshiftprovider/1",
+        "phase": "Ready"
     },
     {
         "name": "ocpv-2",
@@ -638,7 +645,6 @@
         "defaultTransferNetwork": "ocp-network-3",
         "vmCount": 26,
         "networkCount": 8,
-        "ready": "Unknown",
         "positiveConditions": {},
         "negativeConditions": {
             "URLNotValid": {
@@ -677,10 +683,12 @@
                         "lastTransitionTime": "2020-08-21T18:36:41.468Z",
                         "reason": ""
                     }
-                ]
+                ],
+                "phase": "ConnectionFailed"
             }
         },
-        "selfLink": "/foo/openshiftprovider/2"
+        "selfLink": "/foo/openshiftprovider/2",
+        "phase": "ConnectionFailed"
     },
     {
         "name": "ocpv-3",
@@ -697,7 +705,6 @@
         "defaultTransferNetwork": "ocp-network-3",
         "vmCount": 26,
         "networkCount": 8,
-        "ready": "True",
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -771,9 +778,11 @@
                         "status": "True",
                         "type": "Ready"
                     }
-                ]
+                ],
+                "phase": "Ready"
             }
         },
-        "selfLink": "/foo/openshiftprovider/3"
+        "selfLink": "/foo/openshiftprovider/3",
+        "phase": "Ready"
     }
 ]
