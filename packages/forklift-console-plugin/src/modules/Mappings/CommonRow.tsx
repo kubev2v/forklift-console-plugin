@@ -136,13 +136,15 @@ function MappingRow<T extends CommonMapping>({
       </Tr>
       <Tr isExpanded={isRowExpanded}>
         <Td dataLabel={t('Mapping graph')} noPadding colSpan={columns.length}>
-          <ExpandableRowContent>
-            <MappingDetailView
-              mappingType={mappingType}
-              mapping={mapping}
-              className={spacing.mLg}
-            />
-          </ExpandableRowContent>
+          {isRowExpanded && (
+            <ExpandableRowContent>
+              <MappingDetailView
+                mappingType={mappingType}
+                mapping={mapping}
+                className={spacing.mLg}
+              />
+            </ExpandableRowContent>
+          )}
         </Td>
       </Tr>
     </>
