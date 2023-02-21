@@ -2,6 +2,7 @@ import { ISourceStorage, IAnnotatedStorageClass, IByProvider } from '../types';
 
 export let MOCK_VMWARE_DATASTORES: ISourceStorage[] = [];
 export let MOCK_RHV_STORAGE_DOMAINS: ISourceStorage[] = [];
+export let MOCK_OPENSTACK_VOLUME_TYPES: ISourceStorage[] = [];
 export let MOCK_STORAGE_CLASSES_BY_PROVIDER: IByProvider<IAnnotatedStorageClass> = {};
 
 if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
@@ -68,6 +69,39 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
       name: 'rhv-datastore-5',
       selfLink: '/foo/rhvstorage/5',
       path: 'Default/V2V-NFS4-Data-01',
+    },
+  ];
+
+  MOCK_OPENSTACK_VOLUME_TYPES = [
+    {
+      id: '1',
+      name: 'openstack-storage-1',
+      selfLink: '/foo/volumetypes/1',
+      path: 'openstack-storage-1',
+    },
+    {
+      id: '2',
+      name: 'openstack-datastore-2',
+      selfLink: '/foo/volumetypes/2',
+      path: 'openstack-datastore-2',
+    },
+    {
+      id: '3',
+      name: 'openstack-datastore-3',
+      selfLink: '/foo/volumetypes/3',
+      path: 'openstack-datastore-3',
+    },
+    {
+      id: '4',
+      name: 'openstack-datastore-4',
+      selfLink: '/foo/volumetypes/4',
+      path: 'openstack-datastore-4',
+    },
+    {
+      id: '5',
+      name: 'openstack-datastore-5',
+      selfLink: '/foo/volumetypes/5',
+      path: 'openstack-datastore-5',
     },
   ];
 
