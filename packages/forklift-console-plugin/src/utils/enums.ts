@@ -2,6 +2,8 @@ import { K8sConditionStatus } from '@kubev2v/common/components/types';
 import { PlanState, ProviderType } from '@kubev2v/legacy/common/constants';
 import { PlanType } from '@kubev2v/legacy/queries/types';
 
+import { ProviderStatus } from './types';
+
 export const PROVIDERS: Record<ProviderType, (t: (k: string) => string) => string> = {
   vsphere: (t) => t('VMware'),
   ovirt: (t) => t('oVirt'),
@@ -12,6 +14,14 @@ export const PROVIDERS: Record<ProviderType, (t: (k: string) => string) => strin
 export const CONDITIONS: Record<K8sConditionStatus, (t: (k: string) => string) => string> = {
   True: (t) => t('True'),
   False: (t) => t('False'),
+  Unknown: (t) => t('Unknown'),
+};
+
+export const PROVIDER_STATUS: Record<ProviderStatus, (t: (k: string) => string) => string> = {
+  Ready: (t) => t('Ready'),
+  ConnectionFailed: (t) => t('Connection Failed'),
+  Staging: (t) => t('Staging'),
+  ValidationFailed: (t) => t('Validation Failed'),
   Unknown: (t) => t('Unknown'),
 };
 

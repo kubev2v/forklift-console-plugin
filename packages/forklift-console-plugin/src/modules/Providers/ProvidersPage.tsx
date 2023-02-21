@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as C from 'src/utils/constants';
-import { CONDITIONS, PROVIDERS } from 'src/utils/enums';
+import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
@@ -46,14 +46,14 @@ export const fieldsMetadata: Field[] = [
     sortable: true,
   },
   {
-    id: C.READY,
-    toLabel: (t) => t('Ready'),
+    id: C.PHASE,
+    toLabel: (t) => t('Status'),
     isVisible: true,
     filter: {
       type: 'enum',
       primary: true,
-      toPlaceholderLabel: (t) => t('Ready'),
-      values: fromI18nEnum(CONDITIONS),
+      toPlaceholderLabel: (t) => t('Status'),
+      values: fromI18nEnum(PROVIDER_STATUS),
     },
     sortable: true,
   },
