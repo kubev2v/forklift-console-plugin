@@ -17,6 +17,7 @@ import {
   ICorrelatedProvider,
   IRHVProvider,
   IVMwareProvider,
+  IOpenStackProvider,
   SourceInventoryProvider,
 } from 'legacy/src/queries/types';
 import { ProviderActionsDropdown } from '../ProviderActionsDropdown';
@@ -51,6 +52,9 @@ export const SourceProvidersTable: React.FunctionComponent<ISourceProvidersTable
     }
     if (providerType === 'ovirt') {
       return (provider.inventory as IRHVProvider).storageDomainCount;
+    }
+    if (providerType === 'openstack') {
+      return (provider.inventory as IOpenStackProvider).volumeTypeCount;
     }
     return 0;
   };
