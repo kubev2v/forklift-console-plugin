@@ -1,14 +1,12 @@
 import React, { ReactNode } from 'react';
 import { UID } from 'common/src/utils/constants';
-import { useTranslation } from 'common/src/utils/i18n';
 
 import { Bullseye } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { TableComposable, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
 
 import { Field, SortType } from '../types';
 
-import { buildSort } from './sort';
-import { RowProps } from './types';
+import { RowProps, TableViewHeaderProps } from './types';
 
 /**
  * Displays provided list of entities as table. Supported features:
@@ -28,30 +26,15 @@ export function TableView<T>({
   activeSort,
   setActiveSort,
   currentNamespace,
+  Header,
 }: TableViewProps<T>) {
-  const { t } = useTranslation();
   const hasChildren = children.filter(Boolean).length > 0;
   const columnSignature = visibleColumns.map(({ id }) => id).join();
   return (
     <TableComposable aria-label={ariaLabel} variant="compact" isStickyHeader>
       <Thead>
         <Tr>
-          {visibleColumns.map(({ id, toLabel, sortable }, columnIndex) => (
-            <Th
-              key={id}
-              sort={
-                sortable &&
-                buildSort({
-                  activeSort,
-                  columnIndex,
-                  columns: visibleColumns,
-                  setActiveSort,
-                })
-              }
-            >
-              {toLabel(t)}
-            </Th>
-          ))}
+          <Header {...{ activeSort, setActiveSort, visibleColumns }} />
         </Tr>
       </Thead>
       <Tbody>
@@ -69,6 +52,7 @@ export function TableView<T>({
               entity={entity}
               columns={visibleColumns}
               currentNamespace={currentNamespace}
+              rowIndex={index}
             />
           ))}
       </Tbody>
@@ -96,4 +80,9 @@ interface TableViewProps<T> {
   activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
   currentNamespace: string;
+
+  /**
+   * Maps columns to header rows.
+   */
+  Header(props: TableViewHeaderProps): JSX.Element;
 }

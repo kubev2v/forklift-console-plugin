@@ -12,7 +12,7 @@ import { useTranslation } from 'src/utils/i18n';
 import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { AddMappingButton, commonFieldsMetadata } from './CommonPage';
+import { AddMappingButton, commonFieldsMetadata, StartWithEmptyColumnMapper } from './CommonPage';
 import { FlatStorageMapping, Storage, useFlatStorageMappings } from './dataForStorage';
 import StorageMappingRow from './StorageMappingRow';
 
@@ -74,6 +74,7 @@ const Page = ({
       }
       dataSource={dataSource}
       RowMapper={StorageMappingRow}
+      HeaderMapper={StartWithEmptyColumnMapper}
       fieldsMetadata={fieldsMetadata}
       namespace={namespace}
       title={title}

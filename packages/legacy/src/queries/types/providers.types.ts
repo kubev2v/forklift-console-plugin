@@ -26,6 +26,7 @@ export interface IProviderObject extends ICR {
   };
   status?: {
     conditions: IStatusCondition[];
+    phase: 'ValidationFailed' |  'ConnectionFailed'|  'Ready' | 'Staging'|  'Unknown',
   };
 }
 

@@ -1,9 +1,8 @@
-import { ProviderResource } from 'src/utils/types';
-
 import {
   MOCK_CLUSTER_PROVIDERS,
   MOCK_INVENTORY_PROVIDERS,
 } from '@kubev2v/legacy/queries/mocks/providers.mock';
+import { V1beta1Provider } from '@kubev2v/types';
 import { ObjectMetadata } from '@openshift-console/dynamic-plugin-sdk';
 
 import { groupPairs, mergeData, toSupportedConditions } from '../data';
@@ -35,6 +34,8 @@ describe('extracting conditions', () => {
           type: 'URLNotValid',
           status: undefined,
           message: 'Not responding',
+          category: 'Critical',
+          lastTransitionTime: '2020-08-21T18:36:41.468Z',
         },
       ]),
     ).toEqual({ URLNotValid: { status: 'Unknown', message: 'Not responding' } });
@@ -46,6 +47,8 @@ describe('extracting conditions', () => {
           type: 'FooBar',
           status: 'False',
           message: 'BarFoo',
+          category: 'Critical',
+          lastTransitionTime: '2020-08-21T18:36:41.468Z',
         },
       ]),
     ).toEqual({ FooBar: { status: 'False', message: 'BarFoo' } });
@@ -59,7 +62,7 @@ describe('grouping pairs', () => {
     );
   });
   it('skipps inventory without resource', () => {
-    const result = groupPairs([MOCK_INVENTORY_PROVIDERS.openshift[0].object as ProviderResource], {
+    const result = groupPairs([MOCK_INVENTORY_PROVIDERS.openshift[0].object as V1beta1Provider], {
       openshift: [MOCK_INVENTORY_PROVIDERS.openshift[1]],
       ovirt: [],
       openstack: [],
@@ -72,7 +75,7 @@ describe('grouping pairs', () => {
   });
   it('skipps items without UID', () => {
     const provider = MOCK_INVENTORY_PROVIDERS.openshift[0];
-    const k8sNoUid: ProviderResource = {
+    const k8sNoUid: V1beta1Provider = {
       ...provider.object,
       metadata: { ...(provider.object.metadata as ObjectMetadata), uid: undefined },
     };
@@ -88,7 +91,7 @@ describe('grouping pairs', () => {
   it('groups into pairs', () => {
     const provider = MOCK_INVENTORY_PROVIDERS.openshift[0];
     expect(
-      groupPairs([provider.object as ProviderResource], {
+      groupPairs([provider.object as V1beta1Provider], {
         openshift: [provider],
         ovirt: [],
         openstack: [],
@@ -105,7 +108,7 @@ describe('merging k8s Provider with inventory Provider', () => {
 
   test('standard mock data', () => {
     const merged = mergeData(
-      groupPairs(MOCK_CLUSTER_PROVIDERS as ProviderResource[], MOCK_INVENTORY_PROVIDERS),
+      groupPairs(MOCK_CLUSTER_PROVIDERS as V1beta1Provider[], MOCK_INVENTORY_PROVIDERS),
     );
     expect(JSON.parse(JSON.stringify(merged))).toEqual(MERGED_MOCK_DATA);
   });

@@ -13,7 +13,7 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { Button } from '@patternfly/react-core';
 
-import { commonFieldsMetadata } from './CommonPage';
+import { commonFieldsMetadata, StartWithEmptyColumnMapper } from './CommonPage';
 import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './dataForNetwork';
 import NetworkMappingRow from './NetworkMappingRow';
 
@@ -72,6 +72,7 @@ const Page = ({
     addButton={<AddNetworkMappingButton namespace={namespace} />}
     dataSource={dataSource}
     RowMapper={NetworkMappingRow}
+    HeaderMapper={StartWithEmptyColumnMapper}
     fieldsMetadata={fieldsMetadata}
     namespace={namespace}
     title={title}

@@ -2,8 +2,9 @@ import { IdOrNameRef, IStorageMapping } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 import { useStorageMappings } from 'src/utils/fetch';
 import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
-import { ProviderRef, ProviderResource, StorageMapResource } from 'src/utils/types';
+import { ProviderRef, StorageMapResource } from 'src/utils/types';
 
+import { V1beta1Provider } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
 import { CommonMapping, OwnerRef, resolveOwnerRef, useMappings } from './dataCommon';
@@ -47,7 +48,7 @@ export const groupByTarget = (tuples: [string, IdOrNameRef][]): [Storage, IdOrNa
 
 export const mergeData = (
   mappings: StorageMapResource[],
-  providers: ProviderResource[],
+  providers: V1beta1Provider[],
 ): FlatStorageMapping[] => {
   return mappings
     .map(

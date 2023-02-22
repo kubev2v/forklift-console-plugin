@@ -3,7 +3,6 @@ import {
   MigrationResource,
   NetworkMapResource,
   PlanResource,
-  ProviderResource,
   StorageMapResource,
 } from 'src/utils/types';
 
@@ -14,6 +13,7 @@ import {
 import { MOCK_MIGRATIONS } from '@kubev2v/legacy/queries/mocks/migrations.mock';
 import { MOCK_PLANS } from '@kubev2v/legacy/queries/mocks/plans.mock';
 import { MOCK_CLUSTER_PROVIDERS } from '@kubev2v/legacy/queries/mocks/providers.mock';
+import { V1beta1Provider } from '@kubev2v/types';
 import {
   K8sGroupVersionKind,
   K8sResourceCommon,
@@ -45,14 +45,14 @@ function createRealK8sWatchResourceHook<T>(kind: string) {
   };
 }
 
-const useMockProviders = ({ name }: WatchK8sResource): WatchK8sResult<ProviderResource[]> => {
-  const mockData: ProviderResource[] = useMemo(
+const useMockProviders = ({ name }: WatchK8sResource): WatchK8sResult<V1beta1Provider[]> => {
+  const mockData: V1beta1Provider[] = useMemo(
     () =>
       !name
-        ? (MOCK_CLUSTER_PROVIDERS as ProviderResource[])
+        ? (MOCK_CLUSTER_PROVIDERS as V1beta1Provider[])
         : (MOCK_CLUSTER_PROVIDERS?.filter(
             (provider) => provider?.metadata?.name === name,
-          ) as ProviderResource[]),
+          ) as V1beta1Provider[]),
     [name],
   );
   return [mockData, true, false];
@@ -60,7 +60,7 @@ const useMockProviders = ({ name }: WatchK8sResource): WatchK8sResult<ProviderRe
 
 export const useProviders = IS_MOCK
   ? useMockProviders
-  : createRealK8sWatchResourceHook<ProviderResource>('Provider');
+  : createRealK8sWatchResourceHook<V1beta1Provider>('Provider');
 
 const useMockPlans = ({ name }: WatchK8sResource): WatchK8sResult<PlanResource[]> => {
   const mockData: PlanResource[] = useMemo(

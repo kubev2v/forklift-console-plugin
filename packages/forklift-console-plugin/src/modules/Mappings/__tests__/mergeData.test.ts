@@ -2,9 +2,10 @@ import {
   MOCK_NETWORK_MAPPINGS,
   MOCK_STORAGE_MAPPINGS,
 } from 'legacy/src/queries/mocks/mappings.mock';
-import { NetworkMapResource, ProviderResource, StorageMapResource } from 'src/utils/types';
+import { NetworkMapResource, StorageMapResource } from 'src/utils/types';
 
 import { MOCK_CLUSTER_PROVIDERS } from '@kubev2v/legacy/queries/mocks/providers.mock';
+import { V1beta1Provider } from '@kubev2v/types';
 
 import {
   groupByTarget as groupNetworkByTarget,
@@ -25,7 +26,7 @@ describe('merging network data', () => {
 
   test('standard mock data', () => {
     const mappings = MOCK_NETWORK_MAPPINGS as NetworkMapResource[];
-    const providers = MOCK_CLUSTER_PROVIDERS as ProviderResource[];
+    const providers = MOCK_CLUSTER_PROVIDERS as V1beta1Provider[];
     const merged = mergeNetworkData(mappings, providers);
     // do a stringify-parse run to remove undefined properties which clutter the results(if mismatch happens)
     expect(JSON.parse(JSON.stringify(merged))).toEqual(MERGED_NETWORK_DATA);
@@ -39,7 +40,7 @@ describe('merging storage data', () => {
 
   test('standard mock data', () => {
     const mappings = MOCK_STORAGE_MAPPINGS as StorageMapResource[];
-    const providers = MOCK_CLUSTER_PROVIDERS as ProviderResource[];
+    const providers = MOCK_CLUSTER_PROVIDERS as V1beta1Provider[];
     const merged = mergeStoragekData(mappings, providers);
     // do a stringify-parse run to remove undefined properties which clutter the results(if mismatch happens)
     expect(JSON.parse(JSON.stringify(merged))).toEqual(MERGED_STORAGE_DATA);

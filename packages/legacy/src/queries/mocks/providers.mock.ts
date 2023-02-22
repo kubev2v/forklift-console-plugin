@@ -77,6 +77,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             type: 'Ready',
           },
         ],
+        phase: "Ready",
       },
     },
     clusterCount: 2,
@@ -110,6 +111,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             reason: '',
           },
         ],
+        phase: 'ConnectionFailed',
       },
     },
   };
@@ -154,6 +156,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             type: 'LoadInventory',
           },
         ],
+        phase: 'Staging',
       },
     },
   };
@@ -218,6 +221,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             lastTransitionTime: '2021-05-17T00:54:58Z',
           },
         ],
+        phase: "Ready",
       },
     },
     datacenterCount: 1,
@@ -321,6 +325,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             type: 'Ready',
           },
         ],
+        phase: "Ready",
       },
     },
     vmCount: 26,
@@ -350,6 +355,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             reason: '',
           },
         ],
+        phase: 'ConnectionFailed',
       },
     },
   };

@@ -32,6 +32,7 @@ describe('Plan rows', () => {
                 columns={fieldsMetadata}
                 currentNamespace={undefined}
                 entity={plan as FlatPlan}
+                rowIndex={0}
               />
             </tbody>
           </table>

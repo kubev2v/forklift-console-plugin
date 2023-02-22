@@ -3,8 +3,8 @@ import { Mapping } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 import { useProviders } from 'src/utils/fetch';
 import { groupVersionKindForObj, ResourceKind } from 'src/utils/resources';
-import { ProviderResource } from 'src/utils/types';
 
+import { V1beta1Provider } from '@kubev2v/types';
 import {
   K8sGroupVersionKind,
   OwnerReference,
@@ -51,7 +51,7 @@ export const useMappings = <T, K>(
     groupVersionKind: { group, version },
   }: { namespace: string; name?: string; groupVersionKind: K8sGroupVersionKind },
   useMappings: (p: WatchK8sResource, k: Omit<K8sGroupVersionKind, 'kind'>) => WatchK8sResult<T[]>,
-  mergeData: (m: T[], p: ProviderResource[]) => K[],
+  mergeData: (m: T[], p: V1beta1Provider[]) => K[],
 ): [K[], boolean, boolean] => {
   const [providers] = useProviders({ namespace }, { group, version });
   const [mappings, loaded, error] = useMappings({ namespace, name }, { group, version });
