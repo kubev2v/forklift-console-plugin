@@ -7,6 +7,7 @@ import { ProviderStatus } from 'src/utils/types';
 import { useInventoryProvidersQuery } from '@kubev2v/legacy/queries';
 import {
   IOpenShiftProvider,
+  IOpenStackProvider,
   IProviderObject,
   IProvidersByType,
   IRHVProvider,
@@ -62,7 +63,9 @@ export interface MergedProvider {
 }
 
 // may be empty when there is no inventory (yet)
-type FlattenedInventory = Partial<IVMwareProvider & IRHVProvider & IOpenShiftProvider>;
+type FlattenedInventory = Partial<
+  IVMwareProvider & IRHVProvider & IOpenShiftProvider & IOpenStackProvider
+>;
 
 export const groupPairs = (
   resources: V1beta1Provider[],
@@ -118,6 +121,7 @@ export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
           networkCount,
           datastoreCount,
           storageDomainCount,
+          volumeTypeCount,
           selfLink,
         },
         {
@@ -145,7 +149,7 @@ export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
         hostCount,
         vmCount,
         networkCount,
-        storageCount: storageDomainCount ?? datastoreCount,
+        storageCount: storageDomainCount ?? datastoreCount ?? volumeTypeCount,
         positiveConditions: {
           Ready,
           InventoryCreated,

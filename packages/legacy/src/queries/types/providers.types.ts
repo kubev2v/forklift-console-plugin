@@ -62,6 +62,7 @@ export interface IOpenStackProvider extends ICommonProvider {
   hostCount: number;
   vmCount: number;
   networkCount: number;
+  volumeTypeCount: number;
 }
 
 export interface IOpenShiftProvider extends ICommonProvider {
@@ -69,7 +70,7 @@ export interface IOpenShiftProvider extends ICommonProvider {
   networkCount: number;
 }
 
-export type InventoryProvider = IVMwareProvider | IRHVProvider | IOpenStackProvider| IOpenShiftProvider;
+export type InventoryProvider = IVMwareProvider | IRHVProvider | IOpenStackProvider | IOpenShiftProvider;
 export type SourceInventoryProvider = IVMwareProvider | IRHVProvider | IOpenStackProvider;
 
 export interface IProvidersByType {
