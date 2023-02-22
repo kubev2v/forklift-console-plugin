@@ -1,31 +1,6 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-script_dir=$(dirname "$0")
-
-# Check for kind cmd
-# -----------------------------------
-
-echo "Check for kind"
-echo "==============="
-
-if ! [ -x "$(command -v kind)" ]; then
-  echo "Error: can't find 'kind' command line utility, exit"
-  exit 1
-fi
-echo "Found $(which kind)"
-
-if ! [ -x "$(command -v kubectl)" ]; then
-  echo "Error: can't find 'kubectl' command line utility, exit"
-  exit 1
-fi
-echo "Found $(which kubectl)"
-
-# Check for container cmd
-# -----------------------------------
-echo ""
-echo "Check for container command"
-echo "============================"
 
 if [ -x "$(command -v podman)" ]; then
   CONTAINER_CMD=$(which podman)
@@ -33,14 +8,8 @@ else
   CONTAINER_CMD=$(which docker)
 fi
 
-if ! [ -x "$(command -v ${CONTAINER_CMD})" ]; then
-  echo "Error: can't find 'podman' or 'docker' command line utility, exit"
-  exit 1
-fi
-echo "Found: ${CONTAINER_CMD}"
-
 # Starting local registry and temp data dir
-# ---------------------------------------------
+# -----------------------------------------
 echo ""
 echo "Starting local registry and tmp local storage"
 echo "=============================================="
@@ -70,10 +39,18 @@ host_path=$(mktemp -d -t kind-storage-XXXXX)
 echo "host_path: ${host_path} (cluster, /data)"
 
 # Create a cluster with the local registry enabled in containerd
-# -----------------------------------------------------------------
+# ---------------------------------------------------------------
 echo ""
 echo "Starting local kind cluster"
 echo "============================"
+
+# 30001       - fakeovirt
+# 30022       - ssh
+# 30050       - openstack keystone service
+# 30080       - console
+# 30088       - forklift invnetory
+# 30089       - fake wmware
+# 31000:33000 - openstack services
 
 cat <<EOF | kind create cluster --config=-
 kind: Cluster
@@ -83,14 +60,30 @@ networking:
 nodes:
 - role: control-plane
   extraPortMappings:
+  - containerPort: 30001
+    hostPort: 30001
+  - containerPort: 30022
+    hostPort: 30022
+  - containerPort: 30050
+    hostPort: 30050
   - containerPort: 30080
     hostPort: 30080
   - containerPort: 30088
     hostPort: 30088
   - containerPort: 30089
     hostPort: 30089
-  - containerPort: 30022
-    hostPort: 30022
+  - containerPort: 31609
+    hostPort: 31609
+  - containerPort: 31058
+    hostPort: 31058
+  - containerPort: 31663
+    hostPort: 31663
+  - containerPort: 31677
+    hostPort: 31677
+  - containerPort: 31932
+    hostPort: 31932
+  - containerPort: 32359
+    hostPort: 32359
   extraMounts:
   - hostPath: ${host_path}
     containerPath: /data
@@ -100,60 +93,6 @@ containerdConfigPatches:
     endpoint = ["http://${reg_ip}:5000"]
 EOF
 
-# Install Openshift console
-# --------------------------
-echo ""
-echo "Starting Openshift console"
-echo "==========================="
-
-echo ""
-echo "waiting for kind cluster coredns service..."
-kubectl wait deployment -n kube-system coredns --for condition=Available=True --timeout=180s
-
-echo ""
-echo "deploy Openshift console (with forklift proxy, tls: false, auth: flase, port: 30088)..."
-kubectl apply -f ${script_dir}/yaml/openshift-console.yaml
-
-echo ""
-echo "deploy forklift CRDs + deploy console CRDs"
-kubectl apply -f ${script_dir}/yaml/crds
-
-echo ""
-echo "waiting for Openshift console service..."
-kubectl wait deployment -n  openshift-console console --for condition=Available=True --timeout=180s
-
-# Give default kind user cluster admin role
-# -----------------------------------------
 echo ""
 echo "Bind cluster admin role to default user"
-echo "token - 'abcdef.0123456789abcdef'"
 kubectl create clusterrolebinding forklift-cluster-admin --clusterrole=cluster-admin --user=system:bootstrap:abcdef
-
-# Print some help
-# -----------------
-echo ""
-echo "==========================================="
-
-echo ""
-echo "Routes:"
-echo "  server:      https://127.0.0.1:6443/"
-echo "  registry:    http://localhost:${reg_port}/"
-echo "  web console: http://localhost:30080/"
-echo "  ( optional, ports 30088 and 30089 are open for forklift APIs )"
-
-echo ""
-echo "Local registry usage example:"
-echo "  podman build -t localhost:5001/forklift-console-plugin -f ./build/Containerfile"
-echo "  podman push localhost:5001/forklift-console-plugin --tls-verify=false"
-echo "  kubectl apply -f ci/yaml/forklift-plugin.yaml"
-
-echo ""
-echo "==========================================="
-
-echo ""
-echo "This script will install the kubernetes config file in your .kube directory,"
-echo "if this was run by a different user, make sure your current user can use the cluster"
-echo "if needed copy the kubernetes config file to your local home directory, or"
-echo "use the KUBECONFIG environment variable to point to the new config file."
-echo "For example:"
-echo "  cp <home directory of user running this script>/config ~/.kube/config"

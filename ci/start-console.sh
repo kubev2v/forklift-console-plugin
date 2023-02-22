@@ -2,6 +2,19 @@
 
 set -euo pipefail
 
+if [ -x "$(command -v podman)" ]; then
+  CONTAINER_CMD=$(which podman)
+else
+  CONTAINER_CMD=$(which docker)
+fi
+CONSOLE_CONTAINER_NAME=okd-console
+
+# Test is console already running
+if ${CONTAINER_CMD} container exists ${CONSOLE_CONTAINER_NAME}; then
+  echo "container named ${CONSOLE_CONTAINER_NAME} is running, exit."
+  exit 1
+fi
+
 PLUGIN_NAME="forklift-console-plugin"
 CONSOLE_IMAGE=${CONSOLE_IMAGE:="quay.io/openshift/origin-console:latest"}
 CONSOLE_PORT=${CONSOLE_PORT:=9000}
@@ -39,12 +52,12 @@ if [ -x "$(command -v podman)" ]; then
     if [ "$(uname -s)" = "Linux" ]; then
         # Use host networking on Linux since host.containers.internal is unreachable in some environments.
         export BRIDGE_PLUGINS="${PLUGIN_NAME}=http://localhost:9001"
-        podman run --pull always --rm -v $(pwd)/tmp:/mnt/config:Z --network=host --env "BRIDGE_*" $CONSOLE_IMAGE
+        podman run --pull always --rm -v $(pwd)/tmp:/mnt/config:Z --network=host --name=${CONSOLE_CONTAINER_NAME} --env "BRIDGE_*" $CONSOLE_IMAGE
     else
         export BRIDGE_PLUGINS="${PLUGIN_NAME}=http://host.containers.internal:9001"
-        podman run --pull always --rm -v $(pwd)/tmp:/mnt/config:Z -p "$CONSOLE_PORT":9000 --env "BRIDGE_*" $CONSOLE_IMAGE
+        podman run --pull always --rm -v $(pwd)/tmp:/mnt/config:Z -p "$CONSOLE_PORT":9000 --name=${CONSOLE_CONTAINER_NAME} --env "BRIDGE_*" $CONSOLE_IMAGE
     fi
 else
     BRIDGE_PLUGINS="${PLUGIN_NAME}=http://host.docker.internal:9001"
-    docker run --pull always --rm -v $(pwd)/tmp:/mnt/config:Z -p "$CONSOLE_PORT":9000 --env-file <(set | grep ^BRIDGE | sed "s/'//g") $CONSOLE_IMAGE
+    docker run --pull always --rm -v $(pwd)/tmp:/mnt/config:Z -p "$CONSOLE_PORT":9000  --name=${CONSOLE_CONTAINER_NAME} --env-file <(set | grep ^BRIDGE | sed "s/'//g") $CONSOLE_IMAGE
 fi

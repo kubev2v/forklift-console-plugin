@@ -1,6 +1,8 @@
 #!/bin/bash
 
-set -ex
+set -euo pipefail
+
+K8S_TIMEOUT=${K8S_TIMEOUT:="360s"}
 
 # When updating the componenets versions folow HCO recomendations:
 # HCO:
@@ -10,8 +12,12 @@ set -ex
 
 # Default version values
 KUBEVIRT_VERSION="v0.59.0-alpha.0"
-CDI_VERSION="v1.55.0"
-NETWORK_ADDONS_VERSION="v0.80.0"
+CDI_VERSION="v1.56.0-rc0"
+NETWORK_ADDONS_VERSION="v0.85.0"
+
+echo ""
+echo "Installing CDI, CNA and Kubevirt"
+echo "================================"
 
 # Install CDI
 kubectl apply -f https://github.com/kubevirt/containerized-data-importer/releases/download/$CDI_VERSION/cdi-operator.yaml
@@ -30,7 +36,7 @@ kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVI
 
 # Wait for cluster-network-addons operator to start
 while ! kubectl get deployment -n cluster-network-addons cluster-network-addons-operator; do sleep 10; done
-kubectl wait deployment -n cluster-network-addons cluster-network-addons-operator --for condition=Available=True --timeout=180s
+kubectl wait deployment -n cluster-network-addons cluster-network-addons-operator --for condition=Available=True --timeout=${K8S_TIMEOUT}
 
 # Install macvtap and multus
 cat << EOF | kubectl apply -f -
@@ -47,6 +53,10 @@ spec:
 EOF
 
 # Wait for NADs to be ready, and create an empty NAD
+echo ""
+echo "Waiting for NetworkAttachmentDefinition to be ready (may take a few minutes)"
+echo "============================================================================"
+
 while ! kubectl get network-attachment-definitions.k8s.cni.cncf.io; do sleep 10; done
 cat << EOF | kubectl apply -f -
 apiVersion: k8s.cni.cncf.io/v1
@@ -57,6 +67,10 @@ metadata:
 spec:
   config: '{}'
 EOF
+
+echo ""
+echo "Installed versions"
+echo "=================="
 
 echo CDI:  $CDI_VERSION
 echo CNA:  $NETWORK_ADDONS_VERSION

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: openshift-console
+  name: okd-console
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: console
-  namespace: openshift-console
+  namespace: okd-console
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -20,13 +20,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: console
-    namespace: openshift-console
+    namespace: okd-console
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: console
-  namespace: openshift-console
+  namespace: okd-console
 spec:
   replicas: 1
   selector:
@@ -37,13 +37,25 @@ spec:
       labels:
         name: console
     spec:
+      volumes:
+      - name: forklift-logo
+        configMap:
+          name: forklift-logo
       serviceAccountName: console
       containers:
       - name: console
         image: quay.io/openshift/origin-console:latest
+        volumeMounts:
+        - name: forklift-logo
+          mountPath: /opt/bridge/static/assets/forklift-logo-darkbg.svg
+          subPath: forklift-logo-darkbg.svg
         env:
+        - name: BRIDGE_CUSTOM_PRODUCT_NAME
+          value: Forklift
+        - name: BRIDGE_CUSTOM_LOGO_FILE
+          value: /opt/bridge/static/assets/forklift-logo-darkbg.svg
         - name: BRIDGE_PLUGINS
-          value: forklift-console-plugin=http://forklift-console-plugin.konveyor-forklift.svc.cluster.local:9001
+          value: forklift-console-plugin=http://forklift-console-plugin.konveyor-forklift.svc.cluster.local:9001,minivirt-plugin=http://minivirt-plugin.konveyor-forklift.svc.cluster.local:9001
         - name: BRIDGE_PLUGIN_PROXY
           value: |
             {"services":[
@@ -62,7 +74,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: console
-  namespace: openshift-console
+  namespace: okd-console
 spec:
   ports:
   - name: api-http
