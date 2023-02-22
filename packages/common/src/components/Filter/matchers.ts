@@ -34,11 +34,11 @@ export const createMatcher =
       .every(Boolean);
 
 /**
- * The value is accepted if it contains the filter as substring.
+ * The value is accepted if it contains the trimmed filter as substring.
  */
 export const freetextMatcher = {
   filterType: 'freetext',
-  matchValue: (value: string) => (filter: string) => value?.includes(filter),
+  matchValue: (value: string) => (filter: string) => value?.includes(filter?.trim()),
 };
 
 /**

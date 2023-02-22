@@ -92,7 +92,7 @@ const PageMemo = React.memo(Page);
 const targetStorageMatcher: ValueMatcher = {
   filterType: 'targetStorage',
   matchValue: (storages: Storage[]) => (filter: string) =>
-    storages?.some((storage) => storage?.name?.includes(filter) ?? false),
+    storages?.some((storage) => storage?.name?.includes(filter?.trim()) ?? false),
 };
 
 export default StorageMappingsPage;

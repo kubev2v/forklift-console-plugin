@@ -126,7 +126,7 @@ const targetNetworkMatcher: ValueMatcher = {
   matchValue: (networks: Network[]) => (filter: string) =>
     networks.some((net) => {
       const name = net?.type === 'pod' ? 'pod' : net?.name ?? '';
-      return name.includes(filter?.toLocaleLowerCase());
+      return name.includes(filter?.trim()?.toLocaleLowerCase());
     }),
 };
 
