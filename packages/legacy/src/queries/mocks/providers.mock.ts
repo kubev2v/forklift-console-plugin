@@ -4,6 +4,7 @@ import {
   IProvidersByType,
   IProviderObject,
   IRHVProvider,
+  IOpenStackProvider,
 } from '../types/providers.types';
 
 export let MOCK_INVENTORY_PROVIDERS: IProvidersByType = {
@@ -16,6 +17,56 @@ export let MOCK_INVENTORY_PROVIDERS: IProvidersByType = {
 export let MOCK_CLUSTER_PROVIDERS: IProviderObject[];
 
 if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
+  const providerStatusReadyFields : IProviderObject = {
+    status: {
+      conditions: [
+        {
+          category: 'Required',
+          lastTransitionTime: '2021-03-18T21:01:10Z',
+          message: 'Connection test, succeeded.',
+          reason: 'Tested',
+          status: 'True',
+          type: 'ConnectionTestSucceeded',
+        },
+        {
+          category: 'Advisory',
+          lastTransitionTime: '2021-02-08T19:36:55Z',
+          message: 'Validation has been completed.',
+          reason: 'Completed',
+          status: 'True',
+          type: 'Validated',
+        },
+        {
+          category: 'Required',
+          lastTransitionTime: '2021-03-23T16:58:23Z',
+          message: 'The inventory has been loaded.',
+          reason: 'Completed',
+          status: 'True',
+          type: 'InventoryCreated',
+        },
+        {
+          category: 'Required',
+          lastTransitionTime: '2021-03-23T16:58:23Z',
+          message: 'The provider is ready.',
+          status: 'True',
+          type: 'Ready',
+        },
+      ],
+      phase: "Ready",
+    },
+    metadata: undefined,
+    spec: {
+      type: 'vsphere',
+      url: '',
+      secret: undefined,
+      settings: {
+        vddkInitImage: ''
+      }
+    },
+    apiVersion: '',
+    kind: ''
+  };
+
   const vmwareProvider1: IVMwareProvider = {
     uid: 'mock-uid-vcenter-1',
     namespace: 'openshift-migration',
@@ -44,40 +95,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         },
       },
       status: {
-        conditions: [
-          {
-            category: 'Required',
-            lastTransitionTime: '2021-03-18T21:01:10Z',
-            message: 'Connection test, succeeded.',
-            reason: 'Tested',
-            status: 'True',
-            type: 'ConnectionTestSucceeded',
-          },
-          {
-            category: 'Advisory',
-            lastTransitionTime: '2021-02-08T19:36:55Z',
-            message: 'Validation has been completed.',
-            reason: 'Completed',
-            status: 'True',
-            type: 'Validated',
-          },
-          {
-            category: 'Required',
-            lastTransitionTime: '2021-03-23T16:58:23Z',
-            message: 'The inventory has been loaded.',
-            reason: 'Completed',
-            status: 'True',
-            type: 'InventoryCreated',
-          },
-          {
-            category: 'Required',
-            lastTransitionTime: '2021-03-23T16:58:23Z',
-            message: 'The provider is ready.',
-            status: 'True',
-            type: 'Ready',
-          },
-        ],
-        phase: "Ready",
+        ...providerStatusReadyFields.status,
       },
     },
     clusterCount: 2,
@@ -188,41 +206,8 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         secret: { namespace: 'konveyor-forklift', name: 'rhv' },
       },
       status: {
-        conditions: [
-          {
-            type: 'ConnectionTestSucceeded',
-            status: 'True',
-            reason: 'Tested',
-            category: 'Required',
-            message: 'Connection test, succeeded.',
-            lastTransitionTime: '2021-05-14T04:19:01Z',
-          },
-          {
-            type: 'Validated',
-            status: 'True',
-            reason: 'Completed',
-            category: 'Advisory',
-            message: 'Validation has been completed.',
-            lastTransitionTime: '2021-05-14T04:19:01Z',
-          },
-          {
-            type: 'InventoryCreated',
-            status: 'True',
-            reason: 'Completed',
-            category: 'Required',
-            message: 'The inventory has been loaded.',
-            lastTransitionTime: '2021-05-17T00:54:58Z',
-          },
-          {
-            type: 'Ready',
-            status: 'True',
-            category: 'Required',
-            message: 'The provider is ready.',
-            lastTransitionTime: '2021-05-17T00:54:58Z',
-          },
-        ],
-        phase: "Ready",
-      },
+        ...providerStatusReadyFields.status,
+      }
     },
     datacenterCount: 1,
     clusterCount: 2,
@@ -264,6 +249,47 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
   };
 
+  const openstackProvider1: IOpenStackProvider = {
+    uid: 'mock-uid-openstack-1',
+    namespace: 'konveyor-forklift',
+    name: 'openstack-1',
+    selfLink: 'providers/openstack/foo1',
+    type: 'openstack',
+    object: {
+      kind: 'Provider',
+      apiVersion: 'forklift.konveyor.io/v1beta1',
+      metadata: {
+        name: 'openstack-1',
+        namespace: 'konveyor-forklift',
+        selfLink:
+          '/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/openstack-1/status',
+        uid: 'mock-uid-openstack-1',
+        creationTimestamp: '2023-02-20T11:53:06Z',
+        annotations: {
+          'kubectl.kubernetes.io/last-applied-configuration':
+            '{"apiVersion":"forklift.konveyor.io/v1beta1","kind":"Provider","metadata":{"annotations":{},"name":"openstack","namespace":"konveyor-forklift"},"spec":{"secret":{"name":"openstack","namespace":"konveyor-forklift"},"type":"openstack","url":"http://v2v.com:5000/v3"}}\n',
+        },
+      },
+      spec: {
+        type: 'openstack',
+        url: 'http://v2v.com:5000/v3',
+        secret: { namespace: 'konveyor-forklift', name: 'openstack' },
+      },
+      status: {
+        ...providerStatusReadyFields.status,
+      },
+    },
+    clusterCount: 0,   // TODO need to remove when refactoring since there is no such counter for openStack, i.e. This field won't return from a real server
+    hostCount: 0,      // TODO need to remove when refactoring since there is no such counter for openStack, i.e. This field won't return from a real server
+    regionCount: 1,
+    projectCount: 1,
+    vmCount: 3,
+    imageCount: 1,
+    volumeCount: 5,
+    volumeTypeCount: 2,
+    networkCount: 3,
+  }
+
   const openshiftProvider1: IOpenShiftProvider = {
     uid: 'mock-uid-ocpv-1',
     namespace: 'openshift-migration',
@@ -292,40 +318,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         },
       },
       status: {
-        conditions: [
-          {
-            category: 'Required',
-            lastTransitionTime: '2021-03-18T21:01:10Z',
-            message: 'Connection test, succeeded.',
-            reason: 'Tested',
-            status: 'True',
-            type: 'ConnectionTestSucceeded',
-          },
-          {
-            category: 'Advisory',
-            lastTransitionTime: '2021-02-08T19:36:55Z',
-            message: 'Validation has been completed.',
-            reason: 'Completed',
-            status: 'True',
-            type: 'Validated',
-          },
-          {
-            category: 'Required',
-            lastTransitionTime: '2021-03-23T16:58:23Z',
-            message: 'The inventory has been loaded.',
-            reason: 'Completed',
-            status: 'True',
-            type: 'InventoryCreated',
-          },
-          {
-            category: 'Required',
-            lastTransitionTime: '2021-03-23T16:58:23Z',
-            message: 'The provider is ready.',
-            status: 'True',
-            type: 'Ready',
-          },
-        ],
-        phase: "Ready",
+        ...providerStatusReadyFields.status,
       },
     },
     vmCount: 26,
@@ -382,13 +375,14 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
   MOCK_INVENTORY_PROVIDERS = {
     vsphere: [vmwareProvider1, vmwareProvider2, vmwareProvider3],
     ovirt: [rhvProvider1, rhvProvider2, rhvProvider3],
-    openstack: [],
+    openstack: [openstackProvider1],
     openshift: [openshiftProvider1, openshiftProvider2, openshiftProvider3],
   };
 
   MOCK_CLUSTER_PROVIDERS = [
     ...MOCK_INVENTORY_PROVIDERS.vsphere,
     ...MOCK_INVENTORY_PROVIDERS.ovirt,
+    ...MOCK_INVENTORY_PROVIDERS.openstack,
     ...MOCK_INVENTORY_PROVIDERS.openshift,
   ].map((inventoryProvider) => ({ ...inventoryProvider.object }));
 }
