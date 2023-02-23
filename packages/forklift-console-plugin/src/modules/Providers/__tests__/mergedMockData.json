@@ -309,7 +309,7 @@
                         "reason": "Tested",
                         "category": "Required",
                         "message": "Connection test, succeeded.",
-                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                        "lastTransitionTime": "2021-03-18T21:01:10Z"
                     },
                     {
                         "type": "Validated",
@@ -317,7 +317,7 @@
                         "reason": "Completed",
                         "category": "Advisory",
                         "message": "Validation has been completed.",
-                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                        "lastTransitionTime": "2021-02-08T19:36:55Z"
                     },
                     {
                         "type": "InventoryCreated",
@@ -325,14 +325,14 @@
                         "reason": "Completed",
                         "category": "Required",
                         "message": "The inventory has been loaded.",
-                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
                     },
                     {
                         "type": "Ready",
                         "status": "True",
                         "category": "Required",
                         "message": "The provider is ready.",
-                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
                     }
                 ],
                 "phase": "Ready"
@@ -406,7 +406,7 @@
                         "reason": "Tested",
                         "category": "Required",
                         "message": "Connection test, succeeded.",
-                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                        "lastTransitionTime": "2021-03-18T21:01:10Z"
                     },
                     {
                         "type": "Validated",
@@ -414,7 +414,7 @@
                         "reason": "Completed",
                         "category": "Advisory",
                         "message": "Validation has been completed.",
-                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                        "lastTransitionTime": "2021-02-08T19:36:55Z"
                     },
                     {
                         "type": "InventoryCreated",
@@ -422,14 +422,14 @@
                         "reason": "Completed",
                         "category": "Required",
                         "message": "The inventory has been loaded.",
-                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
                     },
                     {
                         "type": "Ready",
                         "status": "True",
                         "category": "Required",
                         "message": "The provider is ready.",
-                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
                     }
                 ],
                 "phase": "Ready"
@@ -503,7 +503,7 @@
                         "reason": "Tested",
                         "category": "Required",
                         "message": "Connection test, succeeded.",
-                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                        "lastTransitionTime": "2021-03-18T21:01:10Z"
                     },
                     {
                         "type": "Validated",
@@ -511,7 +511,7 @@
                         "reason": "Completed",
                         "category": "Advisory",
                         "message": "Validation has been completed.",
-                        "lastTransitionTime": "2021-05-14T04:19:01Z"
+                        "lastTransitionTime": "2021-02-08T19:36:55Z"
                     },
                     {
                         "type": "InventoryCreated",
@@ -519,20 +519,119 @@
                         "reason": "Completed",
                         "category": "Required",
                         "message": "The inventory has been loaded.",
-                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
                     },
                     {
                         "type": "Ready",
                         "status": "True",
                         "category": "Required",
                         "message": "The provider is ready.",
-                        "lastTransitionTime": "2021-05-17T00:54:58Z"
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
                     }
                 ],
                 "phase": "Ready"
             }
         },
         "selfLink": "providers/ovirt/foo3",
+        "phase": "Ready"
+    },
+    {
+        "name": "openstack-1",
+        "namespace": "konveyor-forklift",
+        "url": "http://v2v.com:5000/v3",
+        "type": "openstack",
+        "uid": "mock-uid-openstack-1",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+            },
+        "secretName": "openstack",
+        "clusterCount": 0,
+        "hostCount": 0,
+        "storageCount": 2,
+        "vmCount": 3,
+        "networkCount": 3,
+        "positiveConditions": {
+            "Ready": {
+                "message": "The provider is ready.",
+                "status": "True"
+            },
+            "InventoryCreated": {
+                "message": "The inventory has been loaded.",
+                "status": "True"
+            },
+            "Validated": {
+                "message": "Validation has been completed.",
+                "status": "True"
+            },
+            "ConnectionTestSucceeded": {
+                "message": "Connection test, succeeded.",
+                "status": "True"
+            }
+        },
+        "negativeConditions": {},
+        "object": {
+            "kind": "Provider",
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+
+
+            "metadata": {
+                "name": "openstack-1",
+                "namespace": "konveyor-forklift",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/openstack-1/status",
+                "uid": "mock-uid-openstack-1",
+                "creationTimestamp": "2023-02-20T11:53:06Z",
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"name\":\"openstack\",\"namespace\":\"konveyor-forklift\"},\"spec\":{\"secret\":{\"name\":\"openstack\",\"namespace\":\"konveyor-forklift\"},\"type\":\"openstack\",\"url\":\"http://v2v.com:5000/v3\"}}\n"
+                }
+            },
+            "spec": {
+                "type": "openstack",
+                "url": "http://v2v.com:5000/v3",
+                "secret": {
+                    "namespace": "konveyor-forklift",
+                    "name": "openstack"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "type": "ConnectionTestSucceeded",
+                        "status": "True",
+                        "category": "Required",
+                        "message": "Connection test, succeeded.",
+                        "reason": "Tested",
+                        "lastTransitionTime": "2021-03-18T21:01:10Z"
+                    },
+                    {
+                        "type": "Validated",
+                        "status": "True",
+                        "category": "Advisory",
+                        "message": "Validation has been completed.",
+                        "reason": "Completed",
+                        "lastTransitionTime": "2021-02-08T19:36:55Z"
+                    },
+                    {
+                        "type": "InventoryCreated",
+                        "status": "True",
+                        "category": "Required",
+                        "message": "The inventory has been loaded.",
+                        "reason": "Completed",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
+                    },
+                    {
+                        "type": "Ready",
+                        "status": "True",
+                        "category": "Required",
+                        "message": "The provider is ready.",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
+                    }
+                ],
+                "phase": "Ready"
+            }
+        },
+        "selfLink": "providers/openstack/foo1",
         "phase": "Ready"
     },
     {

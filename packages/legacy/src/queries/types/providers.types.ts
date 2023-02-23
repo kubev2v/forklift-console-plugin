@@ -57,12 +57,15 @@ export interface IRHVProvider extends ICommonProvider {
 }
 
 export interface IOpenStackProvider extends ICommonProvider {
-  // TODO: Still need to decide about the additional counts
-  clusterCount: number;
-  hostCount: number;
+  clusterCount: number;   // TODO need to remove when refactoring since there is no such counter for openStack
+  hostCount: number;      // TODO need to remove when refactoring since there is no such counter for openStack
+  regionCount: number;
+  projectCount: number;
   vmCount: number;
-  networkCount: number;
+  imageCount: number;
+  volumeCount: number;
   volumeTypeCount: number;
+  networkCount: number;
 }
 
 export interface IOpenShiftProvider extends ICommonProvider {
