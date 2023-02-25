@@ -216,7 +216,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
 
   const usernamePlaceholder = {
     vsphere: 'Example, administrator@vsphere.local',
-    ovirt: 'Example, admin@internal',
+    ovirt: 'Examples, admin@internal, admin@ovirt@internalsso',
     openstack: 'Example, admin',
     openshift: undefined,
   }[providerType || ''];
