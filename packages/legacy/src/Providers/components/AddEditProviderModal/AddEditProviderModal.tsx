@@ -147,8 +147,7 @@ const useAddProviderFormState = (
     }),
     ovirt: useFormState({
       ...sourceProviderFields,
-      // TODO: Enable once ovirt support is ready
-      // insecureSkipVerify,
+      insecureSkipVerify,
       caCert: useFormField('', yup.string().label('CA certificate').required()),
       caCertFilename: useFormField('', yup.string()),
     }),
