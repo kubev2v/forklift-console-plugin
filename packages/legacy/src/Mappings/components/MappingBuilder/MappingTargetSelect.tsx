@@ -9,7 +9,6 @@ import {
   IOpenShiftNetwork,
   MappingTarget,
   MappingType,
-  POD_NETWORK,
 } from 'legacy/src/queries/types';
 import { IMappingBuilderItem } from './MappingBuilder';
 import { getMappingTargetName } from '../MappingDetailView/helpers';
@@ -41,22 +40,6 @@ export const MappingTargetSelect: React.FunctionComponent<IMappingTargetSelectPr
     },
     [builderItems, itemIndex, setBuilderItems]
   );
-
-  React.useEffect(() => {
-    if (!builderItems[itemIndex].target) {
-      let defaultTarget: MappingTarget | null = null;
-      if (mappingType === MappingType.Network) {
-        defaultTarget = POD_NETWORK;
-      } else if (mappingType === MappingType.Storage) {
-        defaultTarget =
-          availableTargets.find((target) => (target as IAnnotatedStorageClass).uiMeta.isDefault) ||
-          null;
-      }
-      if (defaultTarget) {
-        setTarget(defaultTarget);
-      }
-    }
-  }, [availableTargets, builderItems, itemIndex, mappingType, setTarget]);
 
   const targetOptions: OptionWithValue<MappingTarget>[] = availableTargets.map((target) => {
     let name = getMappingTargetName(target, mappingType);
