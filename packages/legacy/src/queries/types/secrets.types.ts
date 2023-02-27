@@ -13,6 +13,7 @@ export interface ISecret extends IMetaTypeMeta {
     thumbprint?: string;
     token?: string;
     cacert?: string;
+    insecureSkipVerify?: string;
   };
   metadata: IMetaObjectGenerateName | IMetaObjectMeta;
   type: string;

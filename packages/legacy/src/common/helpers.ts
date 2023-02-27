@@ -182,3 +182,39 @@ export const getUniqueItemsByName = <T extends { name: string }>(allItems: T[]):
   });
   return uniqueItems;
 };
+
+/**
+ * Follow the golang `ParseBool` to return a boolean value represented by the string.
+ * It accepts 1, t, T, TRUE, true, True, 0, f, F, FALSE, false, False.
+ * Any other values return undefined.
+ */
+export const stringToBoolean = (s: string, defaultReturn: boolean = undefined): boolean => {
+  switch (s) {
+    case '1':
+    case 't':
+    case 'T':
+    case 'true':
+    case 'TRUE':
+    case 'True':
+      return true;
+
+    case '0':
+    case 'f':
+    case 'F':
+    case 'false':
+    case 'FALSE':
+    case 'False':
+      return false;
+
+    default:
+      return defaultReturn;
+  };
+};
+
+/**
+ * Follow the golang `FormatBool` to return "true" or "false" according to the
+ * value of `b`.
+ */
+export const booleanToString = (b: boolean): string => {
+  return b ? 'true' : 'false';
+};

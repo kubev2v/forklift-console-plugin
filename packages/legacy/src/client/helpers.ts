@@ -7,6 +7,7 @@ import KubeClient, {
   CoreClusterResource,
 } from '@migtools/lib-ui';
 import { ProviderType, CLUSTER_API_VERSION } from 'legacy/src/common/constants';
+import { booleanToString } from 'legacy/src/common/helpers';
 import { IProviderObject, ISecret } from 'legacy/src/queries/types';
 import {
   AddProviderFormValues,
@@ -105,6 +106,7 @@ export function convertFormValuesToSecret(
       user: btoa(vmwareValues.username),
       password: btoa(vmwareValues.password),
       thumbprint: btoa(vmwareValues.fingerprint),
+      insecureSkipVerify: btoa(booleanToString(vmwareValues.insecureSkipVerify) ?? ''),
     };
   }
   if (values.providerType === 'ovirt') {
@@ -114,6 +116,8 @@ export function convertFormValuesToSecret(
       user: btoa(rhvValues.username),
       password: btoa(rhvValues.password),
       cacert: btoa(rhvValues.caCert),
+      // TODO: Enable once ovirt support is ready
+      // insecureSkipVerify: btoa(booleanToString(rhvValues.insecureSkipVerify) ?? ''),
     };
   }
   if (values.providerType === 'openstack') {
@@ -125,8 +129,8 @@ export function convertFormValuesToSecret(
       domainName:btoa(openstackValues.domainName),
       projectName:btoa(openstackValues.projectName),
       region:btoa(openstackValues.region),
-      insecure:btoa(String((openstackValues.insecure))),
-      cacert: !openstackValues.insecure ? btoa(openstackValues.caCertIfSecure) : null
+      insecure:btoa(booleanToString(openstackValues.insecureSkipVerify) ?? ''),
+      cacert: !openstackValues.insecureSkipVerify ? btoa(openstackValues.caCertIfSecure) : null
     };
   }
   if (values.providerType === 'openshift') {
