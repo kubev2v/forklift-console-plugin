@@ -70,11 +70,12 @@ export const useAddEditProviderPrefillEffect = (
           ovirtFields.password.prefill(atob(secret?.data.password || ''));
           ovirtFields.hostname.prefill(ovirtUrlToHostname(spec.url || ''));
           ovirtFields.caCert.prefill(atob(secret?.data.cacert || ''));
-          ovirtFields.insecureSkipVerify.prefill(
-            secret?.data.insecureSkipVerify
-              ? stringToBoolean(atob(secret?.data.insecureSkipVerify))
-              : false
-          );
+          // TODO: Enable once ovirt support is ready
+          // ovirtFields.insecureSkipVerify.prefill(
+          //   secret?.data.insecureSkipVerify
+          //     ? stringToBoolean(atob(secret?.data.insecureSkipVerify))
+          //     : false
+          // );
         }
         if (providerType === 'openstack') {
           const openstackFields = forms.openstack.fields;

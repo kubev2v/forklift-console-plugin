@@ -147,7 +147,8 @@ const useAddProviderFormState = (
     }),
     ovirt: useFormState({
       ...sourceProviderFields,
-      insecureSkipVerify,
+      // TODO: Enable once ovirt support is ready
+      // insecureSkipVerify,
       caCert: useFormField('', yup.string().label('CA certificate').required()),
       caCertFilename: useFormField('', yup.string()),
     }),
@@ -477,32 +478,32 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
 
                 {fields?.fingerprint ? (
                   <ValidatedTextInput
-                  field={fields.fingerprint}
-                  isRequired
-                  fieldId="fingerprint"
-                  formGroupProps={{
-                    labelIcon: (
-                      <Popover
-                        bodyContent={
-                          <div>
-                            The provider currently requires the SHA-1 fingerprint of the vCenter Server's
-                            TLS certificate in all circumstances. vSphere calls this the server's <code>thumbprint</code>.
-                          </div>
-                        }
-                      >
-                      <Button
-                        variant="plain"
-                        aria-label="More info for vsphere fingerprint field"
-                        onClick={(e) => e.preventDefault()}
-                        aria-describedby="fingerprint-info"
-                        className="pf-c-form__group-label-help"
-                      >
-                        <HelpIcon noVerticalAlign />
-                      </Button>
-                    </Popover>
-                    ),
-                  }}
-                />
+                    field={fields.fingerprint}
+                    isRequired
+                    fieldId="fingerprint"
+                    formGroupProps={{
+                      labelIcon: (
+                        <Popover
+                          bodyContent={
+                            <div>
+                              The provider currently requires the SHA-1 fingerprint of the vCenter Server's
+                              TLS certificate in all circumstances. vSphere calls this the server's <code>thumbprint</code>.
+                            </div>
+                          }
+                        >
+                        <Button
+                          variant="plain"
+                          aria-label="More info for vsphere fingerprint field"
+                          onClick={(e) => e.preventDefault()}
+                          aria-describedby="fingerprint-info"
+                          className="pf-c-form__group-label-help"
+                        >
+                          <HelpIcon noVerticalAlign />
+                        </Button>
+                      </Popover>
+                      ),
+                    }}
+                  />
                 ) : null }
 
                 {fields?.caCert && fields?.caCertFilename ? (

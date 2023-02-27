@@ -116,7 +116,8 @@ export function convertFormValuesToSecret(
       user: btoa(rhvValues.username),
       password: btoa(rhvValues.password),
       cacert: btoa(rhvValues.caCert),
-      insecureSkipVerify: btoa(booleanToString(rhvValues.insecureSkipVerify) ?? ''),
+      // TODO: Enable once ovirt support is ready
+      // insecureSkipVerify: btoa(booleanToString(rhvValues.insecureSkipVerify) ?? ''),
     };
   }
   if (values.providerType === 'openstack') {
