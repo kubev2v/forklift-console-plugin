@@ -212,7 +212,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
   };
 
-  const invalidNetworkMapping: INetworkMapping = {
+  const invalidNetworkMappingDueToNetwork: INetworkMapping = {
     apiVersion: CLUSTER_API_VERSION,
     kind: 'NetworkMap',
     metadata: {
@@ -222,7 +222,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     spec: {
       provider: {
-        source: {namespace: 'unknown-ns', name: 'unknown-provider'},
+        source: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.vsphere[0]),
         destination: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.openshift[0]),
       },
       map: [
@@ -240,10 +240,38 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
   };
 
+  const invalidNetworkMappingDueToProvider: INetworkMapping = {
+    apiVersion: CLUSTER_API_VERSION,
+    kind: 'NetworkMap',
+    metadata: {
+      name: 'vcenter4-invalid-network-map',
+      namespace: ENV.NAMESPACE,
+      annotations: { 'forklift.konveyor.io/shared': 'true' },
+    },
+    spec: {
+      provider: {
+        source: {namespace: 'unknown-ns', name: 'unknown-provider'},
+        destination: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.openshift[0]),
+      },
+      map: [
+        {
+          source: {
+            id: MOCK_VMWARE_NETWORKS[1].id,
+          },
+          destination: {
+            ...nameAndNamespace(MOCK_OPENSHIFT_NETWORKS[2]),
+            type: 'multus',
+          },
+        },
+      ],
+    },
+  };
+
   MOCK_NETWORK_MAPPINGS = [
     networkMapping1,
     networkMapping1WithOwner,
     networkMapping2,
-    invalidNetworkMapping,
+    invalidNetworkMappingDueToNetwork,
+    invalidNetworkMappingDueToProvider
   ];
 }

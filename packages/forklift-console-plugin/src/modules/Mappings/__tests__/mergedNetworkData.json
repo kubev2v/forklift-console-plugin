@@ -281,20 +281,20 @@
                         "namespace": "openshift-migration"
                     },
                     "source": {
-                        "name": "unknown-provider",
-                        "namespace": "unknown-ns"
+                        "name": "vcenter-1",
+                        "namespace": "openshift-migration"
                     }
                 }
             }
         },
-        "source": "unknown-provider",
+        "source": "vcenter-1",
         "sourceGvk": {
             "group": "forklift.konveyor.io",
             "kind": "Provider",
             "version": "v1beta1"
         },
-        "sourceReady": false,
-        "sourceResolved": false,
+        "sourceReady": true,
+        "sourceResolved": true,
         "target": "ocpv-1",
         "targetGvk": {
             "group": "forklift.konveyor.io",
@@ -311,5 +311,87 @@
                 "type": "multus"
             }
         ]
+    },
+    {
+        "name": "vcenter4-invalid-network-map",
+        "namespace": "konveyor-forklift",
+        "template": true,
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "NetworkMap"
+        },
+        "source": "unknown-provider",
+        "sourceGvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
+        "sourceReady": false,
+        "sourceResolved": false,
+        "target": "ocpv-1",
+        "targetGvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
+        "targetResolved": true,
+        "targetReady": true,
+        "from": [
+            [
+                {
+                    "name": "ocp-network-3",
+                    "namespace": "openshift-migration",
+                    "type": "multus"
+                },
+                [
+                    {
+                        "id": "2"
+                    }
+                ]
+            ]
+        ],
+        "to": [
+            {
+                "name": "ocp-network-3",
+                "namespace": "openshift-migration",
+                "type": "multus"
+            }
+        ],
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "NetworkMap",
+            "metadata": {
+                "name": "vcenter4-invalid-network-map",
+                "namespace": "konveyor-forklift",
+                "annotations": {
+                    "forklift.konveyor.io/shared": "true"
+                }
+            },
+            "spec": {
+                "provider": {
+                    "source": {
+                        "namespace": "unknown-ns",
+                        "name": "unknown-provider"
+                    },
+                    "destination": {
+                        "name": "ocpv-1",
+                        "namespace": "openshift-migration"
+                    }
+                },
+                "map": [
+                    {
+                        "source": {
+                            "id": "2"
+                        },
+                        "destination": {
+                            "name": "ocp-network-3",
+                            "namespace": "openshift-migration",
+                            "type": "multus"
+                        }
+                    }
+                ]
+            }
+        }
     }
 ]
