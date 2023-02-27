@@ -3,6 +3,8 @@
 set -euo pipefail
 script_dir=$(dirname "$0")
 
+K8S_TIMEOUT=${K8S_TIMEOUT:="360s"}
+
 # Install olm
 # --------------------------
 echo ""
@@ -15,7 +17,7 @@ if ! kubectl get CatalogSource 2>/dev/null; then
 
   # Wait for olm operator to start
   while ! kubectl get deployment -n olm olm-operator; do sleep 10; done
-  kubectl wait deployment -n olm olm-operator --for condition=Available=True --timeout=180s
+  kubectl wait deployment -n olm olm-operator --for condition=Available=True --timeout=${K8S_TIMEOUT}
 fi
 
 echo ""

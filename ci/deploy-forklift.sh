@@ -1,12 +1,18 @@
 #!/bin/bash
 
-set -ex
+set -euo pipefail
+script_dir=$(dirname "$0")
+
+K8S_TIMEOUT=${K8S_TIMEOUT:="360s"}
 
 # NOTE: this script requires OLM installed
 if ! kubectl get CatalogSource 2>/dev/null; then
-  echo "Error: Can't find OLM, OLM must be installed on the cluster, exit"
-  exit 1
+  bash ${script_dir}/deploy-olm.sh
 fi
+
+echo ""
+echo "Installing forklift operator"
+echo "============================"
 
 FORKLIFT_IMAGE=quay.io/kubev2v/forklift-operator-index:latest
 FORKLIFT_NAMESPACE=konveyor-forklift
@@ -56,9 +62,25 @@ EOF
 
 # --------------------
 
+echo ""
+echo "Installing VolumePopulator CRD"
+echo "=============================="
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/volume-data-source-validator/v1.0.1/client/config/crd/populator.storage.k8s.io_volumepopulators.yaml
+
+# --------------------
+
 # Wait for forklift operator to start, and create a controller instance
+echo ""
+echo "Waiting for forklift-operator (may take a few minutes)"
+echo "======================================================"
+
 while ! kubectl get deployment -n ${FORKLIFT_NAMESPACE} forklift-operator; do sleep 30; done
-kubectl wait deployment -n ${FORKLIFT_NAMESPACE} forklift-operator --for condition=Available=True --timeout=180s
+kubectl wait deployment -n ${FORKLIFT_NAMESPACE} forklift-operator --for condition=Available=True --timeout=${K8S_TIMEOUT}
+
+echo ""
+echo "Installing forklift instance"
+echo "============================"
 
 cat << EOF | kubectl -n ${FORKLIFT_NAMESPACE} apply -f -
 apiVersion: forklift.konveyor.io/v1beta1
@@ -68,10 +90,20 @@ metadata:
   namespace: ${FORKLIFT_NAMESPACE}
 spec:
   feature_ui: false
+  feature_ui_plugin: false,
   feature_auth_required: false
   feature_validation: true
   inventory_tls_enabled: false
   validation_tls_enabled: false
   must_gather_api_tls_enabled: false
   ui_tls_enabled: false
+  inventory_container_requests_cpu: "50m"
+  validation_container_requests_cpu: "50m"
+  controller_container_requests_cpu: "50m"
+  api_container_requests_cpu: "50m"
 EOF
+
+# Wait for forklift inventory service, then expose it on port 30088
+while ! kubectl get service -n ${FORKLIFT_NAMESPACE} forklift-inventory; do sleep 30; done
+kubectl patch service -n ${FORKLIFT_NAMESPACE} forklift-inventory --type='merge' \
+  -p '{"spec":{"type":"NodePort","ports":[{"name":"api-http","protocol":"TCP","targetPort":8080,"port":8080,"nodePort":30088}]}}'
