@@ -13,7 +13,7 @@ import {
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useFormField, useFormState, ValidatedTextInput } from '@migtools/lib-ui';
-import { MappingBuilder, IMappingBuilderItem, mappingBuilderItemsSchema } from './MappingBuilder';
+import { MappingBuilder, IMappingBuilderItem, mappingBuilderItemsSchema, getDefaultTarget } from './MappingBuilder';
 import { getMappingFromBuilderItems } from './MappingBuilder/helpers';
 import {
   MappingType,
@@ -74,7 +74,7 @@ const useMappingFormState = (
       yup.mixed<IOpenShiftProvider>().label('Target provider').required()
     ),
     builderItems: useFormField<IMappingBuilderItem[]>(
-      [{ source: null, target: null }],
+      [],
       mappingBuilderItemsSchema
     ),
   });
@@ -121,7 +121,7 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
   // If you change providers, reset the mapping selections.
   React.useEffect(() => {
     if (isDonePrefilling) {
-      form.fields.builderItems.setValue([{ source: null, target: null }]);
+      form.fields.builderItems.setValue([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values.sourceProvider, form.values.targetProvider]);
@@ -249,7 +249,8 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                     sourceProviderType={form.values.sourceProvider?.type || 'vsphere'}
                     availableSources={mappingResourceQueries.availableSources}
                     availableTargets={mappingResourceQueries.availableTargets}
-                    builderItems={form.values.builderItems}
+                    builderItems={form.values.builderItems.length ? 
+                      form.values.builderItems : [{source: null, target: getDefaultTarget(mappingResourceQueries.availableTargets, mappingType)}]}
                     setBuilderItems={form.fields.builderItems.setValue}
                   />
                 </ResolvedQueries>
