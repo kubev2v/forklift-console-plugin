@@ -137,6 +137,7 @@ const useAddProviderFormState = (
   };
 
   const insecureSkipVerify = useFormField(false, yup.boolean().label('skip server SSL certificate verification'));
+  const caCertFildSchema = yup.string().label('CA certificate');
 
   return {
     vsphere: useFormState({
@@ -148,7 +149,7 @@ const useAddProviderFormState = (
     ovirt: useFormState({
       ...sourceProviderFields,
       insecureSkipVerify,
-      caCert: useFormField('', yup.string().label('CA certificate').required()),
+      caCert: useFormField('', insecureSkipVerify.value ? caCertFildSchema : caCertFildSchema.required()),
       caCertFilename: useFormField('', yup.string()),
     }),
     openstack: useFormState({
@@ -160,7 +161,7 @@ const useAddProviderFormState = (
       projectName: useFormField('', yup.string().label('Project').required()),
       region: useFormField('', yup.string().label('Region').required()),
       insecureSkipVerify,
-      caCertIfSecure: useFormField('', yup.string().label('CA certificate')),
+      caCertIfSecure: useFormField('', caCertFildSchema),
       caCertFilenameIfSecure: useFormField('', yup.string()),
     }),
     openshift: useFormState({
@@ -505,7 +506,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                   />
                 ) : null }
 
-                {fields?.caCert && fields?.caCertFilename ? (
+                {fields?.insecureSkipVerify && !fields?.insecureSkipVerify?.value && fields?.caCert && fields?.caCertFilename ? (
                   <FormGroup
                     label="CA certificate"
                     labelIcon={
