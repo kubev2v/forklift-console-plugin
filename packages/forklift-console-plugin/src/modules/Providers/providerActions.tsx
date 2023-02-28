@@ -15,24 +15,15 @@ import {
   usePlansQuery,
 } from '@kubev2v/legacy/queries';
 import { IOpenShiftProvider } from '@kubev2v/legacy/queries/types';
-import { OwnerReference } from '@openshift-console/dynamic-plugin-sdk';
 
 import { type MergedProvider } from './data';
 
-export const useMergedProviderActions = ({
-  entity,
-  ownerReferences,
-}: {
-  entity: MergedProvider;
-  ownerReferences: OwnerReference[];
-}) => {
+export const useMergedProviderActions = ({ entity }: { entity: MergedProvider }) => {
   const { t } = useTranslation();
   const launchModal = useModal();
   const plansQuery = usePlansQuery(entity.namespace);
-  const isOwnedByForkliftCOntroller =
-    ownerReferences && ownerReferences[0]?.kind === 'ForkliftController';
   const editingDisabled =
-    isOwnedByForkliftCOntroller ||
+    entity.isOwnedByController ||
     hasRunningMigration({
       plans: plansQuery?.data?.items,
       providerMetadata: {
@@ -40,7 +31,7 @@ export const useMergedProviderActions = ({
         namespace: entity.namespace,
       },
     });
-  const disabledTooltip = isOwnedByForkliftCOntroller
+  const disabledTooltip = entity.isOwnedByController
     ? t('The host provider cannot be edited')
     : t('This provider cannot be edited because it has running migrations');
 

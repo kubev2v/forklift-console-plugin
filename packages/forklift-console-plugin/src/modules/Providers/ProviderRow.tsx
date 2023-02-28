@@ -120,16 +120,13 @@ const TextWithIcon = ({ value, Icon }: { value: string; Icon: JSXElementConstruc
 );
 TextWithIcon.displayName = 'TextWithIcon';
 
-const ProviderLink = ({ value, entity, t }: CellProps) => {
-  const { ownerReferences, namespace, gvk } = entity;
-  const isOwnedByForkliftCOntroller =
-    ownerReferences && ownerReferences[0]?.kind === 'ForkliftController';
+const ProviderLink = ({ value, entity: { gvk, namespace, isOwnedByController }, t }: CellProps) => {
   return (
     <span className="forklift-table__flex-cell">
-      <ResourceLink groupVersionKind={entity.gvk} name={value} namespace={entity?.namespace} />
-      {isOwnedByForkliftCOntroller && (
+      <ResourceLink groupVersionKind={gvk} name={value} namespace={namespace} />
+      {isOwnedByController && (
         <Label isCompact color="grey" className="forklift-table__flex-cell-label">
-          {t('default')}
+          {t('owned')}
         </Label>
       )}
     </span>

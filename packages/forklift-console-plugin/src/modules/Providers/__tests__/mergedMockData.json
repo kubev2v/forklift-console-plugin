@@ -16,6 +16,7 @@
         "vmCount": 41,
         "networkCount": 8,
         "storageCount": 3,
+        "ownerReferences": [],
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -94,7 +95,8 @@
             }
         },
         "selfLink": "/foo/vmwareprovider/1",
-        "phase": "Ready"
+        "phase": "Ready",
+        "isOwnedByController": false
     },
     {
         "name": "vcenter-2",
@@ -113,6 +115,7 @@
         "vmCount": 41,
         "networkCount": 8,
         "storageCount": 3,
+        "ownerReferences": [],
         "positiveConditions": {},
         "negativeConditions": {
             "URLNotValid": {
@@ -156,7 +159,8 @@
             }
         },
         "selfLink": "/foo/vmwareprovider/2",
-        "phase": "ConnectionFailed"
+        "phase": "ConnectionFailed",
+        "isOwnedByController": false
     },
     {
         "name": "vcenter-3",
@@ -175,6 +179,7 @@
         "vmCount": 41,
         "networkCount": 8,
         "storageCount": 3,
+        "ownerReferences": [],
         "positiveConditions": {
             "Validated": {
                 "status": "True",
@@ -242,7 +247,8 @@
             }
         },
         "selfLink": "/foo/vmwareprovider/3",
-        "phase": "Staging"
+        "phase": "Staging",
+        "isOwnedByController": false
     },
     {
         "name": "rhv-1",
@@ -261,6 +267,7 @@
         "vmCount": 36,
         "networkCount": 15,
         "storageCount": 9,
+        "ownerReferences": [],
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -339,7 +346,8 @@
             }
         },
         "selfLink": "providers/ovirt/foo1",
-        "phase": "Ready"
+        "phase": "Ready",
+        "isOwnedByController": false
     },
     {
         "name": "rhv-2",
@@ -358,6 +366,7 @@
         "vmCount": 36,
         "networkCount": 15,
         "storageCount": 9,
+        "ownerReferences": [],
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -436,7 +445,8 @@
             }
         },
         "selfLink": "providers/ovirt/foo2",
-        "phase": "Ready"
+        "phase": "Ready",
+        "isOwnedByController": false
     },
     {
         "name": "rhv-3",
@@ -455,6 +465,7 @@
         "vmCount": 36,
         "networkCount": 15,
         "storageCount": 9,
+        "ownerReferences": [],
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -533,7 +544,8 @@
             }
         },
         "selfLink": "providers/ovirt/foo3",
-        "phase": "Ready"
+        "phase": "Ready",
+        "isOwnedByController": false
     },
     {
         "name": "openstack-1",
@@ -552,6 +564,7 @@
         "storageCount": 2,
         "vmCount": 3,
         "networkCount": 3,
+        "ownerReferences": [],
         "positiveConditions": {
             "Ready": {
                 "message": "The provider is ready.",
@@ -574,8 +587,6 @@
         "object": {
             "kind": "Provider",
             "apiVersion": "forklift.konveyor.io/v1beta1",
-
-
             "metadata": {
                 "name": "openstack-1",
                 "namespace": "konveyor-forklift",
@@ -632,7 +643,8 @@
             }
         },
         "selfLink": "providers/openstack/foo1",
-        "phase": "Ready"
+        "phase": "Ready",
+        "isOwnedByController": false
     },
     {
         "name": "ocpv-1",
@@ -649,6 +661,7 @@
         "defaultTransferNetwork": "ocp-network-3",
         "vmCount": 26,
         "networkCount": 8,
+        "ownerReferences": [],
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -727,7 +740,8 @@
             }
         },
         "selfLink": "/foo/openshiftprovider/1",
-        "phase": "Ready"
+        "phase": "Ready",
+        "isOwnedByController": false
     },
     {
         "name": "ocpv-2",
@@ -744,6 +758,7 @@
         "defaultTransferNetwork": "ocp-network-3",
         "vmCount": 26,
         "networkCount": 8,
+        "ownerReferences": [],
         "positiveConditions": {},
         "negativeConditions": {
             "URLNotValid": {
@@ -787,7 +802,8 @@
             }
         },
         "selfLink": "/foo/openshiftprovider/2",
-        "phase": "ConnectionFailed"
+        "phase": "ConnectionFailed",
+        "isOwnedByController": false
     },
     {
         "name": "ocpv-3",
@@ -804,6 +820,7 @@
         "defaultTransferNetwork": "ocp-network-3",
         "vmCount": 26,
         "networkCount": 8,
+        "ownerReferences": [],
         "positiveConditions": {
             "Ready": {
                 "status": "True",
@@ -882,6 +899,121 @@
             }
         },
         "selfLink": "/foo/openshiftprovider/3",
-        "phase": "Ready"
+        "phase": "Ready",
+        "isOwnedByController": false
+    },
+    {
+        "name": "host",
+        "namespace": "openshift-migration",
+        "url": "",
+        "type": "openshift",
+        "uid": "mock-uid-host",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "version": "v1beta1",
+            "kind": "Provider"
+        },
+        "secretName": "boston",
+        "defaultTransferNetwork": "ocp-network-3",
+        "vmCount": 26,
+        "networkCount": 8,
+        "ownerReferences": [
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "kind": "ForkliftController",
+                "name": "forklift-controller",
+                "namespace": "openshift-migration",
+                "uid": "2d0a80a3-94a7-4fe5-b0cb-225cf5e24eac"
+            }
+        ],
+        "positiveConditions": {
+            "Ready": {
+                "status": "True",
+                "message": "The provider is ready."
+            },
+            "InventoryCreated": {
+                "status": "True",
+                "message": "The inventory has been loaded."
+            },
+            "Validated": {
+                "status": "True",
+                "message": "Validation has been completed."
+            },
+            "ConnectionTestSucceeded": {
+                "status": "True",
+                "message": "Connection test, succeeded."
+            }
+        },
+        "negativeConditions": {},
+        "object": {
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "kind": "Provider",
+            "metadata": {
+                "name": "host",
+                "namespace": "openshift-migration",
+                "selfLink": "/foo/bar",
+                "uid": "mock-uid-host",
+                "creationTimestamp": "2020-08-21T18:36:41.468Z",
+                "annotations": {
+                    "forklift.konveyor.io/defaultTransferNetwork": "ocp-network-3"
+                },
+                "ownerReferences": [
+                    {
+                        "apiVersion": "forklift.konveyor.io/v1beta1",
+                        "kind": "ForkliftController",
+                        "name": "forklift-controller",
+                        "namespace": "openshift-migration",
+                        "uid": "2d0a80a3-94a7-4fe5-b0cb-225cf5e24eac"
+                    }
+                ]
+            },
+            "spec": {
+                "type": "openshift",
+                "url": "",
+                "secret": {
+                    "namespace": "openshift-migration",
+                    "name": "boston"
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-18T21:01:10Z",
+                        "message": "Connection test, succeeded.",
+                        "reason": "Tested",
+                        "status": "True",
+                        "type": "ConnectionTestSucceeded"
+                    },
+                    {
+                        "category": "Advisory",
+                        "lastTransitionTime": "2021-02-08T19:36:55Z",
+                        "message": "Validation has been completed.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "Validated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The inventory has been loaded.",
+                        "reason": "Completed",
+                        "status": "True",
+                        "type": "InventoryCreated"
+                    },
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z",
+                        "message": "The provider is ready.",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "phase": "Ready"
+            }
+        },
+        "selfLink": "/foo/openshiftprovider/3",
+        "phase": "Ready",
+        "isOwnedByController": true
     }
 ]

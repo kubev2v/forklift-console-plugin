@@ -13,8 +13,8 @@ import {
   IRHVProvider,
   IVMwareProvider,
 } from '@kubev2v/legacy/queries/types';
-import { K8sGroupVersionKind, OwnerReference } from '@openshift-console/dynamic-plugin-sdk';
 import { V1beta1Provider, V1beta1ProviderStatusConditions } from '@kubev2v/types';
+import { K8sGroupVersionKind, OwnerReference } from '@openshift-console/dynamic-plugin-sdk';
 
 const conditionState = (state: string) =>
   state === 'True' || state === 'False' ? state : 'Unknown';
@@ -56,7 +56,8 @@ export interface MergedProvider {
   [C.NETWORK_COUNT]: number;
   [C.STORAGE_COUNT]: number;
   [C.PHASE]: ProviderStatus;
-  [C.OWNER_REFERENCE]: OwnerReference[];
+  [C.OWNER_REFERENCES]: OwnerReference[];
+  [C.IS_OWNED_BY_CONTROLLER]: boolean;
   positiveConditions: PositiveConditions;
   negativeConditions: NegativeConditions;
   object: IProviderObject;
@@ -109,7 +110,13 @@ export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
     .map(
       ([
         {
-          metadata: { name = '', namespace = '', uid = '', annotations = [] } = {},
+          metadata: {
+            name = '',
+            namespace = '',
+            uid = '',
+            annotations = [],
+            ownerReferences = [],
+          } = {},
           spec: { url = '', type = '', secret: { name: secretName = '' } = {} } = {},
           status: { phase = 'Unknown' } = {},
         },
@@ -151,7 +158,7 @@ export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
         vmCount,
         networkCount,
         storageCount: storageDomainCount ?? datastoreCount ?? volumeTypeCount,
-        ownerReferences: provider.metadata.ownerReferences,
+        ownerReferences,
         positiveConditions: {
           Ready,
           InventoryCreated,
@@ -169,6 +176,7 @@ export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
         object: provider as IProviderObject,
         selfLink,
         phase: phase as ProviderStatus,
+        isOwnedByController: !!ownerReferences.find((ref) => ref.kind === 'ForkliftController'),
       }),
     );
 
