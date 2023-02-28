@@ -47,7 +47,6 @@ export const useAddEditProviderPrefillEffect = (
         const secret = secretQuery.data;
         const { fields } = forms[providerType];
 
-        // TODO: prefill namespace from the provider?
         fields.providerType.prefill(providerType);
         fields.name.prefill(providerBeingEdited.metadata.name);
 
@@ -70,12 +69,11 @@ export const useAddEditProviderPrefillEffect = (
           ovirtFields.password.prefill(atob(secret?.data.password || ''));
           ovirtFields.hostname.prefill(ovirtUrlToHostname(spec.url || ''));
           ovirtFields.caCert.prefill(atob(secret?.data.cacert || ''));
-          // TODO: Enable once ovirt support is ready
-          // ovirtFields.insecureSkipVerify.prefill(
-          //   secret?.data.insecureSkipVerify
-          //     ? stringToBoolean(atob(secret?.data.insecureSkipVerify))
-          //     : false
-          // );
+          ovirtFields.insecureSkipVerify.prefill(
+            secret?.data.insecureSkipVerify
+              ? stringToBoolean(atob(secret?.data.insecureSkipVerify))
+              : false
+          );
         }
         if (providerType === 'openstack') {
           const openstackFields = forms.openstack.fields;
