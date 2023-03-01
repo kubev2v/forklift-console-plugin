@@ -22,9 +22,8 @@ export const useMergedProviderActions = ({ entity }: { entity: MergedProvider })
   const { t } = useTranslation();
   const launchModal = useModal();
   const plansQuery = usePlansQuery(entity.namespace);
-  const isHostProvider = entity.type === 'openshift' && !entity.url;
   const editingDisabled =
-    isHostProvider ||
+    entity.isOwnedByController ||
     hasRunningMigration({
       plans: plansQuery?.data?.items,
       providerMetadata: {
@@ -32,7 +31,7 @@ export const useMergedProviderActions = ({ entity }: { entity: MergedProvider })
         namespace: entity.namespace,
       },
     });
-  const disabledTooltip = isHostProvider
+  const disabledTooltip = entity.isOwnedByController
     ? t('The host provider cannot be edited')
     : t('This provider cannot be edited because it has running migrations');
 
