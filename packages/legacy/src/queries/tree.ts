@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { UseQueryResult } from 'react-query';
 import { getInventoryApiUrl, useMockableQuery } from './helpers';
-import { MOCK_RHV_HOST_TREE, MOCK_VMWARE_HOST_TREE, MOCK_VMWARE_VM_TREE } from './mocks/tree.mock';
+import { MOCK_OPENSTACK_HOST_TREE, MOCK_RHV_HOST_TREE, MOCK_VMWARE_HOST_TREE, MOCK_VMWARE_VM_TREE } from './mocks/tree.mock';
 import { SourceInventoryProvider } from './types';
-import { InventoryTree, InventoryTreeType } from './types/tree.types';
+import { IInventoryHostTree, InventoryTree, InventoryTreeType } from './types/tree.types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
+import { ProviderType } from '../common/constants';
 
 const sortTreeItemsByName = <T extends InventoryTree>(tree: T): T => ({
   ...tree,
@@ -84,29 +85,40 @@ export const useInventoryTreeQuery = <T extends InventoryTree>(
   treeType: InventoryTreeType
 ): UseQueryResult<IndexedTree<T>> => {
   const indexTreeCallback = React.useCallback((data): IndexedTree<T> => indexTree(data), []);
-  // VMware providers have both Host and VM trees, but RHV only has Host trees.
-  const isValidQuery = provider?.type === 'vsphere' || treeType === InventoryTreeType.Cluster;
-  const apiSlug =
-    treeType === InventoryTreeType.Cluster
-      ? provider?.type === 'vsphere'
-        ? '/tree/host' // TODO in the future, this vsphere tree will also be at /tree/cluster
-        : '/tree/cluster'
-      : '/tree/vm';
+  // only VMware have a VM trees.
+  const isValidVMTree = treeType === InventoryTreeType.VM && provider?.type === 'vsphere';
+  const isValidClusterTree = treeType === InventoryTreeType.Cluster;
+  const apiSlugByProviderType: Record<ProviderType, string> = {
+    vsphere: '/tree/host',
+    ovirt: '/tree/cluster',
+    openstack: '/tree/project',
+    openshift: ''
+  }
+  const mockTreeData: Record<ProviderType, IInventoryHostTree> = {
+    vsphere: MOCK_VMWARE_HOST_TREE,
+    ovirt: MOCK_RHV_HOST_TREE,
+    openstack: MOCK_OPENSTACK_HOST_TREE,
+    openshift: undefined
+  }
+
+  const apiSlug = (treeType === InventoryTreeType.Cluster)
+    ? apiSlugByProviderType[provider?.type]
+    : '/tree/vm';
+    
+  const apiMockData = (treeType === InventoryTreeType.Cluster)
+    ? mockTreeData[provider?.type]
+    : MOCK_VMWARE_VM_TREE;
 
   return useMockableQuery<T, unknown, IndexedTree<T>>(
     {
       queryKey: ['inventory-tree', provider?.name, treeType],
       queryFn: async () =>
         await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)),
-      enabled: isValidQuery && !!provider,
+      enabled: (isValidClusterTree || isValidVMTree) && !!provider,
       keepPreviousData: true,
       cacheTime: 0,
       select: indexTreeCallback,
     },
-    (treeType === InventoryTreeType.Cluster
-      ? provider?.type === 'vsphere'
-        ? MOCK_VMWARE_HOST_TREE
-        : MOCK_RHV_HOST_TREE
-      : MOCK_VMWARE_VM_TREE) as T
+    apiMockData as T,
   );
 };
