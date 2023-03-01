@@ -4,10 +4,11 @@ import {
   createMetaMatcher,
   defaultValueMatchers,
   EnumFilter,
+  FilterGroup,
   FilterTypeProps,
   FreetextFilter,
   GroupedEnumFilter,
-  PrimaryFilters,
+  SwitchFilter,
   toFieldFilter,
   useUrlFilters,
   ValueMatcher,
@@ -134,6 +135,7 @@ export function StandardPage<T>({
     enum: EnumFilter,
     freetext: FreetextFilter,
     groupedEnum: GroupedEnumFilter,
+    slider: SwitchFilter,
   },
   customNoResultsFound,
   customNoResultsMatchFilter,
@@ -189,7 +191,7 @@ export function StandardPage<T>({
           <ToolbarContent>
             <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
               {primaryFilters.length > 0 && (
-                <PrimaryFilters
+                <FilterGroup
                   fieldFilters={primaryFilters}
                   onFilterUpdate={setSelectedFilters}
                   selectedFilters={selectedFilters}
@@ -198,12 +200,22 @@ export function StandardPage<T>({
               )}
               <AttributeValueFilter
                 fieldFilters={fields
-                  .filter(({ filter }) => filter && !filter.primary)
+                  .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
                   .map(toFieldFilter)}
                 onFilterUpdate={setSelectedFilters}
                 selectedFilters={selectedFilters}
                 supportedFilterTypes={supportedFilters}
               />
+              {!!fields.find((field) => field.filter?.standalone) && (
+                <FilterGroup
+                  fieldFilters={fields
+                    .filter((field) => field.filter?.standalone)
+                    .map(toFieldFilter)}
+                  onFilterUpdate={setSelectedFilters}
+                  selectedFilters={selectedFilters}
+                  supportedFilterTypes={supportedFilters}
+                />
+              )}
               <ManageColumnsToolbar
                 columns={fields}
                 defaultColumns={fieldsMetadata}
@@ -229,7 +241,7 @@ export function StandardPage<T>({
         </Toolbar>
         <TableView<T>
           entities={showPagination ? pageData : filteredData}
-          visibleColumns={fields.filter(({ isVisible }) => isVisible)}
+          visibleColumns={fields.filter(({ isVisible, isHidden }) => isVisible && !isHidden)}
           aria-label={title}
           Row={RowMapper}
           Header={HeaderMapper}
