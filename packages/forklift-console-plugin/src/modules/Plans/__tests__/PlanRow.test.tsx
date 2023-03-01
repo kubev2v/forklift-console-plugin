@@ -29,7 +29,7 @@ describe('Plan rows', () => {
           <table>
             <tbody>
               <PlanRow
-                columns={fieldsMetadata}
+                columns={fieldsMetadata.filter((f) => !f.isHidden)}
                 currentNamespace={undefined}
                 entity={plan as FlatPlan}
                 rowIndex={0}
