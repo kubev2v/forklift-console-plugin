@@ -72,6 +72,7 @@ const useMappingFormState = (mappingsQuery: UseQueryResult<IKubeList<Mapping>>) 
     isCreateMappingSelected: useFormField(false, yup.boolean().required()),
     selectedExistingMapping: useFormField<Mapping | null>(null, yup.mixed<Mapping | null>()),
     builderItems: useFormField<IMappingBuilderItem[]>([], mappingBuilderItemsSchema),
+    filteredOutItemCount: useFormField(0, yup.number().optional()),
     isSaveNewMapping,
     newMappingName: useFormField(
       '',
