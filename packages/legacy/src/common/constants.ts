@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { X509 } from 'jsrsasign';
 import { BrandType, IEnvVars } from './types';
 
 /**
@@ -150,6 +151,26 @@ export const usernameSchema = yup
     message: ({ label }) => `${label} must not contain spaces`,
     excludeEmptyString: true,
   });
+
+export const x509PemSchema = yup
+  .string()
+  .label('PEM encoded X.509 certificate')
+  .trim()
+  .test(
+    'pem-x509-certificate',
+    'The certificate is not a valid PEM encoded X.509 certificate',
+    (value): boolean | yup.ValidationError => {
+      if (!value) return false;
+
+      try {
+        const cert = new X509();
+        cert.readCertPEM(value);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  );
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = () => {};

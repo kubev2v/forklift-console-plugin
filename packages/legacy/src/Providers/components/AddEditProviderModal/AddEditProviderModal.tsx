@@ -30,6 +30,7 @@ import {
   PROVIDER_TYPE_NAMES,
   urlSchema,
   usernameSchema,
+  x509PemSchema,
 } from 'legacy/src/common/constants';
 import { usePausedPollingEffect } from 'legacy/src/common/context';
 import {
@@ -137,7 +138,6 @@ const useAddProviderFormState = (
   };
 
   const insecureSkipVerify = useFormField(false, yup.boolean().label('skip server SSL certificate verification'));
-  const caCertFildSchema = yup.string().label('CA certificate');
 
   return {
     vsphere: useFormState({
@@ -149,7 +149,7 @@ const useAddProviderFormState = (
     ovirt: useFormState({
       ...sourceProviderFields,
       insecureSkipVerify,
-      caCert: useFormField('', insecureSkipVerify.value ? caCertFildSchema : caCertFildSchema.required()),
+      caCert: useFormField('', insecureSkipVerify.value ? x509PemSchema : x509PemSchema.required()),
       caCertFilename: useFormField('', yup.string()),
     }),
     openstack: useFormState({
@@ -161,7 +161,7 @@ const useAddProviderFormState = (
       projectName: useFormField('', yup.string().label('Project').required()),
       region: useFormField('', yup.string().label('Region').required()),
       insecureSkipVerify,
-      caCertIfSecure: useFormField('', caCertFildSchema),
+      caCertIfSecure: useFormField('', x509PemSchema),
       caCertFilenameIfSecure: useFormField('', yup.string()),
     }),
     openshift: useFormState({
