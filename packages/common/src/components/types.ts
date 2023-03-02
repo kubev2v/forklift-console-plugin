@@ -9,9 +9,12 @@ export interface SortType {
 export interface Field {
   id: string;
   toLabel(t: (key: string) => string): string;
+  // visiblity status, can change in time
   isVisible?: boolean;
   isIdentity?: boolean;
   isAction?: boolean;
+  // if true then the field should be never visible in the UI
+  isHidden?: boolean;
   sortable?: boolean;
   filter?: FilterDef;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

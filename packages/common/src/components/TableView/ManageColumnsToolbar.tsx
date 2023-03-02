@@ -75,7 +75,8 @@ interface ManagedColumnsProps {
   defaultColumns: Field[];
 }
 
-const filterActions = (columns: Field[]) => columns.filter((col) => !col.isAction);
+const filterActionsAndHidden = (columns: Field[]) =>
+  columns.filter((col) => !col.isAction && !col.isHidden);
 
 /**
  * Modal dialog for managing columns.
@@ -92,8 +93,8 @@ const ManageColumns = ({
   defaultColumns,
 }: ManagedColumnsProps) => {
   const { t } = useTranslation();
-  const [editedColumns, setEditedColumns] = useState(filterActions(columns));
-  const restoreDefaults = () => setEditedColumns([...filterActions(defaultColumns)]);
+  const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(columns));
+  const restoreDefaults = () => setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
   const onDrop = (source: { index: number }, dest: { index: number }) => {
     const draggedItem = editedColumns[source?.index];
     const itemCurrentlyAtDestination = editedColumns[dest?.index];

@@ -15,7 +15,11 @@ export interface FilterDef {
   values?: EnumValue[];
   toLabel?(t: (key: string) => string): string;
   primary?: boolean;
+  standalone?: boolean;
   groups?: EnumGroup[];
+  // override default behaviour if there are no filters provided by the user
+  // by default missing/empty filters result in positive match (vacuous truth)
+  defaultValues?: string[];
 }
 
 /**

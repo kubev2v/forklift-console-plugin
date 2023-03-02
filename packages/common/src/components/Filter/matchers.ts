@@ -25,10 +25,13 @@ export const createMatcher =
   (entity): boolean =>
     fields
       .filter(({ filter }) => filter?.type === filterType)
-      .filter(({ id }) => selectedFilters[id] && selectedFilters[id]?.length)
-      .map(({ id }) => ({
+      .filter(
+        ({ id, filter }) =>
+          (selectedFilters[id] && selectedFilters[id]?.length) || filter?.defaultValues,
+      )
+      .map(({ id, filter }) => ({
         value: entity?.[id],
-        filters: selectedFilters[id],
+        filters: selectedFilters[id]?.length ? selectedFilters[id] : filter?.defaultValues,
       }))
       .map(({ value, filters }) => filters.some(matchValue(value)))
       .every(Boolean);
@@ -54,10 +57,16 @@ const groupedEnumMatcher = {
   matchValue: enumMatcher.matchValue,
 };
 
+const sliderMatcher = {
+  filterType: 'slider',
+  matchValue: (value: string) => (filter: string) => Boolean(value).toString() === filter || !value,
+};
+
 export const defaultValueMatchers: ValueMatcher[] = [
   freetextMatcher,
   enumMatcher,
   groupedEnumMatcher,
+  sliderMatcher,
 ];
 
 /**

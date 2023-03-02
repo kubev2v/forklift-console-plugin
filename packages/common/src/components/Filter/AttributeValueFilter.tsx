@@ -10,6 +10,7 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 
+import { FilterFromDef } from './FilterFromDef';
 import { MetaFilterProps } from './types';
 
 interface IdOption extends SelectOptionObject {
@@ -67,29 +68,20 @@ export const AttributeValueFilter = ({
         </Select>
       </ToolbarItem>
 
-      {fieldFilters.map(({ fieldId: id, toFieldLabel, filterDef: filter }) => {
-        const FilterType = supportedFilterTypes[filter.type];
-        return (
-          FilterType && (
-            <FilterType
-              key={id}
-              filterId={id}
-              onFilterUpdate={(values) =>
-                onFilterUpdate({
-                  ...selectedFilters,
-                  [id]: values,
-                })
-              }
-              placeholderLabel={filter.toPlaceholderLabel(t)}
-              selectedFilters={selectedFilters[id] ?? []}
-              showFilter={currentFilter?.fieldId === id}
-              title={filter?.toLabel?.(t) ?? toFieldLabel(t)}
-              supportedValues={filter.values}
-              supportedGroups={filter.groups}
-            />
-          )
-        );
-      })}
+      {fieldFilters.map(({ fieldId, toFieldLabel, filterDef }) => (
+        <FilterFromDef
+          key={fieldId}
+          {...{
+            fieldId,
+            toFieldLabel,
+            filterDef,
+            onFilterUpdate,
+            selectedFilters,
+            FilterType: supportedFilterTypes[filterDef.type],
+            showFilter: currentFilter?.fieldId === fieldId,
+          }}
+        />
+      ))}
     </ToolbarGroup>
   );
 };
