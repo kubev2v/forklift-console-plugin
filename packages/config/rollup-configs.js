@@ -5,7 +5,6 @@
  * Default rollup settings from @openshift/dynamic-plugin-sdk
  */
 
-import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
@@ -46,13 +45,12 @@ export const writeJSONFile = ({ fileName, value }) => ({
  */
 const getBuildMetadata = ({ name, version }) => {
   const now = new Date();
-  ret = {
+  return {
     packageName: name,
     packageVersion: version,
     buildDate: now.toLocaleString('en-US', { dateStyle: 'long' }),
     buildTime: now.toLocaleString('en-US', { timeStyle: 'long' }),
   };
-  return ret;
 };
 
 /**
