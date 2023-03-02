@@ -160,8 +160,7 @@ export const x509PemSchema = yup
     'pem-x509-certificate',
     'The certificate is not a valid PEM encoded X.509 certificate',
     (value): boolean | yup.ValidationError => {
-      if (!value) return false;
-
+      if (!value) return true;
       try {
         const cert = new X509();
         cert.readCertPEM(value);
