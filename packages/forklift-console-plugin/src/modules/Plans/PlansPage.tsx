@@ -91,6 +91,17 @@ export const fieldsMetadata: Field[] = [
     isVisible: true,
     sortable: false,
   },
+  {
+    id: C.ARCHIVED,
+    toLabel: (t) => t('Archived'),
+    isHidden: true,
+    filter: {
+      type: 'slider',
+      standalone: true,
+      toPlaceholderLabel: (t) => t('Show archived'),
+      defaultValues: ['false'],
+    },
+  },
 ];
 
 export const PlansPage = ({ namespace, kind: reference }: ResourceConsolePageProps) => {
