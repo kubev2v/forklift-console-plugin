@@ -52,12 +52,6 @@ const getBuildMetadata = ({ name, version }) => {
     buildDate: now.toLocaleString('en-US', { dateStyle: 'long' }),
     buildTime: now.toLocaleString('en-US', { timeStyle: 'long' }),
   };
-  try{
-    ret['gitCommit'] = execSync('git rev-parse HEAD').toString().trim()
-    ret['gitBranch'] = execSync('git rev-parse --abbrev-ref HEAD').toString().trim()
-  } catch {
-    // no git present
-  }
   return ret;
 };
 
