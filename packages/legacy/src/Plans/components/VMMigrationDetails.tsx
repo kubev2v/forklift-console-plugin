@@ -75,7 +75,7 @@ export interface IPlanMatchParams {
 }
 
 const getTotalCopiedRatio = (vmStatus: IVMStatus) => {
-  const diskTransferSteps = vmStatus.pipeline.filter((step) => step.name === 'DiskTransfer');
+  const diskTransferSteps = vmStatus.pipeline.filter((step) => step.name === 'DiskTransfer' || step.name === 'DiskTransferV2v');
   let completed = 0;
   let total = 0;
   diskTransferSteps.forEach((step) => {
