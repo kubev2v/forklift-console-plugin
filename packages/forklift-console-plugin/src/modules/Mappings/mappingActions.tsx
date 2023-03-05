@@ -116,7 +116,7 @@ const DeleteMappingModal = ({
   const msg =
     mappingType === MappingType.Network
       ? {
-          title: t('Permanently delete network mapping?'),
+          title: t('Delete NetworkMap?'),
           body: t(
             'You will no longer be able to select network mapping "{{name}}" when you create a migration plan.',
             { name },
@@ -124,7 +124,7 @@ const DeleteMappingModal = ({
           errorText: t('Cannot delete network mapping'),
         }
       : {
-          title: t('Permanently delete storage mapping?'),
+          title: t('Delete StorageMap?'),
           body: t(
             'You will no longer be able to select storage mapping "{{name}}" when you create a migration plan.',
             { name },
