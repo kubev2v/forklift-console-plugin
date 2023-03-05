@@ -126,7 +126,7 @@ const ProviderLink = ({ value, entity: { gvk, namespace, isOwnedByController }, 
       <ResourceLink groupVersionKind={gvk} name={value} namespace={namespace} />
       {isOwnedByController && (
         <Label isCompact color="grey" className="forklift-table__flex-cell-label">
-          {t('owned')}
+          {t('managed')}
         </Label>
       )}
     </span>
