@@ -3,7 +3,7 @@ import { usePollingContext } from 'legacy/src/common/context';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { UseQueryResult } from 'react-query';
 import { useMockableQuery } from './helpers';
-import { MOCK_SECRET } from './mocks/secrets.mock';
+import { MOCK_SECRET_INSECURE, MOCK_SECRET_SECURE } from './mocks/secrets.mock';
 import { ISecret } from './types';
 
 export const useSecretQuery = (
@@ -18,6 +18,6 @@ export const useSecretQuery = (
       refetchInterval: usePollingContext().refetchInterval,
       enabled: !!secretName,
     },
-    MOCK_SECRET
+    secretName ==='secure' ? MOCK_SECRET_SECURE : MOCK_SECRET_INSECURE
   );
 };

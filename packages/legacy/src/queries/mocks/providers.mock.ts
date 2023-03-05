@@ -252,17 +252,17 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
   const openstackProvider1: IOpenStackProvider = {
     uid: 'mock-uid-openstack-1',
     namespace: 'konveyor-forklift',
-    name: 'openstack-1',
+    name: 'openstack-insecure-1',
     selfLink: 'providers/openstack/foo1',
     type: 'openstack',
     object: {
       kind: 'Provider',
       apiVersion: 'forklift.konveyor.io/v1beta1',
       metadata: {
-        name: 'openstack-1',
+        name: 'openstack-insecure-1',
         namespace: 'konveyor-forklift',
         selfLink:
-          '/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/openstack-1/status',
+          '/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/openstack/status',
         uid: 'mock-uid-openstack-1',
         creationTimestamp: '2023-02-20T11:53:06Z',
         annotations: {
@@ -273,7 +273,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
       spec: {
         type: 'openstack',
         url: 'http://v2v.com:5000/v3',
-        secret: { namespace: 'konveyor-forklift', name: 'openstack' },
+        secret: { namespace: 'konveyor-forklift', name: 'insecure' },
       },
       status: {
         ...providerStatusReadyFields.status,
@@ -288,7 +288,27 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     volumeCount: 5,
     volumeTypeCount: 2,
     networkCount: 3,
-  }
+  };
+
+  const openstackProvider2: IOpenStackProvider = {
+    ...openstackProvider1,
+    uid: 'mock-uid-openstack-2',
+    name: 'openstack-secure-2',
+    selfLink: 'providers/openstack/foo2',
+    object: {
+      ...openstackProvider1.object,
+      metadata: {
+        ...openstackProvider1.object.metadata,
+        name: 'openstack-secure-2',
+        uid: 'mock-uid-openstack-2',
+      },
+      spec: {
+        type: 'openstack',
+        url: 'http://packstack.com:5000/v3',
+        secret: { namespace: 'konveyor-forklift', name: 'secure' },
+      },
+    },
+  };
 
   const openshiftProvider1: IOpenShiftProvider = {
     uid: 'mock-uid-ocpv-1',
@@ -401,7 +421,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
   MOCK_INVENTORY_PROVIDERS = {
     vsphere: [vmwareProvider1, vmwareProvider2, vmwareProvider3],
     ovirt: [rhvProvider1, rhvProvider2, rhvProvider3],
-    openstack: [openstackProvider1],
+    openstack: [openstackProvider1, openstackProvider2],
     openshift: [openshiftProvider1, openshiftProvider2, openshiftProvider3, openshiftProvider4],
   };
 
