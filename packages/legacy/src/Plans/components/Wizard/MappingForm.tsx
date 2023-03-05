@@ -14,6 +14,7 @@ import {
   SelectGroup,
   SelectOptionObject,
   Divider,
+  Alert,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { ValidatedTextInput } from '@migtools/lib-ui';
@@ -216,6 +217,15 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
       ]}
     >
       <Form>
+        {form.values.isPrefilled && form.values.filteredOutItemCount > 0 && (
+          <Alert isInline variant="warning" title="Unresolved mappings">
+            {`${form.values.filteredOutItemCount} ${mappingType.toLocaleLowerCase()} ${
+              form.values.filteredOutItemCount > 1
+                ? 'mappings could not be resolved based on available configuration and are skipped below.'
+                : 'mapping could not be resolved based on availableconfiguration and is skipped below.'
+            }`}
+          </Alert>
+        )}
         {!form.values.isPrefilled ? (
           <TextContent>
             <Text component="p">
@@ -293,12 +303,11 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
                 availableTargets={filteredAvailableTargets}
                 builderItems={form.values.builderItems}
                 setBuilderItems={form.fields.builderItems.setValue}
-                isWizardMode
               />
               {form.values.isCreateMappingSelected || form.values.isPrefilled || hasAddedItems ? (
                 <>
                   <Checkbox
-                    label="Save mapping to use again"
+                    label="Save current mapping as a template"
                     aria-label="save mapping checkbox"
                     id="save-mapping-check"
                     isChecked={form.values.isSaveNewMapping}

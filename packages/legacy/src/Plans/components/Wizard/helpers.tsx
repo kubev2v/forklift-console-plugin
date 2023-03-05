@@ -678,41 +678,47 @@ export const usePlanWizardPrefillEffect = (
 
       forms.selectVMs.fields.selectedVMIds.prefill(selectedVMs.map((vm) => vm.id));
 
-      forms.networkMapping.fields.builderItems.prefill(
-        getBuilderItemsWithMissingSources(
-          getBuilderItemsFromMappingItems(
-            networkMapping?.spec.map || [],
-            MappingType.Network,
-            networkMappingResourceQueries.availableSources,
-            networkMappingResourceQueries.availableTargets
-          ),
-          networkMappingResourceQueries,
-          selectedVMs,
+      const inputNetworkItems = networkMapping?.spec.map || [];
+      const filteredNetworkItems = getBuilderItemsWithMissingSources(
+        getBuilderItemsFromMappingItems(
+          inputNetworkItems,
           MappingType.Network,
-          sourceProvider?.type || 'vsphere',
-          false,
-          nicProfilesQuery?.data || [],
-          disksQuery?.data || []
-        )
+          networkMappingResourceQueries.availableSources,
+          networkMappingResourceQueries.availableTargets
+        ),
+        networkMappingResourceQueries,
+        selectedVMs,
+        MappingType.Network,
+        sourceProvider?.type || 'vsphere',
+        false,
+        nicProfilesQuery?.data || [],
+        disksQuery?.data || []
+      );
+      forms.networkMapping.fields.builderItems.prefill(filteredNetworkItems);
+      forms.networkMapping.fields.filteredOutItemCount.prefill(
+        inputNetworkItems.length - filteredNetworkItems.length
       );
       forms.networkMapping.fields.isPrefilled.prefill(true);
 
-      forms.storageMapping.fields.builderItems.prefill(
-        getBuilderItemsWithMissingSources(
-          getBuilderItemsFromMappingItems(
-            storageMapping?.spec.map || [],
-            MappingType.Storage,
-            storageMappingResourceQueries.availableSources,
-            storageMappingResourceQueries.availableTargets
-          ),
-          storageMappingResourceQueries,
-          selectedVMs,
+      const inputStorageItems = storageMapping?.spec.map || [];
+      const filteredStorageItems = getBuilderItemsWithMissingSources(
+        getBuilderItemsFromMappingItems(
+          inputStorageItems,
           MappingType.Storage,
-          sourceProvider?.type || 'vsphere',
-          false,
-          nicProfilesQuery?.data || [],
-          disksQuery?.data || []
-        )
+          storageMappingResourceQueries.availableSources,
+          storageMappingResourceQueries.availableTargets
+        ),
+        storageMappingResourceQueries,
+        selectedVMs,
+        MappingType.Storage,
+        sourceProvider?.type || 'vsphere',
+        false,
+        nicProfilesQuery?.data || [],
+        disksQuery?.data || []
+      );
+      forms.storageMapping.fields.builderItems.prefill(filteredStorageItems);
+      forms.storageMapping.fields.filteredOutItemCount.prefill(
+        inputStorageItems.length - filteredStorageItems.length
       );
       forms.storageMapping.fields.isPrefilled.prefill(true);
 
