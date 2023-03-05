@@ -1,14 +1,15 @@
 import { ISecret } from '../types';
 
-export let MOCK_SECRET: ISecret;
+export let MOCK_SECRET_INSECURE: ISecret;
+export let MOCK_SECRET_SECURE: ISecret;
 
 if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
-  MOCK_SECRET = {
+  MOCK_SECRET_INSECURE = {
     kind: 'Secret',
     apiVersion: 'v1',
     metadata: {
       name: 'mock-secret',
-      namespace: 'openshift-migration',
+      namespace: 'konveyor-forklift',
       selfLink: '/foo/secret',
       uid: 'e0f1078b-ce2a-4487-8281-5176267b78c2',
       creationTimestamp: '2020-12-18T17:43:30Z',
@@ -27,4 +28,13 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     type: 'Opaque',
   };
+
+  MOCK_SECRET_SECURE = {
+    ...MOCK_SECRET_INSECURE,
+    data: {
+      ...MOCK_SECRET_INSECURE.data,
+      insecure: 'ZmFsc2U=',           // used by OpenStack only
+      cacert: 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVJekNDQXd1Z0F3SUJBZ0lDRUFBd0RRWUpLb1pJaHZjTkFRRUxCUUF3WnpFTE1BawpFdW1YWGhvRGRyR1g2bG93RkEvNUdiSyt5TFRxNDREUVd0YUd5Sk9aa29iK3BqRkZ0Zz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K',
+    }
+  }
 }

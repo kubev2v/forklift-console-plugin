@@ -548,7 +548,7 @@
         "isOwnedByController": false
     },
     {
-        "name": "openstack-1",
+        "name": "openstack-insecure-1",
         "namespace": "konveyor-forklift",
         "url": "http://v2v.com:5000/v3",
         "type": "openstack",
@@ -558,7 +558,7 @@
             "kind": "Provider",
             "version": "v1beta1"
             },
-        "secretName": "openstack",
+        "secretName": "insecure",
         "clusterCount": 0,
         "hostCount": 0,
         "storageCount": 2,
@@ -588,9 +588,9 @@
             "kind": "Provider",
             "apiVersion": "forklift.konveyor.io/v1beta1",
             "metadata": {
-                "name": "openstack-1",
+                "name": "openstack-insecure-1",
                 "namespace": "konveyor-forklift",
-                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/openstack-1/status",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/openstack/status",
                 "uid": "mock-uid-openstack-1",
                 "creationTimestamp": "2023-02-20T11:53:06Z",
                 "annotations": {
@@ -602,7 +602,7 @@
                 "url": "http://v2v.com:5000/v3",
                 "secret": {
                     "namespace": "konveyor-forklift",
-                    "name": "openstack"
+                    "name": "insecure"
                 }
             },
             "status": {
@@ -644,6 +644,105 @@
         },
         "selfLink": "providers/openstack/foo1",
         "phase": "Ready",
+        "isOwnedByController": false
+    },
+    {
+        "name": "openstack-secure-2",
+        "namespace": "konveyor-forklift",
+        "url": "http://packstack.com:5000/v3",
+        "type": "openstack",
+        "uid": "mock-uid-openstack-2",
+        "gvk": {
+            "group": "forklift.konveyor.io",
+            "kind": "Provider",
+            "version": "v1beta1"
+        },
+        "secretName": "secure",
+        "clusterCount": 0,
+        "hostCount": 0,
+        "storageCount": 2,
+        "vmCount": 3,
+        "networkCount": 3,
+        "ownerReferences": [],
+        "positiveConditions": {
+            "ConnectionTestSucceeded": {
+                "message": "Connection test, succeeded.",
+                "status": "True"
+            },
+            "InventoryCreated": {
+                "message": "The inventory has been loaded.",
+                "status": "True"
+            },
+            "Ready": {
+                "message": "The provider is ready.",
+                "status": "True"
+            },
+            "Validated": {
+                "message": "Validation has been completed.",
+                "status": "True"
+            }
+        },
+        "negativeConditions": {},
+        "object": {
+            "kind": "Provider",
+            "apiVersion": "forklift.konveyor.io/v1beta1",
+            "metadata": {
+                "name": "openstack-secure-2",
+                "namespace": "konveyor-forklift",
+                "selfLink": "/apis/forklift.konveyor.io/v1beta1/namespaces/konveyor-forklift/providers/openstack/status",
+                "uid": "mock-uid-openstack-2",
+                "creationTimestamp": "2023-02-20T11:53:06Z",
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"name\":\"openstack\",\"namespace\":\"konveyor-forklift\"},\"spec\":{\"secret\":{\"name\":\"openstack\",\"namespace\":\"konveyor-forklift\"},\"type\":\"openstack\",\"url\":\"http://v2v.com:5000/v3\"}}\n"
+                }
+            },
+            "spec": {
+                "type": "openstack",
+                "url": "http://packstack.com:5000/v3",
+                "secret": {
+                    "namespace": "konveyor-forklift",
+                    "name": "secure"
+                }
+            },
+            "status": {
+                "conditions": [
+                     {
+                        "type": "ConnectionTestSucceeded",
+                        "status": "True",
+                        "category": "Required",
+                        "message": "Connection test, succeeded.",
+                        "reason": "Tested",
+                        "lastTransitionTime": "2021-03-18T21:01:10Z"
+                    },
+                    {
+                        "type": "Validated",
+                        "status": "True",
+                        "category": "Advisory",
+                        "message": "Validation has been completed.",
+                        "reason": "Completed",
+                        "lastTransitionTime": "2021-02-08T19:36:55Z"
+                    },
+                    {
+                        "type": "InventoryCreated",
+                        "status": "True",
+                        "category": "Required",
+                        "message": "The inventory has been loaded.",
+                        "reason": "Completed",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
+                    },
+                    {
+                        "type": "Ready",
+                        "status": "True",
+                        "category": "Required",
+                        "message": "The provider is ready.",
+                        "lastTransitionTime": "2021-03-23T16:58:23Z"
+                    }
+                ],
+                "phase": "Ready"
+            }
+        },
+        "phase": "Ready",
+        "selfLink": "providers/openstack/foo2",
         "isOwnedByController": false
     },
     {
