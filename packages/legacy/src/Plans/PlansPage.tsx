@@ -22,6 +22,9 @@ import { CreatePlanButton } from './components/CreatePlanButton';
 import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
 import { ENV, PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 
+/**
+ * @deprecated See packages/forklift-console-plugin/src/modules/Plans/PlansPage.tsx
+ */
 export const PlansPage: React.FunctionComponent = () => {
   const namespace = ENV.DEFAULT_NAMESPACE;
   const sufficientProvidersQuery = useHasSufficientProvidersQuery();
