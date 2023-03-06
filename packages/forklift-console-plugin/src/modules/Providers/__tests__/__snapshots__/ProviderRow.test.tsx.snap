@@ -28,7 +28,7 @@ exports[`Provider rows host 1`] = `
               <span
                 class="pf-c-label__content"
               >
-                owned
+                managed
               </span>
             </span>
           </span>
