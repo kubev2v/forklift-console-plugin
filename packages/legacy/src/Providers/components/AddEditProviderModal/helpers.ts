@@ -84,8 +84,8 @@ export const useAddEditProviderPrefillEffect = (
           openstackFields.projectName.prefill(atob(secret?.data.projectName || ''));
           openstackFields.region.prefill(atob(secret?.data.region || ''));
           openstackFields.insecureSkipVerify.prefill(
-            secret?.data.insecure
-              ? stringToBoolean(atob(secret?.data.insecure))
+            secret?.data.insecureSkipVerify
+              ? stringToBoolean(atob(secret?.data.insecureSkipVerify))
               : true
           );
           openstackFields.caCertIfSecure.prefill(atob(secret?.data.cacert || ''));

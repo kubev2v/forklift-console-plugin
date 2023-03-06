@@ -239,13 +239,13 @@ export interface OpenstackProviderSecret {
    * @type {boolean}
    * @memberof ProviderSecret
    */
-  insecure?: boolean;
+  insecureSkipVerify?: boolean;
 
   /**
    * openstack server cacerts, can be a linked list of multple certifications.
    *
    * Provider type: openstack
-   * Conditions: Required if insecure is false
+   * Conditions: Required if insecureSkipVerify is false
    * Validation Regexp:
    *    ssl public key: .*
    *

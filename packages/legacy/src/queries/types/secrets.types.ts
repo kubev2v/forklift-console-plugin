@@ -9,7 +9,6 @@ export interface ISecret extends IMetaTypeMeta {
     domainName?: string;  // used by OpenStack only
     projectName?: string  // used by OpenStack only
     region?: string       // used by OpenStack only
-    insecure?: string;    // used by OpenStack only
     thumbprint?: string;
     token?: string;
     cacert?: string;

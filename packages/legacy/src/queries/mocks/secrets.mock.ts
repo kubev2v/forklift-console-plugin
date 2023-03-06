@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
       domainName: 'bW9jay1kb21haW4=', // used by OpenStack only
       projectName: 'bW9jay1wcm9qZWN0',// used by OpenStack only
       region: 'bW9jay1yZWdpb24=',     // used by OpenStack only
-      insecure: 'dHJ1ZQ==',           // used by OpenStack only
+      insecureSkipVerify: 'dHJ1ZQ==',
     },
     type: 'Opaque',
   };
@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     ...MOCK_SECRET_INSECURE,
     data: {
       ...MOCK_SECRET_INSECURE.data,
-      insecure: 'ZmFsc2U=',           // used by OpenStack only
+      insecureSkipVerify: 'ZmFsc2U=',
       cacert: 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVJekNDQXd1Z0F3SUJBZ0lDRUFBd0RRWUpLb1pJaHZjTkFRRUxCUUF3WnpFTE1BawpFdW1YWGhvRGRyR1g2bG93RkEvNUdiSyt5TFRxNDREUVd0YUd5Sk9aa29iK3BqRkZ0Zz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K',
     }
   }
