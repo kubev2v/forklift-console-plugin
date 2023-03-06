@@ -128,7 +128,7 @@ export function convertFormValuesToSecret(
       domainName:btoa(openstackValues.domainName),
       projectName:btoa(openstackValues.projectName),
       region:btoa(openstackValues.region),
-      insecure:btoa(booleanToString(openstackValues.insecureSkipVerify) ?? ''),
+      insecureSkipVerify:btoa(booleanToString(openstackValues.insecureSkipVerify) ?? ''),
       cacert: !openstackValues.insecureSkipVerify ? btoa(openstackValues.caCertIfSecure) : null
     };
   }
