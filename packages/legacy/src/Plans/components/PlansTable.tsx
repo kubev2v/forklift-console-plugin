@@ -73,6 +73,9 @@ interface IPlansTableProps {
   plans: IPlan[];
 }
 
+/**
+ * @deprecated See packages/forklift-console-plugin/src/modules/Plans/PlansPage.tsx
+ */
 export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
   plans,
 }: IPlansTableProps) => {
