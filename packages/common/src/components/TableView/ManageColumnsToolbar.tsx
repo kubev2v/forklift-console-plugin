@@ -171,7 +171,10 @@ const ManageColumns = ({
                       <DataListCheck
                         aria-labelledby={`draggable-${id}`}
                         name={id}
-                        checked={isVisible}
+                        checked={
+                          // visibility for identity columns (namespace) is governed by parent component
+                          isIdentity ? columns.find((c) => c.id === id)?.isVisible : isVisible
+                        }
                         isDisabled={isIdentity}
                         onChange={(value) => onSelect(id, value)}
                         otherControls
