@@ -124,7 +124,7 @@ interface IHasName {
 
 export const sortByName = <T extends IHasName>(data?: T[]): T[] => {
   const getName = (obj: T) => obj.name || obj.metadata?.name || '';
-  return (data || []).sort((a, b) => (getName(a) < getName(b) ? -1 : 1));
+  return (Array.isArray(data) ? data : []).sort((a, b) => (getName(a) < getName(b) ? -1 : 1));
 };
 
 export const sortIndexedDataByName = <TItem extends { name: string }, TIndexed>(data: TIndexed) =>
