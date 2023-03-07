@@ -140,7 +140,7 @@ const DeleteModal = ({
       toggleOpen={toggleDeleteModal}
       mutateFn={() => deleteProviderMutation.mutate(entity.object)}
       mutateResult={deleteProviderMutation}
-      title={t('Permanently delete provider?')}
+      title={t('Delete Provider?')}
       body={
         isTarget(entity.type as ProviderType)
           ? t('{{type}} provider {{name}} will no longer be selectable as a migration target.', {

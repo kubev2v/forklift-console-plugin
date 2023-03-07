@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { Trans } from 'react-i18next';
 import { useTranslation } from 'src/utils/i18n';
 
 import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
@@ -17,7 +18,7 @@ import {
   useDeletePlanMutation,
   useSetCutoverMutation,
 } from '@kubev2v/legacy/queries';
-import { Button, Modal, Text, TextContent } from '@patternfly/react-core';
+import { Alert, Button, Modal, Stack, Text, TextContent } from '@patternfly/react-core';
 
 import { type FlatPlan } from './data';
 
@@ -47,17 +48,6 @@ const editingDisabledTooltip = ({
     return t(
       'This plan cannot be edited because the inventory data for its associated providers is not ready.',
     );
-  }
-  return '';
-};
-
-const deleteDisabledTooltip = ({ t, isPlanExecuting, isPlanGathering, isArchivingInProgress }) => {
-  if (isPlanExecuting) {
-    return t('This plan cannot be deleted because it is running');
-  } else if (isPlanGathering) {
-    t('This plan cannot be deleted because it is running must gather service');
-  } else if (isArchivingInProgress) {
-    return t('This plan cannot be deleted because it is being archived');
   }
   return '';
 };
@@ -158,15 +148,14 @@ export const useFlatPlanActions = ({
   const deleteAction = useMemo(
     () => ({
       id: 'delete',
-      cta: () => launchModal(withQueryClient(DeleteModal), { plan, isPlanStarted, isPlanArchived }),
+      cta: () =>
+        launchModal(withQueryClient(DeleteModal), {
+          plan,
+          isPlanStarted,
+          isPlanArchived,
+          isPlanExecuting,
+        }),
       label: t('Delete'),
-      disabled: deleteDisabled,
-      disabledTooltip: deleteDisabledTooltip({
-        t,
-        isPlanGathering,
-        isPlanExecuting,
-        isArchivingInProgress,
-      }),
     }),
     [
       t,
@@ -241,13 +230,15 @@ export const useFlatPlanActions = ({
 const DeleteModal = ({
   plan,
   closeModal,
-  isPlanStarted,
   isPlanArchived,
+  isPlanExecuting,
+  isPlanStarted,
 }: {
   plan: FlatPlan;
   closeModal: () => void;
-  isPlanStarted: boolean;
   isPlanArchived: boolean;
+  isPlanExecuting: boolean;
+  isPlanStarted: boolean;
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(true);
@@ -258,6 +249,17 @@ const DeleteModal = ({
   }, [closeModal, setIsOpen]);
 
   const deletePlanMutation = useDeletePlanMutation(plan.namespace, exit);
+
+  const IsExecutingAlert = <Alert isInline variant="danger" title="Plan is currently running" />;
+  const IsNotArchivedAlert = (
+    <Alert isInline variant="info" title="Plan is not archived">
+      <Trans t={t} ns="plugin__forklift-console-plugin">
+        Deleting a migration plan does not remove temporary resources, it is recommended to{' '}
+        <strong>archive</strong> the plan first before deleting it, to remove temporary resources.
+      </Trans>
+    </Alert>
+  );
+
   return (
     <ConfirmModal
       titleIconVariant="warning"
@@ -267,22 +269,20 @@ const DeleteModal = ({
       toggleOpen={exit}
       mutateFn={() => deletePlanMutation.mutate(plan.object)}
       mutateResult={deletePlanMutation}
-      title={t('Permanently delete migration plan?')}
+      title={t('Delete Plan?')}
       confirmButtonText={t('Delete')}
       body={
-        isPlanStarted && !isPlanArchived ? (
+        <Stack hasGutter>
+          {isPlanExecuting ? IsExecutingAlert : ''}
+          {isPlanArchived || !isPlanStarted ? '' : IsNotArchivedAlert}
           <TextContent>
-            <Text>
-              {t(
-                'Migration plan "{{name}}" will be deleted. However, deleting a migration plan does not remove temporary resources such as failed VMs and data volumes, conversion pods, importer pods, secrets, or config maps.',
-                { name: plan.name },
-              )}
-            </Text>
-            <Text>{t('To clean up these resources, archive the plan before deleting it.')}</Text>
+            <Trans t={t} ns="plugin__forklift-console-plugin">
+              Are you sure you want to delete{' '}
+              <strong className="co-break-word">{{ resourceName: plan.name }}</strong> in namespace{' '}
+              <strong>{{ namespace: plan.namespace }}</strong>?
+            </Trans>
           </TextContent>
-        ) : (
-          <>{t('All data for migration plan "{{name}}" will be lost.', { name: plan.name })}</>
-        )
+        </Stack>
       }
       errorText={t('Cannot delete migration plan')}
     />

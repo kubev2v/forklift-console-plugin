@@ -12,7 +12,6 @@ import {
 import { useHistory } from 'react-router-dom';
 
 import { IPlan, IMigration } from 'legacy/src/queries/types';
-import { hasCondition } from 'legacy/src/common/helpers';
 import {
   useClusterProvidersQuery,
   useDeletePlanMutation,
@@ -63,7 +62,6 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
   );
   const deletePlanMutation = useDeletePlanMutation(namespace, toggleDeleteModal);
   const archivePlanMutation = useArchivePlanMutation(namespace, toggleArchivePlanModal);
-  const conditions = plan.status?.conditions || [];
   const clusterProvidersQuery = useClusterProvidersQuery(namespace);
   const areProvidersReady = React.useMemo(
     () => kebabIsOpen && areAssociatedProvidersReady(clusterProvidersQuery, plan.spec.provider),
@@ -148,41 +146,14 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
                 </ConditionalTooltip>,
               ]
             : []),
-          <ConditionalTooltip
-            key="Delete"
-            isTooltipEnabled={
-              hasCondition(conditions, 'Executing') ||
-              deletePlanMutation.isLoading ||
-              isPlanGathering ||
-              planState === 'Archiving'
-            }
-            content={
-              hasCondition(conditions, 'Executing')
-                ? 'This plan cannot be deleted because it is running'
-                : deletePlanMutation.isLoading
-                ? 'This plan cannot be deleted because it is deleting'
-                : isPlanGathering
-                ? 'This plan cannot be deleted because it is running must gather service'
-                : planState === 'Archiving'
-                ? 'This plan cannot be deleted because it is being archived'
-                : ''
-            }
-          >
             <DropdownItem
-              isAriaDisabled={
-                hasCondition(conditions, 'Executing') ||
-                deletePlanMutation.isLoading ||
-                isPlanGathering ||
-                planState === 'Archiving'
-              }
               onClick={() => {
                 setKebabIsOpen(false);
                 toggleDeleteModal();
               }}
             >
               Delete
-            </DropdownItem>
-          </ConditionalTooltip>,
+            </DropdownItem>,
           <DropdownItem
             key="Details"
             onClick={() => {
@@ -232,7 +203,7 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
         toggleOpen={toggleDeleteModal}
         mutateFn={() => deletePlanMutation.mutate(plan)}
         mutateResult={deletePlanMutation}
-        title="Permanently delete migration plan?"
+        title="Delete Plan?"
         confirmButtonText="Delete"
         body={
           isPlanStarted && !isPlanArchived ? (
