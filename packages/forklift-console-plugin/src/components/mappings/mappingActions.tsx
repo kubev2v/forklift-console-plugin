@@ -5,21 +5,12 @@ import { useDeleteMappingMutation } from 'legacy/src/queries';
 import { Mapping, MappingType } from 'legacy/src/queries/types';
 import { useTranslation } from 'src/utils/i18n';
 
-import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 
-import { CommonMapping } from './dataCommon';
-import { FlatNetworkMapping } from './dataForNetwork';
-import { FlatStorageMapping } from './dataForStorage';
+import { CommonMapping } from './data';
 
-export const useNetworkMappingActions = ({ entity }: { entity: FlatNetworkMapping }) =>
-  useMappingActions<FlatNetworkMapping>({ entity, mappingType: MappingType.Network });
-
-export const useStorageMappingActions = ({ entity }: { entity: FlatStorageMapping }) =>
-  useMappingActions<FlatStorageMapping>({ entity, mappingType: MappingType.Storage });
-
-function useMappingActions<T extends CommonMapping>({
+export function useMappingActions<T extends CommonMapping>({
   entity,
   mappingType,
 }: {
@@ -113,24 +104,17 @@ const DeleteMappingModal = ({
 }) => {
   const { t } = useTranslation();
   const deleteMappingMutation = useDeleteMappingMutation(mappingType, namespace, closeModal);
-  const msg =
-    mappingType === MappingType.Network
-      ? {
-          title: t('Delete NetworkMap?'),
-          body: t(
-            'You will no longer be able to select network mapping "{{name}}" when you create a migration plan.',
-            { name },
-          ),
-          errorText: t('Cannot delete network mapping'),
-        }
-      : {
-          title: t('Delete StorageMap?'),
-          body: t(
-            'You will no longer be able to select storage mapping "{{name}}" when you create a migration plan.',
-            { name },
-          ),
-          errorText: t('Cannot delete storage mapping'),
-        };
+  const msg = {
+    title: mappingType === 'Network' ? t('Delete NetworkMap?') : t('Delete StorageMap?'),
+    body: t(
+      'You will no longer be able to select mapping "{{name}}" when you create a migration plan.',
+      { name },
+    ),
+    errorText:
+      mappingType === 'Network'
+        ? t('Cannot delete network mapping')
+        : t('Cannot delete storage mapping'),
+  };
   return (
     <ConfirmModal
       titleIconVariant="warning"
@@ -148,15 +132,3 @@ const DeleteMappingModal = ({
   );
 };
 DeleteMappingModal.displayName = 'DeleteMappingModal';
-
-export const NetworkMappingActions = withActionContext<FlatNetworkMapping>(
-  'kebab',
-  'forklift-flat-network-mapping',
-);
-NetworkMappingActions.displayName = 'NetworkMappingActions';
-
-export const StorageMappingActions = withActionContext<FlatStorageMapping>(
-  'kebab',
-  'forklift-flat-storage-mapping',
-);
-StorageMappingActions.displayName = 'StorageMappingActions';

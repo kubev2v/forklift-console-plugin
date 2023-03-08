@@ -117,6 +117,5 @@
   "VMware": "VMware",
   "Warm": "Warm",
   "When a plan is archived, its history, metadata, and logs are deleted. The plan cannot be edited or restarted but it can be viewed.": "When a plan is archived, its history, metadata, and logs are deleted. The plan cannot be edited or restarted but it can be viewed.",
-  "You will no longer be able to select network mapping \"{{name}}\" when you create a migration plan.": "You will no longer be able to select network mapping \"{{name}}\" when you create a migration plan.",
-  "You will no longer be able to select storage mapping \"{{name}}\" when you create a migration plan.": "You will no longer be able to select storage mapping \"{{name}}\" when you create a migration plan."
+  "You will no longer be able to select mapping \"{{name}}\" when you create a migration plan.": "You will no longer be able to select mapping \"{{name}}\" when you create a migration plan."
 }

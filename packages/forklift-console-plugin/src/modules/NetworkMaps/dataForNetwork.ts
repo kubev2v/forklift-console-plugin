@@ -12,7 +12,12 @@ import { NetworkMapResource, ProviderRef } from 'src/utils/types';
 import { V1beta1Provider } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
-import { CommonMapping, OwnerRef, resolveOwnerRef, useMappings } from './dataCommon';
+import {
+  CommonMapping,
+  OwnerRef,
+  resolveOwnerRef,
+  useMappings,
+} from '../../components/mappings/data';
 
 export interface FlatNetworkMapping extends CommonMapping {
   [C.FROM]: [Network, IdOrNameRef[]][];

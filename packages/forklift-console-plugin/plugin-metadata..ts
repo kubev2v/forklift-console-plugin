@@ -1,8 +1,9 @@
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
-import { exposedModules as mappingModules } from './src/modules/Mappings/dynamic-plugin';
+import { exposedModules as networkMapModules } from './src/modules/NetworkMaps/dynamic-plugin';
 import { exposedModules as planModules } from './src/modules/Plans/dynamic-plugin';
 import { exposedModules as providerModules } from './src/modules/Providers/dynamic-plugin';
+import { exposedModules as storageMapModules } from './src/modules/StorageMaps/dynamic-plugin';
 
 export default {
   name: process.env.PLUGIN_NAME || 'forklift-console-plugin',
@@ -13,7 +14,8 @@ export default {
   exposedModules: {
     ...providerModules,
     ...planModules,
-    ...mappingModules,
+    ...networkMapModules,
+    ...storageMapModules,
   },
   dependencies: {
     '@console/pluginAPI': '*',
