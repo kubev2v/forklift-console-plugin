@@ -11,8 +11,8 @@ K8S_TIMEOUT=${K8S_TIMEOUT:="360s"}
 #   https://github.com/kubevirt/hyperconverged-cluster-operator/blob/<release tag>/hack/config
 
 # Default version values
-KUBEVIRT_VERSION="v0.59.0-alpha.0"
-CDI_VERSION="v1.56.0-rc0"
+KUBEVIRT_VERSION="v0.59.0"
+CDI_VERSION="v1.56.0"
 NETWORK_ADDONS_VERSION="v0.85.0"
 
 echo ""
