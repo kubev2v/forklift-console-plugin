@@ -1,31 +1,52 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
-import { ActionService, ActionServiceProvider } from 'common/src/polyfills/sdk-shim';
+import { type ActionService, ActionServiceProvider } from 'common/src/polyfills/sdk-shim';
 import { useTranslation } from 'common/src/utils/i18n';
 
 import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly/react-core';
 
+export interface ActionContextProps {
+  /**
+   * The kind of toggle to use for the entity actions. Default: `'kebab'`
+   */
+  variant: 'kebab' | 'dropdown';
+
+  /**
+   * The set of the action ids to leave out of the entity actions. Default: `[]`
+   */
+  ignoreList: string[];
+}
+
 /**
  * It's not possible to pass directly parameters to the Action components -
- * we are limted to Action interface. However we can pass the parameters indirectly:
- * 1. via clousure - works best for near constant props like "variant"
+ * we are limited to Action interface. However we can pass the parameters indirectly:
+ * 1. via closure - works best for near constant props like "variant"
  * 2. via context - works better for frequently changing props i.e. "ignoreList"
- * @param variant drop down variant to be used - defaults to 'kebab'
- * @param ignoreList list of actions that should be ignored(filtered out). Main use case is to exlude primary actions.
  */
-export const ActionContext = createContext({ variant: 'kebab', ignoreList: [] });
+export const ActionContext: React.Context<ActionContextProps> = createContext({
+  variant: 'kebab',
+  ignoreList: [],
+});
 
-export interface EhancedActionsComponentProps<T> {
+export interface EnhancedActionsComponentProps<T> {
   entity: T;
   ignoreList?: string[];
   namespace?: string;
 }
 
+/**
+ * Create an `ActionContext` around an `ActionServiceProvider` extension at `contextId`
+ * to render a set of actions for target entity `T`.  Each entity `T` will have actions
+ * rendered individually by the `ActionsComponent` render prop.
+ *
+ * @param variant The kind of toggle to use for the entity actions
+ * @param contextId The contextId of the `console.action/provider` extension to use
+ */
 export function withActionContext<T>(
   variant: 'kebab' | 'dropdown',
   contextId: string,
-): React.ComponentType<EhancedActionsComponentProps<T>> {
-  const Enhanced = ({ entity, ignoreList = [], namespace }: EhancedActionsComponentProps<T>) => {
+): React.ComponentType<EnhancedActionsComponentProps<T>> {
+  const Enhanced = ({ entity, ignoreList = [], namespace }: EnhancedActionsComponentProps<T>) => {
     const outerProviderData = useMemo(
       () => ({ variant, ignoreList: [...ignoreList] }),
       // check if data inside the array has changed
@@ -46,6 +67,9 @@ export function withActionContext<T>(
   return Enhanced;
 }
 
+/**
+ * Render prop given to `ActionServiceProvider` by `withActionContext()`
+ */
 const ActionsComponent = ({ actions }: ActionService) => {
   const { variant, ignoreList = [] } = useContext(ActionContext);
   const { t } = useTranslation();
@@ -82,4 +106,3 @@ const ActionsComponent = ({ actions }: ActionService) => {
     </>
   );
 };
-ActionsComponent.displayName = 'ActionsComponent';
