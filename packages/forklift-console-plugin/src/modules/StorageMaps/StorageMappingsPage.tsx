@@ -12,7 +12,12 @@ import { useTranslation } from 'src/utils/i18n';
 import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { AddMappingButton, commonFieldsMetadata, StartWithEmptyColumnMapper } from './CommonPage';
+import {
+  AddMappingButton,
+  commonFieldsMetadata,
+  StartWithEmptyColumnMapper,
+} from '../../components/mappings/MappingPage';
+
 import { FlatStorageMapping, Storage, useFlatStorageMappings } from './dataForStorage';
 import StorageMappingRow from './StorageMappingRow';
 

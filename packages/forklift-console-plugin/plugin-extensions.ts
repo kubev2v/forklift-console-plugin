@@ -1,9 +1,10 @@
 import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import type { NavSection } from '@openshift-console/dynamic-plugin-sdk';
 
-import { extensions as mappingExtensions } from './src/modules/Mappings/dynamic-plugin';
+import { extensions as networkMapExtensions } from './src/modules/NetworkMaps/dynamic-plugin';
 import { extensions as planExtensions } from './src/modules/Plans/dynamic-plugin';
 import { extensions as providerExtensions } from './src/modules/Providers/dynamic-plugin';
+import { extensions as storageMapExtensions } from './src/modules/StorageMaps/dynamic-plugin';
 
 const extensions: EncodedExtension[] = [
   {
@@ -21,7 +22,8 @@ const extensions: EncodedExtension[] = [
 
   ...providerExtensions,
   ...planExtensions,
-  ...mappingExtensions,
+  ...networkMapExtensions,
+  ...storageMapExtensions,
 ];
 
 export default extensions;

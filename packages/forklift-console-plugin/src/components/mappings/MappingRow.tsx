@@ -11,7 +11,7 @@ import { ExclamationCircleIcon } from '@patternfly/react-icons';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
-import { CommonMapping } from './dataCommon';
+import { CommonMapping } from './data';
 
 export interface CellProps<T extends CommonMapping> {
   value: string;

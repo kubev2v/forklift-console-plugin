@@ -13,7 +13,11 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { Button } from '@patternfly/react-core';
 
-import { commonFieldsMetadata, StartWithEmptyColumnMapper } from './CommonPage';
+import {
+  commonFieldsMetadata,
+  StartWithEmptyColumnMapper,
+} from '../../components/mappings/MappingPage';
+
 import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './dataForNetwork';
 import NetworkMappingRow from './NetworkMappingRow';
 

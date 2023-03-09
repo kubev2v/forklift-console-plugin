@@ -6,7 +6,13 @@ import * as C from 'src/utils/constants';
 import { Label } from '@patternfly/react-core';
 import { StorageDomainIcon } from '@patternfly/react-icons';
 
-import MappingRow, { CellCreator, CellProps, commonCells, SourceCell } from './CommonRow';
+import MappingRow, {
+  CellCreator,
+  CellProps,
+  commonCells,
+  SourceCell,
+} from '../../components/mappings/MappingRow';
+
 import { FlatStorageMapping } from './dataForStorage';
 import { StorageMappingActions } from './mappingActions';
 
