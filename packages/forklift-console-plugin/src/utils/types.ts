@@ -37,11 +37,11 @@ export interface ProviderRef {
   resolved: boolean;
 }
 
-export const ProviderStatusValues = [
+export const ProviderPhaseValues = [
   'ValidationFailed',
   'ConnectionFailed',
   'Ready',
   'Staging',
   'Unknown',
 ] as const;
-export type ProviderStatus = (typeof ProviderStatusValues)[number];
+export type ProviderPhase = (typeof ProviderPhaseValues)[number];

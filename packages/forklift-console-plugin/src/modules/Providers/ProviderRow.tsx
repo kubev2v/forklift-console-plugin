@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import * as C from 'src/utils/constants';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
-import { ProviderStatus } from 'src/utils/types';
+import { ProviderPhase } from 'src/utils/types';
 
 import { RowProps } from '@kubev2v/common/components/TableView';
 import {
@@ -13,12 +13,17 @@ import {
   TARGET_PROVIDER_TYPES,
 } from '@kubev2v/legacy/common/constants';
 import { StatusIcon } from '@migtools/lib-ui';
-import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, Label, Popover } from '@patternfly/react-core';
+import {
+  BlueInfoCircleIcon,
+  GreenCheckCircleIcon,
+  RedExclamationCircleIcon,
+  ResourceLink,
+} from '@openshift-console/dynamic-plugin-sdk';
+import { Button, Flex, FlexItem, Label, Popover } from '@patternfly/react-core';
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { MergedProvider, SupportedConditions } from './data';
+import { MergedProvider } from './data';
 import { ProviderActions } from './providerActions';
 
 import './styles.css';
@@ -30,24 +35,8 @@ interface CellProps {
   currentNamespace?: string;
 }
 
-/**
- * assumes that if condition is 'True' then
- * this is a positive state (success, "green")
- * i.e. ConnectionTestSucceeded
- */
-const toPositiveState = (conditionValue: string): 'Error' | 'Ok' | 'Unknown' => {
-  switch (conditionValue) {
-    case 'True':
-      return 'Ok';
-    case 'False':
-      return 'Error';
-    default:
-      return 'Unknown';
-  }
-};
-
-const fromProviderState = (status: ProviderStatus): 'Error' | 'Ok' | 'Unknown' | 'Loading' => {
-  switch (status) {
+const ProviderPhaseToStatus = (phase: ProviderPhase): 'Error' | 'Ok' | 'Unknown' | 'Loading' => {
+  switch (phase) {
     case 'Ready':
       return 'Ok';
     case 'ConnectionFailed':
@@ -60,49 +49,52 @@ const fromProviderState = (status: ProviderStatus): 'Error' | 'Ok' | 'Unknown' |
   }
 };
 
-const toNegativeState = (conditionValue: string): 'Error' | 'Ok' | 'Unknown' => {
-  switch (conditionValue) {
-    case 'True':
-      return 'Error';
-    case 'False':
-      return 'Ok';
-    default:
-      return 'Unknown';
-  }
+const CategoryToIconMap = {
+  Critical: <RedExclamationCircleIcon />,
+  Error: <RedExclamationCircleIcon />,
+  Required: <GreenCheckCircleIcon />,
+  Warn: <BlueInfoCircleIcon />,
+  Advisory: <GreenCheckCircleIcon />,
 };
 
-const StatusCell = ({
-  value,
-  entity: { positiveConditions, negativeConditions, phase },
-  t,
-}: CellProps) => {
-  const allConditions = [
-    [positiveConditions, toPositiveState],
-    [negativeConditions, toNegativeState],
-  ].flatMap(
-    ([conditions, toState]: [
-      SupportedConditions,
-      (value: string) => 'Error' | 'Ok' | 'Unknown',
-    ]) => [
-      ...Object.values(conditions)
-        .filter(Boolean)
-        .map(({ message, status }) => {
-          return <StatusIcon key={message} status={toState(status)} label={message} />;
-        }),
-    ],
-  );
-
-  const label = PROVIDER_STATUS[value]?.(t) ?? t('Unknown');
-  return (
-    <Popover
-      hasAutoWidth
-      bodyContent={<div>{allConditions.length > 0 ? allConditions : t('No information')}</div>}
+const StatusCell = ({ value, entity: { phase, object }, t }: CellProps) => {
+  const allConditions = (object?.status?.conditions || []).map(({ message, category }) => (
+    <Flex
+      key={message.valueOf()}
+      spaceItems={{ default: 'spaceItemsXs' }}
+      display={{ default: 'inlineFlex' }}
+      flexWrap={{ default: 'nowrap' }}
     >
-      <Button variant="link" isInline aria-label={label}>
-        <StatusIcon status={fromProviderState(phase)} label={label} />
-      </Button>
-    </Popover>
-  );
+      <FlexItem>{CategoryToIconMap[category] || <BlueInfoCircleIcon />}</FlexItem>
+      <FlexItem>{message}</FlexItem>
+    </Flex>
+  ));
+
+  const CellLabel = PROVIDER_STATUS[value]?.(t) ?? t('Unknown');
+  let bodyContent: React.ReactNode;
+
+  switch (allConditions.length) {
+    case 0:
+      bodyContent = '';
+      break;
+    case 1:
+      bodyContent = object?.status?.conditions[0].message || '';
+      break;
+    default:
+      bodyContent = allConditions;
+  }
+
+  if (bodyContent === '') {
+    return <StatusIcon status={ProviderPhaseToStatus(phase)} label={CellLabel} />;
+  } else {
+    return (
+      <Popover bodyContent={bodyContent}>
+        <Button variant="link" isInline aria-label={CellLabel}>
+          <StatusIcon status={ProviderPhaseToStatus(phase)} label={CellLabel} />
+        </Button>
+      </Popover>
+    );
+  }
 };
 StatusCell.displayName = 'StatusCell';
 
