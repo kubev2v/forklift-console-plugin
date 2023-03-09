@@ -1,6 +1,37 @@
+import jsonpath from 'jsonpath';
+
 import { Field } from '../types';
 
 import { ValueMatcher } from './types';
+
+/**
+ * Get a value for a data field based on the table fields
+ * and the row data.
+ *
+ * @param entity is the row data stuct
+ * @param id is the field id, in the fields table
+ * @param fields the fields table
+ * @returns the value of the fields based on the field jsonPath
+ */
+export const getFieldValue = (entity: unknown, id: string, fields: Field[]) => {
+  const field = fields.find((f) => f.id === id);
+  if (typeof entity !== 'object' || !field) {
+    return undefined;
+  }
+
+  if (!field.jsonPath) {
+    return entity?.[id];
+  }
+
+  switch (typeof field.jsonPath) {
+    case 'string':
+      return jsonpath.query(entity, field.jsonPath);
+    case 'function':
+      return field.jsonPath(entity);
+    default:
+      return undefined;
+  }
+};
 
 /**
  * Create matcher for one filter type.
@@ -30,7 +61,7 @@ export const createMatcher =
           (selectedFilters[id] && selectedFilters[id]?.length) || filter?.defaultValues,
       )
       .map(({ id, filter }) => ({
-        value: entity?.[id],
+        value: getFieldValue(entity, id, fields),
         filters: selectedFilters[id]?.length ? selectedFilters[id] : filter?.defaultValues,
       }))
       .map(({ value, filters }) => filters.some(matchValue(value)))

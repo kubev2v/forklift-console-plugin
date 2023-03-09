@@ -46,3 +46,4 @@ export const URL = 'url';
 export const VALIDATED = 'validated';
 export const VM_COUNT = 'vmCount';
 export const VM_DONE = 'vmDone';
+export const IS_MANAGED_JSONPATH = '$.metadata.ownerReferences[?(@.kind == "ForkliftController")]';

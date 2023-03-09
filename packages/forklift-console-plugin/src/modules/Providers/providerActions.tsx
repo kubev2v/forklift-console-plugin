@@ -1,4 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import jsonpath from 'jsonpath';
+import { DEFAULT_TRANSFER_NETWORK_ANNOTATION, IS_MANAGED_JSONPATH } from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
 import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
@@ -14,24 +16,26 @@ import {
   useOCPMigrationNetworkMutation,
   usePlansQuery,
 } from '@kubev2v/legacy/queries';
-import { IOpenShiftProvider } from '@kubev2v/legacy/queries/types';
+import { IOpenShiftProvider, IProviderObject } from '@kubev2v/legacy/queries/types';
 
 import { type MergedProvider } from './data';
 
 export const useMergedProviderActions = ({ entity }: { entity: MergedProvider }) => {
   const { t } = useTranslation();
   const launchModal = useModal();
-  const plansQuery = usePlansQuery(entity.namespace);
+  const plansQuery = usePlansQuery(entity?.metadata.namespace);
+  const isOwned = entity && jsonpath.query(entity, IS_MANAGED_JSONPATH).length > 0;
+
   const editingDisabled =
-    entity.isOwnedByController ||
+    isOwned ||
     hasRunningMigration({
       plans: plansQuery?.data?.items,
       providerMetadata: {
-        name: entity.name,
-        namespace: entity.namespace,
+        name: entity?.metadata.name,
+        namespace: entity?.metadata.namespace,
       },
     });
-  const disabledTooltip = entity.isOwnedByController
+  const disabledTooltip = isOwned
     ? t('The host provider cannot be edited')
     : t('This provider cannot be edited because it has running migrations');
 
@@ -52,7 +56,7 @@ export const useMergedProviderActions = ({ entity }: { entity: MergedProvider })
           disabled: editingDisabled,
           disabledTooltip: editingDisabled ? disabledTooltip : '',
         },
-        entity.type === 'openshift' && {
+        entity?.spec.type === 'openshift' && {
           id: 'selectNetwork',
           cta: () => launchModal(withQueryClient(SelectNetworkForOpenshift), { entity }),
           label: t('Select migration network'),
@@ -68,8 +72,8 @@ const EditModal = ({ entity, closeModal }: { closeModal: () => void; entity: Mer
   return (
     <AddEditProviderModal
       onClose={closeModal}
-      providerBeingEdited={entity.object}
-      namespace={entity.namespace}
+      providerBeingEdited={entity as unknown as IProviderObject}
+      namespace={entity?.metadata.namespace}
     />
   );
 };
@@ -83,13 +87,16 @@ const SelectNetworkForOpenshift = ({
   entity: MergedProvider;
 }) => {
   const { t } = useTranslation();
-  const migrationNetworkMutation = useOCPMigrationNetworkMutation(entity.namespace, closeModal);
-  const inventory = toIOpenShiftProvider(entity, entity.object);
+  const migrationNetworkMutation = useOCPMigrationNetworkMutation(
+    entity?.metadata.namespace,
+    closeModal,
+  );
+  const inventory = entity.inventory;
   return (
     <SelectOpenShiftNetworkModal
-      targetProvider={inventory}
+      targetProvider={inventory as IOpenShiftProvider}
       targetNamespace={null}
-      initialSelectedNetwork={entity.defaultTransferNetwork}
+      initialSelectedNetwork={entity?.metadata?.annotations?.[DEFAULT_TRANSFER_NETWORK_ANNOTATION]}
       instructions={t(
         'Select a default migration network for the provider. This network will be used for migrating data to all namespaces to which it is attached.',
       )}
@@ -99,7 +106,7 @@ const SelectNetworkForOpenshift = ({
       }}
       onSubmit={(network) =>
         migrationNetworkMutation.mutate({
-          provider: inventory,
+          provider: inventory as IOpenShiftProvider,
           network,
         })
       }
@@ -125,8 +132,8 @@ const DeleteModal = ({
   }, [closeModal, isDeleteModalOpen, setIsDeleteModalOpen]);
 
   const deleteProviderMutation = useDeleteProviderMutation(
-    entity.namespace,
-    entity.type as ProviderType,
+    entity.metadata.namespace,
+    entity?.spec.type as ProviderType,
     toggleDeleteModal,
   );
   const isTarget = (type: ProviderType) => type !== 'openshift';
@@ -138,18 +145,18 @@ const DeleteModal = ({
       position="top"
       isOpen={true}
       toggleOpen={toggleDeleteModal}
-      mutateFn={() => deleteProviderMutation.mutate(entity.object)}
+      mutateFn={() => deleteProviderMutation.mutate(entity as unknown as IProviderObject)}
       mutateResult={deleteProviderMutation}
       title={t('Delete Provider?')}
       body={
-        isTarget(entity.type as ProviderType)
+        isTarget(entity?.spec.type as ProviderType)
           ? t('{{type}} provider {{name}} will no longer be selectable as a migration target.', {
-              type: entity.type,
-              name: entity.name,
+              type: entity?.spec.type,
+              name: entity?.metadata.name,
             })
           : t('{{type}} provider {{name}} will no longer be selectable as a migration source.', {
-              type: entity.type,
-              name: entity.name,
+              type: entity?.spec.type,
+              name: entity?.metadata.name,
             })
       }
       confirmButtonText={t('Delete')}
@@ -165,17 +172,3 @@ export const ProviderActions = withActionContext<MergedProvider>(
   'forklift-merged-provider',
 );
 ProviderActions.displayName = 'ProviderActions';
-
-const toIOpenShiftProvider = (
-  { name, namespace, networkCount, selfLink, type, uid, vmCount },
-  object,
-): IOpenShiftProvider => ({
-  object,
-  name,
-  namespace,
-  networkCount,
-  selfLink,
-  type,
-  uid,
-  vmCount,
-});

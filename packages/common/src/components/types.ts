@@ -1,5 +1,7 @@
 import { FilterDef } from './Filter/types';
 
+type OpenAPIjsonPath = string | ((entity: unknown) => unknown);
+
 export interface SortType {
   isAsc: boolean;
   id: string;
@@ -8,6 +10,7 @@ export interface SortType {
 
 export interface Field {
   id: string;
+  jsonPath?: OpenAPIjsonPath;
   toLabel(t: (key: string) => string): string;
   // visiblity status, can change in time
   isVisible?: boolean;

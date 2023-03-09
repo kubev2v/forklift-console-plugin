@@ -1,9 +1,11 @@
 import React, { JSXElementConstructor } from 'react';
 import { Link } from 'react-router-dom';
+import { getFieldValue } from 'common/src/components/Filter';
+import jsonpath from 'jsonpath';
 import * as C from 'src/utils/constants';
-import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
+import { IS_MANAGED_JSONPATH } from 'src/utils/constants';
+import { PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
-import { ProviderStatus } from 'src/utils/types';
 
 import { RowProps } from '@kubev2v/common/components/TableView';
 import {
@@ -12,13 +14,19 @@ import {
   SOURCE_PROVIDER_TYPES,
   TARGET_PROVIDER_TYPES,
 } from '@kubev2v/legacy/common/constants';
-import { StatusIcon } from '@migtools/lib-ui';
-import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, Label, Popover } from '@patternfly/react-core';
+import {
+  getGroupVersionKindForResource,
+  GreenCheckCircleIcon,
+  RedExclamationCircleIcon,
+  ResourceLink,
+} from '@openshift-console/dynamic-plugin-sdk';
+import { Button, Flex, FlexItem, Label, Popover, Spinner } from '@patternfly/react-core';
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { MergedProvider, SupportedConditions } from './data';
+import { V1beta1Provider } from '../../../../types/src/models';
+
+import { MergedProvider } from './data';
 import { ProviderActions } from './providerActions';
 
 import './styles.css';
@@ -30,76 +38,51 @@ interface CellProps {
   currentNamespace?: string;
 }
 
-/**
- * assumes that if condition is 'True' then
- * this is a positive state (success, "green")
- * i.e. ConnectionTestSucceeded
- */
-const toPositiveState = (conditionValue: string): 'Error' | 'Ok' | 'Unknown' => {
-  switch (conditionValue) {
-    case 'True':
-      return 'Ok';
-    case 'False':
-      return 'Error';
-    default:
-      return 'Unknown';
-  }
+const statusIcons = {
+  ValidationFailed: <RedExclamationCircleIcon />,
+  ConnectionFailed: <RedExclamationCircleIcon />,
+  Ready: <GreenCheckCircleIcon />,
+  Staging: <Spinner size="sm" />,
 };
 
-const fromProviderState = (status: ProviderStatus): 'Error' | 'Ok' | 'Unknown' | 'Loading' => {
-  switch (status) {
-    case 'Ready':
-      return 'Ok';
-    case 'ConnectionFailed':
-    case 'ValidationFailed':
-      return 'Error';
-    case 'Staging':
-      return 'Loading';
-    default:
-      return 'Unknown';
-  }
+const statusLabel = {
+  ValidationFailed: 'Validation Failed',
+  ConnectionFailed: 'Connection Failed',
+  Ready: 'Ready',
+  Staging: 'Staging',
 };
 
-const toNegativeState = (conditionValue: string): 'Error' | 'Ok' | 'Unknown' => {
-  switch (conditionValue) {
-    case 'True':
-      return 'Error';
-    case 'False':
-      return 'Ok';
-    default:
-      return 'Unknown';
-  }
-};
+const StatusCell = ({ entity }: CellProps) => {
+  const allConditions = entity?.status?.conditions || [];
+  const phase = entity?.status?.phase;
 
-const StatusCell = ({
-  value,
-  entity: { positiveConditions, negativeConditions, phase },
-  t,
-}: CellProps) => {
-  const allConditions = [
-    [positiveConditions, toPositiveState],
-    [negativeConditions, toNegativeState],
-  ].flatMap(
-    ([conditions, toState]: [
-      SupportedConditions,
-      (value: string) => 'Error' | 'Ok' | 'Unknown',
-    ]) => [
-      ...Object.values(conditions)
-        .filter(Boolean)
-        .map(({ message, status }) => {
-          return <StatusIcon key={message} status={toState(status)} label={message} />;
-        }),
-    ],
+  if (allConditions.length === 0) {
+    return (
+      <>
+        {statusIcons[phase] || ''} {statusLabel[phase] || phase || ''}
+      </>
+    );
+  }
+
+  const conditionsTable = (
+    <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsXs' }}>
+      {allConditions.map((condition) => (
+        <FlexItem key={condition.type}>
+          <Flex>
+            <FlexItem>
+              <strong>{condition.type}</strong>
+            </FlexItem>
+            <FlexItem>{condition?.message}</FlexItem>
+          </Flex>
+        </FlexItem>
+      ))}
+    </Flex>
   );
 
-  const label = PROVIDER_STATUS[value]?.(t) ?? t('Unknown');
   return (
-    <Popover
-      hasAutoWidth
-      bodyContent={<div>{allConditions.length > 0 ? allConditions : t('No information')}</div>}
-    >
-      <Button variant="link" isInline aria-label={label}>
-        <StatusIcon status={fromProviderState(phase)} label={label} />
+    <Popover bodyContent={conditionsTable}>
+      <Button variant="link" isInline aria-label={''}>
+        {statusIcons[phase] || ''} {statusLabel[phase] || phase || ''}
       </Button>
     </Popover>
   );
@@ -120,11 +103,17 @@ const TextWithIcon = ({ value, Icon }: { value: string; Icon: JSXElementConstruc
 );
 TextWithIcon.displayName = 'TextWithIcon';
 
-const ProviderLink = ({ value, entity: { gvk, namespace, isOwnedByController }, t }: CellProps) => {
+const ProviderLink = ({ entity, t }: CellProps) => {
+  const isOwned = entity && jsonpath.query(entity, IS_MANAGED_JSONPATH).length > 0;
+
   return (
     <span className="forklift-table__flex-cell">
-      <ResourceLink groupVersionKind={gvk} name={value} namespace={namespace} />
-      {isOwnedByController && (
+      <ResourceLink
+        groupVersionKind={getGroupVersionKindForResource(entity as unknown as V1beta1Provider)}
+        name={entity?.metadata?.name}
+        namespace={entity?.metadata?.namespace}
+      />
+      {isOwned && (
         <Label isCompact color="grey" className="forklift-table__flex-cell-label">
           {t('managed')}
         </Label>
@@ -134,14 +123,14 @@ const ProviderLink = ({ value, entity: { gvk, namespace, isOwnedByController }, 
 };
 ProviderLink.displayName = 'ProviderLink';
 
-const HostCell = ({ value, entity: { phase, name, type }, currentNamespace }: CellProps) => (
+const HostCell = ({ value, entity, currentNamespace }: CellProps) => (
   <>
-    {phase === 'Ready' && value && type === 'vsphere' ? (
+    {entity?.status?.phase === 'Ready' && value && entity?.spec.type === 'vsphere' ? (
       <Link
         to={
           currentNamespace
-            ? `${PATH_PREFIX}/providers/vsphere/ns/${currentNamespace}/${name}`
-            : `${PATH_PREFIX}/providers/vsphere/${name}`
+            ? `${PATH_PREFIX}/providers/vsphere/ns/${currentNamespace}/${entity?.metadata?.name}`
+            : `${PATH_PREFIX}/providers/vsphere/${entity?.metadata?.name}`
         }
       >
         <TextWithIcon Icon={OutlinedHddIcon} value={value} />
@@ -193,11 +182,11 @@ const ProviderRow = ({ columns, entity, currentNamespace }: RowProps<MergedProvi
       {columns.map(({ id, toLabel }) => (
         <Td key={id} dataLabel={toLabel(t)}>
           {cellCreator?.[id]?.({
-            value: entity[id],
+            value: getFieldValue(entity, id, columns),
             entity,
             t,
             currentNamespace,
-          }) ?? <TextCell value={String(entity[id] ?? '')} />}
+          }) ?? <TextCell value={String(getFieldValue(entity, id, columns) ?? '')} />}
         </Td>
       ))}
     </Tr>

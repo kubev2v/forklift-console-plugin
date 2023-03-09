@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { getFieldValue } from 'common/src/components/Filter';
 import * as C from 'src/utils/constants';
 import { PLAN_TYPE } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
@@ -201,7 +202,7 @@ const PlanRow = ({ columns, entity, currentNamespace }: RowProps<FlatPlan>) => {
         ) : (
           <Td key={id} dataLabel={toLabel(t)}>
             <Cell
-              value={String(entity[id] ?? '')}
+              value={String(getFieldValue(entity, id, columns) ?? '')}
               entity={entity}
               primaryAction={primaryAction}
               currentNamespace={currentNamespace}

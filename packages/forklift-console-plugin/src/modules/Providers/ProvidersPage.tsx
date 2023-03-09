@@ -25,6 +25,7 @@ import ProviderRow from './ProviderRow';
 export const fieldsMetadata: Field[] = [
   {
     id: C.NAME,
+    jsonPath: '$.metadata.name',
     toLabel: (t) => t('Name'),
     isVisible: true,
     isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
@@ -36,6 +37,7 @@ export const fieldsMetadata: Field[] = [
   },
   {
     id: C.NAMESPACE,
+    jsonPath: '$.metadata.namespace',
     toLabel: (t) => t('Namespace'),
     isVisible: true,
     isIdentity: true,
@@ -47,6 +49,7 @@ export const fieldsMetadata: Field[] = [
   },
   {
     id: C.PHASE,
+    jsonPath: '$.status.phase',
     toLabel: (t) => t('Status'),
     isVisible: true,
     filter: {
@@ -59,6 +62,7 @@ export const fieldsMetadata: Field[] = [
   },
   {
     id: C.URL,
+    jsonPath: '$.spec.url',
     toLabel: (t) => t('Endpoint'),
     isVisible: true,
     filter: {
@@ -69,6 +73,7 @@ export const fieldsMetadata: Field[] = [
   },
   {
     id: C.TYPE,
+    jsonPath: '$.spec.type',
     toLabel: (t) => t('Type'),
     isVisible: true,
     filter: {
@@ -89,12 +94,14 @@ export const fieldsMetadata: Field[] = [
   },
   {
     id: C.VM_COUNT,
+    jsonPath: '$.inventory.vmCount',
     toLabel: (t) => t('VMs'),
     isVisible: true,
     sortable: true,
   },
   {
     id: C.NETWORK_COUNT,
+    jsonPath: '$.inventory.networkCount',
     toLabel: (t) => t('Networks'),
     isVisible: true,
     sortable: true,
@@ -102,11 +109,13 @@ export const fieldsMetadata: Field[] = [
   {
     id: C.CLUSTER_COUNT,
     toLabel: (t) => t('Clusters'),
+    jsonPath: '$.inventory.clusterCount',
     isVisible: false,
     sortable: true,
   },
   {
     id: C.HOST_COUNT,
+    jsonPath: '$.inventory.hostCount',
     toLabel: (t) => t('Hosts'),
     isVisible: true,
     sortable: true,
@@ -114,6 +123,7 @@ export const fieldsMetadata: Field[] = [
   {
     id: C.STORAGE_COUNT,
     toLabel: (t) => t('Storage'),
+    jsonPath: '$.inventory.storageCount',
     isVisible: false,
     sortable: true,
   },

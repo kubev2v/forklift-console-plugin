@@ -5,55 +5,9 @@ import {
 import { V1beta1Provider } from '@kubev2v/types';
 import { ObjectMetadata } from '@openshift-console/dynamic-plugin-sdk';
 
-import { groupPairs, mergeData, toSupportedConditions } from '../data';
+import { groupPairs, mergeData } from '../data';
 
 import MERGED_MOCK_DATA from './mergedMockData.json';
-
-describe('extracting conditions', () => {
-  test('empty input', () => {
-    expect(toSupportedConditions([])).toEqual({});
-  });
-  it('extracts supported condition', () => {
-    expect(
-      toSupportedConditions([
-        {
-          type: 'URLNotValid',
-          status: 'True',
-          category: 'Critical',
-          message: 'Not responding',
-          lastTransitionTime: '2020-08-21T18:36:41.468Z',
-          reason: '',
-        },
-      ]),
-    ).toEqual({ URLNotValid: { status: 'True', message: 'Not responding' } });
-  });
-  it('maps unknown status to Unknown', () => {
-    expect(
-      toSupportedConditions([
-        {
-          type: 'URLNotValid',
-          status: undefined,
-          message: 'Not responding',
-          category: 'Critical',
-          lastTransitionTime: '2020-08-21T18:36:41.468Z',
-        },
-      ]),
-    ).toEqual({ URLNotValid: { status: 'Unknown', message: 'Not responding' } });
-  });
-  it('extracts also unsupported conditions (typing is used to cherry-pick the supported via desctructuring', () => {
-    expect(
-      toSupportedConditions([
-        {
-          type: 'FooBar',
-          status: 'False',
-          message: 'BarFoo',
-          category: 'Critical',
-          lastTransitionTime: '2020-08-21T18:36:41.468Z',
-        },
-      ]),
-    ).toEqual({ FooBar: { status: 'False', message: 'BarFoo' } });
-  });
-});
 
 describe('grouping pairs', () => {
   test('empty input', () => {

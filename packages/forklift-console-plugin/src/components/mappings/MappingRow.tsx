@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { getFieldValue } from 'common/src/components/Filter';
 import { RowProps } from 'common/src/components/TableView';
 import { MappingDetailView } from 'legacy/src/Mappings/components/MappingDetailView';
 import { Mapping, MappingType } from 'legacy/src/queries/types';
@@ -125,7 +126,7 @@ function MappingRow<T extends CommonMapping>({
               }
             >
               <Cell
-                value={String(entity[id] ?? '')}
+                value={String(getFieldValue(entity, id, columns) ?? '')}
                 entity={entity}
                 t={t}
                 currentNamespace={currentNamespace}
