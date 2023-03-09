@@ -25,7 +25,7 @@ export const PlanNameNavLink = ({
       variant="link"
       onClick={() => history.push(`${PATH_PREFIX}/plans/${name}`)}
       isInline={isInline}
-      className={!isInline ? 'clickable-progress-bar' : ''}
+      className={!isInline ? 'forklift-table__status-cell-progress' : ''}
     >
       {children}
     </Button>
