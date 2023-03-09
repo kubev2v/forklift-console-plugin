@@ -20,6 +20,7 @@ import {
   Label,
   Progress,
   ProgressMeasureLocation,
+  ProgressSize,
   Truncate,
 } from '@patternfly/react-core';
 import { ArchiveIcon, VirtualMachineIcon } from '@patternfly/react-icons';
@@ -78,6 +79,7 @@ const StatusCell = ({
           valueText={t('{{vmDone}} of {{vmCount}} VMs migrated', { vmDone, vmCount })}
           variant={variant}
           measureLocation={ProgressMeasureLocation.top}
+          size={ProgressSize.sm}
         />
       </Link>
     );

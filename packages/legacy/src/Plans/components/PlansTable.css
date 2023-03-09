@@ -23,7 +23,7 @@
   padding-left: var(--pf-global--spacer--xl);
 }
 
-.pf-c-table.plans-table button.clickable-progress-bar {
+.pf-c-table.plans-table button.forklift-table__status-cell-progress {
   margin: calc(0px - var(--pf-global--spacer--form-element))
     calc(0px - var(--pf-global--spacer--md));
   width: 100%;
