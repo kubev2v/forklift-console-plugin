@@ -18,11 +18,11 @@ export const FilterGroup = ({
   supportedFilterTypes = {},
 }: MetaFilterProps) => (
   <ToolbarGroup variant="filter-group">
-    {fieldFilters.map(({ resourceFieldID, label, filterDef }) => (
+    {fieldFilters.map(({ resourceFieldId, label, filterDef }) => (
       <FilterFromDef
-        key={resourceFieldID}
+        key={resourceFieldId}
         {...{
-          resourceFieldID,
+          resourceFieldId,
           label,
           filterDef,
           onFilterUpdate,

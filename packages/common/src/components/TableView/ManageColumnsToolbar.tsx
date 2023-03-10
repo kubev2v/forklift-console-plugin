@@ -102,7 +102,7 @@ const ManageColumns = ({
       return false;
     }
     const base = editedColumns.filter(
-      ({ resourceFieldID: id }) => id !== draggedItem?.resourceFieldID,
+      ({ resourceFieldId: id }) => id !== draggedItem?.resourceFieldId,
     );
     setEditedColumns([
       ...base.slice(0, dest.index),
@@ -113,10 +113,10 @@ const ManageColumns = ({
   };
   const onSelect = (updatedId: string, updatedValue: boolean): void => {
     setEditedColumns(
-      editedColumns.map(({ resourceFieldID, isVisible, ...rest }) => ({
-        resourceFieldID,
+      editedColumns.map(({ resourceFieldId, isVisible, ...rest }) => ({
+        resourceFieldId,
         ...rest,
-        isVisible: resourceFieldID === updatedId ? updatedValue : isVisible,
+        isVisible: resourceFieldId === updatedId ? updatedValue : isVisible,
       })),
     );
   };
@@ -161,7 +161,7 @@ const ManageColumns = ({
             id="table-column-management"
             isCompact
           >
-            {editedColumns.map(({ resourceFieldID: id, isVisible, isIdentity, label }) => (
+            {editedColumns.map(({ resourceFieldId: id, isVisible, isIdentity, label }) => (
               <Draggable key={id} hasNoWrapper>
                 <DataListItem aria-labelledby={`draggable-${id}`} ref={React.createRef()}>
                   <DataListItemRow>
@@ -176,7 +176,7 @@ const ManageColumns = ({
                         checked={
                           // visibility for identity resourceFields (namespace) is governed by parent component
                           isIdentity
-                            ? resourceFields.find((c) => c.resourceFieldID === id)?.isVisible
+                            ? resourceFields.find((c) => c.resourceFieldId === id)?.isVisible
                             : isVisible
                         }
                         isDisabled={isIdentity}

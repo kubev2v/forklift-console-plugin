@@ -191,17 +191,17 @@ const ProviderRow = ({
   const { t } = useTranslation();
   return (
     <Tr>
-      {resourceFields.map(({ resourceFieldID, label }) => (
-        <Td key={resourceFieldID} dataLabel={label}>
-          {cellCreator?.[resourceFieldID]?.({
-            value: getResourceFieldValue(resourceData, resourceFieldID, resourceFields),
+      {resourceFields.map(({ resourceFieldId, label }) => (
+        <Td key={resourceFieldId} dataLabel={label}>
+          {cellCreator?.[resourceFieldId]?.({
+            value: getResourceFieldValue(resourceData, resourceFieldId, resourceFields),
             resourceData,
             t,
             currentNamespace,
           }) ?? (
             <TextCell
               value={String(
-                getResourceFieldValue(resourceData, resourceFieldID, resourceFields) ?? '',
+                getResourceFieldValue(resourceData, resourceFieldId, resourceFields) ?? '',
               )}
             />
           )}

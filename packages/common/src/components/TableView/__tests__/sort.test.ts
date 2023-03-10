@@ -17,7 +17,7 @@ describe('compareWith compareFn factory', () => {
   it('works without custom compareFn', () => {
     expect(
       compareWith(
-        { resourceFieldID: NAME, isAsc: true, label: NAME },
+        { resourceFieldId: NAME, isAsc: true, label: NAME },
         'en',
         undefined,
       )({ name: 'name_a' }, { name: 'name_b' }),
@@ -27,7 +27,7 @@ describe('compareWith compareFn factory', () => {
   it('works for nullish entities', () => {
     expect(
       compareWith(
-        { resourceFieldID: NAME, isAsc: true, label: NAME },
+        { resourceFieldId: NAME, isAsc: true, label: NAME },
         'en',
         undefined,
       )(null, undefined),
@@ -37,7 +37,7 @@ describe('compareWith compareFn factory', () => {
   it('treats all values equal if sortType is not defined', () => {
     expect(
       compareWith(
-        { resourceFieldID: undefined, isAsc: false, label: undefined },
+        { resourceFieldId: undefined, isAsc: false, label: undefined },
         'en',
         undefined,
       )('a', 'b'),
@@ -47,7 +47,7 @@ describe('compareWith compareFn factory', () => {
   it('reverts sorting order based on sortType.isAsc', () => {
     expect(
       compareWith(
-        { resourceFieldID: NAME, isAsc: false, label: NAME },
+        { resourceFieldId: NAME, isAsc: false, label: NAME },
         'en',
         undefined,
       )({ name: 'name_a' }, { name: 'name_b' }),
@@ -57,7 +57,7 @@ describe('compareWith compareFn factory', () => {
   it('uses custom field compareFn if provided', () => {
     expect(
       compareWith(
-        { resourceFieldID: NAME, isAsc: true, label: NAME },
+        { resourceFieldId: NAME, isAsc: true, label: NAME },
         'en',
         (a, b) => a.localeCompare(b), // no numeric
       )({ name: 'a10' }, { name: 'a5' }),
@@ -66,15 +66,15 @@ describe('compareWith compareFn factory', () => {
 });
 
 describe('buildSort factory', () => {
-  const NameColumn = { resourceFieldID: NAME, label: NAME };
-  const NamespaceColumn = { resourceFieldID: NAMESPACE, label: NAMESPACE };
+  const NameColumn = { resourceFieldId: NAME, label: NAME };
+  const NamespaceColumn = { resourceFieldId: NAMESPACE, label: NAMESPACE };
   it('sorts ascending', () => {
     const setActiveSort = jest.fn();
     const { sortBy, onSort, columnIndex } = buildSort({
       columnIndex: 0,
       resourceFields: [NameColumn, NamespaceColumn],
       activeSort: {
-        resourceFieldID: NAME,
+        resourceFieldId: NAME,
         isAsc: true,
         label: NAME,
       },
@@ -85,7 +85,7 @@ describe('buildSort factory', () => {
     onSort(undefined, 1, SortByDirection.asc, undefined);
     expect(setActiveSort).toBeCalledWith({
       isAsc: true,
-      resourceFieldID: NAMESPACE,
+      resourceFieldId: NAMESPACE,
       label: NamespaceColumn.label,
     });
   });
@@ -96,7 +96,7 @@ describe('buildSort factory', () => {
       columnIndex: 1,
       resourceFields: [NameColumn, NamespaceColumn],
       activeSort: {
-        resourceFieldID: NAME,
+        resourceFieldId: NAME,
         isAsc: false,
         label: NAME,
       },
@@ -107,7 +107,7 @@ describe('buildSort factory', () => {
     onSort(undefined, 1, SortByDirection.desc, undefined);
     expect(setActiveSort).toBeCalledWith({
       isAsc: false,
-      resourceFieldID: NAMESPACE,
+      resourceFieldId: NAMESPACE,
       label: NamespaceColumn.label,
     });
   });
@@ -118,7 +118,7 @@ describe('buildSort factory', () => {
       columnIndex: 1,
       resourceFields: [NameColumn, NamespaceColumn],
       activeSort: {
-        resourceFieldID: undefined,
+        resourceFieldId: undefined,
         isAsc: undefined,
         label: undefined,
       },
@@ -133,7 +133,7 @@ describe('buildSort factory', () => {
       columnIndex: 1,
       resourceFields: [NameColumn, NamespaceColumn],
       activeSort: {
-        resourceFieldID: NAME,
+        resourceFieldId: NAME,
         isAsc: false,
         label: NAME,
       },

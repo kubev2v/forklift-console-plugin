@@ -12,9 +12,14 @@ import {
 import { FilterFromDef } from './FilterFromDef';
 import { MetaFilterProps } from './types';
 
-const toSelectOption = (id: string, label: string): SelectOptionObject => ({
+interface IdOption extends SelectOptionObject {
+  id: string;
+}
+
+const toSelectOption = (id: string, label: string): IdOption => ({
+  id,
   toString: () => label,
-  compareTo: (o) => o.id === id,
+  compareTo: (other: IdOption): boolean => id === other?.id,
 });
 
 /**
@@ -33,7 +38,7 @@ export const AttributeValueFilter = ({
   const [expanded, setExpanded] = useState(false);
 
   const selectOptionToFilter = (selectedId) =>
-    fieldFilters.find(({ resourceFieldID }) => resourceFieldID === selectedId) ?? currentFilter;
+    fieldFilters.find(({ resourceFieldId }) => resourceFieldId === selectedId) ?? currentFilter;
 
   const onFilterTypeSelect = (event, value, isPlaceholder) => {
     if (!isPlaceholder) {
@@ -52,26 +57,26 @@ export const AttributeValueFilter = ({
           variant={SelectVariant.single}
           aria-label={'Select Filter'}
           selections={
-            currentFilter && toSelectOption(currentFilter.resourceFieldID, currentFilter.label)
+            currentFilter && toSelectOption(currentFilter.resourceFieldId, currentFilter.label)
           }
         >
-          {fieldFilters.map(({ resourceFieldID, label }) => (
-            <SelectOption key={resourceFieldID} value={toSelectOption(resourceFieldID, label)} />
+          {fieldFilters.map(({ resourceFieldId, label }) => (
+            <SelectOption key={resourceFieldId} value={toSelectOption(resourceFieldId, label)} />
           ))}
         </Select>
       </ToolbarItem>
 
-      {fieldFilters.map(({ resourceFieldID, label, filterDef }) => (
+      {fieldFilters.map(({ resourceFieldId, label, filterDef }) => (
         <FilterFromDef
-          key={resourceFieldID}
+          key={resourceFieldId}
           {...{
-            resourceFieldID,
+            resourceFieldId,
             label,
             filterDef,
             onFilterUpdate,
             selectedFilters,
             FilterType: supportedFilterTypes[filterDef.type],
-            showFilter: currentFilter?.resourceFieldID === resourceFieldID,
+            showFilter: currentFilter?.resourceFieldId === resourceFieldId,
           }}
         />
       ))}

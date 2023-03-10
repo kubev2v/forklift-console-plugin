@@ -186,9 +186,9 @@ const PlanRow = ({ resourceFields, resourceData, currentNamespace }: RowProps<Fl
   const primaryAction = getButtonState(resourceData.status);
   return (
     <Tr>
-      {resourceFields.map(({ resourceFieldID, label }) => {
-        const Cell = cellCreator[resourceFieldID] ?? TextCell;
-        return resourceFieldID === C.DESCRIPTION ? (
+      {resourceFields.map(({ resourceFieldId, label }) => {
+        const Cell = cellCreator[resourceFieldId] ?? TextCell;
+        return resourceFieldId === C.DESCRIPTION ? (
           [
             <Td key={`${C.DESCRIPTION}_large`} visibility={['hidden', 'visibleOnMd']} width={20}>
               <Truncate content={resourceData.description ?? ''} />
@@ -198,10 +198,10 @@ const PlanRow = ({ resourceFields, resourceData, currentNamespace }: RowProps<Fl
             </Td>,
           ]
         ) : (
-          <Td key={resourceFieldID} dataLabel={label}>
+          <Td key={resourceFieldId} dataLabel={label}>
             <Cell
               value={String(
-                getResourceFieldValue(resourceData, resourceFieldID, resourceFields) ?? '',
+                getResourceFieldValue(resourceData, resourceFieldId, resourceFields) ?? '',
               )}
               resourceData={resourceData}
               primaryAction={primaryAction}
