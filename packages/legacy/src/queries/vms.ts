@@ -21,7 +21,9 @@ const findVMsInRecord = (record: SourceVMsRecord, keys: string[]) =>
   keys.flatMap((key) => (record[key] ? [record[key]] : []));
 
 export const indexVMs = (vms: SourceVM[]): IndexedSourceVMs => {
-  const sortedVMs = sortByName(vms.filter((vm) => !(vm as IVMwareVM).isTemplate));
+  const sortedVMs = sortByName(
+    (Array.isArray(vms) ? vms : []).filter((vm) => !(vm as IVMwareVM).isTemplate)
+  );
   const vmsById: SourceVMsRecord = {};
   const vmsByName: SourceVMsRecord = {};
   const vmsBySelfLink: SourceVMsRecord = {};
