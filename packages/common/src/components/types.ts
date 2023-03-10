@@ -1,14 +1,17 @@
 import { FilterDef } from './Filter/types';
 
+type OpenAPIjsonPath = string | ((resourceData: unknown) => unknown);
+
 export interface SortType {
   isAsc: boolean;
-  id: string;
-  toLabel(t: (key: string) => string): string;
+  resourceFieldID: string;
+  label: string;
 }
 
-export interface Field {
-  id: string;
-  toLabel(t: (key: string) => string): string;
+export interface ResourceField {
+  resourceFieldID: string;
+  jsonPath?: OpenAPIjsonPath;
+  label: string;
   // visiblity status, can change in time
   isVisible?: boolean;
   isIdentity?: boolean;
@@ -18,7 +21,7 @@ export interface Field {
   sortable?: boolean;
   filter?: FilterDef;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  comparator?: (a: any, b: any, locale: string) => number;
+  compareFn?: (a: any, b: any, locale: string) => number;
 }
 
 export const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;

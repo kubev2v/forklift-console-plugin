@@ -32,7 +32,7 @@ export const VMStatusPipelineTable: React.FunctionComponent<IVMStatusPipelineTab
   status,
   isCanceled,
 }: IVMStatusPipelineTableProps) => {
-  const columns: ICell[] = [
+  const resourceFields: ICell[] = [
     {
       title: 'Step',
       transforms: [cellWidth(40)],
@@ -95,7 +95,7 @@ export const VMStatusPipelineTable: React.FunctionComponent<IVMStatusPipelineTab
         className="migration-inner-vmStatus-table"
         variant="compact"
         aria-label="VM status table for migration plan"
-        cells={columns}
+        cells={resourceFields}
         rows={rows}
       >
         <TableHeader />

@@ -20,9 +20,9 @@ describe('StorageMap rows', () => {
         <table>
           <tbody>
             <StorageMappingRow
-              columns={storageFields}
+              resourceFields={storageFields}
               currentNamespace={undefined}
-              entity={storage as FlatStorageMapping}
+              resourceData={storage as FlatStorageMapping}
               rowIndex={0}
             />
           </tbody>

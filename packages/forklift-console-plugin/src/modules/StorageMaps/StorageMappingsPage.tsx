@@ -5,7 +5,7 @@ import {
   StandardPage,
   StandardPageProps,
 } from 'common/src/components/StandardPage';
-import { Field } from 'common/src/components/types';
+import { ResourceField } from 'common/src/components/types';
 import { MappingType } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
@@ -21,21 +21,21 @@ import {
 import { FlatStorageMapping, Storage, useFlatStorageMappings } from './dataForStorage';
 import StorageMappingRow from './StorageMappingRow';
 
-export const fieldsMetadata: Field[] = [
+export const fieldsMetadata: ResourceField[] = [
   ...commonFieldsMetadata,
   {
-    id: C.TO,
-    toLabel: (t) => t('To'),
+    resourceFieldID: C.TO,
+    label: 'To',
     isVisible: true,
     filter: {
       type: 'targetStorage',
-      toPlaceholderLabel: (t) => t('Filter by name'),
+      toPlaceholderLabel: 'Filter by name',
     },
     sortable: false,
   },
   {
-    id: C.ACTIONS,
-    toLabel: () => '',
+    resourceFieldID: C.ACTIONS,
+    label: '',
     isVisible: true,
     isAction: true,
     sortable: false,

@@ -2,55 +2,55 @@ import { K8sConditionStatus } from '@kubev2v/common/components/types';
 import { PlanState, ProviderType } from '@kubev2v/legacy/common/constants';
 import { PlanType } from '@kubev2v/legacy/queries/types';
 
-import { ProviderPhase } from './types';
+import { ProviderStatus } from './types';
 
-export const PROVIDERS: Record<ProviderType, (t: (k: string) => string) => string> = {
-  vsphere: (t) => t('VMware'),
-  ovirt: (t) => t('oVirt'),
-  openstack: (t) => t('OpenStack'),
-  openshift: (t) => t('KubeVirt'),
+export const PROVIDERS: Record<ProviderType, string> = {
+  vsphere: 'VMware',
+  ovirt: 'oVirt',
+  openstack: 'OpenStack',
+  openshift: 'KubeVirt',
 };
 
-export const CONDITIONS: Record<K8sConditionStatus, (t: (k: string) => string) => string> = {
-  True: (t) => t('True'),
-  False: (t) => t('False'),
-  Unknown: (t) => t('Unknown'),
+export const CONDITIONS: Record<K8sConditionStatus, string> = {
+  True: 'True',
+  False: 'False',
+  Unknown: 'Unknown',
 };
 
-export const PROVIDER_STATUS: Record<ProviderPhase, (t: (k: string) => string) => string> = {
-  Ready: (t) => t('Ready'),
-  ConnectionFailed: (t) => t('Connection Failed'),
-  Staging: (t) => t('Staging'),
-  ValidationFailed: (t) => t('Validation Failed'),
-  Unknown: (t) => t('Unknown'),
+export const PROVIDER_STATUS: Record<ProviderStatus, string> = {
+  Ready: 'Ready',
+  ConnectionFailed: 'Connection Failed',
+  Staging: 'Staging',
+  ValidationFailed: 'Validation Failed',
+  Unknown: 'Unknown',
 };
 
-export const PLAN_TYPE: Record<PlanType, (t: (k: string) => string) => string> = {
-  Warm: (t) => t('Warm'),
-  Cold: (t) => t('Cold'),
+export const PLAN_TYPE: Record<PlanType, string> = {
+  Warm: 'Warm',
+  Cold: 'Cold',
 };
 
 // based on filterValue provided by getMigStatusState
-export const PLAN_STATUS_FILTER: Record<PlanState, (t: (k: string) => string) => string> = {
+export const PLAN_STATUS_FILTER: Record<PlanState, string> = {
   // group: Running
-  Starting: (t) => t('Running'),
-  Copying: (t) => t('Running'),
-  'Copying-CutoverScheduled': (t) => t('Running'),
-  PipelineRunning: (t) => t('Running'),
+  Starting: 'Running',
+  Copying: 'Running',
+  'Copying-CutoverScheduled': 'Running',
+  PipelineRunning: 'Running',
   // group: Failed
-  'Finished-Failed': (t) => t('Failed'),
-  'Copying-Failed': (t) => t('Failed'),
+  'Finished-Failed': 'Failed',
+  'Copying-Failed': 'Failed',
   // group: Canceled
-  Canceled: (t) => t('Canceled'),
-  'Copying-Canceled': (t) => t('Canceled'),
+  Canceled: 'Canceled',
+  'Copying-Canceled': 'Canceled',
   // not grouped
-  'Finished-Succeeded': (t) => t('Succeeded'),
-  'Finished-Incomplete': (t) => t('Finished - Incomplete'),
-  Archived: (t) => t('Archived'),
-  'NotStarted-NotReady': (t) => t('Not Ready'),
-  'NotStarted-Ready': (t) => t('Ready'),
+  'Finished-Succeeded': 'Succeeded',
+  'Finished-Incomplete': 'Finished - Incomplete',
+  Archived: 'Archived',
+  'NotStarted-NotReady': 'Not Ready',
+  'NotStarted-Ready': 'Ready',
   // group: Other - states missing in the original mapping
-  StartingCutover: (t) => t('Other'),
-  Archiving: (t) => t('Other'),
-  Unknown: (t) => t('Other'),
+  StartingCutover: 'Other',
+  Archiving: 'Other',
+  Unknown: 'Other',
 };

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'common/src/utils/i18n';
 
 import {
   Select,
@@ -13,14 +12,9 @@ import {
 import { FilterFromDef } from './FilterFromDef';
 import { MetaFilterProps } from './types';
 
-interface IdOption extends SelectOptionObject {
-  id: string;
-}
-
-const toSelectOption = (id: string, label: string): IdOption => ({
-  id,
-  compareTo: (other: IdOption): boolean => id === other?.id,
+const toSelectOption = (id: string, label: string): SelectOptionObject => ({
   toString: () => label,
+  compareTo: (o) => o.id === id,
 });
 
 /**
@@ -35,12 +29,11 @@ export const AttributeValueFilter = ({
   fieldFilters,
   supportedFilterTypes = {},
 }: MetaFilterProps) => {
-  const { t } = useTranslation();
   const [currentFilter, setCurrentFilter] = useState(fieldFilters?.[0]);
   const [expanded, setExpanded] = useState(false);
 
   const selectOptionToFilter = (selectedId) =>
-    fieldFilters.find(({ fieldId }) => fieldId === selectedId) ?? currentFilter;
+    fieldFilters.find(({ resourceFieldID }) => resourceFieldID === selectedId) ?? currentFilter;
 
   const onFilterTypeSelect = (event, value, isPlaceholder) => {
     if (!isPlaceholder) {
@@ -57,28 +50,28 @@ export const AttributeValueFilter = ({
           onToggle={setExpanded}
           isOpen={expanded}
           variant={SelectVariant.single}
-          aria-label={t('Select Filter')}
+          aria-label={'Select Filter'}
           selections={
-            currentFilter && toSelectOption(currentFilter.fieldId, currentFilter.toFieldLabel(t))
+            currentFilter && toSelectOption(currentFilter.resourceFieldID, currentFilter.label)
           }
         >
-          {fieldFilters.map(({ fieldId, toFieldLabel }) => (
-            <SelectOption key={fieldId} value={toSelectOption(fieldId, toFieldLabel(t))} />
+          {fieldFilters.map(({ resourceFieldID, label }) => (
+            <SelectOption key={resourceFieldID} value={toSelectOption(resourceFieldID, label)} />
           ))}
         </Select>
       </ToolbarItem>
 
-      {fieldFilters.map(({ fieldId, toFieldLabel, filterDef }) => (
+      {fieldFilters.map(({ resourceFieldID, label, filterDef }) => (
         <FilterFromDef
-          key={fieldId}
+          key={resourceFieldID}
           {...{
-            fieldId,
-            toFieldLabel,
+            resourceFieldID,
+            label,
             filterDef,
             onFilterUpdate,
             selectedFilters,
             FilterType: supportedFilterTypes[filterDef.type],
-            showFilter: currentFilter?.fieldId === fieldId,
+            showFilter: currentFilter?.resourceFieldID === resourceFieldID,
           }}
         />
       ))}

@@ -317,7 +317,7 @@ export type TableColumn<D> = ICell & {
 
 export type RowProps<D, R extends any = {}> = {
   obj: D;
-  rowData: R;
+  resourceData: R;
   activeColumnIDs: Set<string>;
 };
 
@@ -326,7 +326,7 @@ type VirtualizedTableProps<D, R extends any = {}> = {
   unfilteredData: D[];
   loaded: boolean;
   loadError: any;
-  columns: TableColumn<D>[];
+  resourceFields: TableColumn<D>[];
   Row: React.ComponentType<RowProps<D, R>>;
   NoDataEmptyMsg?: React.ComponentType<{}>;
   EmptyMsg?: React.ComponentType<{}>;
@@ -335,7 +335,7 @@ type VirtualizedTableProps<D, R extends any = {}> = {
   label?: string;
   'aria-label'?: string;
   gridBreakPoint?: TableGridBreakpoint;
-  rowData?: R;
+  resourceData?: R;
 };
 
 export type VirtualizedTableFC = <D, R extends any = {}>(
@@ -349,11 +349,11 @@ export type TableDataProps = {
 };
 
 export type UseActiveColumns = <D = any>({
-  columns,
+  resourceFields,
   showNamespaceOverride,
   columnManagementID,
 }: {
-  columns: TableColumn<D>[];
+  resourceFields: TableColumn<D>[];
   showNamespaceOverride: boolean;
   columnManagementID: string;
 }) => [TableColumn<D>[], boolean];
@@ -419,7 +419,7 @@ export type RowFilter<R = any> = RowMatchFilter<R> | RowReducerFilter<R>;
 
 export type ColumnLayout = {
   id: string;
-  columns: ManagedColumn[];
+  resourceFields: ManagedColumn[];
   selectedColumns: Set<string>;
   showNamespaceOverride?: boolean;
   type: string;

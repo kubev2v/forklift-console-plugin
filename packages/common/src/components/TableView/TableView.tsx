@@ -4,14 +4,14 @@ import { UID } from 'common/src/utils/constants';
 import { Bullseye } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
 
-import { Field, SortType } from '../types';
+import { ResourceField, SortType } from '../types';
 
 import { RowProps, TableViewHeaderProps } from './types';
 
 /**
  * Displays provided list of entities as table. Supported features:
  * 1) sorting via arrow buttons in the header
- * 2) stable row keys based on entity[uidFieldId]
+ * 2) stable row keys based on resourceData[uidFieldId]
  * 3) (if present) display nodes passed via children prop instead of entities (extension point to handle empty state end related corner cases)
  *
  * @see useSort
@@ -29,7 +29,7 @@ export function TableView<T>({
   Header,
 }: TableViewProps<T>) {
   const hasChildren = children.filter(Boolean).length > 0;
-  const columnSignature = visibleColumns.map(({ id }) => id).join();
+  const columnSignature = visibleColumns.map(({ resourceFieldID: id }) => id).join();
   return (
     <TableComposable aria-label={ariaLabel} variant="compact" isStickyHeader>
       <Thead>
@@ -46,11 +46,11 @@ export function TableView<T>({
           </Tr>
         )}
         {!hasChildren &&
-          entities.map((entity, index) => (
+          entities.map((resourceData, index) => (
             <Row
-              key={`${columnSignature}_${entity?.[uidFieldId] ?? index}`}
-              entity={entity}
-              columns={visibleColumns}
+              key={`${columnSignature}_${resourceData?.[uidFieldId] ?? index}`}
+              resourceData={resourceData}
+              resourceFields={visibleColumns}
               currentNamespace={currentNamespace}
               rowIndex={index}
             />
@@ -61,11 +61,11 @@ export function TableView<T>({
 }
 
 interface TableViewProps<T> {
-  visibleColumns: Field[];
+  visibleColumns: ResourceField[];
   entities: T[];
   'aria-label': string;
   /**
-   * entity[uidFieldId] is used to uniquely identify a row. Defaults to UID column.
+   * resourceData[uidFieldId] is used to uniquely identify a row. Defaults to UID column.
    */
   uidFieldId?: string;
   /**
@@ -82,7 +82,7 @@ interface TableViewProps<T> {
   currentNamespace: string;
 
   /**
-   * Maps columns to header rows.
+   * Maps resourceFields to header rows.
    */
   Header(props: TableViewHeaderProps): JSX.Element;
 }

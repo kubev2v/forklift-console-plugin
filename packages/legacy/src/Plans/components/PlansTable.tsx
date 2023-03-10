@@ -194,7 +194,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
     return { statusValue, statusMessage };
   };
 
-  const columns: ICell[] = [
+  const resourceFields: ICell[] = [
     {
       title: 'Name',
       transforms: [sortable, cellWidth(20)],
@@ -397,12 +397,12 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
         <Table
           aria-label="Migration Plans table"
           className="plans-table"
-          cells={columns}
+          cells={resourceFields}
           rows={rows}
           sortBy={sortBy}
           onSort={onSort}
-          onCollapse={(_event, _rowKey, _isOpen, rowData) => {
-            togglePlanExpanded(rowData.meta.plan);
+          onCollapse={(_event, _rowKey, _isOpen, resourceData) => {
+            togglePlanExpanded(resourceData.meta.plan);
           }}
         >
           <TableHeader />

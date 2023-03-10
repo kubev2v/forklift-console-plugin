@@ -95,7 +95,7 @@ export const SourceProvidersTable: React.FunctionComponent<ISourceProvidersTable
     .join()}`;
   */
 
-  const columns: ICell[] = [
+  const resourceFields: ICell[] = [
     /* TODO restore this when https://github.com/konveyor/forklift-ui/issues/281 is settled
     {
       // Using a custom column instead of Table's onSelect prop due to issues
@@ -214,7 +214,7 @@ export const SourceProvidersTable: React.FunctionComponent<ISourceProvidersTable
         gridBreakPoint="grid-lg"
         aria-label={`${PROVIDER_TYPE_NAMES[providerType]} providers table`}
         variant="compact"
-        cells={columns}
+        cells={resourceFields}
         rows={rows}
         sortBy={sortBy}
         onSort={onSort}

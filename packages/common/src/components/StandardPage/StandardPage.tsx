@@ -21,7 +21,7 @@ import {
   TableViewHeaderProps,
   useSort,
 } from 'common/src/components/TableView';
-import { Field } from 'common/src/components/types';
+import { ResourceField } from 'common/src/components/types';
 import { useTranslation } from 'common/src/utils/i18n';
 
 import {
@@ -60,13 +60,13 @@ export interface StandardPageProps<T> {
   /**
    * Fields to be displayed (from the provided type T).
    */
-  fieldsMetadata: Field[];
+  fieldsMetadata: ResourceField[];
   /**
    * Currently used namespace.
    */
   namespace: string;
   /**
-   * Maps entity of type T to a table row.
+   * Maps resourceData of type T to a table row.
    */
   RowMapper: React.FunctionComponent<RowProps<T>>;
 
@@ -152,14 +152,14 @@ export function StandardPage<T>({
   });
   const clearAllFilters = () => setSelectedFilters({});
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
-  const [activeSort, setActiveSort, comparator] = useSort(fields);
+  const [activeSort, setActiveSort, compareFn] = useSort(fields);
 
   const filteredData = useMemo(
     () =>
       flattenData
         .filter(createMetaMatcher(selectedFilters, fields, supportedMatchers))
-        .sort(comparator),
-    [flattenData, selectedFilters, fields, comparator],
+        .sort(compareFn),
+    [flattenData, selectedFilters, fields, compareFn],
   );
 
   const { pageData, showPagination, itemsPerPage, currentPage, setPage, setPerPage } =
@@ -217,7 +217,7 @@ export function StandardPage<T>({
                 />
               )}
               <ManageColumnsToolbar
-                columns={fields}
+                resourceFields={fields}
                 defaultColumns={fieldsMetadata}
                 setColumns={setFields}
               />

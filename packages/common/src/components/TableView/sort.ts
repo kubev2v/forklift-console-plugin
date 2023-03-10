@@ -4,29 +4,27 @@ import { localeCompare } from 'common/src/utils/localCompare';
 
 import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base';
 
-import { Field, SortType } from '../types';
-
-import { Column } from './types';
+import { ResourceField, SortType } from '../types';
 
 /**
  * Compares all types by converting them to string.
  * Nullish entities are converted to empty string.
  * @see localeCompare
- * @param locale to be used by string comparator
+ * @param locale to be used by string compareFn
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const universalComparator = (a: any, b: any, locale: string) =>
   localeCompare(String(a ?? ''), String(b ?? ''), locale);
 
 /**
- * Creates a comparator function based on provided current sort definition.
- * If there is no sort defined then comparator considers all entities equal.
+ * Creates a compareFn function based on provided current sort definition.
+ * If there is no sort defined then compareFn considers all entities equal.
  *
  * @see universalComparator
  * @param currentSort
  * @param locale defaults to "en"
- * @param fieldComparator (optional) custom field comparator. Defaults to universal string based comparator.
- * @returns comparator function
+ * @param fieldComparator (optional) custom field compareFn. Defaults to universal string based compareFn.
+ * @returns compareFn function
  */
 export function compareWith(
   currentSort: SortType,
@@ -34,11 +32,15 @@ export function compareWith(
   fieldComparator: (a, b, locale: string) => number,
 ): (a, b) => number {
   return (a, b) => {
-    if (!currentSort?.id) {
+    if (!currentSort?.resourceFieldID) {
       return 0;
     }
-    const comparator = fieldComparator ?? universalComparator;
-    const compareValue = comparator(a?.[currentSort.id], b?.[currentSort.id], locale ?? 'en');
+    const compareFn = fieldComparator ?? universalComparator;
+    const compareValue = compareFn(
+      a?.[currentSort.resourceFieldID],
+      b?.[currentSort.resourceFieldID],
+      locale ?? 'en',
+    );
     return currentSort.isAsc ? compareValue : -compareValue;
   };
 }
@@ -46,13 +48,13 @@ export function compareWith(
 /**
  * Hook for maintaining sort state. Supported features:
  * 1) by default sort by the first identity column or by the first column available if there is no identity column
- * 2) build comparator based on the current active sort definition
+ * 2) build compareFn based on the current active sort definition
  *
  * @param fields (read only) field metadata
- * @returns [activeSort, setActiveSort, comparator]
+ * @returns [activeSort, setActiveSort, compareFn]
  */
 export const useSort = (
-  fields: Field[],
+  fields: ResourceField[],
 ): [SortType, (sort: SortType) => void, (a, b) => number] => {
   const { i18n } = useTranslation();
 
@@ -63,21 +65,21 @@ export const useSort = (
 
   const [activeSort, setActiveSort] = useState<SortType>({
     isAsc: false,
-    id: firstField?.id,
-    toLabel: firstField?.toLabel,
+    resourceFieldID: firstField?.resourceFieldID,
+    label: firstField?.label,
   });
 
-  const comparator = useMemo(
+  const compareFn = useMemo(
     () =>
       compareWith(
         activeSort,
         i18n.resolvedLanguage,
-        fields.find((field) => field.id === activeSort.id)?.comparator,
+        fields.find((field) => field.resourceFieldID === activeSort.resourceFieldID)?.compareFn,
       ),
     [fields, activeSort],
   );
 
-  return [activeSort, setActiveSort, comparator];
+  return [activeSort, setActiveSort, compareFn];
 };
 
 /**
@@ -86,26 +88,30 @@ export const useSort = (
  */
 export const buildSort = ({
   columnIndex,
-  columns,
+  resourceFields,
   activeSort,
   setActiveSort,
 }: {
   columnIndex: number;
-  columns: Column[];
+  resourceFields: ResourceField[];
   activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
 }): ThSortType => ({
   sortBy: {
     index:
-      columns.find(({ id }) => id === activeSort.id) &&
-      columns.findIndex(({ id }) => id === activeSort.id),
+      resourceFields.find(
+        ({ resourceFieldID }) => resourceFieldID === activeSort.resourceFieldID,
+      ) &&
+      resourceFields.findIndex(
+        ({ resourceFieldID }) => resourceFieldID === activeSort.resourceFieldID,
+      ),
     direction: activeSort.isAsc ? 'asc' : 'desc',
   },
   onSort: (_event, index, direction) => {
-    columns[index]?.id &&
+    resourceFields[index]?.resourceFieldID &&
       setActiveSort({
         isAsc: direction === 'asc',
-        ...columns[index],
+        ...resourceFields[index],
       });
   },
   columnIndex,

@@ -5,8 +5,8 @@ import { withActionContext } from '@kubev2v/common/components/ActionServiceDropd
 
 import { FlatNetworkMapping } from './dataForNetwork';
 
-export const useNetworkMappingActions = ({ entity }: { entity: FlatNetworkMapping }) =>
-  useMappingActions<FlatNetworkMapping>({ entity, mappingType: MappingType.Network });
+export const useNetworkMappingActions = ({ resourceData }: { resourceData: FlatNetworkMapping }) =>
+  useMappingActions<FlatNetworkMapping>({ resourceData, mappingType: MappingType.Network });
 
 export const NetworkMappingActions = withActionContext<FlatNetworkMapping>(
   'kebab',

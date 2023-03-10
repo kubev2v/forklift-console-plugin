@@ -5,9 +5,9 @@ import { useUnique } from '../EnumFilter';
 afterEach(cleanup);
 
 const testEnumValues = [
-  { id: 'True', toLabel: () => 'TrueTranslated' },
-  { id: 'AlsoTrue', toLabel: () => 'TrueTranslated' },
-  { id: 'False', toLabel: () => 'FalseTranslated' },
+  { id: 'True', label: 'TrueTranslated' },
+  { id: 'AlsoTrue', label: 'TrueTranslated' },
+  { id: 'False', label: 'FalseTranslated' },
 ];
 
 describe('aggregate filters with the same labels', () => {

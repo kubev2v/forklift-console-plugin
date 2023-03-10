@@ -53,10 +53,10 @@ const editingDisabledTooltip = ({
 };
 
 export const useFlatPlanActions = ({
-  entity: plan,
+  resourceData: plan,
   namespace,
 }: {
-  entity: FlatPlan;
+  resourceData: FlatPlan;
   namespace: string;
 }) => {
   const { migrationStarted, archived: isPlanArchived, name } = plan;

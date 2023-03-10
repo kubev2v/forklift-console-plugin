@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import * as C from 'src/utils/constants';
 import { useProviders } from 'src/utils/fetch';
 import { groupVersionKindForObj } from 'src/utils/resources';
-import { ProviderPhase } from 'src/utils/types';
+import { ProviderStatus } from 'src/utils/types';
 
 import { useInventoryProvidersQuery } from '@kubev2v/legacy/queries';
 import {
@@ -55,7 +55,7 @@ export interface MergedProvider {
   [C.VM_COUNT]: number;
   [C.NETWORK_COUNT]: number;
   [C.STORAGE_COUNT]: number;
-  [C.PHASE]: ProviderPhase;
+  [C.PHASE]: ProviderStatus;
   [C.OWNER_REFERENCES]: OwnerReference[];
   [C.IS_OWNED_BY_CONTROLLER]: boolean;
   positiveConditions: PositiveConditions;
@@ -175,7 +175,7 @@ export const mergeData = (pairs: [V1beta1Provider, FlattenedInventory][]) =>
         },
         object: provider as IProviderObject,
         selfLink,
-        phase: phase as ProviderPhase,
+        phase: phase as ProviderStatus,
         isOwnedByController: !!ownerReferences.find((ref) => ref.kind === 'ForkliftController'),
       }),
     );

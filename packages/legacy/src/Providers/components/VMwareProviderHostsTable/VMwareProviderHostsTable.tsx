@@ -35,7 +35,7 @@ export const VMwareProviderHostsTable: React.FunctionComponent<IVMwareProviderHo
   const hostConfigsQuery = useHostConfigsQuery(namespace);
   const hostConfigs = hostConfigsQuery.data?.items || [];
 
-  const columns: ICell[] = [
+  const resourceFields: ICell[] = [
     { title: 'Name', transforms: [sortable], cellTransforms: [truncate] },
     {
       title: 'Network for migration data transfer',
@@ -165,15 +165,15 @@ export const VMwareProviderHostsTable: React.FunctionComponent<IVMwareProviderHo
         variant="compact"
         className="provider-inner-hosts-table"
         aria-label={`Hosts table for provider ${provider.name}`}
-        cells={columns}
+        cells={resourceFields}
         rows={rows}
         sortBy={sortBy}
         onSort={onSort}
-        onSelect={(_event, isSelected, rowIndex, rowData) => {
+        onSelect={(_event, isSelected, rowIndex, resourceData) => {
           if (rowIndex === -1) {
             selectAll(isSelected);
           } else {
-            toggleItemSelected(rowData.meta.host, isSelected);
+            toggleItemSelected(resourceData.meta.host, isSelected);
           }
         }}
       >

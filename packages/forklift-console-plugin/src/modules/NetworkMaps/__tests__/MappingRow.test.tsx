@@ -20,9 +20,9 @@ describe('NetworkMap rows', () => {
         <table>
           <tbody>
             <NetworkMappingRow
-              columns={networkFields}
+              resourceFields={networkFields}
               currentNamespace={undefined}
-              entity={net as FlatNetworkMapping}
+              resourceData={net as FlatNetworkMapping}
               rowIndex={0}
             />
           </tbody>

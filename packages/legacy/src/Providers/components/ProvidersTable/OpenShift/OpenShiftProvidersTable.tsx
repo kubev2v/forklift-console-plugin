@@ -54,7 +54,7 @@ export const OpenShiftProvidersTable: React.FunctionComponent<IOpenShiftProvider
   const getStorageClasses = (provider: ICorrelatedProvider<IOpenShiftProvider>) =>
     (storageClassesQuery.data && storageClassesQuery.data[provider.metadata.name]) || [];
 
-  const columns: ICell[] = [
+  const resourceFields: ICell[] = [
     {
       title: 'Name',
       transforms: [sortable],
@@ -163,7 +163,7 @@ export const OpenShiftProvidersTable: React.FunctionComponent<IOpenShiftProvider
     if (isExpanded) {
       rows.push({
         parent: rows.length - 1,
-        compoundExpand: columns.findIndex((column) => column.title === expandedItem?.column) + 1,
+        compoundExpand: resourceFields.findIndex((column) => column.title === expandedItem?.column) + 1,
         fullWidth: true,
         cells: [
           {
@@ -173,7 +173,7 @@ export const OpenShiftProvidersTable: React.FunctionComponent<IOpenShiftProvider
               ) : (
                 <OpenShiftStorageClassList provider={provider} storageClasses={storageClasses} />
               ),
-            props: { colSpan: columns.length + 1, className: tableStyles.modifiers.noPadding },
+            props: { colSpan: resourceFields.length + 1, className: tableStyles.modifiers.noPadding },
           },
         ],
       });
@@ -221,22 +221,22 @@ export const OpenShiftProvidersTable: React.FunctionComponent<IOpenShiftProvider
       <Table
         variant="compact"
         aria-label={`${PROVIDER_TYPE_NAMES.openshift} providers table`}
-        cells={columns}
+        cells={resourceFields}
         rows={rows}
         sortBy={sortBy}
         onSort={onSort}
-        onExpand={(_event, _rowIndex, colIndex, isOpen, rowData) => {
+        onExpand={(_event, _rowIndex, colIndex, isOpen, resourceData) => {
           setExpandedItem(
             !isOpen
               ? {
-                  provider: rowData.meta.provider,
-                  column: columns[colIndex - 1].title as IExpandedItem['column'],
+                  provider: resourceData.meta.provider,
+                  column: resourceFields[colIndex - 1].title as IExpandedItem['column'],
                 }
               : null
           );
         }}
-        onSelect={(_event, _isSelected, _rowIndex, rowData) => {
-          setSelectedProvider(rowData.meta.provider);
+        onSelect={(_event, _isSelected, _rowIndex, resourceData) => {
+          setSelectedProvider(resourceData.meta.provider);
         }}
         selectVariant="radio"
       >

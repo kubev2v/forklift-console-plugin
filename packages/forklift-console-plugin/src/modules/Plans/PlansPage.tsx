@@ -11,94 +11,94 @@ import {
   StandardPage,
   UserSettings,
 } from '@kubev2v/common/components/StandardPage';
-import { Field } from '@kubev2v/common/components/types';
+import { ResourceField } from '@kubev2v/common/components/types';
 import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
 
 import { FlatPlan, useFlatPlans } from './data';
 import PlanRow from './PlanRow';
 
-export const fieldsMetadata: Field[] = [
+export const fieldsMetadata: ResourceField[] = [
   {
-    id: C.NAME,
-    toLabel: (t) => t('Name'),
+    resourceFieldID: C.NAME,
+    label: 'Name',
     isVisible: true,
     isIdentity: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: (t) => t('Filter by name'),
+      toPlaceholderLabel: 'Filter by name',
     },
     sortable: true,
   },
   {
-    id: C.NAMESPACE,
-    toLabel: (t) => t('Namespace'),
+    resourceFieldID: C.NAMESPACE,
+    label: 'Namespace',
     isVisible: true,
     isIdentity: true,
     filter: {
-      toPlaceholderLabel: (t) => t('Filter by namespace'),
+      toPlaceholderLabel: 'Filter by namespace',
       type: 'freetext',
     },
     sortable: true,
   },
   {
-    id: C.SOURCE,
-    toLabel: (t) => t('Source provider'),
+    resourceFieldID: C.SOURCE,
+    label: 'Source provider',
     isVisible: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: (t) => t('Filter by name'),
+      toPlaceholderLabel: 'Filter by name',
     },
     sortable: true,
   },
   {
-    id: C.TARGET,
-    toLabel: (t) => t('Target provider'),
+    resourceFieldID: C.TARGET,
+    label: 'Target provider',
     isVisible: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: (t) => t('Filter by name'),
+      toPlaceholderLabel: 'Filter by name',
     },
     sortable: true,
   },
   {
-    id: C.VM_COUNT,
-    toLabel: (t) => t('VMs'),
+    resourceFieldID: C.VM_COUNT,
+    label: 'VMs',
     isVisible: true,
     sortable: true,
   },
   {
-    id: C.STATUS,
-    toLabel: (t) => t('Status'),
+    resourceFieldID: C.STATUS,
+    label: 'Status',
     isVisible: true,
     filter: {
       type: 'enum',
       primary: true,
-      toPlaceholderLabel: (t) => t('Status'),
+      toPlaceholderLabel: 'Status',
       values: fromI18nEnum(PLAN_STATUS_FILTER),
     },
     sortable: true,
   },
 
   {
-    id: C.DESCRIPTION,
-    toLabel: (t) => t('Description'),
+    resourceFieldID: C.DESCRIPTION,
+    label: 'Description',
     isVisible: true,
   },
   {
-    id: C.ACTIONS,
-    toLabel: () => '',
+    resourceFieldID: C.ACTIONS,
+    label: '',
     isAction: true,
     isVisible: true,
     sortable: false,
   },
   {
-    id: C.ARCHIVED,
-    toLabel: (t) => t('Archived'),
+    resourceFieldID: C.ARCHIVED,
+    label: 'Archived',
     isHidden: true,
     filter: {
       type: 'slider',
       standalone: true,
-      toPlaceholderLabel: (t) => t('Show archived'),
+      toPlaceholderLabel: 'Show archived',
       defaultValues: ['false'],
     },
   },

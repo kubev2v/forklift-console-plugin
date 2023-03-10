@@ -1,19 +1,19 @@
 interface EnumGroup {
   groupId: string;
-  toLabel(t: (key: string) => string): string;
+  label: string;
 }
 
 export interface EnumValue {
   id: string;
   groupId?: string;
-  toLabel(t: (key: string) => string): string;
+  label: string;
 }
 
 export interface FilterDef {
   type: string;
-  toPlaceholderLabel(t: (key: string) => string): string;
+  toPlaceholderLabel: string;
   values?: EnumValue[];
-  toLabel?(t: (key: string) => string): string;
+  label?: string;
   primary?: boolean;
   standalone?: boolean;
   groups?: EnumGroup[];
@@ -56,8 +56,8 @@ export interface FilterTypeProps {
  * Field ID to filter defintion mapping.
  */
 export type FieldFilter = {
-  fieldId: string;
-  toFieldLabel(t: (key: string) => string): string;
+  resourceFieldID: string;
+  label: string;
   filterDef: FilterDef;
 };
 

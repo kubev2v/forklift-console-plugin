@@ -11,16 +11,16 @@ import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { CommonMapping } from './data';
 
 export function useMappingActions<T extends CommonMapping>({
-  entity,
+  resourceData,
   mappingType,
 }: {
-  entity: T;
+  resourceData: T;
   mappingType: MappingType;
 }) {
   const { t } = useTranslation();
   const launchModal = useModal();
-  const areProvidersReady = entity.sourceReady && entity.targetReady;
-  const areProvidersResolved = entity.sourceResolved && entity.targetResolved;
+  const areProvidersReady = resourceData.sourceReady && resourceData.targetReady;
+  const areProvidersResolved = resourceData.sourceResolved && resourceData.targetResolved;
   const editingDisabled = !areProvidersReady || !areProvidersResolved;
 
   const disabledTooltip = !areProvidersResolved
@@ -37,9 +37,9 @@ export function useMappingActions<T extends CommonMapping>({
         id: 'edit',
         cta: () =>
           launchModal(withQueryClient(EditMappingModal), {
-            mapping: entity.object,
+            mapping: resourceData.object,
             mappingType,
-            namespace: entity.namespace,
+            namespace: resourceData.namespace,
           }),
         label: t('Edit Mapping'),
         disabled: editingDisabled,
@@ -49,15 +49,15 @@ export function useMappingActions<T extends CommonMapping>({
         id: 'delete',
         cta: () =>
           launchModal(withQueryClient(DeleteMappingModal), {
-            mapping: entity.object,
+            mapping: resourceData.object,
             mappingType,
-            namespace: entity.namespace,
-            name: entity.name,
+            namespace: resourceData.namespace,
+            name: resourceData.name,
           }),
         label: t('Delete Mapping'),
       },
     ],
-    [t, editingDisabled, disabledTooltip, entity],
+    [t, editingDisabled, disabledTooltip, resourceData],
   );
 
   return [actions, true, undefined];

@@ -1,17 +1,20 @@
 import { useMemo, useState } from 'react';
 import { NAMESPACE } from 'common/src/utils/constants';
 
-import { Field } from '../types';
+import { ResourceField } from '../types';
 
 import { FieldSettings } from './types';
 
-const sameOrderAndVisibility = (a: Field[], b: Field[]): boolean => {
+const sameOrderAndVisibility = (a: ResourceField[], b: ResourceField[]): boolean => {
   if (a.length !== b.length) {
     return false;
   }
 
   for (let i = 0; i < a.length; i++) {
-    if (a[i]?.id !== b[i]?.id || Boolean(a[i]?.isVisible) !== Boolean(b[i]?.isVisible)) {
+    if (
+      a[i]?.resourceFieldID !== b[i]?.resourceFieldID ||
+      Boolean(a[i]?.isVisible) !== Boolean(b[i]?.isVisible)
+    ) {
       return false;
     }
   }
@@ -33,21 +36,21 @@ const sameOrderAndVisibility = (a: Field[], b: Field[]): boolean => {
  */
 export const useFields = (
   currentNamespace: string,
-  defaultFields: Field[],
+  defaultFields: ResourceField[],
   userSettings?: FieldSettings,
-): [Field[], React.Dispatch<React.SetStateAction<Field[]>>] => {
+): [ResourceField[], React.Dispatch<React.SetStateAction<ResourceField[]>>] => {
   const {
     data: fieldsFromSettings = [],
     save: saveFieldsInSettings = () => undefined,
     clear: clearSettings = () => undefined,
   } = userSettings || {};
 
-  const [fields, setFields] = useState<Field[]>(() => {
-    const supportedIds: { [id: string]: Field } = defaultFields.reduce(
-      (acc, it) => ({ ...acc, [it.id]: it }),
+  const [fields, setFields] = useState<ResourceField[]>(() => {
+    const supportedIds: { [id: string]: ResourceField } = defaultFields.reduce(
+      (acc, it) => ({ ...acc, [it.resourceFieldID]: it }),
       {},
     );
-    const savedIds = new Set(fieldsFromSettings.map(({ id }) => id));
+    const savedIds = new Set(fieldsFromSettings.map(({ resourceFieldID }) => resourceFieldID));
     // used to detect duplicates
     const idsToBeVisited = new Set(savedIds);
 
@@ -55,36 +58,40 @@ export const useFields = (
       // put fields saved via user settings (if any)
       ...fieldsFromSettings
         // ignore duplicates:ID is removed from the helper map on the first visit
-        .filter((it) => idsToBeVisited.delete(it.id))
+        .filter((it) => idsToBeVisited.delete(it.resourceFieldID))
         // ignore unsupported fields
-        .filter(({ id }) => supportedIds[id])
-        .map(({ id, isVisible }) => ({
-          ...supportedIds[id],
-          // keep the invariant that identity columns are always visible
-          isVisible: isVisible || supportedIds[id].isIdentity,
+        .filter(({ resourceFieldID }) => supportedIds[resourceFieldID])
+        .map(({ resourceFieldID, isVisible }) => ({
+          ...supportedIds[resourceFieldID],
+          // keep the invariant that identity resourceFields are always visible
+          isVisible: isVisible || supportedIds[resourceFieldID].isIdentity,
         })),
       // put all remaining fields (all fields if there are no settings)
-      ...defaultFields.filter(({ id }) => !savedIds.has(id)).map((it) => ({ ...it })),
+      ...defaultFields
+        .filter(({ resourceFieldID }) => !savedIds.has(resourceFieldID))
+        .map((it) => ({ ...it })),
     ];
   });
-  const namespaceAwareFields: Field[] = useMemo(
+  const namespaceAwareFields: ResourceField[] = useMemo(
     () =>
-      fields.map(({ id, isVisible = false, ...rest }) => ({
-        id,
+      fields.map(({ resourceFieldID, isVisible = false, ...rest }) => ({
+        resourceFieldID,
         ...rest,
-        isVisible: id === NAMESPACE ? !currentNamespace : isVisible,
+        isVisible: resourceFieldID === NAMESPACE ? !currentNamespace : isVisible,
       })),
     [currentNamespace, fields],
   );
 
   const setInternalStateAndSaveUserSettings = useMemo(
-    () => (fields: Field[]) => {
+    () => (fields: ResourceField[]) => {
       setFields(fields);
       if (sameOrderAndVisibility(fields, defaultFields)) {
         // don't store settings if equal to deault settings
         clearSettings();
       } else {
-        saveFieldsInSettings(fields.map(({ id, isVisible }) => ({ id, isVisible })));
+        saveFieldsInSettings(
+          fields.map(({ resourceFieldID, isVisible }) => ({ resourceFieldID, isVisible })),
+        );
       }
     },
     [setFields, saveFieldsInSettings],

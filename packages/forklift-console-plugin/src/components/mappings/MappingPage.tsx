@@ -1,7 +1,7 @@
 import React from 'react';
 import withQueryClient from 'common/src/components/QueryClientHoc';
 import { DefaultHeader, TableViewHeaderProps } from 'common/src/components/TableView';
-import { Field } from 'common/src/components/types';
+import { ResourceField } from 'common/src/components/types';
 import { useModal } from 'common/src/polyfills/console-dynamic-plugin-sdk';
 import { AddEditMappingModal } from 'legacy/src/Mappings/components/AddEditMappingModal';
 import { MappingType } from 'legacy/src/queries/types';
@@ -58,43 +58,43 @@ const byName = {
   isVisible: true,
   filter: {
     type: 'freetext',
-    toPlaceholderLabel: (t) => t('Filter by name'),
+    toPlaceholderLabel: 'Filter by name',
   },
   sortable: true,
 };
 
-export const commonFieldsMetadata: Field[] = [
+export const commonFieldsMetadata: ResourceField[] = [
   {
-    id: C.NAME,
-    toLabel: (t) => t('Name'),
+    resourceFieldID: C.NAME,
+    label: 'Name',
     ...byName,
     isIdentity: true,
   },
   {
-    id: C.NAMESPACE,
-    toLabel: (t) => t('Namespace'),
+    resourceFieldID: C.NAMESPACE,
+    label: 'Namespace',
     isVisible: true,
     isIdentity: true,
     filter: {
-      toPlaceholderLabel: (t) => t('Filter by namespace'),
+      toPlaceholderLabel: 'Filter by namespace',
       type: 'freetext',
     },
     sortable: true,
   },
   {
-    id: C.SOURCE,
-    toLabel: (t) => t('Source provider'),
+    resourceFieldID: C.SOURCE,
+    label: 'Source provider',
     ...byName,
   },
   {
-    id: C.TARGET,
-    toLabel: (t) => t('Target provider'),
+    resourceFieldID: C.TARGET,
+    label: 'Target provider',
     ...byName,
   },
 
   {
-    id: C.FROM,
-    toLabel: (t) => t('From'),
+    resourceFieldID: C.FROM,
+    label: 'From',
     isVisible: true,
     sortable: false,
   },

@@ -18,18 +18,22 @@ import { NetworkMappingActions } from './mappingActions';
 
 import './styles.css';
 
-const SourceNetworksCell = ({ entity }: CellProps<FlatNetworkMapping>) => {
+const SourceNetworksCell = ({ resourceData }: CellProps<FlatNetworkMapping>) => {
   return (
-    <SourceCell Icon={NetworkIcon} groups={entity.from} itemsInFirstGroup={entity.from?.[0]?.[1]} />
+    <SourceCell
+      Icon={NetworkIcon}
+      groups={resourceData.from}
+      itemsInFirstGroup={resourceData.from?.[0]?.[1]}
+    />
   );
 };
 
 const networkName = (n: Network, t: (k: string) => string) =>
   n.type === 'pod' ? t('Pod network') : `${n.namespace}/${n.name}`;
 
-const TargetNetworksCell = ({ t, entity }: CellProps<FlatNetworkMapping>) => (
+const TargetNetworksCell = ({ t, resourceData }: CellProps<FlatNetworkMapping>) => (
   <span className="forklift-table__flex-labels-with-gaps">
-    {entity.to.map((n) => {
+    {resourceData.to.map((n) => {
       return (
         <Label key={networkName(n, t)} color="blue">
           {networkName(n, t)}
@@ -40,8 +44,8 @@ const TargetNetworksCell = ({ t, entity }: CellProps<FlatNetworkMapping>) => (
 );
 
 const networkCells: CellCreator<FlatNetworkMapping> = {
-  [C.ACTIONS]: ({ entity }: CellProps<FlatNetworkMapping>) => (
-    <NetworkMappingActions entity={entity} />
+  [C.ACTIONS]: ({ resourceData }: CellProps<FlatNetworkMapping>) => (
+    <NetworkMappingActions resourceData={resourceData} />
   ),
   [C.FROM]: SourceNetworksCell,
   [C.TO]: TargetNetworksCell,
@@ -52,7 +56,7 @@ const NetworkMappingRow = (props: RowProps<FlatNetworkMapping>) => (
     rowProps={props}
     cellCreator={{ ...commonCells, ...networkCells }}
     mappingType={MappingType.Network}
-    mapping={props.entity.object}
+    mapping={props.resourceData.object}
   />
 );
 

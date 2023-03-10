@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'common/src/utils/i18n';
 
 import {
   Select,
@@ -37,7 +36,6 @@ export const GroupedEnumFilter = ({
   showFilter,
 }: FilterTypeProps) => {
   const [isExpanded, setExpanded] = useState(false);
-  const { t } = useTranslation();
 
   // simplify lookup
   const id2enum = Object.fromEntries(
@@ -64,9 +62,9 @@ export const GroupedEnumFilter = ({
   };
 
   // put the IDs needed for compareTo (although not part of the interface)
-  const toSelectOption = ({ id, groupId, toLabel }): SelectOptionObject =>
+  const toSelectOption = ({ id, groupId, label }): SelectOptionObject =>
     ({
-      toString: () => toLabel(t),
+      toString: label,
       id,
       groupId,
       compareTo: (option) => option.id === id && option.groupId === groupId,
@@ -80,13 +78,13 @@ export const GroupedEnumFilter = ({
        * 2. each ToolbarFilter provides a different chip category
        * 3. a chip category maps to group within the Select */}
       {supportedGroups.reduce(
-        (acc, { toLabel, groupId }) => (
+        (acc, { label, groupId }) => (
           <ToolbarFilter
             chips={selectedEnumIds
               .filter((id) => id2enum[id])
               .map((id) => id2enum[id])
               .filter((enumVal) => enumVal.groupId === groupId)
-              .map(({ id, toLabel }) => ({ key: id, node: toLabel(t) }))}
+              .map(({ id, label }) => ({ key: id, node: label }))}
             deleteChip={(category, option) => {
               // values are one enum so id is enough to identify (category is not needed)
               const id = typeof option === 'string' ? option : option.key;
@@ -96,7 +94,7 @@ export const GroupedEnumFilter = ({
               const groupId = typeof category === 'string' ? category : category.key;
               deleteGroup(groupId);
             }}
-            categoryName={{ key: groupId, name: toLabel(t) }}
+            categoryName={{ key: groupId, name: label }}
             showToolbarItem={showFilter}
           >
             {acc}
@@ -120,12 +118,12 @@ export const GroupedEnumFilter = ({
           isOpen={isExpanded}
           onToggle={setExpanded}
         >
-          {supportedGroups.map(({ toLabel, groupId }) => (
-            <SelectGroup key={groupId} label={toLabel(t)}>
+          {supportedGroups.map(({ label, groupId }) => (
+            <SelectGroup key={groupId} label={label}>
               {supportedEnumValues
                 .filter((item) => item.groupId === groupId)
-                .map(({ id, toLabel }) => (
-                  <SelectOption key={id} value={toSelectOption({ id, toLabel, groupId })} />
+                .map(({ id, label }) => (
+                  <SelectOption key={id} value={toSelectOption({ id, label, groupId })} />
                 ))}
             </SelectGroup>
           ))}

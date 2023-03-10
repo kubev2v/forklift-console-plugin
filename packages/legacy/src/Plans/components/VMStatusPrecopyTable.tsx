@@ -39,7 +39,7 @@ export const VMStatusPrecopyTable: React.FunctionComponent<IVMStatusPrecopyTable
     return 0;
   });
 
-  const columns: ICell[] = [
+  const resourceFields: ICell[] = [
     {
       title: 'Copy number',
       columnTransforms: [textCenter, fitContent],
@@ -83,7 +83,7 @@ export const VMStatusPrecopyTable: React.FunctionComponent<IVMStatusPrecopyTable
         className="migration-inner-vmStatus-table"
         variant="compact"
         aria-label="VM status table for migration plan"
-        cells={columns}
+        cells={resourceFields}
         rows={rows}
       >
         <TableHeader />

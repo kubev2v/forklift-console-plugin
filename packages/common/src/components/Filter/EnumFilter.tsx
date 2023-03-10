@@ -26,7 +26,7 @@ export const useUnique = ({
 }: {
   supportedEnumValues: {
     id: string;
-    toLabel(t: (key: string) => string): string;
+    label: string;
   }[];
   onSelectedEnumIdsChange: (values: string[]) => void;
   selectedEnumIds: string[];
@@ -35,13 +35,13 @@ export const useUnique = ({
   onUniqueFilterUpdate: (selectedEnumLabels: string[]) => void;
   selectedUniqueEnumLabels: string[];
 } => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   const translatedEnums = useMemo(
     () =>
       supportedEnumValues.map((it) => ({
         // fallback to ID
-        label: it.toLabel?.(t) ?? it.id,
+        label: it.label ?? it.id,
         id: it.id,
       })),
 

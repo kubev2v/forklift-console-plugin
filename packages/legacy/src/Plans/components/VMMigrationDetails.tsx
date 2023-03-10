@@ -246,7 +246,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
       isEqual: (a, b) => a.id === b.id,
     });
 
-  const columns: ICell[] = [
+  const resourceFields: ICell[] = [
     {
       title: 'Name',
       transforms: [sortable, wrappable],
@@ -395,18 +395,18 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
             <Table
               className="migration-details-table"
               aria-label="Migration VMs table"
-              cells={columns}
+              cells={resourceFields}
               rows={rows}
               sortBy={sortBy}
               onSort={onSort}
-              onCollapse={(event, rowKey, isOpen, rowData) => {
-                toggleVMExpanded(rowData.meta.vmStatus);
+              onCollapse={(event, rowKey, isOpen, resourceData) => {
+                toggleVMExpanded(resourceData.meta.vmStatus);
               }}
-              onSelect={(_event, isSelected, rowIndex, rowData) => {
+              onSelect={(_event, isSelected, rowIndex, resourceData) => {
                 if (rowIndex === -1) {
                   selectAllCancelable(isSelected);
                 } else {
-                  toggleItemSelected(rowData.meta.vmStatus, isSelected);
+                  toggleItemSelected(resourceData.meta.vmStatus, isSelected);
                 }
               }}
               canSelectAll={cancelableVMs.length > 0}

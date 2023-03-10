@@ -23,9 +23,9 @@ const saveRestOrRemoveKey = (key: string, { rest }: { [k: string]: { [n: string]
   }
 };
 
-const toField = ({ id, isVisible }) => ({ id, isVisible });
+const toField = ({ resourceFieldID, isVisible }) => ({ resourceFieldID, isVisible });
 
-const sanitizeFields = (fields: unknown): { id: string; isVisible?: boolean }[] =>
+const sanitizeFields = (fields: unknown): { resourceFieldID: string; isVisible?: boolean }[] =>
   Array.isArray(fields)
     ? fields
         // array should contain objects
@@ -33,7 +33,7 @@ const sanitizeFields = (fields: unknown): { id: string; isVisible?: boolean }[] 
         // cherry-pick desired props
         .map(toField)
         // verify that ID is string
-        .filter(({ id }) => id && typeof id === 'string')
+        .filter(({ resourceFieldID }) => resourceFieldID && typeof resourceFieldID === 'string')
     : [];
 
 /**

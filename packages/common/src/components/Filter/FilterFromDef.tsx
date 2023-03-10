@@ -1,11 +1,10 @@
 import React from 'react';
-import { useTranslation } from 'common/src/utils/i18n';
 
 import { FilterDef, FilterTypeProps, GlobalFilters } from './types';
 
 interface FilterFromDefProps {
-  fieldId: string;
-  toFieldLabel(t: (key: string) => string): string;
+  resourceFieldID: string;
+  label: string;
   filterDef: FilterDef;
   selectedFilters: GlobalFilters;
   onFilterUpdate(filters: GlobalFilters): void;
@@ -14,15 +13,14 @@ interface FilterFromDefProps {
 }
 
 export const FilterFromDef = ({
-  fieldId: id,
-  toFieldLabel,
+  resourceFieldID: id,
+  label,
   filterDef: def,
   selectedFilters,
   FilterType,
   onFilterUpdate,
   showFilter = true,
 }: FilterFromDefProps) => {
-  const { t } = useTranslation();
   return (
     FilterType && (
       <FilterType
@@ -34,9 +32,9 @@ export const FilterFromDef = ({
             [id]: values,
           })
         }
-        placeholderLabel={def.toPlaceholderLabel(t)}
+        placeholderLabel={def.toPlaceholderLabel}
         selectedFilters={selectedFilters[id] ?? []}
-        title={def?.toLabel?.(t) ?? toFieldLabel(t)}
+        title={def?.label ?? label}
         showFilter={showFilter}
         supportedValues={def.values}
         supportedGroups={def.groups}

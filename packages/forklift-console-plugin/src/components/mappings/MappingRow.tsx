@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { getResourceFieldValue } from 'common/src/components/Filter';
 import { RowProps } from 'common/src/components/TableView';
 import { MappingDetailView } from 'legacy/src/Mappings/components/MappingDetailView';
 import { Mapping, MappingType } from 'legacy/src/queries/types';
@@ -15,7 +16,7 @@ import { CommonMapping } from './data';
 
 export interface CellProps<T extends CommonMapping> {
   value: string;
-  entity: T;
+  resourceData: T;
   currentNamespace: string;
   t: (key: string, params?: { [k: string]: string | number }) => string;
 }
@@ -71,13 +72,13 @@ export type CellCreator<T extends CommonMapping> = Record<
 >;
 
 export const commonCells: CellCreator<CommonMapping> = {
-  [C.NAME]: ({ entity: e }: CellProps<CommonMapping>) => (
+  [C.NAME]: ({ resourceData: e }: CellProps<CommonMapping>) => (
     <Ref gvk={e.gvk} name={e.name} namespace={e.namespace} resolved />
   ),
-  [C.SOURCE]: ({ entity: e }: CellProps<CommonMapping>) => (
+  [C.SOURCE]: ({ resourceData: e }: CellProps<CommonMapping>) => (
     <Ref gvk={e.sourceGvk} name={e.source} namespace={e.namespace} resolved={e.sourceResolved} />
   ),
-  [C.TARGET]: ({ entity: e }: CellProps<CommonMapping>) => (
+  [C.TARGET]: ({ resourceData: e }: CellProps<CommonMapping>) => (
     <Ref gvk={e.targetGvk} name={e.target} namespace={e.namespace} resolved={e.targetResolved} />
   ),
   [C.NAMESPACE]: ({ value }: CellProps<CommonMapping>) => (
@@ -86,7 +87,7 @@ export const commonCells: CellCreator<CommonMapping> = {
 };
 
 function MappingRow<T extends CommonMapping>({
-  rowProps: { columns, entity, currentNamespace, rowIndex },
+  rowProps: { resourceFields, resourceData, currentNamespace, rowIndex },
   cellCreator,
   mappingType,
   mapping,
@@ -112,21 +113,23 @@ function MappingRow<T extends CommonMapping>({
             onToggle: toggleExpand,
           }}
         />
-        {columns.map(({ id, toLabel }) => {
-          const Cell = cellCreator[id] ?? TextCell;
+        {resourceFields.map(({ resourceFieldID, label }) => {
+          const Cell = cellCreator[resourceFieldID] ?? TextCell;
           return (
             <Td
-              key={id}
-              dataLabel={toLabel(t)}
+              key={resourceFieldID}
+              dataLabel={label}
               compoundExpand={
-                id === C.FROM || id === C.TO
+                resourceFieldID === C.FROM || resourceFieldID === C.TO
                   ? { isExpanded: isRowExpanded, onToggle: toggleExpand }
                   : undefined
               }
             >
               <Cell
-                value={String(entity[id] ?? '')}
-                entity={entity}
+                value={String(
+                  getResourceFieldValue(resourceData, resourceFieldID, resourceFields) ?? '',
+                )}
+                resourceData={resourceData}
                 t={t}
                 currentNamespace={currentNamespace}
               />
@@ -135,7 +138,7 @@ function MappingRow<T extends CommonMapping>({
         })}
       </Tr>
       <Tr isExpanded={isRowExpanded}>
-        <Td dataLabel={t('Mapping graph')} noPadding colSpan={columns.length}>
+        <Td dataLabel={t('Mapping graph')} noPadding colSpan={resourceFields.length}>
           {isRowExpanded && (
             <ExpandableRowContent>
               <MappingDetailView

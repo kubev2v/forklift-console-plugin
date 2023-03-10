@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { getResourceFieldValue } from 'common/src/components/Filter';
 import * as C from 'src/utils/constants';
 import { PLAN_TYPE } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
@@ -33,7 +34,7 @@ import './styles.css';
 
 interface CellProps {
   value: string;
-  entity: FlatPlan;
+  resourceData: FlatPlan;
   primaryAction?: string;
   currentNamespace: string;
 }
@@ -41,7 +42,7 @@ interface CellProps {
 const TextCell = ({ value }: CellProps) => <>{value ?? ''}</>;
 
 const StatusCell = ({
-  entity: { status, type, vmCount, vmDone, name, object, namespace },
+  resourceData: { status, type, vmCount, vmDone, name, object, namespace },
 }: CellProps) => {
   const { t } = useTranslation();
   const isBeingStarted = status === 'Starting';
@@ -87,8 +88,8 @@ const StatusCell = ({
 };
 StatusCell.displayName = 'StatusCell';
 
-const Actions = ({ primaryAction, entity, currentNamespace }: CellProps) => {
-  const isBeingStarted = entity.status === 'Starting';
+const Actions = ({ primaryAction, resourceData, currentNamespace }: CellProps) => {
+  const isBeingStarted = resourceData.status === 'Starting';
   return (
     <Flex
       flex={{ default: 'flex_2' }}
@@ -101,16 +102,16 @@ const Actions = ({ primaryAction, entity, currentNamespace }: CellProps) => {
           {primaryAction === 'MustGather' && (
             <MustGatherBtn
               type="plan"
-              isCompleted={!!entity.migrationCompleted}
-              displayName={entity.name}
+              isCompleted={!!resourceData.migrationCompleted}
+              displayName={resourceData.name}
             />
           )}
           {primaryAction === 'ScheduledCutover' && (
-            <ScheduledCutoverTime cutover={entity.latestMigration?.cutover} />
+            <ScheduledCutoverTime cutover={resourceData.latestMigration?.cutover} />
           )}
           {(primaryAction === 'Start' || primaryAction === 'Cutover') && (
             <MigrateOrCutoverButton
-              plan={entity.object}
+              plan={resourceData.object}
               buttonType={primaryAction}
               isBeingStarted={isBeingStarted}
               currentNamespace={currentNamespace}
@@ -122,7 +123,7 @@ const Actions = ({ primaryAction, entity, currentNamespace }: CellProps) => {
         <FlexItem align={{ default: 'alignRight' }}>
           <PlanActions
             {...{
-              entity,
+              resourceData: resourceData,
               ignoreList: primaryAction ? [primaryAction] : [],
               namespace: currentNamespace,
             }}
@@ -144,19 +145,18 @@ const Ref = ({
   namespace: string;
 }) => <ResourceLink groupVersionKind={gvk} name={name} namespace={namespace} />;
 
-const NameCell = ({ entity: e }: CellProps) => {
-  const { t } = useTranslation();
+const NameCell = ({ resourceData: e }: CellProps) => {
   return (
     <span className="forklift-table__flex-cell">
       <Ref gvk={e.gvk} name={e.name} namespace={e.namespace} />
       {e.type === 'Cold' && (
         <Label isCompact color="blue" className="forklift-table__flex-cell-label">
-          {PLAN_TYPE.Cold(t).toLowerCase()}
+          {PLAN_TYPE.Cold.toLowerCase()}
         </Label>
       )}
       {e.type === 'Warm' && (
         <Label isCompact color="orange" className="forklift-table__flex-cell-label">
-          {PLAN_TYPE.Warm(t).toLowerCase()}
+          {PLAN_TYPE.Warm.toLowerCase()}
         </Label>
       )}
     </span>
@@ -166,43 +166,44 @@ NameCell.displayName = 'NameCell';
 
 const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   [C.NAME]: NameCell,
-  [C.SOURCE]: ({ entity: e }: CellProps) => (
+  [C.SOURCE]: ({ resourceData: e }: CellProps) => (
     <Ref gvk={e.sourceGvk} name={e.source} namespace={e.namespace} />
   ),
-  [C.TARGET]: ({ entity: e }: CellProps) => (
+  [C.TARGET]: ({ resourceData: e }: CellProps) => (
     <Ref gvk={e.targetGvk} name={e.target} namespace={e.namespace} />
   ),
   [C.NAMESPACE]: ({ value }: CellProps) => <ResourceLink kind="Namespace" name={value} />,
   [C.STATUS]: StatusCell,
   [C.ACTIONS]: Actions,
-  [C.VM_COUNT]: ({ value, entity }: CellProps) => (
-    <RouterLink to={`${PATH_PREFIX}/plans/${entity.name}`}>
+  [C.VM_COUNT]: ({ value, resourceData }: CellProps) => (
+    <RouterLink to={`${PATH_PREFIX}/plans/${resourceData.name}`}>
       <VirtualMachineIcon /> {value}
     </RouterLink>
   ),
 };
 
-const PlanRow = ({ columns, entity, currentNamespace }: RowProps<FlatPlan>) => {
-  const { t } = useTranslation();
-  const primaryAction = getButtonState(entity.status);
+const PlanRow = ({ resourceFields, resourceData, currentNamespace }: RowProps<FlatPlan>) => {
+  const primaryAction = getButtonState(resourceData.status);
   return (
     <Tr>
-      {columns.map(({ id, toLabel }) => {
-        const Cell = cellCreator[id] ?? TextCell;
-        return id === C.DESCRIPTION ? (
+      {resourceFields.map(({ resourceFieldID, label }) => {
+        const Cell = cellCreator[resourceFieldID] ?? TextCell;
+        return resourceFieldID === C.DESCRIPTION ? (
           [
             <Td key={`${C.DESCRIPTION}_large`} visibility={['hidden', 'visibleOnMd']} width={20}>
-              <Truncate content={entity.description ?? ''} />
+              <Truncate content={resourceData.description ?? ''} />
             </Td>,
-            <Td dataLabel={toLabel(t)} key={`${C.DESCRIPTION}_small`} visibility={['hiddenOnMd']}>
-              {entity.description ?? ''}
+            <Td dataLabel={label} key={`${C.DESCRIPTION}_small`} visibility={['hiddenOnMd']}>
+              {resourceData.description ?? ''}
             </Td>,
           ]
         ) : (
-          <Td key={id} dataLabel={toLabel(t)}>
+          <Td key={resourceFieldID} dataLabel={label}>
             <Cell
-              value={String(entity[id] ?? '')}
-              entity={entity}
+              value={String(
+                getResourceFieldValue(resourceData, resourceFieldID, resourceFields) ?? '',
+              )}
+              resourceData={resourceData}
               primaryAction={primaryAction}
               currentNamespace={currentNamespace}
             />

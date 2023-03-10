@@ -20,9 +20,9 @@ describe('Provider rows', () => {
         <table>
           <tbody>
             <ProviderRow
-              columns={fieldsMetadata}
+              resourceFields={fieldsMetadata}
               currentNamespace={undefined}
-              entity={provider as MergedProvider}
+              resourceData={provider as MergedProvider}
               rowIndex={0}
             />
           </tbody>

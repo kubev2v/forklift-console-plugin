@@ -1,6 +1,41 @@
-import { Field } from '../types';
+import jsonpath from 'jsonpath';
+
+import { ResourceField } from '../types';
 
 import { ValueMatcher } from './types';
+
+/**
+ * Get the field value of a given field id, using resourceData and resourceFields
+ * definition struct.
+ *
+ * @param resourceData is a struct holding all the data needed to render a resource
+ * @param resourceFieldID is the field id, in the resourceFields
+ * @param resourceFields the resourceData fields table
+ * @returns the value of the fields based on the field jsonPath
+ */
+export const getResourceFieldValue = (
+  resourceData: unknown,
+  resourceFieldID: string,
+  resourceFields: ResourceField[],
+) => {
+  const field = resourceFields.find((f) => f.resourceFieldID === resourceFieldID);
+  if (typeof resourceData !== 'object' || !field) {
+    return undefined;
+  }
+
+  if (!field.jsonPath) {
+    return resourceData?.[resourceFieldID];
+  }
+
+  switch (typeof field.jsonPath) {
+    case 'string':
+      return jsonpath.query(resourceData, field.jsonPath);
+    case 'function':
+      return field.jsonPath(resourceData);
+    default:
+      return undefined;
+  }
+};
 
 /**
  * Create matcher for one filter type.
@@ -15,23 +50,26 @@ export const createMatcher =
     selectedFilters,
     filterType,
     matchValue,
-    fields,
+    resourceFields,
   }: {
     selectedFilters: { [id: string]: string[] };
     filterType: string;
     matchValue: (value: unknown) => (filterValue: string) => boolean;
-    fields: Field[];
+    resourceFields: ResourceField[];
   }) =>
-  (entity): boolean =>
-    fields
+  (resourceData): boolean =>
+    resourceFields
       .filter(({ filter }) => filter?.type === filterType)
       .filter(
-        ({ id, filter }) =>
-          (selectedFilters[id] && selectedFilters[id]?.length) || filter?.defaultValues,
+        ({ resourceFieldID, filter }) =>
+          (selectedFilters[resourceFieldID] && selectedFilters[resourceFieldID]?.length) ||
+          filter?.defaultValues,
       )
-      .map(({ id, filter }) => ({
-        value: entity?.[id],
-        filters: selectedFilters[id]?.length ? selectedFilters[id] : filter?.defaultValues,
+      .map(({ resourceFieldID, filter }) => ({
+        value: getResourceFieldValue(resourceData, resourceFieldID, resourceFields),
+        filters: selectedFilters[resourceFieldID]?.length
+          ? selectedFilters[resourceFieldID]
+          : filter?.defaultValues,
       }))
       .map(({ value, filters }) => filters.some(matchValue(value)))
       .every(Boolean);
@@ -79,13 +117,13 @@ export const defaultValueMatchers: ValueMatcher[] = [
 export const createMetaMatcher =
   (
     selectedFilters: { [id: string]: string[] },
-    fields: Field[],
+    resourceFields: ResourceField[],
     valueMatchers: ValueMatcher[] = defaultValueMatchers,
   ) =>
-  (entity): boolean =>
+  (resourceData): boolean =>
     valueMatchers
       .map(({ filterType, matchValue }) =>
-        createMatcher({ selectedFilters, filterType, matchValue, fields }),
+        createMatcher({ selectedFilters, filterType, matchValue, resourceFields }),
       )
-      .map((match) => match(entity))
+      .map((match) => match(resourceData))
       .every(Boolean);
