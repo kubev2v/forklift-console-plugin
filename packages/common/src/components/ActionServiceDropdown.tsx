@@ -5,39 +5,41 @@ import { useTranslation } from 'common/src/utils/i18n';
 
 import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly/react-core';
 
-export interface ActionContextProps {
-  /**
-   * The kind of toggle to use for the resourceData actions. Default: `'kebab'`
-   */
+interface ActionContextProps {
+  /** The kind of toggle to use for the entity actions. Default: `'kebab'` */
   variant: 'kebab' | 'dropdown';
 
-  /**
-   * The set of the action ids to leave out of the resourceData actions. Default: `[]`
-   */
+  /** The set of the action ids to leave out of the entity actions. Default: `[]` */
   ignoreList: string[];
 }
 
 /**
- * It's not possible to pass directly parameters to the Action components -
- * we are limited to Action interface. However we can pass the parameters indirectly:
- * 1. via closure - works best for near constant props like "variant"
- * 2. via context - works better for frequently changing props i.e. "ignoreList"
+ * It is not possible to pass parameters directly to the `ActionServiceProvider`
+ * render prop.  We are limited to params provided from the action hook's output
+ * `ActionService` interface.  However, we can pass parameters to the render prop
+ * indirectly using a closure or a context.  We use the context approach to avoid
+ * any syntactic complexities from using closures.
  */
-export const ActionContext: React.Context<ActionContextProps> = createContext({
+const ActionContext: React.Context<ActionContextProps> = createContext({
   variant: 'kebab',
   ignoreList: [],
 });
 
 export interface EnhancedActionsComponentProps<T> {
+  /** Resource the actions will act upon. */
   resourceData: T;
-  ignoreList?: string[];
+
+  /** The resource's namespace. */
   namespace?: string;
+
+  /** A list of actions to ignore and leave off the full set of actions for the entity. */
+  ignoreList?: string[];
 }
 
 /**
- * Create an `ActionContext` around an `ActionServiceProvider` extension at `contextId`
- * to render a set of actions for target resourceData `T`.  Each resourceData `T` will have actions
- * rendered individually by the `ActionsComponent` render prop.
+ * Create an `ActionContext` provider around an `ActionServiceProvider` extension at
+ * `contextId` to render a set of actions for target entity `T`.  Each entity `T` will
+ * have actions rendered individually by the `ActionsComponent` render prop.
  *
  * @param variant The kind of toggle to use for the resourceData actions
  * @param contextId The contextId of the `console.action/provider` extension to use
@@ -51,7 +53,7 @@ export function withActionContext<T>(
     ignoreList = [],
     namespace,
   }: EnhancedActionsComponentProps<T>) => {
-    const outerProviderData = useMemo(
+    const outerProviderData: ActionContextProps = useMemo(
       () => ({ variant, ignoreList: [...ignoreList] }),
       // check if data inside the array has changed
       [variant, ...ignoreList],
@@ -74,7 +76,7 @@ export function withActionContext<T>(
 /**
  * Render prop given to `ActionServiceProvider` by `withActionContext()`
  */
-const ActionsComponent = ({ actions }: ActionService) => {
+const ActionsComponent = ({ actions }: ActionService): React.ReactNode => {
   const { variant, ignoreList = [] } = useContext(ActionContext);
   const { t } = useTranslation();
   const history = useHistory();
@@ -96,12 +98,12 @@ const ActionsComponent = ({ actions }: ActionService) => {
         isPlain={isPlain}
         dropdownItems={actions
           .filter(({ id }) => !ignoreList?.includes(id))
-          .map(({ id, label, cta, disabled, disabledTooltip }) => (
+          .map(({ id, label, cta, disabled, disabledTooltip, tooltip }) => (
             <DropdownItem
               key={id}
               onClick={typeof cta === 'function' ? cta : () => cta.href && history.push(cta.href)}
               isAriaDisabled={disabled}
-              tooltip={disabledTooltip}
+              tooltip={disabled ? disabledTooltip : tooltip}
             >
               {label}
             </DropdownItem>

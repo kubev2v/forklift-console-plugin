@@ -55,7 +55,7 @@ import './PlansTable.css';
 import {
   getPlanStatusTitle,
   getPlanState,
-  getButtonState,
+  getPrimaryActionFromPlanState,
   getMigStatusState,
   canBeRestarted,
 } from './helpers';
@@ -226,7 +226,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
 
     const planState = getPlanState(plan, latestMigration, migrationsQuery.data?.items);
     const canRestart = canBeRestarted(planState);
-    const buttonType = getButtonState(planState);
+    const buttonType = getPrimaryActionFromPlanState(planState);
     const { title, variant } = getMigStatusState(planState, isWarmPlan);
 
     const { statusValue = 0, statusMessage = '' } = ratioVMs(plan);

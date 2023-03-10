@@ -4,7 +4,7 @@ import { useTranslation } from 'src/utils/i18n';
 
 import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
-import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
+import { type Action, useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import { MustGatherContext } from '@kubev2v/legacy/common/context';
@@ -18,6 +18,7 @@ import {
   useDeletePlanMutation,
   useSetCutoverMutation,
 } from '@kubev2v/legacy/queries';
+import { type ExtensionHook } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, Stack, Text, TextContent } from '@patternfly/react-core';
 
 import { type FlatPlan } from './data';
@@ -52,18 +53,35 @@ const editingDisabledTooltip = ({
   return '';
 };
 
-export const useFlatPlanActions = ({
-  resourceData: plan,
-  namespace,
-}: {
-  resourceData: FlatPlan;
-  namespace: string;
-}) => {
-  const { migrationStarted, archived: isPlanArchived, name } = plan;
+/**
+ * Take an `ActionServiceProvider` provided context and return a set of actions to be
+ * rendered.
+ */
+export const useFlatPlanActions: ExtensionHook<
+  Action[],
+  {
+    /** Resource the actions will act upon. */
+    resourceData: FlatPlan;
+
+    /** The entity's namespace. */
+    namespace: string;
+  }
+> = ({ resourceData: plan, namespace }) => {
+  const { migrationStarted, migrationCompleted, archived: isPlanArchived, name } = plan;
   const isPlanStarted = !!migrationStarted;
   const { t } = useTranslation();
   const launchModal = useModal();
-  const { withNs, latestAssociatedMustGather } = React.useContext(MustGatherContext);
+  const {
+    withNs,
+    withoutNs,
+    mustGathersQuery,
+    setMustGatherModalOpen,
+    setActiveMustGather,
+    latestAssociatedMustGather,
+    downloadMustGatherResult,
+    fetchMustGatherResult,
+    notifyDownloadFailed,
+  } = React.useContext(MustGatherContext);
   const mustGather = latestAssociatedMustGather(withNs(plan.name, 'plan'));
   const cutoverMutation = useSetCutoverMutation(plan.namespace);
 
@@ -81,6 +99,88 @@ export const useFlatPlanActions = ({
   const deleteDisabled = isPlanGathering || isArchivingInProgress || isPlanExecuting;
   const canRestart = canBeRestarted(plan.status);
   const cutoverScheduled = plan.status == 'Copying-CutoverScheduled';
+
+  const isMustGatherReachable = true; // TODO: Figure out how to determine this at runtime.
+  const isMustGatherDownloadable =
+    mustGather?.status === 'completed' && mustGather?.['archive-name'];
+
+  const mustGatherDownloadLogsAction: Action = useMemo(
+    () =>
+      isMustGatherReachable &&
+      isMustGatherDownloadable && {
+        id: 'MustGather',
+        label: 'Download logs',
+        description: `Download logs for ${name}`,
+        disabled: !mustGathersQuery?.isSuccess,
+        disabledTooltip: 'Cannot reach must gather service.',
+        tooltip: `must-gather-plan_${name} available for download.`,
+        cta: () => {
+          fetchMustGatherResult(mustGather)
+            .then(
+              (tarBall) => tarBall && downloadMustGatherResult(tarBall, mustGather['archive-name']),
+            )
+            .catch(() => notifyDownloadFailed());
+        },
+      },
+    [
+      isMustGatherReachable,
+      isMustGatherDownloadable,
+      mustGather,
+      mustGathersQuery,
+      name,
+      fetchMustGatherResult,
+      downloadMustGatherResult,
+      notifyDownloadFailed,
+    ],
+  );
+
+  const mustGatherGetLogsAction: Action = useMemo(
+    () =>
+      isMustGatherReachable &&
+      !isMustGatherDownloadable && {
+        id: 'MustGather',
+        label: mustGather?.status === 'completed' ? 'Download logs' : 'Get logs',
+        disabled:
+          mustGather?.status === 'inprogress' ||
+          mustGather?.status === 'new' ||
+          mustGather?.status === 'error' ||
+          !mustGathersQuery?.isSuccess ||
+          !migrationCompleted,
+        disabledTooltip:
+          mustGather?.status === 'inprogress'
+            ? 'Collecting migration plan logs.'
+            : mustGather?.status === 'new'
+            ? 'Must gather queued for execution.'
+            : mustGather?.status === 'error'
+            ? `Cannot complete must gather for ${withoutNs(mustGather?.['custom-name'], 'plan')}`
+            : !mustGathersQuery?.isSuccess
+            ? 'Cannot reach must gather service.'
+            : !migrationCompleted
+            ? 'Cannot run must gather until the migration is finished.'
+            : undefined,
+        tooltip:
+          'Collects the current migration plan logs and creates a tar archive file for download.',
+        cta: () => {
+          setMustGatherModalOpen(true);
+          setActiveMustGather({
+            type: 'plan',
+            displayName: name,
+            status: 'new',
+          });
+        },
+      },
+    [
+      isMustGatherReachable,
+      isMustGatherDownloadable,
+      mustGather,
+      mustGathersQuery,
+      migrationCompleted,
+      name,
+      withoutNs,
+      setMustGatherModalOpen,
+      setActiveMustGather,
+    ],
+  );
 
   const editAction = useMemo(
     () => ({
@@ -202,9 +302,12 @@ export const useFlatPlanActions = ({
       },
     [plan, t, cutoverScheduled],
   );
-  const actions = useMemo(
+
+  const actions: Action[] = useMemo(
     () =>
       [
+        mustGatherDownloadLogsAction,
+        mustGatherGetLogsAction,
         editAction,
         duplicateAction,
         archiveAction,
@@ -214,6 +317,8 @@ export const useFlatPlanActions = ({
         cancelCutoverAction,
       ].filter(Boolean),
     [
+      mustGatherDownloadLogsAction,
+      mustGatherGetLogsAction,
       editAction,
       duplicateAction,
       archiveAction,
@@ -374,5 +479,9 @@ const ArchiveModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
 };
 ArchiveModal.displayName = 'ArchiveModal';
 
+/**
+ * Use the `console.action/provider` extension named `forklift-flat-plan` to render
+ * a set of actions for a `FlatPlan`.
+ */
 export const PlanActions = withActionContext<FlatPlan>('kebab', 'forklift-flat-plan');
 PlanActions.displayName = 'PlanActions';
