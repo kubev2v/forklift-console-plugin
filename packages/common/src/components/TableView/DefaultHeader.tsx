@@ -12,9 +12,9 @@ export const DefaultHeader = ({
 }: TableViewHeaderProps) => {
   return (
     <>
-      {visibleColumns.map(({ resourceFieldID, label, sortable }, columnIndex) => (
+      {visibleColumns.map(({ resourceFieldId, label, sortable }, columnIndex) => (
         <Th
-          key={resourceFieldID}
+          key={resourceFieldId}
           sort={
             sortable &&
             buildSort({

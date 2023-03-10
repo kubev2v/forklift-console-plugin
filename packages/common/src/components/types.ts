@@ -1,16 +1,16 @@
 import { FilterDef } from './Filter/types';
 
-type OpenAPIjsonPath = string | ((resourceData: unknown) => unknown);
+type OpenApiJsonPath = string | ((resourceData: unknown) => unknown);
 
 export interface SortType {
   isAsc: boolean;
-  resourceFieldID: string;
+  resourceFieldId: string;
   label: string;
 }
 
 export interface ResourceField {
-  resourceFieldID: string;
-  jsonPath?: OpenAPIjsonPath;
+  resourceFieldId: string;
+  jsonPath?: OpenApiJsonPath;
   label: string;
   // visiblity status, can change in time
   isVisible?: boolean;

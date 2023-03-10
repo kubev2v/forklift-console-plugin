@@ -13,7 +13,7 @@ export interface FilterDef {
   type: string;
   toPlaceholderLabel: string;
   values?: EnumValue[];
-  label?: string;
+  fieldLabel?: string;
   primary?: boolean;
   standalone?: boolean;
   groups?: EnumGroup[];
@@ -56,7 +56,7 @@ export interface FilterTypeProps {
  * Field ID to filter defintion mapping.
  */
 export type FieldFilter = {
-  resourceFieldID: string;
+  resourceFieldId: string;
   label: string;
   filterDef: FilterDef;
 };

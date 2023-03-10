@@ -24,7 +24,7 @@ import NetworkMappingRow from './NetworkMappingRow';
 export const fieldsMetadata: ResourceField[] = [
   ...commonFieldsMetadata,
   {
-    resourceFieldID: C.TO,
+    resourceFieldId: C.TO,
     label: 'To',
     isVisible: true,
     filter: {
@@ -34,7 +34,7 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: false,
   },
   {
-    resourceFieldID: C.ACTIONS,
+    resourceFieldId: C.ACTIONS,
     label: '',
     isAction: true,
     isVisible: true,

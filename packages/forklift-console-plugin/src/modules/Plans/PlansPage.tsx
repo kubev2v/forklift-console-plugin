@@ -19,7 +19,7 @@ import PlanRow from './PlanRow';
 
 export const fieldsMetadata: ResourceField[] = [
   {
-    resourceFieldID: C.NAME,
+    resourceFieldId: C.NAME,
     label: 'Name',
     isVisible: true,
     isIdentity: true,
@@ -30,7 +30,7 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.NAMESPACE,
+    resourceFieldId: C.NAMESPACE,
     label: 'Namespace',
     isVisible: true,
     isIdentity: true,
@@ -41,7 +41,7 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.SOURCE,
+    resourceFieldId: C.SOURCE,
     label: 'Source provider',
     isVisible: true,
     filter: {
@@ -51,7 +51,7 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.TARGET,
+    resourceFieldId: C.TARGET,
     label: 'Target provider',
     isVisible: true,
     filter: {
@@ -61,13 +61,13 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.VM_COUNT,
+    resourceFieldId: C.VM_COUNT,
     label: 'VMs',
     isVisible: true,
     sortable: true,
   },
   {
-    resourceFieldID: C.STATUS,
+    resourceFieldId: C.STATUS,
     label: 'Status',
     isVisible: true,
     filter: {
@@ -80,19 +80,19 @@ export const fieldsMetadata: ResourceField[] = [
   },
 
   {
-    resourceFieldID: C.DESCRIPTION,
+    resourceFieldId: C.DESCRIPTION,
     label: 'Description',
     isVisible: true,
   },
   {
-    resourceFieldID: C.ACTIONS,
+    resourceFieldId: C.ACTIONS,
     label: '',
     isAction: true,
     isVisible: true,
     sortable: false,
   },
   {
-    resourceFieldID: C.ARCHIVED,
+    resourceFieldId: C.ARCHIVED,
     label: 'Archived',
     isHidden: true,
     filter: {

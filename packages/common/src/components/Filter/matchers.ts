@@ -9,22 +9,22 @@ import { ValueMatcher } from './types';
  * definition struct.
  *
  * @param resourceData is a struct holding all the data needed to render a resource
- * @param resourceFieldID is the field id, in the resourceFields
+ * @param resourceFieldId is the field id, in the resourceFields
  * @param resourceFields the resourceData fields table
  * @returns the value of the fields based on the field jsonPath
  */
 export const getResourceFieldValue = (
   resourceData: unknown,
-  resourceFieldID: string,
+  resourceFieldId: string,
   resourceFields: ResourceField[],
 ) => {
-  const field = resourceFields.find((f) => f.resourceFieldID === resourceFieldID);
+  const field = resourceFields.find((f) => f.resourceFieldId === resourceFieldId);
   if (typeof resourceData !== 'object' || !field) {
     return undefined;
   }
 
   if (!field.jsonPath) {
-    return resourceData?.[resourceFieldID];
+    return resourceData?.[resourceFieldId];
   }
 
   switch (typeof field.jsonPath) {
@@ -61,14 +61,14 @@ export const createMatcher =
     resourceFields
       .filter(({ filter }) => filter?.type === filterType)
       .filter(
-        ({ resourceFieldID, filter }) =>
-          (selectedFilters[resourceFieldID] && selectedFilters[resourceFieldID]?.length) ||
+        ({ resourceFieldId, filter }) =>
+          (selectedFilters[resourceFieldId] && selectedFilters[resourceFieldId]?.length) ||
           filter?.defaultValues,
       )
-      .map(({ resourceFieldID, filter }) => ({
-        value: getResourceFieldValue(resourceData, resourceFieldID, resourceFields),
-        filters: selectedFilters[resourceFieldID]?.length
-          ? selectedFilters[resourceFieldID]
+      .map(({ resourceFieldId, filter }) => ({
+        value: getResourceFieldValue(resourceData, resourceFieldId, resourceFields),
+        filters: selectedFilters[resourceFieldId]?.length
+          ? selectedFilters[resourceFieldId]
           : filter?.defaultValues,
       }))
       .map(({ value, filters }) => filters.some(matchValue(value)))

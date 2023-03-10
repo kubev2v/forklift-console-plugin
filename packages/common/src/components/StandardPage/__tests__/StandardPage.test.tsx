@@ -12,9 +12,9 @@ afterEach(cleanup);
 function SimpleRow<T>({ resourceFields, resourceData }: RowProps<T>) {
   return (
     <Tr ouiaId={undefined} ouiaSafe={undefined}>
-      {resourceFields.map(({ resourceFieldID, label }) => (
-        <Td key={resourceFieldID} dataLabel={label}>
-          {String(resourceData[resourceFieldID] ?? '')}
+      {resourceFields.map(({ resourceFieldId, label }) => (
+        <Td key={resourceFieldId} dataLabel={label}>
+          {String(resourceData[resourceFieldId] ?? '')}
         </Td>
       ))}
     </Tr>
@@ -32,7 +32,7 @@ test('empty result set returned, no filters ', async () => {
       dataSource={dataSource}
       fieldsMetadata={[
         {
-          resourceFieldID: NAME,
+          resourceFieldId: NAME,
           label: 'Name',
         },
       ]}
@@ -59,7 +59,7 @@ test('single entry returned, both filters ', async () => {
       dataSource={dataSource}
       fieldsMetadata={[
         {
-          resourceFieldID: NAME,
+          resourceFieldId: NAME,
           label: 'Name',
           isIdentity: true,
           isVisible: true,
@@ -70,7 +70,7 @@ test('single entry returned, both filters ', async () => {
           },
         },
         {
-          resourceFieldID: NAMESPACE,
+          resourceFieldId: NAMESPACE,
           label: 'Namespace',
           isIdentity: true,
           isVisible: true,

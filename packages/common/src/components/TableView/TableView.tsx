@@ -29,7 +29,7 @@ export function TableView<T>({
   Header,
 }: TableViewProps<T>) {
   const hasChildren = children.filter(Boolean).length > 0;
-  const columnSignature = visibleColumns.map(({ resourceFieldID: id }) => id).join();
+  const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
   return (
     <TableComposable aria-label={ariaLabel} variant="compact" isStickyHeader>
       <Thead>
