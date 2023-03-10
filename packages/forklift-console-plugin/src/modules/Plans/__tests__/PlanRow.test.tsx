@@ -29,9 +29,9 @@ describe('Plan rows', () => {
           <table>
             <tbody>
               <PlanRow
-                columns={fieldsMetadata.filter((f) => !f.isHidden)}
+                resourceFields={fieldsMetadata.filter((f) => !f.isHidden)}
                 currentNamespace={undefined}
-                entity={plan as FlatPlan}
+                resourceData={plan as FlatPlan}
                 rowIndex={0}
               />
             </tbody>

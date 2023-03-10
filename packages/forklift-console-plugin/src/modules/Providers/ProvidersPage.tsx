@@ -12,7 +12,7 @@ import {
   StandardPage,
   UserSettings,
 } from '@kubev2v/common/components/StandardPage';
-import { Field } from '@kubev2v/common/components/types';
+import { ResourceField } from '@kubev2v/common/components/types';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ProviderType, SOURCE_PROVIDER_TYPES } from '@kubev2v/legacy/common/constants';
 import { AddEditProviderModal } from '@kubev2v/legacy/Providers/components/AddEditProviderModal';
@@ -22,104 +22,104 @@ import { MergedProvider, useProvidersWithInventory } from './data';
 import EmptyStateProviders from './EmptyStateProviders';
 import ProviderRow from './ProviderRow';
 
-export const fieldsMetadata: Field[] = [
+export const fieldsMetadata: ResourceField[] = [
   {
-    id: C.NAME,
-    toLabel: (t) => t('Name'),
+    resourceFieldID: C.NAME,
+    label: 'Name',
     isVisible: true,
     isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: (t) => t('Filter by name'),
+      toPlaceholderLabel: 'Filter by name',
     },
     sortable: true,
   },
   {
-    id: C.NAMESPACE,
-    toLabel: (t) => t('Namespace'),
+    resourceFieldID: C.NAMESPACE,
+    label: 'Namespace',
     isVisible: true,
     isIdentity: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: (t) => t('Filter by namespace'),
+      toPlaceholderLabel: 'Filter by namespace',
     },
     sortable: true,
   },
   {
-    id: C.PHASE,
-    toLabel: (t) => t('Status'),
+    resourceFieldID: C.PHASE,
+    label: 'Status',
     isVisible: true,
     filter: {
       type: 'enum',
       primary: true,
-      toPlaceholderLabel: (t) => t('Status'),
+      toPlaceholderLabel: 'Status',
       values: fromI18nEnum(PROVIDER_STATUS),
     },
     sortable: true,
   },
   {
-    id: C.URL,
-    toLabel: (t) => t('Endpoint'),
+    resourceFieldID: C.URL,
+    label: 'Endpoint',
     isVisible: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: (t) => t('Filter by endpoint'),
+      toPlaceholderLabel: 'Filter by endpoint',
     },
     sortable: true,
   },
   {
-    id: C.TYPE,
-    toLabel: (t) => t('Type'),
+    resourceFieldID: C.TYPE,
+    label: 'Type',
     isVisible: true,
     filter: {
       type: 'groupedEnum',
       primary: true,
-      toPlaceholderLabel: (t) => t('Type'),
+      toPlaceholderLabel: 'Type',
       values: fromI18nEnum(PROVIDERS).map(({ id, ...rest }) => ({
         id,
         groupId: SOURCE_PROVIDER_TYPES.includes(id as ProviderType) ? 'source' : 'target',
         ...rest,
       })),
       groups: [
-        { groupId: 'target', toLabel: (t) => t('Target') },
-        { groupId: 'source', toLabel: (t) => t('Source') },
+        { groupId: 'target', label: 'Target' },
+        { groupId: 'source', label: 'Source' },
       ],
     },
     sortable: true,
   },
   {
-    id: C.VM_COUNT,
-    toLabel: (t) => t('VMs'),
+    resourceFieldID: C.VM_COUNT,
+    label: 'VMs',
     isVisible: true,
     sortable: true,
   },
   {
-    id: C.NETWORK_COUNT,
-    toLabel: (t) => t('Networks'),
+    resourceFieldID: C.NETWORK_COUNT,
+    label: 'Networks',
     isVisible: true,
     sortable: true,
   },
   {
-    id: C.CLUSTER_COUNT,
-    toLabel: (t) => t('Clusters'),
+    resourceFieldID: C.CLUSTER_COUNT,
+    label: 'Clusters',
     isVisible: false,
     sortable: true,
   },
   {
-    id: C.HOST_COUNT,
-    toLabel: (t) => t('Hosts'),
+    resourceFieldID: C.HOST_COUNT,
+    label: 'Hosts',
     isVisible: true,
     sortable: true,
   },
   {
-    id: C.STORAGE_COUNT,
-    toLabel: (t) => t('Storage'),
+    resourceFieldID: C.STORAGE_COUNT,
+    label: 'Storage',
     isVisible: false,
     sortable: true,
   },
   {
-    id: C.ACTIONS,
-    toLabel: () => '',
+    resourceFieldID: C.ACTIONS,
+    label: '',
     isAction: true,
     isVisible: true,
     sortable: false,

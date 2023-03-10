@@ -5,8 +5,8 @@ import { withActionContext } from '@kubev2v/common/components/ActionServiceDropd
 
 import { FlatStorageMapping } from './dataForStorage';
 
-export const useStorageMappingActions = ({ entity }: { entity: FlatStorageMapping }) =>
-  useMappingActions<FlatStorageMapping>({ entity, mappingType: MappingType.Storage });
+export const useStorageMappingActions = ({ resourceData }: { resourceData: FlatStorageMapping }) =>
+  useMappingActions<FlatStorageMapping>({ resourceData, mappingType: MappingType.Storage });
 
 export const StorageMappingActions = withActionContext<FlatStorageMapping>(
   'kebab',

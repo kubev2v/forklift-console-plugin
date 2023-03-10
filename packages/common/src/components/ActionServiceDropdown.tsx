@@ -7,12 +7,12 @@ import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly
 
 export interface ActionContextProps {
   /**
-   * The kind of toggle to use for the entity actions. Default: `'kebab'`
+   * The kind of toggle to use for the resourceData actions. Default: `'kebab'`
    */
   variant: 'kebab' | 'dropdown';
 
   /**
-   * The set of the action ids to leave out of the entity actions. Default: `[]`
+   * The set of the action ids to leave out of the resourceData actions. Default: `[]`
    */
   ignoreList: string[];
 }
@@ -29,32 +29,36 @@ export const ActionContext: React.Context<ActionContextProps> = createContext({
 });
 
 export interface EnhancedActionsComponentProps<T> {
-  entity: T;
+  resourceData: T;
   ignoreList?: string[];
   namespace?: string;
 }
 
 /**
  * Create an `ActionContext` around an `ActionServiceProvider` extension at `contextId`
- * to render a set of actions for target entity `T`.  Each entity `T` will have actions
+ * to render a set of actions for target resourceData `T`.  Each resourceData `T` will have actions
  * rendered individually by the `ActionsComponent` render prop.
  *
- * @param variant The kind of toggle to use for the entity actions
+ * @param variant The kind of toggle to use for the resourceData actions
  * @param contextId The contextId of the `console.action/provider` extension to use
  */
 export function withActionContext<T>(
   variant: 'kebab' | 'dropdown',
   contextId: string,
 ): React.ComponentType<EnhancedActionsComponentProps<T>> {
-  const Enhanced = ({ entity, ignoreList = [], namespace }: EnhancedActionsComponentProps<T>) => {
+  const Enhanced = ({
+    resourceData,
+    ignoreList = [],
+    namespace,
+  }: EnhancedActionsComponentProps<T>) => {
     const outerProviderData = useMemo(
       () => ({ variant, ignoreList: [...ignoreList] }),
       // check if data inside the array has changed
       [variant, ...ignoreList],
     );
     const innerProviderData = useMemo(
-      () => ({ [contextId]: { entity, namespace } }),
-      [contextId, entity, namespace],
+      () => ({ [contextId]: { resourceData, namespace } }),
+      [contextId, resourceData, namespace],
     );
     return (
       <ActionContext.Provider value={outerProviderData}>

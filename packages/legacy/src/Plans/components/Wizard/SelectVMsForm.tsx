@@ -259,7 +259,7 @@ export const SelectVMsForm: React.FunctionComponent<ISelectVMsFormProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterValues.analysisCondition]);
 
-  const columns: ICell[] = [
+  const resourceFields: ICell[] = [
     {
       title: 'Migration assessment',
       transforms: [sortable],
@@ -318,7 +318,7 @@ export const SelectVMsForm: React.FunctionComponent<ISelectVMsFormProps> = ({
                 }
               />
             ),
-            props: { colSpan: columns.length + 2 },
+            props: { colSpan: resourceFields.length + 2 },
           },
         ],
       });
@@ -475,15 +475,15 @@ export const SelectVMsForm: React.FunctionComponent<ISelectVMsFormProps> = ({
               aria-label={`${PROVIDER_TYPE_NAMES[sourceProvider?.type || 'vsphere']} VMs table`}
               canSelectAll={false}
               variant={TableVariant.compact}
-              cells={columns}
+              cells={resourceFields}
               rows={rows}
               sortBy={sortBy}
               onSort={onSort}
-              onSelect={(_event, isSelected, rowIndex, rowData) => {
-                toggleItemSelected(rowData.meta.vm.id, isSelected);
+              onSelect={(_event, isSelected, rowIndex, resourceData) => {
+                toggleItemSelected(resourceData.meta.vm.id, isSelected);
               }}
-              onCollapse={(_event, _rowKey, _isOpen, rowData) => {
-                toggleVMExpanded(rowData.meta.vm);
+              onCollapse={(_event, _rowKey, _isOpen, resourceData) => {
+                toggleVMExpanded(resourceData.meta.vm);
               }}
             >
               <TableHeader />

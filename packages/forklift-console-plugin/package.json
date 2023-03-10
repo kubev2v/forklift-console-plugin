@@ -17,7 +17,8 @@
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot"
   },
   "dependencies": {
-    "@migtools/lib-ui": "^8.4.1"
+    "@migtools/lib-ui": "^8.4.1",
+    "jsonpath": "^1.1.1"
   },
   "peerDependencies": {
     "@openshift-console/dynamic-plugin-sdk": "0.0.18",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.8",
     "@types/ejs": "^3.0.6",
+    "@types/jsonpath": "^0.2.0",
     "@types/node": "^18.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",

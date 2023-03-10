@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'common/src/utils/i18n';
 
 import { Th } from '@patternfly/react-table';
 
@@ -11,23 +10,22 @@ export const DefaultHeader = ({
   setActiveSort,
   activeSort,
 }: TableViewHeaderProps) => {
-  const { t } = useTranslation();
   return (
     <>
-      {visibleColumns.map(({ id, toLabel, sortable }, columnIndex) => (
+      {visibleColumns.map(({ resourceFieldID, label, sortable }, columnIndex) => (
         <Th
-          key={id}
+          key={resourceFieldID}
           sort={
             sortable &&
             buildSort({
               activeSort,
               columnIndex,
-              columns: visibleColumns,
+              resourceFields: visibleColumns,
               setActiveSort,
             })
           }
         >
-          {toLabel(t)}
+          {label}
         </Th>
       ))}
     </>

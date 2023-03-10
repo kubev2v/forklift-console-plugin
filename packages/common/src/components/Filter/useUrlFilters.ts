@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'common/src/hooks/useSearchParams';
 
-import { Field } from '../types';
+import { ResourceField } from '../types';
 
 import { GlobalFilters } from './types';
 
@@ -31,22 +31,22 @@ export const useUrlFilters = ({
   fields,
   filterPrefix = '',
 }: {
-  fields: Field[];
+  fields: ResourceField[];
   filterPrefix?: string;
 }): [GlobalFilters, (filters: GlobalFilters) => void] => {
   const [searchParams, updateSearchParams] = useSearchParams();
   const [selectedFilters, setSelectedFilters] = useState(() =>
     Object.fromEntries(
       fields
-        .map(({ id }) => ({
-          id,
+        .map(({ resourceFieldID }) => ({
+          resourceFieldID,
           // discard any corrupted filters i.e. partially copy-pasted
-          params: safeParse(searchParams[`${filterPrefix}${id}`]),
+          params: safeParse(searchParams[`${filterPrefix}${resourceFieldID}`]),
         }))
         // discard filters with invalid structure (basic validation)
         // each filter should validate if values make sense (i.e. enum values in range)
         .filter(({ params }) => Array.isArray(params) && params.length)
-        .map(({ id, params }) => [id, params]),
+        .map(({ resourceFieldID, params }) => [resourceFieldID, params]),
     ),
   );
   const setStateAndUrl = useMemo(
@@ -55,9 +55,9 @@ export const useUrlFilters = ({
       updateSearchParams(
         Object.fromEntries(
           fields
-            .map(({ id }) => ({ id, filters: filters[id] }))
-            .map(({ id, filters }) => [
-              id,
+            .map(({ resourceFieldID }) => ({ resourceFieldID, filters: filters[resourceFieldID] }))
+            .map(({ resourceFieldID, filters }) => [
+              resourceFieldID,
               Array.isArray(filters) && filters.length ? JSON.stringify(filters) : undefined,
             ]),
         ),

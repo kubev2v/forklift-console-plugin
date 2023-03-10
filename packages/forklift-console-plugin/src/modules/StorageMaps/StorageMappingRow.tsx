@@ -18,19 +18,19 @@ import { StorageMappingActions } from './mappingActions';
 
 import './styles.css';
 
-const SourceStorageCell = ({ entity }: CellProps<FlatStorageMapping>) => {
+const SourceStorageCell = ({ resourceData }: CellProps<FlatStorageMapping>) => {
   return (
     <SourceCell
       Icon={StorageDomainIcon}
-      groups={entity.from}
-      itemsInFirstGroup={entity.from?.[0]?.[1]}
+      groups={resourceData.from}
+      itemsInFirstGroup={resourceData.from?.[0]?.[1]}
     />
   );
 };
 
-const TargetStorageCell = ({ entity }: CellProps<FlatStorageMapping>) => (
+const TargetStorageCell = ({ resourceData }: CellProps<FlatStorageMapping>) => (
   <span className="forklift-table__flex-labels-with-gaps">
-    {entity.to.map(({ name }) => (
+    {resourceData.to.map(({ name }) => (
       <Label key={name} color="blue">
         {name}
       </Label>
@@ -41,8 +41,8 @@ const TargetStorageCell = ({ entity }: CellProps<FlatStorageMapping>) => (
 const storageCells: CellCreator<FlatStorageMapping> = {
   [C.FROM]: SourceStorageCell,
   [C.TO]: TargetStorageCell,
-  [C.ACTIONS]: ({ entity }: CellProps<FlatStorageMapping>) => (
-    <StorageMappingActions entity={entity} />
+  [C.ACTIONS]: ({ resourceData: resourceData }: CellProps<FlatStorageMapping>) => (
+    <StorageMappingActions resourceData={resourceData} />
   ),
 };
 
@@ -51,7 +51,7 @@ const StorageMappingRow = (props: RowProps<FlatStorageMapping>) => (
     rowProps={props}
     cellCreator={{ ...commonCells, ...storageCells }}
     mappingType={MappingType.Storage}
-    mapping={props.entity.object}
+    mapping={props.resourceData.object}
   />
 );
 

@@ -1,9 +1,10 @@
 import React, { JSXElementConstructor } from 'react';
 import { Link } from 'react-router-dom';
+import { getResourceFieldValue } from 'common/src/components/Filter';
 import * as C from 'src/utils/constants';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
-import { ProviderPhase } from 'src/utils/types';
+import { ProviderStatus } from 'src/utils/types';
 
 import { RowProps } from '@kubev2v/common/components/TableView';
 import {
@@ -30,12 +31,12 @@ import './styles.css';
 
 interface CellProps {
   value: string;
-  entity: MergedProvider;
+  resourceData: MergedProvider;
   t?: (k: string) => string;
   currentNamespace?: string;
 }
 
-const ProviderPhaseToStatus = (phase: ProviderPhase): 'Error' | 'Ok' | 'Unknown' | 'Loading' => {
+const ProviderPhaseToStatus = (phase: ProviderStatus): 'Error' | 'Ok' | 'Unknown' | 'Loading' => {
   switch (phase) {
     case 'Ready':
       return 'Ok';
@@ -57,7 +58,7 @@ const CategoryToIconMap = {
   Advisory: <GreenCheckCircleIcon />,
 };
 
-const StatusCell = ({ value, entity: { phase, object }, t }: CellProps) => {
+const StatusCell = ({ value, resourceData: { phase, object }, t }: CellProps) => {
   const allConditions = (object?.status?.conditions || []).map(({ message, category }) => (
     <Flex
       key={message.valueOf()}
@@ -70,7 +71,7 @@ const StatusCell = ({ value, entity: { phase, object }, t }: CellProps) => {
     </Flex>
   ));
 
-  const CellLabel = PROVIDER_STATUS[value]?.(t) ?? t('Unknown');
+  const CellLabel = PROVIDER_STATUS[value] ?? t('Unknown');
   let bodyContent: React.ReactNode;
 
   switch (allConditions.length) {
@@ -112,7 +113,11 @@ const TextWithIcon = ({ value, Icon }: { value: string; Icon: JSXElementConstruc
 );
 TextWithIcon.displayName = 'TextWithIcon';
 
-const ProviderLink = ({ value, entity: { gvk, namespace, isOwnedByController }, t }: CellProps) => {
+const ProviderLink = ({
+  value,
+  resourceData: { gvk, namespace, isOwnedByController },
+  t,
+}: CellProps) => {
   return (
     <span className="forklift-table__flex-cell">
       <ResourceLink groupVersionKind={gvk} name={value} namespace={namespace} />
@@ -126,7 +131,7 @@ const ProviderLink = ({ value, entity: { gvk, namespace, isOwnedByController }, 
 };
 ProviderLink.displayName = 'ProviderLink';
 
-const HostCell = ({ value, entity: { phase, name, type }, currentNamespace }: CellProps) => (
+const HostCell = ({ value, resourceData: { phase, name, type }, currentNamespace }: CellProps) => (
   <>
     {phase === 'Ready' && value && type === 'vsphere' ? (
       <Link
@@ -147,7 +152,7 @@ HostCell.displayName = 'HostCell';
 
 const TypeCell = ({ value, t }: CellProps) => (
   <span className="forklift-table__flex-cell">
-    {PROVIDERS?.[value]?.(t)}
+    {PROVIDERS?.[value]}
     {SOURCE_PROVIDER_TYPES.includes(value as ProviderType) && (
       <>
         <Label isCompact color="green" className="forklift-table__flex-cell-label">
@@ -172,24 +177,34 @@ const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   [C.URL]: TextCell,
   [C.TYPE]: TypeCell,
   [C.NAMESPACE]: ({ value }: CellProps) => <ResourceLink kind="Namespace" name={value} />,
-  [C.ACTIONS]: ({ entity }: CellProps) => <ProviderActions entity={entity} />,
+  [C.ACTIONS]: ({ resourceData }: CellProps) => <ProviderActions resourceData={resourceData} />,
   [C.NETWORK_COUNT]: ({ value }: CellProps) => <TextWithIcon Icon={NetworkIcon} value={value} />,
   [C.STORAGE_COUNT]: ({ value }: CellProps) => <TextWithIcon Icon={DatabaseIcon} value={value} />,
   [C.HOST_COUNT]: HostCell,
 };
 
-const ProviderRow = ({ columns, entity, currentNamespace }: RowProps<MergedProvider>) => {
+const ProviderRow = ({
+  resourceFields,
+  resourceData,
+  currentNamespace,
+}: RowProps<MergedProvider>) => {
   const { t } = useTranslation();
   return (
     <Tr>
-      {columns.map(({ id, toLabel }) => (
-        <Td key={id} dataLabel={toLabel(t)}>
-          {cellCreator?.[id]?.({
-            value: entity[id],
-            entity,
+      {resourceFields.map(({ resourceFieldID, label }) => (
+        <Td key={resourceFieldID} dataLabel={label}>
+          {cellCreator?.[resourceFieldID]?.({
+            value: getResourceFieldValue(resourceData, resourceFieldID, resourceFields),
+            resourceData,
             t,
             currentNamespace,
-          }) ?? <TextCell value={String(entity[id] ?? '')} />}
+          }) ?? (
+            <TextCell
+              value={String(
+                getResourceFieldValue(resourceData, resourceFieldID, resourceFields) ?? '',
+              )}
+            />
+          )}
         </Td>
       ))}
     </Tr>

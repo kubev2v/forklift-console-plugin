@@ -62,7 +62,7 @@ export const MappingsTable: React.FunctionComponent<IMappingsTableProps> = ({
       isEqual: (a, b) => isSameResource(a.metadata, b.metadata),
     });
 
-  const columns: ICell[] = [
+  const resourceFields: ICell[] = [
     {
       title: 'Name',
       transforms: [sortable],
@@ -122,7 +122,7 @@ export const MappingsTable: React.FunctionComponent<IMappingsTableProps> = ({
                 />
               </Form>
             ),
-            props: { colSpan: columns.length + 1, className: tableStyles.modifiers.noPadding },
+            props: { colSpan: resourceFields.length + 1, className: tableStyles.modifiers.noPadding },
           },
         ],
       });
@@ -135,12 +135,12 @@ export const MappingsTable: React.FunctionComponent<IMappingsTableProps> = ({
       <Table
         variant="compact"
         aria-label="Mappings table"
-        cells={columns}
+        cells={resourceFields}
         rows={rows}
         sortBy={sortBy}
         onSort={onSort}
-        onCollapse={(event, rowKey, isOpen, rowData) => {
-          toggleMappingExpanded(rowData.meta.mapping);
+        onCollapse={(event, rowKey, isOpen, resourceData) => {
+          toggleMappingExpanded(resourceData.meta.mapping);
         }}
       >
         <TableHeader />

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { defaultValueMatchers, FreetextFilter, ValueMatcher } from 'common/src/components/Filter';
 import withQueryClient from 'common/src/components/QueryClientHoc';
 import { loadUserSettings, StandardPage, UserSettings } from 'common/src/components/StandardPage';
-import { Field } from 'common/src/components/types';
+import { ResourceField } from 'common/src/components/types';
 import { AddEditMappingModal } from 'legacy/src/Mappings/components/AddEditMappingModal';
 import { MappingType } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
@@ -21,21 +21,21 @@ import {
 import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './dataForNetwork';
 import NetworkMappingRow from './NetworkMappingRow';
 
-export const fieldsMetadata: Field[] = [
+export const fieldsMetadata: ResourceField[] = [
   ...commonFieldsMetadata,
   {
-    id: C.TO,
-    toLabel: (t) => t('To'),
+    resourceFieldID: C.TO,
+    label: 'To',
     isVisible: true,
     filter: {
       type: 'targetNetwork',
-      toPlaceholderLabel: (t) => t('Filter by name'),
+      toPlaceholderLabel: 'Filter by name',
     },
     sortable: false,
   },
   {
-    id: C.ACTIONS,
-    toLabel: () => '',
+    resourceFieldID: C.ACTIONS,
+    label: '',
     isAction: true,
     isVisible: true,
     sortable: false,

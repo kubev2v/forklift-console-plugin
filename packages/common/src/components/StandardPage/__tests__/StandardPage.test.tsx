@@ -9,12 +9,12 @@ import { StandardPage } from '..';
 
 afterEach(cleanup);
 
-function SimpleRow<T>({ columns, entity }: RowProps<T>) {
+function SimpleRow<T>({ resourceFields, resourceData }: RowProps<T>) {
   return (
-    <Tr>
-      {columns.map(({ id, toLabel }) => (
-        <Td key={id} dataLabel={toLabel((s) => s)}>
-          {String(entity[id] ?? '')}
+    <Tr ouiaId={undefined} ouiaSafe={undefined}>
+      {resourceFields.map(({ resourceFieldID, label }) => (
+        <Td key={resourceFieldID} dataLabel={label}>
+          {String(resourceData[resourceFieldID] ?? '')}
         </Td>
       ))}
     </Tr>
@@ -32,8 +32,8 @@ test('empty result set returned, no filters ', async () => {
       dataSource={dataSource}
       fieldsMetadata={[
         {
-          id: NAME,
-          toLabel: (t) => t('Name'),
+          resourceFieldID: NAME,
+          label: 'Name',
         },
       ]}
       namespace={undefined}
@@ -59,24 +59,24 @@ test('single entry returned, both filters ', async () => {
       dataSource={dataSource}
       fieldsMetadata={[
         {
-          id: NAME,
-          toLabel: (t) => t('Name'),
+          resourceFieldID: NAME,
+          label: 'Name',
           isIdentity: true,
           isVisible: true,
           filter: {
             primary: true,
             type: 'freetext',
-            toPlaceholderLabel: (t) => t('Filter by name'),
+            toPlaceholderLabel: 'Filter by name',
           },
         },
         {
-          id: NAMESPACE,
-          toLabel: (t) => t('Namespace'),
+          resourceFieldID: NAMESPACE,
+          label: 'Namespace',
           isIdentity: true,
           isVisible: true,
           filter: {
             type: 'freetext',
-            toPlaceholderLabel: (t) => t('Filter by namespace'),
+            toPlaceholderLabel: 'Filter by namespace',
           },
         },
       ]}

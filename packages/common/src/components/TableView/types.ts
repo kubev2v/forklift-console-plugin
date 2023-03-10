@@ -1,20 +1,14 @@
-import { Field, SortType } from '../types';
-
-export interface Column {
-  id: string;
-  toLabel(t: (key: string) => string): string;
-  sortable?: boolean;
-}
+import { ResourceField, SortType } from '../types';
 
 export interface RowProps<T> {
-  columns: Field[];
-  entity: T;
+  resourceFields: ResourceField[];
+  resourceData: T;
   currentNamespace: string;
   rowIndex: number;
 }
 
 export interface TableViewHeaderProps {
-  visibleColumns: Field[];
+  visibleColumns: ResourceField[];
   activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
 }

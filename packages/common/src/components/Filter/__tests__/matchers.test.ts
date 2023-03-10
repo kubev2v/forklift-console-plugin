@@ -6,59 +6,59 @@ const matchFreetext = (
   selectedFilters,
   filter = {
     type: 'freetext',
-    toPlaceholderLabel: () => NAME,
+    toPlaceholderLabel: NAME,
   },
 ) =>
   createMatcher({
     selectedFilters,
     ...freetextMatcher,
-    fields: [
+    resourceFields: [
       {
-        id: NAME,
-        toLabel: () => NAME,
+        resourceFieldID: NAME,
+        label: NAME,
         filter,
       },
     ],
   });
 
 describe('standard matchers', () => {
-  it('matches the entity by single letter', () => {
+  it('matches the resourceData by single letter', () => {
     const match = matchFreetext({ [NAME]: ['b', 'c', 'd'] });
     expect(match({ [NAME]: 'bar' })).toBeTruthy();
   });
 
-  it('is not matching the entity because the value does not include selected substrings', () => {
+  it('is not matching the resourceData because the value does not include selected substrings', () => {
     const match = matchFreetext({ [NAME]: ['b', 'c', 'd'] });
     expect(match({ [NAME]: 'foo' })).toBeFalsy();
   });
 
-  it('is not matching the entity because entity has no such field', () => {
+  it('is not matching the resourceData because resourceData has no such field', () => {
     const match = matchFreetext({ [NAME]: ['b', 'c', 'd'] });
     expect(match({})).toBeFalsy();
   });
 
-  it('is not matching the entity because entity is nullish', () => {
+  it('is not matching the resourceData because resourceData is nullish', () => {
     const match = matchFreetext({ [NAME]: ['b', 'c', 'd'] });
     expect(match(null)).toBeFalsy();
   });
 
-  it('matches the entity because column has no filter', () => {
+  it('matches the resourceData because column has no filter', () => {
     const match = matchFreetext({ [NAME]: ['b', 'c', 'd'] }, null);
     expect(match({ [NAME]: 'bar' })).toBeTruthy();
   });
 
-  it('matches the entity because column has a different filter', () => {
+  it('matches the resourceData because column has a different filter', () => {
     const match = matchFreetext(
       { [NAME]: ['b', 'c', 'd'] },
       {
         type: 'enum',
-        toPlaceholderLabel: () => NAME,
+        toPlaceholderLabel: NAME,
       },
     );
     expect(match({ [NAME]: 'bar' })).toBeTruthy();
   });
 
-  it('matches the entity because no filters are selected', () => {
+  it('matches the resourceData because no filters are selected', () => {
     const match = matchFreetext({});
     expect(match({ [NAME]: 'bar' })).toBeTruthy();
   });
@@ -72,26 +72,26 @@ const matchBothFieldsFreetext = () =>
     },
     [
       {
-        id: NAME,
-        toLabel: () => NAME,
+        resourceFieldID: NAME,
+        label: NAME,
         filter: {
           type: 'freetext',
-          toPlaceholderLabel: () => NAME,
+          toPlaceholderLabel: NAME,
         },
       },
       {
-        id: NAMESPACE,
-        toLabel: () => NAMESPACE,
+        resourceFieldID: NAMESPACE,
+        label: NAMESPACE,
         filter: {
           type: 'freetext',
-          toPlaceholderLabel: () => NAMESPACE,
+          toPlaceholderLabel: NAMESPACE,
         },
       },
     ],
   );
 
 describe('meta matchers', () => {
-  it('matches the entity on both columns', () => {
+  it('matches the resourceData on both resourceFields', () => {
     const matchBoth = matchBothFieldsFreetext();
     expect(matchBoth({ [NAME]: 'foo', [NAMESPACE]: 'bar' })).toBeTruthy();
   });

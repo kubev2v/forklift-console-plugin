@@ -23,22 +23,22 @@ import {
 } from '@patternfly/react-core';
 import { ColumnsIcon } from '@patternfly/react-icons';
 
-import { Field } from '../types';
+import { ResourceField } from '../types';
 
 export interface ManageColumnsToolbarProps {
   /** Read only. State maintained by parent component. */
-  columns: Field[];
+  resourceFields: ResourceField[];
   /** Read only. The defaults used for initialization.*/
-  defaultColumns: Field[];
+  defaultColumns: ResourceField[];
   /** Setter to modify state in the parent.*/
-  setColumns(columns: Field[]): void;
+  setColumns(resourceFields: ResourceField[]): void;
 }
 
 /**
- * Toggles a modal dialog for managing columns visibility and order.
+ * Toggles a modal dialog for managing resourceFields visibility and order.
  */
 export const ManageColumnsToolbar = ({
-  columns,
+  resourceFields,
   setColumns,
   defaultColumns,
 }: ManageColumnsToolbarProps) => {
@@ -54,8 +54,8 @@ export const ManageColumnsToolbar = ({
       <ManageColumns
         showModal={isOpen}
         onClose={() => setIsOpen(false)}
-        description={t('Selected columns will be displayed in the table.')}
-        columns={columns}
+        description={t('Selected resourceFields will be displayed in the table.')}
+        resourceFields={resourceFields}
         onChange={setColumns}
         defaultColumns={defaultColumns}
       />
@@ -68,32 +68,32 @@ interface ManagedColumnsProps {
   description: string;
   onClose(): void;
   /** Setter to modify state in the parent.*/
-  onChange(colums: Field[]): void;
+  onChange(colums: ResourceField[]): void;
   /** Read only. State maintained by parent component. */
-  columns: Field[];
+  resourceFields: ResourceField[];
   /** Read only. The defaults used for initialization.*/
-  defaultColumns: Field[];
+  defaultColumns: ResourceField[];
 }
 
-const filterActionsAndHidden = (columns: Field[]) =>
-  columns.filter((col) => !col.isAction && !col.isHidden);
+const filterActionsAndHidden = (resourceFields: ResourceField[]) =>
+  resourceFields.filter((col) => !col.isAction && !col.isHidden);
 
 /**
- * Modal dialog for managing columns.
+ * Modal dialog for managing resourceFields.
  * Supported features:
- * 1. toggle column visibility (disabled for identity columns that should always be displayed to uniquely identify a row)
- * 2. re-order the columns using drag and drop
+ * 1. toggle column visibility (disabled for identity resourceFields that should always be displayed to uniquely identify a row)
+ * 2. re-order the resourceFields using drag and drop
  */
 const ManageColumns = ({
   showModal,
   description,
   onClose,
   onChange,
-  columns,
+  resourceFields,
   defaultColumns,
 }: ManagedColumnsProps) => {
   const { t } = useTranslation();
-  const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(columns));
+  const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(resourceFields));
   const restoreDefaults = () => setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
   const onDrop = (source: { index: number }, dest: { index: number }) => {
     const draggedItem = editedColumns[source?.index];
@@ -101,7 +101,9 @@ const ManageColumns = ({
     if (!draggedItem || !itemCurrentlyAtDestination) {
       return false;
     }
-    const base = editedColumns.filter(({ id }) => id !== draggedItem?.id);
+    const base = editedColumns.filter(
+      ({ resourceFieldID: id }) => id !== draggedItem?.resourceFieldID,
+    );
     setEditedColumns([
       ...base.slice(0, dest.index),
       draggedItem,
@@ -111,16 +113,16 @@ const ManageColumns = ({
   };
   const onSelect = (updatedId: string, updatedValue: boolean): void => {
     setEditedColumns(
-      editedColumns.map(({ id, isVisible, ...rest }) => ({
-        id,
+      editedColumns.map(({ resourceFieldID, isVisible, ...rest }) => ({
+        resourceFieldID,
         ...rest,
-        isVisible: id === updatedId ? updatedValue : isVisible,
+        isVisible: resourceFieldID === updatedId ? updatedValue : isVisible,
       })),
     );
   };
   const onSave = () => {
-    // assume that action columns are always at the end
-    onChange([...editedColumns, ...columns.filter((col) => col.isAction)]);
+    // assume that action resourceFields are always at the end
+    onChange([...editedColumns, ...resourceFields.filter((col) => col.isAction)]);
     onClose();
   };
 
@@ -139,7 +141,7 @@ const ManageColumns = ({
         <Button
           key="save"
           variant="primary"
-          isDisabled={columns === editedColumns}
+          isDisabled={resourceFields === editedColumns}
           onClick={onSave}
         >
           {t('Save')}
@@ -159,7 +161,7 @@ const ManageColumns = ({
             id="table-column-management"
             isCompact
           >
-            {editedColumns.map(({ id, isVisible, isIdentity, toLabel }) => (
+            {editedColumns.map(({ resourceFieldID: id, isVisible, isIdentity, label }) => (
               <Draggable key={id} hasNoWrapper>
                 <DataListItem aria-labelledby={`draggable-${id}`} ref={React.createRef()}>
                   <DataListItemRow>
@@ -172,8 +174,10 @@ const ManageColumns = ({
                         aria-labelledby={`draggable-${id}`}
                         name={id}
                         checked={
-                          // visibility for identity columns (namespace) is governed by parent component
-                          isIdentity ? columns.find((c) => c.id === id)?.isVisible : isVisible
+                          // visibility for identity resourceFields (namespace) is governed by parent component
+                          isIdentity
+                            ? resourceFields.find((c) => c.resourceFieldID === id)?.isVisible
+                            : isVisible
                         }
                         isDisabled={isIdentity}
                         onChange={(value) => onSelect(id, value)}
@@ -183,7 +187,7 @@ const ManageColumns = ({
                     <DataListItemCells
                       dataListCells={[
                         <DataListCell key={id}>
-                          <span id={`draggable-${id}`}>{toLabel(t)}</span>
+                          <span id={`draggable-${id}`}>{label}</span>
                         </DataListCell>,
                       ]}
                     />

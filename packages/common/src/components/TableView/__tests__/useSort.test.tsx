@@ -7,17 +7,17 @@ import { useSort } from '../sort';
 afterEach(cleanup);
 
 describe('useSort hook', () => {
-  const NameColumn = { id: NAME, toLabel: () => NAME, isIdentity: true };
+  const NameColumn = { resourceFieldID: NAME, label: NAME, isIdentity: true };
   it('uses first identity column as default sort', () => {
     const {
       result: {
         current: [activeSort],
       },
-    } = renderHook(() => useSort([{ id: 'Foo', toLabel: () => '' }, NameColumn]));
+    } = renderHook(() => useSort([{ resourceFieldID: 'Foo', label: '' }, NameColumn]));
 
     expect(activeSort).toMatchObject({
-      id: NAME,
-      toLabel: NameColumn.toLabel,
+      resourceFieldID: NAME,
+      label: NameColumn.label,
       isAsc: false,
     });
   });
@@ -27,30 +27,30 @@ describe('useSort hook', () => {
       result: {
         current: [activeSort],
       },
-    } = renderHook(() => useSort([{ id: 'Foo', toLabel: undefined }]));
+    } = renderHook(() => useSort([{ resourceFieldID: 'Foo', label: undefined }]));
 
     expect(activeSort).toMatchObject({
-      id: 'Foo',
-      toLabel: undefined,
+      resourceFieldID: 'Foo',
+      label: undefined,
       isAsc: false,
     });
   });
 
-  it('works if no columns(the sort is not defined)', () => {
+  it('works if no resourceFields(the sort is not defined)', () => {
     const {
       result: {
-        current: [activeSort, setActiveSort, comparator],
+        current: [activeSort, setActiveSort, compareFn],
       },
     } = renderHook(() => useSort([]));
 
     expect(activeSort).toMatchObject({
-      id: undefined,
-      toLabel: undefined,
+      resourceFieldID: undefined,
+      label: undefined,
       isAsc: false,
     });
 
     expect(setActiveSort).toBeDefined();
 
-    expect(comparator('a', 'b')).toBe(0);
+    expect(compareFn('a', 'b')).toBe(0);
   });
 });
