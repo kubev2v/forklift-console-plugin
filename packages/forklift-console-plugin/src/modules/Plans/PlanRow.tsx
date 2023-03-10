@@ -9,7 +9,10 @@ import { RowProps } from '@kubev2v/common/components/TableView';
 import { MustGatherBtn } from '@kubev2v/legacy/common/components/MustGatherBtn';
 import { StatusCondition } from '@kubev2v/legacy/common/components/StatusCondition';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
-import { getButtonState, getMigStatusState } from '@kubev2v/legacy/Plans/components/helpers';
+import {
+  getMigStatusState,
+  getPrimaryActionFromPlanState,
+} from '@kubev2v/legacy/Plans/components/helpers';
 import { MigrateOrCutoverButton } from '@kubev2v/legacy/Plans/components/MigrateOrCutoverButton';
 import { PlanNameNavLink as Link } from '@kubev2v/legacy/Plans/components/PlanStatusNavLink';
 import { ScheduledCutoverTime } from '@kubev2v/legacy/Plans/components/ScheduledCutoverTime';
@@ -183,7 +186,7 @@ const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
 };
 
 const PlanRow = ({ resourceFields, resourceData, currentNamespace }: RowProps<FlatPlan>) => {
-  const primaryAction = getButtonState(resourceData.status);
+  const primaryAction = getPrimaryActionFromPlanState(resourceData.status);
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId, label }) => {
