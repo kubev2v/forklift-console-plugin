@@ -6,7 +6,6 @@ import { PLAN_TYPE } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 
 import { RowProps } from '@kubev2v/common/components/TableView';
-import { MustGatherBtn } from '@kubev2v/legacy/common/components/MustGatherBtn';
 import { StatusCondition } from '@kubev2v/legacy/common/components/StatusCondition';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import {
@@ -102,13 +101,6 @@ const Actions = ({ primaryAction, resourceData, currentNamespace }: CellProps) =
     >
       {primaryAction && (
         <FlexItem align={{ default: 'alignRight' }}>
-          {primaryAction === 'MustGather' && (
-            <MustGatherBtn
-              type="plan"
-              isCompleted={!!resourceData.migrationCompleted}
-              displayName={resourceData.name}
-            />
-          )}
           {primaryAction === 'ScheduledCutover' && (
             <ScheduledCutoverTime cutover={resourceData.latestMigration?.cutover} />
           )}
@@ -125,11 +117,9 @@ const Actions = ({ primaryAction, resourceData, currentNamespace }: CellProps) =
       {(primaryAction || !isBeingStarted) && (
         <FlexItem align={{ default: 'alignRight' }}>
           <PlanActions
-            {...{
-              resourceData: resourceData,
-              ignoreList: primaryAction ? [primaryAction] : [],
-              namespace: currentNamespace,
-            }}
+            resourceData={resourceData}
+            namespace={currentNamespace}
+            ignoreList={primaryAction && primaryAction !== 'MustGather' ? [primaryAction] : []}
           />
         </FlexItem>
       )}
