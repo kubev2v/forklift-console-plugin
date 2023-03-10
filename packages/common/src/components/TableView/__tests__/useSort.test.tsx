@@ -7,16 +7,16 @@ import { useSort } from '../sort';
 afterEach(cleanup);
 
 describe('useSort hook', () => {
-  const NameColumn = { resourceFieldID: NAME, label: NAME, isIdentity: true };
+  const NameColumn = { resourceFieldId: NAME, label: NAME, isIdentity: true };
   it('uses first identity column as default sort', () => {
     const {
       result: {
         current: [activeSort],
       },
-    } = renderHook(() => useSort([{ resourceFieldID: 'Foo', label: '' }, NameColumn]));
+    } = renderHook(() => useSort([{ resourceFieldId: 'Foo', label: '' }, NameColumn]));
 
     expect(activeSort).toMatchObject({
-      resourceFieldID: NAME,
+      resourceFieldId: NAME,
       label: NameColumn.label,
       isAsc: false,
     });
@@ -27,10 +27,10 @@ describe('useSort hook', () => {
       result: {
         current: [activeSort],
       },
-    } = renderHook(() => useSort([{ resourceFieldID: 'Foo', label: undefined }]));
+    } = renderHook(() => useSort([{ resourceFieldId: 'Foo', label: undefined }]));
 
     expect(activeSort).toMatchObject({
-      resourceFieldID: 'Foo',
+      resourceFieldId: 'Foo',
       label: undefined,
       isAsc: false,
     });
@@ -44,7 +44,7 @@ describe('useSort hook', () => {
     } = renderHook(() => useSort([]));
 
     expect(activeSort).toMatchObject({
-      resourceFieldID: undefined,
+      resourceFieldId: undefined,
       label: undefined,
       isAsc: false,
     });

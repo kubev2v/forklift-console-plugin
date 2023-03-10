@@ -65,13 +65,13 @@ const byName = {
 
 export const commonFieldsMetadata: ResourceField[] = [
   {
-    resourceFieldID: C.NAME,
+    resourceFieldId: C.NAME,
     label: 'Name',
     ...byName,
     isIdentity: true,
   },
   {
-    resourceFieldID: C.NAMESPACE,
+    resourceFieldId: C.NAMESPACE,
     label: 'Namespace',
     isVisible: true,
     isIdentity: true,
@@ -82,18 +82,18 @@ export const commonFieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.SOURCE,
+    resourceFieldId: C.SOURCE,
     label: 'Source provider',
     ...byName,
   },
   {
-    resourceFieldID: C.TARGET,
+    resourceFieldId: C.TARGET,
     label: 'Target provider',
     ...byName,
   },
 
   {
-    resourceFieldID: C.FROM,
+    resourceFieldId: C.FROM,
     label: 'From',
     isVisible: true,
     sortable: false,

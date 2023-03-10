@@ -4,8 +4,8 @@ export interface UserSettings {
 }
 
 export interface FieldSettings {
-  data: { resourceFieldID: string; isVisible?: boolean }[];
-  save: (fields: { resourceFieldID: string; isVisible?: boolean }[]) => void;
+  data: { resourceFieldId: string; isVisible?: boolean }[];
+  save: (fields: { resourceFieldId: string; isVisible?: boolean }[]) => void;
   clear: () => void;
 }
 

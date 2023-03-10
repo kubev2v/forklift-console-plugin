@@ -64,7 +64,7 @@ export const GroupedEnumFilter = ({
   // put the IDs needed for compareTo (although not part of the interface)
   const toSelectOption = ({ id, groupId, label }): SelectOptionObject =>
     ({
-      toString: label,
+      toString: () => label,
       id,
       groupId,
       compareTo: (option) => option.id === id && option.groupId === groupId,

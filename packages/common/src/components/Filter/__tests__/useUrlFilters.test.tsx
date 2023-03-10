@@ -32,7 +32,7 @@ describe('parse filters from the URL on initialization', () => {
         },
       } = renderHook(() =>
         useUrlFilters({
-          fields: [{ resourceFieldID: NAME, label: NAME }],
+          fields: [{ resourceFieldId: NAME, label: NAME }],
         }),
       );
       expect(selectedFilters[NAME]).toStrictEqual(output);
@@ -47,7 +47,7 @@ describe('parse filters from the URL on initialization', () => {
       },
     } = renderHook(() =>
       useUrlFilters({
-        fields: [{ resourceFieldID: NAME, label: NAME }],
+        fields: [{ resourceFieldId: NAME, label: NAME }],
       }),
     );
     expect(Object.entries(selectedFilters).length).toStrictEqual(0);
@@ -61,7 +61,7 @@ describe('parse filters from the URL on initialization', () => {
       },
     } = renderHook(() =>
       useUrlFilters({
-        fields: [{ resourceFieldID: NAME, label: NAME }],
+        fields: [{ resourceFieldId: NAME, label: NAME }],
         filterPrefix: 'bar',
       }),
     );
@@ -82,7 +82,7 @@ describe('display currrently selected filters in the URL', () => {
       },
     } = renderHook(() =>
       useUrlFilters({
-        fields: [{ resourceFieldID: NAME, label: NAME }],
+        fields: [{ resourceFieldId: NAME, label: NAME }],
       }),
     );
     act(() => setSelectedFilters({ [NAME]: update }));

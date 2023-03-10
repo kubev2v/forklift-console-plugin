@@ -24,7 +24,7 @@ import ProviderRow from './ProviderRow';
 
 export const fieldsMetadata: ResourceField[] = [
   {
-    resourceFieldID: C.NAME,
+    resourceFieldId: C.NAME,
     label: 'Name',
     isVisible: true,
     isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
@@ -35,7 +35,7 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.NAMESPACE,
+    resourceFieldId: C.NAMESPACE,
     label: 'Namespace',
     isVisible: true,
     isIdentity: true,
@@ -46,7 +46,7 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.PHASE,
+    resourceFieldId: C.PHASE,
     label: 'Status',
     isVisible: true,
     filter: {
@@ -58,7 +58,7 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.URL,
+    resourceFieldId: C.URL,
     label: 'Endpoint',
     isVisible: true,
     filter: {
@@ -68,7 +68,7 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.TYPE,
+    resourceFieldId: C.TYPE,
     label: 'Type',
     isVisible: true,
     filter: {
@@ -88,37 +88,37 @@ export const fieldsMetadata: ResourceField[] = [
     sortable: true,
   },
   {
-    resourceFieldID: C.VM_COUNT,
+    resourceFieldId: C.VM_COUNT,
     label: 'VMs',
     isVisible: true,
     sortable: true,
   },
   {
-    resourceFieldID: C.NETWORK_COUNT,
+    resourceFieldId: C.NETWORK_COUNT,
     label: 'Networks',
     isVisible: true,
     sortable: true,
   },
   {
-    resourceFieldID: C.CLUSTER_COUNT,
+    resourceFieldId: C.CLUSTER_COUNT,
     label: 'Clusters',
     isVisible: false,
     sortable: true,
   },
   {
-    resourceFieldID: C.HOST_COUNT,
+    resourceFieldId: C.HOST_COUNT,
     label: 'Hosts',
     isVisible: true,
     sortable: true,
   },
   {
-    resourceFieldID: C.STORAGE_COUNT,
+    resourceFieldId: C.STORAGE_COUNT,
     label: 'Storage',
     isVisible: false,
     sortable: true,
   },
   {
-    resourceFieldID: C.ACTIONS,
+    resourceFieldId: C.ACTIONS,
     label: '',
     isAction: true,
     isVisible: true,

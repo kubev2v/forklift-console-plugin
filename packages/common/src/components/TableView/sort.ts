@@ -32,13 +32,13 @@ export function compareWith(
   fieldComparator: (a, b, locale: string) => number,
 ): (a, b) => number {
   return (a, b) => {
-    if (!currentSort?.resourceFieldID) {
+    if (!currentSort?.resourceFieldId) {
       return 0;
     }
     const compareFn = fieldComparator ?? universalComparator;
     const compareValue = compareFn(
-      a?.[currentSort.resourceFieldID],
-      b?.[currentSort.resourceFieldID],
+      a?.[currentSort.resourceFieldId],
+      b?.[currentSort.resourceFieldId],
       locale ?? 'en',
     );
     return currentSort.isAsc ? compareValue : -compareValue;
@@ -65,7 +65,7 @@ export const useSort = (
 
   const [activeSort, setActiveSort] = useState<SortType>({
     isAsc: false,
-    resourceFieldID: firstField?.resourceFieldID,
+    resourceFieldId: firstField?.resourceFieldId,
     label: firstField?.label,
   });
 
@@ -74,7 +74,7 @@ export const useSort = (
       compareWith(
         activeSort,
         i18n.resolvedLanguage,
-        fields.find((field) => field.resourceFieldID === activeSort.resourceFieldID)?.compareFn,
+        fields.find((field) => field.resourceFieldId === activeSort.resourceFieldId)?.compareFn,
       ),
     [fields, activeSort],
   );
@@ -100,15 +100,15 @@ export const buildSort = ({
   sortBy: {
     index:
       resourceFields.find(
-        ({ resourceFieldID }) => resourceFieldID === activeSort.resourceFieldID,
+        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
       ) &&
       resourceFields.findIndex(
-        ({ resourceFieldID }) => resourceFieldID === activeSort.resourceFieldID,
+        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
       ),
     direction: activeSort.isAsc ? 'asc' : 'desc',
   },
   onSort: (_event, index, direction) => {
-    resourceFields[index]?.resourceFieldID &&
+    resourceFields[index]?.resourceFieldId &&
       setActiveSort({
         isAsc: direction === 'asc',
         ...resourceFields[index],

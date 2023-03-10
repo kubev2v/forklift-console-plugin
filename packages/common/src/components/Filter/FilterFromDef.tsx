@@ -3,7 +3,7 @@ import React from 'react';
 import { FilterDef, FilterTypeProps, GlobalFilters } from './types';
 
 interface FilterFromDefProps {
-  resourceFieldID: string;
+  resourceFieldId: string;
   label: string;
   filterDef: FilterDef;
   selectedFilters: GlobalFilters;
@@ -13,7 +13,7 @@ interface FilterFromDefProps {
 }
 
 export const FilterFromDef = ({
-  resourceFieldID: id,
+  resourceFieldId: id,
   label,
   filterDef: def,
   selectedFilters,
@@ -34,7 +34,7 @@ export const FilterFromDef = ({
         }
         placeholderLabel={def.toPlaceholderLabel}
         selectedFilters={selectedFilters[id] ?? []}
-        title={def?.label ?? label}
+        title={def?.fieldLabel ?? label}
         showFilter={showFilter}
         supportedValues={def.values}
         supportedGroups={def.groups}

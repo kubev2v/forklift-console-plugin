@@ -113,21 +113,21 @@ function MappingRow<T extends CommonMapping>({
             onToggle: toggleExpand,
           }}
         />
-        {resourceFields.map(({ resourceFieldID, label }) => {
-          const Cell = cellCreator[resourceFieldID] ?? TextCell;
+        {resourceFields.map(({ resourceFieldId, label }) => {
+          const Cell = cellCreator[resourceFieldId] ?? TextCell;
           return (
             <Td
-              key={resourceFieldID}
+              key={resourceFieldId}
               dataLabel={label}
               compoundExpand={
-                resourceFieldID === C.FROM || resourceFieldID === C.TO
+                resourceFieldId === C.FROM || resourceFieldId === C.TO
                   ? { isExpanded: isRowExpanded, onToggle: toggleExpand }
                   : undefined
               }
             >
               <Cell
                 value={String(
-                  getResourceFieldValue(resourceData, resourceFieldID, resourceFields) ?? '',
+                  getResourceFieldValue(resourceData, resourceFieldId, resourceFields) ?? '',
                 )}
                 resourceData={resourceData}
                 t={t}

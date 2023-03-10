@@ -12,7 +12,7 @@ const sameOrderAndVisibility = (a: ResourceField[], b: ResourceField[]): boolean
 
   for (let i = 0; i < a.length; i++) {
     if (
-      a[i]?.resourceFieldID !== b[i]?.resourceFieldID ||
+      a[i]?.resourceFieldId !== b[i]?.resourceFieldId ||
       Boolean(a[i]?.isVisible) !== Boolean(b[i]?.isVisible)
     ) {
       return false;
@@ -47,10 +47,10 @@ export const useFields = (
 
   const [fields, setFields] = useState<ResourceField[]>(() => {
     const supportedIds: { [id: string]: ResourceField } = defaultFields.reduce(
-      (acc, it) => ({ ...acc, [it.resourceFieldID]: it }),
+      (acc, it) => ({ ...acc, [it.resourceFieldId]: it }),
       {},
     );
-    const savedIds = new Set(fieldsFromSettings.map(({ resourceFieldID }) => resourceFieldID));
+    const savedIds = new Set(fieldsFromSettings.map(({ resourceFieldId }) => resourceFieldId));
     // used to detect duplicates
     const idsToBeVisited = new Set(savedIds);
 
@@ -58,26 +58,26 @@ export const useFields = (
       // put fields saved via user settings (if any)
       ...fieldsFromSettings
         // ignore duplicates:ID is removed from the helper map on the first visit
-        .filter((it) => idsToBeVisited.delete(it.resourceFieldID))
+        .filter((it) => idsToBeVisited.delete(it.resourceFieldId))
         // ignore unsupported fields
-        .filter(({ resourceFieldID }) => supportedIds[resourceFieldID])
-        .map(({ resourceFieldID, isVisible }) => ({
-          ...supportedIds[resourceFieldID],
+        .filter(({ resourceFieldId }) => supportedIds[resourceFieldId])
+        .map(({ resourceFieldId, isVisible }) => ({
+          ...supportedIds[resourceFieldId],
           // keep the invariant that identity resourceFields are always visible
-          isVisible: isVisible || supportedIds[resourceFieldID].isIdentity,
+          isVisible: isVisible || supportedIds[resourceFieldId].isIdentity,
         })),
       // put all remaining fields (all fields if there are no settings)
       ...defaultFields
-        .filter(({ resourceFieldID }) => !savedIds.has(resourceFieldID))
+        .filter(({ resourceFieldId }) => !savedIds.has(resourceFieldId))
         .map((it) => ({ ...it })),
     ];
   });
   const namespaceAwareFields: ResourceField[] = useMemo(
     () =>
-      fields.map(({ resourceFieldID, isVisible = false, ...rest }) => ({
-        resourceFieldID,
+      fields.map(({ resourceFieldId, isVisible = false, ...rest }) => ({
+        resourceFieldId,
         ...rest,
-        isVisible: resourceFieldID === NAMESPACE ? !currentNamespace : isVisible,
+        isVisible: resourceFieldId === NAMESPACE ? !currentNamespace : isVisible,
       })),
     [currentNamespace, fields],
   );
@@ -90,7 +90,7 @@ export const useFields = (
         clearSettings();
       } else {
         saveFieldsInSettings(
-          fields.map(({ resourceFieldID, isVisible }) => ({ resourceFieldID, isVisible })),
+          fields.map(({ resourceFieldId, isVisible }) => ({ resourceFieldId, isVisible })),
         );
       }
     },

@@ -14,7 +14,7 @@ const matchFreetext = (
     ...freetextMatcher,
     resourceFields: [
       {
-        resourceFieldID: NAME,
+        resourceFieldId: NAME,
         label: NAME,
         filter,
       },
@@ -72,7 +72,7 @@ const matchBothFieldsFreetext = () =>
     },
     [
       {
-        resourceFieldID: NAME,
+        resourceFieldId: NAME,
         label: NAME,
         filter: {
           type: 'freetext',
@@ -80,7 +80,7 @@ const matchBothFieldsFreetext = () =>
         },
       },
       {
-        resourceFieldID: NAMESPACE,
+        resourceFieldId: NAMESPACE,
         label: NAMESPACE,
         filter: {
           type: 'freetext',

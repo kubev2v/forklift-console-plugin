@@ -38,15 +38,15 @@ export const useUrlFilters = ({
   const [selectedFilters, setSelectedFilters] = useState(() =>
     Object.fromEntries(
       fields
-        .map(({ resourceFieldID }) => ({
-          resourceFieldID,
+        .map(({ resourceFieldId }) => ({
+          resourceFieldId,
           // discard any corrupted filters i.e. partially copy-pasted
-          params: safeParse(searchParams[`${filterPrefix}${resourceFieldID}`]),
+          params: safeParse(searchParams[`${filterPrefix}${resourceFieldId}`]),
         }))
         // discard filters with invalid structure (basic validation)
         // each filter should validate if values make sense (i.e. enum values in range)
         .filter(({ params }) => Array.isArray(params) && params.length)
-        .map(({ resourceFieldID, params }) => [resourceFieldID, params]),
+        .map(({ resourceFieldId, params }) => [resourceFieldId, params]),
     ),
   );
   const setStateAndUrl = useMemo(
@@ -55,9 +55,9 @@ export const useUrlFilters = ({
       updateSearchParams(
         Object.fromEntries(
           fields
-            .map(({ resourceFieldID }) => ({ resourceFieldID, filters: filters[resourceFieldID] }))
-            .map(({ resourceFieldID, filters }) => [
-              resourceFieldID,
+            .map(({ resourceFieldId }) => ({ resourceFieldId, filters: filters[resourceFieldId] }))
+            .map(({ resourceFieldId, filters }) => [
+              resourceFieldId,
               Array.isArray(filters) && filters.length ? JSON.stringify(filters) : undefined,
             ]),
         ),
