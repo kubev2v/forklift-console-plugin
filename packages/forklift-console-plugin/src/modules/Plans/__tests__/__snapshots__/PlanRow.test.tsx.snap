@@ -602,18 +602,7 @@ exports[`Plan rows plantest-03 1`] = `
           >
             <div
               class="pf-m-align-right"
-            >
-              <button
-                aria-disabled="true"
-                class="pf-c-button pf-m-secondary pf-m-aria-disabled pf-m-progress"
-                data-ouia-component-id="OUIA-Generated-Button-secondary-1"
-                data-ouia-component-type="PF4/Button"
-                data-ouia-safe="true"
-                type="button"
-              >
-                Get logs
-              </button>
-            </div>
+            />
             <div
               class="pf-m-align-right"
             >
@@ -840,18 +829,7 @@ exports[`Plan rows plantest-04 1`] = `
           >
             <div
               class="pf-m-align-right"
-            >
-              <button
-                aria-disabled="true"
-                class="pf-c-button pf-m-secondary pf-m-aria-disabled pf-m-progress"
-                data-ouia-component-id="OUIA-Generated-Button-secondary-2"
-                data-ouia-component-type="PF4/Button"
-                data-ouia-safe="true"
-                type="button"
-              >
-                Get logs
-              </button>
-            </div>
+            />
             <div
               class="pf-m-align-right"
             >
@@ -1035,18 +1013,7 @@ exports[`Plan rows plantest-05 1`] = `
           >
             <div
               class="pf-m-align-right"
-            >
-              <button
-                aria-disabled="true"
-                class="pf-c-button pf-m-secondary pf-m-aria-disabled pf-m-progress"
-                data-ouia-component-id="OUIA-Generated-Button-secondary-3"
-                data-ouia-component-type="PF4/Button"
-                data-ouia-safe="true"
-                type="button"
-              >
-                Get logs
-              </button>
-            </div>
+            />
             <div
               class="pf-m-align-right"
             >
@@ -2055,18 +2022,7 @@ exports[`Plan rows plantest-10 1`] = `
           >
             <div
               class="pf-m-align-right"
-            >
-              <button
-                aria-disabled="true"
-                class="pf-c-button pf-m-secondary pf-m-aria-disabled pf-m-progress"
-                data-ouia-component-id="OUIA-Generated-Button-secondary-4"
-                data-ouia-component-type="PF4/Button"
-                data-ouia-safe="true"
-                type="button"
-              >
-                Get logs
-              </button>
-            </div>
+            />
             <div
               class="pf-m-align-right"
             >
@@ -2293,18 +2249,7 @@ exports[`Plan rows plantest-11 1`] = `
           >
             <div
               class="pf-m-align-right"
-            >
-              <button
-                aria-disabled="true"
-                class="pf-c-button pf-m-secondary pf-m-aria-disabled pf-m-progress"
-                data-ouia-component-id="OUIA-Generated-Button-secondary-5"
-                data-ouia-component-type="PF4/Button"
-                data-ouia-safe="true"
-                type="button"
-              >
-                Get logs
-              </button>
-            </div>
+            />
             <div
               class="pf-m-align-right"
             >
