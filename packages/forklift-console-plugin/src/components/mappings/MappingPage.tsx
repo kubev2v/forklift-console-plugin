@@ -1,7 +1,7 @@
 import React from 'react';
 import withQueryClient from 'common/src/components/QueryClientHoc';
 import { DefaultHeader, TableViewHeaderProps } from 'common/src/components/TableView';
-import { ResourceField } from 'common/src/components/types';
+import { ResourceFieldFactory, ResourceFieldPartialFactory } from 'common/src/components/types';
 import { useModal } from 'common/src/polyfills/console-dynamic-plugin-sdk';
 import { AddEditMappingModal } from 'legacy/src/Mappings/components/AddEditMappingModal';
 import { MappingType } from 'legacy/src/queries/types';
@@ -54,47 +54,47 @@ const AddMappingModal: React.FC<{
 };
 AddMappingModal.displayName = 'AddMappingModal';
 
-const byName = {
+const byName: ResourceFieldPartialFactory = (t) => ({
   isVisible: true,
   filter: {
     type: 'freetext',
-    toPlaceholderLabel: 'Filter by name',
+    placeholderLabel: t('Filter by name'),
   },
   sortable: true,
-};
+});
 
-export const commonFieldsMetadata: ResourceField[] = [
+export const commonFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: C.NAME,
-    label: 'Name',
-    ...byName,
+    label: t('Name'),
+    ...byName(t),
     isIdentity: true,
   },
   {
     resourceFieldId: C.NAMESPACE,
-    label: 'Namespace',
+    label: t('Namespace'),
     isVisible: true,
     isIdentity: true,
     filter: {
-      toPlaceholderLabel: 'Filter by namespace',
+      placeholderLabel: t('Filter by namespace'),
       type: 'freetext',
     },
     sortable: true,
   },
   {
     resourceFieldId: C.SOURCE,
-    label: 'Source provider',
-    ...byName,
+    label: t('Source provider'),
+    ...byName(t),
   },
   {
     resourceFieldId: C.TARGET,
-    label: 'Target provider',
-    ...byName,
+    label: t('Target provider'),
+    ...byName(t),
   },
 
   {
     resourceFieldId: C.FROM,
-    label: 'From',
+    label: t('From'),
     isVisible: true,
     sortable: false,
   },

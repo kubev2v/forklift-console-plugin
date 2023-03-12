@@ -5,14 +5,14 @@ import { useTranslation } from 'src/utils/i18n';
 import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { fromI18nEnum } from '@kubev2v/common/components/Filter/helpers';
+import { EnumToTuple } from '@kubev2v/common/components/Filter/helpers';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
 import {
   loadUserSettings,
   StandardPage,
   UserSettings,
 } from '@kubev2v/common/components/StandardPage';
-import { ResourceField } from '@kubev2v/common/components/types';
+import { ResourceFieldFactory } from '@kubev2v/common/components/types';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ProviderType, SOURCE_PROVIDER_TYPES } from '@kubev2v/legacy/common/constants';
 import { AddEditProviderModal } from '@kubev2v/legacy/Providers/components/AddEditProviderModal';
@@ -22,98 +22,98 @@ import { MergedProvider, useProvidersWithInventory } from './data';
 import EmptyStateProviders from './EmptyStateProviders';
 import ProviderRow from './ProviderRow';
 
-export const fieldsMetadata: ResourceField[] = [
+export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: C.NAME,
-    label: 'Name',
+    label: t('Name'),
     isVisible: true,
     isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: 'Filter by name',
+      placeholderLabel: t('Filter by name'),
     },
     sortable: true,
   },
   {
     resourceFieldId: C.NAMESPACE,
-    label: 'Namespace',
+    label: t('Namespace'),
     isVisible: true,
     isIdentity: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: 'Filter by namespace',
+      placeholderLabel: t('Filter by namespace'),
     },
     sortable: true,
   },
   {
     resourceFieldId: C.PHASE,
-    label: 'Status',
+    label: t('Status'),
     isVisible: true,
     filter: {
       type: 'enum',
       primary: true,
-      toPlaceholderLabel: 'Status',
-      values: fromI18nEnum(PROVIDER_STATUS),
+      placeholderLabel: t('Status'),
+      values: EnumToTuple(PROVIDER_STATUS),
     },
     sortable: true,
   },
   {
     resourceFieldId: C.URL,
-    label: 'Endpoint',
+    label: t('Endpoint'),
     isVisible: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: 'Filter by endpoint',
+      placeholderLabel: t('Filter by endpoint'),
     },
     sortable: true,
   },
   {
     resourceFieldId: C.TYPE,
-    label: 'Type',
+    label: t('Type'),
     isVisible: true,
     filter: {
       type: 'groupedEnum',
       primary: true,
-      toPlaceholderLabel: 'Type',
-      values: fromI18nEnum(PROVIDERS).map(({ id, ...rest }) => ({
+      placeholderLabel: t('Type'),
+      values: EnumToTuple(PROVIDERS).map(({ id, ...rest }) => ({
         id,
         groupId: SOURCE_PROVIDER_TYPES.includes(id as ProviderType) ? 'source' : 'target',
         ...rest,
       })),
       groups: [
-        { groupId: 'target', label: 'Target' },
-        { groupId: 'source', label: 'Source' },
+        { groupId: 'target', label: t('Target') },
+        { groupId: 'source', label: t('Source') },
       ],
     },
     sortable: true,
   },
   {
     resourceFieldId: C.VM_COUNT,
-    label: 'VMs',
+    label: t('VMs'),
     isVisible: true,
     sortable: true,
   },
   {
     resourceFieldId: C.NETWORK_COUNT,
-    label: 'Networks',
+    label: t('Networks'),
     isVisible: true,
     sortable: true,
   },
   {
     resourceFieldId: C.CLUSTER_COUNT,
-    label: 'Clusters',
+    label: t('Clusters'),
     isVisible: false,
     sortable: true,
   },
   {
     resourceFieldId: C.HOST_COUNT,
-    label: 'Hosts',
+    label: t('Hosts'),
     isVisible: true,
     sortable: true,
   },
   {
     resourceFieldId: C.STORAGE_COUNT,
-    label: 'Storage',
+    label: t('Storage'),
     isVisible: false,
     sortable: true,
   },
@@ -153,6 +153,8 @@ const Page: React.FC<{
   title: string;
   userSettings: UserSettings;
 }> = ({ dataSource, namespace, title, userSettings }) => {
+  const { t } = useTranslation();
+
   const [data, loaded, error] = dataSource;
   const loadedDataIsEmpty = loaded && !error && data?.length === 0;
 
@@ -163,7 +165,7 @@ const Page: React.FC<{
       addButton={<AddProviderButton namespace={namespace} />}
       dataSource={dataSource}
       RowMapper={ProviderRow}
-      fieldsMetadata={fieldsMetadata}
+      fieldsMetadata={fieldsMetadataFactory(t)}
       namespace={namespace}
       title={title}
       userSettings={userSettings}

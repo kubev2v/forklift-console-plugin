@@ -66,7 +66,7 @@ test('single entry returned, both filters ', async () => {
           filter: {
             primary: true,
             type: 'freetext',
-            toPlaceholderLabel: 'Filter by name',
+            placeholderLabel: 'Filter by name',
           },
         },
         {
@@ -76,7 +76,7 @@ test('single entry returned, both filters ', async () => {
           isVisible: true,
           filter: {
             type: 'freetext',
-            toPlaceholderLabel: 'Filter by namespace',
+            placeholderLabel: 'Filter by namespace',
           },
         },
       ]}

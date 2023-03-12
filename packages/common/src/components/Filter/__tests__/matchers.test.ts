@@ -6,7 +6,7 @@ const matchFreetext = (
   selectedFilters,
   filter = {
     type: 'freetext',
-    toPlaceholderLabel: NAME,
+    placeholderLabel: NAME,
   },
 ) =>
   createMatcher({
@@ -52,7 +52,7 @@ describe('standard matchers', () => {
       { [NAME]: ['b', 'c', 'd'] },
       {
         type: 'enum',
-        toPlaceholderLabel: NAME,
+        placeholderLabel: NAME,
       },
     );
     expect(match({ [NAME]: 'bar' })).toBeTruthy();
@@ -76,7 +76,7 @@ const matchBothFieldsFreetext = () =>
         label: NAME,
         filter: {
           type: 'freetext',
-          toPlaceholderLabel: NAME,
+          placeholderLabel: NAME,
         },
       },
       {
@@ -84,7 +84,7 @@ const matchBothFieldsFreetext = () =>
         label: NAMESPACE,
         filter: {
           type: 'freetext',
-          toPlaceholderLabel: NAMESPACE,
+          placeholderLabel: NAMESPACE,
         },
       },
     ],

@@ -6,9 +6,14 @@ import { cleanup, render } from '@testing-library/react';
 
 import { FlatStorageMapping } from '../dataForStorage';
 import StorageMappingRow from '../StorageMappingRow';
-import { fieldsMetadata as storageFields } from '../StorageMappingsPage';
+import { fieldsMetadataFactory as storageFieldsFactory } from '../StorageMappingsPage';
 
 import MERGED_STORAGE_DATA from './mergedStorageData.json';
+
+// Mock translation function.
+const t = (s) => s;
+// Create a field metadata
+const storageFields = storageFieldsFactory(t);
 
 afterEach(cleanup);
 

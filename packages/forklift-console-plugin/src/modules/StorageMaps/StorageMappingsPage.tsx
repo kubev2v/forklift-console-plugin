@@ -5,7 +5,7 @@ import {
   StandardPage,
   StandardPageProps,
 } from 'common/src/components/StandardPage';
-import { ResourceField } from 'common/src/components/types';
+import { ResourceFieldFactory } from 'common/src/components/types';
 import { MappingType } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
@@ -14,22 +14,22 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 
 import {
   AddMappingButton,
-  commonFieldsMetadata,
+  commonFieldsMetadataFactory,
   StartWithEmptyColumnMapper,
 } from '../../components/mappings/MappingPage';
 
 import { FlatStorageMapping, Storage, useFlatStorageMappings } from './dataForStorage';
 import StorageMappingRow from './StorageMappingRow';
 
-export const fieldsMetadata: ResourceField[] = [
-  ...commonFieldsMetadata,
+export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
+  ...commonFieldsMetadataFactory(t),
   {
     resourceFieldId: C.TO,
-    label: 'To',
+    label: t('To'),
     isVisible: true,
     filter: {
       type: 'targetStorage',
-      toPlaceholderLabel: 'Filter by name',
+      placeholderLabel: t('Filter by name'),
     },
     sortable: false,
   },
@@ -68,6 +68,7 @@ const Page = ({
   userSettings,
 }: Partial<StandardPageProps<FlatStorageMapping>>) => {
   const { t } = useTranslation();
+
   return (
     <StandardPage<FlatStorageMapping>
       addButton={
@@ -80,7 +81,7 @@ const Page = ({
       dataSource={dataSource}
       RowMapper={StorageMappingRow}
       HeaderMapper={StartWithEmptyColumnMapper}
-      fieldsMetadata={fieldsMetadata}
+      fieldsMetadata={fieldsMetadataFactory(t)}
       namespace={namespace}
       title={title}
       userSettings={userSettings}

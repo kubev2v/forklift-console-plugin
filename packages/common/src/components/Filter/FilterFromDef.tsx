@@ -32,7 +32,7 @@ export const FilterFromDef = ({
             [id]: values,
           })
         }
-        placeholderLabel={def.toPlaceholderLabel}
+        placeholderLabel={def.placeholderLabel}
         selectedFilters={selectedFilters[id] ?? []}
         title={def?.fieldLabel ?? label}
         showFilter={showFilter}

@@ -6,9 +6,14 @@ import { cleanup, render } from '@testing-library/react';
 
 import { MergedProvider } from '../data';
 import ProviderRow from '../ProviderRow';
-import { fieldsMetadata } from '../ProvidersPage';
+import { fieldsMetadataFactory } from '../ProvidersPage';
 
 import MERGED_MOCK_DATA from './mergedMockData.json';
+
+// Mock translation function.
+const t = (s) => s;
+// Create a field metadata
+const fieldsMetadata = fieldsMetadataFactory(t);
 
 afterEach(cleanup);
 
