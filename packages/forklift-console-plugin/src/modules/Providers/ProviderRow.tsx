@@ -1,8 +1,9 @@
 import React, { JSXElementConstructor } from 'react';
+import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom';
 import { getResourceFieldValue } from 'common/src/components/Filter';
 import * as C from 'src/utils/constants';
-import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
+import { PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 import { ProviderStatus } from 'src/utils/types';
 
@@ -13,12 +14,14 @@ import {
   SOURCE_PROVIDER_TYPES,
   TARGET_PROVIDER_TYPES,
 } from '@kubev2v/legacy/common/constants';
+import { V1beta1ProviderStatusConditions } from '@kubev2v/types/src/models';
 import { StatusIcon } from '@migtools/lib-ui';
 import {
   BlueInfoCircleIcon,
   GreenCheckCircleIcon,
   RedExclamationCircleIcon,
   ResourceLink,
+  YellowExclamationTriangleIcon,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Flex, FlexItem, Label, Popover } from '@patternfly/react-core';
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
@@ -36,66 +39,70 @@ interface CellProps {
   currentNamespace?: string;
 }
 
-const ProviderPhaseToStatus = (phase: ProviderStatus): 'Error' | 'Ok' | 'Unknown' | 'Loading' => {
-  switch (phase) {
-    case 'Ready':
-      return 'Ok';
-    case 'ConnectionFailed':
-    case 'ValidationFailed':
-      return 'Error';
-    case 'Staging':
-      return 'Loading';
-    default:
-      return 'Unknown';
+const phaseToStatus = (phase: ProviderStatus): 'Error' | 'Ok' | 'Unknown' | 'Loading' => {
+  const phaseToStatusMap = {
+    Ready: 'Ok',
+    ConnectionFailed: 'Error',
+    ValidationFailed: 'Error',
+    Staging: 'Loading',
+  };
+
+  return phaseToStatusMap[phase] || 'Undefined';
+};
+
+const phaseToLabel = (phase: ProviderStatus, t): string => {
+  const phaseToLabelMap = {
+    Ready: t('Ready'),
+    ConnectionFailed: t('Connection Failed'),
+    ValidationFailed: t('Validation Failed'),
+    Staging: t('Staging'),
+  };
+
+  return phaseToLabelMap[phase] || t('Undefined');
+};
+
+const ConditionToIcon = (condition: V1beta1ProviderStatusConditions): React.ReactNode => {
+  const categoryToIconMap = {
+    Critical: { True: <RedExclamationCircleIcon />, False: undefined },
+    Error: { True: <RedExclamationCircleIcon />, False: undefined },
+    Required: { True: <GreenCheckCircleIcon />, False: undefined },
+    Warn: { True: <YellowExclamationTriangleIcon />, False: undefined },
+    Advisory: { True: <GreenCheckCircleIcon />, False: undefined },
+  };
+
+  return categoryToIconMap[condition.category]?.[condition.status];
+};
+
+const StatusCell = ({ resourceData: { phase, object } }: CellProps) => {
+  const { t } = useTranslation();
+
+  const providerHasConditions = object?.status?.conditions && object?.status?.conditions.length > 0;
+
+  if (!providerHasConditions) {
+    return <StatusIcon status={phaseToStatus(phase)} label={phaseToLabel(phase, t)} />;
   }
-};
 
-const CategoryToIconMap = {
-  Critical: <RedExclamationCircleIcon />,
-  Error: <RedExclamationCircleIcon />,
-  Required: <GreenCheckCircleIcon />,
-  Warn: <BlueInfoCircleIcon />,
-  Advisory: <GreenCheckCircleIcon />,
-};
-
-const StatusCell = ({ value, resourceData: { phase, object }, t }: CellProps) => {
-  const allConditions = (object?.status?.conditions || []).map(({ message, category }) => (
+  const allConditions = object.status.conditions.map((condition) => (
     <Flex
-      key={message.valueOf()}
+      key={condition.type}
       spaceItems={{ default: 'spaceItemsXs' }}
       display={{ default: 'inlineFlex' }}
       flexWrap={{ default: 'nowrap' }}
     >
-      <FlexItem>{CategoryToIconMap[category] || <BlueInfoCircleIcon />}</FlexItem>
-      <FlexItem>{message}</FlexItem>
+      <FlexItem>{ConditionToIcon(condition) || <BlueInfoCircleIcon />}</FlexItem>
+      <FlexItem>
+        <Linkify>{condition.message || condition.type}</Linkify>
+      </FlexItem>
     </Flex>
   ));
 
-  const CellLabel = PROVIDER_STATUS[value] ?? t('Unknown');
-  let bodyContent: React.ReactNode;
-
-  switch (allConditions.length) {
-    case 0:
-      bodyContent = '';
-      break;
-    case 1:
-      bodyContent = object?.status?.conditions[0].message || '';
-      break;
-    default:
-      bodyContent = allConditions;
-  }
-
-  if (bodyContent === '') {
-    return <StatusIcon status={ProviderPhaseToStatus(phase)} label={CellLabel} />;
-  } else {
-    return (
-      <Popover bodyContent={bodyContent}>
-        <Button variant="link" isInline aria-label={CellLabel}>
-          <StatusIcon status={ProviderPhaseToStatus(phase)} label={CellLabel} />
-        </Button>
-      </Popover>
-    );
-  }
+  return (
+    <Popover bodyContent={allConditions}>
+      <Button variant="link" isInline aria-label={phaseToLabel(phase, t)}>
+        <StatusIcon status={phaseToStatus(phase)} label={phaseToLabel(phase, t)} />
+      </Button>
+    </Popover>
+  );
 };
 StatusCell.displayName = 'StatusCell';
 
