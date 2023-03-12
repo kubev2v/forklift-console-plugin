@@ -5,83 +5,83 @@ import { useTranslation } from 'src/utils/i18n';
 import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { fromI18nEnum } from '@kubev2v/common/components/Filter/helpers';
+import { EnumToTuple } from '@kubev2v/common/components/Filter/helpers';
 import {
   loadUserSettings,
   StandardPage,
   UserSettings,
 } from '@kubev2v/common/components/StandardPage';
-import { ResourceField } from '@kubev2v/common/components/types';
+import { ResourceFieldFactory } from '@kubev2v/common/components/types';
 import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
 
 import { FlatPlan, useFlatPlans } from './data';
 import PlanRow from './PlanRow';
 
-export const fieldsMetadata: ResourceField[] = [
+export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: C.NAME,
-    label: 'Name',
+    label: t('Name'),
     isVisible: true,
     isIdentity: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: 'Filter by name',
+      placeholderLabel: t('Filter by name'),
     },
     sortable: true,
   },
   {
     resourceFieldId: C.NAMESPACE,
-    label: 'Namespace',
+    label: t('Namespace'),
     isVisible: true,
     isIdentity: true,
     filter: {
-      toPlaceholderLabel: 'Filter by namespace',
+      placeholderLabel: t('Filter by namespace'),
       type: 'freetext',
     },
     sortable: true,
   },
   {
     resourceFieldId: C.SOURCE,
-    label: 'Source provider',
+    label: t('Source provider'),
     isVisible: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: 'Filter by name',
+      placeholderLabel: t('Filter by name'),
     },
     sortable: true,
   },
   {
     resourceFieldId: C.TARGET,
-    label: 'Target provider',
+    label: t('Target provider'),
     isVisible: true,
     filter: {
       type: 'freetext',
-      toPlaceholderLabel: 'Filter by name',
+      placeholderLabel: t('Filter by name'),
     },
     sortable: true,
   },
   {
     resourceFieldId: C.VM_COUNT,
-    label: 'VMs',
+    label: t('VMs'),
     isVisible: true,
     sortable: true,
   },
   {
     resourceFieldId: C.STATUS,
-    label: 'Status',
+    label: t('Status'),
     isVisible: true,
     filter: {
       type: 'enum',
       primary: true,
-      toPlaceholderLabel: 'Status',
-      values: fromI18nEnum(PLAN_STATUS_FILTER),
+      placeholderLabel: t('Status'),
+      values: EnumToTuple(PLAN_STATUS_FILTER),
     },
     sortable: true,
   },
 
   {
     resourceFieldId: C.DESCRIPTION,
-    label: 'Description',
+    label: t('Description'),
     isVisible: true,
   },
   {
@@ -93,12 +93,12 @@ export const fieldsMetadata: ResourceField[] = [
   },
   {
     resourceFieldId: C.ARCHIVED,
-    label: 'Archived',
+    label: t('Archived'),
     isHidden: true,
     filter: {
       type: 'slider',
       standalone: true,
-      toPlaceholderLabel: 'Show archived',
+      placeholderLabel: t('Show archived'),
       defaultValues: ['false'],
     },
   },
@@ -133,17 +133,21 @@ const Page = ({
   namespace: string;
   title: string;
   userSettings: UserSettings;
-}) => (
-  <StandardPage<FlatPlan>
-    addButton={<CreatePlanButton namespace={namespace} />}
-    dataSource={dataSource}
-    RowMapper={PlanRow}
-    fieldsMetadata={fieldsMetadata}
-    namespace={namespace}
-    title={title}
-    userSettings={userSettings}
-  />
-);
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <StandardPage<FlatPlan>
+      addButton={<CreatePlanButton namespace={namespace} />}
+      dataSource={dataSource}
+      RowMapper={PlanRow}
+      fieldsMetadata={fieldsMetadataFactory(t)}
+      namespace={namespace}
+      title={title}
+      userSettings={userSettings}
+    />
+  );
+};
 
 const PageMemo = React.memo(Page);
 

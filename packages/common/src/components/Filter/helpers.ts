@@ -8,5 +8,5 @@ export const toFieldFilter = ({
   filter: filterDef,
 }: ResourceField): FieldFilter => ({ resourceFieldId, label, filterDef });
 
-export const fromI18nEnum = (i18nEnum: { [k: string]: string }) =>
+export const EnumToTuple = (i18nEnum: { [k: string]: string }) =>
   Object.entries(i18nEnum).map(([type, label]) => ({ id: type, label }));

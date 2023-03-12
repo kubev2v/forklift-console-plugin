@@ -7,9 +7,14 @@ import { cleanup, render } from '@testing-library/react';
 
 import { FlatPlan } from '../data';
 import PlanRow from '../PlanRow';
-import { fieldsMetadata } from '../PlansPage';
+import { fieldsMetadataFactory } from '../PlansPage';
 
 import MERGED_MOCK_DATA from './mergedMockData.json';
+
+// Mock translation function.
+const t = (s) => s;
+// Create a field metadata
+const fieldsMetadata = fieldsMetadataFactory(t);
 
 afterEach(cleanup);
 

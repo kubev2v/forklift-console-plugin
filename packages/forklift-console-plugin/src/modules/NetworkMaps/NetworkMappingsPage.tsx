@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { defaultValueMatchers, FreetextFilter, ValueMatcher } from 'common/src/components/Filter';
 import withQueryClient from 'common/src/components/QueryClientHoc';
 import { loadUserSettings, StandardPage, UserSettings } from 'common/src/components/StandardPage';
-import { ResourceField } from 'common/src/components/types';
+import { ResourceFieldFactory } from 'common/src/components/types';
 import { AddEditMappingModal } from 'legacy/src/Mappings/components/AddEditMappingModal';
 import { MappingType } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
@@ -14,22 +14,22 @@ import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { Button } from '@patternfly/react-core';
 
 import {
-  commonFieldsMetadata,
+  commonFieldsMetadataFactory,
   StartWithEmptyColumnMapper,
 } from '../../components/mappings/MappingPage';
 
 import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './dataForNetwork';
 import NetworkMappingRow from './NetworkMappingRow';
 
-export const fieldsMetadata: ResourceField[] = [
-  ...commonFieldsMetadata,
+export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
+  ...commonFieldsMetadataFactory(t),
   {
     resourceFieldId: C.TO,
-    label: 'To',
+    label: t('To'),
     isVisible: true,
     filter: {
       type: 'targetNetwork',
-      toPlaceholderLabel: 'Filter by name',
+      placeholderLabel: t('Filter by name'),
     },
     sortable: false,
   },
@@ -71,23 +71,27 @@ const Page = ({
   namespace: string;
   title: string;
   userSettings: UserSettings;
-}) => (
-  <StandardPage<FlatNetworkMapping>
-    addButton={<AddNetworkMappingButton namespace={namespace} />}
-    dataSource={dataSource}
-    RowMapper={NetworkMappingRow}
-    HeaderMapper={StartWithEmptyColumnMapper}
-    fieldsMetadata={fieldsMetadata}
-    namespace={namespace}
-    title={title}
-    userSettings={userSettings}
-    supportedFilters={{
-      freetext: FreetextFilter,
-      targetNetwork: FreetextFilter,
-    }}
-    supportedMatchers={[...defaultValueMatchers, targetNetworkMatcher]}
-  />
-);
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <StandardPage<FlatNetworkMapping>
+      addButton={<AddNetworkMappingButton namespace={namespace} />}
+      dataSource={dataSource}
+      RowMapper={NetworkMappingRow}
+      HeaderMapper={StartWithEmptyColumnMapper}
+      fieldsMetadata={fieldsMetadataFactory(t)}
+      namespace={namespace}
+      title={title}
+      userSettings={userSettings}
+      supportedFilters={{
+        freetext: FreetextFilter,
+        targetNetwork: FreetextFilter,
+      }}
+      supportedMatchers={[...defaultValueMatchers, targetNetworkMatcher]}
+    />
+  );
+};
 
 const PageMemo = React.memo(Page);
 

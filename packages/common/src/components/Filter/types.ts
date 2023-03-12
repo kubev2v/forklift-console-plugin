@@ -11,7 +11,7 @@ export interface EnumValue {
 
 export interface FilterDef {
   type: string;
-  toPlaceholderLabel: string;
+  placeholderLabel: string;
   values?: EnumValue[];
   fieldLabel?: string;
   primary?: boolean;

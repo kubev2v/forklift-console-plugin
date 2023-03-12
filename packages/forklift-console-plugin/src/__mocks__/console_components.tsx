@@ -11,3 +11,9 @@ export const ResourceLink = ({
     {`name: ${name}, gvk: ${[group, version, kind].join('~')}, ns: ${ns}`}
   </div>
 );
+
+export const RedExclamationCircleIcon = () => (
+  <div data-test-element-name={RedExclamationCircleIcon} />
+);
+export const GreenCheckCircleIcon = () => <div data-test-element-name={GreenCheckCircleIcon} />;
+export const BlueInfoCircleIcon = () => <div data-test-element-name={BlueInfoCircleIcon} />;
