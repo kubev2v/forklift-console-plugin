@@ -52,28 +52,48 @@ const StatusCell = ({
   const { title, variant } = getMigStatusState(status, isWarmPlan);
 
   if (status === 'Archiving') {
-    return <Link name={name}>{t('Archiving')}</Link>;
+    return (
+      <Link name={name} namespace={namespace}>
+        {t('Archiving')}
+      </Link>
+    );
   } else if (status === 'Archived') {
     return (
-      <Link name={name}>
+      <Link name={name} namespace={namespace}>
         <ArchiveIcon /> {t('Archived')}
       </Link>
     );
   } else if (isBeingStarted && !isWarmPlan) {
-    return <Link name={name}>{t('Running - preparing for migration')}</Link>;
+    return (
+      <Link name={name} namespace={namespace}>
+        {t('Running - preparing for migration')}
+      </Link>
+    );
   } else if (isBeingStarted && isWarmPlan) {
-    return <Link name={name}>{t('Running - preparing for incremental data copies')}</Link>;
+    return (
+      <Link name={name} namespace={namespace}>
+        {t('Running - preparing for incremental data copies')}
+      </Link>
+    );
   } else if (status === 'Unknown') {
     return <StatusIcon status="Warning" label="Unknown" />;
   } else if (status === 'NotStarted-Ready' || status === 'NotStarted-NotReady') {
     return <StatusCondition status={object.status} />;
   } else if (status === 'Copying' || status === 'Copying-CutoverScheduled') {
-    return <Link name={name}>{t('Running - performing incremental data copies')}</Link>;
+    return (
+      <Link name={name} namespace={namespace}>
+        {t('Running - performing incremental data copies')}
+      </Link>
+    );
   } else if (status === 'StartingCutover') {
-    return <Link name={name}>{t('Running - preparing for cutover')}</Link>;
+    return (
+      <Link name={name} namespace={namespace}>
+        {t('Running - preparing for cutover')}
+      </Link>
+    );
   } else {
     return (
-      <Link name={name} isInline={false}>
+      <Link name={name} namespace={namespace} isInline={false}>
         <Progress
           id={`progress_for_${name}_in_${namespace}`}
           title={title}

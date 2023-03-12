@@ -12,10 +12,12 @@ interface IPlanStatusNavLinkProps {
 
 export const PlanNameNavLink = ({
   name,
+  namespace,
   isInline = true,
   children,
 }: {
   name: string;
+  namespace: string,
   isInline?: boolean;
   children: React.ReactNode;
 }) => {
@@ -23,7 +25,7 @@ export const PlanNameNavLink = ({
   return (
     <Button
       variant="link"
-      onClick={() => history.push(`${PATH_PREFIX}/plans/${name}`)}
+      onClick={() => history.push(`${PATH_PREFIX}/plans/ns/${namespace}/${name}`)}
       isInline={isInline}
       className={!isInline ? 'forklift-table__status-cell-progress' : ''}
     >
@@ -37,7 +39,7 @@ export const PlanStatusNavLink: React.FunctionComponent<IPlanStatusNavLinkProps>
   isInline = true,
   children,
 }) => (
-  <PlanNameNavLink name={plan.metadata.name} isInline={isInline}>
+  <PlanNameNavLink name={plan.metadata.name} namespace={plan.metadata.namespace} isInline={isInline}>
     {children}
   </PlanNameNavLink>
 );
