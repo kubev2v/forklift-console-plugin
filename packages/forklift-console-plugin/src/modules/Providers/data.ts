@@ -15,6 +15,9 @@ export type CommonInventory = Partial<
 >;
 export type MergedProvider = V1beta1Provider & { inventory: CommonInventory };
 
+export const isManaged = (resourceData: V1beta1Provider) =>
+  (resourceData?.metadata?.ownerReferences?.length ?? 0) > 0;
+
 export type GetFlatDataFn = {
   ({
     providers,

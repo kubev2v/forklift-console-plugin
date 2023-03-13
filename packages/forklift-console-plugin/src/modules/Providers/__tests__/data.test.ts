@@ -4,11 +4,26 @@ import {
 } from '@kubev2v/legacy/queries/mocks/providers.mock';
 import { V1beta1Provider } from '@kubev2v/types';
 
-import { getFlatData } from '../data';
+import { getFlatData, isManaged } from '../data';
 
 import preCalculatedflatData from './data.test.getFlatData_mock_data.json';
 
-describe('getFlatData empty', () => {
+const preCalculatedIsManagedMap = {
+  'vcenter-1': false,
+  'vcenter-2': false,
+  'vcenter-3': false,
+  'rhv-1': false,
+  'rhv-2': false,
+  'rhv-3': false,
+  'openstack-insecure-1': false,
+  'openstack-secure-2': false,
+  'ocpv-1': false,
+  'ocpv-2': false,
+  'ocpv-3': false,
+  host: true,
+};
+
+describe('getFlatData', () => {
   test('empty input', () => {
     const flatData = getFlatData({
       providers: [],
@@ -23,7 +38,7 @@ describe('getFlatData empty', () => {
     expect(flatData).toHaveLength(0);
   });
 
-  test('getFlatData mock data', () => {
+  test('mock data', () => {
     const flatData = getFlatData({
       providers: MOCK_CLUSTER_PROVIDERS as unknown as V1beta1Provider[],
       inventory: MOCK_INVENTORY_PROVIDERS,
@@ -45,5 +60,19 @@ describe('getFlatData empty', () => {
     */
 
     expect(flatData).toEqual(preCalculatedflatData);
+  });
+});
+
+describe('isManaged', () => {
+  test('undefined', () => {
+    expect(isManaged(undefined)).toEqual(false);
+  });
+
+  const providersTuples = preCalculatedflatData.map((p) => [p.metadata.name, p]);
+
+  test.each(providersTuples)('%s', (description, provider) => {
+    expect(isManaged(provider as unknown as V1beta1Provider)).toEqual(
+      preCalculatedIsManagedMap[description as string],
+    );
   });
 });
