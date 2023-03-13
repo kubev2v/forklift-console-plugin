@@ -15,7 +15,7 @@ import {
   Title,
 } from '@patternfly/react-core';
 
-import { AddProviderButton } from './ProvidersPage';
+import { AddProviderButton } from './AddProviderButton';
 
 const EmptyStateProviders: React.FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useTranslation();
