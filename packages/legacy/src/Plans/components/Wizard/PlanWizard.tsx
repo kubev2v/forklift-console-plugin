@@ -53,7 +53,7 @@ import {
   IndexedTree,
 } from 'legacy/src/queries';
 import { createK8sPath, getAggregateQueryStatus } from 'legacy/src/queries/helpers';
-import { dnsLabelNameSchema, ENV, PATH_PREFIX, PLANS_REFERENCE } from 'legacy/src/common/constants';
+import { dnsLabelNameSchema, PATH_PREFIX, PLANS_REFERENCE } from 'legacy/src/common/constants';
 import { IKubeList } from 'legacy/src/client/types';
 import { LoadingEmptyState } from 'legacy/src/common/components/LoadingEmptyState';
 import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
@@ -148,20 +148,18 @@ const usePlanWizardFormState = (
 export type PlanWizardFormState = ReturnType<typeof usePlanWizardFormState>; // ✨ Magic
 
 export const PlanWizard: React.FunctionComponent<RouteComponentProps<{ ns: string }>> = (props) => {
-  const currentNamespace = props.match?.params?.ns;
+  // namespace is mandatory in all paths: create, edit, duplicate
+  const prefillPlanNamespace = props.match?.params?.ns;
   const history = useHistory();
-  const plansQuery = usePlansQuery(currentNamespace);
+  const plansQuery = usePlansQuery(prefillPlanNamespace);
 
   const editRouteMatch = useRouteMatch<{ planName: string; ns: string }>({
-    path: [`${PATH_PREFIX}/plans/ns/:ns/:planName/edit`, `${PATH_PREFIX}/plans/:planName/edit`],
+    path: [`${PATH_PREFIX}/plans/ns/:ns/:planName/edit`],
     strict: true,
     sensitive: true,
   });
   const duplicateRouteMatch = useRouteMatch<{ planName: string; ns: string }>({
-    path: [
-      `${PATH_PREFIX}/plans/ns/:ns/:planName/duplicate`,
-      `${PATH_PREFIX}/plans/:planName/duplicate`,
-    ],
+    path: [`${PATH_PREFIX}/plans/ns/:ns/:planName/duplicate`],
     strict: true,
     sensitive: true,
   });
@@ -170,9 +168,6 @@ export const PlanWizard: React.FunctionComponent<RouteComponentProps<{ ns: strin
   const prefillPlanName = editRouteMatch?.params.planName || duplicateRouteMatch?.params.planName;
   const planBeingPrefilled =
     plansQuery.data?.items.find((plan) => plan.metadata.name === prefillPlanName) || null;
-  const prefillPlanNamespace =
-    (wizardMode === 'edit' ? planBeingPrefilled?.metadata?.namespace : currentNamespace) ||
-    ENV.DEFAULT_NAMESPACE;
   const networkMappingsQuery = useMappingsQuery(MappingType.Network, prefillPlanNamespace);
   const storageMappingsQuery = useMappingsQuery(MappingType.Storage, prefillPlanNamespace);
 
@@ -217,7 +212,7 @@ export const PlanWizard: React.FunctionComponent<RouteComponentProps<{ ns: strin
   const stepIdReached: StepId =
     firstInvalidFormIndex === -1 ? StepId.Review : firstInvalidFormIndex;
 
-  const onClose = () => history.push(createK8sPath(PLANS_REFERENCE, currentNamespace));
+  const onClose = () => history.push(createK8sPath(PLANS_REFERENCE, prefillPlanNamespace));
 
   const createPlanMutation = useCreatePlanMutation(prefillPlanNamespace);
   const patchPlanMutation = usePatchPlanMutation(prefillPlanNamespace);
@@ -452,7 +447,7 @@ export const PlanWizard: React.FunctionComponent<RouteComponentProps<{ ns: strin
         <LoadingEmptyState />
       ) : wizardMode === 'edit' &&
         (!planBeingPrefilled || planBeingPrefilled?.status?.migration?.started) ? (
-        <Redirect to={createK8sPath(PLANS_REFERENCE, currentNamespace)} />
+        <Redirect to={createK8sPath(PLANS_REFERENCE, prefillPlanNamespace)} />
       ) : (
         <>
           <RouteGuard
@@ -465,7 +460,7 @@ export const PlanWizard: React.FunctionComponent<RouteComponentProps<{ ns: strin
               <BreadcrumbItem>
                 <ResourceLink
                   kind={PLANS_REFERENCE}
-                  namespace={currentNamespace}
+                  namespace={prefillPlanNamespace}
                   hideIcon
                   displayName="Migration plans"
                 />

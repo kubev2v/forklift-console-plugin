@@ -49,7 +49,7 @@ export const extensions: EncodedExtension[] = [
       component: {
         $codeRef: 'HostsPage',
       },
-      path: ['/mtv/providers/vsphere/ns/:ns/:providerName', '/mtv/providers/vsphere/:providerName'],
+      path: ['/mtv/providers/vsphere/ns/:ns/:providerName'],
       exact: false,
     },
   } as EncodedExtension<RoutePage>,

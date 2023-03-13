@@ -68,7 +68,7 @@ exports[`Plan rows plantest-01 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-01"
+            href="/mtv/plans/ns/openshift-migration/plantest-01"
           >
             <svg
               aria-hidden="true"
@@ -275,7 +275,7 @@ exports[`Plan rows plantest-02 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-02"
+            href="/mtv/plans/ns/openshift-migration/plantest-02"
           >
             <svg
               aria-hidden="true"
@@ -485,7 +485,7 @@ exports[`Plan rows plantest-03 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-03"
+            href="/mtv/plans/ns/openshift-migration/plantest-03"
           >
             <svg
               aria-hidden="true"
@@ -712,7 +712,7 @@ exports[`Plan rows plantest-04 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-04"
+            href="/mtv/plans/ns/openshift-migration/plantest-04"
           >
             <svg
               aria-hidden="true"
@@ -939,7 +939,7 @@ exports[`Plan rows plantest-05 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-05"
+            href="/mtv/plans/ns/openshift-migration/plantest-05"
           >
             <svg
               aria-hidden="true"
@@ -1123,7 +1123,7 @@ exports[`Plan rows plantest-06 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-06"
+            href="/mtv/plans/ns/openshift-migration/plantest-06"
           >
             <svg
               aria-hidden="true"
@@ -1333,7 +1333,7 @@ exports[`Plan rows plantest-07 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-07"
+            href="/mtv/plans/ns/openshift-migration/plantest-07"
           >
             <svg
               aria-hidden="true"
@@ -1515,7 +1515,7 @@ exports[`Plan rows plantest-08 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-08"
+            href="/mtv/plans/ns/openshift-migration/plantest-08"
           >
             <svg
               aria-hidden="true"
@@ -1698,7 +1698,7 @@ exports[`Plan rows plantest-09 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-09"
+            href="/mtv/plans/ns/openshift-migration/plantest-09"
           >
             <svg
               aria-hidden="true"
@@ -1905,7 +1905,7 @@ exports[`Plan rows plantest-10 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-10"
+            href="/mtv/plans/ns/openshift-migration/plantest-10"
           >
             <svg
               aria-hidden="true"
@@ -2132,7 +2132,7 @@ exports[`Plan rows plantest-11 1`] = `
           data-label="VMs"
         >
           <a
-            href="/mtv/plans/plantest-11"
+            href="/mtv/plans/ns/openshift-migration/plantest-11"
           >
             <svg
               aria-hidden="true"

@@ -17,14 +17,8 @@ export const HostCell: React.FC<CellProps> = ({ resourceData, resourceFields }) 
 
   return (
     <>
-      {phase === 'Ready' && hostCount && type === 'vsphere' ? (
-        <Link
-          to={
-            namespace
-              ? `${PATH_PREFIX}/providers/vsphere/ns/${namespace}/${name}`
-              : `${PATH_PREFIX}/providers/vsphere/${name}`
-          }
-        >
+      {phase === 'Ready' && hostCount && type === 'vsphere' && name && namespace ? (
+        <Link to={`${PATH_PREFIX}/providers/vsphere/ns/${namespace}/${name}`}>
           <TextWithIcon icon={<OutlinedHddIcon />} label={hostCount} />
         </Link>
       ) : (

@@ -62,12 +62,9 @@ export const useFlatPlanActions: ExtensionHook<
   {
     /** Resource the actions will act upon. */
     resourceData: FlatPlan;
-
-    /** The entity's namespace. */
-    namespace: string;
   }
-> = ({ resourceData: plan, namespace }) => {
-  const { migrationStarted, migrationCompleted, archived: isPlanArchived, name } = plan;
+> = ({ resourceData: plan }) => {
+  const { migrationStarted, migrationCompleted, archived: isPlanArchived, name, namespace } = plan;
   const isPlanStarted = !!migrationStarted;
   const { t } = useTranslation();
   const launchModal = useModal();
@@ -186,9 +183,7 @@ export const useFlatPlanActions: ExtensionHook<
     () => ({
       id: 'edit',
       cta: {
-        href: namespace
-          ? `${PATH_PREFIX}/plans/ns/${namespace}/${name}/edit`
-          : `${PATH_PREFIX}/plans/${name}/edit`,
+        href: `${PATH_PREFIX}/plans/ns/${namespace}/${name}/edit`,
       },
       label: t('Edit'),
       disabled: editingDisabled,
@@ -216,9 +211,7 @@ export const useFlatPlanActions: ExtensionHook<
     () => ({
       id: 'duplicate',
       cta: {
-        href: namespace
-          ? `${PATH_PREFIX}/plans/ns/${namespace}/${name}/duplicate`
-          : `${PATH_PREFIX}/plans/${name}/duplicate`,
+        href: `${PATH_PREFIX}/plans/ns/${namespace}/${name}/duplicate`,
       },
       label: t('Duplicate'),
       disabled: !areProvidersReady,
