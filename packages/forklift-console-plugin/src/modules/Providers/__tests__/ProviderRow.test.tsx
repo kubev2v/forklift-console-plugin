@@ -1,39 +1,47 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
+import {
+  MOCK_CLUSTER_PROVIDERS,
+  MOCK_INVENTORY_PROVIDERS,
+} from 'legacy/src/queries/mocks/providers.mock';
 
-import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
+import { V1beta1Provider } from '@kubev2v/types';
 import { cleanup, render } from '@testing-library/react';
 
-import { MergedProvider } from '../data';
+import { getFlatData, MergedProvider } from '../data';
 import ProviderRow from '../ProviderRow';
 import { fieldsMetadataFactory } from '../ProvidersPage';
-
-import MERGED_MOCK_DATA from './mergedMockData.json';
 
 // Mock translation function.
 const t = (s) => s;
 // Create a field metadata
 const fieldsMetadata = fieldsMetadataFactory(t);
 
+const flatData = getFlatData({
+  providers: MOCK_CLUSTER_PROVIDERS as unknown as V1beta1Provider[],
+  inventory: MOCK_INVENTORY_PROVIDERS,
+});
+
 afterEach(cleanup);
 
 describe('Provider rows', () => {
-  const providerTuples = MERGED_MOCK_DATA.map((p) => [p.name, p]);
-  test.each(providerTuples)('%s', (description, provider) => {
-    const Wrapped = withQueryClient(() => (
+  const providersTuples = flatData.map((p) => [p.metadata.name, p]);
+
+  test.each(providersTuples)('%s', (description, provider) => {
+    const Wrapped = () => (
       <MemoryRouter>
         <table>
           <tbody>
             <ProviderRow
               resourceFields={fieldsMetadata}
-              currentNamespace={undefined}
+              namespace={'mtv-namespace'}
               resourceData={provider as MergedProvider}
-              rowIndex={0}
+              resourceIndex={0}
             />
           </tbody>
         </table>
       </MemoryRouter>
-    ));
+    );
     const { asFragment } = render(<Wrapped />);
     expect(asFragment()).toMatchSnapshot();
   });

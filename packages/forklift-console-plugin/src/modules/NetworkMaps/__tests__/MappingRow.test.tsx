@@ -26,9 +26,9 @@ describe('NetworkMap rows', () => {
           <tbody>
             <NetworkMappingRow
               resourceFields={networkFields}
-              currentNamespace={undefined}
+              namespace={undefined}
               resourceData={net as FlatNetworkMapping}
-              rowIndex={0}
+              resourceIndex={0}
             />
           </tbody>
         </table>

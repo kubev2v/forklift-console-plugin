@@ -195,7 +195,11 @@ const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   ),
 };
 
-const PlanRow = ({ resourceFields, resourceData, currentNamespace }: RowProps<FlatPlan>) => {
+const PlanRow = ({
+  resourceFields,
+  resourceData,
+  namespace: currentNamespace,
+}: RowProps<FlatPlan>) => {
   const primaryAction = getPrimaryActionFromPlanState(resourceData.status);
   return (
     <Tr>

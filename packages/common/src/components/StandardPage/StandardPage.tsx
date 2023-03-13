@@ -54,9 +54,9 @@ export interface StandardPageProps<T> {
    * Source of data. Tuple should consist of:
    * @param T[] array of items
    * @param loading flag that indicates if loading is in progress
-   * @param error flag indicating error
+   * @param error an error object/message/flag, undefined o/w
    */
-  dataSource: [T[], boolean, boolean];
+  dataSource: [T[], boolean, unknown];
   /**
    * Fields to be displayed (from the provided type T).
    */
@@ -126,7 +126,7 @@ export interface StandardPageProps<T> {
  */
 export function StandardPage<T>({
   namespace,
-  dataSource: [flattenData, loaded, error],
+  dataSource: [flatData, loaded, error],
   RowMapper,
   title,
   addButton,
@@ -156,23 +156,23 @@ export function StandardPage<T>({
 
   const filteredData = useMemo(
     () =>
-      flattenData
+      flatData
         .filter(createMetaMatcher(selectedFilters, fields, supportedMatchers))
         .sort(compareFn),
-    [flattenData, selectedFilters, fields, compareFn],
+    [flatData, selectedFilters, fields, compareFn],
   );
 
   const { pageData, showPagination, itemsPerPage, currentPage, setPage, setPerPage } =
     usePagination({
       pagination,
       filteredData,
-      flattenData,
+      flattenData: flatData,
       userSettings: userSettings?.pagination,
     });
 
   const errorFetchingData = loaded && error;
-  const noResults = loaded && !error && flattenData.length == 0;
-  const noMatchingResults = loaded && !error && filteredData.length === 0 && flattenData.length > 0;
+  const noResults = loaded && !error && flatData.length == 0;
+  const noMatchingResults = loaded && !error && filteredData.length === 0 && flatData.length > 0;
 
   const primaryFilters = fields.filter((field) => field.filter?.primary).map(toFieldFilter);
 

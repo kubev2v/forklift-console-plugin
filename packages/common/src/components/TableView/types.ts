@@ -3,8 +3,8 @@ import { ResourceField, SortType } from '../types';
 export interface RowProps<T> {
   resourceFields: ResourceField[];
   resourceData: T;
-  currentNamespace: string;
-  rowIndex: number;
+  resourceIndex: number;
+  namespace: string;
 }
 
 export interface TableViewHeaderProps {
