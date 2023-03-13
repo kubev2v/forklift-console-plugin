@@ -25,6 +25,7 @@ import ProviderRow from './ProviderRow';
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: C.NAME,
+    jsonPath: '$.metadata.name',
     label: t('Name'),
     isVisible: true,
     isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
@@ -36,6 +37,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: C.NAMESPACE,
+    jsonPath: '$.metadata.namespace',
     label: t('Namespace'),
     isVisible: true,
     isIdentity: true,
@@ -47,6 +49,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: C.PHASE,
+    jsonPath: '$.status.phase',
     label: t('Status'),
     isVisible: true,
     filter: {
@@ -59,6 +62,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: C.URL,
+    jsonPath: '$.spec.url',
     label: t('Endpoint'),
     isVisible: true,
     filter: {
@@ -69,6 +73,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: C.TYPE,
+    jsonPath: '$.spec.type',
     label: t('Type'),
     isVisible: true,
     filter: {
@@ -89,30 +94,35 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: C.VM_COUNT,
+    jsonPath: '$.inventory.vmCount',
     label: t('VMs'),
     isVisible: true,
     sortable: true,
   },
   {
     resourceFieldId: C.NETWORK_COUNT,
+    jsonPath: '$.inventory.networkCount',
     label: t('Networks'),
     isVisible: true,
     sortable: true,
   },
   {
     resourceFieldId: C.CLUSTER_COUNT,
+    jsonPath: '$.inventory.clusterCount',
     label: t('Clusters'),
     isVisible: false,
     sortable: true,
   },
   {
     resourceFieldId: C.HOST_COUNT,
+    jsonPath: '$.inventory.hostCount',
     label: t('Hosts'),
     isVisible: true,
     sortable: true,
   },
   {
     resourceFieldId: C.STORAGE_COUNT,
+    jsonPath: '$.inventory.storageCount',
     label: t('Storage'),
     isVisible: false,
     sortable: true,
@@ -148,7 +158,7 @@ const ProvidersPage: React.FC<ResourceConsolePageProps> = ({ namespace, kind: re
 ProvidersPage.displayName = 'ProvidersPage';
 
 const Page: React.FC<{
-  dataSource: [MergedProvider[], boolean, boolean];
+  dataSource: [MergedProvider[], boolean, unknown, unknown, unknown];
   namespace: string;
   title: string;
   userSettings: UserSettings;
@@ -163,7 +173,7 @@ const Page: React.FC<{
   ) : (
     <StandardPage<MergedProvider>
       addButton={<AddProviderButton namespace={namespace} />}
-      dataSource={dataSource}
+      dataSource={[data, loaded, error]}
       RowMapper={ProviderRow}
       fieldsMetadata={fieldsMetadataFactory(t)}
       namespace={namespace}

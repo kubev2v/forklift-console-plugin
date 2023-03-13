@@ -87,7 +87,7 @@ export const commonCells: CellCreator<CommonMapping> = {
 };
 
 function MappingRow<T extends CommonMapping>({
-  rowProps: { resourceFields, resourceData, currentNamespace, rowIndex },
+  rowProps: { resourceFields, resourceData, namespace: currentNamespace, resourceIndex: rowIndex },
   cellCreator,
   mappingType,
   mapping,

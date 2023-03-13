@@ -26,9 +26,9 @@ describe('StorageMap rows', () => {
           <tbody>
             <StorageMappingRow
               resourceFields={storageFields}
-              currentNamespace={undefined}
+              namespace={undefined}
               resourceData={storage as FlatStorageMapping}
-              rowIndex={0}
+              resourceIndex={0}
             />
           </tbody>
         </table>

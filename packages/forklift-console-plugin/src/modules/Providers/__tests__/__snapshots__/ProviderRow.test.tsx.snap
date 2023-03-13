@@ -40,7 +40,7 @@ exports[`Provider rows host 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: openshift-migration, gvk: ~~, ns: undefined
+            name: openshift-migration, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -57,26 +57,14 @@ exports[`Provider rows host 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#3e8635"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -89,7 +77,15 @@ exports[`Provider rows host 1`] = `
         <td
           class=""
           data-label="Endpoint"
-        />
+        >
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-34"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          />
+        </td>
         <td
           class=""
           data-label="Type"
@@ -113,39 +109,117 @@ exports[`Provider rows host 1`] = `
           class=""
           data-label="VMs"
         >
-          26
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-35"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            26
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           8
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              8
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
-        />
+        >
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-36"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          />
+        </td>
         <td
           class=""
           data-label="Hosts"
-        />
+        >
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            />
+          </div>
+        </td>
         <td
           class=""
           data-label="Storage"
-        />
+        >
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            />
+          </div>
+        </td>
         <td
           class=""
           data-label=""
@@ -217,7 +291,7 @@ exports[`Provider rows ocpv-1 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: openshift-migration, gvk: ~~, ns: undefined
+            name: openshift-migration, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -234,26 +308,14 @@ exports[`Provider rows ocpv-1 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#3e8635"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -267,7 +329,15 @@ exports[`Provider rows ocpv-1 1`] = `
           class=""
           data-label="Endpoint"
         >
-          https://my_OCPv_url
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-25"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            https://my_OCPv_url
+          </p>
         </td>
         <td
           class=""
@@ -292,39 +362,117 @@ exports[`Provider rows ocpv-1 1`] = `
           class=""
           data-label="VMs"
         >
-          26
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-26"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            26
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           8
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              8
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
-        />
+        >
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-27"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          />
+        </td>
         <td
           class=""
           data-label="Hosts"
-        />
+        >
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            />
+          </div>
+        </td>
         <td
           class=""
           data-label="Storage"
-        />
+        >
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            />
+          </div>
+        </td>
         <td
           class=""
           data-label=""
@@ -396,7 +544,7 @@ exports[`Provider rows ocpv-2 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: openshift-migration, gvk: ~~, ns: undefined
+            name: openshift-migration, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -413,26 +561,14 @@ exports[`Provider rows ocpv-2 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#c9190b"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="RedExclamationCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -446,7 +582,15 @@ exports[`Provider rows ocpv-2 1`] = `
           class=""
           data-label="Endpoint"
         >
-          https://my_OCPv_url
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-28"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            https://my_OCPv_url
+          </p>
         </td>
         <td
           class=""
@@ -471,39 +615,117 @@ exports[`Provider rows ocpv-2 1`] = `
           class=""
           data-label="VMs"
         >
-          26
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-29"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            26
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           8
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              8
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
-        />
+        >
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-30"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          />
+        </td>
         <td
           class=""
           data-label="Hosts"
-        />
+        >
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            />
+          </div>
+        </td>
         <td
           class=""
           data-label="Storage"
-        />
+        >
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            />
+          </div>
+        </td>
         <td
           class=""
           data-label=""
@@ -575,7 +797,7 @@ exports[`Provider rows ocpv-3 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: openshift-migration, gvk: ~~, ns: undefined
+            name: openshift-migration, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -592,26 +814,14 @@ exports[`Provider rows ocpv-3 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#3e8635"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -624,7 +834,15 @@ exports[`Provider rows ocpv-3 1`] = `
         <td
           class=""
           data-label="Endpoint"
-        />
+        >
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-31"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          />
+        </td>
         <td
           class=""
           data-label="Type"
@@ -648,39 +866,117 @@ exports[`Provider rows ocpv-3 1`] = `
           class=""
           data-label="VMs"
         >
-          26
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-32"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            26
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           8
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              8
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
-        />
+        >
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-33"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          />
+        </td>
         <td
           class=""
           data-label="Hosts"
-        />
+        >
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            />
+          </div>
+        </td>
         <td
           class=""
           data-label="Storage"
-        />
+        >
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            />
+          </div>
+        </td>
         <td
           class=""
           data-label=""
@@ -752,7 +1048,7 @@ exports[`Provider rows openstack-insecure-1 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: konveyor-forklift, gvk: ~~, ns: undefined
+            name: konveyor-forklift, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -769,26 +1065,14 @@ exports[`Provider rows openstack-insecure-1 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#3e8635"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -802,7 +1086,15 @@ exports[`Provider rows openstack-insecure-1 1`] = `
           class=""
           data-label="Endpoint"
         >
-          http://v2v.com:5000/v3
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-19"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            http://v2v.com:5000/v3
+          </p>
         </td>
         <td
           class=""
@@ -827,57 +1119,122 @@ exports[`Provider rows openstack-insecure-1 1`] = `
           class=""
           data-label="VMs"
         >
-          3
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-20"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            3
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           3
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              3
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
         >
-          0
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-21"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            0
+          </p>
         </td>
         <td
           class=""
           data-label="Hosts"
         >
-          0
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              0
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Storage"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 448 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
-            />
-          </svg>
-           2
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              2
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -950,7 +1307,7 @@ exports[`Provider rows openstack-secure-2 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: konveyor-forklift, gvk: ~~, ns: undefined
+            name: konveyor-forklift, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -967,26 +1324,14 @@ exports[`Provider rows openstack-secure-2 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#3e8635"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -1000,7 +1345,15 @@ exports[`Provider rows openstack-secure-2 1`] = `
           class=""
           data-label="Endpoint"
         >
-          http://packstack.com:5000/v3
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-22"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            http://packstack.com:5000/v3
+          </p>
         </td>
         <td
           class=""
@@ -1025,57 +1378,122 @@ exports[`Provider rows openstack-secure-2 1`] = `
           class=""
           data-label="VMs"
         >
-          3
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-23"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            3
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           3
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              3
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
         >
-          0
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-24"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            0
+          </p>
         </td>
         <td
           class=""
           data-label="Hosts"
         >
-          0
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+          >
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              0
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Storage"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 448 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
-            />
-          </svg>
-           2
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              2
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -1148,7 +1566,7 @@ exports[`Provider rows rhv-1 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: konveyor-forklift, gvk: ~~, ns: undefined
+            name: konveyor-forklift, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -1165,26 +1583,14 @@ exports[`Provider rows rhv-1 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#3e8635"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -1198,7 +1604,15 @@ exports[`Provider rows rhv-1 1`] = `
           class=""
           data-label="Endpoint"
         >
-          https://rhvm.v2v.bos.redhat.com/ovirt-engine/api
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-10"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            https://rhvm.v2v.bos.redhat.com/ovirt-engine/api
+          </p>
         </td>
         <td
           class=""
@@ -1223,70 +1637,122 @@ exports[`Provider rows rhv-1 1`] = `
           class=""
           data-label="VMs"
         >
-          36
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-11"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            36
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           15
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              15
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
         >
-          2
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-12"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            2
+          </p>
         </td>
         <td
           class=""
           data-label="Hosts"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 576 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
-            />
-          </svg>
-           4
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              4
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Storage"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 448 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
-            />
-          </svg>
-           9
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              9
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -1359,7 +1825,7 @@ exports[`Provider rows rhv-2 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: konveyor-forklift, gvk: ~~, ns: undefined
+            name: konveyor-forklift, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -1376,26 +1842,14 @@ exports[`Provider rows rhv-2 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#3e8635"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -1409,7 +1863,15 @@ exports[`Provider rows rhv-2 1`] = `
           class=""
           data-label="Endpoint"
         >
-          https://rhvm.v2v.bos.redhat.com/ovirt-engine/api
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-13"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            https://rhvm.v2v.bos.redhat.com/ovirt-engine/api
+          </p>
         </td>
         <td
           class=""
@@ -1434,70 +1896,122 @@ exports[`Provider rows rhv-2 1`] = `
           class=""
           data-label="VMs"
         >
-          36
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-14"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            36
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           15
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              15
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
         >
-          2
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-15"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            2
+          </p>
         </td>
         <td
           class=""
           data-label="Hosts"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 576 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
-            />
-          </svg>
-           4
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              4
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Storage"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 448 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
-            />
-          </svg>
-           9
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              9
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -1570,7 +2084,7 @@ exports[`Provider rows rhv-3 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: konveyor-forklift, gvk: ~~, ns: undefined
+            name: konveyor-forklift, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -1587,26 +2101,14 @@ exports[`Provider rows rhv-3 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#3e8635"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -1620,7 +2122,15 @@ exports[`Provider rows rhv-3 1`] = `
           class=""
           data-label="Endpoint"
         >
-          https://rhvm.v2v.bos.redhat.com/ovirt-engine/api
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-16"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            https://rhvm.v2v.bos.redhat.com/ovirt-engine/api
+          </p>
         </td>
         <td
           class=""
@@ -1645,70 +2155,122 @@ exports[`Provider rows rhv-3 1`] = `
           class=""
           data-label="VMs"
         >
-          36
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-17"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            36
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           15
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              15
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
         >
-          2
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-18"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            2
+          </p>
         </td>
         <td
           class=""
           data-label="Hosts"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 576 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
-            />
-          </svg>
-           4
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              4
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Storage"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 448 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
-            />
-          </svg>
-           9
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              9
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -1781,7 +2343,7 @@ exports[`Provider rows vcenter-1 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: openshift-migration, gvk: ~~, ns: undefined
+            name: openshift-migration, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -1798,26 +2360,14 @@ exports[`Provider rows vcenter-1 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#3e8635"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -1831,7 +2381,15 @@ exports[`Provider rows vcenter-1 1`] = `
           class=""
           data-label="Endpoint"
         >
-          https://vcenter.v2v.bos.redhat.com/sdk
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-1"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            https://vcenter.v2v.bos.redhat.com/sdk
+          </p>
         </td>
         <td
           class=""
@@ -1856,74 +2414,126 @@ exports[`Provider rows vcenter-1 1`] = `
           class=""
           data-label="VMs"
         >
-          41
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-2"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            41
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           8
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              8
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
         >
-          2
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-3"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            2
+          </p>
         </td>
         <td
           class=""
           data-label="Hosts"
         >
           <a
-            href="/mtv/providers/vsphere/vcenter-1"
+            href="/mtv/providers/vsphere/ns/openshift-migration/vcenter-1"
           >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              height="1em"
-              role="img"
-              style="vertical-align: -0.125em;"
-              viewBox="0 0 576 512"
-              width="1em"
+            <div
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
-              <path
-                d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
-              />
-            </svg>
-             2
+              <div
+                class=""
+              >
+                <svg
+                  aria-hidden="true"
+                  fill="currentColor"
+                  height="1em"
+                  role="img"
+                  style="vertical-align: -0.125em;"
+                  viewBox="0 0 576 512"
+                  width="1em"
+                >
+                  <path
+                    d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                  />
+                </svg>
+              </div>
+              <div
+                class=""
+              >
+                2
+              </div>
+            </div>
           </a>
         </td>
         <td
           class=""
           data-label="Storage"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 448 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
-            />
-          </svg>
-           3
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              3
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -1996,7 +2606,7 @@ exports[`Provider rows vcenter-2 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: openshift-migration, gvk: ~~, ns: undefined
+            name: openshift-migration, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -2013,26 +2623,14 @@ exports[`Provider rows vcenter-2 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
               >
-                <svg
-                  aria-hidden="true"
-                  class=""
-                  fill="#c9190b"
-                  height="1em"
-                  role="img"
-                  style="vertical-align: -0.125em;"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                >
-                  <path
-                    d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
-                  />
-                </svg>
+                <div
+                  data-test-element-name="RedExclamationCircleIcon"
+                />
               </div>
               <div
                 class=""
@@ -2046,7 +2644,15 @@ exports[`Provider rows vcenter-2 1`] = `
           class=""
           data-label="Endpoint"
         >
-          https://vcenter.v2v.bos.redhat.com/sdk
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-4"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            https://vcenter.v2v.bos.redhat.com/sdk
+          </p>
         </td>
         <td
           class=""
@@ -2071,70 +2677,122 @@ exports[`Provider rows vcenter-2 1`] = `
           class=""
           data-label="VMs"
         >
-          41
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-5"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            41
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           8
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              8
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
         >
-          2
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-6"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            2
+          </p>
         </td>
         <td
           class=""
           data-label="Hosts"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 576 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
-            />
-          </svg>
-           2
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              2
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Storage"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 448 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
-            />
-          </svg>
-           3
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              3
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -2207,7 +2865,7 @@ exports[`Provider rows vcenter-3 1`] = `
           <div
             class="ResourceLink_mock"
           >
-            name: openshift-migration, gvk: ~~, ns: undefined
+            name: openshift-migration, gvk: ~v1~Namespace, ns: undefined
           </div>
         </td>
         <td
@@ -2224,8 +2882,7 @@ exports[`Provider rows vcenter-3 1`] = `
             type="button"
           >
             <div
-              class="pf-l-flex pf-m-space-items-sm pf-m-align-items-center pf-m-nowrap"
-              style="white-space: nowrap;"
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
             >
               <div
                 class=""
@@ -2233,8 +2890,7 @@ exports[`Provider rows vcenter-3 1`] = `
                 <span
                   aria-label="Contents"
                   aria-valuetext="Loading..."
-                  class="pf-c-spinner pf-m-xl  status-icon-loading-spinner"
-                  color="#002952"
+                  class="pf-c-spinner pf-m-sm"
                   role="progressbar"
                 >
                   <span
@@ -2260,7 +2916,15 @@ exports[`Provider rows vcenter-3 1`] = `
           class=""
           data-label="Endpoint"
         >
-          https://vcenter.v2v.bos.redhat.com/sdk
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-7"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            https://vcenter.v2v.bos.redhat.com/sdk
+          </p>
         </td>
         <td
           class=""
@@ -2285,70 +2949,122 @@ exports[`Provider rows vcenter-3 1`] = `
           class=""
           data-label="VMs"
         >
-          41
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-8"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            41
+          </p>
         </td>
         <td
           class=""
           data-label="Networks"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 1088 1024"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
-            />
-          </svg>
-           8
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1088 1024"
+                width="1em"
+              >
+                <path
+                  d="M574,320 L574,448 L896,448 C931.332514,448.033078 959.966922,476.667486 960,512 L960,512 L960,640 L1024,640 C1059.33251,640.033078 1087.96692,668.667486 1088,704 L1088,704 L1088,896 C1087.96692,931.332514 1059.33251,959.966922 1024,960 L1024,960 L832,960 C796.667486,959.966922 768.033078,931.332514 768,896 L768,896 L768,704 C768.033078,668.667486 796.667486,640.033078 832,640 L832,640 L896,640 L896,512 L574,512 L574,640 L639,640 C674.332514,640.033078 702.966922,668.667486 703,704 L703,704 L703,896 C702.966922,931.332514 674.332514,959.966922 639,960 L639,960 L447,960 C411.667486,959.966922 383.033078,931.332514 383,896 L383,896 L383,704 C383.033078,668.667486 411.667486,640.033078 447,640 L447,640 L510,640 L510,512 L192,512 L192,640 L256,640 C291.332514,640.033078 319.966922,668.667486 320,704 L320,704 L320,896 C319.966922,931.332514 291.332514,959.966922 256,960 L256,960 L64,960 C28.6674863,959.966922 0.0330777378,931.332514 0,896 L0,896 L0,704 C0.0330777378,668.667486 28.6674863,640.033078 64,640 L64,640 L128,640 L128,512 C128.033078,476.667486 156.667486,448.033078 192,448 L192,448 L510,448 L510,320 L574,320 Z M1024,64 L1024,256 L64,256 L64,64 L1024,64 Z M704,192 L960.5,192 L960.5,128 L704,128 L704,192 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              8
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Clusters"
         >
-          2
+          <p
+            class=""
+            data-ouia-component-id="OUIA-Generated-Text-9"
+            data-ouia-component-type="PF4/Text"
+            data-ouia-safe="true"
+            data-pf-content="true"
+          >
+            2
+          </p>
         </td>
         <td
           class=""
           data-label="Hosts"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 576 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
-            />
-          </svg>
-           2
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 576 512"
+                width="1em"
+              >
+                <path
+                  d="M567.403 235.642L462.323 84.589A48 48 0 0 0 422.919 64H153.081a48 48 0 0 0-39.404 20.589L8.597 235.642A48.001 48.001 0 0 0 0 263.054V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V263.054c0-9.801-3-19.366-8.597-27.412zM153.081 112h269.838l77.913 112H75.168l77.913-112zM528 400H48V272h480v128zm-32-64c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32zm-96 0c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              2
+            </div>
+          </div>
         </td>
         <td
           class=""
           data-label="Storage"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            height="1em"
-            role="img"
-            style="vertical-align: -0.125em;"
-            viewBox="0 0 448 512"
-            width="1em"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            <path
-              d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
-            />
-          </svg>
-           3
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              3
+            </div>
+          </div>
         </td>
         <td
           class=""

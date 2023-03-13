@@ -51,8 +51,8 @@ export function TableView<T>({
               key={`${columnSignature}_${resourceData?.[uidFieldId] ?? index}`}
               resourceData={resourceData}
               resourceFields={visibleColumns}
-              currentNamespace={currentNamespace}
-              rowIndex={index}
+              namespace={currentNamespace}
+              resourceIndex={index}
             />
           ))}
       </Tbody>

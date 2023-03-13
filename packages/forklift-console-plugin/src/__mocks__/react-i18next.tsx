@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Mock tranlation utility
  *
@@ -9,3 +11,5 @@ export const useTranslation = () => ({
     resolvedLanguage: 'en',
   },
 });
+
+export const Trans = () => <div data-test-element-name="Trans" />;

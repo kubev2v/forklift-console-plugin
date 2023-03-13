@@ -29,7 +29,7 @@ export const getResourceFieldValue = (
 
   switch (typeof field.jsonPath) {
     case 'string':
-      return jsonpath.query(resourceData, field.jsonPath);
+      return jsonpath.query(resourceData, field.jsonPath)?.[0];
     case 'function':
       return field.jsonPath(resourceData);
     default:
