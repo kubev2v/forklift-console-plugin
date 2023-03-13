@@ -105,7 +105,7 @@ function MappingRow<T extends CommonMapping>({
   );
   return (
     <>
-      <Tr>
+      <Tr ouiaId={undefined} ouiaSafe={undefined}>
         <Td
           expand={{
             rowIndex,
@@ -137,7 +137,7 @@ function MappingRow<T extends CommonMapping>({
           );
         })}
       </Tr>
-      <Tr isExpanded={isRowExpanded}>
+      <Tr isExpanded={isRowExpanded} ouiaId={undefined} ouiaSafe={undefined}>
         <Td dataLabel={t('Mapping graph')} noPadding colSpan={resourceFields.length}>
           {isRowExpanded && (
             <ExpandableRowContent>
