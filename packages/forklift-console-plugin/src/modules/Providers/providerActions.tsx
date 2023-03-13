@@ -12,16 +12,16 @@ import { hasRunningMigration } from '@kubev2v/legacy/Providers/components/Provid
 import { useDeleteProviderMutation, usePlansQuery } from '@kubev2v/legacy/queries';
 import { IProviderObject } from '@kubev2v/legacy/queries/types';
 
-import { type MergedProvider } from './data';
+import { type MergedProvider, isManaged } from './data';
 
 export const useMergedProviderActions = ({ resourceData }: { resourceData: MergedProvider }) => {
   const { t } = useTranslation();
   const launchModal = useModal();
   const plansQuery = usePlansQuery(resourceData.metadata.namespace);
-  const isManaged = (resourceData?.metadata?.ownerReferences?.length ?? 0) > 0;
+  const managed = isManaged(resourceData);
 
   const editingDisabled =
-    isManaged ||
+    managed ||
     hasRunningMigration({
       plans: plansQuery?.data?.items,
       providerMetadata: {
@@ -29,10 +29,10 @@ export const useMergedProviderActions = ({ resourceData }: { resourceData: Merge
         namespace: resourceData.metadata.namespace,
       },
     });
-  const editDisabledTooltip = isManaged
+  const editDisabledTooltip = managed
     ? t('Managed provider cannot be edited')
     : t('This provider cannot be edited because it has running migrations');
-  const deleteDisabledTooltip = isManaged
+  const deleteDisabledTooltip = managed
     ? t('Managed provider cannot be deleted')
     : t('This provider cannot be deleted because it has running migrations');
 
