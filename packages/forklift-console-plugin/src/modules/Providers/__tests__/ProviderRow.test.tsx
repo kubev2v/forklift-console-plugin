@@ -1,26 +1,18 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
-import {
-  MOCK_CLUSTER_PROVIDERS,
-  MOCK_INVENTORY_PROVIDERS,
-} from 'legacy/src/queries/mocks/providers.mock';
 
-import { V1beta1Provider } from '@kubev2v/types';
 import { cleanup, render } from '@testing-library/react';
 
-import { getFlatData, MergedProvider } from '../data';
+import { MergedProvider } from '../data';
 import ProviderRow from '../ProviderRow';
 import { fieldsMetadataFactory } from '../ProvidersPage';
+
+import flatData from './data.test.getFlatData_mock_data.json';
 
 // Mock translation function.
 const t = (s) => s;
 // Create a field metadata
 const fieldsMetadata = fieldsMetadataFactory(t);
-
-const flatData = getFlatData({
-  providers: MOCK_CLUSTER_PROVIDERS as unknown as V1beta1Provider[],
-  inventory: MOCK_INVENTORY_PROVIDERS,
-});
 
 afterEach(cleanup);
 
