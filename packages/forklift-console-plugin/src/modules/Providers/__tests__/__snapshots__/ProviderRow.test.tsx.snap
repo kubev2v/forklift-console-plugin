@@ -80,7 +80,7 @@ exports[`Provider rows host 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-34"
+            data-ouia-component-id="OUIA-Generated-Text-23"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -109,15 +109,32 @@ exports[`Provider rows host 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-35"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            26
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              26
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -156,7 +173,7 @@ exports[`Provider rows host 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-36"
+            data-ouia-component-id="OUIA-Generated-Text-24"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -331,7 +348,7 @@ exports[`Provider rows ocpv-1 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-25"
+            data-ouia-component-id="OUIA-Generated-Text-17"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -362,15 +379,32 @@ exports[`Provider rows ocpv-1 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-26"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            26
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              26
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -409,7 +443,7 @@ exports[`Provider rows ocpv-1 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-27"
+            data-ouia-component-id="OUIA-Generated-Text-18"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -584,7 +618,7 @@ exports[`Provider rows ocpv-2 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-28"
+            data-ouia-component-id="OUIA-Generated-Text-19"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -615,15 +649,32 @@ exports[`Provider rows ocpv-2 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-29"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            26
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              26
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -662,7 +713,7 @@ exports[`Provider rows ocpv-2 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-30"
+            data-ouia-component-id="OUIA-Generated-Text-20"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -837,7 +888,7 @@ exports[`Provider rows ocpv-3 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-31"
+            data-ouia-component-id="OUIA-Generated-Text-21"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -866,15 +917,32 @@ exports[`Provider rows ocpv-3 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-32"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            26
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              26
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -913,7 +981,7 @@ exports[`Provider rows ocpv-3 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-33"
+            data-ouia-component-id="OUIA-Generated-Text-22"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -1088,7 +1156,7 @@ exports[`Provider rows openstack-insecure-1 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-19"
+            data-ouia-component-id="OUIA-Generated-Text-13"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -1119,15 +1187,32 @@ exports[`Provider rows openstack-insecure-1 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-20"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            3
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              3
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -1166,7 +1251,7 @@ exports[`Provider rows openstack-insecure-1 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-21"
+            data-ouia-component-id="OUIA-Generated-Text-14"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -1347,7 +1432,7 @@ exports[`Provider rows openstack-secure-2 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-22"
+            data-ouia-component-id="OUIA-Generated-Text-15"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -1378,15 +1463,32 @@ exports[`Provider rows openstack-secure-2 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-23"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            3
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              3
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -1425,7 +1527,7 @@ exports[`Provider rows openstack-secure-2 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-24"
+            data-ouia-component-id="OUIA-Generated-Text-16"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -1606,7 +1708,7 @@ exports[`Provider rows rhv-1 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-10"
+            data-ouia-component-id="OUIA-Generated-Text-7"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -1637,15 +1739,32 @@ exports[`Provider rows rhv-1 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-11"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            36
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              36
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -1684,7 +1803,7 @@ exports[`Provider rows rhv-1 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-12"
+            data-ouia-component-id="OUIA-Generated-Text-8"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -1865,7 +1984,7 @@ exports[`Provider rows rhv-2 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-13"
+            data-ouia-component-id="OUIA-Generated-Text-9"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -1896,15 +2015,32 @@ exports[`Provider rows rhv-2 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-14"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            36
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              36
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -1943,7 +2079,7 @@ exports[`Provider rows rhv-2 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-15"
+            data-ouia-component-id="OUIA-Generated-Text-10"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -2124,7 +2260,7 @@ exports[`Provider rows rhv-3 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-16"
+            data-ouia-component-id="OUIA-Generated-Text-11"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -2155,15 +2291,32 @@ exports[`Provider rows rhv-3 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-17"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            36
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              36
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -2202,7 +2355,7 @@ exports[`Provider rows rhv-3 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-18"
+            data-ouia-component-id="OUIA-Generated-Text-12"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -2414,15 +2567,32 @@ exports[`Provider rows vcenter-1 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-2"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            41
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              41
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -2461,7 +2631,7 @@ exports[`Provider rows vcenter-1 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-3"
+            data-ouia-component-id="OUIA-Generated-Text-2"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -2646,7 +2816,7 @@ exports[`Provider rows vcenter-2 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-4"
+            data-ouia-component-id="OUIA-Generated-Text-3"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -2677,15 +2847,32 @@ exports[`Provider rows vcenter-2 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-5"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            41
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              41
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -2724,7 +2911,7 @@ exports[`Provider rows vcenter-2 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-6"
+            data-ouia-component-id="OUIA-Generated-Text-4"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -2918,7 +3105,7 @@ exports[`Provider rows vcenter-3 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-7"
+            data-ouia-component-id="OUIA-Generated-Text-5"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
@@ -2949,15 +3136,32 @@ exports[`Provider rows vcenter-3 1`] = `
           class=""
           data-label="VMs"
         >
-          <p
-            class=""
-            data-ouia-component-id="OUIA-Generated-Text-8"
-            data-ouia-component-type="PF4/Text"
-            data-ouia-safe="true"
-            data-pf-content="true"
+          <div
+            class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
           >
-            41
-          </p>
+            <div
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 1152 1024"
+                width="1em"
+              >
+                <path
+                  d="M1152,896 L1152,256 L832,256 L832,192 L768,192 L768,256 L192,256 L192,576 L128,576 L128,640 L192,640 L192,896 L576,896 L576,956 L384,956 L384,1024 L960,1024 L960,956 L768,956 L768,896 L1152,896 Z M320,768 L320,384 L1024,384 L1024,768 L320,768 Z M768,128 L832,128 L832,64 L768,64 L768,128 Z M640,128 L704,128 L704,64 L640,64 L640,128 Z M512,128 L576,128 L576,64 L512,64 L512,128 Z M384,128 L448,128 L448,64 L384,64 L384,128 Z M256,128 L320,128 L320,64 L256,64 L256,128 Z M128,128 L192,128 L192,64 L128,64 L128,128 Z M0,128 L64,128 L64,64 L0,64 L0,128 Z M0,256 L64,256 L64,192 L0,192 L0,256 Z M0,384 L64,384 L64,320 L0,320 L0,384 Z M768,512 L832,512 L832,448 L768,448 L768,512 Z M0,512 L64,512 L64,448 L0,448 L0,512 Z M768,640 L832,640 L832,576 L768,576 L768,640 Z M640,640 L704,640 L704,576 L640,576 L640,640 Z M512,640 L576,640 L576,576 L512,576 L512,640 Z M384,640 L448,640 L448,576 L384,576 L384,640 Z M0,640 L64,640 L64,576 L0,576 L0,640 Z"
+                />
+              </svg>
+            </div>
+            <div
+              class=""
+            >
+              41
+            </div>
+          </div>
         </td>
         <td
           class=""
@@ -2996,7 +3200,7 @@ exports[`Provider rows vcenter-3 1`] = `
         >
           <p
             class=""
-            data-ouia-component-id="OUIA-Generated-Text-9"
+            data-ouia-component-id="OUIA-Generated-Text-6"
             data-ouia-component-type="PF4/Text"
             data-ouia-safe="true"
             data-pf-content="true"
