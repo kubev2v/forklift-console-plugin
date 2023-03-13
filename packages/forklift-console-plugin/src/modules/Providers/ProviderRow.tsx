@@ -4,7 +4,7 @@ import * as C from 'src/utils/constants';
 
 import { RowProps } from '@kubev2v/common/components/TableView';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { DatabaseIcon, NetworkIcon } from '@patternfly/react-icons';
+import { DatabaseIcon, NetworkIcon, VirtualMachineIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { HostCell } from './ProviderRow/HostCell';
@@ -42,6 +42,12 @@ const cellCreator: Record<string, React.FC<CellProps>> = {
   [C.STORAGE_COUNT]: ({ resourceData, resourceFieldId, resourceFields }: CellProps) => (
     <TextWithIcon
       icon={<DatabaseIcon />}
+      label={getResourceFieldValue(resourceData, resourceFieldId, resourceFields)}
+    />
+  ),
+  [C.VM_COUNT]: ({ resourceData, resourceFieldId, resourceFields }: CellProps) => (
+    <TextWithIcon
+      icon={<VirtualMachineIcon />}
       label={getResourceFieldValue(resourceData, resourceFieldId, resourceFields)}
     />
   ),

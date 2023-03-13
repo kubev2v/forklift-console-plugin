@@ -6,3 +6,8 @@
 .forklift-table__flex-cell-label {
   margin-left: var(--pf-global--spacer--sm);
 }
+
+.forklift-table__flex-cell-popover {
+  max-width: calc(var(--pf-c-popover__content--PaddingLeft) +
+    var(--pf-c-popover__content--PaddingRight) + 13.75rem);
+}

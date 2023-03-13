@@ -24,6 +24,7 @@ export const StatusCell: React.FC<CellProps> = ({ resourceData, resourceFields }
 
   const allConditions = resourceData.status.conditions.map((condition) => (
     <TextWithIcon
+      className="forklift-table__flex-cell-popover"
       key={condition.type}
       label={condition.message || condition.type}
       icon={categoryIcons[condition.category]?.[condition.status] || <BlueInfoCircleIcon />}
