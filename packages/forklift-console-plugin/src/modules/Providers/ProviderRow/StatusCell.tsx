@@ -10,7 +10,7 @@ import { categoryIcons, phaseLabes, statusIcons } from './consts';
 import { TextWithIcon } from './TextWithIcon';
 import { CellProps } from './types';
 
-export const StatusCell = ({ resourceData, resourceFields }: CellProps) => {
+export const StatusCell: React.FC<CellProps> = ({ resourceData, resourceFields }) => {
   const { t } = useTranslation();
 
   const phase = getResourceFieldValue(resourceData, PHASE, resourceFields);

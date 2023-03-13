@@ -50,7 +50,7 @@ const cellCreator: Record<string, React.FC<CellProps>> = {
 
 const ProviderRow: React.FC<RowProps<MergedProvider>> = ({ resourceFields, resourceData }) => {
   return (
-    <Tr>
+    <Tr ouiaId={undefined} ouiaSafe={undefined}>
       {resourceFields.map(({ resourceFieldId, label }) => (
         <Td key={resourceFieldId} dataLabel={label}>
           {(cellCreator?.[resourceFieldId] ?? TextCell)({
