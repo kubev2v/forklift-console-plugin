@@ -6,18 +6,15 @@ import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { EnumToTuple } from '@kubev2v/common/components/Filter/helpers';
-import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
 import {
   loadUserSettings,
   StandardPage,
   UserSettings,
 } from '@kubev2v/common/components/StandardPage';
 import { ResourceFieldFactory } from '@kubev2v/common/components/types';
-import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ProviderType, SOURCE_PROVIDER_TYPES } from '@kubev2v/legacy/common/constants';
-import { AddEditProviderModal } from '@kubev2v/legacy/Providers/components/AddEditProviderModal';
-import { Button } from '@patternfly/react-core';
 
+import { AddProviderButton } from './AddProviderButton';
 import { MergedProvider, useProvidersWithInventory } from './data';
 import EmptyStateProviders from './EmptyStateProviders';
 import ProviderRow from './ProviderRow';
@@ -185,36 +182,4 @@ const Page: React.FC<{
 
 const PageMemo = React.memo(Page);
 
-const AddProviderButton: React.FC<{ namespace: string }> = ({ namespace }) => {
-  const { t } = useTranslation();
-  const launchModal = useModal();
-
-  return (
-    <Button
-      variant="primary"
-      onClick={() =>
-        launchModal(withQueryClient(AddProviderModal), { currentNamespace: namespace })
-      }
-    >
-      {t('Create Provider')}
-    </Button>
-  );
-};
-AddProviderButton.displayName = 'AddProviderButton';
-
-const AddProviderModal: React.FC<{
-  currentNamespace: string;
-  closeModal: () => void;
-}> = ({ closeModal, currentNamespace }) => {
-  return (
-    <AddEditProviderModal
-      onClose={closeModal}
-      providerBeingEdited={null}
-      namespace={currentNamespace}
-    />
-  );
-};
-AddProviderModal.displayName = 'AddProviderModal';
-
 export default ProvidersPage;
-export { AddProviderButton };
