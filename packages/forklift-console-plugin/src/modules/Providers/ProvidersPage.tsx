@@ -162,21 +162,26 @@ const Page: React.FC<{
 }> = ({ dataSource, namespace, title, userSettings }) => {
   const { t } = useTranslation();
 
-  const [data, loaded, error] = dataSource;
-  const loadedDataIsEmpty = loaded && !error && data?.length === 0;
+  const [data, isLoadSuccess, isLoadError] = dataSource;
+  const isLoading = !isLoadSuccess && !isLoadError;
+  const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
 
-  return loadedDataIsEmpty ? (
-    <EmptyStateProviders namespace={namespace} />
-  ) : (
-    <StandardPage<MergedProvider>
-      addButton={<AddProviderButton namespace={namespace} />}
-      dataSource={[data, loaded, error]}
-      RowMapper={ProviderRow}
-      fieldsMetadata={fieldsMetadataFactory(t)}
-      namespace={namespace}
-      title={title}
-      userSettings={userSettings}
-    />
+  return (
+    <>
+      {loadedDataIsEmpty && <EmptyStateProviders namespace={namespace} />}
+
+      {(isLoading || !loadedDataIsEmpty) && (
+        <StandardPage<MergedProvider>
+          addButton={<AddProviderButton namespace={namespace} />}
+          dataSource={[data, isLoadSuccess, isLoadError]}
+          RowMapper={ProviderRow}
+          fieldsMetadata={fieldsMetadataFactory(t)}
+          namespace={namespace}
+          title={title}
+          userSettings={userSettings}
+        />
+      )}
+    </>
   );
 };
 

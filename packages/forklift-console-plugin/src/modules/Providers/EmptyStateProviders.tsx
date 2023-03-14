@@ -31,7 +31,7 @@ const EmptyStateProviders: React.FC<{ namespace: string }> = ({ namespace }) => 
       <EmptyStateBody style={{ textAlign: 'left' }}>
         <Bullseye>
           <TextContent>
-            <Text>{t('Migrating virtualization workloads is a multi-step process.')}</Text>
+            <Text>{t('Migrating virtualization workloads is a multi-step process:')}</Text>
             <TextList component="ol">
               <TextListItem>{t('Add source and target providers for the migration.')}</TextListItem>
               <TextListItem>
