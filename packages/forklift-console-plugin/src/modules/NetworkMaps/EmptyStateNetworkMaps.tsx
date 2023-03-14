@@ -12,6 +12,8 @@ import { Flex, FlexItem } from '@patternfly/react-core';
 
 import { useHasSufficientProviders } from '../Providers/data';
 
+import { AddNetworkMappingButton } from './NetworkMappingsPage';
+
 const AutomationIcon = () => <img src={automationIcon} className="forklift-empty-state__icon" />;
 
 const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
@@ -24,15 +26,15 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
       icon={AutomationIcon}
       title={t('No NetworkMaps found.')}
       textContent={
-        !hasSufficientProviders && (
+        !hasSufficientProviders ? (
           <Flex direction={{ default: 'column' }}>
             <FlexItem>
               <Trans t={t} ns="plugin__forklift-console-plugin">
-                Migration networks maps are used to map network interfaces between source and traget
+                Migration networks maps are used to map network interfaces between source and target
                 workloads, at least one source and one target provider must be available in order to
                 create a migration plan,{' '}
                 <a className="co-external-link" href={HELP_LINK_HREF}>
-                  {t('Learn more')}
+                  Learn more
                 </a>
               </Trans>
             </FlexItem>
@@ -44,7 +46,14 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
               </Trans>
             </FlexItem>
           </Flex>
+        ) : (
+          t(
+            'Migration networks maps are used to map network interfaces between source and target workloads',
+          )
         )
+      }
+      callForActionButtons={
+        hasSufficientProviders && <AddNetworkMappingButton namespace={namespace} />
       }
     />
   );
