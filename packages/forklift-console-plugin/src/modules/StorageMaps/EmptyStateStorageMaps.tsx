@@ -29,7 +29,11 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
             <FlexItem>
               <Trans t={t} ns="plugin__forklift-console-plugin">
                 Migration storage maps are used to map storage interfaces between source and traget
-                workloads, <Link to={HELP_LINK_HREF}>{t('Learn more')}</Link>
+                workloads, at least one source and one target provider must be available in order to
+                create a migration plan,{' '}
+                <a className="co-external-link" href={HELP_LINK_HREF}>
+                  {t('Learn more')}
+                </a>
               </Trans>
             </FlexItem>
             <FlexItem>

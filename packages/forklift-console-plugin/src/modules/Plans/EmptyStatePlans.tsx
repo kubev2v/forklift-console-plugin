@@ -31,7 +31,9 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
                 Migration plans are used to plan migration or virtualization workloads from source
                 providers to target providers, at least one source and one target provider must be
                 available in order to create a migration plan,{' '}
-                <Link to={HELP_LINK_HREF}>{t('Learn more')}</Link>
+                <a className="co-external-link" href={HELP_LINK_HREF}>
+                  {t('Learn more')}
+                </a>
               </Trans>
             </FlexItem>
             <FlexItem>
