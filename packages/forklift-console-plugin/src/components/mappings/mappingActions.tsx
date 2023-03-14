@@ -19,17 +19,6 @@ export function useMappingActions<T extends CommonMapping>({
 }) {
   const { t } = useTranslation();
   const launchModal = useModal();
-  const areProvidersReady = resourceData.sourceReady && resourceData.targetReady;
-  const areProvidersResolved = resourceData.sourceResolved && resourceData.targetResolved;
-  const editingDisabled = !areProvidersReady || !areProvidersResolved;
-
-  const disabledTooltip = !areProvidersResolved
-    ? t(
-        'This mapping cannot be edited because it includes missing source or target resources. Delete and recreate the mapping.',
-      )
-    : t(
-        'This mapping cannot be edited because the inventory data for its associated providers is not ready',
-      );
 
   const actions = useMemo(
     () => [
@@ -42,8 +31,6 @@ export function useMappingActions<T extends CommonMapping>({
             namespace: resourceData.namespace,
           }),
         label: t('Edit Mapping'),
-        disabled: editingDisabled,
-        disabledTooltip: editingDisabled ? disabledTooltip : '',
       },
       {
         id: 'delete',
@@ -57,7 +44,7 @@ export function useMappingActions<T extends CommonMapping>({
         label: t('Delete Mapping'),
       },
     ],
-    [t, editingDisabled, disabledTooltip, resourceData],
+    [t, resourceData],
   );
 
   return [actions, true, undefined];

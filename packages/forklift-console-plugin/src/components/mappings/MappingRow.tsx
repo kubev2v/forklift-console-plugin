@@ -6,9 +6,7 @@ import { Mapping, MappingType } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
-import { K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Tooltip } from '@patternfly/react-core';
-import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
@@ -43,29 +41,6 @@ export const SourceCell = ({
   );
 };
 
-const Ref = ({
-  gvk,
-  name,
-  namespace,
-  resolved,
-}: {
-  gvk: K8sGroupVersionKind;
-  name: string;
-  namespace: string;
-  resolved: boolean;
-}) => {
-  const { t } = useTranslation();
-  return resolved ? (
-    <ResourceLink groupVersionKind={gvk} name={name} namespace={namespace} />
-  ) : (
-    <Tooltip content={t('Provider {{name}} cannot be resolved', { name })}>
-      <span>
-        <ExclamationCircleIcon color="#C9190B" /> {name}
-      </span>
-    </Tooltip>
-  );
-};
-
 export type CellCreator<T extends CommonMapping> = Record<
   string,
   (props: CellProps<T>) => JSX.Element
@@ -73,13 +48,13 @@ export type CellCreator<T extends CommonMapping> = Record<
 
 export const commonCells: CellCreator<CommonMapping> = {
   [C.NAME]: ({ resourceData: e }: CellProps<CommonMapping>) => (
-    <Ref gvk={e.gvk} name={e.name} namespace={e.namespace} resolved />
+    <ResourceLink groupVersionKind={e.gvk} name={e.name} namespace={e.namespace} />
   ),
   [C.SOURCE]: ({ resourceData: e }: CellProps<CommonMapping>) => (
-    <Ref gvk={e.sourceGvk} name={e.source} namespace={e.namespace} resolved={e.sourceResolved} />
+    <ResourceLink groupVersionKind={e.sourceGvk} name={e.source} namespace={e.namespace} />
   ),
   [C.TARGET]: ({ resourceData: e }: CellProps<CommonMapping>) => (
-    <Ref gvk={e.targetGvk} name={e.target} namespace={e.namespace} resolved={e.targetResolved} />
+    <ResourceLink groupVersionKind={e.targetGvk} name={e.target} namespace={e.namespace} />
   ),
   [C.NAMESPACE]: ({ value }: CellProps<CommonMapping>) => (
     <ResourceLink kind="Namespace" name={value} />
