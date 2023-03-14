@@ -92,11 +92,10 @@ export type VMMigrationDetailsProps = {
 };
 
 export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps> = ({ match }) => {
-  const currentNamespace = match?.params?.ns;
-  const plansQuery = usePlansQuery(currentNamespace);
+  const resourceNamespace = match?.params?.ns;
+  const plansQuery = usePlansQuery(resourceNamespace);
   const plan = plansQuery.data?.items.find((item) => item.metadata.name === match?.params.planName);
   const planStarted = !!plan?.status?.migration?.started;
-  const effectiveNamespace = plan?.metadata?.namespace || currentNamespace;
 
   const providersQuery = useInventoryProvidersQuery();
   const { sourceProvider } = findProvidersByRefs(plan?.spec.provider || null, providersQuery);
@@ -107,7 +106,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
     return nameFromInventory || vmStatus.name;
   };
 
-  const migrationsQuery = useMigrationsQuery(effectiveNamespace);
+  const migrationsQuery = useMigrationsQuery(resourceNamespace);
   const latestMigration = findLatestMigration(plan || null, migrationsQuery.data?.items || null);
   const planState = getPlanState(plan || null, latestMigration, migrationsQuery.data?.items);
   const isShowingPrecopyView =
@@ -235,7 +234,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
 
   const [isCancelModalOpen, toggleCancelModal] = React.useReducer((isOpen) => !isOpen, false);
 
-  const cancelVMsMutation = useCancelVMsMutation(plan || null, effectiveNamespace, () => {
+  const cancelVMsMutation = useCancelVMsMutation(plan || null, resourceNamespace, () => {
     toggleCancelModal();
     setSelectedItems([]);
   });
@@ -355,7 +354,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
       <PageSection variant="light">
         <Breadcrumb className={`${spacing.mbLg} ${spacing.prLg}`}>
           <BreadcrumbItem>
-            <ResourceLink kind={PLANS_REFERENCE} hideIcon displayName="Migration plans" />
+            <ResourceLink kind={PLANS_REFERENCE} namespace={resourceNamespace} hideIcon displayName="Migration plans" />
           </BreadcrumbItem>
           <BreadcrumbItem>{match?.params.planName}</BreadcrumbItem>
         </Breadcrumb>

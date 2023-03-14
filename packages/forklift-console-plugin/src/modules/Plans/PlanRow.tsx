@@ -129,7 +129,6 @@ const Actions = ({ primaryAction, resourceData, currentNamespace }: CellProps) =
               plan={resourceData.object}
               buttonType={primaryAction}
               isBeingStarted={isBeingStarted}
-              currentNamespace={currentNamespace}
             />
           )}
         </FlexItem>
@@ -189,7 +188,7 @@ const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
   [C.STATUS]: StatusCell,
   [C.ACTIONS]: Actions,
   [C.VM_COUNT]: ({ value, resourceData }: CellProps) => (
-    <RouterLink to={`${PATH_PREFIX}/plans/${resourceData.name}`}>
+    <RouterLink to={`${PATH_PREFIX}/plans/ns/${resourceData.namespace}/${resourceData.name}`}>
       <VirtualMachineIcon /> {value}
     </RouterLink>
   ),

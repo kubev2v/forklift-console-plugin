@@ -17,7 +17,7 @@ import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-i
 import { useHostsQuery, useInventoryProvidersQuery } from 'legacy/src/queries';
 import { IVMwareProvider } from 'legacy/src/queries/types';
 import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
-import { PROVIDERS_REFERENCE, PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
+import { ENV, PROVIDERS_REFERENCE, PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface IHostsMatchParams {
@@ -30,9 +30,12 @@ export const HostsPage: React.FunctionComponent<RouteComponentProps<IHostsMatchP
   match,
 }) => {
   const providersQuery = useInventoryProvidersQuery();
+  const providerNamespace = match?.params?.ns || ENV.DEFAULT_NAMESPACE;
+  const providerName = match?.params.providerName || '';
   const provider =
-    providersQuery.data?.vsphere.find((provider) => provider.name === match?.params.providerName) ||
-    null;
+    providersQuery.data?.vsphere.find(
+      (provider) => provider.name === providerName && provider.namespace === providerNamespace
+    ) || null;
 
   const hostsQuery = useHostsQuery(provider);
 
@@ -45,13 +48,13 @@ export const HostsPage: React.FunctionComponent<RouteComponentProps<IHostsMatchP
               <BreadcrumbItem>
                 <ResourceLink
                   kind={PROVIDERS_REFERENCE}
-                  namespace={match?.params?.ns}
+                  namespace={providerNamespace}
                   hideIcon
                   displayName="Providers"
                 />
               </BreadcrumbItem>
               <BreadcrumbItem>{PROVIDER_TYPE_NAMES.vsphere}</BreadcrumbItem>
-              <BreadcrumbItem>{match?.params.providerName}</BreadcrumbItem>
+              <BreadcrumbItem>{providerName}</BreadcrumbItem>
               <BreadcrumbItem isActive>Hosts</BreadcrumbItem>
             </Breadcrumb>
           </LevelItem>
@@ -68,7 +71,7 @@ export const HostsPage: React.FunctionComponent<RouteComponentProps<IHostsMatchP
           errorTitles={['Cannot load hosts', 'Cannot load providers']}
           errorsInline={false}
         >
-          {!match?.params?.providerName ? (
+          {!providerName ? (
             <Alert variant="danger" title="No matching host found" />
           ) : !hostsQuery.data ? null : hostsQuery?.data?.length === 0 ? (
             <EmptyState className={spacing.my_2xl}>

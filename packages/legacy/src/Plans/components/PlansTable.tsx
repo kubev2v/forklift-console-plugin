@@ -246,7 +246,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
         {
           title: (
             <>
-              <Link to={`${PATH_PREFIX}/plans/${plan.metadata.name}`}>{plan.metadata.name}</Link>
+              <Link to={`${PATH_PREFIX}/plans/ns/${plan.metadata.namespace}/${plan.metadata.name}`}>{plan.metadata.name}</Link>
               <Flex>
                 <Text component="small">{plan.spec.description}</Text>
               </Flex>
