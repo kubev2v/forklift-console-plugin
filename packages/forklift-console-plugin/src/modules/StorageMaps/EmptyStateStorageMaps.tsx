@@ -1,8 +1,10 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { MappingType } from 'legacy/src/queries/types';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import automationIcon from 'src/components/empty-states/images/automation.svg';
+import { AddMappingButton } from 'src/components/mappings/MappingPage';
 import { HELP_LINK_HREF } from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
@@ -24,15 +26,15 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
       icon={AutomationIcon}
       title={t('No StorageMaps found.')}
       textContent={
-        !hasSufficientProviders && (
+        !hasSufficientProviders ? (
           <Flex direction={{ default: 'column' }}>
             <FlexItem>
               <Trans t={t} ns="plugin__forklift-console-plugin">
-                Migration storage maps are used to map storage interfaces between source and traget
+                Migration storage maps are used to map storage interfaces between source and target
                 workloads, at least one source and one target provider must be available in order to
                 create a migration plan,{' '}
                 <a className="co-external-link" href={HELP_LINK_HREF}>
-                  {t('Learn more')}
+                  Learn more
                 </a>
               </Trans>
             </FlexItem>
@@ -44,6 +46,19 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
               </Trans>
             </FlexItem>
           </Flex>
+        ) : (
+          t(
+            'Migration storage maps are used to map storage interfaces between source and target workloads',
+          )
+        )
+      }
+      callForActionButtons={
+        hasSufficientProviders && (
+          <AddMappingButton
+            namespace={namespace}
+            mappingType={MappingType.Storage}
+            label={t('Create StorageMap')}
+          />
         )
       }
     />

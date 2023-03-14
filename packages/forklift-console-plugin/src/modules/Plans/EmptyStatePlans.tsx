@@ -2,6 +2,7 @@ import React from 'react';
 import { Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { PROVIDERS_REFERENCE } from 'legacy/src/common/constants';
+import { CreatePlanButton } from 'legacy/src/Plans/components/CreatePlanButton';
 import { createK8sPath } from 'legacy/src/queries/helpers';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import automationIcon from 'src/components/empty-states/images/automation.svg';
@@ -24,15 +25,15 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
       icon={AutomationIcon}
       title={t('No Plans found.')}
       textContent={
-        !hasSufficientProviders && (
+        !hasSufficientProviders ? (
           <Flex direction={{ default: 'column' }}>
             <FlexItem>
               <Trans t={t} ns="plugin__forklift-console-plugin">
                 Migration plans are used to plan migration or virtualization workloads from source
-                providers to target providers, at least one source and one target provider must be
+                providers to target providers. At least one source and one target provider must be
                 available in order to create a migration plan,{' '}
                 <a className="co-external-link" href={HELP_LINK_HREF}>
-                  {t('Learn more')}
+                  Learn more
                 </a>
               </Trans>
             </FlexItem>
@@ -44,8 +45,13 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
               </Trans>
             </FlexItem>
           </Flex>
+        ) : (
+          t(
+            'Migration plans are used to plan migration or virtualization workloads from source providers to target providers',
+          )
         )
       }
+      callForActionButtons={hasSufficientProviders && <CreatePlanButton namespace={namespace} />}
     />
   );
 };
