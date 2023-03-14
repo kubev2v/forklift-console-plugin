@@ -15,6 +15,7 @@ import { ResourceFieldFactory } from '@kubev2v/common/components/types';
 import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
 
 import { FlatPlan, useFlatPlans } from './data';
+import EmptyStatePlans from './EmptyStatePlans';
 import PlanRow from './PlanRow';
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
@@ -136,16 +137,26 @@ const Page = ({
 }) => {
   const { t } = useTranslation();
 
+  const [data, isLoadSuccess, isLoadError] = dataSource;
+  const isLoading = !isLoadSuccess && !isLoadError;
+  const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
+
   return (
-    <StandardPage<FlatPlan>
-      addButton={<CreatePlanButton namespace={namespace} />}
-      dataSource={dataSource}
-      RowMapper={PlanRow}
-      fieldsMetadata={fieldsMetadataFactory(t)}
-      namespace={namespace}
-      title={title}
-      userSettings={userSettings}
-    />
+    <>
+      {loadedDataIsEmpty && <EmptyStatePlans namespace={namespace} />}
+
+      {(isLoading || !loadedDataIsEmpty) && (
+        <StandardPage<FlatPlan>
+          addButton={<CreatePlanButton namespace={namespace} />}
+          dataSource={dataSource}
+          RowMapper={PlanRow}
+          fieldsMetadata={fieldsMetadataFactory(t)}
+          namespace={namespace}
+          title={title}
+          userSettings={userSettings}
+        />
+      )}
+    </>
   );
 };
 

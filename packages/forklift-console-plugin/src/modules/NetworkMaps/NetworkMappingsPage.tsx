@@ -1,24 +1,32 @@
 import React, { useState } from 'react';
-import { defaultValueMatchers, FreetextFilter, ValueMatcher } from 'common/src/components/Filter';
-import withQueryClient from 'common/src/components/QueryClientHoc';
-import { loadUserSettings, StandardPage, UserSettings } from 'common/src/components/StandardPage';
-import { ResourceFieldFactory } from 'common/src/components/types';
-import { AddEditMappingModal } from 'legacy/src/Mappings/components/AddEditMappingModal';
-import { MappingType } from 'legacy/src/queries/types';
+import {
+  commonFieldsMetadataFactory,
+  StartWithEmptyColumnMapper,
+} from 'src/components/mappings/MappingPage';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
+import {
+  defaultValueMatchers,
+  FreetextFilter,
+  ValueMatcher,
+} from '@kubev2v/common/components/Filter';
+import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
+import {
+  loadUserSettings,
+  StandardPage,
+  UserSettings,
+} from '@kubev2v/common/components/StandardPage';
+import { ResourceFieldFactory } from '@kubev2v/common/components/types';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
+import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
+import { MappingType } from '@kubev2v/legacy/queries/types';
 import { Button } from '@patternfly/react-core';
 
-import {
-  commonFieldsMetadataFactory,
-  StartWithEmptyColumnMapper,
-} from '../../components/mappings/MappingPage';
-
 import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './dataForNetwork';
+import EmptyStateNetworkMaps from './EmptyStateNetworkMaps';
 import NetworkMappingRow from './NetworkMappingRow';
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
@@ -74,28 +82,38 @@ const Page = ({
 }) => {
   const { t } = useTranslation();
 
+  const [data, isLoadSuccess, isLoadError] = dataSource;
+  const isLoading = !isLoadSuccess && !isLoadError;
+  const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
+
   return (
-    <StandardPage<FlatNetworkMapping>
-      addButton={<AddNetworkMappingButton namespace={namespace} />}
-      dataSource={dataSource}
-      RowMapper={NetworkMappingRow}
-      HeaderMapper={StartWithEmptyColumnMapper}
-      fieldsMetadata={fieldsMetadataFactory(t)}
-      namespace={namespace}
-      title={title}
-      userSettings={userSettings}
-      supportedFilters={{
-        freetext: FreetextFilter,
-        targetNetwork: FreetextFilter,
-      }}
-      supportedMatchers={[...defaultValueMatchers, targetNetworkMatcher]}
-    />
+    <>
+      {loadedDataIsEmpty && <EmptyStateNetworkMaps namespace={namespace} />}
+
+      {(isLoading || !loadedDataIsEmpty) && (
+        <StandardPage<FlatNetworkMapping>
+          addButton={<AddNetworkMappingButton namespace={namespace} />}
+          dataSource={dataSource}
+          RowMapper={NetworkMappingRow}
+          HeaderMapper={StartWithEmptyColumnMapper}
+          fieldsMetadata={fieldsMetadataFactory(t)}
+          namespace={namespace}
+          title={title}
+          userSettings={userSettings}
+          supportedFilters={{
+            freetext: FreetextFilter,
+            targetNetwork: FreetextFilter,
+          }}
+          supportedMatchers={[...defaultValueMatchers, targetNetworkMatcher]}
+        />
+      )}
+    </>
   );
 };
 
 const PageMemo = React.memo(Page);
 
-const AddNetworkMappingButton: React.FC<{ namespace: string }> = ({ namespace }) => {
+export const AddNetworkMappingButton: React.FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useTranslation();
   const launchModal = useModal();
 

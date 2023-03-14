@@ -1,24 +1,29 @@
 import React, { useState } from 'react';
-import { defaultValueMatchers, FreetextFilter, ValueMatcher } from 'common/src/components/Filter';
 import {
-  loadUserSettings,
-  StandardPage,
-  StandardPageProps,
-} from 'common/src/components/StandardPage';
-import { ResourceFieldFactory } from 'common/src/components/types';
-import { MappingType } from 'legacy/src/queries/types';
+  AddMappingButton,
+  commonFieldsMetadataFactory,
+  StartWithEmptyColumnMapper,
+} from 'src/components/mappings/MappingPage';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import {
-  AddMappingButton,
-  commonFieldsMetadataFactory,
-  StartWithEmptyColumnMapper,
-} from '../../components/mappings/MappingPage';
+  defaultValueMatchers,
+  FreetextFilter,
+  ValueMatcher,
+} from '@kubev2v/common/components/Filter';
+import {
+  loadUserSettings,
+  StandardPage,
+  StandardPageProps,
+} from '@kubev2v/common/components/StandardPage';
+import { ResourceFieldFactory } from '@kubev2v/common/components/types';
+import { MappingType } from '@kubev2v/legacy/queries/types';
 
 import { FlatStorageMapping, Storage, useFlatStorageMappings } from './dataForStorage';
+import EmptyStateStorageMaps from './EmptyStateStorageMaps';
 import StorageMappingRow from './StorageMappingRow';
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
@@ -69,28 +74,38 @@ const Page = ({
 }: Partial<StandardPageProps<FlatStorageMapping>>) => {
   const { t } = useTranslation();
 
+  const [data, isLoadSuccess, isLoadError] = dataSource;
+  const isLoading = !isLoadSuccess && !isLoadError;
+  const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
+
   return (
-    <StandardPage<FlatStorageMapping>
-      addButton={
-        <AddMappingButton
+    <>
+      {loadedDataIsEmpty && <EmptyStateStorageMaps namespace={namespace} />}
+
+      {(isLoading || !loadedDataIsEmpty) && (
+        <StandardPage<FlatStorageMapping>
+          addButton={
+            <AddMappingButton
+              namespace={namespace}
+              mappingType={MappingType.Storage}
+              label={t('Create StorageMap')}
+            />
+          }
+          dataSource={dataSource}
+          RowMapper={StorageMappingRow}
+          HeaderMapper={StartWithEmptyColumnMapper}
+          fieldsMetadata={fieldsMetadataFactory(t)}
           namespace={namespace}
-          mappingType={MappingType.Storage}
-          label={t('Create StorageMap')}
+          title={title}
+          userSettings={userSettings}
+          supportedFilters={{
+            freetext: FreetextFilter,
+            targetStorage: FreetextFilter,
+          }}
+          supportedMatchers={[...defaultValueMatchers, targetStorageMatcher]}
         />
-      }
-      dataSource={dataSource}
-      RowMapper={StorageMappingRow}
-      HeaderMapper={StartWithEmptyColumnMapper}
-      fieldsMetadata={fieldsMetadataFactory(t)}
-      namespace={namespace}
-      title={title}
-      userSettings={userSettings}
-      supportedFilters={{
-        freetext: FreetextFilter,
-        targetStorage: FreetextFilter,
-      }}
-      supportedMatchers={[...defaultValueMatchers, targetStorageMatcher]}
-    />
+      )}
+    </>
   );
 };
 const PageMemo = React.memo(Page);
