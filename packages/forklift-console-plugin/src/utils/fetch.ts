@@ -13,7 +13,14 @@ import {
 import { MOCK_MIGRATIONS } from '@kubev2v/legacy/queries/mocks/migrations.mock';
 import { MOCK_PLANS } from '@kubev2v/legacy/queries/mocks/plans.mock';
 import { MOCK_CLUSTER_PROVIDERS } from '@kubev2v/legacy/queries/mocks/providers.mock';
-import { V1beta1Provider } from '@kubev2v/types';
+import {
+  MigrationModelGroupVersionKind,
+  NetworkMapModelGroupVersionKind,
+  PlanModelGroupVersionKind,
+  ProviderModelGroupVersionKind,
+  StorageMapModelGroupVersionKind,
+  V1beta1Provider,
+} from '@kubev2v/types';
 import {
   K8sGroupVersionKind,
   K8sResourceCommon,
@@ -22,14 +29,12 @@ import {
   WatchK8sResult,
 } from '@openshift-console/dynamic-plugin-sdk';
 
-import { ResourceKind } from './resources';
-
 const IS_MOCK = process.env.DATA_SOURCE === 'mock';
 
-function createRealK8sWatchResourceHook<T>(kind: string) {
+function createRealK8sWatchResourceHook<T>(gvk: K8sGroupVersionKind) {
   return function useRealHook(
     { namespace, name }: WatchK8sResource,
-    { group, version }: Omit<K8sGroupVersionKind, 'kind'>,
+    { group, version, kind }: K8sGroupVersionKind = gvk,
   ): WatchK8sResult<T[]> {
     return useK8sWatchResource<T[]>({
       groupVersionKind: {
@@ -57,10 +62,6 @@ const useMockProviders = ({ name }: WatchK8sResource): WatchK8sResult<V1beta1Pro
   );
   return [mockData, true, false];
 };
-
-export const useProviders = IS_MOCK
-  ? useMockProviders
-  : createRealK8sWatchResourceHook<V1beta1Provider>('Provider');
 
 const useMockPlans = ({ name }: WatchK8sResource): WatchK8sResult<PlanResource[]> => {
   const mockData: PlanResource[] = useMemo(
@@ -116,18 +117,22 @@ const useMockStorageMappings = ({
   return [mockData, true, false];
 };
 
+export const useProviders = IS_MOCK
+  ? useMockProviders
+  : createRealK8sWatchResourceHook<V1beta1Provider>(ProviderModelGroupVersionKind);
+
 export const usePlans = IS_MOCK
   ? useMockPlans
-  : createRealK8sWatchResourceHook<PlanResource>(ResourceKind.Plan);
+  : createRealK8sWatchResourceHook<PlanResource>(PlanModelGroupVersionKind);
 
 export const useMigrations = IS_MOCK
   ? useMockMigrations
-  : createRealK8sWatchResourceHook<MigrationResource>(ResourceKind.Migration);
+  : createRealK8sWatchResourceHook<MigrationResource>(MigrationModelGroupVersionKind);
 
 export const useNetworkMappings = IS_MOCK
   ? useMockNetworkMappings
-  : createRealK8sWatchResourceHook<NetworkMapResource>(ResourceKind.NetworkMap);
+  : createRealK8sWatchResourceHook<NetworkMapResource>(NetworkMapModelGroupVersionKind);
 
 export const useStorageMappings = IS_MOCK
   ? useMockStorageMappings
-  : createRealK8sWatchResourceHook<StorageMapResource>(ResourceKind.StorageMap);
+  : createRealK8sWatchResourceHook<StorageMapResource>(StorageMapModelGroupVersionKind);

@@ -3,3 +3,8 @@
   flex-wrap: wrap;
   gap: var(--pf-global--spacer--sm);
 }
+
+.forklift-empty-state__icon {
+  max-width: 14rem;
+  max-height: 14rem;
+}
