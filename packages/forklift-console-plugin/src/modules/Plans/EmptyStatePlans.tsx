@@ -30,8 +30,8 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
               <Trans t={t} ns="plugin__forklift-console-plugin">
                 Migration plans are used to plan migration or virtualization workloads from source
                 providers to target providers, at least one source and one target provider must be
-                available in order to create a migration plan,{' '}
-                <Link to={HELP_LINK_HREF}>{t('Learn more')}</Link>
+                available in order to create a migration plan.{' '}
+                <a href={HELP_LINK_HREF}>Learn more</a>
               </Trans>
             </FlexItem>
             <FlexItem>
