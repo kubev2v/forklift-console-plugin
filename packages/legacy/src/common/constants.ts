@@ -107,7 +107,9 @@ export const dnsLabelNameSchema = yup
 
 export const urlSchema = yup.string().test('is-valid-url', 'Must be a valid URL', (value) => {
   try {
-    new URL(value as string);
+    if (value) {
+      new URL(value as string);
+    }
   } catch (_) {
     return false;
   }

@@ -11,6 +11,7 @@ import {
   FileUpload,
   TextInput,
   Checkbox,
+  Hint,
 } from '@patternfly/react-core';
 import {
   useFormState,
@@ -166,8 +167,8 @@ const useAddProviderFormState = (
     }),
     openshift: useFormState({
       ...commonProviderFields,
-      openshiftUrl: useFormField('', urlSchema.label('URL').required()),
-      saToken: useFormField('', yup.string().label('Service account token').required()),
+      openshiftUrl: useFormField('', urlSchema.label('URL')),
+      saToken: useFormField('', yup.string().label('Service account token')),
     }),
   };
 };
@@ -208,6 +209,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
   const isFormValid = providerType ? forms[providerType].isValid : false;
   const isFormDirty = providerType ? forms[providerType].isDirty : false;
   const isOpenStackButtonEnabled = forms.openstack.fields.insecureSkipVerify.value || forms.openstack.fields.caCertIfSecure.value;
+  const isOpenShiftButtonEnabled = (forms.openshift.fields?.openshiftUrl.value === '') == (forms.openshift.fields?.saToken.value === '');
 
   // Combines fields of all 3 forms into one type with all properties as optional.
   // This way, we can conditionally show fields based on whether they are defined in form state
@@ -270,7 +272,10 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
               variant="primary"
               isDisabled={providerType === 'openstack' ?
                 !isFormDirty || !isFormValid || mutateProviderResult.isLoading || !isOpenStackButtonEnabled:
-                !isFormDirty || !isFormValid || mutateProviderResult.isLoading}
+                providerType === 'openshift' ?
+                  !isFormDirty || !isFormValid || mutateProviderResult.isLoading || !isOpenShiftButtonEnabled:
+                  !isFormDirty || !isFormValid || mutateProviderResult.isLoading
+              }
               onClick={() => {
                 if (formValues) {
                   mutateProvider(formValues);
@@ -591,6 +596,16 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                 ) : null}
 
                 {fields?.openshiftUrl ? (
+                  <React.Fragment>
+                  <Hint>
+                    <text>
+                      If both following fields "URL" and "Service account token" are left empty, the local cluster provider is used.
+                    </text>
+                  </Hint>
+                  </React.Fragment>
+                ) : null}
+
+                {fields?.openshiftUrl ? (
                   <ValidatedTextInput
                     field={fields.openshiftUrl}
                     isRequired
@@ -631,6 +646,10 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     fieldId="openshift-sa-token"
                     formGroupProps={{
                       helperText: 'Input a service account token with cluster-admin privileges.',
+                      validated: 'error',
+                      helperTextInvalid:
+                        (isOpenShiftButtonEnabled || fields?.saToken?.value != ''?
+                          '' : 'A required field if URL is set'),
                       labelIcon: (
                         <Popover
                           bodyContent={
