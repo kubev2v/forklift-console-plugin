@@ -6,7 +6,6 @@ import {
 } from 'src/components/mappings/MappingPage';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
-import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import {
@@ -47,12 +46,11 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const StorageMappingsPage = ({ namespace, kind: reference }: ResourceConsolePageProps) => {
+export const StorageMappingsPage = ({ namespace }: ResourceConsolePageProps) => {
   const { t } = useTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'StorageMappings' }));
   const dataSource = useFlatStorageMappings({
     namespace,
-    groupVersionKind: groupVersionKindForReference(reference),
   });
 
   return (

@@ -5,7 +5,6 @@ import {
 } from 'src/components/mappings/MappingPage';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
-import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import {
@@ -50,12 +49,11 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const NetworkMappingsPage = ({ namespace, kind: reference }: ResourceConsolePageProps) => {
+export const NetworkMappingsPage = ({ namespace }: ResourceConsolePageProps) => {
   const { t } = useTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'NetworkMappings' }));
   const dataSource = useFlatNetworkMappings({
     namespace,
-    groupVersionKind: groupVersionKindForReference(reference),
   });
 
   return (

@@ -167,10 +167,9 @@ export type Network = LocalNetworkResource | RemoteNetworkResource | PodNetwork;
 export const useFlatNetworkMappings = ({
   namespace,
   name = undefined,
-  groupVersionKind,
 }): [FlatNetworkMapping[], boolean, boolean] => {
   return useMappings<NetworkMapResource, FlatNetworkMapping>(
-    { namespace, name, groupVersionKind },
+    { namespace, name },
     useNetworkMappings,
     mergeData,
   );

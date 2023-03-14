@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import * as C from 'src/utils/constants';
 import { PLAN_STATUS_FILTER } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
-import { groupVersionKindForReference } from 'src/utils/resources';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { EnumToTuple } from '@kubev2v/common/components/Filter/helpers';
@@ -105,12 +104,11 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const PlansPage = ({ namespace, kind: reference }: ResourceConsolePageProps) => {
+export const PlansPage = ({ namespace }: ResourceConsolePageProps) => {
   const { t } = useTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'Plans' }));
   const dataSource = useFlatPlans({
     namespace,
-    groupVersionKind: groupVersionKindForReference(reference),
   });
 
   return (
