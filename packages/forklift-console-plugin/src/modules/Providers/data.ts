@@ -51,15 +51,36 @@ export const getFlatData: GetFlatDataFn = ({ providers, inventory }) => {
   return flatData;
 };
 
+export const useHasSourceAndTargetProviders = (
+  namespace?: string,
+): [boolean, boolean, boolean, unknown] => {
+  const [providers, providersLoaded, providersError] = useProviders({
+    namespace,
+  });
+
+  const hasSourceProviders = providers.some((p) => p?.spec?.type !== 'openshift');
+  const hasTargetProviders = providers.some((p) => p?.spec?.type === 'openshift');
+
+  return [hasSourceProviders, hasTargetProviders, providersLoaded, providersError];
+};
+
+export const useHasSufficientProviders = (namespace?: string) => {
+  const [hasSourceProviders, hasTargetProviders, providersLoaded, providersError] =
+    useHasSourceAndTargetProviders(namespace);
+  const hasSufficientProviders =
+    hasSourceProviders && hasTargetProviders && providersLoaded && !providersError;
+
+  return hasSufficientProviders;
+};
+
 export const useProvidersWithInventory = ({
   namespace,
-  name = undefined,
-  groupVersionKind: { group, version },
+  groupVersionKind,
 }): [MergedProvider[], boolean, unknown, unknown, unknown] => {
-  const [providers, providersLoaded, providersError] = useProviders(
-    { namespace, name },
-    { group, version },
-  );
+  const [providers, providersLoaded, providersError] = useProviders({
+    namespace,
+    groupVersionKind,
+  });
   const {
     data: inventory,
     isSuccess: inventoryLoaded,

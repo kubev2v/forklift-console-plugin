@@ -120,11 +120,11 @@ export const mergeData = (
 export const useFlatPlans = ({
   namespace,
   name = undefined,
-  groupVersionKind: { group, version },
+  groupVersionKind: { group, version, kind },
 }): [FlatPlan[], boolean, boolean] => {
-  const [plans, pLoaded, pError] = usePlans({ namespace, name }, { group, version });
-  const [migrations, mLoaded, mError] = useMigrations({ namespace }, { group, version });
-  const [providers] = useProviders({ namespace }, { group, version });
+  const [plans, pLoaded, pError] = usePlans({ namespace, name }, { group, version, kind });
+  const [migrations, mLoaded, mError] = useMigrations({ namespace }, { group, version, kind });
+  const [providers] = useProviders({ namespace }, { group, version, kind });
 
   const merged = useMemo(
     () => (plans && migrations && providers ? mergeData(plans, migrations, providers) : []),

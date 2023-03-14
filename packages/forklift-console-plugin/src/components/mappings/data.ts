@@ -48,13 +48,13 @@ export const useMappings = <T, K>(
   {
     namespace,
     name = undefined,
-    groupVersionKind: { group, version },
+    groupVersionKind: { group, version, kind },
   }: { namespace: string; name?: string; groupVersionKind: K8sGroupVersionKind },
-  useMappings: (p: WatchK8sResource, k: Omit<K8sGroupVersionKind, 'kind'>) => WatchK8sResult<T[]>,
+  useMappings: (p: WatchK8sResource, k: K8sGroupVersionKind) => WatchK8sResult<T[]>,
   mergeData: (m: T[], p: V1beta1Provider[]) => K[],
 ): [K[], boolean, boolean] => {
-  const [providers] = useProviders({ namespace }, { group, version });
-  const [mappings, loaded, error] = useMappings({ namespace, name }, { group, version });
+  const [providers] = useProviders({ namespace }, { group, version, kind });
+  const [mappings, loaded, error] = useMappings({ namespace, name }, { group, version, kind });
 
   const merged = useMemo(
     () => (mappings && providers ? mergeData(mappings, providers) : []),

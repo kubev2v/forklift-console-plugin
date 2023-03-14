@@ -11,3 +11,8 @@
   max-width: calc(var(--pf-c-popover__content--PaddingLeft) +
     var(--pf-c-popover__content--PaddingRight) + 13.75rem);
 }
+
+.forklift-empty-state__icon {
+  max-width: 14rem;
+  max-height: 14rem;
+}
