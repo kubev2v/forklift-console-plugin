@@ -16,41 +16,45 @@ describe('universal compareFn', () => {
 describe('compareWith compareFn factory', () => {
   it('works without custom compareFn', () => {
     expect(
-      compareWith(
-        { resourceFieldId: NAME, isAsc: true, label: NAME },
-        'en',
-        undefined,
-      )({ name: 'name_a' }, { name: 'name_b' }),
+      compareWith({ resourceFieldId: NAME, isAsc: true, label: NAME }, 'en', undefined, [
+        {
+          resourceFieldId: NAME,
+          label: NAME,
+        },
+      ])({ name: 'name_a' }, { name: 'name_b' }),
     ).toBeLessThan(0);
   });
 
   it('works for nullish entities', () => {
     expect(
-      compareWith(
-        { resourceFieldId: NAME, isAsc: true, label: NAME },
-        'en',
-        undefined,
-      )(null, undefined),
+      compareWith({ resourceFieldId: NAME, isAsc: true, label: NAME }, 'en', undefined, [
+        {
+          resourceFieldId: NAME,
+          label: NAME,
+        },
+      ])(null, undefined),
     ).toBe(0);
   });
 
   it('treats all values equal if sortType is not defined', () => {
     expect(
-      compareWith(
-        { resourceFieldId: undefined, isAsc: false, label: undefined },
-        'en',
-        undefined,
-      )('a', 'b'),
+      compareWith({ resourceFieldId: undefined, isAsc: false, label: undefined }, 'en', undefined, [
+        {
+          resourceFieldId: NAME,
+          label: NAME,
+        },
+      ])('a', 'b'),
     ).toBe(0);
   });
 
   it('reverts sorting order based on sortType.isAsc', () => {
     expect(
-      compareWith(
-        { resourceFieldId: NAME, isAsc: false, label: NAME },
-        'en',
-        undefined,
-      )({ name: 'name_a' }, { name: 'name_b' }),
+      compareWith({ resourceFieldId: NAME, isAsc: false, label: NAME }, 'en', undefined, [
+        {
+          resourceFieldId: NAME,
+          label: NAME,
+        },
+      ])({ name: 'name_a' }, { name: 'name_b' }),
     ).toBeGreaterThan(0);
   });
 
@@ -60,6 +64,12 @@ describe('compareWith compareFn factory', () => {
         { resourceFieldId: NAME, isAsc: true, label: NAME },
         'en',
         (a, b) => a.localeCompare(b), // no numeric
+        [
+          {
+            resourceFieldId: NAME,
+            label: NAME,
+          },
+        ],
       )({ name: 'a10' }, { name: 'a5' }),
     ).toBeLessThan(0);
   });

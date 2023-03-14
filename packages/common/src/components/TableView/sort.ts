@@ -4,6 +4,7 @@ import { localeCompare } from 'common/src/utils/localCompare';
 
 import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base';
 
+import { getResourceFieldValue } from '../Filter';
 import { ResourceField, SortType } from '../types';
 
 /**
@@ -13,8 +14,9 @@ import { ResourceField, SortType } from '../types';
  * @param locale to be used by string compareFn
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const universalComparator = (a: any, b: any, locale: string) =>
-  localeCompare(String(a ?? ''), String(b ?? ''), locale);
+export const universalComparator = (a: any, b: any, locale: string) => {
+  return localeCompare(String(a ?? ''), String(b ?? ''), locale);
+};
 
 /**
  * Creates a compareFn function based on provided current sort definition.
@@ -30,6 +32,7 @@ export function compareWith(
   currentSort: SortType,
   locale: string,
   fieldComparator: (a, b, locale: string) => number,
+  fields: ResourceField[],
 ): (a, b) => number {
   return (a, b) => {
     if (!currentSort?.resourceFieldId) {
@@ -37,8 +40,8 @@ export function compareWith(
     }
     const compareFn = fieldComparator ?? universalComparator;
     const compareValue = compareFn(
-      a?.[currentSort.resourceFieldId],
-      b?.[currentSort.resourceFieldId],
+      getResourceFieldValue(a, currentSort.resourceFieldId, fields),
+      getResourceFieldValue(b, currentSort.resourceFieldId, fields),
       locale ?? 'en',
     );
     return currentSort.isAsc ? compareValue : -compareValue;
@@ -75,6 +78,7 @@ export const useSort = (
         activeSort,
         i18n.resolvedLanguage,
         fields.find((field) => field.resourceFieldId === activeSort.resourceFieldId)?.compareFn,
+        fields,
       ),
     [fields, activeSort],
   );
