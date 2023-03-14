@@ -45,16 +45,12 @@ export const resolveOwnerRef = ([first, second]: OwnerReference[] = []): OwnerRe
 };
 
 export const useMappings = <T, K>(
-  {
-    namespace,
-    name = undefined,
-    groupVersionKind: { group, version, kind },
-  }: { namespace: string; name?: string; groupVersionKind: K8sGroupVersionKind },
-  useMappings: (p: WatchK8sResource, k: K8sGroupVersionKind) => WatchK8sResult<T[]>,
+  { namespace, name = undefined }: { namespace: string; name?: string },
+  useMappings: (p: WatchK8sResource) => WatchK8sResult<T[]>,
   mergeData: (m: T[], p: V1beta1Provider[]) => K[],
 ): [K[], boolean, boolean] => {
-  const [providers] = useProviders({ namespace }, { group, version, kind });
-  const [mappings, loaded, error] = useMappings({ namespace, name }, { group, version, kind });
+  const [providers] = useProviders({ namespace });
+  const [mappings, loaded, error] = useMappings({ namespace, name });
 
   const merged = useMemo(
     () => (mappings && providers ? mergeData(mappings, providers) : []),

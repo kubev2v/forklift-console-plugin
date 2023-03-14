@@ -116,10 +116,9 @@ export const mergeData = (
 export const useFlatStorageMappings = ({
   namespace,
   name = undefined,
-  groupVersionKind,
 }): [FlatStorageMapping[], boolean, boolean] => {
   return useMappings<StorageMapResource, FlatStorageMapping>(
-    { namespace, name, groupVersionKind },
+    { namespace, name },
     useStorageMappings,
     mergeData,
   );

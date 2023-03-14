@@ -75,11 +75,9 @@ export const useHasSufficientProviders = (namespace?: string) => {
 
 export const useProvidersWithInventory = ({
   namespace,
-  groupVersionKind,
 }): [MergedProvider[], boolean, unknown, unknown, unknown] => {
   const [providers, providersLoaded, providersError] = useProviders({
     namespace,
-    groupVersionKind,
   });
   const {
     data: inventory,
