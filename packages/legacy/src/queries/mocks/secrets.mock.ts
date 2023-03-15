@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
       username: 'bW9jay11c2Vy',       // used by OpenStack only
       domainName: 'bW9jay1kb21haW4=', // used by OpenStack only
       projectName: 'bW9jay1wcm9qZWN0',// used by OpenStack only
-      region: 'bW9jay1yZWdpb24=',     // used by OpenStack only
+      regionName: 'bW9jay1yZWdpb24=', // used by OpenStack only
       insecureSkipVerify: 'dHJ1ZQ==',
     },
     type: 'Opaque',

@@ -216,7 +216,7 @@ export interface OpenstackProviderSecret {
    * @type {string}
    * @memberof ProviderSecret
    */
-  region?: string;
+  regionName?: string;
 
   /**
    * openstack domain name

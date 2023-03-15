@@ -127,7 +127,7 @@ export function convertFormValuesToSecret(
       password: btoa(openstackValues.password),
       domainName:btoa(openstackValues.domainName),
       projectName:btoa(openstackValues.projectName),
-      region:btoa(openstackValues.region),
+      regionName:btoa(openstackValues.regionName),
       insecureSkipVerify:btoa(booleanToString(openstackValues.insecureSkipVerify) ?? ''),
       cacert: !openstackValues.insecureSkipVerify ? btoa(openstackValues.caCertIfSecure) : null
     };
