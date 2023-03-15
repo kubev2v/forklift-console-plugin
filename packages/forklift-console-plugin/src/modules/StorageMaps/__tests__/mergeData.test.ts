@@ -21,6 +21,23 @@ describe('merging storage data', () => {
     const providers = MOCK_CLUSTER_PROVIDERS as V1beta1Provider[];
     const merged = mergeStoragekData(mappings, providers);
     // do a stringify-parse run to remove undefined properties which clutter the results(if mismatch happens)
+
+    /**
+     * Write test data to file.
+     * 
+     *
+    import fs from 'fs';
+
+    try {
+      fs.writeFileSync(
+        './mergedStorageData.json',
+        JSON.stringify(merged, undefined, 4),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+    */
+
     expect(JSON.parse(JSON.stringify(merged))).toEqual(MERGED_STORAGE_DATA);
   });
 });
