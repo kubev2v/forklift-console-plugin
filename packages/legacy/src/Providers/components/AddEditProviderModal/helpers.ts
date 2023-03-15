@@ -82,7 +82,7 @@ export const useAddEditProviderPrefillEffect = (
           openstackFields.openstackUrl.prefill(spec.url || '');
           openstackFields.domainName.prefill(atob(secret?.data.domainName || ''));
           openstackFields.projectName.prefill(atob(secret?.data.projectName || ''));
-          openstackFields.region.prefill(atob(secret?.data.region || ''));
+          openstackFields.regionName.prefill(atob(secret?.data.regionName || ''));
           openstackFields.insecureSkipVerify.prefill(
             secret?.data.insecureSkipVerify
               ? stringToBoolean(atob(secret?.data.insecureSkipVerify))

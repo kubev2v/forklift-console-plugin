@@ -160,7 +160,7 @@ const useAddProviderFormState = (
       password: useFormField('', yup.string().max(256).label(getLabelName('pwd', brandPrefix(providerTypeField.value))).required()),
       domainName: useFormField('', yup.string().label('Domain').required()),
       projectName: useFormField('', yup.string().label('Project').required()),
-      region: useFormField('', yup.string().label('Region').required()),
+      regionName: useFormField('', yup.string().label('Region').required()),
       insecureSkipVerify,
       caCertIfSecure: useFormField('', x509PemSchema),
       caCertFilenameIfSecure: useFormField('', yup.string()),
@@ -429,11 +429,11 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                   />
                 ) : null}
 
-                {fields?.region? (
+                {fields?.regionName? (
                   <ValidatedTextInput
-                    field={fields.region}
+                    field={fields.regionName}
                     isRequired
-                    fieldId="region"
+                    fieldId="regionName"
                   />
                 ) : null}
 
