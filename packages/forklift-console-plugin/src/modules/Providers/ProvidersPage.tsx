@@ -5,8 +5,8 @@ import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { EnumToTuple } from '@kubev2v/common/components/Filter/helpers';
+import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
 import {
-  Loading,
   loadUserSettings,
   StandardPage,
   UserSettings,
@@ -166,7 +166,7 @@ const Page: React.FC<{
   const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
 
   if (isLoading) {
-    return <Loading />;
+    return <LoadingDots />;
   }
 
   if (loadedDataIsEmpty) {

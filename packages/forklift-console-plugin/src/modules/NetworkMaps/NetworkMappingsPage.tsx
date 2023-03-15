@@ -8,9 +8,9 @@ import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { FreetextFilter, ValueMatcher } from '@kubev2v/common/components/Filter';
+import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
 import {
-  Loading,
   loadUserSettings,
   StandardPage,
   UserSettings,
@@ -82,7 +82,7 @@ const Page = ({
   const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
 
   if (isLoading) {
-    return <Loading />;
+    return <LoadingDots />;
   }
 
   if (loadedDataIsEmpty) {
