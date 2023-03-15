@@ -25,7 +25,7 @@ describe('StorageMap rows', () => {
         <table>
           <tbody>
             <StorageMappingRow
-              resourceFields={storageFields}
+              resourceFields={storageFields.filter((f) => !f.isHidden)}
               namespace={undefined}
               resourceData={storage as FlatStorageMapping}
               resourceIndex={0}

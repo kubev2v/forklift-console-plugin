@@ -52,7 +52,7 @@ const NameCell: React.FC<CellProps<CommonMapping>> = ({ resourceData }) => {
   const { t } = useTranslation();
 
   return (
-    <>
+    <span className="forklift-table__flex-cell">
       <ResourceLink
         groupVersionKind={resourceData.gvk}
         name={resourceData.name}
@@ -63,7 +63,7 @@ const NameCell: React.FC<CellProps<CommonMapping>> = ({ resourceData }) => {
           {t('managed')}
         </Label>
       )}
-    </>
+    </span>
   );
 };
 

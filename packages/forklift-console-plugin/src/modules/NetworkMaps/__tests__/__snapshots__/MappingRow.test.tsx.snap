@@ -48,18 +48,22 @@ exports[`NetworkMap rows plantest1-generated-zxcv 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
-          >
-            name: plantest1-generated-zxcv, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
-          </div>
           <span
-            class="pf-c-label pf-m-compact forklift-table__flex-cell-label"
+            class="forklift-table__flex-cell"
           >
-            <span
-              class="pf-c-label__content"
+            <div
+              class="ResourceLink_mock"
             >
-              managed
+              name: plantest1-generated-zxcv, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
+            </div>
+            <span
+              class="pf-c-label pf-m-compact forklift-table__flex-cell-label"
+            >
+              <span
+                class="pf-c-label__content"
+              >
+                managed
+              </span>
             </span>
           </span>
         </td>
@@ -121,12 +125,6 @@ exports[`NetworkMap rows plantest1-generated-zxcv 1`] = `
                1
             </span>
           </button>
-        </td>
-        <td
-          class=""
-          data-label="Managed"
-        >
-          true
         </td>
         <td
           class="pf-c-table__compound-expansion-toggle"
@@ -200,7 +198,7 @@ exports[`NetworkMap rows plantest1-generated-zxcv 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="8"
+          colspan="7"
           data-label="Mapping graph"
         />
       </tr>
@@ -257,11 +255,15 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network1 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: vcenter1-netstore-to-ocp1-network1, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
-          </div>
+            <div
+              class="ResourceLink_mock"
+            >
+              name: vcenter1-netstore-to-ocp1-network1, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -321,12 +323,6 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network1 1`] = `
                1
             </span>
           </button>
-        </td>
-        <td
-          class=""
-          data-label="Managed"
-        >
-          false
         </td>
         <td
           class="pf-c-table__compound-expansion-toggle"
@@ -400,7 +396,7 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network1 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="8"
+          colspan="7"
           data-label="Mapping graph"
         />
       </tr>
@@ -457,11 +453,15 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network2 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: vcenter1-netstore-to-ocp1-network2, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
-          </div>
+            <div
+              class="ResourceLink_mock"
+            >
+              name: vcenter1-netstore-to-ocp1-network2, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -521,12 +521,6 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network2 1`] = `
                {{groupCount}} Groups
             </span>
           </button>
-        </td>
-        <td
-          class=""
-          data-label="Managed"
-        >
-          false
         </td>
         <td
           class="pf-c-table__compound-expansion-toggle"
@@ -618,7 +612,7 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network2 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="8"
+          colspan="7"
           data-label="Mapping graph"
         />
       </tr>
@@ -675,11 +669,15 @@ exports[`NetworkMap rows vcenter3-invalid-network-map 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: vcenter3-invalid-network-map, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
-          </div>
+            <div
+              class="ResourceLink_mock"
+            >
+              name: vcenter3-invalid-network-map, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -739,12 +737,6 @@ exports[`NetworkMap rows vcenter3-invalid-network-map 1`] = `
                1
             </span>
           </button>
-        </td>
-        <td
-          class=""
-          data-label="Managed"
-        >
-          false
         </td>
         <td
           class="pf-c-table__compound-expansion-toggle"
@@ -818,7 +810,7 @@ exports[`NetworkMap rows vcenter3-invalid-network-map 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="8"
+          colspan="7"
           data-label="Mapping graph"
         />
       </tr>
@@ -875,11 +867,15 @@ exports[`NetworkMap rows vcenter4-invalid-network-map 1`] = `
           class=""
           data-label="Name"
         >
-          <div
-            class="ResourceLink_mock"
+          <span
+            class="forklift-table__flex-cell"
           >
-            name: vcenter4-invalid-network-map, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
-          </div>
+            <div
+              class="ResourceLink_mock"
+            >
+              name: vcenter4-invalid-network-map, gvk: forklift.konveyor.io~v1beta1~NetworkMap, ns: konveyor-forklift
+            </div>
+          </span>
         </td>
         <td
           class=""
@@ -939,12 +935,6 @@ exports[`NetworkMap rows vcenter4-invalid-network-map 1`] = `
                1
             </span>
           </button>
-        </td>
-        <td
-          class=""
-          data-label="Managed"
-        >
-          false
         </td>
         <td
           class="pf-c-table__compound-expansion-toggle"
@@ -1018,7 +1008,7 @@ exports[`NetworkMap rows vcenter4-invalid-network-map 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="8"
+          colspan="7"
           data-label="Mapping graph"
         />
       </tr>
