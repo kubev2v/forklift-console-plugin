@@ -27,6 +27,7 @@ export interface CommonMapping {
   [C.TEMPLATE]: boolean;
   [C.OWNER]: string;
   [C.OWNER_GVK]: K8sGroupVersionKind;
+  [C.MANAGED]: boolean;
   [C.OBJECT]: Mapping;
 }
 

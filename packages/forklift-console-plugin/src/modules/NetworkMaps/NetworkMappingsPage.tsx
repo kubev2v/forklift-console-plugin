@@ -10,6 +10,7 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 import {
   defaultValueMatchers,
   FreetextFilter,
+  SwitchFilter,
   ValueMatcher,
 } from '@kubev2v/common/components/Filter';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
@@ -101,6 +102,7 @@ const Page = ({
           supportedFilters={{
             freetext: FreetextFilter,
             targetNetwork: FreetextFilter,
+            slider: SwitchFilter,
           }}
           supportedMatchers={[...defaultValueMatchers, targetNetworkMatcher]}
         />

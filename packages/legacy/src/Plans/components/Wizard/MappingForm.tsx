@@ -27,7 +27,6 @@ import {
   IMetaObjectMeta,
   SourceVM,
   SourceInventoryProvider,
-  POD_NETWORK,
 } from 'legacy/src/queries/types';
 import { MappingBuilder, IMappingBuilderItem } from 'legacy/src/Mappings/components/MappingBuilder';
 import {
@@ -159,13 +158,6 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
     };
   }) as OptionWithValue<Mapping>[];
 
-  const filteredAvailableTargets =
-    mappingType === MappingType.Network
-      ? availableTargets.filter(
-          (network) => isSameResource(network, POD_NETWORK) || network.namespace === targetNamespace
-        )
-      : availableTargets;
-
   const populateMappingBuilder = (sourceProviderType: ProviderType, mapping?: Mapping) => {
     const newBuilderItems: IMappingBuilderItem[] = !mapping
       ? []
@@ -173,7 +165,7 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
           mapping,
           mappingType,
           availableSources,
-          filteredAvailableTargets
+          availableTargets
         );
     form.fields.builderItems.setValue(
       getBuilderItemsWithMissingSources(
@@ -300,7 +292,7 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
                 mappingType={mappingType}
                 sourceProviderType={sourceProvider?.type || 'vsphere'}
                 availableSources={availableSources}
-                availableTargets={filteredAvailableTargets}
+                availableTargets={availableTargets}
                 builderItems={form.values.builderItems}
                 setBuilderItems={form.fields.builderItems.setValue}
               />

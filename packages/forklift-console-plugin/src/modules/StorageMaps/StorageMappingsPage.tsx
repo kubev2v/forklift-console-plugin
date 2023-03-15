@@ -11,6 +11,7 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 import {
   defaultValueMatchers,
   FreetextFilter,
+  SwitchFilter,
   ValueMatcher,
 } from '@kubev2v/common/components/Filter';
 import {
@@ -99,6 +100,7 @@ const Page = ({
           supportedFilters={{
             freetext: FreetextFilter,
             targetStorage: FreetextFilter,
+            slider: SwitchFilter,
           }}
           supportedMatchers={[...defaultValueMatchers, targetStorageMatcher]}
         />

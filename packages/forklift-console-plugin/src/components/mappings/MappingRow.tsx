@@ -7,11 +7,13 @@ import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { Label } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
 import { CommonMapping } from './data';
 
+import './styles.css';
 export interface CellProps<T extends CommonMapping> {
   value: string;
   resourceData: T;
@@ -46,10 +48,27 @@ export type CellCreator<T extends CommonMapping> = Record<
   (props: CellProps<T>) => JSX.Element
 >;
 
+const NameCell: React.FC<CellProps<CommonMapping>> = ({ resourceData }) => {
+  const { t } = useTranslation();
+
+  return (
+    <span className="forklift-table__flex-cell">
+      <ResourceLink
+        groupVersionKind={resourceData.gvk}
+        name={resourceData.name}
+        namespace={resourceData.namespace}
+      />
+      {resourceData.managed && (
+        <Label isCompact color="grey" className="forklift-table__flex-cell-label">
+          {t('managed')}
+        </Label>
+      )}
+    </span>
+  );
+};
+
 export const commonCells: CellCreator<CommonMapping> = {
-  [C.NAME]: ({ resourceData: e }: CellProps<CommonMapping>) => (
-    <ResourceLink groupVersionKind={e.gvk} name={e.name} namespace={e.namespace} />
-  ),
+  [C.NAME]: NameCell,
   [C.SOURCE]: ({ resourceData: e }: CellProps<CommonMapping>) => (
     <ResourceLink groupVersionKind={e.sourceGvk} name={e.source} namespace={e.namespace} />
   ),

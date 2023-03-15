@@ -25,7 +25,7 @@ describe('NetworkMap rows', () => {
         <table>
           <tbody>
             <NetworkMappingRow
-              resourceFields={networkFields}
+              resourceFields={networkFields.filter((f) => !f.isHidden)}
               namespace={undefined}
               resourceData={net as FlatNetworkMapping}
               resourceIndex={0}

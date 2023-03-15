@@ -21,6 +21,23 @@ describe('merging network data', () => {
     const providers = MOCK_CLUSTER_PROVIDERS as V1beta1Provider[];
     const merged = mergeNetworkData(mappings, providers);
     // do a stringify-parse run to remove undefined properties which clutter the results(if mismatch happens)
+
+    /**
+     * Write test data to file.
+     * 
+     *
+    import fs from 'fs';
+
+    try {
+      fs.writeFileSync(
+        './mergedNetworkData.json',
+        JSON.stringify(merged, undefined, 4),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+     */
+
     expect(JSON.parse(JSON.stringify(merged))).toEqual(MERGED_NETWORK_DATA);
   });
 });

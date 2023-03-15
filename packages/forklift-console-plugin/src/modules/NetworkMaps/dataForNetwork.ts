@@ -128,6 +128,7 @@ export const mergeData = (
         gvk,
         owner: owner.name,
         ownerGvk: owner.gvk,
+        managed: !!owner.name,
         source: sourceProvider.name,
         sourceGvk: sourceProvider.gvk,
         sourceResolved: sourceProvider.resolved,
@@ -140,8 +141,7 @@ export const mergeData = (
         to: groupedNetworks.map(([to]) => to),
         object: mapping,
       }),
-    )
-    .filter((it) => it.template);
+    );
 };
 
 export interface LocalNetworkResource {
