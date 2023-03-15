@@ -104,7 +104,7 @@ export const commonFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     filter: {
       type: 'slider',
       standalone: true,
-      placeholderLabel: t('Show manged'),
+      placeholderLabel: t('Show managed'),
       defaultValues: ['false'],
     },
   },
