@@ -31,6 +31,8 @@ export function useMappingActions<T extends CommonMapping>({
             namespace: resourceData.namespace,
           }),
         label: t('Edit Mapping'),
+        disabled: resourceData.managed,
+        disabledTooltip: t('Manged mappings can not be edited'),
       },
       {
         id: 'delete',
@@ -42,6 +44,8 @@ export function useMappingActions<T extends CommonMapping>({
             name: resourceData.name,
           }),
         label: t('Delete Mapping'),
+        disabled: resourceData.managed,
+        disabledTooltip: t('Manged mappings can not be deleted'),
       },
     ],
     [t, resourceData],

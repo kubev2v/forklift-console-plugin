@@ -23,6 +23,7 @@ export const NETWORK_COUNT = 'networkCount';
 export const OBJECT = 'object';
 export const OWNER = 'owner';
 export const OWNER_GVK = 'ownerGvk';
+export const MANAGED = 'managed';
 export const READY = 'ready';
 export const PHASE = 'phase';
 export const OWNER_REFERENCES = 'ownerReferences';

@@ -97,6 +97,7 @@ export const mergeData = (
         gvk,
         owner: owner.name,
         ownerGvk: owner.gvk,
+        managed: !!owner.name,
         source: sourceProvider.name,
         sourceGvk: sourceProvider.gvk,
         sourceResolved: sourceProvider.resolved,
@@ -109,8 +110,7 @@ export const mergeData = (
         to: groupedStorages.map(([storage]) => storage),
         from: groupedStorages,
       }),
-    )
-    .filter((it) => it.template);
+    );
 };
 
 export const useFlatStorageMappings = ({

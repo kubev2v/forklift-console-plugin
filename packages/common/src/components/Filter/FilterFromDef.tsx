@@ -21,24 +21,24 @@ export const FilterFromDef = ({
   onFilterUpdate,
   showFilter = true,
 }: FilterFromDefProps) => {
-  return (
-    FilterType && (
-      <FilterType
-        key={id}
-        filterId={id}
-        onFilterUpdate={(values) =>
-          onFilterUpdate({
-            ...selectedFilters,
-            [id]: values,
-          })
-        }
-        placeholderLabel={def.placeholderLabel}
-        selectedFilters={selectedFilters[id] ?? []}
-        title={def?.fieldLabel ?? label}
-        showFilter={showFilter}
-        supportedValues={def.values}
-        supportedGroups={def.groups}
-      />
-    )
+  return FilterType ? (
+    <FilterType
+      key={id}
+      filterId={id}
+      onFilterUpdate={(values) =>
+        onFilterUpdate({
+          ...selectedFilters,
+          [id]: values,
+        })
+      }
+      placeholderLabel={def.placeholderLabel}
+      selectedFilters={selectedFilters[id] ?? []}
+      title={def?.fieldLabel ?? label}
+      showFilter={showFilter}
+      supportedValues={def.values}
+      supportedGroups={def.groups}
+    />
+  ) : (
+    <></>
   );
 };

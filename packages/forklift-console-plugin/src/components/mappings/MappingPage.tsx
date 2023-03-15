@@ -91,12 +91,22 @@ export const commonFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     label: t('Target provider'),
     ...byName(t),
   },
-
   {
     resourceFieldId: C.FROM,
     label: t('From'),
     isVisible: true,
     sortable: false,
+  },
+  {
+    resourceFieldId: C.MANAGED,
+    label: t('Managed'),
+    isHidden: true,
+    filter: {
+      type: 'slider',
+      standalone: true,
+      placeholderLabel: t('Show manged'),
+      defaultValues: ['false'],
+    },
   },
 ];
 
