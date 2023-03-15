@@ -24,7 +24,15 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
   return (
     <ForkliftEmptyState
       icon={AutomationIcon}
-      title={t('No NetworkMaps found.')}
+      title={
+        namespace ? (
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            No NetworkMaps found in namespace <strong>{namespace}</strong>.
+          </Trans>
+        ) : (
+          t('No NetworkMaps found.')
+        )
+      }
       textContent={
         !hasSufficientProviders ? (
           <Flex direction={{ default: 'column' }}>
