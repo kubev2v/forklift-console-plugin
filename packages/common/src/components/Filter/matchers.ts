@@ -2,7 +2,11 @@ import jsonpath from 'jsonpath';
 
 import { ResourceField } from '../types';
 
-import { ValueMatcher } from './types';
+import { EnumFilter } from './EnumFilter';
+import { FreetextFilter } from './FreetextFilter';
+import { GroupedEnumFilter } from './GroupedEnumFilter';
+import { SwitchFilter } from './SwitchFilter';
+import { FilterRenderer, ValueMatcher } from './types';
 
 /**
  * Get the field value of a given field id, using resourceData and resourceFields
@@ -106,6 +110,13 @@ export const defaultValueMatchers: ValueMatcher[] = [
   groupedEnumMatcher,
   sliderMatcher,
 ];
+
+export const defaultSupportedFilters: Record<string, FilterRenderer> = {
+  enum: EnumFilter,
+  freetext: FreetextFilter,
+  groupedEnum: GroupedEnumFilter,
+  slider: SwitchFilter,
+};
 
 /**
  * Create matcher for multiple filter types.

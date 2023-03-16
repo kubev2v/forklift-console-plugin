@@ -6,6 +6,7 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { EnumToTuple } from '@kubev2v/common/components/Filter/helpers';
 import {
+  Loading,
   loadUserSettings,
   StandardPage,
   UserSettings,
@@ -164,22 +165,24 @@ const Page: React.FC<{
   const isLoading = !isLoadSuccess && !isLoadError;
   const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
 
-  return (
-    <>
-      {loadedDataIsEmpty && <EmptyStateProviders namespace={namespace} />}
+  if (isLoading) {
+    return <Loading />;
+  }
 
-      {(isLoading || !loadedDataIsEmpty) && (
-        <StandardPage<MergedProvider>
-          addButton={<AddProviderButton namespace={namespace} />}
-          dataSource={[data, isLoadSuccess, isLoadError]}
-          RowMapper={ProviderRow}
-          fieldsMetadata={fieldsMetadataFactory(t)}
-          namespace={namespace}
-          title={title}
-          userSettings={userSettings}
-        />
-      )}
-    </>
+  if (loadedDataIsEmpty) {
+    return <EmptyStateProviders namespace={namespace} />;
+  }
+
+  return (
+    <StandardPage<MergedProvider>
+      addButton={<AddProviderButton namespace={namespace} />}
+      dataSource={[data, isLoadSuccess, isLoadError]}
+      RowMapper={ProviderRow}
+      fieldsMetadata={fieldsMetadataFactory(t)}
+      namespace={namespace}
+      title={title}
+      userSettings={userSettings}
+    />
   );
 };
 

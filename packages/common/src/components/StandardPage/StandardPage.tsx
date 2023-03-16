@@ -2,13 +2,10 @@ import React, { useMemo } from 'react';
 import {
   AttributeValueFilter,
   createMetaMatcher,
+  defaultSupportedFilters,
   defaultValueMatchers,
-  EnumFilter,
   FilterGroup,
-  FilterTypeProps,
-  FreetextFilter,
-  GroupedEnumFilter,
-  SwitchFilter,
+  FilterRenderer,
   toFieldFilter,
   useUrlFilters,
   ValueMatcher,
@@ -41,6 +38,32 @@ import { ErrorState, Loading, NoResultsFound, NoResultsMatchFilter } from './Res
 import { UserSettings } from './types';
 import { useFields } from './useFields';
 import { DEFAULT_PER_PAGE, usePagination } from './usePagination';
+
+/**
+ * Reduce two list of filters to one list.
+ *
+ * @param extraFilters filters we want to use to add or override the default list
+ * @param defaultFilters a default list of filters
+ * @returns a list containing the default filters plus the extra ones, if an extra filter
+ *          already exist in the default list, the extra filter will override the default one.
+ */
+const reduceValueFilters = (
+  extraFilters: ValueMatcher[],
+  defaultFilters: ValueMatcher[],
+): ValueMatcher[] => {
+  const filters = [...extraFilters, ...defaultFilters].reduce((acc, filter) => {
+    const accFilterTypes = acc.map((matcher) => matcher.filterType);
+    const filterTypeFound = accFilterTypes.includes(filter.filterType);
+
+    if (!filterTypeFound) {
+      acc.push(filter);
+    }
+
+    return acc;
+  }, [] as ValueMatcher[]);
+
+  return filters;
+};
 
 /**
  * @param T type to be displayed in the list
@@ -80,15 +103,15 @@ export interface StandardPageProps<T> {
    * Filter types that will be used.
    * Default are: EnumFilter and FreetextFilter
    */
-  supportedFilters?: {
-    [type: string]: (props: FilterTypeProps) => JSX.Element;
+  extraSupportedFilters?: {
+    [type: string]: FilterRenderer;
   };
 
   /**
    * Extract value from fields and compare to selected filter.
    * The default matchers support the default filters.
    */
-  supportedMatchers?: ValueMatcher[];
+  extraSupportedMatchers?: ValueMatcher[];
 
   title: string;
   /**
@@ -131,18 +154,13 @@ export function StandardPage<T>({
   title,
   addButton,
   fieldsMetadata,
-  supportedFilters = {
-    enum: EnumFilter,
-    freetext: FreetextFilter,
-    groupedEnum: GroupedEnumFilter,
-    slider: SwitchFilter,
-  },
+  extraSupportedFilters,
   customNoResultsFound,
   customNoResultsMatchFilter,
   pagination = DEFAULT_PER_PAGE,
   userSettings,
   filterPrefix = '',
-  supportedMatchers = defaultValueMatchers,
+  extraSupportedMatchers,
   HeaderMapper = DefaultHeader,
 }: StandardPageProps<T>) {
   const { t } = useTranslation();
@@ -153,6 +171,13 @@ export function StandardPage<T>({
   const clearAllFilters = () => setSelectedFilters({});
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
   const [activeSort, setActiveSort, compareFn] = useSort(fields);
+
+  const supportedMatchers = extraSupportedMatchers
+    ? reduceValueFilters(extraSupportedMatchers, defaultValueMatchers)
+    : defaultValueMatchers;
+  const supportedFilters = extraSupportedFilters
+    ? { ...defaultSupportedFilters, ...extraSupportedFilters }
+    : defaultSupportedFilters;
 
   const filteredData = useMemo(
     () =>

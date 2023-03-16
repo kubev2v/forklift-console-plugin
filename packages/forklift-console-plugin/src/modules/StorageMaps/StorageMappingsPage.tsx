@@ -8,13 +8,9 @@ import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
+import { FreetextFilter, ValueMatcher } from '@kubev2v/common/components/Filter';
 import {
-  defaultValueMatchers,
-  FreetextFilter,
-  SwitchFilter,
-  ValueMatcher,
-} from '@kubev2v/common/components/Filter';
-import {
+  Loading,
   loadUserSettings,
   StandardPage,
   StandardPageProps,
@@ -77,37 +73,36 @@ const Page = ({
   const isLoading = !isLoadSuccess && !isLoadError;
   const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
 
-  return (
-    <>
-      {loadedDataIsEmpty && <EmptyStateStorageMaps namespace={namespace} />}
+  if (isLoading) {
+    return <Loading />;
+  }
 
-      {(isLoading || !loadedDataIsEmpty) && (
-        <StandardPage<FlatStorageMapping>
-          addButton={
-            <AddMappingButton
-              namespace={namespace}
-              mappingType={MappingType.Storage}
-              label={t('Create StorageMap')}
-            />
-          }
-          dataSource={dataSource}
-          RowMapper={StorageMappingRow}
-          HeaderMapper={StartWithEmptyColumnMapper}
-          fieldsMetadata={fieldsMetadataFactory(t)}
+  if (loadedDataIsEmpty) {
+    return <EmptyStateStorageMaps namespace={namespace} />;
+  }
+
+  return (
+    <StandardPage<FlatStorageMapping>
+      addButton={
+        <AddMappingButton
           namespace={namespace}
-          title={title}
-          userSettings={userSettings}
-          supportedFilters={{
-            freetext: FreetextFilter,
-            targetStorage: FreetextFilter,
-            slider: SwitchFilter,
-          }}
-          supportedMatchers={[...defaultValueMatchers, targetStorageMatcher]}
+          mappingType={MappingType.Storage}
+          label={t('Create StorageMap')}
         />
-      )}
-    </>
+      }
+      dataSource={dataSource}
+      RowMapper={StorageMappingRow}
+      HeaderMapper={StartWithEmptyColumnMapper}
+      fieldsMetadata={fieldsMetadataFactory(t)}
+      namespace={namespace}
+      title={title}
+      userSettings={userSettings}
+      extraSupportedFilters={{ targetStorage: FreetextFilter }}
+      extraSupportedMatchers={[targetStorageMatcher]}
+    />
   );
 };
+
 const PageMemo = React.memo(Page);
 
 const targetStorageMatcher: ValueMatcher = {
