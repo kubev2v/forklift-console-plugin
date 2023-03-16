@@ -1,9 +1,9 @@
-import { IdOrNameRef, IStorageMapping } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 import { useStorageMappings } from 'src/utils/fetch';
 import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
 import { ProviderRef, StorageMapResource } from 'src/utils/types';
 
+import { IdOrNameRef, IStorageMapping } from '@kubev2v/legacy/queries/types';
 import { V1beta1Provider } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { getResourceFieldValue } from 'common/src/components/Filter';
 import { PHASE } from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
+import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
 import { BlueInfoCircleIcon } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Popover } from '@patternfly/react-core';
 

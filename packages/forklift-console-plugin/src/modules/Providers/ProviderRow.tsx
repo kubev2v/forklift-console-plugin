@@ -1,7 +1,7 @@
 import React from 'react';
-import { getResourceFieldValue } from 'common/src/components/Filter';
 import * as C from 'src/utils/constants';
 
+import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
 import { RowProps } from '@kubev2v/common/components/TableView';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { DatabaseIcon, NetworkIcon, VirtualMachineIcon } from '@patternfly/react-icons';

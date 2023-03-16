@@ -1,6 +1,6 @@
-import { MOCK_NETWORK_MAPPINGS } from 'legacy/src/queries/mocks/mappings.mock';
 import { NetworkMapResource } from 'src/utils/types';
 
+import { MOCK_NETWORK_MAPPINGS } from '@kubev2v/legacy/queries/mocks/mappings.mock';
 import { MOCK_CLUSTER_PROVIDERS } from '@kubev2v/legacy/queries/mocks/providers.mock';
 import { V1beta1Provider } from '@kubev2v/types';
 

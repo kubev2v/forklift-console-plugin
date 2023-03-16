@@ -1,8 +1,8 @@
 import React from 'react';
-import { RowProps } from 'common/src/components/TableView';
-import { MappingType } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 
+import { RowProps } from '@kubev2v/common/components/TableView';
+import { MappingType } from '@kubev2v/legacy/queries/types';
 import { Label } from '@patternfly/react-core';
 import { NetworkIcon } from '@patternfly/react-icons';
 

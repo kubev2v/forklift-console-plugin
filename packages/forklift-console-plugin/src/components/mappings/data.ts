@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { Mapping } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 import { useProviders } from 'src/utils/fetch';
 import { groupVersionKindForObj, ResourceKind } from 'src/utils/resources';
 
+import { Mapping } from '@kubev2v/legacy/queries/types';
 import { V1beta1Provider } from '@kubev2v/types';
 import {
   K8sGroupVersionKind,

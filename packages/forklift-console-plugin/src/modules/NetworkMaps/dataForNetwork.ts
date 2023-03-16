@@ -1,14 +1,14 @@
-import {
-  IdOrNameRef,
-  INameNamespaceRef,
-  INetworkMapping,
-  INetworkMappingItem,
-} from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 import { useNetworkMappings } from 'src/utils/fetch';
 import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
 import { NetworkMapResource, ProviderRef } from 'src/utils/types';
 
+import {
+  IdOrNameRef,
+  INameNamespaceRef,
+  INetworkMapping,
+  INetworkMappingItem,
+} from '@kubev2v/legacy/queries/types';
 import { V1beta1Provider } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
