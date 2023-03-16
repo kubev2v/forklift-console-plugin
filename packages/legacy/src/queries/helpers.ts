@@ -83,7 +83,7 @@ export const getInventoryApiUrl = (relativePath?: string): string =>
   `/api/proxy/plugin/${ENV.PLUGIN_NAME}/forklift-inventory/${relativePath || ''}`;
 
 export const getMustGatherApiUrl = (relativePath?: string): string =>
-  `/api/proxy/plugin/${ENV.PLUGIN_NAME}/must-gather-api/${relativePath || ''}`;
+  `/api/proxy/plugin/${ENV.PLUGIN_NAME}/forklift-must-gather-api/${relativePath || ''}`;
 
 export const getAggregateQueryStatus = (queryResults: UnknownResult[]): QueryStatus => {
   if (queryResults.some((result) => result.isError)) return 'error';
