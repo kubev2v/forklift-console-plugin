@@ -15,6 +15,10 @@ export const HostCell: React.FC<CellProps> = ({ resourceData, resourceFields }) 
   const type = getResourceFieldValue(resourceData, C.TYPE, resourceFields);
   const hostCount = getResourceFieldValue(resourceData, C.HOST_COUNT, resourceFields);
 
+  if (!resourceData.inventory?.name) {
+    return null;
+  }
+
   return (
     <>
       {phase === 'Ready' && hostCount && type === 'vsphere' && name && namespace ? (

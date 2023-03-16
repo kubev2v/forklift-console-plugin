@@ -33,24 +33,27 @@ const cellCreator: Record<string, React.FC<CellProps>> = {
   [C.ACTIONS]: ({ resourceData: resourceData }: CellProps) => (
     <ProviderActions resourceData={resourceData} />
   ),
-  [C.NETWORK_COUNT]: ({ resourceData, resourceFieldId, resourceFields }: CellProps) => (
-    <TextWithIcon
-      icon={<NetworkIcon />}
-      label={getResourceFieldValue(resourceData, resourceFieldId, resourceFields)}
-    />
-  ),
-  [C.STORAGE_COUNT]: ({ resourceData, resourceFieldId, resourceFields }: CellProps) => (
-    <TextWithIcon
-      icon={<DatabaseIcon />}
-      label={getResourceFieldValue(resourceData, resourceFieldId, resourceFields)}
-    />
-  ),
-  [C.VM_COUNT]: ({ resourceData, resourceFieldId, resourceFields }: CellProps) => (
-    <TextWithIcon
-      icon={<VirtualMachineIcon />}
-      label={getResourceFieldValue(resourceData, resourceFieldId, resourceFields)}
-    />
-  ),
+  [C.NETWORK_COUNT]: ({ resourceData, resourceFieldId, resourceFields }: CellProps) =>
+    !!resourceData.inventory?.name && (
+      <TextWithIcon
+        icon={<NetworkIcon />}
+        label={getResourceFieldValue(resourceData, resourceFieldId, resourceFields)}
+      />
+    ),
+  [C.STORAGE_COUNT]: ({ resourceData, resourceFieldId, resourceFields }: CellProps) =>
+    !!resourceData.inventory?.name && (
+      <TextWithIcon
+        icon={<DatabaseIcon />}
+        label={getResourceFieldValue(resourceData, resourceFieldId, resourceFields)}
+      />
+    ),
+  [C.VM_COUNT]: ({ resourceData, resourceFieldId, resourceFields }: CellProps) =>
+    !!resourceData.inventory?.name && (
+      <TextWithIcon
+        icon={<VirtualMachineIcon />}
+        label={getResourceFieldValue(resourceData, resourceFieldId, resourceFields)}
+      />
+    ),
   [C.HOST_COUNT]: HostCell,
 };
 
