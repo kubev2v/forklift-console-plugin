@@ -7,14 +7,10 @@ import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import {
-  defaultValueMatchers,
-  FreetextFilter,
-  SwitchFilter,
-  ValueMatcher,
-} from '@kubev2v/common/components/Filter';
+import { FreetextFilter, ValueMatcher } from '@kubev2v/common/components/Filter';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
 import {
+  Loading,
   loadUserSettings,
   StandardPage,
   UserSettings,
@@ -85,29 +81,29 @@ const Page = ({
   const isLoading = !isLoadSuccess && !isLoadError;
   const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
 
-  return (
-    <>
-      {loadedDataIsEmpty && <EmptyStateNetworkMaps namespace={namespace} />}
+  if (isLoading) {
+    return <Loading />;
+  }
 
-      {(isLoading || !loadedDataIsEmpty) && (
-        <StandardPage<FlatNetworkMapping>
-          addButton={<AddNetworkMappingButton namespace={namespace} />}
-          dataSource={dataSource}
-          RowMapper={NetworkMappingRow}
-          HeaderMapper={StartWithEmptyColumnMapper}
-          fieldsMetadata={fieldsMetadataFactory(t)}
-          namespace={namespace}
-          title={title}
-          userSettings={userSettings}
-          supportedFilters={{
-            freetext: FreetextFilter,
-            targetNetwork: FreetextFilter,
-            slider: SwitchFilter,
-          }}
-          supportedMatchers={[...defaultValueMatchers, targetNetworkMatcher]}
-        />
-      )}
-    </>
+  if (loadedDataIsEmpty) {
+    return <EmptyStateNetworkMaps namespace={namespace} />;
+  }
+
+  return (
+    <StandardPage<FlatNetworkMapping>
+      addButton={<AddNetworkMappingButton namespace={namespace} />}
+      dataSource={dataSource}
+      RowMapper={NetworkMappingRow}
+      HeaderMapper={StartWithEmptyColumnMapper}
+      fieldsMetadata={fieldsMetadataFactory(t)}
+      namespace={namespace}
+      title={title}
+      userSettings={userSettings}
+      extraSupportedFilters={{
+        targetNetwork: FreetextFilter,
+      }}
+      extraSupportedMatchers={[targetNetworkMatcher]}
+    />
   );
 };
 

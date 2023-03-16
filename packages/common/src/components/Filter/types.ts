@@ -53,7 +53,14 @@ export interface FilterTypeProps {
 }
 
 /**
- * Field ID to filter defintion mapping.
+ * Filter rendering component,
+ *
+ * Get the filter type, and render a top bar widget that match the filter.
+ */
+export type FilterRenderer = (props: FilterTypeProps) => JSX.Element;
+
+/**
+ * Field ID to filter definition mapping.
  */
 export type FieldFilter = {
   resourceFieldId: string;
@@ -72,7 +79,7 @@ export interface MetaFilterProps {
   fieldFilters: FieldFilter[];
   onFilterUpdate(filters: GlobalFilters): void;
   supportedFilterTypes: {
-    [type: string]: (props: FilterTypeProps) => JSX.Element;
+    [type: string]: FilterRenderer;
   };
 }
 

@@ -6,6 +6,7 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { EnumToTuple } from '@kubev2v/common/components/Filter/helpers';
 import {
+  Loading,
   loadUserSettings,
   StandardPage,
   UserSettings,
@@ -139,22 +140,24 @@ const Page = ({
   const isLoading = !isLoadSuccess && !isLoadError;
   const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
 
-  return (
-    <>
-      {loadedDataIsEmpty && <EmptyStatePlans namespace={namespace} />}
+  if (isLoading) {
+    return <Loading />;
+  }
 
-      {(isLoading || !loadedDataIsEmpty) && (
-        <StandardPage<FlatPlan>
-          addButton={<CreatePlanButton namespace={namespace} />}
-          dataSource={dataSource}
-          RowMapper={PlanRow}
-          fieldsMetadata={fieldsMetadataFactory(t)}
-          namespace={namespace}
-          title={title}
-          userSettings={userSettings}
-        />
-      )}
-    </>
+  if (loadedDataIsEmpty) {
+    return <EmptyStatePlans namespace={namespace} />;
+  }
+
+  return (
+    <StandardPage<FlatPlan>
+      addButton={<CreatePlanButton namespace={namespace} />}
+      dataSource={dataSource}
+      RowMapper={PlanRow}
+      fieldsMetadata={fieldsMetadataFactory(t)}
+      namespace={namespace}
+      title={title}
+      userSettings={userSettings}
+    />
   );
 };
 
