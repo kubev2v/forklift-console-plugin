@@ -1,9 +1,9 @@
 import React from 'react';
-import { getResourceFieldValue } from 'common/src/components/Filter';
 import * as C from 'src/utils/constants';
 import { PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 
+import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
 import { TARGET_PROVIDER_TYPES } from '@kubev2v/legacy/common/constants';
 import { Label } from '@patternfly/react-core';
 

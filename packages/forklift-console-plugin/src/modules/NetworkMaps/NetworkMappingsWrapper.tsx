@@ -1,5 +1,5 @@
-import withQueryClient from 'common/src/components/QueryClientHoc';
-import { withModalProvider } from 'common/src/polyfills/sdk-shim';
+import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
+import { withModalProvider } from '@kubev2v/common/polyfills/sdk-shim';
 
 import { NetworkMappingsPage } from './NetworkMappingsPage';
 

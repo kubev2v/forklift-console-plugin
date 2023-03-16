@@ -1,7 +1,7 @@
-import { MappingType } from 'legacy/src/queries/types';
 import { useMappingActions } from 'src/components/mappings/mappingActions';
 
 import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
+import { MappingType } from '@kubev2v/legacy/queries/types';
 
 import { FlatNetworkMapping } from './dataForNetwork';
 

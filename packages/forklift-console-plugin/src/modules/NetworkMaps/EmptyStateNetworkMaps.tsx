@@ -8,8 +8,9 @@ import { useTranslation } from 'src/utils/i18n';
 
 import { PROVIDERS_REFERENCE } from '@kubev2v/legacy/common/constants';
 import { createK8sPath } from '@kubev2v/legacy/queries/helpers';
-import { Flex, FlexItem } from '@patternfly/react-core';
+import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
+import { ExternalLink } from '../../../../common/src/components/external-link/ExternalLink';
 import { useHasSufficientProviders } from '../Providers/data';
 
 import { AddNetworkMappingButton } from './NetworkMappingsPage';
@@ -35,28 +36,29 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
       }
       textContent={
         !hasSufficientProviders ? (
-          <Flex direction={{ default: 'column' }}>
+          <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
             <FlexItem>
               <Trans t={t} ns="plugin__forklift-console-plugin">
-                Migration networks maps are used to map network interfaces between source and target
-                workloads, at least one source and one target provider must be available in order to
-                create a migration plan,{' '}
-                <a className="co-external-link" href={HELP_LINK_HREF}>
+                Migration network maps are used to map network interfaces between source and target
+                virtualization providers, at least one source and one target provider must be
+                available in order to create a migration storage map,{' '}
+                <ExternalLink href={HELP_LINK_HREF} isInline>
                   Learn more
-                </a>
+                </ExternalLink>
+                .
               </Trans>
             </FlexItem>
             <FlexItem>
-              <Trans t={t} ns="plugin__forklift-console-plugin">
-                Go to the{' '}
-                <Link to={createK8sPath(PROVIDERS_REFERENCE, namespace)}>providers list page</Link>{' '}
-                to create a provider.
-              </Trans>
+              <Button variant="secondary">
+                <Link to={createK8sPath(PROVIDERS_REFERENCE, namespace)}>
+                  {t('Return to the providers list page')}
+                </Link>
+              </Button>
             </FlexItem>
           </Flex>
         ) : (
           t(
-            'Migration networks maps are used to map network interfaces between source and target workloads',
+            'Migration networks maps are used to map network interfaces between source and target workloads.',
           )
         )
       }

@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { getResourceFieldValue } from 'common/src/components/Filter';
-import { RowProps } from 'common/src/components/TableView';
-import { MappingDetailView } from 'legacy/src/Mappings/components/MappingDetailView';
-import { Mapping, MappingType } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
+import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
+import { RowProps } from '@kubev2v/common/components/TableView';
+import { MappingDetailView } from '@kubev2v/legacy/Mappings/components/MappingDetailView';
+import { Mapping, MappingType } from '@kubev2v/legacy/queries/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';

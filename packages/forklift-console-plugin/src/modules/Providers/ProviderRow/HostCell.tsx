@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getResourceFieldValue } from 'common/src/components/Filter';
 import * as C from 'src/utils/constants';
 
+import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import { OutlinedHddIcon } from '@patternfly/react-icons';
 

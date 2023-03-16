@@ -1,12 +1,15 @@
 import React from 'react';
-import withQueryClient from 'common/src/components/QueryClientHoc';
-import { DefaultHeader, TableViewHeaderProps } from 'common/src/components/TableView';
-import { ResourceFieldFactory, ResourceFieldPartialFactory } from 'common/src/components/types';
-import { useModal } from 'common/src/polyfills/console-dynamic-plugin-sdk';
-import { AddEditMappingModal } from 'legacy/src/Mappings/components/AddEditMappingModal';
-import { MappingType } from 'legacy/src/queries/types';
 import * as C from 'src/utils/constants';
 
+import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
+import { DefaultHeader, TableViewHeaderProps } from '@kubev2v/common/components/TableView';
+import {
+  ResourceFieldFactory,
+  ResourceFieldPartialFactory,
+} from '@kubev2v/common/components/types';
+import { useModal } from '@kubev2v/common/polyfills/console-dynamic-plugin-sdk';
+import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
+import { MappingType } from '@kubev2v/legacy/queries/types';
 import { Button } from '@patternfly/react-core';
 import { Th } from '@patternfly/react-table';
 
