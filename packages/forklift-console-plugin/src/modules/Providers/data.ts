@@ -24,7 +24,7 @@ export type GetFlatDataFn = {
     inventory,
   }: {
     providers: V1beta1Provider[];
-    inventory: IProvidersByType;
+    inventory?: IProvidersByType;
   }): MergedProvider[];
 };
 export const getFlatData: GetFlatDataFn = ({ providers, inventory }) => {
@@ -73,25 +73,13 @@ export const useHasSufficientProviders = (namespace?: string) => {
   return hasSufficientProviders;
 };
 
-export const useProvidersWithInventory = ({
-  namespace,
-}): [MergedProvider[], boolean, unknown, unknown, unknown] => {
+export const useProvidersWithInventory = ({ namespace }): [MergedProvider[], boolean, unknown] => {
   const [providers, providersLoaded, providersError] = useProviders({
     namespace,
   });
-  const {
-    data: inventory,
-    isSuccess: inventoryLoaded,
-    isError: inventoryError,
-  } = useInventoryProvidersQuery();
+  const { data: inventory, isError } = useInventoryProvidersQuery();
 
-  const flatData = getFlatData({ providers, inventory });
+  const flatData = getFlatData({ providers, inventory: isError ? undefined : inventory });
 
-  return [
-    flatData,
-    providersLoaded && inventoryLoaded,
-    providersError || inventoryError,
-    { providers, providersLoaded, providersError },
-    { inventory, inventoryLoaded, inventoryError },
-  ];
+  return [flatData, providersLoaded, providersError];
 };

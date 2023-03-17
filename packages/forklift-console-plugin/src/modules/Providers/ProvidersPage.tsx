@@ -154,7 +154,7 @@ const ProvidersPage: React.FC<ResourceConsolePageProps> = ({ namespace }) => {
 ProvidersPage.displayName = 'ProvidersPage';
 
 const Page: React.FC<{
-  dataSource: [MergedProvider[], boolean, unknown, unknown, unknown];
+  dataSource: [MergedProvider[], boolean, unknown];
   namespace: string;
   title: string;
   userSettings: UserSettings;
