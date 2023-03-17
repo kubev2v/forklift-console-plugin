@@ -39,7 +39,7 @@ PLUGIN_PROXY=$(cat << END
         "authorize":true
     },
     {
-        "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/must-gather-api/",
+        "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/forklift-must-gather-api/",
         "endpoint":"${MUST_GATHER_API_SERVER_HOST}",
         "authorize":true
     }]}
