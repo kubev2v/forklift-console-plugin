@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MustGatherModal } from 'legacy/src/common/components/MustGatherModal';
 import * as C from 'src/utils/constants';
 import { PLAN_STATUS_FILTER } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
@@ -149,15 +150,18 @@ const Page = ({
   }
 
   return (
-    <StandardPage<FlatPlan>
-      addButton={<CreatePlanButton namespace={namespace} />}
-      dataSource={dataSource}
-      RowMapper={PlanRow}
-      fieldsMetadata={fieldsMetadataFactory(t)}
-      namespace={namespace}
-      title={title}
-      userSettings={userSettings}
-    />
+    <>
+      <StandardPage<FlatPlan>
+        addButton={<CreatePlanButton namespace={namespace} />}
+        dataSource={dataSource}
+        RowMapper={PlanRow}
+        fieldsMetadata={fieldsMetadataFactory(t)}
+        namespace={namespace}
+        title={title}
+        userSettings={userSettings}
+      />
+      <MustGatherModal />
+    </>
   );
 };
 

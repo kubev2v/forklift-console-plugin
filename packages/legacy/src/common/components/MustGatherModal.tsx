@@ -58,6 +58,7 @@ export const MustGatherModal: React.FunctionComponent = () => {
   return (
     <Modal
       variant="medium"
+      position="top"
       title="Get logs"
       isOpen={mustGatherModalOpen}
       onClose={() => {
