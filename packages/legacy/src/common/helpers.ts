@@ -7,11 +7,17 @@ import {
   ConditionType,
   StepType,
   ProviderType,
+  SOURCE_PROVIDER_TYPES,
+  TARGET_PROVIDER_TYPES,
+  PROVIDER_TYPES,
 } from 'legacy/src/common/constants';
 import {
   ICR,
+  IMetaObjectMeta,
+  InventoryProvider,
   IObjectReference,
   IProviderObject,
+  ISecret,
   IStatusCondition,
   IStep,
   IVMStatus,
@@ -158,14 +164,44 @@ export const getMinutesUntil = (timestamp: Date | string): string => {
   return `${minutes} minutes`;
 };
 
+function providerTypesFilterFromRole (role: "target" | "source") {
+  if (role === 'source') {
+    return SOURCE_PROVIDER_TYPES;
+  } else if (role === 'target') {
+    return TARGET_PROVIDER_TYPES;
+  } else {
+    return PROVIDER_TYPES;
+  }
+}
+
 export const getAvailableProviderTypes = (
-  clusterProvidersQuery: UseQueryResult<IKubeList<IProviderObject>>
+  clusterProvidersQuery: UseQueryResult<IKubeList<IProviderObject>>,
+  role: "target" | "source",
 ): ProviderType[] => {
+  const providerTypesFilter = providerTypesFilterFromRole(role);
   const clusterProviders = clusterProvidersQuery.data?.items || [];
+
   return Array.from(new Set(clusterProviders.map((provider) => provider.spec.type)))
-    .filter((type) => !!type)
+    .filter((type) => providerTypesFilter.includes(type))
     .sort() as ProviderType[];
 };
+
+export function checkIfOvirtInsecureProvider (provider: InventoryProvider, secrets: IKubeList<ISecret>): boolean {
+  if (provider?.type !== 'ovirt') {
+    return false;
+  }
+  const secretName = provider?.object?.spec?.secret?.name ?? '';
+  const secret = secrets?.items.find((secret: ISecret) => (secret.metadata as IMetaObjectMeta).name === secretName);
+  return secret?.data?.insecureSkipVerify
+    ? stringToBoolean(atob(secret.data.insecureSkipVerify))
+    : false
+}
+
+/**
+ * Can this provider be considered a local target provider?
+ */
+export const isProviderLocalTarget = (provider: IProviderObject): boolean =>
+  provider.spec.type === 'openshift' && provider.spec.url === ''
 
 export const getStorageTitle = (sourceProviderType: ProviderType, cap = false): string => {
   if (sourceProviderType === 'vsphere') return `${cap ? 'D' : 'd'}atastores`;
