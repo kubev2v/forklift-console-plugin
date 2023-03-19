@@ -16,7 +16,10 @@ export const useMustGatherMutation = (
   const result = useMockableMutation<IMustGatherResponse>(
     async (options) => {
       return new Promise((res, rej) => {
-        consoleFetchJSON(getMustGatherApiUrl(url), 'POST', { body: JSON.stringify(options) })
+        consoleFetchJSON(getMustGatherApiUrl(url), 'POST', {
+          body: JSON.stringify(options),
+          headers: { 'Content-Type': 'application/json' },
+        })
           .then((mustGatherData) => {
             res(mustGatherData.json());
           })
