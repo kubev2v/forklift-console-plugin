@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "@migtools/lib-ui": "^8.4.1",
-    "jsonpath": "^1.1.1"
+    "jsonpath": "^1.1.1",
+    "streamsaver": "^2.0.6"
   },
   "peerDependencies": {
     "@openshift-console/dynamic-plugin-sdk": "0.0.18",
