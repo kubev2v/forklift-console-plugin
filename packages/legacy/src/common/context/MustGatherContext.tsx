@@ -4,9 +4,9 @@ import { UseQueryResult } from 'react-query';
 import { IMustGatherResponse, mustGatherStatus } from 'legacy/src/client/types';
 import { MustGatherWatcher } from 'legacy/src/common/components/MustGatherWatcher';
 import { NotificationContext } from 'legacy/src/common/context';
-import { saveAs } from 'file-saver';
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
 import { getMustGatherApiUrl } from 'legacy/src/queries/helpers';
+import streamSaver from 'streamsaver';
 
 export type MustGatherObjType = {
   displayName: string;
@@ -30,8 +30,8 @@ export interface IMustGatherContext {
   latestAssociatedMustGather: (name: string) => IMustGatherResponse | undefined;
   withNs: (resourceName: string, type: 'plan' | 'vm') => string;
   withoutNs: (namespacedResourceName: string, type: 'plan' | 'vm') => string;
-  fetchMustGatherResult: (mg: IMustGatherResponse) => Promise<Blob | void>;
-  downloadMustGatherResult: (tarBall: Blob, fileName: string) => void;
+  fetchMustGatherResult: (mg: IMustGatherResponse) => Promise<ReadableStream<Uint8Array> | void>;
+  downloadMustGatherResult: (tarStream: ReadableStream<Uint8Array>, fileName: string) => void;
   notifyDownloadFailed: () => void;
 }
 
@@ -101,18 +101,20 @@ export const MustGatherContextProvider: React.FunctionComponent<IMustGatherConte
     namespacedResourceName.replace(`${type}:`, '');
 
   const fetchMustGatherResult = async (mg: IMustGatherResponse) => {
-    const response = await consoleFetch(getMustGatherApiUrl(`must-gather/${mg?.['id']}/data`));
+    const response = await consoleFetch(getMustGatherApiUrl(`must-gather/${mg?.['id']}/data`), {
+      headers: { 'Content-Type': 'application/octet-stream', 'Content-Disposition': 'attachment'},
+    });
 
-    if (!response.ok || !response.blob) {
+    if (!response.ok || !response.body) {
       throw response;
     }
 
-    return response.blob();
+    return response.body;
   };
 
-  const downloadMustGatherResult = (tarBall: Blob, fileName: string) => {
-    const file = new File([tarBall], fileName, { type: 'text/plain;charset=utf-8' });
-    saveAs(file);
+  const downloadMustGatherResult = (tarStream: ReadableStream<Uint8Array>, fileName: string) => {
+    const fileStream = streamSaver.createWriteStream(fileName);
+    tarStream.pipeTo(fileStream)
   };
 
   const notifyDownloadFailed = () => {
