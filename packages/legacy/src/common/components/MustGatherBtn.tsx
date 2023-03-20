@@ -5,12 +5,14 @@ import { MustGatherContext } from 'legacy/src/common/context';
 
 interface IMustGatherBtn {
   displayName: string;
+  planUid: string;
   type: 'plan' | 'vm';
   isCompleted?: boolean;
 }
 
 export const MustGatherBtn: React.FunctionComponent<IMustGatherBtn> = ({
   displayName,
+  planUid,
   type,
   isCompleted,
 }) => {
@@ -26,7 +28,7 @@ export const MustGatherBtn: React.FunctionComponent<IMustGatherBtn> = ({
     notifyDownloadFailed,
   } = React.useContext(MustGatherContext);
 
-  const namespacedName = withNs(displayName, type);
+  const namespacedName = withNs(displayName, planUid, type);
   const mustGather = latestAssociatedMustGather(namespacedName);
 
   return mustGather?.status === 'completed' && mustGather?.['archive-name'] ? (
@@ -64,7 +66,7 @@ export const MustGatherBtn: React.FunctionComponent<IMustGatherBtn> = ({
           : mustGather?.status === 'new'
           ? `Must gather queued for execution.`
           : mustGather?.status === 'error'
-          ? `Cannot complete must gather for ${withoutNs(mustGather?.['custom-name'], type)}`
+          ? `Cannot complete must gather for ${withoutNs(mustGather?.['custom-name'])}`
           : `Collects the current ${
               type === 'plan' ? 'migration plan' : 'VM migration'
             } logs and creates a tar archive file for download.`
@@ -87,7 +89,8 @@ export const MustGatherBtn: React.FunctionComponent<IMustGatherBtn> = ({
           setMustGatherModalOpen(true);
           setActiveMustGather({
             type,
-            displayName: displayName,
+            displayName,
+            planUid,
             status: 'new',
           });
         }}

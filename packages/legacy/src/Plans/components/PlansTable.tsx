@@ -303,6 +303,7 @@ export const PlansTable: React.FunctionComponent<IPlansTableProps> = ({
                 {buttonType === 'MustGather' ? (
                   <MustGatherBtn
                     type="plan"
+                    planUid={plan?.metadata?.uid || ''}
                     isCompleted={!!plan.status?.migration?.completed}
                     displayName={plan.metadata.name}
                   />

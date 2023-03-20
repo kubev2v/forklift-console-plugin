@@ -10,6 +10,7 @@ import streamSaver from 'streamsaver';
 
 export type MustGatherObjType = {
   displayName: string;
+  planUid: string;
   type: 'plan' | 'vm';
   status: mustGatherStatus;
 };
@@ -28,8 +29,9 @@ export interface IMustGatherContext {
   activeMustGather: MustGatherObjType | undefined;
   mustGathersQuery: UseQueryResult<IMustGatherResponse[], Response>;
   latestAssociatedMustGather: (name: string) => IMustGatherResponse | undefined;
-  withNs: (resourceName: string, type: 'plan' | 'vm') => string;
-  withoutNs: (namespacedResourceName: string, type: 'plan' | 'vm') => string;
+  withNs: (resourceName: string, planUid: string, type: 'plan' | 'vm') => string;
+  withoutNs: (namespacedResourceName) => string;
+  toParts: (namespacedResourceName) => ['vm' | 'plan', string, string];
   fetchMustGatherResult: (mg: IMustGatherResponse) => Promise<ReadableStream<Uint8Array> | void>;
   downloadMustGatherResult: (tarStream: ReadableStream<Uint8Array>, fileName: string) => void;
   notifyDownloadFailed: () => void;
@@ -58,8 +60,11 @@ export const MustGatherContextProvider: React.FunctionComponent<IMustGatherConte
     true,
     (data) => {
       const updatedMgList: mustGatherListType = data?.map((mg): MustGatherObjType => {
+        const [, displayName, planUid] = toParts(mg['custom-name']);
+
         return {
-          displayName: mg['custom-name'],
+          displayName,
+          planUid,
           status: mg.status,
           type: mg.command.toLowerCase().includes('plan') ? 'plan' : 'vm',
         };
@@ -96,9 +101,17 @@ export const MustGatherContextProvider: React.FunctionComponent<IMustGatherConte
       })
       .find((mg) => mg['custom-name'] === name);
 
-  const withNs = (resourceName: string, type: 'plan' | 'vm') => `${type}:${resourceName}`;
-  const withoutNs = (namespacedResourceName: string, type: 'plan' | 'vm') =>
-    namespacedResourceName.replace(`${type}:`, '');
+  const withNs = (resourceName: string, uid: string, type: 'plan' | 'vm') => `${type}:${resourceName}:${uid}`;
+  const withoutNs = (namespacedResourceName: string) => {
+    const [, name,] = [...(namespacedResourceName || '').split(':'), '', '', ''];
+
+    return name;
+  }
+  const toParts = (namespacedResourceName: string): ['vm' | 'plan', string, string] => {
+    const [type, name, planUid] = [...(namespacedResourceName || '').split(':'), '', '', ''];
+
+    return [type.toLowerCase().includes('plan') ? 'plan' : 'vm', name, planUid];
+  }
 
   const fetchMustGatherResult = async (mg: IMustGatherResponse) => {
     const response = await consoleFetch(getMustGatherApiUrl(`must-gather/${mg?.['id']}/data`), {
@@ -142,11 +155,14 @@ export const MustGatherContextProvider: React.FunctionComponent<IMustGatherConte
         latestAssociatedMustGather,
         withNs,
         withoutNs,
+        toParts,
       }}
     >
       <>
         {children}
         {mustGatherList.map((mg, idx) => {
+          const customName = withNs(mg.displayName, mg.planUid, mg.type);
+
           return mg.displayName && process.env.NODE_ENV !== 'production' ? (
             <div
               data-mg-watcher={mg.displayName}
@@ -158,14 +174,14 @@ export const MustGatherContextProvider: React.FunctionComponent<IMustGatherConte
               <MustGatherWatcher
                 listStatus={mg.status}
                 key={`${mg.displayName}-${idx}`}
-                name={mg.displayName}
+                name={customName}
               />
             </div>
           ) : (
             <MustGatherWatcher
               listStatus={mg.status}
               key={`${mg.displayName}-${idx}`}
-              name={mg.displayName}
+              name={customName}
             />
           );
         })}

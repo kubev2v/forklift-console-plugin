@@ -43,8 +43,8 @@ export const MustGatherModal: React.FunctionComponent = () => {
     handleMustGatherError
   );
 
-  const handleMustGatherRequest = ({ displayName, type }: MustGatherObjType) => {
-    const namespacedName = withNs(displayName, type);
+  const handleMustGatherRequest = ({ displayName, planUid, type }: MustGatherObjType) => {
+    const namespacedName = withNs(displayName, planUid, type);
     registerMustGather.mutate({
       'custom-name': namespacedName,
       command:

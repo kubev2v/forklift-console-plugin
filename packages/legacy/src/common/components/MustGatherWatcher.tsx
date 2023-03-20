@@ -24,7 +24,7 @@ export const MustGatherWatcher: React.FunctionComponent<IMustGatherWatcherProps>
 
   React.useEffect(() => {
     const type = data?.command.toLowerCase().includes('plan') ? 'plan' : 'vm';
-    const unprefixedName = data && withoutNs(data['custom-name'], type);
+    const unprefixedName = data && withoutNs(data['custom-name']);
     if (
       data?.status === 'completed' ||
       completedPreviously ||

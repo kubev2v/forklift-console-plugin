@@ -79,7 +79,9 @@ export const useFlatPlanActions: ExtensionHook<
     fetchMustGatherResult,
     notifyDownloadFailed,
   } = React.useContext(MustGatherContext);
-  const mustGather = latestAssociatedMustGather(withNs(plan.name, 'plan'));
+  const mustGather = latestAssociatedMustGather(
+    withNs(plan.name, plan?.object?.metadata?.uid || '', 'plan'),
+  );
   const cutoverMutation = useSetCutoverMutation(plan.namespace);
 
   const isPlanGathering = mustGather?.status === 'inprogress' || mustGather?.status === 'new';
@@ -149,7 +151,7 @@ export const useFlatPlanActions: ExtensionHook<
             : mustGather?.status === 'new'
             ? 'Must gather queued for execution.'
             : mustGather?.status === 'error'
-            ? `Cannot complete must gather for ${withoutNs(mustGather?.['custom-name'], 'plan')}`
+            ? `Cannot complete must gather for ${withoutNs(mustGather?.['custom-name'])}`
             : !mustGathersQuery?.isSuccess
             ? 'Cannot reach must gather service.'
             : !migrationCompleted
@@ -161,6 +163,7 @@ export const useFlatPlanActions: ExtensionHook<
           setMustGatherModalOpen(true);
           setActiveMustGather({
             type: 'plan',
+            planUid: plan?.object?.metadata?.uid || '',
             displayName: name,
             status: 'new',
           });
