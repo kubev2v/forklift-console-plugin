@@ -2,9 +2,14 @@ import { useMemo } from 'react';
 import * as C from 'src/utils/constants';
 import { useProviders } from 'src/utils/fetch';
 import { groupVersionKindForObj, ResourceKind } from 'src/utils/resources';
+import { MappingStatus } from 'src/utils/types';
 
 import { Mapping } from '@kubev2v/legacy/queries/types';
-import { V1beta1Provider } from '@kubev2v/types';
+import {
+  V1beta1NetworkMapStatusConditions,
+  V1beta1Provider,
+  V1beta1StorageMapStatusConditions,
+} from '@kubev2v/types';
 import {
   K8sGroupVersionKind,
   OwnerReference,
@@ -29,6 +34,8 @@ export interface CommonMapping {
   [C.OWNER_GVK]: K8sGroupVersionKind;
   [C.MANAGED]: boolean;
   [C.OBJECT]: Mapping;
+  [C.STATUS]: MappingStatus;
+  conditions: V1beta1NetworkMapStatusConditions[] | V1beta1StorageMapStatusConditions[];
 }
 
 export interface OwnerRef {
@@ -45,6 +52,11 @@ export const resolveOwnerRef = ([first, second]: OwnerReference[] = []): OwnerRe
   return { name: first.name, gvk: groupVersionKindForObj(first) };
 };
 
+export const toStatus = (
+  conditions: V1beta1NetworkMapStatusConditions[] | V1beta1StorageMapStatusConditions[],
+): MappingStatus =>
+  conditions.find((it) => it.type === 'Ready')?.status === 'True' ? 'Ready' : 'NotReady';
+
 export const useMappings = <T, K>(
   { namespace, name = undefined }: { namespace: string; name?: string },
   useMappings: (p: WatchK8sResource) => WatchK8sResult<T[]>,
@@ -59,6 +71,6 @@ export const useMappings = <T, K>(
   );
   // extra memo to keep the tuple reference stable
   // the tuple is used as data source and passed as prop
-  // which triggres unnecessary re-renders
+  // which triggers unnecessary re-renders
   return useMemo(() => [merged, loaded, error], [merged, loaded, error]);
 };

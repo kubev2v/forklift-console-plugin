@@ -4,13 +4,14 @@ import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources'
 import { ProviderRef, StorageMapResource } from 'src/utils/types';
 
 import { IdOrNameRef, IStorageMapping } from '@kubev2v/legacy/queries/types';
-import { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Provider, V1beta1StorageMapStatusConditions } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
 import {
   CommonMapping,
   OwnerRef,
   resolveOwnerRef,
+  toStatus,
   useMappings,
 } from '../../components/mappings/data';
 
@@ -83,6 +84,7 @@ export const mergeData = (
       ([
         {
           metadata: { name, namespace, annotations = [] },
+          status: { conditions = [] } = {},
         },
         mapping,
         gvk,
@@ -109,6 +111,8 @@ export const mergeData = (
         object: mapping,
         to: groupedStorages.map(([storage]) => storage),
         from: groupedStorages,
+        status: toStatus(conditions),
+        conditions: conditions as V1beta1StorageMapStatusConditions[],
       }),
     );
 };

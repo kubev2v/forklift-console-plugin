@@ -46,6 +46,16 @@
                 "type": "multus"
             }
         ],
+        "status": "Ready",
+        "conditions": [
+            {
+                "category": "Required",
+                "lastTransitionTime": "2023-03-20T20:36:23Z",
+                "message": "The network map is ready.",
+                "status": "True",
+                "type": "Ready"
+            }
+        ],
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
             "kind": "NetworkMap",
@@ -77,6 +87,17 @@
                             "namespace": "openshift-migration",
                             "type": "multus"
                         }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2023-03-20T20:36:23Z",
+                        "message": "The network map is ready.",
+                        "status": "True",
+                        "type": "Ready"
                     }
                 ]
             }
@@ -135,6 +156,16 @@
                 "type": "multus"
             }
         ],
+        "status": "Ready",
+        "conditions": [
+            {
+                "category": "Required",
+                "lastTransitionTime": "2023-03-20T20:36:23Z",
+                "message": "The network map is ready.",
+                "status": "True",
+                "type": "Ready"
+            }
+        ],
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
             "kind": "NetworkMap",
@@ -175,6 +206,17 @@
                             "namespace": "openshift-migration",
                             "type": "multus"
                         }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2023-03-20T20:36:23Z",
+                        "message": "The network map is ready.",
+                        "status": "True",
+                        "type": "Ready"
                     }
                 ]
             }
@@ -264,6 +306,16 @@
                 "type": "multus"
             }
         ],
+        "status": "Ready",
+        "conditions": [
+            {
+                "category": "Required",
+                "lastTransitionTime": "2023-03-20T20:36:23Z",
+                "message": "The network map is ready.",
+                "status": "True",
+                "type": "Ready"
+            }
+        ],
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
             "kind": "NetworkMap",
@@ -327,6 +379,17 @@
                         }
                     }
                 ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Required",
+                        "lastTransitionTime": "2023-03-20T20:36:23Z",
+                        "message": "The network map is ready.",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ]
             }
         }
     },
@@ -377,6 +440,18 @@
                 "type": "multus"
             }
         ],
+        "status": "NotReady",
+        "conditions": [
+            {
+                "category": "Critical",
+                "items": [],
+                "lastTransitionTime": "2023-03-20T21:38:04Z",
+                "message": "Destination network (NAD) not found.",
+                "reason": "NotFound",
+                "status": "True",
+                "type": "DestinationNetworkNotValid"
+            }
+        ],
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
             "kind": "NetworkMap",
@@ -408,6 +483,19 @@
                             "name": "missing-network",
                             "namespace": "doesnt-matter"
                         }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Critical",
+                        "items": [],
+                        "lastTransitionTime": "2023-03-20T21:38:04Z",
+                        "message": "Destination network (NAD) not found.",
+                        "reason": "NotFound",
+                        "status": "True",
+                        "type": "DestinationNetworkNotValid"
                     }
                 ]
             }
@@ -460,6 +548,17 @@
                 "type": "multus"
             }
         ],
+        "status": "NotReady",
+        "conditions": [
+            {
+                "category": "Critical",
+                "lastTransitionTime": "2023-03-20T21:33:45Z",
+                "message": "The source provider is not valid.",
+                "reason": "NotFound",
+                "status": "True",
+                "type": "SourceProviderNotValid"
+            }
+        ],
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
             "kind": "NetworkMap",
@@ -491,6 +590,18 @@
                             "namespace": "openshift-migration",
                             "type": "multus"
                         }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "category": "Critical",
+                        "lastTransitionTime": "2023-03-20T21:33:45Z",
+                        "message": "The source provider is not valid.",
+                        "reason": "NotFound",
+                        "status": "True",
+                        "type": "SourceProviderNotValid"
                     }
                 ]
             }

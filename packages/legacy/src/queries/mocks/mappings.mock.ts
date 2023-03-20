@@ -34,6 +34,17 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         },
       ],
     },
+    status: {
+      conditions: [
+        {
+          category: 'Required',
+          lastTransitionTime: '2023-03-20T20:36:23Z',
+          message: 'The storage map is ready.',
+          status: 'True',
+          type: 'Ready',
+        },
+      ],
+    },
   };
 
   const storageMapping1WithOwner: IStorageMapping = {
@@ -78,6 +89,17 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         },
       ],
     },
+    status: {
+      conditions: [
+        {
+          category: 'Required',
+          lastTransitionTime: '2023-03-20T20:36:23Z',
+          message: 'The storage map is ready.',
+          status: 'True',
+          type: 'Ready',
+        },
+      ],
+    },
   };
 
   const invalidStorageMapping: IStorageMapping = {
@@ -101,6 +123,18 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
           destination: {
             storageClass: MOCK_STORAGE_CLASSES_BY_PROVIDER['ocpv-1'][1].name,
           },
+        },
+      ],
+    },
+    status: {
+      conditions: [
+        {
+          category: 'Critical',
+          lastTransitionTime: '2023-03-20T21:33:45Z',
+          message: 'Source storage not found.',
+          reason: 'NotFound',
+          status: 'True',
+          type: 'SourceStorageNotValid',
         },
       ],
     },
@@ -135,6 +169,17 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
             ...nameAndNamespace(MOCK_OPENSHIFT_NETWORKS[0]),
             type: 'multus',
           },
+        },
+      ],
+    },
+    status: {
+      conditions: [
+        {
+          category: 'Required',
+          lastTransitionTime: '2023-03-20T20:36:23Z',
+          message: 'The network map is ready.',
+          status: 'True',
+          type: 'Ready',
         },
       ],
     },
@@ -210,6 +255,17 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         },
       ],
     },
+    status: {
+      conditions: [
+        {
+          category: 'Required',
+          lastTransitionTime: '2023-03-20T20:36:23Z',
+          message: 'The network map is ready.',
+          status: 'True',
+          type: 'Ready',
+        },
+      ],
+    },
   };
 
   const invalidNetworkMappingDueToNetwork: INetworkMapping = {
@@ -238,6 +294,19 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         },
       ],
     },
+    status: {
+      conditions: [
+        {
+          category: 'Critical',
+          items: [],
+          lastTransitionTime: '2023-03-20T21:38:04Z',
+          message: 'Destination network (NAD) not found.',
+          reason: 'NotFound',
+          status: 'True',
+          type: 'DestinationNetworkNotValid',
+        },
+      ],
+    },
   };
 
   const invalidNetworkMappingDueToProvider: INetworkMapping = {
@@ -250,7 +319,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     spec: {
       provider: {
-        source: {namespace: 'unknown-ns', name: 'unknown-provider'},
+        source: { namespace: 'unknown-ns', name: 'unknown-provider' },
         destination: nameAndNamespace(MOCK_INVENTORY_PROVIDERS.openshift[0]),
       },
       map: [
@@ -265,6 +334,18 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         },
       ],
     },
+    status: {
+      conditions: [
+        {
+          category: 'Critical',
+          lastTransitionTime: '2023-03-20T21:33:45Z',
+          message: 'The source provider is not valid.',
+          reason: 'NotFound',
+          status: 'True',
+          type: 'SourceProviderNotValid',
+        },
+      ],
+    },
   };
 
   MOCK_NETWORK_MAPPINGS = [
@@ -272,6 +353,6 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     networkMapping1WithOwner,
     networkMapping2,
     invalidNetworkMappingDueToNetwork,
-    invalidNetworkMappingDueToProvider
+    invalidNetworkMappingDueToProvider,
   ];
 }

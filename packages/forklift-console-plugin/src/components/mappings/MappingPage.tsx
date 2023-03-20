@@ -1,5 +1,7 @@
 import React from 'react';
+import { EnumToTuple } from 'common/src/components/Filter';
 import * as C from 'src/utils/constants';
+import { MAPPING_STATUS } from 'src/utils/enums';
 
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
 import { DefaultHeader, TableViewHeaderProps } from '@kubev2v/common/components/TableView';
@@ -110,6 +112,18 @@ export const commonFieldsMetadataFactory: ResourceFieldFactory = (t) => [
       placeholderLabel: t('Show managed'),
       defaultValues: ['false'],
     },
+  },
+  {
+    resourceFieldId: C.STATUS,
+    label: t('Status'),
+    isVisible: true,
+    filter: {
+      type: 'enum',
+      primary: true,
+      placeholderLabel: t('Status'),
+      values: EnumToTuple(MAPPING_STATUS(t)),
+    },
+    sortable: true,
   },
 ];
 

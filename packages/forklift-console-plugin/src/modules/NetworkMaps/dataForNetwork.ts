@@ -9,13 +9,14 @@ import {
   INetworkMapping,
   INetworkMappingItem,
 } from '@kubev2v/legacy/queries/types';
-import { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1NetworkMapStatusConditions, V1beta1Provider } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
 import {
   CommonMapping,
   OwnerRef,
   resolveOwnerRef,
+  toStatus,
   useMappings,
 } from '../../components/mappings/data';
 
@@ -114,6 +115,7 @@ export const mergeData = (
       ([
         {
           metadata: { name, namespace, annotations = [] },
+          status: { conditions = [] } = {},
         },
         mapping,
         gvk,
@@ -139,6 +141,8 @@ export const mergeData = (
         targetReady: targetProvider.ready,
         from: groupedNetworks,
         to: groupedNetworks.map(([to]) => to),
+        status: toStatus(conditions),
+        conditions: conditions as V1beta1NetworkMapStatusConditions[],
         object: mapping,
       }),
     );

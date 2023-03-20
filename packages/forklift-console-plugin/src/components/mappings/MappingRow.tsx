@@ -1,15 +1,22 @@
 import React, { useCallback, useState } from 'react';
 import * as C from 'src/utils/constants';
+import { MAPPING_STATUS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 
 import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
 import { RowProps } from '@kubev2v/common/components/TableView';
 import { MappingDetailView } from '@kubev2v/legacy/Mappings/components/MappingDetailView';
 import { Mapping, MappingType } from '@kubev2v/legacy/queries/types';
-import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  GreenCheckCircleIcon,
+  RedExclamationCircleIcon,
+  ResourceLink,
+} from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
+
+import { StatusCell } from '../cells/StatusCell';
 
 import { CommonMapping } from './data';
 
@@ -67,6 +74,20 @@ const NameCell: React.FC<CellProps<CommonMapping>> = ({ resourceData }) => {
   );
 };
 
+const MappingStatusCell: React.FC<CellProps<CommonMapping>> = ({ resourceData }) => {
+  const { t } = useTranslation();
+
+  return (
+    <StatusCell
+      conditions={resourceData.conditions}
+      icon={
+        resourceData.status === 'Ready' ? <GreenCheckCircleIcon /> : <RedExclamationCircleIcon />
+      }
+      label={MAPPING_STATUS(t)[resourceData.status] ?? t('Not Ready')}
+    />
+  );
+};
+
 export const commonCells: CellCreator<CommonMapping> = {
   [C.NAME]: NameCell,
   [C.SOURCE]: ({ resourceData: e }: CellProps<CommonMapping>) => (
@@ -78,6 +99,7 @@ export const commonCells: CellCreator<CommonMapping> = {
   [C.NAMESPACE]: ({ value }: CellProps<CommonMapping>) => (
     <ResourceLink kind="Namespace" name={value} />
   ),
+  [C.STATUS]: MappingStatusCell,
 };
 
 function MappingRow<T extends CommonMapping>({

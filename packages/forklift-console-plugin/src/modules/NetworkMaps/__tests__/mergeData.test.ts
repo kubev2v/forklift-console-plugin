@@ -24,19 +24,16 @@ describe('merging network data', () => {
 
     /**
      * Write test data to file.
-     * 
+     *
      *
     import fs from 'fs';
 
     try {
-      fs.writeFileSync(
-        './mergedNetworkData.json',
-        JSON.stringify(merged, undefined, 4),
-      );
+      fs.writeFileSync('./mergedNetworkData.json', JSON.stringify(merged, undefined, 4));
     } catch (err) {
       console.error(err);
     }
-     */
+    */
 
     expect(JSON.parse(JSON.stringify(merged))).toEqual(MERGED_NETWORK_DATA);
   });
