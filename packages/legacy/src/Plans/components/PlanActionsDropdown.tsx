@@ -41,7 +41,7 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
   const namespace = plan.metadata.namespace;
   const { withNs, latestAssociatedMustGather } = React.useContext(MustGatherContext);
 
-  const mustGather = latestAssociatedMustGather(withNs(plan.metadata.name, 'plan'));
+  const mustGather = latestAssociatedMustGather(withNs(plan.metadata.name, plan?.metadata?.uid || '', 'plan'));
 
   const isPlanGathering = mustGather?.status === 'inprogress' || mustGather?.status === 'new';
 

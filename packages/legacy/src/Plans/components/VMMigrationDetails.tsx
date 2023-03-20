@@ -325,6 +325,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
           title: (
             <MustGatherBtn
               type="vm"
+              planUid={plan?.metadata?.uid || ''}
               isCompleted={!!vmStatus.completed}
               displayName={getVMName(vmStatus)}
             />
