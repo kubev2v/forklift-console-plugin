@@ -75,6 +75,7 @@
   "No Providers found.": "No Providers found.",
   "No StorageMaps found in namespace <1>{namespace}</1>.": "No StorageMaps found in namespace <1>{namespace}</1>.",
   "No StorageMaps found.": "No StorageMaps found.",
+  "Not Ready": "Not Ready",
   "Plans": "Plans",
   "Plans for virtualization": "Plans for virtualization",
   "Pod network": "Pod network",

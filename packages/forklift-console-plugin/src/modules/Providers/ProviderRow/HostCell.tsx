@@ -6,7 +6,7 @@ import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import { OutlinedHddIcon } from '@patternfly/react-icons';
 
-import { TextWithIcon } from './TextWithIcon';
+import { TextWithIcon } from '../../../components/cells/TextWithIcon';
 import { CellProps } from './types';
 
 export const HostCell: React.FC<CellProps> = ({ resourceData, resourceFields }) => {

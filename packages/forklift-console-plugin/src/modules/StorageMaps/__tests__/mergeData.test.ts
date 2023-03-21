@@ -24,15 +24,12 @@ describe('merging storage data', () => {
 
     /**
      * Write test data to file.
-     * 
+     *
      *
     import fs from 'fs';
 
     try {
-      fs.writeFileSync(
-        './mergedStorageData.json',
-        JSON.stringify(merged, undefined, 4),
-      );
+      fs.writeFileSync('./mergedStorageData.json', JSON.stringify(merged, undefined, 4));
     } catch (err) {
       console.error(err);
     }

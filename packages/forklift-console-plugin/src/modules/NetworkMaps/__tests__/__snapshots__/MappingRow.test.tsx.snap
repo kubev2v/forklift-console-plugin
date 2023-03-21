@@ -127,6 +127,37 @@ exports[`NetworkMap rows plantest1-generated-zxcv 1`] = `
           </button>
         </td>
         <td
+          class=""
+          data-label="Status"
+        >
+          <button
+            aria-disabled="false"
+            aria-label="Ready"
+            class="pf-c-button pf-m-link pf-m-inline"
+            data-ouia-component-id="OUIA-Generated-Button-link-2"
+            data-ouia-component-type="PF4/Button"
+            data-ouia-safe="true"
+            type="button"
+          >
+            <div
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+            >
+              <div
+                class=""
+              >
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
+              </div>
+              <div
+                class=""
+              >
+                Ready
+              </div>
+            </div>
+          </button>
+        </td>
+        <td
           class="pf-c-table__compound-expansion-toggle"
           data-label="To"
         >
@@ -198,7 +229,7 @@ exports[`NetworkMap rows plantest1-generated-zxcv 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="7"
+          colspan="8"
           data-label="Mapping graph"
         />
       </tr>
@@ -325,6 +356,37 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network1 1`] = `
           </button>
         </td>
         <td
+          class=""
+          data-label="Status"
+        >
+          <button
+            aria-disabled="false"
+            aria-label="Ready"
+            class="pf-c-button pf-m-link pf-m-inline"
+            data-ouia-component-id="OUIA-Generated-Button-link-1"
+            data-ouia-component-type="PF4/Button"
+            data-ouia-safe="true"
+            type="button"
+          >
+            <div
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+            >
+              <div
+                class=""
+              >
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
+              </div>
+              <div
+                class=""
+              >
+                Ready
+              </div>
+            </div>
+          </button>
+        </td>
+        <td
           class="pf-c-table__compound-expansion-toggle"
           data-label="To"
         >
@@ -396,7 +458,7 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network1 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="7"
+          colspan="8"
           data-label="Mapping graph"
         />
       </tr>
@@ -523,6 +585,37 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network2 1`] = `
           </button>
         </td>
         <td
+          class=""
+          data-label="Status"
+        >
+          <button
+            aria-disabled="false"
+            aria-label="Ready"
+            class="pf-c-button pf-m-link pf-m-inline"
+            data-ouia-component-id="OUIA-Generated-Button-link-3"
+            data-ouia-component-type="PF4/Button"
+            data-ouia-safe="true"
+            type="button"
+          >
+            <div
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+            >
+              <div
+                class=""
+              >
+                <div
+                  data-test-element-name="GreenCheckCircleIcon"
+                />
+              </div>
+              <div
+                class=""
+              >
+                Ready
+              </div>
+            </div>
+          </button>
+        </td>
+        <td
           class="pf-c-table__compound-expansion-toggle"
           data-label="To"
         >
@@ -612,7 +705,7 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network2 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="7"
+          colspan="8"
           data-label="Mapping graph"
         />
       </tr>
@@ -739,6 +832,37 @@ exports[`NetworkMap rows vcenter3-invalid-network-map 1`] = `
           </button>
         </td>
         <td
+          class=""
+          data-label="Status"
+        >
+          <button
+            aria-disabled="false"
+            aria-label="Not Ready"
+            class="pf-c-button pf-m-link pf-m-inline"
+            data-ouia-component-id="OUIA-Generated-Button-link-4"
+            data-ouia-component-type="PF4/Button"
+            data-ouia-safe="true"
+            type="button"
+          >
+            <div
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+            >
+              <div
+                class=""
+              >
+                <div
+                  data-test-element-name="RedExclamationCircleIcon"
+                />
+              </div>
+              <div
+                class=""
+              >
+                Not Ready
+              </div>
+            </div>
+          </button>
+        </td>
+        <td
           class="pf-c-table__compound-expansion-toggle"
           data-label="To"
         >
@@ -810,7 +934,7 @@ exports[`NetworkMap rows vcenter3-invalid-network-map 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="7"
+          colspan="8"
           data-label="Mapping graph"
         />
       </tr>
@@ -937,6 +1061,37 @@ exports[`NetworkMap rows vcenter4-invalid-network-map 1`] = `
           </button>
         </td>
         <td
+          class=""
+          data-label="Status"
+        >
+          <button
+            aria-disabled="false"
+            aria-label="Not Ready"
+            class="pf-c-button pf-m-link pf-m-inline"
+            data-ouia-component-id="OUIA-Generated-Button-link-5"
+            data-ouia-component-type="PF4/Button"
+            data-ouia-safe="true"
+            type="button"
+          >
+            <div
+              class="pf-l-flex pf-m-space-items-xs pf-m-inline-flex pf-m-nowrap"
+            >
+              <div
+                class=""
+              >
+                <div
+                  data-test-element-name="RedExclamationCircleIcon"
+                />
+              </div>
+              <div
+                class=""
+              >
+                Not Ready
+              </div>
+            </div>
+          </button>
+        </td>
+        <td
           class="pf-c-table__compound-expansion-toggle"
           data-label="To"
         >
@@ -1008,7 +1163,7 @@ exports[`NetworkMap rows vcenter4-invalid-network-map 1`] = `
       >
         <td
           class="pf-m-no-padding"
-          colspan="7"
+          colspan="8"
           data-label="Mapping graph"
         />
       </tr>

@@ -11,7 +11,7 @@ import { HostCell } from './ProviderRow/HostCell';
 import { ProviderLink } from './ProviderRow/ProviderLink';
 import { StatusCell } from './ProviderRow/StatusCell';
 import { TextCell } from './ProviderRow/TextCell';
-import { TextWithIcon } from './ProviderRow/TextWithIcon';
+import { TextWithIcon } from '../../components/cells/TextWithIcon';
 import { TypeCell } from './ProviderRow/TypeCell';
 import { CellProps } from './ProviderRow/types';
 import { MergedProvider } from './data';

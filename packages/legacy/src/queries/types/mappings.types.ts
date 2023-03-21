@@ -6,6 +6,7 @@ import {
   IMetaObjectGenerateName,
   IMetaObjectMeta,
   IMetaTypeMeta,
+  IStatusCondition,
 } from './common.types';
 import { ISrcDestRefs } from './providers.types';
 
@@ -88,14 +89,14 @@ export interface ICommonMapping extends IMetaTypeMeta {
 export interface INetworkMapping extends ICommonMapping {
   spec: INetworkMappingSpec;
   status?: {
-    conditions: NetworkMappingCondition[];
+    conditions: IStatusCondition[];
   };
 }
 
 export interface IStorageMapping extends ICommonMapping {
   spec: IStorageMappingSpec;
   status?: {
-    conditions: StorageMappingCondition[];
+    conditions: IStatusCondition[];
   };
 }
 

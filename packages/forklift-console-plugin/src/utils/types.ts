@@ -45,3 +45,6 @@ export const ProviderStatusValues = [
   'Unknown',
 ] as const;
 export type ProviderStatus = (typeof ProviderStatusValues)[number];
+
+export const MappingStatusValues = ['Ready', 'NotReady'] as const;
+export type MappingStatus = (typeof MappingStatusValues)[number];

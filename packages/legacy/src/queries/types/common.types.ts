@@ -46,6 +46,7 @@ export interface IStatusCondition {
   durable?: boolean;
   message: string;
   lastTransitionTime: string; // ISO timestamp
+  items?: any[];
 }
 
 export interface IVMwareObjRef {
