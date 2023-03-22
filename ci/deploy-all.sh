@@ -49,6 +49,9 @@ echo "Found: ${CONTAINER_CMD}"
 # Create kind cluster
 bash ${script_dir}/deploy-cluster.sh
 
+# Install console plugins
+bash ${script_dir}/deploy-console-plugins.sh
+
 # Install okd console
 bash ${script_dir}/deploy-console.sh
 

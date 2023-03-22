@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es2016",
+    "types": [
+      "cypress"
+    ]
+  }
+}

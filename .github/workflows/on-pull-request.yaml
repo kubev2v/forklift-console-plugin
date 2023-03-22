@@ -38,3 +38,52 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
+  e2e-tests:
+    name: Run e2e tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download kind
+        run: |
+          curl --silent -LO https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64
+          curl --silent -LO https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64.sha256sum
+          cat kind-linux-amd64.sha256sum | sha256sum --check
+      - name: Install kind
+        run: |    
+          chmod +x ./kind-linux-amd64
+          sudo mv ./kind-linux-amd64 /usr/local/bin/kind
+      - name: Download kubectl
+        run: |
+          export KUBECTL_VERSION="$(curl -L -s https://dl.k8s.io/release/stable.txt)"
+          echo "Install kubectl $KUBECTL_VERSION"
+          curl --silent -LO "https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl"
+          curl --silent -LO "https://dl.k8s.io/$KUBECTL_VERSION/bin/linux/amd64/kubectl.sha256"
+          echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+      - name: Install kubectl
+        run: sudo install kubectl /usr/local/bin/kubectl
+      - name: Install podman
+        run: sudo apt-get -y install podman
+      - name: Create Cluster
+        run: sudo bash ci/deploy-cluster.sh
+      - name: Deploy Console and Forklift CRDs
+        run: sudo kubectl apply -f ci/yaml/crds
+      - name: Build plugin image
+        run: podman build --tag localhost:5001/forklift-console-plugin -f build/Containerfile . 
+      - name: Push the image to the local registry
+        run: podman push localhost:5001/forklift-console-plugin --tls-verify=false
+      - name: Deploy the plugin
+        run: cat ci/yaml/forklift-plugin.yaml.template | sed "s/{{FORKLIFT_IMAGE_REPOSITORY}}/localhost:5001/g" | sudo kubectl apply -f -
+      - name: Install the OKD console
+        run: sudo bash ci/deploy-console.sh
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          wait-on: "http://localhost:30080"
+          browser: chrome
+          headed: false
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos

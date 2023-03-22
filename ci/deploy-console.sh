@@ -22,10 +22,5 @@ kubectl apply -f ${script_dir}/yaml/forklift-logo.yaml
 kubectl apply -f ${script_dir}/yaml/okd-console.yaml
 
 echo ""
-echo "deploy console plugins (forklift, minivirt)"
-kubectl apply -f ${script_dir}/yaml/minivirt-plugin.yaml
-kubectl apply -f ${script_dir}/yaml/forklift-plugin.yaml
-
-echo ""
 echo "waiting for OKD console service..."
 kubectl wait deployment -n  okd-console console --for condition=Available=True --timeout=${K8S_TIMEOUT}
