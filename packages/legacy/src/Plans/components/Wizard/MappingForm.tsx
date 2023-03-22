@@ -214,7 +214,7 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
             {`${form.values.filteredOutItemCount} ${mappingType.toLocaleLowerCase()} ${
               form.values.filteredOutItemCount > 1
                 ? 'mappings could not be resolved based on available configuration and are skipped below.'
-                : 'mapping could not be resolved based on availableconfiguration and is skipped below.'
+                : 'mapping could not be resolved based on available configuration and is skipped below.'
             }`}
           </Alert>
         )}
