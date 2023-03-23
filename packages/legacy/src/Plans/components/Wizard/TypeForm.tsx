@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, List, ListItem, Radio } from '@patternfly/react-core';
+import { Alert, Button, List, ListItem, Radio, Stack, StackItem, WizardContext } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { PlanWizardFormState } from './PlanWizard';
 import { warmCriticalConcerns, someVMHasConcern } from './helpers';
@@ -23,6 +23,8 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
   selectedVMs,
   namespace,
 }: ITypeFormProps) => {
+  const { goToStepById } = React.useContext(WizardContext);
+
   const warmCriticalConcernsFound = warmCriticalConcerns.filter((label) =>
     someVMHasConcern(selectedVMs, label)
   );
@@ -36,67 +38,79 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
       results={[secretsQuery]}
       errorTitles={['Cannot load provider secrets']}
     >
-      <Radio
-        id="migration-type-cold"
-        name="migration-type"
-        label="Cold migration"
-        description={
-          <List>
-            <ListItem>Source VMs are shut down while all of the VM data is migrated.</ListItem>
-          </List>
-        }
-        isChecked={form.values.type === 'Cold'}
-        onChange={() => form.fields.type.setValue('Cold')}
-        className={spacing.mbMd}
-      />
+      <Stack hasGutter >
+        <StackItem>
+          <Radio
+            id="migration-type-cold"
+            name="migration-type"
+            label="Cold migration"
+            description={
+              <List>
+                <ListItem>Source VMs are shut down while all of the VM data is migrated.</ListItem>
+              </List>
+            }
+            isChecked={form.values.type === 'Cold'}
+            onChange={() => form.fields.type.setValue('Cold')}
+          />
+        </StackItem>
 
-      {isSourceOvirtInsecure && (
-        <Alert
-          variant="warning"
-          isInline
-          title={`Warm migration from an insecure ${PROVIDER_TYPE_NAMES.ovirt} provider is not allowed.`}
-        />
-      )}
-      <Radio
-        id="migration-type-warm"
-        name="migration-type"
-        label="Warm migration"
-        isDisabled={isSourceOvirtInsecure}
-        description={
-          <List>
-            <ListItem>VM data is incrementally copied, leaving source VMs running.</ListItem>
-            <ListItem>
-              A final cutover, which shuts down the source VMs while VM data and metadata are
-              copied, is run later.
-            </ListItem>
-          </List>
-        }
-        body={
-          <>
-            {isAnalyzingVms && (
-              <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
-                <StatusIcon status="Loading" label="Analyzing warm migration compatibility" />
-              </div>
-            )}
+        {isSourceOvirtInsecure && (
+          <StackItem>
+            <Alert
+              variant="warning"
+              isInline
+              title="A warm migration is not currently available."
+            >
+              A warm migration from a {PROVIDER_TYPE_NAMES.ovirt} source provider is only supported
+              with a verified secure connection.  To enable a warm migration, first select a secure provider
+              on the <Button variant="link" isInline onClick={() => goToStepById(0)} >General step</Button>.
+            </Alert>
+          </StackItem>
+        )}
 
-            {!isAnalyzingVms && warmCriticalConcernsFound.length > 0 && (
-              <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
-                <StatusIcon
-                  status="Error"
-                  label="Warm migration will fail for one or more VMs because of the following conditions:"
-                />
-                <List className={`${spacing.mtSm} ${spacing.mlMd}`}>
-                  {warmCriticalConcernsFound.map((label) => (
-                    <ListItem key={label}>{label}</ListItem>
-                  ))}
-                </List>
-              </div>
-            )}
-          </>
-        }
-        isChecked={form.values.type === 'Warm'}
-        onChange={() => form.fields.type.setValue('Warm')}
-      />
+        <StackItem>
+          <Radio
+            id="migration-type-warm"
+            name="migration-type"
+            label="Warm migration"
+            isDisabled={isSourceOvirtInsecure}
+            description={
+              <List>
+                <ListItem>VM data is incrementally copied, leaving source VMs running.</ListItem>
+                <ListItem>
+                  A final cutover, which shuts down the source VMs while VM data and metadata are
+                  copied, is run later.
+                </ListItem>
+              </List>
+            }
+            body={
+              <>
+                {isAnalyzingVms && (
+                  <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
+                    <StatusIcon status="Loading" label="Analyzing warm migration compatibility" />
+                  </div>
+                )}
+
+                {!isAnalyzingVms && warmCriticalConcernsFound.length > 0 && (
+                  <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
+                    <StatusIcon
+                      status="Error"
+                      label="Warm migration will fail for one or more VMs because of the following conditions:"
+                    />
+                    <List className={`${spacing.mtSm} ${spacing.mlMd}`}>
+                      {warmCriticalConcernsFound.map((label) => (
+                        <ListItem key={label}>{label}</ListItem>
+                      ))}
+                    </List>
+                  </div>
+                )}
+              </>
+            }
+            isChecked={form.values.type === 'Warm'}
+            onChange={() => form.fields.type.setValue('Warm')}
+          />
+        </StackItem>
+      </Stack>
     </ResolvedQueries>
   );
 };
