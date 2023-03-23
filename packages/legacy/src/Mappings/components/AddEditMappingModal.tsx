@@ -220,7 +220,8 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                   <ProviderSelect
                     providerRole="source"
                     field={form.fields.sourceProvider}
-                    notReadyTooltipPosition="right"
+                    onProviderSelect={form.fields.sourceProvider.setValue}
+                    tooltipPosition="right"
                     menuAppendTo="parent"
                     maxHeight="40vh"
                     namespace={namespace}
@@ -230,6 +231,7 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                   <ProviderSelect
                     providerRole="target"
                     field={form.fields.targetProvider}
+                    onProviderSelect={form.fields.targetProvider.setValue}
                     menuAppendTo="parent"
                     maxHeight="40vh"
                     namespace={namespace}
@@ -249,7 +251,7 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                     sourceProviderType={form.values.sourceProvider?.type || 'vsphere'}
                     availableSources={mappingResourceQueries.availableSources}
                     availableTargets={mappingResourceQueries.availableTargets}
-                    builderItems={form.values.builderItems.length ? 
+                    builderItems={form.values.builderItems.length ?
                       form.values.builderItems : [{source: null, target: getDefaultTarget(mappingResourceQueries.availableTargets, mappingType)}]}
                     setBuilderItems={form.fields.builderItems.setValue}
                   />

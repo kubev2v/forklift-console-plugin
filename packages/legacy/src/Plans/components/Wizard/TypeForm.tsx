@@ -1,27 +1,41 @@
 import * as React from 'react';
-import { List, ListItem, Radio } from '@patternfly/react-core';
+import { Alert, List, ListItem, Radio } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { PlanWizardFormState } from './PlanWizard';
 import { warmCriticalConcerns, someVMHasConcern } from './helpers';
-import { SourceVM } from 'legacy/src/queries/types';
+import { SourceInventoryProvider, SourceVM } from 'legacy/src/queries/types';
 import { StatusIcon } from '@migtools/lib-ui';
+import { useSecretsQuery } from 'legacy/src/queries';
+import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
+import { checkIfOvirtInsecureProvider } from 'legacy/src/common/helpers';
+import { PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
 
 interface ITypeFormProps {
   form: PlanWizardFormState['type'];
+  sourceProvider: SourceInventoryProvider;
   selectedVMs: SourceVM[];
+  namespace: string;
 }
 
 export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
   form,
+  sourceProvider,
   selectedVMs,
+  namespace,
 }: ITypeFormProps) => {
   const warmCriticalConcernsFound = warmCriticalConcerns.filter((label) =>
     someVMHasConcern(selectedVMs, label)
   );
   const isAnalyzingVms = selectedVMs.some((vm) => vm.revisionValidated !== vm.revision);
 
+  const secretsQuery = useSecretsQuery([sourceProvider.object?.spec?.secret?.name], namespace);
+  const isSourceOvirtInsecure = checkIfOvirtInsecureProvider(sourceProvider, secretsQuery.data);
+
   return (
-    <>
+    <ResolvedQueries
+      results={[secretsQuery]}
+      errorTitles={['Cannot load provider secrets']}
+    >
       <Radio
         id="migration-type-cold"
         name="migration-type"
@@ -35,24 +49,37 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
         onChange={() => form.fields.type.setValue('Cold')}
         className={spacing.mbMd}
       />
+
+      {isSourceOvirtInsecure && (
+        <Alert
+          variant="warning"
+          isInline
+          title={`Warm migration from an insecure ${PROVIDER_TYPE_NAMES.ovirt} provider is not allowed.`}
+        />
+      )}
       <Radio
         id="migration-type-warm"
         name="migration-type"
         label="Warm migration"
+        isDisabled={isSourceOvirtInsecure}
         description={
+          <List>
+            <ListItem>VM data is incrementally copied, leaving source VMs running.</ListItem>
+            <ListItem>
+              A final cutover, which shuts down the source VMs while VM data and metadata are
+              copied, is run later.
+            </ListItem>
+          </List>
+        }
+        body={
           <>
-            <List>
-              <ListItem>VM data is incrementally copied, leaving source VMs running.</ListItem>
-              <ListItem>
-                A final cutover, which shuts down the source VMs while VM data and metadata are
-                copied, is run later.
-              </ListItem>
-            </List>
-            {isAnalyzingVms ? (
+            {isAnalyzingVms && (
               <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
                 <StatusIcon status="Loading" label="Analyzing warm migration compatibility" />
               </div>
-            ) : warmCriticalConcernsFound.length > 0 ? (
+            )}
+
+            {!isAnalyzingVms && warmCriticalConcernsFound.length > 0 && (
               <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
                 <StatusIcon
                   status="Error"
@@ -64,12 +91,12 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
                   ))}
                 </List>
               </div>
-            ) : null}
+            )}
           </>
         }
         isChecked={form.values.type === 'Warm'}
         onChange={() => form.fields.type.setValue('Warm')}
       />
-    </>
+    </ResolvedQueries>
   );
 };

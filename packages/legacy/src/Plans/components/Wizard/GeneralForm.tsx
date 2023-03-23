@@ -22,6 +22,7 @@ import {
   useInventoryProvidersQuery,
   useOpenShiftNetworksQuery,
   useNamespacesQuery,
+  useSecretsForProvidersQuery,
 } from 'legacy/src/queries';
 import { PlanWizardFormState, PlanWizardMode } from './PlanWizard';
 import { QuerySpinnerMode, ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
@@ -31,6 +32,7 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { usePausedPollingEffect } from 'legacy/src/common/context';
 import { isSameResource } from 'legacy/src/queries/helpers';
 import { PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
+import { isProviderLocalTarget, checkIfOvirtInsecureProvider } from 'legacy/src/common/helpers';
 
 interface IGeneralFormProps {
   form: PlanWizardFormState['general'];
@@ -49,9 +51,16 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
 }: IGeneralFormProps) => {
   const inventoryProvidersQuery = useInventoryProvidersQuery();
   const clusterProvidersQuery = useClusterProvidersQuery(namespace);
+  const secretsQuery = useSecretsForProvidersQuery(clusterProvidersQuery, namespace);
   const namespacesQuery = useNamespacesQuery(form.values.targetProvider);
+
   const targetNsFoundInQueriesNs = !!namespacesQuery.data?.find(
     (namespace) => form.values.targetNamespace === namespace.name
+  );
+
+  const isLocalTargetRequired = React.useMemo(
+    () => checkIfOvirtInsecureProvider(form.fields.sourceProvider.value, secretsQuery.data),
+    [form.fields.sourceProvider.value, secretsQuery.data]
   );
 
   const [isNamespaceSelectOpen, setIsNamespaceSelectOpen] = React.useState(false);
@@ -106,8 +115,8 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
 
   return (
     <ResolvedQueries
-      results={[inventoryProvidersQuery, clusterProvidersQuery]}
-      errorTitles={['Cannot load provider inventory data', 'Cannot load providers from cluster']}
+      results={[inventoryProvidersQuery, clusterProvidersQuery, secretsQuery]}
+      errorTitles={['Cannot load provider inventory data', 'Cannot load providers from cluster', 'Cannot load provider secrets']}
     >
       <Form className={spacing.pbXl}>
         <Title headingLevel="h2" size="md">
@@ -120,7 +129,7 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
             value={namespace}
             isDisabled={true}
           />
-        </FormGroup> 
+        </FormGroup>
         <ValidatedTextInput
           field={form.fields.planName}
           isRequired
@@ -138,13 +147,29 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
         <ProviderSelect
           providerRole="source"
           field={form.fields.sourceProvider}
-          afterChange={afterProviderChange}
+          onProviderSelect={(inventoryProvider) => {
+            const nextLocalTargetRequired = checkIfOvirtInsecureProvider(inventoryProvider, secretsQuery.data);
+            if (!isLocalTargetRequired
+              && nextLocalTargetRequired
+              && form.fields.targetProvider.value
+              && !isProviderLocalTarget(form.fields.targetProvider.value.object)) {
+              form.fields.targetProvider.clear();
+            }
+            form.fields.sourceProvider.setValue(inventoryProvider);
+            afterProviderChange?.()
+          }}
           namespace={namespace}
         />
         <ProviderSelect
           providerRole="target"
+          providerAllowRemote={!isLocalTargetRequired}
+          providerAllowRemoteTooltip="This is a remote target provider.  The source provider is insecure and this target provider must be a cluster local target."
+          // TODO: If the source is ovirt+insecure AND the target is remote, invalidate the field, put it in an error state
           field={form.fields.targetProvider}
-          afterChange={afterProviderChange}
+          onProviderSelect={(inventoryProvider) => {
+            form.fields.targetProvider.setValue(inventoryProvider);
+            afterProviderChange?.()
+          }}
           namespace={namespace}
         />
         <FormGroup
