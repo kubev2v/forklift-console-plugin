@@ -17,6 +17,7 @@ import {
   InventoryTreeType,
   IVMwareVM,
   IRHVVM,
+  IOpenStackVM,
 } from 'legacy/src/queries/types';
 import EnterpriseIcon from '@patternfly/react-icons/dist/esm/icons/enterprise-icon';
 import ClusterIcon from '@patternfly/react-icons/dist/esm/icons/cluster-icon';
@@ -382,12 +383,21 @@ export const filterSourcesBySelectedVMs = (
   nicProfiles: INicProfile[],
   disks: IDisk[]
 ): MappingSource[] => {
+  // Openstack store the volume ID not the volume types,
+  // disable filtering for openstack volumes.
+  if (sourceProviderType === 'openstack' && mappingType === MappingType.Storage) {
+    return availableSources;
+  }
+
   const sourceIds: (string | undefined)[] = Array.from(
     new Set(
       selectedVMs.flatMap((vm) => {
         if (mappingType === MappingType.Network) {
           if (sourceProviderType === 'vsphere') {
             return (vm as IVMwareVM).networks.map((network) => network.id);
+          }
+          if (sourceProviderType === 'openstack') {
+            return Object.keys((vm as IOpenStackVM)?.addresses || {});
           }
           if (sourceProviderType === 'ovirt') {
             const vmNicProfiles = (vm as IRHVVM).nics.map((nic) =>
@@ -415,7 +425,9 @@ export const filterSourcesBySelectedVMs = (
     )
   );
 
-  const filteredSources = availableSources.filter((source) => sourceIds.includes(source.id));
+  const filteredSources = availableSources.filter(
+    (source) => sourceIds.includes(source.id) ||
+    sourceIds.includes(source.name));
   return filteredSources;
 };
 

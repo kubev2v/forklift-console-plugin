@@ -43,4 +43,21 @@ export interface IRHVVM extends IBaseSourceVM {
   status?: 'up' | 'down';
 }
 
-export type SourceVM = IVMwareVM | IRHVVM;
+export interface IOpenStackVM extends IBaseSourceVM {
+  addresses: Record<string, IOpenStackNIC>;
+  attachedVolumes: IOpenStackDiskAttachment[];
+  status?: 'ACTIVE' | 'SHUTOFF' | 'PAUSED' | 'SHELVED_OFFLOADED' | 'SUSPENDED';
+}
+
+export interface IOpenStackNIC {
+  'OS-EXT-IPS-MAC:mac_addr'?: string;
+  'OS-EXT-IPS:type'?: string;
+  addr?: string;
+  version?: number;
+}
+
+export interface IOpenStackDiskAttachment {
+  ID?: string;
+}
+
+export type SourceVM = IVMwareVM | IRHVVM | IOpenStackVM;

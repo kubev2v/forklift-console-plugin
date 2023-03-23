@@ -7,11 +7,12 @@ import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { DatabaseIcon, NetworkIcon, VirtualMachineIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
+import { TextWithIcon } from '../../components/cells/TextWithIcon';
+
 import { HostCell } from './ProviderRow/HostCell';
 import { ProviderLink } from './ProviderRow/ProviderLink';
 import { StatusCell } from './ProviderRow/StatusCell';
 import { TextCell } from './ProviderRow/TextCell';
-import { TextWithIcon } from '../../components/cells/TextWithIcon';
 import { TypeCell } from './ProviderRow/TypeCell';
 import { CellProps } from './ProviderRow/types';
 import { MergedProvider } from './data';
