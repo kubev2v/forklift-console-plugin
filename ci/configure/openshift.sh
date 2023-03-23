@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -ex
+mkdir -p $(pwd)/tmp
 
 export BRIDGE_K8S_AUTH="bearer-token"
 export BRIDGE_USER_AUTH="disabled"
