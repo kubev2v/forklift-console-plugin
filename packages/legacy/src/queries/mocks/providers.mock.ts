@@ -217,6 +217,26 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     storageDomainCount: 9,
   };
 
+  const rhvProvider1i: IRHVProvider = {
+    ...rhvProvider1,
+    uid: 'mock-uid-rhv-1i',
+    name: 'rhv-1-insecure',
+    selfLink: 'providers/ovirt/foo1i',
+    object: {
+      ...rhvProvider1.object,
+      metadata: {
+        ...rhvProvider1.object.metadata,
+        name: 'rhv-1-insecure',
+        uid: 'mock-uid-rhv-1i',
+      },
+      spec: {
+        ...rhvProvider1.object.spec,
+        secret: { namespace: 'konveyor-forklift', name: 'mock-insecure' },
+      },
+      // TODO different mocked status?
+    },
+  };
+
   const rhvProvider2: IRHVProvider = {
     ...rhvProvider1,
     uid: 'mock-uid-rhv-2',
@@ -420,7 +440,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
 
   MOCK_INVENTORY_PROVIDERS = {
     vsphere: [vmwareProvider1, vmwareProvider2, vmwareProvider3],
-    ovirt: [rhvProvider1, rhvProvider2, rhvProvider3],
+    ovirt: [rhvProvider1, rhvProvider1i, rhvProvider2, rhvProvider3],
     openstack: [openstackProvider1, openstackProvider2],
     openshift: [openshiftProvider1, openshiftProvider2, openshiftProvider3, openshiftProvider4],
   };
