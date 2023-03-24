@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { useTranslation } from 'src/utils/i18n';
 
-import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
+import { withActionServiceContext } from '@kubev2v/common/components/ActionServiceDropdown';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
@@ -131,8 +131,12 @@ const DeleteModal = ({
 };
 DeleteModal.displayName = 'DeleteModal';
 
-export const ProviderActions = withActionContext<MergedProvider>(
-  'kebab',
-  'forklift-merged-provider',
-);
+/**
+ * Use the `console.action/provider` extension named `forklift-merged-provider` to render
+ * a set of actions in a kebab menu.
+ */
+export const ProviderActions = withActionServiceContext<MergedProvider>({
+  contextId: 'forklift-merged-provider',
+  variant: 'kebab',
+});
 ProviderActions.displayName = 'ProviderActions';

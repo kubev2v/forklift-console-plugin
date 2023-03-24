@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { useTranslation } from 'src/utils/i18n';
 
-import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
+import { withActionServiceContext } from '@kubev2v/common/components/ActionServiceDropdown';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
 import { type Action, useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
@@ -477,7 +477,10 @@ ArchiveModal.displayName = 'ArchiveModal';
 
 /**
  * Use the `console.action/provider` extension named `forklift-flat-plan` to render
- * a set of actions for a `FlatPlan`.
+ * a set of actions in a kebab menu.
  */
-export const PlanActions = withActionContext<FlatPlan>('kebab', 'forklift-flat-plan');
+export const PlanActions = withActionServiceContext<FlatPlan>({
+  contextId: 'forklift-flat-plan',
+  variant: 'kebab',
+});
 PlanActions.displayName = 'PlanActions';
