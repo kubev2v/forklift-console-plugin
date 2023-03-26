@@ -46,6 +46,8 @@ nodes:
   extraPortMappings:
   - containerPort: 30080
     hostPort: 30080
+  - containerPort: 30088
+    hostPort: 30088
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
