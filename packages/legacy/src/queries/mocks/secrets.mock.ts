@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     kind: 'Secret',
     apiVersion: 'v1',
     metadata: {
-      name: 'mock-secret',
+      name: 'mock-insecure',
       namespace: 'konveyor-forklift',
       selfLink: '/foo/secret',
       uid: 'e0f1078b-ce2a-4487-8281-5176267b78c2',
@@ -31,6 +31,10 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
 
   MOCK_SECRET_SECURE = {
     ...MOCK_SECRET_INSECURE,
+    metadata: {
+      ...MOCK_SECRET_INSECURE.metadata,
+      name: 'mock-secure',
+    },
     data: {
       ...MOCK_SECRET_INSECURE.data,
       insecureSkipVerify: 'ZmFsc2U=',
