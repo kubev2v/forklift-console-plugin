@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: forklift-console-plugin
-          image: quay.io/kubev2v/forklift-console-plugin:latest
+          image: {{FORKLIFT_IMAGE_REPOSITORY}}/forklift-console-plugin:latest
           ports:
             - containerPort: 8080
               protocol: TCP

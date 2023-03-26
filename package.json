@@ -43,6 +43,7 @@
     "@typescript-eslint/parser": "^5.29.0",
     "copyfiles": "^2.4.1",
     "crdtoapi": "^0.0.14",
+    "cypress": "11",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.1.0",
