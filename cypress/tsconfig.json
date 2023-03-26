@@ -1,9 +1,9 @@
 {
+  "extends": "../packages/config/tsconfig.base.json",
+
+  "include": ["**/*.ts"],
+
   "compilerOptions": {
-    "module": "esnext",
-    "target": "es2016",
-    "types": [
-      "cypress"
-    ]
+    "types": ["cypress", "@testing-library/cypress"]
   }
 }

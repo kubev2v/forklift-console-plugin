@@ -15,7 +15,7 @@ const extensions: EncodedExtension[] = [
       insertAfter: 'workloads',
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-sec-migration',
-        'data-test-id': 'migration-nav-item',
+        'data-testid': 'migration-nav-item',
       },
     },
   } as EncodedExtension<NavSection>,

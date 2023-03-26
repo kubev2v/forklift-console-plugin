@@ -26,7 +26,7 @@ export const extensions: EncodedExtension[] = [
       model: NetworkMapModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-network-mappings',
-        'data-test-id': 'network-mappings-nav-item',
+        'data-testid': 'network-mappings-nav-item',
       },
     },
   } as EncodedExtension<ResourceNSNavItem>,

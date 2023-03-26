@@ -29,7 +29,7 @@ export const extensions: EncodedExtension[] = [
       model: PlanModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-plans',
-        'data-test-id': 'plans-nav-item',
+        'data-testid': 'plans-nav-item',
       },
     },
   } as EncodedExtension<ResourceNSNavItem>,

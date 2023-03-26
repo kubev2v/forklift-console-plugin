@@ -15,7 +15,7 @@ export const extensions: EncodedExtension[] = [
       model: MigrationModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-migrations',
-        'data-test-id': 'migrations-nav-item',
+        'data-testid': 'migrations-nav-item',
       },
     },
   } as EncodedExtension<ResourceNSNavItem>,
