@@ -6,3 +6,4 @@ yarn-error.log
 openapitools.json
 
 cypress/videos
+ci/yaml/openapi.yaml

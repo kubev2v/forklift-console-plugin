@@ -6,23 +6,23 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: minivirt-plugin
+  name: forklift-console-plugin
   namespace: konveyor-forklift
   labels:
-    app: minivirt-plugin
+    app: forklift-console-plugin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: minivirt-plugin
+      app: forklift-console-plugin
   template:
     metadata:
       labels:
-        app: minivirt-plugin
+        app: forklift-console-plugin
     spec:
       containers:
-        - name: minivirt-plugin
-          image: quay.io/kubev2v/minivirt-plugin:latest
+        - name: forklift-console-plugin
+          image: quay.io/kubev2v/forklift-console-plugin:latest
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -31,17 +31,17 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: minivirt-plugin
+  name: forklift-console-plugin
   namespace: konveyor-forklift
   labels:
-    app: minivirt-plugin
+    app: forklift-console-plugin
 spec:
   ports:
-    - name: 9001-tcp
+    - name: 8080-tcp
       protocol: TCP
-      port: 9001
+      port: 8080
       targetPort: 8080
   selector:
-    app: minivirt-plugin
+    app: forklift-console-plugin
   type: ClusterIP
   sessionAffinity: None

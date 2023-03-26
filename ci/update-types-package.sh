@@ -6,7 +6,7 @@ types_package_dir=$(realpath $script_dir/../packages/types/src)
 
 # Collect OpenAPI definitions from forklift CRDs
 npx crdtoapi \
-  -i ${script_dir}/yaml/crds \
+  -i ${script_dir}/yaml/crds/forklift \
   -m "forklift.konveyor.io" \
   -o ${script_dir}/yaml/openapi.yaml \
   --title "Forklift API" \
@@ -16,7 +16,7 @@ npx crdtoapi \
   --contactEmail "kubev2v-dev@redhat.com"
 
 npx crdtomodel \
-  -i ${script_dir}/yaml/crds \
+  -i ${script_dir}/yaml/crds/forklift \
   -m "forklift.konveyor.io" \
   -o ${types_package_dir}/constants
 
