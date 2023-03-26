@@ -1,6 +1,6 @@
 import { useMappingActions } from 'src/components/mappings/mappingActions';
 
-import { withActionContext } from '@kubev2v/common/components/ActionServiceDropdown';
+import { withActionServiceContext } from '@kubev2v/common/components/ActionServiceDropdown';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 
 import { FlatStorageMapping } from './dataForStorage';
@@ -8,8 +8,12 @@ import { FlatStorageMapping } from './dataForStorage';
 export const useStorageMappingActions = ({ resourceData }: { resourceData: FlatStorageMapping }) =>
   useMappingActions<FlatStorageMapping>({ resourceData, mappingType: MappingType.Storage });
 
-export const StorageMappingActions = withActionContext<FlatStorageMapping>(
-  'kebab',
-  'forklift-flat-storage-mapping',
-);
+/**
+ * Use the `console.action/provider` extension named `forklift-flat-storage-mapping` to render
+ * a set of actions in a kebab menu.
+ */
+export const StorageMappingActions = withActionServiceContext<FlatStorageMapping>({
+  contextId: 'forklift-flat-storage-mapping',
+  variant: 'kebab',
+});
 StorageMappingActions.displayName = 'StorageMappingActions';
