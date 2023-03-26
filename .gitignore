@@ -4,3 +4,5 @@ coverage/
 tmp/
 yarn-error.log
 openapitools.json
+
+cypress/videos

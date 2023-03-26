@@ -28,7 +28,7 @@ export const extensions: EncodedExtension[] = [
       model: ProviderModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-providers',
-        'data-test-id': 'providers-nav-item',
+        'data-testid': 'providers-nav-item',
       },
     },
   } as EncodedExtension<ResourceNSNavItem>,

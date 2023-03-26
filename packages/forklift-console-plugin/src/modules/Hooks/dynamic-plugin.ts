@@ -14,7 +14,7 @@ export const extensions: EncodedExtension[] = [
       model: HookModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-hooks',
-        'data-test-id': 'hooks-nav-item',
+        'data-testid': 'hooks-nav-item',
       },
     },
   } as EncodedExtension<ResourceNSNavItem>,

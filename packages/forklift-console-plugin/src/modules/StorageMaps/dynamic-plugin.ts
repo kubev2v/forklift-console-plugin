@@ -26,7 +26,7 @@ export const extensions: EncodedExtension[] = [
       model: StorageMapModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-storage-mappings',
-        'data-test-id': 'storage-mappings-nav-item',
+        'data-testid': 'storage-mappings-nav-item',
       },
     },
   } as EncodedExtension<ResourceNSNavItem>,

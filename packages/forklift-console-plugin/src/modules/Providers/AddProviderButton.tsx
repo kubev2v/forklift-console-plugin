@@ -25,6 +25,7 @@ export const AddProviderButton: React.FC<{ namespace: string }> = ({ namespace }
 
   return (
     <Button
+      data-testid="add-provider-button"
       variant="primary"
       onClick={() =>
         launchModal(withQueryClient(AddProviderModal), { currentNamespace: namespace })
