@@ -12,5 +12,5 @@ if [[ "$response" =~ ^(yes|y)$ ]]; then
     kind delete cluster
     podman stop kind-registry
     podman rm kind-registry
-    rm -rf /tmp/kind-storage-*
+    podman network rm kind
 fi

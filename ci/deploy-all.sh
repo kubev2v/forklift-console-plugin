@@ -5,6 +5,18 @@ script_dir=$(dirname "$0")
 
 export K8S_TIMEOUT="365s"
 
+# Check for container cmd
+# -----------------------
+echo ""
+echo "Check for container command"
+echo "============================"
+
+if ! [ -x "$(command -v podman)" ]; then
+  echo "Error: can't find 'podman' command line utility, exit"
+  exit 1
+fi
+echo "Found: podman"
+
 # Check for kind cmd
 # ------------------
 
@@ -24,24 +36,6 @@ if ! [ -x "$(command -v kubectl)" ]; then
   exit 1
 fi
 echo "Found $(which kubectl)"
-
-# Check for container cmd
-# -----------------------
-echo ""
-echo "Check for container command"
-echo "============================"
-
-if [ -x "$(command -v podman)" ]; then
-  CONTAINER_CMD=$(which podman)
-else
-  CONTAINER_CMD=$(which docker)
-fi
-
-if ! [ -x "$(command -v ${CONTAINER_CMD})" ]; then
-  echo "Error: can't find 'podman' or 'docker' command line utility, exit"
-  exit 1
-fi
-echo "Found: ${CONTAINER_CMD}"
 
 # Install cluster
 # ---------------
@@ -63,10 +57,6 @@ bash ${script_dir}/deploy-forklift.sh
 
 echo ""
 echo "==========================================="
-
-echo ""
-echo "Open ports, available for optional services:"
-echo "  30088: for inventory   running using nodePort 30088"
 
 echo ""
 echo "Local registry available on port 5001:    http://localhost:5001/"

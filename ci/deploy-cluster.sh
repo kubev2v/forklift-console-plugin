@@ -3,37 +3,37 @@
 set -euo pipefail
 script_dir=$(dirname "$0")
 
+CONTAINER_CMD=${CONTAINER_CMD:=podman}
+
 # Install kind and kubectl
 # -----------------------------------------
 echo ""
 echo "Install kind and kubectl"
 echo "============================"
+
 bash ${script_dir}/install-kind.sh
 bash ${script_dir}/install-kubectl.sh
 
-# create registry container unless it already exists
+echo ""
+echo "Install local registry"
+echo "============================"
+
+# Create the kind network
+${CONTAINER_CMD} network create kind --driver bridge
+
 reg_name='kind-registry'
 reg_port='5001'
 
-if [ -x "$(command -v docker)" ]; then
-  if [ "$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)" != 'true' ]; then
-    docker run \
-      -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" \
-      registry:2
-  fi
-else
-  # Create the kind network
-  if ! podman network exists kind; then
-    podman network create kind
-  fi
-
-  # Create the registry
-  if [ "$(podman inspect -f {{.State.Running}} "${reg_name}" 2>/dev/null || true)" != 'true' ]; then
-    podman run \
-      -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" --net kind \
-      registry:2
-  fi
+# Create the registry
+if [ "$(${CONTAINER_CMD} inspect -f {{.State.Running}} "${reg_name}" 2>/dev/null || true)" != 'true' ]; then
+  ${CONTAINER_CMD} run \
+    -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" --network bridge \
+    registry:2
 fi
+
+echo ""
+echo "Create KinD cluster"
+echo "==================="
 
 # create a cluster with the local registry enabled in containerd
 cat <<EOF | kind create cluster --config=-
@@ -54,11 +54,8 @@ containerdConfigPatches:
     endpoint = ["http://${reg_name}:5000"]
 EOF
 
-if [ -x "$(command -v docker)" ]; then
-  # connect the registry to the cluster network if not already connected
-  if [ "$(docker inspect -f='{{json .NetworkSettings.Networks.kind}}' "${reg_name}")" = 'null' ]; then
-    docker network connect "kind" "${reg_name}"
-  fi
+if [ "$(${CONTAINER_CMD} inspect -f='{{json .NetworkSettings.Networks.kind}}' "${reg_name}")" = 'null' ]; then
+  ${CONTAINER_CMD} network connect "kind" "${reg_name}"
 fi
 
 echo ""

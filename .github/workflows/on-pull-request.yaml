@@ -2,6 +2,9 @@
 name: Test
 on:
   pull_request:
+env:
+  CONTAINER_CMD: docker
+  FORKLIFT_PLUGIN_LOCAL_IMG: localhost:5001/forklift-console-plugin:latest
 
 jobs:
   tests:
