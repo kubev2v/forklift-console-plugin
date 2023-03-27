@@ -11,4 +11,10 @@ fi
 
 export VERSION=v0.17.0
 curl -LO https://kind.sigs.k8s.io/dl/${VERSION}/kind-linux-amd64
+
+# test sha256sum
+curl --silent -LO https://kind.sigs.k8s.io/dl/${VERSION}/kind-linux-amd64.sha256sum
+cat kind-linux-amd64.sha256sum | sha256sum --check
+
+# install
 sudo install kind-linux-amd64 /usr/local/bin/kind

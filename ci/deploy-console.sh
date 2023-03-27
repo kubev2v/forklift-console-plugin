@@ -22,7 +22,7 @@ kubectl apply -f ${script_dir}/yaml/crds/console
 kubectl apply -f ${script_dir}/yaml/crds/forklift
 
 echo ""
-echo "deploy OKD console (port: 30088)"
+echo "deploy OKD console (port: 30080)"
 
 cat ${OKD_CONSOLE_YAML} | \
     sed "s/${FORKLIFT_PLUGIN_UPSTREAM_IMG//\//\\/}/${FORKLIFT_PLUGIN_LOCAL_IMG//\//\\/}/g" | \
