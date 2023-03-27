@@ -383,12 +383,6 @@ export const filterSourcesBySelectedVMs = (
   nicProfiles: INicProfile[],
   disks: IDisk[]
 ): MappingSource[] => {
-  // Openstack store the volume ID not the volume types,
-  // disable filtering for openstack volumes.
-  if (sourceProviderType === 'openstack' && mappingType === MappingType.Storage) {
-    return availableSources;
-  }
-
   const sourceIds: (string | undefined)[] = Array.from(
     new Set(
       selectedVMs.flatMap((vm) => {
@@ -418,6 +412,13 @@ export const filterSourcesBySelectedVMs = (
             );
             const storageDomainIds = vmDisks.map((disk) => disk?.storageDomain);
             return storageDomainIds;
+          }
+          if (sourceProviderType === 'openstack') {
+            const vmDisks = (vm as IOpenStackVM).attachedVolumes.map((av) =>
+              disks.find((disk) => disk.id === av.ID)
+            );
+            const volumeTypeIds = vmDisks.map((disk) => disk?.volumeType);
+            return volumeTypeIds;
           }
         }
         return [];
