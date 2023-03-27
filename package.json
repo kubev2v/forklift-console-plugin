@@ -36,6 +36,7 @@
     "helm:build": "mkdir -p tmp && helm package -d tmp deployment/forklift-console-plugin/ && npm run helm:index"
   },
   "devDependencies": {
+    "@cspell/eslint-plugin": "^6.31.1",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",

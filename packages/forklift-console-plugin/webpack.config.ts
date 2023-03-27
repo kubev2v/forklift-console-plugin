@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 /* eslint-env node */
 
 import * as path from 'path';
@@ -121,7 +122,7 @@ const config: WebpackConfiguration & {
       // NODE_ENV: used to bake debugging information on development builds.
       NODE_ENV: production ? 'production' : 'development',
       // PLUGIN_NAME: should be set to the plugin name hardcoded in the
-      //              instalation scripts, defaults to 'forklift-console-plugin'.
+      //              installation scripts, defaults to 'forklift-console-plugin'.
       PLUGIN_NAME: pluginMetadata.name,
     }),
   ],

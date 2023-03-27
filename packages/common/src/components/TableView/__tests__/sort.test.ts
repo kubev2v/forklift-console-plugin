@@ -137,7 +137,7 @@ describe('buildSort factory', () => {
     expect(sortBy).toStrictEqual({ index: undefined, direction: 'desc' });
   });
 
-  it('skips sort callbeck if column cannot be found', () => {
+  it('skips sort callback if column cannot be found', () => {
     const setActiveSort = jest.fn();
     const { onSort } = buildSort({
       columnIndex: 1,

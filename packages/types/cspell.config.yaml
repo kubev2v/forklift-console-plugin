@@ -1,0 +1,26 @@
+words:
+  - konveyor
+  - kubevirt
+  - patternfly
+  - ovirt
+  - multus
+  - testid
+  - quickstarts
+  - forkliftcontrollers
+  - networkmaps
+  - Populator
+  - Populators
+  - ovirtvolumepopulators
+  - crdtotypes
+  - Apimachinery
+  - cutover
+  - Precopy
+  - precopies
+  - storagemaps
+  - kubeadm
+  - vddk
+  - cacerts
+flagWords:
+  - blacklist->allowlist
+suggestWords:
+  - colour->color

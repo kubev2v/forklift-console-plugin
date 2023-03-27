@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 
 import { PaginationSettings } from './types';
 
-// counting from one seems recommneded - zero breaks some cases
+// counting from one seems recommended - zero breaks some cases
 const DEFAULT_FIRST_PAGE = 1;
 // first option in the default "per page" dropdown
 export const DEFAULT_PER_PAGE = 10;

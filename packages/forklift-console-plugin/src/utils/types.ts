@@ -10,11 +10,11 @@ export type Condition = {
   message: string;
   /** higher order category this condition relates to */
   category?: string;
-  /** Items releated to this conditions */
+  /** Items related to this conditions */
   items?: string[];
-  /** timestame RFC 3339 */
+  /** timestamp RFC 3339 */
   lastTransitionTime?: string;
-  /** shorter computer frendly version of message */
+  /** shorter computer friendly version of message */
   reason?: string;
 };
 

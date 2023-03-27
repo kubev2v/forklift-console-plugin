@@ -7,7 +7,7 @@ import { FilterTypeProps } from './types';
 /**
  * Simple boolean filter without support for filter chips.
  *
- * FilterTypeProps are interpeted as follows:
+ * FilterTypeProps are interpreted as follows:
  * 1) selectedFilters - input array with single string 'true' is interpreted as 'true' state, otherwise 'false' state is assumed
  * 2) onFilterUpdate - receives array with single string 'true' or empty array
  * 3) placeholderLabel - used for both on/off states

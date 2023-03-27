@@ -1,5 +1,5 @@
 /**
- * Mock tranlation utility
+ * Mock translation utility
  *
  * @returns {{ t: (k: string) => string; }}
  */

@@ -68,7 +68,7 @@ interface ManagedColumnsProps {
   description: string;
   onClose(): void;
   /** Setter to modify state in the parent.*/
-  onChange(colums: ResourceField[]): void;
+  onChange(columns: ResourceField[]): void;
   /** Read only. State maintained by parent component. */
   resourceFields: ResourceField[];
   /** Read only. The defaults used for initialization.*/
@@ -150,7 +150,7 @@ const ManageColumns = ({
           {t('Cancel')}
         </Button>,
         <Button key="restore" variant="link" onClick={restoreDefaults}>
-          {t('Restore default colums')}
+          {t('Restore default columns')}
         </Button>,
       ]}
     >

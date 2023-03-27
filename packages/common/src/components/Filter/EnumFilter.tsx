@@ -100,7 +100,7 @@ export const useUnique = ({
  *  In such case enums with duplicated labels will be grouped as one option.
  *  The common scenario are values not known at the compile time represented by one label i.e. 'Unknown'.
  *
- * FilterTypeProps are interpeted as follows:
+ * FilterTypeProps are interpreted as follows:
  * 1) selectedFilters - selected enum IDs
  * 2) onFilterUpdate - accepts the list of selected enum IDs
  * 3) supportedValues - supported enum values

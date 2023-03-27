@@ -17,13 +17,13 @@ export interface FilterDef {
   primary?: boolean;
   standalone?: boolean;
   groups?: EnumGroup[];
-  // override default behaviour if there are no filters provided by the user
+  // override default behavior if there are no filters provided by the user
   // by default missing/empty filters result in positive match (vacuous truth)
   defaultValues?: string[];
 }
 
 /**
- * Components implmeneting this interface may be added to complex filters.
+ * Components implementing this interface may be added to complex filters.
  *
  * @see PrimaryFilters
  * @see AttributeValueFilter
@@ -31,7 +31,7 @@ export interface FilterDef {
 export interface FilterTypeProps {
   filterId: string;
   /**
-   * Interpration of filter values is filter specific.
+   * Implementation of filter values is filter specific.
    * @param values list of selected filter values
    */
   onFilterUpdate(values: string[]);

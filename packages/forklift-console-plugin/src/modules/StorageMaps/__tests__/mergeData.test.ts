@@ -6,20 +6,20 @@ import { V1beta1Provider } from '@kubev2v/types';
 
 import {
   groupByTarget as groupStorageByTarget,
-  mergeData as mergeStoragekData,
+  mergeData as mergeStorageData,
 } from '../dataForStorage';
 
 import MERGED_STORAGE_DATA from './mergedStorageData.json';
 
 describe('merging storage data', () => {
   test('empty input', () => {
-    expect(mergeStoragekData([], [])).toHaveLength(0);
+    expect(mergeStorageData([], [])).toHaveLength(0);
   });
 
   test('standard mock data', () => {
     const mappings = MOCK_STORAGE_MAPPINGS as StorageMapResource[];
     const providers = MOCK_CLUSTER_PROVIDERS as V1beta1Provider[];
-    const merged = mergeStoragekData(mappings, providers);
+    const merged = mergeStorageData(mappings, providers);
     // do a stringify-parse run to remove undefined properties which clutter the results(if mismatch happens)
 
     /**

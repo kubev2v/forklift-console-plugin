@@ -8,7 +8,7 @@ import { FilterTypeProps } from './types';
  * Filter using text provided by the user.
  * Text needs to be submitted/confirmed by clicking search button or by pressing Enter key.
  *
- * FilterTypeProps are interpeted as follows:
+ * FilterTypeProps are interpreted as follows:
  * 1) selectedFilters - list of strings provided by the user
  * 2) onFilterUpdate - accepts the list of strings (from user input)
  */
