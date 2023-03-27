@@ -66,10 +66,7 @@ echo "==========================================="
 
 echo ""
 echo "Open ports, available for optional services:"
-echo "  30001: for fakeovirt   running using nodePort 30001"
-echo "  30022: for ssh         running using nodePort 30022"
 echo "  30088: for inventory   running using nodePort 30088"
-echo "  30089: for fake wmware running using nodePort 30089"
 
 echo ""
 echo "Local registry available on port 5001:    http://localhost:5001/"
