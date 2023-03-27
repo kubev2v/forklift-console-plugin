@@ -22,7 +22,7 @@
 
 ## Running the helm chart locally
 
-Running helm requires to be looged into the cluster, and using the namespace for the instalation:
+Running helm requires to be looged into the cluster, and using the namespace for the installation:
 
 ``` bash
 # login into the cluster
@@ -32,7 +32,7 @@ oc login ...
 oc project forklift-console-plugin
 ```
 
-When you are logged in, and using the instalation project, you can use the local helm chart:
+When you are logged in, and using the installation project, you can use the local helm chart:
 
 ``` bash
 # install local
@@ -63,7 +63,7 @@ npm run helm:build
 
 ## Using the public repository
 
-[ Running helm requires to be looged into the cluster, and using the namespace for the instalation ]
+[ Running helm requires to be looged into the cluster, and using the namespace for the installation ]
 
 ``` bash
 # add the forklift helm repo

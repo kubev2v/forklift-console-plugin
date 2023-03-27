@@ -72,7 +72,7 @@ export interface VSphereProviderSecret {
   password: string;
 
   /**
-   * Indicate that the client can ignore certifacte verification.
+   * Indicate that the client can ignore certificate verification.
    *
    * Provider type: OVirt
    * Conditions: Optional
@@ -134,7 +134,7 @@ export interface OVirtProviderSecret {
   password: string;
 
   /**
-   * OVirt server cacerts, can be a linked list of multple certifications.
+   * OVirt server cacerts, can be a linked list of multiple certifications.
    *
    * NOTE: ATM cacert is not optional because
    *       insecureSkipVerify is not implemented in our ovirt image-io client
@@ -150,7 +150,7 @@ export interface OVirtProviderSecret {
   cacert?: string;
 
   /**
-   * Indicate that the client can ignore certifacte verification.
+   * Indicate that the client can ignore certificate verification.
    *
    * Provider type: OVirt
    * Conditions: Optional
@@ -231,7 +231,7 @@ export interface OpenstackProviderSecret {
   projectName?: string;
 
   /**
-   * Indicate that the client can ignore certifacte verification.
+   * Indicate that the client can ignore certificate verification.
    *
    * Provider type: openstack
    * Conditions: Optional
@@ -242,7 +242,7 @@ export interface OpenstackProviderSecret {
   insecureSkipVerify?: boolean;
 
   /**
-   * openstack server cacerts, can be a linked list of multple certifications.
+   * openstack server cacerts, can be a linked list of multiple certifications.
    *
    * Provider type: openstack
    * Conditions: Required if insecureSkipVerify is false

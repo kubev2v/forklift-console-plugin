@@ -132,6 +132,6 @@ export const useFlatPlans = ({ namespace, name = undefined }): [FlatPlan[], bool
 
   // extra memo to keep the tuple reference stable
   // the tuple is used as data source and passed as prop
-  // which triggres unnecessary re-renders
+  // which triggers unnecessary re-renders
   return useMemo(() => [merged, totalSuccess, totalError], [merged, totalSuccess, totalError]);
 };

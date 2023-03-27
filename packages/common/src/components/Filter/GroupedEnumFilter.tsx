@@ -22,7 +22,7 @@ import { EnumValue, FilterTypeProps } from './types';
  * 5) items not assigned to any of the supported groups are skipped
  *
  *
- * FilterTypeProps are interpeted as follows:
+ * FilterTypeProps are interpreted as follows:
  * 1) selectedFilters - selected enum IDs
  * 2) onFilterUpdate - accepts the list of selected enum IDs
  * 3) supportedValues - supported enum values

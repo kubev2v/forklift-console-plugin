@@ -7,7 +7,7 @@ export const extensions: EncodedExtension[] = [
     type: 'console.navigation/resource-ns',
     properties: {
       id: 'migrations',
-      insertAfter: 'forklift-utilities-seperator',
+      insertAfter: 'forklift-utilities-separator',
       perspective: 'admin',
       section: 'migration',
       // t('plugin__forklift-console-plugin~Migrations for virtualization')

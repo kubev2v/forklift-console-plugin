@@ -12,7 +12,7 @@ export interface ResourceField {
   resourceFieldId: string;
   jsonPath?: OpenApiJsonPath;
   label: string;
-  // visiblity status, can change in time
+  // visibility status, can change in time
   isVisible?: boolean;
   isIdentity?: boolean;
   isAction?: boolean;

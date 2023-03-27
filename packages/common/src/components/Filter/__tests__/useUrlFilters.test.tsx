@@ -54,6 +54,7 @@ describe('parse filters from the URL on initialization', () => {
   });
 
   it('supports prefixing params', () => {
+    // eslint-disable-next-line @cspell/spellchecker
     window.location.search = '?barname=%5B"foo"%5D';
     const {
       result: {
@@ -69,7 +70,7 @@ describe('parse filters from the URL on initialization', () => {
   });
 });
 
-describe('display currrently selected filters in the URL', () => {
+describe('display currently selected filters in the URL', () => {
   test.each([
     ['displays single value', '?foo=bar', ['foo'], '?foo=bar&name=%5B%22foo%22%5D'],
     ['updates a value', '?foo=bar&name=%5B"foo"%5D', ['bar'], '?foo=bar&name=%5B%22bar%22%5D'],

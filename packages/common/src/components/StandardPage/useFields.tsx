@@ -22,10 +22,10 @@ const sameOrderAndVisibility = (a: ResourceField[], b: ResourceField[]): boolean
 };
 
 /**
- * Keeps the list of fields. Toggles the visibility of the namespace field based on currently used namspace.
+ * Keeps the list of fields. Toggles the visibility of the namespace field based on currently used namespace.
  *
  * User settings support:
- * 1. fields are loaded from user settings only during intialization
+ * 1. fields are loaded from user settings only during initialization
  * 2. saving fields to user settings is a side effect
  * 3. internal state maintained by the hook remains the single source of truth
  *
@@ -86,7 +86,7 @@ export const useFields = (
     () => (fields: ResourceField[]) => {
       setFields(fields);
       if (sameOrderAndVisibility(fields, defaultFields)) {
-        // don't store settings if equal to deault settings
+        // don't store settings if equal to default settings
         clearSettings();
       } else {
         saveFieldsInSettings(

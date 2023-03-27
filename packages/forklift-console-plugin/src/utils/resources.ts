@@ -6,7 +6,7 @@ import { K8sResourceCommon, ObjectReference } from '@openshift-console/dynamic-p
 import { ProviderRef } from './types';
 
 /**
- * Get reference group version kind string forgroup version kind strings
+ * Get reference group version kind string for group version kind strings
  * @param  {string} group
  * @param  {string} version
  * @param  {string} kind

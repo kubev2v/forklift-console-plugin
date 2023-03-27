@@ -47,7 +47,7 @@ export const getResourceFieldValue = (
  * 1) fields that use different filter type are skipped
  * 2) positive match if there are no selected filter values or no fields support the chosen filter type (vacuous truth)
  * 3) all fields need to pass the test (AND condition)
- * 4) a field is accepted if at least one filter value returns positive match (OR condtion)
+ * 4) a field is accepted if at least one filter value returns positive match (OR condition)
  */
 export const createMatcher =
   ({
@@ -120,8 +120,8 @@ export const defaultSupportedFilters: Record<string, FilterRenderer> = {
 
 /**
  * Create matcher for multiple filter types.
- * Positive match requires that all sub-matchers (per filter type) return positve result (AND condtion).
- * No filter values or no filter types also yields a positve result(vacuous truth).
+ * Positive match requires that all sub-matchers (per filter type) return positive result (AND condition).
+ * No filter values or no filter types also yields a positive result(vacuous truth).
  *
  * @see createMatcher
  */

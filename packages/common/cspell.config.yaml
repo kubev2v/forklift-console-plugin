@@ -1,0 +1,15 @@
+words:
+  - konveyor
+  - kubevirt
+  - patternfly
+  - ovirt
+  - multus
+  - testid
+  - quickstarts
+  - cutover
+  - freetext
+  - Linkify
+flagWords:
+  - blacklist->allowlist
+suggestWords:
+  - colour->color

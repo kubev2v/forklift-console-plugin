@@ -6,14 +6,14 @@ import { cleanup, render } from '@testing-library/react';
 
 import { FlatNetworkMapping } from '../dataForNetwork';
 import NetworkMappingRow from '../NetworkMappingRow';
-import { fieldsMetadataFactory as networkFieldsFactroy } from '../NetworkMappingsPage';
+import { fieldsMetadataFactory as networkFieldsFactory } from '../NetworkMappingsPage';
 
 import MERGED_NETWORK_DATA from './mergedNetworkData.json';
 
 // Mock translation function.
 const t = (s) => s;
 // Create a field metadata
-const networkFields = networkFieldsFactroy(t);
+const networkFields = networkFieldsFactory(t);
 
 afterEach(cleanup);
 
