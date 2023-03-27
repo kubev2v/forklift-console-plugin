@@ -9,9 +9,10 @@ import {
   Stack,
   Flex,
   FormGroup,
-  TextInput,
+  Popover,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
+import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { useFormField, useFormState, ValidatedTextInput } from '@migtools/lib-ui';
 import { MappingBuilder, IMappingBuilderItem, mappingBuilderItemsSchema, getDefaultTarget } from './MappingBuilder';
 import { getMappingFromBuilderItems } from './MappingBuilder/helpers';
@@ -197,25 +198,60 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
             <>
               <Grid hasGutter className={spacing.mbMd}>
                 <GridItem md={6}>
-                  <FormGroup label="Namespace (default to migration operator namespace)" fieldId="mapping-namespace">
-                    <TextInput
+                  <FormGroup
+                    label="Namespace"
+                    fieldId="mapping-namespace"
+                    labelIcon={(
+                      <Popover
+                        bodyContent={
+                          <div>
+                            The default is the migration operator namespace.
+                          </div>
+                        }
+                      >
+                        <Button
+                          variant="plain"
+                          aria-label="More info for Mapping resource namespace field"
+                          onClick={(e) => e.preventDefault()}
+                          aria-describedby="mapping-namespace"
+                          className="pf-c-form__group-label-help"
+                        >
+                         <HelpIcon noVerticalAlign />
+                        </Button>
+                      </Popover>
+                    )}
+                  >
+                    <div
                       id="mapping-namespace"
-                      aria-label="Mapping namespace"
-                      value={namespace}
-                      isDisabled={true}
-                    />
+                      style={{ paddingLeft: 8, fontSize: 16}}
+                    >
+                      { namespace }
+                    </div>
                   </FormGroup>
                 </GridItem>
+
                 <GridItem md={6} className={spacing.mbMd}>
-                  <ValidatedTextInput
-                    field={form.fields.name}
-                    isRequired
-                    fieldId="mapping-name"
-                    inputProps={{
-                      isDisabled: !!mappingBeingEdited,
-                    }}
-                  />
+                  {!!!mappingBeingEdited ? (
+                    <ValidatedTextInput
+                      field={form.fields.name}
+                      isRequired
+                      fieldId="mapping-name"
+                    />
+                  ) :
+                    <FormGroup
+                      label="Name"
+                      fieldId="name"
+                    >
+                      <div
+                        id="mapping-name"
+                        style={{ paddingLeft: 8, fontSize: 16}}
+                      >
+                        { form.fields.name.value }
+                      </div>
+                    </FormGroup>
+                  }
                 </GridItem>
+
                 <GridItem md={6}>
                   <ProviderSelect
                     providerRole="source"
