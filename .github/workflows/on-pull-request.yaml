@@ -43,8 +43,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
     
-      - name: Run pre e2e test tasks
-        run: npm run e2e:pre-test
+      - name: Build plugin image and push to cluster
+        run: bash ./ci/deploy-cluster.sh
+
+      - name: Build plugin image and push to cluster
+        run: bash ./ci/build-and-push-images.sh
+      
+      - name: Deploy console in cluster
+        run: bash ./ci/deploy-console.sh
 
       - name: Run cypress
         uses: cypress-io/github-action@v5

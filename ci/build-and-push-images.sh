@@ -3,6 +3,8 @@
 
 set -euo pipefail
 
+KIND_REGISTRY=localhost:5001
+
 # Check for container cmd
 # -----------------------
 echo ""
@@ -27,15 +29,15 @@ echo "Found: ${CONTAINER_CMD}"
 echo ""
 echo "Build plugin image"
 echo "=================="
-${CONTAINER_CMD} build --tag localhost:5001/forklift-console-plugin -f build/Containerfile . 
+${CONTAINER_CMD} build --tag ${KIND_REGISTRY}/forklift-console-plugin -f build/Containerfile . 
 
 echo ""
 echo "Push plugin image"
 echo "=================="
 if [ -x "$(command -v podman)" ]; then
-  podman push localhost:5001/forklift-console-plugin --tls-verify=false
+  podman push ${KIND_REGISTRY}/forklift-console-plugin --tls-verify=false
 else
-  docker push localhost:5001/forklift-console-plugin
+  docker push ${KIND_REGISTRY}/forklift-console-plugin
 fi
 
 echo ""

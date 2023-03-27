@@ -16,7 +16,7 @@ reg_name='kind-registry'
 reg_port='5001'
 
 if ! podman network exists kind; then
-  podman network create kind -d bridge
+  podman network create kind
 fi
 
 # Create the registry
@@ -25,7 +25,6 @@ if [ "$(podman inspect -f {{.State.Running}} "${reg_name}" 2>/dev/null || true)"
     -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" --net kind \
     registry:2
 fi
-reg_ip=$(podman inspect -f {{.NetworkSettings.Networks.kind.IPAddress}} ${reg_name})
 
 # create a cluster with the local registry enabled in containerd
 KIND_EXPERIMENTAL_PROVIDER=podman
@@ -45,7 +44,7 @@ nodes:
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
-    endpoint = ["http://${reg_ip}:5000"]
+    endpoint = ["http://${reg_name}:5000"]
 EOF
 
 echo ""
