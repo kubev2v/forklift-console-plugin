@@ -9,7 +9,6 @@ import {
   Stack,
   Popover,
   FileUpload,
-  TextInput,
   Checkbox,
   Hint,
 } from '@patternfly/react-core';
@@ -303,15 +302,34 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
         ) : (
           <Form>
             <FormGroup
-              label="Provider resource namespace (default to migration operator namespace)"
-              fieldId="plan-namespace"
+              label="Provider resource namespace"
+              fieldId="provider-namespace"
+              labelIcon={(
+                <Popover
+                  bodyContent={
+                    <div>
+                      The default is the migration operator namespace.
+                    </div>
+                  }
+                >
+                  <Button
+                    variant="plain"
+                    aria-label="More info for Provider resource namespace field"
+                    onClick={(e) => e.preventDefault()}
+                    aria-describedby="provider-namespace"
+                    className="pf-c-form__group-label-help"
+                  >
+                    <HelpIcon noVerticalAlign />
+                  </Button>
+                </Popover>
+              )}
             >
-              <TextInput
-                id="plan-namespace"
-                aria-label="Plan Namespace"
-                value={prefillNamespace}
-                isDisabled={true}
-              />
+              <div
+                id="provider-namespace"
+                style={{ paddingLeft: 8, fontSize: 16}}
+              >
+                { prefillNamespace }
+              </div>
             </FormGroup>
 
             <FormGroup
@@ -320,36 +338,57 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
               fieldId="provider-type"
               {...getFormGroupProps(providerTypeField)}
             >
-              <SimpleSelect
-                id="provider-type"
-                aria-label="Provider type"
-                options={PROVIDER_TYPE_OPTIONS}
-                value={[PROVIDER_TYPE_OPTIONS.find((option) => option.value === providerType)]}
-                onChange={(selection) => {
-                  providerTypeField.setValue((selection as OptionWithValue<ProviderType>).value);
-                  providerTypeField.setIsTouched(true);
-                }}
-                placeholderText="Select a provider type..."
-                isDisabled={!!providerBeingEdited}
-                menuAppendTo="parent"
-                maxHeight="40vh"
-              />
+              {!!!providerBeingEdited ? (
+                <SimpleSelect
+                  id="provider-type"
+                  aria-label="Provider type"
+                  options={PROVIDER_TYPE_OPTIONS}
+                  value={[PROVIDER_TYPE_OPTIONS.find((option) => option.value === providerType)]}
+                  onChange={(selection) => {
+                    providerTypeField.setValue((selection as OptionWithValue<ProviderType>).value);
+                    providerTypeField.setIsTouched(true);
+                  }}
+                  placeholderText="Select a provider type..."
+                  menuAppendTo="parent"
+                  maxHeight="40vh"
+                />
+              ) :
+                <div
+                  id="provider-type"
+                  style={{ paddingLeft: 8, fontSize: 16}}
+                >
+                  { providerType }
+                </div>
+              }
             </FormGroup>
 
             {providerType ? (
               <>
                 {fields?.name ? (
-                  <ValidatedTextInput
-                    field={forms[providerType].fields.name}
-                    isRequired
-                    fieldId="name"
-                    inputProps={{
-                      isDisabled: !!providerBeingEdited,
-                    }}
-                    formGroupProps={{
-                      helperText: 'User specified name to display in the list of providers',
-                    }}
-                  />
+                  <>
+                    {!!!providerBeingEdited ? (
+                      <ValidatedTextInput
+                        field={forms[providerType].fields.name}
+                        isRequired
+                        fieldId="name"
+                        formGroupProps={{
+                          helperText: 'User specified name to display in the list of providers',
+                        }}
+                      />
+                    ) :
+                      <FormGroup
+                        label="Name"
+                        fieldId="name"
+                      >
+                        <div
+                          id="name"
+                          style={{ paddingLeft: 8, fontSize: 16}}
+                        >
+                          { forms[providerType].fields.name.value }
+                        </div>
+                      </FormGroup>
+                    }
+                  </>
                 ) : null}
 
                 {fields?.openstackUrl ? (

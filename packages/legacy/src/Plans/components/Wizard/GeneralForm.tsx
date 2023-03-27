@@ -11,7 +11,6 @@ import {
   Title,
   Button,
   Popover,
-  TextInput,
 } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { getFormGroupProps, ValidatedTextInput } from '@migtools/lib-ui';
@@ -122,20 +121,58 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
         <Title headingLevel="h2" size="md">
           Give your plan a name and a description
         </Title>
-        <FormGroup label="Plan resource namespace (default to migration operator namespace)" fieldId="formgroup-plan-namespace">
-          <TextInput
-            id="plan-namespace"
-            aria-label="Plan Namespace"
-            value={namespace}
-            isDisabled={true}
-          />
+        <FormGroup
+          label="Plan resource namespace"
+          fieldId="plan-namespace"
+
+          labelIcon={(
+            <Popover
+              bodyContent={
+                <div>
+                  The default is the migration operator namespace.
+                </div>
+              }
+            >
+              <Button
+                variant="plain"
+                aria-label="More info for plan resource namespace field"
+                onClick={(e) => e.preventDefault()}
+                aria-describedby="plan-namespace"
+                className="pf-c-form__group-label-help"
+              >
+                <HelpIcon noVerticalAlign />
+              </Button>
+            </Popover>
+          )}
+        >
+          <div
+                id="plan-namespace"
+                style={{ paddingLeft: 8, fontSize: 16}}
+              >
+                { namespace }
+          </div>
         </FormGroup>
-        <ValidatedTextInput
-          field={form.fields.planName}
-          isRequired
-          fieldId="plan-name"
-          inputProps={{ isDisabled: wizardMode === 'edit' }}
-        />
+
+        {wizardMode !== 'edit' ? (
+          <ValidatedTextInput
+            field={form.fields.planName}
+            isRequired
+            fieldId="plan-name"
+          />
+        ) :
+          <FormGroup
+            label="Plan name"
+            fieldId="plan-name"
+          >
+            <div
+              id="plan-name"
+              style={{ paddingLeft: 8, fontSize: 16}}
+            >
+              { form.fields.planName.value }
+            </div>
+          </FormGroup>
+        }
+        
         <ValidatedTextInput
           component={TextArea}
           field={form.fields.planDescription}
