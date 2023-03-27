@@ -1,6 +1,54 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: konveyor-forklift
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forklift-console-plugin
+  namespace: konveyor-forklift
+  labels:
+    app: forklift-console-plugin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: forklift-console-plugin
+  template:
+    metadata:
+      labels:
+        app: forklift-console-plugin
+    spec:
+      containers:
+        - name: forklift-console-plugin
+          image: quay.io/kubev2v/forklift-console-plugin:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: forklift-console-plugin
+  namespace: konveyor-forklift
+  labels:
+    app: forklift-console-plugin
+spec:
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: forklift-console-plugin
+  type: ClusterIP
+  sessionAffinity: None
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: okd-console
 ---
 apiVersion: v1
