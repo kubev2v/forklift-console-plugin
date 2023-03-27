@@ -22,11 +22,8 @@ jobs:
       - name: Lint, eslint and stylelint
         run: npm run lint
 
-      - name: Lint, test i18n files and helm
+      - name: Lint, test i18n files
         run: npm run test:i18n
-
-      - name: Lint, helm
-        run: npm run helm:lint
 
       - name: Test build
         run: npm run build

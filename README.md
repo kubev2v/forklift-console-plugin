@@ -17,19 +17,6 @@ Migration Toolkit for Virtualization (Forklift) is a suite of migration tools th
 
 ## Quick start
 
-forklift-console-plugin is automatically installed when installing the [Forklift operator](https://github.com/kubev2v/forklift/) (ver 2.4+). A user can also install the plugin manually using [Helm](https://helm.sh/) on a cluster with forklift operator already installed.
-
-The folowing script will use [Helm](https://helm.sh/) to install the plugin on Openshift with a running forklift controller:
-
-``` bash
-# add the forklift helm repo
-helm repo add forklift https://kubev2v.github.io/forklift-console-plugin
-
-# install the chart using the repository package
-helm install forklift-console-plugin forklift/forklift-console-plugin \
-  --set forklift.namespace=<the forklift operator namespace>
-```
-
 forklift-console-plugin will add new menu item under the `virtualization` section for virtualization workloads import in [Openshift web console](https://github.com/openshift/console).
 
 ## Development

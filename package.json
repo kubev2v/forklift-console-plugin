@@ -30,10 +30,7 @@
     "e2e:cluster": "bash ./ci/deploy-cluster.sh",
     "e2e:console": "bash ./ci/deploy-forklift-plugin.sh && bash ./ci/deploy-console.sh",
     "e2e:build": "bash ./ci/build-and-push-images.sh",
-    "e2e:pre-test": "npm run e2e:cluster && npm run e2e:build && npm run e2e:console",
-    "helm:lint": "helm lint deployment/forklift-console-plugin/",
-    "helm:index": "helm repo index ./tmp/ --url https://kubev2v.github.io/forklift-console-plugin",
-    "helm:build": "mkdir -p tmp && helm package -d tmp deployment/forklift-console-plugin/ && npm run helm:index"
+    "e2e:pre-test": "npm run e2e:cluster && npm run e2e:build && npm run e2e:console"
   },
   "devDependencies": {
     "@cspell/eslint-plugin": "^6.31.1",
