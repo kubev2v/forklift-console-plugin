@@ -18,6 +18,7 @@ import {
   getFormGroupProps,
   ValidatedTextInput,
   ValidatedPasswordInput,
+  IValidatedFormField,
 } from '@migtools/lib-ui';
 
 import { SimpleSelect, OptionWithValue } from 'legacy/src/common/components/SimpleSelect';
@@ -138,6 +139,7 @@ const useAddProviderFormState = (
   };
 
   const insecureSkipVerify = useFormField(false, yup.boolean().label('skip server SSL certificate verification'));
+  const caCertInvisibleDummy =  useFormField('', yup.string()); // used for restoring cacert data in case insecureSkipVerify=true
 
   return {
     vsphere: useFormState({
@@ -150,6 +152,7 @@ const useAddProviderFormState = (
       ...sourceProviderFields,
       insecureSkipVerify,
       caCert: useFormField('', insecureSkipVerify.value ? x509PemSchema : x509PemSchema.required()),
+      caCertInvisibleDummy,
       caCertFilename: useFormField('', yup.string()),
     }),
     openstack: useFormState({
@@ -162,6 +165,7 @@ const useAddProviderFormState = (
       regionName: useFormField('', yup.string().label('Region').required()),
       insecureSkipVerify,
       caCertIfSecure: useFormField('', x509PemSchema),
+      caCertInvisibleDummy,
       caCertFilenameIfSecure: useFormField('', yup.string()),
     }),
     openshift: useFormState({
@@ -170,6 +174,23 @@ const useAddProviderFormState = (
       saToken: useFormField('', yup.string().label('Service account token')),
     }),
   };
+};
+
+// if InsecureSkipVerify field is checked, avoid validation of the caCert
+// fields by cleaning it since the field is hidden.
+// Re-validate only when InsecureSkipVerify is unchecked
+const handleCaCertForInsecure = (
+  caCertField: IValidatedFormField<String> | null,
+  caCertInvisibleDummyField: IValidatedFormField<String> | null,
+  isInsecureSkipVerifyChecked: boolean
+) :void => {
+  if (!caCertField || !caCertInvisibleDummyField) {
+    return;
+  }
+
+  isInsecureSkipVerifyChecked ?
+    (caCertInvisibleDummyField.setValue(caCertField.value), caCertField.setValue('')) :
+    caCertField.setValue(caCertInvisibleDummyField.value);
 };
 
 export type AddProviderFormState = ReturnType<typeof useAddProviderFormState>; // ✨ Magic
@@ -516,7 +537,17 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     aria-label="Insecure connection checkbox"
                     id="insecure-check"
                     isChecked={fields.insecureSkipVerify.value}
-                    onChange={(checked) => fields.insecureSkipVerify.setValue(checked)}
+                    onChange={(checked) =>
+                      {
+                        fields.insecureSkipVerify.setValue(checked)
+                        if (fields?.caCert && fields?.caCertInvisibleDummy) {
+                          handleCaCertForInsecure(fields.caCert, fields.caCertInvisibleDummy, checked)
+                        }
+                        if (fields?.caCertIfSecure && fields?.caCertInvisibleDummy) {
+                          handleCaCertForInsecure(fields.caCertIfSecure, fields.caCertInvisibleDummy, checked)
+                        }
+                      }
+                    }
                   />
                 ) : null}
 
