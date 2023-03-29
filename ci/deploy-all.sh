@@ -63,7 +63,6 @@ echo "Local registry available on port 5001:    http://localhost:5001/"
 echo "Usage example:"
 echo "  podman build -t localhost:5001/forklift-console-plugin -f ./build/Containerfile"
 echo "  podman push localhost:5001/forklift-console-plugin --tls-verify=false"
-echo "  kubectl apply -f ci/yaml/forklift-plugin.yaml"
 
 config_path=$(echo ~)/.kube/config
 
@@ -74,7 +73,7 @@ echo ""
 echo "  API Server: https://127.0.0.1:6443/"
 echo "  Web console: http://localhost:30080/"
 echo ""
-echo "  configuration file - '${config_path}'"
+echo "  configuration file - '${config_path}' ( example: cp ${config_path} ~/.kube/config )"
 echo "  admin token        - 'abcdef.0123456789abcdef'"
 echo ""
 

@@ -3,6 +3,10 @@
 
 set -euo pipefail
 
+# For local registry run with:
+#   FORKLIFT_PLUGIN_IMAGE=localhost:5001/kubev2v/forklift-console-plugin bash ./ci/build-and-push-images.sh
+FORKLIFT_PLUGIN_IMAGE=${FORKLIFT_PLUGIN_IMAGE:="quay.io/kubev2v/forklift-console-plugin"}
+
 # Build image
 # -----------
 
@@ -10,13 +14,13 @@ echo ""
 echo "Build plugin image"
 echo "=================="
 
-podman build --tag localhost:5001/forklift-console-plugin -f build/Containerfile . 
+podman build --tag ${FORKLIFT_PLUGIN_IMAGE} -f build/Containerfile . 
 
 echo ""
 echo "Push plugin image"
 echo "=================="
 
-podman push localhost:5001/forklift-console-plugin --tls-verify=false
+podman push ${FORKLIFT_PLUGIN_IMAGE} --tls-verify=false
 
 # To remove artefacts run:
 #   podman system prune -a -f
