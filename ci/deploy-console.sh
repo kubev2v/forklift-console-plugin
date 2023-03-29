@@ -7,7 +7,7 @@ K8S_TIMEOUT=${K8S_TIMEOUT:="360s"}
 OKD_CONSOLE_YAML=${script_dir}/yaml/okd-console.yaml
 
 FORKLIFT_PLUGIN_UPSTREAM_IMG=quay.io/kubev2v/forklift-console-plugin:latest
-FORKLIFT_PLUGIN_LOCAL_IMG=${FORKLIFT_PLUGIN_LOCAL_IMG:="quay.io/kubev2v/forklift-console-plugin:latest"}
+FORKLIFT_PLUGIN_IMAGE=${FORKLIFT_PLUGIN_IMAGE:="quay.io/kubev2v/forklift-console-plugin:latest"}
 
 # Install OKD console
 # -------------------
@@ -25,7 +25,7 @@ echo ""
 echo "deploy OKD console (port: 30080)"
 
 cat ${OKD_CONSOLE_YAML} | \
-    sed "s/${FORKLIFT_PLUGIN_UPSTREAM_IMG//\//\\/}/${FORKLIFT_PLUGIN_LOCAL_IMG//\//\\/}/g" | \
+    sed "s/${FORKLIFT_PLUGIN_UPSTREAM_IMG//\//\\/}/${FORKLIFT_PLUGIN_IMAGE//\//\\/}/g" | \
     kubectl apply -f -
 
 echo ""

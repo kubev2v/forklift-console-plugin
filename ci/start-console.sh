@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+script_dir=$(dirname "$0")
 
 CONSOLE_CONTAINER_NAME=okd-console
 
@@ -9,6 +10,18 @@ if podman container exists ${CONSOLE_CONTAINER_NAME}; then
   echo "container named ${CONSOLE_CONTAINER_NAME} is running, exit."
   exit 1
 fi
+
+# Start all local vars exports
+set -a
+
+if [[ $@ == *'--auth'* ]]; then
+    source ${script_dir}/configure/openshift-auth.sh
+else
+    source ${script_dir}/configure/openshift.sh
+fi
+
+# Stop local vars exports
+set +a
 
 PLUGIN_NAME="forklift-console-plugin"
 CONSOLE_IMAGE=${CONSOLE_IMAGE:="quay.io/openshift/origin-console:latest"}
@@ -42,11 +55,5 @@ END
 )
 export BRIDGE_PLUGIN_PROXY=$(echo ${PLUGIN_PROXY} | sed 's/[ \n]//g')
 
-if [ "$(uname -s)" = "Linux" ]; then
-    # Use host networking on Linux since host.containers.internal is unreachable in some environments.
-    export BRIDGE_PLUGINS="${PLUGIN_NAME}=http://localhost:9001"
-    podman run --pull always --rm -v $(pwd)/tmp:/mnt/config:Z --network=host --name=${CONSOLE_CONTAINER_NAME} --env "BRIDGE_*" $CONSOLE_IMAGE
-else
-    export BRIDGE_PLUGINS="${PLUGIN_NAME}=http://host.containers.internal:9001"
-    podman run --pull always --rm -v $(pwd)/tmp:/mnt/config:Z -p "$CONSOLE_PORT":9000 --name=${CONSOLE_CONTAINER_NAME} --env "BRIDGE_*" $CONSOLE_IMAGE
-fi
+export BRIDGE_PLUGINS="${PLUGIN_NAME}=http://localhost:9001"
+podman run --pull always --rm -v $(pwd)/tmp:/mnt/config:Z --network=host --name=${CONSOLE_CONTAINER_NAME} --env "BRIDGE_*" $CONSOLE_IMAGE
