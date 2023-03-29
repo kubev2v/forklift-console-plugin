@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-script_dir=$(dirname "$0")
+script_dir=$(realpath $(dirname "$0"))
 
 export K8S_TIMEOUT="365s"
 
@@ -51,6 +51,25 @@ bash ${script_dir}/deploy-kubevirt.sh
 
 # Install forklift
 bash ${script_dir}/deploy-forklift.sh
+
+# Install mock providers
+if [[ $@ == *'--with-all-providers'* ]]; then
+  # make the submodule the current working direcotry for running the script
+  (cd ${script_dir}/forkliftci && bash ${script_dir}/deploy-providers.sh)
+fi
+
+if [[ $@ == *'--with-ovirt-provider'* ]]; then
+  # make the submodule the current working direcotry for running the script
+  (cd ${script_dir}/forkliftci && bash ${script_dir}/deploy-ovirt-provider.sh)
+fi
+if [[ $@ == *'--with-vmware-provider'* ]]; then
+  # make the submodule the current working direcotry for running the script
+  (cd ${script_dir}/forkliftci && bash ${script_dir}/deploy-vmware-provider.sh)
+fi
+if [[ $@ == *'--with-openstack-provider'* ]]; then
+  # make the submodule the current working direcotry for running the script
+  (cd ${script_dir}/forkliftci && bash ${script_dir}/deploy-openstack-provider.sh)
+fi
 
 # Print some help
 # ---------------
