@@ -58,22 +58,22 @@ const PROVIDER_TYPE_OPTIONS = PROVIDER_TYPES.map((type) => ({
   value: type,
 })) as OptionWithValue<ProviderType>[];
 
-const oVirtLabelPrefix = process.env.BRAND_TYPE === 'RedHat' ? 'RHV Manager' : 'oVirt Engine';
+const oVirtLabelPrefix = process.env.BRAND_TYPE === 'RedHat' ? 'RHV Manager' : 'oVirt';
 const vmwareLabelPrefix = 'vCenter';
-const openStackLabelPrefix = 'OpenStack Identity (Keystone)';
-const getLabelName = (type: 'hostname' | 'URL' | 'username' | 'pwd', prefix?: string) => {
+const openStackLabelPrefix = 'OpenStack';
+const getLabelName = (type: 'ovirt-hostname' | 'hostname' | 'username' | 'pwd', prefix?: string) => {
   let label = '';
   switch (type) {
-    case 'hostname': {
-      label = prefix ? `${prefix} host name or IP address` : 'Host name or IP address';
+    case 'ovirt-hostname': {
+      label = prefix ? `${prefix} Engine server hostname or IP address` : 'Hostname or IP address';
       break;
     }
-    case 'URL': {
-      label = prefix ? `${prefix} URL` : 'URL';
+    case 'hostname': {
+      label = prefix ? `${prefix} server hostname or IP address` : 'Hostname or IP address';
       break;
     }
     case 'username': {
-      label = prefix ? `${prefix} user name` : 'User name';
+      label = prefix ? `${prefix} username` : 'Username';
       break;
     }
     case 'pwd': {
@@ -112,7 +112,7 @@ const useAddProviderFormState = (
     providerType: providerTypeField,
     name: useFormField(
       '',
-      getProviderNameSchema(clusterProvidersQuery, providerBeingEdited).label('Name').required()
+      getProviderNameSchema(clusterProvidersQuery, providerBeingEdited).label('Provider name').required()
     ),
   };
 
@@ -120,7 +120,7 @@ const useAddProviderFormState = (
     ...commonProviderFields,
     hostname: useFormField(
       '',
-      hostnameSchema.label(getLabelName('hostname', brandPrefix(providerTypeField.value)))
+      hostnameSchema.label(getLabelName((isOvirt(providerTypeField.value) ? 'ovirt-hostname' : 'hostname'), brandPrefix(providerTypeField.value)))
     ),
     username: useFormField(
       '',
@@ -157,7 +157,7 @@ const useAddProviderFormState = (
     }),
     openstack: useFormState({
       ...commonProviderFields,
-      openstackUrl: useFormField('', urlSchema.required().label(getLabelName('URL', brandPrefix(providerTypeField.value)))),
+      openstackUrl: useFormField('', urlSchema.label('OpenStack Identity server URL').required()),
       username: useFormField('', usernameSchema.required().label(getLabelName('username', brandPrefix(providerTypeField.value)))),
       password: useFormField('', yup.string().max(256).label(getLabelName('pwd', brandPrefix(providerTypeField.value))).required()),
       domainName: useFormField('', yup.string().label('Domain').required()),
@@ -170,7 +170,7 @@ const useAddProviderFormState = (
     }),
     openshift: useFormState({
       ...commonProviderFields,
-      openshiftUrl: useFormField('', urlSchema.label('URL')),
+      openshiftUrl: useFormField('', urlSchema.label('Kubernetes API server URL')),
       saToken: useFormField('', yup.string().label('Service account token')),
     }),
   };
@@ -323,7 +323,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
         ) : (
           <Form>
             <FormGroup
-              label="Provider resource namespace"
+              label="Provider namespace"
               fieldId="provider-namespace"
               labelIcon={(
                 <Popover
@@ -354,7 +354,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
             </FormGroup>
 
             <FormGroup
-              label="Type"
+              label="Provider type"
               isRequired
               fieldId="provider-type"
               {...getFormGroupProps(providerTypeField)}
@@ -398,7 +398,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                       />
                     ) :
                       <FormGroup
-                        label="Name"
+                        label="Provider name"
                         fieldId="name"
                       >
                         <div
