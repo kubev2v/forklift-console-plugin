@@ -59,10 +59,10 @@ describe('<AddEditProviderModal />', () => {
     const caCertField = screen.getByLabelText(/^File upload/);
     const name = screen.getByRole('textbox', { name: /Name/ });
     const hostname = screen.getByRole('textbox', {
-      name: /oVirt Engine host name or IP address/i,
+      name: /oVirt Engine server hostname or IP address/i,
     });
-    const username = screen.getByRole('textbox', { name: /oVirt Engine user name/i });
-    const password = screen.getByLabelText(/^oVirt Engine password/);
+    const username = screen.getByRole('textbox', { name: /oVirt username/i });
+    const password = screen.getByLabelText(/^oVirt password/);
     await waitFor(() => {
       userEvent.type(name, 'providername');
       userEvent.type(hostname, 'host.example.com');
@@ -100,9 +100,9 @@ describe('<AddEditProviderModal />', () => {
 
     const name = screen.getByRole('textbox', { name: /Name/ });
     const hostname = screen.getByRole('textbox', {
-      name: /vCenter host name or IP address/i,
+      name: /vCenter server hostname or IP address/i,
     });
-    const username = screen.getByRole('textbox', { name: /vCenter user name/i });
+    const username = screen.getByRole('textbox', { name: /vCenter username/i });
     const password = screen.getByLabelText(/^vCenter password/);
 
     userEvent.type(name, 'providername');
@@ -156,9 +156,9 @@ describe('<AddEditProviderModal />', () => {
 
     const name = screen.getByRole('textbox', { name: /Name/ });
     const hostname = screen.getByRole('textbox', {
-      name: /vCenter host name or IP address/i,
+      name: /vCenter server hostname or IP address/i,
     });
-    const username = screen.getByRole('textbox', { name: /vCenter user name/i });
+    const username = screen.getByRole('textbox', { name: /vCenter username/i });
     const password = screen.getByLabelText(/^vCenter password/);
 
     await waitFor(() => {
