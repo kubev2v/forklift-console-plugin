@@ -1,5 +1,5 @@
 extends:
-  - "../config/.eslintrc.yml"
+  - "../../config/eslintrc.yml"
 rules:
   "@typescript-eslint/no-explicit-any":
     - off

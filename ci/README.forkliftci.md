@@ -33,6 +33,9 @@ bash ./ci/deploy-all.sh --with-all-providers
 # You can also install selected providers
 #    --with-ovirt-provider, --with-vmware-provider, --with-openstack-provider
 bash ./ci/deploy-all.sh --with-ovirt-provider
+
+# or with npm ( note the -- separator )
+npm run cluster:up -- --with-all-providers
 ```
 
 # Providers info

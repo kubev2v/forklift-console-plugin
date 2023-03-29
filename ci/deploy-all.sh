@@ -55,7 +55,7 @@ bash ${script_dir}/deploy-forklift.sh
 # Install mock providers
 if [[ $@ == *'--with-all-providers'* ]]; then
   # make the submodule the current working direcotry for running the script
-  (cd ${script_dir}/forkliftci && bash ${script_dir}/deploy-providers.sh)
+  (cd ${script_dir}/forkliftci && bash ${script_dir}/deploy-all-providers.sh)
 fi
 
 if [[ $@ == *'--with-ovirt-provider'* ]]; then

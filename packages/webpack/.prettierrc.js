@@ -1,3 +1,3 @@
 module.exports = {
-    ...require("@kubev2v/config/.prettierrc"),
+    ...require("../../config/prettierrc"),
 };

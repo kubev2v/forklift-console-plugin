@@ -1,2 +1,2 @@
 extends:
-  - "../config/.eslintrc.yml"
+  - "../../config/eslintrc.yml"

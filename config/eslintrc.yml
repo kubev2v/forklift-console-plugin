@@ -39,7 +39,8 @@ rules:
       - ["^.+\\.s?css$"]
   '@cspell/spellchecker':
     - warn
-    - autoFix: false
+    - customWordListFile: "../../config/cspell.wordlist.txt"
+      autoFix: false
 settings:
   react:
     version: detect

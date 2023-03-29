@@ -13,4 +13,7 @@ if [[ "$response" =~ ^(yes|y)$ ]]; then
     podman stop kind-registry
     podman rm kind-registry
     podman network rm kind
+
+    unset BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT
+    unset BRIDGE_K8S_AUTH_BEARER_TOKEN
 fi
