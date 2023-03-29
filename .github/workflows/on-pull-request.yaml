@@ -55,6 +55,7 @@ jobs:
           wait-on: "http://localhost:30080"
           browser: chrome
           headed: false
+          config-file: config/cypress.config.ts
 
       - name: Upload videos
         uses: actions/upload-artifact@v3

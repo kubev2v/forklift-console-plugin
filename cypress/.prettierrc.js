@@ -1,3 +1,3 @@
 module.exports = {
-    ...require("../packages/config/.prettierrc"),
+    ...require("../packages/config/prettierrc"),
 };

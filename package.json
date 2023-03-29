@@ -19,7 +19,7 @@
     "test": "npm run test -w @kubev2v/common -w @kubev2v/forklift-console-plugin",
     "test:coverage": "npm run test:coverage -w @kubev2v/common -w @kubev2v/forklift-console-plugin",
     "test:updateSnapshot": "npm run test:updateSnapshot -w @kubev2v/common -w @kubev2v/forklift-console-plugin",
-    "test:e2e": "cypress run --browser chrome --headed",
+    "test:e2e": "cypress run --config-file config/cypress.config.ts --browser chrome --headed",
     "console": "bash ./ci/start-console.sh",
     "console:oauth": "bash ./ci/start-console.sh --auth",
     "console:background": "npm run console > /dev/null 2>&1 &",
