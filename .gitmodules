@@ -1,0 +1,3 @@
+[submodule "ci/forkliftci"]
+	path = ci/forkliftci
+	url = https://github.com/kubev2v/forkliftci.git
