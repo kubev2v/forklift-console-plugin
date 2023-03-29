@@ -27,9 +27,11 @@ reg_port='5001'
 # Create the registry
 if [ "$(${CONTAINER_CMD} inspect -f {{.State.Running}} "${reg_name}" 2>/dev/null || true)" != 'true' ]; then
   ${CONTAINER_CMD} run \
-    -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" --network bridge \
+    -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" --net kind \
     registry:2
 fi
+reg_ip=$(${CONTAINER_CMD} inspect ${reg_name} -f {{.NetworkSettings.Networks.kind.IPAddress}})
+
 
 echo ""
 echo "Create KinD cluster"
@@ -51,11 +53,11 @@ nodes:
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
-    endpoint = ["http://${reg_name}:5000"]
+    endpoint = ["http://${reg_ip}:5000"]
 EOF
 
 if [ "$(${CONTAINER_CMD} inspect -f='{{json .NetworkSettings.Networks.kind}}' "${reg_name}")" = 'null' ]; then
-  ${CONTAINER_CMD} network connect "kind" "${reg_name}"
+  ${CONTAINER_CMD} network connect "kind" "${reg_ip}"
 fi
 
 echo ""
