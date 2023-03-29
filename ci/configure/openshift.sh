@@ -9,8 +9,11 @@ BRIDGE_K8S_MODE="off-cluster"
 BRIDGE_K8S_MODE_OFF_CLUSTER_SKIP_VERIFY_TLS=true
 BRIDGE_USER_SETTINGS_LOCATION="localstorage"
 
-# If we have oc tool and an Openshift token, assume we are connected to openshift
-if oc whoami --show-token; then
+if [ -n "${BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT-}" ]; then
+    # setup with fixed cluster endpoint
+    return
+elif oc whoami --show-token; then
+    # If we have oc tool and an Openshift token, assume we are connected to openshift
     BRIDGE_K8S_MODE_OFF_CLUSTER_THANOS=$(oc -n openshift-config-managed get configmap monitoring-shared-config -o jsonpath='{.data.thanosPublicURL}')
     BRIDGE_K8S_MODE_OFF_CLUSTER_ALERTMANAGER=$(oc -n openshift-config-managed get configmap monitoring-shared-config -o jsonpath='{.data.alertmanagerPublicURL}')
     BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=${BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT:=$(oc whoami --show-server)}
