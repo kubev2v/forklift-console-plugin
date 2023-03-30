@@ -1,10 +1,62 @@
-# Running the development server
+# Start the development server
 
 The available script starts a containerized openshift console server.
 
 | Script | Description  |
 | -------|--------------|
 | [start-console.sh](./start-console.sh) | Start Openshift web console when logged into a Openshift. |
+
+Use `npm run` command to run this script:
+
+``` bash
+# Start a local Openshift console server.
+# - The console will be available in http://localhost:9000
+npm run console
+
+# Start the server with authentication, requires Openshift authentication,
+# use when looged in to Openshift cluster with authenticaion.
+npm run console:auth
+
+# Running Openshift console server on the background
+# - TO close the console when running in the background run:
+#   npm run console:stop
+npm run console:background
+npm run console:auth:background
+
+# Start the plugin in development mode
+npm run start
+```
+
+## Local KinD cluster
+
+If you do not have access to a Kubernetes or Openshift cluster, you can run a local cluster using KinD.
+
+``` bash
+# Start a local KinD cluster with kubevirt and forklift running.
+npm run cluster:up
+
+# NOTE:
+# kubevirt requires admin previliges to start a virtual machine on local KinD cluster.
+# if your development flow requires to start a virtual machine inside the cluster, run the script
+# using sudo ** do not use npm when runnin sudo **:
+#     sudo bash ci/deploy-cluster.sh
+```
+
+Optionally, if you do not have access to already running providers (e.g oVirt, vmWare or Openstack), you can alsoe start some mock virtualization providers to run inside the cluster.
+
+See the [ci](../ci) directory for more information.
+
+``` bash
+# Update the forkliftci submodule
+git submodule update --init --recursive
+
+# Example: setup a local KinD cluster with all mock providers
+#          [ options: --with-all-providers --with-ovirt-provider, --with-vmware-provider, --with-openstack-provider]
+npm run cluster:up -- --with-all-providers
+
+# run cleanup to stop and delete the cluster.
+npm run cluster:delete
+```
 
 ## Avaliable environment variables
 

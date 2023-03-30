@@ -9,6 +9,8 @@ forklift-console-plugin is an open source project providing [Openshift web conso
 
 Migration Toolkit for Virtualization (Forklift) is a suite of migration tools that facilitate the import of virtualization workloads from [oVirt](https://www.ovirt.org/), VMware and [OpenStack](https://www.openstack.org/) to [OpenShift Virtualization](https://cloud.redhat.com/learn/topics/virtualization/).
 
+Forklift console plugin is managed by Migration Toolkit for Virtualization operator, when installing the operator on Openshift cluster, the plugin will be installed automatically, and the Migration menu item will be added to the Openshift web console.
+
 ### Prerequisites
 
 * [__Forklift Operator 2.4.0+__](https://github.com/kubev2v/forklift/)
@@ -53,6 +55,8 @@ npm run cluster:delete
 ```
 
 ## Learn more
+
+More documentation is available in the [docs](./docs) directory.
 
 | Reference |  |
 |---|----|
