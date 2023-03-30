@@ -1,5 +1,7 @@
 # Compiling and running Openshift console
 
+When developing a plugin it may be usefull to have the development version of the Openshift console.
+
 ## Reference
 
   - [Openshift web console](https://github.com/openshift/console) - Openshift web console git repository.

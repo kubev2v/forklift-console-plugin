@@ -65,19 +65,3 @@ IMAGE=image-registry.openshift-image-registry.svc:5000/${NAMESPACE}/${IMAGE_NAME
 # now we can use the image for deployments inside our cluster
 oc process -f ci/yaml/forklift-plugin-dev.tpl.yaml -p=NAMESPACE=openshift-mtv -p=IMAGE=${IMAGE} | oc apply -f -
 ```
-
-### KinD
-
-When creating the cluster using the `deploy-cluster.sh` script, a local registry is created on [http://localhost:5001)](http://localhost:5001)
-
-Example of use:
-``` bash
-# tag the image using the repository URL,
-# for example, lets use the local repository in http://localhost:5001
-podman tag localhost:5001/forklift-console-plugin quay.io/kubev2v/forklift-console-plugin
-
-# once the image is tagged with the currect url and port, we can push
-# it into the local repository
-# Note: in the case of local repository, you may need to use --tls-verify=false flag
-podman push localhost:5001/forklift-console-plugin --tls-verify=false
-```
