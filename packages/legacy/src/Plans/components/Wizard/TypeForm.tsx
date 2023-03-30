@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Button, List, ListItem, Radio, Stack, StackItem, WizardContext } from '@patternfly/react-core';
+import { Alert, List, ListItem, Radio, Stack, StackItem } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { PlanWizardFormState } from './PlanWizard';
 import { warmCriticalConcerns, someVMHasConcern } from './helpers';
@@ -23,8 +23,6 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
   selectedVMs,
   namespace,
 }: ITypeFormProps) => {
-  const { goToStepById } = React.useContext(WizardContext);
-
   const warmCriticalConcernsFound = warmCriticalConcerns.filter((label) =>
     someVMHasConcern(selectedVMs, label)
   );
@@ -32,6 +30,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
 
   const secretsQuery = useSecretsQuery([sourceProvider.object?.spec?.secret?.name], namespace);
   const isSourceOvirtInsecure = checkIfOvirtInsecureProvider(sourceProvider, secretsQuery.data);
+  const isSourceOpenstack = sourceProvider?.type === 'openstack';
 
   return (
     <ResolvedQueries
@@ -59,11 +58,22 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
             <Alert
               variant="warning"
               isInline
-              title="A warm migration is not currently available."
+              title="Warm migration is not currently available."
             >
-              A warm migration from a {PROVIDER_TYPE_NAMES.ovirt} source provider is only supported
-              with a verified secure connection.  To enable a warm migration, first select a secure provider
-              on the <Button variant="link" isInline onClick={() => goToStepById(0)} >General step</Button>.
+              Warm migration from {PROVIDER_TYPE_NAMES.ovirt} source provider is only supported
+              with a verified secure connection.
+            </Alert>
+          </StackItem>
+        )}
+
+        {isSourceOpenstack && (
+          <StackItem>
+            <Alert
+              variant="warning"
+              isInline
+              title="Warm migration is not currently available."
+            >
+              Warm migration from {PROVIDER_TYPE_NAMES.openstack} source provider is unsupported.
             </Alert>
           </StackItem>
         )}
@@ -73,7 +83,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
             id="migration-type-warm"
             name="migration-type"
             label="Warm migration"
-            isDisabled={isSourceOvirtInsecure}
+            isDisabled={isSourceOvirtInsecure || isSourceOpenstack}
             description={
               <List>
                 <ListItem>VM data is incrementally copied, leaving source VMs running.</ListItem>
@@ -83,7 +93,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
                 </ListItem>
               </List>
             }
-            body={
+            body={!(isSourceOvirtInsecure || isSourceOpenstack) &&
               <>
                 {isAnalyzingVms && (
                   <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
