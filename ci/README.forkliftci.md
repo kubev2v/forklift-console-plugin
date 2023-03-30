@@ -13,7 +13,7 @@ to get the code, use git `submodule` commands.
 
 ``` bash
 # when cloning the project use recurse-submodules
-git clone --recurse-submodules https://github.com/chaconinc/MainProject
+git clone --recurse-submodules https://github.com/kubev2v/forklift-console-plugin.git
 
 # When updating to latest version
 git submodule update --init --recursive

@@ -52,4 +52,4 @@ export INVENTORY_SERVER_HOST=https://<route found>
 
 ### KinD
 
-The development cluster using kind will not expose the inventory and mustgather outside the cluster.
+The development cluster using kind will expose the inventory server on port 30088 `http://loclhost:30088`.

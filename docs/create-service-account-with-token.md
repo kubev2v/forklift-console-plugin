@@ -1,7 +1,14 @@
-# Authenticate using a bearer token
+# Create Service Account with bearer token
 
-Kubernetes does not have objects which represent user accounts, we can use service accounts to
-authenticate API calls using different permissions.
+Kubernetes can use bearer tokens for authenticaion, for development we may need to create
+service accounts with different roles and use bearer tokens to access them.
+
+Example:
+
+``` bash
+# get pods using a bearer token 
+curl -k -H "Authorization: Bearer very-secret-token" 'https://api.k8s.server.org:6443/api/v1/namespaces/default/pods'
+```
 
 We will create a service account with a token we can use to authenticate to the API servers, and then
 add permissions to that service account and token.
