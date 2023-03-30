@@ -60,7 +60,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
               isInline
               title="Warm migration is not currently available."
             >
-              Warm migration from {PROVIDER_TYPE_NAMES.ovirt} source provider is only supported
+              Warm migrations from {PROVIDER_TYPE_NAMES.ovirt} source providers are only supported
               with a verified secure connection.
             </Alert>
           </StackItem>
@@ -73,7 +73,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
               isInline
               title="Warm migration is not currently available."
             >
-              Warm migration from {PROVIDER_TYPE_NAMES.openstack} source provider is unsupported.
+              Warm migrations from {PROVIDER_TYPE_NAMES.openstack} source providers are unsupported.
             </Alert>
           </StackItem>
         )}
