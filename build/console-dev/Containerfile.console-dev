@@ -1,0 +1,49 @@
+##################################################
+#
+# go backend build
+FROM registry.access.redhat.com/ubi8/go-toolset:latest AS backend
+ARG console_branch=master
+
+# copy build scripts and run the checkout/patch/build process
+COPY checkout_patch_build.sh .
+COPY patches ./patches
+RUN SIDE=backend ./checkout_patch_build.sh
+
+
+##################################################
+#
+# nodejs frontend build
+FROM registry.access.redhat.com/ubi8/nodejs-16:latest AS frontend
+ARG console_branch=master
+
+# yarn version and prevent download of chromedriver, geckodriver, and cypress binaries
+ENV YARN_VERSION=v1.22.19 \
+    CHROMEDRIVER_SKIP_DOWNLOAD=true \
+    GECKODRIVER_SKIP_DOWNLOAD=true \
+    CYPRESS_INSTALL_BINARY=0
+
+# install yarn
+RUN npm install https://github.com/yarnpkg/yarn/releases/download/${YARN_VERSION}/yarn-${YARN_VERSION}.tar.gz
+
+# copy build scripts and run the checkout/patch/build process
+COPY checkout_patch_build.sh .
+COPY patches ./patches
+RUN SIDE=frontend ./checkout_patch_build.sh
+
+
+##################################################
+#
+# actual base image for final runtime container
+FROM registry.access.redhat.com/ubi8/toolbox:latest
+ENV BUILD_ROOT=/opt/app-root/src/openshift-console \
+    RUN_ROOT=/opt/bridge
+
+COPY --from=backend ${BUILD_ROOT}/bin/bridge ${RUN_ROOT}/bin/
+COPY --from=backend ${BUILD_ROOT}/pkg/graphql/schema.graphql ${RUN_ROOT}/pkg/graphql/schema.graphql
+COPY --from=frontend ${BUILD_ROOT}/frontend/public/dist ${RUN_ROOT}/static/
+
+# does not require a root user
+USER 1001
+
+WORKDIR ${RUN_ROOT}
+CMD [ "./bin/bridge", "--public-dir=./static" ]
