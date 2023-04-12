@@ -22,9 +22,9 @@
   },
   "peerDependencies": {
     "@openshift-console/dynamic-plugin-sdk": "0.0.18",
-    "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.8",
-    "@openshift/dynamic-plugin-sdk": "~1.0.0",
-    "@openshift/dynamic-plugin-sdk-webpack": "~1.0.0"
+    "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.9",
+    "@openshift/dynamic-plugin-sdk": "3.0.0",
+    "@openshift/dynamic-plugin-sdk-webpack": "3.0.0"
   },
   "engines": {
     "node": ">=16"
