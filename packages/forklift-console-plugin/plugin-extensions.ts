@@ -1,12 +1,15 @@
 import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import type { NavSection } from '@openshift-console/dynamic-plugin-sdk';
 
+import { extensions as mockConsoleExtensions } from './src/mock-console-extension/dynamic-plugin';
 import { extensions as networkMapExtensions } from './src/modules/NetworkMaps/dynamic-plugin';
 import { extensions as planExtensions } from './src/modules/Plans/dynamic-plugin';
 import { extensions as providerExtensions } from './src/modules/Providers/dynamic-plugin';
 import { extensions as storageMapExtensions } from './src/modules/StorageMaps/dynamic-plugin';
 
 const extensions: EncodedExtension[] = [
+  ...mockConsoleExtensions,
+
   {
     type: 'console.navigation/section',
     properties: {

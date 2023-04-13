@@ -2,26 +2,39 @@
   "name": "@kubev2v/mocks",
   "version": "0.0.1",
   "private": true,
-  "repository": "git@github.com:kubev2v/forklift-console-plugin.git",
   "license": "Apache-2.0",
-  "main": "./src/index.ts",
+  "repository": {
+    "url": "git@github.com:kubev2v/forklift-console-plugin.git",
+    "directory": "packages/mocks"
+  },
+
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./consoleHandlers": {
+      "types": "./dist/consoleHandlers/index.d.ts",
+      "default": "./dist/consoleHandlers/index.js"
+    }
+  },
+
   "scripts": {
-    "postinstall": "msw init ./generated --save",
     "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
-    "build": "npm run clean && npm run compile && npm run copy",
+    "build": "npm run clean && npm run compile",
     "compile": "tsc --build --verbose",
-    "copy": "copyfiles -u 1 ./generated/** ./dist",
     "lint": "eslint . ",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@kubev2v/legacy": "*",
     "msw": "^1.2.1"
   },
   "devDependencies": {
-    "ts-node": "^10.9.1"
-  },
-  "msw": {
-    "workerDirectory": "generated"
+    "typescript": "^4.7.4"
   }
 }

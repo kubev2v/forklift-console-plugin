@@ -5,8 +5,9 @@
   "repository": "git@github.com:kubev2v/forklift-console-plugin.git",
   "license": "Apache-2.0",
   "scripts": {
+    "postinstall": "msw init ./generated --save",
     "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
-    "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
+    "clean:all": "npm run clean -- ./node_modules ./.rollup.cache ./generated",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.mjs",
     "build": "npm run clean && NODE_ENV=production webpack",
     "build:dev": "webpack --progress",
@@ -22,6 +23,7 @@
     "@kubev2v/legacy": "*",
     "@migtools/lib-ui": "^8.4.1",
     "jsonpath": "^1.1.1",
+    "msw": "^1.2.1",
     "streamsaver": "^2.0.6"
   },
   "peerDependencies": {
@@ -52,7 +54,10 @@
     "tsconfig-paths-webpack-plugin": "^4.0.0",
     "typescript": "^4.7.4",
     "webpack": "^5.79.0",
-    "webpack-cli": "^4.9.2",
+    "webpack-cli": "^5.0.2",
     "webpack-dev-server": "^4.7.4"
+  },
+  "msw": {
+    "workerDirectory": "generated"
   }
 }
