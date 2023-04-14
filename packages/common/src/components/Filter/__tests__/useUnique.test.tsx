@@ -22,6 +22,7 @@ describe('aggregate filters with the same labels', () => {
         supportedEnumValues: testEnumValues,
         onSelectedEnumIdsChange,
         selectedEnumIds: [],
+        resolvedLanguage: 'en',
       }),
     );
     expect(uniqueEnumLabels).toStrictEqual(['FalseTranslated', 'TrueTranslated']);
@@ -41,6 +42,7 @@ describe('aggregate filters with the same labels', () => {
         supportedEnumValues: testEnumValues,
         onSelectedEnumIdsChange,
         selectedEnumIds: ['True', 'AlsoTrue'],
+        resolvedLanguage: 'en',
       }),
     );
     expect(uniqueEnumLabels).toStrictEqual(['FalseTranslated', 'TrueTranslated']);

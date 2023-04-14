@@ -33,6 +33,7 @@ export const AttributeValueFilter = ({
   onFilterUpdate,
   fieldFilters,
   supportedFilterTypes = {},
+  resolvedLanguage,
 }: MetaFilterProps) => {
   const [currentFilter, setCurrentFilter] = useState(fieldFilters?.[0]);
   const [expanded, setExpanded] = useState(false);
@@ -77,6 +78,7 @@ export const AttributeValueFilter = ({
             selectedFilters,
             FilterType: supportedFilterTypes[filterDef.type],
             showFilter: currentFilter?.resourceFieldId === resourceFieldId,
+            resolvedLanguage,
           }}
         />
       ))}

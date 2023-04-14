@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'common/src/utils/i18n';
 
 import {
   Button,
@@ -12,56 +11,60 @@ import {
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
 
-export const ErrorState = () => {
-  const { t } = useTranslation();
+export const ErrorState = ({ title }: { title: string }) => {
   return (
     <EmptyState>
       <EmptyStateIcon icon={ExclamationCircleIcon} color="#C9190B" />
       <Title headingLevel="h4" size="lg">
-        {t('Unable to retrieve data')}
+        {title}
       </Title>
     </EmptyState>
   );
 };
 
-export const Loading = () => {
-  const { t } = useTranslation();
+export const Loading = ({ title }: { title: string }) => {
   return (
     <EmptyState>
       <EmptyStateIcon variant="container" component={Spinner} />
       <Title size="lg" headingLevel="h4">
-        {t('Loading')}
+        {title}
       </Title>
     </EmptyState>
   );
 };
 
-export const NoResultsFound = () => {
-  const { t } = useTranslation();
+export const NoResultsFound = ({ title }: { title: string }) => {
   return (
     <EmptyState>
       <EmptyStateIcon icon={SearchIcon} />
       <Title size="lg" headingLevel="h4">
-        {t('No results found')}
+        {title}
       </Title>
     </EmptyState>
   );
 };
 
-export const NoResultsMatchFilter = ({ clearAllFilters }: { clearAllFilters: () => void }) => {
-  const { t } = useTranslation();
+export const NoResultsMatchFilter = ({
+  clearAllFilters,
+  title = 'No results found',
+  description = 'No results match the filter criteria. Clear all filters and try again.',
+  clearAllLabel = 'Clear all filters',
+}: {
+  clearAllFilters: () => void;
+  title?: string;
+  description?: string;
+  clearAllLabel?: string;
+}) => {
   return (
     <EmptyState>
       <EmptyStateIcon icon={SearchIcon} />
       <Title size="lg" headingLevel="h4">
-        {t('No results found')}
+        {title}
       </Title>
-      <EmptyStateBody>
-        {t('No results match the filter criteria. Clear all filters and try again.')}
-      </EmptyStateBody>
+      <EmptyStateBody>{description}</EmptyStateBody>
       <EmptyStatePrimary>
         <Button variant="link" onClick={clearAllFilters}>
-          {t('Clear all filters')}
+          {clearAllLabel}
         </Button>
       </EmptyStatePrimary>
     </EmptyState>

@@ -3,6 +3,7 @@ import {
   commonFieldsMetadataFactory,
   StartWithEmptyColumnMapper,
 } from 'src/components/mappings/MappingPage';
+import StandardPage from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
@@ -10,11 +11,7 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 import { FreetextFilter, ValueMatcher } from '@kubev2v/common/components/Filter';
 import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
 import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
-import {
-  loadUserSettings,
-  StandardPage,
-  UserSettings,
-} from '@kubev2v/common/components/StandardPage';
+import { loadUserSettings, UserSettings } from '@kubev2v/common/components/StandardPage';
 import { ResourceFieldFactory } from '@kubev2v/common/components/types';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';

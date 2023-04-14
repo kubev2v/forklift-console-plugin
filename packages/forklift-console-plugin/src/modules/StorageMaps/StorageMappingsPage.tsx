@@ -4,17 +4,14 @@ import {
   commonFieldsMetadataFactory,
   StartWithEmptyColumnMapper,
 } from 'src/components/mappings/MappingPage';
+import StandardPage, { StandardPageProps } from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { FreetextFilter, ValueMatcher } from '@kubev2v/common/components/Filter';
 import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
-import {
-  loadUserSettings,
-  StandardPage,
-  StandardPageProps,
-} from '@kubev2v/common/components/StandardPage';
+import { loadUserSettings } from '@kubev2v/common/components/StandardPage';
 import { ResourceFieldFactory } from '@kubev2v/common/components/types';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 

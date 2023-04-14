@@ -5,7 +5,7 @@ import { NAME, NAMESPACE } from 'common/src/utils/constants';
 import { Td, Tr } from '@patternfly/react-table';
 import { cleanup, render } from '@testing-library/react';
 
-import { StandardPage } from '..';
+import { StandardPage } from '../StandardPage';
 
 afterEach(cleanup);
 

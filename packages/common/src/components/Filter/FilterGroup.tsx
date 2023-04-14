@@ -16,6 +16,7 @@ export const FilterGroup = ({
   onFilterUpdate,
   fieldFilters,
   supportedFilterTypes = {},
+  resolvedLanguage,
 }: MetaFilterProps) => (
   <ToolbarGroup variant="filter-group">
     {fieldFilters.map(({ resourceFieldId, label, filterDef }) => (
@@ -28,6 +29,7 @@ export const FilterGroup = ({
           onFilterUpdate,
           selectedFilters,
           FilterType: supportedFilterTypes[filterDef.type],
+          resolvedLanguage,
         }}
       />
     ))}
