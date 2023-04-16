@@ -6,6 +6,8 @@
   "license": "Apache-2.0",
   "main": "./src/server.ts",
   "scripts": {
+    "clean": "rm -rf ./dist && rm -rf ./coverage",
+    "clean:all": "npm run clean && rm -rf ./node_modules",
     "build": "rm -rf ./dist && tsc",
     "start": "npx ts-node .",
     "lint": "eslint . ",
