@@ -88,8 +88,6 @@ const config: WebpackConfiguration & {
     static: './dist',
     host: 'localhost',
     port: 9001,
-    // Allow bridge running in a container to connect to the plugin dev server.
-    allowedHosts: 'all',
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
