@@ -12,6 +12,7 @@
     "clean:all": "npm run clean && rm -rf node_modules tmp && npm run clean:all -ws",
     "build": "NODE_ENV=production npm run build -w @kubev2v/webpack -w @kubev2v/types -w @kubev2v/legacy -w @kubev2v/common -w @kubev2v/forklift-console-plugin",
     "start": "npm run build -w @kubev2v/webpack -w @kubev2v/types && npm run start -w @kubev2v/forklift-console-plugin",
+    "start:mock": "npm run start -w @kubev2v/mocks -- ",
     "i18n": "npm run i18n -w @kubev2v/forklift-console-plugin",
     "lint": "npm run lint -w @kubev2v/webpack -w @kubev2v/types -w @kubev2v/legacy -w @kubev2v/common -w @kubev2v/forklift-console-plugin",
     "lint:fix": "npm run lint:fix -w @kubev2v/webpack -w @kubev2v/types -w @kubev2v/legacy -w @kubev2v/common -w @kubev2v/forklift-console-plugin",
