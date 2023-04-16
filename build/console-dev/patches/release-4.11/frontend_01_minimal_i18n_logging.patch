@@ -1,0 +1,36 @@
+diff --git a/frontend/public/i18n.js b/frontend/public/i18n.js
+index 6b3dfed5bb..3245b5d8b9 100644
+--- a/frontend/public/i18n.js
++++ b/frontend/public/i18n.js
+@@ -12,6 +12,8 @@ import { dateTimeFormatter, fromNow } from './components/utils/datetime';
+ const params = new URLSearchParams(window.location.search);
+ const pseudolocalizationEnabled = params.get('pseudolocalization') === 'true';
+
++const missingKeyNotified = new Set();
++
+ export const init = () => {
+   i18n
+     .use(new Pseudo({ enabled: pseudolocalizationEnabled, wrapped: true }))
+@@ -36,7 +38,7 @@ export const init = () => {
+       lng: getLastLanguage(),
+       fallbackLng: 'en',
+       load: 'languageOnly',
+-      debug: process.env.NODE_ENV === 'development',
++      debug: false,
+       detection: { caches: [] },
+       contextSeparator: '~',
+       ns: [
+@@ -92,8 +94,11 @@ export const init = () => {
+       saveMissing: true,
+       missingKeyHandler: function(lng, ns, key) {
+         window.windowError = `Missing i18n key "${key}" in namespace "${ns}" and language "${lng}."`;
+-        // eslint-disable-next-line no-console
+-        console.error(window.windowError);
++        if (!missingKeyNotified.has(window.windowError)) {
++          missingKeyNotified.add(window.windowError);
++          // eslint-disable-next-line no-console
++          console.error(window.windowError);
++        }
+       },
+     });
+ };

@@ -1,0 +1,11 @@
+diff --git a/build-frontend.sh b/build-frontend.sh
+index f0cf8bb66a..acd6e0c847 100755
+--- a/build-frontend.sh
++++ b/build-frontend.sh
+@@ -4,5 +4,5 @@ set -e
+
+ pushd frontend
+ yarn install
+-yarn run build
++yarn run dev-once
+ popd
