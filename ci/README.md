@@ -10,6 +10,8 @@ Scripts and tools to run Forklift console plugin on top of Openshift console web
 | FORKLIFT_PLUGIN_IMAGE | The plugin image to build and use ( example: `localhost:5001/forklift-console-plugin:latest` )|
 | INVENTORY_SERVER_HOST | URL of Forklift inventory server ( default `http://localhost:30088` )|
 | MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `http://localhost:30089` )|
+| PLUGIN_URL | plugin dev server URL ( default `http://localhost:9001` } |
+| CONTAINER_NETWORK_TYPE | Podman network for running Openshift console (  default `host` ) |
 
 | Environment varialbles | Description  |
 | -------|--------------|
