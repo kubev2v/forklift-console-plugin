@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'common/src/utils/i18n';
 import { localeCompare } from 'common/src/utils/localCompare';
 
 import {
@@ -23,6 +22,7 @@ export const useUnique = ({
   supportedEnumValues,
   onSelectedEnumIdsChange,
   selectedEnumIds,
+  resolvedLanguage = 'en',
 }: {
   supportedEnumValues: {
     id: string;
@@ -30,13 +30,12 @@ export const useUnique = ({
   }[];
   onSelectedEnumIdsChange: (values: string[]) => void;
   selectedEnumIds: string[];
+  resolvedLanguage: string;
 }): {
   uniqueEnumLabels: string[];
   onUniqueFilterUpdate: (selectedEnumLabels: string[]) => void;
   selectedUniqueEnumLabels: string[];
 } => {
-  const { i18n } = useTranslation();
-
   const translatedEnums = useMemo(
     () =>
       supportedEnumValues.map((it) => ({
@@ -72,7 +71,7 @@ export const useUnique = ({
     () =>
       Object.entries(labelToIds)
         .map(([label]) => label)
-        .sort((a, b) => localeCompare(a, b, i18n.resolvedLanguage)),
+        .sort((a, b) => localeCompare(a, b, resolvedLanguage)),
     [labelToIds],
   );
 
@@ -113,12 +112,14 @@ export const EnumFilter = ({
   placeholderLabel,
   filterId,
   showFilter,
+  resolvedLanguage,
 }: FilterTypeProps) => {
   const [isExpanded, setExpanded] = useState(false);
   const { uniqueEnumLabels, onUniqueFilterUpdate, selectedUniqueEnumLabels } = useUnique({
     supportedEnumValues,
     onSelectedEnumIdsChange,
     selectedEnumIds,
+    resolvedLanguage,
   });
 
   const deleteFilter = (label: string | ToolbarChip | SelectOptionObject): void =>

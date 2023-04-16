@@ -50,6 +50,10 @@ export interface FilterTypeProps {
    * (Optional) groups for supported values (if exist)
    */
   supportedGroups?: EnumGroup[];
+  /**
+   * Language to be used for locale sensitive sorting/filtering. Defaults to 'en',
+   */
+  resolvedLanguage;
 }
 
 /**
@@ -81,6 +85,7 @@ export interface MetaFilterProps {
   supportedFilterTypes: {
     [type: string]: FilterRenderer;
   };
+  resolvedLanguage: string;
 }
 
 export interface GlobalFilters {

@@ -13,13 +13,14 @@ import {
 import {
   DefaultHeader,
   ManageColumnsToolbar,
+  ManageColumnsToolbarProps,
   RowProps,
   TableView,
   TableViewHeaderProps,
   useSort,
 } from 'common/src/components/TableView';
 import { ResourceField } from 'common/src/components/types';
-import { useTranslation } from 'common/src/utils/i18n';
+import { useTranslation } from 'src/utils/i18n';
 
 import {
   Level,
@@ -34,10 +35,18 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
-import { ErrorState, Loading, NoResultsFound, NoResultsMatchFilter } from './ResultStates';
-import { UserSettings } from './types';
-import { useFields } from './useFields';
-import { DEFAULT_PER_PAGE, usePagination } from './usePagination';
+import {
+  ErrorState,
+  Loading,
+  NoResultsFound,
+  NoResultsMatchFilter,
+} from '../../../../common/src/components/StandardPage/ResultStates';
+import { UserSettings } from '../../../../common/src/components/StandardPage/types';
+import { useFields } from '../../../../common/src/components/StandardPage/useFields';
+import {
+  DEFAULT_PER_PAGE,
+  usePagination,
+} from '../../../../common/src/components/StandardPage/usePagination';
 
 /**
  * Reduce two list of filters to one list.
@@ -163,7 +172,10 @@ export function StandardPage<T>({
   extraSupportedMatchers,
   HeaderMapper = DefaultHeader,
 }: StandardPageProps<T>) {
-  const { t } = useTranslation();
+  const {
+    t,
+    i18n: { resolvedLanguage },
+  } = useTranslation();
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
     fields: fieldsMetadata,
     filterPrefix,
@@ -201,6 +213,16 @@ export function StandardPage<T>({
 
   const primaryFilters = fields.filter((field) => field.filter?.primary).map(toFieldFilter);
 
+  const manageColumnsLabels: ManageColumnsToolbarProps['labels'] = {
+    manageColumns: t('Manage Columns'),
+    description: t('Selected resourceFields will be displayed in the table.'),
+    save: t('Save'),
+    cancel: t('Cancel'),
+    restoreDefaults: t('Restore default columns'),
+    reorder: t('Reorder'),
+    tableColumnManagement: t('Table column management'),
+  };
+
   return (
     <>
       <PageSection variant="light">
@@ -221,6 +243,7 @@ export function StandardPage<T>({
                   onFilterUpdate={setSelectedFilters}
                   selectedFilters={selectedFilters}
                   supportedFilterTypes={supportedFilters}
+                  resolvedLanguage={resolvedLanguage}
                 />
               )}
               <AttributeValueFilter
@@ -230,6 +253,7 @@ export function StandardPage<T>({
                 onFilterUpdate={setSelectedFilters}
                 selectedFilters={selectedFilters}
                 supportedFilterTypes={supportedFilters}
+                resolvedLanguage={resolvedLanguage}
               />
               {!!fields.find((field) => field.filter?.standalone) && (
                 <FilterGroup
@@ -239,12 +263,14 @@ export function StandardPage<T>({
                   onFilterUpdate={setSelectedFilters}
                   selectedFilters={selectedFilters}
                   supportedFilterTypes={supportedFilters}
+                  resolvedLanguage={resolvedLanguage}
                 />
               )}
               <ManageColumnsToolbar
                 resourceFields={fields}
                 defaultColumns={fieldsMetadata}
                 setColumns={setFields}
+                labels={manageColumnsLabels}
               />
             </ToolbarToggleGroup>
             {showPagination && (
@@ -274,12 +300,23 @@ export function StandardPage<T>({
           setActiveSort={setActiveSort}
           currentNamespace={namespace}
         >
-          {!loaded && <Loading key="loading" />}
-          {errorFetchingData && <ErrorState key="error" />}
-          {noResults && (customNoResultsFound ?? <NoResultsFound key="no_result" />)}
+          {!loaded && <Loading key="loading" title={t('Loading')} />}
+          {errorFetchingData && <ErrorState key="error" title={t('Unable to retrieve data')} />}
+          {noResults &&
+            (customNoResultsFound ?? (
+              <NoResultsFound key="no_result" title={t('No results found')} />
+            ))}
           {noMatchingResults &&
             (customNoResultsMatchFilter ?? (
-              <NoResultsMatchFilter key="no_match" clearAllFilters={clearAllFilters} />
+              <NoResultsMatchFilter
+                key="no_match"
+                clearAllFilters={clearAllFilters}
+                title={t('No results found')}
+                description={t(
+                  'No results match the filter criteria. Clear all filters and try again.',
+                )}
+                clearAllLabel={t('Clear all filters')}
+              />
             ))}
         </TableView>
         {showPagination && (

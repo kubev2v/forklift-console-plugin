@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'common/src/utils/i18n';
 
 import {
   Button,
@@ -32,6 +31,7 @@ export interface ManageColumnsToolbarProps {
   defaultColumns: ResourceField[];
   /** Setter to modify state in the parent.*/
   setColumns(resourceFields: ResourceField[]): void;
+  labels: Record<keyof typeof defaultLabels, string>;
 }
 
 /**
@@ -41,23 +41,24 @@ export const ManageColumnsToolbar = ({
   resourceFields,
   setColumns,
   defaultColumns,
+  labels = defaultLabels,
 }: ManageColumnsToolbarProps) => {
-  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   return (
     <ToolbarItem>
-      <Tooltip content={t('Manage Columns')}>
-        <Button variant="plain" onClick={() => setIsOpen(true)} aria-label={t('Manage Columns')}>
+      <Tooltip content={labels.manageColumns}>
+        <Button variant="plain" onClick={() => setIsOpen(true)} aria-label={labels.manageColumns}>
           <ColumnsIcon />
         </Button>
       </Tooltip>
       <ManageColumns
         showModal={isOpen}
         onClose={() => setIsOpen(false)}
-        description={t('Selected resourceFields will be displayed in the table.')}
+        description={labels.description}
         resourceFields={resourceFields}
         onChange={setColumns}
         defaultColumns={defaultColumns}
+        labels={labels}
       />
     </ToolbarItem>
   );
@@ -73,11 +74,21 @@ interface ManagedColumnsProps {
   resourceFields: ResourceField[];
   /** Read only. The defaults used for initialization.*/
   defaultColumns: ResourceField[];
+  labels: Record<keyof typeof defaultLabels, string>;
 }
 
 const filterActionsAndHidden = (resourceFields: ResourceField[]) =>
   resourceFields.filter((col) => !col.isAction && !col.isHidden);
 
+const defaultLabels = {
+  manageColumns: 'Manage Columns',
+  description: 'Selected resourceFields will be displayed in the table.',
+  save: 'Save',
+  cancel: 'Cancel',
+  restoreDefaults: 'Restore default columns',
+  reorder: 'Reorder',
+  tableColumnManagement: 'Table column management',
+};
 /**
  * Modal dialog for managing resourceFields.
  * Supported features:
@@ -91,8 +102,8 @@ const ManageColumns = ({
   onChange,
   resourceFields,
   defaultColumns,
+  labels = defaultLabels,
 }: ManagedColumnsProps) => {
-  const { t } = useTranslation();
   const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(resourceFields));
   const restoreDefaults = () => setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
   const onDrop = (source: { index: number }, dest: { index: number }) => {
@@ -128,7 +139,7 @@ const ManageColumns = ({
 
   return (
     <Modal
-      title={t('Manage Columns')}
+      title={labels.manageColumns}
       isOpen={showModal}
       variant="small"
       description={
@@ -144,20 +155,20 @@ const ManageColumns = ({
           isDisabled={resourceFields === editedColumns}
           onClick={onSave}
         >
-          {t('Save')}
+          {labels.save}
         </Button>,
         <Button key="cancel" variant="secondary" onClick={onClose}>
-          {t('Cancel')}
+          {labels.cancel}
         </Button>,
         <Button key="restore" variant="link" onClick={restoreDefaults}>
-          {t('Restore default columns')}
+          {labels.restoreDefaults}
         </Button>,
       ]}
     >
       <DragDrop onDrop={onDrop}>
         <Droppable hasNoWrapper>
           <DataList
-            aria-label={t('Table column management')}
+            aria-label={labels.tableColumnManagement}
             id="table-column-management"
             isCompact
           >
@@ -167,7 +178,7 @@ const ManageColumns = ({
                   <DataListItemRow>
                     <DataListControl>
                       <DataListDragButton
-                        aria-label={t('Reorder')}
+                        aria-label={labels.reorder}
                         aria-labelledby={`draggable-${id}`}
                       />
                       <DataListCheck

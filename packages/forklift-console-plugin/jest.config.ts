@@ -20,6 +20,7 @@ export const config: Config.InitialOptions = {
     }),
   },
   modulePaths: ['<rootDir>'],
+  roots: ['<rootDir>/src'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   transform: {
     '^.+\\.[t|j]sx?$': 'ts-jest',

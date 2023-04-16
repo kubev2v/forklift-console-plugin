@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import StandardPage from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
@@ -6,11 +7,7 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { EnumToTuple } from '@kubev2v/common/components/Filter/helpers';
 import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
-import {
-  loadUserSettings,
-  StandardPage,
-  UserSettings,
-} from '@kubev2v/common/components/StandardPage';
+import { loadUserSettings, UserSettings } from '@kubev2v/common/components/StandardPage';
 import { ResourceFieldFactory } from '@kubev2v/common/components/types';
 import { ProviderType, SOURCE_PROVIDER_TYPES } from '@kubev2v/legacy/common/constants';
 

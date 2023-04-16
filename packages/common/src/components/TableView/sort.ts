@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'common/src/utils/i18n';
 import { localeCompare } from 'common/src/utils/localCompare';
 
 import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base';
@@ -58,9 +57,8 @@ export function compareWith(
  */
 export const useSort = (
   fields: ResourceField[],
+  resolvedLanguage = 'en',
 ): [SortType, (sort: SortType) => void, (a, b) => number] => {
-  const { i18n } = useTranslation();
-
   // by default sort by the first identity column (if any)
   const [firstField] = [...fields].sort(
     (a, b) => Number(Boolean(b.isIdentity)) - Number(Boolean(a.isIdentity)),
@@ -76,7 +74,7 @@ export const useSort = (
     () =>
       compareWith(
         activeSort,
-        i18n.resolvedLanguage,
+        resolvedLanguage,
         fields.find((field) => field.resourceFieldId === activeSort.resourceFieldId)?.compareFn,
         fields,
       ),

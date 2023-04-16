@@ -10,6 +10,7 @@ interface FilterFromDefProps {
   onFilterUpdate(filters: GlobalFilters): void;
   FilterType: (props: FilterTypeProps) => JSX.Element;
   showFilter?: boolean;
+  resolvedLanguage: string;
 }
 
 export const FilterFromDef = ({
@@ -20,6 +21,7 @@ export const FilterFromDef = ({
   FilterType,
   onFilterUpdate,
   showFilter = true,
+  resolvedLanguage,
 }: FilterFromDefProps) => {
   return (
     FilterType && (
@@ -38,6 +40,7 @@ export const FilterFromDef = ({
         showFilter={showFilter}
         supportedValues={def.values}
         supportedGroups={def.groups}
+        resolvedLanguage={resolvedLanguage}
       />
     )
   );

@@ -12,14 +12,12 @@ export const config: Config.InitialOptions = {
   testMatch: ['<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   moduleNameMapper: {
     '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
-    '@console/*': '<rootDir>/src/__mocks__/dummy.ts',
-    '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
-    'react-i18next': '<rootDir>/src/__mocks__/react-i18next.ts',
     ...pathsToModuleNameMapper(compilerOptions.paths, {
       prefix: '<rootDir>/',
     }),
   },
   modulePaths: ['<rootDir>'],
+  roots: ['<rootDir>/src'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   transform: {
     '^.+\\.[t|j]sx?$': 'ts-jest',
@@ -30,6 +28,5 @@ export const config: Config.InitialOptions = {
       isolatedModules: true,
     },
   },
-  setupFiles: ['<rootDir>/src/__mocks__/envvars.ts'],
 };
 export default config;
