@@ -5,18 +5,18 @@ import { type WebpackPluginInstance, Compiler } from 'webpack';
 
 import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import type {
+  PluginBuildMetadata,
   WebpackSharedConfig,
   WebpackSharedObject,
 } from '@openshift/dynamic-plugin-sdk-webpack';
 import { DynamicRemotePlugin } from '@openshift/dynamic-plugin-sdk-webpack';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
-
-import { PatchManifestJson } from './PatchManifestJsonPlugin';
 import {
-  type SharedModuleMetadata,
   sharedPluginModules,
   sharedPluginModulesMetadata,
-} from './shared-modules';
+} from '@openshift-console/dynamic-plugin-sdk-webpack/lib/shared-modules';
+
+import { PatchManifestJson } from './PatchManifestJsonPlugin';
 
 const parseJSONFile = <TValue = unknown>(filePath: string) =>
   JSON.parse(fs.readFileSync(filePath, 'utf-8')) as TValue;
@@ -24,6 +24,12 @@ const parseJSONFile = <TValue = unknown>(filePath: string) =>
 function getPluginMetadata(filename: string, baseDir = process.cwd()) {
   const filePath = path.resolve(baseDir, filename);
   const contents = parseJSONFile<ConsolePluginMetadata>(filePath);
+  return contents;
+}
+
+function getPluginExtensions(filename: string, baseDir = process.cwd()) {
+  const filePath = path.resolve(baseDir, filename);
+  const contents = parseJSONFile<EncodedExtension[]>(filePath);
   return contents;
 }
 
@@ -41,12 +47,11 @@ function buildPluginId(pluginMetadata: ConsolePluginMetadata): string {
  * This function has be adapted from:
  *   https://github.com/openshift/console/blob/master/frontend/packages/console-dynamic-plugin-sdk/src/webpack/ConsoleRemotePlugin.ts#L88-L108
  *
- * TODO 1: Keep aligned with how console handles its modules.
- * TODO 2: Do we need to add '@openshift/dynamic-plugin-sdk' in for any reason?
+ * TODO Keep aligned with how console handles its modules.
  */
 function processConsoleSharedModules(
   modules: typeof sharedPluginModules,
-  metadata: Record<string, SharedModuleMetadata>,
+  metadata: typeof sharedPluginModulesMetadata,
 ): WebpackSharedObject {
   return Object.fromEntries(
     modules.map((module) => {
@@ -89,14 +94,16 @@ export type DynamicConsoleRemotePluginOptions = Partial<{
 export class DynamicConsoleRemotePlugin implements WebpackPluginInstance {
   private readonly pluginMetadata: ConsolePluginMetadata;
 
-  private readonly extensions: string | EncodedExtension[];
+  private readonly extensions: EncodedExtension[];
 
   constructor(options: DynamicConsoleRemotePluginOptions = {}) {
     const _pluginMetadata = options.pluginMetadata ?? 'plugin.json';
     this.pluginMetadata =
       typeof _pluginMetadata === 'string' ? getPluginMetadata(_pluginMetadata) : _pluginMetadata;
 
-    this.extensions = options.extensions ?? 'console-extensions.json';
+    const _extensions = options.extensions ?? 'console-extensions.json';
+    this.extensions =
+      typeof _extensions === 'string' ? getPluginExtensions(_extensions) : _extensions;
   }
 
   apply(compiler: Compiler) {
@@ -107,7 +114,7 @@ export class DynamicConsoleRemotePlugin implements WebpackPluginInstance {
 
     // Do the federated module build and generate the core SDK `plugin-manifest.json` file
     new DynamicRemotePlugin({
-      pluginMetadata: { ...this.pluginMetadata }, // PluginBuildMetadata type isn't exported so we do this!
+      pluginMetadata: this.pluginMetadata as PluginBuildMetadata,
       extensions: this.extensions,
       sharedModules,
 
@@ -117,6 +124,9 @@ export class DynamicConsoleRemotePlugin implements WebpackPluginInstance {
         name: 'window.loadPluginEntry',
         pluginID: buildPluginId(this.pluginMetadata),
       },
+
+      // console doesn't support any other entry script filename
+      entryScriptFilename: 'plugin-entry.js',
     }).apply(compiler);
 
     // Patch core SDK manifest to be console SDK manifest compatible

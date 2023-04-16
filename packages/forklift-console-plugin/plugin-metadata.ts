@@ -18,6 +18,6 @@ export default {
     ...storageMapModules,
   },
   dependencies: {
-    '@console/pluginAPI': '*',
+    '@console/pluginAPI': '>=4.11',
   },
 } as ConsolePluginMetadata;

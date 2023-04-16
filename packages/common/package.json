@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "@openshift-console/dynamic-plugin-sdk": "0.0.18",
-    "@openshift/dynamic-plugin-sdk": "~1.0.0",
+    "@openshift/dynamic-plugin-sdk": "3.0.0",
     "@patternfly/react-core": "4.221.3",
     "@patternfly/react-table": "4.90.3",
     "react": "^17.0.1",

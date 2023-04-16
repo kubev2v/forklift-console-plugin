@@ -1,19 +1,25 @@
 import { type WebpackPluginInstance, Compilation, Compiler, sources } from 'webpack';
 
 import type { PluginManifest } from '@openshift/dynamic-plugin-sdk';
+import type { ConsolePluginManifestJSON } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-manifest';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
-// See: https://github.com/openshift/console/blob/master/frontend/packages/console-dynamic-plugin-sdk/src/webpack/ConsoleAssetPlugin.ts#L32
-const addConsoleMetadataToPluginManifest = (
-  metadata: ConsolePluginMetadata,
-  manifest: PluginManifest,
-) => ({
-  name: manifest.name ?? metadata.name,
-  version: manifest.version ?? metadata.version,
-  displayName: metadata.displayName,
-  description: metadata.description,
-  dependencies: metadata.dependencies,
-  extensions: manifest.extensions,
+/**
+ * Make the core SDK generated manifest look like a console SDK generated manifest.
+ *
+ * See: https://github.com/openshift/console/blob/master/frontend/packages/console-dynamic-plugin-sdk/src/webpack/ConsoleAssetPlugin.ts#L32
+ */
+const blendConsoleAndCorePluginManifestFields = (
+  pluginMetadata: ConsolePluginMetadata,
+  coreSdkManifest: PluginManifest,
+): ConsolePluginManifestJSON => ({
+  name: coreSdkManifest.name ?? pluginMetadata.name,
+  version: coreSdkManifest.version ?? pluginMetadata.version,
+  displayName: pluginMetadata.displayName,
+  description: pluginMetadata.description,
+  dependencies: pluginMetadata.dependencies,
+  disableStaticPlugins: pluginMetadata.disableStaticPlugins,
+  extensions: coreSdkManifest.extensions,
 });
 
 /**
@@ -36,7 +42,7 @@ export class PatchManifestJson implements WebpackPluginInstance {
         },
         (assets) => {
           const existing = JSON.parse(assets[this.fileName].source().toString());
-          const patched = addConsoleMetadataToPluginManifest(this.pluginMetadata, existing);
+          const patched = blendConsoleAndCorePluginManifestFields(this.pluginMetadata, existing);
           assets[this.fileName] = new sources.RawSource(JSON.stringify(patched, undefined, 2));
         },
       );
