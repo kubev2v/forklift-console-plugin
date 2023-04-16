@@ -17,26 +17,6 @@ if ! [ -x "$(command -v podman)" ]; then
 fi
 echo "Found: podman"
 
-# Check for kind cmd
-# ------------------
-
-echo "Check for kind"
-echo "==============="
-
-if ! [ -x "$(command -v kind)" ]; then
-  echo "Error: can't find 'kind' command line utility, exit"
-  echo "  see: https://sigs.k8s.io/kind for more information"
-  exit 1
-fi
-echo "Found $(which kind)"
-
-if ! [ -x "$(command -v kubectl)" ]; then
-  echo "Error: can't find 'kubectl' command line utility, exit"
-  echo "  see: https://kubernetes.io/docs/tasks/tools/#kubectl for more information"
-  exit 1
-fi
-echo "Found $(which kubectl)"
-
 # Install cluster
 # ---------------
 

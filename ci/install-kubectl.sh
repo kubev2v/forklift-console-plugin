@@ -17,4 +17,4 @@ curl --silent -LO "https://dl.k8s.io/$KUBECTL_VERSION/bin/linux/amd64/kubectl.sh
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 
 # install
-install kubectl /usr/local/bin/kubectl
+sudo install kubectl /usr/local/bin/kubectl
