@@ -7,3 +7,5 @@ openapitools.json
 
 cypress/videos
 ci/yaml/openapi.yaml
+
+**/mockServiceWorker.js
