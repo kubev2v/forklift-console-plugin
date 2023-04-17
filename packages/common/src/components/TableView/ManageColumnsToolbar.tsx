@@ -82,7 +82,7 @@ const filterActionsAndHidden = (resourceFields: ResourceField[]) =>
 
 const defaultLabels = {
   manageColumns: 'Manage Columns',
-  description: 'Selected resourceFields will be displayed in the table.',
+  description: 'Selected columns will be displayed in the table.',
   save: 'Save',
   cancel: 'Cancel',
   restoreDefaults: 'Restore default columns',
