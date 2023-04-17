@@ -97,7 +97,7 @@
   "Running - preparing for incremental data copies": "Running - preparing for incremental data copies",
   "Running - preparing for migration": "Running - preparing for migration",
   "Save": "Save",
-  "Selected resourceFields will be displayed in the table.": "Selected resourceFields will be displayed in the table.",
+  "Selected columns will be displayed in the table.": "Selected columns will be displayed in the table.",
   "Show archived": "Show archived",
   "Show managed": "Show managed",
   "source": "source",

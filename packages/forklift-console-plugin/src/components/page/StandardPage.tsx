@@ -215,7 +215,7 @@ export function StandardPage<T>({
 
   const manageColumnsLabels: ManageColumnsToolbarProps['labels'] = {
     manageColumns: t('Manage Columns'),
-    description: t('Selected resourceFields will be displayed in the table.'),
+    description: t('Selected columns will be displayed in the table.'),
     save: t('Save'),
     cancel: t('Cancel'),
     restoreDefaults: t('Restore default columns'),

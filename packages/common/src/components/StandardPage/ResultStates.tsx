@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentType } from 'react';
 
 import {
   Button,
@@ -11,10 +11,25 @@ import {
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
 
-export const ErrorState = ({ title }: { title: string }) => {
+export const State = ({
+  title,
+  Icon,
+  color,
+  Component,
+}: {
+  title: string;
+  Icon?: ComponentType;
+  Component?: ComponentType;
+  color?: string;
+}) => {
   return (
     <EmptyState>
-      <EmptyStateIcon icon={ExclamationCircleIcon} color="#C9190B" />
+      <EmptyStateIcon
+        component={Component}
+        icon={Icon}
+        color={color}
+        variant={Component ? 'container' : 'icon'}
+      />
       <Title headingLevel="h4" size="lg">
         {title}
       </Title>
@@ -22,27 +37,17 @@ export const ErrorState = ({ title }: { title: string }) => {
   );
 };
 
-export const Loading = ({ title }: { title: string }) => {
-  return (
-    <EmptyState>
-      <EmptyStateIcon variant="container" component={Spinner} />
-      <Title size="lg" headingLevel="h4">
-        {title}
-      </Title>
-    </EmptyState>
-  );
-};
+export const ErrorState = ({ title }: { title: string }) => (
+  <State Icon={ExclamationCircleIcon} color="#C9190B" title={title} />
+);
 
-export const NoResultsFound = ({ title }: { title: string }) => {
-  return (
-    <EmptyState>
-      <EmptyStateIcon icon={SearchIcon} />
-      <Title size="lg" headingLevel="h4">
-        {title}
-      </Title>
-    </EmptyState>
-  );
-};
+export const Loading = ({ title }: { title: string }) => (
+  <State Component={Spinner} title={title} />
+);
+
+export const NoResultsFound = ({ title }: { title: string }) => (
+  <State Icon={SearchIcon} title={title} />
+);
 
 export const NoResultsMatchFilter = ({
   clearAllFilters,
