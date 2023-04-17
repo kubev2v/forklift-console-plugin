@@ -3,6 +3,24 @@
 set -euo pipefail
 script_dir=$(realpath $(dirname "$0"))
 
+# Print help message
+if [[ $@ == *'--help'* ]]; then
+  echo "Usage: bash deploy-all.sh [OPTION]...
+helper script for deploying kubernetes cluster for forklift.
+
+some network and virtualization operations requires running with system \
+admin privileges, for example, when running using regular user account \
+you may not be able to start a virtual machine or use some network interfaces.
+
+  --help                      print out this help message.
+  --with-all-providers        will deploy all mock providers avaliable.
+  --with-ovirt-provider       will install fake ovirt provider
+  --with-vmware-provider      will install vmware simulator.
+  --with-openstack-provider   will install packstack simulator.
+  "
+  exit 0
+fi
+
 export K8S_TIMEOUT="365s"
 
 # Check for container cmd
