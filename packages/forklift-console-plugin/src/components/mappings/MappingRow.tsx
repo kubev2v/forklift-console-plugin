@@ -3,7 +3,7 @@ import * as C from 'src/utils/constants';
 import { MAPPING_STATUS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 
-import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
+import { getResourceFieldValue } from '@kubev2v/common/components/FilterGroup';
 import { RowProps } from '@kubev2v/common/components/TableView';
 import { MappingDetailView } from '@kubev2v/legacy/Mappings/components/MappingDetailView';
 import { Mapping, MappingType } from '@kubev2v/legacy/queries/types';

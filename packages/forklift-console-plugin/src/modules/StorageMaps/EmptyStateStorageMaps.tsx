@@ -1,7 +1,6 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ExternalLink } from 'common/src/components/external-link/ExternalLink';
 import { MappingType } from 'legacy/src/queries/types';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import automationIcon from 'src/components/empty-states/images/automation.svg';
@@ -9,6 +8,7 @@ import { AddMappingButton } from 'src/components/mappings/MappingPage';
 import { HELP_LINK_HREF } from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
+import { ExternalLink } from '@kubev2v/common/components/ExternalLink';
 import { PROVIDERS_REFERENCE } from '@kubev2v/legacy/common/constants';
 import { createK8sPath } from '@kubev2v/legacy/queries/helpers';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';

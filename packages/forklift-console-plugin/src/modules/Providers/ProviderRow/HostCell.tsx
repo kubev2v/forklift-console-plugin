@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { TextWithIcon } from 'src/components/cells/TextWithIcon';
 import * as C from 'src/utils/constants';
 
-import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
+import { getResourceFieldValue } from '@kubev2v/common/components/FilterGroup';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import { OutlinedHddIcon } from '@patternfly/react-icons';
-
-import { TextWithIcon } from '../../../components/cells/TextWithIcon';
 
 import { CellProps } from './types';
 

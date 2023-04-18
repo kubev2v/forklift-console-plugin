@@ -1,4 +1,10 @@
-import { ResourceField, SortType } from '../types';
+import { ResourceField } from 'common/src/utils/types';
+
+export interface SortType {
+  isAsc: boolean;
+  resourceFieldId: string;
+  label: string;
+}
 
 export interface RowProps<T> {
   resourceFields: ResourceField[];

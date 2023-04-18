@@ -1,13 +1,12 @@
 import React from 'react';
+import { TextWithIcon } from 'src/components/cells/TextWithIcon';
 import * as C from 'src/utils/constants';
 
-import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
+import { getResourceFieldValue } from '@kubev2v/common/components/FilterGroup';
 import { RowProps } from '@kubev2v/common/components/TableView';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { DatabaseIcon, NetworkIcon, VirtualMachineIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
-
-import { TextWithIcon } from '../../components/cells/TextWithIcon';
 
 import { HostCell } from './ProviderRow/HostCell';
 import { ProviderLink } from './ProviderRow/ProviderLink';

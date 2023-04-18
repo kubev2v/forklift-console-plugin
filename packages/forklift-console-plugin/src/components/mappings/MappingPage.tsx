@@ -1,15 +1,12 @@
 import React from 'react';
-import { EnumToTuple } from 'common/src/components/Filter';
 import * as C from 'src/utils/constants';
 import { MAPPING_STATUS } from 'src/utils/enums';
 
-import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
+import { EnumToTuple } from '@kubev2v/common/components/FilterGroup';
+import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
 import { DefaultHeader, TableViewHeaderProps } from '@kubev2v/common/components/TableView';
-import {
-  ResourceFieldFactory,
-  ResourceFieldPartialFactory,
-} from '@kubev2v/common/components/types';
 import { useModal } from '@kubev2v/common/polyfills/console-dynamic-plugin-sdk';
+import { ResourceFieldFactory, ResourceFieldPartialFactory } from '@kubev2v/common/utils/types';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 import { Button } from '@patternfly/react-core';

@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'common/src/hooks/useSearchParams';
-
-import { ResourceField } from '../types';
+import { ResourceField } from 'common/src/utils/types';
 
 import { GlobalFilters } from './types';
 

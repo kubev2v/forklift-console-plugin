@@ -3,7 +3,7 @@ import { Trans } from 'react-i18next';
 import { useTranslation } from 'src/utils/i18n';
 
 import { withActionServiceContext } from '@kubev2v/common/components/ActionServiceDropdown';
-import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
+import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { ProviderType } from '@kubev2v/legacy/common/constants';

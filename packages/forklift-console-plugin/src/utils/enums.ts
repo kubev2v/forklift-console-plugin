@@ -1,4 +1,4 @@
-import { K8sConditionStatus } from '@kubev2v/common/components/types';
+import { K8sConditionStatus } from '@kubev2v/common/utils/types';
 import { PlanState, ProviderType } from '@kubev2v/legacy/common/constants';
 import { PlanType } from '@kubev2v/legacy/queries/types';
 

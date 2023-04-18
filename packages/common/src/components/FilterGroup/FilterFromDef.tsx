@@ -1,6 +1,9 @@
 import React from 'react';
+import { FilterDef } from 'common/src/utils/types';
 
-import { FilterDef, FilterTypeProps, GlobalFilters } from './types';
+import { FilterTypeProps } from '../Filter';
+
+import { GlobalFilters } from './types';
 
 interface FilterFromDefProps {
   resourceFieldId: string;

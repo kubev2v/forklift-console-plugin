@@ -6,11 +6,11 @@ import automationIcon from 'src/components/empty-states/images/automation.svg';
 import { HELP_LINK_HREF } from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
+import { ExternalLink } from '@kubev2v/common/components/ExternalLink';
 import { PROVIDERS_REFERENCE } from '@kubev2v/legacy/common/constants';
 import { createK8sPath } from '@kubev2v/legacy/queries/helpers';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
-import { ExternalLink } from '../../../../common/src/components/external-link/ExternalLink';
 import { useHasSufficientProviders } from '../Providers/data';
 
 import { AddNetworkMappingButton } from './NetworkMappingsPage';

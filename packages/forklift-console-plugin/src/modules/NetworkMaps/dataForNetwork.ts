@@ -1,3 +1,10 @@
+import {
+  CommonMapping,
+  OwnerRef,
+  resolveOwnerRef,
+  toStatus,
+  useMappings,
+} from 'src/components/mappings/data';
 import * as C from 'src/utils/constants';
 import { useNetworkMappings } from 'src/utils/fetch';
 import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
@@ -11,14 +18,6 @@ import {
 } from '@kubev2v/legacy/queries/types';
 import { V1beta1NetworkMapStatusConditions, V1beta1Provider } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
-
-import {
-  CommonMapping,
-  OwnerRef,
-  resolveOwnerRef,
-  toStatus,
-  useMappings,
-} from '../../components/mappings/data';
 
 export interface FlatNetworkMapping extends CommonMapping {
   [C.FROM]: [Network, IdOrNameRef[]][];

@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'src/utils/i18n';
+
 import {
   AttributeValueFilter,
   createMetaMatcher,
@@ -9,19 +11,25 @@ import {
   toFieldFilter,
   useUrlFilters,
   ValueMatcher,
-} from 'common/src/components/Filter';
+} from '@kubev2v/common/components/FilterGroup';
+import {
+  DEFAULT_PER_PAGE,
+  ErrorState,
+  Loading,
+  NoResultsFound,
+  NoResultsMatchFilter,
+  useFields,
+  usePagination,
+  UserSettings,
+} from '@kubev2v/common/components/Page';
 import {
   DefaultHeader,
-  ManageColumnsToolbar,
-  ManageColumnsToolbarProps,
   RowProps,
   TableView,
   TableViewHeaderProps,
   useSort,
-} from 'common/src/components/TableView';
-import { ResourceField } from 'common/src/components/types';
-import { useTranslation } from 'src/utils/i18n';
-
+} from '@kubev2v/common/components/TableView';
+import { ResourceField } from '@kubev2v/common/utils/types';
 import {
   Level,
   LevelItem,
@@ -35,18 +43,7 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
-import {
-  ErrorState,
-  Loading,
-  NoResultsFound,
-  NoResultsMatchFilter,
-} from '../../../../common/src/components/StandardPage/ResultStates';
-import { UserSettings } from '../../../../common/src/components/StandardPage/types';
-import { useFields } from '../../../../common/src/components/StandardPage/useFields';
-import {
-  DEFAULT_PER_PAGE,
-  usePagination,
-} from '../../../../common/src/components/StandardPage/usePagination';
+import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
 /**
  * Reduce two list of filters to one list.
@@ -213,16 +210,6 @@ export function StandardPage<T>({
 
   const primaryFilters = fields.filter((field) => field.filter?.primary).map(toFieldFilter);
 
-  const manageColumnsLabels: ManageColumnsToolbarProps['labels'] = {
-    manageColumns: t('Manage Columns'),
-    description: t('Selected columns will be displayed in the table.'),
-    save: t('Save'),
-    cancel: t('Cancel'),
-    restoreDefaults: t('Restore default columns'),
-    reorder: t('Reorder'),
-    tableColumnManagement: t('Table column management'),
-  };
-
   return (
     <>
       <PageSection variant="light">
@@ -270,7 +257,6 @@ export function StandardPage<T>({
                 resourceFields={fields}
                 defaultColumns={fieldsMetadata}
                 setColumns={setFields}
-                labels={manageColumnsLabels}
               />
             </ToolbarToggleGroup>
             {showPagination && (

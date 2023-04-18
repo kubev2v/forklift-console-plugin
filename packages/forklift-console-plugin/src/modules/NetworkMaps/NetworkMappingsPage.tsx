@@ -8,12 +8,13 @@ import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { FreetextFilter, ValueMatcher } from '@kubev2v/common/components/Filter';
+import { FreetextFilter } from '@kubev2v/common/components/Filter';
+import { ValueMatcher } from '@kubev2v/common/components/FilterGroup';
 import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
-import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
-import { loadUserSettings, UserSettings } from '@kubev2v/common/components/StandardPage';
-import { ResourceFieldFactory } from '@kubev2v/common/components/types';
+import { loadUserSettings, UserSettings } from '@kubev2v/common/components/Page';
+import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
+import { ResourceFieldFactory } from '@kubev2v/common/utils/types';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 import { Button } from '@patternfly/react-core';
