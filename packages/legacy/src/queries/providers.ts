@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { useQueryClient, UseQueryResult, UseMutationResult } from 'react-query';
+import { useQueryClient, UseQueryResult, UseMutationResult, useQuery } from 'react-query';
 import * as yup from 'yup';
 
 import { usePollingContext } from 'legacy/src/common/context';
 import {
-  useMockableQuery,
   useMockableMutation,
   isSameResource,
   nameAndNamespace,
@@ -12,7 +11,6 @@ import {
   sortIndexedDataByName,
   getInventoryApiUrl,
 } from './helpers';
-import { MOCK_CLUSTER_PROVIDERS, MOCK_INVENTORY_PROVIDERS } from './mocks/providers.mock';
 import {
   IProvidersByType,
   InventoryProvider,
@@ -47,14 +45,13 @@ export const useClusterProvidersQuery = (
   namespace: string
 ): UseQueryResult<IKubeList<IProviderObject>> => {
   const providerResource = createResource(ForkliftResourceKind.Provider, namespace);
-  return useMockableQuery<IKubeList<IProviderObject>>(
-    {
-      queryKey: 'cluster-providers',
-      queryFn: async () => await consoleFetchJSON(providerResource.listPath()),
-      refetchInterval: usePollingContext().refetchInterval,
-    },
-    mockKubeList(MOCK_CLUSTER_PROVIDERS, 'Providers')
-  );
+
+  const result = useQuery<IKubeList<IProviderObject>, unknown, IKubeList<IProviderObject>>({
+    queryKey: 'cluster-providers',
+    queryFn: async () => await consoleFetchJSON(providerResource.listPath()),
+    refetchInterval: usePollingContext().refetchInterval,
+  });
+  return result;
 };
 
 export const useInventoryProvidersQuery = () => {
@@ -62,15 +59,13 @@ export const useInventoryProvidersQuery = () => {
     (data): IProvidersByType => sortIndexedDataByName(data),
     []
   );
-  const result = useMockableQuery<IProvidersByType>(
-    {
-      queryKey: 'inventory-providers',
-      queryFn: async () => await consoleFetchJSON(getInventoryApiUrl('providers?detail=1')),
-      refetchInterval: usePollingContext().refetchInterval,
-      select: sortIndexedDataByNameCallback,
-    },
-    MOCK_INVENTORY_PROVIDERS
-  );
+
+  const result = useQuery<IProvidersByType, unknown, IProvidersByType>({
+    queryKey: 'inventory-providers',
+    queryFn: async () => await consoleFetchJSON(getInventoryApiUrl('providers?detail=1')),
+    refetchInterval: usePollingContext().refetchInterval,
+    select: sortIndexedDataByNameCallback,
+  });
   return result;
 };
 
@@ -186,9 +181,9 @@ export const useCreateProviderMutation = (
         if (rollbackResultPromises[rollbackResult]?.status === 'rejected') {
           throw new Error('Attempted to rollback objects, but failed ');
         } else {
-          //   // One of the objects failed, but rollback was successful. Need to alert
-          //   // the user that something went wrong, but we were able to recover with
-          //   // a rollback
+          // One of the objects failed, but rollback was successful. Need to alert
+          // the user that something went wrong, but we were able to recover with
+          // a rollback
           throw Error(providerAddResults.find((res) => res.state === 'rejected')?.reason);
         }
       });
