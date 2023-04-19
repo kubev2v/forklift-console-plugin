@@ -7,8 +7,9 @@ import minimist from 'minimist';
 
 import { createMiddleware } from '@mswjs/http-middleware';
 
+import defaultPrefixMap from '../../har/localhost.prefixMap.json';
+
 import { createDefaultHandlers } from './handlers';
-import defaultPrefixMap from './prefixMap.json';
 import { createHandlersFromHar } from './utils';
 
 const {

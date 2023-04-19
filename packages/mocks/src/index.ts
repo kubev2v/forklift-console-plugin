@@ -1,2 +1,2 @@
 export * from './browser';
-export * from './handlers';
+export * from './cluster-proxy-server/handlers';
