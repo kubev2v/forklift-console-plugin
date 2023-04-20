@@ -1,9 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
 
-  "include": ["*"],
-  "exclude": [],
-
   "compilerOptions": {
     "allowJs": true,
     "strict": false,
@@ -17,11 +14,13 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "declaration": true,
+    "declarationMap": true,
     "jsx": "react",
 
     "lib": ["dom", "es2020"],
     "esModuleInterop": true
   },
+
   "ts-node": {
     "files": true,
     "transpileOnly": true,

@@ -12,48 +12,49 @@
     "./dist/*"
   ],
   "exports": {
-    "./client/*": "./dist/client/*",
-    "./common/*": "./dist/common/*",
-    "./Mappings/*": "./dist/Mappings/*",
-    "./Plans/*": "./dist/Plans/*",
-    "./Providers/*": "./dist/Providers/*",
-    "./queries": "./dist/queries",
-    "./queries/*": "./dist/queries/*",
-    "./utils/*": "./dist/utils/*"
+    "./client/*": "./dist/src/client/*",
+    "./common/*": "./dist/src/common/*",
+    "./Mappings/*": "./dist/src/Mappings/*",
+    "./Plans/*": "./dist/src/Plans/*",
+    "./Providers/*": "./dist/src/Providers/*",
+    "./queries": "./dist/src/queries",
+    "./queries/*": "./dist/src/queries/*",
+    "./utils/*": "./dist/src/utils/*"
   },
   "typesVersions": {
     "*": {
       "client/*": [
-        "dist/client/*"
+        "dist/src/client/*"
       ],
       "common/*": [
-        "dist/common/*"
+        "dist/src/common/*"
       ],
       "Mappings/*": [
-        "dist/Mappings/*"
+        "dist/src/Mappings/*"
       ],
       "Plans/*": [
-        "dist/Plans/*"
+        "dist/src/Plans/*"
       ],
       "Providers/*": [
-        "dist/Providers/*"
+        "dist/src/Providers/*"
       ],
       "queries": [
-        "dist/queries"
+        "dist/src/queries"
       ],
       "queries/*": [
-        "dist/queries/*"
+        "dist/src/queries/*"
       ],
       "utils/*": [
-        "dist/utils/*"
+        "dist/src/utils/*"
       ]
     }
   },
   "scripts": {
-    "clean": "rimraf ./dist ./coverage",
+    "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules",
-    "build": "npm run clean && tsc && npm run copy:css",
-    "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
+    "build": "npm run clean && npm run compile && npm run copy:css",
+    "compile": "tsc --build --verbose",
+    "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/src",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "echo 'this package is untested'; exit 0"

@@ -12,33 +12,33 @@
     "./dist/*"
   ],
   "exports": {
-    "./components/*": "./dist/components/*",
-    "./hooks/*": "./dist/hooks/*",
-    "./polyfills/*": "./dist/polyfills/*",
-    "./utils/*": "./dist/utils/*"
+    "./components/*": "./dist/src/components/*",
+    "./hooks/*": "./dist/src/hooks/*",
+    "./polyfills/*": "./dist/src/polyfills/*",
+    "./utils/*": "./dist/src/utils/*"
   },
   "typesVersions": {
     "*": {
       "components/*": [
-        "dist/components/*"
+        "dist/src/components/*"
       ],
       "hooks/*": [
-        "dist/hooks/*"
+        "dist/src/hooks/*"
       ],
       "polyfills/*": [
-        "dist/polyfills/*"
+        "dist/src/polyfills/*"
       ],
       "utils/*": [
-        "dist/utils/*"
+        "dist/src/utils/*"
       ]
     }
   },
   "scripts": {
-    "clean": "rimraf ./dist ./coverage",
+    "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules",
     "build": "npm run clean && npm run compile && npm run copy:css",
-    "compile": "tsc",
-    "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
+    "compile": "tsc --build --verbose",
+    "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/src",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "test": "TZ=UTC jest",
@@ -54,8 +54,5 @@
     "react-i18next": "^11.7.3",
     "react-query": "^3.39.2",
     "react-router": "5.2.0"
-  },
-  "devDependencies": {
-    "@types/node": "^18.0.0"
   }
 }
