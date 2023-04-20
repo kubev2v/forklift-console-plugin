@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { MustGatherModal } from 'legacy/src/common/components/MustGatherModal';
 import StandardPage from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
 import { PLAN_STATUS_FILTER } from 'src/utils/enums';
@@ -10,6 +9,7 @@ import { EnumToTuple } from '@kubev2v/common/components/FilterGroup';
 import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
 import { loadUserSettings, UserSettings } from '@kubev2v/common/components/Page';
 import { ResourceFieldFactory } from '@kubev2v/common/utils/types';
+import { MustGatherModal } from '@kubev2v/legacy/common/components/MustGatherModal';
 import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
 
 import { FlatPlan, useFlatPlans } from './data';
