@@ -1,17 +1,16 @@
 import React from 'react';
+import MappingRow, {
+  CellCreator,
+  CellProps,
+  commonCells,
+  SourceCell,
+} from 'src/components/mappings/MappingRow';
 import * as C from 'src/utils/constants';
 
 import { RowProps } from '@kubev2v/common/components/TableView';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 import { Label } from '@patternfly/react-core';
 import { StorageDomainIcon } from '@patternfly/react-icons';
-
-import MappingRow, {
-  CellCreator,
-  CellProps,
-  commonCells,
-  SourceCell,
-} from '../../components/mappings/MappingRow';
 
 import { FlatStorageMapping } from './dataForStorage';
 import { StorageMappingActions } from './mappingActions';

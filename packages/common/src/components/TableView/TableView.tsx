@@ -1,12 +1,11 @@
 import React, { ReactNode } from 'react';
 import { UID } from 'common/src/utils/constants';
+import { ResourceField } from 'common/src/utils/types';
 
 import { Bullseye } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
 
-import { ResourceField, SortType } from '../types';
-
-import { RowProps, TableViewHeaderProps } from './types';
+import { RowProps, SortType, TableViewHeaderProps } from './types';
 
 /**
  * Displays provided list of entities as table. Supported features:

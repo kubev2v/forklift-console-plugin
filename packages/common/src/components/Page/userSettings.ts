@@ -1,9 +1,10 @@
-import { UserSettings } from 'common/src/components/StandardPage';
 import {
   loadFromLocalStorage,
   removeFromLocalStorage,
   saveToLocalStorage,
 } from 'common/src/utils/localStorage';
+
+import { UserSettings } from './types';
 
 const parseOrClean = (key) => {
   try {

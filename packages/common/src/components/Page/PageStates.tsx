@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
 
-export const State = ({
+const BaseState = ({
   title,
   Icon,
   color,
@@ -38,15 +38,15 @@ export const State = ({
 };
 
 export const ErrorState = ({ title }: { title: string }) => (
-  <State Icon={ExclamationCircleIcon} color="#C9190B" title={title} />
+  <BaseState Icon={ExclamationCircleIcon} color="#C9190B" title={title} />
 );
 
 export const Loading = ({ title }: { title: string }) => (
-  <State Component={Spinner} title={title} />
+  <BaseState Component={Spinner} title={title} />
 );
 
 export const NoResultsFound = ({ title }: { title: string }) => (
-  <State Icon={SearchIcon} title={title} />
+  <BaseState Icon={SearchIcon} title={title} />
 );
 
 export const NoResultsMatchFilter = ({

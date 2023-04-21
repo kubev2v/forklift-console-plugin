@@ -1,12 +1,28 @@
-import { FilterDef } from './Filter/types';
-
-type OpenApiJsonPath = string | ((resourceData: unknown) => unknown);
-
-export interface SortType {
-  isAsc: boolean;
-  resourceFieldId: string;
+export interface EnumGroup {
+  groupId: string;
   label: string;
 }
+
+export interface EnumValue {
+  id: string;
+  groupId?: string;
+  label: string;
+}
+
+export interface FilterDef {
+  type: string;
+  placeholderLabel: string;
+  values?: EnumValue[];
+  fieldLabel?: string;
+  primary?: boolean;
+  standalone?: boolean;
+  groups?: EnumGroup[];
+  // override default behavior if there are no filters provided by the user
+  // by default missing/empty filters result in positive match (vacuous truth)
+  defaultValues?: string[];
+}
+
+type OpenApiJsonPath = string | ((resourceData: unknown) => unknown);
 
 export interface ResourceField {
   resourceFieldId: string;

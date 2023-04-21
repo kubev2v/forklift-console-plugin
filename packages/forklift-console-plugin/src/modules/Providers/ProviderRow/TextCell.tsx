@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getResourceFieldValue } from '@kubev2v/common/components/Filter';
+import { getResourceFieldValue } from '@kubev2v/common/components/FilterGroup';
 import { Text } from '@patternfly/react-core';
 
 import { CellProps } from './types';

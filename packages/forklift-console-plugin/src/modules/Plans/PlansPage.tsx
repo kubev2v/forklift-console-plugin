@@ -6,10 +6,10 @@ import { PLAN_STATUS_FILTER } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { EnumToTuple } from '@kubev2v/common/components/Filter/helpers';
+import { EnumToTuple } from '@kubev2v/common/components/FilterGroup';
 import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
-import { loadUserSettings, UserSettings } from '@kubev2v/common/components/StandardPage';
-import { ResourceFieldFactory } from '@kubev2v/common/components/types';
+import { loadUserSettings, UserSettings } from '@kubev2v/common/components/Page';
+import { ResourceFieldFactory } from '@kubev2v/common/utils/types';
 import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
 
 import { FlatPlan, useFlatPlans } from './data';

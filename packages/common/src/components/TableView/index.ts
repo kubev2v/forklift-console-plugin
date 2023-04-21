@@ -1,5 +1,6 @@
 export * from './DefaultHeader';
-export * from './ManageColumnsToolbar';
+export * from './ManageColumnsModal';
+export * from './ManageColumnsToolbarItem';
 export * from './sort';
 export * from './TableView';
 export * from './types';

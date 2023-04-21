@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'src/utils/i18n';
 
-import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
+import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
 import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';

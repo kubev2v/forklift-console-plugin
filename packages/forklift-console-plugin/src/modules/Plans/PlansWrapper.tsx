@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import withQueryClient from '@kubev2v/common/components/QueryClientHoc';
+import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
 import { withModalProvider } from '@kubev2v/common/polyfills/sdk-shim';
 import {
   MustGatherContextProvider,
