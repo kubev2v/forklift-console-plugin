@@ -50,9 +50,9 @@
     }
   },
   "scripts": {
-    "clean": "rm -rf ./dist && rm -rf ./coverage",
-    "clean:all": "npm run clean && rm -rf ./node_modules",
-    "build": "rm -rf ./dist && tsc && npm run copy:css",
+    "clean": "rimraf ./dist ./coverage",
+    "clean:all": "npm run clean -- ./node_modules",
+    "build": "npm run clean && tsc && npm run copy:css",
     "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

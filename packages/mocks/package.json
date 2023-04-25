@@ -7,10 +7,10 @@
   "main": "./src/server.ts",
   "scripts": {
     "postinstall": "npx msw init ./generated --save",
-    "clean": "rm -rf ./dist && rm -rf ./coverage",
-    "clean:all": "npm run clean && rm -rf ./node_modules",
-    "build": "rm -rf ./dist && tsc",
-    "start": "npx ts-node .",
+    "clean": "rimraf ./dist ./coverage",
+    "clean:all": "npm run clean -- ./node_modules",
+    "build": "npm run clean && tsc",
+    "start": "ts-node .",
     "lint": "eslint . ",
     "lint:fix": "eslint . --fix"
   },

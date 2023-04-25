@@ -34,9 +34,10 @@
     }
   },
   "scripts": {
-    "clean": "rm -rf ./dist && rm -rf ./coverage",
-    "clean:all": "npm run clean && rm -rf ./node_modules",
-    "build": "rm -rf ./dist && tsc && npm run copy:css",
+    "clean": "rimraf ./dist ./coverage",
+    "clean:all": "npm run clean -- ./node_modules",
+    "build": "npm run clean && npm run compile && npm run copy:css",
+    "compile": "tsc",
     "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
