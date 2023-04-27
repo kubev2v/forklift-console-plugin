@@ -21,3 +21,6 @@ quickstarts
 storagemaps
 testid
 vddk
+datacenter
+PNICs
+VNICs
