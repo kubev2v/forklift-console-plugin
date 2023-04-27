@@ -89,6 +89,8 @@
   "Running - preparing for cutover": "Running - preparing for cutover",
   "Running - preparing for incremental data copies": "Running - preparing for incremental data copies",
   "Running - preparing for migration": "Running - preparing for migration",
+  "Select a default migration network for the provider. This network will be used for migrating data to all namespaces to which it is attached.": "Select a default migration network for the provider. This network will be used for migrating data to all namespaces to which it is attached.",
+  "Select migration network": "Select migration network",
   "Show archived": "Show archived",
   "Show managed": "Show managed",
   "source": "source",
