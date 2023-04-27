@@ -1,0 +1,28 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: vmware-test
+  namespace: konveyor-forklift
+data:
+  insecureSkipVerify: dHJ1ZQ==
+  password: MTIzNDU2
+  thumbprint: >-
+    NTI6NkM6NEU6ODg6MUQ6Nzg6QUU6MTI6MUM6RjM6QkI6NkM6NUI6RjQ6RTI6ODI6ODY6QTc6MDg6QUY=
+  url: >-
+    aHR0cHM6Ly92Y3NpbS5rb252ZXlvci1mb3JrbGlmdC5zdmMuY2x1c3Rlci5sb2NhbDo4OTg5L3Nkaw==
+  user: YWRtaW5pc3RyYXRvckB2c3BoZXJlLmxvY2Fs
+type: Opaque
+---
+apiVersion: forklift.konveyor.io/v1beta1
+kind: Provider
+metadata:
+  name: vmware-test
+  namespace: konveyor-forklift
+spec:
+  secret:
+    name: vmware-test
+    namespace: konveyor-forklift
+  settings:
+    vddkInitImage: quay.io/kubev2v/vddk-test-vmdk
+  type: vsphere
+  url: 'https://vcsim.konveyor-forklift.svc.cluster.local:8989/sdk'
