@@ -4,7 +4,7 @@
   "private": true,
   "repository": "git@github.com:kubev2v/forklift-console-plugin.git",
   "license": "Apache-2.0",
-  "main": "./src/server.ts",
+  "main": "./src/cluster-proxy-server/server.ts",
   "scripts": {
     "postinstall": "npx msw init ./generated --save",
     "clean": "rimraf ./dist ./coverage",
