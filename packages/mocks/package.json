@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "harproxyserver": "^0.0.19",
+    "luxon": "^3.3.0",
     "msw": "^1.2.1"
   },
   "devDependencies": {

@@ -1,0 +1,6 @@
+[allowlist]
+  description = "Global Allowlist"
+
+  paths = [
+    '''packages\/mocks\/src\/definitions\/basic\/secrets.mock.ts$'''
+  ]

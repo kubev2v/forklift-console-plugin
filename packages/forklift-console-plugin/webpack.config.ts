@@ -4,6 +4,7 @@
 import * as path from 'path';
 
 import CopyPlugin from 'copy-webpack-plugin';
+import { DateTime } from 'luxon';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import TerserPlugin from 'terser-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
@@ -76,6 +77,15 @@ export const ENVIRONMENT_DEFAULTS = {
    * Version of the plugin.  Defaults to the version in `package.json`.
    */
   VERSION: pluginMetadata.version,
+
+  /**
+   * Test/dev only. Starting point for all time-related test data.
+   */
+  TEST_TIMELINE_START: DateTime.now().minus({ days: 1 }).toISO(),
+  /**
+   * Test/dev only. The "now" moment in time for all time-related test data.
+   */
+  TEST_TIMELINE_NOW: DateTime.now().toISO(),
 };
 
 const config: WebpackConfiguration & {
