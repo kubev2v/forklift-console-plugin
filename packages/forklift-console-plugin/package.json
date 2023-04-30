@@ -35,6 +35,7 @@
     "react-router-dom": "5.2.0"
   },
   "devDependencies": {
+    "@kubev2v/mocks": "*",
     "@kubev2v/types": "*",
     "@kubev2v/webpack": "*",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.9",
