@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ManageColumnsModal, ManageColumnsToolbarItem } from 'common/src/components/TableView';
-import { ResourceField } from 'common/src/utils/types';
 import { useTranslation } from 'src/utils/i18n';
+
+import { ManageColumnsModal, ManageColumnsToolbarItem } from '@kubev2v/common/components/TableView';
+import { ResourceField } from '@kubev2v/common/utils/types';
 
 export interface ManageColumnsToolbarProps {
   /** Read only. State maintained by parent component. */

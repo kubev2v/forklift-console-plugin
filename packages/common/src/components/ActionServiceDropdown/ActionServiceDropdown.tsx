@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
-import { type ActionService, ActionServiceProvider } from 'common/src/polyfills/sdk-shim';
+import { ActionService, ActionServiceProvider } from 'common/src/polyfills/sdk-shim';
 
 import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly/react-core';
 

@@ -5,20 +5,24 @@ import type { Config } from '@jest/types';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { compilerOptions } = require('./tsconfig.json');
 
+const moduleNameMapper = {
+  '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
+  '@console/*': '<rootDir>/src/__mocks__/dummy.ts',
+  '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
+  'react-i18next': '<rootDir>/src/__mocks__/react-i18next.ts',
+  'legacy/src/(.*)$': '<rootDir>/../legacy/src/$1', // remove when using rollup
+  'common/src/(.*)$': '<rootDir>/../common/src/$1', // remove when using rollup
+  ...pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: '<rootDir>/',
+  }),
+};
+
 // Sync object
 export const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'jest-environment-jsdom',
   testMatch: ['<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
-  moduleNameMapper: {
-    '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
-    '@console/*': '<rootDir>/src/__mocks__/dummy.ts',
-    '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
-    'react-i18next': '<rootDir>/src/__mocks__/react-i18next.ts',
-    ...pathsToModuleNameMapper(compilerOptions.paths, {
-      prefix: '<rootDir>/',
-    }),
-  },
+  moduleNameMapper,
   modulePaths: ['<rootDir>'],
   roots: ['<rootDir>/src'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],

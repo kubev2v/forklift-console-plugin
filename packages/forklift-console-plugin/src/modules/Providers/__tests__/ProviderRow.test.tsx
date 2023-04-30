@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
+
 import {
   MOCK_CLUSTER_PROVIDERS,
   MOCK_INVENTORY_PROVIDERS,
-} from 'legacy/src/queries/mocks/providers.mock';
-
+} from '@kubev2v/legacy/queries/mocks/providers.mock';
 import { V1beta1Provider } from '@kubev2v/types';
 import { cleanup, render } from '@testing-library/react';
 
