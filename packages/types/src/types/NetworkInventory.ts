@@ -1,9 +1,4 @@
 /**
- * Represents an array of NetworkInventory objects or null.
- */
-export type NetworksInventory = NetworkInventory[] | null;
-
-/**
  * Represents a network inventory item.
  */
 export interface NetworkInventory {

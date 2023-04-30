@@ -1,4 +1,4 @@
-import { IoK8sApiStorageV1StorageClass } from './IoK8sApiStorageV1StorageClass';
+import { IoK8sApiStorageV1StorageClass } from '../k8s/IoK8sApiStorageV1StorageClass';
 
 /** Represents an OpenShift storage class. */
 export interface OpenShiftStorageClass {

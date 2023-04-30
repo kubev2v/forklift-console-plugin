@@ -1,5 +1,5 @@
 /** Represents an oVirt storage domain. */
-export interface OVirtStorageDomains {
+export interface OVirtStorageDomain {
   /** The unique identifier of the storage domain. */
   id: string;
   /** The revision number of the storage domain. */

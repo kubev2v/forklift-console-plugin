@@ -5,7 +5,7 @@ import { V1beta1Provider } from '../models/V1beta1Provider';
  */
 export interface ProvidersInventory {
   openshift?: OpenshiftInventory[] | null;
-  openstack?: OpenstackEntity[] | null;
+  openstack?: OpenstackInventory[] | null;
   ovirt?: OVirtInventory[] | null;
   vsphere?: VSphereInventory[] | null;
 }
@@ -17,7 +17,7 @@ export type ProviderInventory =
   | OpenshiftInventory
   | VSphereInventory
   | OVirtInventory
-  | OpenstackEntity;
+  | OpenstackInventory;
 
 /**
  * Represents an entity in an OpenShift provider.
@@ -116,7 +116,7 @@ export interface VSphereInventory {
 /**
  * Represents an entity in an OpenStack provider.
  */
-export interface OpenstackEntity {
+export interface OpenstackInventory {
   /** The unique identifier of the entity. */
   uid: string;
   /** The version of the OpenStack provider. */
