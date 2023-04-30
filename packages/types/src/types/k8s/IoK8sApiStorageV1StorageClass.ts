@@ -1,4 +1,4 @@
-import { IoK8sApimachineryPkgApisMetaV1ObjectMeta } from '../models/IoK8sApimachineryPkgApisMetaV1ObjectMeta';
+import { IoK8sApimachineryPkgApisMetaV1ObjectMeta } from '../../models/IoK8sApimachineryPkgApisMetaV1ObjectMeta';
 
 /**
  * StorageClass describes the parameters for a class of storage for which PersistentVolumes can be dynamically provisioned.

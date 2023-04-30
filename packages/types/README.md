@@ -1,6 +1,12 @@
 # @kubev2v/types
 
-Auto generated typescript models and constants for Forklift controller.
+Manual and auto generated typescript models and constants for Forklift controller.
+
+| Subdirectory              | Description                                                                                   | Contents                                                                                                                                                                                                                                              |
+|---------------------------|-----------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [constants](./src/constants)  | Contains auto-generated Openshift Web Console model constants.                                            | Auto-generated models, that can be manually adjusted.                                                                                                                                                                                                  |
+| [models](./src/models)        | Contains auto-generated types for Kubernetes (k8s) models used in the project.               | Kubernetes (k8s) models used in the project, auto-generated from API definitions or other sources.                                                                                                                                                     |
+| [types](./src/types)          | Contains manually created helper types and non-Kubernetes types used by the inventory API.    | - Helper types: Manually created types that assist in various tasks within the project.<br>- Non-Kubernetes types: Types that are used by the inventory API.                        |
 
 ## Auto generating new version
 

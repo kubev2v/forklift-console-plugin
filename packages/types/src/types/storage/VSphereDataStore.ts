@@ -1,5 +1,5 @@
 /** Represents a vSphere data store. */
-export interface VSphereDataStores {
+export interface VSphereDataStore {
   /** The unique identifier of the data store. */
   id: string;
   /** The parent of the data store. */

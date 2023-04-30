@@ -5,7 +5,7 @@ export interface VSphereHostInventory {
   /** The unique identifier of the host. */
   id: string;
   /** The parent object of the host, which could be a network, datastore, or another parent object. */
-  parent: NetworksEntityOrDatastoresEntityOrParent;
+  parent: HostParent;
   /** The path of the host in the vSphere inventory tree. */
   path: string;
   /** The revision number of the host. */
@@ -37,17 +37,17 @@ export interface VSphereHostInventory {
   /** The networking configuration for the host. */
   networking: Networking;
   /** The list of networks available on the host. */
-  networks?: NetworksEntityOrDatastoresEntityOrParent[] | null;
+  networks?: HostParent[] | null;
   /** The list of datastores available on the host. */
-  datastores?: NetworksEntityOrDatastoresEntityOrParent[] | null;
+  datastores?: HostParent[] | null;
   /** The list of network adapters on the host. */
-  networkAdapters?: NetworkAdaptersEntity[] | null;
+  networkAdapters?: NetworkAdapters[] | null;
 }
 
 /**
  * Represents an entity that can be a network, datastore, or parent object.
  */
-export interface NetworksEntityOrDatastoresEntityOrParent {
+export interface HostParent {
   /** The type of entity. */
   kind: string;
   /** The unique identifier of the entity. */
@@ -59,19 +59,19 @@ export interface NetworksEntityOrDatastoresEntityOrParent {
  */
 export interface Networking {
   /** The list of physical NICs on the host. */
-  pNICs?: PNICsEntity[] | null;
+  pNICs?: PNICs[] | null;
   /** The list of virtual NICs on the host. */
-  vNICs?: VNICsEntity[] | null;
+  vNICs?: VNICs[] | null;
   /** The list of port groups on the host. */
-  portGroups?: PortGroupsEntity[] | null;
+  portGroups?: PortGroups[] | null;
   /** The list of switches on the host. */
-  switches?: SwitchesEntity[] | null;
+  switches?: Switches[] | null;
 }
 
 /**
  * Represents a physical NIC on a vSphere host.
  */
-export interface PNICsEntity {
+export interface PNICs {
   /** The unique identifier of the physical NIC. */
   key: string;
   /** The link speed of the physical NIC. */
@@ -81,7 +81,7 @@ export interface PNICsEntity {
 /**
  * Represents a virtual NIC on a vSphere host.
  */
-export interface VNICsEntity {
+export interface VNICs {
   /** The unique identifier of the virtual NIC. */
   key: string;
   /** The port group the virtual NIC is connected to. */
@@ -99,7 +99,7 @@ export interface VNICsEntity {
 /**
  * Represents a port group on a vSphere host.
  */
-export interface PortGroupsEntity {
+export interface PortGroups {
   /** The unique identifier of the port group. */
   key: string;
   /** The name of the port group. */
@@ -111,7 +111,7 @@ export interface PortGroupsEntity {
 /**
  * Represents a switch on a vSphere host.
  */
-export interface SwitchesEntity {
+export interface Switches {
   /** The unique identifier of the switch. */
   key: string;
   /** The name of the switch. */
@@ -125,7 +125,7 @@ export interface SwitchesEntity {
 /**
  * Represents a network adapter on a vSphere host.
  */
-export interface NetworkAdaptersEntity {
+export interface NetworkAdapters {
   /** The name of the network adapter. */
   name: string;
   /** The IP address of the network adapter. */
