@@ -18,7 +18,6 @@ import pluginMetadata from './plugin-metadata';
 const pathTo = (relativePath: string) => path.resolve(__dirname, relativePath);
 
 const production = process.env.NODE_ENV === 'production';
-const configFile = pathTo('tsconfig.json');
 
 const config: WebpackConfiguration & {
   devServer: WebpackDevServerConfiguration;
@@ -35,7 +34,7 @@ const config: WebpackConfiguration & {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    plugins: [new TsconfigPathsPlugin({ configFile })],
+    plugins: [new TsconfigPathsPlugin({ baseUrl: '.' })],
   },
   module: {
     rules: [
@@ -46,7 +45,7 @@ const config: WebpackConfiguration & {
           {
             loader: 'ts-loader',
             options: {
-              configFile,
+              projectReferences: true,
             },
           },
         ],

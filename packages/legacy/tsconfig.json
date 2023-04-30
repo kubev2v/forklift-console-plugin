@@ -1,15 +1,14 @@
 {
   "extends": "../../config/tsconfig.base.json",
 
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"],
-  
+  "include": ["src/**/*"],
+
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "dist",
+    "outDir": "./dist",
+    "composite": true,
 
     "paths": {
-      "legacy/src/*": ["src/*"]
+      "legacy/src/*": ["./src/*"]
     }
-  },
+  }
 }

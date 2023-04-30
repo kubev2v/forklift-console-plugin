@@ -1,14 +1,22 @@
 {
-  "extends": "./tsconfig.production.json",
+  "extends": "../../config/tsconfig.base.json",
+
+  "include": ["src/**/*", "*.ts"],
 
   "compilerOptions": {
+    "outDir": "dist",
+    "declarationDir": "dist/types",
+
     "paths": {
-      "legacy/src/*": ["../legacy/src/*"],
+      "src/*": ["./src/*"],
+
       "common/src/*": ["../common/src/*"],
-      "@kubev2v/legacy/*": ["../legacy/src/*"],
-      "@kubev2v/common/*": ["../common/src/*"],
-      "@kubev2v/webpack": ["../webpack/src"],
-      "@kubev2v/types": ["../types/src"]
+      "legacy/src/*": ["../legacy/src/*"]
     }
-  }
+  },
+
+  "references": [
+    { "path": "../common" },
+    { "path": "../legacy" }
+  ]
 }

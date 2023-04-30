@@ -9,6 +9,7 @@
     "clean:all": "npm run clean -- ./node_modules",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.mjs",
     "build": "NODE_ENV=production webpack",
+    "build:dev": "webpack --progress",
     "start": "webpack serve",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
@@ -17,6 +18,8 @@
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot"
   },
   "dependencies": {
+    "@kubev2v/common": "*",
+    "@kubev2v/legacy": "*",
     "@migtools/lib-ui": "^8.4.1",
     "jsonpath": "^1.1.1",
     "streamsaver": "^2.0.6"
@@ -32,6 +35,8 @@
     "react-router-dom": "5.2.0"
   },
   "devDependencies": {
+    "@kubev2v/types": "*",
+    "@kubev2v/webpack": "*",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.9",
     "@types/ejs": "^3.0.6",
     "@types/jsonpath": "^0.2.0",

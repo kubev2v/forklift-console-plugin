@@ -5,6 +5,7 @@ generated/
 tmp/
 yarn-error.log
 openapitools.json
+tsconfig.tsbuildinfo
 
 cypress/videos
 ci/yaml/openapi.yaml

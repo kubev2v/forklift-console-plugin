@@ -5,10 +5,6 @@
  * Default rollup settings from @openshift/dynamic-plugin-sdk
  */
 
-import fs from 'fs';
-import path from 'path';
-
-import jsonc from 'jsonc-parser';
 import analyzer from 'rollup-plugin-analyzer';
 import css from 'rollup-plugin-import-css';
 
@@ -92,16 +88,13 @@ export const tsLibConfig = (pkg, inputFile, format = 'esm') => {
   const buildMetadata = getBuildMetadata(pkg);
   const externalModules = getExternalModules(pkg);
 
-  const tsconfig = jsonc.parse(
-    fs.readFileSync(path.resolve(process.cwd(), 'tsconfig.json'), 'utf-8'),
-  );
-
   return {
     input: inputFile,
     output: {
       file: 'dist/index.js',
       format,
       banner: getBanner(pkg, buildMetadata),
+      sourcemap: true,
     },
     external: externalModules.map((m) => new RegExp(`^${m}(\\/.+)*$`)),
     plugins: [
@@ -116,7 +109,6 @@ export const tsLibConfig = (pkg, inputFile, format = 'esm') => {
       }),
       typescript({
         tsconfig: './tsconfig.json',
-        include: tsconfig.include.map((filePattern) => `${filePattern}/**/*`),
         noEmitOnError: true,
         jsx: 'react',
       }),
