@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "clean": "rimraf ./dist ./coverage && npm run clean -ws",
-    "clean:all": "npm run clean -- ./node_modules ./tmp && npm run clean:all -ws",
+    "clean:all": "npm run clean && npm run clean:all -ws && rimraf ./node_modules ./tmp ",
     "build": "NODE_ENV=production npm run build -w @kubev2v/webpack -w @kubev2v/types -w @kubev2v/legacy -w @kubev2v/common -w @kubev2v/forklift-console-plugin",
     "build:depenencies": "npm run build -w @kubev2v/webpack -w @kubev2v/types -w @kubev2v/legacy -w @kubev2v/common",
     "build:dev": "npm run build:depenencies && npm run build:dev -w @kubev2v/forklift-console-plugin",
