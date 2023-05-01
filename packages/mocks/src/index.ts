@@ -1,2 +1,2 @@
-export * from './browser';
-export * from './cluster-proxy-server/handlers';
+// stub for future work
+export const stub = 'stub';
