@@ -15,7 +15,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf ./dist ./coverage",
-    "clean:all": "npm run clean -- ./node_modules",
+    "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
     "build": "npm run clean && npx rollup -c --bundleConfigAsCjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

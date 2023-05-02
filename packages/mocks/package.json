@@ -8,7 +8,7 @@
   "scripts": {
     "postinstall": "msw init ./generated --save",
     "clean": "rimraf ./dist ./coverage",
-    "clean:all": "npm run clean -- ./node_modules",
+    "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
     "build": "npm run clean && npm run compile && npm run copy",
     "compile": "tsc --build --verbose",
     "copy": "copyfiles -u 1 ./generated/** ./dist",

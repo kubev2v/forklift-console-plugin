@@ -11,3 +11,5 @@ cypress/videos
 ci/yaml/openapi.yaml
 
 **/mockServiceWorker.js
+
+.rollup.cache
