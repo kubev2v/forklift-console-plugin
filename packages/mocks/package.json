@@ -6,10 +6,12 @@
   "license": "Apache-2.0",
   "main": "./src/index.ts",
   "scripts": {
-    "postinstall": "npx msw init ./generated --save",
+    "postinstall": "msw init ./generated --save",
     "clean": "rimraf ./dist ./coverage",
     "clean:all": "npm run clean -- ./node_modules",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && npm run compile && npm run copy",
+    "compile": "tsc --build --verbose",
+    "copy": "copyfiles -u 1 ./generated/** ./dist",
     "lint": "eslint . ",
     "lint:fix": "eslint . --fix"
   },

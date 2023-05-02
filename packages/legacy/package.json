@@ -56,8 +56,7 @@
     "compile": "tsc --build --verbose && tsc-alias -p tsconfig.json",
     "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "echo 'this package is untested'; exit 0"
+    "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
     "@migtools/lib-ui": "^8.4.1",
