@@ -7,7 +7,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "postinstall": "msw init ./generated --save",
-    "clean": "rimraf ./dist ./coverage",
+    "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
     "build": "npm run clean && npm run compile && npm run copy",
     "compile": "tsc --build --verbose",
