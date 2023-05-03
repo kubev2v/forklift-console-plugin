@@ -34,7 +34,7 @@ const EmptyStateProviders: React.FC<{ namespace: string }> = ({ namespace }) => 
             <TextListItem>{t('Add source and target providers for the migration.')}</TextListItem>
             <TextListItem>
               {t(
-                'Map source datastores or storage domains and networks to target storage classes and networks.',
+                'Map source datastores or storage domains or volume types and networks to target storage classes and networks.',
               )}
             </TextListItem>
             <TextListItem>
