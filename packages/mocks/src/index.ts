@@ -1,2 +1,1 @@
-// stub for future work
-export const stub = 'stub';
+export * as consoleHandlers from './consoleHandlers';
