@@ -49,7 +49,7 @@ export const getMockData = <T = object>({
  */
 export interface MockResponse<T = object> {
   statusCode: number;
-  body: T | string | null;
+  body: T;
 }
 
 /**
