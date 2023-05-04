@@ -1,6 +1,6 @@
 import { rest, SetupWorker, setupWorker } from 'msw';
 
-import { getMockDataForRequest } from '@kubev2v/mocks';
+import { getMockData } from '@kubev2v/mocks';
 
 import { logMockRequest } from './logMockRequest';
 
@@ -14,7 +14,7 @@ import { logMockRequest } from './logMockRequest';
 export function setupBrowserWorker(staticFilePath: string): SetupWorker {
   const worker = setupWorker(
     rest.all('/*', (req, res, ctx) => {
-      const mockResponse = getMockDataForRequest({
+      const mockResponse = getMockData({
         pathname: req.url.pathname,
         method: req.method,
         params: req.params,

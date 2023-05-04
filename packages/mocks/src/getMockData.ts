@@ -18,9 +18,7 @@ const mockData: Record<string, object> = {
  * @param {PathParams} param0.params - An optional object containing the path parameters of the request
  * @returns {MockResponse | null} A mock response or null if no mock handler is found
  */
-export const getMockDataForRequest = ({
-  pathname,
-}: MockDataRequestParameters): MockResponse | null => {
+export const getMockData = ({ pathname }: MockDataRequestParameters): MockResponse | null => {
   // Add your mock handlers here, e.g.:
   // if (method === 'GET' && pathname === '/api/some-resource' && params['details'] === '1') {
   //   return mockResponse;
@@ -54,7 +52,7 @@ export interface MockResponse<T = object> {
 }
 
 /**
- * Interface for the parameters of the getMockDataForRequest function.
+ * Interface for the parameters of the getMockData function.
  *
  * @property {string} pathname - The pathname of the incoming request to match against the mock handlers
  * @property {string} [method] - An optional method of the incoming request to match against the mock handlers
