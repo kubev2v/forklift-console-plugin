@@ -1,3 +1,5 @@
+import { ProvidersInventory } from '@kubev2v/types';
+
 import { getMockData, MockDataRequestParameters, MockResponse } from '../getMockData';
 
 describe('getMockData', () => {
@@ -23,5 +25,15 @@ describe('getMockData', () => {
     const response: MockResponse | null = getMockData(requestParameters);
 
     expect(response).toBeNull();
+  });
+
+  it('should return the correct type', () => {
+    const requestParameters: MockDataRequestParameters = {
+      pathname: '/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers',
+    };
+
+    const response = getMockData<ProvidersInventory>(requestParameters);
+
+    expect(response.body.openshift[0].type).toBe('openshift');
   });
 });
