@@ -3,7 +3,7 @@ import { V1beta1Provider } from '../models/V1beta1Provider';
 /**
  * Represents the inventory of providers, including their entities.
  */
-export interface ProvidersInventory {
+export interface InventoryByType {
   openshift?: OpenshiftInventory[] | null;
   openstack?: OpenstackInventory[] | null;
   ovirt?: OVirtInventory[] | null;
@@ -92,7 +92,7 @@ export interface VSphereInventory {
   /** The self link of the entity. */
   selfLink: string;
   /** The type of the entity. */
-  type: 'openshift';
+  type: 'vsphere';
   /** The object associated with the entity. */
   object: V1beta1Provider;
   /** The API version of the vSphere provider. */
