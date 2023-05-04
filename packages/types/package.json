@@ -18,6 +18,10 @@
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
     "build": "npm run clean && rollup -c --bundleConfigAsCjs",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "generate:schemas": "bash ./ci/generate-schemas.sh"
+  },
+  "devDependencies": {
+    "ts-json-schema-generator": "^1.2.0"
   }
 }
