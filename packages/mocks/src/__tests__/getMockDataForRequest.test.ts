@@ -1,0 +1,31 @@
+import {
+  getMockDataForRequest,
+  MockDataRequestParameters,
+  MockResponse,
+} from '../getMockDataForRequest';
+
+describe('getMockDataForRequest', () => {
+  it('should return the correct mock response when the pathname matches', () => {
+    const requestParameters: MockDataRequestParameters = {
+      pathname: '/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers',
+    };
+
+    const response: MockResponse | null = getMockDataForRequest(requestParameters);
+
+    expect(response).not.toBeNull();
+    expect(response).toEqual({
+      statusCode: 200,
+      body: expect.any(Object),
+    });
+  });
+
+  it('should return null when the pathname does not match', () => {
+    const requestParameters: MockDataRequestParameters = {
+      pathname: '/api/non-existent-path',
+    };
+
+    const response: MockResponse | null = getMockDataForRequest(requestParameters);
+
+    expect(response).toBeNull();
+  });
+});

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import pluginMetadata from '../../plugin-metadata';
 
-import { type SetupWorker, setupBrowserWorker } from './setupBrowserWorker';
+import { setupBrowserWorker, SetupWorker } from './setupBrowserWorker';
 
 type MockServiceWorkerContextType = {
   worker: SetupWorker;

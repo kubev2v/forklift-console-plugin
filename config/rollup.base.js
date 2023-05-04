@@ -39,7 +39,7 @@ export const writeJSONFile = ({ fileName, value }) => ({
 /**
  * @param {import('type-fest').PackageJson} pkg
  */
-const getBuildMetadata = ({ name, version }) => {
+export const getBuildMetadata = ({ name, version }) => {
   const now = new Date();
   return {
     packageName: name,
@@ -53,7 +53,7 @@ const getBuildMetadata = ({ name, version }) => {
  * @param {import('type-fest').PackageJson} pkg
  * @param {Record<string, string>} buildMetadata
  */
-const getBanner = ({ repository }, buildMetadata) => {
+export const getBanner = ({ repository }, buildMetadata) => {
   const padLength = Object.keys(buildMetadata).reduce(
     (maxLength, key) => (key.length > maxLength ? key.length : maxLength),
     0,
@@ -73,7 +73,7 @@ const getBanner = ({ repository }, buildMetadata) => {
 /**
  * @param {import('type-fest').PackageJson} pkg
  */
-const getExternalModules = ({ dependencies, peerDependencies }) =>
+export const getExternalModules = ({ dependencies, peerDependencies }) =>
   Array.from(new Set([...Object.keys(dependencies ?? {}), ...Object.keys(peerDependencies ?? {})]));
 
 /**
