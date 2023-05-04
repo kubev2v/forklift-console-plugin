@@ -1,16 +1,12 @@
-import {
-  getMockDataForRequest,
-  MockDataRequestParameters,
-  MockResponse,
-} from '../getMockDataForRequest';
+import { getMockData, MockDataRequestParameters, MockResponse } from '../getMockData';
 
-describe('getMockDataForRequest', () => {
+describe('getMockData', () => {
   it('should return the correct mock response when the pathname matches', () => {
     const requestParameters: MockDataRequestParameters = {
       pathname: '/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers',
     };
 
-    const response: MockResponse | null = getMockDataForRequest(requestParameters);
+    const response: MockResponse | null = getMockData(requestParameters);
 
     expect(response).not.toBeNull();
     expect(response).toEqual({
@@ -24,7 +20,7 @@ describe('getMockDataForRequest', () => {
       pathname: '/api/non-existent-path',
     };
 
-    const response: MockResponse | null = getMockDataForRequest(requestParameters);
+    const response: MockResponse | null = getMockData(requestParameters);
 
     expect(response).toBeNull();
   });
