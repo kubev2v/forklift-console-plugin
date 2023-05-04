@@ -10,31 +10,15 @@
 
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./consoleHandlers": {
-      "types": "./dist/consoleHandlers/index.d.ts",
-      "default": "./dist/consoleHandlers/index.js"
-    }
-  },
 
   "scripts": {
     "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
-    "build": "npm run clean && npm run compile",
-    "compile": "tsc --build --verbose",
+    "build": "rollup -c --bundleConfigAsCjs",
     "lint": "eslint . ",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@kubev2v/legacy": "*",
     "msw": "^1.2.1"
-  },
-  "devDependencies": {
-    "typescript": "^4.7.4"
   }
 }

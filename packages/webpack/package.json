@@ -16,7 +16,7 @@
   "scripts": {
     "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
-    "build": "npm run clean && tsc",
+    "build": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

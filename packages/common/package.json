@@ -36,7 +36,7 @@
   "scripts": {
     "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
-    "build": "npm run clean && npm run compile && npm run copy:css",
+    "build": "npm run compile && npm run copy:css",
     "compile": "tsc --build --verbose && tsc-alias -p tsconfig.json",
     "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
