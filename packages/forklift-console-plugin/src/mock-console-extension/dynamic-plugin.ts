@@ -17,9 +17,9 @@ const _extensions: EncodedExtension[] = [
 ];
 
 /**
- * The plugin will be configured only if the DATA_SOURCE is 'mock'.
+ * The plugin will be configured only if the DATA_SOURCE is 'msw'.
  */
-const isDataSourceMock = process.env.DATA_SOURCE === 'mock';
+const isDataSourceMock = process.env.DATA_SOURCE === 'msw';
 
 export const exposedModules = isDataSourceMock ? _exposedModules : {};
 export const extensions = isDataSourceMock ? _extensions : [];
