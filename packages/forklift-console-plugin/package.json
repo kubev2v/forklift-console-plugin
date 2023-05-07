@@ -5,13 +5,12 @@
   "repository": "git@github.com:kubev2v/forklift-console-plugin.git",
   "license": "Apache-2.0",
   "scripts": {
-    "postinstall": "msw init ./generated --save",
     "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
-    "clean:all": "npm run clean -- ./node_modules ./.rollup.cache ./generated",
+    "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.mjs",
     "build": "NODE_ENV=production webpack",
     "build:dev": "webpack --progress",
-    "start": "webpack serve",
+    "start": "msw init ./dist --save; webpack serve",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "test": "TZ=UTC jest",
@@ -58,6 +57,6 @@
     "webpack-dev-server": "^4.7.4"
   },
   "msw": {
-    "workerDirectory": "generated"
+    "workerDirectory": "dist"
   }
 }

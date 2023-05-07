@@ -84,7 +84,7 @@ const config: WebpackConfiguration & {
     ],
   },
   devServer: {
-    static: ['./dist', './generated'],
+    static: ['./dist'],
     host: 'localhost',
     port: 9001,
     headers: {
