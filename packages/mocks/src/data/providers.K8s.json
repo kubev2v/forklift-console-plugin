@@ -152,7 +152,7 @@
             "namespace": "openshift-mtv"
           },
           "type": "ovirt",
-          "url": "https://rhvm.engineering.redhat.com/ovirt-engine/api"
+          "url": "https://rhvm.engineering.example.com/ovirt-engine/api"
         },
         "status": {
           "conditions": [
@@ -197,7 +197,7 @@
         "kind": "Provider",
         "metadata": {
           "annotations": {
-            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":\"2023-03-30T14:20:37Z\",\"generation\":1,\"name\":\"rhv\",\"namespace\":\"openshift-mtv\"},\"spec\":{\"secret\":{\"name\":\"rhv-zdnst\",\"namespace\":\"demo24\"},\"type\":\"ovirt\",\"url\":\"https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/api\"}}\n"
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":\"2023-03-30T14:20:37Z\",\"generation\":1,\"name\":\"rhv\",\"namespace\":\"openshift-mtv\"},\"spec\":{\"secret\":{\"name\":\"rhv-zdnst\",\"namespace\":\"demo24\"},\"type\":\"ovirt\",\"url\":\"https://hosted-engine-08.lab.eng.tlv2.example.com/ovirt-engine/api\"}}\n"
           },
           "creationTimestamp": "2023-04-03T13:34:48Z",
           "generation": 1,
@@ -251,7 +251,7 @@
             "namespace": "demo24"
           },
           "type": "ovirt",
-          "url": "https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/api"
+          "url": "https://hosted-engine-08.lab.eng.tlv2.example.com/ovirt-engine/api"
         },
         "status": {
           "conditions": [
@@ -349,7 +349,7 @@
             "namespace": "openshift-mtv"
           },
           "type": "ovirt",
-          "url": "https://rhvm.engineering.redhat.com/ovirt-engine/api"
+          "url": "https://rhvm.engineering.example.com/ovirt-engine/api"
         },
         "status": {
           "conditions": [
@@ -439,7 +439,7 @@
             "namespace": "openshift-mtv"
           },
           "type": "ovirt",
-          "url": "https://rhvm.engineering.redhat.com/ovirt-engine/api"
+          "url": "https://rhvm.engineering.example.com/ovirt-engine/api"
         },
         "status": {
           "conditions": [
@@ -536,7 +536,7 @@
             "vddkInitImage": "quay.io/lrotenbe/vddk:7.0.3"
           },
           "type": "vsphere",
-          "url": "https://rhev-node-13.rdu2.scalelab.redhat.com/sdk"
+          "url": "https://rhev-node-13.rdu2.scalelab.example.com/sdk"
         },
         "status": {
           "conditions": [
