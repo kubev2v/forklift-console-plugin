@@ -13,6 +13,8 @@ import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 
+import har from './rollup/rollup-plugin-har';
+
 // https://yarnpkg.com/advanced/lifecycle-scripts#environment-variables
 const rootDir = process.env.PROJECT_CWD;
 
@@ -101,6 +103,10 @@ export const tsLibConfig = (pkg, inputFile, format = 'esm') => {
       nodeResolve(),
       commonjs(),
       json({
+        compact: true,
+        preferConst: true,
+      }),
+      har({
         compact: true,
         preferConst: true,
       }),

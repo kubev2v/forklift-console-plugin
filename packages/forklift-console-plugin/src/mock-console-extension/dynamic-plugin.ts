@@ -1,3 +1,4 @@
+import { WMS_MOCK_SOURCES } from '@kubev2v/mocks';
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import { ContextProvider } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
@@ -17,9 +18,9 @@ const _extensions: EncodedExtension[] = [
 ];
 
 /**
- * The plugin will be configured only if the DATA_SOURCE is 'msw'.
+ * The plugin will be configured only if the DATA_SOURCE is one of the MSW mock sources.
  */
-const isDataSourceMock = process.env.DATA_SOURCE === 'msw';
+const isDataSourceMock = WMS_MOCK_SOURCES.includes(process.env.DATA_SOURCE);
 
 export const exposedModules = isDataSourceMock ? _exposedModules : {};
 export const extensions = isDataSourceMock ? _extensions : [];

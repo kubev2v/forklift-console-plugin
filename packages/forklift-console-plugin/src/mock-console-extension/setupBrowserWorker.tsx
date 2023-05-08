@@ -14,11 +14,16 @@ import { logMockRequest } from './logMockRequest';
 export function setupBrowserWorker(staticFilePath: string): SetupWorker {
   const worker = setupWorker(
     rest.all('/*', (req, res, ctx) => {
-      const mockResponse = getMockData({
-        pathname: req.url.pathname,
-        method: req.method,
-        params: req.params,
-      });
+      const mockResponse = getMockData(
+        {
+          pathname: req.url.pathname,
+          method: req.method,
+          params: req.params,
+        },
+        // the getMockData method will return a different set of mocks depending on
+        // the mock sources, available options include 'har' and 'json'
+        process.env.DATA_SOURCE,
+      );
 
       if (mockResponse) {
         logMockRequest('handled', req.url.href);
