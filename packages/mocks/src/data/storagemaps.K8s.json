@@ -1,0 +1,535 @@
+{
+    "apiVersion": "forklift.konveyor.io/v1beta1",
+    "items": [
+        {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "StorageMap",
+        "metadata": {
+            "annotations": {
+            "forklift.konveyor.io/shared": "false"
+            },
+            "creationTimestamp": "2023-04-06T11:40:44Z",
+            "generateName": "copy-of-mnecas-test-plan-local-",
+            "generation": 1,
+            "managedFields": [
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                "f:metadata": {
+                    "f:annotations": {
+                    ".": {},
+                    "f:forklift.konveyor.io/shared": {}
+                    },
+                    "f:generateName": {},
+                    "f:ownerReferences": {
+                    ".": {},
+                    "k:{\"uid\":\"0f59e83d-fa1d-4c94-a4ff-35a4b66077e8\"}": {}
+                    }
+                },
+                "f:spec": {
+                    ".": {},
+                    "f:map": {},
+                    "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                    }
+                }
+                },
+                "manager": "Mozilla",
+                "operation": "Update",
+                "time": "2023-04-06T11:40:44Z"
+            },
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                "f:status": {
+                    ".": {},
+                    "f:conditions": {},
+                    "f:observedGeneration": {},
+                    "f:references": {}
+                }
+                },
+                "manager": "forklift-controller",
+                "operation": "Update",
+                "subresource": "status",
+                "time": "2023-04-06T11:40:44Z"
+            }
+            ],
+            "name": "copy-of-mnecas-test-plan-local-rb426",
+            "namespace": "openshift-mtv",
+            "ownerReferences": [
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "kind": "Plan",
+                "name": "copy-of-mnecas-test-plan-local",
+                "uid": "0f59e83d-fa1d-4c94-a4ff-35a4b66077e8"
+            }
+            ],
+            "resourceVersion": "481802710",
+            "uid": "15e1d95f-931c-4a92-89a4-784d1ac28a0f"
+        },
+        "spec": {
+            "map": [
+            {
+                "destination": {
+                "storageClass": "localblock-sc"
+                },
+                "source": {
+                "id": "datastore-34003"
+                }
+            }
+            ],
+            "provider": {
+            "destination": {
+                "name": "host",
+                "namespace": "openshift-mtv"
+            },
+            "source": {
+                "name": "vmware",
+                "namespace": "openshift-mtv"
+            }
+            }
+        },
+        "status": {
+            "conditions": [
+            {
+                "category": "Required",
+                "lastTransitionTime": "2023-04-27T12:14:51Z",
+                "message": "The storage map is ready.",
+                "status": "True",
+                "type": "Ready"
+            }
+            ],
+            "observedGeneration": 1,
+            "references": [
+            {
+                "id": "datastore-34003",
+                "name": "v2v_general_porpuse_FC_DC"
+            }
+            ]
+        }
+        },
+        {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "StorageMap",
+        "metadata": {
+            "annotations": {
+            "forklift.konveyor.io/shared": "false"
+            },
+            "creationTimestamp": "2023-04-06T11:40:11Z",
+            "generateName": "copy-of-mnecas-test-plan-",
+            "generation": 1,
+            "managedFields": [
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                "f:status": {
+                    ".": {},
+                    "f:conditions": {},
+                    "f:observedGeneration": {},
+                    "f:references": {}
+                }
+                },
+                "manager": "forklift-controller",
+                "operation": "Update",
+                "subresource": "status",
+                "time": "2023-04-06T11:40:11Z"
+            },
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                "f:metadata": {
+                    "f:annotations": {
+                    ".": {},
+                    "f:forklift.konveyor.io/shared": {}
+                    },
+                    "f:generateName": {},
+                    "f:ownerReferences": {
+                    ".": {},
+                    "k:{\"uid\":\"006a5208-9a55-47ff-9916-ea3823a0ac34\"}": {}
+                    }
+                },
+                "f:spec": {
+                    ".": {},
+                    "f:map": {},
+                    "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                    }
+                }
+                },
+                "manager": "Mozilla",
+                "operation": "Update",
+                "time": "2023-04-06T11:40:12Z"
+            }
+            ],
+            "name": "copy-of-mnecas-test-plan-p4kpn",
+            "namespace": "openshift-mtv",
+            "ownerReferences": [
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "kind": "Plan",
+                "name": "copy-of-mnecas-test-plan",
+                "uid": "006a5208-9a55-47ff-9916-ea3823a0ac34"
+            }
+            ],
+            "resourceVersion": "481802698",
+            "uid": "7c4532b4-9fcb-497f-bb35-5cd42d6cafcc"
+        },
+        "spec": {
+            "map": [
+            {
+                "destination": {
+                "storageClass": "openshift-storage.noobaa.io"
+                },
+                "source": {
+                "id": "datastore-34003"
+                }
+            }
+            ],
+            "provider": {
+            "destination": {
+                "name": "host",
+                "namespace": "openshift-mtv"
+            },
+            "source": {
+                "name": "vmware",
+                "namespace": "openshift-mtv"
+            }
+            }
+        },
+        "status": {
+            "conditions": [
+            {
+                "category": "Required",
+                "lastTransitionTime": "2023-04-27T12:14:51Z",
+                "message": "The storage map is ready.",
+                "status": "True",
+                "type": "Ready"
+            }
+            ],
+            "observedGeneration": 1,
+            "references": [
+            {
+                "id": "datastore-34003",
+                "name": "v2v_general_porpuse_FC_DC"
+            }
+            ]
+        }
+        },
+        {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "StorageMap",
+        "metadata": {
+            "annotations": {
+            "forklift.konveyor.io/shared": "false"
+            },
+            "creationTimestamp": "2023-04-06T09:39:59Z",
+            "generateName": "mnecas-test-plan-",
+            "generation": 1,
+            "managedFields": [
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                "f:metadata": {
+                    "f:annotations": {
+                    ".": {},
+                    "f:forklift.konveyor.io/shared": {}
+                    },
+                    "f:generateName": {},
+                    "f:ownerReferences": {
+                    ".": {},
+                    "k:{\"uid\":\"7c75032b-94e7-4e31-a5ef-656365048047\"}": {}
+                    }
+                },
+                "f:spec": {
+                    ".": {},
+                    "f:map": {},
+                    "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                    }
+                }
+                },
+                "manager": "Mozilla",
+                "operation": "Update",
+                "time": "2023-04-06T09:39:59Z"
+            },
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                "f:status": {
+                    ".": {},
+                    "f:conditions": {},
+                    "f:observedGeneration": {},
+                    "f:references": {}
+                }
+                },
+                "manager": "forklift-controller",
+                "operation": "Update",
+                "subresource": "status",
+                "time": "2023-04-06T09:39:59Z"
+            }
+            ],
+            "name": "mnecas-test-plan-tdpn9",
+            "namespace": "openshift-mtv",
+            "ownerReferences": [
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "kind": "Plan",
+                "name": "mnecas-test-plan",
+                "uid": "7c75032b-94e7-4e31-a5ef-656365048047"
+            }
+            ],
+            "resourceVersion": "481802706",
+            "uid": "917c63fa-3d10-4f26-969c-bd7097b2de1b"
+        },
+        "spec": {
+            "map": [
+            {
+                "destination": {
+                "storageClass": "ocs-storagecluster-ceph-rbd"
+                },
+                "source": {
+                "id": "datastore-34003"
+                }
+            }
+            ],
+            "provider": {
+            "destination": {
+                "name": "host",
+                "namespace": "openshift-mtv"
+            },
+            "source": {
+                "name": "vmware",
+                "namespace": "openshift-mtv"
+            }
+            }
+        },
+        "status": {
+            "conditions": [
+            {
+                "category": "Required",
+                "lastTransitionTime": "2023-04-27T12:14:51Z",
+                "message": "The storage map is ready.",
+                "status": "True",
+                "type": "Ready"
+            }
+            ],
+            "observedGeneration": 1,
+            "references": [
+            {
+                "id": "datastore-34003",
+                "name": "v2v_general_porpuse_FC_DC"
+            }
+            ]
+        }
+        },
+        {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "StorageMap",
+        "metadata": {
+            "annotations": {
+            "forklift.konveyor.io/shared": "true"
+            },
+            "creationTimestamp": "2023-04-19T10:14:56Z",
+            "generation": 2,
+            "managedFields": [
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                "f:spec": {
+                    ".": {},
+                    "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                    }
+                }
+                },
+                "manager": "OpenAPI-Generator",
+                "operation": "Update",
+                "time": "2023-04-19T10:14:56Z"
+            },
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                "f:status": {
+                    ".": {},
+                    "f:conditions": {},
+                    "f:observedGeneration": {},
+                    "f:references": {}
+                }
+                },
+                "manager": "forklift-controller",
+                "operation": "Update",
+                "subresource": "status",
+                "time": "2023-04-19T10:25:35Z"
+            },
+            {
+                "apiVersion": "forklift.konveyor.io/v1beta1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                "f:metadata": {
+                    "f:annotations": {
+                    ".": {},
+                    "f:forklift.konveyor.io/shared": {}
+                    }
+                },
+                "f:spec": {
+                    "f:map": {}
+                }
+                },
+                "manager": "Mozilla",
+                "operation": "Update",
+                "time": "2023-04-19T10:27:31Z"
+            }
+            ],
+            "name": "mtv-storage-mapping-bella",
+            "namespace": "openshift-mtv",
+            "resourceVersion": "481802745",
+            "uid": "9fa5fbc5-549c-4e0a-ae70-bec078e5dda6"
+        },
+        "spec": {
+            "map": [
+            {
+                "destination": {
+                "storageClass": "ocs-storagecluster-ceph-rbd"
+                },
+                "source": {
+                "id": "5a39bb1b-7b15-46c3-bfc0-0765afe19f3b"
+                }
+            },
+            {
+                "destination": {
+                "storageClass": "ocs-storagecluster-ceph-rbd"
+                },
+                "source": {
+                "id": "8eb68241-f36f-40bf-aadf-401c53fcd915"
+                }
+            },
+            {
+                "destination": {
+                "storageClass": "ocs-storagecluster-ceph-rbd"
+                },
+                "source": {
+                "id": "9c4bbfa7-c57c-4431-8f35-565380171b2d"
+                }
+            },
+            {
+                "destination": {
+                "storageClass": "ocs-storagecluster-ceph-rbd"
+                },
+                "source": {
+                "id": "83d6f06b-2bec-4b3c-ba48-872ed54f02b7"
+                }
+            },
+            {
+                "destination": {
+                "storageClass": "ocs-storagecluster-ceph-rbd"
+                },
+                "source": {
+                "id": "9911fcf3-1b3b-4e95-9858-d7b7c0ba779e"
+                }
+            },
+            {
+                "destination": {
+                "storageClass": "ocs-storagecluster-ceph-rbd"
+                },
+                "source": {
+                "id": "f7b1588c-579d-4a35-9d68-2325ca49a4d1"
+                }
+            },
+            {
+                "destination": {
+                "storageClass": "ocs-storagecluster-ceph-rbd"
+                },
+                "source": {
+                "id": "2f5fb606-ee7f-4c46-8e08-b52b62220e70"
+                }
+            },
+            {
+                "destination": {
+                "storageClass": "ocs-storagecluster-ceph-rbd"
+                },
+                "source": {
+                "id": "08e28643-4e89-41ca-ab75-564be2adef81"
+                }
+            }
+            ],
+            "provider": {
+            "destination": {
+                "name": "host",
+                "namespace": "openshift-mtv"
+            },
+            "source": {
+                "name": "mtv-provider-bella",
+                "namespace": "openshift-mtv"
+            }
+            }
+        },
+        "status": {
+            "conditions": [
+            {
+                "category": "Required",
+                "lastTransitionTime": "2023-04-27T12:14:52Z",
+                "message": "The storage map is ready.",
+                "status": "True",
+                "type": "Ready"
+            }
+            ],
+            "observedGeneration": 2,
+            "references": [
+            {
+                "id": "5a39bb1b-7b15-46c3-bfc0-0765afe19f3b",
+                "name": "data-nfs-rdu"
+            },
+            {
+                "id": "8eb68241-f36f-40bf-aadf-401c53fcd915",
+                "name": "data-nfs-tlv2"
+            },
+            {
+                "id": "9c4bbfa7-c57c-4431-8f35-565380171b2d",
+                "name": "export-nfs-rdu"
+            },
+            {
+                "id": "83d6f06b-2bec-4b3c-ba48-872ed54f02b7",
+                "name": "export-nfs-tlv2"
+            },
+            {
+                "id": "9911fcf3-1b3b-4e95-9858-d7b7c0ba779e",
+                "name": "hosted_storage"
+            },
+            {
+                "id": "f7b1588c-579d-4a35-9d68-2325ca49a4d1",
+                "name": "iso-nfs-rdu"
+            },
+            {
+                "id": "2f5fb606-ee7f-4c46-8e08-b52b62220e70",
+                "name": "iso-nfs-tlv2"
+            },
+            {
+                "id": "08e28643-4e89-41ca-ab75-564be2adef81",
+                "name": "vm-leases-tlv2"
+            }
+            ]
+        }
+        }
+    ],
+    "kind": "StorageMapList",
+    "metadata": {
+        "continue": "",
+        "resourceVersion": "498629473"
+    }
+}

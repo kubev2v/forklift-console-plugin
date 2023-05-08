@@ -1,0 +1,1156 @@
+{
+    "apiVersion": "forklift.konveyor.io/v1beta1",
+    "items": [
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Plan",
+        "metadata": {
+          "creationTimestamp": "2023-04-19T10:17:12Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:spec": {
+                  ".": {},
+                  "f:archived": {},
+                  "f:description": {},
+                  "f:map": {
+                    ".": {},
+                    "f:network": {},
+                    "f:storage": {}
+                  },
+                  "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                  },
+                  "f:targetNamespace": {},
+                  "f:vms": {},
+                  "f:warm": {}
+                }
+              },
+              "manager": "OpenAPI-Generator",
+              "operation": "Update",
+              "time": "2023-04-19T10:17:12Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:migration": {
+                    ".": {},
+                    "f:completed": {},
+                    "f:history": {},
+                    "f:started": {},
+                    "f:vms": {}
+                  },
+                  "f:observedGeneration": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-19T10:33:17Z"
+            }
+          ],
+          "name": "bkhizgiy-plan",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "481803005",
+          "uid": "e81c96b5-e42d-402e-82e6-8a0942eab865"
+        },
+        "spec": {
+          "archived": false,
+          "description": "",
+          "map": {
+            "network": {
+              "name": "mtv-network-mapping-bella",
+              "namespace": "openshift-mtv"
+            },
+            "storage": {
+              "name": "mtv-storage-mapping-bella",
+              "namespace": "openshift-mtv"
+            }
+          },
+          "provider": {
+            "destination": {
+              "name": "host",
+              "namespace": "openshift-mtv"
+            },
+            "source": {
+              "name": "mtv-provider-bella",
+              "namespace": "openshift-mtv"
+            }
+          },
+          "targetNamespace": "bkhizgiy-project",
+          "vms": [
+            {
+              "hooks": [],
+              "id": "d56af2fb-e3fa-4553-b5e5-f9101c95344d"
+            },
+            {
+              "hooks": [],
+              "id": "2b17d6a4-c267-4c9f-b90b-b123b38addc2"
+            }
+          ],
+          "warm": false
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Advisory",
+              "durable": true,
+              "lastTransitionTime": "2023-04-19T10:33:17Z",
+              "message": "The plan execution has SUCCEEDED.",
+              "status": "True",
+              "type": "Succeeded"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:15:02Z",
+              "message": "The migration plan is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "migration": {
+            "completed": "2023-04-19T10:33:16Z",
+            "history": [
+              {
+                "conditions": [
+                  {
+                    "category": "Advisory",
+                    "durable": true,
+                    "lastTransitionTime": "2023-04-19T10:33:16Z",
+                    "message": "The plan execution has SUCCEEDED.",
+                    "status": "True",
+                    "type": "Succeeded"
+                  }
+                ],
+                "map": {
+                  "network": {
+                    "generation": 1,
+                    "name": "mtv-network-mapping-bella",
+                    "namespace": "openshift-mtv",
+                    "uid": "48bc0731-2273-4481-bddb-559c13cdd131"
+                  },
+                  "storage": {
+                    "generation": 2,
+                    "name": "mtv-storage-mapping-bella",
+                    "namespace": "openshift-mtv",
+                    "uid": "9fa5fbc5-549c-4e0a-ae70-bec078e5dda6"
+                  }
+                },
+                "migration": {
+                  "generation": 1,
+                  "name": "bkhizgiy-migration",
+                  "namespace": "openshift-mtv",
+                  "uid": "70c78fd6-2c40-4776-830f-10de451edcd0"
+                },
+                "plan": {
+                  "generation": 1,
+                  "name": "bkhizgiy-plan",
+                  "namespace": "openshift-mtv",
+                  "uid": "e81c96b5-e42d-402e-82e6-8a0942eab865"
+                },
+                "provider": {
+                  "destination": {
+                    "generation": 1,
+                    "name": "host",
+                    "namespace": "openshift-mtv",
+                    "uid": "e140d4bc-91b7-48c2-b096-7820c8d20b0d"
+                  },
+                  "source": {
+                    "generation": 1,
+                    "name": "mtv-provider-bella",
+                    "namespace": "openshift-mtv",
+                    "uid": "4864c314-4465-4b5b-8557-00b021e1bb50"
+                  }
+                }
+              }
+            ],
+            "started": "2023-04-19T10:28:06Z",
+            "vms": [
+              {
+                "completed": "2023-04-19T10:32:46Z",
+                "conditions": [
+                  {
+                    "category": "Advisory",
+                    "durable": true,
+                    "lastTransitionTime": "2023-04-19T10:32:46Z",
+                    "message": "The VM migration has SUCCEEDED.",
+                    "status": "True",
+                    "type": "Succeeded"
+                  }
+                ],
+                "id": "d56af2fb-e3fa-4553-b5e5-f9101c95344d",
+                "name": "bkhizgiy-mtv-1",
+                "phase": "Completed",
+                "pipeline": [
+                  {
+                    "completed": "2023-04-19T10:28:52Z",
+                    "description": "Initialize migration.",
+                    "name": "Initialize",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    },
+                    "started": "2023-04-19T10:28:06Z"
+                  },
+                  {
+                    "annotations": {
+                      "unit": "MB"
+                    },
+                    "completed": "2023-04-19T10:32:36Z",
+                    "description": "Transfer disks.",
+                    "name": "DiskTransfer",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 25600,
+                      "total": 25600
+                    },
+                    "started": "2023-04-19T10:29:04Z",
+                    "tasks": [
+                      {
+                        "annotations": {
+                          "unit": "MB"
+                        },
+                        "completed": "2023-04-19T10:32:36Z",
+                        "name": "82f13654-9968-4e26-8323-df7b2f54d374",
+                        "progress": {
+                          "completed": 25600,
+                          "total": 25600
+                        },
+                        "started": "2023-04-19T10:32:36Z"
+                      }
+                    ]
+                  },
+                  {
+                    "completed": "2023-04-19T10:32:46Z",
+                    "description": "Create VM.",
+                    "name": "VirtualMachineCreation",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    },
+                    "started": "2023-04-19T10:32:46Z"
+                  }
+                ],
+                "restorePowerState": "Off",
+                "started": "2023-04-19T10:28:06Z"
+              },
+              {
+                "completed": "2023-04-19T10:33:16Z",
+                "conditions": [
+                  {
+                    "category": "Advisory",
+                    "durable": true,
+                    "lastTransitionTime": "2023-04-19T10:33:16Z",
+                    "message": "The VM migration has SUCCEEDED.",
+                    "status": "True",
+                    "type": "Succeeded"
+                  }
+                ],
+                "id": "2b17d6a4-c267-4c9f-b90b-b123b38addc2",
+                "name": "bkhizgiy-mtv-2",
+                "phase": "Completed",
+                "pipeline": [
+                  {
+                    "completed": "2023-04-19T10:29:04Z",
+                    "description": "Initialize migration.",
+                    "name": "Initialize",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    },
+                    "started": "2023-04-19T10:28:18Z"
+                  },
+                  {
+                    "annotations": {
+                      "unit": "MB"
+                    },
+                    "completed": "2023-04-19T10:33:06Z",
+                    "description": "Transfer disks.",
+                    "name": "DiskTransfer",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 25600,
+                      "total": 25600
+                    },
+                    "started": "2023-04-19T10:29:14Z",
+                    "tasks": [
+                      {
+                        "annotations": {
+                          "unit": "MB"
+                        },
+                        "completed": "2023-04-19T10:33:06Z",
+                        "name": "6b3683e6-b36e-4ae1-81c0-0f9cd39d8741",
+                        "progress": {
+                          "completed": 25600,
+                          "total": 25600
+                        },
+                        "started": "2023-04-19T10:33:06Z"
+                      }
+                    ]
+                  },
+                  {
+                    "completed": "2023-04-19T10:33:16Z",
+                    "description": "Create VM.",
+                    "name": "VirtualMachineCreation",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    },
+                    "started": "2023-04-19T10:33:16Z"
+                  }
+                ],
+                "restorePowerState": "Off",
+                "started": "2023-04-19T10:28:18Z"
+              }
+            ]
+          },
+          "observedGeneration": 1
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Plan",
+        "metadata": {
+          "creationTimestamp": "2023-04-06T11:40:11Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:spec": {
+                  ".": {},
+                  "f:archived": {},
+                  "f:description": {},
+                  "f:map": {
+                    ".": {},
+                    "f:network": {},
+                    "f:storage": {}
+                  },
+                  "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                  },
+                  "f:targetNamespace": {},
+                  "f:vms": {},
+                  "f:warm": {}
+                }
+              },
+              "manager": "Mozilla",
+              "operation": "Update",
+              "time": "2023-04-06T11:40:11Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:migration": {
+                    ".": {},
+                    "f:completed": {},
+                    "f:history": {},
+                    "f:started": {},
+                    "f:vms": {}
+                  },
+                  "f:observedGeneration": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-06T11:43:52Z"
+            }
+          ],
+          "name": "copy-of-mnecas-test-plan",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "481802712",
+          "uid": "006a5208-9a55-47ff-9916-ea3823a0ac34"
+        },
+        "spec": {
+          "archived": false,
+          "description": "",
+          "map": {
+            "network": {
+              "name": "copy-of-mnecas-test-plan-jrf9m",
+              "namespace": "openshift-mtv"
+            },
+            "storage": {
+              "name": "copy-of-mnecas-test-plan-p4kpn",
+              "namespace": "openshift-mtv"
+            }
+          },
+          "provider": {
+            "destination": {
+              "name": "host",
+              "namespace": "openshift-mtv"
+            },
+            "source": {
+              "name": "vmware",
+              "namespace": "openshift-mtv"
+            }
+          },
+          "targetNamespace": "mnecas-test",
+          "vms": [
+            {
+              "hooks": [],
+              "id": "vm-35512"
+            }
+          ],
+          "warm": false
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Advisory",
+              "durable": true,
+              "lastTransitionTime": "2023-04-06T11:43:52Z",
+              "message": "The plan execution has been CANCELED.",
+              "status": "True",
+              "type": "Canceled"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:51Z",
+              "message": "The migration plan is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "migration": {
+            "completed": "2023-04-06T11:43:51Z",
+            "history": [
+              {
+                "conditions": [
+                  {
+                    "category": "Advisory",
+                    "durable": true,
+                    "lastTransitionTime": "2023-04-06T11:43:51Z",
+                    "message": "The plan execution has been CANCELED.",
+                    "status": "True",
+                    "type": "Canceled"
+                  }
+                ],
+                "map": {
+                  "network": {
+                    "generation": 1,
+                    "name": "copy-of-mnecas-test-plan-jrf9m",
+                    "namespace": "openshift-mtv",
+                    "uid": "75c6962c-d753-4488-b2ea-cec58bd1cf3d"
+                  },
+                  "storage": {
+                    "generation": 1,
+                    "name": "copy-of-mnecas-test-plan-p4kpn",
+                    "namespace": "openshift-mtv",
+                    "uid": "7c4532b4-9fcb-497f-bb35-5cd42d6cafcc"
+                  }
+                },
+                "migration": {
+                  "generation": 1,
+                  "name": "copy-of-mnecas-test-plan-1680781215417",
+                  "namespace": "openshift-mtv",
+                  "uid": "a29c5339-ec9d-444a-b6b2-b049e7dce3eb"
+                },
+                "plan": {
+                  "generation": 1,
+                  "name": "copy-of-mnecas-test-plan",
+                  "namespace": "openshift-mtv",
+                  "uid": "006a5208-9a55-47ff-9916-ea3823a0ac34"
+                },
+                "provider": {
+                  "destination": {
+                    "generation": 1,
+                    "name": "host",
+                    "namespace": "openshift-mtv",
+                    "uid": "e140d4bc-91b7-48c2-b096-7820c8d20b0d"
+                  },
+                  "source": {
+                    "generation": 2,
+                    "name": "vmware",
+                    "namespace": "openshift-mtv",
+                    "uid": "1ec8b4c7-028d-4a50-a5a9-3ab07dbd0560"
+                  }
+                }
+              }
+            ],
+            "started": "2023-04-06T11:40:23Z",
+            "vms": [
+              {
+                "completed": "2023-04-06T11:43:51Z",
+                "conditions": [
+                  {
+                    "category": "Advisory",
+                    "durable": true,
+                    "lastTransitionTime": "2023-04-06T11:54:55Z",
+                    "message": "The migration has been canceled.",
+                    "reason": "Modified",
+                    "status": "True",
+                    "type": "Canceled"
+                  }
+                ],
+                "id": "vm-35512",
+                "name": "tg-mini-no-selinux-kernel",
+                "phase": "Completed",
+                "pipeline": [
+                  {
+                    "completed": "2023-04-06T11:41:05Z",
+                    "description": "Initialize migration.",
+                    "name": "Initialize",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    },
+                    "started": "2023-04-06T11:40:23Z"
+                  },
+                  {
+                    "annotations": {
+                      "unit": "MB"
+                    },
+                    "completed": "2023-04-06T11:43:51Z",
+                    "description": "Allocate disks.",
+                    "name": "DiskAllocation",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 0,
+                      "total": 2764
+                    },
+                    "started": "2023-04-06T11:41:14Z",
+                    "tasks": [
+                      {
+                        "annotations": {
+                          "unit": "MB"
+                        },
+                        "name": "[v2v_general_porpuse_FC_DC] tg-mini-no-selinux-kernel/tg-mini-no-selinux-kernel.vmdk",
+                        "progress": {
+                          "completed": 0,
+                          "total": 2764
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "description": "Convert image to kubevirt.",
+                    "name": "ImageConversion",
+                    "phase": "Pending",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    }
+                  },
+                  {
+                    "annotations": {
+                      "unit": "MB"
+                    },
+                    "description": "Copy disks.",
+                    "name": "DiskTransferV2v",
+                    "phase": "Pending",
+                    "progress": {
+                      "completed": 0,
+                      "total": 2764
+                    },
+                    "tasks": [
+                      {
+                        "annotations": {
+                          "unit": "MB"
+                        },
+                        "name": "[v2v_general_porpuse_FC_DC] tg-mini-no-selinux-kernel/tg-mini-no-selinux-kernel.vmdk",
+                        "progress": {
+                          "completed": 0,
+                          "total": 2764
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "description": "Create VM.",
+                    "name": "VirtualMachineCreation",
+                    "phase": "Pending",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    }
+                  }
+                ],
+                "restorePowerState": "Off",
+                "started": "2023-04-06T11:40:23Z"
+              }
+            ]
+          },
+          "observedGeneration": 1
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Plan",
+        "metadata": {
+          "creationTimestamp": "2023-04-06T11:40:44Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:spec": {
+                  ".": {},
+                  "f:archived": {},
+                  "f:description": {},
+                  "f:map": {
+                    ".": {},
+                    "f:network": {},
+                    "f:storage": {}
+                  },
+                  "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                  },
+                  "f:targetNamespace": {},
+                  "f:vms": {},
+                  "f:warm": {}
+                }
+              },
+              "manager": "Mozilla",
+              "operation": "Update",
+              "time": "2023-04-06T11:40:44Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:migration": {
+                    ".": {},
+                    "f:history": {},
+                    "f:started": {},
+                    "f:vms": {}
+                  },
+                  "f:observedGeneration": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-06T11:42:47Z"
+            }
+          ],
+          "name": "copy-of-mnecas-test-plan-local",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "481803102",
+          "uid": "0f59e83d-fa1d-4c94-a4ff-35a4b66077e8"
+        },
+        "spec": {
+          "archived": false,
+          "description": "",
+          "map": {
+            "network": {
+              "name": "copy-of-mnecas-test-plan-local-jj7pb",
+              "namespace": "openshift-mtv"
+            },
+            "storage": {
+              "name": "copy-of-mnecas-test-plan-local-rb426",
+              "namespace": "openshift-mtv"
+            }
+          },
+          "provider": {
+            "destination": {
+              "name": "host",
+              "namespace": "openshift-mtv"
+            },
+            "source": {
+              "name": "vmware",
+              "namespace": "openshift-mtv"
+            }
+          },
+          "targetNamespace": "mnecas-test",
+          "vms": [
+            {
+              "hooks": [],
+              "id": "vm-35512"
+            }
+          ],
+          "warm": false
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Advisory",
+              "durable": true,
+              "lastTransitionTime": "2023-04-06T11:42:47Z",
+              "message": "The plan is EXECUTING.",
+              "status": "True",
+              "type": "Executing"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:15:06Z",
+              "message": "The migration plan is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "migration": {
+            "history": [
+              {
+                "conditions": [
+                  {
+                    "category": "Advisory",
+                    "durable": true,
+                    "lastTransitionTime": "2023-04-06T11:42:47Z",
+                    "message": "The plan is EXECUTING.",
+                    "status": "True",
+                    "type": "Executing"
+                  }
+                ],
+                "map": {
+                  "network": {
+                    "generation": 1,
+                    "name": "copy-of-mnecas-test-plan-local-jj7pb",
+                    "namespace": "openshift-mtv",
+                    "uid": "3f4efab0-a84c-4a09-90a7-acb51a0f0dce"
+                  },
+                  "storage": {
+                    "generation": 1,
+                    "name": "copy-of-mnecas-test-plan-local-rb426",
+                    "namespace": "openshift-mtv",
+                    "uid": "15e1d95f-931c-4a92-89a4-784d1ac28a0f"
+                  }
+                },
+                "migration": {
+                  "generation": 1,
+                  "name": "copy-of-mnecas-test-plan-local-1680781360226",
+                  "namespace": "openshift-mtv",
+                  "uid": "a90dae07-d791-4703-bb30-dd7b7351c29c"
+                },
+                "plan": {
+                  "generation": 1,
+                  "name": "copy-of-mnecas-test-plan-local",
+                  "namespace": "openshift-mtv",
+                  "uid": "0f59e83d-fa1d-4c94-a4ff-35a4b66077e8"
+                },
+                "provider": {
+                  "destination": {
+                    "generation": 1,
+                    "name": "host",
+                    "namespace": "openshift-mtv",
+                    "uid": "e140d4bc-91b7-48c2-b096-7820c8d20b0d"
+                  },
+                  "source": {
+                    "generation": 2,
+                    "name": "vmware",
+                    "namespace": "openshift-mtv",
+                    "uid": "1ec8b4c7-028d-4a50-a5a9-3ab07dbd0560"
+                  }
+                }
+              }
+            ],
+            "started": "2023-04-06T11:42:47Z",
+            "vms": [
+              {
+                "id": "vm-35512",
+                "name": "tg-mini-no-selinux-kernel",
+                "phase": "AllocateDisks",
+                "pipeline": [
+                  {
+                    "completed": "2023-04-06T11:43:34Z",
+                    "description": "Initialize migration.",
+                    "name": "Initialize",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    },
+                    "started": "2023-04-06T11:42:47Z"
+                  },
+                  {
+                    "annotations": {
+                      "unit": "MB"
+                    },
+                    "description": "Allocate disks.",
+                    "name": "DiskAllocation",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 0,
+                      "total": 2764
+                    },
+                    "started": "2023-04-06T11:43:46Z",
+                    "tasks": [
+                      {
+                        "annotations": {
+                          "unit": "MB"
+                        },
+                        "name": "[v2v_general_porpuse_FC_DC] tg-mini-no-selinux-kernel/tg-mini-no-selinux-kernel.vmdk",
+                        "progress": {
+                          "completed": 0,
+                          "total": 2764
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "description": "Convert image to kubevirt.",
+                    "name": "ImageConversion",
+                    "phase": "Pending",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    }
+                  },
+                  {
+                    "annotations": {
+                      "unit": "MB"
+                    },
+                    "description": "Copy disks.",
+                    "name": "DiskTransferV2v",
+                    "phase": "Pending",
+                    "progress": {
+                      "completed": 0,
+                      "total": 2764
+                    },
+                    "tasks": [
+                      {
+                        "annotations": {
+                          "unit": "MB"
+                        },
+                        "name": "[v2v_general_porpuse_FC_DC] tg-mini-no-selinux-kernel/tg-mini-no-selinux-kernel.vmdk",
+                        "progress": {
+                          "completed": 0,
+                          "total": 2764
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "description": "Create VM.",
+                    "name": "VirtualMachineCreation",
+                    "phase": "Pending",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    }
+                  }
+                ],
+                "restorePowerState": "Off",
+                "started": "2023-04-06T11:42:47Z"
+              }
+            ]
+          },
+          "observedGeneration": 1
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Plan",
+        "metadata": {
+          "creationTimestamp": "2023-04-06T09:39:59Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:spec": {
+                  ".": {},
+                  "f:archived": {},
+                  "f:description": {},
+                  "f:map": {
+                    ".": {},
+                    "f:network": {},
+                    "f:storage": {}
+                  },
+                  "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                  },
+                  "f:targetNamespace": {},
+                  "f:vms": {},
+                  "f:warm": {}
+                }
+              },
+              "manager": "Mozilla",
+              "operation": "Update",
+              "time": "2023-04-06T09:39:59Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:migration": {
+                    ".": {},
+                    "f:completed": {},
+                    "f:history": {},
+                    "f:started": {},
+                    "f:vms": {}
+                  },
+                  "f:observedGeneration": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-06T09:41:39Z"
+            }
+          ],
+          "name": "mnecas-test-plan",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "481802880",
+          "uid": "7c75032b-94e7-4e31-a5ef-656365048047"
+        },
+        "spec": {
+          "archived": false,
+          "description": "",
+          "map": {
+            "network": {
+              "name": "mnecas-test-plan-jpsn4",
+              "namespace": "openshift-mtv"
+            },
+            "storage": {
+              "name": "mnecas-test-plan-tdpn9",
+              "namespace": "openshift-mtv"
+            }
+          },
+          "provider": {
+            "destination": {
+              "name": "host",
+              "namespace": "openshift-mtv"
+            },
+            "source": {
+              "name": "vmware",
+              "namespace": "openshift-mtv"
+            }
+          },
+          "targetNamespace": "mnecas-test",
+          "vms": [
+            {
+              "hooks": [],
+              "id": "vm-35512"
+            }
+          ],
+          "warm": false
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Advisory",
+              "durable": true,
+              "lastTransitionTime": "2023-04-06T09:41:39Z",
+              "message": "The plan execution has FAILED.",
+              "status": "True",
+              "type": "Failed"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:57Z",
+              "message": "The migration plan is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "migration": {
+            "completed": "2023-04-06T09:41:38Z",
+            "history": [
+              {
+                "conditions": [
+                  {
+                    "category": "Advisory",
+                    "durable": true,
+                    "lastTransitionTime": "2023-04-06T09:41:38Z",
+                    "message": "The plan execution has FAILED.",
+                    "status": "True",
+                    "type": "Failed"
+                  }
+                ],
+                "map": {
+                  "network": {
+                    "generation": 1,
+                    "name": "mnecas-test-plan-jpsn4",
+                    "namespace": "openshift-mtv",
+                    "uid": "04c28829-4ccc-4ffe-9910-be389e448fa2"
+                  },
+                  "storage": {
+                    "generation": 1,
+                    "name": "mnecas-test-plan-tdpn9",
+                    "namespace": "openshift-mtv",
+                    "uid": "917c63fa-3d10-4f26-969c-bd7097b2de1b"
+                  }
+                },
+                "migration": {
+                  "generation": 1,
+                  "name": "mnecas-test-plan-1680774002168",
+                  "namespace": "openshift-mtv",
+                  "uid": "c8f040c9-be39-48cc-a6e6-29313a6eb197"
+                },
+                "plan": {
+                  "generation": 1,
+                  "name": "mnecas-test-plan",
+                  "namespace": "openshift-mtv",
+                  "uid": "7c75032b-94e7-4e31-a5ef-656365048047"
+                },
+                "provider": {
+                  "destination": {
+                    "generation": 1,
+                    "name": "host",
+                    "namespace": "openshift-mtv",
+                    "uid": "e140d4bc-91b7-48c2-b096-7820c8d20b0d"
+                  },
+                  "source": {
+                    "generation": 2,
+                    "name": "vmware",
+                    "namespace": "openshift-mtv",
+                    "uid": "1ec8b4c7-028d-4a50-a5a9-3ab07dbd0560"
+                  }
+                }
+              }
+            ],
+            "started": "2023-04-06T09:40:10Z",
+            "vms": [
+              {
+                "completed": "2023-04-06T09:41:38Z",
+                "conditions": [
+                  {
+                    "category": "Advisory",
+                    "durable": true,
+                    "lastTransitionTime": "2023-04-06T09:41:30Z",
+                    "message": "The VM migration has FAILED.",
+                    "status": "True",
+                    "type": "Failed"
+                  }
+                ],
+                "error": {
+                  "phase": "ConvertGuest",
+                  "reasons": [
+                    "Guest conversion failed. See pod logs for details."
+                  ]
+                },
+                "id": "vm-35512",
+                "name": "tg-mini-no-selinux-kernel",
+                "phase": "Completed",
+                "pipeline": [
+                  {
+                    "completed": "2023-04-06T09:40:46Z",
+                    "description": "Initialize migration.",
+                    "name": "Initialize",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    },
+                    "started": "2023-04-06T09:40:10Z"
+                  },
+                  {
+                    "annotations": {
+                      "unit": "MB"
+                    },
+                    "completed": "2023-04-06T09:40:55Z",
+                    "description": "Allocate disks.",
+                    "name": "DiskAllocation",
+                    "phase": "Completed",
+                    "progress": {
+                      "completed": 2764,
+                      "total": 2764
+                    },
+                    "started": "2023-04-06T09:40:55Z",
+                    "tasks": [
+                      {
+                        "annotations": {
+                          "unit": "MB"
+                        },
+                        "completed": "2023-04-06T09:40:55Z",
+                        "name": "[v2v_general_porpuse_FC_DC] tg-mini-no-selinux-kernel/tg-mini-no-selinux-kernel.vmdk",
+                        "phase": "Completed",
+                        "progress": {
+                          "completed": 2764,
+                          "total": 2764
+                        },
+                        "reason": "Transfer completed.",
+                        "started": "2023-04-06T09:40:55Z"
+                      }
+                    ]
+                  },
+                  {
+                    "completed": "2023-04-06T09:41:30Z",
+                    "description": "Convert image to kubevirt.",
+                    "error": {
+                      "phase": "Running",
+                      "reasons": [
+                        "Guest conversion failed. See pod logs for details."
+                      ]
+                    },
+                    "name": "ImageConversion",
+                    "phase": "Running",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    },
+                    "started": "2023-04-06T09:41:03Z"
+                  },
+                  {
+                    "annotations": {
+                      "unit": "MB"
+                    },
+                    "description": "Copy disks.",
+                    "name": "DiskTransferV2v",
+                    "phase": "Pending",
+                    "progress": {
+                      "completed": 0,
+                      "total": 2764
+                    },
+                    "tasks": [
+                      {
+                        "annotations": {
+                          "unit": "MB"
+                        },
+                        "name": "[v2v_general_porpuse_FC_DC] tg-mini-no-selinux-kernel/tg-mini-no-selinux-kernel.vmdk",
+                        "progress": {
+                          "completed": 0,
+                          "total": 2764
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "description": "Create VM.",
+                    "name": "VirtualMachineCreation",
+                    "phase": "Pending",
+                    "progress": {
+                      "completed": 0,
+                      "total": 1
+                    }
+                  }
+                ],
+                "restorePowerState": "Off",
+                "started": "2023-04-06T09:40:10Z"
+              }
+            ]
+          },
+          "observedGeneration": 1
+        }
+      }
+    ],
+    "kind": "PlanList",
+    "metadata": {
+      "continue": "",
+      "resourceVersion": "498607863"
+    }
+  }

@@ -1,12 +1,26 @@
 import { PathParams } from 'msw';
 
-import * as providers from './data/provider.json';
+import * as migrationsK8s from './data/migrations.K8s.json';
+import * as networkmapsK8s from './data/networkmaps.K8s.json';
+import * as plansK8s from './data/plans.K8s.json';
+import * as providersInventory from './data/providers.Inventory.json';
+import * as providersK8s from './data/providers.K8s.json';
+import * as storagemapsK8s from './data/storagemaps.K8s.json';
 
 /**
  * A mapping of API paths to their corresponding mock data.
  */
 const mockData: Record<string, object> = {
-  '/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers': providers,
+  '/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers': providersInventory,
+  '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/providers':
+    providersK8s,
+  '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/migrations':
+    migrationsK8s,
+  '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/plans': plansK8s,
+  '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/networkmaps':
+    networkmapsK8s,
+  '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/storagemaps':
+    storagemapsK8s,
 };
 
 /**

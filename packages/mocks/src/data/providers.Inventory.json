@@ -1,5 +1,4 @@
 {
-    "$schema": "../../../types/schemas/ProvidersInventory.schema.json",
     "openshift": [
         {
             "uid": "c13d9331-b4fc-48d8-9fd0-253d6616428b",
