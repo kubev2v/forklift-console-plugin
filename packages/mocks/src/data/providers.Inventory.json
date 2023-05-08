@@ -295,7 +295,7 @@
                 },
                 "spec": {
                     "type": "openstack",
-                    "url": "https://rhos-d.infra.prod.upshift.rdu2.redhat.com:13000/v3",
+                    "url": "https://rhos-d.infra.prod.upshift.rdu2.example.com:13000/v3",
                     "secret": {
                         "namespace": "demo24",
                         "name": "openstack-42xv6"
@@ -362,7 +362,7 @@
                 },
                 "spec": {
                     "type": "ovirt",
-                    "url": "https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/api",
+                    "url": "https://hosted-engine-08.lab.eng.tlv2.example.com/ovirt-engine/api",
                     "secret": {
                         "namespace": "migration",
                         "name": "rhv-2c28j"
@@ -384,7 +384,7 @@
                             "status": "True",
                             "reason": "Tested",
                             "category": "Critical",
-                            "message": "Connection test, failed: GET failed. caused by: 'Get \"https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/sso/oauth/token?grant_type=password\u0026password=123456\u0026scope=ovirt-app-api\u0026username=admin%40internal\": dial tcp 10.46.30.10:443: i/o timeout'",
+                            "message": "Connection test, failed: GET failed. caused by: 'Get \"https://hosted-engine-08.lab.eng.tlv2.example.com/ovirt-engine/sso/oauth/token?grant_type=password\u0026password=123456\u0026scope=ovirt-app-api\u0026username=admin%40internal\": dial tcp 10.46.30.10:443: i/o timeout'",
                             "lastTransitionTime": "2023-04-29T07:43:56Z"
                         }
                     ],
@@ -418,7 +418,7 @@
                 },
                 "spec": {
                     "type": "ovirt",
-                    "url": "https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/api",
+                    "url": "https://hosted-engine-08.lab.eng.tlv2.example.com/ovirt-engine/api",
                     "secret": {
                         "namespace": "demo24",
                         "name": "rhv-zdnst"
@@ -440,7 +440,7 @@
                             "status": "True",
                             "reason": "Tested",
                             "category": "Critical",
-                            "message": "Connection test, failed: GET failed. caused by: 'Get \"https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/sso/oauth/token?grant_type=password\u0026password=123456\u0026scope=ovirt-app-api\u0026username=admin%40internal\": dial tcp 10.46.30.10:443: i/o timeout'",
+                            "message": "Connection test, failed: GET failed. caused by: 'Get \"https://hosted-engine-08.lab.eng.tlv2.example.com/ovirt-engine/sso/oauth/token?grant_type=password\u0026password=123456\u0026scope=ovirt-app-api\u0026username=admin%40internal\": dial tcp 10.46.30.10:443: i/o timeout'",
                             "lastTransitionTime": "2023-04-29T07:43:56Z"
                         }
                     ],
@@ -474,7 +474,7 @@
                 },
                 "spec": {
                     "type": "ovirt",
-                    "url": "https://rhvm.engineering.redhat.com/ovirt-engine/api",
+                    "url": "https://rhvm.engineering.example.com/ovirt-engine/api",
                     "secret": {
                         "namespace": "openshift-mtv",
                         "name": "rhv-lab-lnslg"
@@ -545,7 +545,7 @@
                 },
                 "spec": {
                     "type": "ovirt",
-                    "url": "https://rhvm.engineering.redhat.com/ovirt-engine/api",
+                    "url": "https://rhvm.engineering.example.com/ovirt-engine/api",
                     "secret": {
                         "namespace": "openshift-mtv",
                         "name": "mtv-bkhizgiy"
@@ -614,12 +614,12 @@
                     "generation": 1,
                     "creationTimestamp": "2023-04-03T13:34:48Z",
                     "annotations": {
-                        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":\"2023-03-30T14:20:37Z\",\"generation\":1,\"name\":\"rhv\",\"namespace\":\"openshift-mtv\"},\"spec\":{\"secret\":{\"name\":\"rhv-zdnst\",\"namespace\":\"demo24\"},\"type\":\"ovirt\",\"url\":\"https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/api\"}}\n"
+                        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":\"2023-03-30T14:20:37Z\",\"generation\":1,\"name\":\"rhv\",\"namespace\":\"openshift-mtv\"},\"spec\":{\"secret\":{\"name\":\"rhv-zdnst\",\"namespace\":\"demo24\"},\"type\":\"ovirt\",\"url\":\"https://hosted-engine-08.lab.eng.tlv2.example.com/ovirt-engine/api\"}}\n"
                     }
                 },
                 "spec": {
                     "type": "ovirt",
-                    "url": "https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/api",
+                    "url": "https://hosted-engine-08.lab.eng.tlv2.example.com/ovirt-engine/api",
                     "secret": {
                         "namespace": "demo24",
                         "name": "rhv-zdnst"
@@ -641,7 +641,7 @@
                             "status": "True",
                             "reason": "Tested",
                             "category": "Critical",
-                            "message": "Connection test, failed: GET failed. caused by: 'Get \"https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/sso/oauth/token?grant_type=password\u0026password=123456\u0026scope=ovirt-app-api\u0026username=admin%40internal\": dial tcp 10.46.30.10:443: i/o timeout'",
+                            "message": "Connection test, failed: GET failed. caused by: 'Get \"https://hosted-engine-08.lab.eng.tlv2.example.com/ovirt-engine/sso/oauth/token?grant_type=password\u0026password=123456\u0026scope=ovirt-app-api\u0026username=admin%40internal\": dial tcp 10.46.30.10:443: i/o timeout'",
                             "lastTransitionTime": "2023-04-29T07:43:56Z"
                         }
                     ],
@@ -675,7 +675,7 @@
                 },
                 "spec": {
                     "type": "ovirt",
-                    "url": "https://rhvm.engineering.redhat.com/ovirt-engine/api",
+                    "url": "https://rhvm.engineering.example.com/ovirt-engine/api",
                     "secret": {
                         "namespace": "openshift-mtv",
                         "name": "rhv-lab-pre-mlkh2"
@@ -748,7 +748,7 @@
                 },
                 "spec": {
                     "type": "vsphere",
-                    "url": "https://rhev-node-05.rdu2.scalelab.redhat.com/sdk",
+                    "url": "https://rhev-node-05.rdu2.scalelab.example.com/sdk",
                     "secret": {
                         "namespace": "demo24",
                         "name": "vmware-gq7vc"
@@ -773,7 +773,7 @@
                             "status": "True",
                             "reason": "Tested",
                             "category": "Critical",
-                            "message": "Connection test, failed: Post \"https://rhev-node-05.rdu2.scalelab.redhat.com/sdk\": context deadline exceeded",
+                            "message": "Connection test, failed: Post \"https://rhev-node-05.rdu2.scalelab.example.com/sdk\": context deadline exceeded",
                             "lastTransitionTime": "2023-04-30T05:28:35Z"
                         }
                     ],
@@ -809,7 +809,7 @@
                 },
                 "spec": {
                     "type": "vsphere",
-                    "url": "https://rhev-node-13.rdu2.scalelab.redhat.com/sdk",
+                    "url": "https://rhev-node-13.rdu2.scalelab.example.com/sdk",
                     "secret": {
                         "namespace": "openshift-mtv",
                         "name": "vmware-zlls6"
@@ -893,7 +893,7 @@
                 },
                 "spec": {
                     "type": "vsphere",
-                    "url": "https://rhev-node-05.rdu2.scalelab.redhat.com/sdk",
+                    "url": "https://rhev-node-05.rdu2.scalelab.example.com/sdk",
                     "secret": {
                         "namespace": "migration",
                         "name": "vsphere-7t9b2"
@@ -918,7 +918,7 @@
                             "status": "True",
                             "reason": "Tested",
                             "category": "Critical",
-                            "message": "Connection test, failed: Post \"https://rhev-node-05.rdu2.scalelab.redhat.com/sdk\": context deadline exceeded",
+                            "message": "Connection test, failed: Post \"https://rhev-node-05.rdu2.scalelab.example.com/sdk\": context deadline exceeded",
                             "lastTransitionTime": "2023-04-30T05:28:33Z"
                         }
                     ],

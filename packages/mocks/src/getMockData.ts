@@ -41,7 +41,8 @@ export const getMockData = ({ pathname }: MockDataRequestParameters): MockRespon
   // }
 
   // Static handlers, using mockData.
-  const data = mockData[pathname];
+  const adjustedPathname = replaceNamespaceInPath(pathname, 'openshift-mtv');
+  const data = mockData[adjustedPathname];
   if (data) {
     return {
       statusCode: 200,
@@ -51,6 +52,17 @@ export const getMockData = ({ pathname }: MockDataRequestParameters): MockRespon
 
   return null;
 };
+
+/**
+ * Replaces a namespace string in a Kubernetes path.
+ * @param {string} path - The original Kubernetes path.
+ * @param {string} newNamespace - The replacement namespace.
+ * @returns {string} The modified path with the new namespace.
+ */
+export function replaceNamespaceInPath(path: string, newNamespace: string): string {
+  const namespaceRegex = /\/namespaces\/[^/]+\//g;
+  return path.replace(namespaceRegex, `/namespaces/${newNamespace}/`);
+}
 
 /**
  * Interface representing a mock response.
