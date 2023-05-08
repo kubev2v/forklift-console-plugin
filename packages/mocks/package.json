@@ -7,10 +7,8 @@
     "url": "git@github.com:kubev2v/forklift-console-plugin.git",
     "directory": "packages/mocks"
   },
-
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-
   "scripts": {
     "clean": "rimraf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
@@ -21,6 +19,10 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "harproxyserver": "^0.0.19",
     "msw": "^1.2.1"
+  },
+  "devDependencies": {
+    "@types/har-format": "^1.2.10"
   }
 }

@@ -17,5 +17,8 @@ export const config: Config.InitialOptions = {
       isolatedModules: true,
     },
   },
+  transform: {
+    '\\.har$': '<rootDir>/fileTransformer.js',
+  },
 };
 export default config;

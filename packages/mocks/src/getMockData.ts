@@ -1,3 +1,5 @@
+import { Har } from 'har-format';
+import { findHarEntry } from 'harproxyserver';
 import { PathParams } from 'msw';
 
 import * as migrationsK8s from './data/migrations.K8s.json';
@@ -5,7 +7,15 @@ import * as networkmapsK8s from './data/networkmaps.K8s.json';
 import * as plansK8s from './data/plans.K8s.json';
 import * as providersInventory from './data/providers.Inventory.json';
 import * as providersK8s from './data/providers.K8s.json';
+import * as _har from './data/recorder-brq2.har';
 import * as storagemapsK8s from './data/storagemaps.K8s.json';
+
+const har = _har as unknown as Har;
+
+/**
+ * List of mockable data sources
+ */
+export const WMS_MOCK_SOURCES = ['har', 'json'];
 
 /**
  * A mapping of API paths to their corresponding mock data.
@@ -30,9 +40,22 @@ const mockData: Record<string, object> = {
  * @param {string} param0.pathname - The incoming request pathname to match against the mock handlers
  * @param {string} [param0.method] - An optional string, the incoming request method to match against the mock handlers
  * @param {PathParams} [param0.params] - An optional object containing the path parameters of the request
+ * @param {string} [source] - The type of data source ('json' or 'har'). Defaults to 'json'.
  * @returns {MockResponse | null} A mock response or null if no mock handler is found
  */
-export const getMockData = ({ pathname }: MockDataRequestParameters): MockResponse | null => {
+export const getMockData = (
+  { pathname }: MockDataRequestParameters,
+  source = 'json',
+): MockResponse | null => {
+  // Check path is mockable, Mock only REST API paths
+  if (
+    !WMS_MOCK_SOURCES.includes(source) ||
+    !pathname ||
+    !(pathname.startsWith('/api/kubernetes') || pathname.startsWith('/api/proxy'))
+  ) {
+    return null;
+  }
+
   // Dynamic handlers, using custom logic.
 
   // Add your mock handlers here, e.g.:
@@ -41,8 +64,8 @@ export const getMockData = ({ pathname }: MockDataRequestParameters): MockRespon
   // }
 
   // Static handlers, using mockData.
-  const adjustedPathname = replaceNamespaceInPath(pathname, 'openshift-mtv');
-  const data = mockData[adjustedPathname];
+  const data = getStaticData(pathname, source);
+
   if (data) {
     return {
       statusCode: 200,
@@ -62,6 +85,32 @@ export const getMockData = ({ pathname }: MockDataRequestParameters): MockRespon
 export function replaceNamespaceInPath(path: string, newNamespace: string): string {
   const namespaceRegex = /\/namespaces\/[^/]+\//g;
   return path.replace(namespaceRegex, `/namespaces/${newNamespace}/`);
+}
+
+/**
+ * Retrieves data from a specific static data source.
+ * @param {string} pathname - The path to the data.
+ * @param {string} source - The type of data source ('json' or 'har').
+ * @returns {object | null} The retrieved data as an object, or null if not found.
+ */
+function getStaticData(pathname: string, source: string): object | null {
+  // Static paths for 'json' and 'har' data sources where recorded on 'openshift-mtv'
+  // namespace adjust path to match the namespace
+  const adjustedPathname = replaceNamespaceInPath(pathname, 'openshift-mtv');
+
+  switch (source) {
+    case 'json':
+      return mockData[adjustedPathname];
+    case 'har':
+      // eslint-disable-next-line no-case-declarations
+      const recordedEntry = findHarEntry(har.log, 'GET', adjustedPathname, undefined, true);
+      // eslint-disable-next-line no-case-declarations
+      const text = recordedEntry?.response?.content?.text;
+
+      return text && JSON.parse(text);
+  }
+
+  return null;
 }
 
 /**
