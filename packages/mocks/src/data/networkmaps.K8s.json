@@ -1,0 +1,503 @@
+{
+    "apiVersion": "forklift.konveyor.io/v1beta1",
+    "items": [
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "NetworkMap",
+        "metadata": {
+          "annotations": {
+            "forklift.konveyor.io/shared": "false"
+          },
+          "creationTimestamp": "2023-04-06T11:40:11Z",
+          "generateName": "copy-of-mnecas-test-plan-",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:references": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-06T11:40:11Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:metadata": {
+                  "f:annotations": {
+                    ".": {},
+                    "f:forklift.konveyor.io/shared": {}
+                  },
+                  "f:generateName": {},
+                  "f:ownerReferences": {
+                    ".": {},
+                    "k:{\"uid\":\"006a5208-9a55-47ff-9916-ea3823a0ac34\"}": {}
+                  }
+                },
+                "f:spec": {
+                  ".": {},
+                  "f:map": {},
+                  "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                  }
+                }
+              },
+              "manager": "Mozilla",
+              "operation": "Update",
+              "time": "2023-04-06T11:40:12Z"
+            }
+          ],
+          "name": "copy-of-mnecas-test-plan-jrf9m",
+          "namespace": "openshift-mtv",
+          "ownerReferences": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "kind": "Plan",
+              "name": "copy-of-mnecas-test-plan",
+              "uid": "006a5208-9a55-47ff-9916-ea3823a0ac34"
+            }
+          ],
+          "resourceVersion": "481802693",
+          "uid": "75c6962c-d753-4488-b2ea-cec58bd1cf3d"
+        },
+        "spec": {
+          "map": [
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "network-34001"
+              }
+            }
+          ],
+          "provider": {
+            "destination": {
+              "name": "host",
+              "namespace": "openshift-mtv"
+            },
+            "source": {
+              "name": "vmware",
+              "namespace": "openshift-mtv"
+            }
+          }
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:51Z",
+              "message": "The network map is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 1,
+          "references": [
+            {
+              "id": "network-34001",
+              "name": "VM Network"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "NetworkMap",
+        "metadata": {
+          "annotations": {
+            "forklift.konveyor.io/shared": "false"
+          },
+          "creationTimestamp": "2023-04-06T11:40:44Z",
+          "generateName": "copy-of-mnecas-test-plan-local-",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:metadata": {
+                  "f:annotations": {
+                    ".": {},
+                    "f:forklift.konveyor.io/shared": {}
+                  },
+                  "f:generateName": {},
+                  "f:ownerReferences": {
+                    ".": {},
+                    "k:{\"uid\":\"0f59e83d-fa1d-4c94-a4ff-35a4b66077e8\"}": {}
+                  }
+                },
+                "f:spec": {
+                  ".": {},
+                  "f:map": {},
+                  "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                  }
+                }
+              },
+              "manager": "Mozilla",
+              "operation": "Update",
+              "time": "2023-04-06T11:40:44Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:references": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-06T11:40:44Z"
+            }
+          ],
+          "name": "copy-of-mnecas-test-plan-local-jj7pb",
+          "namespace": "openshift-mtv",
+          "ownerReferences": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "kind": "Plan",
+              "name": "copy-of-mnecas-test-plan-local",
+              "uid": "0f59e83d-fa1d-4c94-a4ff-35a4b66077e8"
+            }
+          ],
+          "resourceVersion": "481802704",
+          "uid": "3f4efab0-a84c-4a09-90a7-acb51a0f0dce"
+        },
+        "spec": {
+          "map": [
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "network-34001"
+              }
+            }
+          ],
+          "provider": {
+            "destination": {
+              "name": "host",
+              "namespace": "openshift-mtv"
+            },
+            "source": {
+              "name": "vmware",
+              "namespace": "openshift-mtv"
+            }
+          }
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:51Z",
+              "message": "The network map is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 1,
+          "references": [
+            {
+              "id": "network-34001",
+              "name": "VM Network"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "NetworkMap",
+        "metadata": {
+          "annotations": {
+            "forklift.konveyor.io/shared": "false"
+          },
+          "creationTimestamp": "2023-04-06T09:39:59Z",
+          "generateName": "mnecas-test-plan-",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:metadata": {
+                  "f:annotations": {
+                    ".": {},
+                    "f:forklift.konveyor.io/shared": {}
+                  },
+                  "f:generateName": {},
+                  "f:ownerReferences": {
+                    ".": {},
+                    "k:{\"uid\":\"7c75032b-94e7-4e31-a5ef-656365048047\"}": {}
+                  }
+                },
+                "f:spec": {
+                  ".": {},
+                  "f:map": {},
+                  "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                  }
+                }
+              },
+              "manager": "Mozilla",
+              "operation": "Update",
+              "time": "2023-04-06T09:39:59Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:references": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-06T09:39:59Z"
+            }
+          ],
+          "name": "mnecas-test-plan-jpsn4",
+          "namespace": "openshift-mtv",
+          "ownerReferences": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "kind": "Plan",
+              "name": "mnecas-test-plan",
+              "uid": "7c75032b-94e7-4e31-a5ef-656365048047"
+            }
+          ],
+          "resourceVersion": "481802687",
+          "uid": "04c28829-4ccc-4ffe-9910-be389e448fa2"
+        },
+        "spec": {
+          "map": [
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "network-34001"
+              }
+            }
+          ],
+          "provider": {
+            "destination": {
+              "name": "host",
+              "namespace": "openshift-mtv"
+            },
+            "source": {
+              "name": "vmware",
+              "namespace": "openshift-mtv"
+            }
+          }
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:51Z",
+              "message": "The network map is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 1,
+          "references": [
+            {
+              "id": "network-34001",
+              "name": "VM Network"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "NetworkMap",
+        "metadata": {
+          "creationTimestamp": "2023-04-19T10:14:58Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:spec": {
+                  ".": {},
+                  "f:map": {},
+                  "f:provider": {
+                    ".": {},
+                    "f:destination": {},
+                    "f:source": {}
+                  }
+                }
+              },
+              "manager": "OpenAPI-Generator",
+              "operation": "Update",
+              "time": "2023-04-19T10:14:58Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:references": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-19T10:25:35Z"
+            }
+          ],
+          "name": "mtv-network-mapping-bella",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "481802742",
+          "uid": "48bc0731-2273-4481-bddb-559c13cdd131"
+        },
+        "spec": {
+          "map": [
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "3d8f43b8-8f7d-4574-9c45-43cbb58f1414"
+              }
+            },
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "83da1bb4-3423-43d9-a481-87b5513251ee"
+              }
+            },
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "ab9e1e1a-4737-47d6-9eed-a1b129bd068b"
+              }
+            },
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "5ff7f565-3acb-4c89-982e-bd7d800913f2"
+              }
+            },
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "f6649732-e4b9-4f17-ae2b-5c2ca9e31b72"
+              }
+            },
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "dd0b35a2-b36b-4357-bd27-671852d0b9b5"
+              }
+            },
+            {
+              "destination": {
+                "type": "pod"
+              },
+              "source": {
+                "id": "39a33c4c-cac1-4874-aa2b-509b92d2b35d"
+              }
+            }
+          ],
+          "provider": {
+            "destination": {
+              "name": "host",
+              "namespace": "openshift-mtv"
+            },
+            "source": {
+              "name": "mtv-provider-bella",
+              "namespace": "openshift-mtv"
+            }
+          }
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:52Z",
+              "message": "The network map is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 1,
+          "references": [
+            {
+              "id": "3d8f43b8-8f7d-4574-9c45-43cbb58f1414",
+              "name": "OSP_INTERNAL"
+            },
+            {
+              "id": "83da1bb4-3423-43d9-a481-87b5513251ee",
+              "name": "ovirtmgmt"
+            },
+            {
+              "id": "ab9e1e1a-4737-47d6-9eed-a1b129bd068b",
+              "name": "ovirtmgmt"
+            },
+            {
+              "id": "5ff7f565-3acb-4c89-982e-bd7d800913f2",
+              "name": "vlan201"
+            },
+            {
+              "id": "f6649732-e4b9-4f17-ae2b-5c2ca9e31b72",
+              "name": "vlan202"
+            },
+            {
+              "id": "dd0b35a2-b36b-4357-bd27-671852d0b9b5",
+              "name": "vlan203"
+            },
+            {
+              "id": "39a33c4c-cac1-4874-aa2b-509b92d2b35d",
+              "name": "vlan400"
+            }
+          ]
+        }
+      }
+    ],
+    "kind": "NetworkMapList",
+    "metadata": {
+      "continue": "",
+      "resourceVersion": "498626832"
+    }
+  }

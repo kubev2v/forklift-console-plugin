@@ -1,0 +1,593 @@
+{
+    "apiVersion": "forklift.konveyor.io/v1beta1",
+    "items": [
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Provider",
+        "metadata": {
+          "creationTimestamp": "2023-04-03T11:26:12Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:metadata": {
+                  "f:ownerReferences": {
+                    ".": {},
+                    "k:{\"uid\":\"1406869c-22c3-426e-91b9-0d6d2c41a81d\"}": {}
+                  }
+                },
+                "f:spec": {
+                  ".": {},
+                  "f:secret": {},
+                  "f:type": {},
+                  "f:url": {}
+                }
+              },
+              "manager": "OpenAPI-Generator",
+              "operation": "Update",
+              "time": "2023-04-03T11:26:12Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:phase": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-03T11:27:49Z"
+            }
+          ],
+          "name": "host",
+          "namespace": "openshift-mtv",
+          "ownerReferences": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "kind": "ForkliftController",
+              "name": "forklift-controller-doc",
+              "uid": "1406869c-22c3-426e-91b9-0d6d2c41a81d"
+            }
+          ],
+          "resourceVersion": "481802636",
+          "uid": "e140d4bc-91b7-48c2-b096-7820c8d20b0d"
+        },
+        "spec": {
+          "secret": {},
+          "type": "openshift",
+          "url": ""
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-03T11:27:49Z",
+              "message": "Connection test, succeeded.",
+              "reason": "Tested",
+              "status": "True",
+              "type": "ConnectionTestSucceeded"
+            },
+            {
+              "category": "Advisory",
+              "lastTransitionTime": "2023-04-03T11:27:49Z",
+              "message": "Validation has been completed.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "Validated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:51Z",
+              "message": "The inventory has been loaded.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "InventoryCreated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:51Z",
+              "message": "The provider is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 1,
+          "phase": "Ready"
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Provider",
+        "metadata": {
+          "creationTimestamp": "2023-04-19T10:25:21Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:spec": {
+                  ".": {},
+                  "f:secret": {},
+                  "f:type": {},
+                  "f:url": {}
+                }
+              },
+              "manager": "OpenAPI-Generator",
+              "operation": "Update",
+              "time": "2023-04-19T10:25:21Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:phase": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-19T10:25:22Z"
+            }
+          ],
+          "name": "mtv-provider-bella",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "481802732",
+          "uid": "4864c314-4465-4b5b-8557-00b021e1bb50"
+        },
+        "spec": {
+          "secret": {
+            "name": "mtv-bkhizgiy",
+            "namespace": "openshift-mtv"
+          },
+          "type": "ovirt",
+          "url": "https://rhvm.engineering.redhat.com/ovirt-engine/api"
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-19T10:25:22Z",
+              "message": "Connection test, succeeded.",
+              "reason": "Tested",
+              "status": "True",
+              "type": "ConnectionTestSucceeded"
+            },
+            {
+              "category": "Advisory",
+              "lastTransitionTime": "2023-04-19T10:25:22Z",
+              "message": "Validation has been completed.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "Validated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:52Z",
+              "message": "The inventory has been loaded.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "InventoryCreated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:52Z",
+              "message": "The provider is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 1,
+          "phase": "Ready"
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Provider",
+        "metadata": {
+          "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"forklift.konveyor.io/v1beta1\",\"kind\":\"Provider\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":\"2023-03-30T14:20:37Z\",\"generation\":1,\"name\":\"rhv\",\"namespace\":\"openshift-mtv\"},\"spec\":{\"secret\":{\"name\":\"rhv-zdnst\",\"namespace\":\"demo24\"},\"type\":\"ovirt\",\"url\":\"https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/api\"}}\n"
+          },
+          "creationTimestamp": "2023-04-03T13:34:48Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:metadata": {
+                  "f:annotations": {
+                    ".": {},
+                    "f:kubectl.kubernetes.io/last-applied-configuration": {}
+                  }
+                },
+                "f:spec": {
+                  ".": {},
+                  "f:secret": {},
+                  "f:type": {},
+                  "f:url": {}
+                }
+              },
+              "manager": "kubectl-client-side-apply",
+              "operation": "Update",
+              "time": "2023-04-03T13:34:48Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:phase": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-03T13:34:49Z"
+            }
+          ],
+          "name": "rhv",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "493581173",
+          "uid": "130b109c-eec8-4753-82f0-d2ebdaf0f835"
+        },
+        "spec": {
+          "secret": {
+            "name": "rhv-zdnst",
+            "namespace": "demo24"
+          },
+          "type": "ovirt",
+          "url": "https://hosted-engine-08.lab.eng.tlv2.redhat.com/ovirt-engine/api"
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Warn",
+              "lastTransitionTime": "2023-04-03T13:34:48Z",
+              "message": "TLS is susceptible to machine-in-the-middle attacks when certificate verification is skipped.",
+              "reason": "SkipTLSVerification",
+              "status": "True",
+              "type": "ConnectionInsecure"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-05-05T00:28:52Z",
+              "message": "Connection test, succeeded.",
+              "reason": "Tested",
+              "status": "True",
+              "type": "ConnectionTestSucceeded"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-05-05T00:28:52Z",
+              "message": "The inventory has been loaded.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "InventoryCreated"
+            },
+            {
+              "category": "Advisory",
+              "lastTransitionTime": "2023-05-05T00:28:52Z",
+              "message": "Validation has been completed.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "Validated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-05-05T00:28:52Z",
+              "message": "The provider is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 1,
+          "phase": "Ready"
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Provider",
+        "metadata": {
+          "creationTimestamp": "2023-04-19T09:18:10Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:spec": {
+                  ".": {},
+                  "f:secret": {},
+                  "f:type": {},
+                  "f:url": {}
+                }
+              },
+              "manager": "Mozilla",
+              "operation": "Update",
+              "time": "2023-04-19T09:18:10Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:phase": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-19T09:18:13Z"
+            }
+          ],
+          "name": "rhv-lab",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "481802759",
+          "uid": "42bce1bc-f532-496a-b059-18b1d209269b"
+        },
+        "spec": {
+          "secret": {
+            "name": "rhv-lab-lnslg",
+            "namespace": "openshift-mtv"
+          },
+          "type": "ovirt",
+          "url": "https://rhvm.engineering.redhat.com/ovirt-engine/api"
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-19T09:18:13Z",
+              "message": "Connection test, succeeded.",
+              "reason": "Tested",
+              "status": "True",
+              "type": "ConnectionTestSucceeded"
+            },
+            {
+              "category": "Advisory",
+              "lastTransitionTime": "2023-04-19T09:18:13Z",
+              "message": "Validation has been completed.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "Validated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:52Z",
+              "message": "The inventory has been loaded.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "InventoryCreated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:52Z",
+              "message": "The provider is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 1,
+          "phase": "Ready"
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Provider",
+        "metadata": {
+          "creationTimestamp": "2023-04-23T10:24:46Z",
+          "generation": 1,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:spec": {
+                  ".": {},
+                  "f:secret": {},
+                  "f:type": {},
+                  "f:url": {}
+                }
+              },
+              "manager": "Mozilla",
+              "operation": "Update",
+              "time": "2023-04-23T10:24:46Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:phase": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-23T10:24:48Z"
+            }
+          ],
+          "name": "rhv-lab-pre",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "481802780",
+          "uid": "0a007b12-7587-4a51-a1a9-550726c71f75"
+        },
+        "spec": {
+          "secret": {
+            "name": "rhv-lab-pre-mlkh2",
+            "namespace": "openshift-mtv"
+          },
+          "type": "ovirt",
+          "url": "https://rhvm.engineering.redhat.com/ovirt-engine/api"
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-23T10:24:48Z",
+              "message": "Connection test, succeeded.",
+              "reason": "Tested",
+              "status": "True",
+              "type": "ConnectionTestSucceeded"
+            },
+            {
+              "category": "Advisory",
+              "lastTransitionTime": "2023-04-23T10:24:48Z",
+              "message": "Validation has been completed.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "Validated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:53Z",
+              "message": "The inventory has been loaded.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "InventoryCreated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:53Z",
+              "message": "The provider is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 1,
+          "phase": "Ready"
+        }
+      },
+      {
+        "apiVersion": "forklift.konveyor.io/v1beta1",
+        "kind": "Provider",
+        "metadata": {
+          "creationTimestamp": "2023-04-06T08:55:52Z",
+          "generation": 2,
+          "managedFields": [
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:spec": {
+                  ".": {},
+                  "f:secret": {},
+                  "f:settings": {
+                    ".": {},
+                    "f:vddkInitImage": {}
+                  },
+                  "f:type": {},
+                  "f:url": {}
+                }
+              },
+              "manager": "Mozilla",
+              "operation": "Update",
+              "time": "2023-04-06T08:55:52Z"
+            },
+            {
+              "apiVersion": "forklift.konveyor.io/v1beta1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:status": {
+                  ".": {},
+                  "f:conditions": {},
+                  "f:observedGeneration": {},
+                  "f:phase": {}
+                }
+              },
+              "manager": "forklift-controller",
+              "operation": "Update",
+              "subresource": "status",
+              "time": "2023-04-06T08:55:53Z"
+            }
+          ],
+          "name": "vmware",
+          "namespace": "openshift-mtv",
+          "resourceVersion": "481802308",
+          "uid": "1ec8b4c7-028d-4a50-a5a9-3ab07dbd0560"
+        },
+        "spec": {
+          "secret": {
+            "name": "vmware-zlls6",
+            "namespace": "openshift-mtv"
+          },
+          "settings": {
+            "vddkInitImage": "quay.io/lrotenbe/vddk:7.0.3"
+          },
+          "type": "vsphere",
+          "url": "https://rhev-node-13.rdu2.scalelab.redhat.com/sdk"
+        },
+        "status": {
+          "conditions": [
+            {
+              "category": "Warn",
+              "lastTransitionTime": "2023-04-06T08:55:52Z",
+              "message": "TLS is susceptible to machine-in-the-middle attacks when certificate verification is skipped.",
+              "reason": "SkipTLSVerification",
+              "status": "True",
+              "type": "ConnectionInsecure"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-06T08:55:53Z",
+              "message": "Connection test, succeeded.",
+              "reason": "Tested",
+              "status": "True",
+              "type": "ConnectionTestSucceeded"
+            },
+            {
+              "category": "Advisory",
+              "lastTransitionTime": "2023-04-06T08:55:53Z",
+              "message": "Validation has been completed.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "Validated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:38Z",
+              "message": "The inventory has been loaded.",
+              "reason": "Completed",
+              "status": "True",
+              "type": "InventoryCreated"
+            },
+            {
+              "category": "Required",
+              "lastTransitionTime": "2023-04-27T12:14:38Z",
+              "message": "The provider is ready.",
+              "status": "True",
+              "type": "Ready"
+            }
+          ],
+          "observedGeneration": 2,
+          "phase": "Ready"
+        }
+      }
+    ],
+    "kind": "ProviderList",
+    "metadata": {
+      "continue": "",
+      "resourceVersion": "498603388"
+    }
+  }
