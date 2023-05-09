@@ -15,7 +15,7 @@ const har = _har as unknown as Har;
 /**
  * List of mockable data sources
  */
-export const WMS_MOCK_SOURCES = ['har', 'json'];
+export const MSW_MOCK_SOURCES = ['har', 'json'];
 
 /**
  * A mapping of API paths to their corresponding mock data.
@@ -49,7 +49,7 @@ export const getMockData = (
 ): MockResponse | null => {
   // Check path is mockable, Mock only REST API paths
   if (
-    !WMS_MOCK_SOURCES.includes(source) ||
+    !MSW_MOCK_SOURCES.includes(source) ||
     !pathname ||
     !(pathname.startsWith('/api/kubernetes') || pathname.startsWith('/api/proxy'))
   ) {
