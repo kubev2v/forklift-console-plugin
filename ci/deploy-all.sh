@@ -78,7 +78,7 @@ echo "==========================================="
 echo ""
 echo "Local registry available on port 5001:    http://localhost:5001/"
 echo "Usage example:"
-echo "  podman build -t localhost:5001/forklift-console-plugin -f ./build/Containerfile"
+echo "  podman build -t localhost:5001/forklift-console-plugin -f ./build/Containerfile ."
 echo "  podman push localhost:5001/forklift-console-plugin --tls-verify=false"
 
 config_path=$(echo ~)/.kube/config

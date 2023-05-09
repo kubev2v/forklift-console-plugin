@@ -9,7 +9,7 @@ import pkg from './package.json';
 
 const pluginMetadata: ConsolePluginMetadata = {
   name: process.env.PLUGIN_NAME || 'forklift-console-plugin',
-  version: pkg?.version || '0.0.0',
+  version: process.env.VERSION || pkg?.version || '0.0.0',
   displayName: 'OpenShift Console Plugin For Forklift',
   description:
     'Forklift is a suite of migration tools that facilitate the migration of VM workloads to KubeVirt.',

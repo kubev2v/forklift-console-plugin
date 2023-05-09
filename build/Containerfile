@@ -1,6 +1,15 @@
 # Builder container
 FROM registry.access.redhat.com/ubi9/nodejs-16 AS build
 
+# VERSION default value should match the forklift-console-plugin package version
+# The VERSION value can be customize during build by using --build-arg:
+#    podman build \
+#      -t quay.io/kubev2v/forklift-console-plugin \
+#      -f ./build/Containerfile \
+#      --build-arg VERSION=1.2.3 .
+ARG VERSION=2.4.1
+ENV VERSION=${VERSION}
+
 # Copy app source
 COPY . /opt/app-root/src/app
 WORKDIR /opt/app-root/src/app
