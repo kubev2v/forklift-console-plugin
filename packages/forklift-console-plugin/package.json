@@ -1,6 +1,6 @@
 {
   "name": "@kubev2v/forklift-console-plugin",
-  "version": "0.0.1",
+  "version": "2.4.1",
   "private": true,
   "repository": "git@github.com:kubev2v/forklift-console-plugin.git",
   "license": "Apache-2.0",
