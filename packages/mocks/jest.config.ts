@@ -10,15 +10,13 @@ export const config: Config.InitialOptions = {
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   transform: {
     '^.+\\.[t|j]sx?$': 'ts-jest',
+    '\\.har$': '<rootDir>/fileTransformer.js',
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@patternfly|@openshift-console\\S*?)/.*)'],
   globals: {
     'ts-jest': {
       isolatedModules: true,
     },
-  },
-  transform: {
-    '\\.har$': '<rootDir>/fileTransformer.js',
   },
 };
 export default config;
