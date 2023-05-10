@@ -126,6 +126,7 @@ const config: WebpackConfiguration & {
       // PLUGIN_NAME: should be set to the plugin name hardcoded in the
       //              installation scripts, defaults to 'forklift-console-plugin'.
       PLUGIN_NAME: pluginMetadata.name,
+      VERSION: pluginMetadata.version,
     }),
   ],
   devtool: 'source-map',
