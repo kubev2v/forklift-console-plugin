@@ -28,10 +28,10 @@ export const getBuildMetadata = ({ name, version }) => {
   return {
     packageName: name,
     packageVersion: version,
-    buildDate: now.toLocaleString('en-US', { dateStyle: 'long' }),
-    buildTime: now.toLocaleString('en-US', { timeStyle: 'long' }),
+    buildDateTime: now.toISOString(),
     gitCommit: execSync('git rev-parse HEAD').toString().trim(),
     gitBranch: execSync('git rev-parse --abbrev-ref HEAD').toString().trim(),
+    gitTags: execSync('git tag --points-at HEAD').toString().trim().split('\n').filter(Boolean),
   };
 };
 

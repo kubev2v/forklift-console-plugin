@@ -10,8 +10,9 @@ import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import { type Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
 import { type Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
-import { DynamicConsoleRemotePlugin } from '@kubev2v/webpack';
+import { BuildMetadataPlugin, DynamicConsoleRemotePlugin } from '@kubev2v/webpack';
 
+import packageJson from './package.json';
 import extensions from './plugin-extensions';
 import pluginMetadata from './plugin-metadata';
 
@@ -141,6 +142,10 @@ const config: WebpackConfiguration & {
     },
   },
   plugins: [
+    new BuildMetadataPlugin({
+      packageJson,
+      bannerBuildInfoTag: '@buildInfo',
+    }),
     new DynamicConsoleRemotePlugin({
       pluginMetadata,
       extensions,
@@ -155,11 +160,16 @@ const config: WebpackConfiguration & {
     chunkIds: production ? 'deterministic' : 'named',
     minimize: production ? true : false,
     minimizer: [
-      // Keep class names and function names in sources to aid debug and diagnostics of prod builds
       new TerserPlugin({
         terserOptions: {
+          // Keep class names and function names in sources to aid debug and diagnostics of prod builds
           keep_classnames: true,
           keep_fnames: true,
+
+          // keep the build info banner comment in the JS chunks
+          format: {
+            comments: /@buildInfo/i,
+          },
         },
       }),
     ],
