@@ -39,7 +39,7 @@ const config: WebpackConfiguration & {
   module: {
     rules: [
       {
-        test: /\.(jsx?|tsx?)$/,
+        test: /\.(tsx?)$/,
         exclude: /node_modules/,
         use: [
           {
@@ -55,25 +55,21 @@ const config: WebpackConfiguration & {
         use: ['style-loader', 'css-loader'],
       },
       {
-        oneOf: [
-          {
-            test: /\.svg$/,
-            type: 'asset/inline',
-            generator: {
-              dataUrl: (content) => {
-                content = content.toString();
-                return svgToMiniDataURI(content);
-              },
-            },
+        test: /\.svg$/,
+        type: 'asset/inline',
+        generator: {
+          dataUrl: (content) => {
+            content = content.toString();
+            return svgToMiniDataURI(content);
           },
-          {
-            test: /\.(png|jpg|jpeg|gif|svg|woff2?|ttf|eot|otf)(\?.*$|$)/,
-            type: 'asset/resource',
-            generator: {
-              filename: 'assets/[name].[ext]',
-            },
-          },
-        ],
+        },
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|woff2?|ttf|eot|otf)(\?.*$|$)/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[name].[ext]',
+        },
       },
       {
         test: /\.m?js/,

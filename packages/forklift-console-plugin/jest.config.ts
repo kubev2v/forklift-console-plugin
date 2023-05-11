@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import { pathsToModuleNameMapper } from 'ts-jest';
 
 import type { Config } from '@jest/types';
@@ -10,11 +11,16 @@ const moduleNameMapper = {
   '@console/*': '<rootDir>/src/__mocks__/dummy.ts',
   '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
   'react-i18next': '<rootDir>/src/__mocks__/react-i18next.ts',
-  'legacy/src/(.*)$': '<rootDir>/../legacy/src/$1', // remove when using rollup
-  'common/src/(.*)$': '<rootDir>/../common/src/$1', // remove when using rollup
+
   ...pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',
   }),
+
+  // Mappings for monorepo packages
+  '@kubev2v/legacy/(.*)$': '<rootDir>/../legacy/dist/$1',
+  '@kubev2v/common/(.*)$': '<rootDir>/../common/dist/$1',
+  '@kubev2v/mocks/(.*)$': '<rootDir>/../mocks/dist/$1',
+  '@kubev2v/types/(.*)$': '<rootDir>/../types/dist/$1',
 };
 
 // Sync object
