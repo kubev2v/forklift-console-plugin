@@ -82,6 +82,7 @@ const config: WebpackConfiguration & {
   devServer: {
     static: ['./dist'],
     host: 'localhost',
+    hot: false,
     port: 9001,
     headers: {
       'Access-Control-Allow-Origin': '*',
