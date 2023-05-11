@@ -7,13 +7,7 @@
     "outDir": "./dist",
 
     "paths": {
-      "src/*": ["./src/*"],
-
-      "@kubev2v/legacy/*": ["../legacy/src/*"],
-      "@kubev2v/common/*": ["../common/src/*"],
-      "@kubev2v/mocks/*": ["../mocks/src/*"],
-      "@kubev2v/webpack": ["../webpack/src"],
-      "@kubev2v/types": ["../types/src"]
+      "src/*": ["./src/*"]
     }
   },
 
