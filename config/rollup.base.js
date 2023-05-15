@@ -14,30 +14,11 @@ import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 
-import har from './rollup/rollup-plugin-har';
+import har from './rollup/plugin-har';
+import writeJSONFile from './rollup/plugin-write-json-file';
 
 // https://yarnpkg.com/advanced/lifecycle-scripts#environment-variables
 const rootDir = process.env.PROJECT_CWD;
-
-/**
- * Emits a JSON file to the build output.
- *
- * @param {object} options
- * @param {string} options.fileName
- * @param {import('type-fest').JsonValue} options.value
- * @returns {import('rollup').Plugin}
- */
-export const writeJSONFile = ({ fileName, value }) => ({
-  name: 'write-json-file',
-
-  generateBundle() {
-    this.emitFile({
-      type: 'asset',
-      fileName,
-      source: JSON.stringify(value, null, 2),
-    });
-  },
-});
 
 /**
  * @param {import('type-fest').PackageJson} pkg
