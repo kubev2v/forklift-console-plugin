@@ -5,6 +5,7 @@
  * Default rollup settings from @openshift/dynamic-plugin-sdk
  */
 
+import { execSync } from 'child_process';
 import analyzer from 'rollup-plugin-analyzer';
 import css from 'rollup-plugin-import-css';
 
@@ -48,6 +49,8 @@ export const getBuildMetadata = ({ name, version }) => {
     packageVersion: version,
     buildDate: now.toLocaleString('en-US', { dateStyle: 'long' }),
     buildTime: now.toLocaleString('en-US', { timeStyle: 'long' }),
+    gitCommit: execSync('git rev-parse HEAD').toString().trim(),
+    gitBranch: execSync('git rev-parse --abbrev-ref HEAD').toString().trim(),
   };
 };
 
@@ -62,7 +65,7 @@ export const getBanner = ({ repository }, buildMetadata) => {
   );
 
   const text = `
-  FPC (Forklift Plugin Components)
+  KFC (Kubernetes Forklift Components)
   ${repository.url.replace(/\.git$/, '')}
   ${Object.entries(buildMetadata)
     .map(([key, value]) => `${key.padEnd(padLength)} : ${value}`)
