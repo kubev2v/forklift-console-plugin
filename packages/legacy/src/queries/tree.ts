@@ -6,6 +6,7 @@ import { SourceInventoryProvider } from './types';
 import { IInventoryHostTree, InventoryTree, InventoryTreeType } from './types/tree.types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { ProviderType } from '../common/constants';
+import { usePollingContext } from '../common/context';
 
 const sortTreeItemsByName = <T extends InventoryTree>(tree: T): T => ({
   ...tree,
@@ -115,8 +116,8 @@ export const useInventoryTreeQuery = <T extends InventoryTree>(
       queryFn: async () =>
         await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)),
       enabled: (isValidClusterTree || isValidVMTree) && !!provider,
-      keepPreviousData: true,
       cacheTime: 0,
+      refetchInterval: usePollingContext().refetchInterval,
       select: indexTreeCallback,
     },
     apiMockData as T,

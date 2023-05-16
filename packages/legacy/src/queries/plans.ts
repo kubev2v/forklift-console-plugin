@@ -276,6 +276,8 @@ export const usePatchPlanMutation = (
         queryClient.invalidateQueries('plans');
         queryClient.invalidateQueries('hooks');
         queryClient.invalidateQueries('mappings');
+        queryClient.invalidateQueries('inventory-tree');
+        queryClient.invalidateQueries('vms');
         onSuccess && onSuccess();
       },
     }
