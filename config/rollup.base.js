@@ -46,7 +46,7 @@ export const getBanner = ({ repository }, buildMetadata) => {
   );
 
   const text = `
-  KFC (Kubernetes Forklift Components)
+  Forklift Console Plugin
   ${repository.url.replace(/\.git$/, '')}
   ${Object.entries(buildMetadata)
     .map(([key, value]) => `${key.padEnd(padLength)} : ${value}`)
