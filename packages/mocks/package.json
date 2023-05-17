@@ -1,10 +1,12 @@
 {
   "name": "@kubev2v/mocks",
   "version": "0.0.1",
-  "private": true,
+  "description": "forklift mock data and handlers used for testing",
   "license": "Apache-2.0",
+  "private": true,
   "repository": {
-    "url": "git@github.com:kubev2v/forklift-console-plugin.git",
+    "type": "git",
+    "url": "https://github.com/kubev2v/forklift-console-plugin.git",
     "directory": "packages/mocks"
   },
   "main": "./dist/index.js",

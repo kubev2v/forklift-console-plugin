@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Typescript interfaces and types for forklift",
   "license": "Apache-2.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/kubev2v/forklift-console-plugin.git",

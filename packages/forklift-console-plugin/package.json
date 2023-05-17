@@ -1,9 +1,15 @@
 {
   "name": "@kubev2v/forklift-console-plugin",
   "version": "2.4.1",
-  "private": true,
-  "repository": "git@github.com:kubev2v/forklift-console-plugin.git",
+  "description": "UI for forklift as an openshift console dynamic plugin",
   "license": "Apache-2.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kubev2v/forklift-console-plugin.git",
+    "directory": "packages/forklift-console-plugin"
+  },
+
   "scripts": {
     "clean": "rm -rf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",

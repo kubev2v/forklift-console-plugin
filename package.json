@@ -1,9 +1,10 @@
 {
   "name": "@monorepo/root",
-  "private": true,
   "version": "0.0.1",
-  "repository": "git@github.com:kubev2v/forklift-console-plugin.git",
+  "description": "forklift-console-plugin monorepo root",
   "license": "Apache-2.0",
+  "private": true,
+  "repository": "https://github.com/kubev2v/forklift-console-plugin.git",
   "workspaces": [
     "packages/*"
   ],
