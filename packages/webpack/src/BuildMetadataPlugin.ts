@@ -1,18 +1,8 @@
-import { execSync } from 'node:child_process';
 import * as path from 'node:path';
 import { PackageJson } from 'type-fest';
 import { type WebpackPluginInstance, BannerPlugin, Compilation, Compiler, sources } from 'webpack';
 
-const getBaseBuildMetadata = () => {
-  const now = new Date();
-
-  return {
-    buildDateTime: now.toISOString(),
-    gitCommit: execSync('git rev-parse HEAD').toString().trim(),
-    gitBranch: execSync('git rev-parse --abbrev-ref HEAD').toString().trim(),
-    gitTags: execSync('git tag --points-at HEAD').toString().trim().split('\n').filter(Boolean),
-  };
-};
+import { createBannerComment, getBuildMetadata } from '@kubev2v/build/src/metadata';
 
 export type BuildMetadataPluginOptions = {
   /**
@@ -21,14 +11,7 @@ export type BuildMetadataPluginOptions = {
   packageJson: PackageJson;
 
   /**
-   * Output path for the metadata file.
-   *
-   * Defaults value: the configured webpack output path
-   */
-  outputPath?: string;
-
-  /**
-   * Name of the JSON metadata file.
+   * Path and name of the JSON metadata file, relative to the configured webpack output path.
    *
    * Default value: `build-metadata.json`
    */
@@ -51,13 +34,11 @@ export type BuildMetadataPluginOptions = {
  */
 export class BuildMetadataPlugin implements WebpackPluginInstance {
   private readonly packageJson: PackageJson;
-  private readonly outputPath: string;
   private readonly jsonMetadataFilename: string;
   private readonly bannerBuildInfoTag: string;
 
   constructor(options: BuildMetadataPluginOptions = { packageJson: {} }) {
     this.packageJson = options.packageJson;
-    this.outputPath = options.outputPath ?? '.';
     this.jsonMetadataFilename = options.jsonMetadataFilename ?? 'build-metadata.json';
     this.bannerBuildInfoTag = options.bannerBuildInfoTag ?? '@buildInfo';
   }
@@ -66,25 +47,16 @@ export class BuildMetadataPlugin implements WebpackPluginInstance {
     //
     // Lookup the build metadata (package.json of the thing running webpack & git info):
     //
-    const buildInfo = {
-      packageName: this.packageJson.name,
-      packageVersion: this.packageJson.version,
-      ...getBaseBuildMetadata(),
-    };
+    const buildInfo = getBuildMetadata(this.packageJson);
 
     //
     // Build up the chunk banner (include the @buildInfo tag so terser can be configured to keep it):
     //
-    const bannerInfo = [
-      `${this.bannerBuildInfoTag} for [file]:`,
-      `${buildInfo.packageName}@${buildInfo.packageVersion}`,
-      `built: ${buildInfo.buildDateTime}`,
-      !buildInfo?.gitCommit && 'built from non-git repo',
-      buildInfo?.gitCommit && `commit: ${buildInfo.gitCommit}`,
-      buildInfo?.gitBranch && `branch: ${buildInfo.gitBranch}`,
-      buildInfo?.gitTags.length && `tags: ${buildInfo.gitTags.join(', ')}`,
-    ].filter(Boolean);
-    const banner = `/***\n    ${bannerInfo.join('\n    ')}\n***/`;
+    const banner = createBannerComment(
+      this.packageJson,
+      buildInfo,
+      `${this.bannerBuildInfoTag} for \`[file]\``,
+    );
 
     //
     // run the BannerPlugin:
@@ -101,15 +73,10 @@ export class BuildMetadataPlugin implements WebpackPluginInstance {
           stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
         },
         () => {
-          const filename = path.relative(
-            compilation.options.output.path,
-            path.resolve(
-              this.outputPath ?? compilation.options.output.path,
-              this.jsonMetadataFilename,
-            ),
-          );
-
+          const filename = path.normalize(this.jsonMetadataFilename);
           const source = new sources.RawSource(JSON.stringify(buildInfo, undefined, 2));
+
+          // filename is relative to webpack's configured output path
           compilation.emitAsset(filename, source);
         },
       );

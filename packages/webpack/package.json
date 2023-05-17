@@ -17,7 +17,7 @@
   "scripts": {
     "clean": "rm -rf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
-    "build": "tsc",
+    "build": "rollup -c --bundleConfigAsCjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -28,7 +28,7 @@
     "@openshift/dynamic-plugin-sdk-webpack": "3.0.0",
     "webpack": "^5.79.0"
   },
-  "engines": {
-    "node": ">=16"
+  "dependencies": {
+    "@kubev2v/build": "*"
   }
 }

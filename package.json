@@ -12,8 +12,8 @@
     "libs": "-w @kubev2v/webpack -w @kubev2v/types -w @kubev2v/legacy -w @kubev2v/common -w @kubev2v/mocks"
   },
   "scripts": {
-    "clean": "rm -rf ./dist ./coverage && npm run clean -ws",
-    "clean:all": "npm run clean && npm run clean:all -ws && rm -rf ./node_modules ./tmp ",
+    "clean": "rm -rf ./dist ./coverage && npm run clean -ws --if-present",
+    "clean:all": "npm run clean && npm run clean:all -ws --if-present && rm -rf ./node_modules ./tmp ",
     "build": "NODE_ENV=production npm run build $npm_package_config_libs -w @kubev2v/forklift-console-plugin",
     "build:dev": "npm run build $npm_package_config_libs && npm run build:dev -w @kubev2v/forklift-console-plugin",
     "start": "npm run build $npm_package_config_libs && npm run start -w @kubev2v/forklift-console-plugin",
@@ -84,5 +84,8 @@
     "typescript": "^4.7.4",
     "webpack": "^5.79.0",
     "webpack-merge": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=16"
   }
 }
