@@ -19,6 +19,49 @@ const pathTo = (relativePath: string) => path.resolve(__dirname, relativePath);
 
 const production = process.env.NODE_ENV === 'production';
 
+export const ENVIRONMENT_DEFAULTS = {
+  /**
+   * Used for testing when no api servers are available.  If set to `mock`, network api
+   * calls will use mock data.
+   */
+  DATA_SOURCE: 'remote' as 'mock' | 'remote',
+
+  /**
+   * UI branding name.
+   *
+   * Note: downstream builds are set to: 'RedHat'
+   */
+  BRAND_TYPE: 'Konveyor' as 'RedHat' | 'Konveyor',
+
+  /**
+   * Namespaces to add to the mock data is `DATA_SOURCE = 'mock'`.
+   */
+  NAMESPACE: 'konveyor-forklift',
+
+  /**
+   * Namespaces used by UI forms and modals if no namespace is given by the user.
+   *
+   * Note: downstream build are set to: 'openshift-mtv'
+   */
+  DEFAULT_NAMESPACE: 'konveyor-forklift',
+
+  /**
+   * NODE_ENV: used to bake debugging information on development builds.
+   */
+  NODE_ENV: (production ? 'production' : 'development') as 'production' | 'development',
+
+  /**
+   * Name of the console plugin.  It should be set to the plugin name used in the
+   * installation scripts.  Defaults to the name in `package.json`: 'forklift-console-plugin'.
+   */
+  PLUGIN_NAME: pluginMetadata.name,
+
+  /**
+   * Version of the plugin.  Defaults to the version in `package.json`.
+   */
+  VERSION: pluginMetadata.version,
+};
+
 const config: WebpackConfiguration & {
   devServer: WebpackDevServerConfiguration;
 } = {
@@ -105,26 +148,7 @@ const config: WebpackConfiguration & {
     new CopyPlugin({
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),
-    new EnvironmentPlugin({
-      // DATA_SOURCE: used for testing when no api servers are available
-      // if set to mock, network api calls will be mocked
-      DATA_SOURCE: 'remote',
-      // can be 'RedHat' or 'Konveyor',
-      // note: downstream build are set to: 'RedHat'
-      BRAND_TYPE: 'Konveyor',
-      // NAMESPACE: used only on mock data
-      NAMESPACE: 'konveyor-forklift',
-      // DEFAULT_NAMESPACE: UI forms and modals will fallback to this namespace
-      //                    if no namespace is given by user.
-      // note: downstream build are set to: 'openshift-mtv'
-      DEFAULT_NAMESPACE: 'konveyor-forklift',
-      // NODE_ENV: used to bake debugging information on development builds.
-      NODE_ENV: production ? 'production' : 'development',
-      // PLUGIN_NAME: should be set to the plugin name hardcoded in the
-      //              installation scripts, defaults to 'forklift-console-plugin'.
-      PLUGIN_NAME: pluginMetadata.name,
-      VERSION: pluginMetadata.version,
-    }),
+    new EnvironmentPlugin(ENVIRONMENT_DEFAULTS),
   ],
   devtool: 'source-map',
   optimization: {

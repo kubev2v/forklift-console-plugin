@@ -3,19 +3,13 @@
  * `EnvironmentPlugin` definitions
  */
 
-import { EnvironmentPlugin } from 'webpack';
-
-import config from '../../webpack.config';
-
-const environmentPlugin = config.plugins.find(
-  (plugin) => plugin.constructor.name === 'EnvironmentPlugin',
-) as EnvironmentPlugin;
+import { ENVIRONMENT_DEFAULTS } from '../../webpack.config';
 
 const environmentDefaults = {
-  ...environmentPlugin.defaultValues,
+  ...ENVIRONMENT_DEFAULTS,
   NODE_ENV: 'test',
 };
 
-for (const envKey in environmentDefaults) {
-  process.env[envKey] = environmentDefaults[envKey];
-}
+Object.entries(environmentDefaults).forEach(([key, value]) => {
+  process.env[key] = value;
+});
