@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "description": "Allow building openshift console dynamic plugins using the openshift dynamic plugin sdk.",
   "license": "Apache-2.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/kubev2v/forklift-console-plugin.git",
-    "directory": "packages/lib-webpack"
+    "directory": "packages/webpack"
   },
   "files": [
     "./dist/*"
