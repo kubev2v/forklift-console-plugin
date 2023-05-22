@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 
 /**
  * Source the current timestamp and git information and merge with info from `package.json`
@@ -12,9 +12,13 @@ export const getBuildMetadata = ({ name, version }) => {
     packageName: name,
     packageVersion: version,
     buildDateTime: now.toISOString(),
-    gitCommit: execSync('git rev-parse HEAD').toString().trim(),
-    gitBranch: execSync('git rev-parse --abbrev-ref HEAD').toString().trim(),
-    gitTags: execSync('git tag --points-at HEAD').toString().trim().split('\n').filter(Boolean),
+    gitCommit: execFileSync('git', ['rev-parse', 'HEAD']).toString().trim(),
+    gitBranch: execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD']).toString().trim(),
+    gitTags: execFileSync('git', ['tag', '--points-at', 'HEAD'])
+      .toString()
+      .trim()
+      .split('\n')
+      .filter(Boolean),
   };
 };
 
