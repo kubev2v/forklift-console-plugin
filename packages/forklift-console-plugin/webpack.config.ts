@@ -7,10 +7,15 @@ import CopyPlugin from 'copy-webpack-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import TerserPlugin from 'terser-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
-import { type Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
+import {
+  type Configuration as WebpackConfiguration,
+  BannerPlugin,
+  EnvironmentPlugin,
+} from 'webpack';
 import { type Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
-import { BuildMetadataPlugin, DynamicConsoleRemotePlugin } from '@kubev2v/webpack';
+import { createBannerComment, getBuildMetadata } from '@kubev2v/build/src/metadata';
+import { DynamicConsoleRemotePlugin, WriteJsonFilePlugin } from '@kubev2v/webpack';
 
 import packageJson from './package.json';
 import extensions from './plugin-extensions';
@@ -19,6 +24,16 @@ import pluginMetadata from './plugin-metadata';
 const pathTo = (relativePath: string) => path.resolve(__dirname, relativePath);
 
 const production = process.env.NODE_ENV === 'production';
+
+/**
+ * The build metadata (package.json of the thing running webpack & git info)
+ */
+const buildInfo = getBuildMetadata(packageJson);
+
+/**
+ * The chunk banner (including the '@buildInfo' tag so terser can be configured to keep it)
+ */
+const banner = createBannerComment(packageJson, buildInfo, '@buildInfo for `[file]`');
 
 export const ENVIRONMENT_DEFAULTS = {
   /**
@@ -142,9 +157,10 @@ const config: WebpackConfiguration & {
     },
   },
   plugins: [
-    new BuildMetadataPlugin({
-      packageJson,
-      bannerBuildInfoTag: '@buildInfo',
+    new BannerPlugin({ banner, raw: true }),
+    new WriteJsonFilePlugin({
+      contents: buildInfo,
+      jsonFilename: 'build-metadata.json',
     }),
     new DynamicConsoleRemotePlugin({
       pluginMetadata,

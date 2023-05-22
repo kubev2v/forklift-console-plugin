@@ -1,2 +1,2 @@
-export * from './BuildMetadataPlugin';
 export * from './DynamicConsoleRemotePlugin';
+export * from './WriteJsonFilePlugin';
