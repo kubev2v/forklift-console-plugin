@@ -80,30 +80,37 @@ const generateSecret = (
   host: IHost,
   provider: IVMwareProvider,
   hostConfig?: IHostConfig
-): ISecret => ({
-  apiVersion: 'v1',
-  data: {
-    user: values.adminUsername && btoa(values.adminUsername),
-    password: values.adminPassword && btoa(values.adminPassword),
-  },
-  kind: 'Secret',
-  metadata: {
-    ...(secretBeingReusedRef || {
-      generateName: truncateK8sString(provider.name, `-${host.id}-`, true),
-      namespace: provider.namespace,
-    }),
-    labels: {
-      createdForResourceType: ForkliftResourceKind.Host,
-      createdForResource: getHostConfigRef(provider, host).name,
+): ISecret => {
+  const matchingNetworkAdapter = host.networkAdapters.find(
+    ({ name }) => values.selectedNetworkAdapter?.name === name
+  );
+  return {
+    apiVersion: 'v1',
+    data: {
+      user: values.adminUsername && btoa(values.adminUsername),
+      password: values.adminPassword && btoa(values.adminPassword),
+      provider: 'vsphere',
+      ip: matchingNetworkAdapter?.ipAddress || '',
     },
-    ...(hostConfig
-      ? {
-          ownerReferences: [getObjectRef(hostConfig)],
-        }
-      : {}),
-  },
-  type: 'Opaque',
-});
+    kind: 'Secret',
+    metadata: {
+      ...(secretBeingReusedRef || {
+        generateName: truncateK8sString(provider.name, `-${host.id}-`, true),
+        namespace: provider.namespace,
+      }),
+      labels: {
+        createdForResourceType: ForkliftResourceKind.Host,
+        createdForResource: host.id,
+      },
+      ...(hostConfig
+        ? {
+            ownerReferences: [getObjectRef(hostConfig)],
+          }
+        : {}),
+    },
+    type: 'Opaque',
+  }
+};
 
 const generateHostConfig = (
   values: SelectNetworkFormValues,
