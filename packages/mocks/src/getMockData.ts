@@ -1,6 +1,5 @@
 import { Har } from 'har-format';
 import { findHarEntry } from 'harproxyserver';
-import { PathParams } from 'msw';
 
 import * as migrationsK8s from './data/migrations.K8s.json';
 import * as networkmapsK8s from './data/networkmaps.K8s.json';
@@ -13,9 +12,17 @@ import * as storagemapsK8s from './data/storagemaps.K8s.json';
 const har = _har as unknown as Har;
 
 /**
- * List of mockable data sources
+ * List of prefixes used by mockable data sources.
+ * Format for data source name is:
+ * 1. type:dataSet i.e. "code:basic" OR
+ * 2. type i.e. "json"
  */
-export const MSW_MOCK_SOURCES = ['har', 'json'];
+export const MSW_MOCK_SOURCES = ['har', 'json', 'code'];
+
+export const isDataSourceMock = (dataSource) =>
+  MSW_MOCK_SOURCES.some(
+    (mockSource) => mockSource === dataSource || mockSource === dataSource?.split(':')?.[0],
+  );
 
 /**
  * A mapping of API paths to their corresponding mock data.
@@ -49,7 +56,7 @@ export const getMockData = (
 ): MockResponse | null => {
   // Check path is mockable, Mock only REST API paths
   if (
-    !MSW_MOCK_SOURCES.includes(source) ||
+    !isDataSourceMock(source) ||
     !pathname ||
     !(pathname.startsWith('/api/kubernetes') || pathname.startsWith('/api/proxy'))
   ) {
@@ -78,6 +85,7 @@ export const getMockData = (
 
 /**
  * Replaces a namespace string in a Kubernetes path.
+ * Static paths for 'json' and 'har' data sources may have been recorded on a different namespace.
  * @param {string} path - The original Kubernetes path.
  * @param {string} newNamespace - The replacement namespace.
  * @returns {string} The modified path with the new namespace.
@@ -94,16 +102,19 @@ export function replaceNamespaceInPath(path: string, newNamespace: string): stri
  * @returns {object | null} The retrieved data as an object, or null if not found.
  */
 function getStaticData(pathname: string, source: string): object | null {
-  // Static paths for 'json' and 'har' data sources where recorded on 'openshift-mtv'
-  // namespace adjust path to match the namespace
-  const adjustedPathname = replaceNamespaceInPath(pathname, 'openshift-mtv');
-
-  switch (source) {
+  const [type] = source?.split(':') ?? [];
+  switch (type) {
     case 'json':
-      return mockData[adjustedPathname];
+      return mockData[replaceNamespaceInPath(pathname, 'openshift-mtv')];
     case 'har':
       // eslint-disable-next-line no-case-declarations
-      const recordedEntry = findHarEntry(har.log, 'GET', adjustedPathname, undefined, true);
+      const recordedEntry = findHarEntry(
+        har.log,
+        'GET',
+        replaceNamespaceInPath(pathname, 'openshift-mtv'),
+        undefined,
+        true,
+      );
       // eslint-disable-next-line no-case-declarations
       const text = recordedEntry?.response?.content?.text;
 
@@ -129,10 +140,10 @@ export interface MockResponse {
  *
  * @property {string} pathname - The pathname of the incoming request to match against the mock handlers
  * @property {string} [method] - An optional method of the incoming request to match against the mock handlers
- * @property {PathParams} [params] - An optional object containing the path parameters of the request
+ * @property {Record<string, string | ReadonlyArray<string>>} [params] - An optional object containing the path parameters of the request
  */
 export interface MockDataRequestParameters {
   pathname: string;
   method?: string;
-  params?: PathParams;
+  params?: Record<string, string | ReadonlyArray<string>>;
 }
