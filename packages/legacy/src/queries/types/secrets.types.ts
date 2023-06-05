@@ -13,6 +13,8 @@ export interface ISecret extends IMetaTypeMeta {
     token?: string;
     cacert?: string;
     insecureSkipVerify?: string;
+    provider?: string;
+    ip?: string;
   };
   metadata: IMetaObjectGenerateName | IMetaObjectMeta;
   type: string;
