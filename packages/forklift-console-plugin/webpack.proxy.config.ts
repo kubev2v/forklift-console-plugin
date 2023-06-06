@@ -1,6 +1,13 @@
 /* eslint-env node */
+import fs from 'fs';
+import * as path from 'path';
 
-import { type Configuration as WebpackConfiguration } from 'webpack';
+import {
+  type Configuration as WebpackConfiguration,
+  Compilation,
+  Compiler,
+  sources,
+} from 'webpack';
 import { type Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 import { merge } from 'webpack-merge';
 
@@ -40,6 +47,28 @@ const config: WebpackConfiguration & {
       },
     ],
   },
+  plugins: [
+    {
+      apply: (compiler: Compiler) =>
+        compiler.hooks.thisCompilation.tap('ReloadServiceWorker', (compilation) =>
+          compilation.hooks.processAssets.tap(
+            {
+              name: 'ReloadServiceWorker',
+              stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+            },
+            () =>
+              // make WebPack aware of mockServiceWorker.js by re-writing the file in-place
+              // step required since the file is copied to ./dist manually and is not added to the list of available assets
+              compilation.emitAsset(
+                'mockServiceWorker.js',
+                new sources.RawSource(
+                  fs.readFileSync(path.resolve(__dirname, 'dist/mockServiceWorker.js'), 'utf-8'),
+                ),
+              ),
+          ),
+        ),
+    },
+  ],
 };
 
 export default merge(baseConfig, config);
