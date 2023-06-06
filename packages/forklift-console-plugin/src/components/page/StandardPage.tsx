@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'src/utils/i18n';
 
 import {
@@ -148,6 +148,11 @@ export interface StandardPageProps<T> {
    * User settings store to initialize the page according to user preferences.
    */
   userSettings?: UserSettings;
+
+  /**
+   * Alerts section below the page title
+   */
+  alerts?: ReactNode;
 }
 
 /**
@@ -168,6 +173,7 @@ export function StandardPage<T>({
   filterPrefix = '',
   extraSupportedMatchers,
   HeaderMapper = DefaultHeader,
+  alerts,
 }: StandardPageProps<T>) {
   const {
     t,
@@ -220,6 +226,7 @@ export function StandardPage<T>({
           {addButton && <LevelItem>{addButton}</LevelItem>}
         </Level>
       </PageSection>
+      {alerts && <PageSection>{alerts}</PageSection>}
       <PageSection>
         <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
           <ToolbarContent>
