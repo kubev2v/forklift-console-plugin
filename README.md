@@ -46,9 +46,11 @@ npm run start
 Forklift console plugin requires the user to be logged into an openshift or kubernetes cluster, if you do not have access to one, you can setup your own using [Openshift local]( https://developers.redhat.com/products/openshift-local/overview) or use the CI script to build a local [KinD](https://sigs.k8s.io/kind) cluster.
 
 ``` bash
-# Example: setup a local KinD cluster with all mock providers
+# Example: setup a local KinD cluster with ovirt mock provider
 #          [ options: --with-all-providers --with-ovirt-provider, --with-vmware-provider, --with-openstack-provider]
-npm run cluster:up -- --with-all-providers
+#
+# Note: openstack-provider requires NFS server running, look at forkliftci documentation for more details.
+npm run cluster:up -- --with-ovirt-provider
 
 # run cleanup to stop and delete the cluster.
 npm run cluster:delete
