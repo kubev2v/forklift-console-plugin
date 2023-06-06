@@ -27,10 +27,8 @@ done
 
 # Generate JSON schema files for forklift inventory
 inventoryTypes=(
-    "NetworkInventory"
     "ProviderSecret"
-    "ProvidersInventory"
-    "StorageInventory")
+)
 
 for type in ${inventoryTypes[*]}; do
     echo "generating: ${type}.schema.json"

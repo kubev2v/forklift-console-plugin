@@ -8,6 +8,7 @@ import * as providersInventory from './data/providers.Inventory.json';
 import * as providersK8s from './data/providers.K8s.json';
 import * as _har from './data/recorder-brq2.har';
 import * as storagemapsK8s from './data/storagemaps.K8s.json';
+import { resolvePath } from './definitions/resolvePath';
 
 const har = _har as unknown as Har;
 
@@ -102,7 +103,7 @@ export function replaceNamespaceInPath(path: string, newNamespace: string): stri
  * @returns {object | null} The retrieved data as an object, or null if not found.
  */
 function getStaticData(pathname: string, source: string): object | null {
-  const [type] = source?.split(':') ?? [];
+  const [type, dataSet] = source?.split(':') ?? [];
   switch (type) {
     case 'json':
       return mockData[replaceNamespaceInPath(pathname, 'openshift-mtv')];
@@ -119,6 +120,8 @@ function getStaticData(pathname: string, source: string): object | null {
       const text = recordedEntry?.response?.content?.text;
 
       return text && JSON.parse(text);
+    case 'code':
+      return resolvePath(pathname, dataSet);
   }
 
   return null;
