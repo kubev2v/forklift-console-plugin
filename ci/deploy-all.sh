@@ -3,6 +3,8 @@
 set -euo pipefail
 script_dir=$(realpath $(dirname "$0"))
 
+CONTAINER_CMD=${CONTAINER_CMD:=podman}
+
 # Print help message
 if [[ $@ == *'--help'* ]]; then
   echo "Usage: bash deploy-all.sh [OPTION]...
@@ -29,11 +31,15 @@ echo ""
 echo "Check for container command"
 echo "============================"
 
-if ! [ -x "$(command -v podman)" ]; then
-  echo "Error: can't find 'podman' command line utility, exit"
+if ! [ -x "$(command -v ${CONTAINER_CMD})" ]; then
+  echo "Error: can't find '${CONTAINER_CMD}' command line utility, exit"
+  echo ""
+  echo "you can changed the command line urility using a CONTAINER_CMD enviorment variable"
+  echo "and try again."
+  echo "for example: export CONTAINER_CMD=docker"
   exit 1
 fi
-echo "Found: podman"
+echo "Found: ${CONTAINER_CMD}"
 
 # Install cluster
 # ---------------
@@ -78,8 +84,8 @@ echo "==========================================="
 echo ""
 echo "Local registry available on port 5001:    http://localhost:5001/"
 echo "Usage example:"
-echo "  podman build -t localhost:5001/forklift-console-plugin -f ./build/Containerfile ."
-echo "  podman push localhost:5001/forklift-console-plugin --tls-verify=false"
+echo "  ${CONTAINER_CMD} build -t localhost:5001/forklift-console-plugin -f ./build/Containerfile ."
+echo "  ${CONTAINER_CMD} push localhost:5001/forklift-console-plugin --tls-verify=false"
 
 config_path=$(echo ~)/.kube/config
 
