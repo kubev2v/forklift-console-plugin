@@ -33,8 +33,13 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 ``` bash
 # Start a local Openshift console server on the background.
 # - The console will be available in http://localhost:9000
-# - TO close the console server run:
+# - The inventory URL can be set using an enviorment variable,
+#   ( default value for INVENTORY_SERVER_HOST is http://localhost:30088 )
+#   for example:
+#     export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.example.com
+# - To close the console server run:
 #   npm run console:stop
+export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your caluster address>
 npm run console:background
 
 # Start the plugin in development mode
