@@ -1,6 +1,6 @@
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/model/ovirt/model.go
 
-export interface Snapshot {
+export interface OVirtSnapshot {
   // ID            string `json:"id"`
   id: string;
   // Description   string `json:"description"`
@@ -12,7 +12,7 @@ export interface Snapshot {
 }
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/model/ovirt/model.go
-export interface Property {
+export interface OVirtProperty {
   // Name  string `json:"name"`
   name: string;
   // Value string `json:"value"`
@@ -20,7 +20,7 @@ export interface Property {
 }
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/model/ovirt/model.go
-export interface NetworkAttachment {
+export interface OVirtNetworkAttachment {
   // ID      string `json:"id"`
   id: string;
   // Network string `json:"network"`
@@ -28,7 +28,7 @@ export interface NetworkAttachment {
 }
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/model/ovirt/model.go
-export interface HostNIC {
+export interface OVirtHostNIC {
   // ID        string `json:"id"`
   id: string;
   // Name      string `json:"name"`
@@ -41,7 +41,7 @@ export interface HostNIC {
   vlan: string;
 }
 
-export interface NIC {
+export interface OVirtNIC {
   // ID        string      `json:"id"`
   id: string;
   // Name      string      `json:"name"`
@@ -59,16 +59,14 @@ export interface NIC {
   mac: string;
 }
 
-export type RHVNIC = NIC;
-
-export interface IpAddress {
+interface IpAddress {
   // Address string `json:"address"`
   address: string;
   // Version string `json:"version"`
   version: string;
 }
 
-export interface DiskAttachment {
+export interface OVirtDiskAttachment {
   // ID              string `json:"id"`
   id: string;
   // Interface       string `json:"interface"`
@@ -78,5 +76,3 @@ export interface DiskAttachment {
   // Disk            string `json:"disk"`
   disk: string;
 }
-
-export type RHVDiskAttachment = DiskAttachment;

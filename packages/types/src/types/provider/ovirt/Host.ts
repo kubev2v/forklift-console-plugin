@@ -1,8 +1,8 @@
-import { HostNIC, NetworkAttachment } from './model';
-import { Resource } from './Resource';
+import { OVirtHostNIC, OVirtNetworkAttachment } from './model';
+import { OVirtResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/host.go
-export interface Host extends Resource {
+export interface OVirtHost extends OVirtResource {
   // Cluster            string              `json:"cluster"`
   cluster: string;
   // Status             string              `json:"status"`
@@ -18,7 +18,7 @@ export interface Host extends Resource {
   // CpuCores           int16               `json:"cpuCores"`
   cpuCores: number;
   // NetworkAttachments []NetworkAttachment `json:"networkAttachments"`
-  networkAttachments: NetworkAttachment[];
+  networkAttachments: OVirtNetworkAttachment[];
   // NICs               []hNIC              `json:"nics"`
-  nics: HostNIC[];
+  nics: OVirtHostNIC[];
 }

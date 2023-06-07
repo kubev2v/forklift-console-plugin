@@ -1,7 +1,7 @@
-import { Resource } from './Resource';
+import { OpenstackResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/openstack/volumetype.go
-export interface VolumeType extends Resource {
+export interface OpenstackVolumeType extends OpenstackResource {
   // Description  string            `json:"description"`
   description: string;
   // ExtraSpecs   map[string]string `json:"extraSpecs,omitempty"`
@@ -13,5 +13,3 @@ export interface VolumeType extends Resource {
   // PublicAccess bool              `json:"publicAccess"`
   publicAccess: boolean;
 }
-
-export type OpenstackVolumeType = Resource;

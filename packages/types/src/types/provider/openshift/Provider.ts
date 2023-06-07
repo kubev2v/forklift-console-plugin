@@ -1,9 +1,9 @@
 import { V1beta1Provider } from '../../../models';
 
-import { Resource } from './Resource';
+import { OpenshiftResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ocp/provider.go
-export interface Provider extends Resource {
+export interface OpenshiftProvider extends OpenshiftResource {
   // Type              string       `json:"type"`
   type: string;
   // Object            api.Provider `json:"object"`
@@ -15,5 +15,3 @@ export interface Provider extends Resource {
   // StorageClassCount int64        `json:"storageClassCount"`
   storageClassCount: number;
 }
-
-export type OpenshiftInventory = Provider;

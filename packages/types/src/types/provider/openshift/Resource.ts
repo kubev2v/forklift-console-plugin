@@ -1,5 +1,5 @@
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ocp/resource.go
-export interface Resource {
+export interface OpenshiftResource {
   // k8s UID.
   // UID string `json:"uid"`
   uid: string;

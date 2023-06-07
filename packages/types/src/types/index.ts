@@ -1,14 +1,10 @@
-// @index('./**/*.ts', f => `export * from '${f.path}';`)
-export * from './host/VSphereHostInventory';
+// @index('./*', f => `export * from '${f.path}';`)
+export * from './host';
 export * from './InventoryByType';
-export * from './k8s/IoK8sApiStorageV1StorageClass';
-export { V1Secret } from './k8s/Secret';
+export * from './k8s';
 export * from './MustGatherResponse';
 export * from './provider';
 export * from './ProviderSecret';
-export * from './secret/OpenShiftProviderSecret';
-export * from './secret/OpenstackProviderSecret';
-export * from './secret/OVirtProviderSecret';
-export * from './secret/VSphereProviderSecret';
+export * from './secret';
 export * from './TLSCertificate';
 // @endindex

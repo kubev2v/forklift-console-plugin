@@ -1,9 +1,9 @@
 import { Concern } from '../base/model';
 
-import { Resource } from './Resource';
+import { OpenstackResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/openstack/vm.go
-export interface VM extends Resource {
+export interface OpenstackVM extends OpenstackResource {
   // TenantID          string                 `json:"tenantID"`
   tenantID: string;
   // 'ACTIVE' | 'SHUTOFF' | 'PAUSED' | 'SHELVED_OFFLOADED' | 'SUSPENDED'
@@ -20,11 +20,11 @@ export interface VM extends Resource {
   // Addresses         map[string]interface{} `json:"addresses"`
   addresses: { [key: string]: any };
   // AttachedVolumes   []AttachedVolume       `json:"attachedVolumes,omitempty"`
-  attachedVolumes?: AttachedVolume[];
+  attachedVolumes?: OpenstackAttachedVolume[];
   // Concerns          []Concern              `json:"concerns"`
   concerns: Concern[];
 }
 
-export interface AttachedVolume {
+export interface OpenstackAttachedVolume {
   ID: string;
 }

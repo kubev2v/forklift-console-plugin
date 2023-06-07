@@ -1,10 +1,10 @@
 import { Concern, Ref } from '../base/model';
 
-import { Disk } from './model';
-import { Resource } from './Resource';
+import { VSphereDisk } from './model';
+import { VSphereResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/vsphere/vm.go
-export interface VM extends Resource {
+export interface VSphereVM extends VSphereResource {
   // RevisionValidated int64           `json:"revisionValidated"`
   revisionValidated: number;
   // IsTemplate        bool            `json:"isTemplate"`
@@ -17,9 +17,7 @@ export interface VM extends Resource {
   // Networks          []model.Ref     `json:"networks"`
   networks: Ref[];
   // Disks             []model.Disk    `json:"disks"`
-  disks: Disk[];
+  disks: VSphereDisk[];
   // Concerns          []model.Concern `json:"concerns"`
   concerns: Concern[];
 }
-
-export type VMwareVM = VM;

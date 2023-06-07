@@ -1,9 +1,7 @@
-import { TreeNode as BaseNode } from '../base/TreeNode';
+import { TreeNode } from '../base/TreeNode';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/model/vsphere/tree.go
-export interface TreeNode extends BaseNode {
+export interface VSphereTreeNode extends TreeNode {
   kind: '' | 'Datacenter' | 'Folder' | 'VM' | 'Cluster' | 'Host' | 'Network' | 'Datastore';
-  children: TreeNode[] | null;
+  children: VSphereTreeNode[] | null;
 }
-
-export type VMWareTreeNode = TreeNode;

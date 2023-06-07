@@ -1,7 +1,7 @@
-import { Resource } from './Resource';
+import { OVirtResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/cluster.go
-export interface Cluster extends Resource {
+export interface OVirtCluster extends OVirtResource {
   // 	DataCenter    string `json:"dataCenter"`
   dataCenter: string;
   // 	HaReservation bool   `json:"haReservation"`
