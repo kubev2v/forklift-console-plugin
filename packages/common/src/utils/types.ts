@@ -47,5 +47,6 @@ export const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
 export type K8sConditionStatus = (typeof K8sConditionStatusValues)[number];
 
 export interface GlobalActionToolbarProps<T> {
+  // data visible on the screen (i.e. adjusted by paging and filtering)
   dataOnScreen: T[];
 }

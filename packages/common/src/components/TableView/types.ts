@@ -15,8 +15,9 @@ export interface RowProps<T> {
   toggleSelect?: () => void;
 }
 
-export interface TableViewHeaderProps {
+export interface TableViewHeaderProps<T> {
   visibleColumns: ResourceField[];
   activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
+  dataOnScreen: T[];
 }

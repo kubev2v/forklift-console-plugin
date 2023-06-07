@@ -124,7 +124,7 @@ export const commonFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const StartWithEmptyColumnMapper = (props: TableViewHeaderProps) => (
+export const StartWithEmptyColumnMapper = (props: TableViewHeaderProps<unknown>) => (
   <>
     <Th />
     <DefaultHeader {...props} />
