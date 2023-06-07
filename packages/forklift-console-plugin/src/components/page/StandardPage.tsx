@@ -8,6 +8,7 @@ import {
   defaultValueMatchers,
   FilterGroup,
   FilterRenderer,
+  GlobalActionToolbarProps,
   toFieldFilter,
   useUrlFilters,
   ValueMatcher,
@@ -147,6 +148,11 @@ export interface StandardPageProps<T> {
    * Alerts section below the page title
    */
   alerts?: ReactNode;
+
+  /**
+   * Toolbar items with global actions.
+   */
+  GlobalActionToolbarItems?: ((props: GlobalActionToolbarProps<T>) => JSX.Element)[];
 }
 
 /**
@@ -167,6 +173,7 @@ export function StandardPage<T>({
   filterPrefix = '',
   extraSupportedMatchers,
   HeaderMapper = DefaultHeader,
+  GlobalActionToolbarItems = [],
   alerts,
 }: StandardPageProps<T>) {
   const {
@@ -259,6 +266,10 @@ export function StandardPage<T>({
                 defaultColumns={fieldsMetadata}
                 setColumns={setFields}
               />
+              {GlobalActionToolbarItems?.length > 0 &&
+                GlobalActionToolbarItems.map((Action, index) => (
+                  <Action key={index} dataOnScreen={showPagination ? pageData : filteredData} />
+                ))}
             </ToolbarToggleGroup>
             {showPagination && (
               <ToolbarItem variant="pagination">
