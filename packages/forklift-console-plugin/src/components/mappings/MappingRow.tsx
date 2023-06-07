@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import * as C from 'src/utils/constants';
 import { MAPPING_STATUS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
@@ -103,7 +103,14 @@ export const commonCells: CellCreator<CommonMapping> = {
 };
 
 function MappingRow<T extends CommonMapping>({
-  rowProps: { resourceFields, resourceData, namespace: currentNamespace, resourceIndex: rowIndex },
+  rowProps: {
+    isSelected,
+    toggleSelect,
+    resourceFields,
+    resourceData,
+    namespace: currentNamespace,
+    resourceIndex: rowIndex,
+  },
   cellCreator,
   mappingType,
   mapping,
@@ -114,19 +121,15 @@ function MappingRow<T extends CommonMapping>({
   mapping: Mapping;
 }) {
   const { t } = useTranslation();
-  const [isRowExpanded, setIsRowExpanded] = useState(false);
-  const toggleExpand = useCallback(
-    () => setIsRowExpanded(!isRowExpanded),
-    [isRowExpanded, setIsRowExpanded],
-  );
+
   return (
     <>
       <Tr ouiaId={undefined} ouiaSafe={undefined}>
         <Td
-          expand={{
+          select={{
             rowIndex,
-            isExpanded: isRowExpanded,
-            onToggle: toggleExpand,
+            onSelect: toggleSelect,
+            isSelected,
           }}
         />
         {resourceFields.map(({ resourceFieldId, label }) => {
@@ -137,7 +140,7 @@ function MappingRow<T extends CommonMapping>({
               dataLabel={label}
               compoundExpand={
                 resourceFieldId === C.FROM || resourceFieldId === C.TO
-                  ? { isExpanded: isRowExpanded, onToggle: toggleExpand }
+                  ? { isExpanded: isSelected, onToggle: toggleSelect }
                   : undefined
               }
             >
@@ -153,9 +156,9 @@ function MappingRow<T extends CommonMapping>({
           );
         })}
       </Tr>
-      <Tr isExpanded={isRowExpanded} ouiaId={undefined} ouiaSafe={undefined}>
+      <Tr isExpanded={isSelected} ouiaId={undefined} ouiaSafe={undefined}>
         <Td dataLabel={t('Mapping graph')} noPadding colSpan={resourceFields.length}>
-          {isRowExpanded && (
+          {isSelected && (
             <ExpandableRowContent>
               <MappingDetailView
                 mappingType={mappingType}
