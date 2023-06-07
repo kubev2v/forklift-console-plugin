@@ -1,8 +1,8 @@
-import { Property } from './model';
-import { Resource } from './Resource';
+import { OVirtProperty } from './model';
+import { OVirtResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/nicprofile.go
-export interface NicProfile extends Resource {
+export interface OVirtNicProfile extends OVirtResource {
   // Network       string           `json:"network"`
   network: string;
   // NetworkFilter string           `json:"networkFilter"`
@@ -12,7 +12,7 @@ export interface NicProfile extends Resource {
   // QoS           string           `json:"qos"`
   qos: string;
   // Properties    []model.Property `json:"properties"`
-  properties: Property[];
+  properties: OVirtProperty[];
   // PassThrough   bool             `json:"passThrough"`
   passThrough: boolean;
 }

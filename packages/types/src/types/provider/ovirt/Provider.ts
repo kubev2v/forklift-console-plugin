@@ -1,8 +1,9 @@
 import { V1beta1Provider } from '../../../models';
-import { Resource } from '../openshift/Resource';
+
+import { OVirtResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/provider.go
-export interface Provider extends Resource {
+export interface OVirtProvider extends OVirtResource {
   // Type               string       `json:"type"`
   type: string;
   // Object             api.Provider `json:"object"`
@@ -20,5 +21,3 @@ export interface Provider extends Resource {
   // StorageDomainCount int64        `json:"storageDomainCount"`
   storageDomainCount: number;
 }
-
-export type OVirtInventory = Provider;

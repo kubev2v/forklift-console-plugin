@@ -1,10 +1,10 @@
 import { Concern } from '../base/model';
 
-import { DiskAttachment, NIC } from './model';
-import { Resource } from './Resource';
+import { OVirtDiskAttachment, OVirtNIC } from './model';
+import { OVirtResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/vm.go
-export interface VM extends Resource {
+export interface OVirtVM extends OVirtResource {
   // Cluster           string           `json:"cluster"`
   cluster: string;
   // 'up' | 'down'
@@ -14,12 +14,10 @@ export interface VM extends Resource {
   host: string;
   // RevisionValidated int64            `json:"revisionValidated"`
   revisionValidated: number;
-  // NICs              []VNIC           `json:"nics"`
-  nics: NIC[];
+  // NICs              []OVirtNIC           `json:"nics"`
+  nics: OVirtNIC[];
   // DiskAttachments   []DiskAttachment `json:"diskAttachments"`
-  diskAttachments: DiskAttachment[];
+  diskAttachments: OVirtDiskAttachment[];
   // Concerns          []Concern        `json:"concerns"`
   concerns: Concern[];
 }
-
-export type RHVVM = VM;

@@ -1,7 +1,7 @@
-import { TreeNode as BaseNode } from '../base/TreeNode';
+import { TreeNode } from '../base/TreeNode';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/model/openstack/tree.go
-export interface TreeNode extends BaseNode {
+export interface OpenstackTreeNode extends TreeNode {
   kind:
     | ''
     | 'Project'
@@ -14,7 +14,5 @@ export interface TreeNode extends BaseNode {
     | 'VolumeType'
     | 'Network'
     | 'Subnet';
-  children: TreeNode[] | null;
+  children: OpenstackTreeNode[] | null;
 }
-
-export type OpenstackTreeNode = TreeNode;

@@ -1,7 +1,7 @@
 import { Ref } from '../base/model';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/model/vsphere/model.go
-export interface DVSHost {
+export interface VSphereDVSHost {
   // Host Ref
   host: Ref;
   // PNIC []string
@@ -9,7 +9,7 @@ export interface DVSHost {
 }
 
 // Virtual Disk.
-export interface Disk {
+export interface VSphereDisk {
   // Key       int32  `json:"key"`
   key: number;
   // File      string `json:"file"`

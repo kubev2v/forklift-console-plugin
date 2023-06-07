@@ -1,7 +1,7 @@
-import { TreeNode as BaseNode } from '../base/TreeNode';
+import { TreeNode } from '../base/TreeNode';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/model/ovirt/tree.go
-export interface TreeNode extends BaseNode {
+export interface OvirtTreeNode extends TreeNode {
   kind:
     | ''
     | 'DataCenter'
@@ -12,7 +12,5 @@ export interface TreeNode extends BaseNode {
     | 'Network'
     | 'StorageDomain'
     | 'Disk';
-  children: TreeNode[] | null;
+  children: OvirtTreeNode[] | null;
 }
-
-export type OvirtTreeNode = TreeNode;

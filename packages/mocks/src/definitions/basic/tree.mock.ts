@@ -1,4 +1,5 @@
-import { OpenstackTreeNode, OvirtTreeNode, VMWareTreeNode } from '@kubev2v/types';
+/* eslint-disable @cspell/spellchecker */
+import { OpenstackTreeNode, OvirtTreeNode, VSphereTreeNode } from '@kubev2v/types';
 
 import {
   OPENSTACK_01_UID,
@@ -15,7 +16,7 @@ import {
   VmwareProviderIDs,
 } from './providers.mock';
 
-export const MOCK_VMWARE_HOST_TREE: { [uid in VmwareProviderIDs]: VMWareTreeNode } = {
+export const MOCK_VMWARE_HOST_TREE: { [uid in VmwareProviderIDs]: VSphereTreeNode } = {
   [VMWARE_01_UID]: {
     kind: '',
     object: null,
@@ -559,7 +560,7 @@ export const MOCK_OPENSTACK_HOST_TREE: { [uid in OpenstackProviderIDs]: Openstac
   },
 };
 
-export const MOCK_VMWARE_VM_TREE: { [uid in VmwareProviderIDs]: VMWareTreeNode } = {
+export const MOCK_VMWARE_VM_TREE: { [uid in VmwareProviderIDs]: VSphereTreeNode } = {
   [VMWARE_01_UID]: {
     kind: '',
     object: null,

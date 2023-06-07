@@ -1,4 +1,5 @@
-import { NicProfile, RHVNIC } from '@kubev2v/types';
+/* eslint-disable @cspell/spellchecker */
+import { OVirtNIC, OVirtNicProfile } from '@kubev2v/types';
 
 import { MOCK_RHV_NETWORKS } from './networks.mock';
 import {
@@ -15,7 +16,7 @@ const np3Id = '71c3bfa0-67da-4b5b-9ca8-41297f7cfba6';
 const np4Id = 'f9db7fae-7b41-4037-ba7b-fafd53783272';
 const np5Id = 'b63804a9-46f9-4015-ba6e-94784135430b';
 
-export const MOCK_NICS: { [uid in OvirtProviderIDs]: RHVNIC[] } = {
+export const MOCK_NICS: { [uid in OvirtProviderIDs]: OVirtNIC[] } = {
   [OVIRT_01_UID]: [
     {
       id: '1794dcdd-565d-43c7-824b-ba0074855a82',
@@ -71,7 +72,7 @@ export const MOCK_NICS: { [uid in OvirtProviderIDs]: RHVNIC[] } = {
   ],
 };
 
-export const MOCK_NIC_PROFILES: { [uid in OvirtProviderIDs]: NicProfile[] } = {
+export const MOCK_NIC_PROFILES: { [uid in OvirtProviderIDs]: OVirtNicProfile[] } = {
   [OVIRT_01_UID]: [
     {
       id: np1Id,

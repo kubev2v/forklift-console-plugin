@@ -1,13 +1,14 @@
+/* eslint-disable @cspell/spellchecker */
 import {
   ForkliftControllerModelGroupVersionKind,
   InventoryByType,
-  OpenshiftInventory,
-  OpenstackInventory,
-  OVirtInventory,
+  OpenshiftProvider,
+  OpenstackProvider,
+  OVirtProvider,
   ProviderModelGroupVersionKind as gvk,
   V1beta1Provider,
   V1beta1ProviderStatus,
-  VSphereInventory,
+  VSphereProvider,
 } from '@kubev2v/types';
 
 import { EPOCH, NAMESPACE_FORKLIFT, NAMESPACE_MIGRATION } from '../utils';
@@ -78,11 +79,8 @@ const providerStatusReadyFields: V1beta1ProviderStatus = {
   phase: 'Ready',
 };
 
-export const vmwareProvider1: VSphereInventory = {
-  version: '14676',
+export const vmwareProvider1: VSphereProvider = {
   product: 'test-product',
-  uid: VMWARE_01_UID,
-  namespace: NAMESPACE_MIGRATION,
   name: 'vcenter-1',
   selfLink: `providers/vsphere/${VMWARE_01_UID}`,
   type: 'vsphere',
@@ -119,11 +117,13 @@ export const vmwareProvider1: VSphereInventory = {
   datastoreCount: 3,
   datacenterCount: 0,
   apiVersion: 'v1beta1',
+  id: '',
+  parent: undefined,
+  revision: 0,
 };
 
-const vmwareProvider2: VSphereInventory = {
+const vmwareProvider2: VSphereProvider = {
   ...vmwareProvider1,
-  uid: VMWARE_02_UID,
   name: 'vcenter-2',
   selfLink: `providers/vsphere/${VMWARE_02_UID}`,
   object: {
@@ -150,11 +150,9 @@ const vmwareProvider2: VSphereInventory = {
   },
 };
 
-export const vmwareProvider3: VSphereInventory = {
+export const vmwareProvider3: VSphereProvider = {
   ...vmwareProvider1,
-  uid: VMWARE_03_UID,
   name: 'vcenter-3',
-  namespace: NAMESPACE_FORKLIFT,
   selfLink: `providers/vsphere/${VMWARE_03_UID}`,
   object: {
     ...vmwareProvider1.object,
@@ -197,10 +195,7 @@ export const vmwareProvider3: VSphereInventory = {
   },
 };
 
-const rhvProvider1: OVirtInventory = {
-  version: '14873',
-  uid: OVIRT_01_UID,
-  namespace: NAMESPACE_FORKLIFT,
+const rhvProvider1: OVirtProvider = {
   name: 'rhv-1',
   selfLink: `providers/ovirt/${OVIRT_01_UID}`,
   type: 'ovirt',
@@ -229,11 +224,12 @@ const rhvProvider1: OVirtInventory = {
   vmCount: 36,
   networkCount: 15,
   storageDomainCount: 9,
+  id: '',
+  revision: 0,
 };
 
-const rhvProvider1i: OVirtInventory = {
+const rhvProvider1i: OVirtProvider = {
   ...rhvProvider1,
-  uid: OVIRT_INSECURE_UID,
   name: 'rhv-1-insecure',
   selfLink: `providers/ovirt/${OVIRT_INSECURE_UID}`,
   object: {
@@ -250,9 +246,8 @@ const rhvProvider1i: OVirtInventory = {
   },
 };
 
-const rhvProvider2: OVirtInventory = {
+const rhvProvider2: OVirtProvider = {
   ...rhvProvider1,
-  uid: OVIRT_02_UID,
   name: 'rhv-2',
   selfLink: `providers/ovirt/${OVIRT_02_UID}`,
   object: {
@@ -265,9 +260,8 @@ const rhvProvider2: OVirtInventory = {
   },
 };
 
-const rhvProvider3: OVirtInventory = {
+const rhvProvider3: OVirtProvider = {
   ...rhvProvider1,
-  uid: OVIRT_03_UID,
   name: 'rhv-3',
   selfLink: `providers/ovirt/${OVIRT_03_UID}`,
   object: {
@@ -280,10 +274,7 @@ const rhvProvider3: OVirtInventory = {
   },
 };
 
-const openstackProvider1: OpenstackInventory = {
-  version: '14874',
-  uid: OPENSTACK_01_UID,
-  namespace: NAMESPACE_FORKLIFT,
+const openstackProvider1: OpenstackProvider = {
   name: 'openstack-insecure-1',
   selfLink: `providers/openstack/${OPENSTACK_01_UID}`,
   type: 'openstack',
@@ -313,11 +304,12 @@ const openstackProvider1: OpenstackInventory = {
   volumeCount: 5,
   volumeTypeCount: 2,
   networkCount: 3,
+  id: '',
+  revision: 0,
 };
 
-const openstackProvider2: OpenstackInventory = {
+const openstackProvider2: OpenstackProvider = {
   ...openstackProvider1,
-  uid: OPENSTACK_02_UID,
   name: 'openstack-secure-2',
   selfLink: `providers/openstack/${OPENSTACK_02_UID}`,
   object: {
@@ -335,7 +327,7 @@ const openstackProvider2: OpenstackInventory = {
   },
 };
 
-export const openshiftProvider1: OpenshiftInventory = {
+export const openshiftProvider1: OpenshiftProvider = {
   version: '14676',
   storageClassCount: 0,
   uid: OPENSHIFT_01_UID,
@@ -372,7 +364,7 @@ export const openshiftProvider1: OpenshiftInventory = {
   networkCount: 8,
 };
 
-const openshiftProvider2: OpenshiftInventory = {
+const openshiftProvider2: OpenshiftProvider = {
   ...openshiftProvider1,
   uid: OPENSHIFT_02_UID,
   name: 'ocpv-2',
@@ -400,7 +392,7 @@ const openshiftProvider2: OpenshiftInventory = {
   },
 };
 
-const openshiftProvider3: OpenshiftInventory = {
+const openshiftProvider3: OpenshiftProvider = {
   ...openshiftProvider1,
   uid: OPENSHIFT_03_UID,
   namespace: NAMESPACE_FORKLIFT,
@@ -421,7 +413,7 @@ const openshiftProvider3: OpenshiftInventory = {
   },
 };
 
-export const openshiftProviderHost: OpenshiftInventory = {
+export const openshiftProviderHost: OpenshiftProvider = {
   ...openshiftProvider1,
   uid: OPENSHIFT_HOST_UID,
   namespace: NAMESPACE_FORKLIFT,

@@ -1,5 +1,5 @@
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/resource.go
-export interface Resource {
+export interface OVirtResource {
   // Object ID.
   // ID string `json:"id"`
   id: string;

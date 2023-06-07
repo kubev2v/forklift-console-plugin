@@ -1,4 +1,4 @@
-import { RHVVM, VMwareVM } from '@kubev2v/types';
+import { OVirtVM, VSphereVM } from '@kubev2v/types';
 
 import { MOCK_DISK_ATTACHMENTS } from './disks.mock';
 import { MOCK_NICS } from './nicProfiles.mock';
@@ -14,7 +14,7 @@ import {
   VmwareProviderIDs,
 } from './providers.mock';
 
-const vm1: VMwareVM = {
+const vm1: VSphereVM = {
   id: 'vm-1630',
   powerState: 'poweredOn',
   revision: 1,
@@ -70,7 +70,7 @@ const vm1: VMwareVM = {
   parent: null,
 };
 
-export const MOCK_VMWARE_VMS: { [uid in VmwareProviderIDs]: VMwareVM[] } = {
+export const MOCK_VMWARE_VMS: { [uid in VmwareProviderIDs]: VSphereVM[] } = {
   [VMWARE_01_UID]: [
     vm1,
     {
@@ -225,7 +225,7 @@ export const MOCK_VMWARE_VMS: { [uid in VmwareProviderIDs]: VMwareVM[] } = {
   ],
 };
 
-export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: RHVVM[] } = {
+export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
   [OVIRT_01_UID]: [
     {
       id: '3dcaf3ec-6b51-4ca0-8345-6d61841731d7',

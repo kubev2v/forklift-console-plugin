@@ -1,5 +1,5 @@
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/openstack/resource.go
-export interface Resource {
+export interface OpenstackResource {
   // Object ID.
   // ID string `json:"id"`
   id: string;

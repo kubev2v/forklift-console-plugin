@@ -1,4 +1,4 @@
-import { Disk, RHVDiskAttachment } from '@kubev2v/types';
+import { OVirtDisk, OVirtDiskAttachment } from '@kubev2v/types';
 
 import {
   OVIRT_01_UID,
@@ -14,7 +14,7 @@ const disk3DaId = '33f51a02-6d51-46e6-85d7-f4864a90ae10';
 const disk4DaId = '45b22939-31f9-4ff7-a290-104b59cfcf75';
 const disk5DaId = '52f84502-3bd1-4ac5-9107-fb7629cc2fdd';
 
-export const MOCK_DISK_ATTACHMENTS: { [uid in OvirtProviderIDs]: RHVDiskAttachment[] } = {
+export const MOCK_DISK_ATTACHMENTS: { [uid in OvirtProviderIDs]: OVirtDiskAttachment[] } = {
   [OVIRT_01_UID]: [
     {
       disk: disk1DaId,
@@ -55,7 +55,7 @@ export const MOCK_DISK_ATTACHMENTS: { [uid in OvirtProviderIDs]: RHVDiskAttachme
   ],
 };
 
-export const MOCK_DISKS: { [uid in OvirtProviderIDs]: Disk[] } = {
+export const MOCK_DISKS: { [uid in OvirtProviderIDs]: OVirtDisk[] } = {
   [OVIRT_01_UID]: [
     {
       id: disk1DaId,

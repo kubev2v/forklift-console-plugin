@@ -1,8 +1,9 @@
 import { V1beta1Provider } from '../../../models';
-import { Resource } from '../openshift/Resource';
+
+import { VSphereResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/vsphere/provider.go
-export interface Provider extends Resource {
+export interface VSphereProvider extends VSphereResource {
   // Type            string       `json:"type"`
   type: string;
   // Object          api.Provider `json:"object"`
@@ -24,5 +25,3 @@ export interface Provider extends Resource {
   // DatastoreCount  int64        `json:"datastoreCount"`
   datastoreCount: number;
 }
-
-export type VSphereInventory = Provider;

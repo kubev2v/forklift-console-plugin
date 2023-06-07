@@ -1,6 +1,6 @@
 import { IoK8sApimachineryPkgApisMetaV1ObjectMeta } from '../../models';
 
-export interface Secret {
+interface Secret {
   apiVersion?: string;
   kind?: string;
   immutable?: boolean;

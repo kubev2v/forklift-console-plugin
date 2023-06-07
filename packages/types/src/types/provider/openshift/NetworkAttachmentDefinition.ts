@@ -1,9 +1,9 @@
-import { V1NetworkAttachmentDefinition } from '../../k8s/NetworkAttachementDefinition';
+import { V1NetworkAttachmentDefinition } from '../../k8s/V1NetworkAttachmentDefinition';
 
-import { Resource } from './Resource';
+import { OpenshiftResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ocp/netattachdefinition.go
-export interface NetworkAttachmentDefinition extends Resource {
+export interface OpenShiftNetworkAttachmentDefinition extends OpenshiftResource {
   // Object net.NetworkAttachmentDefinition `json:"object"`
   object: V1NetworkAttachmentDefinition;
 }

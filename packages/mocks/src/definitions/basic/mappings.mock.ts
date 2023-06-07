@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import {
   NetworkMapModelGroupVersionKind as netGvk,
   PlanModelGroupVersionKind,

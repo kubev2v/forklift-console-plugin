@@ -1,4 +1,5 @@
-import { NetworkAttachmentDefinition, OvirtNetwork, VmWareNetwork } from '@kubev2v/types';
+/* eslint-disable @cspell/spellchecker */
+import { OpenShiftNetworkAttachmentDefinition, OVirtNetwork, VSphereNetwork } from '@kubev2v/types';
 
 import { NAMESPACE_FORKLIFT, NAMESPACE_MIGRATION } from '../utils';
 
@@ -19,7 +20,7 @@ import {
   VmwareProviderIDs,
 } from './providers.mock';
 
-export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VmWareNetwork[] } = {
+export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VSphereNetwork[] } = {
   [VMWARE_01_UID]: [
     {
       id: '1',
@@ -27,6 +28,9 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VmWareNetwork[]
       selfLink: `providers/vsphere/${VMWARE_01_UID}/networks/1`,
       path: '/V2V-DC/network/vDS-00',
       revision: 1,
+      variant: '',
+      host: [],
+      parent: null,
     },
     {
       id: '2',
@@ -34,6 +38,9 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VmWareNetwork[]
       selfLink: `providers/vsphere/${VMWARE_01_UID}/networks/2`,
       path: '/V2V-DC/network/vDS-00',
       revision: 1,
+      variant: '',
+      host: [],
+      parent: null,
     },
   ],
   [VMWARE_02_UID]: [
@@ -43,6 +50,9 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VmWareNetwork[]
       selfLink: `providers/vsphere/${VMWARE_02_UID}/networks/3`,
       path: '/V2V-DC/network/vDS-00',
       revision: 1,
+      variant: '',
+      host: [],
+      parent: null,
     },
   ],
   [VMWARE_03_UID]: [
@@ -52,6 +62,9 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VmWareNetwork[]
       selfLink: `providers/vsphere/${VMWARE_03_UID}/networks/4`,
       path: '/V2V-DC/network/vDS-00',
       revision: 1,
+      variant: '',
+      host: [],
+      parent: null,
     },
     {
       id: '5',
@@ -59,11 +72,14 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VmWareNetwork[]
       selfLink: `providers/vsphere/${VMWARE_03_UID}/networks/5`,
       path: '/V2V-DC/network/vDS-00',
       revision: 1,
+      variant: '',
+      host: [],
+      parent: null,
     },
   ],
 };
 
-export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OvirtNetwork[] } = {
+export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OVirtNetwork[] } = {
   [OVIRT_01_UID]: [
     {
       id: '00000000-0000-0000-0000-000000000009',
@@ -72,6 +88,10 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OvirtNetwork[] } = 
       name: 'ovirtmgmt',
       description: 'this description is doubly improved',
       selfLink: `providers/ovirt/${OVIRT_01_UID}/networks/00000000-0000-0000-0000-000000000009`,
+      dataCenter: '',
+      vlan: '',
+      usages: [],
+      nicProfiles: [],
     },
     {
       id: '8b6f4200-cba6-4579-8edd-ea08b7ddd97b',
@@ -79,6 +99,10 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OvirtNetwork[] } = 
       path: 'Default/qosn',
       name: 'qosn',
       selfLink: `providers/ovirt/${OVIRT_01_UID}/networks/8b6f4200-cba6-4579-8edd-ea08b7ddd97b`,
+      dataCenter: '',
+      vlan: '',
+      usages: [],
+      nicProfiles: [],
     },
     {
       id: '0189c310-19e6-41e3-97b1-33894562b5fb',
@@ -86,6 +110,10 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OvirtNetwork[] } = 
       path: 'Default/test',
       name: 'test',
       selfLink: `providers/ovirt/${OVIRT_01_UID}/networks/0189c310-19e6-41e3-97b1-33894562b5fb`,
+      dataCenter: '',
+      vlan: '',
+      usages: [],
+      nicProfiles: [],
     },
   ],
   [OVIRT_02_UID]: [
@@ -96,6 +124,10 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OvirtNetwork[] } = 
       name: 'ovirtmgmt',
       description: 'test description',
       selfLink: `providers/ovirt/${OVIRT_02_UID}/networks/00000000-0000-0000-0000-000000000008`,
+      dataCenter: '',
+      vlan: '',
+      usages: [],
+      nicProfiles: [],
     },
   ],
   [OVIRT_03_UID]: [
@@ -106,6 +138,10 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OvirtNetwork[] } = 
       name: 'ovirtmgmt',
       description: 'test description',
       selfLink: `providers/ovirt/${OVIRT_03_UID}/networks/00000000-0000-0000-0000-000000000007`,
+      dataCenter: '',
+      vlan: '',
+      usages: [],
+      nicProfiles: [],
     },
   ],
   [OVIRT_INSECURE_UID]: [
@@ -116,19 +152,23 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OvirtNetwork[] } = 
       name: 'ovirtmgmt',
       description: 'test description',
       selfLink: `providers/ovirt/${OVIRT_INSECURE_UID}/networks/00000000-0000-0000-0000-000000000006`,
+      dataCenter: '',
+      vlan: '',
+      usages: [],
+      nicProfiles: [],
     },
   ],
 };
 
 export const MOCK_OPENSHIFT_NETWORKS: {
-  [uid in OpenshiftProviderIDs]: NetworkAttachmentDefinition[];
+  [uid in OpenshiftProviderIDs]: OpenShiftNetworkAttachmentDefinition[];
 } = {
   [OPENSHIFT_HOST_UID]: [
     {
-      uid: 'e49f7782-7c59-4343-aac4-59a420201d07',
-      version: '13180',
-      namespace: NAMESPACE_FORKLIFT,
+      uid: 'example-network-uid-1',
+      namespace: 'remote-namespace-1',
       name: 'example-network-1',
+      version: '1',
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/networkattachmentdefinitions/e49f7782-7c59-4343-aac4-59a420201d07`,
       object: {
         apiVersion: 'k8s.cni.cncf.io/v1',
@@ -142,10 +182,10 @@ export const MOCK_OPENSHIFT_NETWORKS: {
       },
     },
     {
-      uid: '8b6f4200-cba6-4579-8edd-ea08b7ddd97b',
-      version: '13',
-      namespace: NAMESPACE_MIGRATION,
+      uid: 'example-network-uid-2',
+      namespace: 'remote-namespace-2',
       name: 'example-network-2',
+      version: '1',
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/networkattachmentdefinitions/8b6f4200-cba6-4579-8edd-ea08b7ddd97b`,
       object: {
         apiVersion: 'k8s.cni.cncf.io/v1',
@@ -163,8 +203,8 @@ export const MOCK_OPENSHIFT_NETWORKS: {
     {
       uid: 'foo-network-uid-1',
       namespace: 'remote-namespace-1',
-      version: '1',
       name: 'ocp-network-1',
+      version: '1',
       selfLink: `providers/openshift/${OPENSHIFT_01_UID}/networkattachmentdefinitions/foo-network-uid-1`,
       object: {
         apiVersion: 'k8s.cni.cncf.io/v1',

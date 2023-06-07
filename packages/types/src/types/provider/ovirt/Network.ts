@@ -1,7 +1,7 @@
-import { Resource } from './Resource';
+import { OVirtResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/network.go
-export interface Network extends Resource {
+export interface OVirtNetwork extends OVirtResource {
   // DataCenter string   `json:"dataCenter"`
   dataCenter: string;
   // VLan       string   `json:"vlan"`
@@ -11,5 +11,3 @@ export interface Network extends Resource {
   // Profiles   []string `json:"nicProfiles"`
   nicProfiles: string[];
 }
-
-export type OvirtNetwork = Resource;

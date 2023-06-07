@@ -1,7 +1,7 @@
-import { Resource } from './Resource';
+import { OVirtResource } from './Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/storage.go
-export interface StorageDomain extends Resource {
+export interface OVirtStorageDomain extends OVirtResource {
   // DataCenter string `json:"dataCenter"`
   dataCenter: string;
   // Type       string `json:"type"`
@@ -15,5 +15,3 @@ export interface StorageDomain extends Resource {
   // } `json:"storage"`
   storage: { type: string };
 }
-
-export type OVirtStorageDomain = Resource;

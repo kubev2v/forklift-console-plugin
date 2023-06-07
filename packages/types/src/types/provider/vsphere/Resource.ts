@@ -1,7 +1,7 @@
 import { Ref } from '../base/model';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/vsphere/resource.go
-export interface Resource {
+export interface VSphereResource {
   // Object ID.
   // ID string `json:"id"`
   id: string;
