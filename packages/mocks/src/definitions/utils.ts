@@ -49,9 +49,9 @@ export const disks = ({
   ovirt: { [uid: string]: OVirtDisk[] };
   openstack: OpenstackVolumeType[];
 }) => [
-  ...providers.ovirt.map(({ selfLink, object }) => [
+  ...providers.ovirt.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/disks`,
-    ovirt[object.metadata.uid] ?? [],
+    ovirt[uid] ?? [],
   ]),
   ...providers.openstack.map(({ selfLink }) => [`${inventoryPath}${selfLink}/volumes`, openstack]),
 ];
@@ -68,11 +68,8 @@ export const vms = ({
   ovirt: { [uid: string]: OVirtVM[] };
 }) =>
   [
-    ...providers.ovirt.map(({ selfLink, object }) => [selfLink, ovirt[object.metadata.uid] ?? []]),
-    ...providers.vsphere.map(({ selfLink, object }) => [
-      selfLink,
-      vsphere[object.metadata.uid] ?? [],
-    ]),
+    ...providers.ovirt.map(({ selfLink, uid }) => [selfLink, ovirt[uid] ?? []]),
+    ...providers.vsphere.map(({ selfLink, uid }) => [selfLink, vsphere[uid] ?? []]),
   ].map(([selfLink, mock]) => [`${inventoryPath}${selfLink}/vms`, mock]);
 
 export const hosts = ({
@@ -84,9 +81,9 @@ export const hosts = ({
   inventoryPath: string;
   vsphere: { [uid: string]: VSphereHostInventory[] };
 }) =>
-  providers.vsphere.map(({ selfLink, object }) => [
+  providers.vsphere.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/hosts`,
-    vsphere[object.metadata.uid] ?? [],
+    vsphere[uid] ?? [],
   ]);
 
 export const namespaces = ({
@@ -117,15 +114,12 @@ export const networks = ({
   openshift: { [uid: string]: OpenShiftNetworkAttachmentDefinition[] };
 }) => [
   ...[
-    ...providers.vsphere.map(({ selfLink, object }) => [
-      selfLink,
-      vsphere[object.metadata.uid] ?? [],
-    ]),
-    ...providers.ovirt.map(({ selfLink, object }) => [selfLink, ovirt[object.metadata.uid] ?? []]),
+    ...providers.vsphere.map(({ selfLink, uid }) => [selfLink, vsphere[uid] ?? []]),
+    ...providers.ovirt.map(({ selfLink, uid }) => [selfLink, ovirt[uid] ?? []]),
   ].map(([selfLink, mock]) => [`${inventoryPath}${selfLink}/networks`, mock]),
-  ...providers.openshift.map(({ selfLink, object }) => [
+  ...providers.openshift.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/networkattachmentdefinitions`,
-    openshift[object.metadata.uid] ?? [],
+    openshift[uid] ?? [],
   ]),
 ];
 
@@ -138,9 +132,9 @@ export const nicProfiles = ({
   inventoryPath: string;
   ovirt: { [uid: string]: OVirtNicProfile[] };
 }) =>
-  providers.ovirt.map(({ selfLink, object }) => [
+  providers.ovirt.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/nicprofiles`,
-    ovirt[object.metadata.uid] ?? [],
+    ovirt[uid] ?? [],
   ]);
 
 export const storages = ({
@@ -158,21 +152,21 @@ export const storages = ({
   openstack: { [uid: string]: OpenstackVolumeType[] };
   openshift: { [uid: string]: OpenShiftStorageClass[] };
 }) => [
-  ...providers.ovirt.map(({ selfLink, object }) => [
+  ...providers.ovirt.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/storagedomains`,
-    ovirt[object.metadata.uid] ?? [],
+    ovirt[uid] ?? [],
   ]),
-  ...providers.openstack.map(({ selfLink, object }) => [
+  ...providers.openstack.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/volumetypes`,
-    openstack[object.metadata.uid] ?? [],
+    openstack[uid] ?? [],
   ]),
-  ...providers.vsphere.map(({ selfLink, object }) => [
+  ...providers.vsphere.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/datastores`,
-    vsphere[object.metadata.uid] ?? [],
+    vsphere[uid] ?? [],
   ]),
-  ...providers.openshift.map(({ selfLink, object }) => [
+  ...providers.openshift.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/storageclasses`,
-    openshift[object.metadata.uid] ?? [],
+    openshift[uid] ?? [],
   ]),
 ];
 
@@ -192,21 +186,21 @@ export const trees = ({
   ovirt: { [uid: string]: OvirtTreeNode };
   openstack: { [uid: string]: OpenstackTreeNode };
 }) => [
-  ...providers.vsphere.map(({ selfLink, object }) => [
+  ...providers.vsphere.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/tree/host`,
-    vsphereHostTree[object.metadata.uid] ?? [],
+    vsphereHostTree[uid] ?? [],
   ]),
-  ...providers.vsphere.map(({ selfLink, object }) => [
+  ...providers.vsphere.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/tree/vm`,
-    vsphereVmTree[object.metadata.uid] ?? [],
+    vsphereVmTree[uid] ?? [],
   ]),
-  ...providers.ovirt.map(({ selfLink, object }) => [
+  ...providers.ovirt.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/tree/cluster`,
-    ovirt[object.metadata.uid] ?? [],
+    ovirt[uid] ?? [],
   ]),
-  ...providers.openstack.map(({ selfLink, object }) => [
+  ...providers.openstack.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/tree/project`,
-    openstack[object.metadata.uid] ?? [],
+    openstack[uid] ?? [],
   ]),
 ];
 
