@@ -165,10 +165,10 @@ export const MOCK_OPENSHIFT_NETWORKS: {
 } = {
   [OPENSHIFT_HOST_UID]: [
     {
-      uid: 'example-network-uid-1',
-      namespace: 'remote-namespace-1',
+      uid: 'e49f7782-7c59-4343-aac4-59a420201d07',
+      version: '13180',
+      namespace: NAMESPACE_FORKLIFT,
       name: 'example-network-1',
-      version: '1',
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/networkattachmentdefinitions/e49f7782-7c59-4343-aac4-59a420201d07`,
       object: {
         apiVersion: 'k8s.cni.cncf.io/v1',
@@ -182,10 +182,10 @@ export const MOCK_OPENSHIFT_NETWORKS: {
       },
     },
     {
-      uid: 'example-network-uid-2',
-      namespace: 'remote-namespace-2',
+      uid: '8b6f4200-cba6-4579-8edd-ea08b7ddd97b',
+      version: '13',
+      namespace: NAMESPACE_MIGRATION,
       name: 'example-network-2',
-      version: '1',
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/networkattachmentdefinitions/8b6f4200-cba6-4579-8edd-ea08b7ddd97b`,
       object: {
         apiVersion: 'k8s.cni.cncf.io/v1',

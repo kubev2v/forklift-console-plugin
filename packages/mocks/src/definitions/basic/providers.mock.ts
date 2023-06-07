@@ -80,7 +80,10 @@ const providerStatusReadyFields: V1beta1ProviderStatus = {
 };
 
 export const vmwareProvider1: VSphereProvider = {
+  version: '14676',
   product: 'test-product',
+  uid: VMWARE_01_UID,
+  namespace: NAMESPACE_MIGRATION,
   name: 'vcenter-1',
   selfLink: `providers/vsphere/${VMWARE_01_UID}`,
   type: 'vsphere',
@@ -117,13 +120,11 @@ export const vmwareProvider1: VSphereProvider = {
   datastoreCount: 3,
   datacenterCount: 0,
   apiVersion: 'v1beta1',
-  id: '',
-  parent: undefined,
-  revision: 0,
 };
 
 const vmwareProvider2: VSphereProvider = {
   ...vmwareProvider1,
+  uid: VMWARE_02_UID,
   name: 'vcenter-2',
   selfLink: `providers/vsphere/${VMWARE_02_UID}`,
   object: {
@@ -152,7 +153,9 @@ const vmwareProvider2: VSphereProvider = {
 
 export const vmwareProvider3: VSphereProvider = {
   ...vmwareProvider1,
+  uid: VMWARE_03_UID,
   name: 'vcenter-3',
+  namespace: NAMESPACE_FORKLIFT,
   selfLink: `providers/vsphere/${VMWARE_03_UID}`,
   object: {
     ...vmwareProvider1.object,
@@ -196,6 +199,9 @@ export const vmwareProvider3: VSphereProvider = {
 };
 
 const rhvProvider1: OVirtProvider = {
+  version: '14873',
+  uid: OVIRT_01_UID,
+  namespace: NAMESPACE_FORKLIFT,
   name: 'rhv-1',
   selfLink: `providers/ovirt/${OVIRT_01_UID}`,
   type: 'ovirt',
@@ -224,12 +230,11 @@ const rhvProvider1: OVirtProvider = {
   vmCount: 36,
   networkCount: 15,
   storageDomainCount: 9,
-  id: '',
-  revision: 0,
 };
 
 const rhvProvider1i: OVirtProvider = {
   ...rhvProvider1,
+  uid: OVIRT_INSECURE_UID,
   name: 'rhv-1-insecure',
   selfLink: `providers/ovirt/${OVIRT_INSECURE_UID}`,
   object: {
@@ -248,6 +253,7 @@ const rhvProvider1i: OVirtProvider = {
 
 const rhvProvider2: OVirtProvider = {
   ...rhvProvider1,
+  uid: OVIRT_02_UID,
   name: 'rhv-2',
   selfLink: `providers/ovirt/${OVIRT_02_UID}`,
   object: {
@@ -262,6 +268,7 @@ const rhvProvider2: OVirtProvider = {
 
 const rhvProvider3: OVirtProvider = {
   ...rhvProvider1,
+  uid: OVIRT_03_UID,
   name: 'rhv-3',
   selfLink: `providers/ovirt/${OVIRT_03_UID}`,
   object: {
@@ -275,6 +282,9 @@ const rhvProvider3: OVirtProvider = {
 };
 
 const openstackProvider1: OpenstackProvider = {
+  version: '14874',
+  uid: OPENSTACK_01_UID,
+  namespace: NAMESPACE_FORKLIFT,
   name: 'openstack-insecure-1',
   selfLink: `providers/openstack/${OPENSTACK_01_UID}`,
   type: 'openstack',
@@ -304,12 +314,11 @@ const openstackProvider1: OpenstackProvider = {
   volumeCount: 5,
   volumeTypeCount: 2,
   networkCount: 3,
-  id: '',
-  revision: 0,
 };
 
 const openstackProvider2: OpenstackProvider = {
   ...openstackProvider1,
+  uid: OPENSTACK_02_UID,
   name: 'openstack-secure-2',
   selfLink: `providers/openstack/${OPENSTACK_02_UID}`,
   object: {

@@ -1,9 +1,8 @@
 import { V1beta1Provider } from '../../../models';
-
-import { OVirtResource } from './Resource';
+import { OpenshiftResource } from '../openshift/Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/provider.go
-export interface OVirtProvider extends OVirtResource {
+export interface OVirtProvider extends OpenshiftResource {
   // Type               string       `json:"type"`
   type: string;
   // Object             api.Provider `json:"object"`
