@@ -89,7 +89,7 @@ const generateSecret = (
     data: {
       user: values.adminUsername && btoa(values.adminUsername),
       password: values.adminPassword && btoa(values.adminPassword),
-      provider: btoa('vsphere'),
+      provider: btoa(provider.name),
       ip: btoa(matchingNetworkAdapter?.ipAddress || ''),
     },
     kind: 'Secret',
