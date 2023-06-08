@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import {
   PlanModelGroupVersionKind as gvk,
   V1beta1Plan,
@@ -44,7 +45,7 @@ const vm1 = {
 };
 
 const vm2 = {
-  id: 'vm-2844', // test-migraton-2
+  id: 'vm-2844', // test-migration-2
 };
 
 const vm3 = {
