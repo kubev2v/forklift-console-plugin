@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import { HookModelGroupVersionKind as gvk, V1beta1Hook } from '@kubev2v/types';
 
 import { EPOCH, NAMESPACE_FORKLIFT, NAMESPACE_MIGRATION } from '../utils';

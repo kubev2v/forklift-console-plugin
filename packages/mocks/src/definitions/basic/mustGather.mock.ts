@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import { MustGatherResponse } from '@kubev2v/types';
 
 import { EPOCH } from '../utils';
