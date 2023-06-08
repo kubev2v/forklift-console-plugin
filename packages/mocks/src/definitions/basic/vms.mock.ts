@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import { OVirtVM, VSphereVM } from '@kubev2v/types';
 
 import { MOCK_DISK_ATTACHMENTS } from './disks.mock';

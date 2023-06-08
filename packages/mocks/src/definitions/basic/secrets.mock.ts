@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import { V1Secret } from '@kubev2v/types';
 
 import { EPOCH } from '../utils';
