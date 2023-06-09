@@ -13,10 +13,10 @@ import { ValueMatcher } from '@kubev2v/common/components/FilterGroup';
 import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
 import { loadUserSettings, UserSettings } from '@kubev2v/common/components/Page';
 import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
-import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ResourceFieldFactory } from '@kubev2v/common/utils/types';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
 import { MappingType } from '@kubev2v/legacy/queries/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button } from '@patternfly/react-core';
 
 import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './dataForNetwork';

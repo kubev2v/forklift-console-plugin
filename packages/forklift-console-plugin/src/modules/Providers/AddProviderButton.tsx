@@ -2,8 +2,8 @@ import React from 'react';
 import { useTranslation } from 'src/utils/i18n';
 
 import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
-import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { AddEditProviderModal } from '@kubev2v/legacy/Providers/components/AddEditProviderModal';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button } from '@patternfly/react-core';
 
 const AddProviderModal: React.FC<{

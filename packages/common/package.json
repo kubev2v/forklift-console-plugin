@@ -15,7 +15,6 @@
   "exports": {
     "./components/*": "./dist/components/*",
     "./hooks/*": "./dist/hooks/*",
-    "./polyfills/*": "./dist/polyfills/*",
     "./utils/*": "./dist/utils/*"
   },
   "typesVersions": {
@@ -25,9 +24,6 @@
       ],
       "hooks/*": [
         "dist/hooks/*"
-      ],
-      "polyfills/*": [
-        "dist/polyfills/*"
       ],
       "utils/*": [
         "dist/utils/*"

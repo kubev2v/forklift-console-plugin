@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'src/utils/i18n';
 
 import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
-import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
 import { useDeleteMappingMutation } from '@kubev2v/legacy/queries';
 import { Mapping, MappingType } from '@kubev2v/legacy/queries/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 
 import { CommonMapping } from './data';
 
