@@ -1,7 +1,6 @@
-import { NAME, NAMESPACE } from 'common/src/utils/constants';
-
 import { act, cleanup, renderHook } from '@testing-library/react-hooks';
 
+import { NAME, NAMESPACE } from '../../../utils';
 import { useFields } from '../useFields';
 
 afterEach(cleanup);

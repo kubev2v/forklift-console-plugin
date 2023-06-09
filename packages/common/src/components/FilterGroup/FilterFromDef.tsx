@@ -1,6 +1,6 @@
 import React from 'react';
-import { FilterDef } from 'common/src/utils/types';
 
+import { FilterDef } from '../../utils';
 import { FilterTypeProps } from '../Filter';
 
 import { GlobalFilters } from './types';

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ResourceField } from 'common/src/utils/types';
 
 import {
   Button,
@@ -19,6 +18,8 @@ import {
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
+
+import { ResourceField } from '../../utils';
 
 export interface ManagedColumnsProps {
   showModal: boolean;

@@ -1,7 +1,6 @@
-import { NAME } from 'common/src/utils/constants';
-
 import { cleanup, renderHook } from '@testing-library/react-hooks';
 
+import { NAME } from '../../../utils';
 import { useSort } from '../sort';
 
 afterEach(cleanup);

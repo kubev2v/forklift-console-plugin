@@ -1,7 +1,6 @@
-import { NAME } from 'common/src/utils/constants';
-
 import { act, cleanup, renderHook } from '@testing-library/react-hooks';
 
+import { NAME } from '../../../utils';
 import { useUrlFilters } from '../useUrlFilters';
 
 afterEach(cleanup);
