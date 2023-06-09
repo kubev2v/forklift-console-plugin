@@ -1,3 +1,3 @@
 // @index(['./*', /__/g], f => `export * from '${f.path}';`)
-export * from './ActionServiceDropdown';
+export * from './useSearchParams';
 // @endindex

@@ -4,7 +4,6 @@ import { useTranslation } from 'src/utils/i18n';
 
 import { withActionServiceContext } from '@kubev2v/common/components/ActionServiceDropdown';
 import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
-import { type Action, useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import { MustGatherContext } from '@kubev2v/legacy/common/context';
@@ -18,7 +17,7 @@ import {
   useDeletePlanMutation,
   useSetCutoverMutation,
 } from '@kubev2v/legacy/queries';
-import { type ExtensionHook } from '@openshift-console/dynamic-plugin-sdk';
+import { type ExtensionHook, Action, useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, Stack, Text, TextContent } from '@patternfly/react-core';
 
 import { type FlatPlan } from './data';

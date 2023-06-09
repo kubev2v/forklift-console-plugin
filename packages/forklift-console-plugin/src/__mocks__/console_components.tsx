@@ -20,3 +20,6 @@ export const YellowExclamationTriangleIcon = () => (
   <div data-test-element-name="YellowExclamationTriangleIcon" />
 );
 export const BlueInfoCircleIcon = () => <div data-test-element-name="BlueInfoCircleIcon" />;
+export const useModal = (props) => <div data-test-element-name="useModal" {...props} />;
+export const ActionService = () => <div data-test-element-name="ActionService" />;
+export const ActionServiceProvider = () => <div data-test-element-name="ActionServiceProvider" />;

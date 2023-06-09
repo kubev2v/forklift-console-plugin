@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
-import { ActionService, ActionServiceProvider } from 'common/src/polyfills/sdk-shim';
 
+import { ActionService, ActionServiceProvider } from '@openshift-console/dynamic-plugin-sdk';
 import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly/react-core';
 
 export interface ActionServiceDropdownProps<T> {

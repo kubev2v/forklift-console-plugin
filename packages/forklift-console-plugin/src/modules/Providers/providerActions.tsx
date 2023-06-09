@@ -5,7 +5,6 @@ import { useTranslation } from 'src/utils/i18n';
 
 import { withActionServiceContext } from '@kubev2v/common/components/ActionServiceDropdown';
 import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
-import { useModal } from '@kubev2v/common/polyfills/sdk-shim';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { SelectOpenShiftNetworkModal } from '@kubev2v/legacy/common/components/SelectOpenShiftNetworkModal';
 import { ProviderType } from '@kubev2v/legacy/common/constants';
@@ -17,6 +16,7 @@ import {
   usePlansQuery,
 } from '@kubev2v/legacy/queries';
 import { IOpenShiftProvider, IProviderObject } from '@kubev2v/legacy/queries/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 
 import { type MergedProvider, isManaged } from './data';
 

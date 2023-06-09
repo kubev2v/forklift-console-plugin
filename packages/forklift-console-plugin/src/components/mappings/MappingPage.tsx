@@ -5,10 +5,10 @@ import { MAPPING_STATUS } from 'src/utils/enums';
 import { EnumToTuple } from '@kubev2v/common/components/FilterGroup';
 import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
 import { DefaultHeader, TableViewHeaderProps } from '@kubev2v/common/components/TableView';
-import { useModal } from '@kubev2v/common/polyfills/console-dynamic-plugin-sdk';
 import { ResourceFieldFactory, ResourceFieldPartialFactory } from '@kubev2v/common/utils/types';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
 import { MappingType } from '@kubev2v/legacy/queries/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button } from '@patternfly/react-core';
 import { Th } from '@patternfly/react-table';
 
