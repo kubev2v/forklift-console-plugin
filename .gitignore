@@ -12,3 +12,4 @@ ci/yaml/openapi.yaml
 **/mockServiceWorker.js
 
 .rollup.cache
+.vscode/

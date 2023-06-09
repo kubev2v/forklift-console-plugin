@@ -7,6 +7,7 @@ freetext
 konveyor
 kubeadm
 kubevirt
+kubev2v
 linkify
 multus
 networkmaps
