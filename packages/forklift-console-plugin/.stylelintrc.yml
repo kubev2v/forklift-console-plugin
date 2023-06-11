@@ -1,1 +1,1 @@
-extends: "../../config/stylelintrc.yml"
+extends: "../eslint-plugin/stylelintrc.yml"
