@@ -4,6 +4,8 @@ set -euo pipefail
 
 CONSOLE_CONTAINER_NAME=okd-console
 
+pkill kubectl
+
 # Test is console already running
 if podman container exists ${CONSOLE_CONTAINER_NAME}; then
   podman container stop ${CONSOLE_CONTAINER_NAME}

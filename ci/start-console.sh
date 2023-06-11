@@ -5,13 +5,14 @@ script_dir=$(dirname "$0")
 source ${script_dir}/configure/openshift.sh
 
 CONSOLE_CONTAINER_NAME=okd-console
+FORKLIFT_NAMESPACE=konveyor-forklift
 
 PLUGIN_NAME="forklift-console-plugin"
 PLUGIN_URL=${PLUGIN_URL:-"http://localhost:9001"}
 CONTAINER_NETWORK_TYPE=${CONTAINER_NETWORK_TYPE:-"host"}
 CONSOLE_IMAGE=${CONSOLE_IMAGE:-"quay.io/openshift/origin-console:latest"}
 CONSOLE_PORT=${CONSOLE_PORT:-9000}
-INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:-"http://localhost:30088"}
+INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:-"http://localhost:65300"}
 MUST_GATHER_API_SERVER_HOST=${MUST_GATHER_API_SERVER_HOST:-"http://localhost:30089"}
 
 if [[ ${CONSOLE_IMAGE} =~ ^localhost/ ]]; then
@@ -25,6 +26,8 @@ if podman container exists ${CONSOLE_CONTAINER_NAME}; then
   echo "container named ${CONSOLE_CONTAINER_NAME} is running, exit."
   exit 1
 fi
+
+kubectl port-forward -n ${FORKLIFT_NAMESPACE} service/forklift-inventory 65300:8443 &
 
 # Base setup for the bridge
 if [[ $@ == *'--auth'* ]]; then
