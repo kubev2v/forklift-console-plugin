@@ -7,7 +7,9 @@
     "outDir": "./dist",
 
     "paths": {
-      "src/*": ["./src/*"]
+      "src/*": ["./src/*"],
+      "common/src/*": ["../common/src/*"],
+      "legacy/src/*": ["../legacy/src/*"]
     }
   },
 
