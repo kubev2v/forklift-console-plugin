@@ -1,5 +1,5 @@
 {
-  "extends": "../../config/tsconfig.base.json",
+  "extends": "../build/src/tsconfig.base.json",
 
   "include": ["./src/**/*", "./src/**/*.json", "./src/**/*.har"],
 

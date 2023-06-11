@@ -1,7 +1,7 @@
 {
-  "extends": "../config/tsconfig.base.json",
+  "extends": "../packages/build/src/tsconfig.base.json",
 
-  "include": ["**/*.ts", "cypress.config.cjs"],
+  "include": ["**/*.ts"],
 
   "compilerOptions": {
     "types": ["cypress", "@testing-library/cypress"]

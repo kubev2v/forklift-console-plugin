@@ -1,4 +1,5 @@
-/* eslint-disable no-undef */
+/* eslint-env node */
+
 /**
  * Source: https://github.com/openshift/dynamic-plugin-sdk/blob/main/packages/common/rollup-configs.js
  *
@@ -12,16 +13,16 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import typescript from '@rollup/plugin-typescript';
 
-import { createBannerComment, getBuildMetadata } from '../packages/build/src/metadata';
-
 import har from './rollup/plugin-har';
 import writeJSONFile from './rollup/plugin-write-json-file';
+import { createBannerComment, getBuildMetadata } from './metadata';
 
 // https://yarnpkg.com/advanced/lifecycle-scripts#environment-variables
 const rootDir = process.env.PROJECT_CWD;
 
 /**
  * @param {import('type-fest').PackageJson} pkg
+ * @returns {Record<string, string>} external modules as dictionary.
  */
 export const getExternalModules = ({ dependencies, peerDependencies }) =>
   Array.from(new Set([...Object.keys(dependencies ?? {}), ...Object.keys(peerDependencies ?? {})]));

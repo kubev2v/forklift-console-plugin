@@ -30,15 +30,15 @@ export default function har(options = {}) {
             preferConst: options.preferConst,
             compact: options.compact,
             namedExports: options.namedExports,
-            indent
+            indent,
           }),
-          map: { mappings: '' }
+          map: { mappings: '' },
         };
       } catch (err) {
         const message = 'Could not parse HAR file';
         this.error({ message, id, cause: err });
         return null;
       }
-    }
+    },
   };
 }
