@@ -10,7 +10,7 @@
 export default function writeJSONFile({ fileName, value }) {
   return {
     name: 'write-json-file',
-  
+
     generateBundle() {
       this.emitFile({
         type: 'asset',
@@ -20,4 +20,3 @@ export default function writeJSONFile({ fileName, value }) {
     },
   };
 }
-  

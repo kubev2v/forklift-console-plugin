@@ -1,4 +1,4 @@
-import { tsLibConfig } from '../../config/rollup.base';
+import { tsLibConfig } from '../build/src/rollup.base';
 
 import pkg from './package.json';
 

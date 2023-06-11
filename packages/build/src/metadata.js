@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 import { execFileSync } from 'node:child_process';
 
 /**
