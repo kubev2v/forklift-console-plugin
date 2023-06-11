@@ -1,6 +1,6 @@
 import { useMappingActions } from 'src/components/mappings/mappingActions';
 
-import { withActionServiceContext } from '@kubev2v/common/components/ActionServiceDropdown';
+import { withActionServiceContext } from '@kubev2v/common';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 
 import { FlatStorageMapping } from './dataForStorage';

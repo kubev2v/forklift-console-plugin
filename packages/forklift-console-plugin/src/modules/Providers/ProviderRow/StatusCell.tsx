@@ -3,7 +3,7 @@ import { StatusCell as Cell } from 'src/components/cells/StatusCell';
 import { PHASE } from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
-import { getResourceFieldValue } from '@kubev2v/common/components/FilterGroup';
+import { getResourceFieldValue } from '@kubev2v/common';
 
 import { phaseLabels, statusIcons } from './consts';
 import { CellProps } from './types';

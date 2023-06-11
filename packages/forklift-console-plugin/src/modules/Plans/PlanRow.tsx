@@ -4,8 +4,8 @@ import * as C from 'src/utils/constants';
 import { PLAN_TYPE } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 
-import { getResourceFieldValue } from '@kubev2v/common/components/FilterGroup';
-import { RowProps } from '@kubev2v/common/components/TableView';
+import { getResourceFieldValue } from '@kubev2v/common';
+import { RowProps } from '@kubev2v/common';
 import { StatusCondition } from '@kubev2v/legacy/common/components/StatusCondition';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import {

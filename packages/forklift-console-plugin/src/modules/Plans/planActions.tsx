@@ -2,8 +2,8 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { useTranslation } from 'src/utils/i18n';
 
-import { withActionServiceContext } from '@kubev2v/common/components/ActionServiceDropdown';
-import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
+import { withActionServiceContext } from '@kubev2v/common';
+import { withQueryClient } from '@kubev2v/common';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import { MustGatherContext } from '@kubev2v/legacy/common/context';

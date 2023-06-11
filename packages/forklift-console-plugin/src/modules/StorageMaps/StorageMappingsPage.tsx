@@ -9,11 +9,11 @@ import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { FreetextFilter } from '@kubev2v/common/components/Filter';
-import { ValueMatcher } from '@kubev2v/common/components/FilterGroup';
-import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
-import { loadUserSettings } from '@kubev2v/common/components/Page';
-import { ResourceFieldFactory } from '@kubev2v/common/utils/types';
+import { FreetextFilter } from '@kubev2v/common';
+import { ValueMatcher } from '@kubev2v/common';
+import { LoadingDots } from '@kubev2v/common';
+import { loadUserSettings } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@kubev2v/common';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 
 import { FlatStorageMapping, Storage, useFlatStorageMappings } from './dataForStorage';

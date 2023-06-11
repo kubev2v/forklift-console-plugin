@@ -3,8 +3,8 @@ import { Trans } from 'react-i18next';
 import { DEFAULT_TRANSFER_NETWORK_ANNOTATION } from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
-import { withActionServiceContext } from '@kubev2v/common/components/ActionServiceDropdown';
-import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
+import { withActionServiceContext } from '@kubev2v/common';
+import { withQueryClient } from '@kubev2v/common';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { SelectOpenShiftNetworkModal } from '@kubev2v/legacy/common/components/SelectOpenShiftNetworkModal';
 import { ProviderType } from '@kubev2v/legacy/common/constants';

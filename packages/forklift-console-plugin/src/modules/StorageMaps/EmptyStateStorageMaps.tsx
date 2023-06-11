@@ -7,7 +7,7 @@ import { AddMappingButton } from 'src/components/mappings/MappingPage';
 import { HELP_LINK_HREF } from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from '@kubev2v/common/components/ExternalLink';
+import { ExternalLink } from '@kubev2v/common';
 import { PROVIDERS_REFERENCE } from '@kubev2v/legacy/common/constants';
 import { createK8sPath } from '@kubev2v/legacy/queries/helpers';
 import { MappingType } from '@kubev2v/legacy/queries/types';

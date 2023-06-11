@@ -2,10 +2,10 @@ import React from 'react';
 import * as C from 'src/utils/constants';
 import { MAPPING_STATUS } from 'src/utils/enums';
 
-import { EnumToTuple } from '@kubev2v/common/components/FilterGroup';
-import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
-import { DefaultHeader, TableViewHeaderProps } from '@kubev2v/common/components/TableView';
-import { ResourceFieldFactory, ResourceFieldPartialFactory } from '@kubev2v/common/utils/types';
+import { EnumToTuple } from '@kubev2v/common';
+import { withQueryClient } from '@kubev2v/common';
+import { DefaultHeader, TableViewHeaderProps } from '@kubev2v/common';
+import { ResourceFieldFactory, ResourceFieldPartialFactory } from '@kubev2v/common';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';

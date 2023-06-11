@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
+import { withQueryClient } from '@kubev2v/common';
 import {
   MustGatherContextProvider,
   NotificationContextProvider,

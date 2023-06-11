@@ -8,12 +8,12 @@ import * as C from 'src/utils/constants';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { FreetextFilter } from '@kubev2v/common/components/Filter';
-import { ValueMatcher } from '@kubev2v/common/components/FilterGroup';
-import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
-import { loadUserSettings, UserSettings } from '@kubev2v/common/components/Page';
-import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
-import { ResourceFieldFactory } from '@kubev2v/common/utils/types';
+import { FreetextFilter } from '@kubev2v/common';
+import { ValueMatcher } from '@kubev2v/common';
+import { LoadingDots } from '@kubev2v/common';
+import { loadUserSettings, UserSettings } from '@kubev2v/common';
+import { withQueryClient } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@kubev2v/common';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
