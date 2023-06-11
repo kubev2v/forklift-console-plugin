@@ -11,7 +11,7 @@ import {
   toFieldFilter,
   useUrlFilters,
   ValueMatcher,
-} from '@kubev2v/common/components/FilterGroup';
+} from '@kubev2v/common';
 import {
   DEFAULT_PER_PAGE,
   ErrorState,
@@ -21,15 +21,9 @@ import {
   useFields,
   usePagination,
   UserSettings,
-} from '@kubev2v/common/components/Page';
-import {
-  DefaultHeader,
-  RowProps,
-  TableView,
-  TableViewHeaderProps,
-  useSort,
-} from '@kubev2v/common/components/TableView';
-import { ResourceField } from '@kubev2v/common/utils/types';
+} from '@kubev2v/common';
+import { DefaultHeader, RowProps, TableView, TableViewHeaderProps, useSort } from '@kubev2v/common';
+import { ResourceField } from '@kubev2v/common';
 import {
   Level,
   LevelItem,

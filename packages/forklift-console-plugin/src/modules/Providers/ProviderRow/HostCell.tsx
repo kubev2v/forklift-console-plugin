@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { TextWithIcon } from 'src/components/cells/TextWithIcon';
 import * as C from 'src/utils/constants';
 
-import { getResourceFieldValue } from '@kubev2v/common/components/FilterGroup';
+import { getResourceFieldValue } from '@kubev2v/common';
 import { PATH_PREFIX } from '@kubev2v/legacy/common/constants';
 import { OutlinedHddIcon } from '@patternfly/react-icons';
 

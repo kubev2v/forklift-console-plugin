@@ -1,4 +1,4 @@
-import { ResourceField } from '@kubev2v/common/utils/types';
+import { ResourceField } from '@kubev2v/common';
 
 import { MergedProvider } from '../data';
 

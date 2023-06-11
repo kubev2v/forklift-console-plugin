@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import { withQueryClient } from '@kubev2v/common/components/QueryClientHoc';
+import { withQueryClient } from '@kubev2v/common';
 import { cleanup, render } from '@testing-library/react';
 
 import { FlatNetworkMapping } from '../dataForNetwork';

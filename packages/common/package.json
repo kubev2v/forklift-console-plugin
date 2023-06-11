@@ -12,30 +12,12 @@
   "files": [
     "./dist/*"
   ],
-  "exports": {
-    "./components/*": "./dist/components/*",
-    "./hooks/*": "./dist/hooks/*",
-    "./utils/*": "./dist/utils/*"
-  },
-  "typesVersions": {
-    "*": {
-      "components/*": [
-        "dist/components/*"
-      ],
-      "hooks/*": [
-        "dist/hooks/*"
-      ],
-      "utils/*": [
-        "dist/utils/*"
-      ]
-    }
-  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
-    "build": "npm run compile && npm run copy:css",
-    "compile": "tsc --build --verbose && tsc-alias -p tsconfig.json",
-    "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
+    "build": "rollup -c --bundleConfigAsCjs",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "test": "TZ=UTC jest",

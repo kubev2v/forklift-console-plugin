@@ -2,8 +2,8 @@ import React from 'react';
 import { TextWithIcon } from 'src/components/cells/TextWithIcon';
 import * as C from 'src/utils/constants';
 
-import { getResourceFieldValue } from '@kubev2v/common/components/FilterGroup';
-import { RowProps } from '@kubev2v/common/components/TableView';
+import { getResourceFieldValue } from '@kubev2v/common';
+import { RowProps } from '@kubev2v/common';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { DatabaseIcon, NetworkIcon, VirtualMachineIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';

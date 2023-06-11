@@ -5,10 +5,10 @@ import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { useTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { EnumToTuple } from '@kubev2v/common/components/FilterGroup';
-import { LoadingDots } from '@kubev2v/common/components/LoadingDots';
-import { loadUserSettings, UserSettings } from '@kubev2v/common/components/Page';
-import { ResourceFieldFactory } from '@kubev2v/common/utils/types';
+import { EnumToTuple } from '@kubev2v/common';
+import { LoadingDots } from '@kubev2v/common';
+import { loadUserSettings, UserSettings } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@kubev2v/common';
 import { ProviderType, SOURCE_PROVIDER_TYPES } from '@kubev2v/legacy/common/constants';
 
 import { AddProviderButton } from './AddProviderButton';
