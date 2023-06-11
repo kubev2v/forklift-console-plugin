@@ -25,7 +25,7 @@
     "test": "npm run build $npm_package_config_libs && npm run test -ws --if-present",
     "test:coverage": "npm run build $npm_package_config_libs && npm run test:coverage -ws --if-present",
     "test:updateSnapshot": "npm run build $npm_package_config_libs && npm run test:updateSnapshot -ws --if-present",
-    "test:e2e": "cypress run --config-file config/cypress.config.ts --browser chrome --headed",
+    "test:e2e": "cypress run --config-file cypress/cypress.config.cjs --browser chrome --headed",
     "console": "bash ./ci/start-console.sh",
     "console:oauth": "bash ./ci/start-console.sh --auth",
     "console:background": "npm run console > /dev/null 2>&1 &",

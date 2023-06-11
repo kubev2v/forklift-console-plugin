@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-env node */
+
 import { defineConfig } from "cypress";
 
 export default defineConfig({
