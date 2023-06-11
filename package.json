@@ -42,7 +42,6 @@
     "@cspell/eslint-plugin": "^6.31.1",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^11.0.0",
     "@rollup/pluginutils": "^5.0.2",
     "@testing-library/cypress": "^9.0.0",
