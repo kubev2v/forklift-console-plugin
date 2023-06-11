@@ -1,8 +1,8 @@
-/* eslint-disable no-undef */
-const externalConfigPath = '../../config/eslintrc';
+/* eslint-env node */
 
 module.exports = {
-  extends: [externalConfigPath],
+  root: true,
+  extends: ['plugin:@kubev2v/eslint-plugin/typescript'],
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/prefer-as-const': 'off',

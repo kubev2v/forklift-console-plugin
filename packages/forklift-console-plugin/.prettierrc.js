@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 module.exports = {
-    ...require("../../config/prettierrc"),
+  ...require('@kubev2v/eslint-plugin/prettierrc.js'),
 };
