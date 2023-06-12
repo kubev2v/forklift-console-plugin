@@ -56,8 +56,8 @@
     "build": "npm run compile && npm run copy:css",
     "compile": "tsc --build --verbose && tsc-alias -p tsconfig.json",
     "copy:css": "copyfiles -u 1 ./src/**/*.css ./dist/",
-    "lint": "eslint --ext .js,.cjs .",
-    "lint:fix": "eslint --ext .js,.cjs . --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
     "@migtools/lib-ui": "^8.4.1",
