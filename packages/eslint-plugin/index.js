@@ -73,6 +73,14 @@ const base = {
     'generated/',
     'node_modules/',
   ],
+
+  // this is a hack to make sure eslint will look at all of the file extensions we
+  // care about without having to put it on the command line
+  overrides: [
+    {
+      files: ['**/*.js', '**/*.jsx', '**/*.cjs', '**/*.mjs', '**/*.ts', '**/*.tsx'],
+    },
+  ],
 };
 
 const typescript = {

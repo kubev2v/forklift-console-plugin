@@ -12,7 +12,7 @@
   },
 
   "scripts": {
-    "lint": "eslint --ext .js,.cjs .",
-    "lint:fix": "eslint --ext .js,.cjs . --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   }
 }
