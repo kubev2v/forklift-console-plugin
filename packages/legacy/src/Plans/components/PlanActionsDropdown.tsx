@@ -155,6 +155,7 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
               ]
             : []),
           <DropdownItem
+            key="Delete"
             onClick={() => {
               setKebabIsOpen(false);
               toggleDeleteModal();
