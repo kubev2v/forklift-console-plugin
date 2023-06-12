@@ -14,7 +14,12 @@ import {
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { useFormField, useFormState, ValidatedTextInput } from '@migtools/lib-ui';
-import { MappingBuilder, IMappingBuilderItem, mappingBuilderItemsSchema, getDefaultTarget } from './MappingBuilder';
+import {
+  MappingBuilder,
+  IMappingBuilderItem,
+  mappingBuilderItemsSchema,
+  getDefaultTarget,
+} from './MappingBuilder';
 import { getMappingFromBuilderItems } from './MappingBuilder/helpers';
 import {
   MappingType,
@@ -53,8 +58,8 @@ interface IAddEditMappingModalProps {
   mappingType: MappingType;
   mappingBeingEdited: Mapping | null;
   setActiveMapType: React.Dispatch<React.SetStateAction<MappingType>>;
-  namespace?:string;
-  isFixed?:boolean;
+  namespace?: string;
+  isFixed?: boolean;
 }
 
 const useMappingFormState = (
@@ -74,10 +79,7 @@ const useMappingFormState = (
       null,
       yup.mixed<IOpenShiftProvider>().label('Target provider').required()
     ),
-    builderItems: useFormField<IMappingBuilderItem[]>(
-      [],
-      mappingBuilderItemsSchema
-    ),
+    builderItems: useFormField<IMappingBuilderItem[]>([], mappingBuilderItemsSchema),
   });
 
 export type MappingFormState = ReturnType<typeof useMappingFormState>;
@@ -87,9 +89,7 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
   onClose,
   mappingType,
   mappingBeingEdited,
-  setActiveMapType,
   namespace = ENV.DEFAULT_NAMESPACE,
-  isFixed = false,
 }: IAddEditMappingModalProps) => {
   usePausedPollingEffect();
 
@@ -201,13 +201,9 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                   <FormGroup
                     label="Namespace"
                     fieldId="mapping-namespace"
-                    labelIcon={(
+                    labelIcon={
                       <Popover
-                        bodyContent={
-                          <div>
-                            The default is the migration operator namespace.
-                          </div>
-                        }
+                        bodyContent={<div>The default is the migration operator namespace.</div>}
                       >
                         <Button
                           variant="plain"
@@ -216,40 +212,31 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                           aria-describedby="mapping-namespace"
                           className="pf-c-form__group-label-help"
                         >
-                         <HelpIcon noVerticalAlign />
+                          <HelpIcon noVerticalAlign />
                         </Button>
                       </Popover>
-                    )}
+                    }
                   >
-                    <div
-                      id="mapping-namespace"
-                      style={{ paddingLeft: 8, fontSize: 16}}
-                    >
-                      { namespace }
+                    <div id="mapping-namespace" style={{ paddingLeft: 8, fontSize: 16 }}>
+                      {namespace}
                     </div>
                   </FormGroup>
                 </GridItem>
 
                 <GridItem md={6} className={spacing.mbMd}>
-                  {!!!mappingBeingEdited ? (
+                  {!mappingBeingEdited ? (
                     <ValidatedTextInput
                       field={form.fields.name}
                       isRequired
                       fieldId="mapping-name"
                     />
-                  ) :
-                    <FormGroup
-                      label="Name"
-                      fieldId="name"
-                    >
-                      <div
-                        id="mapping-name"
-                        style={{ paddingLeft: 8, fontSize: 16}}
-                      >
-                        { form.fields.name.value }
+                  ) : (
+                    <FormGroup label="Name" fieldId="name">
+                      <div id="mapping-name" style={{ paddingLeft: 8, fontSize: 16 }}>
+                        {form.fields.name.value}
                       </div>
                     </FormGroup>
-                  }
+                  )}
                 </GridItem>
 
                 <GridItem md={6}>
@@ -287,8 +274,19 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                     sourceProviderType={form.values.sourceProvider?.type || 'vsphere'}
                     availableSources={mappingResourceQueries.availableSources}
                     availableTargets={mappingResourceQueries.availableTargets}
-                    builderItems={form.values.builderItems.length ?
-                      form.values.builderItems : [{source: null, target: getDefaultTarget(mappingResourceQueries.availableTargets, mappingType)}]}
+                    builderItems={
+                      form.values.builderItems.length
+                        ? form.values.builderItems
+                        : [
+                            {
+                              source: null,
+                              target: getDefaultTarget(
+                                mappingResourceQueries.availableTargets,
+                                mappingType
+                              ),
+                            },
+                          ]
+                    }
                     setBuilderItems={form.fields.builderItems.setValue}
                   />
                 </ResolvedQueries>

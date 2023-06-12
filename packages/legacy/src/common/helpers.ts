@@ -164,7 +164,7 @@ export const getMinutesUntil = (timestamp: Date | string): string => {
   return `${minutes} minutes`;
 };
 
-function providerTypesFilterFromRole (role: "target" | "source") {
+function providerTypesFilterFromRole(role: 'target' | 'source') {
   if (role === 'source') {
     return SOURCE_PROVIDER_TYPES;
   } else if (role === 'target') {
@@ -176,7 +176,7 @@ function providerTypesFilterFromRole (role: "target" | "source") {
 
 export const getAvailableProviderTypes = (
   clusterProvidersQuery: UseQueryResult<IKubeList<IProviderObject>>,
-  role: "target" | "source",
+  role: 'target' | 'source'
 ): ProviderType[] => {
   const providerTypesFilter = providerTypesFilterFromRole(role);
   const clusterProviders = clusterProvidersQuery.data?.items || [];
@@ -186,22 +186,27 @@ export const getAvailableProviderTypes = (
     .sort() as ProviderType[];
 };
 
-export function checkIfOvirtInsecureProvider (provider: InventoryProvider, secrets: IKubeList<ISecret>): boolean {
+export function checkIfOvirtInsecureProvider(
+  provider: InventoryProvider,
+  secrets: IKubeList<ISecret>
+): boolean {
   if (provider?.type !== 'ovirt') {
     return false;
   }
   const secretName = provider?.object?.spec?.secret?.name ?? '';
-  const secret = secrets?.items.find((secret: ISecret) => (secret.metadata as IMetaObjectMeta).name === secretName);
+  const secret = secrets?.items.find(
+    (secret: ISecret) => (secret.metadata as IMetaObjectMeta).name === secretName
+  );
   return secret?.data?.insecureSkipVerify
     ? stringToBoolean(atob(secret.data.insecureSkipVerify))
-    : false
+    : false;
 }
 
 /**
  * Can this provider be considered a local target provider?
  */
 export const isProviderLocalTarget = (provider: IProviderObject): boolean =>
-  provider.spec.type === 'openshift' && provider.spec.url === ''
+  provider.spec.type === 'openshift' && provider.spec.url === '';
 
 export const getStorageTitle = (sourceProviderType: ProviderType, cap = false): string => {
   if (sourceProviderType === 'vsphere') return `${cap ? 'D' : 'd'}atastores`;
@@ -245,7 +250,7 @@ export const stringToBoolean = (s: string, defaultReturn: boolean = undefined): 
 
     default:
       return defaultReturn;
-  };
+  }
 };
 
 /**

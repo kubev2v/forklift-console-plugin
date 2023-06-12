@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  useClusterProvidersQuery,
-  useInventoryProvidersQuery,
-} from 'legacy/src/queries';
+import { useClusterProvidersQuery, useInventoryProvidersQuery } from 'legacy/src/queries';
 import {
   InventoryProvider,
   IOpenShiftProvider,
@@ -20,10 +17,7 @@ import {
   SelectOption,
   SelectProps,
 } from '@patternfly/react-core';
-import {
-  ProviderType,
-  PROVIDER_TYPE_NAMES,
-} from '../constants';
+import { ProviderType, PROVIDER_TYPE_NAMES } from '../constants';
 import { getAvailableProviderTypes, hasCondition, isProviderLocalTarget } from '../helpers';
 import { ConditionalTooltip } from './ConditionalTooltip';
 import { QuerySpinnerMode, ResolvedQueries } from './ResolvedQuery';
@@ -51,7 +45,7 @@ interface ITargetProviderSelectProps extends IProviderSelectBaseProps<IOpenShift
 
 type ProviderSelectProps = ISourceProviderSelectProps | ITargetProviderSelectProps;
 
-function toOptionWithValue (provider: IProviderObject) {
+function toOptionWithValue(provider: IProviderObject) {
   return {
     toString: () => provider.metadata.name,
     value: provider,
@@ -83,23 +77,24 @@ export const ProviderSelect: React.FunctionComponent<ProviderSelectProps> = ({
     return null;
   };
 
-  const availableProviderTypes = getAvailableProviderTypes(clusterProvidersQuery, providerRole)
+  const availableProviderTypes = getAvailableProviderTypes(clusterProvidersQuery, providerRole);
   // TODO handle the empty case here, "no source/target providers available" or something
 
   const optionsByType: Record<ProviderType, OptionWithValue<IProviderObject>[]> =
-    availableProviderTypes.reduce(
-      (byType, type) => {
-        byType[type] = providerItems.filter((provider) => provider.spec.type === type).map(toOptionWithValue)
-        return byType;
-      },
-      {} as Record<ProviderType, OptionWithValue<IProviderObject>[]>
-    );
+    availableProviderTypes.reduce((byType, type) => {
+      byType[type] = providerItems
+        .filter((provider) => provider.spec.type === type)
+        .map(toOptionWithValue);
+      return byType;
+    }, {} as Record<ProviderType, OptionWithValue<IProviderObject>[]>);
 
-  const optionsByUid: Record<string, OptionWithValue<IProviderObject>> =
-    providerItems.reduce((options, provider) => {
+  const optionsByUid: Record<string, OptionWithValue<IProviderObject>> = providerItems.reduce(
+    (options, provider) => {
       options[provider.metadata.uid] = toOptionWithValue(provider);
       return options;
-    }, {});
+    },
+    {}
+  );
 
   const selectedOptions = field.value?.uid ? [optionsByUid[field.value?.uid]] : [];
 
@@ -111,7 +106,7 @@ export const ProviderSelect: React.FunctionComponent<ProviderSelectProps> = ({
     const isReady =
       !!inventoryProvider && hasCondition(clusterProvider.status?.conditions || [], 'Ready');
 
-    const disabled = (!providerAllowRemote && isProviderRemote) || !isReady
+    const disabled = (!providerAllowRemote && isProviderRemote) || !isReady;
 
     return (
       <SelectOption
@@ -122,16 +117,23 @@ export const ProviderSelect: React.FunctionComponent<ProviderSelectProps> = ({
       >
         <ConditionalTooltip
           isTooltipEnabled={disabled}
-          content={(
+          content={
             <List isPlain>
               {[
-                !providerAllowRemote && isProviderRemote ? providerAllowRemoteTooltip || 'This is a remote target provider and cannot currently be selected.' : '',
-                !isReady ? 'This provider cannot be selected because its inventory data is not ready' : '',
-              ].filter(Boolean).map((c, index) => (
-                <ListItem key={index}>{c}</ListItem>
-              ))}
+                !providerAllowRemote && isProviderRemote
+                  ? providerAllowRemoteTooltip ||
+                    'This is a remote target provider and cannot currently be selected.'
+                  : '',
+                !isReady
+                  ? 'This provider cannot be selected because its inventory data is not ready'
+                  : '',
+              ]
+                .filter(Boolean)
+                .map((c, index) => (
+                  <ListItem key={index}>{c}</ListItem>
+                ))}
             </List>
-          )}
+          }
           position={tooltipPosition}
         >
           <div>{clusterProvider.metadata.name}</div>

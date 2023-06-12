@@ -10,7 +10,11 @@ import {
   ISourceStorage,
   SourceInventoryProvider,
 } from './types';
-import { MOCK_VMWARE_DATASTORES, MOCK_RHV_STORAGE_DOMAINS, MOCK_OPENSTACK_VOLUME_TYPES } from './mocks/storages.mock';
+import {
+  MOCK_VMWARE_DATASTORES,
+  MOCK_RHV_STORAGE_DOMAINS,
+  MOCK_OPENSTACK_VOLUME_TYPES,
+} from './mocks/storages.mock';
 import { MOCK_STORAGE_CLASSES_BY_PROVIDER } from './mocks/storages.mock';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -20,33 +24,35 @@ export const useSourceStoragesQuery = (
 ) => {
   const apiSlug = (provider: SourceInventoryProvider) => {
     if (provider?.type === 'vsphere') {
-      return "/datastores"
+      return '/datastores';
     }
     if (provider?.type === 'openstack') {
-      return "/volumetypes"
+      return '/volumetypes';
     }
-    return "/storagedomains"
-  }
+    return '/storagedomains';
+  };
   const mockStorage = (provider: SourceInventoryProvider) => {
     if (provider?.type === 'vsphere') {
-      return MOCK_VMWARE_DATASTORES
+      return MOCK_VMWARE_DATASTORES;
     }
     if (provider?.type === 'openstack') {
-      return MOCK_OPENSTACK_VOLUME_TYPES
+      return MOCK_OPENSTACK_VOLUME_TYPES;
     }
-    return MOCK_RHV_STORAGE_DOMAINS
+    return MOCK_RHV_STORAGE_DOMAINS;
   };
   const sortByNameCallback = React.useCallback((data): ISourceStorage[] => sortByName(data), []);
   const result = useMockableQuery<ISourceStorage[]>(
     {
       queryKey: ['source-storages', provider?.name],
       queryFn: async () =>
-        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug(provider)}`)),
+        await consoleFetchJSON(
+          getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug(provider)}`)
+        ),
       enabled: !!provider && mappingType === MappingType.Storage,
       refetchInterval: usePollingContext().refetchInterval,
       select: sortByNameCallback,
     },
-    mockStorage(provider),
+    mockStorage(provider)
   );
   return result;
 };

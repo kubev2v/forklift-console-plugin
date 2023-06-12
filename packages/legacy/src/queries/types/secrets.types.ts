@@ -4,11 +4,11 @@ export interface ISecret extends IMetaTypeMeta {
   data: {
     url?: string;
     user?: string;
-    username?: string;    // used by OpenStack only
+    username?: string; // used by OpenStack only
     password?: string;
-    domainName?: string;  // used by OpenStack only
-    projectName?: string  // used by OpenStack only
-    regionName?: string   // used by OpenStack only
+    domainName?: string; // used by OpenStack only
+    projectName?: string; // used by OpenStack only
+    regionName?: string; // used by OpenStack only
     thumbprint?: string;
     token?: string;
     cacert?: string;

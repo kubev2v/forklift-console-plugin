@@ -402,55 +402,57 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
   };
 
   MOCK_OPENSTACK_HOST_TREE = {
-    'kind':'',
-    'object':null,
-    'children':
-    [
+    kind: '',
+    object: null,
+    children: [
       {
-        'kind':'Project',
-        'object': {
-          'id':'863df1446a134ec88581998d98912ff3',
-          'revision':1,
-          'path':'admin',
-          'name':'admin',
-          'selfLink':'providers/openstack/a3714338-7b7b-4b2f-a646-c3a6b69a1ed7/projects/863df1446a134ec88581998d98912ff3',
-          'is_domain':false,
-          'description':'Bootstrap project for initializing the cloud.',
-          'domain_id':'default',
-          'enabled':true,
-          'parent_id':'default'
+        kind: 'Project',
+        object: {
+          id: '863df1446a134ec88581998d98912ff3',
+          revision: 1,
+          path: 'admin',
+          name: 'admin',
+          selfLink:
+            'providers/openstack/a3714338-7b7b-4b2f-a646-c3a6b69a1ed7/projects/863df1446a134ec88581998d98912ff3',
+          is_domain: false,
+          description: 'Bootstrap project for initializing the cloud.',
+          domain_id: 'default',
+          enabled: true,
+          parent_id: 'default',
         },
-        'children': [
+        children: [
           {
-            'kind':'VM',
-            'object': {
-              'id':'231efc19-af42-47e3-ad13-eb6da01f2316',
-              'revision':1,
-              'path':'admin/cirros',
-              'name':'cirros',
-              'selfLink':'providers/openstack/a3714338-7b7b-4b2f-a646-c3a6b69a1ed7/vms/231efc19-af42-47e3-ad13-eb6da01f2316'
+            kind: 'VM',
+            object: {
+              id: '231efc19-af42-47e3-ad13-eb6da01f2316',
+              revision: 1,
+              path: 'admin/cirros',
+              name: 'cirros',
+              selfLink:
+                'providers/openstack/a3714338-7b7b-4b2f-a646-c3a6b69a1ed7/vms/231efc19-af42-47e3-ad13-eb6da01f2316',
             },
-            'children':null
-          }
-        ]
+            children: null,
+          },
+        ],
       },
       {
-        'kind':'Project',
-        'object': {
-          'id':'e4cd61a02dba448abc1db1b4462c6f38',
-          'revision':1,
-          'path':'services',
-          'name':'services',
-          'selfLink':'providers/openstack/a3714338-7b7b-4b2f-a646-c3a6b69a1ed7/projects/e4cd61a02dba448abc1db1b4462c6f38',
-          'is_domain':false,
-          'description':'',
-          'domain_id':'default',
-          'enabled':true,
-          'parent_id':'default'
+        kind: 'Project',
+        object: {
+          id: 'e4cd61a02dba448abc1db1b4462c6f38',
+          revision: 1,
+          path: 'services',
+          name: 'services',
+          selfLink:
+            'providers/openstack/a3714338-7b7b-4b2f-a646-c3a6b69a1ed7/projects/e4cd61a02dba448abc1db1b4462c6f38',
+          is_domain: false,
+          description: '',
+          domain_id: 'default',
+          enabled: true,
+          parent_id: 'default',
         },
-        'children':null
-      }
-    ]
+        children: null,
+      },
+    ],
   };
 
   MOCK_VMWARE_VM_TREE = {

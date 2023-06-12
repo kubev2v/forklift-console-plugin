@@ -165,7 +165,9 @@ export const SourceProvidersTable: React.FunctionComponent<ISourceProvidersTable
             );
             return {
               title: hasCondition(provider.status?.conditions || [], 'Ready') ? (
-                <Link to={`${PATH_PREFIX}/providers/vsphere/ns/${provider.metadata.namespace}/${provider.metadata.name}`}>
+                <Link
+                  to={`${PATH_PREFIX}/providers/vsphere/ns/${provider.metadata.namespace}/${provider.metadata.name}`}
+                >
                   {hostCountWithIcon}
                 </Link>
               ) : (

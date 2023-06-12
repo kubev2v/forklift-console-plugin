@@ -26,7 +26,7 @@ export interface IProviderObject extends ICR {
   };
   status?: {
     conditions: IStatusCondition[];
-    phase: 'ValidationFailed' |  'ConnectionFailed'|  'Ready' | 'Staging'|  'Unknown',
+    phase: 'ValidationFailed' | 'ConnectionFailed' | 'Ready' | 'Staging' | 'Unknown';
   };
 }
 
@@ -57,8 +57,8 @@ export interface IRHVProvider extends ICommonProvider {
 }
 
 export interface IOpenStackProvider extends ICommonProvider {
-  clusterCount: number;   // TODO need to remove when refactoring since there is no such counter for openStack
-  hostCount: number;      // TODO need to remove when refactoring since there is no such counter for openStack
+  clusterCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
+  hostCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
   regionCount: number;
   projectCount: number;
   vmCount: number;
@@ -73,7 +73,11 @@ export interface IOpenShiftProvider extends ICommonProvider {
   networkCount: number;
 }
 
-export type InventoryProvider = IVMwareProvider | IRHVProvider | IOpenStackProvider | IOpenShiftProvider;
+export type InventoryProvider =
+  | IVMwareProvider
+  | IRHVProvider
+  | IOpenStackProvider
+  | IOpenShiftProvider;
 export type SourceInventoryProvider = IVMwareProvider | IRHVProvider | IOpenStackProvider;
 
 export interface IProvidersByType {

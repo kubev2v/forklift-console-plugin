@@ -125,11 +125,11 @@ export function convertFormValuesToSecret(
       url: btoa(openstackValues.openstackUrl),
       username: btoa(openstackValues.username),
       password: btoa(openstackValues.password),
-      domainName:btoa(openstackValues.domainName),
-      projectName:btoa(openstackValues.projectName),
-      regionName:btoa(openstackValues.regionName),
-      insecureSkipVerify:btoa(booleanToString(openstackValues.insecureSkipVerify) ?? ''),
-      cacert: !openstackValues.insecureSkipVerify ? btoa(openstackValues.caCertIfSecure) : null
+      domainName: btoa(openstackValues.domainName),
+      projectName: btoa(openstackValues.projectName),
+      regionName: btoa(openstackValues.regionName),
+      insecureSkipVerify: btoa(booleanToString(openstackValues.insecureSkipVerify) ?? ''),
+      cacert: !openstackValues.insecureSkipVerify ? btoa(openstackValues.caCertIfSecure) : null,
     };
   }
   if (values.providerType === 'openshift') {

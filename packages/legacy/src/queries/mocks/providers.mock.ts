@@ -17,7 +17,7 @@ export let MOCK_INVENTORY_PROVIDERS: IProvidersByType = {
 export let MOCK_CLUSTER_PROVIDERS: IProviderObject[];
 
 if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
-  const providerStatusReadyFields : IProviderObject = {
+  const providerStatusReadyFields: IProviderObject = {
     status: {
       conditions: [
         {
@@ -52,7 +52,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
           type: 'Ready',
         },
       ],
-      phase: "Ready",
+      phase: 'Ready',
     },
     metadata: undefined,
     spec: {
@@ -60,11 +60,11 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
       url: '',
       secret: undefined,
       settings: {
-        vddkInitImage: ''
-      }
+        vddkInitImage: '',
+      },
     },
     apiVersion: '',
-    kind: ''
+    kind: '',
   };
 
   const vmwareProvider1: IVMwareProvider = {
@@ -207,7 +207,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
       },
       status: {
         ...providerStatusReadyFields.status,
-      }
+      },
     },
     datacenterCount: 1,
     clusterCount: 2,
@@ -299,8 +299,8 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         ...providerStatusReadyFields.status,
       },
     },
-    clusterCount: 0,   // TODO need to remove when refactoring since there is no such counter for openStack, i.e. This field won't return from a real server
-    hostCount: 0,      // TODO need to remove when refactoring since there is no such counter for openStack, i.e. This field won't return from a real server
+    clusterCount: 0, // TODO need to remove when refactoring since there is no such counter for openStack, i.e. This field won't return from a real server
+    hostCount: 0, // TODO need to remove when refactoring since there is no such counter for openStack, i.e. This field won't return from a real server
     regionCount: 1,
     projectCount: 1,
     vmCount: 3,
@@ -423,13 +423,15 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         ...openshiftProvider1.object.metadata,
         name: 'host',
         uid: 'mock-uid-host',
-        ownerReferences: [{
-          apiVersion: "forklift.konveyor.io/v1beta1",
-          kind: "ForkliftController",
-          name: "forklift-controller",
-          namespace: "openshift-migration",
-          uid: "2d0a80a3-94a7-4fe5-b0cb-225cf5e24eac"
-      }]
+        ownerReferences: [
+          {
+            apiVersion: 'forklift.konveyor.io/v1beta1',
+            kind: 'ForkliftController',
+            name: 'forklift-controller',
+            namespace: 'openshift-migration',
+            uid: '2d0a80a3-94a7-4fe5-b0cb-225cf5e24eac',
+          },
+        ],
       },
       spec: {
         ...openshiftProvider1.object.spec,

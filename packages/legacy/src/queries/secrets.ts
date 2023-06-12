@@ -26,16 +26,18 @@ export const useSecretQuery = (
 
 export const useSecretsQuery = (
   secretNames: string[] | null,
-  namespace: string,
+  namespace: string
 ): UseQueryResult<IKubeList<ISecret>> => {
   const filterList = useCallback(
     (data: IKubeList<ISecret>): IKubeList<ISecret> =>
       !secretNames || secretNames.length == 0
         ? data
-        : ({
-          ...data,
-          items: data.items.filter((d) => secretNames.includes((d.metadata as IMetaObjectMeta)?.name)),
-        }),
+        : {
+            ...data,
+            items: data.items.filter((d) =>
+              secretNames.includes((d.metadata as IMetaObjectMeta)?.name)
+            ),
+          },
     [secretNames]
   );
 
@@ -54,10 +56,13 @@ export const useSecretsQuery = (
 
 export const useSecretsForProvidersQuery = (
   providersQuery: UseQueryResult<IKubeList<IProviderObject>>,
-  namespace: string,
+  namespace: string
 ): UseQueryResult<IKubeList<ISecret>> => {
-  const providerSecretNames: string[] = useMemo(() =>
-    providersQuery.data?.items?.map((provider) => provider.spec?.secret?.name ?? '').filter(Boolean) ?? [],
+  const providerSecretNames: string[] = useMemo(
+    () =>
+      providersQuery.data?.items
+        ?.map((provider) => provider.spec?.secret?.name ?? '')
+        .filter(Boolean) ?? [],
     [providersQuery.data]
   );
 

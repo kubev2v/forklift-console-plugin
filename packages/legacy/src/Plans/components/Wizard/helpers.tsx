@@ -427,8 +427,8 @@ export const filterSourcesBySelectedVMs = (
   );
 
   const filteredSources = availableSources.filter(
-    (source) => sourceIds.includes(source.id) ||
-    sourceIds.includes(source.name));
+    (source) => sourceIds.includes(source.id) || sourceIds.includes(source.name)
+  );
   return filteredSources;
 };
 

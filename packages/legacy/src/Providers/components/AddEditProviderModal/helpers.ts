@@ -5,7 +5,6 @@ import { AddProviderFormState } from './AddEditProviderModal';
 import { ovirtUrlToHostname, vmwareUrlToHostname } from 'legacy/src/client/helpers';
 import { stringToBoolean } from 'legacy/src/common/helpers';
 
-
 interface IEditProviderPrefillEffect {
   isDonePrefilling: boolean;
 }
@@ -34,7 +33,9 @@ export const useAddEditProviderPrefillEffect = (
           // For a new provider, prefill the vddkInitImage from the most recently created vmware provider
           const lastCreatedVmwareProvider = (clusterProvidersQuery.data.items || [])
             .filter((provider) => provider.spec.type === 'vsphere')
-            .sort((a, b) => (a.metadata.creationTimestamp || '') > (b.metadata.creationTimestamp || '') ? -1 : 1)
+            .sort((a, b) =>
+              (a.metadata.creationTimestamp || '') > (b.metadata.creationTimestamp || '') ? -1 : 1
+            )
             .shift();
 
           const vmwareFields = forms.vsphere.fields;

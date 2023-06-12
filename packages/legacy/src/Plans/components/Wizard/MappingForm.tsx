@@ -66,7 +66,6 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
   sourceProvider,
   targetProvider,
   mappingType,
-  targetNamespace,
   selectedVMs,
   planBeingPrefilled,
   namespace,
@@ -161,12 +160,7 @@ export const MappingForm: React.FunctionComponent<IMappingFormProps> = ({
   const populateMappingBuilder = (sourceProviderType: ProviderType, mapping?: Mapping) => {
     const newBuilderItems: IMappingBuilderItem[] = !mapping
       ? []
-      : getBuilderItemsFromMapping(
-          mapping,
-          mappingType,
-          availableSources,
-          availableTargets
-        );
+      : getBuilderItemsFromMapping(mapping, mappingType, availableSources, availableTargets);
     form.fields.builderItems.setValue(
       getBuilderItemsWithMissingSources(
         newBuilderItems,

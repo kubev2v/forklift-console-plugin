@@ -75,7 +75,9 @@ export interface IPlanMatchParams {
 }
 
 const getTotalCopiedRatio = (vmStatus: IVMStatus) => {
-  const diskTransferSteps = vmStatus.pipeline.filter((step) => step.name === 'DiskTransfer' || step.name === 'DiskTransferV2v');
+  const diskTransferSteps = vmStatus.pipeline.filter(
+    (step) => step.name === 'DiskTransfer' || step.name === 'DiskTransferV2v'
+  );
   let completed = 0;
   let total = 0;
   diskTransferSteps.forEach((step) => {
@@ -355,7 +357,12 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
       <PageSection variant="light">
         <Breadcrumb className={`${spacing.mbLg} ${spacing.prLg}`}>
           <BreadcrumbItem>
-            <ResourceLink kind={PLANS_REFERENCE} namespace={resourceNamespace} hideIcon displayName="Migration plans" />
+            <ResourceLink
+              kind={PLANS_REFERENCE}
+              namespace={resourceNamespace}
+              hideIcon
+              displayName="Migration plans"
+            />
           </BreadcrumbItem>
           <BreadcrumbItem>{match?.params.planName}</BreadcrumbItem>
         </Breadcrumb>

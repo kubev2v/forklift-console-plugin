@@ -93,7 +93,9 @@ export const canBeRestarted = (planState: PlanState | null) => {
   );
 };
 
-export const getPrimaryActionFromPlanState = (state: PlanState | null): PlanActionButtonType | null => {
+export const getPrimaryActionFromPlanState = (
+  state: PlanState | null
+): PlanActionButtonType | null => {
   let type: PlanActionButtonType | null;
 
   switch (true) {

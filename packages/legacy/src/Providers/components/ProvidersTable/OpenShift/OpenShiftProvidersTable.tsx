@@ -163,7 +163,8 @@ export const OpenShiftProvidersTable: React.FunctionComponent<IOpenShiftProvider
     if (isExpanded) {
       rows.push({
         parent: rows.length - 1,
-        compoundExpand: resourceFields.findIndex((column) => column.title === expandedItem?.column) + 1,
+        compoundExpand:
+          resourceFields.findIndex((column) => column.title === expandedItem?.column) + 1,
         fullWidth: true,
         cells: [
           {
@@ -173,7 +174,10 @@ export const OpenShiftProvidersTable: React.FunctionComponent<IOpenShiftProvider
               ) : (
                 <OpenShiftStorageClassList provider={provider} storageClasses={storageClasses} />
               ),
-            props: { colSpan: resourceFields.length + 1, className: tableStyles.modifiers.noPadding },
+            props: {
+              colSpan: resourceFields.length + 1,
+              className: tableStyles.modifiers.noPadding,
+            },
           },
         ],
       });

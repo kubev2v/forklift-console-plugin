@@ -101,21 +101,22 @@ export const MustGatherContextProvider: React.FunctionComponent<IMustGatherConte
       })
       .find((mg) => mg['custom-name'] === name);
 
-  const withNs = (resourceName: string, uid: string, type: 'plan' | 'vm') => `${type}:${resourceName}:${uid}`;
+  const withNs = (resourceName: string, uid: string, type: 'plan' | 'vm') =>
+    `${type}:${resourceName}:${uid}`;
   const withoutNs = (namespacedResourceName: string) => {
-    const [, name,] = [...(namespacedResourceName || '').split(':'), '', '', ''];
+    const [, name] = [...(namespacedResourceName || '').split(':'), '', '', ''];
 
     return name;
-  }
+  };
   const toParts = (namespacedResourceName: string): ['vm' | 'plan', string, string] => {
     const [type, name, planUid] = [...(namespacedResourceName || '').split(':'), '', '', ''];
 
     return [type.toLowerCase().includes('plan') ? 'plan' : 'vm', name, planUid];
-  }
+  };
 
   const fetchMustGatherResult = async (mg: IMustGatherResponse) => {
     const response = await consoleFetch(getMustGatherApiUrl(`must-gather/${mg?.['id']}/data`), {
-      headers: { 'Content-Type': 'application/octet-stream', 'Content-Disposition': 'attachment'},
+      headers: { 'Content-Type': 'application/octet-stream', 'Content-Disposition': 'attachment' },
     });
 
     if (!response.ok || !response.body) {
@@ -127,7 +128,7 @@ export const MustGatherContextProvider: React.FunctionComponent<IMustGatherConte
 
   const downloadMustGatherResult = (tarStream: ReadableStream<Uint8Array>, fileName: string) => {
     const fileStream = streamSaver.createWriteStream(fileName);
-    tarStream.pipeTo(fileStream)
+    tarStream.pipeTo(fileStream);
   };
 
   const notifyDownloadFailed = () => {

@@ -23,7 +23,11 @@ export const ProvidersTable: React.FunctionComponent<IProvidersTableProps> = ({
   clusterProviders,
   activeProviderType,
 }) => {
-  if (activeProviderType === 'vsphere' || activeProviderType === 'ovirt' || activeProviderType === 'openstack') {
+  if (
+    activeProviderType === 'vsphere' ||
+    activeProviderType === 'ovirt' ||
+    activeProviderType === 'openstack'
+  ) {
     return (
       <SourceProvidersTable
         providers={correlateProviders<SourceInventoryProvider>(

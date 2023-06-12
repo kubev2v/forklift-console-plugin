@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { UseQueryResult } from 'react-query';
 import { getInventoryApiUrl, useMockableQuery } from './helpers';
-import { MOCK_OPENSTACK_HOST_TREE, MOCK_RHV_HOST_TREE, MOCK_VMWARE_HOST_TREE, MOCK_VMWARE_VM_TREE } from './mocks/tree.mock';
+import {
+  MOCK_OPENSTACK_HOST_TREE,
+  MOCK_RHV_HOST_TREE,
+  MOCK_VMWARE_HOST_TREE,
+  MOCK_VMWARE_VM_TREE,
+} from './mocks/tree.mock';
 import { SourceInventoryProvider } from './types';
 import { IInventoryHostTree, InventoryTree, InventoryTreeType } from './types/tree.types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
@@ -93,22 +98,20 @@ export const useInventoryTreeQuery = <T extends InventoryTree>(
     vsphere: '/tree/host',
     ovirt: '/tree/cluster',
     openstack: '/tree/project',
-    openshift: ''
-  }
+    openshift: '',
+  };
   const mockTreeData: Record<ProviderType, IInventoryHostTree> = {
     vsphere: MOCK_VMWARE_HOST_TREE,
     ovirt: MOCK_RHV_HOST_TREE,
     openstack: MOCK_OPENSTACK_HOST_TREE,
-    openshift: undefined
-  }
+    openshift: undefined,
+  };
 
-  const apiSlug = (treeType === InventoryTreeType.Cluster)
-    ? apiSlugByProviderType[provider?.type]
-    : '/tree/vm';
-    
-  const apiMockData = (treeType === InventoryTreeType.Cluster)
-    ? mockTreeData[provider?.type]
-    : MOCK_VMWARE_VM_TREE;
+  const apiSlug =
+    treeType === InventoryTreeType.Cluster ? apiSlugByProviderType[provider?.type] : '/tree/vm';
+
+  const apiMockData =
+    treeType === InventoryTreeType.Cluster ? mockTreeData[provider?.type] : MOCK_VMWARE_VM_TREE;
 
   return useMockableQuery<T, unknown, IndexedTree<T>>(
     {
@@ -120,6 +123,6 @@ export const useInventoryTreeQuery = <T extends InventoryTree>(
       refetchInterval: usePollingContext().refetchInterval,
       select: indexTreeCallback,
     },
-    apiMockData as T,
+    apiMockData as T
   );
 };
