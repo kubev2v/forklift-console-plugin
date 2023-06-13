@@ -17,7 +17,7 @@ export const PlanNameNavLink = ({
   children,
 }: {
   name: string;
-  namespace: string,
+  namespace: string;
   isInline?: boolean;
   children: React.ReactNode;
 }) => {
@@ -39,7 +39,11 @@ export const PlanStatusNavLink: React.FunctionComponent<IPlanStatusNavLinkProps>
   isInline = true,
   children,
 }) => (
-  <PlanNameNavLink name={plan.metadata.name} namespace={plan.metadata.namespace} isInline={isInline}>
+  <PlanNameNavLink
+    name={plan.metadata.name}
+    namespace={plan.metadata.namespace}
+    isInline={isInline}
+  >
     {children}
   </PlanNameNavLink>
 );

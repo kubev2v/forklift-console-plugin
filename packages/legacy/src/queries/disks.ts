@@ -27,7 +27,9 @@ export const useDisksQuery = (
     {
       queryKey: ['disks', provider?.selfLink],
       queryFn: async () =>
-        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}/${quaryParams[provider?.type] || ''}`)),
+        await consoleFetchJSON(
+          getInventoryApiUrl(`${provider?.selfLink || ''}/${quaryParams[provider?.type] || ''}`)
+        ),
       enabled: !!provider && Object.keys(quaryParams).includes(provider.type),
       refetchInterval: usePollingContext().refetchInterval,
     },

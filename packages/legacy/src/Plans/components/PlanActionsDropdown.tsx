@@ -41,14 +41,18 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
   const namespace = plan.metadata.namespace;
   const { withNs, latestAssociatedMustGather } = React.useContext(MustGatherContext);
 
-  const mustGather = latestAssociatedMustGather(withNs(plan.metadata.name, plan?.metadata?.uid || '', 'plan'));
+  const mustGather = latestAssociatedMustGather(
+    withNs(plan.metadata.name, plan?.metadata?.uid || '', 'plan')
+  );
 
   const isPlanGathering = mustGather?.status === 'inprogress' || mustGather?.status === 'new';
 
   const history = useHistory();
   const onMigrationStarted = (migration: IMigration) => {
     toggleRestartModal();
-    history.push(`${PATH_PREFIX}/plans/ns/${migration.spec.plan.namespace}/${migration.spec.plan.name}`);
+    history.push(
+      `${PATH_PREFIX}/plans/ns/${migration.spec.plan.namespace}/${migration.spec.plan.name}`
+    );
   };
   const createMigrationMutation = useCreateMigrationMutation(namespace, onMigrationStarted);
   const setCutoverMutation = useSetCutoverMutation(namespace);
@@ -105,7 +109,9 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
               isDisabled={isPlanStarted || !areProvidersReady || isPlanArchived || isPlanGathering}
               onClick={() => {
                 setKebabIsOpen(false);
-                history.push(`${PATH_PREFIX}/plans/ns/${plan.metadata.namespace}/${plan.metadata.name}/edit`);
+                history.push(
+                  `${PATH_PREFIX}/plans/ns/${plan.metadata.namespace}/${plan.metadata.name}/edit`
+                );
               }}
             >
               Edit
@@ -120,7 +126,9 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
               isDisabled={!areProvidersReady}
               onClick={() => {
                 setKebabIsOpen(false);
-                history.push(`${PATH_PREFIX}/plans/ns/${plan.metadata.namespace}/${plan.metadata.name}/duplicate`);
+                history.push(
+                  `${PATH_PREFIX}/plans/ns/${plan.metadata.namespace}/${plan.metadata.name}/duplicate`
+                );
               }}
             >
               Duplicate
@@ -146,14 +154,15 @@ export const PlanActionsDropdown: React.FunctionComponent<IPlansActionDropdownPr
                 </ConditionalTooltip>,
               ]
             : []),
-            <DropdownItem
-              onClick={() => {
-                setKebabIsOpen(false);
-                toggleDeleteModal();
-              }}
-            >
-              Delete
-            </DropdownItem>,
+          <DropdownItem
+            key="Delete"
+            onClick={() => {
+              setKebabIsOpen(false);
+              toggleDeleteModal();
+            }}
+          >
+            Delete
+          </DropdownItem>,
           <DropdownItem
             key="Details"
             onClick={() => {

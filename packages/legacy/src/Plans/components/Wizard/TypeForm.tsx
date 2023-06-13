@@ -33,11 +33,8 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
   const isSourceOpenstack = sourceProvider?.type === 'openstack';
 
   return (
-    <ResolvedQueries
-      results={[secretsQuery]}
-      errorTitles={['Cannot load provider secrets']}
-    >
-      <Stack hasGutter >
+    <ResolvedQueries results={[secretsQuery]} errorTitles={['Cannot load provider secrets']}>
+      <Stack hasGutter>
         <StackItem>
           <Radio
             id="migration-type-cold"
@@ -55,11 +52,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
 
         {isSourceOvirtInsecure && (
           <StackItem>
-            <Alert
-              variant="warning"
-              isInline
-              title="Warm migration is not currently available."
-            >
+            <Alert variant="warning" isInline title="Warm migration is not currently available.">
               Warm migrations from {PROVIDER_TYPE_NAMES.ovirt} source providers are only supported
               with a verified secure connection.
             </Alert>
@@ -68,11 +61,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
 
         {isSourceOpenstack && (
           <StackItem>
-            <Alert
-              variant="warning"
-              isInline
-              title="Warm migration is not currently available."
-            >
+            <Alert variant="warning" isInline title="Warm migration is not currently available.">
               Warm migrations from {PROVIDER_TYPE_NAMES.openstack} source providers are unsupported.
             </Alert>
           </StackItem>
@@ -93,28 +82,30 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
                 </ListItem>
               </List>
             }
-            body={!(isSourceOvirtInsecure || isSourceOpenstack) &&
-              <>
-                {isAnalyzingVms && (
-                  <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
-                    <StatusIcon status="Loading" label="Analyzing warm migration compatibility" />
-                  </div>
-                )}
+            body={
+              !(isSourceOvirtInsecure || isSourceOpenstack) && (
+                <>
+                  {isAnalyzingVms && (
+                    <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
+                      <StatusIcon status="Loading" label="Analyzing warm migration compatibility" />
+                    </div>
+                  )}
 
-                {!isAnalyzingVms && warmCriticalConcernsFound.length > 0 && (
-                  <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
-                    <StatusIcon
-                      status="Error"
-                      label="Warm migration will fail for one or more VMs because of the following conditions:"
-                    />
-                    <List className={`${spacing.mtSm} ${spacing.mlMd}`}>
-                      {warmCriticalConcernsFound.map((label) => (
-                        <ListItem key={label}>{label}</ListItem>
-                      ))}
-                    </List>
-                  </div>
-                )}
-              </>
+                  {!isAnalyzingVms && warmCriticalConcernsFound.length > 0 && (
+                    <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
+                      <StatusIcon
+                        status="Error"
+                        label="Warm migration will fail for one or more VMs because of the following conditions:"
+                      />
+                      <List className={`${spacing.mtSm} ${spacing.mlMd}`}>
+                        {warmCriticalConcernsFound.map((label) => (
+                          <ListItem key={label}>{label}</ListItem>
+                        ))}
+                      </List>
+                    </div>
+                  )}
+                </>
+              )
             }
             isChecked={form.values.type === 'Warm'}
             onChange={() => form.fields.type.setValue('Warm')}

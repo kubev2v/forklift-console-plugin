@@ -109,7 +109,7 @@ const generateSecret = (
         : {}),
     },
     type: 'Opaque',
-  }
+  };
 };
 
 const generateHostConfig = (

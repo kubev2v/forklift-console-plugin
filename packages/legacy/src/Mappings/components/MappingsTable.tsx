@@ -122,7 +122,10 @@ export const MappingsTable: React.FunctionComponent<IMappingsTableProps> = ({
                 />
               </Form>
             ),
-            props: { colSpan: resourceFields.length + 1, className: tableStyles.modifiers.noPadding },
+            props: {
+              colSpan: resourceFields.length + 1,
+              className: tableStyles.modifiers.noPadding,
+            },
           },
         ],
       });

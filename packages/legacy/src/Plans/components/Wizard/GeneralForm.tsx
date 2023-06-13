@@ -115,7 +115,11 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
   return (
     <ResolvedQueries
       results={[inventoryProvidersQuery, clusterProvidersQuery, secretsQuery]}
-      errorTitles={['Cannot load provider inventory data', 'Cannot load providers from cluster', 'Cannot load provider secrets']}
+      errorTitles={[
+        'Cannot load provider inventory data',
+        'Cannot load providers from cluster',
+        'Cannot load provider secrets',
+      ]}
     >
       <Form className={spacing.pbXl}>
         <Title headingLevel="h2" size="md">
@@ -124,15 +128,8 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
         <FormGroup
           label="Plan resource namespace"
           fieldId="plan-namespace"
-
-          labelIcon={(
-            <Popover
-              bodyContent={
-                <div>
-                  The default is the migration operator namespace.
-                </div>
-              }
-            >
+          labelIcon={
+            <Popover bodyContent={<div>The default is the migration operator namespace.</div>}>
               <Button
                 variant="plain"
                 aria-label="More info for plan resource namespace field"
@@ -143,36 +140,23 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
                 <HelpIcon noVerticalAlign />
               </Button>
             </Popover>
-          )}
+          }
         >
-          <div
-                id="plan-namespace"
-                style={{ paddingLeft: 8, fontSize: 16}}
-              >
-                { namespace }
+          <div id="plan-namespace" style={{ paddingLeft: 8, fontSize: 16 }}>
+            {namespace}
           </div>
         </FormGroup>
 
         {wizardMode !== 'edit' ? (
-          <ValidatedTextInput
-            field={form.fields.planName}
-            isRequired
-            fieldId="plan-name"
-          />
-        ) :
-          <FormGroup
-            label="Plan name"
-            fieldId="plan-name"
-          >
-            <div
-              id="plan-name"
-              style={{ paddingLeft: 8, fontSize: 16}}
-            >
-              { form.fields.planName.value }
+          <ValidatedTextInput field={form.fields.planName} isRequired fieldId="plan-name" />
+        ) : (
+          <FormGroup label="Plan name" fieldId="plan-name">
+            <div id="plan-name" style={{ paddingLeft: 8, fontSize: 16 }}>
+              {form.fields.planName.value}
             </div>
           </FormGroup>
-        }
-        
+        )}
+
         <ValidatedTextInput
           component={TextArea}
           field={form.fields.planDescription}
@@ -185,15 +169,20 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
           providerRole="source"
           field={form.fields.sourceProvider}
           onProviderSelect={(inventoryProvider) => {
-            const nextLocalTargetRequired = checkIfOvirtInsecureProvider(inventoryProvider, secretsQuery.data);
-            if (!isLocalTargetRequired
-              && nextLocalTargetRequired
-              && form.fields.targetProvider.value
-              && !isProviderLocalTarget(form.fields.targetProvider.value.object)) {
+            const nextLocalTargetRequired = checkIfOvirtInsecureProvider(
+              inventoryProvider,
+              secretsQuery.data
+            );
+            if (
+              !isLocalTargetRequired &&
+              nextLocalTargetRequired &&
+              form.fields.targetProvider.value &&
+              !isProviderLocalTarget(form.fields.targetProvider.value.object)
+            ) {
               form.fields.targetProvider.clear();
             }
             form.fields.sourceProvider.setValue(inventoryProvider);
-            afterProviderChange?.()
+            afterProviderChange?.();
           }}
           namespace={namespace}
         />
@@ -205,7 +194,7 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
           field={form.fields.targetProvider}
           onProviderSelect={(inventoryProvider) => {
             form.fields.targetProvider.setValue(inventoryProvider);
-            afterProviderChange?.()
+            afterProviderChange?.();
           }}
           namespace={namespace}
         />

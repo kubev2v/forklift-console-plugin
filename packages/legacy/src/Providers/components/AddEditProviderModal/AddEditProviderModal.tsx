@@ -61,7 +61,10 @@ const PROVIDER_TYPE_OPTIONS = PROVIDER_TYPES.map((type) => ({
 const oVirtLabelPrefix = process.env.BRAND_TYPE === 'RedHat' ? 'RHV Manager' : 'oVirt';
 const vmwareLabelPrefix = 'vCenter';
 const openStackLabelPrefix = 'OpenStack';
-const getLabelName = (type: 'ovirt-hostname' | 'hostname' | 'username' | 'pwd', prefix?: string) => {
+const getLabelName = (
+  type: 'ovirt-hostname' | 'hostname' | 'username' | 'pwd',
+  prefix?: string
+) => {
   let label = '';
   switch (type) {
     case 'ovirt-hostname': {
@@ -91,9 +94,13 @@ const isVmWare = (providerType: ProviderType | null) => providerType === 'vspher
 const isOvirt = (providerType: ProviderType | null) => providerType === 'ovirt';
 const isOpenStack = (providerType: ProviderType | null) => providerType === 'openstack';
 const brandPrefix = (providerType: ProviderType | null) =>
-  isOvirt(providerType) ? oVirtLabelPrefix :
-  isVmWare(providerType) ? vmwareLabelPrefix :
-  isOpenStack(providerType) ? openStackLabelPrefix: undefined;
+  isOvirt(providerType)
+    ? oVirtLabelPrefix
+    : isVmWare(providerType)
+    ? vmwareLabelPrefix
+    : isOpenStack(providerType)
+    ? openStackLabelPrefix
+    : undefined;
 
 const useAddProviderFormState = (
   clusterProvidersQuery: ReturnType<typeof useClusterProvidersQuery>,
@@ -112,7 +119,9 @@ const useAddProviderFormState = (
     providerType: providerTypeField,
     name: useFormField(
       '',
-      getProviderNameSchema(clusterProvidersQuery, providerBeingEdited).label('Provider name').required()
+      getProviderNameSchema(clusterProvidersQuery, providerBeingEdited)
+        .label('Provider name')
+        .required()
     ),
   };
 
@@ -120,7 +129,12 @@ const useAddProviderFormState = (
     ...commonProviderFields,
     hostname: useFormField(
       '',
-      hostnameSchema.label(getLabelName((isOvirt(providerTypeField.value) ? 'ovirt-hostname' : 'hostname'), brandPrefix(providerTypeField.value)))
+      hostnameSchema.label(
+        getLabelName(
+          isOvirt(providerTypeField.value) ? 'ovirt-hostname' : 'hostname',
+          brandPrefix(providerTypeField.value)
+        )
+      )
     ),
     username: useFormField(
       '',
@@ -138,8 +152,11 @@ const useAddProviderFormState = (
     ),
   };
 
-  const insecureSkipVerify = useFormField(false, yup.boolean().label('skip server SSL certificate verification'));
-  const caCertInvisibleDummy =  useFormField('', yup.string()); // used for restoring cacert data in case insecureSkipVerify=true
+  const insecureSkipVerify = useFormField(
+    false,
+    yup.boolean().label('skip server SSL certificate verification')
+  );
+  const caCertInvisibleDummy = useFormField('', yup.string()); // used for restoring cacert data in case insecureSkipVerify=true
 
   return {
     vsphere: useFormState({
@@ -158,8 +175,20 @@ const useAddProviderFormState = (
     openstack: useFormState({
       ...commonProviderFields,
       openstackUrl: useFormField('', urlSchema.label('OpenStack Identity server URL').required()),
-      username: useFormField('', usernameSchema.required().label(getLabelName('username', brandPrefix(providerTypeField.value)))),
-      password: useFormField('', yup.string().max(256).label(getLabelName('pwd', brandPrefix(providerTypeField.value))).required()),
+      username: useFormField(
+        '',
+        usernameSchema
+          .required()
+          .label(getLabelName('username', brandPrefix(providerTypeField.value)))
+      ),
+      password: useFormField(
+        '',
+        yup
+          .string()
+          .max(256)
+          .label(getLabelName('pwd', brandPrefix(providerTypeField.value)))
+          .required()
+      ),
       domainName: useFormField('', yup.string().label('Domain').required()),
       projectName: useFormField('', yup.string().label('Project').required()),
       regionName: useFormField('', yup.string().label('Region').required()),
@@ -180,17 +209,17 @@ const useAddProviderFormState = (
 // fields by cleaning it since the field is hidden.
 // Re-validate only when InsecureSkipVerify is unchecked
 const handleCaCertForInsecure = (
-  caCertField: IValidatedFormField<String> | null,
-  caCertInvisibleDummyField: IValidatedFormField<String> | null,
+  caCertField: IValidatedFormField<string> | null,
+  caCertInvisibleDummyField: IValidatedFormField<string> | null,
   isInsecureSkipVerifyChecked: boolean
-) :void => {
+): void => {
   if (!caCertField || !caCertInvisibleDummyField) {
     return;
   }
 
-  isInsecureSkipVerifyChecked ?
-    (caCertInvisibleDummyField.setValue(caCertField.value), caCertField.setValue('')) :
-    caCertField.setValue(caCertInvisibleDummyField.value);
+  isInsecureSkipVerifyChecked
+    ? (caCertInvisibleDummyField.setValue(caCertField.value), caCertField.setValue(''))
+    : caCertField.setValue(caCertInvisibleDummyField.value);
 };
 
 export type AddProviderFormState = ReturnType<typeof useAddProviderFormState>; // ✨ Magic
@@ -228,15 +257,21 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
   const formValues = providerType ? forms[providerType].values : null;
   const isFormValid = providerType ? forms[providerType].isValid : false;
   const isFormDirty = providerType ? forms[providerType].isDirty : false;
-  const isOpenStackButtonEnabled = forms.openstack.fields.insecureSkipVerify.value || forms.openstack.fields.caCertIfSecure.value;
-  const isOpenShiftButtonEnabled = (forms.openshift.fields?.openshiftUrl.value === '') == (forms.openshift.fields?.saToken.value === '');
+  const isOpenStackButtonEnabled =
+    forms.openstack.fields.insecureSkipVerify.value || forms.openstack.fields.caCertIfSecure.value;
+  const isOpenShiftButtonEnabled =
+    (forms.openshift.fields?.openshiftUrl.value === '') ==
+    (forms.openshift.fields?.saToken.value === '');
 
   // Combines fields of all 3 forms into one type with all properties as optional.
   // This way, we can conditionally show fields based on whether they are defined in form state
   // instead of duplicating the logic of which providers have which fields.
   const fields = providerType
     ? (forms[providerType].fields as Partial<
-        typeof forms.vsphere.fields & typeof forms.ovirt.fields & typeof forms.openstack.fields & typeof forms.openshift.fields
+        typeof forms.vsphere.fields &
+          typeof forms.ovirt.fields &
+          typeof forms.openstack.fields &
+          typeof forms.openshift.fields
       >)
     : null;
 
@@ -290,11 +325,18 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
               id="modal-confirm-button"
               key="confirm"
               variant="primary"
-              isDisabled={providerType === 'openstack' ?
-                !isFormDirty || !isFormValid || mutateProviderResult.isLoading || !isOpenStackButtonEnabled:
-                providerType === 'openshift' ?
-                  !isFormDirty || !isFormValid || mutateProviderResult.isLoading || !isOpenShiftButtonEnabled:
-                  !isFormDirty || !isFormValid || mutateProviderResult.isLoading
+              isDisabled={
+                providerType === 'openstack'
+                  ? !isFormDirty ||
+                    !isFormValid ||
+                    mutateProviderResult.isLoading ||
+                    !isOpenStackButtonEnabled
+                  : providerType === 'openshift'
+                  ? !isFormDirty ||
+                    !isFormValid ||
+                    mutateProviderResult.isLoading ||
+                    !isOpenShiftButtonEnabled
+                  : !isFormDirty || !isFormValid || mutateProviderResult.isLoading
               }
               onClick={() => {
                 if (formValues) {
@@ -325,14 +367,8 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
             <FormGroup
               label="Provider namespace"
               fieldId="provider-namespace"
-              labelIcon={(
-                <Popover
-                  bodyContent={
-                    <div>
-                      The default is the migration operator namespace.
-                    </div>
-                  }
-                >
+              labelIcon={
+                <Popover bodyContent={<div>The default is the migration operator namespace.</div>}>
                   <Button
                     variant="plain"
                     aria-label="More info for Provider resource namespace field"
@@ -343,13 +379,10 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                     <HelpIcon noVerticalAlign />
                   </Button>
                 </Popover>
-              )}
+              }
             >
-              <div
-                id="provider-namespace"
-                style={{ paddingLeft: 8, fontSize: 16}}
-              >
-                { prefillNamespace }
+              <div id="provider-namespace" style={{ paddingLeft: 8, fontSize: 16 }}>
+                {prefillNamespace}
               </div>
             </FormGroup>
 
@@ -359,7 +392,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
               fieldId="provider-type"
               {...getFormGroupProps(providerTypeField)}
             >
-              {!!!providerBeingEdited ? (
+              {!providerBeingEdited ? (
                 <SimpleSelect
                   id="provider-type"
                   aria-label="Provider type"
@@ -373,21 +406,18 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                   menuAppendTo="parent"
                   maxHeight="40vh"
                 />
-              ) :
-                <div
-                  id="provider-type"
-                  style={{ paddingLeft: 8, fontSize: 16}}
-                >
-                  { providerType }
+              ) : (
+                <div id="provider-type" style={{ paddingLeft: 8, fontSize: 16 }}>
+                  {providerType}
                 </div>
-              }
+              )}
             </FormGroup>
 
             {providerType ? (
               <>
                 {fields?.name ? (
                   <>
-                    {!!!providerBeingEdited ? (
+                    {!providerBeingEdited ? (
                       <ValidatedTextInput
                         field={forms[providerType].fields.name}
                         isRequired
@@ -396,19 +426,13 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                           helperText: 'User specified name to display in the list of providers',
                         }}
                       />
-                    ) :
-                      <FormGroup
-                        label="Provider name"
-                        fieldId="name"
-                      >
-                        <div
-                          id="name"
-                          style={{ paddingLeft: 8, fontSize: 16}}
-                        >
-                          { forms[providerType].fields.name.value }
+                    ) : (
+                      <FormGroup label="Provider name" fieldId="name">
+                        <div id="name" style={{ paddingLeft: 8, fontSize: 16 }}>
+                          {forms[providerType].fields.name.value}
                         </div>
                       </FormGroup>
-                    }
+                    )}
                   </>
                 ) : null}
 
@@ -447,11 +471,7 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                 ) : null}
 
                 {fields?.hostname ? (
-                  <ValidatedTextInput
-                    field={fields.hostname}
-                    isRequired
-                    fieldId="hostname"
-                  />
+                  <ValidatedTextInput field={fields.hostname} isRequired fieldId="hostname" />
                 ) : null}
 
                 {fields?.username ? (
@@ -466,19 +486,11 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                 ) : null}
 
                 {fields?.password ? (
-                  <ValidatedPasswordInput
-                    field={fields.password}
-                    isRequired
-                    fieldId="password"
-                  />
+                  <ValidatedPasswordInput field={fields.password} isRequired fieldId="password" />
                 ) : null}
 
                 {fields?.domainName ? (
-                  <ValidatedTextInput
-                    field={fields.domainName}
-                    isRequired
-                    fieldId="domain-name"
-                  />
+                  <ValidatedTextInput field={fields.domainName} isRequired fieldId="domain-name" />
                 ) : null}
 
                 {fields?.projectName ? (
@@ -489,12 +501,8 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                   />
                 ) : null}
 
-                {fields?.regionName? (
-                  <ValidatedTextInput
-                    field={fields.regionName}
-                    isRequired
-                    fieldId="regionName"
-                  />
+                {fields?.regionName ? (
+                  <ValidatedTextInput field={fields.regionName} isRequired fieldId="regionName" />
                 ) : null}
 
                 {fields?.vddkInitImage ? (
@@ -531,23 +539,29 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                   />
                 ) : null}
 
-                {fields?.insecureSkipVerify? (
+                {fields?.insecureSkipVerify ? (
                   <Checkbox
                     label="Skip certificate validation (if checked, the provider's certificate won't be validated)"
                     aria-label="Insecure connection checkbox"
                     id="insecure-check"
                     isChecked={fields.insecureSkipVerify.value}
-                    onChange={(checked) =>
-                      {
-                        fields.insecureSkipVerify.setValue(checked)
-                        if (fields?.caCert && fields?.caCertInvisibleDummy) {
-                          handleCaCertForInsecure(fields.caCert, fields.caCertInvisibleDummy, checked)
-                        }
-                        if (fields?.caCertIfSecure && fields?.caCertInvisibleDummy) {
-                          handleCaCertForInsecure(fields.caCertIfSecure, fields.caCertInvisibleDummy, checked)
-                        }
+                    onChange={(checked) => {
+                      fields.insecureSkipVerify.setValue(checked);
+                      if (fields?.caCert && fields?.caCertInvisibleDummy) {
+                        handleCaCertForInsecure(
+                          fields.caCert,
+                          fields.caCertInvisibleDummy,
+                          checked
+                        );
                       }
-                    }
+                      if (fields?.caCertIfSecure && fields?.caCertInvisibleDummy) {
+                        handleCaCertForInsecure(
+                          fields.caCertIfSecure,
+                          fields.caCertInvisibleDummy,
+                          checked
+                        );
+                      }
+                    }}
                   />
                 ) : null}
 
@@ -561,27 +575,31 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                         <Popover
                           bodyContent={
                             <div>
-                              The provider currently requires the SHA-1 fingerprint of the vCenter Server's
-                              TLS certificate in all circumstances. vSphere calls this the server's <code>thumbprint</code>.
+                              The provider currently requires the SHA-1 fingerprint of the vCenter
+                              Server&apos;s TLS certificate in all circumstances. vSphere calls this
+                              the server&apos;s <code>thumbprint</code>.
                             </div>
                           }
                         >
-                        <Button
-                          variant="plain"
-                          aria-label="More info for vsphere fingerprint field"
-                          onClick={(e) => e.preventDefault()}
-                          aria-describedby="fingerprint-info"
-                          className="pf-c-form__group-label-help"
-                        >
-                          <HelpIcon noVerticalAlign />
-                        </Button>
-                      </Popover>
+                          <Button
+                            variant="plain"
+                            aria-label="More info for vsphere fingerprint field"
+                            onClick={(e) => e.preventDefault()}
+                            aria-describedby="fingerprint-info"
+                            className="pf-c-form__group-label-help"
+                          >
+                            <HelpIcon noVerticalAlign />
+                          </Button>
+                        </Popover>
                       ),
                     }}
                   />
-                ) : null }
+                ) : null}
 
-                {fields?.insecureSkipVerify && !fields?.insecureSkipVerify?.value && fields?.caCert && fields?.caCertFilename ? (
+                {fields?.insecureSkipVerify &&
+                !fields?.insecureSkipVerify?.value &&
+                fields?.caCert &&
+                fields?.caCertFilename ? (
                   <FormGroup
                     label="CA certificate"
                     labelIcon={
@@ -624,14 +642,18 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                   </FormGroup>
                 ) : null}
 
-                {fields?.insecureSkipVerify && !fields?.insecureSkipVerify?.value && fields?.caCertIfSecure && fields?.caCertFilenameIfSecure ? (
+                {fields?.insecureSkipVerify &&
+                !fields?.insecureSkipVerify?.value &&
+                fields?.caCertIfSecure &&
+                fields?.caCertFilenameIfSecure ? (
                   <FormGroup
                     label="CA certificate"
                     labelIcon={
                       <Popover
                         bodyContent={
                           <div>
-                            The CA certificate file to validate before connecting to the OpenStack Identity server.
+                            The CA certificate file to validate before connecting to the OpenStack
+                            Identity server.
                           </div>
                         }
                       >
@@ -667,11 +689,12 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
 
                 {fields?.openshiftUrl ? (
                   <React.Fragment>
-                  <Hint>
-                    <text>
-                      If both following fields "URL" and "Service account token" are left empty, the local cluster provider is used.
-                    </text>
-                  </Hint>
+                    <Hint>
+                      <text>
+                        If both following fields &quot;URL&quot; and &quot;Service account
+                        token&quot; are left empty, the local cluster provider is used.
+                      </text>
+                    </Hint>
                   </React.Fragment>
                 ) : null}
 
@@ -718,8 +741,9 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                       helperText: 'Input a service account token with cluster-admin privileges.',
                       validated: 'error',
                       helperTextInvalid:
-                        (isOpenShiftButtonEnabled || fields?.saToken?.value != ''?
-                          '' : 'A required field if URL is set'),
+                        isOpenShiftButtonEnabled || fields?.saToken?.value != ''
+                          ? ''
+                          : 'A required field if URL is set',
                       labelIcon: (
                         <Popover
                           bodyContent={

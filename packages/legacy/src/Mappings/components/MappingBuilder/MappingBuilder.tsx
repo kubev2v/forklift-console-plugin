@@ -4,7 +4,13 @@ import { Button, TextContent, Text, Grid, GridItem, Bullseye, Flex } from '@patt
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 import TrashIcon from '@patternfly/react-icons/dist/esm/icons/trash-icon';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
-import { MappingType, MappingSource, MappingTarget, POD_NETWORK, IAnnotatedStorageClass } from 'legacy/src/queries/types';
+import {
+  MappingType,
+  MappingSource,
+  MappingTarget,
+  POD_NETWORK,
+  IAnnotatedStorageClass,
+} from 'legacy/src/queries/types';
 import { LineArrow } from 'legacy/src/common/components/LineArrow';
 import { MappingSourceSelect } from './MappingSourceSelect';
 import { MappingTargetSelect } from './MappingTargetSelect';
@@ -38,8 +44,11 @@ interface IMappingBuilderProps {
   setBuilderItems: (groups: IMappingBuilderItem[]) => void;
 }
 
-export const getDefaultTarget = (availableTargets:MappingTarget[], mappingType: MappingType) => 
-  mappingType === MappingType.Network ? POD_NETWORK : availableTargets.find((target) => (target as IAnnotatedStorageClass).uiMeta.isDefault) || null
+export const getDefaultTarget = (availableTargets: MappingTarget[], mappingType: MappingType) =>
+  mappingType === MappingType.Network
+    ? POD_NETWORK
+    : availableTargets.find((target) => (target as IAnnotatedStorageClass).uiMeta.isDefault) ||
+      null;
 
 export const MappingBuilder: React.FunctionComponent<IMappingBuilderProps> = ({
   mappingType,
@@ -51,7 +60,11 @@ export const MappingBuilder: React.FunctionComponent<IMappingBuilderProps> = ({
 }: IMappingBuilderProps) => {
   const reset = () => setBuilderItems([{ source: null, target: null }]);
   const isReset = builderItems.length === 1 && !builderItems[0].source && !builderItems[0].target;
-  const addEmptyItem = () => setBuilderItems([...builderItems, { source: null, target: getDefaultTarget(availableTargets, mappingType) }]);
+  const addEmptyItem = () =>
+    setBuilderItems([
+      ...builderItems,
+      { source: null, target: getDefaultTarget(availableTargets, mappingType) },
+    ]);
   const removeItem = (itemIndex: number) => {
     if (builderItems.length > 1) {
       setBuilderItems(builderItems.filter((_item, index) => index !== itemIndex));
