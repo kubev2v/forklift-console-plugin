@@ -93,9 +93,6 @@ spec:
   feature_ui_plugin: false,
   feature_auth_required: false
   feature_validation: true
-  inventory_tls_enabled: false
-  validation_tls_enabled: false
-  must_gather_api_tls_enabled: false
   ui_tls_enabled: false
   inventory_container_requests_cpu: "50m"
   validation_container_requests_cpu: "50m"
