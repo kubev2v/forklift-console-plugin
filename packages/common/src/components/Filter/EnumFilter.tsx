@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { localeCompare } from 'common/src/utils/localCompare';
 
 import {
   Select,
@@ -9,6 +8,8 @@ import {
   ToolbarChip,
   ToolbarFilter,
 } from '@patternfly/react-core';
+
+import { localeCompare } from '../../utils';
 
 import { FilterTypeProps } from './types';
 

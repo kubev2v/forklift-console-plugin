@@ -1,6 +1,6 @@
-import { ResourceField } from 'common/src/utils/types';
 import jsonpath from 'jsonpath';
 
+import { ResourceField } from '../../utils';
 import { EnumFilter, FreetextFilter, GroupedEnumFilter, SwitchFilter } from '../Filter';
 
 import { FilterRenderer, ValueMatcher } from './types';

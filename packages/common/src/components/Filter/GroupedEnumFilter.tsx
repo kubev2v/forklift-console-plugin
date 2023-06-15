@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { EnumValue } from 'common/src/utils/types';
 
 import {
   Select,
@@ -9,6 +8,8 @@ import {
   SelectVariant,
   ToolbarFilter,
 } from '@patternfly/react-core';
+
+import { EnumValue } from '../../utils';
 
 import { FilterTypeProps } from './types';
 

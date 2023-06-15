@@ -6,10 +6,6 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "composite": true,
-
-    "paths": {
-      "common/src/*": ["./src/*"]
-    }
+    "composite": true
   }
 }

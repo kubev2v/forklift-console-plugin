@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
-import { UID } from 'common/src/utils/constants';
-import { ResourceField } from 'common/src/utils/types';
 
 import { Bullseye } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
+
+import { ResourceField, UID } from '../../utils';
 
 import { RowProps, SortType, TableViewHeaderProps } from './types';
 

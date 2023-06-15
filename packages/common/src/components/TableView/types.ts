@@ -1,4 +1,4 @@
-import { ResourceField } from 'common/src/utils/types';
+import { ResourceField } from '../../utils';
 
 export interface SortType {
   isAsc: boolean;

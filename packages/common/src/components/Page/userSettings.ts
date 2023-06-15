@@ -1,8 +1,4 @@
-import {
-  loadFromLocalStorage,
-  removeFromLocalStorage,
-  saveToLocalStorage,
-} from 'common/src/utils/localStorage';
+import { loadFromLocalStorage, removeFromLocalStorage, saveToLocalStorage } from '../../utils';
 
 import { UserSettings } from './types';
 

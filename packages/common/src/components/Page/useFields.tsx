@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { NAMESPACE } from 'common/src/utils/constants';
-import { ResourceField } from 'common/src/utils/types';
+
+import { NAMESPACE, ResourceField } from '../../utils';
 
 import { FieldSettings } from './types';
 

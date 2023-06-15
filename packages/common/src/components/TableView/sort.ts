@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react';
-import { localeCompare } from 'common/src/utils/localCompare';
-import { ResourceField } from 'common/src/utils/types';
 
 import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base';
 
+import { localeCompare, ResourceField } from '../../utils';
 import { getResourceFieldValue } from '../FilterGroup';
 
 import { SortType } from './types';

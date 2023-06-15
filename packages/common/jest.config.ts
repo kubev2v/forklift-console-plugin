@@ -1,9 +1,4 @@
-import { pathsToModuleNameMapper } from 'ts-jest';
-
 import type { Config } from '@jest/types';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { compilerOptions } = require('./tsconfig');
 
 // Sync object
 export const config: Config.InitialOptions = {
@@ -12,9 +7,6 @@ export const config: Config.InitialOptions = {
   testMatch: ['<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   moduleNameMapper: {
     '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
-    ...pathsToModuleNameMapper(compilerOptions.paths, {
-      prefix: '<rootDir>/',
-    }),
   },
   modulePaths: ['<rootDir>'],
   roots: ['<rootDir>/src'],
