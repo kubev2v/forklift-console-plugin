@@ -68,9 +68,11 @@ export type PlanWizardMode = 'create' | 'edit' | 'duplicate';
 const useMappingFormState = (mappingsQuery: UseQueryResult<IKubeList<Mapping>>) => {
   const isSaveNewMapping = useFormField(false, yup.boolean().required());
   const newMappingNameSchema = getMappingNameSchema(mappingsQuery, null).label('Name');
+  const isCreateMappingSelected = useFormField(false, yup.boolean().required());
+  const selectedExistingMapping = useFormField<Mapping | null>(null, yup.mixed<Mapping | null>());
   return useFormState({
-    isCreateMappingSelected: useFormField(false, yup.boolean().required()),
-    selectedExistingMapping: useFormField<Mapping | null>(null, yup.mixed<Mapping | null>()),
+    isCreateMappingSelected,
+    selectedExistingMapping,
     builderItems: useFormField<IMappingBuilderItem[]>([], mappingBuilderItemsSchema),
     filteredOutItemCount: useFormField(0, yup.number().optional()),
     isSaveNewMapping,
@@ -79,6 +81,12 @@ const useMappingFormState = (mappingsQuery: UseQueryResult<IKubeList<Mapping>>) 
       isSaveNewMapping.value ? newMappingNameSchema.required() : yup.string()
     ),
     isPrefilled: useFormField(false, yup.boolean()),
+    newOrExistingSelected: useFormField(
+      false,
+      isCreateMappingSelected.value || selectedExistingMapping.value
+        ? yup.boolean()
+        : yup.boolean().required().oneOf([true])
+    ),
   });
 };
 
