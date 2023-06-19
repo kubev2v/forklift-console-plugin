@@ -64,8 +64,8 @@ npm run cluster:delete
 | -------|--------------|
 | CONSOLE_IMAGE | The console image to run ( default `quay.io/openshift/origin-console:latest` )|
 | CONSOLE_PORT | Expose the console web application on port ( default `9000` )|
-| INVENTORY_SERVER_HOST | URL of Forklift inventory server ( default `http://localhost:8080` )|
-| MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `http://localhost:8090` )|
+| INVENTORY_SERVER_HOST | URL of Forklift inventory server ( default `https://localhost:30444` )|
+| MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `https://localhost:30445` )|
 | BRIDGE_K8S_AUTH_BEARER_TOKEN | Bearer token of user account ( on openshift token default to `$(oc whoami -t)` )|
 | BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT | Kubernetes API servere URL (default, guess useing kubeconfig file) |
 
@@ -85,8 +85,8 @@ In this scenario the inventory and must-gather URLs will be on the local machine
 
 ``` bash
 # When running locally the 
-export INVENTORY_SERVER_HOST=http://localhost:30088
-export MUST_GATHER_API_SERVER_HOST=http://localhost:< the port assigned for must gather role >
+export INVENTORY_SERVER_HOST=https://localhost:30444
+export MUST_GATHER_API_SERVER_HOST=https://localhost:< the port assigned for must gather role >
 ```
 
 ### Running forklift operator on CRC or Openshift
@@ -104,4 +104,4 @@ export INVENTORY_SERVER_HOST=https://<route found>
 
 ### KinD
 
-The development cluster using kind will expose the inventory server on port 30088 `http://loclhost:30088`.
+The development cluster using kind will expose the inventory server on port 30443 `https://loclhost:30443`.

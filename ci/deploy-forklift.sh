@@ -62,14 +62,6 @@ EOF
 
 # --------------------
 
-echo ""
-echo "Installing VolumePopulator CRD"
-echo "=============================="
-
-kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/volume-data-source-validator/v1.0.1/client/config/crd/populator.storage.k8s.io_volumepopulators.yaml
-
-# --------------------
-
 # Wait for forklift operator to start, and create a controller instance
 echo ""
 echo "Waiting for forklift-operator (may take a few minutes)"
@@ -103,4 +95,4 @@ EOF
 # Wait for forklift inventory service, then expose it on port 30088
 while ! kubectl get service -n ${FORKLIFT_NAMESPACE} forklift-inventory; do sleep 30; done
 kubectl patch service -n ${FORKLIFT_NAMESPACE} forklift-inventory --type='merge' \
-  -p '{"spec":{"type":"NodePort","ports":[{"name":"api-http","protocol":"TCP","targetPort":8080,"port":8080,"nodePort":30088}]}}'
+  -p '{"spec":{"type":"NodePort","ports":[{"name":"api-https","protocol":"TCP","targetPort":8443,"port":8443,"nodePort":30444}]}}'

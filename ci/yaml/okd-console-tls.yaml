@@ -29,25 +29,6 @@ spec:
           imagePullPolicy: Always
 ---
 apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: console
-  namespace: konveyor-forklift
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: console-console-admin
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: console
-    namespace: konveyor-forklift
----
-apiVersion: v1
 kind: Service
 metadata:
   name: forklift-console-plugin
@@ -81,10 +62,29 @@ spec:
         name: console
     spec:
       serviceAccountName: console
+      volumes:
+      - name: forklift-cert
+        secret:
+          secretName: forklift-cert
+      - name: console-serving-cert
+        secret:
+          secretName: console-serving-cert
       containers:
       - name: console
         image: quay.io/openshift/origin-console:latest
+        volumeMounts:
+        - name: console-serving-cert
+          mountPath: /var/run/secrets/forklift
+        - name: forklift-cert
+          mountPath: /etc/ssl/certs/forklift-ca.crt
+          subPath: ca.crt
         env:
+        - name: BRIDGE_LISTEN
+          value: "https://0.0.0.0:9000"
+        - name: BRIDGE_TLS_CERT_FILE
+          value: /var/run/secrets/forklift/tls.crt
+        - name: BRIDGE_TLS_KEY_FILE
+          value: /var/run/secrets/forklift/tls.key
         - name: BRIDGE_PLUGINS
           value: forklift-console-plugin=http://forklift-console-plugin.konveyor-forklift.svc.cluster.local:8080
         - name: BRIDGE_PLUGIN_PROXY
@@ -92,12 +92,12 @@ spec:
             {"services":[
               {
                   "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/forklift-inventory/",
-                  "endpoint":"http://forklift-inventory.konveyor-forklift.svc.cluster.local:8080",
+                  "endpoint":"https://forklift-inventory.konveyor-forklift.svc.cluster.local:8443",
                   "authorize":true
               },
               {
                   "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/must-gather-api/",
-                  "endpoint":"http://must-gather-api.konveyor-forklift.svc.cluster.local:8080",
+                  "endpoint":"https://must-gather-api.konveyor-forklift.svc.cluster.local:8443",
                   "authorize":true
               }]}
 ---
@@ -108,8 +108,8 @@ metadata:
   namespace: konveyor-forklift
 spec:
   ports:
-  - name: api-http
-    nodePort: 30080
+  - name: api-https
+    nodePort: 30443
     port: 9000
     protocol: TCP
     targetPort: 9000
