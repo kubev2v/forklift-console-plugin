@@ -34,7 +34,7 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 # Start a local Openshift console server on the background.
 # - The console will be available in http://localhost:9000
 # - The inventory URL can be set using an enviorment variable,
-#   ( default value for INVENTORY_SERVER_HOST is http://localhost:30088 )
+#   ( default value for INVENTORY_SERVER_HOST is https://localhost:30444 )
 #   for example:
 #     export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.example.com
 # - To close the console server run:

@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: console
+  namespace: konveyor-forklift
+automountServiceAccountToken: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: console-console-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: console
+    namespace: konveyor-forklift
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: console
+  namespace: konveyor-forklift
+  annotations:
+    kubernetes.io/service-account.name: console
+type: kubernetes.io/service-account-token
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: console-certificate
+  namespace: konveyor-forklift
+spec:
+  commonName: console-certificate
+  dnsNames:
+    - console.konveyor-forklift.svc
+    - console.konveyor-forklift.svc.cluster.local
+  isCA: true
+  issuerRef:
+    group: cert-manager.io
+    kind: Issuer
+    name: forklift-issuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  secretName: console-serving-cert
+  

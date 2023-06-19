@@ -19,6 +19,8 @@ you may not be able to start a virtual machine or use some network interfaces.
   --with-ovirt-provider       will install fake ovirt provider
   --with-vmware-provider      will install vmware simulator.
   --with-openstack-provider   will install packstack simulator.
+  --no-kubevirt               don't install kubebirt.
+  --no-console                don't install OKD console.
   "
   exit 0
 fi
@@ -47,14 +49,28 @@ echo "Found: ${CONTAINER_CMD}"
 # Create kind cluster
 bash ${script_dir}/deploy-cluster.sh
 
-# Install okd console
-bash ${script_dir}/deploy-console.sh
+# Install volume poplulator
+bash ${script_dir}/deploy-volume-populator.sh
 
-# Install kubevirt
-bash ${script_dir}/deploy-kubevirt.sh
+# Install cert manager
+bash ${script_dir}/deploy-cert-manager.sh
 
 # Install forklift
 bash ${script_dir}/deploy-forklift.sh
+
+# Install kubevirt
+if [[ $@ != *'--no-kubevirt'* ]]; then
+  bash ${script_dir}/deploy-kubevirt.sh
+fi
+
+# Install okd console
+if [[ $@ != *'--no-console'* ]]; then
+  # Get console service account and tls certifications
+  kubectl apply -f ${script_dir}/yaml/okd-console-tls-cert.yaml
+  kubectl wait certificate -n konveyor-forklift console-certificate --for condition=Ready=True --timeout=${K8S_TIMEOUT}
+
+  bash ${script_dir}/deploy-console.sh
+fi
 
 # Install mock providers
 if [[ $@ == *'--with-all-providers'* ]]; then
@@ -94,7 +110,7 @@ echo "Cluster information:"
 echo "  kubectl cluster-info --context kind-kind"
 echo ""
 echo "  API Server: https://127.0.0.1:6443/"
-echo "  Web console: http://localhost:30080/"
+echo "  Web console: https://localhost:30443/"
 echo ""
 echo "  configuration file - '${config_path}' ( example: cp ${config_path} ~/.kube/config )"
 echo "  admin token        - 'abcdef.0123456789abcdef'"
