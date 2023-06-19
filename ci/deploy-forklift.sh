@@ -96,3 +96,6 @@ EOF
 while ! kubectl get service -n ${FORKLIFT_NAMESPACE} forklift-inventory; do sleep 30; done
 kubectl patch service -n ${FORKLIFT_NAMESPACE} forklift-inventory --type='merge' \
   -p '{"spec":{"type":"NodePort","ports":[{"name":"api-https","protocol":"TCP","targetPort":8443,"port":8443,"nodePort":30444}]}}'
+
+# secondary namespace used in test data
+kubectl create namespace konveyor-migration

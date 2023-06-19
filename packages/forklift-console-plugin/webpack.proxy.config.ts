@@ -40,7 +40,7 @@ const config: WebpackConfiguration & {
       {
         // proxy also the root URL ('/')
         context: () => true,
-        target: process.env.CONSOLE_URL || 'http://localhost:30080/',
+        target: process.env.CONSOLE_URL || 'https://localhost:30443/',
         ws: true,
         changeOrigin: true,
         secure: false,
