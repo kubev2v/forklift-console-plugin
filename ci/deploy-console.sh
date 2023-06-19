@@ -9,8 +9,6 @@ OKD_CONSOLE_YAML=${OKD_CONSOLE_YAML:="${script_dir}/yaml/okd-console-tls.yaml"}
 FORKLIFT_PLUGIN_UPSTREAM_IMG=quay.io/kubev2v/forklift-console-plugin:latest
 FORKLIFT_PLUGIN_IMAGE=${FORKLIFT_PLUGIN_IMAGE:="quay.io/kubev2v/forklift-console-plugin:latest"}
 
-#--------------------
-
 # Install OKD console
 # -------------------
 echo ""
