@@ -74,7 +74,7 @@ spec:
         image: quay.io/openshift/origin-console:latest
         volumeMounts:
         - name: console-serving-cert
-          mountPath: /var/run/secrets/forklift
+          mountPath: /var/run/secrets/console-serving-cert
         - name: forklift-cert
           mountPath: /etc/ssl/certs/forklift-ca.crt
           subPath: ca.crt
@@ -82,9 +82,9 @@ spec:
         - name: BRIDGE_LISTEN
           value: "https://0.0.0.0:9000"
         - name: BRIDGE_TLS_CERT_FILE
-          value: /var/run/secrets/forklift/tls.crt
+          value: /var/run/secrets/console-serving-cert/tls.crt
         - name: BRIDGE_TLS_KEY_FILE
-          value: /var/run/secrets/forklift/tls.key
+          value: /var/run/secrets/console-serving-cert/tls.key
         - name: BRIDGE_PLUGINS
           value: forklift-console-plugin=http://forklift-console-plugin.konveyor-forklift.svc.cluster.local:8080
         - name: BRIDGE_PLUGIN_PROXY
