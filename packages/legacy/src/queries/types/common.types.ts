@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // TODO: lib-ui candidate
 
 // TODO this is a confusing name
