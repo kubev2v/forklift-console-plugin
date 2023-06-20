@@ -35,7 +35,7 @@
     "cluster:delete": "bash ./ci/clean-cluster.sh",
     "e2e:cluster": "bash ./ci/deploy-cluster.sh",
     "e2e:build": "bash ./ci/build-and-push-images.sh",
-    "e2e:console": "OKD_CONSOLE_YAML=./ci/yaml/okd-console.yaml bash ./ci/deploy-console.sh",
+    "e2e:console": "bash ./ci/deploy-console.sh",
     "e2e:pre-test": "npm run e2e:cluster && npm run e2e:build && npm run e2e:console"
   },
   "devDependencies": {
