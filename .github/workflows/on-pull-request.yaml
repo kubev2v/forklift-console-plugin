@@ -5,6 +5,7 @@ on:
 env:
   CONTAINER_CMD: docker
   FORKLIFT_PLUGIN_IMAGE: localhost:5001/forklift-console-plugin:latest
+  OKD_CONSOLE_YAML: ./ci/yaml/okd-console.yaml 
 
 jobs:
   tests:
