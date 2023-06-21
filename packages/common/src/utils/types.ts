@@ -45,3 +45,7 @@ export type ResourceFieldFactory = { (t: (string) => string): ResourceField[] };
 
 export const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
 export type K8sConditionStatus = (typeof K8sConditionStatusValues)[number];
+
+export interface GlobalActionToolbarProps<T> {
+  dataOnScreen: T[];
+}
