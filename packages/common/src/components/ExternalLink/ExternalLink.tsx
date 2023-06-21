@@ -3,10 +3,16 @@ import * as React from 'react';
 import { Button } from '@patternfly/react-core';
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 
-export const ExternalLink: React.FC<ExternalLinkProps> = ({ children, href, text, isInline }) => (
+export const ExternalLink: React.FC<ExternalLinkProps> = ({
+  children,
+  href,
+  text,
+  isInline,
+  hideIcon,
+}) => (
   <Button
     variant="link"
-    icon={<ExternalLinkAltIcon />}
+    icon={hideIcon ? undefined : <ExternalLinkAltIcon />}
     iconPosition="right"
     component="a"
     href={href}
@@ -22,4 +28,5 @@ type ExternalLinkProps = {
   text?: React.ReactNode;
   additionalClassName?: string;
   isInline?: boolean;
+  hideIcon?: boolean;
 };
