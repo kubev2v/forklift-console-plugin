@@ -40,6 +40,8 @@ import { FilterIcon } from '@patternfly/react-icons';
 
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
+import './StandardPage.style.css';
+
 /**
  * Reduce two list of filters to one list.
  *
@@ -219,7 +221,7 @@ export function StandardPage<T>({
 
   return (
     <>
-      <PageSection variant="light">
+      <PageSection variant="light" className="forklift-page__main-title">
         <Level>
           <LevelItem>
             <Title headingLevel="h1">{title}</Title>

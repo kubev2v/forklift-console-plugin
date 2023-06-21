@@ -3,7 +3,7 @@
 exports[`empty result set returned, no filters  1`] = `
 <DocumentFragment>
   <section
-    class="pf-c-page__main-section pf-m-light"
+    class="pf-c-page__main-section pf-m-light forklift-page__main-title"
   >
     <div
       class="pf-l-level"
@@ -241,7 +241,7 @@ exports[`empty result set returned, no filters  1`] = `
 exports[`single entry returned, both filters  1`] = `
 <DocumentFragment>
   <section
-    class="pf-c-page__main-section pf-m-light"
+    class="pf-c-page__main-section pf-m-light forklift-page__main-title"
   >
     <div
       class="pf-l-level"
