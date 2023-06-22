@@ -30,9 +30,9 @@ export interface IMappingBuilderItem {
 export const mappingBuilderItemsSchema = yup
   .array<IMappingBuilderItem>()
   .required()
-  .min(1)
+  .min(0)
   .test('no-empty-selections', 'All sources must be mapped to a target.', (builderItems) =>
-    builderItems ? builderItems.every((item) => item.source && item.target) : false
+    builderItems.every((item) => item.source && item.target)
   );
 
 interface IMappingBuilderProps {
@@ -58,8 +58,7 @@ export const MappingBuilder: React.FunctionComponent<IMappingBuilderProps> = ({
   builderItems,
   setBuilderItems,
 }: IMappingBuilderProps) => {
-  const reset = () => setBuilderItems([{ source: null, target: null }]);
-  const isReset = builderItems.length === 1 && !builderItems[0].source && !builderItems[0].target;
+  const reset = () => setBuilderItems([]);
   const addEmptyItem = () =>
     setBuilderItems([
       ...builderItems,
@@ -168,7 +167,6 @@ export const MappingBuilder: React.FunctionComponent<IMappingBuilderProps> = ({
                   variant="plain"
                   aria-label="Remove mapping"
                   onClick={() => removeItem(itemIndex)}
-                  isDisabled={isReset}
                 >
                   <TrashIcon />
                 </Button>
@@ -201,7 +199,7 @@ export const MappingBuilder: React.FunctionComponent<IMappingBuilderProps> = ({
             </div>
           </ConditionalTooltip>
         ) : null}
-        <Button variant="secondary" onClick={reset} isDisabled={isReset}>
+        <Button variant="secondary" onClick={reset}>
           Remove all
         </Button>
       </Flex>

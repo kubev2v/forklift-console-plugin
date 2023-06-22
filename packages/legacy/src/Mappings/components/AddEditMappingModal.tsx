@@ -14,12 +14,7 @@ import {
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { useFormField, useFormState, ValidatedTextInput } from '@migtools/lib-ui';
-import {
-  MappingBuilder,
-  IMappingBuilderItem,
-  mappingBuilderItemsSchema,
-  getDefaultTarget,
-} from './MappingBuilder';
+import { MappingBuilder, IMappingBuilderItem, mappingBuilderItemsSchema } from './MappingBuilder';
 import { getMappingFromBuilderItems } from './MappingBuilder/helpers';
 import {
   MappingType,
@@ -274,19 +269,7 @@ export const AddEditMappingModal: React.FunctionComponent<IAddEditMappingModalPr
                     sourceProviderType={form.values.sourceProvider?.type || 'vsphere'}
                     availableSources={mappingResourceQueries.availableSources}
                     availableTargets={mappingResourceQueries.availableTargets}
-                    builderItems={
-                      form.values.builderItems.length
-                        ? form.values.builderItems
-                        : [
-                            {
-                              source: null,
-                              target: getDefaultTarget(
-                                mappingResourceQueries.availableTargets,
-                                mappingType
-                              ),
-                            },
-                          ]
-                    }
+                    builderItems={form.values.builderItems}
                     setBuilderItems={form.fields.builderItems.setValue}
                   />
                 </ResolvedQueries>
