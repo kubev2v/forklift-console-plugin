@@ -1,4 +1,4 @@
-import { V1Namespace } from '../../k8s/Namespace';
+import { V1Namespace } from '../../k8s/V1Namespace';
 
 import { OpenshiftResource } from './Resource';
 

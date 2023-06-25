@@ -3,7 +3,7 @@ import { OpenshiftProvider, OpenstackProvider, OVirtProvider, VSphereProvider } 
 /**
  * Represents the inventory of providers, including their entities.
  */
-export interface InventoryByType {
+export interface ProvidersInventory {
   openshift?: OpenshiftProvider[] | null;
   openstack?: OpenstackProvider[] | null;
   ovirt?: OVirtProvider[] | null;
