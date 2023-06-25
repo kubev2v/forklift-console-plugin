@@ -10,6 +10,5 @@ export * from './nicProfiles.mock';
 export * from './plans.mock';
 export * from './providers.mock';
 export * from './storages.mock';
-export * from './tlsCertificates.mock';
 export * from './tree.mock';
 export * from './vms.mock';

@@ -3,7 +3,6 @@ import { DateTime } from 'luxon';
 
 import {
   ForkliftControllerModelGroupVersionKind,
-  InventoryByType,
   IoK8sApimachineryPkgApisMetaV1ObjectMeta,
   OpenShiftNamespace,
   OpenShiftNetworkAttachmentDefinition,
@@ -16,6 +15,7 @@ import {
   OVirtStorageDomain,
   OvirtTreeNode,
   OVirtVM,
+  ProvidersInventory,
   V1beta1Provider,
   VSphereDataStore,
   VSphereHostInventory,
@@ -44,7 +44,7 @@ export const disks = ({
   ovirt,
   openstack,
 }: {
-  providers: InventoryByType;
+  providers: ProvidersInventory;
   inventoryPath: string;
   ovirt: { [uid: string]: OVirtDisk[] };
   openstack: OpenstackVolumeType[];
@@ -62,7 +62,7 @@ export const vms = ({
   vsphere,
   ovirt,
 }: {
-  providers: InventoryByType;
+  providers: ProvidersInventory;
   inventoryPath: string;
   vsphere: { [uid: string]: VSphereVM[] };
   ovirt: { [uid: string]: OVirtVM[] };
@@ -77,7 +77,7 @@ export const hosts = ({
   inventoryPath,
   vsphere,
 }: {
-  providers: InventoryByType;
+  providers: ProvidersInventory;
   inventoryPath: string;
   vsphere: { [uid: string]: VSphereHostInventory[] };
 }) =>
@@ -91,7 +91,7 @@ export const namespaces = ({
   inventoryPath,
   openshift,
 }: {
-  providers: InventoryByType;
+  providers: ProvidersInventory;
   inventoryPath: string;
   openshift: { [uid: string]: OpenShiftNamespace[] };
 }) =>
@@ -107,7 +107,7 @@ export const networks = ({
   ovirt,
   openshift,
 }: {
-  providers: InventoryByType;
+  providers: ProvidersInventory;
   inventoryPath: string;
   vsphere: { [uid: string]: VSphereNetwork[] };
   ovirt: { [uid: string]: OVirtNetwork[] };
@@ -128,7 +128,7 @@ export const nicProfiles = ({
   inventoryPath,
   ovirt,
 }: {
-  providers: InventoryByType;
+  providers: ProvidersInventory;
   inventoryPath: string;
   ovirt: { [uid: string]: OVirtNicProfile[] };
 }) =>
@@ -145,7 +145,7 @@ export const storages = ({
   openstack,
   openshift,
 }: {
-  providers: InventoryByType;
+  providers: ProvidersInventory;
   inventoryPath: string;
   vsphere: { [uid: string]: VSphereDataStore[] };
   ovirt: { [uid: string]: OVirtStorageDomain[] };
@@ -177,7 +177,7 @@ export const trees = ({
   ovirt,
   openstack,
 }: {
-  providers: InventoryByType;
+  providers: ProvidersInventory;
   inventoryPath: string;
   vsphere: {
     hostTree: { [uid: string]: VSphereTreeNode };

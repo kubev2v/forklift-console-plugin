@@ -1,9 +1,11 @@
 /** Unified file containing typed provider secrets */
 
-import { OpenShiftProviderSecret } from './secret/OpenShiftProviderSecret';
-import { OpenstackProviderSecret } from './secret/OpenstackProviderSecret';
-import { OVirtProviderSecret } from './secret/OVirtProviderSecret';
-import { VSphereProviderSecret } from './secret/VSphereProviderSecret';
+import {
+  OpenShiftProviderSecret,
+  OpenstackProviderSecret,
+  OVirtProviderSecret,
+  VSphereProviderSecret,
+} from './secret';
 
 export type ProviderType = 'openshift' | 'vsphere' | 'ovirt' | 'openstack';
 
