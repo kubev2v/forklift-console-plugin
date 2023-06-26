@@ -1,8 +1,4 @@
-import {
-  HostModelGroupVersionKind as gvk,
-  V1beta1Host,
-  VSphereHostInventory,
-} from '@kubev2v/types';
+import { HostModelGroupVersionKind as gvk, V1beta1Host, VSphereHost } from '@kubev2v/types';
 
 import { EPOCH, nameAndNamespace, NAMESPACE_FORKLIFT, NAMESPACE_MIGRATION } from '../utils';
 
@@ -16,7 +12,7 @@ import {
 } from './providers.mock';
 
 export const HOST_01_ID = 'host-44';
-const host1: VSphereHostInventory = {
+const host1: VSphereHost = {
   id: HOST_01_ID,
   name: 'esx12.v2v.bos.redhat.com',
   selfLink: `providers/vsphere/${VMWARE_01_UID}/hosts/${HOST_01_ID}`,
@@ -72,7 +68,7 @@ const host1: VSphereHostInventory = {
 };
 
 export const HOST_02_ID = 'host-29';
-const host2: VSphereHostInventory = {
+const host2: VSphereHost = {
   ...host1,
   id: HOST_02_ID,
   name: 'esx13.v2v.bos.redhat.com',
@@ -80,14 +76,14 @@ const host2: VSphereHostInventory = {
 };
 
 export const HOST_03_ID = 'host-57';
-const host3: VSphereHostInventory = {
+const host3: VSphereHost = {
   ...host1,
   id: 'host-57',
   name: 'esx14.v2v.bos.redhat.com',
   selfLink: `providers/vsphere/${VMWARE_03_UID}/hosts/${HOST_03_ID}`,
 };
 
-export const MOCK_HOSTS: { [uid in VmwareProviderIDs]: VSphereHostInventory[] } = {
+export const MOCK_HOSTS: { [uid in VmwareProviderIDs]: VSphereHost[] } = {
   [VMWARE_01_UID]: [host1, host2],
   [VMWARE_02_UID]: [],
   [VMWARE_03_UID]: [host3],

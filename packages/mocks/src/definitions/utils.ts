@@ -18,7 +18,7 @@ import {
   ProvidersInventory,
   V1beta1Provider,
   VSphereDataStore,
-  VSphereHostInventory,
+  VSphereHost,
   VSphereNetwork,
   VSphereTreeNode,
   VSphereVM,
@@ -79,7 +79,7 @@ export const hosts = ({
 }: {
   providers: ProvidersInventory;
   inventoryPath: string;
-  vsphere: { [uid: string]: VSphereHostInventory[] };
+  vsphere: { [uid: string]: VSphereHost[] };
 }) =>
   providers.vsphere.map(({ selfLink, uid }) => [
     `${inventoryPath}${selfLink}/hosts`,
