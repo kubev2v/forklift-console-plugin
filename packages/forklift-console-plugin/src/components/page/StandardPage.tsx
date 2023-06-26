@@ -100,7 +100,7 @@ export interface StandardPageProps<T> {
    * (optional) Maps field list to table header.
    * Defaults to all visible fields.
    */
-  HeaderMapper?: (props: TableViewHeaderProps) => JSX.Element;
+  HeaderMapper?: (props: TableViewHeaderProps<T>) => JSX.Element;
 
   /**
    * Filter types that will be used.

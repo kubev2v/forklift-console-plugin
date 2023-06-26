@@ -9,7 +9,7 @@ export const DefaultHeader = ({
   visibleColumns,
   setActiveSort,
   activeSort,
-}: TableViewHeaderProps) => {
+}: TableViewHeaderProps<unknown>) => {
   return (
     <>
       {visibleColumns.map(({ resourceFieldId, label, sortable }, columnIndex) => (

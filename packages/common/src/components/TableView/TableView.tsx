@@ -33,7 +33,7 @@ export function TableView<T>({
     <TableComposable aria-label={ariaLabel} variant="compact" isStickyHeader>
       <Thead>
         <Tr>
-          <Header {...{ activeSort, setActiveSort, visibleColumns }} />
+          <Header {...{ activeSort, setActiveSort, visibleColumns, dataOnScreen: entities }} />
         </Tr>
       </Thead>
       <Tbody>
@@ -83,5 +83,5 @@ interface TableViewProps<T> {
   /**
    * Maps resourceFields to header rows.
    */
-  Header(props: TableViewHeaderProps): JSX.Element;
+  Header(props: TableViewHeaderProps<T>): JSX.Element;
 }
