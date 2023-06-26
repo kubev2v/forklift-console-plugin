@@ -1,3 +1,3 @@
-import { VSphereResource } from './Resource';
+import { VSphereHostInventory } from './host';
 
-export type VSphereHost = VSphereResource;
+export type VSphereHost = VSphereHostInventory;
