@@ -1,3 +1,7 @@
+import { Concern } from '../base';
+
 import { OpenshiftResource } from './Resource';
 
-export type OpenshiftVM = OpenshiftResource;
+export interface OpenshiftVM extends OpenshiftResource {
+  concerns: Concern[];
+}
