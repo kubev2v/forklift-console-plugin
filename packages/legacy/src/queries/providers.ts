@@ -261,6 +261,7 @@ export const usePatchProviderMutation = (
       queryClient.invalidateQueries('cluster-providers');
       queryClient.invalidateQueries('inventory-providers');
       queryClient.invalidateQueries('secrets');
+      queryClient.invalidateQueries('secret');
       onSuccess && onSuccess();
     },
   });
