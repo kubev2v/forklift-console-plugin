@@ -5,7 +5,7 @@ import {
   OpenstackProvider,
   OVirtProvider,
   ProviderModelGroupVersionKind as gvk,
-  ProvidersInventory,
+  ProvidersInventoryList,
   V1beta1Provider,
   V1beta1ProviderStatus,
   VSphereProvider,
@@ -451,7 +451,7 @@ export const openshiftProviderHost: OpenshiftProvider = {
   },
 };
 
-export const MOCK_INVENTORY_PROVIDERS: ProvidersInventory = {
+export const MOCK_INVENTORY_PROVIDERS: ProvidersInventoryList = {
   vsphere: [vmwareProvider1, vmwareProvider2, vmwareProvider3],
   ovirt: [rhvProvider1, rhvProvider1i, rhvProvider2, rhvProvider3],
   openstack: [openstackProvider1, openstackProvider2],
