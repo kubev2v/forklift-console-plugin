@@ -16,19 +16,19 @@ import { FilterTypeProps } from './types';
 /**
  * This Filter type enables selecting one or many enum values that are separated by groups.
  *
- * **Enum contract:**
- * 1) values are grouped only for presentation and better user experience - logically it's one enum.
- * 2) enum IDs(not translated identifiers) are required to be constant and unique within the enum.
- * 3) the translated labels are not checked for duplication and simply displayed.
- * 4) groups are expected not to overlap (one item may belong to only one group).
+ * **Enum contract:**<br>
+ * 1) values are grouped only for presentation and better user experience - logically it's one enum.<br>
+ * 2) enum IDs(not translated identifiers) are required to be constant and unique within the enum.<br>
+ * 3) the translated labels are not checked for duplication and simply displayed.<br>
+ * 4) groups are expected not to overlap (one item may belong to only one group).<br>
  * 5) items not assigned to any of the supported groups are skipped.
  *
  *
- * **FilterTypeProps are interpreted as follows:**
- * 1) selectedFilters - selected enum IDs
- * 2) onFilterUpdate - accepts the list of selected enum IDs
- * 3) supportedValues - supported enum values
- * 4) supportedGroups - groups for supported enum values
+ * **FilterTypeProps are interpreted as follows:**<br>
+ * 1) selectedFilters - selected enum IDs.<br>
+ * 2) onFilterUpdate - accepts the list of selected enum IDs.<br>
+ * 3) supportedValues - supported enum values.<br>
+ * 4) supportedGroups - groups for supported enum values.
  *
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/GroupedEnumFilter.tsx)
