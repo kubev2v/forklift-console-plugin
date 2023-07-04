@@ -8,10 +8,15 @@ import { ResourceField, UID } from '../../utils';
 import { RowProps, SortType, TableViewHeaderProps } from './types';
 
 /**
- * Displays provided list of entities as table. Supported features:
- * 1) sorting via arrow buttons in the header
- * 2) stable row keys based on resourceData[uidFieldId]
- * 3) (if present) display nodes passed via children prop instead of entities (extension point to handle empty state end related corner cases)
+ * Displays provided list of entities as table.
+ *
+ * **Supported features:**
+ * 1) sorting via arrow buttons in the header.
+ * 2) stable row keys based on resourceData[uidFieldId].
+ * 3) (if present) display nodes passed via children prop instead of entities (extension point to handle empty state end related corner cases).
+ *
+ * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github"></i>
+ * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/TableView/TableView.tsx)
  *
  * @see useSort
  */
@@ -60,7 +65,13 @@ export function TableView<T>({
 }
 
 interface TableViewProps<T> {
+  /**
+   * List of visible columns and their properties
+   */
   visibleColumns: ResourceField[];
+  /**
+   * List of rows content
+   */
   entities: T[];
   'aria-label': string;
   /**
@@ -76,8 +87,18 @@ interface TableViewProps<T> {
    * Extension point to handle empty state and related cases.
    */
   children?: ReactNode[];
+  /**
+   * Specify which column is currently used for sorting the table
+   * and is it ascending or descending order.
+   */
   activeSort: SortType;
+  /**
+   * A handler for applying the sorting
+   */
   setActiveSort: (sort: SortType) => void;
+  /**
+   * The current Namespace
+   */
   currentNamespace: string;
 
   /**

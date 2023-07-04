@@ -9,27 +9,36 @@ import { EnumGroup, EnumValue } from '../../utils';
 export interface FilterTypeProps {
   filterId: string;
   /**
-   * Implementation of filter values is filter specific.
+   * Filter apply handler. Implementation of filter values is filter specific.
    * @param values list of selected filter values
    */
   onFilterUpdate(values: string[]);
-  placeholderLabel: string;
   /**
-   * List of selected values (filter specific).
+   * A text located inside the filter field or next to it.
    */
-  selectedFilters: string[];
-  showFilter: boolean;
-  title: string;
+  placeholderLabel?: string;
   /**
-   * (Optional) List of supported values (if limited)
+   * List of selected values for the filter (filter specific).
+   */
+  selectedFilters?: string[];
+  /**
+   * Display or hide the filter component.
+   */
+  showFilter?: boolean;
+  /**
+   * A title for the category appears in filter chips.
+   */
+  title?: string;
+  /**
+   * List of filter supported values (if limited)
    */
   supportedValues?: EnumValue[];
   /**
-   * (Optional) groups for supported values (if exist)
+   * groups for supported values (if exists or required by a specific filter)
    */
-  supportedGroups?: EnumGroup[];
+  supportedGroups: EnumGroup[];
   /**
-   * Language to be used for locale sensitive sorting/filtering. Defaults to 'en',
+   * Language to be used for locale sensitive sorting/filtering. Defaults to 'en'.
    */
-  resolvedLanguage;
+  resolvedLanguage: string;
 }

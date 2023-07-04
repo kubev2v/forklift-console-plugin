@@ -22,19 +22,49 @@ import {
 import { ResourceField } from '../../utils';
 
 export interface ManagedColumnsProps {
+  /**
+   * To flag an open or a closed modal.
+   */
   showModal: boolean;
-  description?: string;
+  /**
+   * A callback for when the ``close`` button is clicked.
+   */
   onClose(): void;
-  /** Setter to modify state in the parent.*/
+  /**
+   * A callback for when the ``Save`` button is clicked. A setter to modify state in the parent
+   */
   onChange(columns: ResourceField[]): void;
-  /** Read only. State maintained by parent component. */
+  /**
+   * The list of fields to manage by the modal. This is the state maintained by parent component. Read only.
+   */
   resourceFields: ResourceField[];
-  /** Read only. The defaults used for initialization.*/
+  /**
+   * The defaults used for initialization and for the restore option. Read only.
+   */
   defaultColumns: ResourceField[];
+  /**
+   * A description title to be displayed in the modal.
+   */
+  description?: string;
+  /**
+   * A label for the ``Save`` button to be displayed in the modal.
+   */
   saveLabel?: string;
+  /**
+   * A label for the ``Cancel`` button to be displayed in the modal.
+   */
   cancelLabel?: string;
+  /**
+   * An aria label for the reorder draggable option to be displayed in the modal.
+   */
   reorderLabel?: string;
+  /**
+   * A label for the ``Restore`` button to be displayed in the modal.
+   */
   restoreLabel?: string;
+  /**
+   * A Simple text content of the modal header.
+   */
   title?: string;
 }
 
@@ -43,9 +73,13 @@ const filterActionsAndHidden = (resourceFields: ResourceField[]) =>
 
 /**
  * Modal dialog for managing resourceFields.
- * Supported features:
- * 1. toggle column visibility (disabled for identity resourceFields that should always be displayed to uniquely identify a row)
- * 2. re-order the resourceFields using drag and drop
+ *
+ * **Supported features:**
+ * 1. toggle column visibility (disabled for identity resourceFields that should always be displayed to uniquely identify a row).
+ * 2. re-order the resourceFields using drag and drop.
+ *
+ * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github"></i>
+ * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/TableView/ManageColumnsModal.tsx)
  */
 export const ManageColumnsModal = ({
   showModal,

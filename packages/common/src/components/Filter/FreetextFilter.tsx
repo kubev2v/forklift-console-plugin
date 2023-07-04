@@ -5,19 +5,22 @@ import { InputGroup, SearchInput, ToolbarFilter } from '@patternfly/react-core';
 import { FilterTypeProps } from './types';
 
 /**
- * Filter using text provided by the user.
+ * This Filter type uses text provided by the user.
  * Text needs to be submitted/confirmed by clicking search button or by pressing Enter key.
  *
- * FilterTypeProps are interpreted as follows:
+ * **FilterTypeProps are interpreted as follows** :
  * 1) selectedFilters - list of strings provided by the user
  * 2) onFilterUpdate - accepts the list of strings (from user input)
+ *
+ * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
+ * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/FreetextFilter.tsx)
  */
 export const FreetextFilter = ({
   filterId,
   selectedFilters,
   onFilterUpdate,
   title,
-  showFilter,
+  showFilter = true,
   placeholderLabel,
 }: FilterTypeProps) => {
   const [inputValue, setInputValue] = useState('');
