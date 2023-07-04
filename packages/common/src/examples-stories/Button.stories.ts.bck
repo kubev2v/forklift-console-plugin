@@ -1,0 +1,102 @@
+import type { Meta, StoryObj } from '@storybook/react';
+
+import { Button } from './Button';
+
+const meta: Meta<typeof Button> = {
+  /* 👇 The title prop is optional.
+   * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
+   * to learn how to generate automatic titles
+   */
+  title: 'Intro & Examples/Button',
+  component: Button,
+  tags: ['autodocs'],
+  parameters : {
+    componentSubtitle: 'Primary UI component for user interaction.',
+    /* This will override the component jsdoc section
+    docs: {
+      description: {
+        component: 'A button is a box area.',
+      },
+    },
+    */
+  },
+
+  /* This will override the component props definition
+  argTypes: {
+    primary: {
+      description: 'Is this the principal call to action on the page?',
+      control: { type: 'boolean' },
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+      },
+    },
+    size: {
+      type: { name: 'string', required: false },
+      description: 'demo description',
+      options: ['primary', 'secondary'],
+      control: { type: 'radio' },
+      defaultValue: 'primary',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'Hello' },
+      },
+    },
+  },
+  args: {
+      primary: Button.defaultProps.primary,
+      size: Button.defaultProps.size,
+      onClick:undefined,
+  },
+  */
+};
+
+export default meta;
+type Story = StoryObj<typeof Button>;
+
+/**
+ * This example is used when this is the **primary** button. The primary button style used to gu  ide users forward in a flow. Used only once per page
+ */
+export const Primary: Story = {
+  args: {
+    label: 'Button',
+  },
+   /* This will override this method's jsdoc section
+   /*
+  parameters : {
+    docs: {
+      description: {
+        story: 'This example is used when this is the primary button. The primary button style used to guide users forward in a flow. Used only once per page',
+      },
+    },
+  },
+  */
+};
+
+export const Secondary: Story = {
+  args: {
+    label: 'Button',
+    primary: false,
+  },
+  parameters : {
+    docs: {
+      description: {
+        story: 'This example is used when this is the **secondary** button. The secondary button styled used more frequently for secondary actions.',
+      },
+    },
+  },
+};
+
+export const Large: Story = {
+  args: {
+    label: 'Button',
+    size: 'large',
+  },
+};
+
+export const Small: Story = {
+  args: {
+    label: 'Button',
+    size: 'small',
+  },
+};
