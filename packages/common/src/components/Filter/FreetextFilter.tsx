@@ -8,8 +8,8 @@ import { FilterTypeProps } from './types';
  * This Filter type uses text provided by the user.
  * Text needs to be submitted/confirmed by clicking search button or by pressing Enter key.
  *
- * **FilterTypeProps are interpreted as follows** :
- * 1) selectedFilters - list of strings provided by the user
+ * **FilterTypeProps are interpreted as follows** :<br>
+ * 1) selectedFilters - list of strings provided by the user<br>
  * 2) onFilterUpdate - accepts the list of strings (from user input)
  *
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">

@@ -10,9 +10,9 @@ import { RowProps, SortType, TableViewHeaderProps } from './types';
 /**
  * Displays provided list of entities as table.
  *
- * **Supported features:**
- * 1) sorting via arrow buttons in the header.
- * 2) stable row keys based on resourceData[uidFieldId].
+ * **Supported features:**<br>
+ * 1) sorting via arrow buttons in the header.<br>
+ * 2) stable row keys based on resourceData[uidFieldId].<br>
  * 3) (if present) display nodes passed via children prop instead of entities (extension point to handle empty state end related corner cases).
  *
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github"></i>
