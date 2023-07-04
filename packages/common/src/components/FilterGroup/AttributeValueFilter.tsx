@@ -23,17 +23,20 @@ const toSelectOption = (id: string, label: string): IdOption => ({
 });
 
 /**
- * Implementation of PatternFly 4 attribute-value filter pattern.
- * Accepts any filter matching FilterTypeProps interface.
+ * This is an implementation of [<font>``PatternFly 4`` attribute-value filter</font>](https://www.patternfly.org/v4/demos/filters/design-guidelines/#attribute-value-filter) pattern,
+ * extended to use any filter matching FilterTypeProps interface (not only enum based selection but also free text, boolean switch and grouped enum based).
+ *
+ * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
+ * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/FilterGroup/AttributeValueFilter.tsx)
  *
  * @see FilterTypeProps
  */
 export const AttributeValueFilter = ({
-  selectedFilters,
+  selectedFilters = {},
   onFilterUpdate,
   fieldFilters,
-  supportedFilterTypes = {},
-  resolvedLanguage,
+  supportedFilterTypes,
+  resolvedLanguage = 'en',
 }: MetaFilterProps) => {
   const [currentFilter, setCurrentFilter] = useState(fieldFilters?.[0]);
   const [expanded, setExpanded] = useState(false);

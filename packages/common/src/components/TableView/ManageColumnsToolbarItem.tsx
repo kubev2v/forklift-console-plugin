@@ -5,13 +5,25 @@ import { ColumnsIcon } from '@patternfly/react-icons';
 
 export interface ManageColumnsToolbarItemProps {
   children: React.ReactNode;
+  /**
+   * A handler for clicking the button.
+   */
   showDialog: () => void;
+  /**
+   * A tooltip content.
+   */
   tooltip?: string;
+  /**
+   * A text describing the button.
+   */
   ariaLabel?: string;
 }
 
 /**
- * Toolbar item with columns icon used to show Manage Columns dialog.
+ * A Toolbar button item with columns icon, uses to show the Manage Columns dialog modal.
+ *
+ * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
+ * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/TableView/ManageColumnsToolbarItem.tsx)
  */
 export const ManageColumnsToolbarItem = ({
   children,

@@ -16,8 +16,21 @@ export interface RowProps<T> {
 }
 
 export interface TableViewHeaderProps<T> {
+  /**
+   * List of visible columns and their properties
+   */
   visibleColumns: ResourceField[];
+  /**
+   * Specify which column is currently used for sorting the table
+   * and is it ascending or descending order.
+   */
   activeSort: SortType;
+  /**
+   * A handler for applying the sorting
+   */
   setActiveSort: (sort: SortType) => void;
-  dataOnScreen: T[];
+  /**
+   * currently visible items on the screen, for handling bulk selection ("select all" checkbox).
+   */
+  dataOnScreen?: T[];
 }

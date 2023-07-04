@@ -11,13 +11,19 @@ import {
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
 
-const BaseState = ({
+/**
+ * The page basic states.
+ *
+ * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
+ * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Page/PageStates.tsx)
+ */
+export const BaseState = ({
   title,
   Icon,
   color,
   Component,
 }: {
-  title: string;
+  title?: string;
   Icon?: ComponentType;
   Component?: ComponentType;
   color?: string;
@@ -49,6 +55,12 @@ export const NoResultsFound = ({ title }: { title: string }) => (
   <BaseState Icon={SearchIcon} title={title} />
 );
 
+/**
+ * The page for a case of no results matching a filter, including a title, description and a button for clearing all filters.
+ *
+ * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
+ * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Page/PageStates.tsx)
+ */
 export const NoResultsMatchFilter = ({
   clearAllFilters,
   title = 'No results found',

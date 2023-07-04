@@ -92,18 +92,21 @@ export const useUnique = ({
 };
 
 /**
- * Select one or many enum values from the list.
+ * This Filter type enables selecting one or many enum values from the list.
  *
- * Enum contract:
- * 1) enum IDs(not translated identifiers) are required to be constant and unique within the enum
+ * **Enum contract**:
+ * 1) enum IDs (not translated identifiers) are required to be constant and unique within the enum.
  * 2) the translated labels might be duplicated (one label may map to multiple enum IDs).
- *  In such case enums with duplicated labels will be grouped as one option.
- *  The common scenario are values not known at the compile time represented by one label i.e. 'Unknown'.
+ * In such case enums with duplicated labels will be grouped as one option.
+ * The common scenario are values not known at the compile time represented by one label i.e. 'Unknown'.
  *
- * FilterTypeProps are interpreted as follows:
+ * **FilterTypeProps are interpreted as follows**:
  * 1) selectedFilters - selected enum IDs
  * 2) onFilterUpdate - accepts the list of selected enum IDs
  * 3) supportedValues - supported enum values
+ *
+ * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
+ * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/EnumFilter.tsx)
  */
 export const EnumFilter = ({
   selectedFilters: selectedEnumIds = [],
@@ -112,7 +115,7 @@ export const EnumFilter = ({
   title,
   placeholderLabel,
   filterId,
-  showFilter,
+  showFilter = true,
   resolvedLanguage,
 }: FilterTypeProps) => {
   const [isExpanded, setExpanded] = useState(false);
