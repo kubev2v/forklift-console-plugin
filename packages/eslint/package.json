@@ -1,5 +1,5 @@
 {
-  "name": "@kubev2v/eslint-plugin",
+  "name": "@kubev2v/eslint",
   "version": "0.0.1",
   "description": "standard eslint configuration for forklift",
   "license": "Apache-2.0",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/kubev2v/forklift-console-plugin.git",
-    "directory": "packages/eslint-plugin-forklift"
+    "directory": "packages/eslint"
   },
   "main": "index.js",
   "scripts": {
