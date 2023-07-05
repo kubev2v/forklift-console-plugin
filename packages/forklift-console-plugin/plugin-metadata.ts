@@ -1,6 +1,6 @@
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
-import { exposedModules as mockExtensionModules } from './src/mock-console-extension/dynamic-plugin';
+import { exposedModules as mockExtensionModules } from './src/__mock-console-extension/dynamic-plugin';
 import { exposedModules as networkMapModules } from './src/modules/NetworkMaps/dynamic-plugin';
 import { exposedModules as planModules } from './src/modules/Plans/dynamic-plugin';
 import { exposedModules as providerModules } from './src/modules/Providers/dynamic-plugin';
