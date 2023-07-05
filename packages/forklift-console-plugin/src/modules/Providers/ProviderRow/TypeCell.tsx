@@ -1,7 +1,7 @@
 import React from 'react';
 import * as C from 'src/utils/constants';
 import { PROVIDERS } from 'src/utils/enums';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getResourceFieldValue } from '@kubev2v/common';
 import { TARGET_PROVIDER_TYPES } from '@kubev2v/legacy/common/constants';
@@ -10,7 +10,7 @@ import { Label } from '@patternfly/react-core';
 import { CellProps } from './types';
 
 export const TypeCell: React.FC<CellProps> = ({ resourceData, resourceFields }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const type = getResourceFieldValue(resourceData, C.TYPE, resourceFields);
   const isTarget = TARGET_PROVIDER_TYPES.includes(type);
 

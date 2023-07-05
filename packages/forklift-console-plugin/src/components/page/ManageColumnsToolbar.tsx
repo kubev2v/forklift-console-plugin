@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ManageColumnsModal, ManageColumnsToolbarItem } from '@kubev2v/common';
 import { ResourceField } from '@kubev2v/common';
@@ -21,7 +21,7 @@ export const ManageColumnsToolbar = ({
   setColumns,
   defaultColumns,
 }: ManageColumnsToolbarProps) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
   return (
     <ManageColumnsToolbarItem

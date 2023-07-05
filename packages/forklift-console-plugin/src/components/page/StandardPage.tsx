@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo } from 'react';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   AttributeValueFilter,
@@ -181,7 +181,7 @@ export function StandardPage<T>({
   const {
     t,
     i18n: { resolvedLanguage },
-  } = useTranslation();
+  } = useForkliftTranslation();
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
     fields: fieldsMetadata,
     filterPrefix,

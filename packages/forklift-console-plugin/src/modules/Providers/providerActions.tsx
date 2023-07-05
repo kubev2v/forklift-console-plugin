@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { DEFAULT_TRANSFER_NETWORK_ANNOTATION } from 'src/utils/constants';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { withActionServiceContext } from '@kubev2v/common';
 import { withQueryClient } from '@kubev2v/common';
@@ -21,7 +21,7 @@ import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { type MergedProvider, isManaged } from './data';
 
 export const useMergedProviderActions = ({ resourceData }: { resourceData: MergedProvider }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const launchModal = useModal();
   const plansQuery = usePlansQuery(resourceData.metadata.namespace);
   const managed = isManaged(resourceData);
@@ -95,7 +95,7 @@ const SelectNetworkForOpenshift = ({
   closeModal: () => void;
   resourceData: MergedProvider;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const migrationNetworkMutation = useOCPMigrationNetworkMutation(
     resourceData.metadata?.namespace,
     closeModal,
@@ -133,7 +133,7 @@ const DeleteModal = ({
   closeModal: () => void;
   resourceData: MergedProvider;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(true);
 
   const toggleDeleteModal = useCallback(() => {

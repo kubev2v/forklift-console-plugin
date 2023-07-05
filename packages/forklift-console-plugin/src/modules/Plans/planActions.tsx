@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { withActionServiceContext } from '@kubev2v/common';
 import { withQueryClient } from '@kubev2v/common';
@@ -65,7 +65,7 @@ export const useFlatPlanActions: ExtensionHook<
 > = ({ resourceData: plan }) => {
   const { migrationStarted, migrationCompleted, archived: isPlanArchived, name, namespace } = plan;
   const isPlanStarted = !!migrationStarted;
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const launchModal = useModal();
   const {
     withNs,
@@ -340,7 +340,7 @@ const DeleteModal = ({
   isPlanExecuting: boolean;
   isPlanStarted: boolean;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(true);
 
   const exit = useCallback(() => {
@@ -412,7 +412,7 @@ const RestartModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
 RestartModal.displayName = 'RestartModal';
 
 const DetailsModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => void }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(true);
 
   const exit = useCallback(() => {
@@ -440,7 +440,7 @@ const DetailsModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => 
 DetailsModal.displayName = 'DetailsModal';
 
 const ArchiveModal = ({ plan, closeModal }: { plan: FlatPlan; closeModal: () => void }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(true);
 
   const exit = useCallback(() => {

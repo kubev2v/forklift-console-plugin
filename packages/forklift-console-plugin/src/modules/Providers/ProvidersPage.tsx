@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StandardPage from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { EnumToTuple } from '@kubev2v/common';
@@ -131,7 +131,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 const ProvidersPage: React.FC<ResourceConsolePageProps> = ({ namespace }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'Providers' }));
   const dataSource = useProvidersWithInventory({
     namespace,
@@ -156,7 +156,7 @@ const Page: React.FC<{
   title: string;
   userSettings: UserSettings;
 }> = ({ dataSource, namespace, title, userSettings }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
 
   const [data, isLoadSuccess, isLoadError] = dataSource;
   const isLoading = !isLoadSuccess && !isLoadError;

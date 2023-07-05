@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { withQueryClient } from '@kubev2v/common';
 import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
@@ -17,7 +17,7 @@ export function useMappingActions<T extends CommonMapping>({
   resourceData: T;
   mappingType: MappingType;
 }) {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const launchModal = useModal();
 
   const actions = useMemo(
@@ -65,7 +65,7 @@ const EditMappingModal = ({
   mappingType: MappingType;
   namespace: string;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const title = mappingType === 'Network' ? t('Edit NetworkMap') : t('Edit StorageMap');
   return (
     <AddEditMappingModal
@@ -93,7 +93,7 @@ const DeleteMappingModal = ({
   namespace: string;
   name: string;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const deleteMappingMutation = useDeleteMappingMutation(mappingType, namespace, closeModal);
   const msg = {
     title: mappingType === 'Network' ? t('Delete NetworkMap?') : t('Delete StorageMap?'),

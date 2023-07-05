@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StandardPage from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
 import { PLAN_STATUS_FILTER } from 'src/utils/enums';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { EnumToTuple } from '@kubev2v/common';
@@ -104,7 +104,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 export const PlansPage = ({ namespace }: ResourceConsolePageProps) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'Plans' }));
   const dataSource = useFlatPlans({
     namespace,
@@ -132,7 +132,7 @@ const Page = ({
   title: string;
   userSettings: UserSettings;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
 
   const [data, isLoadSuccess, isLoadError] = dataSource;
   const isLoading = !isLoadSuccess && !isLoadError;

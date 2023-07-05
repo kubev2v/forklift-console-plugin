@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import * as C from 'src/utils/constants';
 import { MAPPING_STATUS } from 'src/utils/enums';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getResourceFieldValue } from '@kubev2v/common';
 import { RowProps } from '@kubev2v/common';
@@ -39,7 +39,7 @@ export const SourceCell = ({
   groups: unknown[];
   Icon: React.ComponentClass;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const isSingleGroup = groups.length === 1;
   return (
     <>
@@ -56,7 +56,7 @@ export type CellCreator<T extends CommonMapping> = Record<
 >;
 
 const NameCell: React.FC<CellProps<CommonMapping>> = ({ resourceData }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
 
   return (
     <span className="forklift-table__flex-cell">
@@ -75,7 +75,7 @@ const NameCell: React.FC<CellProps<CommonMapping>> = ({ resourceData }) => {
 };
 
 const MappingStatusCell: React.FC<CellProps<CommonMapping>> = ({ resourceData }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
 
   return (
     <StatusCell
@@ -113,7 +113,7 @@ function MappingRow<T extends CommonMapping>({
   mappingType: MappingType;
   mapping: Mapping;
 }) {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [isRowExpanded, setIsRowExpanded] = useState(false);
   const toggleExpand = useCallback(
     () => setIsRowExpanded(!isRowExpanded),
