@@ -6,7 +6,7 @@ import {
 } from 'src/components/mappings/MappingPage';
 import StandardPage, { StandardPageProps } from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { FreetextFilter } from '@kubev2v/common';
@@ -42,7 +42,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 export const StorageMappingsPage = ({ namespace }: ResourceConsolePageProps) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'StorageMappings' }));
   const dataSource = useFlatStorageMappings({
     namespace,
@@ -65,7 +65,7 @@ const Page = ({
   title,
   userSettings,
 }: Partial<StandardPageProps<FlatStorageMapping>>) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
 
   const [data, isLoadSuccess, isLoadError] = dataSource;
   const isLoading = !isLoadSuccess && !isLoadError;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
@@ -10,7 +10,7 @@ import { isManaged } from '../data';
 import { CellProps } from './types';
 
 export const ProviderLink: React.FC<CellProps> = ({ resourceData }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const { name, namespace } = resourceData?.metadata || {};
   const managed = isManaged(resourceData);
 

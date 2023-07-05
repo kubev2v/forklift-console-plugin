@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { withQueryClient } from '@kubev2v/common';
 import { AddEditProviderModal } from '@kubev2v/legacy/Providers/components/AddEditProviderModal';
@@ -20,7 +20,7 @@ const AddProviderModal: React.FC<{
 };
 
 export const AddProviderButton: React.FC<{ namespace: string }> = ({ namespace }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const launchModal = useModal();
 
   return (

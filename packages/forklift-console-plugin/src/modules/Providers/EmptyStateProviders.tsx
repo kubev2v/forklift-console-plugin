@@ -2,7 +2,7 @@ import React from 'react';
 import { Trans } from 'react-i18next';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import digitalTransformationIcon from 'src/components/empty-states/images/digital-transformation.svg';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Text, TextList, TextListItem } from '@patternfly/react-core';
 
@@ -13,7 +13,7 @@ const DigitalTransformationIcon = () => (
 );
 
 const EmptyStateProviders: React.FC<{ namespace: string }> = ({ namespace }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
 
   return (
     <ForkliftEmptyState

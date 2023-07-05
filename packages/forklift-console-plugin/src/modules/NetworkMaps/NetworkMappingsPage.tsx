@@ -5,7 +5,7 @@ import {
 } from 'src/components/mappings/MappingPage';
 import StandardPage from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { FreetextFilter } from '@kubev2v/common';
@@ -45,7 +45,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 export const NetworkMappingsPage = ({ namespace }: ResourceConsolePageProps) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'NetworkMappings' }));
   const dataSource = useFlatNetworkMappings({
     namespace,
@@ -73,7 +73,7 @@ const Page = ({
   title: string;
   userSettings: UserSettings;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
 
   const [data, isLoadSuccess, isLoadError] = dataSource;
   const isLoading = !isLoadSuccess && !isLoadError;
@@ -108,7 +108,7 @@ const Page = ({
 const PageMemo = React.memo(Page);
 
 export const AddNetworkMappingButton: React.FC<{ namespace: string }> = ({ namespace }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const launchModal = useModal();
 
   return (
@@ -126,7 +126,7 @@ const AddMappingModal: React.FC<{
   currentNamespace: string;
   closeModal: () => void;
 }> = ({ closeModal, currentNamespace }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   return (
     <AddEditMappingModal
       onClose={closeModal}

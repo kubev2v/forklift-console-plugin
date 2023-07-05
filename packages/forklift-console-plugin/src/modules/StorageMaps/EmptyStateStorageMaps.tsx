@@ -5,7 +5,7 @@ import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import automationIcon from 'src/components/empty-states/images/automation.svg';
 import { AddMappingButton } from 'src/components/mappings/MappingPage';
 import { HELP_LINK_HREF } from 'src/utils/constants';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
 import { PROVIDERS_REFERENCE } from '@kubev2v/legacy/common/constants';
@@ -18,7 +18,7 @@ import { useHasSufficientProviders } from '../Providers/data';
 const AutomationIcon = () => <img src={automationIcon} className="forklift-empty-state__icon" />;
 
 const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
 
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 

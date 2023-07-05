@@ -2,7 +2,7 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import * as C from 'src/utils/constants';
 import { PLAN_TYPE } from 'src/utils/enums';
-import { useTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getResourceFieldValue } from '@kubev2v/common';
 import { RowProps } from '@kubev2v/common';
@@ -46,7 +46,7 @@ const TextCell = ({ value }: CellProps) => <>{value ?? ''}</>;
 const StatusCell = ({
   resourceData: { status, type, vmCount, vmDone, name, object, namespace },
 }: CellProps) => {
-  const { t } = useTranslation();
+  const { t } = useForkliftTranslation();
   const isBeingStarted = status === 'Starting';
   const isWarmPlan = type === 'Warm';
   const { title, variant } = getMigStatusState(status, isWarmPlan);
