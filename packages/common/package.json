@@ -16,7 +16,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./dist ./coverage tsconfig.tsbuildinfo",
-    "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
+    "clean:all": "npm run clean -- ./node_modules ./.rollup.cache ./storybook-static",
     "build": "rollup -c --bundleConfigAsCjs",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
@@ -24,7 +24,7 @@
     "test:coverage": "TZ=UTC jest --coverage",
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot",
     "storybook": "storybook dev  -p 6006",
-    "build-storybook": "storybook build"
+    "storybook:build": "storybook build"
   },
   "peerDependencies": {
     "@openshift-console/dynamic-plugin-sdk": "0.0.18",

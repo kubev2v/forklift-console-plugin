@@ -36,7 +36,9 @@
     "e2e:cluster": "bash ./ci/deploy-cluster.sh",
     "e2e:build": "bash ./ci/build-and-push-images.sh",
     "e2e:console": "bash ./ci/deploy-console.sh",
-    "e2e:pre-test": "npm run e2e:cluster && npm run e2e:build && npm run e2e:console"
+    "e2e:pre-test": "npm run e2e:cluster && npm run e2e:build && npm run e2e:console",
+    "storybook": "npm run storybook -w @kubev2v/common -- dev -p 6006",
+    "storybook:build": "npm run storybook -w @kubev2v/common -- build"
   },
   "devDependencies": {
     "@cspell/eslint-plugin": "^6.31.1",
