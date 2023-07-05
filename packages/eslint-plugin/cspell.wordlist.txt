@@ -32,3 +32,9 @@ omitempty
 nics
 pnic
 virtio
+SSHA
+applicationcredential
+autodocs
+freetextfilter
+groupedenumfilter
+switchfilter
