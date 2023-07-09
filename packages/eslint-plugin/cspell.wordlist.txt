@@ -38,3 +38,8 @@ autodocs
 freetextfilter
 groupedenumfilter
 switchfilter
+ipam
+masq
+promisc
+enabledad
+macspoofchk
