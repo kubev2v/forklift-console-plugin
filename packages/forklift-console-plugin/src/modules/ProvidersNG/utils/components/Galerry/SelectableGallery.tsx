@@ -1,0 +1,69 @@
+import React, { FC } from 'react';
+
+import { Gallery, GalleryItem } from '@patternfly/react-core';
+
+import { SelectableCard } from './SelectableCard';
+
+import './SelectableGallery.style.css';
+
+export interface SelectableGalleryItem {
+  /** The title of the item */
+  title: string;
+  /** The content of the item */
+  content: string;
+}
+
+interface SelectableGalleryProps {
+  /** An object of items to be displayed in the gallery. Key is the item's id */
+  items: Record<string, SelectableGalleryItem>;
+  /** Handler function to be called when a card is selected */
+  onChange: (selectedCardId: string | null) => void;
+  /** A function to sort the items. Default is alphabetic sort on item titles. */
+  sortFunction?: (a: [string, SelectableGalleryItem], b: [string, SelectableGalleryItem]) => number;
+  /** initial selected value */
+  selectedID?: string;
+}
+
+/**
+ * SelectableGallery component
+ * @param props The properties of the SelectableGallery
+ */
+export const SelectableGallery: FC<SelectableGalleryProps> = ({
+  items,
+  onChange,
+  sortFunction = ([, a], [, b]) => a.title.localeCompare(b.title),
+  selectedID,
+}) => {
+  // State to manage the selected card's id
+  const [selectedCardId, setSelectedCardId] = React.useState<string | null>(selectedID);
+
+  // Callback function for when a card is selected
+  const handleCardChange = (isSelected: boolean, id: string) => {
+    if (isSelected) {
+      setSelectedCardId(id);
+      onChange(id);
+    } else if (selectedCardId === id) {
+      // Unselect the card if it's currently selected
+      setSelectedCardId(null);
+      onChange(null);
+    }
+  };
+
+  // Convert the items object to an array and sort it
+  const sortedItems = Object.entries(items).sort(sortFunction);
+
+  return (
+    <Gallery hasGutter className="forklift-selectable-gallery">
+      {sortedItems.map(([id, item]) => (
+        <GalleryItem key={id}>
+          <SelectableCard
+            title={item.title}
+            content={item.content}
+            isSelected={id === selectedCardId}
+            onChange={(isSelected) => handleCardChange(isSelected, id)}
+          />
+        </GalleryItem>
+      ))}
+    </Gallery>
+  );
+};
