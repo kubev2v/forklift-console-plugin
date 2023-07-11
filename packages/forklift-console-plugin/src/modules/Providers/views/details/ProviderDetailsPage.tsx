@@ -132,6 +132,7 @@ export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, 
       <PageHeadings
         model={ProviderModel}
         obj={data?.provider}
+        namespace={namespace}
         actions={<ProviderActionsDropdown data={data} fieldId={''} fields={[]} />}
       >
         {alerts && alerts.length > 0 && (

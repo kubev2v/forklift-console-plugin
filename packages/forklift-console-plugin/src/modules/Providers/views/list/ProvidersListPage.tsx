@@ -173,19 +173,14 @@ const ProvidersListPage: React.FC<{
   const providersListURL = getResourceUrl({
     reference: ProviderModelRef,
     namespace: namespace,
+    namespaced: namespace ? true : false,
   });
 
   const AddButton = (
     <Button
       data-testid="add-provider-button"
       variant="primary"
-      onClick={() =>
-        history.push(
-          namespace
-            ? `${providersListURL}/~new`
-            : `/k8s/cluster/forklift.konveyor.io~v1beta1~Provider/~new`,
-        )
-      }
+      onClick={() => history.push(`${providersListURL}/~new`)}
     >
       {t('Create Provider')}
     </Button>
