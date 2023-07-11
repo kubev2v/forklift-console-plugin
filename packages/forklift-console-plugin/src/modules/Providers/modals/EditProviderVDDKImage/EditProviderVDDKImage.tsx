@@ -2,10 +2,45 @@ import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
-import { K8sModel } from '@openshift-console/dynamic-plugin-sdk/lib/api/core-api';
+import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 import { validateContainerImage } from '../../utils';
-import { EditModal, EditModalProps, ValidationHookType } from '../EditModal';
+import { EditModal, EditModalProps, OnConfirmHookType, ValidationHookType } from '../EditModal';
+
+/**
+ * Handles the confirmation action for editing a resource annotations.
+ * Adds or updates the vddkInitImage settings in the resource's spec.
+ *
+ * @param {Object} options - Options for the confirmation action.
+ * @param {Object} options.resource - The resource to be modified.
+ * @param {Object} options.model - The model associated with the resource.
+ * @param {any} options.newValue - The new value for the 'vddkInitImage' spec settings.
+ * @returns {Promise<Object>} - The modified resource.
+ */
+const onConfirm: OnConfirmHookType = async ({ resource, model, newValue: value }) => {
+  const provider = resource as V1beta1Provider;
+  const currentSettings = provider?.spec?.settings as object;
+  const settings = {
+    ...currentSettings,
+    vddkInitImage: value || undefined,
+  };
+
+  const op = provider?.spec?.settings ? 'replace' : 'add';
+
+  const obj = await k8sPatch({
+    model: model,
+    resource: resource,
+    data: [
+      {
+        op,
+        path: '/spec/settings',
+        value: settings,
+      },
+    ],
+  });
+
+  return obj;
+};
 
 export type EditProviderVDDKImageProps = Modify<
   EditModalProps,
@@ -49,6 +84,7 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
         'Specify the VDDK image that you created. some functionality will not be available if the VDDK image is left empty',
       )}
       validationHook={imageValidationHook}
+      onConfirmHook={onConfirm}
     />
   );
 };
