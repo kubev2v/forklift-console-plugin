@@ -1,16 +1,22 @@
 import React, { ReactNode } from 'react';
 
-import { Card, CardBody, CardTitle } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Level, LevelItem } from '@patternfly/react-core';
 
 interface SelectableCardProps {
-  /** The title of the card */
+  /** The title of the card. It can be any element - a string, a React component, etc. */
   title: ReactNode;
-  /** The content of the card */
-  content: ReactNode;
-  /** Handler function to be called when the card is clicked */
+  /** Optional: A logo or symbol to be displayed along with the title. It can be any element - a string, a React component, etc. */
+  titleLogo?: ReactNode;
+  /** Optional: The content of the card. It can be any element - a string, a React component, etc. */
+  content?: ReactNode;
+  /** A function that will be called when the card is clicked. It receives a single argument, `isSelected`, which is a boolean indicating the selected state of the card. */
   onChange: (isSelected: boolean) => void;
-  /** The selected state of the card */
+  /** A boolean indicating whether the card is currently selected. */
   isSelected: boolean;
+  /** Optional: A boolean indicating whether the card should be displayed in a compact form. This may affect things like the card's padding and margin. */
+  isCompact?: boolean;
+  /** Optional: A string representing a CSS class name. This class will be applied to the card's top-level DOM element, allowing you to style the card with custom CSS. */
+  className?: string;
 }
 
 /**
@@ -19,9 +25,12 @@ interface SelectableCardProps {
  */
 export const SelectableCard: React.FC<SelectableCardProps> = ({
   title,
+  titleLogo,
   content,
   onChange,
   isSelected,
+  isCompact,
+  className,
 }) => {
   // Handler function to toggle selection and call onChange
   const handleClick = () => {
@@ -31,16 +40,27 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
 
   return (
     <Card
-      className="forklift-selectable-gallery-card"
+      className={`forklift-selectable-gallery-card ${className}`}
       id="selectable-card"
       onKeyDown={handleClick}
       onClick={handleClick}
       onSelectableInputChange={handleClick}
       isSelectable
+      isCompact={isCompact}
       isSelected={isSelected}
     >
-      <CardTitle>{title}</CardTitle>
-      <CardBody>{content}</CardBody>
+      {titleLogo ? (
+        <CardTitle>
+          <Level className="forklift--create-provider-edit-card-title">
+            <LevelItem>{titleLogo}</LevelItem>
+            <LevelItem>{title}</LevelItem>
+          </Level>
+        </CardTitle>
+      ) : (
+        <CardTitle>{title}</CardTitle>
+      )}
+
+      {content && <CardBody>{content}</CardBody>}
     </Card>
   );
 };

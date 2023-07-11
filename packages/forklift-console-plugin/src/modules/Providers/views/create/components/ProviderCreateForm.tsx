@@ -10,7 +10,6 @@ import { Flex, FlexItem, Form, FormGroup, TextInput } from '@patternfly/react-co
 
 import { EditProvider } from './EditProvider';
 import { providerCardItems } from './providerCardItems';
-
 export interface ProvidersCreateFormProps {
   newProvider: V1beta1Provider;
   newSecret: V1Secret;
@@ -101,12 +100,13 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
           <FormGroup label={t('Select provider type')} isRequired fieldId="type">
             {newProvider?.spec?.type ? (
               <Flex>
-                <FlexItem>
+                <FlexItem className="forklift--create-provider-edit-card-selected">
                   <SelectableCard
                     title={providerCardItems[newProvider?.spec?.type]?.title}
-                    content={providerCardItems[newProvider?.spec?.type]?.content}
+                    titleLogo={providerCardItems[newProvider?.spec?.type]?.logo}
                     onChange={() => handleTypeChange(null)}
-                    isSelected={true}
+                    isSelected
+                    isCompact
                   />
                 </FlexItem>
               </Flex>
