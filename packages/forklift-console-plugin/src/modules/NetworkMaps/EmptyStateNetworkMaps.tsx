@@ -11,7 +11,7 @@ import { PROVIDERS_REFERENCE } from '@kubev2v/legacy/common/constants';
 import { createK8sPath } from '@kubev2v/legacy/queries/helpers';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
-import { useHasSufficientProviders } from '../Providers/data';
+import { useHasSufficientProviders } from '../Plans/data';
 
 import { AddNetworkMappingButton } from './NetworkMappingsPage';
 

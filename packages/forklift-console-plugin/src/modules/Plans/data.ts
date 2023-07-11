@@ -135,3 +135,25 @@ export const useFlatPlans = ({ namespace, name = undefined }): [FlatPlan[], bool
   // which triggers unnecessary re-renders
   return useMemo(() => [merged, totalSuccess, totalError], [merged, totalSuccess, totalError]);
 };
+
+export const useHasSourceAndTargetProviders = (
+  namespace?: string,
+): [boolean, boolean, boolean, unknown] => {
+  const [providers, providersLoaded, providersError] = useProviders({
+    namespace,
+  });
+
+  const hasSourceProviders = providers.some((p) => p?.spec?.type !== 'openshift');
+  const hasTargetProviders = providers.some((p) => p?.spec?.type === 'openshift');
+
+  return [hasSourceProviders, hasTargetProviders, providersLoaded, providersError];
+};
+
+export const useHasSufficientProviders = (namespace?: string) => {
+  const [hasSourceProviders, hasTargetProviders, providersLoaded, providersError] =
+    useHasSourceAndTargetProviders(namespace);
+  const hasSufficientProviders =
+    hasSourceProviders && hasTargetProviders && providersLoaded && !providersError;
+
+  return hasSufficientProviders;
+};
