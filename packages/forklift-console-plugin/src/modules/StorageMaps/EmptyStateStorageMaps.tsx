@@ -13,7 +13,7 @@ import { createK8sPath } from '@kubev2v/legacy/queries/helpers';
 import { MappingType } from '@kubev2v/legacy/queries/types';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
-import { useHasSufficientProviders } from '../Providers/data';
+import { useHasSufficientProviders } from '../Plans/data';
 
 const AutomationIcon = () => <img src={automationIcon} className="forklift-empty-state__icon" />;
 
