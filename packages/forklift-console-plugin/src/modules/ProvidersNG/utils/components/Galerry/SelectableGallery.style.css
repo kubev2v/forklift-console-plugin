@@ -1,0 +1,7 @@
+.forklift-selectable-gallery {
+  padding-top: var(--pf-global--spacer--sm);
+}
+
+.forklift-selectable-gallery-card {
+  height: 100%;
+}
