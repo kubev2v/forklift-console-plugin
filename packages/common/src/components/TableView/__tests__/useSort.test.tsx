@@ -17,7 +17,7 @@ describe('useSort hook', () => {
     expect(activeSort).toMatchObject({
       resourceFieldId: NAME,
       label: NameColumn.label,
-      isAsc: false,
+      isAsc: true,
     });
   });
 
@@ -31,7 +31,7 @@ describe('useSort hook', () => {
     expect(activeSort).toMatchObject({
       resourceFieldId: 'Foo',
       label: undefined,
-      isAsc: false,
+      isAsc: true,
     });
   });
 
@@ -45,7 +45,7 @@ describe('useSort hook', () => {
     expect(activeSort).toMatchObject({
       resourceFieldId: undefined,
       label: undefined,
-      isAsc: false,
+      isAsc: true,
     });
 
     expect(setActiveSort).toBeDefined();
