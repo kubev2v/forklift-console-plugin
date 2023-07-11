@@ -1,3 +1,15 @@
 .forklift-create-provider-edit-section {
   padding-top: var(--pf-global--spacer--md);
 }
+
+.forklift--create-provider-edit-card-selected {
+  min-width: 25%;
+}
+
+.forklift--create-provider-edit-card-title {
+  justify-content: normal;
+}
+
+.forklift--create-provider-edit-card-title-logo {
+  margin-right: var(--pf-global--spacer--sm);
+}

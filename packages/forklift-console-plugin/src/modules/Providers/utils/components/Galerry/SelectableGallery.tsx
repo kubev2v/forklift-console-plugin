@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import { Gallery, GalleryItem } from '@patternfly/react-core';
 
@@ -9,6 +9,8 @@ import './SelectableGallery.style.css';
 export interface SelectableGalleryItem {
   /** The title of the item */
   title: string;
+  /** The logo of the item */
+  logo?: ReactNode;
   /** The content of the item */
   content: string;
 }
@@ -58,6 +60,7 @@ export const SelectableGallery: FC<SelectableGalleryProps> = ({
         <GalleryItem key={id}>
           <SelectableCard
             title={item.title}
+            titleLogo={item.logo}
             content={item.content}
             isSelected={id === selectedCardId}
             onChange={(isSelected) => handleCardChange(isSelected, id)}
