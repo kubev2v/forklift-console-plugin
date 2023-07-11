@@ -132,7 +132,7 @@ export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data })
         title={t('Default Transfer Network')}
         content={
           provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'] || (
-            <span className="text-muted">{t('Empty')}</span>
+            <span className="text-muted">{t('Pod network')}</span>
           )
         }
         helpContent={

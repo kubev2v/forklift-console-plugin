@@ -278,7 +278,6 @@
   "Username": "Username",
   "Validation Failed": "Validation Failed",
   "VDDK container image of the provider, when left empty some functionality will not be available": "VDDK container image of the provider, when left empty some functionality will not be available",
-  "vddk Init Image": "vddk Init Image",
   "VDDK Init Image": "VDDK Init Image",
   "VDDK Init Image must be a valid container image, for example quay.io/kubev2v/example:latest": "VDDK Init Image must be a valid container image, for example quay.io/kubev2v/example:latest",
   "View details": "View details",
