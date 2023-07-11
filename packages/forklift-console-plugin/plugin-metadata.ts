@@ -3,7 +3,7 @@ import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sd
 import { exposedModules as mockExtensionModules } from './src/__mock-console-extension/dynamic-plugin';
 import { exposedModules as networkMapModules } from './src/modules/NetworkMaps/dynamic-plugin';
 import { exposedModules as planModules } from './src/modules/Plans/dynamic-plugin';
-import { exposedModules as providerModules } from './src/modules/ProvidersNG/dynamic-plugin';
+import { exposedModules as providerModules } from './src/modules/Providers/dynamic-plugin';
 import { exposedModules as storageMapModules } from './src/modules/StorageMaps/dynamic-plugin';
 import pkg from './package.json';
 
