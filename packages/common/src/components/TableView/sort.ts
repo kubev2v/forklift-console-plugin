@@ -66,7 +66,8 @@ export const useSort = (
   );
 
   const [activeSort, setActiveSort] = useState<SortType>({
-    isAsc: false,
+    // when no other order is define, default to ascending order
+    isAsc: true,
     resourceFieldId: firstField?.resourceFieldId,
     label: firstField?.label,
   });
