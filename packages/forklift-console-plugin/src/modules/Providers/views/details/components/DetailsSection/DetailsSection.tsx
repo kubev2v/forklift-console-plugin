@@ -4,6 +4,7 @@ import { ProviderData } from 'src/modules/Providers/utils';
 
 import { OpenshiftDetailsSection } from './OpenshiftDetailsSection';
 import { OpenstackDetailsSection } from './OpenstackDetailsSection';
+import { OVADetailsSection } from './OVADetailsSection';
 import { OvirtDetailsSection } from './OvirtDetailsSection';
 import { VSphereDetailsSection } from './VSphereDetailsSection';
 
@@ -19,6 +20,8 @@ const DetailsSection_: React.FC<DetailsSectionProps> = (props) => {
       return <OpenstackDetailsSection {...props} />;
     case 'vsphere':
       return <VSphereDetailsSection {...props} />;
+    case 'ova':
+      return <OVADetailsSection {...props} />;
     default:
       return <></>;
   }

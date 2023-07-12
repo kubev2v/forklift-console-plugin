@@ -20,5 +20,5 @@ export function getIsOnlySource(provider: V1beta1Provider): boolean {
   return SOURCE_ONLY_PROVIDER_TYPES.includes(provider?.spec.type as ProviderType);
 }
 
-export const SOURCE_ONLY_PROVIDER_TYPES: ProviderType[] = ['vsphere', 'ovirt', 'openstack'];
+export const SOURCE_ONLY_PROVIDER_TYPES: ProviderType[] = ['ova', 'vsphere', 'ovirt', 'openstack'];
 export const TARGET_PROVIDER_TYPES: ProviderType[] = ['openshift'];

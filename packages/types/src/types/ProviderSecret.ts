@@ -7,7 +7,7 @@ import {
   VSphereProviderSecret,
 } from './secret';
 
-export type ProviderType = 'openshift' | 'vsphere' | 'ovirt' | 'openstack';
+export type ProviderType = 'openshift' | 'vsphere' | 'ovirt' | 'openstack' | 'ova';
 
 /**
  * Provider secret containing credentials and other confidential information

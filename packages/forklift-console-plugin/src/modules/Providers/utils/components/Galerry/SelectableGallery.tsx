@@ -33,7 +33,7 @@ interface SelectableGalleryProps {
 export const SelectableGallery: FC<SelectableGalleryProps> = ({
   items,
   onChange,
-  sortFunction = ([, a], [, b]) => a.title.localeCompare(b.title),
+  sortFunction,
   selectedID,
 }) => {
   // State to manage the selected card's id
@@ -52,7 +52,9 @@ export const SelectableGallery: FC<SelectableGalleryProps> = ({
   };
 
   // Convert the items object to an array and sort it
-  const sortedItems = Object.entries(items).sort(sortFunction);
+  const sortedItems = sortFunction
+    ? Object.entries(items).sort(sortFunction)
+    : Object.entries(items);
 
   return (
     <Gallery hasGutter className="forklift-selectable-gallery">

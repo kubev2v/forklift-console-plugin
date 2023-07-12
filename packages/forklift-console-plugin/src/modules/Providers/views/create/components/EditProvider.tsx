@@ -9,6 +9,7 @@ import {
 
 import { OpenshiftProviderFormCreate } from './OpenshiftProviderCreateForm';
 import { OpenstackProviderCreateForm } from './OpenstackProviderCreateForm';
+import { OVAProviderCreateForm } from './OVAProviderCreateForm';
 import { OvirtProviderCreateForm } from './OvirtProviderCreateForm';
 import { ProvidersCreateFormProps } from './ProviderCreateForm';
 import { VSphereProviderCreateForm } from './VSphereProviderCreateForm';
@@ -46,6 +47,12 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
         <>
           <VSphereProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
           <VSphereCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
+        </>
+      );
+    case 'ova':
+      return (
+        <>
+          <OVAProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
         </>
       );
     default:

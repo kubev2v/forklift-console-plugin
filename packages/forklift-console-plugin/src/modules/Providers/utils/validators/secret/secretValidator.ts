@@ -21,6 +21,9 @@ export function secretValidator(type: string, secret: V1Secret) {
     case 'vsphere':
       validationError = vsphereSecretValidator(secret);
       break;
+    case 'ova':
+      validationError = null;
+      break;
     default:
       validationError = new Error('bad provider type');
   }

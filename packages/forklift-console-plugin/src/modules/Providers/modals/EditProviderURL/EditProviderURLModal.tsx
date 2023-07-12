@@ -7,6 +7,7 @@ import { EditModalProps } from '../EditModal';
 
 import { OpenshiftEditURLModal } from './OpenshiftEditURLModal';
 import { OpenstackEditURLModal } from './OpenstackEditURLModal';
+import { OVAEditURLModal } from './OVAEditURLModal';
 import { OvirtEditURLModal } from './OvirtEditURLModal';
 import { VSphereEditURLModal } from './VSphereEditURLModal';
 
@@ -31,6 +32,8 @@ export const EditProviderURLModal: React.FC<EditProviderURLModalProps> = (props)
       return <OpenstackEditURLModal {...props} />;
     case 'vsphere':
       return <VSphereEditURLModal {...props} />;
+    case 'ova':
+      return <OVAEditURLModal {...props} />;
     default:
       return <></>;
   }

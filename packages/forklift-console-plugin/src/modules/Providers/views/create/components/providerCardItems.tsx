@@ -3,6 +3,7 @@ import { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Ga
 
 import openshiftImg from '../images/openshift.svg';
 import openstackImg from '../images/openstack.svg';
+import ovaImg from '../images/ova.svg';
 import redhatImg from '../images/redhat.svg';
 import vmImg from '../images/vm.svg';
 
@@ -42,6 +43,15 @@ const redhatLogo = (
   />
 );
 
+const ovaLogo = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={ovaImg}
+    alt="PatternFly logo"
+    width="27px"
+  />
+);
+
 export const providerCardItems: Record<string, SelectableGalleryItem> = {
   openshift: {
     title: 'OpenShift Virtualization',
@@ -62,5 +72,10 @@ export const providerCardItems: Record<string, SelectableGalleryItem> = {
     title: 'vSphere',
     logo: vmLogo,
     content: "vSphere is VMware's cloud computing virtualization platform.",
+  },
+  ova: {
+    title: 'Open Virtual Appliance (OVA)',
+    logo: ovaLogo,
+    content: 'OVA file is a virtual appliance used by virtualization applications.',
   },
 };

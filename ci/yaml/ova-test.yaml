@@ -1,0 +1,9 @@
+apiVersion: forklift.konveyor.io/v1beta1
+kind: Provider
+metadata:
+  name: ova-test
+  namespace: konveyor-forklift
+spec:
+  secret: {}
+  type: ova
+  url: 'https://fake.coml:5000/files/ova'
