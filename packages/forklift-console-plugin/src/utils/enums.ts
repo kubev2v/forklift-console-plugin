@@ -1,6 +1,6 @@
 import { K8sConditionStatus } from '@kubev2v/common';
-import { PlanState, ProviderType } from '@kubev2v/legacy/common/constants';
-import { PlanType } from '@kubev2v/legacy/queries/types';
+import { PlanState } from '@kubev2v/legacy/common/constants';
+import { ProviderType } from '@kubev2v/types';
 
 import { MappingStatus, ProviderStatus } from './types';
 
@@ -9,6 +9,7 @@ export const PROVIDERS: Record<ProviderType, string> = {
   ovirt: 'oVirt',
   openstack: 'OpenStack',
   openshift: 'KubeVirt',
+  ova: 'OVA',
 };
 
 export const CONDITIONS: Record<K8sConditionStatus, string> = {
@@ -30,7 +31,7 @@ export const PROVIDER_STATUS: Record<ProviderStatus, string> = {
   Unknown: 'Unknown',
 };
 
-export const PLAN_TYPE: Record<PlanType, string> = {
+export const PLAN_TYPE: Record<string, string> = {
   Warm: 'Warm',
   Cold: 'Cold',
 };
