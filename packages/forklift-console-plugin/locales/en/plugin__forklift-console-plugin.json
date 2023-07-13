@@ -260,7 +260,7 @@
   "This plan cannot be edited because it is running must gather.": "This plan cannot be edited because it is running must gather.",
   "This plan cannot be edited because the inventory data for its associated providers is not ready.": "This plan cannot be edited because the inventory data for its associated providers is not ready.",
   "This plan cannot be restarted because it is running must gather service": "This plan cannot be restarted because it is running must gather service",
-  "This provider will be created in the default namespace, if you wish to choose another namespace please cancel, and choose a namespace from the top bar.": "This provider will be created in the default namespace, if you wish to choose another namespace please cancel, and choose a namespace from the top bar.",
+  "This provider will be created in <1>{defaultNamespace}</1> namespace, if you wish to choose another namespace please cancel, and choose a namespace from the top bar.": "This provider will be created in <1>{defaultNamespace}</1> namespace, if you wish to choose another namespace please cancel, and choose a namespace from the top bar.",
   "This resource is managed by <2></2> and any modifications may be overwritten. Edit the managing resource to preserve changes.": "This resource is managed by <2></2> and any modifications may be overwritten. Edit the managing resource to preserve changes.",
   "To": "To",
   "To make changes to the plan, select Duplicate and edit the duplicate plan.": "To make changes to the plan, select Duplicate and edit the duplicate plan.",
