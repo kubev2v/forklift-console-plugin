@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -43,14 +44,22 @@ export const ProvidersCreatePage: React.FC<{
 
   const [providerNames] = useK8sWatchProviderNames({ namespace });
 
+  const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
+
   const initialState: ProvidersCreatePageState = {
     newSecret: {
       ...secretTemplate,
-      metadata: { ...secretTemplate.metadata, namespace: namespace || 'default' },
+      metadata: {
+        ...secretTemplate.metadata,
+        namespace: namespace || defaultNamespace,
+      },
     },
     newProvider: {
       ...providerTemplate,
-      metadata: { ...providerTemplate.metadata, namespace: namespace || 'default' },
+      metadata: {
+        ...providerTemplate.metadata,
+        namespace: namespace || defaultNamespace,
+      },
     },
     validationError: new Error('Missing provider name'),
     apiError: null,
@@ -250,9 +259,11 @@ export const ProvidersCreatePage: React.FC<{
             variant="warning"
             title={t('Namespace is not defined')}
           >
-            {t(
-              'This provider will be created in the default namespace, if you wish to choose another namespace please cancel, and choose a namespace from the top bar.',
-            )}
+            <Trans t={t} ns="plugin__forklift-console-plugin">
+              This provider will be created in <strong>{defaultNamespace}</strong> namespace, if you
+              wish to choose another namespace please cancel, and choose a namespace from the top
+              bar.
+            </Trans>
           </Alert>
         )}
 
