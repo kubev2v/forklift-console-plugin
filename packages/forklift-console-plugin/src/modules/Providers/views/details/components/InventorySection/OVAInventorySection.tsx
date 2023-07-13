@@ -7,7 +7,7 @@ import { DetailsItem } from '../../../../utils';
 
 import { InventoryProps } from './InventorySection';
 
-export const OpenstackInventorySection: React.FC<InventoryProps> = ({ data }) => {
+export const OVAInventorySection: React.FC<InventoryProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { provider, inventory } = data;
 
@@ -18,27 +18,7 @@ export const OpenstackInventorySection: React.FC<InventoryProps> = ({ data }) =>
   const inventoryItems = {
     vmCount: {
       title: t('Virtual machines'),
-      helpContent: t('Number of virtual machines in cluster'),
-    },
-    networkCount: {
-      title: t('Network interfaces'),
-      helpContent: t('Number of network interfaces in provider cluster'),
-    },
-    regionCount: {
-      title: t('Regions'),
-      helpContent: t('Number of regions in Openstack cluster'),
-    },
-    projectCount: {
-      title: t('Projects'),
-      helpContent: t('Number of projects in Openstack cluster'),
-    },
-    volumeCount: {
-      title: t('Volumes'),
-      helpContent: t('Number of storage volumes in cluster'),
-    },
-    volumeTypeCount: {
-      title: t('Volume Types'),
-      helpContent: t('Number of storage types in cluster'),
+      helpContent: t('Number of virtual machines in OVA files'),
     },
   };
 

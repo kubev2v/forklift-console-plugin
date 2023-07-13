@@ -12,7 +12,7 @@ export const VSphereInventorySection: React.FC<InventoryProps> = ({ data }) => {
   const { provider, inventory } = data;
 
   if (!provider || !inventory) {
-    return <span className="text-muted">{t('No credentials found.')}</span>;
+    return <span className="text-muted">{t('No inventory data available.')}</span>;
   }
 
   const inventoryItems = {

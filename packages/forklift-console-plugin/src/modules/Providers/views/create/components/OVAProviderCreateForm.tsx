@@ -1,5 +1,5 @@
 import React, { useCallback, useReducer } from 'react';
-import { Validation } from 'src/modules/Providers/utils';
+import { validateNFSMount, Validation } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Provider } from '@kubev2v/types';
@@ -46,7 +46,8 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
       const trimmedValue = value.trim();
 
       if (id === 'url') {
-        const validationState = 'success';
+        const validationState = validateNFSMount(trimmedValue) ? 'success' : 'error';
+
         dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
         onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
@@ -60,9 +61,11 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
       <FormGroup
         label={t('URL')}
         fieldId="url"
-        helperText={t('URL of the OVA provider')}
+        helperText={t('Please enter OVA server end point.')}
         validated={state.validation.url}
-        helperTextInvalid={t('Error: URL must be valid.')}
+        helperTextInvalid={t(
+          'Error: NFS mount end point should be in the form NFS_SERVER:EXPORTED_DIRECTORY, for example: 10.10.0.10:/ova.',
+        )}
       >
         <TextInput
           type="text"
