@@ -3,9 +3,10 @@ import {
   validateContainerImage,
   validateFingerprint,
   validateK8sName,
+  validateNFSMount,
   validatePublicCert,
   validateURL,
-} from '../../validators/common';
+} from '../common';
 
 describe('validator', () => {
   // Tests for validateContainerImage
@@ -145,6 +146,33 @@ BAYTAkFVMRMwEQYDVQQIDApTb21lLVN 0YXRlMSEwHwYDVQQKDBhJ=
 
     it('invalidates k8s names that end with a hyphen', () => {
       expect(validateK8sName('k8sname-')).toBe(false);
+    });
+  });
+
+  describe('validateNFSMount', () => {
+    it('should validate correct NFS paths', () => {
+      const validNFSPaths = [
+        '10.10.0.10:/backups',
+        '192.168.0.1:/exports',
+        'my-nfs-server.com:/exports',
+      ];
+
+      validNFSPaths.forEach((nfsPath) => {
+        expect(validateNFSMount(nfsPath)).toBe(true);
+      });
+    });
+
+    it('should not validate incorrect NFS paths', () => {
+      const invalidNFSPaths = [
+        '10.10.0.10:backups', // missing leading slash in path
+        'my-nfs-server:/exports', // missing .com or similar in the hostname
+        '10.10.0.10:', // missing path
+        'http://10.10.0.10:/backups', // protocol included in the path
+      ];
+
+      invalidNFSPaths.forEach((nfsPath) => {
+        expect(validateNFSMount(nfsPath)).toBe(false);
+      });
     });
   });
 });

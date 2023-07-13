@@ -22,6 +22,11 @@ const URL_REGEX = new RegExp(
   `^${PROTOCOL}((${IPV4})|(${HOSTNAME}))((${PORT})(${PATH})?(${QUERY_PARAMS})?)?$`,
 );
 
+// validate NFS mount NFS_SERVER:EXPORTED_DIRECTORY
+// example: 10.10.0.10:/backups
+const NFS_PATH = '(\\/[^ ]*)+';
+const NFS_REGEX = new RegExp(`^((${IPV4})|(${HOSTNAME})):(${NFS_PATH})$`);
+
 // validate CA certification.
 const CERTIFICATE_HEADER = '-----BEGIN CERTIFICATE-----';
 const CERTIFICATE_FOOTER = '-----END CERTIFICATE-----';
@@ -53,6 +58,10 @@ export function validateContainerImage(image: string) {
 
 export function validateURL(url: string) {
   return URL_REGEX.test(url);
+}
+
+export function validateNFSMount(nfsPath: string) {
+  return NFS_REGEX.test(nfsPath);
 }
 
 export function validatePublicCert(ca: string) {
