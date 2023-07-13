@@ -82,6 +82,5 @@ export function validateK8sToken(token: string) {
 
 export function validateNoSpaces(value: string) {
   // any string without spaces
-  // max length 128 chars
-  return /^[^\s]{1,128}$/.test(value);
+  return /^[^\s]+$/.test(value);
 }
