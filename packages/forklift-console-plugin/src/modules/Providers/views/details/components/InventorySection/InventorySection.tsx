@@ -3,6 +3,7 @@ import { ProviderData } from 'src/modules/Providers/utils';
 
 import { OpenshiftInventorySection } from './OpenshiftInventorySection';
 import { OpenstackInventorySection } from './OpenstackInventorySection';
+import { OVAInventorySection } from './OVAInventorySection';
 import { OvirtInventorySection } from './OvirtInventorySection';
 import { VSphereInventorySection } from './VSphereInventorySection';
 
@@ -18,6 +19,8 @@ export const InventorySection: React.FC<InventoryProps> = (props) => {
       return <OpenstackInventorySection {...props} />;
     case 'vsphere':
       return <VSphereInventorySection {...props} />;
+    case 'ova':
+      return <OVAInventorySection {...props} />;
     default:
       return <></>;
   }

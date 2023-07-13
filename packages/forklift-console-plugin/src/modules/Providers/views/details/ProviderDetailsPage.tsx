@@ -54,9 +54,12 @@ export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, 
   const loadError = providerLoadError;
   const type = provider?.spec?.type;
 
-  const providerHasSecret = provider?.spec?.secret?.name;
+  const providerHasSecret =
+    provider?.spec?.secret?.name && ['openshift', 'openstack', 'ovirt', 'vsphere'].includes(type);
   const providerHasHosts = ['vsphere'].includes(type);
-  const ProviderHasVirtualMachines = ['openshift', 'openstack', 'ovirt', 'vsphere'].includes(type);
+  const ProviderHasVirtualMachines = ['openshift', 'openstack', 'ovirt', 'vsphere', 'ova'].includes(
+    type,
+  );
   const providerHasNetworks = ['openshift'].includes(type);
 
   const pages = [

@@ -73,29 +73,6 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
   return (
     <>
       <div className="forklift-create-provider-edit-section">
-        <Form isWidthLimited className="forklift-section-provider-edit">
-          <FormGroup
-            label={t('Provider Resource Name')}
-            isRequired
-            fieldId="name"
-            helperText={t('Unique Kubernetes resource name identifier')}
-            validated={state.validation.name}
-            helperTextInvalid={t(
-              'Error: Name is required and must be a unique and valid Kubernetes name.',
-            )}
-          >
-            <TextInput
-              isRequired
-              type="text"
-              id="url"
-              name="url"
-              value={newProvider.metadata.name} // Use the appropriate prop value here
-              validated={state.validation.name}
-              onChange={(value) => handleNameChange(value)} // Call the custom handler method
-            />
-          </FormGroup>
-        </Form>
-
         <Form isWidthLimited className="forklift-section-secret-edit">
           <FormGroup label={t('Select provider type')} isRequired fieldId="type">
             {newProvider?.spec?.type ? (
@@ -117,6 +94,29 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
                 onChange={handleTypeChange}
               />
             )}
+          </FormGroup>
+        </Form>
+
+        <Form isWidthLimited className="forklift-create-provider-edit-section">
+          <FormGroup
+            label={t('Provider Resource Name')}
+            isRequired
+            fieldId="name"
+            helperText={t('Unique Kubernetes resource name identifier')}
+            validated={state.validation.name}
+            helperTextInvalid={t(
+              'Error: Name is required and must be a unique and valid Kubernetes name.',
+            )}
+          >
+            <TextInput
+              isRequired
+              type="text"
+              id="url"
+              name="url"
+              value={newProvider.metadata.name} // Use the appropriate prop value here
+              validated={state.validation.name}
+              onChange={(value) => handleNameChange(value)} // Call the custom handler method
+            />
           </FormGroup>
         </Form>
       </div>
