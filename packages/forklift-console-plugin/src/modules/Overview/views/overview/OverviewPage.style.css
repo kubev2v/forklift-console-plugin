@@ -1,0 +1,17 @@
+.forklift-page-headings-alerts {
+    padding-left: 0;
+}
+
+.forklift-page-section {
+    border-top: 1px solid var(--pf-global--BorderColor--100);
+}
+
+.forklift-welcome-text {
+    padding-bottom: var(--pf-global--spacer--sm);
+}
+
+.forklift-welcome__icon {
+    max-width: 10rem;
+    max-height: 10rem;
+    padding-right:  var(--pf-global--spacer--lg);
+  }

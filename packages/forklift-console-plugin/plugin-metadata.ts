@@ -2,6 +2,7 @@ import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sd
 
 import { exposedModules as mockExtensionModules } from './src/__mock-console-extension/dynamic-plugin';
 import { exposedModules as networkMapModules } from './src/modules/NetworkMaps/dynamic-plugin';
+import { exposedModules as overviewModules } from './src/modules/Overview/dynamic-plugin';
 import { exposedModules as planModules } from './src/modules/Plans/dynamic-plugin';
 import { exposedModules as providerModules } from './src/modules/Providers/dynamic-plugin';
 import { exposedModules as storageMapModules } from './src/modules/StorageMaps/dynamic-plugin';
@@ -15,6 +16,7 @@ const pluginMetadata: ConsolePluginMetadata = {
     'Forklift is a suite of migration tools that facilitate the migration of VM workloads to KubeVirt.',
   exposedModules: {
     ...mockExtensionModules,
+    ...overviewModules,
     ...providerModules,
     ...planModules,
     ...networkMapModules,
