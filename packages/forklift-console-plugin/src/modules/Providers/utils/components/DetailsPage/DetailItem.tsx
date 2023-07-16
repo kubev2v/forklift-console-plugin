@@ -13,6 +13,7 @@ import {
   Flex,
   FlexItem,
   Popover,
+  Truncate,
 } from '@patternfly/react-core';
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
@@ -77,7 +78,7 @@ export const DescriptionTitleWithHelp: React.FC<{
             <FlexItem>
               {moreInfoLabel}{' '}
               <ExternalLink href={moreInfoLink} isInline hideIcon>
-                {moreInfoLink}
+                <Truncate content={moreInfoLink} />
               </ExternalLink>
               .
             </FlexItem>

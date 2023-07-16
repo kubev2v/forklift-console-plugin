@@ -20,7 +20,7 @@ export const extensions: EncodedExtension[] = [
     type: 'console.navigation/resource-ns',
     properties: {
       id: 'providers-ng',
-      insertAfter: 'importSeparator',
+      insertAfter: ['forkliftSettings', 'importSeparator'],
       perspective: 'admin',
       section: 'migration',
       // t('plugin__forklift-console-plugin~Providers for virtualization')
