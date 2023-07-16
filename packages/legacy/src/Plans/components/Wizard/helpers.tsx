@@ -370,8 +370,8 @@ export const findNodesMatchingSelectedVMs = (
   Array.from(
     new Set(
       selectedVMs
-        .map((vm) => findMatchingSelectableNode(indexedTree, vm.selfLink, isNodeSelectable))
-        .filter((node) => !!node) as InventoryTree[]
+        ?.map((vm) => findMatchingSelectableNode(indexedTree, vm.selfLink, isNodeSelectable))
+        ?.filter((node) => !!node) as InventoryTree[]
     )
   );
 
@@ -385,39 +385,39 @@ export const filterSourcesBySelectedVMs = (
 ): MappingSource[] => {
   const sourceIds: (string | undefined)[] = Array.from(
     new Set(
-      selectedVMs.flatMap((vm) => {
+      selectedVMs?.flatMap((vm) => {
         if (mappingType === MappingType.Network) {
           if (sourceProviderType === 'vsphere') {
-            return (vm as IVMwareVM).networks.map((network) => network.id);
+            return (vm as IVMwareVM).networks?.map((network) => network.id);
           }
           if (sourceProviderType === 'openstack') {
             return Object.keys((vm as IOpenStackVM)?.addresses || {});
           }
           if (sourceProviderType === 'ovirt') {
-            const vmNicProfiles = (vm as IRHVVM).nics.map((nic) =>
+            const vmNicProfiles = (vm as IRHVVM).nics?.map((nic) =>
               nicProfiles.find((nicProfile) => nicProfile.id === nic.profile)
             );
-            const networkIds = vmNicProfiles.map((nicProfile) => nicProfile?.network);
+            const networkIds = vmNicProfiles?.map((nicProfile) => nicProfile?.network);
             return networkIds;
           }
         }
 
         if (mappingType === MappingType.Storage) {
           if (sourceProviderType === 'vsphere') {
-            return (vm as IVMwareVM).disks.map((disk) => disk.datastore.id);
+            return (vm as IVMwareVM).disks?.map((disk) => disk.datastore.id);
           }
           if (sourceProviderType === 'ovirt') {
-            const vmDisks = (vm as IRHVVM).diskAttachments.map((da) =>
+            const vmDisks = (vm as IRHVVM).diskAttachments?.map((da) =>
               disks.find((disk) => disk.id === da.disk)
             );
-            const storageDomainIds = vmDisks.map((disk) => disk?.storageDomain);
+            const storageDomainIds = vmDisks?.map((disk) => disk?.storageDomain);
             return storageDomainIds;
           }
           if (sourceProviderType === 'openstack') {
-            const vmDisks = (vm as IOpenStackVM).attachedVolumes.map((av) =>
+            const vmDisks = (vm as IOpenStackVM).attachedVolumes?.map((av) =>
               disks.find((disk) => disk.id === av.ID)
             );
-            const volumeTypeIds = vmDisks.map((disk) => disk?.volumeType);
+            const volumeTypeIds = vmDisks?.map((disk) => disk?.volumeType);
             return volumeTypeIds;
           }
         }
