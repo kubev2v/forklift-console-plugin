@@ -70,6 +70,8 @@ const useMappingFormState = (mappingsQuery: UseQueryResult<IKubeList<Mapping>>) 
   const newMappingNameSchema = getMappingNameSchema(mappingsQuery, null).label('Name');
   const isCreateMappingSelected = useFormField(false, yup.boolean().required());
   const selectedExistingMapping = useFormField<Mapping | null>(null, yup.mixed<Mapping | null>());
+  const isPrefilled = useFormField(false, yup.boolean());
+
   return useFormState({
     isCreateMappingSelected,
     selectedExistingMapping,
@@ -80,10 +82,10 @@ const useMappingFormState = (mappingsQuery: UseQueryResult<IKubeList<Mapping>>) 
       '',
       isSaveNewMapping.value ? newMappingNameSchema.required() : yup.string()
     ),
-    isPrefilled: useFormField(false, yup.boolean()),
+    isPrefilled,
     newOrExistingSelected: useFormField(
       false,
-      isCreateMappingSelected.value || selectedExistingMapping.value
+      isCreateMappingSelected.value || selectedExistingMapping.value || isPrefilled.value
         ? yup.boolean()
         : yup.boolean().required().oneOf([true])
     ),
