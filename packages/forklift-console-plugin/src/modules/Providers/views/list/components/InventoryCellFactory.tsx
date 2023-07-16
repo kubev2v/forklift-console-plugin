@@ -4,6 +4,7 @@ import { TableEmptyCell, TableIconCell } from 'src/modules/Providers/utils';
 import { getResourceFieldValue } from '@kubev2v/common';
 
 import { CellProps } from './CellProps';
+import { OpenshiftNetworkCell } from './OpenshiftNetworkCell';
 
 /**
  * Factory function for creating InventoryCell components.
@@ -19,11 +20,19 @@ export const InventoryCellFactory: CellFactory = ({ icon }) => {
   // eslint-disable-next-line react/display-name
   return ({ data, fieldId, fields }: CellProps) => {
     const { provider, inventory } = data;
+    const type = provider?.spec.type;
+
     const value = getResourceFieldValue({ ...provider, inventory }, fieldId, fields);
 
     if (value === undefined) {
       return <TableEmptyCell />;
     }
+
+    // Special cases
+    if (type === 'openshift' && fieldId === 'networkCount') {
+      return <OpenshiftNetworkCell data={data} fieldId={fieldId} fields={fields} />;
+    }
+
     return <TableIconCell icon={icon}>{value}</TableIconCell>;
   };
 };

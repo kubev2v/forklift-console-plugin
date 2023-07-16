@@ -1,11 +1,16 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useProviderInventory } from 'src/modules/Providers/hooks';
+import {
+  EditProviderDefaultTransferNetwork,
+  ModalHOC,
+  useModal,
+} from 'src/modules/Providers/modals';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { CnoConfig, OpenShiftNetworkAttachmentDefinition } from '@kubev2v/types';
-import { Label, PageSection, Title } from '@patternfly/react-core';
+import { Button, Label, PageSection, Title } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 interface ProviderNetworksProps extends RouteComponentProps {
@@ -16,8 +21,10 @@ interface ProviderNetworksProps extends RouteComponentProps {
   loadError?: unknown;
 }
 
-export const ProviderNetworks: React.FC<ProviderNetworksProps> = ({ obj }) => {
+const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
+  const { showModal } = useModal();
+
   const { provider } = obj;
 
   const { inventory: networks } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
@@ -49,8 +56,17 @@ export const ProviderNetworks: React.FC<ProviderNetworksProps> = ({ obj }) => {
         <Title headingLevel="h2" className="co-section-heading">
           {t('NetworkAttachmentDefinitions')}
         </Title>
-      </PageSection>
-      <PageSection>
+
+        <div className="forklift-page-provider-networks-button">
+          <Button
+            key="editTransferNetwork"
+            variant="secondary"
+            onClick={() => showModal(<EditProviderDefaultTransferNetwork resource={provider} />)}
+          >
+            {t('Set default transfer network')}
+          </Button>
+        </div>
+
         <TableComposable aria-label="Expandable table" variant="compact">
           <Thead>
             <Tr>
@@ -92,3 +108,9 @@ export const ProviderNetworks: React.FC<ProviderNetworksProps> = ({ obj }) => {
     </div>
   );
 };
+
+export const ProviderNetworks: React.FC<ProviderNetworksProps> = (props) => (
+  <ModalHOC>
+    <ProviderNetworks_ {...props} />
+  </ModalHOC>
+);
