@@ -37,7 +37,7 @@ export const ProviderVirtualMachines: React.FC<ProviderVirtualMachinesProps> = (
     <div>
       <PageSection>
         <Title headingLevel="h2" className="co-section-heading">
-          {t('Virtual Machined')}
+          {t('Virtual Machines')}
         </Title>
       </PageSection>
       <PageSection>
