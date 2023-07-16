@@ -2,6 +2,7 @@
 export * from './CellProps';
 export * from './InventoryCellFactory';
 export * from './NamespaceCell';
+export * from './OpenshiftNetworkCell';
 export * from './ProviderLinkCell';
 export * from './StatusCell';
 export * from './TypeCell';
