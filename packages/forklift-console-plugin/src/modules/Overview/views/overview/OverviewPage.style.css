@@ -11,7 +11,23 @@
 }
 
 .forklift-welcome__icon {
-    max-width: 10rem;
-    max-height: 10rem;
+    max-width: 14rem;
+    max-height: 14rem;
     padding-right:  var(--pf-global--spacer--lg);
+  }
+
+  .forklift-status-migration-running {
+    color: var(--pf-global--info-color--100);
+  }
+
+  .forklift-status-migration-failed {
+    color: var(--pf-global--danger-color--100);
+  }
+
+  .forklift-status-migration-succeeded {
+    color: var(--pf-global--success-color--100);
+  }
+
+  .forklift-status-migration {
+    padding-right: var(--pf-global--spacer--xl);
   }

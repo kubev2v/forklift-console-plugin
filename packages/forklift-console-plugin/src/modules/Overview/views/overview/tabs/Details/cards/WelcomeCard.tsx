@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Trans } from 'react-i18next';
-import automationIcon from 'src/components/empty-states/images/automation.svg';
+import automationIcon from 'src/modules/Overview/images/automation.svg';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';

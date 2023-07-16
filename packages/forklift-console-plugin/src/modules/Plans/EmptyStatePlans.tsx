@@ -2,7 +2,7 @@ import React from 'react';
 import { Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
-import automationIcon from 'src/components/empty-states/images/automation.svg';
+import digitalTransformation from 'src/modules/Overview/images/digitalTransormation.svg';
 import { HELP_LINK_HREF } from 'src/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -14,7 +14,9 @@ import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
 import { useHasSufficientProviders } from './data';
 
-const AutomationIcon = () => <img src={automationIcon} className="forklift-empty-state__icon" />;
+const AutomationIcon = () => (
+  <img src={digitalTransformation} className="forklift-empty-state__icon" />
+);
 
 const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();

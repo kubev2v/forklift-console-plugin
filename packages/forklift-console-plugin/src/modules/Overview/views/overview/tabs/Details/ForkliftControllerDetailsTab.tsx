@@ -1,7 +1,6 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useMigrationCounts } from 'src/modules/Overview/hooks';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { Grid, GridItem } from '@patternfly/react-core';
@@ -19,7 +18,6 @@ interface ForkliftControllerDetailsTabProps extends RouteComponentProps {
 export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTabProps> = ({
   obj,
 }) => {
-  const { t } = useForkliftTranslation();
   const { count, vmCount } = useMigrationCounts();
 
   return (
@@ -34,11 +32,7 @@ export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTab
         </GridItem>
 
         <GridItem span={8}>
-          <MigrationsCard obj={obj} count={count} title={t('Migration plans')} />
-        </GridItem>
-
-        <GridItem span={8}>
-          <MigrationsCard obj={obj} count={vmCount} title={t('Virtual Machine Migrations')} />
+          <MigrationsCard obj={obj} count={count} vmCount={vmCount} />
         </GridItem>
 
         <GridItem span={8}>
