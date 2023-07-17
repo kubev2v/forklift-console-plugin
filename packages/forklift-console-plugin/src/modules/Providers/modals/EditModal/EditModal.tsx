@@ -21,6 +21,7 @@ import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import { EditModalProps, ValidationResults } from './types';
 
 import './EditModal.style.css';
+import { useToggle } from '../../hooks';
 
 /**
  * `EditModal` is a React Functional Component that allows editing a Kubernetes resource property inside a modal.
@@ -62,6 +63,8 @@ export const EditModal: React.FC<EditModalProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
+
+  const [isLoading, toggleIsLoading] = useToggle();
   const history = useHistory();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
   const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath) as string);
@@ -92,6 +95,8 @@ export const EditModal: React.FC<EditModalProps> = ({
    * Handles save action.
    */
   const handleSave = useCallback(async () => {
+    toggleIsLoading();
+
     try {
       await onConfirmHook({ resource, jsonPath, model, newValue: value });
 
@@ -101,6 +106,8 @@ export const EditModal: React.FC<EditModalProps> = ({
 
       toggleModal();
     } catch (err) {
+      toggleIsLoading();
+
       setAlertMessage(
         <AlertMessageForModals title={t('Error')} message={err.message || err.toString()} />,
       );
@@ -145,6 +152,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       variant="primary"
       onClick={handleSave}
       isDisabled={validation.validated === 'error'}
+      isLoading={isLoading}
     >
       {t('Save')}
     </Button>,
