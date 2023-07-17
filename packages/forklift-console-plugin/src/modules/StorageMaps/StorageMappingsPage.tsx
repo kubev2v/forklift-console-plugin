@@ -11,7 +11,6 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { FreetextFilter } from '@kubev2v/common';
 import { ValueMatcher } from '@kubev2v/common';
-import { LoadingDots } from '@kubev2v/common';
 import { loadUserSettings } from '@kubev2v/common';
 import { ResourceFieldFactory } from '@kubev2v/common';
 import { MappingType } from '@kubev2v/legacy/queries/types';
@@ -67,18 +66,6 @@ const Page = ({
 }: Partial<StandardPageProps<FlatStorageMapping>>) => {
   const { t } = useForkliftTranslation();
 
-  const [data, isLoadSuccess, isLoadError] = dataSource;
-  const isLoading = !isLoadSuccess && !isLoadError;
-  const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
-
-  if (isLoading) {
-    return <LoadingDots />;
-  }
-
-  if (loadedDataIsEmpty) {
-    return <EmptyStateStorageMaps namespace={namespace} />;
-  }
-
   return (
     <StandardPage<FlatStorageMapping>
       addButton={
@@ -97,6 +84,7 @@ const Page = ({
       userSettings={userSettings}
       extraSupportedFilters={{ targetStorage: FreetextFilter }}
       extraSupportedMatchers={[targetStorageMatcher]}
+      customNoResultsFound={<EmptyStateStorageMaps namespace={namespace} />}
     />
   );
 };

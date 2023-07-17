@@ -11,8 +11,8 @@
 }
 
 .forklift-welcome__icon {
-    max-width: 14rem;
-    max-height: 14rem;
+    max-width: 18rem;
+    max-height: 18rem;
     padding-right:  var(--pf-global--spacer--lg);
   }
 

@@ -1,6 +1,9 @@
 import React, { ComponentType, ReactNode } from 'react';
+import { Trans } from 'react-i18next';
+import { HELP_LINK_HREF } from 'src/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { ExternalLink } from '@kubev2v/common';
 import {
   Bullseye,
   EmptyState,
@@ -41,8 +44,15 @@ export const ProvidersEmptyState: React.FC<ProvidersEmptyStateProps> = ({
                 <Title headingLevel="h4" size="lg">
                   {title}
                 </Title>
-
-                <Text>{t('Migrating virtualization workloads is a multi-step process:')}</Text>
+                <Text>
+                  <Trans>
+                    Migrating virtualization workloads is a multi-step process.{' '}
+                    <ExternalLink href={HELP_LINK_HREF} isInline>
+                      Learn more
+                    </ExternalLink>
+                    .
+                  </Trans>
+                </Text>
                 <TextList component="ol">
                   <TextListItem>
                     {t('Add source and target providers for the migration.')}

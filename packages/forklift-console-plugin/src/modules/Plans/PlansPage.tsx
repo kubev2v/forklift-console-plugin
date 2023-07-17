@@ -6,7 +6,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { EnumToTuple } from '@kubev2v/common';
-import { LoadingDots } from '@kubev2v/common';
 import { loadUserSettings, UserSettings } from '@kubev2v/common';
 import { ResourceFieldFactory } from '@kubev2v/common';
 import { MustGatherModal } from '@kubev2v/legacy/common/components/MustGatherModal';
@@ -134,18 +133,6 @@ const Page = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const [data, isLoadSuccess, isLoadError] = dataSource;
-  const isLoading = !isLoadSuccess && !isLoadError;
-  const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
-
-  if (isLoading) {
-    return <LoadingDots />;
-  }
-
-  if (loadedDataIsEmpty) {
-    return <EmptyStatePlans namespace={namespace} />;
-  }
-
   return (
     <>
       <StandardPage<FlatPlan>
@@ -156,6 +143,7 @@ const Page = ({
         namespace={namespace}
         title={title}
         userSettings={userSettings}
+        customNoResultsFound={<EmptyStatePlans namespace={namespace} />}
       />
       <MustGatherModal />
     </>
