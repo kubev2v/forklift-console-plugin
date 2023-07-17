@@ -1,6 +1,7 @@
 import React from 'react';
 import { EditProviderURLModal, useModal } from 'src/modules/Providers/modals';
 import { HELP_LINK_HREF } from 'src/utils/constants';
+import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
@@ -15,6 +16,7 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { showModal } = useModal();
 
   const { provider } = data;
+  const type = PROVIDERS[provider?.spec?.type] || provider?.spec?.type;
 
   return (
     <DescriptionList
@@ -26,7 +28,7 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
         title={t('Type')}
         content={
           <>
-            {provider?.spec?.type}{' '}
+            {type}{' '}
             {!provider?.spec?.url && (
               <Label isCompact color={'grey'} className="forklift-table__flex-cell-label">
                 {t('Host cluster')}

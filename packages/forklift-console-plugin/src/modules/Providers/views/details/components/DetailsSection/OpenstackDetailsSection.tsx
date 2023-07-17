@@ -1,6 +1,7 @@
 import React from 'react';
 import { EditProviderURLModal, useModal } from 'src/modules/Providers/modals';
 import { HELP_LINK_HREF } from 'src/utils/constants';
+import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
@@ -15,6 +16,7 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
   const { showModal } = useModal();
 
   const { provider } = data;
+  const type = PROVIDERS[provider?.spec?.type] || provider?.spec?.type;
 
   return (
     <DescriptionList
@@ -24,7 +26,7 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
     >
       <DetailsItem
         title={t('Type')}
-        content={provider?.spec?.type}
+        content={type}
         moreInfoLink={HELP_LINK_HREF}
         helpContent={
           <Text>{t(`Allowed values are openshift, ovirt, vsphere, and openstack.`)}</Text>
