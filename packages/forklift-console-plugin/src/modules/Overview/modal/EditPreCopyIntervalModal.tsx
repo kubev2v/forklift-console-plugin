@@ -10,10 +10,10 @@ import SettingsSelectInput from './SettingsSelectInput';
 
 // Define the options
 const options = [
-  { key: 5, name: 5, description: 'Extra small precopy interval' },
-  { key: 30, name: 30, description: 'Small precopy interval' },
-  { key: 60, name: 60, description: 'Large precopy interval' },
-  { key: 120, name: 120, description: 'Extra large precopy interval' },
+  { key: 5, name: '5min', description: 'Extra small precopy interval' },
+  { key: 30, name: '30min', description: 'Small precopy interval' },
+  { key: 60, name: '60min', description: 'Large precopy interval' },
+  { key: 120, name: '120min', description: 'Extra large precopy interval' },
 ];
 
 /**

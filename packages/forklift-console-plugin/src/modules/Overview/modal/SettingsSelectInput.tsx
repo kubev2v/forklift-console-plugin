@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import { useToggle } from 'src/modules/Providers/hooks';
 
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 
@@ -9,7 +10,7 @@ import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
  * @property {string} description
  */
 interface Option {
-  key: number;
+  key: number | string;
   name: number | string;
   description: string;
 }
@@ -22,7 +23,7 @@ interface Option {
  */
 interface SettingsSelectInputProps {
   value: number | string;
-  onChange: (value: string) => void;
+  onChange: (value: number | string) => void;
   options: Option[];
 }
 
@@ -37,36 +38,56 @@ export const SettingsSelectInput: React.FC<SettingsSelectInputProps> = ({
   onChange,
   options,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  // State to keep track of the dropdown menu open/closed state
+  const [isOpen, toggleIsOpen] = useToggle();
 
-  /** Toggles the select input visibility */
-  const onToggle = useCallback((isOpen: boolean) => {
-    setIsOpen(isOpen);
-  }, []);
+  // Build a dictionary mapping option names to keys for efficient lookup
+  // This dictionary is re-calculated every time the options prop changes
+  const nameToKey = useMemo(() => {
+    return options.reduce((dict, option) => {
+      dict[option.name] = option.key;
+      return dict;
+    }, {});
+  }, [options]);
 
-  /** Updates the current selected value */
+  const keyToName = useMemo(() => {
+    return options.reduce((dict, option) => {
+      dict[option.key] = option.name;
+      return dict;
+    }, {});
+  }, [options]);
+
+  const valueLabel = keyToName?.[value] || value;
+
+  // Callback function to handle selection in the dropdown menu
   const onSelect = useCallback(
     (event, selection) => {
-      onChange(selection);
-      setIsOpen(!isOpen);
+      // Use the dictionary to find the key corresponding to the selected name
+      const key = nameToKey[selection] || selection;
+      onChange(key);
+
+      // Toggle the dropdown menu open state
+      toggleIsOpen();
     },
-    [isOpen, onChange],
+    [isOpen, nameToKey, onChange], // Dependencies for useCallback
   );
 
+  // Render the Select component with dynamically created SelectOption children
   return (
     <Select
       variant={SelectVariant.single}
       placeholderText="Select an option"
       aria-label="Select Input with descriptions"
-      value={value}
-      onToggle={onToggle}
+      value={valueLabel}
+      onToggle={toggleIsOpen}
       onSelect={onSelect}
-      selections={value}
+      selections={valueLabel}
       isOpen={isOpen}
       aria-labelledby="exampleSelect"
       menuAppendTo={() => document.body}
     >
       {options.map((option) => (
+        // Create a SelectOption for each option
         <SelectOption key={option.key} value={option.name} description={option.description} />
       ))}
     </Select>

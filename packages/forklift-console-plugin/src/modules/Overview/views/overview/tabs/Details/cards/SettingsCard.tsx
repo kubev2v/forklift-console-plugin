@@ -24,6 +24,11 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
+  const mustGatherAPICleanupMaxAge =
+    obj?.spec?.['must_gather_api_cleanup_max_age'] === -1
+      ? 'Disabled'
+      : obj?.spec?.['must_gather_api_cleanup_max_age'];
+
   return (
     <Card>
       <CardTitle>{t('Settings')}</CardTitle>
@@ -86,11 +91,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
 
           <DetailsItem
             title={'Must gather cleanup after (hours)'}
-            content={
-              obj?.spec?.['must_gather_api_cleanup_max_age'] || (
-                <span className="text-muted">{'Never'}</span>
-              )
-            }
+            content={mustGatherAPICleanupMaxAge || <span className="text-muted">{'Disabled'}</span>}
             moreInfoLink={
               'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
             }
