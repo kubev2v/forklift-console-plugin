@@ -1,9 +1,10 @@
 import React from 'react';
+import { InventoryNotReachable } from 'src/modules/Providers/views/list/components';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
-import { Alert, PageSection, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core';
 
 import { useProvidersInventoryIsLive } from '../../hooks';
 import { useK8sWatchForkliftController } from '../../hooks/useK8sWatchProviderNames';
@@ -51,18 +52,6 @@ export const OverviewPage: React.FC<OverviewPageProps> = () => {
     },
   ];
 
-  const inventoryNotReachable = (
-    <Alert title={t('Inventory')} variant="warning">
-      <TextContent>
-        <Text component={TextVariants.p}>
-          {t(
-            'Inventory server is not reachable. To troubleshoot, check the Forklift controller pod logs.',
-          )}
-        </Text>
-      </TextContent>
-    </Alert>
-  );
-
   return (
     <>
       <HeaderTitle
@@ -70,7 +59,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = () => {
         status={<Status status={phaseObj.phase} />}
       />
 
-      {inventoryLivelinessError && <PageSection>{[inventoryNotReachable]}</PageSection>}
+      {inventoryLivelinessError && <PageSection>{[InventoryNotReachable]}</PageSection>}
 
       <HorizontalNav pages={pages.filter((p) => p)} />
     </>
