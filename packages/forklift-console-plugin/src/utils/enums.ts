@@ -10,7 +10,7 @@ export const PROVIDERS: Record<ProviderType, string> =
         vsphere: 'VMware',
         ovirt: 'RHV',
         openstack: 'OpenStack',
-        openshift: 'Openshift',
+        openshift: 'OpenShift',
         ova: 'OVA',
       }
     : {

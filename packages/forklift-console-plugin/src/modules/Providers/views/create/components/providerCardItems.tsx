@@ -56,7 +56,7 @@ export const providerCardItems: Record<string, SelectableGalleryItem> = {
   openshift: {
     title: 'OpenShift Virtualization',
     logo: openshiftLogo,
-    content: 'OpenShift Virtualization run and manage virtual machine in Openshift.',
+    content: 'OpenShift Virtualization run and manage virtual machine in OpenShift.',
   },
   openstack: {
     title: 'OpenStack',
