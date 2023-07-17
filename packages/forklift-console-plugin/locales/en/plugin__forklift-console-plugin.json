@@ -221,7 +221,7 @@
   "Please enter the limit for memory usage by the controller in Mi, if empty default value will be used.": "Please enter the limit for memory usage by the controller in Mi, if empty default value will be used.",
   "Please enter the maximum age in hours for must gather cleanup, if empty default value will be used.": "Please enter the maximum age in hours for must gather cleanup, if empty default value will be used.",
   "Please enter the maximum number of concurrent VM migrations, if empty default value will be used.": "Please enter the maximum number of concurrent VM migrations, if empty default value will be used.",
-  "Please enter the URL for oVirt engine server.": "Please enter the URL for oVirt engine server.",
+  "Please enter the URL for RHV engine server.": "Please enter the URL for RHV engine server.",
   "Please enter URL for OpenStack services REST APIs.": "Please enter URL for OpenStack services REST APIs.",
   "Please enter URL for the kubernetes API server, if empty URL default to this cluster.": "Please enter URL for the kubernetes API server, if empty URL default to this cluster.",
   "Please enter URL for vSphere REST APIs server.": "Please enter URL for vSphere REST APIs server.",

@@ -4,13 +4,22 @@ import { ProviderType } from '@kubev2v/types';
 
 import { MappingStatus, ProviderStatus } from './types';
 
-export const PROVIDERS: Record<ProviderType, string> = {
-  vsphere: 'VMware',
-  ovirt: 'oVirt',
-  openstack: 'OpenStack',
-  openshift: 'KubeVirt',
-  ova: 'OVA',
-};
+export const PROVIDERS: Record<ProviderType, string> =
+  process.env.BRAND_TYPE === 'RedHat'
+    ? {
+        vsphere: 'VMware',
+        ovirt: 'RHV',
+        openstack: 'OpenStack',
+        openshift: 'Openshift',
+        ova: 'OVA',
+      }
+    : {
+        vsphere: 'VMware',
+        ovirt: 'oVirt',
+        openstack: 'OpenStack',
+        openshift: 'KubeVirt',
+        ova: 'OVA',
+      };
 
 export const CONDITIONS: Record<K8sConditionStatus, string> = {
   True: 'True',

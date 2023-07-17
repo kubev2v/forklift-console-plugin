@@ -13,6 +13,7 @@ import {
 } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
+import { useToggle } from '../../hooks';
 import { getValueByJsonPath } from '../../utils';
 import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
 import { useModal } from '../ModalHOC';
@@ -21,7 +22,6 @@ import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import { EditModalProps, ValidationResults } from './types';
 
 import './EditModal.style.css';
-import { useToggle } from '../../hooks';
 
 /**
  * `EditModal` is a React Functional Component that allows editing a Kubernetes resource property inside a modal.
