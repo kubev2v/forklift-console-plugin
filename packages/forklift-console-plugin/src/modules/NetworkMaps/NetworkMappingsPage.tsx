@@ -10,7 +10,6 @@ import { ResourceConsolePageProps } from 'src/utils/types';
 
 import { FreetextFilter } from '@kubev2v/common';
 import { ValueMatcher } from '@kubev2v/common';
-import { LoadingDots } from '@kubev2v/common';
 import { loadUserSettings, UserSettings } from '@kubev2v/common';
 import { withQueryClient } from '@kubev2v/common';
 import { ResourceFieldFactory } from '@kubev2v/common';
@@ -75,18 +74,6 @@ const Page = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const [data, isLoadSuccess, isLoadError] = dataSource;
-  const isLoading = !isLoadSuccess && !isLoadError;
-  const loadedDataIsEmpty = isLoadSuccess && !isLoadError && (data?.length ?? 0) === 0;
-
-  if (isLoading) {
-    return <LoadingDots />;
-  }
-
-  if (loadedDataIsEmpty) {
-    return <EmptyStateNetworkMaps namespace={namespace} />;
-  }
-
   return (
     <StandardPage<FlatNetworkMapping>
       addButton={<AddNetworkMappingButton namespace={namespace} />}
@@ -101,6 +88,7 @@ const Page = ({
         targetNetwork: FreetextFilter,
       }}
       extraSupportedMatchers={[targetNetworkMatcher]}
+      customNoResultsFound={<EmptyStateNetworkMaps namespace={namespace} />}
     />
   );
 };
