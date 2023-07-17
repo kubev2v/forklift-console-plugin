@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router';
 import StandardPage from 'src/components/page/StandardPage';
-import cloudNative from 'src/modules/Providers/images/cloudNative.svg';
+import modernizeMigration from 'src/modules/Providers/images/modernizeMigration.svg';
 import {
   getResourceUrl,
   ProviderData,
@@ -20,12 +20,12 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Alert, Button, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 import { useGetDeleteAndEditAccessReview, useProvidersInventoryList } from '../../hooks';
 import { findInventoryByID } from '../../utils';
 
-import { ProvidersEmptyState } from './components';
+import { InventoryNotReachable } from './components/InventoryNotReachable';
+import { ProvidersAddButton, ProvidersEmptyState } from './components';
 import ProviderRow from './ProviderRow';
 
 import './ProvidersListPage.style.css';
@@ -182,44 +182,13 @@ const ProvidersListPage: React.FC<{
   });
 
   const AddButton = (
-    <Button
-      data-testid="add-provider-button"
-      variant="primary"
+    <ProvidersAddButton
       onClick={() => history.push(`${providersListURL}/~new`)}
-    >
-      {t('Create Provider')}
-    </Button>
-  );
-
-  const CloudNative = () => <img src={cloudNative} className="forklift-empty-state__icon" />;
-
-  const EmptyState = (
-    <ProvidersEmptyState
-      AddButton={AddButton}
-      title={
-        namespace ? (
-          <Trans t={t} ns="plugin__forklift-console-plugin">
-            No Providers found in namespace <strong>{namespace}</strong>.
-          </Trans>
-        ) : (
-          t('No providers found')
-        )
-      }
-      Icon={CloudNative}
+      buttonText={t('Create Provider')}
     />
   );
 
-  const inventoryNotReachable = (
-    <Alert title={t('Inventory')} variant="warning">
-      <TextContent>
-        <Text component={TextVariants.p}>
-          {t(
-            'Inventory server is not reachable. To troubleshoot, check the Forklift controller pod logs.',
-          )}
-        </Text>
-      </TextContent>
-    </Alert>
-  );
+  const EmptyState = <EmptyState_ AddButton={AddButton} namespace={namespace} />;
 
   return (
     <StandardPage<ProviderData>
@@ -231,8 +200,37 @@ const ProvidersListPage: React.FC<{
       namespace={namespace}
       title={t('Providers')}
       userSettings={userSettings}
-      alerts={!inventoryLoading && inventoryError ? [inventoryNotReachable] : undefined}
+      alerts={!inventoryLoading && inventoryError ? [InventoryNotReachable] : undefined}
       customNoResultsFound={EmptyState}
+    />
+  );
+};
+
+interface EmptyStateProps {
+  AddButton: JSX.Element;
+  namespace?: string;
+}
+
+const ModernizeMigration = () => (
+  <img src={modernizeMigration} className="forklift-empty-state__icon" />
+);
+
+const EmptyState_: React.FC<EmptyStateProps> = ({ AddButton, namespace }) => {
+  const { t } = useForkliftTranslation();
+
+  return (
+    <ProvidersEmptyState
+      AddButton={AddButton}
+      title={
+        namespace ? (
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            No Providers found in namespace <strong>{namespace}</strong>.
+          </Trans>
+        ) : (
+          t('No providers found')
+        )
+      }
+      Icon={ModernizeMigration}
     />
   );
 };
