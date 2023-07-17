@@ -97,28 +97,30 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
           </FormGroup>
         </Form>
 
-        <Form isWidthLimited className="forklift-create-provider-edit-section">
-          <FormGroup
-            label={t('Provider Resource Name')}
-            isRequired
-            fieldId="name"
-            helperText={t('Unique Kubernetes resource name identifier')}
-            validated={state.validation.name}
-            helperTextInvalid={t(
-              'Error: Name is required and must be a unique and valid Kubernetes name.',
-            )}
-          >
-            <TextInput
+        {newProvider?.spec?.type && (
+          <Form isWidthLimited className="forklift-create-provider-edit-section">
+            <FormGroup
+              label={t('Provider Resource Name')}
               isRequired
-              type="text"
-              id="url"
-              name="url"
-              value={newProvider.metadata.name} // Use the appropriate prop value here
+              fieldId="name"
+              helperText={t('Unique Kubernetes resource name identifier')}
               validated={state.validation.name}
-              onChange={(value) => handleNameChange(value)} // Call the custom handler method
-            />
-          </FormGroup>
-        </Form>
+              helperTextInvalid={t(
+                'Error: Name is required and must be a unique and valid Kubernetes name.',
+              )}
+            >
+              <TextInput
+                isRequired
+                type="text"
+                id="url"
+                name="url"
+                value={newProvider.metadata.name} // Use the appropriate prop value here
+                validated={state.validation.name}
+                onChange={(value) => handleNameChange(value)} // Call the custom handler method
+              />
+            </FormGroup>
+          </Form>
+        )}
       </div>
 
       <div className="forklift-create-provider-edit-section">
