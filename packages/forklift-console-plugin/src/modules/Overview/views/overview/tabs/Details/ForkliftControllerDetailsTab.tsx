@@ -1,6 +1,5 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { useMigrationCounts } from 'src/modules/Overview/hooks';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { Grid, GridItem } from '@patternfly/react-core';
@@ -18,8 +17,6 @@ interface ForkliftControllerDetailsTabProps extends RouteComponentProps {
 export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTabProps> = ({
   obj,
 }) => {
-  const { count, vmCount } = useMigrationCounts();
-
   return (
     <div className="co-dashboard-body">
       <Grid hasGutter>
@@ -32,7 +29,7 @@ export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTab
         </GridItem>
 
         <GridItem span={8}>
-          <MigrationsCard obj={obj} count={count} vmCount={vmCount} />
+          <MigrationsCard obj={obj} />
         </GridItem>
 
         <GridItem span={8}>

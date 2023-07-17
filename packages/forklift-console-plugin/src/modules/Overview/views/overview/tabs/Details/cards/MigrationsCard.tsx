@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { MigrationCounts } from 'src/modules/Overview/hooks';
+import React from 'react';
+import { useMigrationCounts } from 'src/modules/Overview/hooks';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
@@ -13,14 +13,6 @@ import {
   Text,
   TextVariants,
 } from '@patternfly/react-core';
-
-type MigrationsCardProps = {
-  obj?: V1beta1ForkliftController;
-  count?: MigrationCounts;
-  vmCount?: MigrationCounts;
-  loaded?: boolean;
-  loadError?: unknown;
-};
 
 interface StatusCardProps {
   status: string;
@@ -46,8 +38,15 @@ const StatusCard: React.FC<StatusCardProps> = ({
   </FlexItem>
 );
 
-export const MigrationsCard: FC<MigrationsCardProps> = ({ count, vmCount }) => {
+type MigrationsCardProps = {
+  obj?: V1beta1ForkliftController;
+  loaded?: boolean;
+  loadError?: unknown;
+};
+
+export const MigrationsCard: React.FC<MigrationsCardProps> = () => {
   const { t } = useForkliftTranslation();
+  const { count, vmCount } = useMigrationCounts();
 
   return (
     <Card>
