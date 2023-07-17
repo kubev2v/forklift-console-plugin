@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router';
 import StandardPage from 'src/components/page/StandardPage';
+import cloudNative from 'src/modules/Providers/images/cloudNative.svg';
 import {
   getResourceUrl,
   ProviderData,
@@ -23,7 +25,10 @@ import { Alert, Button, Text, TextContent, TextVariants } from '@patternfly/reac
 import { useGetDeleteAndEditAccessReview, useProvidersInventoryList } from '../../hooks';
 import { findInventoryByID } from '../../utils';
 
+import { ProvidersEmptyState } from './components';
 import ProviderRow from './ProviderRow';
+
+import './ProvidersListPage.style.css';
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
@@ -186,6 +191,24 @@ const ProvidersListPage: React.FC<{
     </Button>
   );
 
+  const CloudNative = () => <img src={cloudNative} className="forklift-empty-state__icon" />;
+
+  const EmptyState = (
+    <ProvidersEmptyState
+      AddButton={AddButton}
+      title={
+        namespace ? (
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            No Providers found in namespace <strong>{namespace}</strong>.
+          </Trans>
+        ) : (
+          t('No providers found')
+        )
+      }
+      Icon={CloudNative}
+    />
+  );
+
   const inventoryNotReachable = (
     <Alert title={t('Inventory')} variant="warning">
       <TextContent>
@@ -209,6 +232,7 @@ const ProvidersListPage: React.FC<{
       title={t('Providers')}
       userSettings={userSettings}
       alerts={!inventoryLoading && inventoryError ? [inventoryNotReachable] : undefined}
+      customNoResultsFound={EmptyState}
     />
   );
 };

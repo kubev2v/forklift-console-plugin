@@ -4,6 +4,7 @@ export * from './InventoryCellFactory';
 export * from './NamespaceCell';
 export * from './OpenshiftNetworkCell';
 export * from './ProviderLinkCell';
+export * from './ProvidersEmptyState';
 export * from './StatusCell';
 export * from './TypeCell';
 export * from './URLCell';
