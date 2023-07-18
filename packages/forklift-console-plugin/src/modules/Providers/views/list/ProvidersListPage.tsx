@@ -200,7 +200,11 @@ const ProvidersListPage: React.FC<{
       namespace={namespace}
       title={t('Providers')}
       userSettings={userSettings}
-      alerts={!inventoryLoading && inventoryError ? [InventoryNotReachable] : undefined}
+      alerts={
+        !inventoryLoading && inventoryError
+          ? [<InventoryNotReachable key={'inventoryNotReachable'} />]
+          : undefined
+      }
       customNoResultsFound={EmptyState}
     />
   );
