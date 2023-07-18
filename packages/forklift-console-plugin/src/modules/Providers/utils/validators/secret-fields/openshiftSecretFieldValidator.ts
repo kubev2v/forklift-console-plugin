@@ -19,7 +19,7 @@ export const openshiftSecretFieldValidator = (id: string, value: string) => {
 
   switch (id) {
     case 'token':
-      validationState = validateK8sToken(trimmedValue) ? 'success' : 'error';
+      validationState = trimmedValue === '' || validateK8sToken(trimmedValue) ? 'success' : 'error';
       break;
     default:
       validationState = 'default';
