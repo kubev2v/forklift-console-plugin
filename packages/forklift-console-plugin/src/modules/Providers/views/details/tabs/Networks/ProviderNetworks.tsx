@@ -33,17 +33,9 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
     subPath: 'networkattachmentdefinitions?detail=4',
   });
 
-  if (!networks || networks.length === 0) {
-    return (
-      <PageSection>
-        <span className="text-muted">{t('No networks found.')}</span>
-      </PageSection>
-    );
-  }
-
   const defaultNetwork =
     provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'];
-  const networkData = networks.map((net) => ({
+  const networkData = networks?.map((net) => ({
     name: net.name,
     namespace: net.namespace,
     isDefault: `${net.namespace}/${net.name}` === defaultNetwork,
@@ -88,7 +80,7 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
               <Td modifier="truncate">{'-'}</Td>
               <Td modifier="truncate">{'pod-network'}</Td>
             </Tr>
-            {networkData.map((data) => (
+            {networkData?.map((data) => (
               <Tr key={data.name}>
                 <Td width={20}>
                   {data.name}{' '}
