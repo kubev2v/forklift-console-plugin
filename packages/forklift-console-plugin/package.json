@@ -26,7 +26,7 @@
   "dependencies": {
     "@kubev2v/common": "*",
     "@kubev2v/legacy": "*",
-    "@migtools/lib-ui": "^8.4.1",
+    "@migtools/lib-ui": "8.4.1",
     "jsonpath": "^1.1.1",
     "msw": "^1.2.1",
     "streamsaver": "^2.0.6"

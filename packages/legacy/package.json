@@ -60,7 +60,7 @@
     "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
-    "@migtools/lib-ui": "^8.4.1",
+    "@migtools/lib-ui": "8.4.1",
     "@openshift-console/dynamic-plugin-sdk": "0.0.18",
     "@patternfly/react-core": "4.221.3",
     "@patternfly/react-table": "4.90.3",
