@@ -10,6 +10,7 @@ export function getMigrationCounts(migrations: V1beta1Migration[]): { [key: stri
     Total: 0,
     Running: 0,
     Failed: 0,
+    Canceled: 0,
     Succeeded: 0,
   };
 
