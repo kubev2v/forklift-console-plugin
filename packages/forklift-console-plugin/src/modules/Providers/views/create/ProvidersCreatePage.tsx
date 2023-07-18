@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react';
 import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router';
+import { Base64 } from 'js-base64';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef, V1beta1Provider, V1Secret } from '@kubev2v/types';
@@ -95,7 +96,7 @@ export const ProvidersCreatePage: React.FC<{
       }
       case 'SET_NEW_PROVIDER': {
         const value = action.payload as V1beta1Provider;
-        let validationError = providerAndSecretValidator(value, state.newSecret);
+        let validationError: Error;
 
         if (providerNames.includes(value?.metadata?.name)) {
           validationError = new Error('new provider name is not unique');
@@ -105,10 +106,19 @@ export const ProvidersCreatePage: React.FC<{
           validationError = new Error('Missing provider name');
         }
 
+        // Sync secret with new URL
+        const updatedSecret = {
+          ...state.newSecret,
+          data: { ...state.newSecret.data, URL: Base64.encode(value?.spec?.url || '') },
+        };
+
+        validationError = validationError || providerAndSecretValidator(value, updatedSecret);
+
         return {
           ...state,
           validationError: validationError,
           newProvider: value,
+          newSecret: updatedSecret,
           apiError: null,
         };
       }

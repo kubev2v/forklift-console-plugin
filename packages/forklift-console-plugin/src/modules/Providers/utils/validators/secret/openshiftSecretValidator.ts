@@ -2,23 +2,34 @@ import { Base64 } from 'js-base64';
 
 import { V1Secret } from '@kubev2v/types';
 
-import { missingKeysInSecretData } from '../../helpers';
 import { openshiftSecretFieldValidator } from '../secret-fields';
 
 export function openshiftSecretValidator(secret: V1Secret) {
-  const requiredFields = ['token'];
-  const validateFields = ['token'];
+  const url = secret?.data?.URL || '';
+  const token = secret?.data?.token || '';
 
-  const missingRequiredFields = missingKeysInSecretData(secret, requiredFields);
-  if (missingRequiredFields.length > 0) {
-    return new Error(`missing required fields [${missingRequiredFields.join(', ')}]`);
+  // Empty URL + token is valid as host providers
+  if (url === '' && token === '') {
+    return null;
   }
 
-  for (const id of validateFields) {
-    const value = Base64.decode(secret?.data?.[id] || '');
+  // If we have url, token is required
+  if (url !== '' && token === '') {
+    return new Error(`missing required fields [token]`);
+  }
 
-    if (openshiftSecretFieldValidator(id, value) === 'error') {
-      return new Error(`invalid ${id}`);
+  // If we have token, url is required
+  if (url === '' && token !== '') {
+    return new Error(`missing required fields [url]`);
+  }
+
+  // if we have url and token, validate token
+  // url will be validated using the provider rules
+  if (token !== '') {
+    const value = Base64.decode(token);
+
+    if (openshiftSecretFieldValidator('token', value) === 'error') {
+      return new Error(`invalid token`);
     }
   }
 
