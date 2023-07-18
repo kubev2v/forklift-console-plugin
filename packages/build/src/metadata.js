@@ -10,18 +10,30 @@ import { execFileSync } from 'node:child_process';
  */
 export const getBuildMetadata = ({ name, version }) => {
   const now = new Date();
-  return {
-    packageName: name,
-    packageVersion: version,
-    buildDateTime: now.toISOString(),
-    gitCommit: execFileSync('git', ['rev-parse', 'HEAD']).toString().trim(),
-    gitBranch: execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD']).toString().trim(),
-    gitTags: execFileSync('git', ['tag', '--points-at', 'HEAD'])
-      .toString()
-      .trim()
-      .split('\n')
-      .filter(Boolean),
-  };
+  let data = {};
+
+  try {
+    data = {
+      packageName: name,
+      packageVersion: version,
+      buildDateTime: now.toISOString(),
+      gitCommit: execFileSync('git', ['rev-parse', 'HEAD']).toString().trim(),
+      gitBranch: execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD']).toString().trim(),
+      gitTags: execFileSync('git', ['tag', '--points-at', 'HEAD'])
+        .toString()
+        .trim()
+        .split('\n')
+        .filter(Boolean),
+    };
+  } catch {
+    data = {
+      packageName: name,
+      packageVersion: version,
+      buildDateTime: now.toISOString(),
+    };
+  }
+
+  return data;
 };
 
 /**
