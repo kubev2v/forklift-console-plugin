@@ -83,6 +83,8 @@ export const useProviderInventory = <T>({
   useEffect(() => {
     if (cacheExpiryDuration > 0) {
       const fetchCachedData = async () => {
+        handleError(null);
+
         if (!isValidProvider(provider)) {
           const e = new Error('Invalid provider data');
           handleError(e);
@@ -103,6 +105,8 @@ export const useProviderInventory = <T>({
   // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {
+      handleError(null);
+
       if (!isValidProvider(provider)) {
         const e = new Error('Invalid provider data');
         handleError(e);
@@ -155,7 +159,7 @@ export const useProviderInventory = <T>({
    * @returns {boolean} - True if the provider object is valid, false otherwise.
    */
   function isValidProvider(provider: V1beta1Provider): boolean {
-    return Boolean(provider?.spec?.type && provider?.metadata?.uid);
+    return provider?.spec?.type !== undefined && provider?.metadata?.uid !== undefined;
   }
 
   /**

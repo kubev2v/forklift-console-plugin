@@ -17,6 +17,7 @@ import { PageSection } from '@patternfly/react-core';
 import { ProviderActionsDropdown } from '../../actions';
 import { useGetDeleteAndEditAccessReview, useProviderInventory } from '../../hooks';
 import { PageHeadings } from '../../utils';
+import { InventoryNotReachable } from '../list/components';
 
 import {
   ProviderCredentials,
@@ -39,7 +40,11 @@ export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, 
     namespace,
   });
 
-  const { inventory } = useProviderInventory<ProviderInventory>({
+  const {
+    inventory,
+    loading: inventoryLoading,
+    error: inventoryError,
+  } = useProviderInventory<ProviderInventory>({
     provider,
   });
 
@@ -61,6 +66,10 @@ export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, 
     type,
   );
   const providerHasNetworks = ['openshift'].includes(type);
+
+  if (providerLoaded && !inventoryLoading && inventoryError) {
+    alerts.push(<InventoryNotReachable key={'inventoryNotReachable'} />);
+  }
 
   const pages = [
     {
