@@ -16,7 +16,7 @@ import {
   Title,
 } from '@patternfly/react-core';
 
-import { useK8sWatchProviderNames } from '../../hooks';
+import { useK8sWatchProviderNames, useToggle } from '../../hooks';
 import { getResourceUrl, Validation } from '../../utils';
 import { providerAndSecretValidator } from '../../utils/validators/providerAndSecretValidator';
 
@@ -41,6 +41,7 @@ export const ProvidersCreatePage: React.FC<{
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
+  const [isLoading, toggleIsLoading] = useToggle();
 
   const [providerNames] = useK8sWatchProviderNames({ namespace });
 
@@ -143,6 +144,8 @@ export const ProvidersCreatePage: React.FC<{
     let secret: V1Secret;
     let provider: V1beta1Provider;
 
+    toggleIsLoading();
+
     // try to generate a secret with data
     //
     // add generateName using provider name as prefix
@@ -156,6 +159,7 @@ export const ProvidersCreatePage: React.FC<{
         payload: err,
       });
 
+      toggleIsLoading();
       return;
     }
 
@@ -169,6 +173,7 @@ export const ProvidersCreatePage: React.FC<{
         payload: err,
       });
 
+      toggleIsLoading();
       return;
     }
 
@@ -181,6 +186,7 @@ export const ProvidersCreatePage: React.FC<{
         payload: err,
       });
 
+      toggleIsLoading();
       return;
     }
 
@@ -218,6 +224,7 @@ export const ProvidersCreatePage: React.FC<{
               variant="primary"
               onClick={onUpdate}
               isDisabled={state.validationError !== null}
+              isLoading={isLoading}
             >
               {t('Create provider')}
             </Button>

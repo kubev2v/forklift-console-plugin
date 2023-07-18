@@ -1,4 +1,4 @@
-import React, { ReactNode, useReducer } from 'react';
+import React, { ReactNode, useReducer, useState } from 'react';
 import { AlertMessageForModals } from 'src/modules/Providers/modals';
 import { isSecretDataChanged, ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -67,6 +67,8 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
   EditComponent,
 }) => {
   const { t } = useForkliftTranslation();
+  const [isLoading, setIsLoading] = useState(false);
+
   const initialState: BaseCredentialsSecretState = {
     reveal: false,
     edit: false,
@@ -134,11 +136,14 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
 
   // Handle user clicking "save"
   async function onUpdate() {
+    setIsLoading(true);
+
     try {
       // Patch provider secret, set clean to `true`
       // to remove old values from the secret
       await patchSecretData(state.newSecret, true);
 
+      setIsLoading(false);
       toggleEdit();
     } catch (err) {
       dispatch({
@@ -147,6 +152,8 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
           <AlertMessageForModals title={t('Error')} message={err.message || err.toString()} />
         ),
       });
+
+      setIsLoading(false);
     }
   }
 
@@ -158,6 +165,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
             variant="primary"
             onClick={onUpdate}
             isDisabled={!state.dataChanged || state.dataError !== null}
+            isLoading={isLoading}
           >
             {t('Update credentials')}
           </Button>

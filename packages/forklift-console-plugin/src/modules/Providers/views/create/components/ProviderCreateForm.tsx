@@ -102,7 +102,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
             <FormGroup
               label={t('Provider Resource Name')}
               isRequired
-              fieldId="name"
+              fieldId="k8sName"
               helperText={t('Unique Kubernetes resource name identifier')}
               validated={state.validation.name}
               helperTextInvalid={t(
@@ -112,8 +112,8 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
               <TextInput
                 isRequired
                 type="text"
-                id="url"
-                name="url"
+                id="k8sName"
+                name="name"
                 value={newProvider.metadata.name} // Use the appropriate prop value here
                 validated={state.validation.name}
                 onChange={(value) => handleNameChange(value)} // Call the custom handler method
