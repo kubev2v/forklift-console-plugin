@@ -50,7 +50,7 @@ export const MigrationsCard: React.FC<MigrationsCardProps> = () => {
 
   return (
     <Card>
-      <CardTitle>{t('Migration plans')}</CardTitle>
+      <CardTitle>{t('Migrations')}</CardTitle>
       <CardBody className="forklift-status-migration">
         <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
           <StatusCard status="Total" count={count['Total']} />
@@ -71,6 +71,7 @@ export const MigrationsCard: React.FC<MigrationsCardProps> = () => {
           />
         </Flex>
 
+        <Text component={TextVariants.small}>{t('{{Canceled}} canceled', count)}</Text>
         <Divider />
       </CardBody>
 
@@ -95,6 +96,7 @@ export const MigrationsCard: React.FC<MigrationsCardProps> = () => {
           />
         </Flex>
 
+        <Text component={TextVariants.small}>{t('{{Canceled}} canceled', vmCount)}</Text>
         <Divider />
       </CardBody>
     </Card>
