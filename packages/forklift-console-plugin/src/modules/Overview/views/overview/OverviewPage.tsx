@@ -3,13 +3,13 @@ import { InventoryNotReachable } from 'src/modules/Providers/views/list/componen
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
-import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import { PageSection } from '@patternfly/react-core';
 
 import { useProvidersInventoryIsLive } from '../../hooks';
 import { useK8sWatchForkliftController } from '../../hooks/useK8sWatchProviderNames';
-import { getPhase } from '../../utils/helpers/getPhase';
+import { getOperatorPhase } from '../../utils/helpers/getOperatorPhase';
 
+import OperatorStatus from './components/OperatorStatus';
 import { HeaderTitle } from './components';
 import { ForkliftControllerDetailsTab, ForkliftControllerYAMLTab } from './tabs';
 
@@ -21,7 +21,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = () => {
   const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
   const { loadError: inventoryLivelinessError } = useProvidersInventoryIsLive({});
 
-  const phaseObj = getPhase(forkliftController);
+  const phaseObj = getOperatorPhase(forkliftController);
 
   const pages = [
     {
@@ -56,7 +56,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = () => {
     <>
       <HeaderTitle
         title={t('Migration Toolkit for Virtualization')}
-        status={<Status status={phaseObj.phase} />}
+        status={<OperatorStatus status={phaseObj.phase} />}
       />
 
       {inventoryLivelinessError && <PageSection>{[InventoryNotReachable]}</PageSection>}
