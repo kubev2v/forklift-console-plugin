@@ -59,7 +59,9 @@ export const OverviewPage: React.FC<OverviewPageProps> = () => {
         status={<OperatorStatus status={phaseObj.phase} />}
       />
 
-      {inventoryLivelinessError && <PageSection>{[InventoryNotReachable]}</PageSection>}
+      {inventoryLivelinessError && (
+        <PageSection>{[<InventoryNotReachable key={'inventoryNotReachable'} />]}</PageSection>
+      )}
 
       <HorizontalNav pages={pages.filter((p) => p)} />
     </>
