@@ -421,14 +421,14 @@ export const AddEditProviderModal: React.FunctionComponent<IAddEditProviderModal
                       <ValidatedTextInput
                         field={forms[providerType].fields.name}
                         isRequired
-                        fieldId="name"
+                        fieldId="provider-name"
                         formGroupProps={{
                           helperText: 'User specified name to display in the list of providers',
                         }}
                       />
                     ) : (
                       <FormGroup label="Provider name" fieldId="name">
-                        <div id="name" style={{ paddingLeft: 8, fontSize: 16 }}>
+                        <div id="provider-name" style={{ paddingLeft: 8, fontSize: 16 }}>
                           {forms[providerType].fields.name.value}
                         </div>
                       </FormGroup>

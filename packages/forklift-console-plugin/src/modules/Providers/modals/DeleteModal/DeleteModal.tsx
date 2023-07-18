@@ -11,6 +11,7 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 
+import { useToggle } from '../../hooks';
 import { getResourceUrl } from '../../utils';
 import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
 import { useModal } from '../ModalHOC';
@@ -39,6 +40,7 @@ interface DeleteModalProps {
 export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model, redirectTo }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
+  const [isLoading, toggleIsLoading] = useToggle();
   const history = useHistory();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
@@ -57,6 +59,8 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model
       return re.test(window.location.pathname);
     };
 
+    toggleIsLoading();
+
     try {
       await k8sDelete({ model, resource });
       if (redirectTo) {
@@ -67,12 +71,14 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model
 
       toggleModal();
     } catch (err) {
+      toggleIsLoading();
+
       setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
     }
   }, [resource]);
 
   const actions = [
-    <Button key="confirm" variant="danger" onClick={onDelete}>
+    <Button key="confirm" variant="danger" onClick={onDelete} isLoading={isLoading}>
       {t('Delete')}
     </Button>,
     <Button key="cancel" variant="secondary" onClick={toggleModal}>
