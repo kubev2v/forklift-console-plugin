@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
-import { getPhase } from 'src/modules/Overview/utils/helpers/getPhase';
+import { getOperatorPhase } from 'src/modules/Overview/utils/helpers/getOperatorPhase';
 import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
-import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import {
   Card,
   CardBody,
@@ -15,6 +14,8 @@ import {
   TextVariants,
 } from '@patternfly/react-core';
 
+import OperatorStatus from '../../../components/OperatorStatus';
+
 type OperatorCardProps = {
   obj?: V1beta1ForkliftController;
   loaded?: boolean;
@@ -23,7 +24,7 @@ type OperatorCardProps = {
 
 export const OperatorCard: FC<OperatorCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
-  const phaseObj = getPhase(obj);
+  const phaseObj = getOperatorPhase(obj);
 
   return (
     <Card>
@@ -71,7 +72,7 @@ export const OperatorCard: FC<OperatorCardProps> = ({ obj }) => {
 
           <DetailsItem
             title={t('Status')}
-            content={<Status status={phaseObj.phase} />}
+            content={<OperatorStatus status={phaseObj.phase} />}
             helpContent={
               <>
                 <Text component={TextVariants.p}>
