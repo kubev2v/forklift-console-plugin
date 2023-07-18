@@ -49,6 +49,7 @@ export const useProvidersInventoryList = ({
 
   useEffect(() => {
     const fetchData = async () => {
+      setError(null);
       try {
         const newInventory: ProvidersInventoryList = await consoleFetchJSON(
           getInventoryApiUrl(`providers?detail=1`),
