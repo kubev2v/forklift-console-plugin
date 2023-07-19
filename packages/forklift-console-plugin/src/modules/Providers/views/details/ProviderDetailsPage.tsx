@@ -67,7 +67,12 @@ export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, 
   );
   const providerHasNetworks = ['openshift'].includes(type);
 
-  if (providerLoaded && !inventoryLoading && inventoryError) {
+  if (
+    providerLoaded &&
+    !inventoryLoading &&
+    inventoryError &&
+    provider?.status?.phase === 'Ready'
+  ) {
     alerts.push(<InventoryNotReachable key={'inventoryNotReachable'} />);
   }
 
