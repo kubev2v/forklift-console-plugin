@@ -5,6 +5,7 @@ import { getResourceFieldValue } from '@kubev2v/common';
 
 import { CellProps } from './CellProps';
 import { OpenshiftNetworkCell } from './OpenshiftNetworkCell';
+import { VSphereHostCell } from './VSphereHostCell';
 
 /**
  * Factory function for creating InventoryCell components.
@@ -31,6 +32,10 @@ export const InventoryCellFactory: CellFactory = ({ icon }) => {
     // Special cases
     if (type === 'openshift' && fieldId === 'networkCount') {
       return <OpenshiftNetworkCell data={data} fieldId={fieldId} fields={fields} />;
+    }
+
+    if (type === 'vsphere' && fieldId === 'hostCount') {
+      return <VSphereHostCell data={data} fieldId={fieldId} fields={fields} />;
     }
 
     return <TableIconCell icon={icon}>{value}</TableIconCell>;

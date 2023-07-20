@@ -1,0 +1,24 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { getResourceUrl, TableCell } from 'src/modules/Providers/utils';
+
+import { HostModelRef } from '@kubev2v/types';
+
+import { HostCellProps } from './HostCellProps';
+
+// Define cell renderer for 'name'
+export const NameCellRenderer: React.FC<HostCellProps> = ({ data }) => {
+  const { host, inventory } = data;
+
+  const hostURL =
+    host &&
+    getResourceUrl({
+      reference: HostModelRef,
+      name: host?.metadata?.name,
+      namespace: host?.metadata?.namespace,
+    });
+
+  return (
+    <TableCell>{host ? <Link to={hostURL}>{inventory?.name}</Link> : inventory?.name}</TableCell>
+  );
+};
