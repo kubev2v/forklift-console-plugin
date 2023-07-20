@@ -48,6 +48,8 @@ export const useProvidersInventoryList = ({
   const oldErrorRef = useRef(null);
 
   useEffect(() => {
+    let timeoutId = null;
+
     const fetchData = async () => {
       setError(null);
       try {
@@ -63,13 +65,13 @@ export const useProvidersInventoryList = ({
           setLoading(false);
         }
       }
+
+      timeoutId = setTimeout(fetchData, interval);
     };
 
     fetchData();
 
-    // Polling interval set by the passed parameter
-    const intervalId = setInterval(fetchData, interval);
-    return () => clearInterval(intervalId);
+    return () => clearTimeout(timeoutId);
   }, [interval]);
 
   /**

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { V1beta1Provider } from '@kubev2v/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
@@ -19,13 +19,15 @@ import { DEFAULT_FIELDS_TO_COMPARE } from './utils';
  * @property {string} [subPath] - The sub path to be used in the inventory fetch API URL.
  * @property {string[]} [fieldsToCompare] - The fields to compare to check if the inventory has changed.
  * @property {number} [interval] - The polling interval in milliseconds.
+ * @property {number} [fetchTimeout] - The fetch timeout in milliseconds.
  * @property {number} [cacheExpiryDuration] - Duration in milliseconds till the cache remains valid.
  */
-interface UseProviderInventoryParams {
+export interface UseProviderInventoryParams {
   provider: V1beta1Provider;
   subPath?: string;
   fieldsToCompare?: string[];
   interval?: number;
+  fetchTimeout?: number;
   cacheExpiryDuration?: number;
 }
 
@@ -65,6 +67,7 @@ export const useProviderInventory = <T>({
   subPath = '',
   fieldsToCompare = DEFAULT_FIELDS_TO_COMPARE,
   interval = 10000,
+  fetchTimeout,
   cacheExpiryDuration = 0, // default cache validity is 0 seconds (don't use cache)
 }: UseProviderInventoryParams): UseProviderInventoryResult<T> => {
   const [inventory, setInventory] = useState<T | null>(null);
@@ -78,6 +81,9 @@ export const useProviderInventory = <T>({
     `forklift_inventory_${provider.spec.type}_${provider.metadata.uid}${
       subPath ? `_${subPath}` : ''
     }`;
+
+  // we only use type and uid in this context
+  const stableProvider = useMemo(() => provider, [provider?.spec?.type, provider?.metadata?.uid]);
 
   // Fetch cached data
   useEffect(() => {
@@ -100,10 +106,12 @@ export const useProviderInventory = <T>({
 
       fetchCachedData();
     }
-  }, [provider, subPath, interval, cacheExpiryDuration]);
+  }, [stableProvider, subPath, cacheExpiryDuration]);
 
   // Fetch data from API
   useEffect(() => {
+    let timeoutId = null;
+
     const fetchData = async () => {
       handleError(null);
 
@@ -121,20 +129,26 @@ export const useProviderInventory = <T>({
               subPath ? `/${subPath}` : ''
             }`,
           ),
+          'GET',
+          {},
+          fetchTimeout,
         );
 
         updateInventoryIfChanged(newInventory, fieldsToCompare);
-        setCachedData<T>(cacheKey, newInventory);
+
+        if (cacheExpiryDuration > 0) {
+          setCachedData<T>(cacheKey, newInventory);
+        }
       } catch (e) {
         handleError(e);
       }
+      timeoutId = setTimeout(fetchData, interval);
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, interval);
 
-    return () => clearInterval(intervalId);
-  }, [provider, subPath, interval, cacheExpiryDuration]);
+    return () => clearTimeout(timeoutId);
+  }, [stableProvider, subPath, interval, cacheExpiryDuration]);
 
   /**
    * Handles any errors thrown when trying to fetch the inventory.
