@@ -81,7 +81,7 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
       label={props?.label || t('VDDK Init Image')}
       model={ProviderModel}
       body={t(
-        'Specify the VDDK image that you created. some functionality will not be available if the VDDK image is left empty',
+        'Specify the VDDK image that you created. Some functionality will not be available if the VDDK image is left empty',
       )}
       validationHook={imageValidationHook}
       onConfirmHook={onConfirm}
