@@ -39,7 +39,7 @@ interface UseInventoryResult {
  * @returns {UseInventoryResult} result - Contains the inventory data, the loading state, and the error state.
  */
 export const useProvidersInventoryList = ({
-  interval = 10000,
+  interval = 20000,
 }: UseInventoryParams): UseInventoryResult => {
   const [inventory, setInventory] = useState<ProvidersInventoryList | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -48,8 +48,6 @@ export const useProvidersInventoryList = ({
   const oldErrorRef = useRef(null);
 
   useEffect(() => {
-    let timeoutId = null;
-
     const fetchData = async () => {
       setError(null);
       try {
@@ -65,13 +63,12 @@ export const useProvidersInventoryList = ({
           setLoading(false);
         }
       }
-
-      timeoutId = setTimeout(fetchData, interval);
     };
 
     fetchData();
 
-    return () => clearTimeout(timeoutId);
+    const intervalId = setInterval(fetchData, interval);
+    return () => clearInterval(intervalId);
   }, [interval]);
 
   /**
