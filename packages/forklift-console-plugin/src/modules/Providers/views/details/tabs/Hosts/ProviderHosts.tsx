@@ -1,14 +1,11 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
+import { ModalHOC } from 'src/modules/Providers/modals';
 import { ProviderData } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderHost } from '@kubev2v/types';
-import { PageSection, Title } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { VSphereHostsList } from './VSphereHostsList';
 
-interface ProviderHostsProps extends RouteComponentProps {
+export interface ProviderHostsProps extends RouteComponentProps {
   obj: ProviderData;
   ns?: string;
   name?: string;
@@ -16,50 +13,19 @@ interface ProviderHostsProps extends RouteComponentProps {
   loadError?: unknown;
 }
 
-export const ProviderHosts: React.FC<ProviderHostsProps> = ({ obj }) => {
-  const { t } = useForkliftTranslation();
-  const { provider } = obj;
+const ProviderHosts_: React.FC<ProviderHostsProps> = (props) => {
+  const { provider } = props.obj;
 
-  const { inventory: hosts } = useProviderInventory<ProviderHost[]>({
-    provider,
-    subPath: 'hosts?detail=4',
-  });
-
-  if (!hosts || hosts.length === 0) {
-    return (
-      <PageSection>
-        <span className="text-muted">{t('No hosts found.')}</span>
-      </PageSection>
-    );
+  switch (provider?.spec?.type) {
+    case 'vsphere':
+      return <VSphereHostsList {...props} />;
+    default:
+      return <></>;
   }
-
-  return (
-    <div>
-      <PageSection>
-        <Title headingLevel="h2" className="co-section-heading">
-          {t('Hosts')}
-        </Title>
-      </PageSection>
-      <PageSection>
-        <TableComposable aria-label="Expandable table" variant="compact">
-          <Thead>
-            <Tr>
-              <Th>{t('Name')}</Th>
-              <Th> {t('ID')}</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {hosts &&
-              hosts.length > 0 &&
-              hosts.map((host) => (
-                <Tr key={host.name}>
-                  <Td width={20}>{host.name}</Td>
-                  <Td modifier="truncate">{host.id || '-'}</Td>
-                </Tr>
-              ))}
-          </Tbody>
-        </TableComposable>
-      </PageSection>
-    </div>
-  );
 };
+
+export const ProviderHosts: React.FC<ProviderHostsProps> = (props) => (
+  <ModalHOC>
+    <ProviderHosts_ {...props} />
+  </ModalHOC>
+);
