@@ -1,12 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
+import StandardPage from 'src/components/page/StandardPage';
+import { useProviderInventory, UseProviderInventoryParams } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { EnumToTuple, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import { ProviderVirtualMachine } from '@kubev2v/types';
-import { List, ListItem, PageSection, Title } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+
+import { ProviderVirtualMachinesRow, VmData } from './ProviderVirtualMachinesRow';
+import { getHighestPriorityConcern } from './utils';
+
+export const vmsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+  {
+    resourceFieldId: 'name',
+    jsonPath: '$.name',
+    label: t('Name'),
+    isVisible: true,
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by name'),
+    },
+    sortable: true,
+  },
+  {
+    resourceFieldId: 'concerns',
+    jsonPath: '$.concerns',
+    label: t('Concerns'),
+    isVisible: true,
+    sortable: true,
+    filter: {
+      type: 'enum',
+      primary: true,
+      placeholderLabel: t('Concerns'),
+      values: EnumToTuple({ Critical: 'Critical', Warning: 'Warning', Information: 'Information' }),
+    },
+  },
+];
 
 interface ProviderVirtualMachinesProps extends RouteComponentProps {
   obj: ProviderData;
@@ -16,56 +47,48 @@ interface ProviderVirtualMachinesProps extends RouteComponentProps {
   loadError?: unknown;
 }
 
-export const ProviderVirtualMachines: React.FC<ProviderVirtualMachinesProps> = ({ obj }) => {
+export const ProviderVirtualMachines: React.FC<ProviderVirtualMachinesProps> = ({
+  obj,
+  loaded,
+  loadError,
+}) => {
   const { t } = useForkliftTranslation();
-  const { provider } = obj;
+  const [userSettings] = useState(() => loadUserSettings({ pageId: 'ProviderVMs' }));
 
-  const { inventory: vms } = useProviderInventory<ProviderVirtualMachine[]>({
-    provider,
+  const { provider, inventory } = obj;
+  const { namespace } = provider.metadata;
+
+  const largeInventory = inventory?.vmCount > 1000;
+  const customTimeoutAndInterval = largeInventory ? 250000 : undefined;
+  const validProvider = loaded && !loadError && provider;
+
+  const inventoryOptions: UseProviderInventoryParams = {
+    provider: validProvider,
     subPath: 'vms?detail=4',
-  });
+    fetchTimeout: customTimeoutAndInterval,
+    interval: customTimeoutAndInterval,
+  };
 
-  if (!vms || vms.length === 0) {
-    return (
-      <PageSection>
-        <span className="text-muted">{t('No virtual machines found.')}</span>
-      </PageSection>
-    );
-  }
+  const { inventory: vms, loading } =
+    useProviderInventory<ProviderVirtualMachine[]>(inventoryOptions);
+
+  const vmData: VmData[] = !loading
+    ? vms.map((vm) => ({
+        vm,
+        name: vm.name,
+        concerns: getHighestPriorityConcern(vm),
+      }))
+    : [];
 
   return (
-    <div>
-      <PageSection>
-        <Title headingLevel="h2" className="co-section-heading">
-          {t('Virtual Machines')}
-        </Title>
-      </PageSection>
-      <PageSection>
-        <TableComposable aria-label="Expandable table" variant="compact">
-          <Thead>
-            <Tr>
-              <Th>{t('Name')}</Th>
-              <Th> {t('Concerns')}</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {vms &&
-              vms.length > 0 &&
-              vms.map((vm) => (
-                <Tr key={vm.name}>
-                  <Td width={20}>{vm.name}</Td>
-                  <Td modifier="truncate">
-                    <List isPlain>
-                      {vm?.concerns?.map((c) => (
-                        <ListItem key={c.label}>{c.label}</ListItem>
-                      ))}
-                    </List>
-                  </Td>
-                </Tr>
-              ))}
-          </Tbody>
-        </TableComposable>
-      </PageSection>
-    </div>
+    <StandardPage<VmData>
+      data-testid="vm-list"
+      dataSource={[vmData || [], !loading, null]}
+      RowMapper={ProviderVirtualMachinesRow}
+      fieldsMetadata={vmsFieldsMetadataFactory(t)}
+      namespace={namespace}
+      title={t('Virtual Machines')}
+      userSettings={userSettings}
+    />
   );
 };

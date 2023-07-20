@@ -1,5 +1,4 @@
 import React from 'react';
-import { TableEmptyCell } from 'src/modules/Providers/utils';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
 import { Td, Tr } from '@patternfly/react-table';
@@ -53,14 +52,6 @@ export const VSphereHostsRow: React.FC<RowProps<InventoryHostPair>> = ({
  */
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
   const fieldId = resourceFieldId;
-  const hasInventory = resourceData?.inventory !== undefined;
-  const inventoryCells = ['networkCount', 'storageCount', 'vmCount', 'hostCount'];
-
-  // If the current cell is an inventory cell and there's no inventory data,
-  // don't render the cell
-  if (inventoryCells.includes(fieldId) && !hasInventory) {
-    return <TableEmptyCell />;
-  }
 
   const CellRenderer = cellRenderers?.[fieldId] ?? (() => <></>);
   return (
@@ -70,7 +61,6 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-// Now, use the above renderers in the 'cellRenderers' object
 const cellRenderers: Record<string, React.FC<HostCellProps>> = {
   name: NameCellRenderer,
   network: NetworkCellRenderer,
