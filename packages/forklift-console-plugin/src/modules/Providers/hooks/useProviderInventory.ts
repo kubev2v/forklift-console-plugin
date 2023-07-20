@@ -66,7 +66,7 @@ export const useProviderInventory = <T>({
   provider,
   subPath = '',
   fieldsToCompare = DEFAULT_FIELDS_TO_COMPARE,
-  interval = 10000,
+  interval = 20000,
   fetchTimeout,
   cacheExpiryDuration = 0, // default cache validity is 0 seconds (don't use cache)
 }: UseProviderInventoryParams): UseProviderInventoryResult<T> => {
@@ -110,8 +110,6 @@ export const useProviderInventory = <T>({
 
   // Fetch data from API
   useEffect(() => {
-    let timeoutId = null;
-
     const fetchData = async () => {
       handleError(null);
 
@@ -142,12 +140,12 @@ export const useProviderInventory = <T>({
       } catch (e) {
         handleError(e);
       }
-      timeoutId = setTimeout(fetchData, interval);
     };
 
     fetchData();
 
-    return () => clearTimeout(timeoutId);
+    const intervalId = setInterval(fetchData, interval);
+    return () => clearInterval(intervalId);
   }, [stableProvider, subPath, interval, cacheExpiryDuration]);
 
   /**
