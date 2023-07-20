@@ -278,7 +278,7 @@
   "Specify the API end point URL, for example, https://<identity_service>/v3 for OpenStack.": "Specify the API end point URL, for example, https://<identity_service>/v3 for OpenStack.",
   "Specify the API end point URL, for example, https://<kubernetes API Endpoint>:6443 for OpenShift.": "Specify the API end point URL, for example, https://<kubernetes API Endpoint>:6443 for OpenShift.",
   "Specify the API end point URL, for example, https://<vCenter_host>/sdk for vSphere.": "Specify the API end point URL, for example, https://<vCenter_host>/sdk for vSphere.",
-  "Specify the VDDK image that you created. some functionality will not be available if the VDDK image is left empty": "Specify the VDDK image that you created. some functionality will not be available if the VDDK image is left empty",
+  "Specify the VDDK image that you created. Some functionality will not be available if the VDDK image is left empty": "Specify the VDDK image that you created. Some functionality will not be available if the VDDK image is left empty",
   "SSHA-1 fingerprint": "SSHA-1 fingerprint",
   "Staging": "Staging",
   "Status": "Status",
