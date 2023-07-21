@@ -109,7 +109,7 @@ export const ProvidersCreatePage: React.FC<{
         // Sync secret with new URL
         const updatedSecret = {
           ...state.newSecret,
-          data: { ...state.newSecret.data, URL: Base64.encode(value?.spec?.url || '') },
+          data: { ...state.newSecret.data, url: Base64.encode(value?.spec?.url || '') },
         };
 
         validationError = validationError || providerAndSecretValidator(value, updatedSecret);
