@@ -69,16 +69,20 @@ export const ProviderVirtualMachines: React.FC<ProviderVirtualMachinesProps> = (
     interval: customTimeoutAndInterval,
   };
 
-  const { inventory: vms, loading } =
-    useProviderInventory<ProviderVirtualMachine[]>(inventoryOptions);
+  const {
+    inventory: vms,
+    loading,
+    error,
+  } = useProviderInventory<ProviderVirtualMachine[]>(inventoryOptions);
 
-  const vmData: VmData[] = !loading
-    ? vms.map((vm) => ({
-        vm,
-        name: vm.name,
-        concerns: getHighestPriorityConcern(vm),
-      }))
-    : [];
+  const vmData: VmData[] =
+    !loading && !error && vms
+      ? vms.map((vm) => ({
+          vm,
+          name: vm.name,
+          concerns: getHighestPriorityConcern(vm),
+        }))
+      : [];
 
   return (
     <StandardPage<VmData>
