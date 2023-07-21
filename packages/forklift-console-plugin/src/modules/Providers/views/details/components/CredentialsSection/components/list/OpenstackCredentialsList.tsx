@@ -180,17 +180,17 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
 
     case 'token':
       if (!secret?.data?.userID) {
-        openstackSecretFields = fields.tokenWithUserIDSecretFields;
-      } else if (!secret?.data?.username) {
         openstackSecretFields = fields.tokenWithUsernameSecretFields;
+      } else if (!secret?.data?.username) {
+        openstackSecretFields = fields.tokenWithUserIDSecretFields;
       }
       break;
 
     case 'applicationcredential':
       if (!secret?.data?.applicationCredentialID) {
-        openstackSecretFields = fields.applicationCredentialIdSecretFields;
-      } else if (!secret?.data?.applicationCredentialName) {
         openstackSecretFields = fields.applicationCredentialNameSecretFields;
+      } else if (!secret?.data?.applicationCredentialName) {
+        openstackSecretFields = fields.applicationCredentialIdSecretFields;
       }
       break;
 
