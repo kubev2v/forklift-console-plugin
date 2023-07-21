@@ -22,7 +22,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
   const token = safeBase64Decode(secret?.data?.token || '');
   const username = safeBase64Decode(secret?.data?.username || '');
   const projectName = safeBase64Decode(secret?.data?.projectName || '');
-  const userDomainName = safeBase64Decode(secret?.data?.userDomainName || '');
+  const domainName = safeBase64Decode(secret?.data?.domainName || '');
 
   const initialState = {
     passwordHidden: true,
@@ -30,7 +30,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
       token: 'default' as Validation,
       username: 'default' as Validation,
       projectName: 'default' as Validation,
-      userDomainName: 'default' as Validation,
+      domainName: 'default' as Validation,
     },
   };
 
@@ -133,21 +133,21 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
         />
       </FormGroup>
       <FormGroup
-        label={t('User Domain Name')}
+        label={t('Domain Name')}
         isRequired
-        fieldId="userDomainName"
-        helperText={t('Openstack user domain name for token credentials.')}
-        helperTextInvalid={t('Invalid User Domain Name.')}
-        validated={state.validation.userDomainName}
+        fieldId="domainName"
+        helperText={t('Openstack domain name for token credentials.')}
+        helperTextInvalid={t('Invalid Domain Name.')}
+        validated={state.validation.domainName}
       >
         <TextInput
           isRequired
           type="text"
-          id="userDomainName"
-          name="userDomainName"
-          value={userDomainName}
-          onChange={(value) => handleChange('userDomainName', value)}
-          validated={state.validation.userDomainName}
+          id="domainName"
+          name="domainName"
+          value={domainName}
+          onChange={(value) => handleChange('domainName', value)}
+          validated={state.validation.domainName}
         />
       </FormGroup>
     </>
