@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getResourceUrl, TableCell } from 'src/modules/Providers/utils';
 
 import { HostModelRef } from '@kubev2v/types';
+import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 
 import { HostCellProps } from './HostCellProps';
 
@@ -19,6 +20,13 @@ export const NameCellRenderer: React.FC<HostCellProps> = ({ data }) => {
     });
 
   return (
-    <TableCell>{host ? <Link to={hostURL}>{inventory?.name}</Link> : inventory?.name}</TableCell>
+    <TableCell>
+      {inventory.name}{' '}
+      {host && (
+        <Link to={hostURL}>
+          <ExternalLinkAltIcon />
+        </Link>
+      )}
+    </TableCell>
   );
 };
