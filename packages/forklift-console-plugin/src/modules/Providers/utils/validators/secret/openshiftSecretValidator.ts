@@ -5,7 +5,7 @@ import { V1Secret } from '@kubev2v/types';
 import { openshiftSecretFieldValidator } from '../secret-fields';
 
 export function openshiftSecretValidator(secret: V1Secret) {
-  const url = secret?.data?.URL || '';
+  const url = secret?.data?.url || '';
   const token = secret?.data?.token || '';
 
   // Empty URL + token is valid as host providers
