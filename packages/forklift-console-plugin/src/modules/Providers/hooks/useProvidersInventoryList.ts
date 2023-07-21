@@ -49,19 +49,15 @@ export const useProvidersInventoryList = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      setError(null);
       try {
         const newInventory: ProvidersInventoryList = await consoleFetchJSON(
           getInventoryApiUrl(`providers?detail=1`),
         );
 
         updateInventoryIfChanged(newInventory, DEFAULT_FIELDS_TO_COMPARE);
+        handleError(null);
       } catch (e) {
-        if (e?.toString() !== oldErrorRef.current?.error) {
-          oldErrorRef.current = { error: e?.toString() };
-          setError(e as Error);
-          setLoading(false);
-        }
+        handleError(e);
       }
     };
 
@@ -70,6 +66,23 @@ export const useProvidersInventoryList = ({
     const intervalId = setInterval(fetchData, interval);
     return () => clearInterval(intervalId);
   }, [interval]);
+
+  /**
+   * Handles any errors thrown when trying to fetch the inventory.
+   * If the error is new (compared to the last error),
+   * it sets the error state and stops the loading state.
+   *
+   * @param {Error} e The error object to handle
+   * @returns {void}
+   */
+  function handleError(e: Error): void {
+    if (e?.toString() !== oldErrorRef.current?.error) {
+      setError(e);
+      setLoading(false);
+
+      oldErrorRef.current = { error: e?.toString() };
+    }
+  }
 
   /**
    * Checks if there have been changes to any inventory items, and if so,
