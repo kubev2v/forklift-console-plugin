@@ -3,12 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { V1beta1Provider } from '@kubev2v/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-import {
-  getCachedData,
-  getInventoryApiUrl,
-  hasObjectChangedInGivenFields,
-  setCachedData,
-} from '../utils/helpers';
+import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils/helpers';
 
 import { DEFAULT_FIELDS_TO_COMPARE } from './utils';
 
@@ -28,7 +23,6 @@ export interface UseProviderInventoryParams {
   fieldsToCompare?: string[];
   interval?: number;
   fetchTimeout?: number;
-  cacheExpiryDuration?: number;
 }
 
 /**
@@ -55,7 +49,6 @@ interface UseProviderInventoryResult<T> {
  * @param {string} [useProviderInventoryParams.subPath=''] Sub-path to append to the provider API URL
  * @param {Array} [useProviderInventoryParams.fieldsToCompare=DEFAULT_FIELDS_TO_COMPARE] Fields to use for comparing new data with old data
  * @param {number} [useProviderInventoryParams.interval=10000] Interval (in milliseconds) to fetch new data at
- * @param {number} [useProviderInventoryParams.cacheExpiryDuration=60000] Duration (in milliseconds) to keep data in cache, if zero, don't use cache
  *
  * @returns {Object} useProviderInventoryResult Contains the inventory data (or null if loading, not fetched yet, or error),
  * the loading state, and the error state (or null if no errors)
@@ -68,7 +61,6 @@ export const useProviderInventory = <T>({
   fieldsToCompare = DEFAULT_FIELDS_TO_COMPARE,
   interval = 20000,
   fetchTimeout,
-  cacheExpiryDuration = 0, // default cache validity is 0 seconds (don't use cache)
 }: UseProviderInventoryParams): UseProviderInventoryResult<T> => {
   const [inventory, setInventory] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -76,43 +68,12 @@ export const useProviderInventory = <T>({
   const oldDataRef = useRef(null);
   const oldErrorRef = useRef(null);
 
-  const cacheKey =
-    provider?.metadata?.uid &&
-    `forklift_inventory_${provider.spec.type}_${provider.metadata.uid}${
-      subPath ? `_${subPath}` : ''
-    }`;
-
   // we only use type and uid in this context
   const stableProvider = useMemo(() => provider, [provider?.spec?.type, provider?.metadata?.uid]);
-
-  // Fetch cached data
-  useEffect(() => {
-    if (cacheExpiryDuration > 0) {
-      const fetchCachedData = async () => {
-        handleError(null);
-
-        if (!isValidProvider(provider)) {
-          const e = new Error('Invalid provider data');
-          handleError(e);
-
-          return;
-        }
-
-        const cachedData = getCachedData<T>(cacheKey, cacheExpiryDuration);
-        if (cachedData) {
-          updateInventoryIfChanged(cachedData, fieldsToCompare);
-        }
-      };
-
-      fetchCachedData();
-    }
-  }, [stableProvider, subPath, cacheExpiryDuration]);
 
   // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {
-      handleError(null);
-
       if (!isValidProvider(provider)) {
         const e = new Error('Invalid provider data');
         handleError(e);
@@ -133,10 +94,7 @@ export const useProviderInventory = <T>({
         );
 
         updateInventoryIfChanged(newInventory, fieldsToCompare);
-
-        if (cacheExpiryDuration > 0) {
-          setCachedData<T>(cacheKey, newInventory);
-        }
+        handleError(null);
       } catch (e) {
         handleError(e);
       }
@@ -146,7 +104,7 @@ export const useProviderInventory = <T>({
 
     const intervalId = setInterval(fetchData, interval);
     return () => clearInterval(intervalId);
-  }, [stableProvider, subPath, interval, cacheExpiryDuration]);
+  }, [stableProvider, subPath, interval]);
 
   /**
    * Handles any errors thrown when trying to fetch the inventory.
