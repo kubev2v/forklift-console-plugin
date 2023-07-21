@@ -42,9 +42,6 @@ export const openstackSecretFieldValidator = (id: string, value: string) => {
     case 'projectID':
       validationState = validateProjectID(trimmedValue) ? 'success' : 'error';
       break;
-    case 'userDomainName':
-      validationState = validateUserDomainName(trimmedValue) ? 'success' : 'error';
-      break;
     case 'applicationCredentialID':
       validationState = validateApplicationCredentialID(trimmedValue) ? 'success' : 'error';
       break;
@@ -97,10 +94,6 @@ const validateUserID = (value: string) => {
 };
 
 const validateProjectID = (value: string) => {
-  return validateNoSpaces(value);
-};
-
-const validateUserDomainName = (value: string) => {
   return validateNoSpaces(value);
 };
 

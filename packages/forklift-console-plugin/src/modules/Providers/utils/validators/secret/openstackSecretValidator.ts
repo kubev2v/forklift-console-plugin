@@ -25,12 +25,12 @@ export function openstackSecretValidator(secret: V1Secret) {
       break;
     case 'token':
       if (secret?.data?.['username']) {
-        requiredFields = ['token', 'username', 'projectName', 'userDomainName'];
+        requiredFields = ['token', 'username', 'projectName', 'domainName'];
         validateFields = [
           'token',
           'username',
           'projectName',
-          'userDomainName',
+          'domainName',
           'cacert',
           'insecureSkipVerify',
         ];

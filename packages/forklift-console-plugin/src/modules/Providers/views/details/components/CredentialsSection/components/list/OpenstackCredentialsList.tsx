@@ -93,9 +93,9 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         label: t('Project'),
         description: t('Openstack project for token credentials.'),
       },
-      userDomainName: {
-        label: t('User Domain Name'),
-        description: t('Openstack user domain name for token credentials.'),
+      domainName: {
+        label: t('Domain Name'),
+        description: t('Openstack domain name for token credentials.'),
       },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),

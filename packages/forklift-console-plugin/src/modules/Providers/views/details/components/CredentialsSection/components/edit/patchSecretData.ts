@@ -35,7 +35,6 @@ const EmptyOpenstackCredentials = {
   token: undefined,
   userID: undefined,
   projectID: undefined,
-  userDomainName: undefined,
   applicationCredentialID: undefined,
   applicationCredentialSecret: undefined,
   applicationCredentialName: undefined,
