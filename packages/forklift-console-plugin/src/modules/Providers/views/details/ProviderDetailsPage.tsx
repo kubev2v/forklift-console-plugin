@@ -71,6 +71,7 @@ export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, 
     providerLoaded &&
     !inventoryLoading &&
     inventoryError &&
+    inventoryError.toString() !== 'Error: Invalid provider data' &&
     provider?.status?.phase === 'Ready'
   ) {
     alerts.push(<InventoryNotReachable key={'inventoryNotReachable'} />);
