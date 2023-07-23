@@ -49,6 +49,7 @@ const DNS_SUBDOMAINS_NAME_REGEXP = /^[a-z][a-z0-9-]{0,251}[a-z0-9]$/;
 // validate bearer tokens, used in K8s
 const JWT_TOKEN_REGEX = /^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-+/=]*)/gm;
 const K8S_TOKEN_REGEX = /^[a-z0-9]{6}.[a-z0-9]{16}$/;
+const TMP_TOKEN_REGEX = /^sha256~[A-Za-z0-9+/=_-]{43}$/;
 
 // helper methods
 
@@ -77,7 +78,7 @@ export function validateK8sName(k8sName: string) {
 }
 
 export function validateK8sToken(token: string) {
-  return JWT_TOKEN_REGEX.test(token) || K8S_TOKEN_REGEX.test(token);
+  return JWT_TOKEN_REGEX.test(token) || K8S_TOKEN_REGEX.test(token) || TMP_TOKEN_REGEX.test(token);
 }
 
 export function validateNoSpaces(value: string) {
