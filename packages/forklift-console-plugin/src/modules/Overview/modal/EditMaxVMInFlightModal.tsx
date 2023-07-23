@@ -13,8 +13,8 @@ const options = [
   { key: 2, name: 2, description: 'Very low concurrent VM migrations' },
   { key: 10, name: 10, description: 'Low concurrent VM migrations' },
   { key: 20, name: 20, description: 'Moderate concurrent VM migrations' },
-  { key: 30, name: 50, description: 'High concurrent VM migrations' },
-  { key: 50, name: 100, description: 'Very high concurrent VM migrations' },
+  { key: 50, name: 50, description: 'High concurrent VM migrations' },
+  { key: 100, name: 100, description: 'Very high concurrent VM migrations' },
 ];
 
 /**
