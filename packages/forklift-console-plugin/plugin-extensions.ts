@@ -16,7 +16,7 @@ const extensions: EncodedExtension[] = [
     properties: {
       id: 'migration',
       name: '%plugin__kubevirt-plugin~Migration%',
-      insertAfter: 'workloads',
+      insertAfter: ['virtualization', 'workloads'],
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-sec-migration',
         'data-testid': 'migration-nav-item',
