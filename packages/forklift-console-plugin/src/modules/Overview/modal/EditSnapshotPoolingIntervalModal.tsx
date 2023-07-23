@@ -13,7 +13,7 @@ const options = [
   { key: 1, name: '1s', description: 'Extra short snapshot polling interval' },
   { key: 5, name: '5s', description: 'Short snapshot polling interval' },
   { key: 10, name: '10s', description: 'Long snapshot polling interval' },
-  { key: 50, name: '60s', description: 'Extra long snapshot polling interval' },
+  { key: 60, name: '60s', description: 'Extra long snapshot polling interval' },
 ];
 
 /**
