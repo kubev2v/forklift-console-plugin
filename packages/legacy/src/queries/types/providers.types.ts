@@ -54,11 +54,21 @@ export interface IRHVProvider extends ICommonProvider {
   vmCount: number;
   networkCount: number;
   storageDomainCount: number;
+
+  datastoreCount: number;
+}
+
+export interface IOvaProvider extends ICommonProvider {
+  vmCount: number;
+  networkCount: number;
+  DiskCount: number;
+
+  clusterCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
+  hostCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
+  datastoreCount: number;
 }
 
 export interface IOpenStackProvider extends ICommonProvider {
-  clusterCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
-  hostCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
   regionCount: number;
   projectCount: number;
   vmCount: number;
@@ -66,25 +76,42 @@ export interface IOpenStackProvider extends ICommonProvider {
   volumeCount: number;
   volumeTypeCount: number;
   networkCount: number;
+
+  clusterCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
+  hostCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
+  datastoreCount: number;
 }
 
 export interface IOpenShiftProvider extends ICommonProvider {
   vmCount: number;
   networkCount: number;
+  storageClassCount: number;
+
+  clusterCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
+  hostCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
+  datastoreCount: number;
 }
 
 export type InventoryProvider =
   | IVMwareProvider
   | IRHVProvider
   | IOpenStackProvider
-  | IOpenShiftProvider;
-export type SourceInventoryProvider = IVMwareProvider | IRHVProvider | IOpenStackProvider;
+  | IOpenShiftProvider
+  | IOvaProvider;
+
+export type SourceInventoryProvider =
+  | IVMwareProvider
+  | IRHVProvider
+  | IOpenStackProvider
+  | IOpenShiftProvider
+  | IOvaProvider;
 
 export interface IProvidersByType {
   vsphere: IVMwareProvider[];
   ovirt: IRHVProvider[];
   openstack: IOpenStackProvider[];
   openshift: IOpenShiftProvider[];
+  ova: IOvaProvider[];
 }
 
 export interface ICorrelatedProvider<T extends InventoryProvider> extends IProviderObject {
