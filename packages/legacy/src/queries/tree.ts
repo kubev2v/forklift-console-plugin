@@ -8,7 +8,12 @@ import {
   MOCK_VMWARE_VM_TREE,
 } from './mocks/tree.mock';
 import { SourceInventoryProvider } from './types';
-import { IInventoryHostTree, InventoryTree, InventoryTreeType } from './types/tree.types';
+import {
+  ICommonTreeObject,
+  IInventoryHostTree,
+  InventoryTree,
+  InventoryTreeType,
+} from './types/tree.types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { ProviderType } from '../common/constants';
 import { usePollingContext } from '../common/context';
@@ -99,7 +104,7 @@ export const useInventoryTreeQuery = <T extends InventoryTree>(
     ovirt: '/tree/cluster',
     openstack: '/tree/project',
     openshift: '/tree/namespace',
-    ova: '/tree/vms',
+    ova: '/vms',
   };
   const mockTreeData: Record<ProviderType, IInventoryHostTree> = {
     vsphere: MOCK_VMWARE_HOST_TREE,
@@ -118,8 +123,17 @@ export const useInventoryTreeQuery = <T extends InventoryTree>(
   return useMockableQuery<T, unknown, IndexedTree<T>>(
     {
       queryKey: ['inventory-tree', provider?.name, treeType],
-      queryFn: async () =>
-        await consoleFetchJSON(getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)),
+      queryFn: async () => {
+        const result = await consoleFetchJSON(
+          getInventoryApiUrl(`${provider?.selfLink || ''}${apiSlug}`)
+        );
+
+        if (provider.type === 'ova') {
+          return createTreeFromVMs(result);
+        } else {
+          return result;
+        }
+      },
       enabled: (isValidClusterTree || isValidVMTree) && !!provider,
       cacheTime: 0,
       refetchInterval: usePollingContext().refetchInterval,
@@ -128,3 +142,32 @@ export const useInventoryTreeQuery = <T extends InventoryTree>(
     apiMockData as T
   );
 };
+
+function createTreeFromVMs(vms: ICommonTreeObject[]): InventoryTree {
+  // Create children nodes from VMs
+  const children: InventoryTree[] = vms.map((vm) => ({
+    kind: 'VM',
+    object: { id: vm.name, ...vm },
+    children: null,
+  }));
+
+  // Create root node
+  const rootNode: InventoryTree = {
+    kind: 'Folder',
+    object: {
+      name: 'default',
+      id: 'default',
+      selfLink: '/default',
+    },
+    children: children,
+  };
+
+  // Create the final tree
+  const tree: InventoryTree = {
+    kind: '',
+    object: null,
+    children: [rootNode],
+  };
+
+  return tree;
+}
