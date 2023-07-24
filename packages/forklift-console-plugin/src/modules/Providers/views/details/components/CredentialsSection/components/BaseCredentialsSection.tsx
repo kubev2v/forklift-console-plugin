@@ -1,6 +1,6 @@
 import React, { ReactNode, useReducer, useState } from 'react';
 import { AlertMessageForModals } from 'src/modules/Providers/modals';
-import { isSecretDataChanged, ProviderData } from 'src/modules/Providers/utils';
+import { isSecretDataChanged } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1Secret } from '@kubev2v/types';
@@ -51,9 +51,6 @@ export interface BaseCredentialsSecretState {
 }
 
 export type BaseCredentialsSectionProps = {
-  data: ProviderData;
-  loaded: boolean;
-  loadError: unknown;
   secret: V1Secret;
   validator: (secret: V1Secret) => Error | null;
   ListComponent: React.FC<ListComponentProps>;
