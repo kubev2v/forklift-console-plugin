@@ -28,6 +28,12 @@ export interface V1beta1NetworkMapSpecMapSource {
    * @required {false}
    */
   name?: string;
+  /** namespace
+   * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+   *
+   * @required {false}
+   */
+  namespace?: string;
   /** type
    * Type used to qualify the name.
    *

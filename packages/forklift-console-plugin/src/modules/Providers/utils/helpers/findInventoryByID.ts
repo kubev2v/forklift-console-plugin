@@ -15,11 +15,9 @@ export function findInventoryByID(
     return undefined;
   }
 
-  const providers = [
-    ...inventory.openshift,
-    ...inventory.openstack,
-    ...inventory.ovirt,
-    ...inventory.vsphere,
-  ];
+  const providers = Object.keys(inventory).reduce((flatInventory, key) => {
+    return flatInventory.concat(inventory[key] || []);
+  }, [] as ProviderInventory[]);
+
   return providers.find((provider) => provider.uid === uid);
 }

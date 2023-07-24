@@ -1,5 +1,3 @@
-import { ProviderType } from '@kubev2v/types';
-
 export const DEFAULT_FIELDS_TO_COMPARE = [
   'vmCount',
   'networkCount',
@@ -15,5 +13,3 @@ export const DEFAULT_FIELDS_TO_COMPARE = [
   'storageDomainCount',
   'datastoreCount',
 ];
-
-export const INVENTORY_TYPES: ProviderType[] = ['openshift', 'openstack', 'ovirt', 'vsphere'];

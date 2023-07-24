@@ -46,3 +46,4 @@ macspoofchk
 veth
 milli
 Mbps
+Numa

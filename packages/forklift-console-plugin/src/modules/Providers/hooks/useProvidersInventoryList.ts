@@ -5,7 +5,9 @@ import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils';
 
-import { DEFAULT_FIELDS_TO_COMPARE, INVENTORY_TYPES } from './utils';
+import { DEFAULT_FIELDS_TO_COMPARE } from './utils';
+
+const INVENTORY_TYPES: string[] = ['openshift', 'openstack', 'ovirt', 'vsphere', 'ova'];
 
 /**
  * Configuration parameters for useProvidersInventoryList hook.
