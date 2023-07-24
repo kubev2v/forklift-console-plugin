@@ -12,32 +12,63 @@ import { VSphereCredentialsSection } from './VSphereCredentialsSection';
 
 export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
   const { t } = useForkliftTranslation();
-  const { data, loaded: providerLoaded, loadError: providerError } = props;
+  const { data, loaded, loadError } = props;
   const { provider } = data;
+
+  if (!provider?.spec?.secret?.name || !provider?.spec?.secret?.namespace || !loaded || loadError) {
+    return (
+      <div>
+        <span className="text-muted">{t('Secret is loading, please wait.')}</span>
+      </div>
+    );
+  }
+
+  return (
+    <CredentialsSection_
+      name={provider?.spec?.secret?.name}
+      namespace={provider?.spec?.secret?.namespace}
+      type={provider?.spec?.type}
+    />
+  );
+};
+
+export const CredentialsSection_: React.FC<{ name: string; namespace: string; type: string }> = ({
+  name,
+  namespace,
+  type,
+}) => {
+  const { t } = useForkliftTranslation();
 
   const [secret, loaded, loadError] = useK8sWatchResource<V1Secret>({
     groupVersionKind: { version: 'v1', kind: 'Secret' },
     namespaced: true,
-    namespace: provider?.spec?.secret?.namespace,
-    name: provider?.spec?.secret?.name,
+    namespace: namespace,
+    name: name,
   });
-
-  // Checking if all necessary data is available
-  const isDataLoaded = secret && loaded && !loadError && providerLoaded && !providerError;
-  const isProviderDataAvailable = provider?.spec?.secret?.name && provider?.spec?.secret?.namespace;
-  const isSecretDataAvailable = secret?.metadata?.name && secret?.metadata?.namespace;
 
   // Checking if provider data matches secret data
   const doesProviderDataMatchSecret =
-    secret?.metadata?.name === provider?.spec?.secret?.name &&
-    secret?.metadata?.namespace === provider?.spec?.secret?.namespace;
+    secret?.metadata?.name === name && secret?.metadata?.namespace === namespace;
 
-  if (
-    !isDataLoaded ||
-    !isProviderDataAvailable ||
-    !isSecretDataAvailable ||
-    !doesProviderDataMatchSecret
-  ) {
+  if (!loaded) {
+    return (
+      <div>
+        <span className="text-muted">{t('Secret is loading, please wait.')}</span>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div>
+        <span className="text-muted">
+          {t('Something is wrong, the secret was not loaded, please try to reload the page.')}
+        </span>
+      </div>
+    );
+  }
+
+  if (!doesProviderDataMatchSecret) {
     return (
       <div>
         <span className="text-muted">{t('No secret found.')}</span>
@@ -45,15 +76,15 @@ export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
     );
   }
 
-  switch (provider?.spec?.type) {
+  switch (type) {
     case 'ovirt':
-      return <OvirtCredentialsSection {...props} secret={secret} />;
+      return <OvirtCredentialsSection secret={secret} />;
     case 'openshift':
-      return <OpenshiftCredentialsSection {...props} secret={secret} />;
+      return <OpenshiftCredentialsSection secret={secret} />;
     case 'openstack':
-      return <OpenstackCredentialsSection {...props} secret={secret} />;
+      return <OpenstackCredentialsSection secret={secret} />;
     case 'vsphere':
-      return <VSphereCredentialsSection {...props} secret={secret} />;
+      return <VSphereCredentialsSection secret={secret} />;
     default:
       return <></>;
   }
