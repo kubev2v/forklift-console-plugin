@@ -143,7 +143,7 @@ export const useHasSourceAndTargetProviders = (
     namespace,
   });
 
-  const hasSourceProviders = providers.some((p) => p?.spec?.type !== 'openshift');
+  const hasSourceProviders = providers.length > 0;
   const hasTargetProviders = providers.some((p) => p?.spec?.type === 'openshift');
 
   return [hasSourceProviders, hasTargetProviders, providersLoaded, providersError];

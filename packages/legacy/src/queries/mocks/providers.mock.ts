@@ -12,6 +12,7 @@ export let MOCK_INVENTORY_PROVIDERS: IProvidersByType = {
   ovirt: [],
   openstack: [],
   openshift: [],
+  ova: [],
 };
 
 export let MOCK_CLUSTER_PROVIDERS: IProviderObject[];
@@ -215,6 +216,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     vmCount: 36,
     networkCount: 15,
     storageDomainCount: 9,
+    datastoreCount: 0,
   };
 
   const rhvProvider1i: IRHVProvider = {
@@ -299,8 +301,8 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
         ...providerStatusReadyFields.status,
       },
     },
-    clusterCount: 0, // TODO need to remove when refactoring since there is no such counter for openStack, i.e. This field won't return from a real server
-    hostCount: 0, // TODO need to remove when refactoring since there is no such counter for openStack, i.e. This field won't return from a real server
+    clusterCount: 0,
+    hostCount: 0,
     regionCount: 1,
     projectCount: 1,
     vmCount: 3,
@@ -308,6 +310,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     volumeCount: 5,
     volumeTypeCount: 2,
     networkCount: 3,
+    datastoreCount: 0,
   };
 
   const openstackProvider2: IOpenStackProvider = {
@@ -363,6 +366,10 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     vmCount: 26,
     networkCount: 8,
+    clusterCount: 0,
+    hostCount: 0,
+    storageClassCount: 0,
+    datastoreCount: 0,
   };
 
   const openshiftProvider2: IOpenShiftProvider = {
@@ -445,6 +452,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     ovirt: [rhvProvider1, rhvProvider1i, rhvProvider2, rhvProvider3],
     openstack: [openstackProvider1, openstackProvider2],
     openshift: [openshiftProvider1, openshiftProvider2, openshiftProvider3, openshiftProvider4],
+    ova: [],
   };
 
   MOCK_CLUSTER_PROVIDERS = [

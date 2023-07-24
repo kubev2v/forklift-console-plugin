@@ -19,6 +19,7 @@ import {
   IVMwareProvider,
   IOpenStackProvider,
   SourceInventoryProvider,
+  IOpenShiftProvider,
 } from 'legacy/src/queries/types';
 import { ProviderActionsDropdown } from '../ProviderActionsDropdown';
 import { StatusCondition } from 'legacy/src/common/components/StatusCondition';
@@ -55,6 +56,12 @@ export const SourceProvidersTable: React.FunctionComponent<ISourceProvidersTable
     }
     if (providerType === 'openstack') {
       return (provider.inventory as IOpenStackProvider).volumeTypeCount;
+    }
+    if (providerType === 'openshift') {
+      return (provider.inventory as IOpenShiftProvider).storageClassCount;
+    }
+    if (providerType === 'ova') {
+      return 1;
     }
     return 0;
   };
