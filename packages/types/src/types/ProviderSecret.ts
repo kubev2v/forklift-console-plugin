@@ -3,6 +3,7 @@
 import {
   OpenShiftProviderSecret,
   OpenstackProviderSecret,
+  OvaProviderSecret,
   OVirtProviderSecret,
   VSphereProviderSecret,
 } from './secret';
@@ -19,4 +20,5 @@ export type ProviderSecret =
   | OpenShiftProviderSecret
   | VSphereProviderSecret
   | OVirtProviderSecret
-  | OpenstackProviderSecret;
+  | OpenstackProviderSecret
+  | OvaProviderSecret;
