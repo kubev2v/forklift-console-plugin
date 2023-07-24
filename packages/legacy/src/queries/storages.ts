@@ -29,6 +29,9 @@ export const useSourceStoragesQuery = (
     if (provider?.type === 'openstack') {
       return '/volumetypes';
     }
+    if (provider?.type === 'openshift') {
+      return '/storageclasses?detail=1';
+    }
     return '/storagedomains';
   };
   const mockStorage = (provider: SourceInventoryProvider) => {

@@ -11,7 +11,7 @@ import {
   MappingType,
 } from 'legacy/src/queries/types';
 import { IMappingBuilderItem } from './MappingBuilder';
-import { getMappingTargetName } from '../MappingDetailView/helpers';
+import { getMappingName } from '../MappingDetailView/helpers';
 import { TruncatedText } from 'legacy/src/common/components/TruncatedText';
 
 interface IMappingTargetSelectProps extends Partial<ISimpleSelectProps> {
@@ -42,7 +42,7 @@ export const MappingTargetSelect: React.FunctionComponent<IMappingTargetSelectPr
   );
 
   const targetOptions: OptionWithValue<MappingTarget>[] = availableTargets.map((target) => {
-    let name = getMappingTargetName(target, mappingType);
+    let name = getMappingName(target, mappingType);
     let isDefault = false;
     if (mappingType === MappingType.Storage) {
       const targetStorage = target as IAnnotatedStorageClass;

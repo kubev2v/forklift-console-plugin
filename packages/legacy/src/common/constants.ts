@@ -40,6 +40,7 @@ export const PRODUCT_DOCO_LINK = {
 
 export const PROVIDER_TYPES = ['vsphere', 'ovirt', 'openstack', 'openshift', 'ova'] as const;
 export type ProviderType = (typeof PROVIDER_TYPES)[number];
+
 export const SOURCE_PROVIDER_TYPES: ProviderType[] = [
   'vsphere',
   'ovirt',

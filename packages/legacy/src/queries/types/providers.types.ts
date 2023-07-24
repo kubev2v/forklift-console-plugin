@@ -45,6 +45,7 @@ export interface IVMwareProvider extends ICommonProvider {
   vmCount: number;
   networkCount: number;
   datastoreCount: number;
+  storageClassCount: number; // TODO need to remove when refactoring since there is no such counter for VMware
 }
 
 export interface IRHVProvider extends ICommonProvider {
@@ -56,6 +57,7 @@ export interface IRHVProvider extends ICommonProvider {
   storageDomainCount: number;
 
   datastoreCount: number;
+  storageClassCount: number; // TODO need to remove when refactoring since there is no such counter for RHV
 }
 
 export interface IOvaProvider extends ICommonProvider {
@@ -66,6 +68,7 @@ export interface IOvaProvider extends ICommonProvider {
   clusterCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
   hostCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
   datastoreCount: number;
+  storageClassCount: number; //// TODO need to remove when refactoring since there is no such counter for OVA
 }
 
 export interface IOpenStackProvider extends ICommonProvider {
@@ -80,6 +83,7 @@ export interface IOpenStackProvider extends ICommonProvider {
   clusterCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
   hostCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
   datastoreCount: number;
+  storageClassCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
 }
 
 export interface IOpenShiftProvider extends ICommonProvider {
@@ -87,8 +91,8 @@ export interface IOpenShiftProvider extends ICommonProvider {
   networkCount: number;
   storageClassCount: number;
 
-  clusterCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
-  hostCount: number; // TODO need to remove when refactoring since there is no such counter for openStack
+  clusterCount: number; // TODO need to remove when refactoring since there is no such counter for OpenShift
+  hostCount: number; // TODO need to remove when refactoring since there is no such counter for OpenShift
   datastoreCount: number;
 }
 

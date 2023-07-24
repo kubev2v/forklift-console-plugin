@@ -2,8 +2,10 @@ import {
   IAnnotatedStorageClass,
   INetworkMappingItem,
   IOpenShiftNetwork,
+  ISourceNetwork,
   IStorageMappingItem,
   MappingItem,
+  MappingSource,
   MappingTarget,
   MappingType,
   POD_NETWORK,
@@ -41,11 +43,18 @@ export const groupMappingItemsByTarget = (
   );
 };
 
-export const getMappingTargetName = (target: MappingTarget, mappingType: MappingType): string => {
+export const getMappingName = (
+  SourceOrTarget: MappingTarget | MappingSource,
+  mappingType: MappingType
+): string => {
   if (mappingType === MappingType.Network) {
-    const network = target as IOpenShiftNetwork | typeof POD_NETWORK;
+    if ((SourceOrTarget as ISourceNetwork).path) {
+      return (SourceOrTarget as ISourceNetwork).name;
+    }
+
+    const network = SourceOrTarget as IOpenShiftNetwork | typeof POD_NETWORK;
     if ((network as typeof POD_NETWORK).type === 'pod') return POD_NETWORK.name;
     return `${network.namespace} / ${network.name}`;
   }
-  return (target as IAnnotatedStorageClass).name;
+  return (SourceOrTarget as IAnnotatedStorageClass).name;
 };
