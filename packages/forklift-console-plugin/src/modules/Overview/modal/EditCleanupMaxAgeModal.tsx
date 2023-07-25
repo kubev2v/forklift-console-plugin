@@ -10,11 +10,11 @@ import SettingsSelectInput from './SettingsSelectInput';
 
 // Define the options
 const options = [
-  { key: -1, name: 'Disable', description: 'Never perform must gather cleanup' },
-  { key: 1, name: '1h', description: 'Clean must gather API after 1 hour' },
-  { key: 12, name: '12h', description: 'Clean must gather API after 12 hours' },
-  { key: 24, name: '24h', description: 'Clean must gather API after 24 hours' },
-  { key: 72, name: '72h', description: 'Clean must gather API after 72 hours' },
+  { key: '-1', name: 'Disable', description: 'Never perform must gather cleanup' },
+  { key: '1h', name: '1h', description: 'Clean must gather API after 1 hour' },
+  { key: '12h', name: '12h', description: 'Clean must gather API after 12 hours' },
+  { key: '24h', name: '24h', description: 'Clean must gather API after 24 hours' },
+  { key: '72h', name: '72h', description: 'Clean must gather API after 72 hours' },
 ];
 
 /**
