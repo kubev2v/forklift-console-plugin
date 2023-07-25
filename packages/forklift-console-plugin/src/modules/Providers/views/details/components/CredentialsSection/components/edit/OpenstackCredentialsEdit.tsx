@@ -155,10 +155,17 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
       >
         <Radio
           name="authType"
-          label="Password"
-          id="passwordSecretFields"
-          isChecked={state.authenticationType === 'passwordSecretFields'}
-          onChange={() => handleAuthTypeChange('passwordSecretFields')}
+          label="Application Credential ID"
+          id="applicationCredentialIdSecretFields"
+          isChecked={state.authenticationType === 'applicationCredentialIdSecretFields'}
+          onChange={() => handleAuthTypeChange('applicationCredentialIdSecretFields')}
+        />
+        <Radio
+          name="authType"
+          label="Application Credential Name"
+          id="applicationCredentialNameSecretFields"
+          isChecked={state.authenticationType === 'applicationCredentialNameSecretFields'}
+          onChange={() => handleAuthTypeChange('applicationCredentialNameSecretFields')}
         />
         <Radio
           name="authType"
@@ -176,17 +183,10 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         />
         <Radio
           name="authType"
-          label="Application Credential ID"
-          id="applicationCredentialIdSecretFields"
-          isChecked={state.authenticationType === 'applicationCredentialIdSecretFields'}
-          onChange={() => handleAuthTypeChange('applicationCredentialIdSecretFields')}
-        />
-        <Radio
-          name="authType"
-          label="Application Credential Name"
-          id="applicationCredentialNameSecretFields"
-          isChecked={state.authenticationType === 'applicationCredentialNameSecretFields'}
-          onChange={() => handleAuthTypeChange('applicationCredentialNameSecretFields')}
+          label="Password"
+          id="passwordSecretFields"
+          isChecked={state.authenticationType === 'passwordSecretFields'}
+          onChange={() => handleAuthTypeChange('passwordSecretFields')}
         />
       </FormGroup>
 
