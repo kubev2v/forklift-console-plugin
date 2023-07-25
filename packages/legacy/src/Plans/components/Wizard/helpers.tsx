@@ -304,8 +304,25 @@ export const getAvailableVMs = (
       .flatMap(({ object }) => (object ? [object.selfLink] : []))
       .filter((selfLink) => !includeExtraVMs.some((extraVM) => selfLink === extraVM.selfLink)),
   ];
-  const matchingVMs = indexedVMs?.findVMsBySelfLinks(vmSelfLinks) || [];
-  return matchingVMs;
+
+  // Check if `indexedVMs` is defined, and if so, use its `findVMsBySelfLinks` method
+  let matchingVMs = [];
+  if (indexedVMs) {
+    matchingVMs = indexedVMs.findVMsBySelfLinks(vmSelfLinks);
+  }
+
+  // If no matching VMs were found, use an empty array
+  matchingVMs = matchingVMs || [];
+
+  // Create a new array from `matchingVMs` by mapping over it
+  // Each element of the new array is an object with an `id` property and all the properties of the original VM
+  return matchingVMs.map((vm) => {
+    // If the VM is not defined, its id would be `undefined`, and the spread operator will have no effect
+    const id = vm?.uid;
+    const vmProperties = vm || {};
+
+    return { id, ...vmProperties };
+  });
 };
 
 export interface IVMTreePathInfo {
