@@ -104,6 +104,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     vmCount: 41,
     networkCount: 8,
     datastoreCount: 3,
+    storageClassCount: 0, // TODO need to remove when refactoring
   };
 
   const vmwareProvider2: IVMwareProvider = {
@@ -217,6 +218,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     networkCount: 15,
     storageDomainCount: 9,
     datastoreCount: 0,
+    storageClassCount: 0, // TODO need to remove when refactoring
   };
 
   const rhvProvider1i: IRHVProvider = {
@@ -311,6 +313,7 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     volumeTypeCount: 2,
     networkCount: 3,
     datastoreCount: 0,
+    storageClassCount: 0, // TODO need to remove when refactoring
   };
 
   const openstackProvider2: IOpenStackProvider = {
@@ -366,10 +369,10 @@ if (process.env.NODE_ENV === 'test' || process.env.DATA_SOURCE === 'mock') {
     },
     vmCount: 26,
     networkCount: 8,
-    clusterCount: 0,
-    hostCount: 0,
-    storageClassCount: 0,
-    datastoreCount: 0,
+    clusterCount: 0, // TODO need to remove when refactoring since there is no such counter for OpenShift
+    hostCount: 0, // TODO need to remove when refactoring since there is no such counter for OpenShift
+    storageClassCount: 0, // TODO need to remove when refactoring since there is no such counter for OpenShift
+    datastoreCount: 0, // TODO need to remove when refactoring since there is no such counter for OpenShift
   };
 
   const openshiftProvider2: IOpenShiftProvider = {

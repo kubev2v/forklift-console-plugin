@@ -1,6 +1,6 @@
 import {
   ICR,
-  IdOrNameRef,
+  IdNameNamespaceTypeRef,
   IMetaObjectMeta,
   INameNamespaceRef,
   IStatusCondition,
@@ -61,7 +61,7 @@ export interface IPlanVMHook {
   step: HookStep;
 }
 
-export interface IPlanVM extends IdOrNameRef {
+export interface IPlanVM extends IdNameNamespaceTypeRef {
   hooks?: IPlanVMHook[];
 }
 

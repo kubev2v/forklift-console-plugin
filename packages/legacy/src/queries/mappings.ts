@@ -197,7 +197,13 @@ export const useMappingResourceQueries = (
   let availableSources: MappingSource[] = [];
   let availableTargets: MappingTarget[] = [];
   if (mappingType === MappingType.Network) {
-    availableSources = (sourceProvider && sourceNetworksQuery.data) || [];
+    availableSources =
+      sourceProvider?.type === 'openshift'
+        ? sourceProvider && sourceNetworksQuery.data
+          ? [POD_NETWORK, ...(sourceNetworksQuery.data || [])]
+          : []
+        : (sourceProvider && sourceNetworksQuery.data) || [];
+
     availableTargets =
       targetProvider && openshiftNetworksQuery.data
         ? [POD_NETWORK, ...(openshiftNetworksQuery.data || [])]

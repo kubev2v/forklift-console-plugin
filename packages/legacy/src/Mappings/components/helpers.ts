@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { isSameResource } from 'legacy/src/queries/helpers';
 import {
-  IdOrNameRef,
+  IdNameNamespaceTypeRef,
   IMetaObjectMeta,
   INetworkMappingItem,
+  IOpenShiftNetwork,
   IOpenShiftProvider,
   IProvidersByType,
+  ISourceNetwork,
+  ISourceStorage,
   IStorageMappingItem,
   Mapping,
   MappingItem,
@@ -23,9 +26,27 @@ import { getStorageTitle } from 'legacy/src/common/helpers';
 
 export const getMappingSourceByRef = (
   sources: MappingSource[],
-  ref: IdOrNameRef
+  ref: IdNameNamespaceTypeRef
 ): MappingSource | null =>
-  sources.find((source) => (ref.id ? source.id === ref.id : source.name === ref.name)) || null;
+  sources.find((source) => {
+    if (ref.type && ref.type == 'pod') {
+      return (source as IOpenShiftNetwork).selfLink === 'pod';
+    } else if (ref.id) {
+      return (
+        ((source as IOpenShiftNetwork).uid ||
+          (source as ISourceNetwork).id ||
+          (source as ISourceStorage).id) === ref.id
+      );
+    } else if (ref.namespace) {
+      return (source as IOpenShiftNetwork).namespace === ref.namespace;
+    } else if (ref.name) {
+      return (
+        ((source as IOpenShiftNetwork).name ||
+          (source as ISourceNetwork).name ||
+          (source as ISourceStorage).name) === ref.name
+      );
+    }
+  }) || null;
 
 export const getMappingTargetByRef = (
   targets: MappingTarget[],

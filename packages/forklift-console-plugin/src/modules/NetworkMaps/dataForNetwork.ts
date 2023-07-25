@@ -11,7 +11,7 @@ import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources'
 import { NetworkMapResource, ProviderRef } from 'src/utils/types';
 
 import {
-  IdOrNameRef,
+  IdNameNamespaceTypeRef,
   INameNamespaceRef,
   INetworkMapping,
   INetworkMappingItem,
@@ -20,24 +20,24 @@ import { V1beta1NetworkMapStatusConditions, V1beta1Provider } from '@kubev2v/typ
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
 export interface FlatNetworkMapping extends CommonMapping {
-  [C.FROM]: [Network, IdOrNameRef[]][];
+  [C.FROM]: [Network, IdNameNamespaceTypeRef[]][];
   [C.TO]: Network[];
   [C.OBJECT]: INetworkMapping;
 }
 
 const groupMultusNetworks = (
-  tuples: [INameNamespaceRef, IdOrNameRef][],
-): [RemoteNetworkResource, IdOrNameRef[]][] => {
+  tuples: [INameNamespaceRef, IdNameNamespaceTypeRef][],
+): [RemoteNetworkResource, IdNameNamespaceTypeRef[]][] => {
   const namespaceNameTree = tuples.reduce(
     (acc, [{ name, namespace }, source]) => ({
       ...acc,
       [namespace]: { ...acc[namespace], [name]: [...(acc[namespace]?.[name] ?? []), source] },
     }),
-    {} as { [k: string]: { [l: string]: IdOrNameRef[] } },
+    {} as { [k: string]: { [l: string]: IdNameNamespaceTypeRef[] } },
   );
   return Object.entries(namespaceNameTree).flatMap(([namespace, nameToSrc]) =>
     Object.entries(nameToSrc).map(
-      ([name, sourceNetworks]): [RemoteNetworkResource, IdOrNameRef[]] => [
+      ([name, sourceNetworks]): [RemoteNetworkResource, IdNameNamespaceTypeRef[]] => [
         {
           name,
           namespace,
@@ -51,7 +51,7 @@ const groupMultusNetworks = (
 
 export const groupByTarget = (
   networkItems: INetworkMappingItem[] = [],
-): [Network, IdOrNameRef[]][] => {
+): [Network, IdNameNamespaceTypeRef[]][] => {
   const types = networkItems.reduce(
     (acc, it) => ({
       pod: [...acc.pod, ...(it.destination.type === 'pod' ? [it] : [])],
@@ -66,14 +66,14 @@ export const groupByTarget = (
     },
   );
 
-  const podNet: [Network, IdOrNameRef[]][] = types.pod.length
+  const podNet: [Network, IdNameNamespaceTypeRef[]][] = types.pod.length
     ? [[{ name: '', type: 'pod' }, types.pod.map((it) => it.source)]]
     : [];
 
   return [
     ...podNet,
     ...groupMultusNetworks(
-      types.multus.map(({ source, destination }): [INameNamespaceRef, IdOrNameRef] => [
+      types.multus.map(({ source, destination }): [INameNamespaceRef, IdNameNamespaceTypeRef] => [
         destination as INameNamespaceRef,
         source,
       ]),
@@ -95,7 +95,7 @@ export const mergeData = (
         K8sGroupVersionKind,
         ProviderRef,
         ProviderRef,
-        [Network, IdOrNameRef[]][],
+        [Network, IdNameNamespaceTypeRef[]][],
         OwnerRef,
       ] => [
         mapping, // to extract props

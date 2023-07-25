@@ -3,7 +3,7 @@ import { Grid, GridItem, Text, TextContent } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import text from '@patternfly/react-styles/css/utilities/Text/text';
 
-import { Mapping, MappingType } from 'legacy/src/queries/types';
+import { ISourceNetwork, ISourceStorage, Mapping, MappingType } from 'legacy/src/queries/types';
 import { LineArrow } from 'legacy/src/common/components/LineArrow';
 import { useResourceQueriesForMapping } from 'legacy/src/queries';
 import { TruncatedText } from 'legacy/src/common/components/TruncatedText';
@@ -73,22 +73,25 @@ export const MappingDetailView: React.FunctionComponent<IMappingDetailViewProps>
                       item.source
                     );
                     const sourceName = source ? source.name : '';
+                    const path = source
+                      ? (source as ISourceNetwork).path || (source as ISourceStorage).path || ''
+                      : null;
                     return (
                       <li
-                        key={`${sourceName}-${source?.path || ''}`}
+                        key={`${sourceName}-${path || ''}`}
                         className={itemIndex !== items.length - 1 ? spacing.mbSm : ''}
                       >
                         <TextContent>
                           <TruncatedText>
                             {sourceName || <span className="missing-item">Not available</span>}
                           </TruncatedText>
-                          {source?.path ? (
+                          {path ? (
                             <TruncatedText>
                               <Text
                                 component="small"
                                 style={{ fontSize: 'var(--pf-global--FontSize--xs)' }}
                               >
-                                {source.path}
+                                {path}
                               </Text>
                             </TruncatedText>
                           ) : null}

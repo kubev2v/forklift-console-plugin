@@ -60,7 +60,9 @@ export interface INameNamespaceRef {
   namespace: string;
 }
 
-export interface IdOrNameRef {
+export interface IdNameNamespaceTypeRef {
   id?: string;
   name?: string;
+  namespace?: string;
+  type?: string;
 }

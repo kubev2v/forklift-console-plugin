@@ -10,6 +10,8 @@ import {
   MappingTarget,
   POD_NETWORK,
   IAnnotatedStorageClass,
+  ISourceNetwork,
+  ISourceStorage,
 } from 'legacy/src/queries/types';
 import { LineArrow } from 'legacy/src/common/components/LineArrow';
 import { MappingSourceSelect } from './MappingSourceSelect';
@@ -88,7 +90,9 @@ export const MappingBuilder: React.FunctionComponent<IMappingBuilderProps> = ({
         <Text component="p">{instructionText}</Text>
       </TextContent>
       {builderItems.map((item, itemIndex) => {
-        const key = item.source ? item.source.path : 'empty';
+        const key = item.source
+          ? (item.source as ISourceNetwork).path || (item.source as ISourceStorage).path || ''
+          : 'empty';
         return (
           <Grid key={key}>
             {itemIndex === 0 ? (
@@ -116,13 +120,16 @@ export const MappingBuilder: React.FunctionComponent<IMappingBuilderProps> = ({
                 <Bullseye style={{ justifyContent: 'left' }} className={spacing.plSm}>
                   <TextContent>
                     <TruncatedText>{item.source.name}</TruncatedText>
-                    {item.source.path ? (
+                    {(item.source as ISourceNetwork).path ||
+                    (item.source as ISourceStorage).path ? (
                       <TruncatedText>
                         <Text
                           component="small"
                           style={{ fontSize: 'var(--pf-global--FontSize--xs)' }}
                         >
-                          {item.source.path}
+                          {(item.source as ISourceNetwork).path ||
+                            (item.source as ISourceStorage).path ||
+                            ''}
                         </Text>
                       </TruncatedText>
                     ) : null}
@@ -135,6 +142,7 @@ export const MappingBuilder: React.FunctionComponent<IMappingBuilderProps> = ({
                   itemIndex={itemIndex}
                   setBuilderItems={setBuilderItems}
                   availableSources={availableSources}
+                  mappingType={mappingType}
                   // Maybe use these instead of extraSelectMargin if we can get it to be dynamic to always fit the screen
                   //menuAppendTo="parent"
                   //maxHeight="200px"

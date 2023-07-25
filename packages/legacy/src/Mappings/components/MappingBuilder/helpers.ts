@@ -13,6 +13,9 @@ import {
   IPlan,
   SourceVM,
   SourceInventoryProvider,
+  IOpenShiftNetwork,
+  ISourceNetwork,
+  ISourceStorage,
 } from 'legacy/src/queries/types';
 import { IMappingBuilderItem } from './MappingBuilder';
 import { getMappingSourceByRef, getMappingTargetByRef } from '../helpers';
@@ -77,8 +80,20 @@ export const getMappingFromBuilderItems = ({
     .map((builderItem): MappingItem | null => {
       if (builderItem.source && builderItem.target) {
         if (mappingType === MappingType.Network) {
+          const isSourceMapNetworkTypeOCP = (builderItem.source as IOpenShiftNetwork).uid;
+          const isSourceMapNetworkTypeOCPPod =
+            (builderItem.source as IOpenShiftNetwork).type === 'pod';
           const item: INetworkMappingItem = {
-            source: { id: builderItem.source.id },
+            source: isSourceMapNetworkTypeOCPPod
+              ? { type: 'pod' } // a default POD network is mapped
+              : isSourceMapNetworkTypeOCP
+              ? {
+                  // a non default OpenShift's network is mapped
+                  name: (builderItem.source as IOpenShiftNetwork).name,
+                  namespace: (builderItem.source as IOpenShiftNetwork).namespace,
+                  type: 'multus',
+                }
+              : { id: (builderItem.source as ISourceNetwork).id || null }, // a non OpenShift provider
             destination:
               builderItem.target.selfLink === 'pod'
                 ? { type: 'pod' }
@@ -92,7 +107,10 @@ export const getMappingFromBuilderItems = ({
         }
         if (mappingType === MappingType.Storage) {
           const item: IStorageMappingItem = {
-            source: { id: builderItem.source.id },
+            source: {
+              id: (builderItem.source as ISourceStorage).id,
+              name: (builderItem.source as ISourceStorage).name,
+            },
             destination: {
               storageClass: builderItem.target.name,
             },

@@ -3,7 +3,7 @@ import { usePollingContext } from 'legacy/src/common/context';
 import { UseQueryResult } from 'react-query';
 import { useMockableQuery, sortByName, getInventoryApiUrl } from './helpers';
 import { MOCK_RHV_VMS, MOCK_VMWARE_VMS } from './mocks/vms.mock';
-import { IdOrNameRef, SourceInventoryProvider } from './types';
+import { IdNameNamespaceTypeRef, SourceInventoryProvider } from './types';
 import { SourceVM, IVMwareVM } from './types/vms.types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -12,8 +12,8 @@ type SourceVMsRecord = Record<string, SourceVM | undefined>;
 export interface IndexedSourceVMs {
   vms: SourceVM[];
   vmsBySelfLink: SourceVMsRecord;
-  findVMByRef: (ref: IdOrNameRef) => SourceVM | undefined;
-  findVMsByRefs: (refs: IdOrNameRef[]) => SourceVM[];
+  findVMByRef: (ref: IdNameNamespaceTypeRef) => SourceVM | undefined;
+  findVMsByRefs: (refs: IdNameNamespaceTypeRef[]) => SourceVM[];
   findVMsBySelfLinks: (selfLinks: string[]) => SourceVM[];
 }
 
@@ -32,7 +32,7 @@ export const indexVMs = (vms: SourceVM[]): IndexedSourceVMs => {
     vmsByName[vm.name] = vm;
     vmsBySelfLink[vm.selfLink] = vm;
   });
-  const findVMByRef = (ref: IdOrNameRef): SourceVM | undefined => {
+  const findVMByRef = (ref: IdNameNamespaceTypeRef): SourceVM | undefined => {
     const record = ref.id ? vmsById : vmsByName;
     return record[ref.id ? ref.id : ref.name || ''];
   };

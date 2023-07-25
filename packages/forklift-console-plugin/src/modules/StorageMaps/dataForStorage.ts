@@ -10,7 +10,7 @@ import { useStorageMappings } from 'src/utils/fetch';
 import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
 import { ProviderRef, StorageMapResource } from 'src/utils/types';
 
-import { IdOrNameRef, IStorageMapping } from '@kubev2v/legacy/queries/types';
+import { IdNameNamespaceTypeRef, IStorageMapping } from '@kubev2v/legacy/queries/types';
 import { V1beta1Provider, V1beta1StorageMapStatusConditions } from '@kubev2v/types';
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -19,7 +19,7 @@ export interface Storage {
 }
 
 export interface FlatStorageMapping extends CommonMapping {
-  [C.FROM]: [Storage, IdOrNameRef[]][];
+  [C.FROM]: [Storage, IdNameNamespaceTypeRef[]][];
   [C.TO]: Storage[];
   [C.OBJECT]: IStorageMapping;
 }
@@ -40,14 +40,16 @@ export interface FlatStorageMapping extends CommonMapping {
  *  ]
  * ]
  */
-export const groupByTarget = (tuples: [string, IdOrNameRef][]): [Storage, IdOrNameRef[]][] =>
+export const groupByTarget = (
+  tuples: [string, IdNameNamespaceTypeRef][],
+): [Storage, IdNameNamespaceTypeRef[]][] =>
   Object.entries(
     tuples.reduce(
       (acc, [targetStorageName, sourceStorage]) => ({
         ...acc,
         [targetStorageName]: [...(acc[targetStorageName] ?? []), sourceStorage],
       }),
-      {} as { [k: string]: IdOrNameRef[] },
+      {} as { [k: string]: IdNameNamespaceTypeRef[] },
     ),
   ).map(([targetStorageName, sources]) => [{ name: targetStorageName }, sources]);
 
@@ -66,7 +68,7 @@ export const mergeData = (
         ProviderRef,
         ProviderRef,
         OwnerRef,
-        [Storage, IdOrNameRef[]][],
+        [Storage, IdNameNamespaceTypeRef[]][],
       ] => [
         mapping, // to extract props
         mapping, // to pass as object blob

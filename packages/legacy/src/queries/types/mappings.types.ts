@@ -2,7 +2,7 @@ import { ISourceNetwork, IOpenShiftNetwork } from './networks.types';
 import { ISourceStorage } from './storages.types';
 import { IAnnotatedStorageClass } from './storages.types';
 import {
-  IdOrNameRef,
+  IdNameNamespaceTypeRef,
   IMetaObjectGenerateName,
   IMetaObjectMeta,
   IMetaTypeMeta,
@@ -16,7 +16,7 @@ export enum MappingType {
 }
 
 export interface INetworkMappingItem {
-  source: IdOrNameRef;
+  source: IdNameNamespaceTypeRef;
   destination:
     | {
         name: string;
@@ -27,7 +27,7 @@ export interface INetworkMappingItem {
 }
 
 export interface IStorageMappingItem {
-  source: IdOrNameRef;
+  source: IdNameNamespaceTypeRef;
   destination: {
     storageClass: string;
   };
@@ -110,5 +110,5 @@ export const POD_NETWORK: IOpenShiftNetwork = {
   selfLink: 'pod',
   uid: 'pod',
 };
-export type MappingSource = ISourceStorage | ISourceNetwork;
+export type MappingSource = ISourceStorage | ISourceNetwork | IOpenShiftNetwork;
 export type MappingTarget = IOpenShiftNetwork | IAnnotatedStorageClass;

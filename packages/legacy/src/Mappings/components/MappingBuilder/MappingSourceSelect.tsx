@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MappingSource } from 'legacy/src/queries/types';
+import { ISourceNetwork, MappingSource, MappingType } from 'legacy/src/queries/types';
 import {
   SimpleSelect,
   ISimpleSelectProps,
@@ -7,6 +7,7 @@ import {
 } from 'legacy/src/common/components/SimpleSelect';
 import { IMappingBuilderItem } from './MappingBuilder';
 import { TruncatedText } from 'legacy/src/common/components/TruncatedText';
+import { getMappingName } from '../MappingDetailView/helpers';
 
 interface IMappingSourceSelectProps extends Partial<ISimpleSelectProps> {
   id: string;
@@ -14,6 +15,7 @@ interface IMappingSourceSelectProps extends Partial<ISimpleSelectProps> {
   itemIndex: number;
   setBuilderItems: (items: IMappingBuilderItem[]) => void;
   availableSources: MappingSource[];
+  mappingType: MappingType;
 }
 
 export const MappingSourceSelect: React.FunctionComponent<IMappingSourceSelectProps> = ({
@@ -22,6 +24,7 @@ export const MappingSourceSelect: React.FunctionComponent<IMappingSourceSelectPr
   itemIndex,
   setBuilderItems,
   availableSources,
+  mappingType,
   ...props
 }: IMappingSourceSelectProps) => {
   const setSource = (source: MappingSource) => {
@@ -38,14 +41,18 @@ export const MappingSourceSelect: React.FunctionComponent<IMappingSourceSelectPr
       )
   );
 
-  const options: OptionWithValue<MappingSource>[] = filteredSources.map((source) => ({
-    value: source,
-    toString: () => source.name,
-    props: {
-      children: <TruncatedText>{source.name}</TruncatedText>,
-      description: <TruncatedText>{source.path}</TruncatedText>,
-    },
-  }));
+  const options: OptionWithValue<MappingSource>[] = filteredSources.map((source) => {
+    const sourceName = getMappingName(source, mappingType);
+
+    return {
+      value: source,
+      toString: () => sourceName,
+      props: {
+        children: <TruncatedText>{sourceName}</TruncatedText>,
+        description: <TruncatedText>{(source as ISourceNetwork).path || ''}</TruncatedText>,
+      },
+    };
+  });
   const selectedOption = options.filter(
     (option) => option.value.selfLink === builderItems[itemIndex].source?.selfLink
   );

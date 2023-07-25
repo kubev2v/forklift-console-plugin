@@ -18,6 +18,9 @@ import {
   IVMwareVM,
   IRHVVM,
   IOpenStackVM,
+  IOpenShiftNetwork,
+  ISourceNetwork,
+  ISourceStorage,
 } from 'legacy/src/queries/types';
 import EnterpriseIcon from '@patternfly/react-icons/dist/esm/icons/enterprise-icon';
 import ClusterIcon from '@patternfly/react-icons/dist/esm/icons/cluster-icon';
@@ -427,7 +430,12 @@ export const filterSourcesBySelectedVMs = (
   );
 
   const filteredSources = availableSources.filter(
-    (source) => sourceIds.includes(source.id) || sourceIds.includes(source.name)
+    (source) =>
+      sourceIds.includes(
+        (source as IOpenShiftNetwork).uid ||
+          (source as ISourceNetwork).id ||
+          (source as ISourceStorage).id
+      ) || sourceIds.includes(source.name)
   );
   return filteredSources;
 };
