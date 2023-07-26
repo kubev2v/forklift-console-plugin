@@ -67,6 +67,9 @@ interface IGetMappingParams {
   builderItems: IMappingBuilderItem[];
 }
 
+const buildItemToOCPNetworkName = (source: IOpenShiftNetwork) =>
+  `${source.namespace}/${source.name}`;
+
 export const getMappingFromBuilderItems = ({
   mappingType,
   mappingName,
@@ -89,8 +92,7 @@ export const getMappingFromBuilderItems = ({
               : isSourceMapNetworkTypeOCP
               ? {
                   // a non default OpenShift's network is mapped
-                  name: (builderItem.source as IOpenShiftNetwork).name,
-                  namespace: (builderItem.source as IOpenShiftNetwork).namespace,
+                  name: buildItemToOCPNetworkName(builderItem.source as IOpenShiftNetwork),
                   type: 'multus',
                 }
               : { id: (builderItem.source as ISourceNetwork).id || null }, // a non OpenShift provider
