@@ -24,12 +24,17 @@ import { getBuilderItemsFromMapping } from './MappingBuilder/helpers';
 import { ProviderType } from 'legacy/src/common/constants';
 import { getStorageTitle } from 'legacy/src/common/helpers';
 
+const domainAndNameToName = (domainnAndName: string): string => {
+  const name = domainnAndName.split('/', 2);
+  return name[1] ? name[1] : domainnAndName;
+};
+
 export const getMappingSourceByRef = (
   sources: MappingSource[],
   ref: IdNameNamespaceTypeRef
 ): MappingSource | null =>
   sources.find((source) => {
-    if (ref.type && ref.type == 'pod') {
+    if (ref.type && ref.type === 'pod') {
       return (source as IOpenShiftNetwork).selfLink === 'pod';
     } else if (ref.id) {
       return (
@@ -39,12 +44,10 @@ export const getMappingSourceByRef = (
       );
     } else if (ref.namespace) {
       return (source as IOpenShiftNetwork).namespace === ref.namespace;
+    } else if (ref.name && (source as IOpenShiftNetwork).name) {
+      return (source as IOpenShiftNetwork).name === domainAndNameToName(ref.name);
     } else if (ref.name) {
-      return (
-        ((source as IOpenShiftNetwork).name ||
-          (source as ISourceNetwork).name ||
-          (source as ISourceStorage).name) === ref.name
-      );
+      return ((source as ISourceNetwork).name || (source as ISourceStorage).name) === ref.name;
     }
   }) || null;
 
