@@ -312,17 +312,7 @@ export const getAvailableVMs = (
   }
 
   // If no matching VMs were found, use an empty array
-  matchingVMs = matchingVMs || [];
-
-  // Create a new array from `matchingVMs` by mapping over it
-  // Each element of the new array is an object with an `id` property and all the properties of the original VM
-  return matchingVMs.map((vm) => {
-    // If the VM is not defined, its id would be `undefined`, and the spread operator will have no effect
-    const id = vm?.uid;
-    const vmProperties = vm || {};
-
-    return { id, ...vmProperties };
-  });
+  return matchingVMs || [];
 };
 
 export interface IVMTreePathInfo {
@@ -492,7 +482,7 @@ export const getVMConcernStatusLabel = (concern: ISourceVMConcern | null): strin
     : concern?.category || 'Ok';
 
 export const someVMHasConcern = (vms: SourceVM[], concernLabel: string): boolean =>
-  vms.some((vm) => vm.concerns.some((concern) => concern.label === concernLabel));
+  vms?.some((vm) => vm.concerns?.some((concern) => concern.label === concernLabel));
 
 export interface IGenerateMappingsArgs {
   forms: PlanWizardFormState;

@@ -104,7 +104,7 @@ export const useInventoryTreeQuery = <T extends InventoryTree>(
     ovirt: '/tree/cluster',
     openstack: '/tree/project',
     openshift: '/tree/namespace',
-    ova: '/vms',
+    ova: '/vms?detail=4',
   };
   const mockTreeData: Record<ProviderType, IInventoryHostTree> = {
     vsphere: MOCK_VMWARE_HOST_TREE,
