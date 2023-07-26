@@ -31,6 +31,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
   const secretsQuery = useSecretsQuery([sourceProvider.object?.spec?.secret?.name], namespace);
   const isSourceOvirtInsecure = checkIfOvirtInsecureProvider(sourceProvider, secretsQuery.data);
   const isSourceOpenstack = sourceProvider?.type === 'openstack';
+  const isSourceOCP = sourceProvider?.type === 'openshift';
 
   return (
     <ResolvedQueries results={[secretsQuery]} errorTitles={['Cannot load provider secrets']}>
@@ -67,12 +68,20 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
           </StackItem>
         )}
 
+        {isSourceOCP && (
+          <StackItem>
+            <Alert variant="warning" isInline title="Warm migration is not currently available.">
+              Warm migrations from {PROVIDER_TYPE_NAMES.openshift} source providers are unsupported.
+            </Alert>
+          </StackItem>
+        )}
+
         <StackItem>
           <Radio
             id="migration-type-warm"
             name="migration-type"
             label="Warm migration"
-            isDisabled={isSourceOvirtInsecure || isSourceOpenstack}
+            isDisabled={isSourceOvirtInsecure || isSourceOpenstack || isSourceOCP}
             description={
               <List>
                 <ListItem>VM data is incrementally copied, leaving source VMs running.</ListItem>
@@ -83,7 +92,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
               </List>
             }
             body={
-              !(isSourceOvirtInsecure || isSourceOpenstack) && (
+              !(isSourceOvirtInsecure || isSourceOpenstack || isSourceOCP) && (
                 <>
                   {isAnalyzingVms && (
                     <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
