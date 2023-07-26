@@ -30,8 +30,8 @@ const NFS_REGEX = new RegExp(`^((${IPV4})|(${HOSTNAME})):(${NFS_PATH})$`);
 // validate CA certification.
 const CERTIFICATE_HEADER = '-----BEGIN CERTIFICATE-----';
 const CERTIFICATE_FOOTER = '-----END CERTIFICATE-----';
-const BASE64_LINE = '([A-Za-z0-9+\\/]{64}\\r?\\n)';
-const LAST_BASE64_LINE = '([A-Za-z0-9+\\/=]{1,64}\\r?\\n)?';
+const BASE64_LINE = '([A-Za-z0-9+\\/=]{1,1256}\\r?\\n)';
+const LAST_BASE64_LINE = '([A-Za-z0-9+\\/=]{1,1256}\\r?\\n)?';
 const BASE64_CONTENT = `(${BASE64_LINE}*${LAST_BASE64_LINE})`;
 
 const EMPTY_LINES = '((\\#[^\\r\\n]*)?\\s*\\r?\\n)*';
