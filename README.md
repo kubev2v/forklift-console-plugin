@@ -42,6 +42,9 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your caluster address>
 npm run console:background
 
+# If this is the first time running, npm run build will build the required dependencies
+npm run build
+
 # Start the plugin in development mode
 npm run start
 ```
