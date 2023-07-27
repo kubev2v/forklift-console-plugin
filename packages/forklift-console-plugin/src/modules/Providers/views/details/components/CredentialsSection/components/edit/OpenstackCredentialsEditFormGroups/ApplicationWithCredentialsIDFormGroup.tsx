@@ -73,7 +73,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         label={t('Application Credential ID')}
         isRequired
         fieldId="applicationCredentialID"
-        helperText={t('Openstack REST API Application Credential ID.')}
+        helperText={t('OpenStack REST API Application Credential ID.')}
         helperTextInvalid={t('Invalid application credential ID.')}
         validated={state.validation.applicationCredentialID}
       >
@@ -92,7 +92,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         label={t('Application Credential Secret')}
         isRequired
         fieldId="applicationCredentialSecret"
-        helperText={t('Openstack REST API Application Credential Secret.')}
+        helperText={t('OpenStack REST API Application Credential Secret.')}
         helperTextInvalid={t('Invalid application credential secret.')}
         validated={state.validation.applicationCredentialSecret}
       >

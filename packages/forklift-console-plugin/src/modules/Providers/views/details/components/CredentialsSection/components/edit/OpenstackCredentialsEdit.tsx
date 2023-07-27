@@ -151,7 +151,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         role="radiogroup"
         fieldId="authType"
         label={t('Authentication type')}
-        helperText={t('Type of authentication to use when connecting to Openstack REST API.')}
+        helperText={t('Type of authentication to use when connecting to OpenStack REST API.')}
       >
         <Radio
           name="authType"
@@ -232,7 +232,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         }
         fieldId="cacert"
         helperText={t(
-          'Custom certification used to verify the Openstack REST API server, when empty use system certificate.',
+          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
         )}
         validated={state.validation.cacert}
         helperTextInvalid={t('Error: CA Certificate must be valid.')}

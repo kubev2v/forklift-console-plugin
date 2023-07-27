@@ -16,24 +16,24 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     passwordSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to Openstack REST API.'),
+        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
       },
-      username: { label: t('Username'), description: t('Openstack REST API user name.') },
+      username: { label: t('Username'), description: t('OpenStack REST API user name.') },
       password: {
         label: t('Password'),
-        description: t('Openstack REST API password credentials.'),
+        description: t('OpenStack REST API password credentials.'),
       },
       regionName: {
         label: t('Region'),
-        description: t('Openstack region for password credentials.'),
+        description: t('OpenStack region for password credentials.'),
       },
       projectName: {
         label: t('Project'),
-        description: t('Openstack project for password credentials.'),
+        description: t('OpenStack project for password credentials.'),
       },
       domainName: {
         label: t('Domain'),
-        description: t('Openstack domain for password credentials.'),
+        description: t('OpenStack domain for password credentials.'),
       },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
@@ -42,7 +42,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the Openstack REST API server, when empty use system certificate.',
+          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
         ),
       },
     },
@@ -50,19 +50,19 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     tokenWithUserIDSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to Openstack REST API.'),
+        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
       },
       token: {
         label: t('Token'),
-        description: t('Openstack REST API token credentials.'),
+        description: t('OpenStack REST API token credentials.'),
       },
       userID: {
         label: t('User ID'),
-        description: t('Openstack REST API user ID.'),
+        description: t('OpenStack REST API user ID.'),
       },
       projectID: {
         label: t('Project ID'),
-        description: t('Openstack project ID for token credentials.'),
+        description: t('OpenStack project ID for token credentials.'),
       },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
@@ -71,7 +71,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the Openstack REST API server, when empty use system certificate.',
+          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
         ),
       },
     },
@@ -79,23 +79,23 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     tokenWithUsernameSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to Openstack REST API.'),
+        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
       },
       token: {
         label: t('Token'),
-        description: t('Openstack REST API token credentials.'),
+        description: t('OpenStack REST API token credentials.'),
       },
       username: {
         label: t('Username'),
-        description: t('Openstack REST API user name.'),
+        description: t('OpenStack REST API user name.'),
       },
       projectName: {
         label: t('Project'),
-        description: t('Openstack project for token credentials.'),
+        description: t('OpenStack project for token credentials.'),
       },
       domainName: {
         label: t('Domain Name'),
-        description: t('Openstack domain name for token credentials.'),
+        description: t('OpenStack domain name for token credentials.'),
       },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
@@ -104,7 +104,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the Openstack REST API server, when empty use system certificate.',
+          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
         ),
       },
     },
@@ -112,15 +112,15 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     applicationCredentialIdSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to Openstack REST API.'),
+        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
       },
       applicationCredentialID: {
         label: t('Application Credential ID'),
-        description: t('Openstack REST API Application Credential ID.'),
+        description: t('OpenStack REST API Application Credential ID.'),
       },
       applicationCredentialSecret: {
         label: t('Application Credential Secret'),
-        description: t('Openstack REST API Application Credential Secret.'),
+        description: t('OpenStack REST API Application Credential Secret.'),
       },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
@@ -129,7 +129,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the Openstack REST API server, when empty use system certificate.',
+          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
         ),
       },
     },
@@ -137,23 +137,23 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     applicationCredentialNameSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to Openstack REST API.'),
+        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
       },
       applicationCredentialName: {
         label: t('Application Credential Name'),
-        description: t('Openstack REST API Application Credential Name.'),
+        description: t('OpenStack REST API Application Credential Name.'),
       },
       applicationCredentialSecret: {
         label: t('Application Credential Secret'),
-        description: t('Openstack REST API Application Credential Secret.'),
+        description: t('OpenStack REST API Application Credential Secret.'),
       },
       username: {
         label: t('Username'),
-        description: t('Openstack REST API user name.'),
+        description: t('OpenStack REST API user name.'),
       },
       domainName: {
         label: t('Domain'),
-        description: t('Openstack domain for application credential credentials.'),
+        description: t('OpenStack domain for application credential credentials.'),
       },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
@@ -162,7 +162,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the Openstack REST API server, when empty use system certificate.',
+          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
         ),
       },
     },
