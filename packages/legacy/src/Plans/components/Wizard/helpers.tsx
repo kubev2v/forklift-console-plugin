@@ -534,6 +534,8 @@ interface IHookRef {
   instance: PlanHookInstance;
 }
 
+// This function takes a tree and a 'kind',
+// and generates a flat dictionary (object)
 function genrateNodesByVmID(data, kind) {
   const result = {};
 
@@ -548,31 +550,32 @@ function genrateNodesByVmID(data, kind) {
       }
     }
   };
-
   traverse(data);
 
   return result;
 }
 
-function getNameNamespaceByID(id, nodes) {
-  const { name, namespace } = nodes[id];
-
-  return { name, namespace };
-}
-
+// This function generates a list of Virtual Machines (VMs) for a plan.
+// If the source provider is 'openshift', it fetches the VMs from a tree structure.
+// If the source provider is not 'openshift', it simply uses the id to generate the VM list.
 function getVmsListForPlan(hooksRef: IHookRef[], forms) {
   let result = [];
   const type = forms.general.values.sourceProvider?.type;
-  const vmTree = forms.filterVMs.values.selectedTreeNodes;
-  const vmNodes = genrateNodesByVmID(vmTree, 'VM');
 
   if (type === 'openshift') {
+    const vmTree = forms.filterVMs.values.selectedTreeNodes;
+    const vmNodes = genrateNodesByVmID(vmTree, 'VM');
+
     result = hooksRef
       ? forms.selectVMs.values.selectedVMIds.map((id) => ({
-          ...getNameNamespaceByID(id, vmNodes),
+          name: vmNodes[id].name,
+          namespace: vmNodes[id].namespace,
           hooks: hooksRef.map((hookRef) => ({ hook: hookRef.ref, step: hookRef.instance.step })),
         }))
-      : forms.selectVMs.values.selectedVMIds.map((id) => getNameNamespaceByID(id, vmNodes));
+      : forms.selectVMs.values.selectedVMIds.map((id) => ({
+          name: vmNodes[id].name,
+          namespace: vmNodes[id].namespace,
+        }));
   } else {
     result = hooksRef
       ? forms.selectVMs.values.selectedVMIds.map((id) => ({
