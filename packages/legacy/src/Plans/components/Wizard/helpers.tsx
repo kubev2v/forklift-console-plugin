@@ -534,6 +534,57 @@ interface IHookRef {
   instance: PlanHookInstance;
 }
 
+function genrateNodesByVmID(data, kind) {
+  const result = {};
+
+  const traverse = (nodes) => {
+    for (const node of nodes) {
+      if (node.kind === kind) {
+        result[node.object.id] = node.object;
+      }
+
+      if (node.children) {
+        traverse(node.children);
+      }
+    }
+  };
+
+  traverse(data);
+
+  return result;
+}
+
+function getNameNamespaceByID(id, nodes) {
+  const { name, namepace } = nodes[id];
+
+  return { name, namepace };
+}
+
+function getVmsListForPlan(hooksRef: IHookRef[], forms) {
+  let result = [];
+  const type = forms.general.values.sourceProvider?.type;
+  const vmTree = forms.filterVMs.values.selectedTreeNodes;
+  const vmNodes = genrateNodesByVmID(vmTree, 'VM');
+
+  if (type === 'openshift') {
+    result = hooksRef
+      ? forms.selectVMs.values.selectedVMIds.map((id) => ({
+          ...getNameNamespaceByID(id, vmNodes),
+          hooks: hooksRef.map((hookRef) => ({ hook: hookRef.ref, step: hookRef.instance.step })),
+        }))
+      : forms.selectVMs.values.selectedVMIds.map((id) => getNameNamespaceByID(id, vmNodes));
+  } else {
+    result = hooksRef
+      ? forms.selectVMs.values.selectedVMIds.map((id) => ({
+          id,
+          hooks: hooksRef.map((hookRef) => ({ hook: hookRef.ref, step: hookRef.instance.step })),
+        }))
+      : forms.selectVMs.values.selectedVMIds.map((id) => ({ id }));
+  }
+
+  return result;
+}
+
 export const generatePlan = (
   forms: PlanWizardFormState,
   networkMappingRef: INameNamespaceRef,
@@ -567,12 +618,7 @@ export const generatePlan = (
       network: networkMappingRef,
       storage: storageMappingRef,
     },
-    vms: hooksRef
-      ? forms.selectVMs.values.selectedVMIds.map((id) => ({
-          id,
-          hooks: hooksRef.map((hookRef) => ({ hook: hookRef.ref, step: hookRef.instance.step })),
-        }))
-      : forms.selectVMs.values.selectedVMIds.map((id) => ({ id })),
+    vms: getVmsListForPlan(hooksRef, forms),
     warm: forms.type.values.type === 'Warm',
   },
 });
