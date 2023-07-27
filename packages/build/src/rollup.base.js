@@ -6,7 +6,6 @@
  * Default rollup settings from @openshift/dynamic-plugin-sdk
  */
 
-import analyzer from 'rollup-plugin-analyzer';
 import css from 'rollup-plugin-import-css';
 
 import commonjs from '@rollup/plugin-commonjs';
@@ -63,16 +62,11 @@ export const tsLibConfig = (pkg, inputFile, format = 'esm') => {
       }),
       typescript({
         tsconfig: './tsconfig.json',
-        noEmitOnError: true,
         jsx: 'react',
       }),
       writeJSONFile({
         fileName: 'build-metadata.json',
         value: buildMetadata,
-      }),
-      analyzer({
-        summaryOnly: true,
-        root: rootDir,
       }),
     ],
   };

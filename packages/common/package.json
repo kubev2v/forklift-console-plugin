@@ -18,6 +18,7 @@
     "clean": "rm -rf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache ./storybook-static",
     "build": "rollup -c --bundleConfigAsCjs",
+    "start": "rollup -c --bundleConfigAsCjs --watch",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "test": "TZ=UTC jest",
