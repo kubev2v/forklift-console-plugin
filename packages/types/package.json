@@ -18,6 +18,7 @@
     "clean": "rm -rf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
     "build": "rollup -c --bundleConfigAsCjs",
+    "start": "rollup -c --bundleConfigAsCjs --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "generate:schemas": "bash ./ci/generate-schemas.sh"
