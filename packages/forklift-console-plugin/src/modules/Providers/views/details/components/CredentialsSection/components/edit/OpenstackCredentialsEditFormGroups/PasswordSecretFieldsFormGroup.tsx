@@ -77,7 +77,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Username')}
         isRequired
         fieldId="username"
-        helperText={t('Openstack REST API user name.')}
+        helperText={t('OpenStack REST API user name.')}
         helperTextInvalid={t('Invalid username.')}
         validated={state.validation.username}
       >
@@ -96,7 +96,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Password')}
         isRequired
         fieldId="password"
-        helperText={t('Openstack REST API password credentials.')}
+        helperText={t('OpenStack REST API password credentials.')}
         helperTextInvalid={t('Invalid password.')}
         validated={state.validation.password}
       >
@@ -122,7 +122,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Region')}
         isRequired
         fieldId="regionName"
-        helperText={t('Openstack region for password credentials.')}
+        helperText={t('OpenStack region for password credentials.')}
         helperTextInvalid={t('Invalid region name.')}
         validated={state.validation.regionName}
       >
@@ -141,7 +141,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Project')}
         isRequired
         fieldId="projectName"
-        helperText={t('Openstack project for password credentials.')}
+        helperText={t('OpenStack project for password credentials.')}
         helperTextInvalid={t('Invalid project name.')}
         validated={state.validation.projectName}
       >
@@ -160,7 +160,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Domain')}
         isRequired
         fieldId="domainName"
-        helperText={t('Openstack domain for password credentials.')}
+        helperText={t('OpenStack domain for password credentials.')}
         helperTextInvalid={t('Invalid domain name.')}
         validated={state.validation.domainName}
       >

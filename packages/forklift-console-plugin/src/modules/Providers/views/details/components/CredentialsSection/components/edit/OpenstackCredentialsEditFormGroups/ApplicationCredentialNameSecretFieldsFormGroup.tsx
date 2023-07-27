@@ -77,7 +77,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Application Credential Name')}
         isRequired
         fieldId="applicationCredentialName"
-        helperText={t('Openstack REST API Application Credential Name.')}
+        helperText={t('OpenStack REST API Application Credential Name.')}
         helperTextInvalid={t('Invalid application credential name.')}
         validated={state.validation.applicationCredentialName}
       >
@@ -96,7 +96,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Application Credential Secret')}
         isRequired
         fieldId="applicationCredentialSecret"
-        helperText={t('Openstack REST API Application Credential Secret.')}
+        helperText={t('OpenStack REST API Application Credential Secret.')}
         helperTextInvalid={t('Invalid application credential secret.')}
         validated={state.validation.applicationCredentialSecret}
       >
@@ -123,7 +123,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Username')}
         isRequired
         fieldId="username"
-        helperText={t('Openstack REST API user name.')}
+        helperText={t('OpenStack REST API user name.')}
         helperTextInvalid={t('Invalid username.')}
         validated={state.validation.username}
       >
@@ -142,7 +142,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Domain')}
         isRequired
         fieldId="domainName"
-        helperText={t('Openstack domain for application credential credentials.')}
+        helperText={t('OpenStack domain for application credential credentials.')}
         helperTextInvalid={t('Invalid domain name.')}
         validated={state.validation.domainName}
       >

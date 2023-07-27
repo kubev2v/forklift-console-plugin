@@ -26,11 +26,11 @@ export const OpenstackInventorySection: React.FC<InventoryProps> = ({ data }) =>
     },
     regionCount: {
       title: t('Regions'),
-      helpContent: t('Number of regions in Openstack cluster'),
+      helpContent: t('Number of regions in OpenStack cluster'),
     },
     projectCount: {
       title: t('Projects'),
-      helpContent: t('Number of projects in Openstack cluster'),
+      helpContent: t('Number of projects in OpenStack cluster'),
     },
     volumeCount: {
       title: t('Volumes'),

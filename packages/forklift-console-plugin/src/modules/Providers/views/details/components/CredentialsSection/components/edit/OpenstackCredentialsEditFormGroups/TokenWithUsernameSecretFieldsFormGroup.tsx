@@ -74,7 +74,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
         label={t('Token')}
         isRequired
         fieldId="token"
-        helperText={t('Openstack REST API token credentials.')}
+        helperText={t('OpenStack REST API token credentials.')}
         helperTextInvalid={t('Invalid token.')}
         validated={state.validation.token}
       >
@@ -100,7 +100,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
         label={t('Username')}
         isRequired
         fieldId="username"
-        helperText={t('Openstack REST API user name.')}
+        helperText={t('OpenStack REST API user name.')}
         helperTextInvalid={t('Invalid Username.')}
         validated={state.validation.username}
       >
@@ -118,7 +118,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
         label={t('Project')}
         isRequired
         fieldId="projectName"
-        helperText={t('Openstack project for token credentials.')}
+        helperText={t('OpenStack project for token credentials.')}
         helperTextInvalid={t('Invalid Project.')}
         validated={state.validation.projectName}
       >
@@ -136,7 +136,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
         label={t('Domain Name')}
         isRequired
         fieldId="domainName"
-        helperText={t('Openstack domain name for token credentials.')}
+        helperText={t('OpenStack domain name for token credentials.')}
         helperTextInvalid={t('Invalid Domain Name.')}
         validated={state.validation.domainName}
       >

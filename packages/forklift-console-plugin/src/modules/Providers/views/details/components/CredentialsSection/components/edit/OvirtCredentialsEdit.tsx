@@ -147,7 +147,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
         }
         fieldId="cacert"
         helperText={t(
-          'Custom certification used to verify the Openstack REST API server, when empty use system certificate.',
+          'Custom certification used to verify the RH Virtualization REST API server, when empty use system certificate.',
         )}
         validated={state.validation.cacert}
         helperTextInvalid={t('Error: CA Certificate must be valid.')}
