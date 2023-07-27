@@ -32,6 +32,9 @@ export const useSourceStoragesQuery = (
     if (provider?.type === 'openshift') {
       return '/storageclasses?detail=1';
     }
+    if (provider?.type === 'ova') {
+      return '/disks?detail=1';
+    }
     return '/storagedomains';
   };
   const mockStorage = (provider: SourceInventoryProvider) => {

@@ -32,6 +32,8 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
   const isSourceOvirtInsecure = checkIfOvirtInsecureProvider(sourceProvider, secretsQuery.data);
   const isSourceOpenstack = sourceProvider?.type === 'openstack';
   const isSourceOCP = sourceProvider?.type === 'openshift';
+  const isSourceOVA = sourceProvider?.type === 'ova';
+  const isDisabled = isSourceOvirtInsecure || isSourceOpenstack || isSourceOCP || isSourceOVA;
 
   return (
     <ResolvedQueries results={[secretsQuery]} errorTitles={['Cannot load provider secrets']}>
@@ -60,18 +62,11 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
           </StackItem>
         )}
 
-        {isSourceOpenstack && (
+        {!isSourceOvirtInsecure && isDisabled && (
           <StackItem>
             <Alert variant="warning" isInline title="Warm migration is not currently available.">
-              Warm migrations from {PROVIDER_TYPE_NAMES.openstack} source providers are unsupported.
-            </Alert>
-          </StackItem>
-        )}
-
-        {isSourceOCP && (
-          <StackItem>
-            <Alert variant="warning" isInline title="Warm migration is not currently available.">
-              Warm migrations from {PROVIDER_TYPE_NAMES.openshift} source providers are unsupported.
+              Warm migrations from {PROVIDER_TYPE_NAMES?.[sourceProvider?.type]} source providers
+              are unsupported.
             </Alert>
           </StackItem>
         )}
@@ -81,7 +76,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
             id="migration-type-warm"
             name="migration-type"
             label="Warm migration"
-            isDisabled={isSourceOvirtInsecure || isSourceOpenstack || isSourceOCP}
+            isDisabled={isDisabled}
             description={
               <List>
                 <ListItem>VM data is incrementally copied, leaving source VMs running.</ListItem>
@@ -92,7 +87,7 @@ export const TypeForm: React.FunctionComponent<ITypeFormProps> = ({
               </List>
             }
             body={
-              !(isSourceOvirtInsecure || isSourceOpenstack || isSourceOCP) && (
+              !isDisabled && (
                 <>
                   {isAnalyzingVms && (
                     <div className={`${spacing.mtMd} ${spacing.mlXs}`}>
