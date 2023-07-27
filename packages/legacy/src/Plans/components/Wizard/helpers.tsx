@@ -555,9 +555,9 @@ function genrateNodesByVmID(data, kind) {
 }
 
 function getNameNamespaceByID(id, nodes) {
-  const { name, namepace } = nodes[id];
+  const { name, namespace } = nodes[id];
 
-  return { name, namepace };
+  return { name, namespace };
 }
 
 function getVmsListForPlan(hooksRef: IHookRef[], forms) {
