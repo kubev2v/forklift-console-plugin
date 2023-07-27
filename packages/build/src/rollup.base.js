@@ -16,9 +16,6 @@ import har from './rollup/plugin-har';
 import writeJSONFile from './rollup/plugin-write-json-file';
 import { createBannerComment, getBuildMetadata } from './metadata';
 
-// https://yarnpkg.com/advanced/lifecycle-scripts#environment-variables
-const rootDir = process.env.PROJECT_CWD;
-
 /**
  * @param {import('type-fest').PackageJson} pkg
  * @returns {Record<string, string>} external modules as dictionary.
