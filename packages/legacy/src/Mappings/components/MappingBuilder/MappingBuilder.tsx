@@ -22,7 +22,6 @@ import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTool
 import './MappingBuilder.css';
 import { ProviderType } from 'legacy/src/common/constants';
 import { getStorageTitle } from 'legacy/src/common/helpers';
-import { TruncatedText } from 'legacy/src/common/components/TruncatedText';
 
 export interface IMappingBuilderItem {
   source: MappingSource | null;
@@ -116,38 +115,17 @@ export const MappingBuilder: React.FunctionComponent<IMappingBuilderProps> = ({
               </>
             ) : null}
             <GridItem span={5} className={`mapping-builder-box ${spacing.pSm}`}>
-              {item.source ? (
-                <Bullseye style={{ justifyContent: 'left' }} className={spacing.plSm}>
-                  <TextContent>
-                    <TruncatedText>{item.source.name}</TruncatedText>
-                    {(item.source as ISourceNetwork).path ||
-                    (item.source as ISourceStorage).path ? (
-                      <TruncatedText>
-                        <Text
-                          component="small"
-                          style={{ fontSize: 'var(--pf-global--FontSize--xs)' }}
-                        >
-                          {(item.source as ISourceNetwork).path ||
-                            (item.source as ISourceStorage).path ||
-                            ''}
-                        </Text>
-                      </TruncatedText>
-                    ) : null}
-                  </TextContent>
-                </Bullseye>
-              ) : (
-                <MappingSourceSelect
-                  id={`mapping-source-for-${key}`}
-                  builderItems={builderItems}
-                  itemIndex={itemIndex}
-                  setBuilderItems={setBuilderItems}
-                  availableSources={availableSources}
-                  mappingType={mappingType}
-                  // Maybe use these instead of extraSelectMargin if we can get it to be dynamic to always fit the screen
-                  //menuAppendTo="parent"
-                  //maxHeight="200px"
-                />
-              )}
+              <MappingSourceSelect
+                id={`mapping-source-for-${key}`}
+                builderItems={builderItems}
+                itemIndex={itemIndex}
+                setBuilderItems={setBuilderItems}
+                availableSources={availableSources}
+                mappingType={mappingType}
+                // Maybe use these instead of extraSelectMargin if we can get it to be dynamic to always fit the screen
+                //menuAppendTo="parent"
+                //maxHeight="200px"
+              />
             </GridItem>
             <GridItem span={1}>
               <Bullseye>
