@@ -16,6 +16,9 @@ export const extensions: EncodedExtension[] = [
       path: ['/mtv/settings/ns/:ns', '/mtv/settings/all-namespaces'],
       exact: false,
     },
+    flags: {
+      required: ['CAN_LIST_NS'],
+    },
   } as EncodedExtension<RoutePage>,
 
   {
@@ -29,6 +32,9 @@ export const extensions: EncodedExtension[] = [
       namespaced: true,
       // t('plugin__forklift-console-plugin~Overview')
       name: '%plugin__forklift-console-plugin~Overview%',
+    },
+    flags: {
+      required: ['CAN_LIST_NS'],
     },
   } as EncodedExtension<HrefNavItem>,
 ];
