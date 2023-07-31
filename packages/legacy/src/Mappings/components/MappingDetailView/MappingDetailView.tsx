@@ -9,7 +9,7 @@ import { useResourceQueriesForMapping } from 'legacy/src/queries';
 import { TruncatedText } from 'legacy/src/common/components/TruncatedText';
 import { ResolvedQueries } from 'legacy/src/common/components/ResolvedQuery';
 import { getMappingSourceByRef, getMappingSourceTitle, getMappingTargetTitle } from '../helpers';
-import { getMappingItemTargetName, groupMappingItemsByTarget } from './helpers';
+import { getMappingItemTargetName, getMappingName, groupMappingItemsByTarget } from './helpers';
 
 import './MappingDetailView.css';
 import { ProviderType } from 'legacy/src/common/constants';
@@ -72,7 +72,7 @@ export const MappingDetailView: React.FunctionComponent<IMappingDetailViewProps>
                       mappingResourceQueries.availableSources,
                       item.source
                     );
-                    const sourceName = source ? source.name : '';
+                    const sourceName = source ? getMappingName(source, mappingType) : '';
                     const path = source
                       ? (source as ISourceNetwork).path || (source as ISourceStorage).path || ''
                       : null;
