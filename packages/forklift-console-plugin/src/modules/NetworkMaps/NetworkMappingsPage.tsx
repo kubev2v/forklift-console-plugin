@@ -15,7 +15,8 @@ import { withQueryClient } from '@kubev2v/common';
 import { ResourceFieldFactory } from '@kubev2v/common';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
 import { MappingType } from '@kubev2v/legacy/queries/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { NetworkMapModel } from '@kubev2v/types';
+import { useAccessReview, useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button } from '@patternfly/react-core';
 
 import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './dataForNetwork';
@@ -50,12 +51,20 @@ export const NetworkMappingsPage = ({ namespace }: ResourceConsolePageProps) => 
     namespace,
   });
 
+  const [canCreate] = useAccessReview({
+    group: NetworkMapModel.apiGroup,
+    resource: NetworkMapModel.plural,
+    verb: 'create',
+    namespace,
+  });
+
   return (
     <PageMemo
       dataSource={dataSource}
       namespace={namespace}
       title={t('NetworkMaps')}
       userSettings={userSettings}
+      canCreate={canCreate}
     />
   );
 };
@@ -66,17 +75,19 @@ const Page = ({
   namespace,
   title,
   userSettings,
+  canCreate,
 }: {
   dataSource: [FlatNetworkMapping[], boolean, boolean];
   namespace: string;
   title: string;
   userSettings: UserSettings;
+  canCreate: boolean;
 }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <StandardPage<FlatNetworkMapping>
-      addButton={<AddNetworkMappingButton namespace={namespace} />}
+      addButton={canCreate && <AddNetworkMappingButton namespace={namespace} />}
       dataSource={dataSource}
       RowMapper={NetworkMappingRow}
       HeaderMapper={StartWithEmptyColumnMapper}

@@ -193,7 +193,7 @@ const ProvidersListPage: React.FC<{
   return (
     <StandardPage<ProviderData>
       data-testid="providers-list"
-      addButton={AddButton}
+      addButton={permissions.canCreate && AddButton}
       dataSource={[data || [], providersLoaded, providersLoadError]}
       RowMapper={ProviderRow}
       fieldsMetadata={fieldsMetadataFactory(t)}

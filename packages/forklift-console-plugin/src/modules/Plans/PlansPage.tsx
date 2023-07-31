@@ -10,6 +10,8 @@ import { loadUserSettings, UserSettings } from '@kubev2v/common';
 import { ResourceFieldFactory } from '@kubev2v/common';
 import { MustGatherModal } from '@kubev2v/legacy/common/components/MustGatherModal';
 import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
+import { PlanModel } from '@kubev2v/types';
+import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 
 import { FlatPlan, useFlatPlans } from './data';
 import EmptyStatePlans from './EmptyStatePlans';
@@ -109,12 +111,20 @@ export const PlansPage = ({ namespace }: ResourceConsolePageProps) => {
     namespace,
   });
 
+  const [canCreate] = useAccessReview({
+    group: PlanModel.apiGroup,
+    resource: PlanModel.plural,
+    verb: 'create',
+    namespace,
+  });
+
   return (
     <PageMemo
       dataSource={dataSource}
       namespace={namespace}
       title={t('Plans')}
       userSettings={userSettings}
+      canCreate={canCreate}
     />
   );
 };
@@ -125,18 +135,20 @@ const Page = ({
   namespace,
   title,
   userSettings,
+  canCreate,
 }: {
   dataSource: [FlatPlan[], boolean, boolean];
   namespace: string;
   title: string;
   userSettings: UserSettings;
+  canCreate: boolean;
 }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <>
       <StandardPage<FlatPlan>
-        addButton={<CreatePlanButton namespace={namespace} />}
+        addButton={canCreate && <CreatePlanButton namespace={namespace} />}
         dataSource={dataSource}
         RowMapper={PlanRow}
         fieldsMetadata={fieldsMetadataFactory(t)}
