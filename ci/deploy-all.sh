@@ -91,6 +91,14 @@ if [[ $@ == *'--with-openstack-provider'* ]]; then
   (cd ${script_dir}/forkliftci && bash ${script_dir}/deploy-openstack-provider.sh)
 fi
 
+# Create some service accounts
+# ----------------------------
+
+echo ""
+echo "==========================================="
+
+bash ${script_dir}/create-forklift-user-account.sh
+
 # Print some help
 # ---------------
 
