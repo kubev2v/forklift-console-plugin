@@ -19,7 +19,8 @@ export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data })
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const { provider } = data;
+  const { provider, permissions } = data;
+  const canEdit = permissions.canPatch;
   const type = PROVIDERS[provider?.spec?.type] || provider?.spec?.type;
 
   return (
@@ -92,7 +93,9 @@ export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data })
         helpContent={<Text>{t(`The provider URL. Empty may be used for the host provider.`)}</Text>}
         crumbs={['Provider', 'spec', 'url']}
         onEdit={
-          provider?.spec?.url && (() => showModal(<EditProviderURLModal resource={provider} />))
+          canEdit &&
+          provider?.spec?.url &&
+          (() => showModal(<EditProviderURLModal resource={provider} />))
         }
       />
 
@@ -151,7 +154,9 @@ export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data })
           'annotations',
           'forklift.konveyor.io/defaultTransferNetwork',
         ]}
-        onEdit={() => showModal(<EditProviderDefaultTransferNetwork resource={provider} />)}
+        onEdit={
+          canEdit && (() => showModal(<EditProviderDefaultTransferNetwork resource={provider} />))
+        }
       />
 
       <DetailsItem

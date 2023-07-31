@@ -25,7 +25,7 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const { provider } = obj;
+  const { provider, permissions } = obj;
 
   const { inventory: networks } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
     provider,
@@ -49,15 +49,17 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
           {t('NetworkAttachmentDefinitions')}
         </Title>
 
-        <div className="forklift-page-provider-networks-button">
-          <Button
-            key="editTransferNetwork"
-            variant="secondary"
-            onClick={() => showModal(<EditProviderDefaultTransferNetwork resource={provider} />)}
-          >
-            {t('Set default transfer network')}
-          </Button>
-        </div>
+        {permissions.canPatch && (
+          <div className="forklift-page-provider-networks-button">
+            <Button
+              key="editTransferNetwork"
+              variant="secondary"
+              onClick={() => showModal(<EditProviderDefaultTransferNetwork resource={provider} />)}
+            >
+              {t('Set default transfer network')}
+            </Button>
+          </div>
+        )}
 
         <TableComposable aria-label="Expandable table" variant="compact">
           <Thead>

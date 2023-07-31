@@ -19,7 +19,8 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const { provider, inventory } = data;
+  const { provider, inventory, permissions } = data;
+  const canEdit = permissions.canPatch;
   const type = PROVIDERS[provider?.spec?.type] || provider?.spec?.type;
 
   return (
@@ -87,7 +88,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
         }
         helpContent={<Text>{t(`The provider URL. Empty may be used for the host provider.`)}</Text>}
         crumbs={['Provider', 'spec', 'url']}
-        onEdit={() => showModal(<EditProviderURLModal resource={provider} />)}
+        onEdit={canEdit && (() => showModal(<EditProviderURLModal resource={provider} />))}
       />
 
       <DetailsItem
@@ -133,7 +134,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
         }
         helpContent={<Text>{t(`VMware only: Specify the VDDK image that you created.`)}</Text>}
         crumbs={['Provider', 'spec', 'settings', 'vddkInitImage']}
-        onEdit={() => showModal(<EditProviderVDDKImage resource={provider} />)}
+        onEdit={canEdit && (() => showModal(<EditProviderVDDKImage resource={provider} />))}
       />
 
       <DetailsItem
