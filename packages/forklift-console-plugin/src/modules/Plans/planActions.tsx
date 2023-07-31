@@ -17,7 +17,13 @@ import {
   useDeletePlanMutation,
   useSetCutoverMutation,
 } from '@kubev2v/legacy/queries';
-import { type ExtensionHook, Action, useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { PlanModel } from '@kubev2v/types';
+import {
+  type ExtensionHook,
+  Action,
+  useAccessReview,
+  useModal,
+} from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, Stack, Text, TextContent } from '@patternfly/react-core';
 
 import { type FlatPlan } from './data';
@@ -83,9 +89,26 @@ export const useFlatPlanActions: ExtensionHook<
   );
   const cutoverMutation = useSetCutoverMutation(plan.namespace);
 
+  const [canDelete] = useAccessReview({
+    group: PlanModel.apiVersion,
+    resource: PlanModel.plural,
+    verb: 'delete',
+    name,
+    namespace,
+  });
+
+  const [canPatch] = useAccessReview({
+    group: PlanModel.apiVersion,
+    resource: PlanModel.plural,
+    verb: 'patch',
+    name,
+    namespace,
+  });
+
   const isPlanGathering = mustGather?.status === 'inprogress' || mustGather?.status === 'new';
   const areProvidersReady = plan.sourceReady && plan.targetReady;
-  const editingDisabled = isPlanStarted || !areProvidersReady || isPlanArchived || isPlanGathering;
+  const editingDisabled =
+    !canPatch || isPlanStarted || !areProvidersReady || isPlanArchived || isPlanGathering;
   const isPlanExecuting = hasCondition(plan.object.status?.conditions ?? [], 'Executing');
   const isPlanCompleted =
     !plan.status?.toLowerCase().includes('finished') &&
@@ -93,8 +116,7 @@ export const useFlatPlanActions: ExtensionHook<
     !plan.status?.toLowerCase().includes('canceled');
 
   const isArchivingInProgress = plan.status === 'Archiving';
-  // previously the check included isDeleteInProgress === deletePlanMutation.isLoading
-  const deleteDisabled = isPlanGathering || isArchivingInProgress || isPlanExecuting;
+  const deleteDisabled = !canDelete;
   const canRestart = canBeRestarted(plan.status);
   const cutoverScheduled = plan.status == 'Copying-CutoverScheduled';
 
@@ -216,7 +238,7 @@ export const useFlatPlanActions: ExtensionHook<
         href: `${PATH_PREFIX}/plans/ns/${namespace}/${name}/duplicate`,
       },
       label: t('Duplicate'),
-      disabled: !areProvidersReady,
+      disabled: !canPatch || !areProvidersReady,
       disabledTooltip: !areProvidersReady
         ? t(
             'This plan cannot be duplicated because the inventory data for its associated providers is not ready.',
@@ -250,6 +272,7 @@ export const useFlatPlanActions: ExtensionHook<
           isPlanArchived,
           isPlanExecuting,
         }),
+      disabled: deleteDisabled,
       label: t('Delete'),
     }),
     [
