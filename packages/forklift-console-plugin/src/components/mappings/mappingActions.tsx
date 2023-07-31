@@ -22,7 +22,7 @@ export function useMappingActions<T extends CommonMapping>({
   const launchModal = useModal();
 
   const [canDelete] = useAccessReview({
-    group: NetworkMapModel.apiVersion,
+    group: NetworkMapModel.apiGroup,
     resource: NetworkMapModel.plural,
     verb: 'delete',
     name: resourceData.name,
@@ -30,7 +30,7 @@ export function useMappingActions<T extends CommonMapping>({
   });
 
   const [canPatch] = useAccessReview({
-    group: NetworkMapModel.apiVersion,
+    group: NetworkMapModel.apiGroup,
     resource: NetworkMapModel.plural,
     verb: 'patch',
     name: resourceData.name,

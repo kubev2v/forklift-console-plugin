@@ -4,16 +4,18 @@ import {
   commonFieldsMetadataFactory,
   StartWithEmptyColumnMapper,
 } from 'src/components/mappings/MappingPage';
-import StandardPage, { StandardPageProps } from 'src/components/page/StandardPage';
+import StandardPage from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
-import { FreetextFilter } from '@kubev2v/common';
+import { FreetextFilter, UserSettings } from '@kubev2v/common';
 import { ValueMatcher } from '@kubev2v/common';
 import { loadUserSettings } from '@kubev2v/common';
 import { ResourceFieldFactory } from '@kubev2v/common';
 import { MappingType } from '@kubev2v/legacy/queries/types';
+import { StorageMapModel } from '@kubev2v/types';
+import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 
 import { FlatStorageMapping, Storage, useFlatStorageMappings } from './dataForStorage';
 import EmptyStateStorageMaps from './EmptyStateStorageMaps';
@@ -47,12 +49,20 @@ export const StorageMappingsPage = ({ namespace }: ResourceConsolePageProps) => 
     namespace,
   });
 
+  const [canCreate] = useAccessReview({
+    group: StorageMapModel.apiGroup,
+    resource: StorageMapModel.plural,
+    verb: 'create',
+    namespace,
+  });
+
   return (
     <PageMemo
       dataSource={dataSource}
       namespace={namespace}
       title={t('StorageMaps')}
       userSettings={userSettings}
+      canCreate={canCreate}
     />
   );
 };
@@ -63,17 +73,26 @@ const Page = ({
   namespace,
   title,
   userSettings,
-}: Partial<StandardPageProps<FlatStorageMapping>>) => {
+  canCreate,
+}: {
+  dataSource: [FlatStorageMapping[], boolean, boolean];
+  namespace: string;
+  title: string;
+  userSettings: UserSettings;
+  canCreate: boolean;
+}) => {
   const { t } = useForkliftTranslation();
 
   return (
     <StandardPage<FlatStorageMapping>
       addButton={
-        <AddMappingButton
-          namespace={namespace}
-          mappingType={MappingType.Storage}
-          label={t('Create StorageMap')}
-        />
+        canCreate && (
+          <AddMappingButton
+            namespace={namespace}
+            mappingType={MappingType.Storage}
+            label={t('Create StorageMap')}
+          />
+        )
       }
       dataSource={dataSource}
       RowMapper={StorageMappingRow}

@@ -90,7 +90,7 @@ export const useFlatPlanActions: ExtensionHook<
   const cutoverMutation = useSetCutoverMutation(plan.namespace);
 
   const [canDelete] = useAccessReview({
-    group: PlanModel.apiVersion,
+    group: PlanModel.apiGroup,
     resource: PlanModel.plural,
     verb: 'delete',
     name,
@@ -98,7 +98,7 @@ export const useFlatPlanActions: ExtensionHook<
   });
 
   const [canPatch] = useAccessReview({
-    group: PlanModel.apiVersion,
+    group: PlanModel.apiGroup,
     resource: PlanModel.plural,
     verb: 'patch',
     name,
