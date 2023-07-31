@@ -29,15 +29,22 @@ function setup_bridge_for_bearer_token () {
     BRIDGE_USER_AUTH="disabled"
 
     if [[ -n "${BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT-}" && -n "${BRIDGE_K8S_AUTH_BEARER_TOKEN-}" ]]; then
-        # Setup with fixed cluster endpoint
-        return
+        echo  "Setup with fixed cluster endpoint and token"
+    elif [[ -n "${BRIDGE_K8S_AUTH_BEARER_TOKEN-}" ]]; then
+        echo "Setup with fixed cluster token"
+
+        BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$(kubectl config current-context)\")].cluster.server}")
     elif oc_available_loggedin; then
+        echo "Setup for Openshift enviorment"
+
         # If we have oc tool and an Openshift token, assume we are connected to openshift
         BRIDGE_K8S_MODE_OFF_CLUSTER_THANOS=$(oc -n openshift-config-managed get configmap monitoring-shared-config -o jsonpath='{.data.thanosPublicURL}')
         BRIDGE_K8S_MODE_OFF_CLUSTER_ALERTMANAGER=$(oc -n openshift-config-managed get configmap monitoring-shared-config -o jsonpath='{.data.alertmanagerPublicURL}')
         BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=${BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT:=$(oc whoami --show-server)}
         BRIDGE_K8S_AUTH_BEARER_TOKEN=$(oc whoami --show-token 2>/dev/null)
     else
+        echo "Setup for K8s enviorment"
+
         BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$(kubectl config current-context)\")].cluster.server}")
         BRIDGE_K8S_AUTH_BEARER_TOKEN="abcdef.0123456789abcdef"
     fi
