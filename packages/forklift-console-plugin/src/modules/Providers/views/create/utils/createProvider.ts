@@ -21,13 +21,25 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
  *  .catch(err => console.error(err));
  */
 export async function createProvider(provider: V1beta1Provider, secret: V1Secret) {
-  const newProvider: V1beta1Provider = {
-    ...provider,
-    spec: {
-      ...provider?.spec,
-      secret: { name: secret?.metadata?.name, namespace: secret?.metadata?.namespace },
-    },
-  };
+  // Sanity check, don't try to create empty provider
+  if (!provider) {
+    return;
+  }
+
+  let newProvider: V1beta1Provider;
+
+  // Skip referencing to empty secret or a secret with no url
+  if (!secret || provider?.spec?.url) {
+    newProvider = {
+      ...provider,
+      spec: {
+        ...provider?.spec,
+        secret: { name: secret?.metadata?.name, namespace: secret?.metadata?.namespace },
+      },
+    };
+  } else {
+    newProvider = provider;
+  }
 
   const obj = await k8sCreate({
     model: ProviderModel,

@@ -24,6 +24,12 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
  */
 export async function createSecret(provider: V1beta1Provider, secret: V1Secret) {
   const url = provider?.spec?.url;
+
+  // Sanity check, don't try to create empty secret, or a secret without url
+  if (!secret || !url) {
+    return;
+  }
+
   const encodedURL = url ? Base64.encode(url) : undefined;
   const generateName = `${provider.metadata.name}-`;
 

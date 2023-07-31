@@ -20,6 +20,11 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
  *  .catch(err => console.error(err));
  */
 export async function patchSecretOwner(provider: V1beta1Provider, secret: V1Secret) {
+  // Sanity check, don't try to patch empty secret
+  if (!secret) {
+    return;
+  }
+
   const op = secret?.metadata?.ownerReferences ? 'replace' : 'add';
 
   await k8sPatch({
