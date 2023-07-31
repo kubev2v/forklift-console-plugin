@@ -19,7 +19,6 @@ echo ""
 echo "deploy console CRDs"
 
 kubectl apply -f ${script_dir}/yaml/crds/console
-kubectl apply -f ${script_dir}/yaml/crds/forklift
 
 echo ""
 echo "deploy OKD console"
