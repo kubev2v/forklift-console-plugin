@@ -20,6 +20,9 @@ rules:
 - apiGroups: ["console.openshift.io"]
   resources: ["*"]
   verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
 EOF
 
   cat <<EOF | kubectl apply -f -
@@ -34,6 +37,9 @@ rules:
 - apiGroups: ["console.openshift.io"]
   resources: ["*"]
   verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["*"]
 EOF
 }
 
