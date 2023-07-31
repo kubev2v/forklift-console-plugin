@@ -5,17 +5,17 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.10.0
   creationTimestamp: null
-  name: ovirtvolumepopulators.forklift.konveyor.io
+  name: openstackvolumepopulators.forklift.konveyor.io
 spec:
   group: forklift.konveyor.io
   names:
-    kind: OvirtVolumePopulator
-    listKind: OvirtVolumePopulatorList
-    plural: ovirtvolumepopulators
+    kind: OpenstackVolumePopulator
+    listKind: OpenstackVolumePopulatorList
+    plural: openstackvolumepopulators
     shortNames:
-    - ovvp
-    - ovvps
-    singular: ovirtvolumepopulator
+    - osvp
+    - osvps
+    singular: openstackvolumepopulator
   scope: Namespaced
   versions:
   - name: v1beta1
@@ -36,11 +36,11 @@ spec:
             type: object
           spec:
             properties:
-              diskId:
+              identityUrl:
                 type: string
-              engineSecretName:
+              imageId:
                 type: string
-              engineUrl:
+              secretName:
                 type: string
               transferNetwork:
                 description: The network attachment definition that should be used
@@ -81,13 +81,13 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
             required:
-            - diskId
-            - engineSecretName
-            - engineUrl
+            - identityUrl
+            - imageId
+            - secretName
             type: object
           status:
             properties:
-              progress:
+              transferred:
                 type: string
             type: object
         required:
