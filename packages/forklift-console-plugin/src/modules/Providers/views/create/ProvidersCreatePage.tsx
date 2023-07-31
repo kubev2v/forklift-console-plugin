@@ -228,36 +228,6 @@ export const ProvidersCreatePage: React.FC<{
           </HelperTextItem>
         </HelperText>
 
-        <Flex>
-          <FlexItem>
-            <Button
-              variant="primary"
-              onClick={onUpdate}
-              isDisabled={state.validationError !== null}
-              isLoading={isLoading}
-            >
-              {t('Create provider')}
-            </Button>
-          </FlexItem>
-          <FlexItem>
-            <Button onClick={() => history.push(providersListURL)} variant="secondary">
-              {t('Cancel')}
-            </Button>
-          </FlexItem>
-        </Flex>
-
-        <HelperText className="forklift-create-subtitle-errors">
-          {state.validationError ? (
-            <HelperTextItem variant="indeterminate">
-              {state.validationError.toString()}
-            </HelperTextItem>
-          ) : (
-            <HelperTextItem variant="indeterminate">{t('Create new provider')}</HelperTextItem>
-          )}
-        </HelperText>
-
-        <Divider className="forklift-section-secret-edit" />
-
         {state.apiError && (
           <Alert
             className="co-alert co-alert--margin-top"
@@ -291,6 +261,36 @@ export const ProvidersCreatePage: React.FC<{
           onNewSecretChange={onNewSecretChange}
           providerNames={providerNames}
         />
+
+        <Divider className="forklift-section-create-deviser" />
+
+        <Flex>
+          <FlexItem>
+            <Button
+              variant="primary"
+              onClick={onUpdate}
+              isDisabled={state.validationError !== null}
+              isLoading={isLoading}
+            >
+              {t('Create provider')}
+            </Button>
+          </FlexItem>
+          <FlexItem>
+            <Button onClick={() => history.push(providersListURL)} variant="secondary">
+              {t('Cancel')}
+            </Button>
+          </FlexItem>
+        </Flex>
+
+        <HelperText className="forklift-create-subtitle-errors">
+          {state.validationError && state?.newProvider?.spec?.type ? (
+            <HelperTextItem variant="indeterminate">
+              {state.validationError.toString()}
+            </HelperTextItem>
+          ) : (
+            <HelperTextItem variant="indeterminate">{t('Create new provider')}</HelperTextItem>
+          )}
+        </HelperText>
       </PageSection>
     </div>
   );
