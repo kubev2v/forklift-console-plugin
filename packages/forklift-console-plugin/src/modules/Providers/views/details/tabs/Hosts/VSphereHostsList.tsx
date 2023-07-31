@@ -68,7 +68,7 @@ export const VSphereHostsList: React.FC<ProviderHostsProps> = ({ obj }) => {
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'ProviderHosts' }));
   const [selected, setSelected]: [string[], (selected: string[]) => void] = useState([]);
 
-  const { provider } = obj;
+  const { provider, permissions } = obj;
   const { namespace } = provider?.metadata || {};
 
   const {
@@ -154,7 +154,7 @@ export const VSphereHostsList: React.FC<ProviderHostsProps> = ({ obj }) => {
   return (
     <StandardPage<InventoryHostPair>
       data-testid="hosts-list"
-      addButton={<AddButton />}
+      addButton={permissions.canPatch && <AddButton />}
       dataSource={[hostsData || [], !loading, error]}
       RowMapper={RowMapper}
       HeaderMapper={HeaderMapper}

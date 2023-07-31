@@ -4,6 +4,7 @@ import { isSecretDataChanged } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1Secret } from '@kubev2v/types';
+import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
   Divider,
@@ -65,6 +66,14 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const [isLoading, setIsLoading] = useState(false);
+
+  const [canPatch] = useAccessReview({
+    group: '',
+    resource: 'secrets',
+    verb: 'patch',
+    namespace: secret.metadata.namespace,
+    name: secret.metadata.name,
+  });
 
   const initialState: BaseCredentialsSecretState = {
     reveal: false,
@@ -167,6 +176,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
             {t('Update credentials')}
           </Button>
         </FlexItem>
+
         <FlexItem>
           <Button variant="secondary" onClick={onCancel}>
             {t('Cancel')}
@@ -194,11 +204,13 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
   ) : (
     <>
       <Flex>
-        <FlexItem>
-          <Button variant="secondary" icon={<Pencil />} onClick={toggleEdit}>
-            {t('Edit credentials')}
-          </Button>
-        </FlexItem>
+        {canPatch && (
+          <FlexItem>
+            <Button variant="secondary" icon={<Pencil />} onClick={toggleEdit}>
+              {t('Edit credentials')}
+            </Button>
+          </FlexItem>
+        )}
         <FlexItem align={{ default: 'alignRight' }}>
           <Button
             variant="link"

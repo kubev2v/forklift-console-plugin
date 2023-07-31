@@ -15,7 +15,8 @@ export const OvirtDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => 
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const { provider } = data;
+  const { provider, permissions } = data;
+  const canEdit = permissions.canPatch;
   const type = PROVIDERS[provider?.spec?.type] || provider?.spec?.type;
 
   return (
@@ -78,7 +79,7 @@ export const OvirtDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => 
         }
         helpContent={<Text>{t(`The provider URL. Empty may be used for the host provider.`)}</Text>}
         crumbs={['Provider', 'spec', 'url']}
-        onEdit={() => showModal(<EditProviderURLModal resource={provider} />)}
+        onEdit={canEdit && (() => showModal(<EditProviderURLModal resource={provider} />))}
       />
 
       <DetailsItem
