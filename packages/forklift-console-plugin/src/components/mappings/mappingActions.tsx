@@ -6,7 +6,8 @@ import { ConfirmModal } from '@kubev2v/legacy/common/components/ConfirmModal';
 import { AddEditMappingModal } from '@kubev2v/legacy/Mappings/components/AddEditMappingModal';
 import { useDeleteMappingMutation } from '@kubev2v/legacy/queries';
 import { Mapping, MappingType } from '@kubev2v/legacy/queries/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { NetworkMapModel } from '@kubev2v/types';
+import { useAccessReview, useModal } from '@openshift-console/dynamic-plugin-sdk';
 
 import { CommonMapping } from './data';
 
@@ -20,6 +21,22 @@ export function useMappingActions<T extends CommonMapping>({
   const { t } = useForkliftTranslation();
   const launchModal = useModal();
 
+  const [canDelete] = useAccessReview({
+    group: NetworkMapModel.apiVersion,
+    resource: NetworkMapModel.plural,
+    verb: 'delete',
+    name: resourceData.name,
+    namespace: resourceData.namespace,
+  });
+
+  const [canPatch] = useAccessReview({
+    group: NetworkMapModel.apiVersion,
+    resource: NetworkMapModel.plural,
+    verb: 'patch',
+    name: resourceData.name,
+    namespace: resourceData.namespace,
+  });
+
   const actions = useMemo(
     () => [
       {
@@ -31,7 +48,7 @@ export function useMappingActions<T extends CommonMapping>({
             namespace: resourceData.namespace,
           }),
         label: t('Edit Mapping'),
-        disabled: resourceData.managed,
+        disabled: !canPatch || resourceData.managed,
         disabledTooltip: t('Manged mappings can not be edited'),
       },
       {
@@ -44,7 +61,7 @@ export function useMappingActions<T extends CommonMapping>({
             name: resourceData.name,
           }),
         label: t('Delete Mapping'),
-        disabled: resourceData.managed,
+        disabled: !canDelete || resourceData.managed,
         disabledTooltip: t('Manged mappings can not be deleted'),
       },
     ],
