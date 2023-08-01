@@ -1,15 +1,9 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  ProviderInventory,
-  ProviderModel,
-  ProviderModelGroupVersionKind,
-  V1beta1Provider,
-} from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection, Title } from '@patternfly/react-core';
 
@@ -53,10 +47,7 @@ export const ProviderCredentialsWrapper: React.FC<{ name: string; namespace: str
     namespace,
   });
 
-  const { inventory } = useProviderInventory<ProviderInventory>({ provider });
-  const permissions = useGetDeleteAndEditAccessReview({ model: ProviderModel, namespace });
-
-  const data = { provider, inventory, permissions };
+  const data = { provider };
 
   return <ProviderCredentials obj={data} loaded={providerLoaded} loadError={providerLoadError} />;
 };
