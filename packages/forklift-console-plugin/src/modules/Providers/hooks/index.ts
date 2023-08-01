@@ -4,6 +4,7 @@ export * from './useK8sWatchProviderNames';
 export * from './useK8sWatchSecretData';
 export * from './useProviderInventory';
 export * from './useProvidersInventoryList';
+export * from './useProviderType';
 export * from './useToggle';
 export * from './utils';
 // @endindex

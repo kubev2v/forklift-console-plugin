@@ -1,9 +1,16 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  ProviderInventory,
+  ProviderModel,
+  ProviderModelGroupVersionKind,
+  V1beta1Provider,
+} from '@kubev2v/types';
+import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
 interface ProviderYAMLPageProps extends RouteComponentProps {
@@ -41,4 +48,21 @@ const Loading: React.FC = () => (
   </div>
 );
 
-export default ProviderYAMLPage;
+export const ProviderYAMLPageWrapper: React.FC<{ name: string; namespace: string }> = ({
+  name,
+  namespace,
+}) => {
+  const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
+    name,
+    namespace,
+  });
+
+  const { inventory } = useProviderInventory<ProviderInventory>({ provider });
+  const permissions = useGetDeleteAndEditAccessReview({ model: ProviderModel, namespace });
+
+  const data = { provider, inventory, permissions };
+
+  return <ProviderYAMLPage obj={data} loaded={providerLoaded} loadError={providerLoadError} />;
+};

@@ -1,6 +1,6 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
+import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
 import {
   EditProviderDefaultTransferNetwork,
   ModalHOC,
@@ -9,7 +9,15 @@ import {
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { CnoConfig, OpenShiftNetworkAttachmentDefinition } from '@kubev2v/types';
+import {
+  CnoConfig,
+  OpenShiftNetworkAttachmentDefinition,
+  ProviderInventory,
+  ProviderModel,
+  ProviderModelGroupVersionKind,
+  V1beta1Provider,
+} from '@kubev2v/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Label, PageSection, Title } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
@@ -108,3 +116,22 @@ export const ProviderNetworks: React.FC<ProviderNetworksProps> = (props) => (
     <ProviderNetworks_ {...props} />
   </ModalHOC>
 );
+
+export const ProviderNetworksWrapper: React.FC<{ name: string; namespace: string }> = ({
+  name,
+  namespace,
+}) => {
+  const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
+    name,
+    namespace,
+  });
+
+  const { inventory } = useProviderInventory<ProviderInventory>({ provider });
+  const permissions = useGetDeleteAndEditAccessReview({ model: ProviderModel, namespace });
+
+  const data = { provider, inventory, permissions };
+
+  return <ProviderNetworks obj={data} loaded={providerLoaded} loadError={providerLoadError} />;
+};

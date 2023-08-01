@@ -15,10 +15,26 @@ export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
   const { data, loaded, loadError } = props;
   const { provider } = data;
 
-  if (!provider?.spec?.secret?.name || !provider?.spec?.secret?.namespace || !loaded || loadError) {
+  if (!provider?.spec?.secret?.name || !provider?.spec?.secret?.namespace) {
+    return (
+      <div>
+        <span className="text-muted">{t('No secret.')}</span>
+      </div>
+    );
+  }
+
+  if (!loaded) {
     return (
       <div>
         <span className="text-muted">{t('Secret is loading, please wait.')}</span>
+      </div>
+    );
+  }
+
+  if (loaded && loadError) {
+    return (
+      <div>
+        <span className="text-muted">{t('Secret failed to load, check if the secret exist.')}</span>
       </div>
     );
   }
