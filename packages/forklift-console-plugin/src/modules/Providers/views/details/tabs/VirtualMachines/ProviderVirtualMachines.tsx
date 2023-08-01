@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import StandardPage from 'src/components/page/StandardPage';
-import { useProviderInventory, UseProviderInventoryParams } from 'src/modules/Providers/hooks';
+import {
+  useGetDeleteAndEditAccessReview,
+  useProviderInventory,
+  UseProviderInventoryParams,
+} from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { EnumToTuple, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
-import { ProviderVirtualMachine } from '@kubev2v/types';
+import {
+  ProviderInventory,
+  ProviderModel,
+  ProviderModelGroupVersionKind,
+  ProviderVirtualMachine,
+  V1beta1Provider,
+} from '@kubev2v/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { ProviderVirtualMachinesRow, VmData } from './ProviderVirtualMachinesRow';
 import { getHighestPriorityConcern } from './utils';
@@ -94,5 +105,26 @@ export const ProviderVirtualMachines: React.FC<ProviderVirtualMachinesProps> = (
       title={t('Virtual Machines')}
       userSettings={userSettings}
     />
+  );
+};
+
+export const ProviderVirtualMachinesWrapper: React.FC<{ name: string; namespace: string }> = ({
+  name,
+  namespace,
+}) => {
+  const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
+    name,
+    namespace,
+  });
+
+  const { inventory } = useProviderInventory<ProviderInventory>({ provider });
+  const permissions = useGetDeleteAndEditAccessReview({ model: ProviderModel, namespace });
+
+  const data = { provider, inventory, permissions };
+
+  return (
+    <ProviderVirtualMachines obj={data} loaded={providerLoaded} loadError={providerLoadError} />
   );
 };
