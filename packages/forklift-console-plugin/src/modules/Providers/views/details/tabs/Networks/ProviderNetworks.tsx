@@ -12,7 +12,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import {
   CnoConfig,
   OpenShiftNetworkAttachmentDefinition,
-  ProviderInventory,
   ProviderModel,
   ProviderModelGroupVersionKind,
   V1beta1Provider,
@@ -128,10 +127,9 @@ export const ProviderNetworksWrapper: React.FC<{ name: string; namespace: string
     namespace,
   });
 
-  const { inventory } = useProviderInventory<ProviderInventory>({ provider });
   const permissions = useGetDeleteAndEditAccessReview({ model: ProviderModel, namespace });
 
-  const data = { provider, inventory, permissions };
+  const data = { provider, permissions };
 
   return <ProviderNetworks obj={data} loaded={providerLoaded} loadError={providerLoadError} />;
 };
