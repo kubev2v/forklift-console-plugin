@@ -4,7 +4,7 @@ import { ContextProvider } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 const _exposedModules: ConsolePluginMetadata['exposedModules'] = {
-  MockPlugin: './mock-console-extension',
+  MockPlugin: './__mock-console-extension',
 };
 
 const _extensions: EncodedExtension[] = [
