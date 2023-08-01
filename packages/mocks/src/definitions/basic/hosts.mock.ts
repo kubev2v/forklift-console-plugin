@@ -14,7 +14,7 @@ import {
 export const HOST_01_ID = 'host-44';
 const host1: VSphereHost = {
   id: HOST_01_ID,
-  name: 'esx12.v2v.bos.redhat.com',
+  name: 'esx12.v2v.example.com',
   selfLink: `providers/vsphere/${VMWARE_01_UID}/hosts/${HOST_01_ID}`,
   managementServerIp: '10.19.2.10',
   parent: {
@@ -71,7 +71,7 @@ export const HOST_02_ID = 'host-29';
 const host2: VSphereHost = {
   ...host1,
   id: HOST_02_ID,
-  name: 'esx13.v2v.bos.redhat.com',
+  name: 'esx13.v2v.example.com',
   selfLink: `providers/vsphere/${VMWARE_01_UID}/hosts/${HOST_02_ID}`,
 };
 

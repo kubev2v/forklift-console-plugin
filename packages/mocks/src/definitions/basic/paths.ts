@@ -127,15 +127,19 @@ const paths = [
       vmTree: MOCK_VMWARE_VM_TREE,
     },
   }),
-  ...Object.entries(k8s).flatMap(([kind, data]) =>
-    toPath({
+  ...Object.entries(k8s).flatMap(([kind, data]) => [
+    ...toPath({
       resources: data,
       name: kind,
       namespaces: NAMESPACES,
       allNamespacesPath: ALL_NAMESPACES_PATH,
       namespacePath: NAMESPACE_PATH,
     }),
-  ),
+    ...data.map((it) => [
+      `${NAMESPACE_PATH}${it.metadata.namespace}/${kind}/${it.metadata.name}`,
+      it,
+    ]),
+  ]),
 ];
 
 export default Object.fromEntries(paths);
