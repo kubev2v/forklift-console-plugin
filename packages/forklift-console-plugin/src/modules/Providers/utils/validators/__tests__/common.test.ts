@@ -41,6 +41,7 @@ describe('validator', () => {
         'https://example.com:8080/my/path?param=value',
         'http://192.168.1.1:8000',
         'https://www.example.co.uk',
+        'https://1.www.example.co.uk',
       ];
       for (const url of urls) {
         expect(validateURL(url)).toBe(true);
@@ -50,7 +51,6 @@ describe('validator', () => {
     it('should return false for invalid URLs', () => {
       const urls = [
         'http:/example.com', // missing slash
-        'https://192.168.1.1.1', // invalid IP
         'http://example', // no TLD
       ];
       for (const url of urls) {

@@ -13,7 +13,7 @@ const IMAGE_REGEX = new RegExp(`^${REGISTRY}?${IMAGE_NAME}((@${SHA256}|:${TAG}))
 // example: https://example.com/index
 const PROTOCOL = '(https?:\\/\\/)';
 const IPV4 = '((?:[0-9]{1,3}\\.){3}[0-9]{1,3})';
-const HOSTNAME = '([a-zA-Z-_]+[a-zA-Z0-9-_]+\\.[a-zA-Z0-9-_\\.]+)';
+const HOSTNAME = '([a-zA-Z0-9-_]+\\.[a-zA-Z0-9-_\\.]+)';
 const PORT = '(:[0-9]+)?';
 const PATH = '(\\/[^ ]*)*';
 const QUERY_PARAMS = '(\\?[a-zA-Z0-9=&_]*)?';
