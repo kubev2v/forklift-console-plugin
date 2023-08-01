@@ -98,7 +98,13 @@ export const VSphereHostsList: React.FC<ProviderHostsProps> = ({ obj }) => {
         setSelected(isSelected ? newSelected : [...newSelected, props.resourceData.inventory.id]);
       };
 
-      return <VSphereHostsRow {...props} isSelected={isSelected} toggleSelect={handleToggle} />;
+      return (
+        <VSphereHostsRow
+          {...props}
+          isSelected={isSelected}
+          toggleSelect={permissions.canPatch ? handleToggle : undefined}
+        />
+      );
     },
     [selected], // dependency array
   );
@@ -120,13 +126,15 @@ export const VSphereHostsList: React.FC<ProviderHostsProps> = ({ obj }) => {
 
       return (
         <>
-          <Th
-            select={{
-              onSelect: handleSelect,
-              isSelected: allSelected,
-              isHeaderSelectDisabled: selectableItems.length === 0, // Disable if no selectable items
-            }}
-          />
+          {permissions.canPatch && (
+            <Th
+              select={{
+                onSelect: handleSelect,
+                isSelected: allSelected,
+                isHeaderSelectDisabled: selectableItems.length === 0, // Disable if no selectable items
+              }}
+            />
+          )}
           <DefaultHeader {...{ ...other, dataOnScreen }} />
         </>
       );

@@ -21,16 +21,18 @@ export const VSphereHostsRow: React.FC<RowProps<InventoryHostPair>> = ({
 }) => {
   return (
     <Tr ouiaId={undefined} ouiaSafe={undefined}>
-      <Td
-        select={{
-          rowIndex,
-          onSelect: toggleSelect,
-          isSelected,
-          disable:
-            resourceData?.inventory?.networkAdapters === undefined ||
-            resourceData?.inventory?.networkAdapters?.length === 0,
-        }}
-      />
+      {!!toggleSelect && (
+        <Td
+          select={{
+            rowIndex,
+            onSelect: toggleSelect,
+            isSelected,
+            disable:
+              resourceData?.inventory?.networkAdapters === undefined ||
+              resourceData?.inventory?.networkAdapters?.length === 0,
+          }}
+        />
+      )}
       {resourceFields?.map(({ resourceFieldId }) =>
         renderTd({ resourceData, resourceFieldId, resourceFields }),
       )}
