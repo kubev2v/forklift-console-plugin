@@ -4,7 +4,6 @@ import {
   EditProviderVDDKImage,
   useModal,
 } from 'src/modules/Providers/modals';
-import { HELP_LINK_HREF } from 'src/utils/constants';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -19,7 +18,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const { provider, inventory, permissions } = data;
+  const { provider, permissions } = data;
   const canEdit = permissions.canPatch;
   const type = PROVIDERS[provider?.spec?.type] || provider?.spec?.type;
 
@@ -32,19 +31,20 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
       <DetailsItem
         title={t('Type')}
         content={type}
-        moreInfoLink={HELP_LINK_HREF}
+        moreInfoLink={
+          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
+        }
         helpContent={
-          <Text>{t(`Allowed values are openshift, ovirt, vsphere, and openstack.`)}</Text>
+          <Text>
+            {t(
+              'Specify the type of source provider. Allowed values are ova, ovirt, vsphere, and openstack. This label is needed to verify the credentials are correct when the remote system is accessible and, for RHV, to retrieve the Manager CA certificate when a third-party certificate is specified.',
+            )}
+          </Text>
         }
         crumbs={['Provider', 'spec', 'type']}
       />
 
-      <DetailsItem
-        title={t('Product')}
-        content={inventory?.['product'] || <span className="text-muted">{t('Empty')}</span>}
-        helpContent={<Text>{t(`VMware only: vSphere product name.`)}</Text>}
-        crumbs={['Inventory', 'providers', `${provider.spec.type}`, '[UID]']}
-      />
+      <DetailsItem title={''} content={''} />
 
       <DetailsItem
         title={t('Name')}
@@ -84,9 +84,15 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
         title={t('URL')}
         content={provider?.spec?.url || <span className="text-muted">{t('Empty')}</span>}
         moreInfoLink={
-          'https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces'
+          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-source-provider_vmware'
         }
-        helpContent={<Text>{t(`The provider URL. Empty may be used for the host provider.`)}</Text>}
+        helpContent={
+          <Text>
+            {t(
+              `vCenter host name or IP address - if a certificate for FQDN is specified, the value of this field needs to match the FQDN in the certificate.`,
+            )}
+          </Text>
+        }
         crumbs={['Provider', 'spec', 'url']}
         onEdit={canEdit && (() => showModal(<EditProviderURLModal resource={provider} />))}
       />
@@ -104,15 +110,15 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
             <span className="text-muted">{t('No secret')}</span>
           )
         }
-        helpContent={t(
-          `References a secret containing credentials and other confidential information. Empty may be used for the host provider.`,
-        )}
+        moreInfoLink={'https://kubernetes.io/docs/concepts/configuration/secret/'}
+        helpContent={t(`A Secret containing credentials and other confidential information.`)}
         crumbs={['Provider', 'spec', 'secret']}
       />
 
       <DetailsItem
         title={t('Created at')}
         content={<Timestamp timestamp={provider?.metadata?.creationTimestamp} />}
+        moreInfoLink={'https://kubernetes.io/docs/reference/using-api/api-concepts'}
         helpContent={
           <Text>
             {t(
@@ -132,7 +138,10 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
             <span className="text-muted">{t('Empty')}</span>
           )
         }
-        helpContent={<Text>{t(`VMware only: Specify the VDDK image that you created.`)}</Text>}
+        moreInfoLink={
+          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv'
+        }
+        helpContent={<Text>{t(`Specify the VDDK image that you created.`)}</Text>}
         crumbs={['Provider', 'spec', 'settings', 'vddkInitImage']}
         onEdit={canEdit && (() => showModal(<EditProviderVDDKImage resource={provider} />))}
       />
@@ -140,6 +149,9 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
       <DetailsItem
         title={t('Owner')}
         content={<OwnerReferencesItem resource={provider} />}
+        moreInfoLink={
+          'https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/'
+        }
         helpContent={
           <Text>
             {t(
