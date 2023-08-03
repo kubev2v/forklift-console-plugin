@@ -16,6 +16,10 @@ export const VSphereInventorySection: React.FC<InventoryProps> = ({ data }) => {
   }
 
   const inventoryItems = {
+    product: {
+      title: t('Product'),
+      helpContent: t('vSphere product name'),
+    },
     vmCount: {
       title: t('Virtual machines'),
       helpContent: t('Number of virtual machines in cluster'),

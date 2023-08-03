@@ -1,6 +1,5 @@
 import React from 'react';
 import { EditProviderURLModal, useModal } from 'src/modules/Providers/modals';
-import { HELP_LINK_HREF } from 'src/utils/constants';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -28,9 +27,15 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
       <DetailsItem
         title={t('Type')}
         content={type}
-        moreInfoLink={HELP_LINK_HREF}
+        moreInfoLink={
+          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
+        }
         helpContent={
-          <Text>{t(`Allowed values are openshift, ovirt, vsphere, and openstack.`)}</Text>
+          <Text>
+            {t(
+              'Specify the type of source provider. Allowed values are ova, ovirt, vsphere, and openstack. This label is needed to verify the credentials are correct when the remote system is accessible and, for RHV, to retrieve the Manager CA certificate when a third-party certificate is specified.',
+            )}
+          </Text>
         }
         crumbs={['Provider', 'spec', 'type']}
       />
@@ -75,9 +80,13 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
         title={t('URL')}
         content={provider?.spec?.url || <span className="text-muted">{t('Empty')}</span>}
         moreInfoLink={
-          'https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces'
+          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#osh-adding-source-provider_mtv'
         }
-        helpContent={<Text>{t(`The provider URL. Empty may be used for the host provider.`)}</Text>}
+        helpContent={
+          <Text>
+            {t(`OpenStack Identity (Keystone) endpoint, for example, http://controller:5000/v3`)}
+          </Text>
+        }
         crumbs={['Provider', 'spec', 'url']}
         onEdit={canEdit && (() => showModal(<EditProviderURLModal resource={provider} />))}
       />
@@ -95,15 +104,15 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
             <span className="text-muted">{t('No secret')}</span>
           )
         }
-        helpContent={t(
-          `References a secret containing credentials and other confidential information. Empty may be used for the host provider.`,
-        )}
+        moreInfoLink={'https://kubernetes.io/docs/concepts/configuration/secret/'}
+        helpContent={t(`A Secret containing credentials and other confidential information.`)}
         crumbs={['Provider', 'spec', 'secret']}
       />
 
       <DetailsItem
         title={t('Created at')}
         content={<Timestamp timestamp={provider?.metadata?.creationTimestamp} />}
+        moreInfoLink={'https://kubernetes.io/docs/reference/using-api/api-concepts'}
         helpContent={
           <Text>
             {t(
@@ -121,6 +130,9 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
       <DetailsItem
         title={t('Owner')}
         content={<OwnerReferencesItem resource={provider} />}
+        moreInfoLink={
+          'https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/'
+        }
         helpContent={
           <Text>
             {t(
