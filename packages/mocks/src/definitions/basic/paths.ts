@@ -60,6 +60,9 @@ const paths = [
     '/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers',
     MOCK_INVENTORY_PROVIDERS,
   ],
+  ...Object.values(MOCK_INVENTORY_PROVIDERS).flatMap((providers: { selfLink: string }[]) =>
+    providers.map((it) => [`${INVENTORY_PATH}${it.selfLink}`, it]),
+  ),
   [
     '/api/proxy/plugin/forklift-console-plugin/forklift-must-gather-api/must-gather',
     MOCK_MUST_GATHERS,
