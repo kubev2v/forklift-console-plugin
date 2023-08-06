@@ -106,7 +106,7 @@ export const VSphereHostsList: React.FC<ProviderHostsProps> = ({ obj }) => {
         />
       );
     },
-    [selected], // dependency array
+    [selected, permissions],
   );
 
   const HeaderMapper = React.useCallback(
@@ -139,7 +139,7 @@ export const VSphereHostsList: React.FC<ProviderHostsProps> = ({ obj }) => {
         </>
       );
     },
-    [selected],
+    [selected, permissions],
   );
 
   const AddButton = useCallback(
