@@ -80,7 +80,6 @@ export const DescriptionTitleWithHelp: React.FC<{
               <ExternalLink href={moreInfoLink} isInline hideIcon>
                 <Truncate content={moreInfoLink} />
               </ExternalLink>
-              .
             </FlexItem>
           )}
 
