@@ -91,7 +91,13 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
         moreInfoLink={
           'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
         }
-        helpContent={<Text>{t('OVA server end point.')}</Text>}
+        helpContent={
+          <Text>
+            {t(
+              'NFS mount end point should be in the form NFS_SERVER:EXPORTED_DIRECTORY, for example: 10.10.0.10:/ova',
+            )}
+          </Text>
+        }
         crumbs={['Provider', 'spec', 'url']}
         onEdit={
           canEdit &&

@@ -38,7 +38,8 @@ export const OvirtEditURLModal: React.FC<EditProviderURLModalProps> = (props) =>
       model={ProviderModel}
       variant={ModalVariant.large}
       body={t(
-        'Specify the API end point URL, for example, https://<engine_host>/ovirt-engine/api/ for RHV.',
+        `Specify RHV Manager host name or IP address. If a certificate for FQDN is specified, the value of this field needs to match the FQDN in the certificate,
+        for example, https://<engine_host>/ovirt-engine/api/ for RHV.`,
       )}
       helperText={t('Please enter the URL for RHV engine server.')}
       onConfirmHook={patchProviderURL}

@@ -38,7 +38,7 @@ export const OpenstackEditURLModal: React.FC<EditProviderURLModalProps> = (props
       model={ProviderModel}
       variant={ModalVariant.large}
       body={t(
-        'Specify the API end point URL, for example, https://<identity_service>/v3 for OpenStack.',
+        'Specify OpenStack Identity (Keystone) endpoint, for example, http://controller:5000/v3.',
       )}
       helperText={t('Please enter URL for OpenStack services REST APIs.')}
       onConfirmHook={patchProviderURL}

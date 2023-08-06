@@ -122,8 +122,9 @@ const EditProviderDefaultTransferNetwork_: React.FC<EditProviderDefaultTransferN
       model={ProviderModel}
       onConfirmHook={onConfirm}
       body={t(
-        `If you defined a migration transfer network for the OpenShift Virtualization provider and if the network is in the target namespace,
-        the network that you defined is the default network for all migration plans. Otherwise, the pod network is used.`,
+        `You can select a default migration network for an OpenShift Virtualization provider in the Red Hat OpenShift web console to improve performance.
+        The default migration network is used to transfer disks to the namespaces in which it is configured.If you do not select a migration network,
+        the default migration network is the pod network, which might not be optimal for disk transfer.`,
       )}
       InputComponent={OpenshiftNetworksInputFactory({ resource: props.resource })}
     />
