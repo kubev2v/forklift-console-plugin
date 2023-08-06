@@ -38,7 +38,7 @@ export const OpenshiftEditURLModal: React.FC<EditProviderURLModalProps> = (props
       model={ProviderModel}
       variant={ModalVariant.large}
       body={t(
-        'Specify the API end point URL, for example, https://<kubernetes API Endpoint>:6443 for OpenShift.',
+        'Specify OpenShift cluster API endpoint, for example, https://<kubernetes API Endpoint>:6443 for OpenShift. Empty may be used for the host provider.',
       )}
       helperText={t(
         'Please enter URL for the kubernetes API server, if empty URL default to this cluster.',

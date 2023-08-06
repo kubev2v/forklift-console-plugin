@@ -38,7 +38,7 @@ export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = (props) 
       model={ProviderModel}
       variant={ModalVariant.large}
       body={t(
-        'Specify the API end point URL, for example, https://<vCenter_host>/sdk for vSphere.',
+        'Specify vCenter host name or IP address - if a certificate for FQDN is specified, the value of this field needs to match the FQDN in the certificate.',
       )}
       helperText={t('Please enter URL for vSphere REST APIs server.')}
       onConfirmHook={patchProviderURL}
