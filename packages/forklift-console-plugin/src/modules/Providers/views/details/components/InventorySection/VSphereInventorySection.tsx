@@ -20,6 +20,7 @@ export const VSphereInventorySection: React.FC<InventoryProps> = ({ data }) => {
       title: t('Product'),
       helpContent: t('vSphere product name'),
     },
+    empty: {},
     vmCount: {
       title: t('Virtual machines'),
       helpContent: t('Number of virtual machines in cluster'),
@@ -52,7 +53,10 @@ export const VSphereInventorySection: React.FC<InventoryProps> = ({ data }) => {
     const item = inventoryItems?.[key];
 
     if (item) {
-      const value = inventory[key] || '-';
+      const isEmpty = key === 'empty';
+      const inventoryValue = inventory[key] || '-';
+      const value = isEmpty ? '' : inventoryValue;
+
       items.push(
         <DetailsItem
           title={item.title}
