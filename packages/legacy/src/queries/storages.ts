@@ -33,7 +33,7 @@ export const useSourceStoragesQuery = (
       return '/storageclasses?detail=1';
     }
     if (provider?.type === 'ova') {
-      return '/disks?detail=1';
+      return '/storages?detail=1';
     }
     return '/storagedomains';
   };
