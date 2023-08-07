@@ -1,8 +1,9 @@
 import React, { memo } from 'react';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
-
-import { useProviderType } from '../../hooks';
+import { ErrorState, LoadingDots } from '@kubev2v/common';
+import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { OpenshiftProviderDetailsPage } from './OpenshiftProviderDetailsPage';
 import { OpenStackProviderDetailsPage } from './OpenStackProviderDetailsPage';
@@ -13,29 +14,74 @@ import { VSphereProviderDetailsPage } from './VSphereProviderDetailsPage';
 import './ProviderDetailsPage.style.css';
 
 export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
-  const type = useProviderType(name, namespace);
-  return <ProviderDetailsPage_ name={name} namespace={namespace} type={type} />;
+  const [provider, loaded, error] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
+    name,
+    namespace,
+  });
+  return (
+    <ProviderDetailsPage_
+      name={name}
+      namespace={namespace}
+      type={provider?.spec?.type}
+      loaded={loaded}
+      error={error}
+    />
+  );
+};
+ProviderDetailsPage.displayName = 'ProviderDetails';
+
+const ProviderDetailsPageInternal: React.FC<{
+  name: string;
+  namespace: string;
+  type: string;
+  loaded: boolean;
+  error: unknown;
+}> = ({ type, name, namespace, error, loaded }) => {
+  const { t } = useForkliftTranslation();
+  // status checked in the order used in the Console's StatusBox component
+  if (error) {
+    return <LoadError error={error} />;
+  }
+
+  if (!loaded) {
+    return <LoadingDots />;
+  }
+
+  switch (type) {
+    case 'openshift':
+      return <OpenshiftProviderDetailsPage name={name} namespace={namespace} />;
+    case 'openstack':
+      return <OpenStackProviderDetailsPage name={name} namespace={namespace} />;
+    case 'ovirt':
+      return <OVirtProviderDetailsPage name={name} namespace={namespace} />;
+    case 'vsphere':
+      return <VSphereProviderDetailsPage name={name} namespace={namespace} />;
+    case 'ova':
+      return <OvaProviderDetailsPage name={name} namespace={namespace} />;
+    default:
+      return <ErrorState title={t('Unsupported provider type')} />;
+  }
 };
 
-export const ProviderDetailsPage_: React.FC<{ name: string; namespace: string; type: string }> =
-  // eslint-disable-next-line react/display-name, react/prop-types
-  memo(({ name, namespace, type }) => {
-    switch (type) {
-      case 'openshift':
-        return <OpenshiftProviderDetailsPage name={name} namespace={namespace} />;
-      case 'openstack':
-        return <OpenStackProviderDetailsPage name={name} namespace={namespace} />;
-      case 'ovirt':
-        return <OVirtProviderDetailsPage name={name} namespace={namespace} />;
-      case 'vsphere':
-        return <VSphereProviderDetailsPage name={name} namespace={namespace} />;
-      case 'ova':
-        return <OvaProviderDetailsPage name={name} namespace={namespace} />;
-      default:
-        return <></>;
-    }
-  });
-ProviderDetailsPage.displayName = 'ProviderDetails';
+const ProviderDetailsPage_ = memo(ProviderDetailsPageInternal);
+
+// API provides no typing info for the error prop
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const LoadError = ({ error }: { error: any }) => {
+  const { t } = useForkliftTranslation();
+  const status = error?.response?.status;
+
+  if (status === 404) {
+    return <ErrorState title={t('404: Not Found')} />;
+  }
+  if (status === 403) {
+    return <ErrorState title={t("You don't have access to this section due to cluster policy.")} />;
+  }
+
+  return <ErrorState title={t('Unable to retrieve data')} />;
+};
 
 type ProviderDetailsPageProps = {
   kind: string;

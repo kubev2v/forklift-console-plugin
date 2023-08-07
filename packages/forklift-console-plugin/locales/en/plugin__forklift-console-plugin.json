@@ -4,6 +4,7 @@
   "{{name}} Details": "{{name}} Details",
   "{{selectedLength}} hosts selected.": "{{selectedLength}} hosts selected.",
   "{{vmDone}} of {{vmCount}} VMs migrated": "{{vmDone}} of {{vmCount}} VMs migrated",
+  "404: Not Found": "404: Not Found",
   "A Secret containing credentials and other confidential information.": "A Secret containing credentials and other confidential information.",
   "A Secret containing credentials and other confidential information. Empty may be used for the host provider.": "A Secret containing credentials and other confidential information. Empty may be used for the host provider.",
   "Actions": "Actions",
@@ -332,6 +333,7 @@
   "Unable to retrieve data": "Unable to retrieve data",
   "Undefined": "Undefined",
   "Unique Kubernetes resource name identifier": "Unique Kubernetes resource name identifier",
+  "Unsupported provider type": "Unsupported provider type",
   "Update credentials": "Update credentials",
   "Updated": "Updated",
   "URL": "URL",
@@ -363,5 +365,6 @@
   "You can select a default migration network for an OpenShift Virtualization provider in the Red Hat OpenShift web console to improve performance.\n        The default migration network is used to transfer disks to the namespaces in which it is configured.If you do not select a migration network,\n        the default migration network is the pod network, which might not be optimal for disk transfer.": "You can select a default migration network for an OpenShift Virtualization provider in the Red Hat OpenShift web console to improve performance.\n        The default migration network is used to transfer disks to the namespaces in which it is configured.If you do not select a migration network,\n        the default migration network is the pod network, which might not be optimal for disk transfer.",
   "You can select a default migration network for an OpenShift Virtualization provider in the Red Hat OpenShift web console to improve performance. The default migration network is used to transfer disks to the namespaces in which it is configured.If you do not select a migration network, the default migration network is the pod network, which might not be optimal for disk transfer.": "You can select a default migration network for an OpenShift Virtualization provider in the Red Hat OpenShift web console to improve performance. The default migration network is used to transfer disks to the namespaces in which it is configured.If you do not select a migration network, the default migration network is the pod network, which might not be optimal for disk transfer.",
   "You can select a migration network for a source provider to reduce risk to the source environment and to improve performance.": "You can select a migration network for a source provider to reduce risk to the source environment and to improve performance.",
+  "You don't have access to this section due to cluster policy.": "You don't have access to this section due to cluster policy.",
   "You will no longer be able to select mapping \"{{name}}\" when you create a migration plan.": "You will no longer be able to select mapping \"{{name}}\" when you create a migration plan."
 }
