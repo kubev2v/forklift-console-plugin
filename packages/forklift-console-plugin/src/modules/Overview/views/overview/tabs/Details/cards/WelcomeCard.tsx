@@ -26,16 +26,23 @@ export const OverviewCard: FC<OverviewCardProps> = () => {
             <Text component={TextVariants.h3}>{t('Welcome')}</Text>
             <Text className="forklift-welcome-text">
               <Trans t={t} ns="plugin__forklift-console-plugin">
-                The Migration Toolkit for Virtualization (MTV) enables you to migrate virtual
-                machines from VMware vSphere, Red Hat Virtualization, or OpenStack to OpenShift
-                Virtualization running on Red Hat OpenShift.
+                Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale to Red
+                Hat OpenShift Virtualization. You can migrate virtual machines from VMware vSphere,
+                Red Hat Virtualization, OpenStack, OVA and OpenShift Virtualization source providers
+                to OpenShift Virtualization with the Migration Toolkit for Virtualization (MTV).
               </Trans>
             </Text>
             <Text className="forklift-welcome-text">
               <Trans t={t} ns="plugin__forklift-console-plugin">
-                You can migrate virtual machines from VMware vSphere, Red Hat Virtualization, or
-                OpenStack source providers to OpenShift Virtualization with the Migration Toolkit
-                for Virtualization (MTV).
+                This gives organizations the ability to more easily access workloads running on
+                virtual machines, while developing new cloud-native applications.
+              </Trans>
+            </Text>
+            <Text className="forklift-welcome-text">
+              <Trans t={t} ns="plugin__forklift-console-plugin">
+                Migrations are performed in a few simple steps, first by providing source and
+                destination credentials, then mapping the source and destination infrastructure and
+                creating a choreographed plan, and finally, executing the migration effort.
               </Trans>
             </Text>
           </SplitItem>
