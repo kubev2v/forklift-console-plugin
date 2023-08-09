@@ -10,7 +10,7 @@ import './TableCells.style.css';
  * @param {TableCellProps} props - The props for the component.
  * @returns {ReactElement} The rendered TableCell component.
  */
-export const TableCell: React.FC<TableCellProps> = ({ children }) => {
+export const TableCell: React.FC<TableCellProps> = ({ children, isWrap = false }) => {
   const arrayChildren = Children.toArray(children);
 
   return (
@@ -18,7 +18,7 @@ export const TableCell: React.FC<TableCellProps> = ({ children }) => {
       <Flex
         spaceItems={{ default: 'spaceItemsXs' }}
         display={{ default: 'inlineFlex' }}
-        flexWrap={{ default: 'nowrap' }}
+        flexWrap={!isWrap ? { default: 'nowrap' } : {}}
       >
         {Children.map(arrayChildren, (child) => (
           <FlexItem>{child}</FlexItem>
@@ -30,4 +30,5 @@ export const TableCell: React.FC<TableCellProps> = ({ children }) => {
 
 export interface TableCellProps {
   children?: ReactNode;
+  isWrap?: boolean;
 }

@@ -12,12 +12,13 @@ import { TableCell, TableCellProps } from './TableCell';
  */
 export const TableLabelCell: React.FC<TableLabelCellProps> = ({
   children,
+  isWrap = false,
   hasLabel = false,
   label,
   labelColor = 'grey',
 }) => {
   return (
-    <TableCell>
+    <TableCell isWrap={isWrap}>
       {children}
       {hasLabel && (
         <Label isCompact color={labelColor} className="forklift-table__flex-cell-label">
@@ -32,4 +33,5 @@ export interface TableLabelCellProps extends TableCellProps {
   hasLabel?: boolean;
   label?: ReactNode;
   labelColor?: 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey';
+  isWrap?: boolean;
 }
