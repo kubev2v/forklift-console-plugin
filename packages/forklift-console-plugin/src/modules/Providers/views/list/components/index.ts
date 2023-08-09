@@ -5,6 +5,7 @@ export * from './InventoryNotReachable';
 export * from './NamespaceCell';
 export * from './OpenshiftNetworkCell';
 export * from './ProviderLinkCell';
+export * from './ProviderNotReachable';
 export * from './ProvidersAddButton';
 export * from './ProvidersEmptyState';
 export * from './StatusCell';
