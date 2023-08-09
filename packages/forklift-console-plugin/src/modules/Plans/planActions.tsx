@@ -245,7 +245,7 @@ export const useFlatPlanActions: ExtensionHook<
           )
         : '',
     }),
-    [t, areProvidersReady, name, namespace],
+    [t, canPatch, areProvidersReady, name, namespace],
   );
 
   const archiveAction = useMemo(
