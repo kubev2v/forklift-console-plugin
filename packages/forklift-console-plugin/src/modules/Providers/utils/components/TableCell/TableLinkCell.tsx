@@ -19,7 +19,7 @@ export const TableLinkCell: React.FC<TableLinkCellProps> = ({
   labelColor = 'grey',
 }) => {
   return (
-    <TableLabelCell hasLabel={hasLabel} label={label} labelColor={labelColor}>
+    <TableLabelCell hasLabel={hasLabel} label={label} labelColor={labelColor} isWrap={true}>
       <ResourceLink groupVersionKind={groupVersionKind} name={name} namespace={namespace} />
     </TableLabelCell>
   );
