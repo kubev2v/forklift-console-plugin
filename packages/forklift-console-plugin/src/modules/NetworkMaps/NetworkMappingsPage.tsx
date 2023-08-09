@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
 import {
   commonFieldsMetadataFactory,
   StartWithEmptyColumnMapper,
@@ -18,6 +19,8 @@ import { MappingType } from '@kubev2v/legacy/queries/types';
 import { NetworkMapModel } from '@kubev2v/types';
 import { useAccessReview, useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button } from '@patternfly/react-core';
+
+import { useHasSufficientProviders } from '../Plans/data';
 
 import { FlatNetworkMapping, Network, useFlatNetworkMappings } from './dataForNetwork';
 import EmptyStateNetworkMaps from './EmptyStateNetworkMaps';
@@ -110,13 +113,23 @@ export const AddNetworkMappingButton: React.FC<{ namespace: string }> = ({ names
   const { t } = useForkliftTranslation();
   const launchModal = useModal();
 
+  const hasSufficientProviders = useHasSufficientProviders(namespace);
+
   return (
-    <Button
-      variant="primary"
-      onClick={() => launchModal(withQueryClient(AddMappingModal), { currentNamespace: namespace })}
+    <ConditionalTooltip
+      isTooltipEnabled={!hasSufficientProviders}
+      content={`You must add at least one source and one target provider in order to create a mapping.`}
     >
-      {t('Create NetworkMap')}
-    </Button>
+      <Button
+        variant="primary"
+        isAriaDisabled={!hasSufficientProviders}
+        onClick={() =>
+          launchModal(withQueryClient(AddMappingModal), { currentNamespace: namespace })
+        }
+      >
+        {t('Create NetworkMap')}
+      </Button>
+    </ConditionalTooltip>
   );
 };
 AddNetworkMappingButton.displayName = 'AddNetworkMappingButton';

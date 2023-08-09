@@ -46,6 +46,7 @@
   "Create by using the form or manually entering YAML or JSON definitions, Provider CR stores attributes that enable MTV to connect to and interact with the source and target providers.": "Create by using the form or manually entering YAML or JSON definitions, Provider CR stores attributes that enable MTV to connect to and interact with the source and target providers.",
   "Create NetworkMap": "Create NetworkMap",
   "Create new provider": "Create new provider",
+  "Create plan": "Create plan",
   "Create provider": "Create provider",
   "Create Provider": "Create Provider",
   "Create StorageMap": "Create StorageMap",
