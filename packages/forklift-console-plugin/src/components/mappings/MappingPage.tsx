@@ -1,4 +1,6 @@
 import React from 'react';
+import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
+import { useHasSufficientProviders } from 'src/modules/Plans/data';
 import * as C from 'src/utils/constants';
 import { MAPPING_STATUS } from 'src/utils/enums';
 
@@ -19,19 +21,27 @@ export const AddMappingButton: React.FC<{
 }> = ({ namespace, label, mappingType }) => {
   const launchModal = useModal();
 
+  const hasSufficientProviders = useHasSufficientProviders(namespace);
+
   return (
-    <Button
-      variant="primary"
-      onClick={() =>
-        launchModal(withQueryClient(AddMappingModal), {
-          currentNamespace: namespace,
-          label,
-          mappingType,
-        })
-      }
+    <ConditionalTooltip
+      isTooltipEnabled={!hasSufficientProviders}
+      content={`You must add at least one source and one target provider in order to create a mapping.`}
     >
-      {label}
-    </Button>
+      <Button
+        variant="primary"
+        isAriaDisabled={!hasSufficientProviders}
+        onClick={() =>
+          launchModal(withQueryClient(AddMappingModal), {
+            currentNamespace: namespace,
+            label,
+            mappingType,
+          })
+        }
+      >
+        {label}
+      </Button>
+    </ConditionalTooltip>
   );
 };
 AddMappingButton.displayName = 'AddMappingButton';

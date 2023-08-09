@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { ConditionalTooltip } from 'legacy/src/common/components/ConditionalTooltip';
+import { ENV, PATH_PREFIX } from 'legacy/src/common/constants';
 import StandardPage from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
 import { PLAN_STATUS_FILTER } from 'src/utils/enums';
@@ -9,11 +12,11 @@ import { EnumToTuple } from '@kubev2v/common';
 import { loadUserSettings, UserSettings } from '@kubev2v/common';
 import { ResourceFieldFactory } from '@kubev2v/common';
 import { MustGatherModal } from '@kubev2v/legacy/common/components/MustGatherModal';
-import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
 import { PlanModel } from '@kubev2v/types';
 import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
+import { Button } from '@patternfly/react-core';
 
-import { FlatPlan, useFlatPlans } from './data';
+import { FlatPlan, useFlatPlans, useHasSufficientProviders } from './data';
 import EmptyStatePlans from './EmptyStatePlans';
 import PlanRow from './PlanRow';
 
@@ -129,6 +132,31 @@ export const PlansPage = ({ namespace }: ResourceConsolePageProps) => {
   );
 };
 PlansPage.displayName = 'PlansPage';
+
+export const CreatePlanButton: React.FC<{ namespace: string }> = ({ namespace }) => {
+  const { t } = useForkliftTranslation();
+  const history = useHistory();
+  const hasSufficientProviders = useHasSufficientProviders(namespace);
+
+  return (
+    <ConditionalTooltip
+      isTooltipEnabled={!hasSufficientProviders}
+      content={`You must add at least one source and one target provider in order to create a mapping.`}
+    >
+      <Button
+        onClick={() =>
+          history.push(`${PATH_PREFIX}/plans/ns/${namespace || ENV.DEFAULT_NAMESPACE}/create`)
+        }
+        isAriaDisabled={!hasSufficientProviders}
+        variant="primary"
+        id="create-plan-button"
+      >
+        {t('Create plan')}
+      </Button>
+    </ConditionalTooltip>
+  );
+};
+CreatePlanButton.displayName = 'CreatePlanButton';
 
 const Page = ({
   dataSource,
