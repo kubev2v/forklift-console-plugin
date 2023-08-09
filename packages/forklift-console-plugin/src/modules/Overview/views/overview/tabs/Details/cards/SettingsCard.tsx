@@ -48,7 +48,13 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
             moreInfoLink={
               'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
             }
-            helpContent={<Text>{'The interval in minutes for precopy. Default value is 60.'}</Text>}
+            helpContent={
+              <Text>
+                {t(
+                  'Controls the interval at which a new snapshot is requested prior to initiating a warm migration. The default value is 60 minutes.',
+                )}
+              </Text>
+            }
             crumbs={['spec', 'controller_precopy_interval']}
             onEdit={() => showModal(<EditPreCopyIntervalModal resource={obj} />)}
           />
@@ -64,7 +70,11 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
             }
             helpContent={
-              <Text>{'The interval in seconds for snapshot pooling. Default value is 10.'}</Text>
+              <Text>
+                {t(
+                  'Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.',
+                )}
+              </Text>
             }
             crumbs={['spec', 'controller_snapshot_status_check_rate_seconds']}
             onEdit={() => showModal(<EditSnapshotPoolingIntervalModal resource={obj} />)}
@@ -82,7 +92,9 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
             }
             helpContent={
               <Text>
-                {'Maximum number of concurrent virtual machine migrations. Default value is 20.'}
+                {t(
+                  'Sets the maximum number of VMs that can be migrated simultaneously. The default value is 20 virtual machines.',
+                )}
               </Text>
             }
             crumbs={['spec', 'controller_max_vm_inflight']}
@@ -97,9 +109,9 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
             }
             helpContent={
               <Text>
-                {
-                  'The maximum age in hours for must gather cleanup. Default value is -1, which implies never.'
-                }
+                {t(
+                  "Specifies the duration for retaining 'must gather' reports before they are automatically deleted. The default value is -1, which implies automatic cleanup is disabled.",
+                )}
               </Text>
             }
             crumbs={['spec', 'must_gather_api_cleanup_max_age']}
@@ -118,9 +130,9 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
             }
             helpContent={
               <Text>
-                {
-                  'The limit for CPU usage by the controller, specified in milliCPU. Default value is 500m.'
-                }
+                {t(
+                  'Defines the CPU limits allocated to the controller container. The default value is 500 milliCPU.',
+                )}
               </Text>
             }
             crumbs={['spec', 'controller_container_limits_cpu']}
@@ -139,9 +151,9 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
             }
             helpContent={
               <Text>
-                {
-                  'The limit for memory usage by the controller, specified in Megabytes (Mi). Default value is 800Mi.'
-                }
+                {t(
+                  'Sets the memory limits allocated to the controller container. The default value is 800Mi.',
+                )}
               </Text>
             }
             crumbs={['spec', 'controller_container_limits_memory']}
