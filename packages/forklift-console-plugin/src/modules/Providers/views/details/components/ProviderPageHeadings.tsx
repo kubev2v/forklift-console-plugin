@@ -12,7 +12,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-import { InventoryNotReachable, ProviderNotReachable } from '../../list';
+import { InventoryNotReachable, ProviderCriticalCondition } from '../../list';
 
 export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }> = ({
   name,
@@ -41,29 +41,25 @@ export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }>
   const data = { provider, inventory, permissions };
   const alerts = [];
 
-  const criticalCondition = provider?.status?.conditions.find(
-    (condition) => condition?.category === 'Critical',
-  );
-
-  if (
+  const criticalCondition =
     providerLoaded &&
+    provider?.status?.conditions.find((condition) => condition?.category === 'Critical');
+
+  const inventoryNotReachable =
+    providerLoaded &&
+    provider?.status?.phase === 'Ready' &&
     !inventoryLoading &&
     inventoryError &&
-    inventoryError.toString() !== 'Error: Invalid provider data' &&
-    provider?.status?.phase === 'Ready'
-  ) {
+    inventoryError.toString() !== 'Error: Invalid provider data';
+
+  if (inventoryNotReachable) {
     alerts.push(<InventoryNotReachable key={'inventoryNotReachable'} />);
-  } else if (
-    providerLoaded &&
-    !inventoryLoading &&
-    provider?.status?.phase !== 'Ready' &&
-    provider?.status?.conditions.filter((condition) => condition?.category === 'Critical').length
-  ) {
+  } else if (criticalCondition) {
     alerts.push(
-      <ProviderNotReachable
+      <ProviderCriticalCondition
         type={criticalCondition?.type}
         message={criticalCondition?.message}
-        key={'providerNotReachable'}
+        key={'providerCriticalCondition'}
       />,
     );
   }
