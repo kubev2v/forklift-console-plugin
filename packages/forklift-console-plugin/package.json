@@ -9,7 +9,6 @@
     "url": "https://github.com/kubev2v/forklift-console-plugin.git",
     "directory": "packages/forklift-console-plugin"
   },
-
   "scripts": {
     "clean": "rm -rf ./dist ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
@@ -28,7 +27,7 @@
     "@kubev2v/legacy": "*",
     "@migtools/lib-ui": "8.4.1",
     "jsonpath": "^1.1.1",
-    "msw": "^1.2.1",
+    "msw": "^1.2.3",
     "streamsaver": "^2.0.6"
   },
   "peerDependencies": {
