@@ -20,6 +20,10 @@ export const OVAInventorySection: React.FC<InventoryProps> = ({ data }) => {
       title: t('Virtual machines'),
       helpContent: t('Number of virtual machines in OVA files'),
     },
+    storageCount: {
+      title: t('Storage'),
+      helpContent: t('Number of storage types found in OVA server'),
+    },
   };
 
   const items = [];

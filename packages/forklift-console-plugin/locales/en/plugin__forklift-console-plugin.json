@@ -202,6 +202,7 @@
   "Number of regions in OpenStack cluster": "Number of regions in OpenStack cluster",
   "Number of storage classes in provider cluster": "Number of storage classes in provider cluster",
   "Number of storage domains in provider": "Number of storage domains in provider",
+  "Number of storage types found in OVA server": "Number of storage types found in OVA server",
   "Number of storage types in cluster": "Number of storage types in cluster",
   "Number of storage volumes in cluster": "Number of storage volumes in cluster",
   "Number of virtual machines in cluster": "Number of virtual machines in cluster",
