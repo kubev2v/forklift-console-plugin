@@ -12,7 +12,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-import { InventoryNotReachable } from '../../list';
+import { InventoryNotReachable, ProviderNotReachable } from '../../list';
 
 export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }> = ({
   name,
@@ -41,6 +41,10 @@ export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }>
   const data = { provider, inventory, permissions };
   const alerts = [];
 
+  const criticalCondition = provider?.status?.conditions.find(
+    (condition) => condition?.category === 'Critical',
+  );
+
   if (
     providerLoaded &&
     !inventoryLoading &&
@@ -49,6 +53,19 @@ export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }>
     provider?.status?.phase === 'Ready'
   ) {
     alerts.push(<InventoryNotReachable key={'inventoryNotReachable'} />);
+  } else if (
+    providerLoaded &&
+    !inventoryLoading &&
+    provider?.status?.phase !== 'Ready' &&
+    provider?.status?.conditions.filter((condition) => condition?.category === 'Critical').length
+  ) {
+    alerts.push(
+      <ProviderNotReachable
+        type={criticalCondition?.type}
+        message={criticalCondition?.message}
+        key={'providerNotReachable'}
+      />,
+    );
   }
 
   return (
