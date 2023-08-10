@@ -213,6 +213,7 @@ const ProvidersListPage: React.FC<{
     <ProvidersAddButton
       onClick={() => history.push(`${providersListURL}/~new`)}
       buttonText={t('Create Provider')}
+      dataTestId="add-provider-button"
     />
   );
 

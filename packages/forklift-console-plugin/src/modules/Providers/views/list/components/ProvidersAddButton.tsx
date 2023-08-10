@@ -5,11 +5,16 @@ import { Button } from '@patternfly/react-core';
 interface AProvidersAddButtonProps {
   onClick: () => void;
   buttonText: string;
+  dataTestId?: string;
 }
 
-export const ProvidersAddButton: React.FC<AProvidersAddButtonProps> = ({ onClick, buttonText }) => {
+export const ProvidersAddButton: React.FC<AProvidersAddButtonProps> = ({
+  onClick,
+  buttonText,
+  dataTestId,
+}) => {
   return (
-    <Button data-testid="add-provider-button" variant="primary" onClick={onClick}>
+    <Button data-testid={dataTestId} variant="primary" onClick={onClick}>
       {buttonText}
     </Button>
   );
