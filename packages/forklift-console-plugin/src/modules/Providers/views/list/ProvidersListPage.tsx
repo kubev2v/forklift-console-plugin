@@ -13,11 +13,16 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { EnumToTuple, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import {
+  OpenshiftProvider,
+  OpenstackProvider,
+  OvaProvider,
+  OVirtProvider,
   ProviderModel,
   ProviderModelGroupVersionKind,
   ProviderModelRef,
   ProviderType,
   V1beta1Provider,
+  VSphereProvider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -130,7 +135,30 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'storageCount',
-    jsonPath: '$.inventory.storageCount',
+    jsonPath: (obj: ProviderData) => {
+      let storageCount: number;
+      const { inventory } = obj;
+
+      switch (inventory?.type) {
+        case 'ova':
+          storageCount = (inventory as OvaProvider).storageCount;
+          break;
+        case 'openshift':
+          storageCount = (inventory as OpenshiftProvider).storageClassCount;
+          break;
+        case 'vsphere':
+          storageCount = (inventory as VSphereProvider).datastoreCount;
+          break;
+        case 'openstack':
+          storageCount = (inventory as OpenstackProvider).volumeTypeCount;
+          break;
+        case 'ovirt':
+          storageCount = (inventory as OVirtProvider).storageDomainCount;
+          break;
+      }
+
+      return storageCount;
+    },
     label: t('Storage'),
     isVisible: false,
     sortable: true,

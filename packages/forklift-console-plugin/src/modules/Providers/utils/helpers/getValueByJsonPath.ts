@@ -1,17 +1,23 @@
 /**
- * Retrieves the deep value of an object given a JSON path.
+ * Retrieves the deep value of an object given a JSON path or a function.
  *
  * @param obj - The object to retrieve the value from.
- * @param path - The JSON path (dot notation) to the property.
- * @returns The value at the given path, or undefined if the path doesn't exist.
+ * @param pathOrFunction - The JSON path (dot notation) to the property, or a function that returns the desired value.
+ * @returns The value at the given path, or the result of the function, or undefined if the path doesn't exist or the function returns undefined.
  */
-export function getValueByJsonPath<T>(obj: T, path: string | string[]): unknown {
-  let pathParts = [];
+export function getValueByJsonPath<T>(
+  obj: T,
+  pathOrFunction: string | string[] | ((obj: T) => unknown),
+): unknown {
+  if (typeof pathOrFunction === 'function') {
+    return pathOrFunction(obj);
+  }
 
-  if (typeof path === 'string') {
-    pathParts = path.split('.');
+  let pathParts = [];
+  if (typeof pathOrFunction === 'string') {
+    pathParts = pathOrFunction.split('.');
   } else {
-    pathParts = path;
+    pathParts = pathOrFunction;
   }
 
   return pathParts.reduce((o, key) => o?.[key], obj);
