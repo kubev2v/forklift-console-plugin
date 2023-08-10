@@ -10,6 +10,7 @@ import {
   SourceInventoryProvider,
   SourceVM,
   IVMStatus,
+  IOpenStackVM,
 } from 'legacy/src/queries/types';
 import { ProviderType } from 'legacy/src/common/constants';
 
@@ -19,7 +20,10 @@ interface IVMNameWithPowerState {
   vmStatus?: IVMStatus;
 }
 
-export const getVMPowerState = (providerType: ProviderType | undefined, vm?: SourceVM) => {
+export const getVMPowerState = (
+  providerType: ProviderType | undefined,
+  vm?: SourceVM
+): 'on' | 'off' | 'unknown' => {
   let powerStatus: 'on' | 'off' | 'unknown' = 'unknown';
   if (!vm) return powerStatus;
   switch (providerType) {
@@ -31,6 +35,20 @@ export const getVMPowerState = (providerType: ProviderType | undefined, vm?: Sou
     case 'vsphere': {
       if ((vm as IVMwareVM).powerState === 'poweredOn') powerStatus = 'on';
       if ((vm as IVMwareVM).powerState === 'poweredOff') powerStatus = 'off';
+      break;
+    }
+    case 'openstack': {
+      const status = (vm as IOpenStackVM).status;
+      if (status === 'ACTIVE') {
+        powerStatus = 'on';
+      }
+      if (status === 'SHUTOFF') {
+        powerStatus = 'off';
+      }
+      break;
+    }
+    case 'ova': {
+      powerStatus = 'off';
       break;
     }
     default: {
