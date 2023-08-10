@@ -49,6 +49,14 @@ export interface IOpenStackVM extends IBaseSourceVM {
   status?: 'ACTIVE' | 'SHUTOFF' | 'PAUSED' | 'SHELVED_OFFLOADED' | 'SUSPENDED';
 }
 
+export interface IOpenShiftVM extends IBaseSourceVM {
+  object?: {
+    status?: {
+      printableStatus?: string;
+    };
+  };
+}
+
 export interface IOpenStackNIC {
   'OS-EXT-IPS-MAC:mac_addr'?: string;
   'OS-EXT-IPS:type'?: string;

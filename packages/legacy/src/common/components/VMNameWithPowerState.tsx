@@ -11,6 +11,7 @@ import {
   SourceVM,
   IVMStatus,
   IOpenStackVM,
+  IOpenShiftVM,
 } from 'legacy/src/queries/types';
 import { ProviderType } from 'legacy/src/common/constants';
 
@@ -43,6 +44,15 @@ export const getVMPowerState = (
         powerStatus = 'on';
       }
       if (status === 'SHUTOFF') {
+        powerStatus = 'off';
+      }
+      break;
+    }
+    case 'openshift': {
+      const status = (vm as IOpenShiftVM)?.object?.status?.printableStatus;
+      if (status === 'Running') {
+        powerStatus = 'on';
+      } else {
         powerStatus = 'off';
       }
       break;
