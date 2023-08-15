@@ -54,6 +54,13 @@ export interface IOpenShiftVM extends IBaseSourceVM {
     status?: {
       printableStatus?: string;
     };
+    spec?: {
+      template?: {
+        spec: {
+          networks?: IOpenShiftNIC[];
+        };
+      };
+    };
   };
 }
 
@@ -66,6 +73,13 @@ export interface IOpenStackNIC {
 
 export interface IOpenStackDiskAttachment {
   ID?: string;
+}
+
+export interface IOpenShiftNIC {
+  pod?: NonNullable<unknown>;
+  multus?: {
+    networkName: string;
+  };
 }
 
 export type SourceVM = IVMwareVM | IRHVVM | IOpenStackVM;
