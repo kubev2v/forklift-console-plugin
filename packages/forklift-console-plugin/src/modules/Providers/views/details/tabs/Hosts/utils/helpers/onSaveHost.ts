@@ -127,6 +127,9 @@ async function processHostPair(
       metadata: {
         generateName: `${provider.metadata.name}-${inventory.id}-`,
         namespace: provider.metadata.namespace,
+        labels: {
+          createdForResourceType: 'hosts',
+        },
         ownerReferences: [
           {
             apiVersion: 'forklift.konveyor.io/v1beta1',
