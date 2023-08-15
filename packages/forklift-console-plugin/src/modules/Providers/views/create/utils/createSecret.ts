@@ -41,7 +41,7 @@ export async function createSecret(provider: V1beta1Provider, secret: V1Secret) 
       labels: {
         ...secret?.metadata?.labels,
         createdForProviderType: provider?.spec?.type,
-        createdForResourceType: 'provider',
+        createdForResourceType: 'providers',
       },
     },
     data: { ...secret?.data, url: encodedURL },
