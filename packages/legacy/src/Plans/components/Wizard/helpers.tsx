@@ -21,6 +21,8 @@ import {
   IOpenShiftNetwork,
   ISourceNetwork,
   ISourceStorage,
+  IOpenShiftVM,
+  POD_NETWORK,
 } from 'legacy/src/queries/types';
 import EnterpriseIcon from '@patternfly/react-icons/dist/esm/icons/enterprise-icon';
 import ClusterIcon from '@patternfly/react-icons/dist/esm/icons/cluster-icon';
@@ -372,6 +374,13 @@ export const findMatchingSelectableDescendants = (
   isNodeSelectable: (node: InventoryTree) => boolean
 ): InventoryTree[] => indexedTree.getDescendants(node, true).filter((n) => isNodeSelectable(n));
 
+export const generateOpenShiftSourceMapNetworkName = (mappingSource: MappingSource) =>
+  (mappingSource as IOpenShiftNetwork) && (mappingSource as typeof POD_NETWORK)?.type !== 'pod'
+    ? (mappingSource as IOpenShiftNetwork).namespace +
+      '/' +
+      (mappingSource as IOpenShiftNetwork).name
+    : null;
+
 export const findNodesMatchingSelectedVMs = (
   indexedTree: IndexedTree,
   selectedVMs: SourceVM[],
@@ -410,6 +419,11 @@ export const filterSourcesBySelectedVMs = (
             const networkIds = vmNicProfiles?.map((nicProfile) => nicProfile?.network);
             return networkIds;
           }
+          if (sourceProviderType === 'openshift') {
+            return (vm as IOpenShiftVM)?.object.spec.template.spec.networks?.map((network) =>
+              network.pod ? 'Pod network' : network.multus.networkName
+            );
+          }
         }
 
         if (mappingType === MappingType.Storage) {
@@ -442,7 +456,9 @@ export const filterSourcesBySelectedVMs = (
         (source as IOpenShiftNetwork).uid ||
           (source as ISourceNetwork).id ||
           (source as ISourceStorage).id
-      ) || sourceIds.includes(source.name)
+      ) ||
+      sourceIds.includes(source.name) ||
+      sourceIds.includes(generateOpenShiftSourceMapNetworkName(source as IOpenShiftNetwork))
   );
   return filteredSources;
 };
