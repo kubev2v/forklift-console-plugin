@@ -50,7 +50,7 @@ export const Mappings: React.FunctionComponent<IMappingsProps> = ({
           <EmptyStateBody>
             {mappingType === MappingType.Network
               ? 'Map source provider networks to target provider networks.'
-              : 'Map source provider datastores or storage domains or volume types to target provider storage classes.'}
+              : 'Map datastores, storage domains, volume types or storage classes from the source provider to storage classes of the target provider.'}
           </EmptyStateBody>
           <CreateMappingButton onClick={toggleModalAndResetEdit} />
         </EmptyState>
