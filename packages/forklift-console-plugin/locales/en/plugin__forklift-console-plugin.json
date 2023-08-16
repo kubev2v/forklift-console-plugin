@@ -143,7 +143,7 @@
   "Managed resource": "Managed resource",
   "Manged mappings can not be deleted": "Manged mappings can not be deleted",
   "Manged mappings can not be edited": "Manged mappings can not be edited",
-  "Map source datastores or storage domains or volume types and networks to target storage classes and networks.": "Map source datastores or storage domains or volume types and networks to target storage classes and networks.",
+  "Map source datastores, storage domains, volume types, storage classes and networks to their respective target storage classes and networks.": "Map source datastores, storage domains, volume types, storage classes and networks to their respective target storage classes and networks.",
   "Mapping graph": "Mapping graph",
   "Maximum concurrent VM migrations": "Maximum concurrent VM migrations",
   "Maximum number of concurrent VM migrations. Default value is 20.": "Maximum number of concurrent VM migrations. Default value is 20.",

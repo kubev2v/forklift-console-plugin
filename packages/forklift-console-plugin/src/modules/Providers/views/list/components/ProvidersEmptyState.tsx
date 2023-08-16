@@ -59,7 +59,7 @@ export const ProvidersEmptyState: React.FC<ProvidersEmptyStateProps> = ({
                   </TextListItem>
                   <TextListItem>
                     {t(
-                      'Map source datastores or storage domains or volume types and networks to target storage classes and networks.',
+                      'Map source datastores, storage domains, volume types, storage classes and networks to their respective target storage classes and networks.',
                     )}
                   </TextListItem>
                   <TextListItem>
