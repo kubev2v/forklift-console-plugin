@@ -212,6 +212,7 @@ export const getStorageTitle = (sourceProviderType: ProviderType, cap = false): 
   if (sourceProviderType === 'vsphere') return `${cap ? 'D' : 'd'}atastores`;
   if (sourceProviderType === 'ovirt') return `${cap ? 'S' : 's'}torage domains`;
   if (sourceProviderType === 'openstack') return `${cap ? 'V' : 'v'}olume types`;
+  if (sourceProviderType === 'openshift') return `${cap ? 'S' : 's'}torage classes`;
   return '';
 };
 
