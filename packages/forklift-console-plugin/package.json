@@ -27,6 +27,7 @@
     "@kubev2v/legacy": "*",
     "@migtools/lib-ui": "8.4.1",
     "jsonpath": "^1.1.1",
+    "luxon": "^3.3.0",
     "msw": "^1.2.3",
     "streamsaver": "^2.0.6"
   },
@@ -35,6 +36,8 @@
     "@openshift/dynamic-plugin-sdk": "3.0.0",
     "@patternfly/react-core": "4.221.3",
     "@patternfly/react-table": "4.90.3",
+    "@patternfly/react-charts": "6.94.19",
+    "react-dom": "^17",
     "react": "^17.0.1",
     "react-i18next": "^11.7.3",
     "react-router": "5.2.0",

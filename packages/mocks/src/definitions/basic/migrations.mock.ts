@@ -1,4 +1,6 @@
 import { MigrationModelGroupVersionKind as gvk, V1beta1Migration } from '@kubev2v/types';
+import { V1beta1MigrationStatus } from '@kubev2v/types/dist/models/V1beta1MigrationStatus';
+import { V1beta1PlanStatusMigration } from '@kubev2v/types/dist/models/V1beta1PlanStatusMigration';
 import { V1beta1MigrationSpec } from '@kubev2v/types/src/models/V1beta1MigrationSpec';
 
 import { EPOCH, nameAndNamespace, NOW } from '../utils';
@@ -31,6 +33,16 @@ const uidToSpec: { [uid: string]: Partial<V1beta1MigrationSpec> } = {
   [plan11.metadata.uid]: { cancel: cancelSpec },
 };
 
+const toMigrationStatus = ({
+  completed,
+  started,
+  history,
+}: V1beta1PlanStatusMigration): V1beta1MigrationStatus => ({
+  completed,
+  started,
+  conditions: [...history].pop()?.conditions ?? [],
+});
+
 export const MOCK_MIGRATIONS: V1beta1Migration[] = runningPlans.map((plan) => ({
   apiVersion: `${gvk.group}/${gvk.version}`,
   kind: 'Migration',
@@ -42,5 +54,5 @@ export const MOCK_MIGRATIONS: V1beta1Migration[] = runningPlans.map((plan) => ({
     plan: nameAndNamespace(plan.metadata),
     ...(uidToSpec[plan.metadata.uid] ?? {}),
   },
-  status: plan.status?.migration,
+  status: toMigrationStatus(plan.status?.migration),
 }));
