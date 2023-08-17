@@ -278,7 +278,7 @@
   "Select migration network": "Select migration network",
   "Select provider type": "Select provider type",
   "Selected columns will be displayed in the table.": "Selected columns will be displayed in the table.",
-  "Service account token": "Service account token",
+  "Service account bearer token": "Service account bearer token",
   "Set default transfer network": "Set default transfer network",
   "Sets the maximum number of VMs that can be migrated simultaneously. The default value is 20 virtual machines.": "Sets the maximum number of VMs that can be migrated simultaneously. The default value is 20 virtual machines.",
   "Sets the memory limits allocated to the controller container. The default value is 800Mi.": "Sets the memory limits allocated to the controller container. The default value is 800Mi.",
