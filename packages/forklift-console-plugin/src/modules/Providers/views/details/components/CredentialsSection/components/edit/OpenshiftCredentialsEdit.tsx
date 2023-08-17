@@ -68,7 +68,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroup
-        label={t('Service account token')}
+        label={t('Service account bearer token')}
         isRequired
         fieldId="token"
         helperText={t(

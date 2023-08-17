@@ -14,7 +14,7 @@ export const OpenshiftCredentialsList: React.FC<ListComponentProps> = ({ secret,
 
   const fields = {
     token: {
-      label: t('Service account token'),
+      label: t('Service account bearer token'),
       description: t(
         'User or service account bearer token for service accounts or user authentication.',
       ),
