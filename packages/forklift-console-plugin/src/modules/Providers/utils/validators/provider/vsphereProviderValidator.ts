@@ -16,7 +16,7 @@ export function vsphereProviderValidator(provider: V1beta1Provider) {
   }
 
   if (vddkInitImage !== '' && !validateContainerImage(vddkInitImage)) {
-    return new Error('invalided VDDK Init Image');
+    return new Error('invalided VDDK init image');
   }
 
   return null;

@@ -133,7 +133,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
         />
       </FormGroup>
       <FormGroup
-        label={t('Domain Name')}
+        label={t('Domain name')}
         isRequired
         fieldId="domainName"
         helperText={t('OpenStack domain name for token credentials.')}

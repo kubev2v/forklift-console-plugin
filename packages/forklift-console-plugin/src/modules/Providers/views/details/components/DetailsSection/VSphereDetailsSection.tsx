@@ -132,7 +132,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
       />
 
       <DetailsItem
-        title={t('VDDK Init Image')}
+        title={t('VDDK init image')}
         content={
           provider?.spec?.settings?.['vddkInitImage'] || (
             <span className="text-muted">{t('Empty')}</span>

@@ -155,28 +155,28 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
       >
         <Radio
           name="authType"
-          label="Application Credential ID"
+          label="Application credential ID"
           id="applicationCredentialIdSecretFields"
           isChecked={state.authenticationType === 'applicationCredentialIdSecretFields'}
           onChange={() => handleAuthTypeChange('applicationCredentialIdSecretFields')}
         />
         <Radio
           name="authType"
-          label="Application Credential Name"
+          label="Application credential name"
           id="applicationCredentialNameSecretFields"
           isChecked={state.authenticationType === 'applicationCredentialNameSecretFields'}
           onChange={() => handleAuthTypeChange('applicationCredentialNameSecretFields')}
         />
         <Radio
           name="authType"
-          label="Token with User ID"
+          label="Token with user ID"
           id="tokenWithUserIDSecretFields"
           isChecked={state.authenticationType === 'tokenWithUserIDSecretFields'}
           onChange={() => handleAuthTypeChange('tokenWithUserIDSecretFields')}
         />
         <Radio
           name="authType"
-          label="Token with User Name"
+          label="Token with user name"
           id="tokenWithUsernameSecretFields"
           isChecked={state.authenticationType === 'tokenWithUsernameSecretFields'}
           onChange={() => handleAuthTypeChange('tokenWithUsernameSecretFields')}

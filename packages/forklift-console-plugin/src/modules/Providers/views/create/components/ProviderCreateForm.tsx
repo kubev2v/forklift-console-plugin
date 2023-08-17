@@ -100,7 +100,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
         {newProvider?.spec?.type && (
           <Form isWidthLimited className="forklift-create-provider-edit-section">
             <FormGroup
-              label={t('Provider Resource Name')}
+              label={t('Provider resource name')}
               isRequired
               fieldId="k8sName"
               helperText={t('Unique Kubernetes resource name identifier')}
