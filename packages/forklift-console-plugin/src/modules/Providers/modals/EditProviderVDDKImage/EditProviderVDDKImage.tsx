@@ -67,7 +67,7 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
         }
       : {
           validationHelpText: t(
-            'VDDK Init Image must be a valid container image, for example quay.io/kubev2v/example:latest',
+            'VDDK init image must be a valid container image, for example quay.io/kubev2v/example:latest',
           ),
           validated: 'error',
         };
@@ -77,8 +77,8 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
     <EditModal
       {...props}
       jsonPath={'spec.settings.vddkInitImage'}
-      title={props?.title || t('Edit VDDK Init Image')}
-      label={props?.label || t('VDDK Init Image')}
+      title={props?.title || t('Edit VDDK init image')}
+      label={props?.label || t('VDDK init image')}
       model={ProviderModel}
       body={t(
         'Specify the VDDK image that you created. Some functionality will not be available if the VDDK image is left empty',

@@ -98,13 +98,13 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
       </FormGroup>
 
       <FormGroup
-        label={t('VDDK Init Image')}
+        label={t('VDDK init image')}
         fieldId="vddkInitImage"
         helperText={t(
           'VDDK container image of the provider, when left empty some functionality will not be available',
         )}
         validated={state.validation.vddkInitImage}
-        helperTextInvalid={t('Error: VDDK Init Image must be valid.')}
+        helperTextInvalid={t('Error: VDDK init image must be valid.')}
       >
         <TextInput
           type="text"

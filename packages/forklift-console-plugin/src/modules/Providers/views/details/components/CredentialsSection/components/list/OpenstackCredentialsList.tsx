@@ -94,7 +94,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         description: t('OpenStack project for token credentials.'),
       },
       domainName: {
-        label: t('Domain Name'),
+        label: t('Domain name'),
         description: t('OpenStack domain name for token credentials.'),
       },
       insecureSkipVerify: {
@@ -115,12 +115,12 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         description: t('Type of authentication to use when connecting to OpenStack REST API.'),
       },
       applicationCredentialID: {
-        label: t('Application Credential ID'),
-        description: t('OpenStack REST API Application Credential ID.'),
+        label: t('Application credential ID'),
+        description: t('OpenStack REST API application credential ID.'),
       },
       applicationCredentialSecret: {
-        label: t('Application Credential Secret'),
-        description: t('OpenStack REST API Application Credential Secret.'),
+        label: t('Application credential secret'),
+        description: t('OpenStack REST API application credential secret.'),
       },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
@@ -140,12 +140,12 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         description: t('Type of authentication to use when connecting to OpenStack REST API.'),
       },
       applicationCredentialName: {
-        label: t('Application Credential Name'),
-        description: t('OpenStack REST API Application Credential Name.'),
+        label: t('Application credential name'),
+        description: t('OpenStack REST API application credential name.'),
       },
       applicationCredentialSecret: {
         label: t('Application Credential Secret'),
-        description: t('OpenStack REST API Application Credential Secret.'),
+        description: t('OpenStack REST API application credential secret.'),
       },
       username: {
         label: t('Username'),

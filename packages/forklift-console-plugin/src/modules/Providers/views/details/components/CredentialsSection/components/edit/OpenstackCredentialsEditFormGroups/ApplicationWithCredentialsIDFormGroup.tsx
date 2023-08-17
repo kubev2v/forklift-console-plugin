@@ -70,10 +70,10 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
   return (
     <>
       <FormGroup
-        label={t('Application Credential ID')}
+        label={t('Application credential ID')}
         isRequired
         fieldId="applicationCredentialID"
-        helperText={t('OpenStack REST API Application Credential ID.')}
+        helperText={t('OpenStack REST API application credential ID.')}
         helperTextInvalid={t('Invalid application credential ID.')}
         validated={state.validation.applicationCredentialID}
       >
@@ -89,10 +89,10 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
       </FormGroup>
 
       <FormGroup
-        label={t('Application Credential Secret')}
+        label={t('Application credential secret')}
         isRequired
         fieldId="applicationCredentialSecret"
-        helperText={t('OpenStack REST API Application Credential Secret.')}
+        helperText={t('OpenStack REST API application credential secret.')}
         helperTextInvalid={t('Invalid application credential secret.')}
         validated={state.validation.applicationCredentialSecret}
       >
