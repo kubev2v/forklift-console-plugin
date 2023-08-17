@@ -10,6 +10,6 @@ describe('Providers list view', () => {
 
   it('has a add-provider button', () => {
     // find and click the create provider button (the 1st one since there are two occurrences)
-    cy.findAllByTestId('add-provider-button').should('exist').click();
+    cy.findByTestId('add-provider-button').should('exist').click();
   });
 });
