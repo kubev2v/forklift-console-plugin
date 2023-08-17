@@ -60,7 +60,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
           />
 
           <DetailsItem
-            title={'Snapshot pooling interval (seconds)'}
+            title={'Snapshot polling interval (seconds)'}
             content={
               obj?.spec?.['controller_snapshot_status_check_rate_seconds'] || (
                 <span className="text-muted">{'10'}</span>

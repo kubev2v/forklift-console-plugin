@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { Trans } from 'react-i18next';
-import { useHistory } from 'react-router';
 import StandardPage from 'src/components/page/StandardPage';
 import modernizeMigration from 'src/modules/Providers/images/modernizeMigration.svg';
-import {
-  getResourceUrl,
-  ProviderData,
-  SOURCE_ONLY_PROVIDER_TYPES,
-} from 'src/modules/Providers/utils';
+import { ProviderData, SOURCE_ONLY_PROVIDER_TYPES } from 'src/modules/Providers/utils';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -19,7 +14,6 @@ import {
   OVirtProvider,
   ProviderModel,
   ProviderModelGroupVersionKind,
-  ProviderModelRef,
   ProviderType,
   V1beta1Provider,
   VSphereProvider,
@@ -30,7 +24,7 @@ import { useGetDeleteAndEditAccessReview, useProvidersInventoryList } from '../.
 import { findInventoryByID } from '../../utils';
 
 import { InventoryNotReachable } from './components/InventoryNotReachable';
-import { ProvidersAddButton, ProvidersEmptyState } from './components';
+import { AddProviderButton, ProvidersEmptyState } from './components';
 import ProviderRow from './ProviderRow';
 
 import './ProvidersListPage.style.css';
@@ -176,7 +170,6 @@ const ProvidersListPage: React.FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
-  const history = useHistory();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'Providers' }));
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
@@ -203,26 +196,23 @@ const ProvidersListPage: React.FC<{
     permissions,
   }));
 
-  const providersListURL = getResourceUrl({
-    reference: ProviderModelRef,
-    namespace: namespace,
-    namespaced: namespace ? true : false,
-  });
-
-  const AddButton = (
-    <ProvidersAddButton
-      onClick={() => history.push(`${providersListURL}/~new`)}
-      buttonText={t('Create Provider')}
-      dataTestId="add-provider-button"
+  const EmptyState = (
+    <EmptyState_
+      AddButton={
+        <AddProviderButton namespace={namespace} dataTestId="add-provider-button-empty-state" />
+      }
+      namespace={namespace}
     />
   );
-
-  const EmptyState = <EmptyState_ AddButton={AddButton} namespace={namespace} />;
 
   return (
     <StandardPage<ProviderData>
       data-testid="providers-list"
-      addButton={permissions.canCreate && AddButton}
+      addButton={
+        permissions.canCreate && (
+          <AddProviderButton namespace={namespace} dataTestId="add-provider-button" />
+        )
+      }
       dataSource={[data || [], providersLoaded, providersLoadError]}
       RowMapper={ProviderRow}
       fieldsMetadata={fieldsMetadataFactory(t)}

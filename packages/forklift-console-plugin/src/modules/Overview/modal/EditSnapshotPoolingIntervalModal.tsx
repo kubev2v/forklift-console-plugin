@@ -34,8 +34,8 @@ export const EditSnapshotPoolingIntervalModal: React.FC<EditSettingsModalProps> 
     <EditModal
       {...props}
       jsonPath={'spec.controller_snapshot_status_check_rate_seconds'}
-      title={props?.title || t('Edit Snapshot pooling interval (seconds)')}
-      label={props?.label || t('Snapshot pooling interval (seconds)')}
+      title={props?.title || t('Edit Snapshot polling interval (seconds)')}
+      label={props?.label || t('Snapshot polling interval (seconds)')}
       model={ForkliftControllerModel}
       variant={ModalVariant.small}
       body={t('The interval in seconds for snapshot pooling. Default value is 10.')}
