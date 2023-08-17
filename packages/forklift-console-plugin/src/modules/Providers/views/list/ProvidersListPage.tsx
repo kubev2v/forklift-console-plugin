@@ -24,7 +24,7 @@ import { useGetDeleteAndEditAccessReview, useProvidersInventoryList } from '../.
 import { findInventoryByID } from '../../utils';
 
 import { InventoryNotReachable } from './components/InventoryNotReachable';
-import { AddProviderButton, ProvidersEmptyState } from './components';
+import { ProvidersAddButton, ProvidersEmptyState } from './components';
 import ProviderRow from './ProviderRow';
 
 import './ProvidersListPage.style.css';
@@ -199,7 +199,7 @@ const ProvidersListPage: React.FC<{
   const EmptyState = (
     <EmptyState_
       AddButton={
-        <AddProviderButton namespace={namespace} dataTestId="add-provider-button-empty-state" />
+        <ProvidersAddButton namespace={namespace} dataTestId="add-provider-button-empty-state" />
       }
       namespace={namespace}
     />
@@ -210,7 +210,7 @@ const ProvidersListPage: React.FC<{
       data-testid="providers-list"
       addButton={
         permissions.canCreate && (
-          <AddProviderButton namespace={namespace} dataTestId="add-provider-button" />
+          <ProvidersAddButton namespace={namespace} dataTestId="add-provider-button" />
         )
       }
       dataSource={[data || [], providersLoaded, providersLoadError]}
