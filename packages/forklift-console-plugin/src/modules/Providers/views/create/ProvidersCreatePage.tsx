@@ -203,7 +203,7 @@ export const ProvidersCreatePage: React.FC<{
     // go to providers derails page
     const providerURL = getResourceUrl({
       reference: ProviderModelRef,
-      namespace: namespace,
+      namespace: provider.metadata.namespace,
       name: provider.metadata.name,
     });
 
