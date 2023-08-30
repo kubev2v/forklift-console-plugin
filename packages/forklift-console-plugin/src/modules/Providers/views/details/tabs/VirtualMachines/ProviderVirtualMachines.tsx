@@ -5,7 +5,7 @@ import { useProviderInventory, UseProviderInventoryParams } from 'src/modules/Pr
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { EnumToTuple, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { EnumToTuple, loadUserSettings, ResourceFieldFactory, RowProps } from '@kubev2v/common';
 import {
   ProviderInventory,
   ProviderModelGroupVersionKind,
@@ -14,8 +14,12 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import { OpenStackVirtualMachinesList } from './OpenStackVirtualMachinesList';
+import { OvaVirtualMachinesList } from './OvaVirtualMachinesList';
+import { OVirtVirtualMachinesList } from './OVirtVirtualMachinesList';
 import { ProviderVirtualMachinesRow, VmData } from './ProviderVirtualMachinesRow';
 import { getHighestPriorityConcern } from './utils';
+import { VSphereVirtualMachinesList } from './VSphereVirtualMachinesList';
 
 export const vmsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
@@ -45,18 +49,22 @@ export const vmsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-interface ProviderVirtualMachinesProps extends RouteComponentProps {
+export interface ProviderVirtualMachinesProps extends RouteComponentProps {
   obj: ProviderData;
   ns?: string;
   name?: string;
   loaded?: boolean;
   loadError?: unknown;
+  rowMapper?: React.FunctionComponent<RowProps<VmData>>;
+  fieldsMetadataFactory?: ResourceFieldFactory;
 }
 
 export const ProviderVirtualMachines: React.FC<ProviderVirtualMachinesProps> = ({
   obj,
   loaded,
   loadError,
+  rowMapper = ProviderVirtualMachinesRow,
+  fieldsMetadataFactory = vmsFieldsMetadataFactory,
 }) => {
   const { t } = useForkliftTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'ProviderVMs' }));
@@ -94,8 +102,8 @@ export const ProviderVirtualMachines: React.FC<ProviderVirtualMachinesProps> = (
     <StandardPage<VmData>
       data-testid="vm-list"
       dataSource={[vmData || [], !loading, null]}
-      RowMapper={ProviderVirtualMachinesRow}
-      fieldsMetadata={vmsFieldsMetadataFactory(t)}
+      RowMapper={rowMapper}
+      fieldsMetadata={fieldsMetadataFactory(t)}
       namespace={namespace}
       title={t('Virtual Machines')}
       userSettings={userSettings}
@@ -117,8 +125,37 @@ export const ProviderVirtualMachinesWrapper: React.FC<{ name: string; namespace:
   const { inventory } = useProviderInventory<ProviderInventory>({ provider });
 
   const data = { provider, inventory };
-
-  return (
-    <ProviderVirtualMachines obj={data} loaded={providerLoaded} loadError={providerLoadError} />
-  );
+  switch (provider?.spec?.type) {
+    case 'openshift':
+      return <ProviderVirtualMachines obj={data} loaded={providerLoaded} />;
+    case 'openstack':
+      return (
+        <OpenStackVirtualMachinesList
+          obj={data}
+          loaded={providerLoaded}
+          loadError={providerLoadError}
+        />
+      );
+    case 'ovirt':
+      return (
+        <OVirtVirtualMachinesList
+          obj={data}
+          loaded={providerLoaded}
+          loadError={providerLoadError}
+        />
+      );
+    case 'vsphere':
+      return (
+        <VSphereVirtualMachinesList
+          obj={data}
+          loaded={providerLoaded}
+          loadError={providerLoadError}
+        />
+      );
+    case 'ova':
+      return <OvaVirtualMachinesList obj={data} loaded={providerLoaded} />;
+    default:
+      // unsupported provider or loading errors will be handled by parent page
+      return <></>;
+  }
 };

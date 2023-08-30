@@ -25,12 +25,17 @@ export const ProviderVirtualMachinesRow: React.FC<RowProps<VmData>> = ({
   );
 };
 
-const cellRenderers: Record<string, React.FC<VMCellProps>> = {
+export const defaultCellRenderers: Record<string, React.FC<VMCellProps>> = {
   name: VMNameCellRenderer,
   concerns: VMConcernsCellRenderer,
 };
 
-const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
+export const renderTd = ({
+  resourceData,
+  resourceFieldId,
+  resourceFields,
+  cellRenderers = defaultCellRenderers,
+}: RenderTdProps) => {
   const fieldId = resourceFieldId;
 
   const CellRenderer = cellRenderers?.[fieldId] ?? (() => <></>);
@@ -45,4 +50,5 @@ interface RenderTdProps {
   resourceData: VmData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
+  cellRenderers?: Record<string, React.FC<VMCellProps>>;
 }
