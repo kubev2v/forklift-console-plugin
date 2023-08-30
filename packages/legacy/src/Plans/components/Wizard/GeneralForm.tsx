@@ -189,7 +189,7 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
         <ProviderSelect
           providerRole="target"
           providerAllowRemote={!isLocalTargetRequired}
-          providerAllowRemoteTooltip="This is a remote target provider.  The source provider is insecure and this target provider must be a cluster local target."
+          providerAllowRemoteTooltip="This is a remote target provider. When the source RHV provider uses insecure connection, the target provider must be local OCP provider."
           // TODO: If the source is ovirt+insecure AND the target is remote, invalidate the field, put it in an error state
           field={form.fields.targetProvider}
           onProviderSelect={(inventoryProvider) => {
