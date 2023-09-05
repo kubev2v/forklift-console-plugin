@@ -43,8 +43,13 @@ const CERTIFICATE_REGEX = new RegExp(
 // validate CA certification fingerprint.
 const FINGERPRINT_REGEX = /^([a-fA-F0-9]{2}:){19}[a-fA-F0-9]{2}$/;
 
-// validate sub domain names, used in K8s
-const DNS_SUBDOMAINS_NAME_REGEXP = /^[a-z][a-z0-9-]{0,251}[a-z0-9]$/;
+/**
+ * Validate sub domain names, used in K8s.
+ * This is based on k8s doc: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names
+ * @see  https://github.com/kubernetes/apimachinery/blob/0d057e543013c79e20abb000df19bc16d286b777/pkg/util/validation/validation.go#L205
+ */
+const DNS_SUBDOMAINS_NAME_REGEXP =
+  /^(?=.{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
 
 // validate bearer tokens, used in K8s
 const JWT_TOKEN_REGEX = /^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-+/=]*)/gm;
