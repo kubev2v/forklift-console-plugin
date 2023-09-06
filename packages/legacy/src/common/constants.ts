@@ -107,9 +107,9 @@ export enum StepType {
 export const dnsLabelNameSchema = yup
   .string()
   .max(63)
-  .matches(/^[a-z0-9][a-z0-9-]*[a-z0-9]$/, {
+  .matches(/^(?=.{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/, {
     message: ({ label }) =>
-      `${label} can only contain lowercase alphanumeric characters and dashes (-), and must start and end with an alphanumeric character`,
+      `${label} can only contain lowercase alphanumeric characters, dashes and dots, and must start and end with an alphanumeric character, see k8s documentation for more details.`,
     excludeEmptyString: true,
   });
 
