@@ -67,7 +67,7 @@ export type PlanWizardMode = 'create' | 'edit' | 'duplicate';
 
 const useMappingFormState = (mappingsQuery: UseQueryResult<IKubeList<Mapping>>) => {
   const isSaveNewMapping = useFormField(false, yup.boolean().required());
-  const newMappingNameSchema = getMappingNameSchema(mappingsQuery, null).label('Name');
+  const newMappingNameSchema = getMappingNameSchema(mappingsQuery, null).label('Mapping Name');
   const isCreateMappingSelected = useFormField(false, yup.boolean().required());
   const selectedExistingMapping = useFormField<Mapping | null>(null, yup.mixed<Mapping | null>());
   const isPrefilled = useFormField(false, yup.boolean());
