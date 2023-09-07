@@ -461,7 +461,16 @@ export const plan4: V1beta1Plan = {
       vms: [vmStatus3],
       history: [
         {
-          conditions: [],
+          conditions: [
+            {
+              type: 'Succeeded',
+              status: 'True',
+              category: 'Advisory',
+              lastTransitionTime: EPOCH.plus({ minutes: 50 }).toISO(),
+              message: 'The plan execution has SUCCEEDED.',
+              durable: true,
+            },
+          ],
           map: {},
           migration: {
             name: 'plantest-04-mock-migration',
@@ -911,7 +920,16 @@ export const plan10: V1beta1Plan = {
       vms: [warmVmPrecopyingWithError],
       history: [
         {
-          conditions: [],
+          conditions: [
+            {
+              type: 'Failed',
+              status: 'True',
+              category: 'Advisory',
+              message: 'The plan execution has FAILED.',
+              durable: true,
+              lastTransitionTime: EPOCH.plus({ minutes: 10 }).toISO(),
+            },
+          ],
           map: {},
           migration: {
             name: 'plantest-10-mock-migration',

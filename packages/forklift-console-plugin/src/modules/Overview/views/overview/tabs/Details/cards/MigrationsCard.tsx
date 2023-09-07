@@ -38,7 +38,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
   </FlexItem>
 );
 
-type MigrationsCardProps = {
+export type MigrationsCardProps = {
   obj?: V1beta1ForkliftController;
   loaded?: boolean;
   loadError?: unknown;
