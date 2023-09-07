@@ -106,7 +106,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
               helperText={t('Unique Kubernetes resource name identifier')}
               validated={state.validation.name}
               helperTextInvalid={t(
-                'Error: Name is required and must be a unique and valid Kubernetes name.',
+                "Error: Name is required and must be a unique within a namespace and valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).",
               )}
             >
               <TextInput
