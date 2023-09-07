@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
-import { Grid, GridItem } from '@patternfly/react-core';
+import { Flex, FlexItem } from '@patternfly/react-core';
 
 import { ChartsCard } from './cards/ChartsCard';
 import { ConditionsCard, MigrationsCard, OperatorCard, OverviewCard, SettingsCard } from './cards';
@@ -20,31 +20,35 @@ export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTab
 }) => {
   return (
     <div className="co-dashboard-body">
-      <Grid hasGutter>
-        <GridItem lg={8}>
-          <OverviewCard obj={obj} />
-        </GridItem>
+      <Flex>
+        <Flex direction={{ default: 'column' }} flex={{ default: 'flex_4' }}>
+          <FlexItem>
+            <OverviewCard obj={obj} />
+          </FlexItem>
 
-        <GridItem lg={8} xl={4} xlRowSpan={2}>
-          <SettingsCard obj={obj} />
-        </GridItem>
+          <FlexItem>
+            <MigrationsCard obj={obj} />
+          </FlexItem>
 
-        <GridItem lg={8} xl={8} xlRowSpan={2}>
-          <MigrationsCard obj={obj} />
-        </GridItem>
+          <FlexItem>
+            <OperatorCard obj={obj} />
+          </FlexItem>
 
-        <GridItem lg={8} xl={8} xl2={4} xl2RowSpan={3}>
-          <ChartsCard obj={obj} />
-        </GridItem>
+          <FlexItem>
+            <ConditionsCard obj={obj} />
+          </FlexItem>
+        </Flex>
 
-        <GridItem lg={8}>
-          <OperatorCard obj={obj} />
-        </GridItem>
+        <Flex direction={{ default: 'column' }} alignSelf={{ default: 'alignSelfFlexStart' }}>
+          <FlexItem>
+            <SettingsCard obj={obj} />
+          </FlexItem>
 
-        <GridItem lg={8}>
-          <ConditionsCard obj={obj} />
-        </GridItem>
-      </Grid>
+          <FlexItem>
+            <ChartsCard obj={obj} />
+          </FlexItem>
+        </Flex>
+      </Flex>
     </div>
   );
 };
