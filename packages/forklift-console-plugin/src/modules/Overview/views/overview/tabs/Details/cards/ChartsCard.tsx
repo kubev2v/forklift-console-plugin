@@ -27,7 +27,7 @@ interface MigrationDataPoint {
   value: number;
 }
 
-const toStarted = (m: V1beta1Migration): string => m.status.started;
+const toTotal = (m: V1beta1Migration): string => m.metadata?.creationTimestamp;
 const toFinished = (m: V1beta1Migration): string => m.status.completed;
 const hasTimestamp = (timestamp: string) => timestamp && DateTime.fromISO(timestamp).isValid;
 const toDateTime = (timestamp: string): DateTime => DateTime.fromISO(timestamp);
@@ -75,28 +75,34 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const onToggle = () => setIsDropdownOpened(!isDropdownOpened);
   const [isDaysViewSelected, setIsDaysViewSelected] = useState(true);
-  const [allMigrations] = useK8sWatchResource<V1beta1Migration[]>({
+  const [migrations] = useK8sWatchResource<V1beta1Migration[]>({
     groupVersionKind: MigrationModelGroupVersionKind,
     namespaced: true,
     isList: true,
   });
-  const migrations: {
-    started: MigrationDataPoint[];
+  const migrationsDataPoints: {
+    total: MigrationDataPoint[];
     failed: MigrationDataPoint[];
     succeeded: MigrationDataPoint[];
   } = {
-    started: toDataPoints(allMigrations, toStarted, isDaysViewSelected),
+    total: toDataPoints(migrations, toTotal, isDaysViewSelected),
     succeeded: toDataPoints(
-      allMigrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Succeeded')),
+      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Succeeded')),
       toFinished,
       isDaysViewSelected,
     ),
     failed: toDataPoints(
-      allMigrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Failed')),
+      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Failed')),
       toFinished,
       isDaysViewSelected,
     ),
   };
+
+  const maxMigrationValue = Math.max(
+    ...migrationsDataPoints.total.map((m) => m.value),
+    ...migrationsDataPoints.succeeded.map((m) => m.value),
+    ...migrationsDataPoints.failed.map((m) => m.value),
+  );
 
   return (
     <Card>
@@ -142,8 +148,9 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
               chart_color_red_100.var,
             ]}
             domainPadding={{ x: [30, 25] }}
+            maxDomain={{ y: maxMigrationValue ? undefined : 5 }}
             legendData={[
-              { name: t('Started'), symbol: { fill: chart_color_blue_200.var } },
+              { name: t('Total'), symbol: { fill: chart_color_blue_200.var } },
               { name: t('Succeeded'), symbol: { fill: chart_color_green_400.var } },
               { name: t('Failed'), symbol: { fill: chart_color_red_100.var } },
             ]}
@@ -161,16 +168,16 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
             <ChartAxis dependentAxis showGrid />
             <ChartGroup offset={11} horizontal>
               <ChartBar
-                data={migrations.started.map(({ dateLabel, value }) => ({
+                data={migrationsDataPoints.total.map(({ dateLabel, value }) => ({
                   x: dateLabel,
                   y: value,
-                  name: t('Started'),
+                  name: t('Total'),
                   label: t('{{dateLabel}} Started: {{value}}', { dateLabel, value }),
                 }))}
                 labelComponent={<ChartTooltip constrainToVisibleArea />}
               />
               <ChartBar
-                data={migrations.succeeded.map(({ dateLabel, value }) => ({
+                data={migrationsDataPoints.succeeded.map(({ dateLabel, value }) => ({
                   x: dateLabel,
                   y: value,
                   name: 'Succeeded',
@@ -179,7 +186,7 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
                 labelComponent={<ChartTooltip constrainToVisibleArea />}
               />
               <ChartBar
-                data={migrations.failed.map(({ dateLabel, value }) => ({
+                data={migrationsDataPoints.failed.map(({ dateLabel, value }) => ({
                   x: dateLabel,
                   y: value,
                   name: t('Failed'),
