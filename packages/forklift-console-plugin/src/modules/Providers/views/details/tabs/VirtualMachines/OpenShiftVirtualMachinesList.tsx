@@ -3,10 +3,10 @@ import React from 'react';
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
-import { OvaVirtualMachinesRow } from './OvaVirtualMachinesRow';
+import { OpenShiftVirtualMachinesRow } from './OpenShiftVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
-export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: 'name',
     jsonPath: '$.name',
@@ -32,21 +32,9 @@ export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
       values: EnumToTuple({ Critical: 'Critical', Warning: 'Warning', Information: 'Information' }),
     },
   },
-  {
-    resourceFieldId: 'ovaPath',
-    jsonPath: '$.vm.OvaPath',
-    label: t('OvaPath'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by path'),
-    },
-    sortable: true,
-  },
 ];
 
-export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
+export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
   obj,
   loaded,
   loadError,
@@ -55,8 +43,8 @@ export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
     obj={obj}
     loaded={loaded}
     loadError={loadError}
-    rowMapper={OvaVirtualMachinesRow}
-    fieldsMetadataFactory={ovaVmFieldsMetadataFactory}
-    pageId="OvaVirtualMachinesList"
+    rowMapper={OpenShiftVirtualMachinesRow}
+    fieldsMetadataFactory={openShiftVmFieldsMetadataFactory}
+    pageId="OpenShiftVirtualMachinesList"
   />
 );

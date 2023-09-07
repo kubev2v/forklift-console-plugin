@@ -1,21 +1,38 @@
 import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { RowProps } from '@kubev2v/common';
-import { VSphereVM } from '@kubev2v/types';
-import { Tr } from '@patternfly/react-table';
+import { ResourceField, RowProps } from '@kubev2v/common';
+import { OpenstackVM } from '@kubev2v/types';
+import { Td, Tr } from '@patternfly/react-table';
 
-import { VMCellProps } from './components';
-import { defaultCellRenderers, renderTd, VmData } from './ProviderVirtualMachinesRow';
+import { VMCellProps, VMConcernsCellRenderer, VmData, VMNameCellRenderer } from './components';
+
+const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
+  const fieldId = resourceFieldId;
+
+  const CellRenderer = cellRenderers?.[fieldId] ?? (() => <></>);
+  return (
+    <Td key={fieldId} dataLabel={fieldId}>
+      <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />
+    </Td>
+  );
+};
+
+interface RenderTdProps {
+  resourceData: VmData;
+  resourceFieldId: string;
+  resourceFields: ResourceField[];
+}
 
 const cellRenderers: Record<string, React.FC<VMCellProps>> = {
-  ...defaultCellRenderers,
-  host: ({ data }) => <TableCell>{(data?.vm as VSphereVM)?.host}</TableCell>,
-  isTemplate: ({ data }) => (
-    <TableCell>{Boolean((data?.vm as VSphereVM)?.isTemplate).toString()}</TableCell>
-  ),
-  path: ({ data }) => <TableCell>{(data?.vm as VSphereVM)?.path}</TableCell>,
-  status: ({ data }) => <TableCell>{(data?.vm as VSphereVM)?.powerState}</TableCell>,
+  name: VMNameCellRenderer,
+  concerns: VMConcernsCellRenderer,
+  hostID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.hostID}</TableCell>,
+  path: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.path}</TableCell>,
+  status: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.status}</TableCell>,
+  tenantID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.tenantID}</TableCell>,
+  imageID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.imageID}</TableCell>,
+  flavorID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.flavorID}</TableCell>,
 };
 
 export const OpenStackVirtualMachinesRow: React.FC<RowProps<VmData>> = ({
@@ -25,7 +42,7 @@ export const OpenStackVirtualMachinesRow: React.FC<RowProps<VmData>> = ({
   return (
     <Tr>
       {resourceFields?.map(({ resourceFieldId }) =>
-        renderTd({ resourceData, resourceFieldId, resourceFields, cellRenderers }),
+        renderTd({ resourceData, resourceFieldId, resourceFields }),
       )}
     </Tr>
   );
