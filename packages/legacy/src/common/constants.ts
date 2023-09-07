@@ -106,10 +106,10 @@ export enum StepType {
 
 export const dnsLabelNameSchema = yup
   .string()
-  .max(63)
-  .matches(/^(?=.{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/, {
+  .max(253)
+  .matches(/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/, {
     message: ({ label }) =>
-      `${label} can only contain lowercase alphanumeric characters, dashes and dots, and must start and end with an alphanumeric character, see k8s documentation for more details.`,
+      `${label} must be a valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).`,
     excludeEmptyString: true,
   });
 

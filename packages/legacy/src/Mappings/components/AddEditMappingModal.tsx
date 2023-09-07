@@ -64,7 +64,7 @@ const useMappingFormState = (
   useFormState({
     name: useFormField(
       '',
-      getMappingNameSchema(mappingsQuery, mappingBeingEdited).label('Name').required()
+      getMappingNameSchema(mappingsQuery, mappingBeingEdited).label('Mapping Name').required()
     ),
     sourceProvider: useFormField<SourceInventoryProvider | null>(
       null,
