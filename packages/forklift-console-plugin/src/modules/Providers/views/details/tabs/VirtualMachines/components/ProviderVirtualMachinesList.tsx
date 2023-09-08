@@ -60,7 +60,7 @@ export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListPr
   } = useProviderInventory<ProviderVirtualMachine[]>(inventoryOptions);
 
   const vmData: VmData[] =
-    !loading && !error && vms
+    !loading && !error && Array.isArray(vms)
       ? vms.map((vm) => ({
           vm,
           name: vm.name,
