@@ -2,7 +2,8 @@ import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
-import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import { ProviderVirtualMachinesList, VmData } from './components/ProviderVirtualMachinesList';
+import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { OpenStackVirtualMachinesRow } from './OpenStackVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
@@ -58,13 +59,14 @@ export const openStackVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'status',
-    jsonPath: '$.vm.status',
+    jsonPath: (data) => getVmPowerState('openstack', (data as VmData)?.vm),
     label: t('Status'),
     isVisible: true,
     isIdentity: false,
     filter: {
-      type: 'freetext',
+      type: 'enum',
       placeholderLabel: t('Filter by status'),
+      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
     },
     sortable: true,
   },

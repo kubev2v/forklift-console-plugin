@@ -5,6 +5,7 @@ import { ResourceField, RowProps } from '@kubev2v/common';
 import { OVirtVM } from '@kubev2v/types';
 import { Td, Tr } from '@patternfly/react-table';
 
+import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import { VMCellProps, VMConcernsCellRenderer, VMNameCellRenderer } from './components';
 
 export interface VmData {
@@ -36,7 +37,7 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   host: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.host}</TableCell>,
   cluster: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.cluster}</TableCell>,
   path: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.path}</TableCell>,
-  status: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.status}</TableCell>,
+  status: PowerStateCellRenderer,
   description: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.description}</TableCell>,
 };
 

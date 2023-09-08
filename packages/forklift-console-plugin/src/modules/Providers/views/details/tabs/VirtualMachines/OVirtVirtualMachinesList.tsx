@@ -2,9 +2,10 @@ import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
-import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import { ProviderVirtualMachinesList, VmData } from './components/ProviderVirtualMachinesList';
 import { OVirtVirtualMachinesRow } from './OVirtVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
+import { getVmPowerState } from './utils';
 
 export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
@@ -70,13 +71,14 @@ export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'status',
-    jsonPath: '$.vm.status',
+    jsonPath: (data) => getVmPowerState('ovirt', (data as VmData)?.vm),
     label: t('Status'),
     isVisible: true,
     isIdentity: false,
     filter: {
-      type: 'freetext',
+      type: 'enum',
       placeholderLabel: t('Filter by status'),
+      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
     },
     sortable: true,
   },
