@@ -109,7 +109,7 @@ export const dnsLabelNameSchema = yup
   .max(253)
   .matches(/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/, {
     message: ({ label }) =>
-      `${label} must be a valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).`,
+      `${label} must be a valid Kubernetes name (i.e., consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).`,
     excludeEmptyString: true,
   });
 
