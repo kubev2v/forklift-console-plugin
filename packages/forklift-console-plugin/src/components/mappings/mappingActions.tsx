@@ -65,7 +65,7 @@ export function useMappingActions<T extends CommonMapping>({
         disabledTooltip: t('Managed mappings can not be deleted'),
       },
     ],
-    [t, resourceData],
+    [t, resourceData, canPatch, canDelete],
   );
 
   return [actions, true, undefined];
