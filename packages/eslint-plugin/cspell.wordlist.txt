@@ -47,3 +47,5 @@ veth
 milli
 Mbps
 Numa
+snapshotting
+hotplug
