@@ -85,6 +85,7 @@ export const MOCK_NIC_PROFILES: { [uid in OvirtProviderIDs]: OVirtNicProfile[] }
       qos: '',
       properties: [],
       passThrough: false,
+      providerType: 'ovirt',
     },
     {
       id: np2Id,
@@ -97,6 +98,7 @@ export const MOCK_NIC_PROFILES: { [uid in OvirtProviderIDs]: OVirtNicProfile[] }
       qos: 'e00fb4fb-e88e-4245-9b68-077db776d74c',
       properties: [],
       passThrough: false,
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_02_UID]: [
@@ -111,6 +113,7 @@ export const MOCK_NIC_PROFILES: { [uid in OvirtProviderIDs]: OVirtNicProfile[] }
       qos: '',
       properties: [],
       passThrough: false,
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_03_UID]: [
@@ -125,6 +128,7 @@ export const MOCK_NIC_PROFILES: { [uid in OvirtProviderIDs]: OVirtNicProfile[] }
       qos: '',
       properties: [],
       passThrough: false,
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_INSECURE_UID]: [
@@ -139,6 +143,7 @@ export const MOCK_NIC_PROFILES: { [uid in OvirtProviderIDs]: OVirtNicProfile[] }
       qos: '',
       properties: [],
       passThrough: false,
+      providerType: 'ovirt',
     },
   ],
 };

@@ -1,7 +1,7 @@
-import { OpenstackResource } from './Resource';
+import { TypedOpenstackResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/openstack/network.go
-export interface OpenstackNetwork extends OpenstackResource {
+export interface OpenstackNetwork extends TypedOpenstackResource {
   // Description           string    `json:"description"`
   description: string;
   // AdminStateUp          bool      `json:"adminStateUp"`

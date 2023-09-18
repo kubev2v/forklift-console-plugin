@@ -1,10 +1,10 @@
 import { Concern } from '../base/model';
 
 import { OvaNetwork } from './Network';
-import { OvaResource } from './Resource';
+import { TypedOvaResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ova/vm.go
-export interface OvaVM extends OvaResource {
+export interface OvaVM extends TypedOvaResource {
   OvaPath: string;
   RevisionValidated: number;
   PolicyVersion: number;

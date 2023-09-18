@@ -70,6 +70,7 @@ export const MOCK_DISKS: { [uid in OvirtProviderIDs]: OVirtDisk[] } = {
       actualSize: 134217728,
       storageType: 'image',
       status: 'ok',
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_02_UID]: [
@@ -85,6 +86,7 @@ export const MOCK_DISKS: { [uid in OvirtProviderIDs]: OVirtDisk[] } = {
       actualSize: 0,
       storageType: 'image',
       status: 'ok',
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_INSECURE_UID]: [
@@ -101,6 +103,7 @@ export const MOCK_DISKS: { [uid in OvirtProviderIDs]: OVirtDisk[] } = {
       actualSize: 2501120,
       storageType: 'image',
       status: 'ok',
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_03_UID]: [
@@ -117,6 +120,7 @@ export const MOCK_DISKS: { [uid in OvirtProviderIDs]: OVirtDisk[] } = {
       actualSize: 2501120,
       storageType: 'image',
       status: 'locked',
+      providerType: 'ovirt',
     },
     {
       id: disk5DaId,
@@ -131,6 +135,7 @@ export const MOCK_DISKS: { [uid in OvirtProviderIDs]: OVirtDisk[] } = {
       actualSize: 0,
       storageType: 'image',
       status: 'ok',
+      providerType: 'ovirt',
     },
   ],
 };

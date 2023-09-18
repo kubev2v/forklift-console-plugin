@@ -31,6 +31,7 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VSphereNetwork[
       variant: '',
       host: [],
       parent: null,
+      providerType: 'vsphere',
     },
     {
       id: '2',
@@ -41,6 +42,7 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VSphereNetwork[
       variant: '',
       host: [],
       parent: null,
+      providerType: 'vsphere',
     },
   ],
   [VMWARE_02_UID]: [
@@ -53,6 +55,7 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VSphereNetwork[
       variant: '',
       host: [],
       parent: null,
+      providerType: 'vsphere',
     },
   ],
   [VMWARE_03_UID]: [
@@ -65,6 +68,7 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VSphereNetwork[
       variant: '',
       host: [],
       parent: null,
+      providerType: 'vsphere',
     },
     {
       id: '5',
@@ -75,6 +79,7 @@ export const MOCK_VMWARE_NETWORKS: { [uid in VmwareProviderIDs]: VSphereNetwork[
       variant: '',
       host: [],
       parent: null,
+      providerType: 'vsphere',
     },
   ],
 };
@@ -92,6 +97,7 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OVirtNetwork[] } = 
       vlan: '',
       usages: [],
       nicProfiles: [],
+      providerType: 'ovirt',
     },
     {
       id: '8b6f4200-cba6-4579-8edd-ea08b7ddd97b',
@@ -103,6 +109,7 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OVirtNetwork[] } = 
       vlan: '',
       usages: [],
       nicProfiles: [],
+      providerType: 'ovirt',
     },
     {
       id: '0189c310-19e6-41e3-97b1-33894562b5fb',
@@ -114,6 +121,7 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OVirtNetwork[] } = 
       vlan: '',
       usages: [],
       nicProfiles: [],
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_02_UID]: [
@@ -128,6 +136,7 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OVirtNetwork[] } = 
       vlan: '',
       usages: [],
       nicProfiles: [],
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_03_UID]: [
@@ -142,6 +151,7 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OVirtNetwork[] } = 
       vlan: '',
       usages: [],
       nicProfiles: [],
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_INSECURE_UID]: [
@@ -156,6 +166,7 @@ export const MOCK_RHV_NETWORKS: { [uid in OvirtProviderIDs]: OVirtNetwork[] } = 
       vlan: '',
       usages: [],
       nicProfiles: [],
+      providerType: 'ovirt',
     },
   ],
 };
@@ -180,6 +191,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
           name: 'example-network-1',
         },
       },
+      providerType: 'openshift',
     },
     {
       uid: '8b6f4200-cba6-4579-8edd-ea08b7ddd97b',
@@ -197,6 +209,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
           name: 'example-network-2',
         },
       },
+      providerType: 'openshift',
     },
   ],
   [OPENSHIFT_01_UID]: [
@@ -215,6 +228,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
           name: 'ocp-network-1',
         },
       },
+      providerType: 'openshift',
     },
   ],
   [OPENSHIFT_02_UID]: [
@@ -234,6 +248,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
           resourceVersion: '1',
         },
       },
+      providerType: 'openshift',
     },
   ],
   [OPENSHIFT_03_UID]: [
@@ -253,6 +268,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
           name: 'ocp-network-3',
         },
       },
+      providerType: 'openshift',
     },
   ],
 };

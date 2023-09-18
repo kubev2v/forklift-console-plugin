@@ -1,10 +1,10 @@
 import { Ref } from '../base/model';
 
 import { VSphereDVSHost } from './model';
-import { VSphereResource } from './Resource';
+import { TypedVSphereResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/vsphere/network.go
-export interface VSphereNetwork extends VSphereResource {
+export interface VSphereNetwork extends TypedVSphereResource {
   // Variant  string          `json:"variant"`
   variant: string;
   // DVSwitch *model.Ref      `json:"dvSwitch,omitempty"`

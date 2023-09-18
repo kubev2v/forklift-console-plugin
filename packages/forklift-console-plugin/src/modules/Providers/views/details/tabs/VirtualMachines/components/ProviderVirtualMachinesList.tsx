@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import StandardPage from 'src/components/page/StandardPage';
-import { useProviderInventory, UseProviderInventoryParams } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { loadUserSettings, ResourceFieldFactory, RowProps } from '@kubev2v/common';
 import { ProviderVirtualMachine } from '@kubev2v/types';
 
-import { getHighestPriorityConcern } from '../utils';
+import { useInventoryVms } from '../utils/useInventoryVms';
 
 export interface VmData {
   vm: ProviderVirtualMachine;
@@ -39,34 +38,7 @@ export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListPr
 
   const [userSettings] = useState(() => loadUserSettings({ pageId }));
 
-  const { provider, inventory } = obj;
-  const { namespace } = provider.metadata;
-
-  const largeInventory = inventory?.vmCount > 1000;
-  const customTimeoutAndInterval = largeInventory ? 250000 : undefined;
-  const validProvider = loaded && !loadError && provider;
-
-  const inventoryOptions: UseProviderInventoryParams = {
-    provider: validProvider,
-    subPath: 'vms?detail=4',
-    fetchTimeout: customTimeoutAndInterval,
-    interval: customTimeoutAndInterval,
-  };
-
-  const {
-    inventory: vms,
-    loading,
-    error,
-  } = useProviderInventory<ProviderVirtualMachine[]>(inventoryOptions);
-
-  const vmData: VmData[] =
-    !loading && !error && Array.isArray(vms)
-      ? vms.map((vm) => ({
-          vm,
-          name: vm.name,
-          concerns: getHighestPriorityConcern(vm),
-        }))
-      : [];
+  const [vmData, loading] = useInventoryVms(obj, loaded, loadError);
 
   return (
     <StandardPage<VmData>
@@ -74,7 +46,7 @@ export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListPr
       dataSource={[vmData || [], !loading, null]}
       RowMapper={rowMapper}
       fieldsMetadata={fieldsMetadataFactory(t)}
-      namespace={namespace}
+      namespace={obj?.provider?.metadata?.namespace}
       title={t('Virtual Machines')}
       userSettings={userSettings}
     />

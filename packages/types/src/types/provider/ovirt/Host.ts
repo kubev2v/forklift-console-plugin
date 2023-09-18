@@ -1,8 +1,8 @@
 import { OVirtHostNIC, OVirtNetworkAttachment } from './model';
-import { OVirtResource } from './Resource';
+import { TypedOVirtResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/host.go
-export interface OVirtHost extends OVirtResource {
+export interface OVirtHost extends TypedOVirtResource {
   // Cluster            string              `json:"cluster"`
   cluster: string;
   // Status             string              `json:"status"`
