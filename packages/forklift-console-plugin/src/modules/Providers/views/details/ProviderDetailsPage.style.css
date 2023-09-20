@@ -10,3 +10,7 @@
     padding-bottom: var(--pf-global--spacer--lg);
 }
 
+.forklift-page-provider-vm_concern-button {
+    padding: var(--pf-global--spacer--xs);
+}
+
