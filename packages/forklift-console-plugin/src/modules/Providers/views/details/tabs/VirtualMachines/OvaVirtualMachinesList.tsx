@@ -32,6 +32,18 @@ export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
       values: EnumToTuple({ Critical: 'Critical', Warning: 'Warning', Information: 'Information' }),
     },
   },
+  {
+    resourceFieldId: 'ovaPath',
+    jsonPath: '$.vm.OvaPath',
+    label: t('OvaPath'),
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by path'),
+    },
+    sortable: true,
+  },
 ];
 
 export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
