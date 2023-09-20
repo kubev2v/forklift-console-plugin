@@ -19,9 +19,19 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
   const url = provider?.spec?.url || '';
   const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'] || '';
 
+  const helperTextInvalid = {
+    error: t(
+      'Error: Please provide a valid URL with a schema, domain, and path. For example: https://vcenter.com/sdk.',
+    ),
+    warning: t(
+      'Warning: The provided URL does not end with "sdk". Ensure it includes the correct path, like: https://vcenter.com/sdk.',
+    ),
+  };
+
   const initialState = {
     validation: {
       url: 'default' as Validation,
+      urlHelperTextInvalid: '',
       vddkInitImage: 'default' as Validation,
     },
   };
@@ -67,8 +77,17 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
       }
 
       if (id === 'url') {
-        const validationState = validateURL(trimmedValue) ? 'success' : 'error';
-        dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
+        const validationState = getURLValidationState(trimmedValue);
+
+        dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
+
+        dispatch({
+          type: 'SET_FIELD_VALIDATED',
+          payload: {
+            field: 'urlHelperTextInvalid',
+            validationState: helperTextInvalid[validationState],
+          },
+        });
 
         onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
       }
@@ -76,15 +95,23 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
     [provider],
   );
 
+  const getURLValidationState = (url: string): Validation => {
+    if (!validateURL(url)) return 'error';
+    if (!url.endsWith('sdk')) return 'warning';
+    return 'success';
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
       <FormGroup
         label={t('URL')}
         isRequired
         fieldId="url"
-        helperText={t('URL of the provider')}
+        helperText={t(
+          'Enter the URL of the SDK endpoint in vCenter. Ensure it includes the "sdk" path, e.g., https://vcenter.com/sdk.',
+        )}
         validated={state.validation.url}
-        helperTextInvalid={t('Error: URL is required and must be valid.')}
+        helperTextInvalid={state.validation.urlHelperTextInvalid}
       >
         <TextInput
           isRequired
