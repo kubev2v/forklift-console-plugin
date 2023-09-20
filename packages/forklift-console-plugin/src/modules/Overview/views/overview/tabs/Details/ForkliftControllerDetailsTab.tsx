@@ -7,11 +7,6 @@ import { Flex, FlexItem } from '@patternfly/react-core';
 import { ChartsCard } from './cards/ChartsCard';
 import { ConditionsCard, MigrationsCard, OperatorCard, OverviewCard, SettingsCard } from './cards';
 
-/**
- * Due to QE capacity we will hide the chart in 2.5.1
- */
-const HIDE_FOR_2_5_1 = true;
-
 interface ForkliftControllerDetailsTabProps extends RouteComponentProps {
   obj: V1beta1ForkliftController;
   ns?: string;
@@ -49,11 +44,9 @@ export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTab
             <SettingsCard obj={obj} />
           </FlexItem>
 
-          {!HIDE_FOR_2_5_1 && (
-            <FlexItem>
-              <ChartsCard obj={obj} />
-            </FlexItem>
-          )}
+          <FlexItem>
+            <ChartsCard obj={obj} />
+          </FlexItem>
         </Flex>
       </Flex>
     </div>
