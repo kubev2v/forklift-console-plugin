@@ -24,6 +24,8 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
     secret?.data?.applicationCredentialSecret || '',
   );
   const username = safeBase64Decode(secret?.data?.username || '');
+  const regionName = safeBase64Decode(secret?.data?.regionName || '');
+  const projectName = safeBase64Decode(secret?.data?.projectName || '');
   const domainName = safeBase64Decode(secret?.data?.domainName || '');
 
   const initialState = {
@@ -32,6 +34,8 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
       applicationCredentialName: 'default' as Validation,
       applicationCredentialSecret: 'default' as Validation,
       username: 'default' as Validation,
+      regionName: 'default' as Validation,
+      projectName: 'default' as Validation,
       domainName: 'default' as Validation,
     },
   };
@@ -135,6 +139,44 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           value={username}
           onChange={(value) => handleChange('username', value)}
           validated={state.validation.username}
+        />
+      </FormGroup>
+
+      <FormGroup
+        label={t('Region')}
+        isRequired
+        fieldId="regionName"
+        helperText={t('OpenStack region.')}
+        helperTextInvalid={t('Invalid region name.')}
+        validated={state.validation.regionName}
+      >
+        <TextInput
+          isRequired
+          type="text"
+          id="regionName"
+          name="regionName"
+          value={regionName}
+          onChange={(value) => handleChange('regionName', value)}
+          validated={state.validation.regionName}
+        />
+      </FormGroup>
+
+      <FormGroup
+        label={t('Project')}
+        isRequired
+        fieldId="projectName"
+        helperText={t('OpenStack project.')}
+        helperTextInvalid={t('Invalid project name.')}
+        validated={state.validation.projectName}
+      >
+        <TextInput
+          isRequired
+          type="text"
+          id="projectName"
+          name="projectName"
+          value={projectName}
+          onChange={(value) => handleChange('projectName', value)}
+          validated={state.validation.projectName}
         />
       </FormGroup>
 

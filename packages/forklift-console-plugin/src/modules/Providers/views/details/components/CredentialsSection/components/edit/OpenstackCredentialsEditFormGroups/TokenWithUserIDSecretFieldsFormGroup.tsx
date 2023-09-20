@@ -22,6 +22,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
   const token = safeBase64Decode(secret?.data?.token || '');
   const userID = safeBase64Decode(secret?.data?.userID || '');
   const projectID = safeBase64Decode(secret?.data?.projectID || '');
+  const regionName = safeBase64Decode(secret?.data?.regionName || '');
 
   const initialState = {
     passwordHidden: true,
@@ -29,6 +30,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
       token: 'default' as Validation,
       userID: 'default' as Validation,
       projectID: 'default' as Validation,
+      regionName: 'default' as Validation,
     },
   };
 
@@ -94,6 +96,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
       </FormGroup>
+
       <FormGroup
         label={t('User ID')}
         isRequired
@@ -112,6 +115,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           validated={state.validation.userID}
         />
       </FormGroup>
+
       <FormGroup
         label={t('Project ID')}
         isRequired
@@ -128,6 +132,25 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           value={projectID}
           onChange={(value) => handleChange('projectID', value)}
           validated={state.validation.projectID}
+        />
+      </FormGroup>
+
+      <FormGroup
+        label={t('Region')}
+        isRequired
+        fieldId="regionName"
+        helperText={t('OpenStack region.')}
+        helperTextInvalid={t('Invalid region name.')}
+        validated={state.validation.regionName}
+      >
+        <TextInput
+          isRequired
+          type="text"
+          id="regionName"
+          name="regionName"
+          value={regionName}
+          onChange={(value) => handleChange('regionName', value)}
+          validated={state.validation.regionName}
         />
       </FormGroup>
     </>

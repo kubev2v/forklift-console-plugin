@@ -25,11 +25,11 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       },
       regionName: {
         label: t('Region'),
-        description: t('OpenStack region for password credentials.'),
+        description: t('OpenStack region.'),
       },
       projectName: {
         label: t('Project'),
-        description: t('OpenStack project for password credentials.'),
+        description: t('OpenStack project.'),
       },
       domainName: {
         label: t('Domain'),
