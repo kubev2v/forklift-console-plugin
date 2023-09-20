@@ -25,18 +25,26 @@ export function openstackSecretValidator(secret: V1Secret) {
       break;
     case 'token':
       if (secret?.data?.['username']) {
-        requiredFields = ['token', 'username', 'projectName', 'domainName'];
+        requiredFields = ['token', 'username', 'regionName', 'projectName', 'domainName'];
         validateFields = [
           'token',
           'username',
+          'regionName',
           'projectName',
           'domainName',
           'cacert',
           'insecureSkipVerify',
         ];
       } else {
-        requiredFields = ['token', 'userID', 'projectID'];
-        validateFields = ['token', 'userID', 'projectID', 'cacert', 'insecureSkipVerify'];
+        requiredFields = ['token', 'userID', 'projectID', 'regionName'];
+        validateFields = [
+          'token',
+          'userID',
+          'projectID',
+          'regionName',
+          'cacert',
+          'insecureSkipVerify',
+        ];
       }
       break;
     case 'applicationcredential':
@@ -45,21 +53,32 @@ export function openstackSecretValidator(secret: V1Secret) {
           'applicationCredentialName',
           'applicationCredentialSecret',
           'username',
+          'regionName',
+          'projectName',
           'domainName',
         ];
         validateFields = [
           'applicationCredentialName',
           'applicationCredentialSecret',
           'username',
+          'regionName',
+          'projectName',
           'domainName',
           'cacert',
           'insecureSkipVerify',
         ];
       } else {
-        requiredFields = ['applicationCredentialID', 'applicationCredentialSecret'];
+        requiredFields = [
+          'applicationCredentialID',
+          'applicationCredentialSecret',
+          'regionName',
+          'projectName',
+        ];
         validateFields = [
           'applicationCredentialID',
           'applicationCredentialSecret',
+          'regionName',
+          'projectName',
           'cacert',
           'insecureSkipVerify',
         ];

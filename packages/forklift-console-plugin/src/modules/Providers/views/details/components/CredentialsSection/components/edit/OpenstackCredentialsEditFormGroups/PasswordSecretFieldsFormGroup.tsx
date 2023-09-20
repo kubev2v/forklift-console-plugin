@@ -122,7 +122,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Region')}
         isRequired
         fieldId="regionName"
-        helperText={t('OpenStack region for password credentials.')}
+        helperText={t('OpenStack region.')}
         helperTextInvalid={t('Invalid region name.')}
         validated={state.validation.regionName}
       >
@@ -141,7 +141,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Project')}
         isRequired
         fieldId="projectName"
-        helperText={t('OpenStack project for password credentials.')}
+        helperText={t('OpenStack project.')}
         helperTextInvalid={t('Invalid project name.')}
         validated={state.validation.projectName}
       >

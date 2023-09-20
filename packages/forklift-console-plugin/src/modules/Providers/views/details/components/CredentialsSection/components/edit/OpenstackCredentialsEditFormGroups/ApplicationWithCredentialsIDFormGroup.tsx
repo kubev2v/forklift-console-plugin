@@ -23,12 +23,16 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
   const applicationCredentialSecret = safeBase64Decode(
     secret?.data?.applicationCredentialSecret || '',
   );
+  const regionName = safeBase64Decode(secret?.data?.regionName || '');
+  const projectName = safeBase64Decode(secret?.data?.projectName || '');
 
   const initialState = {
     passwordHidden: true,
     validation: {
       applicationCredentialID: 'default' as Validation,
       applicationCredentialSecret: 'default' as Validation,
+      regionName: 'default' as Validation,
+      projectName: 'default' as Validation,
     },
   };
 
@@ -113,6 +117,44 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         >
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
+      </FormGroup>
+
+      <FormGroup
+        label={t('Region')}
+        isRequired
+        fieldId="regionName"
+        helperText={t('OpenStack region.')}
+        helperTextInvalid={t('Invalid region name.')}
+        validated={state.validation.regionName}
+      >
+        <TextInput
+          isRequired
+          type="text"
+          id="regionName"
+          name="regionName"
+          value={regionName}
+          onChange={(value) => handleChange('regionName', value)}
+          validated={state.validation.regionName}
+        />
+      </FormGroup>
+
+      <FormGroup
+        label={t('Project')}
+        isRequired
+        fieldId="projectName"
+        helperText={t('OpenStack project.')}
+        helperTextInvalid={t('Invalid project name.')}
+        validated={state.validation.projectName}
+      >
+        <TextInput
+          isRequired
+          type="text"
+          id="projectName"
+          name="projectName"
+          value={projectName}
+          onChange={(value) => handleChange('projectName', value)}
+          validated={state.validation.projectName}
+        />
       </FormGroup>
     </>
   );

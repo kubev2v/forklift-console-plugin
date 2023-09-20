@@ -21,6 +21,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
 
   const token = safeBase64Decode(secret?.data?.token || '');
   const username = safeBase64Decode(secret?.data?.username || '');
+  const regionName = safeBase64Decode(secret?.data?.regionName || '');
   const projectName = safeBase64Decode(secret?.data?.projectName || '');
   const domainName = safeBase64Decode(secret?.data?.domainName || '');
 
@@ -29,6 +30,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
     validation: {
       token: 'default' as Validation,
       username: 'default' as Validation,
+      regionName: 'default' as Validation,
       projectName: 'default' as Validation,
       domainName: 'default' as Validation,
     },
@@ -96,6 +98,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
       </FormGroup>
+
       <FormGroup
         label={t('Username')}
         isRequired
@@ -114,6 +117,26 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           validated={state.validation.username}
         />
       </FormGroup>
+
+      <FormGroup
+        label={t('Region')}
+        isRequired
+        fieldId="regionName"
+        helperText={t('OpenStack region.')}
+        helperTextInvalid={t('Invalid region name.')}
+        validated={state.validation.regionName}
+      >
+        <TextInput
+          isRequired
+          type="text"
+          id="regionName"
+          name="regionName"
+          value={regionName}
+          onChange={(value) => handleChange('regionName', value)}
+          validated={state.validation.regionName}
+        />
+      </FormGroup>
+
       <FormGroup
         label={t('Project')}
         isRequired
@@ -132,6 +155,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           validated={state.validation.projectName}
         />
       </FormGroup>
+
       <FormGroup
         label={t('Domain name')}
         isRequired
