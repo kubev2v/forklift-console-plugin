@@ -64,6 +64,10 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         label: t('Project ID'),
         description: t('OpenStack project ID for token credentials.'),
       },
+      regionName: {
+        label: t('Region'),
+        description: t('OpenStack region.'),
+      },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
         description: t("If true, the provider's REST API TLS certificate won't be validated."),
@@ -88,6 +92,10 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       username: {
         label: t('Username'),
         description: t('OpenStack REST API user name.'),
+      },
+      regionName: {
+        label: t('Region'),
+        description: t('OpenStack region.'),
       },
       projectName: {
         label: t('Project'),
@@ -122,6 +130,14 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         label: t('Application credential secret'),
         description: t('OpenStack REST API application credential secret.'),
       },
+      regionName: {
+        label: t('Region'),
+        description: t('OpenStack region.'),
+      },
+      projectName: {
+        label: t('Project'),
+        description: t('OpenStack project.'),
+      },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
         description: t("If true, the provider's REST API TLS certificate won't be validated."),
@@ -150,6 +166,14 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       username: {
         label: t('Username'),
         description: t('OpenStack REST API user name.'),
+      },
+      regionName: {
+        label: t('Region'),
+        description: t('OpenStack region.'),
+      },
+      projectName: {
+        label: t('Project'),
+        description: t('OpenStack project.'),
       },
       domainName: {
         label: t('Domain'),
