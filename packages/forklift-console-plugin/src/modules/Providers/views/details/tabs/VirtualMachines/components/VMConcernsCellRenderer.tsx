@@ -1,5 +1,7 @@
 import React from 'react';
+import { TFunction } from 'react-i18next';
 import { TableCell } from 'src/modules/Providers/utils';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Concern } from '@kubev2v/types';
 import {
@@ -11,11 +13,12 @@ import { Button, Flex, FlexItem, Label, Popover, Stack, StackItem } from '@patte
 
 import { VMCellProps } from './VMCellProps';
 
-type ConcernCategories = {
-  category: 'Critical' | 'Information' | 'Warning';
-  label: string;
-};
-
+/**
+ * Renders a table cell containing concerns grouped by category.
+ *
+ * @param {VMCellProps} props - The properties of the VMConcernsCellRenderer component.
+ * @returns {ReactElement} The rendered table cell.
+ */
 export const VMConcernsCellRenderer: React.FC<VMCellProps> = ({ data }) => {
   const groupedConcerns = groupConcernsByCategory(data?.vm?.concerns);
 
@@ -32,59 +35,123 @@ export const VMConcernsCellRenderer: React.FC<VMCellProps> = ({ data }) => {
   );
 };
 
-const groupConcernsByCategory = (concerns: Concern[]): Record<string, ConcernCategories[]> => {
-  return (
-    concerns?.reduce((acc, concern) => {
-      acc[concern.category] = (acc[concern.category] || []).concat(concern);
-      return acc;
-    }, {}) || {}
-  );
-};
-
+/**
+ * Renders a popover for a specific concern category.
+ *
+ * @param {Object} props - The properties of the ConcernPopover component.
+ * @param {string} props.category - The category of the concern.
+ * @param {Concern[]} props.concerns - The list of concerns for the category.
+ * @returns {ReactElement} The rendered popover.
+ */
 const ConcernPopover: React.FC<{
   category: string;
-  concerns: ConcernCategories[];
+  concerns: Concern[];
 }> = ({ category, concerns }) => {
+  const { t } = useForkliftTranslation();
+
   if (concerns.length < 1) return <></>;
 
   return (
     <Popover
       aria-label={`${category} popover`}
-      headerContent={<div>{category} Concerns</div>}
+      headerContent={<div>{getCategoryTitle(category, t)}</div>}
       bodyContent={<ConcernList concerns={concerns} />}
-      footerContent={`Total: ${concerns.length}`}
+      footerContent={t('Total: {{length}}', { length: concerns.length })}
     >
       <Button variant="link" className="forklift-page-provider-vm_concern-button">
-        <ConcernLabel category={category} count={concerns.length} />
+        <Label color={getCategoryColor(category)} icon={getCategoryIcon(category)}>
+          {concerns.length}
+        </Label>
       </Button>
     </Popover>
   );
 };
 
-const ConcernList: React.FC<{ concerns: ConcernCategories[] }> = ({ concerns }) => (
+/**
+ * Renders a list of concerns.
+ *
+ * @param {Object} props - The properties of the ConcernList component.
+ * @param {Concern[]} props.concerns - The list of concerns to render.
+ * @returns {ReactElement} The rendered list of concerns.
+ */
+const ConcernList: React.FC<{ concerns: Concern[] }> = ({ concerns }) => (
   <Stack>
     {concerns.map((c) => (
       <StackItem key={c.category}>
-        {statusIcons[c.category]} {c.label}
+        {getCategoryIcon(c.category)} {c.label}
       </StackItem>
     ))}
   </Stack>
 );
 
-const ConcernLabel: React.FC<{ category: string; count: number }> = ({ category, count }) => (
-  <Label variant="outline" color={categoryColors[category]} icon={statusIcons[category]}>
-    {count}
-  </Label>
-);
-
-const statusIcons = {
-  Critical: <RedExclamationCircleIcon />,
-  Information: <BlueInfoCircleIcon />,
-  Warning: <YellowExclamationTriangleIcon />,
+/**
+ * Groups concerns by their category.
+ *
+ * @param {Concern[]} concerns - The list of concerns to group.
+ * @returns {Record<string, Concern[]>} The grouped concerns by category.
+ */
+const groupConcernsByCategory = (concerns: Concern[] = []): Record<string, Concern[]> => {
+  return concerns.reduce(
+    (acc, concern) => {
+      if (!acc[concern.category]) {
+        acc[concern.category] = [];
+      }
+      acc[concern.category].push(concern);
+      return acc;
+    },
+    {
+      Critical: [],
+      Information: [],
+      Warning: [],
+    },
+  );
 };
 
-const categoryColors = {
-  Critical: 'red',
-  Information: 'blue',
-  Warning: 'orange',
+/**
+ * Retrieves the title for a given concern category.
+ *
+ * @param {string} category - The category of the concern.
+ * @param {TFunction} t - The translation function.
+ * @returns {string} The title for the given category.
+ */
+const getCategoryTitle = (category: string, t: TFunction): string => {
+  const titles = {
+    Critical: t('Critical concerns'),
+    Information: t('Information concerns'),
+    Warning: t('Warning concerns'),
+  };
+
+  return titles[category] || '';
+};
+
+/**
+ * Retrieves the icon for a given concern category.
+ *
+ * @param {string} category - The category of the concern.
+ * @returns {ReactElement} The icon for the given category.
+ */
+const getCategoryIcon = (category: string) => {
+  const icons = {
+    Critical: <RedExclamationCircleIcon />,
+    Information: <BlueInfoCircleIcon />,
+    Warning: <YellowExclamationTriangleIcon />,
+  };
+
+  return icons[category] || <></>;
+};
+
+/**
+ * Retrieves the color for a given concern category.
+ *
+ * @param {string} category - The category of the concern.
+ * @returns {string} The color for the given category.
+ */
+const getCategoryColor = (category: string) => {
+  const colors = {
+    Critical: 'red',
+    Information: 'blue',
+    Warning: 'orange',
+  };
+
+  return colors[category] || 'grey';
 };
