@@ -7,7 +7,7 @@ FROM registry.access.redhat.com/ubi9/nodejs-16 AS build
 #      -t quay.io/kubev2v/forklift-console-plugin \
 #      -f ./build/Containerfile \
 #      --build-arg VERSION=1.2.3 .
-ARG VERSION=2.5.0
+ARG VERSION=2.5.1
 ENV VERSION=${VERSION}
 
 # Copy app source
