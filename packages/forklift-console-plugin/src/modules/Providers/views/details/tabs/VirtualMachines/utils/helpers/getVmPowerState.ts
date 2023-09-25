@@ -8,47 +8,57 @@ import {
 
 export type PowerState = 'on' | 'off' | 'unknown';
 
-// moved from packages/legacy/src/common/components/VMNameWithPowerState.tsx
 export const getVmPowerState = (vm?: ProviderVirtualMachine): PowerState => {
-  let powerStatus: PowerState = 'unknown';
-  if (!vm) return powerStatus;
+  if (!vm) return 'unknown';
+
   switch (vm?.providerType) {
-    case 'ovirt': {
-      if ((vm as OVirtVM).status === 'up') powerStatus = 'on';
-      if ((vm as OVirtVM).status === 'down') powerStatus = 'off';
-      break;
-    }
-    case 'vsphere': {
-      if ((vm as VSphereVM).powerState === 'poweredOn') powerStatus = 'on';
-      if ((vm as VSphereVM).powerState === 'poweredOff') powerStatus = 'off';
-      break;
-    }
-    case 'openstack': {
-      const status = (vm as OpenstackVM).status;
-      if (status === 'ACTIVE') {
-        powerStatus = 'on';
-      }
-      if (status === 'SHUTOFF') {
-        powerStatus = 'off';
-      }
-      break;
-    }
-    case 'openshift': {
-      const status = (vm as OpenshiftVM)?.object?.status?.printableStatus;
-      if (status === 'Running') {
-        powerStatus = 'on';
-      } else {
-        powerStatus = 'off';
-      }
-      break;
-    }
-    case 'ova': {
-      powerStatus = 'off';
-      break;
-    }
-    default: {
-      powerStatus = 'unknown';
-    }
+    case 'ovirt':
+      return getOVirtVmPowerState(vm as OVirtVM);
+    case 'vsphere':
+      return getVSphereVmPowerState(vm as VSphereVM);
+    case 'openstack':
+      return getOpenStackVmPowerState(vm as OpenstackVM);
+    case 'openshift':
+      return getOpenShiftVmPowerState(vm as OpenshiftVM);
+    case 'ova':
+      return 'off';
+    default:
+      return 'unknown';
   }
-  return powerStatus;
 };
+
+const getOVirtVmPowerState = (vm: OVirtVM): PowerState => {
+  switch (vm?.status) {
+    case 'up':
+      return 'on';
+    case 'down':
+      return 'off';
+    default:
+      return 'unknown';
+  }
+};
+
+const getVSphereVmPowerState = (vm: VSphereVM): PowerState => {
+  switch (vm?.powerState) {
+    case 'poweredOn':
+      return 'on';
+    case 'poweredOff':
+      return 'off';
+    default:
+      return 'unknown';
+  }
+};
+
+const getOpenStackVmPowerState = (vm: OpenstackVM): PowerState => {
+  switch (vm?.status) {
+    case 'ACTIVE':
+      return 'on';
+    case 'SHUTOFF':
+      return 'off';
+    default:
+      return 'unknown';
+  }
+};
+
+const getOpenShiftVmPowerState = (vm: OpenshiftVM): PowerState =>
+  vm?.object?.status?.printableStatus === 'Running' ? 'on' : 'off';

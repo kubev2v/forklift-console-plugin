@@ -2,8 +2,7 @@ import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
-import { ProviderVirtualMachinesList, VmData } from './components/ProviderVirtualMachinesList';
-import { getVmPowerState } from './utils/helpers/getVmPowerState';
+import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import { OpenShiftVirtualMachinesRow } from './OpenShiftVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 

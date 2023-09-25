@@ -71,7 +71,7 @@ export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'status',
-    jsonPath: (data) => getVmPowerState('ovirt', (data as VmData)?.vm),
+    jsonPath: (data) => getVmPowerState((data as VmData)?.vm),
     label: t('Status'),
     isVisible: true,
     isIdentity: false,
