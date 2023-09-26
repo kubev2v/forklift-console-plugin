@@ -1,8 +1,8 @@
 import { OVirtProperty } from './model';
-import { OVirtResource } from './Resource';
+import { TypedOVirtResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/nicprofile.go
-export interface OVirtNicProfile extends OVirtResource {
+export interface OVirtNicProfile extends TypedOVirtResource {
   // Network       string           `json:"network"`
   network: string;
   // NetworkFilter string           `json:"networkFilter"`

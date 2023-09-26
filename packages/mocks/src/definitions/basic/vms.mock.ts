@@ -69,6 +69,7 @@ const vm1: VSphereVM = {
   isTemplate: false,
   host: 'esx12.v2v.example.com',
   parent: null,
+  providerType: 'vsphere',
 };
 
 export const MOCK_VMWARE_VMS: { [uid in VmwareProviderIDs]: VSphereVM[] } = {
@@ -105,6 +106,7 @@ export const MOCK_VMWARE_VMS: { [uid in VmwareProviderIDs]: VSphereVM[] } = {
       isTemplate: false,
       host: 'esx12.v2v.example.com',
       parent: null,
+      providerType: 'vsphere',
     },
     {
       id: 'vm-1008',
@@ -139,6 +141,7 @@ export const MOCK_VMWARE_VMS: { [uid in VmwareProviderIDs]: VSphereVM[] } = {
       isTemplate: false,
       host: 'esx13.v2v.example.com',
       parent: null,
+      providerType: 'vsphere',
     },
     {
       id: 'vm-2686',
@@ -162,6 +165,7 @@ export const MOCK_VMWARE_VMS: { [uid in VmwareProviderIDs]: VSphereVM[] } = {
       isTemplate: false,
       host: 'esx13.v2v.example.com',
       parent: null,
+      providerType: 'vsphere',
     },
   ],
   [VMWARE_02_UID]: [],
@@ -188,6 +192,7 @@ export const MOCK_VMWARE_VMS: { [uid in VmwareProviderIDs]: VSphereVM[] } = {
       isTemplate: false,
       host: '',
       parent: null,
+      providerType: 'vsphere',
     },
     {
       id: 'vm-431',
@@ -222,6 +227,7 @@ export const MOCK_VMWARE_VMS: { [uid in VmwareProviderIDs]: VSphereVM[] } = {
       isTemplate: false,
       host: '',
       parent: null,
+      providerType: 'vsphere',
     },
   ],
 };
@@ -241,6 +247,7 @@ export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
       concerns: [],
       cluster: 'main',
       host: 'host.example.com',
+      providerType: 'ovirt',
     },
     {
       id: '2a66a719-440c-4544-9da0-692d14338b12',
@@ -255,6 +262,7 @@ export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
       concerns: [],
       cluster: 'main',
       host: 'host.example.com',
+      providerType: 'ovirt',
     },
     {
       id: '64333a40-ffbb-4c28-add7-5560bdf082fb',
@@ -269,6 +277,7 @@ export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
       concerns: [],
       cluster: 'main',
       host: 'host-2.example.com',
+      providerType: 'ovirt',
     },
     {
       id: '6f9de857-ef39-43b7-8853-af982286dc59',
@@ -283,6 +292,7 @@ export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
       concerns: [],
       cluster: 'main',
       host: 'host-2.example.com',
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_02_UID]: [
@@ -299,6 +309,7 @@ export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
       concerns: [],
       cluster: '',
       host: '',
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_03_UID]: [
@@ -315,6 +326,7 @@ export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
       concerns: [],
       cluster: '',
       host: '',
+      providerType: 'ovirt',
     },
     {
       id: 'be55c259-2415-448d-841e-f4b9d743242e',
@@ -329,6 +341,7 @@ export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
       concerns: [],
       cluster: '',
       host: '',
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_INSECURE_UID]: [
@@ -345,6 +358,7 @@ export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
       concerns: [],
       cluster: '',
       host: '',
+      providerType: 'ovirt',
     },
   ],
 };

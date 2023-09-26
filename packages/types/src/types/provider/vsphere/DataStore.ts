@@ -1,7 +1,7 @@
-import { VSphereResource } from './Resource';
+import { TypedVSphereResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/vsphere/datastore.go
-export interface VSphereDataStore extends VSphereResource {
+export interface VSphereDataStore extends TypedVSphereResource {
   // Type            string `json:"type"`
   type: string;
   // Capacity        int64  `json:"capacity"`

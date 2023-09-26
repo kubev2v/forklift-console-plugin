@@ -1,10 +1,10 @@
 import { Concern } from '../base/model';
 
 import { OVirtDiskAttachment, OVirtNIC } from './model';
-import { OVirtResource } from './Resource';
+import { TypedOVirtResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/vm.go
-export interface OVirtVM extends OVirtResource {
+export interface OVirtVM extends TypedOVirtResource {
   // Cluster           string           `json:"cluster"`
   cluster: string;
   // 'up' | 'down'

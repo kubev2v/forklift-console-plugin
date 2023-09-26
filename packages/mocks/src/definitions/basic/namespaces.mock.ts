@@ -19,6 +19,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
       name: NAMESPACE_MIGRATION,
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/namespaces/11a0375f-f33e-489b-812a-d9a0929388ae`,
       object: { kind: 'Namespace', apiVersion: 'v1' },
+      providerType: 'openshift',
     },
     {
       uid: '68d88b58-22f4-49ba-8665-74f4256aa617',
@@ -27,6 +28,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
       name: NAMESPACE_FORKLIFT,
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/namespaces/68d88b58-22f4-49ba-8665-74f4256aa617`,
       object: { kind: 'Namespace', apiVersion: 'v1' },
+      providerType: 'openshift',
     },
   ],
   [OPENSHIFT_01_UID]: [
@@ -37,6 +39,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
       name: 'example-namespace-1',
       selfLink: `providers/openshift/${OPENSHIFT_01_UID}/namespaces/338c69a1-bee1-40a9-af33-e83b0ec3cb99`,
       object: { kind: 'Namespace', apiVersion: 'v1' },
+      providerType: 'openshift',
     },
   ],
   [OPENSHIFT_02_UID]: [
@@ -47,6 +50,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
       name: 'example-namespace-2',
       selfLink: `providers/openshift/${OPENSHIFT_02_UID}/namespaces/287d34b7-763f-4065-ba3a-2b7d6440baf6`,
       object: { kind: 'Namespace', apiVersion: 'v1' },
+      providerType: 'openshift',
     },
   ],
   [OPENSHIFT_03_UID]: [
@@ -57,6 +61,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
       name: 'example-namespace-3',
       selfLink: `providers/openshift/${OPENSHIFT_03_UID}/namespaces/c4f375bb-39dc-4276-913e-0d4c43691d2f`,
       object: { kind: 'Namespace', apiVersion: 'v1' },
+      providerType: 'openshift',
     },
   ],
 };

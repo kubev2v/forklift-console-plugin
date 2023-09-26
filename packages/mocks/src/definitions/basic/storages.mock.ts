@@ -44,6 +44,7 @@ export const MOCK_VMWARE_DATASTORES: { [uid in VmwareProviderIDs]: VSphereDataSt
       capacity: 0,
       free: 0,
       maintenance: '',
+      providerType: 'vsphere',
     },
     {
       id: '2',
@@ -59,6 +60,7 @@ export const MOCK_VMWARE_DATASTORES: { [uid in VmwareProviderIDs]: VSphereDataSt
       capacity: 0,
       free: 0,
       maintenance: '',
+      providerType: 'vsphere',
     },
   ],
   [VMWARE_02_UID]: [
@@ -76,6 +78,7 @@ export const MOCK_VMWARE_DATASTORES: { [uid in VmwareProviderIDs]: VSphereDataSt
       capacity: 0,
       free: 0,
       maintenance: '',
+      providerType: 'vsphere',
     },
   ],
   [VMWARE_03_UID]: [
@@ -93,6 +96,7 @@ export const MOCK_VMWARE_DATASTORES: { [uid in VmwareProviderIDs]: VSphereDataSt
       capacity: 0,
       free: 0,
       maintenance: '',
+      providerType: 'vsphere',
     },
     {
       id: '5',
@@ -108,6 +112,7 @@ export const MOCK_VMWARE_DATASTORES: { [uid in VmwareProviderIDs]: VSphereDataSt
       capacity: 0,
       free: 0,
       maintenance: '',
+      providerType: 'vsphere',
     },
   ],
 };
@@ -125,6 +130,7 @@ export const MOCK_RHV_STORAGE_DOMAINS: { [uid in OvirtProviderIDs]: OVirtStorage
       type: '',
       capacity: 0,
       storage: { type: '' },
+      providerType: 'ovirt',
     },
     {
       id: '2',
@@ -137,6 +143,7 @@ export const MOCK_RHV_STORAGE_DOMAINS: { [uid in OvirtProviderIDs]: OVirtStorage
       type: '',
       capacity: 0,
       storage: { type: '' },
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_02_UID]: [
@@ -151,6 +158,7 @@ export const MOCK_RHV_STORAGE_DOMAINS: { [uid in OvirtProviderIDs]: OVirtStorage
       type: '',
       capacity: 0,
       storage: { type: '' },
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_03_UID]: [
@@ -165,6 +173,7 @@ export const MOCK_RHV_STORAGE_DOMAINS: { [uid in OvirtProviderIDs]: OVirtStorage
       type: '',
       capacity: 0,
       storage: { type: '' },
+      providerType: 'ovirt',
     },
   ],
   [OVIRT_INSECURE_UID]: [
@@ -179,6 +188,7 @@ export const MOCK_RHV_STORAGE_DOMAINS: { [uid in OvirtProviderIDs]: OVirtStorage
       type: '',
       capacity: 0,
       storage: { type: '' },
+      providerType: 'ovirt',
     },
   ],
 };
@@ -195,6 +205,7 @@ export const MOCK_OPENSTACK_VOLUME_TYPES: { [uid in OpenstackProviderIDs]: Opens
         isPublic: true,
         qosSpecsID: '',
         publicAccess: true,
+        providerType: 'openstack',
       },
       {
         id: '2',
@@ -205,6 +216,7 @@ export const MOCK_OPENSTACK_VOLUME_TYPES: { [uid in OpenstackProviderIDs]: Opens
         isPublic: true,
         qosSpecsID: '',
         publicAccess: true,
+        providerType: 'openstack',
       },
       {
         id: '3',
@@ -215,6 +227,7 @@ export const MOCK_OPENSTACK_VOLUME_TYPES: { [uid in OpenstackProviderIDs]: Opens
         isPublic: true,
         qosSpecsID: '',
         publicAccess: true,
+        providerType: 'openstack',
       },
     ],
     [OPENSTACK_02_UID]: [
@@ -227,6 +240,7 @@ export const MOCK_OPENSTACK_VOLUME_TYPES: { [uid in OpenstackProviderIDs]: Opens
         isPublic: true,
         qosSpecsID: '',
         publicAccess: true,
+        providerType: 'openstack',
       },
       {
         id: '5',
@@ -237,6 +251,7 @@ export const MOCK_OPENSTACK_VOLUME_TYPES: { [uid in OpenstackProviderIDs]: Opens
         isPublic: true,
         qosSpecsID: '',
         publicAccess: true,
+        providerType: 'openstack',
       },
     ],
   };
@@ -263,6 +278,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
           },
         },
       },
+      providerType: 'openshift',
     },
     {
       uid: 'uid-1',
@@ -278,6 +294,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
           name: 'large',
         },
       },
+      providerType: 'openshift',
     },
     {
       uid: 'uid-2',
@@ -293,6 +310,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
           name: 'small',
         },
       },
+      providerType: 'openshift',
     },
   ],
   [OPENSHIFT_01_UID]: [
@@ -313,6 +331,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
           },
         },
       },
+      providerType: 'openshift',
     },
   ],
   [OPENSHIFT_02_UID]: [
@@ -333,6 +352,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
           },
         },
       },
+      providerType: 'openshift',
     },
   ],
   [OPENSHIFT_03_UID]: [
@@ -353,6 +373,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
           },
         },
       },
+      providerType: 'openshift',
     },
   ],
 };

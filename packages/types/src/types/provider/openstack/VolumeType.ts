@@ -1,7 +1,7 @@
-import { OpenstackResource } from './Resource';
+import { TypedOpenstackResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/openstack/volumetype.go
-export interface OpenstackVolumeType extends OpenstackResource {
+export interface OpenstackVolumeType extends TypedOpenstackResource {
   // Description  string            `json:"description"`
   description: string;
   // ExtraSpecs   map[string]string `json:"extraSpecs,omitempty"`

@@ -1,7 +1,7 @@
-import { OVirtResource } from './Resource';
+import { TypedOVirtResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/ovirt/disk.go
-export interface OVirtDisk extends OVirtResource {
+export interface OVirtDisk extends TypedOVirtResource {
   // Shared          bool   `json:"shared"`
   shared: boolean;
   // StorageDomain   string `json:"storageDomain"`

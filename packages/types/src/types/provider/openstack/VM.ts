@@ -1,9 +1,9 @@
 import { Concern } from '../base/model';
 
-import { OpenstackResource } from './Resource';
+import { TypedOpenstackResource } from './TypedResource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/openstack/vm.go
-export interface OpenstackVM extends OpenstackResource {
+export interface OpenstackVM extends TypedOpenstackResource {
   // TenantID          string                 `json:"tenantID"`
   tenantID: string;
   // 'ACTIVE' | 'SHUTOFF' | 'PAUSED' | 'SHELVED_OFFLOADED' | 'SUSPENDED'
