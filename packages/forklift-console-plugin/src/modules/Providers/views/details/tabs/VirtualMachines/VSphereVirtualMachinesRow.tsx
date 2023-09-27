@@ -5,7 +5,12 @@ import { ResourceField, RowProps } from '@kubev2v/common';
 import { VSphereVM } from '@kubev2v/types';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { VMCellProps, VMConcernsCellRenderer, VMNameCellRenderer } from './components';
+import {
+  PowerStateCellRenderer,
+  VMCellProps,
+  VMConcernsCellRenderer,
+  VMNameCellRenderer,
+} from './components';
 
 export interface VmData {
   vm: VSphereVM;
@@ -38,7 +43,7 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
     <TableCell>{Boolean((data?.vm as VSphereVM)?.isTemplate).toString()}</TableCell>
   ),
   path: ({ data }) => <TableCell>{(data?.vm as VSphereVM)?.path}</TableCell>,
-  status: ({ data }) => <TableCell>{(data?.vm as VSphereVM)?.powerState}</TableCell>,
+  powerState: PowerStateCellRenderer,
 };
 
 export const VSphereVirtualMachinesRow: React.FC<RowProps<VmData>> = ({
