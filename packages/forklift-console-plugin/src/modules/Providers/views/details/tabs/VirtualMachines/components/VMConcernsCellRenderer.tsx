@@ -1,6 +1,6 @@
 import React from 'react';
 import { TFunction } from 'react-i18next';
-import { TableCell } from 'src/modules/Providers/utils';
+import { TableCell, TableEmptyCell } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Concern } from '@kubev2v/types';
@@ -20,6 +20,10 @@ import { VMCellProps } from './VMCellProps';
  * @returns {ReactElement} The rendered table cell.
  */
 export const VMConcernsCellRenderer: React.FC<VMCellProps> = ({ data }) => {
+  if (data?.vm?.providerType === 'openshift') {
+    return <TableEmptyCell />;
+  }
+
   const groupedConcerns = groupConcernsByCategory(data?.vm?.concerns);
 
   return (
