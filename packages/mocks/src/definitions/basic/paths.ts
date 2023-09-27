@@ -38,7 +38,7 @@ import {
   MOCK_VMWARE_HOST_TREE,
   MOCK_VMWARE_VM_TREE,
 } from './tree.mock';
-import { MOCK_RHV_VMS, MOCK_VMWARE_VMS } from './vms.mock';
+import { MOCK_OPENSHIFT_VMS, MOCK_RHV_VMS, MOCK_VMWARE_VMS } from './vms.mock';
 
 const INVENTORY_PATH = '/api/proxy/plugin/forklift-console-plugin/forklift-inventory/';
 const ALL_NAMESPACES_PATH = '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/';
@@ -89,6 +89,7 @@ const paths = [
     inventoryPath: INVENTORY_PATH,
     ovirt: MOCK_RHV_VMS,
     vsphere: MOCK_VMWARE_VMS,
+    openshift: MOCK_OPENSHIFT_VMS,
   }),
   ...hosts({
     providers: MOCK_INVENTORY_PROVIDERS,
