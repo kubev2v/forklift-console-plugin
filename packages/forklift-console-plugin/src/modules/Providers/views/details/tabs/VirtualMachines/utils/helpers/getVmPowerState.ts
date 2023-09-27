@@ -13,13 +13,13 @@ export const getVmPowerState = (vm?: ProviderVirtualMachine): PowerState => {
 
   switch (vm?.providerType) {
     case 'ovirt':
-      return getOVirtVmPowerState(vm as OVirtVM);
+      return getOVirtVmPowerState(vm);
     case 'vsphere':
-      return getVSphereVmPowerState(vm as VSphereVM);
+      return getVSphereVmPowerState(vm);
     case 'openstack':
-      return getOpenStackVmPowerState(vm as OpenstackVM);
+      return getOpenStackVmPowerState(vm);
     case 'openshift':
-      return getOpenShiftVmPowerState(vm as OpenshiftVM);
+      return getOpenShiftVmPowerState(vm);
     case 'ova':
       return 'off';
     default:

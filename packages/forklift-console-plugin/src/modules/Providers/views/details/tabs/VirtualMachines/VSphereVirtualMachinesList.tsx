@@ -67,7 +67,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'powerState',
-    jsonPath: (data) => getVmPowerState((data as VmData)?.vm),
+    jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Power state'),
     isVisible: true,
     isIdentity: false,

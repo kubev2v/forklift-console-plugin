@@ -59,7 +59,7 @@ export const openStackVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'status',
-    jsonPath: (data) => getVmPowerState((data as VmData)?.vm),
+    jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Status'),
     isVisible: true,
     isIdentity: false,
