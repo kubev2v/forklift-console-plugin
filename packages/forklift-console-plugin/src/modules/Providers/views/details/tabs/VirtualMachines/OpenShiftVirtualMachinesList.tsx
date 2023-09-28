@@ -22,19 +22,6 @@ const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    resourceFieldId: 'concerns',
-    jsonPath: '$.concerns',
-    label: t('Concerns'),
-    isVisible: true,
-    sortable: true,
-    filter: {
-      type: 'enum',
-      primary: true,
-      placeholderLabel: t('Concerns'),
-      values: EnumToTuple({ Critical: 'Critical', Warning: 'Warning', Information: 'Information' }),
-    },
-  },
-  {
     resourceFieldId: 'status',
     jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Status'),

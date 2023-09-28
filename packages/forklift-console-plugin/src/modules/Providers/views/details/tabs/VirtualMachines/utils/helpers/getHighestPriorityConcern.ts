@@ -3,7 +3,7 @@ import { ProviderVirtualMachine } from '@kubev2v/types';
 type ConcernCategory = 'Critical' | 'Warning' | 'Information';
 
 export const getHighestPriorityConcern = (vm: ProviderVirtualMachine): ConcernCategory => {
-  if (!vm?.concerns) {
+  if (vm?.providerType === 'openshift' || !vm?.concerns) {
     return undefined;
   }
 
