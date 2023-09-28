@@ -5,8 +5,6 @@ import { ProviderVirtualMachine } from '@kubev2v/types';
 
 import { VmData } from '../components';
 
-import { getHighestPriorityConcern } from './helpers';
-
 /**
  * A hook for retrieving VMs from the inventory.
  * Adds providerType property to each VM.
@@ -46,7 +44,6 @@ export const useInventoryVms = (
             providerType: provider?.spec?.type,
           } as ProviderVirtualMachine,
           name: vm.name,
-          concerns: getHighestPriorityConcern(vm),
         }))
       : [];
 

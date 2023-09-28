@@ -2,7 +2,7 @@ import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
-import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import { ProviderVirtualMachinesList, VmData } from './components';
 import { OvaVirtualMachinesRow } from './OvaVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
@@ -21,12 +21,12 @@ export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'concerns',
-    jsonPath: '$.concerns',
+    jsonPath: (data: VmData) => (data.vm.providerType === 'ova' ? data?.vm?.concerns : []),
     label: t('Concerns'),
     isVisible: true,
     sortable: true,
     filter: {
-      type: 'enum',
+      type: 'concerns',
       primary: true,
       placeholderLabel: t('Concerns'),
       values: EnumToTuple({ Critical: 'Critical', Warning: 'Warning', Information: 'Information' }),
