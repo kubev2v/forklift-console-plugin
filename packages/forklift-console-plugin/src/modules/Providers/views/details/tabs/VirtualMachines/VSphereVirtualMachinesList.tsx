@@ -22,7 +22,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'concerns',
-    jsonPath: (data: VmData) => (data.vm.providerType === 'vsphere' ? data?.vm?.concerns : []),
+    jsonPath: '$.vm.concerns',
     label: t('Concerns'),
     isVisible: true,
     sortable: true,

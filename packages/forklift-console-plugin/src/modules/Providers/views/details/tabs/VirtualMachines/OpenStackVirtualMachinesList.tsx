@@ -22,7 +22,7 @@ export const openStackVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'concerns',
-    jsonPath: (data: VmData) => (data.vm.providerType === 'openstack' ? data?.vm?.concerns : []),
+    jsonPath: '$.vm.concerns',
     label: t('Concerns'),
     isVisible: true,
     sortable: true,

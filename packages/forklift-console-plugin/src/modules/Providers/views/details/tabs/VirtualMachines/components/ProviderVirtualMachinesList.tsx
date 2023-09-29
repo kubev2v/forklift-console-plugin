@@ -62,5 +62,5 @@ export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListPr
 const concernsMatcher: ValueMatcher = {
   filterType: 'concerns',
   matchValue: (concerns: Concern[]) => (filter: string) =>
-    concerns.some(({ category }) => category === filter),
+    Array.isArray(concerns) && concerns.some(({ category }) => category === filter),
 };
