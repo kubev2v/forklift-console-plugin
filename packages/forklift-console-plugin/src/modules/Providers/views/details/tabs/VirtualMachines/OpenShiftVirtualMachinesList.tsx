@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
-import { OpenshiftVM } from '@kubev2v/types';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import { VmData } from './components';
@@ -37,8 +36,7 @@ const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'template',
-    jsonPath: (data: VmData) =>
-      (data?.vm as OpenshiftVM)?.object?.metadata?.labels?.['vm.kubevirt.io/template'] ?? '',
+    jsonPath: "$.vm.object.metadata.labels['vm.kubevirt.io/template']",
     label: t('Template'),
     isVisible: true,
     isIdentity: false,
