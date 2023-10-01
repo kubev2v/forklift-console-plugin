@@ -18,19 +18,22 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
 
   const url = provider?.spec?.url || '';
 
-  const helperTextInvalid = {
+  const helperTextMsgs = {
     error: t(
-      'Error: Please provide a valid URL with a schema, domain, and path. For example: https://rhv.com/ovirt-engine/api.',
+      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://rhv-host-example.com/ovirt-engine/api',
     ),
     warning: t(
-      'Warning: The provided URL does not end with "ovirt-engine/api". Ensure it includes the correct path, like: https://rhv.com/ovirt-engine/api.',
+      'Warning: The provided URL does not end with the RHVM API endpoint path: "ovirt-engine/api". Ensure the URL includes the correct path. For example: https://rhv-host-example.com/ovirt-engine/api',
+    ),
+    success: t(
+      'URL of the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the URL includes the "/ovirt-engine/api" path. for example: https://rhv-host-example.com/ovirt-engine/api',
     ),
   };
 
   const initialState = {
     validation: {
       url: 'default' as Validation,
-      urlHelperTextInvalid: '',
+      urlHelperText: helperTextMsgs.success,
     },
   };
 
@@ -66,8 +69,8 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
       dispatch({
         type: 'SET_FIELD_VALIDATED',
         payload: {
-          field: 'urlHelperTextInvalid',
-          validationState: helperTextInvalid[validationState],
+          field: 'urlHelperText',
+          validationState: helperTextMsgs[validationState],
         },
       });
 
@@ -78,7 +81,7 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
 
   const getURLValidationState = (url: string): Validation => {
     if (!validateURL(url)) return 'error';
-    if (!url.endsWith('ovirt-engine/api')) return 'warning';
+    if (!url.endsWith('ovirt-engine/api') && !url.endsWith('ovirt-engine/api/')) return 'warning';
     return 'success';
   };
 
@@ -88,11 +91,9 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
         label={t('URL')}
         isRequired
         fieldId="url"
-        helperText={t(
-          'Enter the API engine URL for the Red Hat Virtualization (RHV) provider. Ensure it includes the "ovirt-engine/api" path, e.g., https://rhv.com/ovirt-engine/api.',
-        )}
         validated={state.validation.url}
-        helperTextInvalid={state.validation.urlHelperTextInvalid}
+        helperText={state.validation.urlHelperText}
+        helperTextInvalid={state.validation.urlHelperText}
       >
         <TextInput
           isRequired
