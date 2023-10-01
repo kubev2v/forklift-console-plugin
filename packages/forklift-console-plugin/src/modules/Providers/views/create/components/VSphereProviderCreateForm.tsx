@@ -19,19 +19,22 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
   const url = provider?.spec?.url || '';
   const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'] || '';
 
-  const helperTextInvalid = {
+  const helperTextMsgs = {
     error: t(
-      'Error: Please provide a valid URL with a schema, domain, and path. For example: https://vcenter.com/sdk.',
+      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://vCenter-host-example.com/sdk',
     ),
     warning: t(
-      'Warning: The provided URL does not end with "sdk". Ensure it includes the correct path, like: https://vcenter.com/sdk.',
+      'Warning: The provided URL does not end with the SDK endpoint path: "/sdk". Ensure the URL includes the correct path. For example: https://vCenter-host-example.com/sdk',
+    ),
+    success: t(
+      'URL of the vCenter SDK endpoint. Ensure the URL includes the "/sdk" path. For example: https://vCenter-host-example.com/sdk',
     ),
   };
 
   const initialState = {
     validation: {
       url: 'default' as Validation,
-      urlHelperTextInvalid: '',
+      urlHelperText: helperTextMsgs.success,
       vddkInitImage: 'default' as Validation,
     },
   };
@@ -84,8 +87,8 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
         dispatch({
           type: 'SET_FIELD_VALIDATED',
           payload: {
-            field: 'urlHelperTextInvalid',
-            validationState: helperTextInvalid[validationState],
+            field: 'urlHelperText',
+            validationState: helperTextMsgs[validationState],
           },
         });
 
@@ -97,7 +100,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
 
   const getURLValidationState = (url: string): Validation => {
     if (!validateURL(url)) return 'error';
-    if (!url.endsWith('sdk')) return 'warning';
+    if (!url.endsWith('sdk') && !url.endsWith('sdk/')) return 'warning';
     return 'success';
   };
 
@@ -107,11 +110,9 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
         label={t('URL')}
         isRequired
         fieldId="url"
-        helperText={t(
-          'Enter the URL of the SDK endpoint in vCenter. Ensure it includes the "sdk" path, e.g., https://vcenter.com/sdk.',
-        )}
+        helperText={state.validation.urlHelperText}
         validated={state.validation.url}
-        helperTextInvalid={state.validation.urlHelperTextInvalid}
+        helperTextInvalid={state.validation.urlHelperText}
       >
         <TextInput
           isRequired
