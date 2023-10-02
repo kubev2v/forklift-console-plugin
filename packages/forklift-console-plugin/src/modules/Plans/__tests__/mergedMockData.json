@@ -27,7 +27,7 @@
         "status": "PipelineRunning",
         "vmCount": 2,
         "vmDone": 0,
-        "migrationStarted": "2020-10-10T14:04:10Z",
+        "migrationStarted": "2020-10-10T14:04:10.000Z",
         "latestMigration": {},
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
@@ -342,7 +342,7 @@
         "status": "Finished-Failed",
         "vmCount": 4,
         "vmDone": 1,
-        "migrationStarted": "2020-10-10T14:04:10Z",
+        "migrationStarted": "2020-10-10T14:04:10.000Z",
         "latestMigration": {},
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
@@ -641,8 +641,8 @@
         "status": "Finished-Succeeded",
         "vmCount": 1,
         "vmDone": 1,
-        "migrationCompleted": "2020-10-10T15:58:43Z",
-        "migrationStarted": "2020-10-10T14:04:10Z",
+        "migrationCompleted": "2020-10-10T15:58:43.000Z",
+        "migrationStarted": "2020-10-10T14:04:10.000Z",
         "latestMigration": {},
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
@@ -810,7 +810,7 @@
         "status": "Archived",
         "vmCount": 2,
         "vmDone": 0,
-        "migrationStarted": "2020-10-10T14:04:10Z",
+        "migrationStarted": "2020-10-10T14:04:10.000Z",
         "latestMigration": {},
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
@@ -1122,7 +1122,7 @@
         "status": "Copying",
         "vmCount": 3,
         "vmDone": 0,
-        "migrationStarted": "2020-10-10T14:04:10Z",
+        "migrationStarted": "2020-10-10T14:04:10.000Z",
         "latestMigration": {},
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
@@ -1406,7 +1406,7 @@
         "status": "Copying-CutoverScheduled",
         "vmCount": 3,
         "vmDone": 0,
-        "migrationStarted": "2020-10-10T14:04:10Z",
+        "migrationStarted": "2020-10-10T14:04:10.000Z",
         "latestMigration": {
             "cutover": "2023-01-18T05:27:28.820Z"
         },
@@ -1692,7 +1692,7 @@
         "status": "PipelineRunning",
         "vmCount": 3,
         "vmDone": 1,
-        "migrationStarted": "2020-10-10T14:04:10Z",
+        "migrationStarted": "2020-10-10T14:04:10.000Z",
         "latestMigration": {
             "cutover": "2021-03-16T18:31:30Z"
         },
@@ -1991,8 +1991,8 @@
         "status": "Copying-Failed",
         "vmCount": 3,
         "vmDone": 0,
-        "migrationCompleted": "2020-10-10T15:04:10Z",
-        "migrationStarted": "2020-10-10T14:04:10Z",
+        "migrationCompleted": "2020-10-10T15:04:10.000Z",
+        "migrationStarted": "2020-10-10T14:04:10.000Z",
         "latestMigration": {},
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",
@@ -2168,8 +2168,8 @@
         "status": "Finished-Incomplete",
         "vmCount": 2,
         "vmDone": 1,
-        "migrationCompleted": "2020-10-10T15:04:10Z",
-        "migrationStarted": "2020-10-10T14:04:10Z",
+        "migrationCompleted": "2020-10-10T15:04:10.000Z",
+        "migrationStarted": "2020-10-10T14:04:10.000Z",
         "latestMigration": {},
         "object": {
             "apiVersion": "forklift.konveyor.io/v1beta1",

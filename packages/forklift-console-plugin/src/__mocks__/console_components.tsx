@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ResourceLinkProps } from '@openshift-console/dynamic-plugin-sdk';
+import { ResourceLinkProps, TimestampProps } from '@openshift-console/dynamic-plugin-sdk';
 
 export const ResourceLink = ({
   name,
@@ -23,3 +23,7 @@ export const BlueInfoCircleIcon = () => <div data-test-element-name="BlueInfoCir
 export const useModal = (props) => <div data-test-element-name="useModal" {...props} />;
 export const ActionService = () => <div data-test-element-name="ActionService" />;
 export const ActionServiceProvider = () => <div data-test-element-name="ActionServiceProvider" />;
+
+export const Timestamp = ({ timestamp }: TimestampProps) => (
+  <div data-test-element-name="Timestamp">{timestamp}</div>
+);

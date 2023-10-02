@@ -1,7 +1,8 @@
 import jsonpath from 'jsonpath';
+import { DateTime } from 'luxon';
 
 import { ResourceField } from '../../utils';
-import { EnumFilter, FreetextFilter, GroupedEnumFilter, SwitchFilter } from '../Filter';
+import { DateFilter, EnumFilter, FreetextFilter, GroupedEnumFilter, SwitchFilter } from '../Filter';
 
 import { FilterRenderer, ValueMatcher } from './types';
 
@@ -96,6 +97,12 @@ const groupedEnumMatcher = {
   matchValue: enumMatcher.matchValue,
 };
 
+const dateMatcher = {
+  filterType: 'date',
+  matchValue: (value: string) => (filter: string) =>
+    DateTime.fromISO(value).toUTC().hasSame(DateTime.fromISO(filter).toUTC(), 'day'),
+};
+
 const sliderMatcher = {
   filterType: 'slider',
   matchValue: (value: string) => (filter: string) => Boolean(value).toString() === filter || !value,
@@ -106,9 +113,11 @@ export const defaultValueMatchers: ValueMatcher[] = [
   enumMatcher,
   groupedEnumMatcher,
   sliderMatcher,
+  dateMatcher,
 ];
 
 export const defaultSupportedFilters: Record<string, FilterRenderer> = {
+  date: DateFilter,
   enum: EnumFilter,
   freetext: FreetextFilter,
   groupedEnum: GroupedEnumFilter,

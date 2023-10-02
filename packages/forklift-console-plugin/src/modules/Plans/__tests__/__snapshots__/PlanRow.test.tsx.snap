@@ -45,6 +45,16 @@ exports[`Plan rows plantest-01 1`] = `
         </td>
         <td
           class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          >
+            2020-10-10T14:04:10.000Z
+          </div>
+        </td>
+        <td
+          class=""
           data-label="Source provider"
         >
           <div
@@ -223,6 +233,14 @@ exports[`Plan rows plantest-02 1`] = `
           >
             name: openshift-migration, gvk: ~~, ns: undefined
           </div>
+        </td>
+        <td
+          class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          />
         </td>
         <td
           class=""
@@ -406,6 +424,16 @@ exports[`Plan rows plantest-03 1`] = `
             class="ResourceLink_mock"
           >
             name: openshift-migration, gvk: ~~, ns: undefined
+          </div>
+        </td>
+        <td
+          class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          >
+            2020-10-10T14:04:10.000Z
           </div>
         </td>
         <td
@@ -611,6 +639,16 @@ exports[`Plan rows plantest-04 1`] = `
         </td>
         <td
           class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          >
+            2020-10-10T14:04:10.000Z
+          </div>
+        </td>
+        <td
+          class=""
           data-label="Source provider"
         >
           <div
@@ -812,6 +850,16 @@ exports[`Plan rows plantest-05 1`] = `
         </td>
         <td
           class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          >
+            2020-10-10T14:04:10.000Z
+          </div>
+        </td>
+        <td
+          class=""
           data-label="Source provider"
         >
           <div
@@ -967,6 +1015,14 @@ exports[`Plan rows plantest-06 1`] = `
           >
             name: openshift-migration, gvk: ~~, ns: undefined
           </div>
+        </td>
+        <td
+          class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          />
         </td>
         <td
           class=""
@@ -1154,6 +1210,16 @@ exports[`Plan rows plantest-07 1`] = `
         </td>
         <td
           class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          >
+            2020-10-10T14:04:10.000Z
+          </div>
+        </td>
+        <td
+          class=""
           data-label="Source provider"
         >
           <div
@@ -1306,6 +1372,16 @@ exports[`Plan rows plantest-08 1`] = `
             class="ResourceLink_mock"
           >
             name: openshift-migration, gvk: ~~, ns: undefined
+          </div>
+        </td>
+        <td
+          class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          >
+            2020-10-10T14:04:10.000Z
           </div>
         </td>
         <td
@@ -1463,6 +1539,16 @@ exports[`Plan rows plantest-09 1`] = `
             class="ResourceLink_mock"
           >
             name: openshift-migration, gvk: ~~, ns: undefined
+          </div>
+        </td>
+        <td
+          class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          >
+            2020-10-10T14:04:10.000Z
           </div>
         </td>
         <td
@@ -1644,6 +1730,16 @@ exports[`Plan rows plantest-10 1`] = `
             class="ResourceLink_mock"
           >
             name: openshift-migration, gvk: ~~, ns: undefined
+          </div>
+        </td>
+        <td
+          class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          >
+            2020-10-10T14:04:10.000Z
           </div>
         </td>
         <td
@@ -1845,6 +1941,16 @@ exports[`Plan rows plantest-11 1`] = `
             class="ResourceLink_mock"
           >
             name: openshift-migration, gvk: ~~, ns: undefined
+          </div>
+        </td>
+        <td
+          class=""
+          data-label="Migration started"
+        >
+          <div
+            data-test-element-name="Timestamp"
+          >
+            2020-10-10T14:04:10.000Z
           </div>
         </td>
         <td
