@@ -4,16 +4,18 @@ import StandardPage from 'src/components/page/StandardPage';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { loadUserSettings, ResourceFieldFactory, RowProps } from '@kubev2v/common';
-import { ProviderVirtualMachine } from '@kubev2v/types';
+import {
+  EnumFilter,
+  loadUserSettings,
+  ResourceFieldFactory,
+  RowProps,
+  ValueMatcher,
+} from '@kubev2v/common';
+import { Concern } from '@kubev2v/types';
 
 import { useInventoryVms } from '../utils/useInventoryVms';
 
-export interface VmData {
-  vm: ProviderVirtualMachine;
-  name: string;
-  concerns: string;
-}
+import { VmData } from './VMCellProps';
 
 export interface ProviderVirtualMachinesListProps extends RouteComponentProps {
   obj: ProviderData;
@@ -49,6 +51,16 @@ export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListPr
       namespace={obj?.provider?.metadata?.namespace}
       title={t('Virtual Machines')}
       userSettings={userSettings}
+      extraSupportedFilters={{
+        concerns: EnumFilter,
+      }}
+      extraSupportedMatchers={[concernsMatcher]}
     />
   );
+};
+
+const concernsMatcher: ValueMatcher = {
+  filterType: 'concerns',
+  matchValue: (concerns: Concern[]) => (filter: string) =>
+    Array.isArray(concerns) && concerns.some(({ category }) => category === filter),
 };

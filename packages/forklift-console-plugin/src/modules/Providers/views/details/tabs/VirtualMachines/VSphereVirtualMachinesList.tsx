@@ -2,7 +2,7 @@ import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
-import { ProviderVirtualMachinesList, VmData } from './components/ProviderVirtualMachinesList';
+import { ProviderVirtualMachinesList, VmData } from './components';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { getVmPowerState } from './utils';
 import { VSphereVirtualMachinesRow } from './VSphereVirtualMachinesRow';
@@ -22,12 +22,12 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'concerns',
-    jsonPath: '$.concerns',
+    jsonPath: '$.vm.concerns',
     label: t('Concerns'),
     isVisible: true,
     sortable: true,
     filter: {
-      type: 'enum',
+      type: 'concerns',
       primary: true,
       placeholderLabel: t('Concerns'),
       values: EnumToTuple({ Critical: 'Critical', Warning: 'Warning', Information: 'Information' }),
