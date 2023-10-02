@@ -1,9 +1,14 @@
 /* eslint-disable @cspell/spellchecker */
-import { OVirtVM, VSphereVM } from '@kubev2v/types';
+import { OpenshiftVM, OVirtVM, VSphereVM } from '@kubev2v/types';
 
 import { MOCK_DISK_ATTACHMENTS } from './disks.mock';
 import { MOCK_NICS } from './nicProfiles.mock';
 import {
+  OPENSHIFT_01_UID,
+  OPENSHIFT_02_UID,
+  OPENSHIFT_03_UID,
+  OPENSHIFT_HOST_UID,
+  OpenshiftProviderIDs,
   OVIRT_01_UID,
   OVIRT_02_UID,
   OVIRT_03_UID,
@@ -359,6 +364,133 @@ export const MOCK_RHV_VMS: { [uid in OvirtProviderIDs]: OVirtVM[] } = {
       cluster: '',
       host: '',
       providerType: 'ovirt',
+    },
+  ],
+};
+
+export const MOCK_OPENSHIFT_VMS: { [uid in OpenshiftProviderIDs]: OpenshiftVM[] } = {
+  [OPENSHIFT_01_UID]: [],
+  [OPENSHIFT_02_UID]: [],
+  [OPENSHIFT_03_UID]: [],
+  [OPENSHIFT_HOST_UID]: [
+    // source: https://kubevirt.io/user-guide/virtual_machines/templates/
+    {
+      name: 'rheltinyvm',
+      namespace: '',
+      selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/vms/3dcaf3ec-6b51-4ca0-8345-6d61841731d7`,
+      uid: '',
+      version: '',
+      object: {
+        kind: 'VirtualMachine',
+        apiVersion: 'kubevirt.io/v1',
+        metadata: {
+          annotations: {
+            ['vm.kubevirt.io/flavor']: 'tiny',
+            ['vm.kubevirt.io/os']: 'rhel8',
+            ['vm.kubevirt.io/validations']: `
+              {
+                name: 'minimal-required-memory',
+                path: 'jsonpath::.spec.domain.resources.requests.memory',
+                rule: 'integer',
+                message: 'This VM requires more memory.',
+                min: 1610612736,
+              }`,
+            ['vm.kubevirt.io/workload']: 'server',
+          },
+          labels: {
+            app: 'rheltinyvm',
+            ['vm.kubevirt.io/template']: 'rhel8-server-tiny',
+            ['vm.kubevirt.io/template.revision']: '45',
+            ['vm.kubevirt.io/template.version']: '0.11.3',
+          },
+          name: 'rheltinyvm',
+        },
+        spec: {
+          dataVolumeTemplates: [
+            {
+              apiVersion: 'cdi.kubevirt.io/v1beta1',
+              kind: 'DataVolume',
+              metadata: {
+                name: 'rheltinyvm',
+              },
+              spec: {
+                pvc: {
+                  accessModes: ['ReadWriteMany'],
+                  resources: {
+                    requests: {
+                      storage: '30Gi',
+                    },
+                  },
+                },
+                source: {
+                  pvc: {
+                    name: 'rhel',
+                    namespace: 'kubevirt',
+                  },
+                },
+              },
+            },
+          ],
+          running: false,
+          template: {
+            metadata: {
+              labels: {
+                ['kubevirt.io/domain']: 'rheltinyvm',
+                ['kubevirt.io/size']: 'tiny',
+              },
+            },
+            spec: {
+              domain: {
+                cpu: {
+                  cores: 1,
+                  sockets: 1,
+                  threads: 1,
+                },
+                devices: {
+                  disks: [
+                    {
+                      disk: {
+                        bus: 'virtio',
+                      },
+                      name: 'rheltinyvm',
+                    },
+                    {
+                      disk: {
+                        bus: 'virtio',
+                      },
+                      name: 'cloudinitdisk',
+                    },
+                  ],
+                  interfaces: [
+                    {
+                      masquerade: {},
+                      name: 'default',
+                    },
+                  ],
+                  networkInterfaceMultiqueue: true,
+                  rng: {},
+                },
+                resources: {
+                  requests: {
+                    memory: '1.5Gi',
+                  },
+                },
+              },
+              networks: [{ name: 'default', pod: {} }],
+              terminationGracePeriodSeconds: 180,
+              volumes: [
+                {
+                  dataVolume: {
+                    name: 'rheltinyvm',
+                  },
+                  name: 'rheltinyvm',
+                },
+              ],
+            },
+          },
+        },
+      },
+      providerType: 'openshift',
     },
   ],
 };

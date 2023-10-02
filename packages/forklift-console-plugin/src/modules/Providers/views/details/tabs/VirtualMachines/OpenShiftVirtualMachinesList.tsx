@@ -34,6 +34,18 @@ const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     },
     sortable: true,
   },
+  {
+    resourceFieldId: 'template',
+    jsonPath: "$.vm.object.metadata.labels['vm.kubevirt.io/template']",
+    label: t('Template'),
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by template'),
+    },
+    sortable: true,
+  },
 ];
 
 export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({

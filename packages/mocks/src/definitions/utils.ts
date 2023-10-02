@@ -7,6 +7,7 @@ import {
   OpenShiftNamespace,
   OpenShiftNetworkAttachmentDefinition,
   OpenShiftStorageClass,
+  OpenshiftVM,
   OpenstackTreeNode,
   OpenstackVolumeType,
   OVirtDisk,
@@ -61,15 +62,18 @@ export const vms = ({
   inventoryPath,
   vsphere,
   ovirt,
+  openshift,
 }: {
   providers: ProvidersInventoryList;
   inventoryPath: string;
   vsphere: { [uid: string]: VSphereVM[] };
   ovirt: { [uid: string]: OVirtVM[] };
+  openshift: { [uid: string]: OpenshiftVM[] };
 }) =>
   [
     ...providers.ovirt.map(({ selfLink, uid }) => [selfLink, ovirt[uid] ?? []]),
     ...providers.vsphere.map(({ selfLink, uid }) => [selfLink, vsphere[uid] ?? []]),
+    ...providers.openshift.map(({ selfLink, uid }) => [selfLink, openshift[uid] ?? []]),
   ].map(([selfLink, mock]) => [`${inventoryPath}${selfLink}/vms`, mock]);
 
 export const hosts = ({
