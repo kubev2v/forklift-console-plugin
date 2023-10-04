@@ -23,10 +23,10 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
       'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://rhv-host-example.com/ovirt-engine/api',
     ),
     warning: t(
-      'Warning: The provided URL does not end with the RHVM API endpoint path: "ovirt-engine/api". Ensure the URL includes the correct path. For example: https://rhv-host-example.com/ovirt-engine/api',
+      'Warning: The provided URL does not end with the RHVM API endpoint path: "/ovirt-engine/api". Ensure the URL includes the correct path. For example: https://rhv-host-example.com/ovirt-engine/api',
     ),
     success: t(
-      'URL of the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the URL includes the "/ovirt-engine/api" path. for example: https://rhv-host-example.com/ovirt-engine/api',
+      'URL of the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the URL includes the "/ovirt-engine/api" path. For example: https://rhv-host-example.com/ovirt-engine/api',
     ),
   };
 
