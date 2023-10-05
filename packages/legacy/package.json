@@ -62,8 +62,8 @@
   "peerDependencies": {
     "@migtools/lib-ui": "8.4.1",
     "@openshift-console/dynamic-plugin-sdk": "0.0.18",
-    "@patternfly/react-core": "4.221.3",
-    "@patternfly/react-table": "4.90.3",
+    "@patternfly/react-core": "4.276.6",
+    "@patternfly/react-table": "4.112.39",
     "axios": "^0.21.2",
     "classnames": "2.x",
     "dayjs": "^1.11.5",

@@ -100,7 +100,7 @@ export const CutoverConfirmModal: React.FunctionComponent<ICutoverConfirmModalPr
                   <>
                     <InputGroup className={spacing.mtSm}>
                       <DatePicker
-                        onChange={(_inputDate, newDate) => {
+                        onChange={(event, _inputDate, newDate) => {
                           if (newDate && isValidDate(newDate)) {
                             setCutoverDay(newDate);
                           } else {
@@ -114,7 +114,7 @@ export const CutoverConfirmModal: React.FunctionComponent<ICutoverConfirmModalPr
                       <TimePicker
                         aria-label="Cutover scheduled time"
                         style={{ width: '150px' }}
-                        onChange={(_time, hour, minute) => {
+                        onChange={(event, _time, hour, minute) => {
                           if ((hour || hour === 0) && (minute || minute === 0)) {
                             setCutoverTime({ hour, minute });
                           } else {

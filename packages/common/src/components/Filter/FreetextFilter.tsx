@@ -47,10 +47,7 @@ export const FreetextFilter = ({
           placeholder={placeholderLabel}
           value={inputValue}
           onChange={(event, value) => {
-            // starting with react-core 4.273.0 parameters were re-ordered
-            // the workaround can be removed when last supported Console version is 4.13
-            const isReactCoreBefore4_273_0 = typeof value === 'object';
-            setInputValue(isReactCoreBefore4_273_0 ? event : value);
+            setInputValue(value);
           }}
           onSearch={onTextInput}
           onClear={() => setInputValue('')}

@@ -121,7 +121,7 @@ function MappingRow<T extends CommonMapping>({
   );
   return (
     <>
-      <Tr ouiaId={undefined} ouiaSafe={undefined}>
+      <Tr>
         <Td
           expand={{
             rowIndex,
@@ -129,7 +129,7 @@ function MappingRow<T extends CommonMapping>({
             onToggle: toggleExpand,
           }}
         />
-        {resourceFields.map(({ resourceFieldId, label }) => {
+        {resourceFields.map(({ resourceFieldId, label }, columnIndex) => {
           const Cell = cellCreator[resourceFieldId] ?? TextCell;
           return (
             <Td
@@ -137,7 +137,7 @@ function MappingRow<T extends CommonMapping>({
               dataLabel={label}
               compoundExpand={
                 resourceFieldId === C.FROM || resourceFieldId === C.TO
-                  ? { isExpanded: isRowExpanded, onToggle: toggleExpand }
+                  ? { isExpanded: isRowExpanded, onToggle: toggleExpand, rowIndex, columnIndex }
                   : undefined
               }
             >
@@ -153,7 +153,7 @@ function MappingRow<T extends CommonMapping>({
           );
         })}
       </Tr>
-      <Tr isExpanded={isRowExpanded} ouiaId={undefined} ouiaSafe={undefined}>
+      <Tr isExpanded={isRowExpanded}>
         <Td dataLabel={t('Mapping graph')} noPadding colSpan={resourceFields.length}>
           {isRowExpanded && (
             <ExpandableRowContent>

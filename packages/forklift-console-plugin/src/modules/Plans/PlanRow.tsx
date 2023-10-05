@@ -201,7 +201,7 @@ const PlanRow = ({
 }: RowProps<FlatPlan>) => {
   const primaryAction = getPrimaryActionFromPlanState(resourceData.status);
   return (
-    <Tr ouiaId={undefined} ouiaSafe={undefined}>
+    <Tr>
       {resourceFields.map(({ resourceFieldId, label }) => {
         const Cell = cellCreator[resourceFieldId] ?? TextCell;
         return resourceFieldId === C.DESCRIPTION ? (
