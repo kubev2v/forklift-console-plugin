@@ -104,6 +104,7 @@ exports[`NetworkMap rows plantest1-generated-zxcv 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-4"
             type="button"
           >
             <span
@@ -164,6 +165,7 @@ exports[`NetworkMap rows plantest1-generated-zxcv 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-6"
             type="button"
           >
             <span
@@ -307,6 +309,7 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network1 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-4"
             type="button"
           >
             <span
@@ -367,6 +370,7 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network1 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-6"
             type="button"
           >
             <span
@@ -510,6 +514,7 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network2 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-4"
             type="button"
           >
             <span
@@ -570,6 +575,7 @@ exports[`NetworkMap rows vcenter1-netstore-to-ocp1-network2 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-6"
             type="button"
           >
             <span
@@ -731,6 +737,7 @@ exports[`NetworkMap rows vcenter3-invalid-network-map 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-4"
             type="button"
           >
             <span
@@ -791,6 +798,7 @@ exports[`NetworkMap rows vcenter3-invalid-network-map 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-6"
             type="button"
           >
             <span
@@ -934,6 +942,7 @@ exports[`NetworkMap rows vcenter4-invalid-network-map 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-4"
             type="button"
           >
             <span
@@ -994,6 +1003,7 @@ exports[`NetworkMap rows vcenter4-invalid-network-map 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-6"
             type="button"
           >
             <span

@@ -104,6 +104,7 @@ exports[`StorageMap rows plantest1-generated-asdf 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-4"
             type="button"
           >
             <span
@@ -164,6 +165,7 @@ exports[`StorageMap rows plantest1-generated-asdf 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-6"
             type="button"
           >
             <span
@@ -307,6 +309,7 @@ exports[`StorageMap rows vcenter1-datastore-to-ocpv-storageclass1 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-4"
             type="button"
           >
             <span
@@ -367,6 +370,7 @@ exports[`StorageMap rows vcenter1-datastore-to-ocpv-storageclass1 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-6"
             type="button"
           >
             <span
@@ -510,6 +514,7 @@ exports[`StorageMap rows vcenter1-invalid-storage-mapping 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-4"
             type="button"
           >
             <span
@@ -570,6 +575,7 @@ exports[`StorageMap rows vcenter1-invalid-storage-mapping 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-6"
             type="button"
           >
             <span
@@ -713,6 +719,7 @@ exports[`StorageMap rows vcenter3-datastore-to-ocpv-storageclass2 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-4"
             type="button"
           >
             <span
@@ -773,6 +780,7 @@ exports[`StorageMap rows vcenter3-datastore-to-ocpv-storageclass2 1`] = `
           <button
             aria-expanded="false"
             class="pf-c-table__button"
+            id="expand-toggle-0-6"
             type="button"
           >
             <span
