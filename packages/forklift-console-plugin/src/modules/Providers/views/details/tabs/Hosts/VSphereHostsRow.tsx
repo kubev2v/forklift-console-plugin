@@ -20,7 +20,7 @@ export const VSphereHostsRow: React.FC<RowProps<InventoryHostPair>> = ({
   resourceIndex: rowIndex,
 }) => {
   return (
-    <Tr ouiaId={undefined} ouiaSafe={undefined}>
+    <Tr>
       {!!toggleSelect && (
         <Td
           select={{

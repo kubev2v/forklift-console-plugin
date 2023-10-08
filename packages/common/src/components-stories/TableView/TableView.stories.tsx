@@ -89,7 +89,7 @@ const visibleColumns: ResourceField[] = [
 
 function SimpleRow<T>({ resourceFields, resourceData }: RowProps<T>) {
   return (
-    <Tr ouiaId={undefined} ouiaSafe={undefined}>
+    <Tr>
       {resourceFields.map(({ resourceFieldId, label }) => (
         <Td key={resourceFieldId} dataLabel={label}>
           {String(resourceData[resourceFieldId] ?? '')}

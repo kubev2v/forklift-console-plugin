@@ -35,7 +35,7 @@ import {
  */
 export const ProviderRow: React.FC<RowProps<ProviderData>> = ({ resourceFields, resourceData }) => {
   return (
-    <Tr ouiaId={undefined} ouiaSafe={undefined}>
+    <Tr>
       {resourceFields.map(({ resourceFieldId }) =>
         renderTd({ resourceData, resourceFieldId, resourceFields }),
       )}
