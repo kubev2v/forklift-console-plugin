@@ -1,7 +1,15 @@
 import jsonpath from 'jsonpath';
+import { DateTime, Interval } from 'luxon';
 
 import { areSameDayInUTCZero, ResourceField } from '../../utils';
-import { DateFilter, EnumFilter, FreetextFilter, GroupedEnumFilter, SwitchFilter } from '../Filter';
+import {
+  DateFilter,
+  DateRangeFilter,
+  EnumFilter,
+  FreetextFilter,
+  GroupedEnumFilter,
+  SwitchFilter,
+} from '../Filter';
 
 import { FilterRenderer, ValueMatcher } from './types';
 
@@ -101,6 +109,12 @@ const dateMatcher = {
   matchValue: (value: string) => (filter: string) => areSameDayInUTCZero(value, filter),
 };
 
+const dateRangeMatcher = {
+  filterType: 'dateRange',
+  matchValue: (value: string) => (filter: string) =>
+    Interval.fromISO(filter).contains(DateTime.fromISO(value)),
+};
+
 const sliderMatcher = {
   filterType: 'slider',
   matchValue: (value: string) => (filter: string) => Boolean(value).toString() === filter || !value,
@@ -112,10 +126,12 @@ export const defaultValueMatchers: ValueMatcher[] = [
   groupedEnumMatcher,
   sliderMatcher,
   dateMatcher,
+  dateRangeMatcher,
 ];
 
 export const defaultSupportedFilters: Record<string, FilterRenderer> = {
   date: DateFilter,
+  dateRange: DateRangeFilter,
   enum: EnumFilter,
   freetext: FreetextFilter,
   groupedEnum: GroupedEnumFilter,

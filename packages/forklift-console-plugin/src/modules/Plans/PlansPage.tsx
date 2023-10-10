@@ -48,7 +48,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     label: t('Migration started'),
     isVisible: true,
     filter: {
-      type: 'date',
+      type: 'dateRange',
       placeholderLabel: 'YYYY-MM-DD',
     },
     sortable: true,
