@@ -50,7 +50,7 @@ exports[`Plan rows plantest-01 1`] = `
           <div
             data-test-element-name="Timestamp"
           >
-            2020-10-10T14:04:10.000Z
+            2020-10-10T14:04:10Z
           </div>
         </td>
         <td
@@ -433,7 +433,7 @@ exports[`Plan rows plantest-03 1`] = `
           <div
             data-test-element-name="Timestamp"
           >
-            2020-10-10T14:04:10.000Z
+            2020-10-10T14:04:10Z
           </div>
         </td>
         <td
@@ -644,7 +644,7 @@ exports[`Plan rows plantest-04 1`] = `
           <div
             data-test-element-name="Timestamp"
           >
-            2020-10-10T14:04:10.000Z
+            2020-10-10T14:04:10Z
           </div>
         </td>
         <td
@@ -855,7 +855,7 @@ exports[`Plan rows plantest-05 1`] = `
           <div
             data-test-element-name="Timestamp"
           >
-            2020-10-10T14:04:10.000Z
+            2020-10-10T14:04:10Z
           </div>
         </td>
         <td
@@ -1215,7 +1215,7 @@ exports[`Plan rows plantest-07 1`] = `
           <div
             data-test-element-name="Timestamp"
           >
-            2020-10-10T14:04:10.000Z
+            2020-10-10T14:04:10Z
           </div>
         </td>
         <td
@@ -1381,7 +1381,7 @@ exports[`Plan rows plantest-08 1`] = `
           <div
             data-test-element-name="Timestamp"
           >
-            2020-10-10T14:04:10.000Z
+            2020-10-10T14:04:10Z
           </div>
         </td>
         <td
@@ -1548,7 +1548,7 @@ exports[`Plan rows plantest-09 1`] = `
           <div
             data-test-element-name="Timestamp"
           >
-            2020-10-10T14:04:10.000Z
+            2020-10-10T14:04:10Z
           </div>
         </td>
         <td
@@ -1739,7 +1739,7 @@ exports[`Plan rows plantest-10 1`] = `
           <div
             data-test-element-name="Timestamp"
           >
-            2020-10-10T14:04:10.000Z
+            2020-10-10T14:04:10Z
           </div>
         </td>
         <td
@@ -1950,7 +1950,7 @@ exports[`Plan rows plantest-11 1`] = `
           <div
             data-test-element-name="Timestamp"
           >
-            2020-10-10T14:04:10.000Z
+            2020-10-10T14:04:10Z
           </div>
         </td>
         <td

@@ -1,7 +1,6 @@
 import jsonpath from 'jsonpath';
-import { DateTime } from 'luxon';
 
-import { ResourceField } from '../../utils';
+import { areSameDayInUTCZero, ResourceField } from '../../utils';
 import { DateFilter, EnumFilter, FreetextFilter, GroupedEnumFilter, SwitchFilter } from '../Filter';
 
 import { FilterRenderer, ValueMatcher } from './types';
@@ -99,8 +98,7 @@ const groupedEnumMatcher = {
 
 const dateMatcher = {
   filterType: 'date',
-  matchValue: (value: string) => (filter: string) =>
-    DateTime.fromISO(value).toUTC().hasSame(DateTime.fromISO(filter).toUTC(), 'day'),
+  matchValue: (value: string) => (filter: string) => areSameDayInUTCZero(value, filter),
 };
 
 const sliderMatcher = {

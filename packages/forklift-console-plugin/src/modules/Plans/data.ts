@@ -4,7 +4,6 @@ import { useMigrations, usePlans, useProviders } from 'src/utils/fetch';
 import { groupVersionKindForObj, resolveProviderRef } from 'src/utils/resources';
 import { MigrationResource, PlanResource, ProviderRef } from 'src/utils/types';
 
-import { convertToUTC } from '@kubev2v/common';
 import { PlanState } from '@kubev2v/legacy/common/constants';
 import { getPlanState } from '@kubev2v/legacy/Plans/components/helpers';
 import { findLatestMigration } from '@kubev2v/legacy/queries';
@@ -111,8 +110,8 @@ export const mergeData = (
               !vm.error &&
               !vm.conditions?.find((condition) => condition.type === 'Canceled'),
           ).length || 0,
-        migrationCompleted: convertToUTC(migration?.completed),
-        migrationStarted: convertToUTC(migration?.started),
+        migrationCompleted: migration?.completed,
+        migrationStarted: migration?.started,
         latestMigration,
         object: plan,
       }),

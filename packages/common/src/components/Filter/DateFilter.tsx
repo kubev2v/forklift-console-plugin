@@ -1,7 +1,8 @@
 import React, { FormEvent, useState } from 'react';
-import { DateTime } from 'luxon';
 
 import { DatePicker, InputGroup, ToolbarFilter } from '@patternfly/react-core';
+
+import { changeFormatToISODate, isValidDate, parseISOtoJSDate, toISODate } from '../../utils';
 
 import { FilterTypeProps } from './types';
 
@@ -23,14 +24,10 @@ export const DateFilter = ({
   placeholderLabel,
   showFilter = true,
 }: FilterTypeProps) => {
-  const validFilters =
-    selectedFilters
-      ?.map((str) => DateTime.fromISO(str))
-      ?.filter((dt: DateTime) => dt.isValid)
-      ?.map((dt: DateTime) => dt.toISODate()) ?? [];
+  const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(Boolean) ?? [];
 
   // internal state - stored as ISO date string (no time)
-  const [date, setDate] = useState(DateTime.now().toISODate());
+  const [date, setDate] = useState(toISODate(new Date()));
 
   const clearSingleDate = (option) => {
     onFilterUpdate([...validFilters.filter((d) => d !== option)]);
@@ -40,8 +37,8 @@ export const DateFilter = ({
     // require full format "YYYY-MM-DD" although partial date is also accepted
     // i.e. YYYY-MM gets parsed as YYYY-MM-01 and results in auto completing the date
     // unfortunately due to auto-complete user cannot delete the date char after char
-    if (value?.length === 10 && DateTime.fromISO(value).isValid) {
-      const targetDate = DateTime.fromISO(value).toISODate();
+    if (value?.length === 10 && isValidDate(value)) {
+      const targetDate = changeFormatToISODate(value);
       setDate(targetDate);
       onFilterUpdate([...validFilters.filter((d) => d !== targetDate), targetDate]);
     }
@@ -58,9 +55,9 @@ export const DateFilter = ({
     >
       <InputGroup>
         <DatePicker
-          value={DateTime.fromISO(date).toISODate()}
-          dateFormat={(date) => DateTime.fromJSDate(date).toISODate()}
-          dateParse={(str) => DateTime.fromISO(str).toJSDate()}
+          value={date}
+          dateFormat={toISODate}
+          dateParse={parseISOtoJSDate}
           onChange={onDateChange}
           aria-label={title}
           placeholder={placeholderLabel}
