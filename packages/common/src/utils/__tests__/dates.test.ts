@@ -2,9 +2,12 @@ import {
   areSameDayInUTCZero,
   changeFormatToISODate,
   changeTimeZoneToUTCZero,
+  isInRange,
   isValidDate,
+  isValidInterval,
   parseISOtoJSDate,
   toISODate,
+  toISODateInterval,
 } from '../dates';
 
 describe('changeTimeZoneToUTCZero', () => {
@@ -73,5 +76,32 @@ describe('areSameDayInUTCZero', () => {
   });
   test('one date missing, one invalid', () => {
     expect(areSameDayInUTCZero(undefined, '2023-foo')).toBeFalsy();
+  });
+});
+
+describe('isInRange', () => {
+  test('date in range', () => {
+    expect(isInRange('2023-10-30/2023-10-31', '2023-10-31T01:30:00.000+02:00')).toBeTruthy();
+  });
+  test('date before range', () => {
+    expect(isInRange('2023-10-31/2023-11-01', '2023-10-31T01:30:00.000+02:00')).toBeFalsy();
+  });
+});
+
+describe('isValidInterval', () => {
+  test('2023-10-30/2023-10-31', () => {
+    expect(isValidInterval('2023-10-30/2023-10-31')).toBeTruthy();
+  });
+  test('invalid format', () => {
+    expect(isValidInterval('2023-foo-30/2023-10-31')).toBeFalsy();
+  });
+  test('invalid days', () => {
+    expect(isValidInterval('2023-10-60/2023-10-31')).toBeFalsy();
+  });
+});
+
+describe('toISODateInterval', () => {
+  test('unix epoch as start and end', () => {
+    expect(toISODateInterval(new Date(0), new Date(0))).toBe('1970-01-01/1970-01-01');
   });
 });

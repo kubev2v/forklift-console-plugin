@@ -1,7 +1,6 @@
 import jsonpath from 'jsonpath';
-import { DateTime, Interval } from 'luxon';
 
-import { areSameDayInUTCZero, ResourceField } from '../../utils';
+import { areSameDayInUTCZero, isInRange, ResourceField } from '../../utils';
 import {
   DateFilter,
   DateRangeFilter,
@@ -111,8 +110,7 @@ const dateMatcher = {
 
 const dateRangeMatcher = {
   filterType: 'dateRange',
-  matchValue: (value: string) => (filter: string) =>
-    Interval.fromISO(filter).contains(DateTime.fromISO(value)),
+  matchValue: (value: string) => (filter: string) => isInRange(filter, value),
 };
 
 const sliderMatcher = {

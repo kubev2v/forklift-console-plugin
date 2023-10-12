@@ -1,7 +1,20 @@
 import React, { FormEvent, useState } from 'react';
-import { DateTime, Interval } from 'luxon';
+import { DateTime } from 'luxon';
 
-import { DatePicker, InputGroup, ToolbarFilter } from '@patternfly/react-core';
+import {
+  DatePicker,
+  InputGroup,
+  isValidDate as isValidJSDate,
+  ToolbarFilter,
+} from '@patternfly/react-core';
+
+import {
+  isValidDate,
+  isValidInterval,
+  parseISOtoJSDate,
+  toISODate,
+  toISODateInterval,
+} from '../../utils';
 
 import { FilterTypeProps } from './types';
 
@@ -24,43 +37,33 @@ export const DateRangeFilter = ({
   placeholderLabel,
   showFilter = true,
 }: FilterTypeProps) => {
-  const validFilters =
-    selectedFilters
-      ?.map((str) => Interval.fromISO(str))
-      ?.filter((range: Interval) => range.isValid) ?? [];
+  const validFilters = selectedFilters?.filter(isValidInterval) ?? [];
 
-  const [from, setFrom] = useState<DateTime>();
-  const [to, setTo] = useState<DateTime>();
+  const [from, setFrom] = useState<Date>();
+  const [to, setTo] = useState<Date>();
 
-  const rangeToOption = (range: Interval): string => range.toISODate().replace('/', ' - ');
-
-  const optionToRange = (option: string): Interval => Interval.fromISO(option.replace(' - ', '/'));
+  const rangeToOption = (range: string): string => range.replace('/', ' - ');
+  const optionToRange = (option: string): string => option.replace(' - ', '/');
 
   const clearSingleRange = (option) => {
     const target = optionToRange(option);
-    onFilterUpdate([
-      ...validFilters.filter((range) => range.equals(target)).map((range) => range.toISODate()),
-    ]);
+    onFilterUpdate([...validFilters.filter((range) => range !== target)]);
   };
 
   const onFromDateChange = (even: FormEvent<HTMLInputElement>, value: string) => {
-    if (value?.length === 10 && DateTime.fromISO(value).isValid) {
-      setFrom(DateTime.fromISO(value));
+    if (value?.length === 10 && isValidDate(value)) {
+      setFrom(parseISOtoJSDate(value));
       setTo(undefined);
     }
   };
 
   const onToDateChange = (even: FormEvent<HTMLInputElement>, value: string) => {
-    if (value?.length === 10 && DateTime.fromISO(value).isValid) {
-      const newTo = DateTime.fromISO(value);
+    if (value?.length === 10 && isValidDate(value)) {
+      const newTo = parseISOtoJSDate(value);
       setTo(newTo);
-      const target = Interval.fromDateTimes(from, newTo);
-      if (target.isValid) {
-        onFilterUpdate(
-          [...validFilters.filter((range) => !range.equals(target)), target].map((range) =>
-            range.toISODate(),
-          ),
-        );
+      const target = toISODateInterval(from, newTo);
+      if (target) {
+        onFilterUpdate([...validFilters.filter((range) => range !== target), target]);
       }
     }
   };
@@ -75,7 +78,7 @@ export const DateRangeFilter = ({
     >
       <InputGroup>
         <DatePicker
-          value={from?.toISODate()}
+          value={toISODate(from)}
           dateFormat={(date) => DateTime.fromJSDate(date).toISODate()}
           dateParse={(str) => DateTime.fromISO(str).toJSDate()}
           onChange={onFromDateChange}
@@ -87,14 +90,14 @@ export const DateRangeFilter = ({
           appendTo={document.body}
         />
         <DatePicker
-          value={to?.toISODate()}
+          value={toISODate(to)}
           onChange={onToDateChange}
           // disable error text (no space in toolbar scenario)
           invalidFormatText={''}
-          isDisabled={!from?.isValid}
-          rangeStart={from?.toJSDate()}
+          isDisabled={isValidJSDate(from)}
+          rangeStart={from}
           aria-label="Interval end"
-          placeholder="YYYY-MM-DD"
+          placeholder={placeholderLabel}
           appendTo={document.body}
         />
       </InputGroup>
