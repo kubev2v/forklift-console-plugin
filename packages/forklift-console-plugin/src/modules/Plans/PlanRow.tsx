@@ -16,7 +16,11 @@ import { MigrateOrCutoverButton } from '@kubev2v/legacy/Plans/components/Migrate
 import { PlanNameNavLink as Link } from '@kubev2v/legacy/Plans/components/PlanStatusNavLink';
 import { ScheduledCutoverTime } from '@kubev2v/legacy/Plans/components/ScheduledCutoverTime';
 import { StatusIcon } from '@migtools/lib-ui';
-import { K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  K8sGroupVersionKind,
+  ResourceLink,
+  Timestamp,
+} from '@openshift-console/dynamic-plugin-sdk';
 import {
   Flex,
   FlexItem,
@@ -192,6 +196,7 @@ const cellCreator: Record<string, (props: CellProps) => JSX.Element> = {
       <VirtualMachineIcon /> {value}
     </RouterLink>
   ),
+  [C.MIGRATION_STARTED]: ({ value }: CellProps) => <Timestamp timestamp={value} />,
 };
 
 const PlanRow = ({

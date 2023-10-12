@@ -44,6 +44,16 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
+    resourceFieldId: C.MIGRATION_STARTED,
+    label: t('Migration started'),
+    isVisible: true,
+    filter: {
+      type: 'date',
+      placeholderLabel: 'YYYY-MM-DD',
+    },
+    sortable: true,
+  },
+  {
     resourceFieldId: C.SOURCE,
     label: t('Source provider'),
     isVisible: true,
