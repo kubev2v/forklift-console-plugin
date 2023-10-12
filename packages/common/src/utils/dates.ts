@@ -85,3 +85,11 @@ export const toISODateInterval = (from: Date, to: Date): string | undefined => {
   const target = Interval.fromDateTimes(DateTime.fromJSDate(from), DateTime.fromJSDate(to));
   return target.isValid ? target.toISODate() : undefined;
 };
+
+export const abbreviateInterval = (isoInterval: string): string | undefined => {
+  const interval = Interval.fromISO(isoInterval);
+  if (!interval.isValid) {
+    return undefined;
+  }
+  return `${interval.start.toFormat('MM-dd')}/${interval.end.toFormat('MM-dd')}`;
+};

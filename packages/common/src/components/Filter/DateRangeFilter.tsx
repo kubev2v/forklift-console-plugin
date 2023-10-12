@@ -6,9 +6,11 @@ import {
   InputGroup,
   isValidDate as isValidJSDate,
   ToolbarFilter,
+  Tooltip,
 } from '@patternfly/react-core';
 
 import {
+  abbreviateInterval,
   isValidDate,
   isValidInterval,
   parseISOtoJSDate,
@@ -23,7 +25,7 @@ import { FilterTypeProps } from './types';
  * Precisely given range [A,B) a date X in the range if A <= X < B.
  *
  * **FilterTypeProps are interpreted as follows**:<br>
- * 1) selectedFilters - date range encoded as ISO 8601 time interval string ("dateFrom/dateTo").<br>
+ * 1) selectedFilters - date range encoded as ISO 8601 time interval string ("dateFrom/dateTo"). Only date part is used (no time).<br>
  * 2) onFilterUpdate - accepts the list of ranges.<br>
  *
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
@@ -42,8 +44,18 @@ export const DateRangeFilter = ({
   const [from, setFrom] = useState<Date>();
   const [to, setTo] = useState<Date>();
 
-  const rangeToOption = (range: string): string => range.replace('/', ' - ');
-  const optionToRange = (option: string): string => option.replace(' - ', '/');
+  const rangeToOption = (range: string) => {
+    const abbr = abbreviateInterval(range);
+    return {
+      key: range,
+      node: (
+        <Tooltip content={range}>
+          <span>{abbr ?? ''}</span>
+        </Tooltip>
+      ),
+    };
+  };
+  const optionToRange = (option): string => option?.key;
 
   const clearSingleRange = (option) => {
     const target = optionToRange(option);
@@ -51,6 +63,7 @@ export const DateRangeFilter = ({
   };
 
   const onFromDateChange = (even: FormEvent<HTMLInputElement>, value: string) => {
+    //see DateFilter onDateChange
     if (value?.length === 10 && isValidDate(value)) {
       setFrom(parseISOtoJSDate(value));
       setTo(undefined);
@@ -58,6 +71,7 @@ export const DateRangeFilter = ({
   };
 
   const onToDateChange = (even: FormEvent<HTMLInputElement>, value: string) => {
+    //see DateFilter onDateChange
     if (value?.length === 10 && isValidDate(value)) {
       const newTo = parseISOtoJSDate(value);
       setTo(newTo);
@@ -82,7 +96,7 @@ export const DateRangeFilter = ({
           dateFormat={(date) => DateTime.fromJSDate(date).toISODate()}
           dateParse={(str) => DateTime.fromISO(str).toJSDate()}
           onChange={onFromDateChange}
-          aria-label={'Interval start'}
+          aria-label="Interval start"
           placeholder={placeholderLabel}
           // disable error text (no space in toolbar scenario)
           invalidFormatText={''}
@@ -92,9 +106,9 @@ export const DateRangeFilter = ({
         <DatePicker
           value={toISODate(to)}
           onChange={onToDateChange}
+          isDisabled={!isValidJSDate(from)}
           // disable error text (no space in toolbar scenario)
           invalidFormatText={''}
-          isDisabled={isValidJSDate(from)}
           rangeStart={from}
           aria-label="Interval end"
           placeholder={placeholderLabel}
