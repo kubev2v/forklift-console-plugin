@@ -63,14 +63,10 @@ describe('parseISOtoJSDate', () => {
 
 describe('areSameDayInUTCZero', () => {
   test('the same date', () => {
-    expect(
-      areSameDayInUTCZero('2023-10-31T01:30:00.000+02:00', '2023-10-29T23:30:00.000-02:00'),
-    ).toBeTruthy();
+    expect(areSameDayInUTCZero('2023-10-31T01:30:00.000+02:00', '2023-10-30')).toBeTruthy();
   });
   test('the different dates', () => {
-    expect(
-      areSameDayInUTCZero('2023-10-31T10:00:00.000+02:00', '2023-10-29T14:00:00.000-02:00'),
-    ).toBeFalsy();
+    expect(areSameDayInUTCZero('2023-10-31T01:30:00.000+02:00', '2023-10-31')).toBeFalsy();
   });
   test('one date invalid', () => {
     expect(areSameDayInUTCZero('2023-10-31T10:00:00.000+02:00', '2023-foo')).toBeFalsy();

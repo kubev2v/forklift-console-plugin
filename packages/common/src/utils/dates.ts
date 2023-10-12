@@ -47,9 +47,12 @@ export const parseISOtoJSDate = (isoDateString: string) => {
 
 /**
  *
- * @param a ISO date(time) formatted string
- * @param b ISO date(time) formatted string
+ * @param dateTime ISO date time formatted string (with time zone)
+ * @param calendarDate local date as ISO date formatted string (no time, no time zone)
  * @returns true if both dates are on the same day in UTC+00:00
  */
-export const areSameDayInUTCZero = (a: string, b: string): boolean =>
-  DateTime.fromISO(a).toUTC().hasSame(DateTime.fromISO(b).toUTC(), 'day');
+export const areSameDayInUTCZero = (dateTime: string, calendarDate: string): boolean => {
+  // calendar date has no zone - during conversion to UTC the local zone is used
+  // which results in shifting to previous day for zones with positive offsets
+  return DateTime.fromISO(dateTime).toUTC().hasSame(DateTime.fromISO(calendarDate), 'day');
+};
