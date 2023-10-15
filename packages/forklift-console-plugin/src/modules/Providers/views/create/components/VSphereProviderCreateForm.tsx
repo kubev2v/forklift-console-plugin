@@ -129,7 +129,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
         label={t('VDDK init image')}
         fieldId="vddkInitImage"
         helperText={t(
-          'VDDK container image of the provider, when left empty some functionality will not be available',
+          'VDDK container image. It is strongly recommended to specify a VDDK image to accelerate migrations.',
         )}
         validated={state.validation.vddkInitImage}
         helperTextInvalid={t('Error: VDDK init image must be valid.')}
