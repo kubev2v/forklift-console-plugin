@@ -2,7 +2,7 @@ import {
   areSameDayInUTCZero,
   changeFormatToISODate,
   changeTimeZoneToUTCZero,
-  isInRange,
+  isInClosedRange,
   isValidDate,
   isValidInterval,
   parseISOtoJSDate,
@@ -79,12 +79,15 @@ describe('areSameDayInUTCZero', () => {
   });
 });
 
-describe('isInRange', () => {
-  test('date in range', () => {
-    expect(isInRange('2023-10-30/2023-10-31', '2023-10-31T01:30:00.000+02:00')).toBeTruthy();
+describe('isInClosedRange', () => {
+  test('date in range(positive TZ offset)', () => {
+    expect(isInClosedRange('2023-10-30/2023-10-31', '2023-11-01T01:30:00.000+02:00')).toBeTruthy();
+  });
+  test('date after range (negative TZ offset)', () => {
+    expect(isInClosedRange('2023-10-30/2023-10-31', '2023-10-31T22:30:00.000-02:00')).toBeFalsy();
   });
   test('date before range', () => {
-    expect(isInRange('2023-10-31/2023-11-01', '2023-10-31T01:30:00.000+02:00')).toBeFalsy();
+    expect(isInClosedRange('2023-10-31/2023-11-01', '2023-10-31T01:30:00.000+02:00')).toBeFalsy();
   });
 });
 

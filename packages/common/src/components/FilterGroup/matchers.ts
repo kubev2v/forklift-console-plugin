@@ -1,6 +1,6 @@
 import jsonpath from 'jsonpath';
 
-import { areSameDayInUTCZero, isInRange, ResourceField } from '../../utils';
+import { areSameDayInUTCZero, isInClosedRange, ResourceField } from '../../utils';
 import {
   DateFilter,
   DateRangeFilter,
@@ -110,7 +110,7 @@ const dateMatcher = {
 
 const dateRangeMatcher = {
   filterType: 'dateRange',
-  matchValue: (value: string) => (filter: string) => isInRange(filter, value),
+  matchValue: (value: string) => (filter: string) => isInClosedRange(filter, value),
 };
 
 const sliderMatcher = {

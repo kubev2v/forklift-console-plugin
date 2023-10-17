@@ -21,8 +21,8 @@ import {
 import { FilterTypeProps } from './types';
 
 /**
- * This Filter type enables selecting an exclusive date range.
- * Precisely given range [A,B) a date X in the range if A <= X < B.
+ * This Filter type enables selecting an closed date range.
+ * Precisely given range [A,B] a date X in the range if A <= X <= B.
  *
  * **FilterTypeProps are interpreted as follows**:<br>
  * 1) selectedFilters - date range encoded as ISO 8601 time interval string ("dateFrom/dateTo"). Only date part is used (no time).<br>
@@ -93,6 +93,7 @@ export const DateRangeFilter = ({
       <InputGroup>
         <DatePicker
           value={toISODate(from)}
+          helperText="UTC time zone used"
           dateFormat={(date) => DateTime.fromJSDate(date).toISODate()}
           dateParse={(str) => DateTime.fromISO(str).toJSDate()}
           onChange={onFromDateChange}
