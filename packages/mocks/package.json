@@ -23,7 +23,7 @@
   "dependencies": {
     "harproxyserver": "^0.0.19",
     "luxon": "^3.3.0",
-    "msw": "^1.2.1"
+    "msw": "^1.3.2"
   },
   "devDependencies": {
     "@types/har-format": "^1.2.10"
