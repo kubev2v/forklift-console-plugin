@@ -19,7 +19,7 @@ USER 0
 RUN npm ci && npm run build
 
 # Web server container
-FROM registry.access.redhat.com/ubi9/nginx-120
+FROM registry.access.redhat.com/ubi9/nginx-122
 
 # Use none-root user
 USER 1001
