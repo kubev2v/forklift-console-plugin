@@ -14,11 +14,13 @@ import { ResourceFieldFactory } from '@kubev2v/common';
 import { MustGatherModal } from '@kubev2v/legacy/common/components/MustGatherModal';
 import { PlanModel } from '@kubev2v/types';
 import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
-import { Button } from '@patternfly/react-core';
+import { Button, HelperText, HelperTextItem } from '@patternfly/react-core';
 
 import { FlatPlan, useFlatPlans, useHasSufficientProviders } from './data';
 import EmptyStatePlans from './EmptyStatePlans';
 import PlanRow from './PlanRow';
+
+import './styles.css';
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
@@ -50,6 +52,13 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     filter: {
       type: 'dateRange',
       placeholderLabel: 'YYYY-MM-DD',
+      helperText: (
+        <HelperText className="forklift-date-range-helper-text">
+          <HelperTextItem variant="indeterminate">
+            {t('Dates are compared in UTC. End of the interval is included.')}
+          </HelperTextItem>
+        </HelperText>
+      ),
     },
     sortable: true,
   },

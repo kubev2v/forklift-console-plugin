@@ -22,3 +22,18 @@
   max-width: 14rem;
   max-height: 14rem;
 }
+
+.forklift-date-range-helper-text {
+  /* use the same padding as CalendarMonth widget in the DatePicker pop-up */
+  padding-left: var(--pf-global--spacer--lg);
+  padding-right: var(--pf-global--spacer--lg);
+
+  /* extra space below text */
+  padding-bottom: var(--pf-global--spacer--lg);
+
+  /* negative margin that compensates the setting used by DatePicker pop-up footer */
+  margin-top: calc(-1*(var(--pf-c-popover__footer--MarginTop)));
+
+  /* limit the width of the helper text to the typical width of the calendar. This prevents the text from expanding/widening the pop-up */
+  max-width: 22rem;
+}

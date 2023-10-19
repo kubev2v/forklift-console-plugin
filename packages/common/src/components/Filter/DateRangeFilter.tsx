@@ -38,6 +38,7 @@ export const DateRangeFilter = ({
   filterId,
   placeholderLabel,
   showFilter = true,
+  helperText,
 }: FilterTypeProps) => {
   const validFilters = selectedFilters?.filter(isValidInterval) ?? [];
 
@@ -93,7 +94,6 @@ export const DateRangeFilter = ({
       <InputGroup>
         <DatePicker
           value={toISODate(from)}
-          helperText="UTC time zone used"
           dateFormat={(date) => DateTime.fromJSDate(date).toISODate()}
           dateParse={(str) => DateTime.fromISO(str).toJSDate()}
           onChange={onFromDateChange}
@@ -103,6 +103,9 @@ export const DateRangeFilter = ({
           invalidFormatText={''}
           // default value ("parent") creates collision with sticky table header
           appendTo={document.body}
+          popoverProps={{
+            footerContent: helperText,
+          }}
         />
         <DatePicker
           value={toISODate(to)}
@@ -114,6 +117,9 @@ export const DateRangeFilter = ({
           aria-label="Interval end"
           placeholder={placeholderLabel}
           appendTo={document.body}
+          popoverProps={{
+            footerContent: helperText,
+          }}
         />
       </InputGroup>
     </ToolbarFilter>
