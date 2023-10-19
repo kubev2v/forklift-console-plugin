@@ -44,6 +44,7 @@ export const FilterFromDef = ({
         supportedValues={def.values}
         supportedGroups={def.groups}
         resolvedLanguage={resolvedLanguage}
+        helperText={def.helperText}
       />
     )
   );

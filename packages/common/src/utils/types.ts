@@ -1,3 +1,4 @@
+import React from 'react';
 export interface EnumGroup {
   groupId: string;
   label: string;
@@ -20,6 +21,7 @@ export interface FilterDef {
   // override default behavior if there are no filters provided by the user
   // by default missing/empty filters result in positive match (vacuous truth)
   defaultValues?: string[];
+  helperText?: string | React.ReactNode;
 }
 
 type OpenApiJsonPath = string | ((resourceData: unknown) => unknown);
