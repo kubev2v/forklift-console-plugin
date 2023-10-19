@@ -41,4 +41,6 @@ export interface FilterTypeProps {
    * Language to be used for locale sensitive sorting/filtering. Defaults to 'en'.
    */
   resolvedLanguage: string;
+  /** Text that explains how to use the filter. */
+  helperText?: string | React.ReactNode;
 }
