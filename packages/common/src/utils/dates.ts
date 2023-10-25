@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 
 /**
  * Converts a given ISO date time string to UTC+00:00 time zone.
@@ -28,7 +28,7 @@ export const changeFormatToISODate = (isoDateString: string): string | undefined
  * @param date
  * @returns ISO date string if input is valid or undefined otherwise.
  */
-export const toISODate = (date: Date): string => {
+export const toISODate = (date: Date): string | undefined => {
   const dt = DateTime.fromJSDate(date);
   return dt.isValid ? dt.toISODate() : undefined;
 };
@@ -40,7 +40,7 @@ export const isValidDate = (isoDateString: string) => DateTime.fromISO(isoDateSt
  * @param isoDateString
  * @returns JS Date instance  if input is valid or undefined otherwise.
  */
-export const parseISOtoJSDate = (isoDateString: string) => {
+export const parseISOtoJSDate = (isoDateString: string): Date | undefined => {
   const date = DateTime.fromISO(isoDateString);
   return date.isValid ? date.toJSDate() : undefined;
 };
@@ -55,4 +55,43 @@ export const areSameDayInUTCZero = (dateTime: string, calendarDate: string): boo
   // calendar date has no zone - during conversion to UTC the local zone is used
   // which results in shifting to previous day for zones with positive offsets
   return DateTime.fromISO(dateTime).toUTC().hasSame(DateTime.fromISO(calendarDate), 'day');
+};
+
+/**
+ *
+ * @param interval ISO time interval with date part only (no time, no time zone) interpreted as closed range (both start and and included)
+ * @param date  ISO date time
+ * @returns true if the provided date is in the time interval
+ */
+export const isInClosedRange = (interval: string, date: string): boolean => {
+  const { start, end } = Interval.fromISO(interval);
+  return Interval.fromDateTimes(start, end.plus({ days: 1 })).contains(
+    DateTime.fromISO(date).toUTC().setZone('local', { keepCalendarTime: true }),
+  );
+};
+
+/**
+ *
+ * @param interval ISO time interval
+ * @returns true if valid
+ */
+export const isValidInterval = (interval: string): boolean => Interval.fromISO(interval).isValid;
+
+/**
+ *
+ * @param from start date (inclusive)
+ * @param to end date (exclusive)
+ * @returns ISO time interval with date part only (no time, no time zone)
+ */
+export const toISODateInterval = (from: Date, to: Date): string | undefined => {
+  const target = Interval.fromDateTimes(DateTime.fromJSDate(from), DateTime.fromJSDate(to));
+  return target.isValid ? target.toISODate() : undefined;
+};
+
+export const abbreviateInterval = (isoInterval: string): string | undefined => {
+  const interval = Interval.fromISO(isoInterval);
+  if (!interval.isValid) {
+    return undefined;
+  }
+  return `${interval.start.toFormat('MM-dd')}/${interval.end.toFormat('MM-dd')}`;
 };

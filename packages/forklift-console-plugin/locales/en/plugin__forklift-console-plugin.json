@@ -66,6 +66,7 @@
   "Custom certification used to verify the RH Virtualization REST API server, when empty use system certificate.": "Custom certification used to verify the RH Virtualization REST API server, when empty use system certificate.",
   "Data centers": "Data centers",
   "Data stores": "Data stores",
+  "Dates are compared in UTC. End of the interval is included.": "Dates are compared in UTC. End of the interval is included.",
   "Default": "Default",
   "Default Transfer Network": "Default Transfer Network",
   "Defines the CPU limits allocated to the main container in the controller pod. The default value is 500 milliCPU.": "Defines the CPU limits allocated to the main container in the controller pod. The default value is 500 milliCPU.",
