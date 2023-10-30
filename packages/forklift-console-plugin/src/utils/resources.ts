@@ -69,3 +69,9 @@ export enum ResourceKind {
   Host = 'Host',
   Hook = 'Hook',
 }
+
+/**
+ * Can this provider be considered a local target provider?
+ */
+export const isProviderLocalTarget = (provider: V1beta1Provider): boolean =>
+  provider?.spec?.type === 'openshift' && (!provider?.spec?.url || provider?.spec?.url === '');
