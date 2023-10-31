@@ -28,7 +28,7 @@ export interface V1VirtualMachine {
       kind: 'DataVolume';
       metadata: IoK8sApimachineryPkgApisMetaV1ObjectMeta;
       spec: {
-        pvc: {
+        pvc?: {
           accessModes: string[];
           resources: {
             requests: {
@@ -36,10 +36,22 @@ export interface V1VirtualMachine {
             };
           };
         };
-        source: {
+        source?: {
           pvc: {
             name: string;
             namespace: string;
+          };
+        };
+        sourceRef?: {
+          kind: string;
+          name: string;
+          namespace: string;
+        };
+        storage?: {
+          resources: {
+            requests: {
+              storage: string;
+            };
           };
         };
       };
@@ -59,6 +71,15 @@ export interface V1VirtualMachine {
     printableStatus: VirtualMachinePrintableStatus;
     // Hold the state information of the VirtualMachine and its VirtualMachineInstance
     // Conditions []VirtualMachineCondition `json:"conditions,omitempty" optional:"true"`
+    conditions?: {
+      lastProbeTime: string;
+      lastTransitionTime: string;
+      message: string;
+      reason: string;
+      status: string;
+      type: string;
+    }[];
+
     // StateChangeRequests indicates a list of actions that should be taken on a VMI
     // e.g. stop a specific VMI then start a new one.
     // StateChangeRequests []VirtualMachineStateChangeRequest `json:"stateChangeRequests,omitempty" optional:"true"`
@@ -70,6 +91,11 @@ export interface V1VirtualMachine {
     // VolumeSnapshotStatuses indicates a list of statuses whether snapshotting is
     // supported by each volume.
     // VolumeSnapshotStatuses []VolumeSnapshotStatus `json:"volumeSnapshotStatuses,omitempty" optional:"true"`
+    volumeSnapshotStatuses?: {
+      enabled: boolean;
+      name: string;
+      reason?: string;
+    }[];
   };
 }
 
@@ -114,7 +140,7 @@ interface V1VirtualMachineInstanceSpec {
 
   // Specification of the desired behavior of the VirtualMachineInstance on the host.
   // Domain DomainSpec `json:"domain"`
-  domain: DomainSpec;
+  domain: V1DomainSpec;
 
   // NodeSelector is a selector which must be true for the vmi to fit on a node.
   // Selector which must match a node's labels for the vmi to be scheduled on that node.
@@ -138,6 +164,7 @@ interface V1VirtualMachineInstanceSpec {
   //
   // +optional
   // EvictionStrategy *EvictionStrategy `json:"evictionStrategy,omitempty"`
+  evictionStrategy?: string;
 
   // StartStrategy can be set to "Paused" if Virtual Machine should be started in paused state.
   //
@@ -161,12 +188,15 @@ interface V1VirtualMachineInstanceSpec {
     // VolumeSource represents the location and type of the mounted volume.
     // Defaults to Disk, if no type is specified.
     // VolumeSource `json:",inline"`
+    cloudInitNoCloud?: {
+      userData: string;
+    };
 
     // DataVolume represents the dynamic creation a PVC for this volume as well as
     // the process of populating that PVC with a disk image.
     // +optional
     // DataVolume *DataVolumeSource `json:"dataVolume,omitempty"`
-    dataVolume: {
+    dataVolume?: {
       // Name represents the name of the DataVolume in the same namespace
       // Name string `json:"name"`
       name: string;
@@ -235,7 +265,7 @@ interface V1VirtualMachineInstanceSpec {
   //AccessCredentials []AccessCredential `json:"accessCredentials,omitempty"`
 }
 
-interface DomainSpec {
+export interface V1DomainSpec {
   // Resources describes the Compute Resources required by this vmi.
   // Resources ResourceRequirements `json:"resources,omitempty"`
   resources?: {
@@ -251,6 +281,8 @@ interface DomainSpec {
     cores: number;
     sockets: number;
     threads: number;
+    dedicatedCpuPlacement?: boolean;
+    numa?: unknown;
   };
 
   // Memory allow specifying the VMI memory features.
@@ -260,10 +292,20 @@ interface DomainSpec {
   // Machine type.
   // +optional
   // Machine *Machine `json:"machine,omitempty"`
+  machine?: {
+    type: string;
+  };
 
   // Firmware.
   // +optional
   // Firmware *Firmware `json:"firmware,omitempty"`
+  firmware?: {
+    bootloader?: {
+      efi?: {
+        persistent?: boolean;
+      };
+    };
+  };
 
   // Clock sets the clock and timers of the vmi.
   // +optional
@@ -272,6 +314,10 @@ interface DomainSpec {
   // Features like acpi, apic, hyperv, smm.
   // +optional
   // Features *Features `json:"features,omitempty"`
+  features?: {
+    acpi?: unknown;
+    smm?: unknown;
+  };
 
   // Devices allows adding disks, network interfaces, and others
   // Devices Devices `json:"devices"`
@@ -314,6 +360,8 @@ interface Devices {
   interfaces: {
     name: string;
     masquerade?: object;
+    macAddress?: string;
+    model?: string;
   }[];
 
   // Inputs describe input devices
@@ -355,6 +403,7 @@ interface Devices {
   // +optional
   // +listType=atomic
   // GPUs []GPU `json:"gpus,omitempty"`
+  gpus?: unknown[];
 
   // Filesystems describes filesystem which is connected to the vmi.
   // +optional
@@ -365,4 +414,9 @@ interface Devices {
   // +optional
   // +listType=atomic
   // HostDevices []HostDevice `json:"hostDevices,omitempty"`
+  hostDevices?: unknown[];
+
+  tpm?: {
+    persistent?: boolean;
+  };
 }

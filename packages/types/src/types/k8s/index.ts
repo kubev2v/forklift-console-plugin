@@ -5,4 +5,5 @@ export * from './K8sResourceCondition';
 export * from './V1Namespace';
 export * from './V1NetworkAttachmentDefinition';
 export * from './V1Secret';
+export * from './V1VirtualMachine';
 // @endindex
