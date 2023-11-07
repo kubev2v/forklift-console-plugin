@@ -178,7 +178,7 @@ export const EditModal: React.FC<EditModalProps> = ({
           label={label}
           labelIcon={LabelIcon}
           fieldId="modal-with-form-form-field"
-          helperText={helperText}
+          helperText={validation.helperText ? validation.helperText : helperText}
           helperTextInvalid={validation.helperText}
           validated={validation.validated}
         >
