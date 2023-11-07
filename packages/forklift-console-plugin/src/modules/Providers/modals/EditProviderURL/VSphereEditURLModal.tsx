@@ -13,20 +13,41 @@ import { EditProviderURLModalProps } from './EditProviderURLModal';
 export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
-  const urlValidationHook: ValidationHookType = (value) => {
-    const isValidURL = validateURL(value.toString().trim());
+  const helperTextMsgs = {
+    error: t(
+      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://vCenter-host-example.com/sdk',
+    ),
+    warning: t(
+      'Warning: The provided URL does not end with the SDK endpoint path: "/sdk". Ensure the URL includes the correct path. For example: https://vCenter-host-example.com/sdk',
+    ),
+    success: t(
+      'Ensure the URL includes the "/sdk" path. For example: https://vCenter-host-example.com/sdk',
+    ),
+  };
 
-    return isValidURL
-      ? {
-          validationHelpText: undefined,
-          validated: 'success',
-        }
-      : {
-          validationHelpText: t(
-            'URL must start with https:// or http:// and contain valid hostname and path',
-          ),
-          validated: 'error',
-        };
+  const urlValidationHook: ValidationHookType = (value) => {
+    const trimmedUrl: string = value.toString().trim();
+    const isValidURL = validateURL(trimmedUrl);
+
+    // error
+    if (!isValidURL)
+      return {
+        validationHelpText: helperTextMsgs.error,
+        validated: 'error',
+      };
+
+    // warning
+    if (!trimmedUrl.endsWith('sdk') && !trimmedUrl.endsWith('sdk/'))
+      return {
+        validationHelpText: helperTextMsgs.warning,
+        validated: 'warning',
+      };
+
+    // success
+    return {
+      validationHelpText: helperTextMsgs.success,
+      validated: 'success',
+    };
   };
 
   return (
@@ -37,10 +58,8 @@ export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = (props) 
       label={props?.label || t('URL')}
       model={ProviderModel}
       variant={ModalVariant.large}
-      body={t(
-        'Specify vCenter host name or IP address - if a certificate for FQDN is specified, the value of this field needs to match the FQDN in the certificate.',
-      )}
-      helperText={t('Please enter URL for vSphere REST APIs server.')}
+      body={t('URL of the vCenter SDK endpoint.')}
+      helperText={helperTextMsgs.success}
       onConfirmHook={patchProviderURL}
       validationHook={urlValidationHook}
     />
