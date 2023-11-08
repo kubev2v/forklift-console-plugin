@@ -217,7 +217,9 @@ export function StandardPage<T>({
   const noResults = loaded && !error && flatData.length == 0;
   const noMatchingResults = loaded && !error && filteredData.length === 0 && flatData.length > 0;
 
-  const primaryFilters = fields.filter((field) => field.filter?.primary).map(toFieldFilter);
+  const primaryFilters = fields
+    .filter((field) => field.filter?.primary)
+    .map(toFieldFilter(flatData));
 
   return (
     <>
@@ -246,7 +248,7 @@ export function StandardPage<T>({
               <AttributeValueFilter
                 fieldFilters={fields
                   .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
-                  .map(toFieldFilter)}
+                  .map(toFieldFilter(flatData))}
                 onFilterUpdate={setSelectedFilters}
                 selectedFilters={selectedFilters}
                 supportedFilterTypes={supportedFilters}
@@ -256,7 +258,7 @@ export function StandardPage<T>({
                 <FilterGroup
                   fieldFilters={fields
                     .filter((field) => field.filter?.standalone)
-                    .map(toFieldFilter)}
+                    .map(toFieldFilter(flatData))}
                   onFilterUpdate={setSelectedFilters}
                   selectedFilters={selectedFilters}
                   supportedFilterTypes={supportedFilters}

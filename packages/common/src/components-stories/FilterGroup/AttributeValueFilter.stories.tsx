@@ -91,7 +91,7 @@ export const AttributeValueWithMultipleSelectionTypes: Story = {
       type: ['india', 'japan', 'france'],
       archived: ['true'],
     },
-    fieldFilters: fieldsMetadata.filter((field) => field.filter?.primary).map(toFieldFilter),
+    fieldFilters: fieldsMetadata.filter((field) => field.filter?.primary).map(toFieldFilter()),
     supportedFilterTypes: defaultSupportedFilters,
   },
 };
@@ -107,7 +107,7 @@ export const AttributeValueWithMultipleSelectionTypes: Story = {
 export const AttributeValueWithNoSelectedValues: Story = {
   args: {
     selectedFilters: {},
-    fieldFilters: fieldsMetadata.filter((field) => field.filter?.primary).map(toFieldFilter),
+    fieldFilters: fieldsMetadata.filter((field) => field.filter?.primary).map(toFieldFilter()),
     supportedFilterTypes: defaultSupportedFilters,
   },
 };

@@ -37,7 +37,7 @@ export const GroupedEnumFilter = ({
   selectedFilters: selectedEnumIds = [],
   onFilterUpdate: onSelectedEnumIdsChange,
   supportedValues: supportedEnumValues = [],
-  supportedGroups,
+  supportedGroups = [],
   placeholderLabel,
   showFilter = true,
 }: FilterTypeProps) => {

@@ -22,6 +22,7 @@ export interface FilterDef {
   // by default missing/empty filters result in positive match (vacuous truth)
   defaultValues?: string[];
   helperText?: string | React.ReactNode;
+  dynamicFilter?: (items: unknown[]) => Partial<FilterDef>;
 }
 
 type OpenApiJsonPath = string | ((resourceData: unknown) => unknown);
