@@ -89,7 +89,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
         helpContent={
           <Text>
             {t(
-              `vCenter host name or IP address - if a certificate for FQDN is specified, the value of this field needs to match the FQDN in the certificate.`,
+              `URL of the SDK endpoint of the vCenter on which the source VM is mounted. Ensure that the URL includes the sdk path, usually /sdk. For example, https://vCenter-host-example.com/sdk. If a certificate for FQDN is specified, the value of this field needs to match the FQDN in the certificate.`,
             )}
           </Text>
         }
