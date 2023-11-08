@@ -85,7 +85,7 @@ export const OvirtDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => 
         helpContent={
           <Text>
             {t(
-              `RHV Manager host name or IP address. If a certificate for FQDN is specified, the value of this field needs to match the FQDN in the certificate.`,
+              `URL of the API endpoint of the Red Hat Virtualization Manager (RHVM) on which the source VM is mounted. Ensure that the URL includes the path leading to the RHVM API server, usually /ovirt-engine/api. For example, https://rhv-host-example.com/ovirt-engine/api.`,
             )}
           </Text>
         }
