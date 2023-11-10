@@ -7,6 +7,7 @@ import {
   EnumFilter,
   FreetextFilter,
   GroupedEnumFilter,
+  SearchableGroupedEnumFilter,
   SwitchFilter,
 } from '../Filter';
 
@@ -103,6 +104,11 @@ const groupedEnumMatcher = {
   matchValue: enumMatcher.matchValue,
 };
 
+const searchableGroupedEnumMatcher = {
+  filterType: 'searchableGroupedEnum',
+  matchValue: enumMatcher.matchValue,
+};
+
 const dateMatcher = {
   filterType: 'date',
   matchValue: (value: string) => (filter: string) => areSameDayInUTCZero(value, filter),
@@ -122,6 +128,7 @@ export const defaultValueMatchers: ValueMatcher[] = [
   freetextMatcher,
   enumMatcher,
   groupedEnumMatcher,
+  searchableGroupedEnumMatcher,
   sliderMatcher,
   dateMatcher,
   dateRangeMatcher,
@@ -134,6 +141,7 @@ export const defaultSupportedFilters: Record<string, FilterRenderer> = {
   freetext: FreetextFilter,
   groupedEnum: GroupedEnumFilter,
   slider: SwitchFilter,
+  searchableGroupedEnum: SearchableGroupedEnumFilter,
 };
 
 /**
