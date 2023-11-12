@@ -30,6 +30,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
   helpContent,
   moreInfoLabel,
   moreInfoLink,
+  moreInfoLink2,
   crumbs,
   onEdit,
 }) => {
@@ -41,6 +42,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
           helpContent={helpContent}
           moreInfoLabel={moreInfoLabel}
           moreInfoLink={moreInfoLink}
+          moreInfoLink2={moreInfoLink2}
           crumbs={crumbs}
         />
       ) : (
@@ -65,8 +67,16 @@ export const DescriptionTitleWithHelp: React.FC<{
   helpContent: ReactNode;
   moreInfoLabel?: string;
   moreInfoLink?: string;
+  moreInfoLink2?: string;
   crumbs?: string[];
-}> = ({ title, helpContent, crumbs, moreInfoLabel = 'More info:', moreInfoLink }) => (
+}> = ({
+  title,
+  helpContent,
+  crumbs,
+  moreInfoLabel = 'More info:',
+  moreInfoLink,
+  moreInfoLink2,
+}) => (
   <DescriptionListTermHelpText>
     <Popover
       headerContent={<div>{title}</div>}
@@ -80,6 +90,11 @@ export const DescriptionTitleWithHelp: React.FC<{
               <ExternalLink href={moreInfoLink} isInline hideIcon>
                 <Truncate content={moreInfoLink} />
               </ExternalLink>
+              {moreInfoLink2 && (
+                <ExternalLink href={moreInfoLink2} isInline hideIcon>
+                  <Truncate content={moreInfoLink2} />
+                </ExternalLink>
+              )}
             </FlexItem>
           )}
 
@@ -153,6 +168,7 @@ export type DetailsItemProps = {
   helpContent?: ReactNode;
   moreInfoLabel?: string;
   moreInfoLink?: string;
+  moreInfoLink2?: string;
   crumbs?: string[];
   onEdit?: () => void;
 };
