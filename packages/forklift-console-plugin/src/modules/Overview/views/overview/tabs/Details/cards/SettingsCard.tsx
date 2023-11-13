@@ -9,6 +9,7 @@ import {
 } from 'src/modules/Overview/modal';
 import { ModalHOC, useModal } from 'src/modules/Providers/modals';
 import { DetailsItem } from 'src/modules/Providers/utils';
+import { HELP_LINK_HREF } from 'src/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
@@ -46,7 +47,10 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              HELP_LINK_HREF +
+              (process.env.BRAND_TYPE == 'RedHat'
+                ? '/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+                : '')
             }
             helpContent={
               <Text>
@@ -63,7 +67,10 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
             title={'Must gather cleanup after (hours)'}
             content={mustGatherAPICleanupMaxAge || <span className="text-muted">{'Disabled'}</span>}
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              HELP_LINK_HREF +
+              (process.env.BRAND_TYPE == 'RedHat'
+                ? '/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+                : '')
             }
             helpContent={
               <Text>
@@ -84,7 +91,10 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              HELP_LINK_HREF +
+              (process.env.BRAND_TYPE == 'RedHat'
+                ? '/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+                : '')
             }
             helpContent={
               <Text>
@@ -105,7 +115,10 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              HELP_LINK_HREF +
+              (process.env.BRAND_TYPE == 'RedHat'
+                ? '/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+                : '')
             }
             helpContent={
               <Text>
@@ -126,7 +139,10 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              HELP_LINK_HREF +
+              (process.env.BRAND_TYPE == 'RedHat'
+                ? '/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+                : '')
             }
             helpContent={
               <Text>
@@ -147,7 +163,10 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              HELP_LINK_HREF +
+              (process.env.BRAND_TYPE == 'RedHat'
+                ? '/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+                : '')
             }
             helpContent={
               <Text>

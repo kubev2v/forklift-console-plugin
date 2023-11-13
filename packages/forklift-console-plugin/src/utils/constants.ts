@@ -48,7 +48,10 @@ export const VALIDATED = 'validated';
 export const VM_COUNT = 'vmCount';
 export const VM_DONE = 'vmDone';
 
+export const DOCUMENTATION_VERSION = 2.5;
+
 export const HELP_LINK_HREF =
   process.env.BRAND_TYPE !== 'RedHat'
-    ? 'https://konveyor.github.io/forklift/'
-    : 'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/';
+    ? 'https://github.com/kubev2v/forklift.github.io'
+    : 'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/' +
+      DOCUMENTATION_VERSION;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { EditProviderURLModal, useModal } from 'src/modules/Providers/modals';
+import { HELP_LINK_HREF } from 'src/utils/constants';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -37,7 +38,10 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
           </>
         }
         moreInfoLink={
-          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
+          HELP_LINK_HREF +
+          (process.env.BRAND_TYPE == 'RedHat'
+            ? '/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
+            : '')
         }
         helpContent={
           <Text>
@@ -89,7 +93,10 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
         title={t('URL')}
         content={provider?.spec?.url || <span className="text-muted">{t('Empty')}</span>}
         moreInfoLink={
-          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
+          HELP_LINK_HREF +
+          (process.env.BRAND_TYPE == 'RedHat'
+            ? '/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-source-provider_ova'
+            : '')
         }
         helpContent={
           <Text>
