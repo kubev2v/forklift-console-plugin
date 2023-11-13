@@ -33,7 +33,7 @@ export const OvirtDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => 
         helpContent={
           <Text>
             {t(
-              'Specify the type of source provider. Allowed values are ova, ovirt, vsphere, and openstack. This label is needed to verify the credentials are correct when the remote system is accessible and, for RHV, to retrieve the Manager CA certificate when a third-party certificate is specified.',
+              'Specify the type of source provider. Allowed values are ova, ovirt, vsphere, openshift, and openstack. This label is needed to verify the credentials are correct when the remote system is accessible and, for RHV, to retrieve the Manager CA certificate when a third-party certificate is specified.',
             )}
           </Text>
         }
