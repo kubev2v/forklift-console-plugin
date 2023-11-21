@@ -1,4 +1,5 @@
 // @index(['./*', /__/g], f => `export * from '${f.path}';`)
+export * from './AutocompleteFilter';
 export * from './DateFilter';
 export * from './DateRangeFilter';
 export * from './EnumFilter';
