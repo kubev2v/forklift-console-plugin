@@ -1,5 +1,5 @@
 import { Validation } from '../../types';
-import { validateNoSpaces, validatePublicCert } from '../common';
+import { validateNoSpaces, validatePublicCert, validateUsernameAndDomain } from '../common';
 
 /**
  * Validates form input fields based on their id.
@@ -10,6 +10,7 @@ import { validateNoSpaces, validatePublicCert } from '../common';
  * @return {Validation} - The validation state of the form field. Can be one of the following:
  * 'default' - The default state of the form field, used when the field is empty or a value hasn't been entered yet.
  * 'success' - The field's value has passed validation.
+ * 'warning' - The field's value might fail the validation, but it's not mandatory and not disabling the form saving.
  * 'error' - The field's value has failed validation.
  */
 export const ovirtSecretFieldValidator = (id: string, value: string) => {
@@ -19,7 +20,7 @@ export const ovirtSecretFieldValidator = (id: string, value: string) => {
 
   switch (id) {
     case 'user':
-      validationState = validateUser(trimmedValue) ? 'success' : 'error';
+      validationState = validateUser(trimmedValue);
       break;
     case 'password':
       validationState = validatePassword(trimmedValue) ? 'success' : 'error';
@@ -39,7 +40,11 @@ export const ovirtSecretFieldValidator = (id: string, value: string) => {
 };
 
 const validateUser = (value: string) => {
-  return validateNoSpaces(value);
+  return validateNoSpaces(value)
+    ? validateUsernameAndDomain(value)
+      ? 'success'
+      : 'warning'
+    : 'error';
 };
 
 const validatePassword = (value: string) => {

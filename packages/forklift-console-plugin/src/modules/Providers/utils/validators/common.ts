@@ -90,3 +90,9 @@ export function validateNoSpaces(value: string) {
   // any string without spaces
   return /^[^\s]+$/.test(value);
 }
+
+export function validateUsernameAndDomain(value: string) {
+  // any string without spaces that includes appearance of the at '@' sign
+  // example: user@domain
+  return /^[^\s]+(@+)+[^\s]+$/.test(value);
+}

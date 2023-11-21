@@ -1,8 +1,17 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
+import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ClipboardCopy, ClipboardCopyVariant, Text, TextVariants } from '@patternfly/react-core';
+import { ExternalLink } from '@kubev2v/common';
+import {
+  ClipboardCopy,
+  ClipboardCopyVariant,
+  DescriptionList,
+  Text,
+  TextVariants,
+} from '@patternfly/react-core';
 
 import { MaskedData } from '../../MaskedData';
 import { ListComponentProps } from '../BaseCredentialsSection';
@@ -13,19 +22,50 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
   const items = [];
 
   const fields = {
-    user: { label: t('Username'), description: t('RH Virtualization engine REST API user name.') },
+    user: {
+      label: t('Username'),
+      description: t(
+        'A user name for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the user name is in the format of username@user-domain. For example: admin@internal.',
+      ),
+    },
     password: {
       label: t('Password'),
-      description: t('RH Virtualization engine REST API password credentials.'),
+      description: t(
+        'A user password for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint.',
+      ),
     },
     insecureSkipVerify: {
       label: t('Skip certificate validation'),
-      description: t("If true, the provider's REST API TLS certificate won't be validated."),
+      description: t(
+        "If true (check box is checked), the provider's CA certificate won't be validated.",
+      ),
+      helperTextPopover: (
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Note: If this field is checked/true, the migration from this provider will be insecure.<br><br> Insecure migration means that the transferred data is sent over an insecure connection and potentially sensitive data could be exposed.'
+          }
+        </Trans>
+      ),
     },
     cacert: {
       label: t('CA certificate'),
       description: t(
-        'The CA certificate is the /etc/pki/ovirt-engine/apache-ca.pem file on the Manager machine.',
+        'A CA certificate to be trusted when connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificates, leave the field empty.',
+      ),
+      helperTextPopover: (
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Note: Use the Manager CA certificate unless it was replaced by a third-party certificate, in which case use the Manager Apache CA certificate. <br><br>You can retrieve the Manager CA certificate at:<br>'
+          }
+          <ExternalLink
+            href="https://<rhv-host-example.com>/ovirt-engine/services/pki-resource?resource=ca-certificate&format=X509-PEM-CA"
+            isInline
+            hideIcon
+          >
+            https://&#8249;rhv-host-example.com&#8250;/ovirt-engine/services/pki-resource?resource=ca-certificate&format=X509-PEM-CA
+          </ExternalLink>
+          {' .'}
+        </Trans>
       ),
     },
   };
@@ -38,9 +78,18 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
     items.push(
       <>
         <div className="forklift-page-secret-title-div">
-          <Text component={TextVariants.h6} className="forklift-page-secret-title">
-            {field.label}
-          </Text>
+          <DescriptionList className="forklift-page-secret-title">
+            <DetailsItem
+              title={field.label}
+              helpContent={
+                key === 'insecureSkipVerify' || key === 'cacert' ? (
+                  <Text>{field?.helperTextPopover}</Text>
+                ) : null
+              }
+              showHelpIconNextToTitle={true}
+              content={''}
+            />
+          </DescriptionList>
           <Text component={TextVariants.small} className="forklift-page-secret-subtitle">
             {field.description}
           </Text>
