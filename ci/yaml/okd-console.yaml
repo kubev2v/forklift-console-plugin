@@ -85,6 +85,8 @@ spec:
       - name: console
         image: quay.io/openshift/origin-console:latest
         env:
+        - name: BRIDGE_USER_AUTH
+          value: disabled
         - name: BRIDGE_PLUGINS
           value: forklift-console-plugin=http://forklift-console-plugin.konveyor-forklift.svc.cluster.local:8080
         - name: BRIDGE_PLUGIN_PROXY
