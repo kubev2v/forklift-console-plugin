@@ -79,6 +79,8 @@ spec:
           mountPath: /etc/ssl/certs/forklift-ca.crt
           subPath: ca.crt
         env:
+        - name: BRIDGE_USER_AUTH
+          value: disabled
         - name: BRIDGE_LISTEN
           value: "https://0.0.0.0:9000"
         - name: BRIDGE_TLS_CERT_FILE
