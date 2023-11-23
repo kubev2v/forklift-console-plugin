@@ -15,13 +15,13 @@ export const OvirtEditURLModal: React.FC<EditProviderURLModalProps> = (props) =>
 
   const helperTextMsgs = {
     error: t(
-      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://rhv-host-example.com/ovirt-engine/api',
+      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://rhv-host-example.com/ovirt-engine/api.',
     ),
     warning: t(
-      'Warning: The provided URL does not end with the RHVM API endpoint path: "/ovirt-engine/api". Ensure the URL includes the correct path. For example: https://rhv-host-example.com/ovirt-engine/api',
+      'Warning: The provided URL does not end with the RHVM API endpoint path: "/ovirt-engine/api". Ensure the URL includes the correct path. For example: https://rhv-host-example.com/ovirt-engine/api.',
     ),
     success: t(
-      'Ensure the URL includes the "/ovirt-engine/api" path. For example: https://rhv-host-example.com/ovirt-engine/api',
+      'Ensure the URL includes the "/ovirt-engine/api" path. For example: https://rhv-host-example.com/ovirt-engine/api.',
     ),
   };
 

@@ -21,13 +21,13 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
 
   const helperTextMsgs = {
     error: t(
-      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://vCenter-host-example.com/sdk',
+      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://vCenter-host-example.com/sdk.',
     ),
     warning: t(
-      'Warning: The provided URL does not end with the SDK endpoint path: "/sdk". Ensure the URL includes the correct path. For example: https://vCenter-host-example.com/sdk',
+      'Warning: The provided URL does not end with the SDK endpoint path: "/sdk". Ensure the URL includes the correct path. For example: https://vCenter-host-example.com/sdk.',
     ),
     success: t(
-      'URL of the vCenter SDK endpoint. Ensure the URL includes the "/sdk" path. For example: https://vCenter-host-example.com/sdk',
+      'URL of the vCenter SDK endpoint. Ensure the URL includes the "/sdk" path. For example: https://vCenter-host-example.com/sdk.',
     ),
   };
 
