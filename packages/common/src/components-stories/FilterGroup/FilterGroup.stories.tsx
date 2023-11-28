@@ -90,7 +90,7 @@ export const FilterGroupWithMultipleSelectionTypes: Story = {
       type: ['india', 'japan', 'france'],
       archived: ['true'],
     },
-    fieldFilters: fieldsMetadata.filter((field) => field.filter?.primary).map(toFieldFilter),
+    fieldFilters: fieldsMetadata.filter((field) => field.filter?.primary).map(toFieldFilter()),
     supportedFilterTypes: defaultSupportedFilters,
   },
 };
@@ -106,7 +106,7 @@ export const FilterGroupWithMultipleSelectionTypes: Story = {
 export const FilterGroupWithNoSelectedValues: Story = {
   args: {
     selectedFilters: {},
-    fieldFilters: fieldsMetadata.filter((field) => field.filter?.primary).map(toFieldFilter),
+    fieldFilters: fieldsMetadata.filter((field) => field.filter?.primary).map(toFieldFilter()),
     supportedFilterTypes: defaultSupportedFilters,
   },
 };
