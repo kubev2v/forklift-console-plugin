@@ -44,3 +44,7 @@ export interface FilterTypeProps {
   /** Text that explains how to use the filter. */
   helperText?: string | React.ReactNode;
 }
+
+export interface InlineFilter {
+  hasInlineFilter?: boolean;
+}

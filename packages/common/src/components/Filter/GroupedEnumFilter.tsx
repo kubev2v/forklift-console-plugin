@@ -11,7 +11,7 @@ import {
 
 import { EnumValue } from '../../utils';
 
-import { FilterTypeProps } from './types';
+import { FilterTypeProps, InlineFilter } from './types';
 
 /**
  * This Filter type enables selecting one or many enum values that are separated by groups.
@@ -40,7 +40,8 @@ export const GroupedEnumFilter = ({
   supportedGroups = [],
   placeholderLabel,
   showFilter = true,
-}: FilterTypeProps) => {
+  hasInlineFilter = false,
+}: FilterTypeProps & InlineFilter) => {
   const [isExpanded, setExpanded] = useState(false);
 
   // simplify lookup
@@ -75,6 +76,36 @@ export const GroupedEnumFilter = ({
       groupId,
       compareTo: (option) => option.id === id && option.groupId === groupId,
     } as SelectOptionObject);
+
+  const options = supportedGroups.map(({ label, groupId }) => (
+    <SelectGroup key={groupId} label={label}>
+      {supportedEnumValues
+        .filter((item) => item.groupId === groupId)
+        .map(({ id, label }) => (
+          <SelectOption key={id} value={toSelectOption({ id, label, groupId })} />
+        ))}
+    </SelectGroup>
+  ));
+
+  const onFilter = (_, textInput) => {
+    if (textInput === '') {
+      return options;
+    }
+
+    const filteredGroups = options
+      .map((group) => {
+        const filteredGroup = React.cloneElement(group, {
+          children: group.props.children.filter((item) => {
+            // options are not plain strings but the our toString() method
+            // converts them in a meaningful way
+            return item.props.value.toString().toLowerCase().includes(textInput.toLowerCase());
+          }),
+        });
+        if (filteredGroup.props.children.length > 0) return filteredGroup;
+      })
+      .filter((newGroup) => newGroup);
+    return filteredGroups;
+  };
 
   return (
     <>
@@ -123,16 +154,10 @@ export const GroupedEnumFilter = ({
           placeholderText={placeholderLabel}
           isOpen={isExpanded}
           onToggle={setExpanded}
+          hasInlineFilter={hasInlineFilter}
+          onFilter={onFilter}
         >
-          {supportedGroups.map(({ label, groupId }) => (
-            <SelectGroup key={groupId} label={label}>
-              {supportedEnumValues
-                .filter((item) => item.groupId === groupId)
-                .map(({ id, label }) => (
-                  <SelectOption key={id} value={toSelectOption({ id, label, groupId })} />
-                ))}
-            </SelectGroup>
-          ))}
+          {options}
         </Select>,
       )}
     </>
