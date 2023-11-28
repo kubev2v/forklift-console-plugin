@@ -2,6 +2,7 @@ import jsonpath from 'jsonpath';
 
 import { areSameDayInUTCZero, isInClosedRange, ResourceField } from '../../utils';
 import {
+  AutocompleteFilter,
   DateFilter,
   DateRangeFilter,
   EnumFilter,
@@ -109,6 +110,11 @@ const searchableGroupedEnumMatcher = {
   matchValue: enumMatcher.matchValue,
 };
 
+const autocompleteFilterMatcher = {
+  filterType: 'autocomplete',
+  matchValue: enumMatcher.matchValue,
+};
+
 const dateMatcher = {
   filterType: 'date',
   matchValue: (value: string) => (filter: string) => areSameDayInUTCZero(value, filter),
@@ -125,6 +131,7 @@ const sliderMatcher = {
 };
 
 export const defaultValueMatchers: ValueMatcher[] = [
+  autocompleteFilterMatcher,
   freetextMatcher,
   enumMatcher,
   groupedEnumMatcher,
@@ -142,6 +149,7 @@ export const defaultSupportedFilters: Record<string, FilterRenderer> = {
   groupedEnum: GroupedEnumFilter,
   slider: SwitchFilter,
   searchableGroupedEnum: SearchableGroupedEnumFilter,
+  autocomplete: AutocompleteFilter,
 };
 
 /**
