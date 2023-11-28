@@ -5,11 +5,12 @@ import { ResourceField, RowProps } from '@kubev2v/common';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
-import { VMCellProps, VmData, VMNameCellRenderer } from './components';
+import { VmResourceLinkRenderer } from './components/VmResourceLinkRenderer';
+import { VMCellProps, VmData } from './components';
 import { getVmTemplate } from './utils';
 
 const cellRenderers: Record<string, React.FC<VMCellProps>> = {
-  name: VMNameCellRenderer,
+  name: VmResourceLinkRenderer,
   status: PowerStateCellRenderer,
   template: ({ data }) => <TableCell>{getVmTemplate(data?.vm)}</TableCell>,
 };

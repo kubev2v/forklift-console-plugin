@@ -1,5 +1,6 @@
 import { useProviderInventory, UseProviderInventoryParams } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
+import { isProviderLocalTarget } from 'src/utils/resources';
 
 import { ProviderVirtualMachine } from '@kubev2v/types';
 
@@ -44,6 +45,7 @@ export const useInventoryVms = (
             providerType: provider?.spec?.type,
           } as ProviderVirtualMachine,
           name: vm.name,
+          isProviderLocalTarget: isProviderLocalTarget(validProvider),
         }))
       : [];
 

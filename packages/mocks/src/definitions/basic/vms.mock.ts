@@ -1,6 +1,8 @@
 /* eslint-disable @cspell/spellchecker */
 import { OpenshiftVM, OVirtVM, VSphereVM } from '@kubev2v/types';
 
+import { NAMESPACE_FORKLIFT } from '../utils';
+
 import { MOCK_DISK_ATTACHMENTS } from './disks.mock';
 import { MOCK_NICS } from './nicProfiles.mock';
 import {
@@ -376,7 +378,7 @@ export const MOCK_OPENSHIFT_VMS: { [uid in OpenshiftProviderIDs]: OpenshiftVM[] 
     // source: https://kubevirt.io/user-guide/virtual_machines/templates/
     {
       name: 'rheltinyvm',
-      namespace: '',
+      namespace: NAMESPACE_FORKLIFT,
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/vms/3dcaf3ec-6b51-4ca0-8345-6d61841731d7`,
       uid: '',
       version: '',
@@ -404,6 +406,7 @@ export const MOCK_OPENSHIFT_VMS: { [uid in OpenshiftProviderIDs]: OpenshiftVM[] 
             ['vm.kubevirt.io/template.version']: '0.11.3',
           },
           name: 'rheltinyvm',
+          namespace: NAMESPACE_FORKLIFT,
         },
         spec: {
           dataVolumeTemplates: [
