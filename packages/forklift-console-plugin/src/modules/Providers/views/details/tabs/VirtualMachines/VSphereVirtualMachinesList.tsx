@@ -2,6 +2,7 @@ import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
+import { concernFilter } from './utils/concernFilter';
 import { ProviderVirtualMachinesList, VmData } from './components';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { getVmPowerState } from './utils';
@@ -26,12 +27,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     label: t('Concerns'),
     isVisible: true,
     sortable: true,
-    filter: {
-      type: 'concerns',
-      primary: true,
-      placeholderLabel: t('Concerns'),
-      values: EnumToTuple({ Critical: 'Critical', Warning: 'Warning', Information: 'Information' }),
-    },
+    filter: concernFilter(t),
   },
   {
     resourceFieldId: 'isTemplate',

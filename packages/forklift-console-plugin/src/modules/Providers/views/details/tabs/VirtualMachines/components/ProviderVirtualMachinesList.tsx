@@ -5,10 +5,10 @@ import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  EnumFilter,
   loadUserSettings,
   ResourceFieldFactory,
   RowProps,
+  SearchableGroupedEnumFilter,
   ValueMatcher,
 } from '@kubev2v/common';
 import { Concern } from '@kubev2v/types';
@@ -52,7 +52,7 @@ export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListPr
       title={t('Virtual Machines')}
       userSettings={userSettings}
       extraSupportedFilters={{
-        concerns: EnumFilter,
+        concerns: SearchableGroupedEnumFilter,
       }}
       extraSupportedMatchers={[concernsMatcher]}
     />
@@ -62,5 +62,6 @@ export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListPr
 const concernsMatcher: ValueMatcher = {
   filterType: 'concerns',
   matchValue: (concerns: Concern[]) => (filter: string) =>
-    Array.isArray(concerns) && concerns.some(({ category }) => category === filter),
+    Array.isArray(concerns) &&
+    concerns.some(({ category, label }) => category === filter || label === filter),
 };
