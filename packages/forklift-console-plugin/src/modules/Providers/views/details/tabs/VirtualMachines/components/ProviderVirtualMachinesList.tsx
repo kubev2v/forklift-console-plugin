@@ -5,6 +5,7 @@ import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
+  EnumFilter,
   loadUserSettings,
   ResourceFieldFactory,
   RowProps,
@@ -53,8 +54,9 @@ export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListPr
       userSettings={userSettings}
       extraSupportedFilters={{
         concerns: SearchableGroupedEnumFilter,
+        features: EnumFilter,
       }}
-      extraSupportedMatchers={[concernsMatcher]}
+      extraSupportedMatchers={[concernsMatcher, featuresMatcher]}
     />
   );
 };
@@ -64,4 +66,9 @@ const concernsMatcher: ValueMatcher = {
   matchValue: (concerns: Concern[]) => (filter: string) =>
     Array.isArray(concerns) &&
     concerns.some(({ category, label }) => category === filter || label === filter),
+};
+
+const featuresMatcher: ValueMatcher = {
+  filterType: 'features',
+  matchValue: (features: { [key: string]: boolean }) => (filter: string) => !!features?.[filter],
 };

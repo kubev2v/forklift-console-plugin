@@ -380,7 +380,7 @@ export const MOCK_OPENSHIFT_VMS: { [uid in OpenshiftProviderIDs]: OpenshiftVM[] 
       name: 'rheltinyvm',
       namespace: NAMESPACE_FORKLIFT,
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/vms/3dcaf3ec-6b51-4ca0-8345-6d61841731d7`,
-      uid: '',
+      uid: '3dcaf3ec-6b51-4ca0-8345-6d61841731d7',
       version: '',
       object: {
         kind: 'VirtualMachine',
@@ -407,6 +407,7 @@ export const MOCK_OPENSHIFT_VMS: { [uid in OpenshiftProviderIDs]: OpenshiftVM[] 
           },
           name: 'rheltinyvm',
           namespace: NAMESPACE_FORKLIFT,
+          uid: '3dcaf3ec-6b51-4ca0-8345-6d61841731d7',
         },
         spec: {
           dataVolumeTemplates: [
@@ -494,6 +495,197 @@ export const MOCK_OPENSHIFT_VMS: { [uid in OpenshiftProviderIDs]: OpenshiftVM[] 
         },
       },
       providerType: 'openshift',
+    },
+    {
+      name: 'fedora-rival-catshark',
+      namespace: NAMESPACE_FORKLIFT,
+      selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/vms/029b9890-259e-4ade-b22f-3991c3359062`,
+      uid: '029b9890-259e-4ade-b22f-3991c3359062',
+      version: '',
+      providerType: 'openshift',
+      object: {
+        apiVersion: 'kubevirt.io/v1',
+        kind: 'VirtualMachine',
+        metadata: {
+          annotations: {
+            'kubemacpool.io/transaction-timestamp': '2023-10-01T11:11:12.736465708Z',
+            'kubevirt.io/latest-observed-api-version': 'v1',
+            'kubevirt.io/storage-observed-api-version': 'v1alpha3',
+            'vm.kubevirt.io/validations':
+              '[\n  {\n    "name": "minimal-required-memory",\n    "path": "jsonpath::.spec.domain.resources.requests.memory",\n    "rule": "integer",\n    "message": "This VM requires more memory.",\n    "min": 1073741824\n  }\n]\n',
+          },
+          creationTimestamp: '2023-10-01T07:52:34Z',
+          finalizers: ['kubevirt.io/virtualMachineControllerFinalize'],
+          generation: 5,
+          labels: {
+            app: 'fedora-rival-catshark',
+            'vm.kubevirt.io/template': 'fedora-server-small',
+            'vm.kubevirt.io/template.namespace': 'openshift',
+            'vm.kubevirt.io/template.revision': '1',
+            'vm.kubevirt.io/template.version': 'v0.25.0',
+          },
+          name: 'fedora-rival-catshark',
+          namespace: NAMESPACE_FORKLIFT,
+          resourceVersion: '2002703392',
+          uid: '029b9890-259e-4ade-b22f-3991c3359062',
+        },
+        spec: {
+          dataVolumeTemplates: [
+            {
+              apiVersion: 'cdi.kubevirt.io/v1beta1',
+              kind: 'DataVolume',
+              metadata: {
+                creationTimestamp: null,
+                name: 'fedora-rival-catshark',
+              },
+              spec: {
+                sourceRef: {
+                  kind: 'DataSource',
+                  name: 'fedora',
+                  namespace: 'openshift-virtualization-os-images',
+                },
+                storage: {
+                  resources: {
+                    requests: {
+                      storage: '30Gi',
+                    },
+                  },
+                },
+              },
+            },
+          ],
+          running: false,
+          template: {
+            metadata: {
+              annotations: {
+                'vm.kubevirt.io/flavor': 'small',
+                'vm.kubevirt.io/os': 'fedora',
+                'vm.kubevirt.io/workload': 'server',
+              },
+              creationTimestamp: null,
+              labels: {
+                'kubevirt.io/domain': 'fedora-rival-catshark',
+                'kubevirt.io/size': 'small',
+              },
+            },
+            spec: {
+              domain: {
+                cpu: {
+                  cores: 1,
+                  sockets: 1,
+                  threads: 1,
+                },
+                devices: {
+                  disks: [
+                    {
+                      disk: {
+                        bus: 'virtio',
+                      },
+                      name: 'rootdisk',
+                    },
+                    {
+                      disk: {
+                        bus: 'virtio',
+                      },
+                      name: 'cloudinitdisk',
+                    },
+                  ],
+                  gpus: [
+                    {
+                      deviceName: 'nvidia.com/GM204GL_Tesla_M60',
+                      name: 'gpu1',
+                    },
+                  ],
+                  interfaces: [
+                    {
+                      macAddress: '02:26:19:00:00:70',
+                      masquerade: {},
+                      model: 'virtio',
+                      name: 'default',
+                    },
+                  ],
+                  networkInterfaceMultiqueue: true,
+                  rng: {},
+                },
+                features: {
+                  acpi: {},
+                  smm: {
+                    enabled: true,
+                  },
+                },
+                firmware: {
+                  bootloader: {
+                    efi: {},
+                  },
+                },
+                machine: {
+                  type: 'pc-q35-rhel9.2.0',
+                },
+                resources: {
+                  requests: {
+                    memory: '2Gi',
+                  },
+                },
+              },
+              evictionStrategy: 'LiveMigrate',
+              networks: [
+                {
+                  name: 'default',
+                  pod: {},
+                },
+              ],
+              terminationGracePeriodSeconds: 180,
+              volumes: [
+                {
+                  dataVolume: {
+                    name: 'fedora-rival-catshark',
+                  },
+                  name: 'rootdisk',
+                },
+                {
+                  cloudInitNoCloud: {
+                    userData:
+                      '#cloud-config\nuser: foo\npassword: bar\nchpasswd: { expire: False }',
+                  },
+                  name: 'cloudinitdisk',
+                },
+              ],
+            },
+          },
+        },
+        status: {
+          conditions: [
+            {
+              lastProbeTime: '2023-10-01T11:11:18Z',
+              lastTransitionTime: '2023-10-01T11:11:18Z',
+              message: 'VMI does not exist',
+              reason: 'VMINotExists',
+              status: 'False',
+              type: 'Ready',
+            },
+            {
+              lastProbeTime: null,
+              lastTransitionTime: null,
+              message: 'VMI uses a PCI host devices',
+              reason: 'HostDeviceNotLiveMigratable',
+              status: 'False',
+              type: 'LiveMigratable',
+            },
+          ],
+          printableStatus: 'Stopped',
+          volumeSnapshotStatuses: [
+            {
+              enabled: true,
+              name: 'rootdisk',
+            },
+            {
+              enabled: false,
+              name: 'cloudinitdisk',
+              reason: 'Snapshot is not supported for this volumeSource type [cloudinitdisk]',
+            },
+          ],
+        },
+      },
     },
   ],
 };

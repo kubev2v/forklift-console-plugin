@@ -64,3 +64,5 @@ autoattach
 virt
 multiqueue
 filesystems
+bootloader
+typeahead

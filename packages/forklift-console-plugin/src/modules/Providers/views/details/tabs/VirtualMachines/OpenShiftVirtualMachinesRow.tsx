@@ -6,13 +6,14 @@ import { Td, Tr } from '@patternfly/react-table';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import { VmResourceLinkRenderer } from './components/VmResourceLinkRenderer';
-import { VMCellProps, VmData } from './components';
+import { VMCellProps, VmData, VmFeaturesCell } from './components';
 import { getVmTemplate } from './utils';
 
 const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   name: VmResourceLinkRenderer,
   status: PowerStateCellRenderer,
   template: ({ data }) => <TableCell>{getVmTemplate(data?.vm)}</TableCell>,
+  features: VmFeaturesCell,
 };
 
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
