@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import StandardPage from 'src/components/page/StandardPage';
+import { withIdBasedSelection } from 'src/components/page/withSelection';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -29,6 +29,11 @@ export interface ProviderVirtualMachinesListProps extends RouteComponentProps {
   pageId: string;
 }
 
+const PageWithSelection = withIdBasedSelection<VmData>({
+  toId: (item: VmData) => (item.vm.providerType === 'openshift' ? item.vm.uid : item.vm.id),
+  canSelect: (item: VmData) => !!item,
+});
+
 export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
   obj,
   loaded,
@@ -44,7 +49,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   const [vmData, loading] = useInventoryVms(obj, loaded, loadError);
 
   return (
-    <StandardPage<VmData>
+    <PageWithSelection
       data-testid="vm-list"
       dataSource={[vmData || [], !loading, null]}
       CellMapper={cellMapper}
