@@ -4,7 +4,7 @@ import { ResourceFieldFactory } from '@kubev2v/common';
 
 import { concernFilter } from './utils/concernFilter';
 import { ProviderVirtualMachinesList } from './components';
-import { OvaVirtualMachinesRow } from './OvaVirtualMachinesRow';
+import { OvaVirtualMachinesCells } from './OvaVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
 export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
@@ -51,7 +51,7 @@ export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
     obj={obj}
     loaded={loaded}
     loadError={loadError}
-    rowMapper={OvaVirtualMachinesRow}
+    cellMapper={OvaVirtualMachinesCells}
     fieldsMetadataFactory={ovaVmFieldsMetadataFactory}
     pageId="OvaVirtualMachinesList"
   />

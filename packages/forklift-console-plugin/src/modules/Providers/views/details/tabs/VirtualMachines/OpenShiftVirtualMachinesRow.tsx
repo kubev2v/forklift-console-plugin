@@ -2,7 +2,7 @@ import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
-import { Td, Tr } from '@patternfly/react-table';
+import { Td } from '@patternfly/react-table';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import { VmResourceLinkRenderer } from './components/VmResourceLinkRenderer';
@@ -33,15 +33,15 @@ interface RenderTdProps {
   resourceFields: ResourceField[];
 }
 
-export const OpenShiftVirtualMachinesRow: React.FC<RowProps<VmData>> = ({
+export const OpenShiftVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
   resourceFields,
   resourceData,
 }) => {
   return (
-    <Tr>
+    <>
       {resourceFields?.map(({ resourceFieldId }) =>
         renderTd({ resourceData, resourceFieldId, resourceFields }),
       )}
-    </Tr>
+    </>
   );
 };

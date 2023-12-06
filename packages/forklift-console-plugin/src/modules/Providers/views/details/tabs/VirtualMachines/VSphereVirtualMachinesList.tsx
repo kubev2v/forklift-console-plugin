@@ -6,7 +6,7 @@ import { concernFilter } from './utils/concernFilter';
 import { ProviderVirtualMachinesList, VmData } from './components';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { getVmPowerState } from './utils';
-import { VSphereVirtualMachinesRow } from './VSphereVirtualMachinesRow';
+import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
 export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
@@ -85,7 +85,7 @@ export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> 
     obj={obj}
     loaded={loaded}
     loadError={loadError}
-    rowMapper={VSphereVirtualMachinesRow}
+    cellMapper={VSphereVirtualMachinesCells}
     fieldsMetadataFactory={vSphereVmFieldsMetadataFactory}
     pageId="VSphereVirtualMachinesList"
   />

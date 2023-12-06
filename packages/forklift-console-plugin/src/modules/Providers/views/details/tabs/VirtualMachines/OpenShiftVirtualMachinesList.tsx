@@ -4,7 +4,7 @@ import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
 import { ProviderVirtualMachinesList, VmData } from './components';
-import { OpenShiftVirtualMachinesRow } from './OpenShiftVirtualMachinesRow';
+import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { getOpenShiftFeatureMap, getVmPowerState } from './utils';
 
@@ -70,7 +70,7 @@ export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps
     obj={obj}
     loaded={loaded}
     loadError={loadError}
-    rowMapper={OpenShiftVirtualMachinesRow}
+    cellMapper={OpenShiftVirtualMachinesCells}
     fieldsMetadataFactory={openShiftVmFieldsMetadataFactory}
     pageId="OpenShiftVirtualMachinesList"
   />

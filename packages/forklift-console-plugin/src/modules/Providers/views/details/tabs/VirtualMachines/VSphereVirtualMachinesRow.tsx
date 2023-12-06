@@ -3,7 +3,7 @@ import { TableCell } from 'src/modules/Providers/utils';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
 import { VSphereVM } from '@kubev2v/types';
-import { Td, Tr } from '@patternfly/react-table';
+import { Td } from '@patternfly/react-table';
 
 import {
   PowerStateCellRenderer,
@@ -46,15 +46,15 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   powerState: PowerStateCellRenderer,
 };
 
-export const VSphereVirtualMachinesRow: React.FC<RowProps<VmData>> = ({
+export const VSphereVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
   resourceFields,
   resourceData,
 }) => {
   return (
-    <Tr>
+    <>
       {resourceFields?.map(({ resourceFieldId }) =>
         renderTd({ resourceData, resourceFieldId, resourceFields }),
       )}
-    </Tr>
+    </>
   );
 };

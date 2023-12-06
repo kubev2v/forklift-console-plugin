@@ -3,7 +3,7 @@ import { TableCell } from 'src/modules/Providers/utils';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
 import { OVirtVM } from '@kubev2v/types';
-import { Td, Tr } from '@patternfly/react-table';
+import { Td } from '@patternfly/react-table';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import { VMCellProps, VMConcernsCellRenderer, VMNameCellRenderer } from './components';
@@ -41,15 +41,15 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   description: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.description}</TableCell>,
 };
 
-export const OVirtVirtualMachinesRow: React.FC<RowProps<VmData>> = ({
+export const OVirtVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
   resourceFields,
   resourceData,
 }) => {
   return (
-    <Tr>
+    <>
       {resourceFields?.map(({ resourceFieldId }) =>
         renderTd({ resourceData, resourceFieldId, resourceFields }),
       )}
-    </Tr>
+    </>
   );
 };

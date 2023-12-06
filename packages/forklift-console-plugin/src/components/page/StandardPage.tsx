@@ -4,28 +4,31 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import {
   AttributeValueFilter,
   createMetaMatcher,
+  DEFAULT_PER_PAGE,
+  DefaultHeader,
+  DefaultRow,
   defaultSupportedFilters,
   defaultValueMatchers,
+  ErrorState,
   FilterGroup,
   FilterRenderer,
   GlobalActionToolbarProps,
-  toFieldFilter,
-  useUrlFilters,
-  ValueMatcher,
-} from '@kubev2v/common';
-import {
-  DEFAULT_PER_PAGE,
-  ErrorState,
   Loading,
   NoResultsFound,
   NoResultsMatchFilter,
+  ResourceField,
+  RowProps,
+  TableView,
+  TableViewHeaderProps,
+  toFieldFilter,
   useFields,
   usePagination,
   UserSettings,
+  useSort,
+  useUrlFilters,
+  ValueMatcher,
+  withTr,
 } from '@kubev2v/common';
-import { DefaultHeader, RowProps, TableView, TableViewHeaderProps, useSort } from '@kubev2v/common';
-import { ResourceField } from '@kubev2v/common';
-import { DefaultRow } from '@kubev2v/common';
 import {
   Level,
   LevelItem,
@@ -99,6 +102,12 @@ export interface StandardPageProps<T> {
   RowMapper?: FC<RowProps<T>>;
 
   /**
+   * (optional) Maps entity to a list of cells (without wrapping them in <Tr>).
+   * If present, it is used instead of RowMapper.
+   */
+  CellMapper?: FC<RowProps<T>>;
+
+  /**
    * (optional) Maps field list to table header.
    * Defaults to all visible fields.
    */
@@ -166,6 +175,7 @@ export function StandardPage<T>({
   namespace,
   dataSource: [flatData, loaded, error],
   RowMapper = DefaultRow<T>,
+  CellMapper,
   title,
   addButton,
   fieldsMetadata,
@@ -298,7 +308,7 @@ export function StandardPage<T>({
           entities={showPagination ? pageData : filteredData}
           visibleColumns={fields.filter(({ isVisible, isHidden }) => isVisible && !isHidden)}
           aria-label={title}
-          Row={RowMapper}
+          Row={CellMapper ? withTr(CellMapper) : RowMapper}
           Header={HeaderMapper}
           activeSort={activeSort}
           setActiveSort={setActiveSort}

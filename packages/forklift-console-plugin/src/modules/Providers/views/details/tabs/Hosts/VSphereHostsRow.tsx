@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
-import { Td, Tr } from '@patternfly/react-table';
+import { Td } from '@patternfly/react-table';
 
 import { NameCellRenderer } from './components/NameCellRenderer';
 import { InventoryHostPair } from './utils/helpers';
@@ -12,31 +12,16 @@ import {
   NetworkCellRenderer,
 } from './components';
 
-export const VSphereHostsRow: React.FC<RowProps<InventoryHostPair>> = ({
+export const VSphereHostsCells: React.FC<RowProps<InventoryHostPair>> = ({
   resourceFields,
   resourceData,
-  isSelected,
-  toggleSelect,
-  resourceIndex: rowIndex,
 }) => {
   return (
-    <Tr>
-      {!!toggleSelect && (
-        <Td
-          select={{
-            rowIndex,
-            onSelect: toggleSelect,
-            isSelected,
-            disable:
-              resourceData?.inventory?.networkAdapters === undefined ||
-              resourceData?.inventory?.networkAdapters?.length === 0,
-          }}
-        />
-      )}
+    <>
       {resourceFields?.map(({ resourceFieldId }) =>
         renderTd({ resourceData, resourceFieldId, resourceFields }),
       )}
-    </Tr>
+    </>
   );
 };
 

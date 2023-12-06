@@ -4,7 +4,7 @@ import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
 import { concernFilter } from './utils/concernFilter';
 import { ProviderVirtualMachinesList, VmData } from './components';
-import { OVirtVirtualMachinesRow } from './OVirtVirtualMachinesRow';
+import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { getVmPowerState } from './utils';
 
@@ -97,7 +97,7 @@ export const OVirtVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = 
     obj={obj}
     loaded={loaded}
     loadError={loadError}
-    rowMapper={OVirtVirtualMachinesRow}
+    cellMapper={OVirtVirtualMachinesCells}
     fieldsMetadataFactory={oVirtVmFieldsMetadataFactory}
     pageId="OVirtVirtualMachinesList"
   />
