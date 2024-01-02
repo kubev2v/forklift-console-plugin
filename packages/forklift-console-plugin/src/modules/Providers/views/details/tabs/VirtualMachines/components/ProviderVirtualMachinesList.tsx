@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import StandardPage from 'src/components/page/StandardPage';
 import { ProviderData } from 'src/modules/Providers/utils';
@@ -24,16 +24,16 @@ export interface ProviderVirtualMachinesListProps extends RouteComponentProps {
   name?: string;
   loaded?: boolean;
   loadError?: unknown;
-  rowMapper: React.FunctionComponent<RowProps<VmData>>;
+  cellMapper: FC<RowProps<VmData>>;
   fieldsMetadataFactory: ResourceFieldFactory;
   pageId: string;
 }
 
-export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListProps> = ({
+export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
   obj,
   loaded,
   loadError,
-  rowMapper,
+  cellMapper,
   fieldsMetadataFactory,
   pageId,
 }) => {
@@ -47,7 +47,7 @@ export const ProviderVirtualMachinesList: React.FC<ProviderVirtualMachinesListPr
     <StandardPage<VmData>
       data-testid="vm-list"
       dataSource={[vmData || [], !loading, null]}
-      RowMapper={rowMapper}
+      CellMapper={cellMapper}
       fieldsMetadata={fieldsMetadataFactory(t)}
       namespace={obj?.provider?.metadata?.namespace}
       title={t('Virtual Machines')}

@@ -3,7 +3,7 @@ import { TableCell } from 'src/modules/Providers/utils';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
 import { OvaVM } from '@kubev2v/types';
-import { Td, Tr } from '@patternfly/react-table';
+import { Td } from '@patternfly/react-table';
 
 import { VMCellProps, VMConcernsCellRenderer, VMNameCellRenderer } from './components';
 
@@ -35,15 +35,15 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   ovaPath: ({ data }) => <TableCell>{(data?.vm as OvaVM)?.OvaPath}</TableCell>,
 };
 
-export const OvaVirtualMachinesRow: React.FC<RowProps<VmData>> = ({
+export const OvaVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
   resourceFields,
   resourceData,
 }) => {
   return (
-    <Tr>
+    <>
       {resourceFields?.map(({ resourceFieldId }) =>
         renderTd({ resourceData, resourceFieldId, resourceFields }),
       )}
-    </Tr>
+    </>
   );
 };

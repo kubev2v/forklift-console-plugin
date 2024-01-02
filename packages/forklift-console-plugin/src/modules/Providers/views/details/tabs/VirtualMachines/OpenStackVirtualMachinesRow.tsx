@@ -3,7 +3,7 @@ import { TableCell } from 'src/modules/Providers/utils';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
 import { OpenstackVM } from '@kubev2v/types';
-import { Td, Tr } from '@patternfly/react-table';
+import { Td } from '@patternfly/react-table';
 
 import { VMCellProps, VMConcernsCellRenderer, VmData, VMNameCellRenderer } from './components';
 
@@ -35,15 +35,15 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   flavorID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.flavorID}</TableCell>,
 };
 
-export const OpenStackVirtualMachinesRow: React.FC<RowProps<VmData>> = ({
+export const OpenStackVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
   resourceFields,
   resourceData,
 }) => {
   return (
-    <Tr>
+    <>
       {resourceFields?.map(({ resourceFieldId }) =>
         renderTd({ resourceData, resourceFieldId, resourceFields }),
       )}
-    </Tr>
+    </>
   );
 };

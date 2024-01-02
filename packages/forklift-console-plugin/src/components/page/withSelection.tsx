@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import {
   DefaultHeader,
@@ -6,21 +6,25 @@ import {
   RowProps,
   TableViewHeaderProps,
 } from '@kubev2v/common';
-import { Th } from '@patternfly/react-table';
+import { Td, Th } from '@patternfly/react-table';
 
 import StandardPage, { StandardPageProps } from './StandardPage';
 
-export function withRowSelection<T>({ RowMapper, isSelected, toggleSelectFor }) {
+export function withRowSelection<T>({ CellMapper, isSelected, toggleSelectFor, canSelect }) {
   const Enhanced = (props: RowProps<T>) => (
-    <RowMapper
-      {...props}
-      isSelected={isSelected(props.resourceData)}
-      // the check box will be always visible
-      // with current interface disabling/hiding needs to be implemented at the row mapper level
-      toggleSelect={() => toggleSelectFor([props.resourceData])}
-    />
+    <>
+      <Td
+        select={{
+          rowIndex: props.resourceIndex,
+          onSelect: () => toggleSelectFor([props.resourceData]),
+          isSelected: isSelected(props.resourceData),
+          disable: !canSelect(props.resourceData),
+        }}
+      />
+      <CellMapper {...props} />
+    </>
   );
-  Enhanced.displayName = `${RowMapper.displayName || 'RowMapper'}WithSelection`;
+  Enhanced.displayName = `${CellMapper.displayName || 'CellMapper'}WithSelection`;
   return Enhanced;
 }
 
@@ -55,21 +59,19 @@ export interface IdBasedSelectionProps<T> {
    * @returns true if items can be selected, false otherwise
    */
   canSelect: (item: T) => boolean;
-
-  /**
-   * global toolbar actions
-   */
-  actions: React.FC<GlobalActionToolbarProps<T> & { selectedIds: string[] }>[];
 }
+
+export type GlobalActionWithSelection<T> = GlobalActionToolbarProps<T> & {
+  selectedIds: string[];
+};
 
 /**
  * Adds ID based multi selection to StandardPage component.
  * Contract:
- * 1. provided row mapper renders check boxes when needed
- * 2. IDs provided with toId() function are unique and constant in time
- * 3. check box status at row level does not depend from other rows and  can be calculated from the item via canSelect() function
+ * 1. IDs provided with toId() function are unique and constant in time
+ * 2. check box status at row level does not depend from other rows and  can be calculated from the item via canSelect() function
  */
-export function withIdBasedSelection<T>({ toId, canSelect, actions }: IdBasedSelectionProps<T>) {
+export function withIdBasedSelection<T>({ toId, canSelect }: IdBasedSelectionProps<T>) {
   const Enhanced = (props: StandardPageProps<T>) => {
     const [selectedIds, setSelectedIds]: [string[], (selected: string[]) => void] = useState([]);
     const isSelected = (item: T) => selectedIds.includes(toId(item));
@@ -84,8 +86,9 @@ export function withIdBasedSelection<T>({ toId, canSelect, actions }: IdBasedSel
     return (
       <StandardPage
         {...props}
-        RowMapper={withRowSelection({
-          RowMapper: props.RowMapper,
+        CellMapper={withRowSelection({
+          CellMapper: props.CellMapper,
+          canSelect,
           isSelected,
           toggleSelectFor,
         })}
@@ -95,11 +98,13 @@ export function withIdBasedSelection<T>({ toId, canSelect, actions }: IdBasedSel
           isSelected,
           toggleSelectFor,
         })}
-        GlobalActionToolbarItems={actions.map((Action) => {
-          const ActionWithSelection = (props) => <Action {...{ ...props, selectedIds }} />;
-          ActionWithSelection.displayName = `${Action.displayName || 'Action'}WithSelection`;
-          return ActionWithSelection;
-        })}
+        GlobalActionToolbarItems={props.GlobalActionToolbarItems?.map(
+          (Action: FC<GlobalActionWithSelection<T>>) => {
+            const ActionWithSelection = (props) => <Action {...{ ...props, selectedIds }} />;
+            ActionWithSelection.displayName = `${Action.displayName || 'Action'}WithSelection`;
+            return ActionWithSelection;
+          },
+        )}
       />
     );
   };

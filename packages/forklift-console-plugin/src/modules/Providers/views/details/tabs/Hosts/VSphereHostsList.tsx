@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import StandardPage from 'src/components/page/StandardPage';
-import { withIdBasedSelection } from 'src/components/page/withSelection';
+import { GlobalActionWithSelection, withIdBasedSelection } from 'src/components/page/withSelection';
 import { useProviderInventory } from 'src/modules/Providers/hooks';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -18,7 +18,7 @@ import { Button, ToolbarItem } from '@patternfly/react-core';
 import { VSphereNetworkModal } from './modals/VSphereNetworkModal';
 import { InventoryHostPair, matchHostsToInventory } from './utils/helpers';
 import { ProviderHostsProps } from './ProviderHosts';
-import { VSphereHostsRow } from './VSphereHostsRow';
+import { VSphereHostsCells } from './VSphereHostsRow';
 
 export const hostsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
@@ -60,7 +60,12 @@ export const hostsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const VSphereHostsList: React.FC<ProviderHostsProps> = ({ obj }) => {
+const PageWithSelection = withIdBasedSelection<InventoryHostPair>({
+  toId: (item: InventoryHostPair) => item.inventory.id,
+  canSelect: (item: InventoryHostPair) => item?.inventory?.networkAdapters?.length > 0,
+});
+
+export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
 
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'ProviderHosts' }));
@@ -86,30 +91,26 @@ export const VSphereHostsList: React.FC<ProviderHostsProps> = ({ obj }) => {
 
   const hostsData = matchHostsToInventory(hostsInventory, hosts, provider);
 
-  const Page = permissions?.canPatch
-    ? withIdBasedSelection<InventoryHostPair>({
-        toId: (item: InventoryHostPair) => item.inventory.id,
-        canSelect: (item: InventoryHostPair) => item?.inventory?.networkAdapters?.length > 0,
-        actions: [
-          ({ selectedIds }) => <SelectNetworkBtn {...{ hostsData, provider, selectedIds }} />,
-        ],
-      })
-    : StandardPage<InventoryHostPair>;
+  const Page = permissions?.canPatch ? PageWithSelection : StandardPage<InventoryHostPair>;
+  const actions: FC<GlobalActionWithSelection<InventoryHostPair>>[] = permissions?.canPatch
+    ? [({ selectedIds }) => <SelectNetworkBtn {...{ hostsData, provider, selectedIds }} />]
+    : [];
 
   return (
     <Page
       data-testid="hosts-list"
       dataSource={[hostsData || [], !loading, error]}
-      RowMapper={VSphereHostsRow}
+      CellMapper={VSphereHostsCells}
       fieldsMetadata={hostsFieldsMetadataFactory(t)}
       namespace={namespace}
       title={t('Hosts')}
       userSettings={userSettings}
+      GlobalActionToolbarItems={actions}
     />
   );
 };
 
-const SelectNetworkBtn: React.FC<{
+const SelectNetworkBtn: FC<{
   selectedIds: string[];
   provider: V1beta1Provider;
   hostsData: InventoryHostPair[];

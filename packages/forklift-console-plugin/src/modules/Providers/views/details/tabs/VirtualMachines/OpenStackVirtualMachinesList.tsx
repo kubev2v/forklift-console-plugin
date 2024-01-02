@@ -5,7 +5,7 @@ import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 import { concernFilter } from './utils/concernFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { ProviderVirtualMachinesList, VmData } from './components';
-import { OpenStackVirtualMachinesRow } from './OpenStackVirtualMachinesRow';
+import { OpenStackVirtualMachinesCells } from './OpenStackVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
 export const openStackVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
@@ -113,7 +113,7 @@ export const OpenStackVirtualMachinesList: React.FC<ProviderVirtualMachinesProps
     obj={obj}
     loaded={loaded}
     loadError={loadError}
-    rowMapper={OpenStackVirtualMachinesRow}
+    cellMapper={OpenStackVirtualMachinesCells}
     fieldsMetadataFactory={openStackVmFieldsMetadataFactory}
     pageId="OpenStackVirtualMachinesList"
   />
