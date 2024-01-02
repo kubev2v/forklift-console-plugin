@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from 'react';
+import React, { FC, ReactNode, useMemo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -25,6 +25,7 @@ import {
 } from '@kubev2v/common';
 import { DefaultHeader, RowProps, TableView, TableViewHeaderProps, useSort } from '@kubev2v/common';
 import { ResourceField } from '@kubev2v/common';
+import { DefaultRow } from '@kubev2v/common';
 import {
   Level,
   LevelItem,
@@ -92,15 +93,16 @@ export interface StandardPageProps<T> {
    */
   namespace: string;
   /**
-   * Maps resourceData of type T to a table row.
+   * (optional) Maps resourceData of type T to a table row.
+   * Defaults to rendering values as strings.
    */
-  RowMapper: React.FunctionComponent<RowProps<T>>;
+  RowMapper?: FC<RowProps<T>>;
 
   /**
    * (optional) Maps field list to table header.
    * Defaults to all visible fields.
    */
-  HeaderMapper?: (props: TableViewHeaderProps<T>) => JSX.Element;
+  HeaderMapper?: FC<TableViewHeaderProps<T>>;
 
   /**
    * Filter types that will be used.
@@ -154,7 +156,7 @@ export interface StandardPageProps<T> {
   /**
    * Toolbar items with global actions.
    */
-  GlobalActionToolbarItems?: ((props: GlobalActionToolbarProps<T>) => JSX.Element)[];
+  GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<T>>[];
 }
 
 /**
@@ -163,7 +165,7 @@ export interface StandardPageProps<T> {
 export function StandardPage<T>({
   namespace,
   dataSource: [flatData, loaded, error],
-  RowMapper,
+  RowMapper = DefaultRow<T>,
   title,
   addButton,
   fieldsMetadata,
@@ -174,7 +176,7 @@ export function StandardPage<T>({
   userSettings,
   filterPrefix = '',
   extraSupportedMatchers,
-  HeaderMapper = DefaultHeader,
+  HeaderMapper = DefaultHeader<T>,
   GlobalActionToolbarItems = [],
   alerts,
 }: StandardPageProps<T>) {
