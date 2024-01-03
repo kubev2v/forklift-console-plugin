@@ -129,6 +129,7 @@ async function processHostPair(
         namespace: provider.metadata.namespace,
         labels: {
           createdForResourceType: 'hosts',
+          createdForResource: inventory.id,
         },
         ownerReferences: [
           {
