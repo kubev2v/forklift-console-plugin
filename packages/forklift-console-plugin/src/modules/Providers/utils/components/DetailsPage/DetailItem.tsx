@@ -15,6 +15,7 @@ import {
   Popover,
   Truncate,
 } from '@patternfly/react-core';
+import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
 /**
@@ -28,6 +29,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
   title,
   content,
   helpContent,
+  showHelpIconNextToTitle,
   moreInfoLabel,
   moreInfoLink,
   crumbs,
@@ -39,6 +41,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
         <DescriptionTitleWithHelp
           title={title}
           helpContent={helpContent}
+          showHelpIconNextToTitle={showHelpIconNextToTitle}
           moreInfoLabel={moreInfoLabel}
           moreInfoLink={moreInfoLink}
           crumbs={crumbs}
@@ -63,11 +66,20 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
 export const DescriptionTitleWithHelp: React.FC<{
   title: string;
   helpContent: ReactNode;
+  showHelpIconNextToTitle: boolean;
   moreInfoLabel?: string;
   moreInfoLink?: string;
   crumbs?: string[];
-}> = ({ title, helpContent, crumbs, moreInfoLabel = 'More info:', moreInfoLink }) => (
+}> = ({
+  title,
+  helpContent,
+  showHelpIconNextToTitle = false,
+  crumbs,
+  moreInfoLabel = 'More info:',
+  moreInfoLink,
+}) => (
   <DescriptionListTermHelpText>
+    {showHelpIconNextToTitle ? <label>{title} &nbsp;</label> : null}
     <Popover
       headerContent={<div>{title}</div>}
       bodyContent={
@@ -95,7 +107,17 @@ export const DescriptionTitleWithHelp: React.FC<{
         </Flex>
       }
     >
-      <DescriptionListTermHelpTextButton> {title} </DescriptionListTermHelpTextButton>
+      {showHelpIconNextToTitle ? (
+        <button
+          type="button"
+          onClick={(e) => e.preventDefault()}
+          className="pf-c-form__group-label-help"
+        >
+          <HelpIcon noVerticalAlign />
+        </button>
+      ) : (
+        <DescriptionListTermHelpTextButton> {title} </DescriptionListTermHelpTextButton>
+      )}
     </Popover>
   </DescriptionListTermHelpText>
 );
@@ -144,6 +166,8 @@ export const NonEditableContent: React.FC<{ content: ReactNode }> = ({ content }
  * @property {string} title - The title of the details item.
  * @property {ReactNode} content - The content of the details item.
  * @property {ReactNode} [helpContent] - The content to display in the help popover.
+ * @property {ReactNode} [showHelpIconNextToTitle] - if true, adding a help icon next to the title for displaying the help popover.
+ *    If false, show the default Patternfly dashed line under the title.
  * @property {string[]} [crumbs] - Breadcrumbs for the details item.
  * @property {Function} [onEdit] - Function to be called when the edit button is clicked.
  */
@@ -151,6 +175,7 @@ export type DetailsItemProps = {
   title: string;
   content: ReactNode;
   helpContent?: ReactNode;
+  showHelpIconNextToTitle?: boolean;
   moreInfoLabel?: string;
   moreInfoLink?: string;
   crumbs?: string[];
