@@ -1,25 +1,35 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
-import { groupVersionKindForObj } from 'src/utils/resources';
 
-import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 import { VMCellProps } from './VMCellProps';
-import { VMNameCellRenderer } from './VMNameCellRenderer';
 
-export const VmResourceLinkRenderer: React.FC<VMCellProps> = (props) => {
-  const { name, isProviderLocalTarget, vm } = props.data;
-  if (vm.providerType === 'openshift' && isProviderLocalTarget) {
-    return (
-      <TableCell>
-        <ResourceLink
-          name={name}
-          groupVersionKind={groupVersionKindForObj(vm.object)}
-          namespace={vm.namespace}
-        />
-      </TableCell>
-    );
-  }
+export const withResourceLink = ({
+  toName,
+  toGVK,
+  Component,
+}: {
+  toName: (props: VMCellProps) => string;
+  toGVK: (props: VMCellProps) => K8sGroupVersionKind;
+  Component: FC<VMCellProps>;
+}) => {
+  const Enhanced: FC<VMCellProps> = (props: VMCellProps) => {
+    const { isProviderLocalTarget, vm } = props.data;
+    if (vm.providerType === 'openshift' && isProviderLocalTarget) {
+      return (
+        <TableCell>
+          <ResourceLink
+            name={toName(props)}
+            groupVersionKind={toGVK(props)}
+            namespace={vm.namespace}
+          />
+        </TableCell>
+      );
+    }
 
-  return <VMNameCellRenderer {...props} />;
+    return <Component {...props} />;
+  };
+  Enhanced.displayName = `${Component?.displayName ?? 'Component'}WithResourceLink`;
+  return Enhanced;
 };
