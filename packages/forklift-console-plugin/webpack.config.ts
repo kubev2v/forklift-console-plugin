@@ -158,6 +158,7 @@ const config: WebpackConfiguration & {
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
       'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization',
       'Service-Worker-Allowed': '/', // needed to support MockServiceWorker
+      'Cache-Control': 'no-store', // Jan-4-2024, workaround for a caching bug in bridge
     },
     devMiddleware: {
       writeToDisk: true,
