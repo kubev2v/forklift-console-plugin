@@ -22,6 +22,18 @@ const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
+    resourceFieldId: 'possibly_remote_namespace',
+    jsonPath: '$.vm.object.metadata.namespace',
+    label: t('Namespace'),
+    isVisible: true,
+    isIdentity: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by namespace'),
+    },
+    sortable: true,
+  },
+  {
     resourceFieldId: 'status',
     jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Status'),
