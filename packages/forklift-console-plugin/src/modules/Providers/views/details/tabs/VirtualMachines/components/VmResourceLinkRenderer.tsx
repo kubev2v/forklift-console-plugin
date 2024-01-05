@@ -7,29 +7,27 @@ import { VMCellProps } from './VMCellProps';
 
 export const withResourceLink = ({
   toName,
+  toNamespace,
   toGVK,
-  Component,
 }: {
   toName: (props: VMCellProps) => string;
+  toNamespace: (props: VMCellProps) => string;
   toGVK: (props: VMCellProps) => K8sGroupVersionKind;
-  Component: FC<VMCellProps>;
 }) => {
   const Enhanced: FC<VMCellProps> = (props: VMCellProps) => {
     const { isProviderLocalTarget, vm } = props.data;
-    if (vm.providerType === 'openshift' && isProviderLocalTarget) {
-      return (
-        <TableCell>
-          <ResourceLink
-            name={toName(props)}
-            groupVersionKind={toGVK(props)}
-            namespace={vm.namespace}
-          />
-        </TableCell>
-      );
-    }
-
-    return <Component {...props} />;
+    const isLocal = vm.providerType === 'openshift' && !isProviderLocalTarget;
+    return (
+      <TableCell>
+        <ResourceLink
+          name={toName(props)}
+          groupVersionKind={toGVK(props)}
+          namespace={toNamespace(props)}
+          linkTo={isLocal}
+        />
+      </TableCell>
+    );
   };
-  Enhanced.displayName = `${Component?.displayName ?? 'Component'}WithResourceLink`;
+  Enhanced.displayName = `CellWithResourceLink`;
   return Enhanced;
 };
