@@ -37,7 +37,7 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
           </>
         }
         moreInfoLink={
-          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
+          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
         }
         helpContent={
           <Text>
@@ -89,7 +89,7 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
         title={t('URL')}
         content={provider?.spec?.url || <span className="text-muted">{t('Empty')}</span>}
         moreInfoLink={
-          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.4/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
+          'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers'
         }
         helpContent={
           <Text>
