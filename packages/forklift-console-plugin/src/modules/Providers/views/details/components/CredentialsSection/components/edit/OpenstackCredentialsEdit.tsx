@@ -7,7 +7,7 @@ import {
 } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Checkbox, Divider, FileUpload, Form, FormGroup, Radio } from '@patternfly/react-core';
+import { Divider, FileUpload, Form, FormGroup, Radio, Switch } from '@patternfly/react-core';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
 
@@ -213,14 +213,18 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
       <FormGroup
         label={t('Skip certificate validation')}
         fieldId="insecureSkipVerify"
-        helperText={t("If true, the provider's REST API TLS certificate won't be validated.")}
         validated={state.validation.insecureSkipVerify}
         helperTextInvalid={t('Error: Insecure Skip Verify must be a boolean value.')}
       >
-        <Checkbox
+        <Switch
+          className="forklift-section-secret-edit-switch"
           id="insecureSkipVerify"
           name="insecureSkipVerify"
+          label={t("The provider's REST API TLS certificate won't be validated.")}
+          labelOff={t("The provider's REST API TLS certificate will be validated.")}
+          aria-label={t("If true, the provider's REST API TLS certificate won't be validated.")}
           isChecked={insecureSkipVerify}
+          hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
       </FormGroup>

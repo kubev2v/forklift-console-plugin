@@ -7,7 +7,7 @@ import {
 } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, Checkbox, Divider, Form, FormGroup, TextInput } from '@patternfly/react-core';
+import { Button, Divider, Form, FormGroup, Switch, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 
@@ -140,14 +140,18 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
       <FormGroup
         label={t('Skip certificate validation')}
         fieldId="insecureSkipVerify"
-        helperText={t("If true, the provider's REST API TLS certificate won't be validated.")}
         helperTextInvalid={t('Error: This field must be a boolean.')}
         validated={'default'}
       >
-        <Checkbox
+        <Switch
+          className="forklift-section-secret-edit-switch"
           id="insecureSkipVerify"
           name="insecureSkipVerify"
+          label={t("The provider's REST API TLS certificate won't be validated.")}
+          labelOff={t("The provider's REST API TLS certificate will be validated.")}
+          aria-label={t("The provider's REST API TLS certificate won't be validated.")}
           isChecked={insecureSkipVerify}
+          hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
       </FormGroup>
