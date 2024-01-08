@@ -11,12 +11,12 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { ExternalLink } from '@kubev2v/common';
 import {
   Button,
-  Checkbox,
   Divider,
   FileUpload,
   Form,
   FormGroup,
   Popover,
+  Switch,
   TextInput,
 } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
@@ -56,7 +56,8 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
 
   const insecureSkipVerifyHelperTextMsgs = {
     error: t('Error: this field must be set to a boolean value.'),
-    success: t("If true (check box is checked), the provider's CA certificate won't be validated."),
+    successAndSkipped: t("The provider's CA certificate won't be validated."),
+    successAndNotSkipped: t("The provider's CA certificate will be validated."),
   };
 
   const cacertHelperTextMsgs = {
@@ -71,7 +72,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
   const insecureSkipVerifyHelperTextPopover = (
     <Trans t={t} ns="plugin__forklift-console-plugin">
       {
-        'Note: If this field is checked/true, the migration from this provider will be insecure.<br><br> Insecure migration means that the transferred data is sent over an insecure connection and potentially sensitive data could be exposed.'
+        'Note: If this field is set to true, the migration from this provider will be insecure.<br><br> Insecure migration means that the transferred data is sent over an insecure connection and potentially sensitive data could be exposed.'
       }
     </Trans>
   );
@@ -227,14 +228,18 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           </Popover>
         }
         fieldId="insecureSkipVerify"
-        helperText={insecureSkipVerifyHelperTextMsgs.success}
         validated={state.validation.insecureSkipVerify}
         helperTextInvalid={insecureSkipVerifyHelperTextMsgs.error}
       >
-        <Checkbox
+        <Switch
+          className="forklift-section-secret-edit-switch"
           id="insecureSkipVerify"
           name="insecureSkipVerify"
+          label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
+          labelOff={insecureSkipVerifyHelperTextMsgs.successAndNotSkipped}
+          aria-label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
           isChecked={insecureSkipVerify}
+          hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
       </FormGroup>
