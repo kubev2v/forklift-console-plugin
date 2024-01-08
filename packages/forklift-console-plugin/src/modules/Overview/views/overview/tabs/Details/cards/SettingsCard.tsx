@@ -40,6 +40,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
         >
           <DetailsItem
             title={'Max concurrent virtual machine migrations'}
+            showHelpIconNextToTitle={true}
             content={
               obj?.spec?.['controller_max_vm_inflight'] || (
                 <span className="text-muted">{'20'}</span>
@@ -61,6 +62,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
 
           <DetailsItem
             title={'Must gather cleanup after (hours)'}
+            showHelpIconNextToTitle={true}
             content={mustGatherAPICleanupMaxAge || <span className="text-muted">{'Disabled'}</span>}
             moreInfoLink={
               'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
@@ -78,6 +80,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
 
           <DetailsItem
             title={'Controller main container CPU limit'}
+            showHelpIconNextToTitle={true}
             content={
               obj?.spec?.['controller_container_limits_cpu'] || (
                 <span className="text-muted">{'500m'}</span>
@@ -99,6 +102,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
 
           <DetailsItem
             title={'Controller main container Memory limit'}
+            showHelpIconNextToTitle={true}
             content={
               obj?.spec?.['controller_container_limits_memory'] || (
                 <span className="text-muted">{'800Mi'}</span>
@@ -120,6 +124,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
 
           <DetailsItem
             title={'Precopy interval (minutes)'}
+            showHelpIconNextToTitle={true}
             content={
               obj?.spec?.['controller_precopy_interval'] || (
                 <span className="text-muted">{'60'}</span>
@@ -141,6 +146,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
 
           <DetailsItem
             title={'Snapshot polling interval (seconds)'}
+            showHelpIconNextToTitle={true}
             content={
               obj?.spec?.['controller_snapshot_status_check_rate_seconds'] || (
                 <span className="text-muted">{'10'}</span>
