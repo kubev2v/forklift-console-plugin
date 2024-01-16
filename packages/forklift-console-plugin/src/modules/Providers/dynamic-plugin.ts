@@ -1,6 +1,12 @@
-import { ProviderModel, ProviderModelGroupVersionKind } from '@kubev2v/types';
+import {
+  PlanModel,
+  PlanModelGroupVersionKind,
+  ProviderModel,
+  ProviderModelGroupVersionKind,
+} from '@kubev2v/types';
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import {
+  ContextProvider,
   CreateResource,
   ModelMetadata,
   ResourceDetailsPage,
@@ -13,6 +19,10 @@ export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
   ProvidersListPage: './modules/Providers/views/list/ProvidersListPage',
   ProviderDetailsPage: './modules/Providers/views/details/ProviderDetailsPage',
   ProvidersCreatePage: './modules/Providers/views/create/ProvidersCreatePage',
+  ProvidersCreateVmMigrationContext:
+    './modules/Providers/views/migrate/ProvidersCreateVmMigrationContext',
+  ProvidersCreateVmMigrationPage:
+    './modules/Providers/views/migrate/ProvidersCreateVmMigrationPage',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -69,6 +79,25 @@ export const extensions: EncodedExtension[] = [
       },
       model: ProviderModelGroupVersionKind,
       ...ProviderModel,
+    },
+  } as EncodedExtension<CreateResource>,
+  {
+    type: 'console.context-provider',
+    properties: {
+      provider: { $codeRef: 'ProvidersCreateVmMigrationContext.CreateVmMigrationProvider' },
+      useValueHook: {
+        $codeRef: 'ProvidersCreateVmMigrationContext.useCreateVmMigrationContextValue',
+      },
+    },
+  } as EncodedExtension<ContextProvider>,
+  {
+    type: 'console.resource/create',
+    properties: {
+      component: {
+        $codeRef: 'ProvidersCreateVmMigrationPage',
+      },
+      model: PlanModelGroupVersionKind,
+      ...PlanModel,
     },
   } as EncodedExtension<CreateResource>,
 ];

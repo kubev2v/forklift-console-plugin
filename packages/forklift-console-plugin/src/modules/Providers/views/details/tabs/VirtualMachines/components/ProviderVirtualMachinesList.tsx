@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { withIdBasedSelection } from 'src/components/page/withSelection';
+import { GlobalActionWithSelection, withIdBasedSelection } from 'src/components/page/withSelection';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -16,6 +16,7 @@ import { Concern } from '@kubev2v/types';
 
 import { useInventoryVms } from '../utils/useInventoryVms';
 
+import { MigrationAction } from './MigrationAction';
 import { VmData } from './VMCellProps';
 
 export interface ProviderVirtualMachinesListProps extends RouteComponentProps {
@@ -29,8 +30,10 @@ export interface ProviderVirtualMachinesListProps extends RouteComponentProps {
   pageId: string;
 }
 
+export const toId = (item: VmData) =>
+  item.vm.providerType === 'openshift' ? item.vm.uid : item.vm.id;
 const PageWithSelection = withIdBasedSelection<VmData>({
-  toId: (item: VmData) => (item.vm.providerType === 'openshift' ? item.vm.uid : item.vm.id),
+  toId,
   canSelect: (item: VmData) => !!item,
 });
 
@@ -47,6 +50,16 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   const [userSettings] = useState(() => loadUserSettings({ pageId }));
 
   const [vmData, loading] = useInventoryVms(obj, loaded, loadError);
+  const actions: FC<GlobalActionWithSelection<VmData>>[] = [
+    ({ selectedIds }) => (
+      <MigrationAction
+        {...{
+          provider: obj?.provider,
+          selectedVms: vmData.filter((data) => selectedIds.includes(toId(data))),
+        }}
+      />
+    ),
+  ];
 
   return (
     <PageWithSelection
@@ -62,6 +75,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
         features: EnumFilter,
       }}
       extraSupportedMatchers={[concernsMatcher, featuresMatcher]}
+      GlobalActionToolbarItems={actions}
     />
   );
 };
