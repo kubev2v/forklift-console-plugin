@@ -31,7 +31,7 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { usePausedPollingEffect } from 'legacy/src/common/context';
 import { isSameResource } from 'legacy/src/queries/helpers';
 import { PROVIDER_TYPE_NAMES } from 'legacy/src/common/constants';
-import { isProviderLocalTarget, checkIfOvirtInsecureProvider } from 'legacy/src/common/helpers';
+import { isProviderLocalOpenshift, checkIfOvirtInsecureProvider } from 'legacy/src/common/helpers';
 
 interface IGeneralFormProps {
   form: PlanWizardFormState['general'];
@@ -177,7 +177,7 @@ export const GeneralForm: React.FunctionComponent<IGeneralFormProps> = ({
               !isLocalTargetRequired &&
               nextLocalTargetRequired &&
               form.fields.targetProvider.value &&
-              !isProviderLocalTarget(form.fields.targetProvider.value.object)
+              !isProviderLocalOpenshift(form.fields.targetProvider.value.object)
             ) {
               form.fields.targetProvider.clear();
             }

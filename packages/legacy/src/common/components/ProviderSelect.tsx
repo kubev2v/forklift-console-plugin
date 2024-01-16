@@ -18,7 +18,7 @@ import {
   SelectProps,
 } from '@patternfly/react-core';
 import { ProviderType, PROVIDER_TYPE_NAMES } from '../constants';
-import { getAvailableProviderTypes, hasCondition, isProviderLocalTarget } from '../helpers';
+import { getAvailableProviderTypes, hasCondition, isProviderLocalOpenshift } from '../helpers';
 import { ConditionalTooltip } from './ConditionalTooltip';
 import { QuerySpinnerMode, ResolvedQueries } from './ResolvedQuery';
 
@@ -102,7 +102,8 @@ export const ProviderSelect: React.FunctionComponent<ProviderSelectProps> = ({
     const clusterProvider = option.value;
     const inventoryProvider = getMatchingInventoryProvider(clusterProvider);
 
-    const isProviderRemote = providerRole === 'target' && !isProviderLocalTarget(clusterProvider);
+    const isProviderRemote =
+      providerRole === 'target' && !isProviderLocalOpenshift(clusterProvider);
     const isReady =
       !!inventoryProvider && hasCondition(clusterProvider.status?.conditions || [], 'Ready');
 

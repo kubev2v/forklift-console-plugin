@@ -15,15 +15,14 @@ export const withResourceLink = ({
   toGVK: (props: VMCellProps) => K8sGroupVersionKind;
 }) => {
   const Enhanced: FC<VMCellProps> = (props: VMCellProps) => {
-    const { isProviderLocalTarget, vm } = props.data;
-    const isLocal = vm.providerType === 'openshift' && !isProviderLocalTarget;
+    const { isProviderLocalOpenshift } = props.data;
     return (
       <TableCell>
         <ResourceLink
           name={toName(props)}
           groupVersionKind={toGVK(props)}
           namespace={toNamespace(props)}
-          linkTo={isLocal}
+          linkTo={isProviderLocalOpenshift}
         />
       </TableCell>
     );

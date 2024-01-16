@@ -205,7 +205,7 @@ export function checkIfOvirtInsecureProvider(
 /**
  * Can this provider be considered a local target provider?
  */
-export const isProviderLocalTarget = (provider: IProviderObject): boolean =>
+export const isProviderLocalOpenshift = (provider: IProviderObject): boolean =>
   provider?.spec?.type === 'openshift' && (!provider?.spec?.url || provider?.spec?.url === '');
 
 export const getStorageTitle = (sourceProviderType: ProviderType, cap = false): string => {
