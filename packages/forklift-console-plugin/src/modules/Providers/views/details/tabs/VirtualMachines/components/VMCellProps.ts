@@ -4,7 +4,7 @@ import { ProviderVirtualMachine } from '@kubev2v/types';
 export interface VmData {
   vm: ProviderVirtualMachine;
   name: string;
-  isProviderLocalTarget?: boolean;
+  isProviderLocalOpenshift?: boolean;
 }
 
 export interface VMCellProps {

@@ -19,6 +19,10 @@ export const referenceFor = (group: string, version: string, kind: string) =>
  * @param  {K8sResourceCommon} obj
  */
 export const groupVersionKindForObj = (obj: K8sResourceCommon) => {
+  if (!obj?.apiVersion) {
+    return null;
+  }
+
   const [group, version] = obj.apiVersion.split('/');
   return { group, version, kind: obj.kind };
 };
@@ -73,5 +77,5 @@ export enum ResourceKind {
 /**
  * Can this provider be considered a local target provider?
  */
-export const isProviderLocalTarget = (provider: V1beta1Provider): boolean =>
+export const isProviderLocalOpenshift = (provider: V1beta1Provider): boolean =>
   provider?.spec?.type === 'openshift' && (!provider?.spec?.url || provider?.spec?.url === '');

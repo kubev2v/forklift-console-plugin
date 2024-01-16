@@ -1,5 +1,5 @@
 import { Draft } from 'immer';
-import { isProviderLocalTarget } from 'src/utils/resources';
+import { isProviderLocalOpenshift } from 'src/utils/resources';
 import { v4 as randomId } from 'uuid';
 
 import { V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
@@ -88,7 +88,7 @@ const actions: {
     ) {
       // set the default provider if none is set
       // reset the provider if provider was removed
-      const firstHostProvider = availableProviders.find((p) => isProviderLocalTarget(p));
+      const firstHostProvider = availableProviders.find((p) => isProviderLocalOpenshift(p));
       draft.newPlan.spec.provider.destination =
         firstHostProvider && getObjectRef(firstHostProvider);
       draft.newPlan.spec.targetNamespace = undefined;

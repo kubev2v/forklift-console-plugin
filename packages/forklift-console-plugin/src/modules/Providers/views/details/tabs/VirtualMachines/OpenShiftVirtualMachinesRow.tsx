@@ -1,6 +1,5 @@
 import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
-import { groupVersionKindForObj } from 'src/utils/resources';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
 import { Td } from '@patternfly/react-table';
@@ -13,21 +12,15 @@ import { getVmTemplate } from './utils';
 const toNamespace = ({ data }: VMCellProps) =>
   (data.vm.providerType === 'openshift' && data.vm.object?.metadata?.namespace) || '';
 
-const toGVK = ({ data }) =>
-  (data.vm.providerType === 'openshift' && groupVersionKindForObj(data.vm.object)) || {
-    version: '',
-    kind: '',
-  };
-
 const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   name: withResourceLink({
     toName: ({ data }) => data.name,
     toNamespace,
-    toGVK,
+    toGVK: () => ({ kind: 'VirtualMachine', version: 'v1', group: 'kubevirt.io' }),
   }),
   possibly_remote_namespace: withResourceLink({
     toName: toNamespace,
-    toGVK: () => ({ kind: 'Namespace', version: 'v1', group: 'core' }),
+    toGVK: () => ({ kind: 'Namespace', version: 'v1', group: '' }),
     toNamespace: () => '',
   }),
   status: PowerStateCellRenderer,
