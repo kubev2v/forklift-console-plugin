@@ -1,5 +1,6 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import SectionHeading from 'src/components/headers/SectionHeading';
 import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
 import {
   EditProviderDefaultTransferNetwork,
@@ -17,7 +18,7 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, Label, PageSection, Title } from '@patternfly/react-core';
+import { Button, Label, PageSection } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 interface ProviderNetworksProps extends RouteComponentProps {
@@ -52,9 +53,7 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
   return (
     <div>
       <PageSection>
-        <Title headingLevel="h2" className="co-section-heading">
-          {t('NetworkAttachmentDefinitions')}
-        </Title>
+        <SectionHeading text={t('NetworkAttachmentDefinitions')} />
 
         {permissions.canPatch && (
           <div className="forklift-page-provider-networks-button">

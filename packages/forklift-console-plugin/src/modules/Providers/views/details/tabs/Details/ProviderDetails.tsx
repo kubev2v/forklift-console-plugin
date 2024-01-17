@@ -1,5 +1,6 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { SectionHeading } from 'src/components/headers/SectionHeading';
 import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -11,7 +12,7 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { PageSection, Title } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core';
 
 import { ConditionsSection, DetailsSection, InventorySection } from '../../components';
 
@@ -34,23 +35,17 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
   return (
     <div>
       <PageSection>
-        <Title headingLevel="h2" className="co-section-heading">
-          {t('Provider details')}
-        </Title>
+        <SectionHeading text={t('Provider details')} />
         <DetailsSection data={obj} />
       </PageSection>
 
       <PageSection className="forklift-page-section">
-        <Title headingLevel="h2" className="co-section-heading">
-          {t('Provider inventory')}
-        </Title>
+        <SectionHeading text={t('Provider inventory')} />
         <InventorySection data={obj} />
       </PageSection>
 
       <PageSection className="forklift-page-section">
-        <Title headingLevel="h2" className="co-section-heading">
-          {t('Conditions')}
-        </Title>
+        <SectionHeading text={t('Conditions')} />
         <ConditionsSection conditions={provider?.status?.conditions} />
       </PageSection>
     </div>

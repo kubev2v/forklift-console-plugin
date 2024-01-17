@@ -2,6 +2,7 @@ import React, { useReducer } from 'react';
 import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { Base64 } from 'js-base64';
+import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef, V1beta1Provider, V1Secret } from '@kubev2v/types';
@@ -14,7 +15,6 @@ import {
   HelperText,
   HelperTextItem,
   PageSection,
-  Title,
 } from '@patternfly/react-core';
 
 import { useK8sWatchProviderNames, useToggle } from '../../hooks';
@@ -218,7 +218,7 @@ export const ProvidersCreatePage: React.FC<{
   return (
     <div>
       <PageSection>
-        <Title headingLevel="h2">{t('Create Provider')}</Title>
+        <SectionHeading text={t('Create Provider')} />
 
         <HelperText className="forklift-create-subtitle">
           <HelperTextItem variant="default">
