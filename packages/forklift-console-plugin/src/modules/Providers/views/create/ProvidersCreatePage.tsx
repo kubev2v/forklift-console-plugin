@@ -217,7 +217,7 @@ export const ProvidersCreatePage: React.FC<{
 
   return (
     <div>
-      <PageSection>
+      <PageSection variant="light">
         <SectionHeading text={t('Create Provider')} />
 
         <HelperText className="forklift-create-subtitle">

@@ -58,7 +58,7 @@ const MappingsPage: React.FunctionComponent = () => {
         </Tabs>
       </PageSection>
 
-      <PageSection>
+      <PageSection variant="light">
         <Mappings
           mappingType={MappingType[activeMapType]}
           key={activeMapType.toLowerCase()}

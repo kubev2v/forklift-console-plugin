@@ -27,7 +27,7 @@ export const ProviderCredentials: React.FC<ProviderCredentialsProps> = ({
 
   return (
     <div>
-      <PageSection>
+      <PageSection variant="light">
         <SectionHeading text={t('Credentials')} />
         <CredentialsSection data={obj} loaded={loaded} loadError={loadError} />
       </PageSection>

@@ -73,7 +73,9 @@ export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }>
         actions={<ProviderActionsDropdown data={data} fieldId={''} fields={[]} />}
       >
         {alerts && alerts.length > 0 && (
-          <PageSection className="forklift-page-headings-alerts">{alerts}</PageSection>
+          <PageSection variant="light" className="forklift-page-headings-alerts">
+            {alerts}
+          </PageSection>
         )}
       </PageHeadings>
     </>

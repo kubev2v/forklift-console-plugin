@@ -63,7 +63,7 @@ const ProvidersCreateVmMigrationPage: FC<{
   }
 
   return (
-    <PageSection>
+    <PageSection variant="light">
       <SectionHeading text={t('Create Plan')} />
 
       <PlansCreateForm state={state} dispatch={dispatch} />

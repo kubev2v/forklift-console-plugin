@@ -62,7 +62,9 @@ const HeaderTitleWrapper: React.FC = () => {
         status={<OperatorStatus status={phaseObj.phase} />}
       />
       {inventoryLivelinessError && (
-        <PageSection>{[<InventoryNotReachable key={'inventoryNotReachable'} />]}</PageSection>
+        <PageSection variant="light">
+          {[<InventoryNotReachable key={'inventoryNotReachable'} />]}
+        </PageSection>
       )}
     </>
   );

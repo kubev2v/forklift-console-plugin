@@ -23,7 +23,7 @@ const meta: Meta<typeof TableView> = {
             </LevelItem>
           </Level>
         </PageSection>
-        <PageSection>
+        <PageSection variant="light">
           <Story />
         </PageSection>
       </>

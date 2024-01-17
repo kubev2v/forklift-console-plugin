@@ -138,7 +138,7 @@ export const ProvidersPage: React.FunctionComponent = () => {
           </Tabs>
         )}
       </PageSection>
-      <PageSection>
+      <PageSection variant="light">
         <ResolvedQueries results={allQueries} errorTitles={allErrorTitles} errorsInline={false}>
           {!clusterProvidersQuery.data ||
           !inventoryProvidersQuery.data ||
