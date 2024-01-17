@@ -21,7 +21,7 @@ exports[`empty result set returned, no filters  1`] = `
     </div>
   </section>
   <section
-    class="pf-c-page__main-section"
+    class="pf-c-page__main-section pf-m-light"
   >
     <div
       class="pf-c-toolbar"
@@ -259,7 +259,7 @@ exports[`single entry returned, both filters  1`] = `
     </div>
   </section>
   <section
-    class="pf-c-page__main-section"
+    class="pf-c-page__main-section pf-m-light"
   >
     <div
       class="pf-c-toolbar"
