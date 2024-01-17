@@ -34,17 +34,17 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
 
   return (
     <div>
-      <PageSection>
+      <PageSection variant="light">
         <SectionHeading text={t('Provider details')} />
         <DetailsSection data={obj} />
       </PageSection>
 
-      <PageSection className="forklift-page-section">
+      <PageSection variant="light" className="forklift-page-section">
         <SectionHeading text={t('Provider inventory')} />
         <InventorySection data={obj} />
       </PageSection>
 
-      <PageSection className="forklift-page-section">
+      <PageSection variant="light" className="forklift-page-section">
         <SectionHeading text={t('Conditions')} />
         <ConditionsSection conditions={provider?.status?.conditions} />
       </PageSection>

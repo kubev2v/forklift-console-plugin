@@ -52,7 +52,7 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
 
   return (
     <div>
-      <PageSection>
+      <PageSection variant="light">
         <SectionHeading text={t('NetworkAttachmentDefinitions')} />
 
         {permissions.canPatch && (

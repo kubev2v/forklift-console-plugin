@@ -65,7 +65,7 @@ export const HostsPage: React.FunctionComponent<RouteComponentProps<IHostsMatchP
           </LevelItem>
         </Level>
       </PageSection>
-      <PageSection>
+      <PageSection variant="light">
         <ResolvedQueries
           results={[hostsQuery, providersQuery]}
           errorTitles={['Cannot load hosts', 'Cannot load providers']}

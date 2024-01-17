@@ -243,8 +243,8 @@ export function StandardPage<T>({
           {addButton && <LevelItem>{addButton}</LevelItem>}
         </Level>
       </PageSection>
-      {alerts && <PageSection>{alerts}</PageSection>}
-      <PageSection>
+      {alerts && <PageSection variant="light">{alerts}</PageSection>}
+      <PageSection variant="light">
         <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
           <ToolbarContent>
             <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">

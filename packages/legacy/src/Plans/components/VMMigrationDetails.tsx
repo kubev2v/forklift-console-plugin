@@ -368,7 +368,7 @@ export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps
         </Breadcrumb>
         <Title headingLevel="h1">Migration details by VM</Title>
       </PageSection>
-      <PageSection>
+      <PageSection variant="light">
         <ResolvedQueries
           results={[plansQuery, providersQuery, vmsQuery]}
           errorTitles={['Cannot load plan details', 'Cannot load providers', 'Cannot load VMs']}

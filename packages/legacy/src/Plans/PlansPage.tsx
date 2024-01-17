@@ -37,7 +37,7 @@ export const PlansPage: React.FunctionComponent = () => {
       <PageSection variant="light">
         <Title headingLevel="h1">Migration plans</Title>
       </PageSection>
-      <PageSection>
+      <PageSection variant="light">
         <ResolvedQueries
           results={[
             sufficientProvidersQuery.result,
