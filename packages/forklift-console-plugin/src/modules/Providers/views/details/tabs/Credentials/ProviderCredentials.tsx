@@ -1,11 +1,12 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import SectionHeading from 'src/components/headers/SectionHeading';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { PageSection, Title } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core';
 
 import { CredentialsSection } from '../../components';
 
@@ -27,9 +28,7 @@ export const ProviderCredentials: React.FC<ProviderCredentialsProps> = ({
   return (
     <div>
       <PageSection>
-        <Title headingLevel="h2" className="co-section-heading">
-          {t('Credentials')}
-        </Title>
+        <SectionHeading text={t('Credentials')} />
         <CredentialsSection data={obj} loaded={loaded} loadError={loadError} />
       </PageSection>
     </div>

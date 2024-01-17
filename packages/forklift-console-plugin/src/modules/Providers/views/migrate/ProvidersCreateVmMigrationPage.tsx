@@ -1,11 +1,12 @@
 import React, { FC, useEffect } from 'react';
 import { useHistory } from 'react-router';
+import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { useImmerReducer } from 'use-immer';
 
 import { ProviderModelGroupVersionKind, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, Flex, FlexItem, PageSection, Title } from '@patternfly/react-core';
+import { Button, Flex, FlexItem, PageSection } from '@patternfly/react-core';
 
 import { useToggle } from '../../hooks';
 import { getResourceUrl } from '../../utils';
@@ -63,7 +64,7 @@ const ProvidersCreateVmMigrationPage: FC<{
 
   return (
     <PageSection>
-      <Title headingLevel="h2">{t('Create Plan')}</Title>
+      <SectionHeading text={t('Create Plan')} />
 
       <PlansCreateForm state={state} dispatch={dispatch} />
 
