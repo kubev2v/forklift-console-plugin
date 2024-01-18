@@ -1,9 +1,10 @@
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
-import { HrefNavItem, RoutePage } from '@openshift-console/dynamic-plugin-sdk';
+import { ContextProvider, HrefNavItem, RoutePage } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
   OverviewPage: './modules/Overview/views/overview/OverviewPage',
+  OverviewContextProvider: './modules/Overview/hooks/OverviewContextProvider',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -20,7 +21,6 @@ export const extensions: EncodedExtension[] = [
       required: ['CAN_LIST_NS'],
     },
   } as EncodedExtension<RoutePage>,
-
   {
     type: 'console.navigation/href',
     properties: {
@@ -37,4 +37,13 @@ export const extensions: EncodedExtension[] = [
       required: ['CAN_LIST_NS'],
     },
   } as EncodedExtension<HrefNavItem>,
+  {
+    type: 'console.context-provider',
+    properties: {
+      provider: { $codeRef: 'OverviewContextProvider.CreateOverviewContextProvider' },
+      useValueHook: {
+        $codeRef: 'OverviewContextProvider.useOverviewContext',
+      },
+    },
+  } as EncodedExtension<ContextProvider>,
 ];

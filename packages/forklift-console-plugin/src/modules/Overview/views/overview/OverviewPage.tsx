@@ -9,6 +9,7 @@ import { useK8sWatchForkliftController, useProvidersInventoryIsLive } from '../.
 import { getOperatorPhase } from '../../utils/helpers/getOperatorPhase';
 
 import OperatorStatus from './components/OperatorStatus';
+import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
 import { HeaderTitle } from './components';
 import { ForkliftControllerDetailsTab, ForkliftControllerYAMLTab } from './tabs';
 
@@ -60,6 +61,7 @@ const HeaderTitleWrapper: React.FC = () => {
       <HeaderTitle
         title={t('Migration Toolkit for Virtualization')}
         status={<OperatorStatus status={phaseObj.phase} />}
+        badge={<ShowWelcomeCardButton />}
       />
       {inventoryLivelinessError && (
         <PageSection variant="light">
