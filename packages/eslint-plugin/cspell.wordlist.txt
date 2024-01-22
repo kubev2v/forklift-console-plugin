@@ -67,3 +67,5 @@ filesystems
 bootloader
 typeahead
 immer
+networkattachmentdefinitions
+nicprofiles

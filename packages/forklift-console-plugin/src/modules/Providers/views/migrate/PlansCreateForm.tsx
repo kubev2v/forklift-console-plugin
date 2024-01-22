@@ -4,7 +4,11 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
 
 import { EnumFilter, SearchableGroupedEnumFilter } from '@kubev2v/common';
-import { ProviderModelGroupVersionKind } from '@kubev2v/types';
+import {
+  NetworkMapModelGroupVersionKind,
+  ProviderModelGroupVersionKind,
+  StorageMapModelGroupVersionKind,
+} from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -29,18 +33,38 @@ import {
 import { DetailsItem, getIsTarget } from '../../utils';
 import { concernsMatcher, featuresMatcher, VmData } from '../details';
 
-import { PageAction, setPlanName, setPlanTargetNamespace, setPlanTargetProvider } from './actions';
+import {
+  PageAction,
+  replaceNetworkMapping,
+  replaceStorageMapping,
+  setPlanName,
+  setPlanTargetNamespace,
+  setPlanTargetProvider,
+} from './actions';
 import { EditableDescriptionItem } from './EditableDescriptionItem';
+import { MappingList } from './MappingList';
 import { CreateVmMigrationPageState } from './reducer';
 
 export const PlansCreateForm = ({
   state: {
-    newPlan: plan,
+    underConstruction: { plan, netMap, storageMap },
     validation,
-    selectedVms,
-    vmFieldsFactory: [vmFieldsFactory, RowMapper],
-    availableProviders,
-    availableTargetNamespaces,
+    receivedAsParams: { selectedVms },
+    calculatedOnce: {
+      vmFieldsFactory: [vmFieldsFactory, RowMapper],
+    },
+    existingResources: {
+      providers: availableProviders,
+      targetNamespaces: availableTargetNamespaces,
+    },
+    calculatedPerNamespace: {
+      targetNetworks,
+      targetStorages,
+      sourceNetworks,
+      networkMappings,
+      storageMappings,
+    },
+    flow,
   },
   dispatch,
 }: {
@@ -86,20 +110,20 @@ export const PlansCreateForm = ({
               default: '1Col',
             }}
           >
-            {isNameEdited || validation.name === 'error' ? (
+            {isNameEdited || validation.planName === 'error' ? (
               <Form isWidthLimited>
                 <FormGroup
                   label={t('Plan name')}
                   isRequired
                   fieldId="planName"
-                  validated={validation.name}
+                  validated={validation.planName}
                 >
                   <TextInput
                     isRequired
                     type="text"
                     id="planName"
                     value={plan.metadata.name}
-                    validated={validation.name}
+                    validated={validation.planName}
                     onChange={(value) => dispatch(setPlanName(value?.trim() ?? ''))}
                   />
                 </FormGroup>
@@ -216,6 +240,66 @@ export const PlansCreateForm = ({
                 onEdit={() => setIsTargetNamespaceEdited(true)}
               />
             )}
+            <DescriptionListGroup>
+              <DescriptionListTerm>
+                <span className="forklift-page-editable-description-item">
+                  {t('Network map:')}
+                  <ResourceLink
+                    groupVersionKind={NetworkMapModelGroupVersionKind}
+                    namespace={netMap.metadata?.namespace}
+                    name={netMap.metadata?.name}
+                    className="forklift-page-resource-link-in-description-item"
+                    linkTo={flow.netMapCreated}
+                  />
+                </span>
+              </DescriptionListTerm>
+              <DescriptionListDescription className="forklift-page-mapping-list">
+                <MappingList
+                  addMapping={(newMapping) => dispatch(replaceNetworkMapping({ next: newMapping }))}
+                  replaceMapping={({ current, next }) =>
+                    dispatch(replaceNetworkMapping({ current, next }))
+                  }
+                  deleteMapping={(current) => dispatch(replaceNetworkMapping({ current }))}
+                  availableDestinations={targetNetworks}
+                  sources={sourceNetworks}
+                  mappings={networkMappings}
+                  generalSourcesLabel={t('Other networks present on the source provider ')}
+                  usedSourcesLabel={t('Networks used by the selected VMs')}
+                  noSourcesLabel={t('No networks in this category')}
+                  isDisabled={flow.editingDone}
+                />
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+            <DescriptionListGroup>
+              <DescriptionListTerm>
+                <span className="forklift-page-editable-description-item">
+                  {t('Storage map:')}
+                  <ResourceLink
+                    groupVersionKind={StorageMapModelGroupVersionKind}
+                    namespace={storageMap.metadata?.namespace}
+                    name={storageMap.metadata?.name}
+                    className="forklift-page-resource-link-in-description-item"
+                    linkTo={flow.storageMapCreated}
+                  />
+                </span>
+              </DescriptionListTerm>
+              <DescriptionListDescription className="forklift-page-mapping-list">
+                <MappingList
+                  addMapping={(newMapping) => dispatch(replaceStorageMapping({ next: newMapping }))}
+                  replaceMapping={({ current, next }) =>
+                    dispatch(replaceStorageMapping({ current, next }))
+                  }
+                  deleteMapping={(current) => dispatch(replaceStorageMapping({ current }))}
+                  availableDestinations={targetStorages}
+                  sources={[]}
+                  mappings={storageMappings}
+                  generalSourcesLabel={t('Other storages present on the source provider ')}
+                  usedSourcesLabel={t('Storages used by the selected VMs')}
+                  noSourcesLabel={t('No storages in this category')}
+                  isDisabled={flow.editingDone}
+                />
+              </DescriptionListDescription>
+            </DescriptionListGroup>
           </DescriptionList>
         </DrawerContentBody>
       </DrawerContent>

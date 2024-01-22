@@ -241,7 +241,18 @@ interface V1VirtualMachineInstanceSpec {
     // Defaults to Pod, if no type is specified.
     // NetworkSource `json:",inline"`
     pod?: object;
-    multus?: object;
+    multus?: {
+      // References to a NetworkAttachmentDefinition CRD object. Format:
+      // <networkName>, <namespace>/<networkName>. If namespace is not
+      // specified, VMI namespace is assumed.
+      // NetworkName string `json:"networkName"`
+      networkName: string;
+
+      // Select the default network and add it to the
+      // multus-cni.io/default-network annotation.
+      // Default bool `json:"default,omitempty"`
+      default?: boolean;
+    };
   }[];
 
   // Set DNS policy for the pod.

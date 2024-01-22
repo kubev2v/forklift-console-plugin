@@ -1,4 +1,18 @@
-import { OpenShiftNamespace, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
+import {
+  OpenShiftNamespace,
+  OpenShiftNetworkAttachmentDefinition,
+  OVirtNicProfile,
+  V1beta1NetworkMap,
+  V1beta1Plan,
+  V1beta1Provider,
+} from '@kubev2v/types';
+
+import { InventoryNetwork } from '../../hooks/useNetworks';
+
+import { Mapping } from './MappingList';
+
+export const POD_NETWORK = 'Pod Networking';
+export const DEFAULT_NAMESPACE = 'default';
 
 // action type names
 export const SET_NAME = 'SET_NAME';
@@ -8,6 +22,14 @@ export const SET_TARGET_NAMESPACE = 'SET_TARGET_NAMESPACE';
 export const SET_AVAILABLE_PROVIDERS = 'SET_AVAILABLE_PROVIDERS';
 export const SET_EXISTING_PLANS = 'SET_EXISTING_PLANS';
 export const SET_AVAILABLE_TARGET_NAMESPACES = 'SET_AVAILABLE_TARGET_NAMESPACES';
+export const REPLACE_NETWORK_MAPPING = 'REPLACE_NETWORK_MAPPING';
+export const REPLACE_STORAGE_MAPPING = 'REPLACE_STORAGE_MAPPING';
+export const SET_AVAILABLE_TARGET_NETWORKS = 'SET_AVAILABLE_TARGET_NETWORKS';
+export const SET_AVAILABLE_SOURCE_NETWORKS = 'SET_AVAILABLE_SOURCE_NETWORKS';
+export const SET_NICK_PROFILES = 'SET_NICK_PROFILES';
+export const SET_EXISTING_NET_MAPS = 'SET_EXISTING_NET_MAPS';
+export const START_CREATE = 'START_CREATE';
+export const SET_NET_MAP = 'SET_NET_MAP';
 
 export type CreateVmMigration =
   | typeof SET_NAME
@@ -16,7 +38,15 @@ export type CreateVmMigration =
   | typeof SET_TARGET_NAMESPACE
   | typeof SET_AVAILABLE_PROVIDERS
   | typeof SET_EXISTING_PLANS
-  | typeof SET_AVAILABLE_TARGET_NAMESPACES;
+  | typeof SET_AVAILABLE_TARGET_NAMESPACES
+  | typeof REPLACE_NETWORK_MAPPING
+  | typeof REPLACE_STORAGE_MAPPING
+  | typeof SET_AVAILABLE_TARGET_NETWORKS
+  | typeof SET_AVAILABLE_SOURCE_NETWORKS
+  | typeof SET_NICK_PROFILES
+  | typeof SET_EXISTING_NET_MAPS
+  | typeof START_CREATE
+  | typeof SET_NET_MAP;
 
 export interface PageAction<S, T> {
   type: S;
@@ -43,14 +73,54 @@ export interface PlanTargetNamespace {
 
 export interface PlanAvailableProviders {
   availableProviders: V1beta1Provider[];
+  loading: boolean;
+  error?: Error;
 }
 
 export interface PlanExistingPlans {
   existingPlans: V1beta1Plan[];
+  loading: boolean;
+  error?: Error;
+}
+
+export interface PlanExistingNetMaps {
+  existingNetMaps: V1beta1NetworkMap[];
+  loading: boolean;
+  error?: Error;
 }
 
 export interface PlanAvailableTargetNamespaces {
   availableTargetNamespaces: OpenShiftNamespace[];
+  loading: boolean;
+  error?: Error;
+}
+
+export interface PlanAvailableTargetNetworks {
+  availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[];
+  loading: boolean;
+  error?: Error;
+}
+
+export interface PlanAvailableSourceNetworks {
+  availableSourceNetworks: InventoryNetwork[];
+  loading: boolean;
+  error?: Error;
+}
+
+export interface PlanNickProfiles {
+  nickProfiles: OVirtNicProfile[];
+  loading: boolean;
+  error?: Error;
+}
+
+export interface PlanCrateNetMap {
+  netMap?: V1beta1NetworkMap;
+  error?: Error;
+}
+
+export interface PlanMapping {
+  current?: Mapping;
+  next?: Mapping;
 }
 
 // action creators
@@ -85,25 +155,104 @@ export const setPlanName = (name: string): PageAction<CreateVmMigration, PlanNam
 
 export const setAvailableProviders = (
   availableProviders: V1beta1Provider[],
+  loaded: boolean,
+  error: Error,
 ): PageAction<CreateVmMigration, PlanAvailableProviders> => ({
   type: 'SET_AVAILABLE_PROVIDERS',
   payload: {
-    availableProviders,
+    availableProviders: Array.isArray(availableProviders) ? availableProviders : [],
+    loading: !loaded,
+    error,
   },
 });
 
 export const setExistingPlans = (
   existingPlans: V1beta1Plan[],
+  loaded: boolean,
+  error: Error,
 ): PageAction<CreateVmMigration, PlanExistingPlans> => ({
   type: 'SET_EXISTING_PLANS',
   payload: {
-    existingPlans,
+    existingPlans: Array.isArray(existingPlans) ? existingPlans : [],
+    loading: !loaded,
+    error,
+  },
+});
+
+export const setExistingNetMaps = (
+  existingNetMaps: V1beta1NetworkMap[],
+  loaded: boolean,
+  error: Error,
+): PageAction<CreateVmMigration, PlanExistingNetMaps> => ({
+  type: 'SET_EXISTING_NET_MAPS',
+  payload: {
+    existingNetMaps: Array.isArray(existingNetMaps) ? existingNetMaps : [],
+    loading: !loaded,
+    error,
   },
 });
 
 export const setAvailableTargetNamespaces = (
   availableTargetNamespaces: OpenShiftNamespace[],
+  loading: boolean,
+  error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableTargetNamespaces> => ({
   type: 'SET_AVAILABLE_TARGET_NAMESPACES',
-  payload: { availableTargetNamespaces },
+  payload: { availableTargetNamespaces, loading, error },
+});
+
+export const replaceStorageMapping = ({
+  current,
+  next,
+}: PlanMapping): PageAction<CreateVmMigration, PlanMapping> => ({
+  type: 'REPLACE_STORAGE_MAPPING',
+  payload: { current, next },
+});
+
+export const replaceNetworkMapping = ({
+  current,
+  next,
+}: PlanMapping): PageAction<CreateVmMigration, PlanMapping> => ({
+  type: 'REPLACE_NETWORK_MAPPING',
+  payload: { current, next },
+});
+
+export const setAvailableTargetNetworks = (
+  availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[],
+  loading: boolean,
+  error?: Error,
+): PageAction<CreateVmMigration, PlanAvailableTargetNetworks> => ({
+  type: 'SET_AVAILABLE_TARGET_NETWORKS',
+  payload: { availableTargetNetworks, loading, error },
+});
+
+export const setAvailableSourceNetworks = (
+  availableSourceNetworks: InventoryNetwork[],
+  loading: boolean,
+  error?: Error,
+): PageAction<CreateVmMigration, PlanAvailableSourceNetworks> => ({
+  type: 'SET_AVAILABLE_SOURCE_NETWORKS',
+  payload: { availableSourceNetworks, loading, error },
+});
+
+export const setNicProfiles = (
+  nickProfiles: OVirtNicProfile[],
+  nicProfilesLoading: boolean,
+  nicProfilesError: Error,
+): PageAction<CreateVmMigration, PlanNickProfiles> => ({
+  type: 'SET_NICK_PROFILES',
+  payload: { nickProfiles, loading: nicProfilesLoading, error: nicProfilesError },
+});
+
+export const startCreate = (): PageAction<CreateVmMigration, unknown> => ({
+  type: 'START_CREATE',
+  payload: {},
+});
+
+export const setNetMap = ({
+  netMap,
+  error,
+}: PlanCrateNetMap): PageAction<CreateVmMigration, PlanCrateNetMap> => ({
+  type: 'SET_NET_MAP',
+  payload: { netMap, error },
 });
