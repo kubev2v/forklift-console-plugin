@@ -8,7 +8,7 @@ import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { getOpenShiftFeatureMap, getVmPowerState } from './utils';
 
-const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: 'name',
     jsonPath: '$.name',

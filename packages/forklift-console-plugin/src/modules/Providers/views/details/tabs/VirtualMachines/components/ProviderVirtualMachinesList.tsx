@@ -80,14 +80,14 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   );
 };
 
-const concernsMatcher: ValueMatcher = {
+export const concernsMatcher: ValueMatcher = {
   filterType: 'concerns',
   matchValue: (concerns: Concern[]) => (filter: string) =>
     Array.isArray(concerns) &&
     concerns.some(({ category, label }) => category === filter || label === filter),
 };
 
-const featuresMatcher: ValueMatcher = {
+export const featuresMatcher: ValueMatcher = {
   filterType: 'features',
   matchValue: (features: { [key: string]: boolean }) => (filter: string) => !!features?.[filter],
 };
