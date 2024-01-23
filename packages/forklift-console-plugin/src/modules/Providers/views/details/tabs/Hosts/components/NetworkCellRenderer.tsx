@@ -48,7 +48,7 @@ export const NetworkCellRenderer: React.FC<HostCellProps> = (props) => {
         }
         bodyContent={<div>{hostStatus.message}</div>}
       >
-        <Button variant="link" isInline data-test="popover-status-button">
+        <Button variant="link" isInline data-testid="popover-status-button-host-network">
           {cellContent}
         </Button>
       </Popover>

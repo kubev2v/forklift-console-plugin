@@ -84,7 +84,7 @@ export const ErrorStatusCell: React.FC<CellProps & { t: TFunction }> = ({ t, dat
       bodyContent={bodyContent && <Linkify>{bodyContent}</Linkify>}
       footerContent={footerContent}
     >
-      <Button variant="link" isInline data-test="popover-status-button">
+      <Button variant="link" isInline data-testid="popover-status-button-providers-list">
         <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>
       </Button>
     </Popover>
