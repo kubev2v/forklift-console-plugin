@@ -10,10 +10,19 @@
     padding-bottom: var(--pf-global--spacer--sm);
 }
 
+.forklift-welcome-header {
+  display: flex;
+}
+
 .forklift-welcome__icon {
     max-width: 18rem;
     max-height: 18rem;
     padding-right:  var(--pf-global--spacer--lg);
+  }
+
+  .forklift-welcome-header-badge {
+    min-width: 768px;
+    margin-left: var(--pf-global--spacer--sm);
   }
 
   .forklift-status-migration-running {

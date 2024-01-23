@@ -1,29 +1,97 @@
 import React, { FC } from 'react';
 import { Trans } from 'react-i18next';
 import automationIcon from 'src/modules/Overview/images/automation.svg';
+import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
-import { Card, CardBody, Split, SplitItem, Text, TextVariants } from '@patternfly/react-core';
+import {
+  Card,
+  CardActions,
+  CardBody,
+  CardHeader,
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  Split,
+  SplitItem,
+  Text,
+  TextVariants,
+} from '@patternfly/react-core';
 
 type OverviewCardProps = {
   obj?: V1beta1ForkliftController;
   loaded?: boolean;
   loadError?: unknown;
+  onHide?: () => void;
 };
 
-export const OverviewCard: FC<OverviewCardProps> = () => {
+const hideFromViewDropdownOption = (onHide: () => void, t) => {
+  const hasHideAction = !!onHide;
+
+  return hasHideAction ? (
+    <DropdownItem
+      key="action"
+      component="button"
+      description={t(
+        "You can always bring this welcome card back into view by clicking 'Show the welcome card' in the page heading.",
+      )}
+      onClick={onHide}
+      data-testid="hide"
+      style={{ whiteSpace: 'pre-wrap', width: 280, fontWeight: 'bold' }}
+    >
+      {t('Hide from view')}
+    </DropdownItem>
+  ) : (
+    <DropdownItem />
+  );
+};
+
+export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
   const { t } = useForkliftTranslation();
+  const actionDropdownItem: any[] = [];
+
+  const [menuIsOpen, setMenuIsOpen] = React.useState(false);
+  const onToggle = () => setMenuIsOpen((open) => !open);
+
+  actionDropdownItem.push(hideFromViewDropdownOption(onHide, t));
 
   return (
     <Card>
+      <CardHeader>
+        <CardActions>
+          <Dropdown
+            isOpen={menuIsOpen}
+            isPlain
+            toggle={<KebabToggle onToggle={onToggle} data-testid="actions" />}
+            position="left"
+            dropdownItems={actionDropdownItem}
+          />
+        </CardActions>
+      </CardHeader>
       <CardBody>
         <Split>
           <SplitItem>
             <img src={automationIcon} className="forklift-welcome__icon" />
           </SplitItem>
           <SplitItem>
-            <Text component={TextVariants.h3}>{t('Welcome')}</Text>
+            <div className="forklift-welcome-header">
+              <Text component={TextVariants.h3}>{t('Welcome')}&nbsp;&nbsp;</Text>
+              <DetailsItem
+                title={t('')}
+                helpContent={
+                  <Text>
+                    <Trans t={t} ns="plugin__forklift-console-plugin">
+                      {
+                        'Read this introduction to help you get started with the Migration Toolkit for Virtualization (MTV).<br> <br>Note: This welcome card can be hidden at any time.'
+                      }
+                    </Trans>
+                  </Text>
+                }
+                showHelpIconNextToTitle={true}
+                content={''}
+              />
+            </div>
             <Text className="forklift-welcome-text">
               <Trans t={t} ns="plugin__forklift-console-plugin">
                 Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale to Red

@@ -1,5 +1,6 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { useCreateOverviewContext } from 'src/modules/Overview/hooks/OverviewContextProvider';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { Flex, FlexItem } from '@patternfly/react-core';
@@ -18,13 +19,24 @@ interface ForkliftControllerDetailsTabProps extends RouteComponentProps {
 export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTabProps> = ({
   obj,
 }) => {
+  // Set and use context data for the overview page state
+  const { setData } = useCreateOverviewContext();
+  const { data: { hideWelcomeCardByContext } = {} } = useCreateOverviewContext();
+
   return (
     <div className="co-dashboard-body">
       <Flex>
         <Flex direction={{ default: 'column' }} flex={{ default: 'flex_4' }}>
-          <FlexItem>
-            <OverviewCard obj={obj} />
-          </FlexItem>
+          {!hideWelcomeCardByContext ? (
+            <FlexItem>
+              <OverviewCard
+                obj={obj}
+                onHide={() => {
+                  setData({ hideWelcomeCardByContext: true });
+                }}
+              />
+            </FlexItem>
+          ) : null}
 
           <FlexItem>
             <MigrationsCard obj={obj} />
