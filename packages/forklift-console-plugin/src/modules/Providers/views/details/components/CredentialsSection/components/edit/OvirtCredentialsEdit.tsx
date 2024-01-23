@@ -72,7 +72,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
   const insecureSkipVerifyHelperTextPopover = (
     <Trans t={t} ns="plugin__forklift-console-plugin">
       {
-        'Note: If this field is set to true, the migration from this provider will be insecure.<br><br> Insecure migration means that the transferred data is sent over an insecure connection and potentially sensitive data could be exposed.'
+        "Note: If 'Skip certificate validation' is selected, migrations from this provider will not be secure.<br><br> Insecure migration means that the transferred data is sent over an insecure connection and potentially sensitive data could be exposed."
       }
     </Trans>
   );
