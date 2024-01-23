@@ -6,37 +6,41 @@
     border-top: 1px solid var(--pf-global--BorderColor--100);
 }
 
+.forklift-welcome__flex-text {
+  align-self: normal;
+}
+
 .forklift-welcome-text {
     padding-bottom: var(--pf-global--spacer--sm);
 }
 
-.forklift-welcome-header {
-  display: flex;
+.forklift-welcome__flex-icon {
+  align-self: center;
 }
 
 .forklift-welcome__icon {
-    max-width: 18rem;
-    max-height: 18rem;
-    padding-right:  var(--pf-global--spacer--lg);
-  }
+  max-width: 18rem;
+  max-height: 18rem;
+  padding-right:  var(--pf-global--spacer--lg);
+}
 
-  .forklift-welcome-header-badge {
-    min-width: 768px;
-    margin-left: var(--pf-global--spacer--sm);
-  }
+.forklift-welcome-header-badge {
+  min-width: 768px;
+  margin-left: var(--pf-global--spacer--sm);
+}
 
-  .forklift-status-migration-running {
-    color: var(--pf-global--info-color--100);
-  }
+.forklift-status-migration-running {
+  color: var(--pf-global--info-color--100);
+}
 
-  .forklift-status-migration-failed {
-    color: var(--pf-global--danger-color--100);
-  }
+.forklift-status-migration-failed {
+  color: var(--pf-global--danger-color--100);
+}
 
-  .forklift-status-migration-succeeded {
-    color: var(--pf-global--success-color--100);
-  }
+.forklift-status-migration-succeeded {
+  color: var(--pf-global--success-color--100);
+}
 
-  .forklift-status-migration {
-    padding-right: var(--pf-global--spacer--xl);
-  }
+.forklift-status-migration {
+  padding-right: var(--pf-global--spacer--xl);
+}

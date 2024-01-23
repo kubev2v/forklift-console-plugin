@@ -9,13 +9,13 @@ import {
   CardActions,
   CardBody,
   CardHeader,
+  CardTitle,
   Dropdown,
   DropdownItem,
   KebabToggle,
   Split,
   SplitItem,
   Text,
-  TextVariants,
 } from '@patternfly/react-core';
 
 type OverviewCardProps = {
@@ -57,26 +57,24 @@ export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardActions>
-          <Dropdown
-            isOpen={menuIsOpen}
-            isPlain
-            toggle={<KebabToggle onToggle={onToggle} data-testid="actions" />}
-            position="left"
-            dropdownItems={actionDropdownItem}
-          />
-        </CardActions>
-      </CardHeader>
-      <CardBody>
-        <Split>
-          <SplitItem>
-            <img src={automationIcon} className="forklift-welcome__icon" />
-          </SplitItem>
-          <SplitItem>
-            <div className="forklift-welcome-header">
-              <Text component={TextVariants.h3}>{t('Welcome')}&nbsp;&nbsp;</Text>
-            </div>
+      <Split>
+        <SplitItem className="forklift-welcome__flex-icon">
+          <img src={automationIcon} className="forklift-welcome__icon" />
+        </SplitItem>
+        <SplitItem className="forklift-welcome__flex-text">
+          <CardHeader>
+            <CardActions>
+              <Dropdown
+                isOpen={menuIsOpen}
+                isPlain
+                toggle={<KebabToggle onToggle={onToggle} data-testid="actions" />}
+                position="left"
+                dropdownItems={actionDropdownItem}
+              />
+            </CardActions>
+            <CardTitle>{t('Welcome')}</CardTitle>
+          </CardHeader>
+          <CardBody>
             <Text className="forklift-welcome-text">
               <Trans t={t} ns="plugin__forklift-console-plugin">
                 Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale to Red
@@ -98,9 +96,9 @@ export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
                 creating a choreographed plan, and finally, executing the migration effort.
               </Trans>
             </Text>
-          </SplitItem>
-        </Split>
-      </CardBody>
+          </CardBody>
+        </SplitItem>
+      </Split>
     </Card>
   );
 };
