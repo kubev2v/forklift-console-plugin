@@ -19,10 +19,7 @@ export const ShowWelcomeCardButton: React.FC = () => {
       onClick={() => {
         setData({ hideWelcomeCardByContext: false });
       }}
-      onClose={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-      }}
+      onClose={() => null}
       style={{ cursor: 'pointer' }}
       data-testid="show-welcome-card"
     >
