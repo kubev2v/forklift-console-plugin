@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { Trans } from 'react-i18next';
 import automationIcon from 'src/modules/Overview/images/automation.svg';
-import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
@@ -77,20 +76,6 @@ export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
           <SplitItem>
             <div className="forklift-welcome-header">
               <Text component={TextVariants.h3}>{t('Welcome')}&nbsp;&nbsp;</Text>
-              <DetailsItem
-                title={t('')}
-                helpContent={
-                  <Text>
-                    <Trans t={t} ns="plugin__forklift-console-plugin">
-                      {
-                        'Read this introduction to help you get started with the Migration Toolkit for Virtualization (MTV).<br> <br>Note: This welcome card can be hidden at any time.'
-                      }
-                    </Trans>
-                  </Text>
-                }
-                showHelpIconNextToTitle={true}
-                content={''}
-              />
             </div>
             <Text className="forklift-welcome-text">
               <Trans t={t} ns="plugin__forklift-console-plugin">
