@@ -48,12 +48,10 @@ const hideFromViewDropdownOption = (onHide: () => void, t) => {
 
 export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
   const { t } = useForkliftTranslation();
-  const actionDropdownItem: any[] = [];
-
   const [menuIsOpen, setMenuIsOpen] = React.useState(false);
-  const onToggle = () => setMenuIsOpen((open) => !open);
 
-  actionDropdownItem.push(hideFromViewDropdownOption(onHide, t));
+  const actionDropdownItems = [hideFromViewDropdownOption(onHide, t)];
+  const onToggle = () => setMenuIsOpen((open) => !open);
 
   return (
     <Card>
@@ -68,8 +66,8 @@ export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
                 isOpen={menuIsOpen}
                 isPlain
                 toggle={<KebabToggle onToggle={onToggle} data-testid="actions" />}
-                position="left"
-                dropdownItems={actionDropdownItem}
+                position="right"
+                dropdownItems={actionDropdownItems}
               />
             </CardActions>
             <CardTitle>{t('Welcome')}</CardTitle>
