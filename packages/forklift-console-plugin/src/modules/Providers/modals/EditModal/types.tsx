@@ -36,7 +36,7 @@ export interface EditModalProps {
   InputComponent?: ModalInputComponentType;
 
   /** Optional. Helper text that provides additional hints to the user, printed in grayed text under the input field. */
-  helperText?: string;
+  helperText?: string | React.JSX.Element;
 
   /** Optional. The URL to which the user will be redirected after the confirmation action. */
   redirectTo?: string;
@@ -75,7 +75,7 @@ export type ModalInputComponentType = React.FC<{
  * and 'validated' which indicates the status of the validation and is of type ValidationResults.
  */
 export type ValidationHookType = (value: string | number) => {
-  validationHelpText: string;
+  validationHelpText: string | React.JSX.Element;
   validated: ValidationResults;
 };
 

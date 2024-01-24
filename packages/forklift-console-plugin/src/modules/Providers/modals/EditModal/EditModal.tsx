@@ -69,7 +69,7 @@ export const EditModal: React.FC<EditModalProps> = ({
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
   const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath) as string);
   const [validation, setValidation] = useState<{
-    helperText: string;
+    helperText: string | React.JSX.Element;
     validated: ValidationResults;
   }>({ helperText: '', validated: undefined });
 

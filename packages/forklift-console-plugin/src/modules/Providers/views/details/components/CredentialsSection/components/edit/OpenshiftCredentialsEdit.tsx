@@ -1,4 +1,5 @@
 import React, { useCallback, useReducer } from 'react';
+import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
 import {
   openshiftSecretFieldValidator,
@@ -18,10 +19,41 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
   const token = safeBase64Decode(secret?.data?.token || '');
 
+  const tokenHelperTextMsgs = {
+    error: (
+      <span className="forklift-page-provider-field-error-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            '<br>Error: The format of the provided token is invalid. Ensure the token is a valid kubernetes service account token.'
+          }
+        </Trans>
+      </span>
+    ),
+    success: (
+      <span className="forklift-page-provider-field-success-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            '<br>A service account token with cluster admin privileges, required for authenticating the connection to the API server.<br>If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
+          }
+        </Trans>
+      </span>
+    ),
+    default: (
+      <span className="forklift-page-provider-field-default-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            '<br>A service account token with cluster admin privileges, required for authenticating the connection to the API server.<br>If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
+          }
+        </Trans>
+      </span>
+    ),
+  };
+
   const initialState = {
     passwordHidden: true,
     validation: {
       token: 'default' as Validation,
+      tokenHelperText: tokenHelperTextMsgs.default,
     },
   };
 
@@ -50,6 +82,20 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
       const validationState = openshiftSecretFieldValidator(id, value);
       dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
+      switch (id) {
+        case 'token':
+          dispatch({
+            type: 'SET_FIELD_VALIDATED',
+            payload: {
+              field: 'tokenHelperText',
+              validationState: tokenHelperTextMsgs[validationState],
+            },
+          });
+          break;
+        default:
+          break;
+      }
+
       // don't trim fields that allow spaces
       const encodedValue = ['cacert'].includes(id)
         ? Base64.encode(value)
@@ -71,13 +117,9 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         label={t('Service account bearer token')}
         isRequired
         fieldId="token"
-        helperText={t(
-          'User or service account bearer token for service accounts or user authentication.',
-        )}
+        helperText={state.validation.tokenHelperText}
         validated={state.validation.token}
-        helperTextInvalid={t(
-          'Error: token is a required field, the token must be a valid kubernetes token.',
-        )}
+        helperTextInvalid={state.validation.tokenHelperText}
       >
         <TextInput
           className="pf-u-w-75"
