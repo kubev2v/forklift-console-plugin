@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import {
   EditProviderDefaultTransferNetwork,
   EditProviderURLModal,
@@ -97,7 +98,11 @@ export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data })
         }
         helpContent={
           <Text>
-            {t(`OpenShift cluster API endpoint. Empty may be used for the host provider.`)}
+            <Trans t={t} ns="plugin__forklift-console-plugin">
+              {
+                'URL of the Openshift Virtualization API endpoint.<br>If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
+              }
+            </Trans>
           </Text>
         }
         crumbs={['Provider', 'spec', 'url']}

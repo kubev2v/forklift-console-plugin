@@ -2,3 +2,17 @@
   margin: 0;
   padding-bottom: var(--pf-global--spacer--md);
 }
+
+.forklift-edit-modal-field-error-validation {
+  color: var(--pf-v5-global--danger-color--100);
+  font-size: small;
+}
+
+.forklift-edit-modal-field-success-validation {
+  color: var(--pf-v5-global--success-color--100);
+  font-size: small;
+}
+
+.forklift-edit-modal-field-default-validation {
+  font-size: small;
+}
