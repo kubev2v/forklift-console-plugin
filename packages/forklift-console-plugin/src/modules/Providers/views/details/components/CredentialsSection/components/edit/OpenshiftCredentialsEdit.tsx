@@ -21,31 +21,31 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
   const tokenHelperTextMsgs = {
     error: (
-      <span className="forklift-page-provider-field-error-validation">
+      <div className="forklift-page-provider-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           {
-            '<br>Error: The format of the provided token is invalid. Ensure the token is a valid kubernetes service account token.'
+            'Error: The format of the provided token is invalid. Ensure the token is a valid Kubernetes service account token.'
           }
         </Trans>
-      </span>
+      </div>
     ),
     success: (
-      <span className="forklift-page-provider-field-success-validation">
+      <div className="forklift-page-provider-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           {
-            '<br>A service account token with cluster admin privileges, required for authenticating the connection to the API server.<br>If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
+            'A service account token with cluster admin privileges, required for authenticating the connection to the API server.'
           }
         </Trans>
-      </span>
+      </div>
     ),
     default: (
-      <span className="forklift-page-provider-field-default-validation">
+      <div className="forklift-page-provider-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           {
-            '<br>A service account token with cluster admin privileges, required for authenticating the connection to the API server.<br>If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
+            'A service account token with cluster admin privileges, required for authenticating the connection to the API server.'
           }
         </Trans>
-      </span>
+      </div>
     ),
   };
 

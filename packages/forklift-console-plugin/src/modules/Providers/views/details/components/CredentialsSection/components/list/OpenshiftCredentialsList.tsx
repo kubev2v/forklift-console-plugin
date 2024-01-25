@@ -20,7 +20,7 @@ export const OpenshiftCredentialsList: React.FC<ListComponentProps> = ({ secret,
         <span className="forklift-page-provider-field-default-validation">
           <Trans t={t} ns="plugin__forklift-console-plugin">
             {
-              '<br>A service account token with cluster admin privileges, required for authenticating the connection to the API server.'
+              'A service account token with cluster admin privileges, required for authenticating the connection to the API server.'
             }
           </Trans>
         </span>
