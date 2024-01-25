@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import { EditProviderURLModal, useModal } from 'src/modules/Providers/modals';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -93,9 +94,16 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
         }
         helpContent={
           <Text>
-            {t(
-              'NFS mount end point should be in the form NFS_SERVER:EXPORTED_DIRECTORY, for example: 10.10.0.10:/ova',
-            )}
+            <Trans t={t} ns="plugin__forklift-console-plugin">
+              URL of the NFS file share that serves the OVA.{'<br><br>'}
+              Ensure the URL is in the following format: {'<strong>'}nfs_server:/nfs_path
+              {'</strong>'}, where:{'<br>'}
+              {'<strong>'}nfs_server:{'</strong>'} An IP or hostname of the server where the share
+              was created.{'<br>'}
+              {'<strong>'}nfs_path: {'</strong>'} The path on the server where the OVA files are
+              stored.{'<br>'}
+              For example: {'<strong>'}10.10.0.10:/ova{'</strong>'} .
+            </Trans>
           </Text>
         }
         crumbs={['Provider', 'spec', 'url']}
