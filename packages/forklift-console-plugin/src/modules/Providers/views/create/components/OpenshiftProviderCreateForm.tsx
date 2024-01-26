@@ -3,7 +3,6 @@ import { Trans } from 'react-i18next';
 import { validateURL, Validation } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
 import { Form, FormGroup, TextInput } from '@patternfly/react-core';
 
@@ -24,13 +23,9 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
     error: (
       <span className="forklift--create-provider-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and optionally a port. For example: '
-          }
-          <ExternalLink href="https://api.<your-openshift-domain>:6443" isInline hideIcon>
-            https://api.&#8249;your-openshift-domain&#8250;:6443
-          </ExternalLink>
-          {' .'}
+          Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
+          domain name, and, optionally, a port. For example: {'<strong>'}
+          https://api.&#8249;your-openshift-domain&#8250;:6443{'</strong>'}.
         </Trans>
       </span>
     ),
@@ -38,7 +33,7 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
       <span className="forklift--create-provider-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           {
-            'URL of the Openshift Virtualization API endpoint.<br>If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
+            'URL of the Openshift Virtualization API endpoint. If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
           }
         </Trans>
       </span>
@@ -47,7 +42,7 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
       <span className="forklift--create-provider-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           {
-            'URL of the Openshift Virtualization API endpoint.<br>If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
+            'URL of the Openshift Virtualization API endpoint. If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
           }
         </Trans>
       </span>

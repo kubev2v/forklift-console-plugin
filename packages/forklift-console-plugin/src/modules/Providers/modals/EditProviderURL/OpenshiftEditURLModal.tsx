@@ -2,7 +2,6 @@ import React from 'react';
 import { Trans } from 'react-i18next';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from '@kubev2v/common';
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
@@ -19,13 +18,9 @@ export const OpenshiftEditURLModal: React.FC<EditProviderURLModalProps> = (props
     error: (
       <span className="forklift-edit-modal-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and optionally a port. For example: '
-          }
-          <ExternalLink href="https://api.<your-openshift-domain>:6443" isInline hideIcon>
-            https://api.&#8249;your-openshift-domain&#8250;:6443
-          </ExternalLink>
-          {' .'}
+          Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
+          domain name, and, optionally, a port. For example: {'<strong>'}
+          https://api.&#8249;your-openshift-domain&#8250;:6443{'</strong>'}.
         </Trans>
       </span>
     ),
