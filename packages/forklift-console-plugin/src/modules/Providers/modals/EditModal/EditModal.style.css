@@ -4,12 +4,12 @@
 }
 
 .forklift-edit-modal-field-error-validation {
-  color: var(--pf-v5-global--danger-color--100);
+  color: var(--pf-c-form__helper-text--m-error--Color);
   font-size: small;
 }
 
 .forklift-edit-modal-field-success-validation {
-  color: var(--pf-v5-global--success-color--100);
+  color: var(--pf-c-form__helper-text--m-success--Color);
   font-size: small;
 }
 

@@ -1,4 +1,5 @@
 import React, { useCallback, useReducer } from 'react';
+import { Trans } from 'react-i18next';
 import { validateNFSMount, Validation } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -18,9 +19,40 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
 
   const url = provider?.spec?.url || '';
 
+  const helperTextMsgs = {
+    error: (
+      <span className="forklift--create-provider-field-error-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          Error: The format of the provided URL is invalid. Ensure the URL is in the following
+          format: {'<strong>'}ip_or_hostname_of_nfs_server:/nfs_path{'</strong>'}. For example:{' '}
+          {'<strong>'}10.10.0.10:/ova{'</strong>'} .
+        </Trans>
+      </span>
+    ),
+    success: (
+      <span className="forklift--create-provider-field-success-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          URL of the NFS file share that serves the OVA. Ensure the URL is in the following format:{' '}
+          {'<strong>'}ip_or_hostname_of_nfs_server:/nfs_path{'</strong>'}. For example: {'<strong>'}
+          10.10.0.10:/ova{'</strong>'} .
+        </Trans>
+      </span>
+    ),
+    default: (
+      <span className="forklift--create-provider-field-default-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          URL of the NFS file share that serves the OVA. Ensure the URL is in the following format:{' '}
+          {'<strong>'}ip_or_hostname_of_nfs_server:/nfs_path{'</strong>'}. For example: {'<strong>'}
+          10.10.0.10:/ova{'</strong>'} .
+        </Trans>
+      </span>
+    ),
+  };
+
   const initialState = {
     validation: {
       url: 'default' as Validation,
+      urlHelperText: helperTextMsgs.default,
     },
   };
 
@@ -50,6 +82,14 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
 
         dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
+        dispatch({
+          type: 'SET_FIELD_VALIDATED',
+          payload: {
+            field: 'urlHelperText',
+            validationState: helperTextMsgs[validationState],
+          },
+        });
+
         onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
       }
     },
@@ -61,11 +101,9 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
       <FormGroup
         label={t('URL')}
         fieldId="url"
-        helperText={t('Please enter OVA server end point.')}
         validated={state.validation.url}
-        helperTextInvalid={t(
-          'Error: NFS mount end point should be in the form NFS_SERVER:EXPORTED_DIRECTORY, for example: 10.10.0.10:/ova.',
-        )}
+        helperText={state.validation.urlHelperText}
+        helperTextInvalid={state.validation.urlHelperText}
       >
         <TextInput
           type="text"
