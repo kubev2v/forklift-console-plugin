@@ -21,31 +21,31 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
 
   const helperTextMsgs = {
     error: (
-      <span className="forklift--create-provider-field-error-validation">
+      <div className="forklift--create-provider-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           Error: The format of the provided URL is invalid. Ensure the URL is in the following
           format: {'<strong>'}ip_or_hostname_of_nfs_server:/nfs_path{'</strong>'}. For example:{' '}
           {'<strong>'}10.10.0.10:/ova{'</strong>'} .
         </Trans>
-      </span>
+      </div>
     ),
     success: (
-      <span className="forklift--create-provider-field-success-validation">
+      <div className="forklift--create-provider-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           URL of the NFS file share that serves the OVA. Ensure the URL is in the following format:{' '}
           {'<strong>'}ip_or_hostname_of_nfs_server:/nfs_path{'</strong>'}. For example: {'<strong>'}
           10.10.0.10:/ova{'</strong>'} .
         </Trans>
-      </span>
+      </div>
     ),
     default: (
-      <span className="forklift--create-provider-field-default-validation">
+      <div className="forklift--create-provider-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           URL of the NFS file share that serves the OVA. Ensure the URL is in the following format:{' '}
           {'<strong>'}ip_or_hostname_of_nfs_server:/nfs_path{'</strong>'}. For example: {'<strong>'}
           10.10.0.10:/ova{'</strong>'} .
         </Trans>
-      </span>
+      </div>
     ),
   };
 
