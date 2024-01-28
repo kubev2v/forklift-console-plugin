@@ -17,13 +17,13 @@ export const OpenshiftCredentialsList: React.FC<ListComponentProps> = ({ secret,
     token: {
       label: t('Service account bearer token'),
       description: (
-        <span className="forklift-page-provider-field-default-validation">
+        <div className="forklift-page-provider-field-default-validation">
           <Trans t={t} ns="plugin__forklift-console-plugin">
             {
               'A service account token with cluster admin privileges, required for authenticating the connection to the API server.'
             }
           </Trans>
-        </span>
+        </div>
       ),
     },
   };

@@ -21,31 +21,31 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
 
   const helperTextMsgs = {
     error: (
-      <span className="forklift--create-provider-field-error-validation">
+      <div className="forklift--create-provider-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
           domain name, and, optionally, a port. For example: {'<strong>'}
           https://api.&#8249;your-openshift-domain&#8250;:6443{'</strong>'}.
         </Trans>
-      </span>
+      </div>
     ),
     success: (
-      <span className="forklift--create-provider-field-success-validation">
+      <div className="forklift--create-provider-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           {
             'URL of the Openshift Virtualization API endpoint. If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
           }
         </Trans>
-      </span>
+      </div>
     ),
     default: (
-      <span className="forklift--create-provider-field-default-validation">
+      <div className="forklift--create-provider-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           {
             'URL of the Openshift Virtualization API endpoint. If both <strong>URL</strong> and <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster is used.'
           }
         </Trans>
-      </span>
+      </div>
     ),
   };
 
