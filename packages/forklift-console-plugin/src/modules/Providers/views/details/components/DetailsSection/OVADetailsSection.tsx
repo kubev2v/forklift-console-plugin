@@ -93,7 +93,7 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
           <Text>
             <Trans t={t} ns="plugin__forklift-console-plugin">
               URL of the NFS file share that serves the OVA.{'<br><br>'}
-              The URL should be in the following format: {'<strong>'}nfs_server:/nfs_path
+              The URL must be in the following format: {'<strong>'}nfs_server:/nfs_path
               {'</strong>'}, where:{'<br>'}
               {'<strong>'}nfs_server:{'</strong>'} An IP or hostname of the server where the share
               was created.{'<br>'}
