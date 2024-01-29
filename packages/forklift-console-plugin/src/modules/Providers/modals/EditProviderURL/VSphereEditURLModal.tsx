@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
@@ -14,14 +15,41 @@ export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = (props) 
   const { t } = useForkliftTranslation();
 
   const helperTextMsgs = {
-    error: t(
-      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://vCenter-host-example.com/sdk.',
+    error: (
+      <div className="forklift-edit-modal-field-error-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
+          }
+        </Trans>
+      </div>
     ),
-    warning: t(
-      'Warning: The provided URL does not end with the SDK endpoint path: "/sdk". Ensure the URL includes the correct path. For example: https://vCenter-host-example.com/sdk.',
+    warning: (
+      <div className="forklift--edit-modal-field-warning-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Warning: The provided URL does not end with the SDK endpoint path: <strong>"/sdk"</strong>. Ensure the URL includes the correct path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
+          }
+        </Trans>
+      </div>
     ),
-    success: t(
-      'Ensure the URL includes the "/sdk" path. For example: https://vCenter-host-example.com/sdk.',
+    success: (
+      <div className="forklift-edit-modal-field-success-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Ensure the URL includes the <strong>"/sdk"</strong> path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
+          }
+        </Trans>
+      </div>
+    ),
+    default: (
+      <div className="forklift-edit-modal-field-default-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Ensure the URL includes the <strong>"/sdk"</strong> path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
+          }
+        </Trans>
+      </div>
     ),
   };
 
@@ -58,8 +86,8 @@ export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = (props) 
       label={props?.label || t('URL')}
       model={ProviderModel}
       variant={ModalVariant.large}
-      body={t('URL of the vCenter SDK endpoint.')}
-      helperText={helperTextMsgs.success}
+      body={t('URL of the vCenter API endpoint.')}
+      helperText={helperTextMsgs.default}
       onConfirmHook={patchProviderURL}
       validationHook={urlValidationHook}
     />

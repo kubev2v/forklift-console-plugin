@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import {
   EditProviderURLModal,
   EditProviderVDDKImage,
@@ -88,9 +89,11 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
         }
         helpContent={
           <Text>
-            {t(
-              `URL of the SDK endpoint of the vCenter on which the source VM is mounted. Ensure that the URL includes the sdk path, usually /sdk. For example, https://vCenter-host-example.com/sdk. If a certificate for FQDN is specified, the value of this field needs to match the FQDN in the certificate.`,
-            )}
+            <Trans t={t} ns="plugin__forklift-console-plugin">
+              {
+                'URL of the API endpoint of the vCenter on which the source VM is mounted. Ensure that the URL includes the sdk path, usually <strong>/sdk</strong>. For example, <strong>https://vCenter-host-example.com/sdk</strong>. If a certificate for FQDN is specified, the value of this field needs to match the FQDN in the certificate.'
+              }
+            </Trans>
           </Text>
         }
         crumbs={['Provider', 'spec', 'url']}
@@ -141,7 +144,17 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
         moreInfoLink={
           'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv'
         }
-        helpContent={<Text>{t(`Specify the VDDK image that you created.`)}</Text>}
+        helpContent={
+          <Text>
+            <Trans t={t} ns="plugin__forklift-console-plugin">
+              Virtual Disk Development Kit (VDDK) container init image path. The path must be empty
+              or a valid container image path in the format of {'<strong>'}
+              registry_route_or_server_path/vddk:&#8249;tag&#8250;{'</strong>'}. For example:{' '}
+              {'<strong>'}quay.io/kubev2v/example:latest{'</strong>'}. It is strongly recommended to
+              specify a VDDK init image to accelerate migrations.
+            </Trans>
+          </Text>
+        }
         crumbs={['Provider', 'spec', 'settings', 'vddkInitImage']}
         onEdit={canEdit && (() => showModal(<EditProviderVDDKImage resource={provider} />))}
       />
