@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel, ProviderModelRef } from '@kubev2v/types';
@@ -23,10 +22,21 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
   return [
     <DropdownItem
       key="EditProvider"
-      component={<Link to={providerURL}>{t('Edit Provider')}</Link>}
-    />,
+      description={t('View and edit provider details.')}
+      href={providerURL}
+    >
+      {t('Edit Provider')}
+    </DropdownItem>,
+    <DropdownItem
+      key="EditCredentials"
+      description={t('Edit the provider credential secret.')}
+      href={`${providerURL}/credentials`}
+    >
+      {t('Edit Provider Credentials')}
+    </DropdownItem>,
     <DropdownItem
       key="delete"
+      description={t('Delete the provider resource.')}
       isDisabled={!data?.permissions?.canDelete}
       onClick={() => showModal(<DeleteModal resource={provider} model={ProviderModel} />)}
     >
