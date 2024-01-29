@@ -9,6 +9,12 @@
   padding-top: var(--pf-c-form__helper-text--MarginTop);
 }
 
+.forklift--edit-modal-field-warning-validation {
+  color: var(--pf-c-form__helper-text--m-warning--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
+
 .forklift-edit-modal-field-success-validation {
   color: var(--pf-c-form__helper-text--m-success--Color);
   font-size: small;

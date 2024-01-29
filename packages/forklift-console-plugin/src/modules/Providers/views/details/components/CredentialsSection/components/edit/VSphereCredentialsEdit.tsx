@@ -1,4 +1,5 @@
 import React, { useCallback, useReducer } from 'react';
+import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
 import {
   safeBase64Decode,
@@ -21,10 +22,57 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
   const thumbprint = safeBase64Decode(secret?.data?.thumbprint || '');
   const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
 
+  const usernameHelperTextMsgs = {
+    error: (
+      <div className="forklift-page-provider-field-error-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            "Error: The format of the provided user name is invalid. Ensure the user name doesn't include whitespace characters."
+          }
+        </Trans>
+      </div>
+    ),
+    warning: (
+      <div className="forklift-page-provider-field-warning-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Warning: The provided user name does not include the user domain. Ensure the user name is in the format of <strong>username@user-domain</strong>. For example: <strong>user@vsphere.local</strong> .'
+          }
+        </Trans>
+      </div>
+    ),
+    success: (
+      <div className="forklift-page-provider-field-success-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'A user name for connecting to the vCenter API endpoint. Ensure the user name is in the format of <strong>username@user-domain</strong>. For example: <strong>user@vsphere.local</strong> .'
+          }
+        </Trans>
+      </div>
+    ),
+    default: (
+      <div className="forklift-page-provider-field-default-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'A user name for connecting to the vCenter API endpoint. Ensure the user name is in the format of <strong>username@user-domain</strong>. For example: <strong>user@vsphere.local</strong> .'
+          }
+        </Trans>
+      </div>
+    ),
+  };
+
+  const passwordHelperTextMsgs = {
+    error: t(
+      "Error: The format of the provided user password is invalid. Ensure the user password doesn't include whitespace characters.",
+    ),
+    success: t('A user password for connecting to the vCenter API endpoint.'),
+  };
+
   const initialState = {
     passwordHidden: true,
     validation: {
       user: 'default' as Validation,
+      userHelperText: usernameHelperTextMsgs.default,
       password: 'default' as Validation,
       thumbprint: 'default' as Validation,
     },
@@ -54,6 +102,21 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
       const validationState = vsphereSecretFieldValidator(id, value);
       dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
+      // The 'warning' validation state is currently supported only for the 'username' field.
+      switch (id) {
+        case 'user':
+          dispatch({
+            type: 'SET_FIELD_VALIDATED',
+            payload: {
+              field: 'userHelperText',
+              validationState: usernameHelperTextMsgs[validationState],
+            },
+          });
+          break;
+        default:
+          break;
+      }
+
       // don't trim fields that allow spaces
       const encodedValue = ['cacert'].includes(id)
         ? Base64.encode(value)
@@ -74,8 +137,8 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
         label={t('Username')}
         isRequired
         fieldId="username"
-        helperText={t('vSphere REST API user name.')}
-        helperTextInvalid={t('Error: Username is required and must be valid.')}
+        helperText={state.validation.userHelperText}
+        helperTextInvalid={state.validation.userHelperText}
         validated={state.validation.user}
       >
         <TextInput
@@ -92,8 +155,8 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
         label={t('Password')}
         isRequired
         fieldId="password"
-        helperText={t('vSphere REST API password credentials.')}
-        helperTextInvalid={t('Error: Password is required and must be valid.')}
+        helperText={passwordHelperTextMsgs.success}
+        helperTextInvalid={passwordHelperTextMsgs.error}
         validated={state.validation.password}
       >
         <TextInput

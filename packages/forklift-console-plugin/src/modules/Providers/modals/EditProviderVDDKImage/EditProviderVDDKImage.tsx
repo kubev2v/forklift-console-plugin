@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
@@ -56,19 +57,44 @@ export type EditProviderVDDKImageProps = Modify<
 const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => {
   const { t } = useForkliftTranslation();
 
+  const vddkHelperTextMsgs = {
+    error: (
+      <div className="forklift-edit-modal-field-error-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          Error: The format of the provided VDDK init image is invalid. Ensure the path is a valid
+          container image path. For example: {'<strong>'}quay.io/kubev2v/vddk:latest{'</strong>'}.
+        </Trans>
+      </div>
+    ),
+    success: (
+      <div className="forklift-edit-modal-field-success-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          The path must be empty or a valid container image path. For example: {'<strong>'}
+          quay.io/kubev2v/vddk:latest{'</strong>'}.
+        </Trans>
+      </div>
+    ),
+    default: (
+      <div className="forklift-edit-modal-field-default-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          The path must be empty or a valid container image path. For example: {'<strong>'}
+          quay.io/kubev2v/vddk:latest{'</strong>'}.
+        </Trans>
+      </div>
+    ),
+  };
+
   const imageValidationHook: ValidationHookType = (value) => {
     const trimmedValue = value.toString().trim();
     const isValidImage = trimmedValue === '' || validateContainerImage(value.toString().trim());
 
     return isValidImage
       ? {
-          validationHelpText: undefined,
+          validationHelpText: vddkHelperTextMsgs.success,
           validated: 'success',
         }
       : {
-          validationHelpText: t(
-            'VDDK init image must be a valid container image, for example quay.io/kubev2v/example:latest',
-          ),
+          validationHelpText: vddkHelperTextMsgs.error,
           validated: 'error',
         };
   };
@@ -80,9 +106,14 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
       title={props?.title || t('Edit VDDK init image')}
       label={props?.label || t('VDDK init image')}
       model={ProviderModel}
-      body={t(
-        'Specify the VDDK image that you created. VDDK accelerates migrations significantly.',
-      )}
+      body={
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Virtual Disk Development Kit (VDDK) container init image path.<br><br>Note: It is strongly recommended to specify a VDDK init image to accelerate migrations.'
+          }
+        </Trans>
+      }
+      helperText={vddkHelperTextMsgs.default}
       validationHook={imageValidationHook}
       onConfirmHook={onConfirm}
     />

@@ -1,5 +1,5 @@
 import { Validation } from '../../types';
-import { validateFingerprint, validateNoSpaces } from '../common';
+import { validateFingerprint, validateNoSpaces, validateUsernameAndDomain } from '../common';
 
 /**
  * Validates form input fields based on their id.
@@ -11,6 +11,7 @@ import { validateFingerprint, validateNoSpaces } from '../common';
  * 'default' - The default state of the form field, used when the field is empty or a value hasn't been entered yet.
  * 'success' - The field's value has passed validation.
  * 'error' - The field's value has failed validation.
+ * 'warning' - The field's value might fail the validation, but it's not mandatory and not disabling the form saving.
  */
 export const vsphereSecretFieldValidator = (id: string, value: string) => {
   const trimmedValue = value.trim();
@@ -19,7 +20,7 @@ export const vsphereSecretFieldValidator = (id: string, value: string) => {
 
   switch (id) {
     case 'user':
-      validationState = validateUser(trimmedValue) ? 'success' : 'error';
+      validationState = validateUser(trimmedValue);
       break;
     case 'password':
       validationState = validatePassword(trimmedValue) ? 'success' : 'error';
@@ -39,7 +40,11 @@ export const vsphereSecretFieldValidator = (id: string, value: string) => {
 };
 
 const validateUser = (value: string) => {
-  return validateNoSpaces(value);
+  return validateNoSpaces(value)
+    ? validateUsernameAndDomain(value)
+      ? 'success'
+      : 'warning'
+    : 'error';
 };
 
 const validatePassword = (value: string) => {

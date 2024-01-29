@@ -20,6 +20,12 @@
     padding-top: var(--pf-c-form__helper-text--MarginTop);
   }
 
+  .forklift-page-provider-field-warning-validation {
+    color: var(--pf-c-form__helper-text--m-warning--Color);
+    font-size: small;
+    padding-top: var(--pf-c-form__helper-text--MarginTop);
+  }
+
   .forklift-page-provider-field-success-validation {
     color: var(--pf-c-form__helper-text--m-success--Color);
     font-size: small;

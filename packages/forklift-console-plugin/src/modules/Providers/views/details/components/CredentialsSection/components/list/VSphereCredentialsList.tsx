@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -13,8 +14,22 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
   const items = [];
 
   const fields = {
-    user: { label: t('Username'), description: t('vSphere REST API user name.') },
-    password: { label: t('Password'), description: t('vSphere REST API password credentials.') },
+    user: {
+      label: t('Username'),
+      description: (
+        <div className="forklift-page-provider-field-default-validation">
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            {
+              'A user name for connecting to the vCenter API endpoint. Ensure the user name is in the format of <strong>username@user-domain</strong>. For example: <strong>user@vsphere.local</strong> .'
+            }
+          </Trans>
+        </div>
+      ),
+    },
+    password: {
+      label: t('Password'),
+      description: 'A user password for connecting to the vCenter API endpoint.',
+    },
     thumbprint: {
       label: t('SSHA-1 fingerprint'),
       description: t(

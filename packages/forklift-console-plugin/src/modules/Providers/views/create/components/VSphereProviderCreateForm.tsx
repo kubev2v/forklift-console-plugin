@@ -1,9 +1,11 @@
 import React, { useCallback, useReducer } from 'react';
+import { Trans } from 'react-i18next';
 import { validateContainerImage, validateURL, Validation } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Provider } from '@kubev2v/types';
-import { Form, FormGroup, TextInput } from '@patternfly/react-core';
+import { Form, FormGroup, Popover, TextInput } from '@patternfly/react-core';
+import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 export interface VSphereProviderCreateFormProps {
   provider: V1beta1Provider;
@@ -19,23 +21,86 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
   const url = provider?.spec?.url || '';
   const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'] || '';
 
-  const helperTextMsgs = {
-    error: t(
-      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://vCenter-host-example.com/sdk.',
+  const urlHelperTextMsgs = {
+    error: (
+      <div className="forklift--create-provider-field-error-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
+          }
+        </Trans>
+      </div>
     ),
-    warning: t(
-      'Warning: The provided URL does not end with the SDK endpoint path: "/sdk". Ensure the URL includes the correct path. For example: https://vCenter-host-example.com/sdk.',
+    warning: (
+      <div className="forklift--create-provider-field-warning-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'Warning: The provided URL does not end with the SDK endpoint path: <strong>"/sdk"</strong>. Ensure the URL includes the correct path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
+          }
+        </Trans>
+      </div>
     ),
-    success: t(
-      'URL of the vCenter SDK endpoint. Ensure the URL includes the "/sdk" path. For example: https://vCenter-host-example.com/sdk.',
+    success: (
+      <div className="forklift--create-provider-field-success-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'URL of the vCenter API endpoint. Ensure the URL includes the <strong>"/sdk"</strong> path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
+          }
+        </Trans>
+      </div>
+    ),
+    default: (
+      <div className="forklift--create-provider-field-default-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          {
+            'URL of the vCenter API endpoint. Ensure the URL includes the <strong>"/sdk"</strong> path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
+          }
+        </Trans>
+      </div>
     ),
   };
+
+  const vddkHelperTextMsgs = {
+    error: (
+      <div className="forklift--create-provider-field-error-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          Error: The format of the provided VDDK init image is invalid. Ensure the path is a valid
+          container image path. For example: {'<strong>'}quay.io/kubev2v/vddk:latest{'</strong>'}.
+        </Trans>
+      </div>
+    ),
+    success: (
+      <div className="forklift--create-provider-field-success-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          Virtual Disk Development Kit (VDDK) container init image path. The path must be empty or a
+          valid container image path. For example: {'<strong>'}quay.io/kubev2v/vddk:latest
+          {'</strong>'}.
+        </Trans>
+      </div>
+    ),
+    default: (
+      <div className="forklift--create-provider-field-default-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          Virtual Disk Development Kit (VDDK) container init image path. The path must be empty or a
+          valid container image path. For example: {'<strong>'}quay.io/kubev2v/vddk:latest
+          {'</strong>'}.
+        </Trans>
+      </div>
+    ),
+  };
+
+  const vddkHelperTextPopover = (
+    <Trans t={t} ns="plugin__forklift-console-plugin">
+      {'Note: It is strongly recommended to specify a VDDK init image to accelerate migrations.'}
+    </Trans>
+  );
 
   const initialState = {
     validation: {
       url: 'default' as Validation,
-      urlHelperText: helperTextMsgs.success,
+      urlHelperText: urlHelperTextMsgs.default,
       vddkInitImage: 'default' as Validation,
+      vddkHelperText: vddkHelperTextMsgs.default,
     },
   };
 
@@ -65,6 +130,14 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
           trimmedValue == '' || validateContainerImage(trimmedValue) ? 'success' : 'error';
         dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
+        dispatch({
+          type: 'SET_FIELD_VALIDATED',
+          payload: {
+            field: 'vddkHelperText',
+            validationState: vddkHelperTextMsgs[validationState],
+          },
+        });
+
         onChange({
           ...provider,
           spec: {
@@ -88,7 +161,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
           type: 'SET_FIELD_VALIDATED',
           payload: {
             field: 'urlHelperText',
-            validationState: helperTextMsgs[validationState],
+            validationState: urlHelperTextMsgs[validationState],
           },
         });
 
@@ -128,11 +201,24 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
       <FormGroup
         label={t('VDDK init image')}
         fieldId="vddkInitImage"
-        helperText={t(
-          'VDDK container image. It is strongly recommended to specify a VDDK image to accelerate migrations.',
-        )}
+        helperText={state.validation.vddkHelperText}
         validated={state.validation.vddkInitImage}
-        helperTextInvalid={t('Error: VDDK init image must be valid.')}
+        helperTextInvalid={state.validation.vddkHelperText}
+        labelIcon={
+          <Popover
+            headerContent={<div>VDDK init image</div>}
+            bodyContent={<div>{vddkHelperTextPopover}</div>}
+            alertSeverityVariant="info"
+          >
+            <button
+              type="button"
+              onClick={(e) => e.preventDefault()}
+              className="pf-c-form__group-label-help"
+            >
+              <HelpIcon noVerticalAlign />
+            </button>
+          </Popover>
+        }
       >
         <TextInput
           type="text"
