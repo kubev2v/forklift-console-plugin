@@ -9,6 +9,8 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert } from '@patternfly/react-core';
 
+import './alerts.style.css';
+
 interface ItemIsOwnedAlertProps {
   owner: OwnerReference;
   namespace: string;
@@ -19,7 +21,7 @@ export const ItemIsOwnedAlert: React.FC<ItemIsOwnedAlertProps> = ({ owner, names
 
   return (
     <Alert
-      className="co-alert co-alert--margin-top"
+      className="co-alert forklift-alert--margin-top"
       isInline
       variant="warning"
       title={t('Managed resource')}
