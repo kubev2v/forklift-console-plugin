@@ -1,125 +1,194 @@
 import { FC } from 'react';
 import { Draft } from 'immer';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
-import { v4 as randomId } from 'uuid';
 
-import { DefaultRow, ResourceFieldFactory, RowProps, withTr } from '@kubev2v/common';
-import { OpenShiftNamespace, ProviderType, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
+import { ResourceFieldFactory, RowProps } from '@kubev2v/common';
+import {
+  OpenShiftNamespace,
+  OpenshiftResource,
+  OVirtNicProfile,
+  V1beta1NetworkMap,
+  V1beta1Plan,
+  V1beta1Provider,
+  V1beta1StorageMap,
+} from '@kubev2v/types';
 
-import { getIsTarget, validateK8sName, Validation } from '../../utils';
-import { planTemplate } from '../create/templates';
-import { toId, VmData } from '../details';
-import { openShiftVmFieldsMetadataFactory } from '../details/tabs/VirtualMachines/OpenShiftVirtualMachinesList';
-import { OpenShiftVirtualMachinesCells } from '../details/tabs/VirtualMachines/OpenShiftVirtualMachinesRow';
-import { openStackVmFieldsMetadataFactory } from '../details/tabs/VirtualMachines/OpenStackVirtualMachinesList';
-import { OpenStackVirtualMachinesCells } from '../details/tabs/VirtualMachines/OpenStackVirtualMachinesRow';
-import { ovaVmFieldsMetadataFactory } from '../details/tabs/VirtualMachines/OvaVirtualMachinesList';
-import { OvaVirtualMachinesCells } from '../details/tabs/VirtualMachines/OvaVirtualMachinesRow';
-import { oVirtVmFieldsMetadataFactory } from '../details/tabs/VirtualMachines/OVirtVirtualMachinesList';
-import { OVirtVirtualMachinesCells } from '../details/tabs/VirtualMachines/OVirtVirtualMachinesRow';
-import { vSphereVmFieldsMetadataFactory } from '../details/tabs/VirtualMachines/VSphereVirtualMachinesList';
-import { VSphereVirtualMachinesCells } from '../details/tabs/VirtualMachines/VSphereVirtualMachinesRow';
+import { InventoryNetwork } from '../../hooks/useNetworks';
+import { getIsTarget, Validation } from '../../utils';
+import { VmData } from '../details';
 
 import {
   CreateVmMigration,
+  DEFAULT_NAMESPACE,
   PageAction,
   PlanAvailableProviders,
+  PlanAvailableSourceNetworks,
   PlanAvailableTargetNamespaces,
-  PlanDescription,
+  PlanAvailableTargetNetworks,
+  PlanCrateNetMap,
+  PlanExistingNetMaps,
   PlanExistingPlans,
   PlanName,
+  PlanNickProfiles,
   PlanTargetNamespace,
   PlanTargetProvider,
+  POD_NETWORK,
   SET_AVAILABLE_PROVIDERS,
+  SET_AVAILABLE_SOURCE_NETWORKS,
   SET_AVAILABLE_TARGET_NAMESPACES,
-  SET_DESCRIPTION,
+  SET_AVAILABLE_TARGET_NETWORKS,
+  SET_EXISTING_NET_MAPS,
   SET_EXISTING_PLANS,
   SET_NAME,
+  SET_NET_MAP,
+  SET_NICK_PROFILES,
   SET_TARGET_NAMESPACE,
   SET_TARGET_PROVIDER,
+  START_CREATE,
 } from './actions';
+import { getNetworksUsedBySelectedVms } from './getNetworksUsedBySelectedVMs';
+import { Mapping } from './MappingList';
+import {
+  calculateNetworks,
+  generateName,
+  mapSourceNetworksToLabels,
+  setTargetNamespace,
+  setTargetProvider,
+  validatePlanName,
+  validateTargetNamespace,
+  validateUniqueName,
+} from './stateHelpers';
 
 export interface CreateVmMigrationPageState {
-  newPlan: V1beta1Plan;
+  underConstruction: {
+    plan: V1beta1Plan;
+    netMap: V1beta1NetworkMap;
+    storageMap: V1beta1StorageMap;
+  };
   validationError: Error | null;
   apiError: Error | null;
   validation: {
-    name: Validation;
+    planName: Validation;
     targetNamespace: Validation;
     targetProvider: Validation;
   };
-  availableProviders: V1beta1Provider[];
-  selectedVms: VmData[];
-  existingPlans: V1beta1Plan[];
-  vmFieldsFactory: [ResourceFieldFactory, FC<RowProps<VmData>>];
-  availableTargetNamespaces: OpenShiftNamespace[];
+  // data fetched from k8s or inventory
+  existingResources: {
+    providers: V1beta1Provider[];
+    plans: V1beta1Plan[];
+    targetNamespaces: OpenShiftNamespace[];
+    targetNetworks: OpenshiftResource[];
+    sourceNetworks: InventoryNetwork[];
+    targetStorages: unknown[];
+    nickProfiles: OVirtNicProfile[];
+    netMaps: V1beta1NetworkMap[];
+    createdNetMap?: V1beta1NetworkMap;
+  };
+  calculatedOnce: {
+    // calculated on start (exception:for ovirt/openstack we need to fetch disks)
+    storagesUsedBySelectedVms: string[];
+    // calculated on start (exception:for ovirt we need to fetch nic profiles)
+    networkIdsUsedBySelectedVms: string[];
+    sourceNetworkLabelToId: { [label: string]: string };
+    // calculated on start
+    vmFieldsFactory: [ResourceFieldFactory, FC<RowProps<VmData>>];
+  };
+  // re-calculated on every target namespace change
+  calculatedPerNamespace: {
+    // read-only
+    targetStorages: string[];
+    // read-only, human-readable
+    targetNetworks: string[];
+    targetNetworkLabelToId: { [label: string]: string };
+    sourceNetworks: {
+      // read-only
+      label: string;
+      usedBySelectedVms: boolean;
+      // mutated via UI
+      isMapped: boolean;
+    }[];
+    sourceStorages: string[];
+    // mutated, both source and destination human-readable
+    networkMappings: Mapping[];
+    storageMappings: Mapping[];
+  };
+  receivedAsParams: {
+    selectedVms: VmData[];
+    sourceProvider: V1beta1Provider;
+    namespace: string;
+  };
+  // placeholder for helper data
+  workArea: {
+    targetProvider: V1beta1Provider;
+  };
+  flow: {
+    editingDone: boolean;
+    netMapCreated: boolean;
+    storageMapCreated: boolean;
+  };
 }
-
-const validateUniqueName = (name: string, existingPlanNames: string[]) =>
-  existingPlanNames.every((existingName) => existingName !== name);
-
-const validatePlanName = (name: string, existingPlans: V1beta1Plan[]) =>
-  validateK8sName(name) &&
-  validateUniqueName(
-    name,
-    existingPlans.map((plan) => plan?.metadata?.name ?? ''),
-  )
-    ? 'success'
-    : 'error';
-
-const validateTargetNamespace = (namespace: string, availableNamespaces: OpenShiftNamespace[]) =>
-  validateK8sName(namespace) && availableNamespaces?.find((n) => n.name === namespace)
-    ? 'success'
-    : 'error';
 
 const actions: {
   [name: string]: (
     draft: Draft<CreateVmMigrationPageState>,
     action: PageAction<CreateVmMigration, unknown>,
-  ) => CreateVmMigrationPageState;
+  ) => CreateVmMigrationPageState | void;
 } = {
   [SET_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
-    draft.newPlan.metadata.name = name;
-    draft.validation.name = validatePlanName(name, draft.existingPlans);
-    return draft;
-  },
-  [SET_DESCRIPTION](
-    draft,
-    { payload: { description } }: PageAction<CreateVmMigration, PlanDescription>,
-  ) {
-    draft.newPlan.spec.description = description;
+    if (draft.flow.editingDone) {
+      return;
+    }
+    draft.underConstruction.plan.metadata.name = name;
+    draft.validation.planName = validatePlanName(name, draft.existingResources.plans);
     return draft;
   },
   [SET_TARGET_NAMESPACE](
     draft,
     { payload: { targetNamespace } }: PageAction<CreateVmMigration, PlanTargetNamespace>,
   ) {
-    draft.newPlan.spec.targetNamespace = targetNamespace;
-    draft.validation.targetNamespace = validateTargetNamespace(
-      targetNamespace,
-      draft.availableTargetNamespaces,
-    );
+    if (!draft.flow.editingDone) {
+      setTargetNamespace(draft, targetNamespace);
+    }
     return draft;
   },
   [SET_TARGET_PROVIDER](
     draft,
     { payload: { targetProviderName } }: PageAction<CreateVmMigration, PlanTargetProvider>,
   ) {
-    setTargetProvider(draft, targetProviderName, draft.availableProviders);
+    const {
+      underConstruction: { plan },
+      existingResources,
+      flow: { editingDone },
+    } = draft;
+    // avoid side effects if no real change
+    if (!editingDone && plan.spec.provider?.destination?.name !== targetProviderName) {
+      setTargetProvider(draft, targetProviderName, existingResources.providers);
+    }
     return draft;
   },
   [SET_AVAILABLE_PROVIDERS](
     draft,
-    { payload: { availableProviders } }: PageAction<CreateVmMigration, PlanAvailableProviders>,
+    {
+      payload: { availableProviders, loading, error },
+    }: PageAction<CreateVmMigration, PlanAvailableProviders>,
   ) {
-    draft.availableProviders = availableProviders;
-    // set the default provider if none is set
-    // reset the provider if provider was removed
+    if (loading || error || draft.flow.editingDone) {
+      return draft;
+    }
+    console.warn(SET_AVAILABLE_PROVIDERS, availableProviders);
+    draft.existingResources.providers = availableProviders;
     if (
       !availableProviders
         .filter(getIsTarget)
-        .find((p) => p?.metadata?.name === draft.newPlan.spec.provider.destination?.name)
+        .find(
+          (p) => p?.metadata?.name === draft.underConstruction.plan.spec.provider.destination?.name,
+        )
     ) {
+      // the current provider is missing in the list of available providers
+      // possible cases:
+      // 1. no provider set (yet)
+      // 2. provider got removed in the meantime
+      // 3. no host provider in the namespace
       const firstHostProvider = availableProviders.find((p) => isProviderLocalOpenshift(p));
       setTargetProvider(draft, firstHostProvider?.metadata?.name, availableProviders);
     }
@@ -127,43 +196,163 @@ const actions: {
   },
   [SET_EXISTING_PLANS](
     draft,
-    { payload: { existingPlans } }: PageAction<CreateVmMigration, PlanExistingPlans>,
+    {
+      payload: { existingPlans, loading, error },
+    }: PageAction<CreateVmMigration, PlanExistingPlans>,
   ) {
-    draft.existingPlans = existingPlans;
-    draft.validation.name = validatePlanName(draft.newPlan.metadata.name, existingPlans);
+    if (loading || error || draft.flow.editingDone) {
+      return draft;
+    }
+    console.warn(SET_EXISTING_PLANS, existingPlans);
+    draft.existingResources.plans = existingPlans;
+    draft.validation.planName = validatePlanName(
+      draft.underConstruction.plan.metadata.name,
+      existingPlans,
+    );
     return draft;
   },
   [SET_AVAILABLE_TARGET_NAMESPACES](
     draft,
     {
-      payload: { availableTargetNamespaces },
+      payload: { availableTargetNamespaces, loading, error },
     }: PageAction<CreateVmMigration, PlanAvailableTargetNamespaces>,
   ) {
-    draft.availableTargetNamespaces = availableTargetNamespaces;
-    draft.validation.targetNamespace = validateTargetNamespace(
-      draft.newPlan.spec.targetNamespace,
+    const {
+      existingResources,
+      validation,
+      underConstruction: { plan },
+      workArea: { targetProvider },
+      flow: { editingDone },
+    } = draft;
+    if (loading || error || editingDone) {
+      return;
+    }
+    console.warn(SET_AVAILABLE_TARGET_NAMESPACES, availableTargetNamespaces);
+    existingResources.targetNamespaces = availableTargetNamespaces;
+
+    validation.targetNamespace = validateTargetNamespace(
+      plan.spec.targetNamespace,
       availableTargetNamespaces,
     );
+    if (validation.targetNamespace === 'success') {
+      return draft;
+    }
+
+    const targetNamespace =
+      // use the current namespace (inherited from source provider)
+      (isProviderLocalOpenshift(targetProvider) && plan.metadata.namespace) ||
+      // use 'default' if exists
+      (availableTargetNamespaces.find((n) => n.name === DEFAULT_NAMESPACE) && DEFAULT_NAMESPACE) ||
+      // use the first from the list (if exists)
+      availableTargetNamespaces[0]?.name;
+
+    setTargetNamespace(draft, targetNamespace);
     return draft;
   },
-};
+  [SET_AVAILABLE_TARGET_NETWORKS](
+    draft,
+    {
+      payload: { availableTargetNetworks, loading, error },
+    }: PageAction<CreateVmMigration, PlanAvailableTargetNetworks>,
+  ) {
+    if (loading || error || draft.flow.editingDone) {
+      return draft;
+    }
+    console.warn(SET_AVAILABLE_TARGET_NETWORKS, availableTargetNetworks);
+    draft.existingResources.targetNetworks = availableTargetNetworks;
 
-const setTargetProvider = (
-  draft: Draft<CreateVmMigrationPageState>,
-  targetProviderName: string,
-  availableProviders: V1beta1Provider[],
-) => {
-  // there might be no target provider in the namespace
-  const resolvedTarget = availableProviders
-    .filter(getIsTarget)
-    .find((p) => p?.metadata?.name === targetProviderName);
-  draft.newPlan.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
-  draft.newPlan.spec.targetNamespace = isProviderLocalOpenshift(resolvedTarget)
-    ? draft.newPlan.metadata.namespace
-    : 'default';
-  // assume the value is correct and wait until the namespaces will be loaded for further validation
-  draft.validation.targetNamespace = 'default';
-  draft.validation.targetProvider = resolvedTarget ? 'success' : 'error';
+    draft.calculatedPerNamespace = {
+      ...draft.calculatedPerNamespace,
+      ...calculateNetworks(draft),
+    };
+    return draft;
+  },
+  [SET_AVAILABLE_SOURCE_NETWORKS](
+    draft,
+    {
+      payload: { availableSourceNetworks, loading, error },
+    }: PageAction<CreateVmMigration, PlanAvailableSourceNetworks>,
+  ) {
+    if (loading || error || draft.flow.editingDone) {
+      return draft;
+    }
+    console.warn(SET_AVAILABLE_SOURCE_NETWORKS, availableSourceNetworks);
+    draft.existingResources.sourceNetworks = availableSourceNetworks;
+    draft.calculatedOnce.sourceNetworkLabelToId =
+      mapSourceNetworksToLabels(availableSourceNetworks);
+    draft.calculatedPerNamespace = {
+      ...draft.calculatedPerNamespace,
+      ...calculateNetworks(draft),
+    };
+    return draft;
+  },
+  [SET_NICK_PROFILES](
+    draft,
+    { payload: { nickProfiles, loading, error } }: PageAction<CreateVmMigration, PlanNickProfiles>,
+  ) {
+    const {
+      existingResources,
+      calculatedOnce,
+      receivedAsParams: { selectedVms },
+      flow: { editingDone },
+    } = draft;
+    if (loading || error || editingDone) {
+      return;
+    }
+    console.warn(SET_NICK_PROFILES, nickProfiles);
+    existingResources.nickProfiles = nickProfiles;
+    calculatedOnce.networkIdsUsedBySelectedVms = getNetworksUsedBySelectedVms(
+      selectedVms,
+      nickProfiles,
+    );
+    draft.calculatedPerNamespace = {
+      ...draft.calculatedPerNamespace,
+      ...calculateNetworks(draft),
+    };
+  },
+  [SET_EXISTING_NET_MAPS](
+    {
+      existingResources,
+      underConstruction: { netMap },
+      receivedAsParams: { sourceProvider },
+      flow: { editingDone },
+    },
+    {
+      payload: { existingNetMaps, loading, error },
+    }: PageAction<CreateVmMigration, PlanExistingNetMaps>,
+  ) {
+    if (loading || error || editingDone) {
+      return;
+    }
+    console.warn(SET_EXISTING_NET_MAPS, existingNetMaps);
+    existingResources.netMaps = existingNetMaps;
+    const names = existingNetMaps.map((n) => n.metadata?.name).filter(Boolean);
+    while (!validateUniqueName(netMap.metadata.name, names)) {
+      netMap.metadata.name = generateName(sourceProvider.metadata.name);
+    }
+  },
+  [START_CREATE]({
+    flow,
+    underConstruction: { plan, netMap },
+    calculatedOnce: { sourceNetworkLabelToId },
+    calculatedPerNamespace: { networkMappings },
+  }) {
+    console.warn(START_CREATE);
+    flow.editingDone = true;
+    netMap.spec.map = networkMappings.map(({ source, destination }) => ({
+      source: {
+        id: sourceNetworkLabelToId[source],
+      },
+      destination:
+        destination === POD_NETWORK
+          ? { type: 'pod' }
+          : { name: destination, namespace: plan.spec.targetNamespace, type: 'multus' },
+    }));
+  },
+  [SET_NET_MAP](draft, { payload: { netMap } }: PageAction<CreateVmMigration, PlanCrateNetMap>) {
+    draft.existingResources.createdNetMap = netMap;
+    draft.flow.netMapCreated = true;
+  },
 };
 
 export const reducer = (
@@ -171,80 +360,4 @@ export const reducer = (
   action: PageAction<CreateVmMigration, unknown>,
 ) => {
   return actions?.[action?.type]?.(draft, action) ?? draft;
-};
-
-// based on the method used in legacy/src/common/helpers
-// and mocks/src/definitions/utils
-export const getObjectRef = (
-  { apiVersion, kind, metadata: { name, namespace, uid } = {} }: V1beta1Provider = {
-    apiVersion: undefined,
-    kind: undefined,
-  },
-) => ({
-  apiVersion,
-  kind,
-  name,
-  namespace,
-  uid,
-});
-
-export const createInitialState = ({
-  namespace,
-  sourceProvider,
-  selectedVms,
-}: {
-  namespace: string;
-  sourceProvider: V1beta1Provider;
-  selectedVms: VmData[];
-}): CreateVmMigrationPageState => ({
-  newPlan: {
-    ...planTemplate,
-    metadata: {
-      ...planTemplate?.metadata,
-      name: sourceProvider?.metadata?.name
-        ? `${sourceProvider?.metadata?.name}-${randomId().substring(0, 8)}`
-        : undefined,
-      namespace,
-    },
-    spec: {
-      ...planTemplate?.spec,
-      provider: {
-        source: getObjectRef(sourceProvider),
-        destination: undefined,
-      },
-      targetNamespace: undefined,
-      vms: selectedVms.map((data) => ({ name: data.name, id: toId(data) })),
-    },
-  },
-  validationError: null,
-  apiError: null,
-  availableProviders: [],
-  selectedVms,
-  existingPlans: [],
-  validation: {
-    name: 'default',
-    targetNamespace: 'default',
-    targetProvider: 'default',
-  },
-  vmFieldsFactory: resourceFieldsForType(sourceProvider?.spec?.type as ProviderType),
-  availableTargetNamespaces: [],
-});
-
-export const resourceFieldsForType = (
-  type: ProviderType,
-): [ResourceFieldFactory, FC<RowProps<VmData>>] => {
-  switch (type) {
-    case 'openshift':
-      return [openShiftVmFieldsMetadataFactory, withTr(OpenShiftVirtualMachinesCells)];
-    case 'openstack':
-      return [openStackVmFieldsMetadataFactory, withTr(OpenStackVirtualMachinesCells)];
-    case 'ova':
-      return [ovaVmFieldsMetadataFactory, withTr(OvaVirtualMachinesCells)];
-    case 'ovirt':
-      return [oVirtVmFieldsMetadataFactory, withTr(OVirtVirtualMachinesCells)];
-    case 'vsphere':
-      return [vSphereVmFieldsMetadataFactory, withTr(VSphereVirtualMachinesCells)];
-    default:
-      return [() => [], DefaultRow];
-  }
 };

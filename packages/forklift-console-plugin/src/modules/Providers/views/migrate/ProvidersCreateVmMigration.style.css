@@ -5,3 +5,12 @@
 .forklift-page-editable-description-item-button {
     padding-top: 0;
 }
+
+.forklift-page-mapping-list {
+    /* <Form isWidthLimited> */
+    max-width: 55rem;
+}
+
+.forklift-page-resource-link-in-description-item {
+    padding-left: 8px;
+}
