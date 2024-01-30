@@ -11,7 +11,6 @@ import {
   NameDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
-  SecretDetailsItem,
   TypeDetailsItem,
   URLDetailsItem,
 } from './components';
@@ -48,7 +47,7 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
 
       <CreatedAtDetailsItem resource={provider} />
 
-      <SecretDetailsItem resource={provider} />
+      <DetailsItem title={''} content={''} />
 
       <OwnerDetailsItem resource={provider} />
     </DescriptionList>

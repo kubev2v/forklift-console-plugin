@@ -4,4 +4,5 @@ export * from './CredentialsSection';
 export * from './DetailsSection';
 export * from './InventorySection';
 export * from './ProviderPageHeadings';
+export * from './SecretsSection';
 // @endindex

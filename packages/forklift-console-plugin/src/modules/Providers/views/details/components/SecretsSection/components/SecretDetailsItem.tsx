@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 import { DetailsItem } from '../../../../../utils';
 
-import { ProviderDetailsItemProps } from './ProviderDetailsItem';
+export interface SecretDetailsItemProps {
+  resource: V1beta1Provider;
+  moreInfoLink?: string;
+  helpContent?: ReactNode;
+}
 
-export const SecretDetailsItem: React.FC<ProviderDetailsItemProps> = ({
+export const SecretDetailsItem: React.FC<SecretDetailsItemProps> = ({
   resource: provider,
   moreInfoLink,
   helpContent,
