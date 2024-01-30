@@ -1,16 +1,10 @@
-import { Har } from 'har-format';
-import { findHarEntry } from 'harproxyserver';
-
 import * as migrationsK8s from './data/migrations.K8s.json';
 import * as networkmapsK8s from './data/networkmaps.K8s.json';
 import * as plansK8s from './data/plans.K8s.json';
 import * as providersInventory from './data/providers.Inventory.json';
 import * as providersK8s from './data/providers.K8s.json';
-import * as _har from './data/recorder-brq2.har';
 import * as storagemapsK8s from './data/storagemaps.K8s.json';
 import { resolvePath } from './definitions/resolvePath';
-
-const har = _har as unknown as Har;
 
 /**
  * List of prefixes used by mockable data sources.
@@ -18,7 +12,7 @@ const har = _har as unknown as Har;
  * 1. type:dataSet i.e. "code:basic" OR
  * 2. type i.e. "json"
  */
-export const MSW_MOCK_SOURCES = ['har', 'json', 'code'];
+export const MSW_MOCK_SOURCES = ['json', 'code'];
 
 export const isDataSourceMock = (dataSource) =>
   MSW_MOCK_SOURCES.some(
@@ -107,19 +101,6 @@ function getStaticData(pathname: string, source: string): object | null {
   switch (type) {
     case 'json':
       return mockData[replaceNamespaceInPath(pathname, 'openshift-mtv')];
-    case 'har':
-      // eslint-disable-next-line no-case-declarations
-      const recordedEntry = findHarEntry(
-        har.log,
-        'GET',
-        replaceNamespaceInPath(pathname, 'openshift-mtv'),
-        undefined,
-        true,
-      );
-      // eslint-disable-next-line no-case-declarations
-      const text = recordedEntry?.response?.content?.text;
-
-      return text && JSON.parse(text);
     case 'code':
       return resolvePath(pathname, dataSet);
   }
