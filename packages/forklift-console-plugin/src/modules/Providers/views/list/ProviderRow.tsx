@@ -2,12 +2,7 @@ import React from 'react';
 import { ProviderData } from 'src/modules/Providers/utils';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
-import {
-  DatabaseIcon,
-  NetworkIcon,
-  OutlinedHddIcon,
-  VirtualMachineIcon,
-} from '@patternfly/react-icons';
+import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { ProviderActionsDropdown } from '../../actions';
@@ -21,6 +16,7 @@ import {
   StatusCell,
   TypeCell,
   URLCell,
+  VirtualMachinesCell,
 } from './components';
 
 /**
@@ -82,7 +78,7 @@ const cellRenderers: Record<string, React.FC<CellProps>> = {
   ['namespace']: NamespaceCell,
   ['networkCount']: InventoryCellFactory({ icon: <NetworkIcon /> }),
   ['storageCount']: InventoryCellFactory({ icon: <DatabaseIcon /> }),
-  ['vmCount']: InventoryCellFactory({ icon: <VirtualMachineIcon /> }),
+  ['vmCount']: VirtualMachinesCell,
   ['hostCount']: InventoryCellFactory({ icon: <OutlinedHddIcon /> }),
   ['actions']: (props) => ProviderActionsDropdown({ isKebab: true, ...props }),
 };

@@ -11,5 +11,6 @@ export * from './ProvidersEmptyState';
 export * from './StatusCell';
 export * from './TypeCell';
 export * from './URLCell';
+export * from './VirtualMachinesCell';
 export * from './VSphereHostCell';
 // @endindex
