@@ -11,7 +11,6 @@ import {
   NameDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
-  SecretDetailsItem,
   TransferNetworkDetailsItem,
   TypeDetailsItem,
   URLDetailsItem,
@@ -49,15 +48,9 @@ export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data })
 
       <CreatedAtDetailsItem resource={provider} />
 
-      <SecretDetailsItem
-        resource={provider}
-        helpContent={`A Secret containing credentials and other confidential information.
-          Empty may be used for the host provider.`}
-      />
+      <TransferNetworkDetailsItem resource={provider} canPatch={permissions.canPatch} />
 
       <OwnerDetailsItem resource={provider} />
-
-      <TransferNetworkDetailsItem resource={provider} canPatch={permissions.canPatch} />
     </DescriptionList>
   );
 };

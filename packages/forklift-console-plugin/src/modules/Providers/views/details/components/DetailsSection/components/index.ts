@@ -5,7 +5,6 @@ export * from './NameDetailsItem';
 export * from './NamespaceDetailsItem';
 export * from './OwnerDetailsItem';
 export * from './ProviderDetailsItem';
-export * from './SecretDetailsItem';
 export * from './TransferNetworkDetailsItem';
 export * from './TypeDetailsItem';
 export * from './URLDetailsItem';

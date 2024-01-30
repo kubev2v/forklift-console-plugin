@@ -346,6 +346,7 @@
   "Secret": "Secret",
   "Secret failed to load, check if the secret exist.": "Secret failed to load, check if the secret exist.",
   "Secret is loading, please wait.": "Secret is loading, please wait.",
+  "Secrets": "Secrets",
   "Select migration network": "Select migration network",
   "Select provider type": "Select provider type",
   "Selected columns will be displayed in the table.": "Selected columns will be displayed in the table.",

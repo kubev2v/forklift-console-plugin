@@ -12,7 +12,6 @@ import {
   NameDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
-  SecretDetailsItem,
   TypeDetailsItem,
   URLDetailsItem,
   VDDKDetailsItem,
@@ -63,11 +62,9 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
 
       <CreatedAtDetailsItem resource={provider} />
 
-      <SecretDetailsItem resource={provider} />
+      <VDDKDetailsItem resource={provider} canPatch={permissions.canPatch} />
 
       <OwnerDetailsItem resource={provider} />
-
-      <VDDKDetailsItem resource={provider} canPatch={permissions.canPatch} />
     </DescriptionList>
   );
 };

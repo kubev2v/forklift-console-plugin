@@ -14,7 +14,12 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-import { ConditionsSection, DetailsSection, InventorySection } from '../../components';
+import {
+  ConditionsSection,
+  DetailsSection,
+  InventorySection,
+  SecretsSection,
+} from '../../components';
 
 interface ProviderDetailsProps extends RouteComponentProps {
   obj: ProviderData;
@@ -37,6 +42,11 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
       <PageSection variant="light">
         <SectionHeading text={t('Provider details')} />
         <DetailsSection data={obj} />
+      </PageSection>
+
+      <PageSection variant="light" className="forklift-page-section">
+        <SectionHeading text={t('Secrets')} />
+        <SecretsSection data={obj} />
       </PageSection>
 
       <PageSection variant="light" className="forklift-page-section">
