@@ -8,10 +8,10 @@ import { validateFingerprint, validateNoSpaces, validateUsernameAndDomain } from
  * @param {string} value - The value of the form field.
  *
  * @return {Validation} - The validation state of the form field. Can be one of the following:
- * 'default' - The default state of the form field, used when the field is empty or a value hasn't been entered yet.
+ * 'default' - The default state of the form field, used when the field is empty or a value has not been entered yet.
  * 'success' - The field's value has passed validation.
  * 'error' - The field's value has failed validation.
- * 'warning' - The field's value might fail the validation, but it's not mandatory and not disabling the form saving.
+ * 'warning' - The field's value has passed validation but does not fit the standard format, it's the user's choice if to accept that value.
  */
 export const vsphereSecretFieldValidator = (id: string, value: string) => {
   const trimmedValue = value.trim();

@@ -49,9 +49,12 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
   const insecureSkipVerifyHelperTextPopover = (
     <Trans t={t} ns="plugin__forklift-console-plugin">
-      Note: If {"'"}Skip certificate validation{"'"} is selected, migrations from this provider will
-      not be secure.{'<br><br>'}Insecure migration means that the transferred data is sent over an
-      insecure connection and potentially sensitive data could be exposed.
+      Note: If <strong>Skip certificate validation</strong> is selected, migrations from this
+      provider will not be secure.
+      <br />
+      <br />
+      Insecure migration means that the transferred data is sent over an insecure connection and
+      potentially sensitive data could be exposed.
     </Trans>
   );
 

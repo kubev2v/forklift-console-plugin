@@ -10,7 +10,7 @@ import { validateNoSpaces, validatePublicCert, validateUsernameAndDomain } from 
  * @return {Validation} - The validation state of the form field. Can be one of the following:
  * 'default' - The default state of the form field, used when the field is empty or a value hasn't been entered yet.
  * 'success' - The field's value has passed validation.
- * 'warning' - The field's value might fail the validation, but it's not mandatory and not disabling the form saving.
+ * 'warning' - The field's value has passed validation but does not fit the standard format, it's the user's choice if to accept that value.
  * 'error' - The field's value has failed validation.
  */
 export const ovirtSecretFieldValidator = (id: string, value: string) => {

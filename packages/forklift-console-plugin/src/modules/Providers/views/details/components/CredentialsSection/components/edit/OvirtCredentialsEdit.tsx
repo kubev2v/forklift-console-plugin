@@ -35,7 +35,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
 
   const usernameHelperTextMsgs = {
     error: t(
-      "Error: The format of the provided user name is invalid. Ensure the user name doesn't include whitespace characters.",
+      'Error: The format of the provided user name is invalid. Ensure the user name does not include whitespace characters.',
     ),
     warning: t(
       'Warning: The provided user name does not include the user domain. Ensure the user name is in the format of username@user-domain. For example: admin@internal.',
@@ -47,7 +47,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
 
   const passwordHelperTextMsgs = {
     error: t(
-      "Error: The format of the provided user password is invalid. Ensure the user password doesn't include whitespace characters.",
+      'Error: The format of the provided user password is invalid. Ensure the user password does not include whitespace characters.',
     ),
     success: t(
       'A user password for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint.',
@@ -71,17 +71,22 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
 
   const insecureSkipVerifyHelperTextPopover = (
     <Trans t={t} ns="plugin__forklift-console-plugin">
-      {
-        "Note: If 'Skip certificate validation' is selected, migrations from this provider will not be secure.<br><br> Insecure migration means that the transferred data is sent over an insecure connection and potentially sensitive data could be exposed."
-      }
+      Note: If <strong>Skip certificate validation</strong> is selected, migrations from this
+      provider will not be secure.
+      <br />
+      <br /> Insecure migration means that the transferred data is sent over an insecure connection
+      and potentially sensitive data could be exposed.
     </Trans>
   );
 
   const cacertHelperTextPopover = (
     <Trans t={t} ns="plugin__forklift-console-plugin">
-      {
-        'Note: Use the Manager CA certificate unless it was replaced by a third-party certificate, in which case use the Manager Apache CA certificate. <br><br>You can retrieve the Manager CA certificate at:<br>'
-      }
+      Note: Use the Manager CA certificate unless it was replaced by a third-party certificate, in
+      which case use the Manager Apache CA certificate.
+      <br />
+      <br />
+      You can retrieve the Manager CA certificate at:
+      <br />
       <ExternalLink
         href="https://<rhv-host-example.com>/ovirt-engine/services/pki-resource?resource=ca-certificate&format=X509-PEM-CA"
         isInline

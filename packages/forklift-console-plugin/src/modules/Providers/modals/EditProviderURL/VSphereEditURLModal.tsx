@@ -18,36 +18,34 @@ export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = (props) 
     error: (
       <div className="forklift-edit-modal-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
-          }
+          Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
+          domain name, and a path. For example:{' '}
+          <strong>https://vCenter-host-example.com/sdk</strong>.
         </Trans>
       </div>
     ),
     warning: (
       <div className="forklift--edit-modal-field-warning-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Warning: The provided URL does not end with the SDK endpoint path: <strong>"/sdk"</strong>. Ensure the URL includes the correct path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
-          }
+          Warning: The provided URL does not end with the SDK endpoint path: <strong>/sdk</strong>.
+          Ensure the URL includes the correct path. For example:{' '}
+          <strong>https://vCenter-host-example.com/sdk</strong>.
         </Trans>
       </div>
     ),
     success: (
       <div className="forklift-edit-modal-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Ensure the URL includes the <strong>"/sdk"</strong> path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
-          }
+          Ensure the URL includes the <strong>/sdk</strong> path. For example:{' '}
+          <strong>https://vCenter-host-example.com/sdk</strong>.
         </Trans>
       </div>
     ),
     default: (
       <div className="forklift-edit-modal-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Ensure the URL includes the <strong>"/sdk"</strong> path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
-          }
+          Ensure the URL includes the <strong>/sdk</strong> path. For example:{' '}
+          <strong>https://vCenter-host-example.com/sdk</strong>.
         </Trans>
       </div>
     ),

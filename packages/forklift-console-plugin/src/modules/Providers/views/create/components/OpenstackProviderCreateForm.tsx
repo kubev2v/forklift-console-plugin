@@ -52,8 +52,8 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
     default: (
       <div className="forklift--create-provider-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          URL of the OpenStack Identity (Keystone) endpoint. For example: {'<strong>'}
-          https://identity_service.com:5000/v3{'</strong>'}.
+          URL of the OpenStack Identity (Keystone) endpoint. For example:{' '}
+          <strong>https://identity_service.com:5000/v3</strong>.
         </Trans>
       </div>
     ),

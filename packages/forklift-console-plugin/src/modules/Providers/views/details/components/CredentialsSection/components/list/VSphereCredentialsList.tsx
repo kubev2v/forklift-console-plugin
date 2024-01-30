@@ -19,9 +19,8 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
       description: (
         <div className="forklift-page-provider-field-default-validation">
           <Trans t={t} ns="plugin__forklift-console-plugin">
-            {
-              'A user name for connecting to the vCenter API endpoint. Ensure the user name is in the format of <strong>username@user-domain</strong>. For example: <strong>user@vsphere.local</strong> .'
-            }
+            A user name for connecting to the vCenter API endpoint. Ensure the user name includes
+            the user domain. For example: <strong>user@vsphere.local</strong>.
           </Trans>
         </div>
       ),
