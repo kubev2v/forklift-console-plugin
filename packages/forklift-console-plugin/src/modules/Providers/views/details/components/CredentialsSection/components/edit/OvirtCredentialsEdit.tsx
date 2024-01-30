@@ -246,9 +246,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
       <FormGroup
         label={
           insecureSkipVerify
-            ? t(
-                "CA certificate - disabled and ignored when 'Skip certificate validation' is checked",
-              )
+            ? t("CA certificate - disabled when 'Skip certificate validation' is checked")
             : t('CA certificate - leave empty to use system CA certificates')
         }
         labelIcon={

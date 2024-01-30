@@ -1,4 +1,5 @@
 import React, { useCallback, useReducer } from 'react';
+import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
 import {
   openstackSecretFieldValidator,
@@ -7,7 +8,16 @@ import {
 } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Divider, FileUpload, Form, FormGroup, Radio, Switch } from '@patternfly/react-core';
+import {
+  Divider,
+  FileUpload,
+  Form,
+  FormGroup,
+  Popover,
+  Radio,
+  Switch,
+} from '@patternfly/react-core';
+import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
 
@@ -21,6 +31,29 @@ import {
 
 export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
   const { t } = useForkliftTranslation();
+
+  const insecureSkipVerifyHelperTextMsgs = {
+    error: t('Error: this field must be set to a boolean value.'),
+    successAndSkipped: t("The provider's CA certificate won't be validated."),
+    successAndNotSkipped: t("The provider's CA certificate will be validated."),
+  };
+
+  const cacertHelperTextMsgs = {
+    error: t(
+      'Error: The format of the provided CA Certificate is invalid. Ensure the CA certificate format is valid.',
+    ),
+    success: t(
+      'A CA certificate to be trusted when connecting to the OpenStack Identity (Keystone) endpoint. Ensure the CA certificate format is valid. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificates, leave the field empty.',
+    ),
+  };
+
+  const insecureSkipVerifyHelperTextPopover = (
+    <Trans t={t} ns="plugin__forklift-console-plugin">
+      Note: If {"'"}Skip certificate validation{"'"} is selected, migrations from this provider will
+      not be secure.{'<br><br>'}Insecure migration means that the transferred data is sent over an
+      insecure connection and potentially sensitive data could be exposed.
+    </Trans>
+  );
 
   const authType = safeBase64Decode(secret?.data?.authType || '');
   const username = safeBase64Decode(secret?.data?.username || '');
@@ -62,6 +95,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     authenticationType: authenticationType,
     validation: {
       cacert: 'default' as Validation,
+      insecureSkipVerify: 'default' as Validation,
     },
   };
 
@@ -151,7 +185,9 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         role="radiogroup"
         fieldId="authType"
         label={t('Authentication type')}
-        helperText={t('Type of authentication to use when connecting to OpenStack REST API.')}
+        helperText={t(
+          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
+        )}
       >
         <Radio
           name="authType"
@@ -212,6 +248,21 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
       <FormGroup
         label={t('Skip certificate validation')}
+        labelIcon={
+          <Popover
+            headerContent={<div>Skip certificate validation</div>}
+            bodyContent={<div>{insecureSkipVerifyHelperTextPopover}</div>}
+            alertSeverityVariant="info"
+          >
+            <button
+              type="button"
+              onClick={(e) => e.preventDefault()}
+              className="pf-c-form__group-label-help"
+            >
+              <HelpIcon noVerticalAlign />
+            </button>
+          </Popover>
+        }
         fieldId="insecureSkipVerify"
         validated={state.validation.insecureSkipVerify}
         helperTextInvalid={t('Error: Insecure Skip Verify must be a boolean value.')}
@@ -220,9 +271,9 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           className="forklift-section-secret-edit-switch"
           id="insecureSkipVerify"
           name="insecureSkipVerify"
-          label={t("The provider's REST API TLS certificate won't be validated.")}
-          labelOff={t("The provider's REST API TLS certificate will be validated.")}
-          aria-label={t("If true, the provider's REST API TLS certificate won't be validated.")}
+          label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
+          labelOff={insecureSkipVerifyHelperTextMsgs.successAndNotSkipped}
+          aria-label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
           isChecked={insecureSkipVerify}
           hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
@@ -231,15 +282,13 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
       <FormGroup
         label={
           insecureSkipVerify
-            ? t('CA certificate - disabled when skip certificate validation is checked')
-            : t('CA certificate - leave empty to use system certificates')
+            ? t("CA certificate - disabled when 'Skip certificate validation' is checked")
+            : t('CA certificate - leave empty to use system CA certificates')
         }
         fieldId="cacert"
-        helperText={t(
-          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
-        )}
+        helperText={cacertHelperTextMsgs.success}
         validated={state.validation.cacert}
-        helperTextInvalid={t('Error: CA Certificate must be valid.')}
+        helperTextInvalid={cacertHelperTextMsgs.error}
       >
         <FileUpload
           id="cacert"

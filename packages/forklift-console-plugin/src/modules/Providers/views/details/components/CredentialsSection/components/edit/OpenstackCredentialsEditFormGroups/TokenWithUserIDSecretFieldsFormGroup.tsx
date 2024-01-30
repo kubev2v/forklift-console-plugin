@@ -74,8 +74,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         label={t('Token')}
         isRequired
         fieldId="token"
-        helperText={t('OpenStack REST API token credentials.')}
-        helperTextInvalid={t('Invalid token.')}
+        helperText={t('OpenStack token for authentication using a user ID.')}
+        helperTextInvalid={t(
+          "Error: The format of the provided token is invalid. Ensure the token doesn't include whitespace characters.",
+        )}
         validated={state.validation.token}
       >
         <TextInput
@@ -101,8 +103,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         label={t('User ID')}
         isRequired
         fieldId="userID"
-        helperText={t('OpenStack REST API user ID.')}
-        helperTextInvalid={t('Invalid User ID.')}
+        helperText={t('A user ID for connecting to the OpenStack Identity (Keystone) endpoint.')}
+        helperTextInvalid={t(
+          "Error: The format of the provided user ID is invalid. Ensure the user ID doesn't include whitespace characters.",
+        )}
         validated={state.validation.userID}
       >
         <TextInput
@@ -120,8 +124,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         label={t('Project ID')}
         isRequired
         fieldId="projectID"
-        helperText={t('OpenStack project ID for token credentials.')}
-        helperTextInvalid={t('Invalid Project ID.')}
+        helperText={t('OpenStack project ID.')}
+        helperTextInvalid={t(
+          "Error: The format of the provided project ID is invalid. Ensure the project ID doesn't include whitespace characters.",
+        )}
         validated={state.validation.projectID}
       >
         <TextInput
@@ -139,8 +145,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         label={t('Region')}
         isRequired
         fieldId="regionName"
-        helperText={t('OpenStack region.')}
-        helperTextInvalid={t('Invalid region name.')}
+        helperText={t('OpenStack region name.')}
+        helperTextInvalid={t(
+          "Error: The format of the provided region name is invalid. Ensure the region name doesn't include whitespace characters.",
+        )}
         validated={state.validation.regionName}
       >
         <TextInput
