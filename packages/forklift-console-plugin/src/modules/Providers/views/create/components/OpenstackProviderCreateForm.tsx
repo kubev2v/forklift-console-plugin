@@ -1,4 +1,5 @@
 import React, { useCallback, useReducer } from 'react';
+import { Trans } from 'react-i18next';
 import { validateURL, Validation } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -18,9 +19,50 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
 
   const url = provider?.spec?.url || '';
 
+  const urlHelperTextMsgs = {
+    error: (
+      <div className="forklift--create-provider-field-error-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
+          domain name, and a path. For example:{' '}
+          <strong>https://identity_service.com:5000/v3</strong>.
+        </Trans>
+      </div>
+    ),
+    warning: (
+      <div className="forklift--create-provider-field-warning-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          Warning: The provided URL does not end with the API endpoint path:{' '}
+          <strong>
+            {'"'}/v3{'"'}
+          </strong>
+          . Ensure the URL includes the correct path. For example:{' '}
+          <strong>https://identity_service.com:5000/v3</strong>.
+        </Trans>
+      </div>
+    ),
+    success: (
+      <div className="forklift--create-provider-field-success-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          URL of the OpenStack Identity (Keystone) endpoint. For example:{' '}
+          <strong>https://identity_service.com:5000/v3</strong>.
+        </Trans>
+      </div>
+    ),
+    default: (
+      <div className="forklift--create-provider-field-default-validation">
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          URL of the OpenStack Identity (Keystone) endpoint. For example: {'<strong>'}
+          https://identity_service.com:5000/v3{'</strong>'}.
+        </Trans>
+      </div>
+    ),
+  };
+
   const initialState = {
     validation: {
       url: 'default' as Validation,
+      urlHelperText: urlHelperTextMsgs.default,
     },
   };
 
@@ -43,17 +85,34 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
 
   const handleChange = useCallback(
     (id, value) => {
-      const trimmedValue = value.trim();
+      if (id !== 'url') return;
 
-      if (id === 'url') {
-        const validationState = validateURL(trimmedValue) ? 'success' : 'error';
-        dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
+      const trimmedValue: string = value.trim();
+      const validationState = getURLValidationState(trimmedValue);
 
-        onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
-      }
+      dispatch({
+        type: 'SET_FIELD_VALIDATED',
+        payload: { field: 'url', validationState },
+      });
+
+      dispatch({
+        type: 'SET_FIELD_VALIDATED',
+        payload: {
+          field: 'urlHelperText',
+          validationState: urlHelperTextMsgs[validationState],
+        },
+      });
+
+      onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
     },
     [provider],
   );
+
+  const getURLValidationState = (url: string): Validation => {
+    if (!validateURL(url)) return 'error';
+    if (!url.endsWith('v3') && !url.endsWith('v3/')) return 'warning';
+    return 'success';
+  };
 
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
@@ -61,9 +120,9 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
         label={t('URL')}
         isRequired
         fieldId="url"
-        helperText={t('URL of the provider')}
+        helperText={state.validation.urlHelperText}
         validated={state.validation.url}
-        helperTextInvalid={t('Error: URL is required and must be valid.')}
+        helperTextInvalid={state.validation.urlHelperText}
       >
         <TextInput
           isRequired

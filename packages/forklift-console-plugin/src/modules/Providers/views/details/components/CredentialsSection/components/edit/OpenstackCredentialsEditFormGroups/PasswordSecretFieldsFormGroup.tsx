@@ -77,8 +77,10 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Username')}
         isRequired
         fieldId="username"
-        helperText={t('OpenStack REST API user name.')}
-        helperTextInvalid={t('Invalid username.')}
+        helperText={t('A user name for connecting to the OpenStack Identity (Keystone) endpoint.')}
+        helperTextInvalid={t(
+          "Error: The format of the provided user name is invalid. Ensure the user name doesn't include whitespace characters.",
+        )}
         validated={state.validation.username}
       >
         <TextInput
@@ -96,8 +98,12 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Password')}
         isRequired
         fieldId="password"
-        helperText={t('OpenStack REST API password credentials.')}
-        helperTextInvalid={t('Invalid password.')}
+        helperText={t(
+          'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
+        )}
+        helperTextInvalid={t(
+          "Error: The format of the provided user password is invalid. Ensure the user password doesn't include whitespace characters.",
+        )}
         validated={state.validation.password}
       >
         <TextInput
@@ -122,8 +128,10 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Region')}
         isRequired
         fieldId="regionName"
-        helperText={t('OpenStack region.')}
-        helperTextInvalid={t('Invalid region name.')}
+        helperText={t('OpenStack region name.')}
+        helperTextInvalid={t(
+          "Error: The format of the provided region name is invalid. Ensure the region name doesn't include whitespace characters.",
+        )}
         validated={state.validation.regionName}
       >
         <TextInput
@@ -141,8 +149,10 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Project')}
         isRequired
         fieldId="projectName"
-        helperText={t('OpenStack project.')}
-        helperTextInvalid={t('Invalid project name.')}
+        helperText={t('OpenStack project name.')}
+        helperTextInvalid={t(
+          "Error: The format of the provided project name is invalid. Ensure the project name doesn't include whitespace characters.",
+        )}
         validated={state.validation.projectName}
       >
         <TextInput
@@ -160,8 +170,10 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Domain')}
         isRequired
         fieldId="domainName"
-        helperText={t('OpenStack domain for password credentials.')}
-        helperTextInvalid={t('Invalid domain name.')}
+        helperText={t('OpenStack domain name.')}
+        helperTextInvalid={t(
+          "Error: The format of the provided domain name is invalid. Ensure the domain name doesn't include whitespace characters.",
+        )}
         validated={state.validation.domainName}
       >
         <TextInput

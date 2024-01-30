@@ -1,8 +1,16 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
+import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ClipboardCopy, ClipboardCopyVariant, Text, TextVariants } from '@patternfly/react-core';
+import {
+  ClipboardCopy,
+  ClipboardCopyVariant,
+  DescriptionList,
+  Text,
+  TextVariants,
+} from '@patternfly/react-core';
 
 import { MaskedData } from '../../MaskedData';
 import { ListComponentProps } from '../BaseCredentialsSection';
@@ -10,39 +18,62 @@ import { ListComponentProps } from '../BaseCredentialsSection';
 export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
   const { t } = useForkliftTranslation();
 
+  const usernameHelperTextMsg = t(
+    'A user name for connecting to the OpenStack Identity (Keystone) endpoint.',
+  );
+  const passwordHelperTextMsg = t(
+    'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
+  );
+  const regionHelperTextMsg = t('OpenStack region name.');
+  const projectNameHelperTextMsg = t('OpenStack project name.');
+  const domainHelperTextMsg = t('OpenStack domain name.');
+  const tokenWithUserIdHelperTextMsg = t('OpenStack token for authentication using a user ID.');
+  const tokenWithUsernameHelperTextMsg = t('OpenStack token for authentication using a user name.');
+  const userIdHelperTextMsg = t(
+    'A user ID for connecting to the OpenStack Identity (Keystone) endpoint.',
+  );
+  const projectIdHelperTextMsg = t('OpenStack project ID.');
+  const applicationCredentialIDHelperTextMsg = t(
+    'OpenStack application credential ID needed for the application credential authentication.',
+  );
+  const applicationCredentialNameHelperTextMsg = t(
+    'OpenStack application credential name needed for application credential authentication.',
+  );
+  const applicationCredentialSecretHelperTextMsg = t(
+    'OpenStack application credential Secret needed for the application credential authentication.',
+  );
   const items = [];
 
   const fields = {
     passwordSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
+        description: t(
+          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
+        ),
       },
-      username: { label: t('Username'), description: t('OpenStack REST API user name.') },
-      password: {
-        label: t('Password'),
-        description: t('OpenStack REST API password credentials.'),
-      },
-      regionName: {
-        label: t('Region'),
-        description: t('OpenStack region.'),
-      },
-      projectName: {
-        label: t('Project'),
-        description: t('OpenStack project.'),
-      },
-      domainName: {
-        label: t('Domain'),
-        description: t('OpenStack domain for password credentials.'),
-      },
+      username: { label: t('Username'), description: usernameHelperTextMsg },
+      password: { label: t('Password'), description: passwordHelperTextMsg },
+      regionName: { label: t('Region'), description: regionHelperTextMsg },
+      projectName: { label: t('Project'), description: projectNameHelperTextMsg },
+      domainName: { label: t('Domain'), description: domainHelperTextMsg },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t("If true, the provider's REST API TLS certificate won't be validated."),
+        description: t(
+          "If true (check box is checked), the provider's CA certificate won't be validated.",
+        ),
+        helperTextPopover: (
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            Note: If this field is checked/true, the migration from this provider will be insecure.
+            {'<br><br>'} Insecure migration means that the transferred data is sent over an insecure
+            connection and potentially sensitive data could be exposed.
+          </Trans>
+        ),
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
+          'A CA certificate to be trusted when connecting to the OpenStack Identity (Keystone) endpoint. Ensure the CA certificate format is valid. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificates, leave the field empty.',
         ),
       },
     },
@@ -50,27 +81,26 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     tokenWithUserIDSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
+        description: t(
+          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
+        ),
       },
-      token: {
-        label: t('Token'),
-        description: t('OpenStack REST API token credentials.'),
-      },
-      userID: {
-        label: t('User ID'),
-        description: t('OpenStack REST API user ID.'),
-      },
-      projectID: {
-        label: t('Project ID'),
-        description: t('OpenStack project ID for token credentials.'),
-      },
-      regionName: {
-        label: t('Region'),
-        description: t('OpenStack region.'),
-      },
+      token: { label: t('Token'), description: tokenWithUserIdHelperTextMsg },
+      userID: { label: t('User ID'), description: userIdHelperTextMsg },
+      projectID: { label: t('Project ID'), description: projectIdHelperTextMsg },
+      regionName: { label: t('Region'), description: regionHelperTextMsg },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t("If true, the provider's REST API TLS certificate won't be validated."),
+        description: t(
+          "If true (check box is checked), the provider's CA certificate won't be validated.",
+        ),
+        helperTextPopover: (
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            Note: If this field is checked/true, the migration from this provider will be insecure.
+            {'<br><br>'} Insecure migration means that the transferred data is sent over an insecure
+            connection and potentially sensitive data could be exposed.
+          </Trans>
+        ),
       },
       cacert: {
         label: t('CA certificate'),
@@ -83,31 +113,27 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     tokenWithUsernameSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
+        description: t(
+          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
+        ),
       },
-      token: {
-        label: t('Token'),
-        description: t('OpenStack REST API token credentials.'),
-      },
-      username: {
-        label: t('Username'),
-        description: t('OpenStack REST API user name.'),
-      },
-      regionName: {
-        label: t('Region'),
-        description: t('OpenStack region.'),
-      },
-      projectName: {
-        label: t('Project'),
-        description: t('OpenStack project for token credentials.'),
-      },
-      domainName: {
-        label: t('Domain name'),
-        description: t('OpenStack domain name for token credentials.'),
-      },
+      token: { label: t('Token'), description: tokenWithUsernameHelperTextMsg },
+      username: { label: t('Username'), description: t(usernameHelperTextMsg) },
+      regionName: { label: t('Region'), description: regionHelperTextMsg },
+      projectName: { label: t('Project'), description: projectNameHelperTextMsg },
+      domainName: { label: t('Domain name'), description: domainHelperTextMsg },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t("If true, the provider's REST API TLS certificate won't be validated."),
+        description: t(
+          "If true (check box is checked), the provider's CA certificate won't be validated.",
+        ),
+        helperTextPopover: (
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            Note: If this field is checked/true, the migration from this provider will be insecure.
+            {'<br><br>'} Insecure migration means that the transferred data is sent over an insecure
+            connection and potentially sensitive data could be exposed.
+          </Trans>
+        ),
       },
       cacert: {
         label: t('CA certificate'),
@@ -120,27 +146,32 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     applicationCredentialIdSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
+        description: t(
+          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
+        ),
       },
       applicationCredentialID: {
         label: t('Application credential ID'),
-        description: t('OpenStack REST API application credential ID.'),
+        description: applicationCredentialIDHelperTextMsg,
       },
       applicationCredentialSecret: {
         label: t('Application credential secret'),
-        description: t('OpenStack REST API application credential secret.'),
+        description: applicationCredentialSecretHelperTextMsg,
       },
-      regionName: {
-        label: t('Region'),
-        description: t('OpenStack region.'),
-      },
-      projectName: {
-        label: t('Project'),
-        description: t('OpenStack project.'),
-      },
+      regionName: { label: t('Region'), description: regionHelperTextMsg },
+      projectName: { label: t('Project'), description: projectNameHelperTextMsg },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t("If true, the provider's REST API TLS certificate won't be validated."),
+        description: t(
+          "If true (check box is checked), the provider's CA certificate won't be validated.",
+        ),
+        helperTextPopover: (
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            Note: If this field is checked/true, the migration from this provider will be insecure.
+            {'<br><br>'} Insecure migration means that the transferred data is sent over an insecure
+            connection and potentially sensitive data could be exposed.
+          </Trans>
+        ),
       },
       cacert: {
         label: t('CA certificate'),
@@ -153,35 +184,34 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     applicationCredentialNameSecretFields: {
       authType: {
         label: t('Authentication type'),
-        description: t('Type of authentication to use when connecting to OpenStack REST API.'),
+        description: t(
+          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
+        ),
       },
       applicationCredentialName: {
         label: t('Application credential name'),
-        description: t('OpenStack REST API application credential name.'),
+        description: applicationCredentialNameHelperTextMsg,
       },
       applicationCredentialSecret: {
         label: t('Application Credential Secret'),
-        description: t('OpenStack REST API application credential secret.'),
+        description: applicationCredentialSecretHelperTextMsg,
       },
-      username: {
-        label: t('Username'),
-        description: t('OpenStack REST API user name.'),
-      },
-      regionName: {
-        label: t('Region'),
-        description: t('OpenStack region.'),
-      },
-      projectName: {
-        label: t('Project'),
-        description: t('OpenStack project.'),
-      },
-      domainName: {
-        label: t('Domain'),
-        description: t('OpenStack domain for application credential credentials.'),
-      },
+      username: { label: t('Username'), description: t(usernameHelperTextMsg) },
+      regionName: { label: t('Region'), description: regionHelperTextMsg },
+      projectName: { label: t('Project'), description: projectNameHelperTextMsg },
+      domainName: { label: t('Domain'), description: domainHelperTextMsg },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t("If true, the provider's REST API TLS certificate won't be validated."),
+        description: t(
+          "If true (check box is checked), the provider's CA certificate won't be validated.",
+        ),
+        helperTextPopover: (
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            Note: If this field is checked/true, the migration from this provider will be insecure.
+            {'<br><br>'} Insecure migration means that the transferred data is sent over an insecure
+            connection and potentially sensitive data could be exposed.
+          </Trans>
+        ),
       },
       cacert: {
         label: t('CA certificate'),
@@ -230,9 +260,16 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     items.push(
       <>
         <div className="forklift-page-secret-title-div">
-          <Text component={TextVariants.h6} className="forklift-page-secret-title">
-            {field.label}
-          </Text>
+          <DescriptionList className="forklift-page-secret-title">
+            <DetailsItem
+              title={field.label}
+              helpContent={
+                key === 'insecureSkipVerify' ? <Text>{field?.helperTextPopover}</Text> : null
+              }
+              showHelpIconNextToTitle={true}
+              content={''}
+            />
+          </DescriptionList>
           <Text component={TextVariants.small} className="forklift-page-secret-subtitle">
             {field.description}
           </Text>
