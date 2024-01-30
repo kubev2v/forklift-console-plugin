@@ -18,29 +18,33 @@ import { getIsTarget, Validation } from '../../utils';
 import { VmData } from '../details';
 
 import {
+  ADD_NETWORK_MAPPING,
   CreateVmMigration,
   DEFAULT_NAMESPACE,
+  DELETE_NETWORK_MAPPING,
   PageAction,
   PlanAvailableProviders,
   PlanAvailableSourceNetworks,
   PlanAvailableTargetNamespaces,
   PlanAvailableTargetNetworks,
-  PlanCrateNetMap,
+  PlanError,
   PlanExistingNetMaps,
   PlanExistingPlans,
+  PlanMapping,
   PlanName,
   PlanNickProfiles,
   PlanTargetNamespace,
   PlanTargetProvider,
   POD_NETWORK,
+  REPLACE_NETWORK_MAPPING,
   SET_AVAILABLE_PROVIDERS,
   SET_AVAILABLE_SOURCE_NETWORKS,
   SET_AVAILABLE_TARGET_NAMESPACES,
   SET_AVAILABLE_TARGET_NETWORKS,
+  SET_ERROR,
   SET_EXISTING_NET_MAPS,
   SET_EXISTING_PLANS,
   SET_NAME,
-  SET_NET_MAP,
   SET_NICK_PROFILES,
   SET_TARGET_NAMESPACE,
   SET_TARGET_PROVIDER,
@@ -65,8 +69,7 @@ export interface CreateVmMigrationPageState {
     netMap: V1beta1NetworkMap;
     storageMap: V1beta1StorageMap;
   };
-  validationError: Error | null;
-  apiError: Error | null;
+
   validation: {
     planName: Validation;
     targetNamespace: Validation;
@@ -83,6 +86,8 @@ export interface CreateVmMigrationPageState {
     nickProfiles: OVirtNicProfile[];
     netMaps: V1beta1NetworkMap[];
     createdNetMap?: V1beta1NetworkMap;
+    createdStorageMap?: V1beta1StorageMap;
+    createdPlan?: V1beta1Plan;
   };
   calculatedOnce: {
     // calculated on start (exception:for ovirt/openstack we need to fetch disks)
@@ -123,8 +128,8 @@ export interface CreateVmMigrationPageState {
   };
   flow: {
     editingDone: boolean;
-    netMapCreated: boolean;
-    storageMapCreated: boolean;
+    validationError: Error | null;
+    apiError?: Error;
   };
 }
 
@@ -333,7 +338,7 @@ const actions: {
   },
   [START_CREATE]({
     flow,
-    underConstruction: { plan, netMap },
+    underConstruction: { plan, netMap, storageMap },
     calculatedOnce: { sourceNetworkLabelToId },
     calculatedPerNamespace: { networkMappings },
   }) {
@@ -348,10 +353,79 @@ const actions: {
           ? { type: 'pod' }
           : { name: destination, namespace: plan.spec.targetNamespace, type: 'multus' },
     }));
+    storageMap.spec.map = [];
   },
-  [SET_NET_MAP](draft, { payload: { netMap } }: PageAction<CreateVmMigration, PlanCrateNetMap>) {
-    draft.existingResources.createdNetMap = netMap;
-    draft.flow.netMapCreated = true;
+  [SET_ERROR]({ flow }, { payload: { error } }: PageAction<CreateVmMigration, PlanError>) {
+    console.warn(SET_ERROR);
+    flow.apiError = error;
+  },
+  [ADD_NETWORK_MAPPING]({ calculatedPerNamespace: cpn }) {
+    const firstUsedByVms = cpn.sourceNetworks.find(
+      ({ usedBySelectedVms, isMapped }) => usedBySelectedVms && !isMapped,
+    );
+    const firstGeneral = cpn.sourceNetworks.find(
+      ({ usedBySelectedVms, isMapped }) => !usedBySelectedVms && !isMapped,
+    );
+    const nextSource = firstUsedByVms || firstGeneral;
+    const nextDest = cpn.targetNetworks[0];
+
+    console.warn(ADD_NETWORK_MAPPING, nextSource, nextDest);
+    if (nextDest && nextSource) {
+      cpn.sourceNetworks = cpn.sourceNetworks.map((m) => ({
+        ...m,
+        isMapped: m.label === nextSource.label ? true : m.isMapped,
+      }));
+      cpn.networkMappings = [
+        ...cpn.networkMappings,
+        { source: nextSource.label, destination: cpn.targetNetworks[0] },
+      ];
+    }
+  },
+  [DELETE_NETWORK_MAPPING](
+    { calculatedPerNamespace: cpn },
+    { payload: { source } }: PageAction<CreateVmMigration, Mapping>,
+  ) {
+    const currentSource = cpn.sourceNetworks.find(
+      ({ label, isMapped }) => label === source && isMapped,
+    );
+    console.warn(DELETE_NETWORK_MAPPING, source, currentSource);
+    if (currentSource) {
+      cpn.sourceNetworks = cpn.sourceNetworks.map((m) => ({
+        ...m,
+        isMapped: m.label === source ? false : m.isMapped,
+      }));
+      cpn.networkMappings = cpn.networkMappings.filter(
+        ({ source }) => source !== currentSource.label,
+      );
+    }
+  },
+  [REPLACE_NETWORK_MAPPING](
+    { calculatedPerNamespace: cpn },
+    { payload: { current, next } }: PageAction<CreateVmMigration, PlanMapping>,
+  ) {
+    console.warn(REPLACE_NETWORK_MAPPING, current, next);
+    const currentSource = cpn.sourceNetworks.find(
+      ({ label, isMapped }) => label === current.source && isMapped,
+    );
+    const nextSource = cpn.sourceNetworks.find(({ label }) => label === next.source);
+    const nextDest = cpn.targetNetworks.find((label) => label === next.destination);
+    const sourceChanged = currentSource.label !== nextSource.label;
+    const destinationChanged = current.destination !== nextDest;
+
+    if (!currentSource || !nextSource || !nextDest || (!sourceChanged && !destinationChanged)) {
+      return;
+    }
+
+    if (sourceChanged) {
+      const labelToMappingState = { [currentSource.label]: false, [nextSource.label]: true };
+      cpn.sourceNetworks = cpn.sourceNetworks.map((m) => ({
+        ...m,
+        isMapped: labelToMappingState[m.label] ?? m.isMapped,
+      }));
+    }
+
+    const mappingIndex = cpn.networkMappings.findIndex(({ source }) => source === current.source);
+    mappingIndex > -1 && cpn.networkMappings.splice(mappingIndex, 1, next);
   },
 };
 

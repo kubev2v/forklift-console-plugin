@@ -24,12 +24,14 @@ export const SET_EXISTING_PLANS = 'SET_EXISTING_PLANS';
 export const SET_AVAILABLE_TARGET_NAMESPACES = 'SET_AVAILABLE_TARGET_NAMESPACES';
 export const REPLACE_NETWORK_MAPPING = 'REPLACE_NETWORK_MAPPING';
 export const REPLACE_STORAGE_MAPPING = 'REPLACE_STORAGE_MAPPING';
+export const ADD_NETWORK_MAPPING = 'ADD_NETWORK_MAPPING';
+export const DELETE_NETWORK_MAPPING = 'DELETE_NETWORK_MAPPING';
 export const SET_AVAILABLE_TARGET_NETWORKS = 'SET_AVAILABLE_TARGET_NETWORKS';
 export const SET_AVAILABLE_SOURCE_NETWORKS = 'SET_AVAILABLE_SOURCE_NETWORKS';
 export const SET_NICK_PROFILES = 'SET_NICK_PROFILES';
 export const SET_EXISTING_NET_MAPS = 'SET_EXISTING_NET_MAPS';
 export const START_CREATE = 'START_CREATE';
-export const SET_NET_MAP = 'SET_NET_MAP';
+export const SET_ERROR = 'SET_ERROR';
 
 export type CreateVmMigration =
   | typeof SET_NAME
@@ -40,13 +42,15 @@ export type CreateVmMigration =
   | typeof SET_EXISTING_PLANS
   | typeof SET_AVAILABLE_TARGET_NAMESPACES
   | typeof REPLACE_NETWORK_MAPPING
+  | typeof ADD_NETWORK_MAPPING
+  | typeof DELETE_NETWORK_MAPPING
   | typeof REPLACE_STORAGE_MAPPING
   | typeof SET_AVAILABLE_TARGET_NETWORKS
   | typeof SET_AVAILABLE_SOURCE_NETWORKS
   | typeof SET_NICK_PROFILES
   | typeof SET_EXISTING_NET_MAPS
   | typeof START_CREATE
-  | typeof SET_NET_MAP;
+  | typeof SET_ERROR;
 
 export interface PageAction<S, T> {
   type: S;
@@ -113,14 +117,13 @@ export interface PlanNickProfiles {
   error?: Error;
 }
 
-export interface PlanCrateNetMap {
-  netMap?: V1beta1NetworkMap;
-  error?: Error;
+export interface PlanError {
+  error: Error;
 }
 
 export interface PlanMapping {
-  current?: Mapping;
-  next?: Mapping;
+  current: Mapping;
+  next: Mapping;
 }
 
 // action creators
@@ -209,12 +212,25 @@ export const replaceStorageMapping = ({
   payload: { current, next },
 });
 
+export const addNetworkMapping = (): PageAction<CreateVmMigration, unknown> => ({
+  type: 'ADD_NETWORK_MAPPING',
+  payload: {},
+});
+
 export const replaceNetworkMapping = ({
   current,
   next,
 }: PlanMapping): PageAction<CreateVmMigration, PlanMapping> => ({
   type: 'REPLACE_NETWORK_MAPPING',
   payload: { current, next },
+});
+
+export const deleteNetworkMapping = ({
+  source,
+  destination,
+}: Mapping): PageAction<CreateVmMigration, Mapping> => ({
+  type: 'DELETE_NETWORK_MAPPING',
+  payload: { source, destination },
 });
 
 export const setAvailableTargetNetworks = (
@@ -249,10 +265,7 @@ export const startCreate = (): PageAction<CreateVmMigration, unknown> => ({
   payload: {},
 });
 
-export const setNetMap = ({
-  netMap,
-  error,
-}: PlanCrateNetMap): PageAction<CreateVmMigration, PlanCrateNetMap> => ({
-  type: 'SET_NET_MAP',
-  payload: { netMap, error },
+export const setError = (error: Error): PageAction<CreateVmMigration, PlanError> => ({
+  type: 'SET_ERROR',
+  payload: { error },
 });
