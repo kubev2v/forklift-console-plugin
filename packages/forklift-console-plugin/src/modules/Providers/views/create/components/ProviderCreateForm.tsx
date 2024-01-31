@@ -10,6 +10,7 @@ import { Flex, FlexItem, Form, FormGroup, TextInput } from '@patternfly/react-co
 
 import { EditProvider } from './EditProvider';
 import { providerCardItems } from './providerCardItems';
+import { EditProviderSectionHeading } from './EditProviderSectionHeading';
 export interface ProvidersCreateFormProps {
   newProvider: V1beta1Provider;
   newSecret: V1Secret;
@@ -73,6 +74,8 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
   return (
     <>
       <div className="forklift-create-provider-edit-section">
+        <EditProviderSectionHeading text={t('Provider details')} />
+
         <Form isWidthLimited className="forklift-section-secret-edit">
           <FormGroup label={t('Select provider type')} isRequired fieldId="type">
             {newProvider?.spec?.type ? (

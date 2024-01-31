@@ -1,4 +1,5 @@
 import React from 'react';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   OpenshiftCredentialsEdit,
@@ -7,6 +8,7 @@ import {
   VSphereCredentialsEdit,
 } from '../../details';
 
+import { EditProviderSectionHeading } from './EditProviderSectionHeading';
 import { OpenshiftProviderFormCreate } from './OpenshiftProviderCreateForm';
 import { OpenstackProviderCreateForm } from './OpenstackProviderCreateForm';
 import { OVAProviderCreateForm } from './OVAProviderCreateForm';
@@ -20,11 +22,15 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
   onNewProviderChange,
   onNewSecretChange,
 }) => {
+  const { t } = useForkliftTranslation();
+
   switch (newProvider?.spec?.type) {
     case 'openstack':
       return (
         <>
           <OpenstackProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
+
+          <EditProviderSectionHeading text={t('Provider credentials')} />
           <OpenstackCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
         </>
       );
@@ -32,6 +38,8 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
       return (
         <>
           <OpenshiftProviderFormCreate provider={newProvider} onChange={onNewProviderChange} />
+
+          <EditProviderSectionHeading text={t('Provider credentials')} />
           <OpenshiftCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
         </>
       );
@@ -39,6 +47,8 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
       return (
         <>
           <OvirtProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
+
+          <EditProviderSectionHeading text={t('Provider credentials')} />
           <OvirtCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
         </>
       );
@@ -46,6 +56,8 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
       return (
         <>
           <VSphereProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
+
+          <EditProviderSectionHeading text={t('Provider credentials')} />
           <VSphereCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
         </>
       );
