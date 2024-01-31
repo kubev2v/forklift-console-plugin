@@ -2,6 +2,11 @@
   padding-top: var(--pf-global--spacer--md);
 }
 
+.forklift-create-provider-edit-section-header {
+  padding-top: var(--pf-global--spacer--lg);
+  margin-bottom: 0;
+}
+
 .forklift--create-provider-edit-card-selected {
   min-width: 25%;
 }
