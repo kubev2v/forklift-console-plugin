@@ -35,19 +35,19 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
 
   const usernameHelperTextMsgs = {
     error: t(
-      'Error: The format of the provided user name is invalid. Ensure the user name does not include whitespace characters.',
+      'Error: The format of the provided username is invalid. Ensure the username does not include spaces.',
     ),
     warning: t(
-      'Warning: The provided user name does not include the user domain. Ensure the user name is in the format of username@user-domain. For example: admin@internal.',
+      'Warning: The provided username does not include the user domain. Ensure the username is in the format of username@user-domain. For example: admin@internal.',
     ),
     success: t(
-      'A user name for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the user name is in the format of username@user-domain. For example: admin@internal.',
+      'A username for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the username is in the format of username@user-domain. For example: admin@internal.',
     ),
   };
 
   const passwordHelperTextMsgs = {
     error: t(
-      'Error: The format of the provided user password is invalid. Ensure the user password does not include whitespace characters.',
+      'Error: The format of the provided user password is invalid. Ensure the user password does not include spaces.',
     ),
     success: t(
       'A user password for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint.',
@@ -62,20 +62,18 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
 
   const cacertHelperTextMsgs = {
     error: t(
-      'Error: The format of the provided CA Certificate is invalid. Ensure the CA certificate format is in a PEM encoded X.509 format.',
+      'Error: The format of the provided CA certificate is invalid. Ensure the CA certificate format is in a PEM encoded X.509 format.',
     ),
     success: t(
-      'A CA certificate to be trusted when connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificates, leave the field empty.',
+      'A CA certificate to be trusted when connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
     ),
   };
 
   const insecureSkipVerifyHelperTextPopover = (
     <Trans t={t} ns="plugin__forklift-console-plugin">
       Note: If <strong>Skip certificate validation</strong> is selected, migrations from this
-      provider will not be secure.
-      <br />
-      <br /> Insecure migration means that the transferred data is sent over an insecure connection
-      and potentially sensitive data could be exposed.
+      provider will not be secure, meaning that the transferred data is sent over an insecure
+      connection and potentially sensitive data could be exposed.
     </Trans>
   );
 
@@ -251,7 +249,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
       <FormGroup
         label={
           insecureSkipVerify
-            ? t("CA certificate - disabled when 'Skip certificate validation' is checked")
+            ? t("CA certificate - disabled when 'Skip certificate validation' is selected")
             : t('CA certificate - leave empty to use system CA certificates')
         }
         labelIcon={

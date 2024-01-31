@@ -26,15 +26,15 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
     error: (
       <div className="forklift-page-provider-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          Error: The format of the provided user name is invalid. Ensure the user name does not
-          include whitespace characters.
+          Error: The format of the provided username is invalid. Ensure the username does not
+          include spaces.
         </Trans>
       </div>
     ),
     warning: (
       <div className="forklift-page-provider-field-warning-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          Warning: The provided user name does not include the user domain. Ensure the user name
+          Warning: The provided username does not include the user domain. Ensure the username
           includes the domain. For example: <strong>user@vsphere.local</strong>.
         </Trans>
       </div>
@@ -42,7 +42,7 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
     success: (
       <div className="forklift-page-provider-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          A user name for connecting to the vCenter API endpoint. Ensure the user name includes the
+          A username for connecting to the vCenter API endpoint. Ensure the username includes the
           user domain. For example: <strong>user@vsphere.local</strong>.
         </Trans>
       </div>
@@ -50,7 +50,7 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
     default: (
       <div className="forklift-page-provider-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          A user name for connecting to the vCenter API endpoint. Ensure the user name includes the
+          A username for connecting to the vCenter API endpoint. Ensure the username includes the
           user domain. For example: <strong>user@vsphere.local</strong>.
         </Trans>
       </div>
@@ -59,7 +59,7 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
 
   const passwordHelperTextMsgs = {
     error: t(
-      'Error: The format of the provided user password is invalid. Ensure the user password does not include whitespace characters.',
+      'Error: The format of the provided user password is invalid. Ensure the user password does not include spaces.',
     ),
     success: t('A user password for connecting to the vCenter API endpoint.'),
   };

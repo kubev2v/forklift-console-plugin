@@ -85,7 +85,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           'OpenStack application credential name needed for application credential authentication.',
         )}
         helperTextInvalid={t(
-          "Error: The format of the provided application credential name is invalid. Ensure the name doesn't include whitespace characters.",
+          'Error: The format of the provided application credential name is invalid. Ensure the name does not include spaces.',
         )}
         validated={state.validation.applicationCredentialName}
       >
@@ -108,7 +108,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           'OpenStack application credential Secret needed for the application credential authentication.',
         )}
         helperTextInvalid={t(
-          "Error: The format of the provided application credential secret is invalid. Ensure the secret doesn't include whitespace characters.",
+          'Error: The format of the provided application credential Secret is invalid. Ensure the Secret does not include spaces.',
         )}
         validated={state.validation.applicationCredentialSecret}
       >
@@ -135,9 +135,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Username')}
         isRequired
         fieldId="username"
-        helperText={t('A user name for connecting to the OpenStack Identity (Keystone) endpoint.')}
+        helperText={t('A username for connecting to the OpenStack Identity (Keystone) endpoint.')}
         helperTextInvalid={t(
-          "Error: The format of the provided user name is invalid. Ensure the user name doesn't include whitespace characters.",
+          'Error: The format of the provided username is invalid. Ensure the username does not include spaces.',
         )}
         validated={state.validation.username}
       >
@@ -158,7 +158,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         fieldId="regionName"
         helperText={t('OpenStack region name.')}
         helperTextInvalid={t(
-          "Error: The format of the provided region name is invalid. Ensure the region name doesn't include whitespace characters.",
+          'Error: The format of the provided region name is invalid. Ensure the region name does not include spaces.',
         )}
         validated={state.validation.regionName}
       >
@@ -179,7 +179,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         fieldId="projectName"
         helperText={t('OpenStack project name.')}
         helperTextInvalid={t(
-          "Error: The format of the provided project name is invalid. Ensure the project name doesn't include whitespace characters.",
+          'Error: The format of the provided project name is invalid. Ensure the project name does not include spaces.',
         )}
         validated={state.validation.projectName}
       >
@@ -200,7 +200,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         fieldId="domainName"
         helperText={t('OpenStack domain name.')}
         helperTextInvalid={t(
-          "Error: The format of the provided domain name is invalid. Ensure the domain name doesn't include whitespace characters.",
+          'Error: The format of the provided domain name is invalid. Ensure the domain name does not include spaces.',
         )}
         validated={state.validation.domainName}
       >
