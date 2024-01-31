@@ -34,6 +34,8 @@ import { DetailsItem, getIsTarget } from '../../utils';
 import { concernsMatcher, featuresMatcher, VmData } from '../details';
 
 import {
+  addNetworkMapping,
+  deleteNetworkMapping,
   PageAction,
   replaceNetworkMapping,
   replaceStorageMapping,
@@ -249,17 +251,17 @@ export const PlansCreateForm = ({
                     namespace={netMap.metadata?.namespace}
                     name={netMap.metadata?.name}
                     className="forklift-page-resource-link-in-description-item"
-                    linkTo={flow.netMapCreated}
+                    linkTo={false}
                   />
                 </span>
               </DescriptionListTerm>
               <DescriptionListDescription className="forklift-page-mapping-list">
                 <MappingList
-                  addMapping={(newMapping) => dispatch(replaceNetworkMapping({ next: newMapping }))}
+                  addMapping={() => dispatch(addNetworkMapping())}
                   replaceMapping={({ current, next }) =>
                     dispatch(replaceNetworkMapping({ current, next }))
                   }
-                  deleteMapping={(current) => dispatch(replaceNetworkMapping({ current }))}
+                  deleteMapping={(current) => dispatch(deleteNetworkMapping({ ...current }))}
                   availableDestinations={targetNetworks}
                   sources={sourceNetworks}
                   mappings={networkMappings}
@@ -279,17 +281,17 @@ export const PlansCreateForm = ({
                     namespace={storageMap.metadata?.namespace}
                     name={storageMap.metadata?.name}
                     className="forklift-page-resource-link-in-description-item"
-                    linkTo={flow.storageMapCreated}
+                    linkTo={false}
                   />
                 </span>
               </DescriptionListTerm>
               <DescriptionListDescription className="forklift-page-mapping-list">
                 <MappingList
-                  addMapping={(newMapping) => dispatch(replaceStorageMapping({ next: newMapping }))}
+                  addMapping={() => dispatch(addNetworkMapping())}
                   replaceMapping={({ current, next }) =>
                     dispatch(replaceStorageMapping({ current, next }))
                   }
-                  deleteMapping={(current) => dispatch(replaceStorageMapping({ current }))}
+                  deleteMapping={() => undefined}
                   availableDestinations={targetStorages}
                   sources={[]}
                   mappings={storageMappings}

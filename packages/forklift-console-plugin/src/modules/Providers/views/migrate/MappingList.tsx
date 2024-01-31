@@ -35,7 +35,7 @@ interface MappingListProps {
   availableDestinations: string[];
   replaceMapping: (val: { current: Mapping; next: Mapping }) => void;
   deleteMapping: (mapping: Mapping) => void;
-  addMapping: (mapping: Mapping) => void;
+  addMapping: () => void;
   usedSourcesLabel: string;
   generalSourcesLabel: string;
   noSourcesLabel: string;
@@ -80,13 +80,7 @@ export const MappingList: FC<MappingListProps> = ({
         ))}
       </DataList>
       <Button
-        onClick={() =>
-          addMapping({
-            source: usedSources?.[0]?.label ?? generalSources?.[0]?.label,
-            // assume that the default exists and is first in the list
-            destination: availableDestinations?.[0],
-          })
-        }
+        onClick={addMapping}
         type="button"
         variant="link"
         isDisabled={allMapped || isDisabled}

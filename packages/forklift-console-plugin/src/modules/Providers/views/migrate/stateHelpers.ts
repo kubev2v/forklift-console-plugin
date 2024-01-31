@@ -10,6 +10,7 @@ import {
   withTr,
 } from '@kubev2v/common';
 import {
+  IoK8sApimachineryPkgApisMetaV1ObjectMeta,
   OpenShiftNamespace,
   ProviderModelGroupVersionKind as ProviderGVK,
   ProviderType,
@@ -60,7 +61,6 @@ export const calculateNetworks = (
   draft: Draft<CreateVmMigrationPageState>,
 ): Partial<CreateVmMigrationPageState['calculatedPerNamespace']> => {
   const {
-    calculatedPerNamespace: { networkMappings },
     existingResources,
     underConstruction: { plan },
     calculatedOnce: { sourceNetworkLabelToId, networkIdsUsedBySelectedVms },
@@ -77,33 +77,28 @@ export const calculateNetworks = (
   ];
   const defaultDestination = POD_NETWORK;
 
-  const validMappings = networkMappings.filter(
-    ({ source, destination }) =>
-      (targetNetworkNameToUid[destination] || destination === POD_NETWORK) &&
-      sourceNetworkLabelToId[source],
-  );
-
   const sourceNetworks = Object.keys(sourceNetworkLabelToId)
     .sort((a, b) => universalComparator(a, b, 'en'))
-    .map((label) => ({
-      label,
-      isMapped: validMappings.some(({ source }) => source === label),
-      usedBySelectedVms: networkIdsUsedBySelectedVms.some(
+    .map((label) => {
+      const usedBySelectedVms = networkIdsUsedBySelectedVms.some(
         (id) => id === sourceNetworkLabelToId[label],
-      ),
-    }));
+      );
+      return {
+        label,
+        usedBySelectedVms,
+        isMapped: usedBySelectedVms,
+      };
+    });
 
   return {
     targetNetworks: targetNetworkLabels,
     sourceNetworks,
-    networkMappings: networkMappings.length
-      ? validMappings
-      : sourceNetworks
-          .filter(({ usedBySelectedVms }) => usedBySelectedVms)
-          .map(({ label }) => ({
-            source: label,
-            destination: defaultDestination,
-          })),
+    networkMappings: sourceNetworks
+      .filter(({ usedBySelectedVms }) => usedBySelectedVms)
+      .map(({ label }) => ({
+        source: label,
+        destination: defaultDestination,
+      })),
   };
 };
 
@@ -119,7 +114,7 @@ export const setTargetProvider = (
   const {
     existingResources,
     validation,
-    underConstruction: { plan, netMap },
+    underConstruction: { plan, netMap, storageMap },
     workArea,
   } = draft;
 
@@ -137,6 +132,7 @@ export const setTargetProvider = (
   validation.targetProvider = resolvedTarget ? 'success' : 'error';
   plan.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
   netMap.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
+  storageMap.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
   workArea.targetProvider = resolvedTarget;
 };
 
@@ -179,7 +175,15 @@ export const resolveTargetProvider = (name: string, availableProviders: V1beta1P
 // based on the method used in legacy/src/common/helpers
 // and mocks/src/definitions/utils
 export const getObjectRef = (
-  { apiVersion, kind, metadata: { name, namespace, uid } = {} }: V1beta1Provider = {
+  {
+    apiVersion,
+    kind,
+    metadata: { name, namespace, uid } = {},
+  }: {
+    apiVersion: string;
+    kind: string;
+    metadata?: IoK8sApimachineryPkgApisMetaV1ObjectMeta;
+  } = {
     apiVersion: undefined,
     kind: undefined,
   },
@@ -244,10 +248,16 @@ export const createInitialState = ({
         name: generateName(sourceProvider.metadata.name),
         namespace,
       },
+      spec: {
+        ...storageMapTemplate?.spec,
+        provider: {
+          source: getObjectRef(sourceProvider),
+          destination: undefined,
+        },
+      },
     },
   },
-  validationError: null,
-  apiError: null,
+
   existingResources: {
     plans: [],
     providers: [],
@@ -291,8 +301,8 @@ export const createInitialState = ({
   },
   flow: {
     editingDone: false,
-    netMapCreated: false,
-    storageMapCreated: false,
+    validationError: undefined,
+    apiError: undefined,
   },
 });
 
@@ -342,8 +352,11 @@ export const mapSourceNetworksToLabels = (
     })
     .filter(Boolean);
   const labelToId: { [label: string]: string } = tuples.reduce((acc, [label, id]) => {
-    if (acc[label] && acc[label] === id) {
-      //already included
+    if (acc[label] === id) {
+      //already included - no collisions
+      return acc;
+    } else if (acc[withSuffix(label, id)] === id) {
+      //already included with suffix - there was a collision before
       return acc;
     } else if (acc[label]) {
       // resolve conflict
@@ -351,9 +364,9 @@ export const mapSourceNetworksToLabels = (
         ...acc,
         // existing entry: add suffix with ID
         [label]: undefined,
-        [`${label}  (ID: ${acc[label]})`]: acc[label],
+        [withSuffix(label, acc[label])]: acc[label],
         // new entry: create with suffix
-        [`${label}  (ID: ${id})`]: id,
+        [withSuffix(label, id)]: id,
       };
     } else {
       // happy path
@@ -366,3 +379,5 @@ export const mapSourceNetworksToLabels = (
 
   return labelToId;
 };
+
+const withSuffix = (label: string, id: string) => `${label}  (ID: ${id}})`;
