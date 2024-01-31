@@ -35,6 +35,13 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
     >
       {t('Edit Provider Credentials')}
     </DropdownItemLink>,
+    <DropdownItemLink
+      key="MigratePlan"
+      description={t('Select virtual machines and create a migration plan.')}
+      href={`${providerURL}/vms`}
+    >
+      {t('Migrate')}
+    </DropdownItemLink>,
     <DropdownItem
       key="delete"
       description={t('Delete the provider resource.')}
