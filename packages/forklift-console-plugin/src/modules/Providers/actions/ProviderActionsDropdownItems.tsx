@@ -1,4 +1,5 @@
 import React from 'react';
+import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel, ProviderModelRef } from '@kubev2v/types';
@@ -20,20 +21,20 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
   });
 
   return [
-    <DropdownItem
+    <DropdownItemLink
       key="EditProvider"
       description={t('View and edit provider details.')}
       href={providerURL}
     >
       {t('Edit Provider')}
-    </DropdownItem>,
-    <DropdownItem
+    </DropdownItemLink>,
+    <DropdownItemLink
       key="EditCredentials"
       description={t('Edit the provider credential secret.')}
       href={`${providerURL}/credentials`}
     >
       {t('Edit Provider Credentials')}
-    </DropdownItem>,
+    </DropdownItemLink>,
     <DropdownItem
       key="delete"
       description={t('Delete the provider resource.')}
