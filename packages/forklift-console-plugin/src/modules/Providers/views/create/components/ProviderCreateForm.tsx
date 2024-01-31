@@ -9,8 +9,8 @@ import { ProviderType, V1beta1Provider, V1Secret } from '@kubev2v/types';
 import { Flex, FlexItem, Form, FormGroup, TextInput } from '@patternfly/react-core';
 
 import { EditProvider } from './EditProvider';
-import { providerCardItems } from './providerCardItems';
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
+import { providerCardItems } from './providerCardItems';
 export interface ProvidersCreateFormProps {
   newProvider: V1beta1Provider;
   newSecret: V1Secret;

@@ -40,21 +40,18 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
   const cacertHelperTextMsgs = {
     error: t(
-      'Error: The format of the provided CA Certificate is invalid. Ensure the CA certificate format is valid.',
+      'Error: The format of the provided CA certificate is invalid. Ensure the CA certificate format is valid.',
     ),
     success: t(
-      'A CA certificate to be trusted when connecting to the OpenStack Identity (Keystone) endpoint. Ensure the CA certificate format is valid. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificates, leave the field empty.',
+      'A CA certificate to be trusted when connecting to the OpenStack Identity (Keystone) endpoint. Ensure the CA certificate format is valid. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
     ),
   };
 
   const insecureSkipVerifyHelperTextPopover = (
     <Trans t={t} ns="plugin__forklift-console-plugin">
       Note: If <strong>Skip certificate validation</strong> is selected, migrations from this
-      provider will not be secure.
-      <br />
-      <br />
-      Insecure migration means that the transferred data is sent over an insecure connection and
-      potentially sensitive data could be exposed.
+      provider will not be secure, meaning that the transferred data is sent over an insecure
+      connection and potentially sensitive data could be exposed.
     </Trans>
   );
 
@@ -285,7 +282,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
       <FormGroup
         label={
           insecureSkipVerify
-            ? t("CA certificate - disabled when 'Skip certificate validation' is checked")
+            ? t("CA certificate - disabled when 'Skip certificate validation' is selected")
             : t('CA certificate - leave empty to use system CA certificates')
         }
         fieldId="cacert"

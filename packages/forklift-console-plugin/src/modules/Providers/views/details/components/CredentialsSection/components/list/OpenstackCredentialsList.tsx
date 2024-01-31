@@ -19,7 +19,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
   const { t } = useForkliftTranslation();
 
   const usernameHelperTextMsg = t(
-    'A user name for connecting to the OpenStack Identity (Keystone) endpoint.',
+    'A username for connecting to the OpenStack Identity (Keystone) endpoint.',
   );
   const passwordHelperTextMsg = t(
     'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
@@ -60,22 +60,20 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
         description: t(
-          "If true (check box is checked), the provider's CA certificate won't be validated.",
+          "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
           <Trans t={t} ns="plugin__forklift-console-plugin">
-            Note: If this field is checked/true, the migration from this provider will be insecure.
-            <br />
-            <br />
-            Insecure migration means that the transferred data is sent over an insecure connection
-            and potentially sensitive data could be exposed.
+            Note: If this field is checked/true, migrations from this provider will not be secure,
+            meaning that the transferred data is sent over an insecure connection and potentially
+            sensitive data could be exposed.
           </Trans>
         ),
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'A CA certificate to be trusted when connecting to the OpenStack Identity (Keystone) endpoint. Ensure the CA certificate format is valid. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificates, leave the field empty.',
+          'A CA certificate to be trusted when connecting to the OpenStack Identity (Keystone) endpoint. Ensure the CA certificate format is valid. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
         ),
       },
     },
@@ -94,15 +92,13 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
         description: t(
-          "If true (check box is checked), the provider's CA certificate won't be validated.",
+          "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
           <Trans t={t} ns="plugin__forklift-console-plugin">
-            Note: If this field is checked/true, the migration from this provider will be insecure.
-            <br />
-            <br />
-            Insecure migration means that the transferred data is sent over an insecure connection
-            and potentially sensitive data could be exposed.
+            Note: If this field is checked/true, migrations from this provider will not be secure,
+            meaning that the transferred data is sent over an insecure connection and potentially
+            sensitive data could be exposed.
           </Trans>
         ),
       },
@@ -129,15 +125,13 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
         description: t(
-          "If true (check box is checked), the provider's CA certificate won't be validated.",
+          "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
           <Trans t={t} ns="plugin__forklift-console-plugin">
-            Note: If this field is checked/true, the migration from this provider will be insecure.
-            <br />
-            <br />
-            Insecure migration means that the transferred data is sent over an insecure connection
-            and potentially sensitive data could be exposed.
+            Note: If this field is checked/true, migrations from this provider will not be secure,
+            meaning that the transferred data is sent over an insecure connection and potentially
+            sensitive data could be exposed.
           </Trans>
         ),
       },
@@ -161,7 +155,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         description: applicationCredentialIDHelperTextMsg,
       },
       applicationCredentialSecret: {
-        label: t('Application credential secret'),
+        label: t('Application credential Secret'),
         description: applicationCredentialSecretHelperTextMsg,
       },
       regionName: { label: t('Region'), description: regionHelperTextMsg },
@@ -169,15 +163,13 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
         description: t(
-          "If true (check box is checked), the provider's CA certificate won't be validated.",
+          "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
           <Trans t={t} ns="plugin__forklift-console-plugin">
-            Note: If this field is checked/true, the migration from this provider will be insecure.
-            <br />
-            <br />
-            Insecure migration means that the transferred data is sent over an insecure connection
-            and potentially sensitive data could be exposed.
+            Note: If this field is checked/true, migrations from this provider will not be secure,
+            meaning that the transferred data is sent over an insecure connection and potentially
+            sensitive data could be exposed.
           </Trans>
         ),
       },
@@ -201,7 +193,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         description: applicationCredentialNameHelperTextMsg,
       },
       applicationCredentialSecret: {
-        label: t('Application Credential Secret'),
+        label: t('Application credential Secret'),
         description: applicationCredentialSecretHelperTextMsg,
       },
       username: { label: t('Username'), description: t(usernameHelperTextMsg) },
@@ -211,15 +203,13 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
         description: t(
-          "If true (check box is checked), the provider's CA certificate won't be validated.",
+          "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
           <Trans t={t} ns="plugin__forklift-console-plugin">
-            Note: If this field is checked/true, the migration from this provider will be insecure.
-            <br />
-            <br />
-            Insecure migration means that the transferred data is sent over an insecure connection
-            and potentially sensitive data could be exposed.
+            Note: If this field is checked/true, migrations from this provider will not be secure,
+            meaning that the transferred data is sent over an insecure connection and potentially
+            sensitive data could be exposed.
           </Trans>
         ),
       },

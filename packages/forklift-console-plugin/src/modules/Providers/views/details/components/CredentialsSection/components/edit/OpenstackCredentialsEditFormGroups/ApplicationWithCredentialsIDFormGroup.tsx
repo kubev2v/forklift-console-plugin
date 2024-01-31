@@ -81,7 +81,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           'OpenStack application credential ID needed for the application credential authentication.',
         )}
         helperTextInvalid={t(
-          "Error: The format of the provided application credential ID is invalid. Ensure the ID doesn't include whitespace characters.",
+          'Error: The format of the provided application credential ID is invalid. Ensure the ID does not include spaces.',
         )}
         validated={state.validation.applicationCredentialID}
       >
@@ -97,14 +97,14 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
       </FormGroup>
 
       <FormGroup
-        label={t('Application credential secret')}
+        label={t('Application credential Secret')}
         isRequired
         fieldId="applicationCredentialSecret"
         helperText={t(
           'OpenStack application credential Secret needed for the application credential authentication.',
         )}
         helperTextInvalid={t(
-          "Error: The format of the provided application credential secret is invalid. Ensure the secret doesn't include whitespace characters.",
+          'Error: The format of the provided application credential Secret is invalid. Ensure the Secret does not include spaces.',
         )}
         validated={state.validation.applicationCredentialSecret}
       >
@@ -133,7 +133,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         fieldId="regionName"
         helperText={t('OpenStack region name.')}
         helperTextInvalid={t(
-          "Error: The format of the provided region name is invalid. Ensure the region name doesn't include whitespace characters.",
+          'Error: The format of the provided region name is invalid. Ensure the region name does not include spaces.',
         )}
         validated={state.validation.regionName}
       >
@@ -154,7 +154,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         fieldId="projectName"
         helperText={t('OpenStack project name.')}
         helperTextInvalid={t(
-          "Error: The format of the provided project name is invalid. Ensure the project name doesn't include whitespace characters.",
+          'Error: The format of the provided project name is invalid. Ensure the project name does not include spaces.',
         )}
         validated={state.validation.projectName}
       >
