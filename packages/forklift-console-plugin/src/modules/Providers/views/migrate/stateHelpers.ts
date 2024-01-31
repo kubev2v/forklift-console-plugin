@@ -18,7 +18,6 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 
-import { InventoryNetwork } from '../../hooks/useNetworks';
 import { getIsTarget, validateK8sName } from '../../utils';
 import { networkMapTemplate, planTemplate, storageMapTemplate } from '../create/templates';
 import { toId, VmData } from '../details';
@@ -35,6 +34,7 @@ import { VSphereVirtualMachinesCells } from '../details/tabs/VirtualMachines/VSp
 
 import { POD_NETWORK } from './actions';
 import { getNetworksUsedBySelectedVms } from './getNetworksUsedBySelectedVMs';
+import { getStoragesUsedBySelectedVms } from './getStoragesUsedBySelectedVMs';
 import { CreateVmMigrationPageState } from './reducer';
 
 export const validateUniqueName = (name: string, existingNames: string[]) =>
@@ -104,7 +104,57 @@ export const calculateNetworks = (
 
 export const calculateStorages = (
   draft: Draft<CreateVmMigrationPageState>,
-): Partial<CreateVmMigrationPageState['calculatedPerNamespace']> => ({});
+): Partial<CreateVmMigrationPageState['calculatedPerNamespace']> => {
+  const {
+    existingResources,
+    underConstruction: { plan },
+    calculatedOnce: { sourceStorageLabelToId, storageIdsUsedBySelectedVms },
+  } = draft;
+
+  const filteredTargets = existingResources.targetStorages
+    .filter(({ namespace }) => namespace === plan.spec.targetNamespace || !namespace)
+    .sort((a, b) => universalComparator(a.name, b.name, 'en'));
+
+  const targetTuples = filteredTargets
+    .map((t): [string, string, boolean] => [
+      t.name,
+      t.uid,
+      t?.object?.metadata?.annotations?.['storageclass.kubernetes.io/is-default-class'] === 'true',
+    ])
+    .sort(([, , isDefault], [, , isOtherDefault]) => {
+      // Always put the default at the top
+      if (isDefault && !isOtherDefault) return -1;
+      if (isOtherDefault && !isDefault) return 1;
+      return 0;
+    });
+
+  const targetLabels = targetTuples.map(([name]) => name);
+  const defaultDestination = targetLabels?.[0];
+
+  const sourceStorages = Object.keys(sourceStorageLabelToId)
+    .sort((a, b) => universalComparator(a, b, 'en'))
+    .map((label) => {
+      const usedBySelectedVms = storageIdsUsedBySelectedVms.some(
+        (id) => id === sourceStorageLabelToId[label],
+      );
+      return {
+        label,
+        usedBySelectedVms,
+        isMapped: usedBySelectedVms,
+      };
+    });
+
+  return {
+    targetStorages: targetLabels,
+    sourceStorages,
+    storageMappings: sourceStorages
+      .filter(({ usedBySelectedVms }) => usedBySelectedVms)
+      .map(({ label }) => ({
+        source: label,
+        destination: defaultDestination,
+      })),
+  };
+};
 
 export const setTargetProvider = (
   draft: Draft<CreateVmMigrationPageState>,
@@ -265,9 +315,10 @@ export const createInitialState = ({
     targetNetworks: [],
     sourceNetworks: [],
     targetStorages: [],
+    sourceStorages: [],
     nickProfiles: [],
+    disks: [],
     netMaps: [],
-    createdNetMap: undefined,
   },
   receivedAsParams: {
     selectedVms,
@@ -284,8 +335,10 @@ export const createInitialState = ({
     networkIdsUsedBySelectedVms:
       sourceProvider.spec?.type !== 'ovirt' ? getNetworksUsedBySelectedVms(selectedVms, []) : [],
     sourceNetworkLabelToId: {},
-    storagesUsedBySelectedVms: [],
-    // storagesUsedBySelectedVms: ['ovirt', 'openstack'].includes(sourceProvider.spec?.type) ? [] : [],
+    sourceStorageLabelToId: {},
+    storageIdsUsedBySelectedVms: ['ovirt', 'openstack'].includes(sourceProvider.spec?.type)
+      ? []
+      : getStoragesUsedBySelectedVms(selectedVms, []),
   },
   calculatedPerNamespace: {
     targetNetworks: [],
@@ -326,58 +379,3 @@ export const resourceFieldsForType = (
       return [() => [], DefaultRow];
   }
 };
-
-export const mapSourceNetworksToLabels = (
-  sources: InventoryNetwork[],
-): { [label: string]: string } => {
-  const tuples = sources
-    .map((net) => {
-      switch (net.providerType) {
-        case 'openshift': {
-          return [`${net.namespace}/${net.name}`, net.uid];
-        }
-        case 'openstack': {
-          return [net.name, net.id];
-        }
-        case 'ovirt': {
-          return [net.path, net.id];
-        }
-        case 'vsphere': {
-          return [net.name, net.id];
-        }
-        default: {
-          return undefined;
-        }
-      }
-    })
-    .filter(Boolean);
-  const labelToId: { [label: string]: string } = tuples.reduce((acc, [label, id]) => {
-    if (acc[label] === id) {
-      //already included - no collisions
-      return acc;
-    } else if (acc[withSuffix(label, id)] === id) {
-      //already included with suffix - there was a collision before
-      return acc;
-    } else if (acc[label]) {
-      // resolve conflict
-      return {
-        ...acc,
-        // existing entry: add suffix with ID
-        [label]: undefined,
-        [withSuffix(label, acc[label])]: acc[label],
-        // new entry: create with suffix
-        [withSuffix(label, id)]: id,
-      };
-    } else {
-      // happy path
-      return {
-        ...acc,
-        [label]: id,
-      };
-    }
-  }, {});
-
-  return labelToId;
-};
-
-const withSuffix = (label: string, id: string) => `${label}  (ID: ${id}})`;

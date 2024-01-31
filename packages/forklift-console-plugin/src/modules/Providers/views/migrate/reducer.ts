@@ -6,6 +6,9 @@ import { ResourceFieldFactory, RowProps } from '@kubev2v/common';
 import {
   OpenShiftNamespace,
   OpenshiftResource,
+  OpenShiftStorageClass,
+  OpenstackVolume,
+  OVirtDisk,
   OVirtNicProfile,
   V1beta1NetworkMap,
   V1beta1Plan,
@@ -14,19 +17,25 @@ import {
 } from '@kubev2v/types';
 
 import { InventoryNetwork } from '../../hooks/useNetworks';
+import { InventoryStorage } from '../../hooks/useStorages';
 import { getIsTarget, Validation } from '../../utils';
 import { VmData } from '../details';
 
 import {
   ADD_NETWORK_MAPPING,
+  ADD_STORAGE_MAPPING,
   CreateVmMigration,
   DEFAULT_NAMESPACE,
   DELETE_NETWORK_MAPPING,
+  DELETE_STORAGE_MAPPING,
   PageAction,
   PlanAvailableProviders,
   PlanAvailableSourceNetworks,
+  PlanAvailableSourceStorages,
   PlanAvailableTargetNamespaces,
   PlanAvailableTargetNetworks,
+  PlanAvailableTargetStorages,
+  PlanDisks,
   PlanError,
   PlanExistingNetMaps,
   PlanExistingPlans,
@@ -37,10 +46,14 @@ import {
   PlanTargetProvider,
   POD_NETWORK,
   REPLACE_NETWORK_MAPPING,
+  REPLACE_STORAGE_MAPPING,
   SET_AVAILABLE_PROVIDERS,
   SET_AVAILABLE_SOURCE_NETWORKS,
+  SET_AVAILABLE_SOURCE_STORAGES,
   SET_AVAILABLE_TARGET_NAMESPACES,
   SET_AVAILABLE_TARGET_NETWORKS,
+  SET_AVAILABLE_TARGET_STORAGES,
+  SET_DISKS,
   SET_ERROR,
   SET_EXISTING_NET_MAPS,
   SET_EXISTING_PLANS,
@@ -51,11 +64,13 @@ import {
   START_CREATE,
 } from './actions';
 import { getNetworksUsedBySelectedVms } from './getNetworksUsedBySelectedVMs';
+import { getStoragesUsedBySelectedVms } from './getStoragesUsedBySelectedVMs';
 import { Mapping } from './MappingList';
+import { mapSourceNetworksToLabels, mapSourceStoragesToLabels } from './mapSourceToLabels';
 import {
   calculateNetworks,
+  calculateStorages,
   generateName,
-  mapSourceNetworksToLabels,
   setTargetNamespace,
   setTargetProvider,
   validatePlanName,
@@ -82,16 +97,16 @@ export interface CreateVmMigrationPageState {
     targetNamespaces: OpenShiftNamespace[];
     targetNetworks: OpenshiftResource[];
     sourceNetworks: InventoryNetwork[];
-    targetStorages: unknown[];
+    targetStorages: OpenShiftStorageClass[];
+    sourceStorages: InventoryStorage[];
     nickProfiles: OVirtNicProfile[];
+    disks: (OVirtDisk | OpenstackVolume)[];
     netMaps: V1beta1NetworkMap[];
-    createdNetMap?: V1beta1NetworkMap;
-    createdStorageMap?: V1beta1StorageMap;
-    createdPlan?: V1beta1Plan;
   };
   calculatedOnce: {
     // calculated on start (exception:for ovirt/openstack we need to fetch disks)
-    storagesUsedBySelectedVms: string[];
+    storageIdsUsedBySelectedVms: string[];
+    sourceStorageLabelToId: { [label: string]: string };
     // calculated on start (exception:for ovirt we need to fetch nic profiles)
     networkIdsUsedBySelectedVms: string[];
     sourceNetworkLabelToId: { [label: string]: string };
@@ -112,7 +127,13 @@ export interface CreateVmMigrationPageState {
       // mutated via UI
       isMapped: boolean;
     }[];
-    sourceStorages: string[];
+    sourceStorages: {
+      // read-only
+      label: string;
+      usedBySelectedVms: boolean;
+      // mutated via UI
+      isMapped: boolean;
+    }[];
     // mutated, both source and destination human-readable
     networkMappings: Mapping[];
     storageMappings: Mapping[];
@@ -291,6 +312,43 @@ const actions: {
     };
     return draft;
   },
+  [SET_AVAILABLE_TARGET_STORAGES](
+    draft,
+    {
+      payload: { availableTargetStorages, loading, error },
+    }: PageAction<CreateVmMigration, PlanAvailableTargetStorages>,
+  ) {
+    if (loading || error || draft.flow.editingDone) {
+      return draft;
+    }
+    console.warn(SET_AVAILABLE_TARGET_STORAGES, availableTargetStorages);
+    draft.existingResources.targetStorages = availableTargetStorages;
+
+    draft.calculatedPerNamespace = {
+      ...draft.calculatedPerNamespace,
+      ...calculateStorages(draft),
+    };
+    return draft;
+  },
+  [SET_AVAILABLE_SOURCE_STORAGES](
+    draft,
+    {
+      payload: { availableSourceStorages, loading, error },
+    }: PageAction<CreateVmMigration, PlanAvailableSourceStorages>,
+  ) {
+    if (loading || error || draft.flow.editingDone) {
+      return draft;
+    }
+    console.warn(SET_AVAILABLE_SOURCE_STORAGES, availableSourceStorages);
+    draft.existingResources.sourceStorages = availableSourceStorages;
+    draft.calculatedOnce.sourceStorageLabelToId =
+      mapSourceStoragesToLabels(availableSourceStorages);
+    draft.calculatedPerNamespace = {
+      ...draft.calculatedPerNamespace,
+      ...calculateStorages(draft),
+    };
+    return draft;
+  },
   [SET_NICK_PROFILES](
     draft,
     { payload: { nickProfiles, loading, error } }: PageAction<CreateVmMigration, PlanNickProfiles>,
@@ -313,6 +371,27 @@ const actions: {
     draft.calculatedPerNamespace = {
       ...draft.calculatedPerNamespace,
       ...calculateNetworks(draft),
+    };
+  },
+  [SET_DISKS](
+    draft,
+    { payload: { disks, loading, error } }: PageAction<CreateVmMigration, PlanDisks>,
+  ) {
+    const {
+      existingResources,
+      calculatedOnce,
+      receivedAsParams: { selectedVms },
+      flow: { editingDone },
+    } = draft;
+    if (loading || error || editingDone) {
+      return;
+    }
+    console.warn(SET_DISKS, disks);
+    existingResources.disks = disks;
+    calculatedOnce.storageIdsUsedBySelectedVms = getStoragesUsedBySelectedVms(selectedVms, disks);
+    draft.calculatedPerNamespace = {
+      ...draft.calculatedPerNamespace,
+      ...calculateStorages(draft),
     };
   },
   [SET_EXISTING_NET_MAPS](
@@ -339,8 +418,8 @@ const actions: {
   [START_CREATE]({
     flow,
     underConstruction: { plan, netMap, storageMap },
-    calculatedOnce: { sourceNetworkLabelToId },
-    calculatedPerNamespace: { networkMappings },
+    calculatedOnce: { sourceNetworkLabelToId, sourceStorageLabelToId },
+    calculatedPerNamespace: { networkMappings, storageMappings },
   }) {
     console.warn(START_CREATE);
     flow.editingDone = true;
@@ -353,7 +432,12 @@ const actions: {
           ? { type: 'pod' }
           : { name: destination, namespace: plan.spec.targetNamespace, type: 'multus' },
     }));
-    storageMap.spec.map = [];
+    storageMap.spec.map = storageMappings.map(({ source, destination }) => ({
+      source: {
+        id: sourceStorageLabelToId[source],
+      },
+      destination: { storageClass: destination },
+    }));
   },
   [SET_ERROR]({ flow }, { payload: { error } }: PageAction<CreateVmMigration, PlanError>) {
     console.warn(SET_ERROR);
@@ -377,7 +461,7 @@ const actions: {
       }));
       cpn.networkMappings = [
         ...cpn.networkMappings,
-        { source: nextSource.label, destination: cpn.targetNetworks[0] },
+        { source: nextSource.label, destination: nextDest },
       ];
     }
   },
@@ -426,6 +510,74 @@ const actions: {
 
     const mappingIndex = cpn.networkMappings.findIndex(({ source }) => source === current.source);
     mappingIndex > -1 && cpn.networkMappings.splice(mappingIndex, 1, next);
+  },
+  [ADD_STORAGE_MAPPING]({ calculatedPerNamespace: cpn }) {
+    const firstUsedByVms = cpn.sourceStorages.find(
+      ({ usedBySelectedVms, isMapped }) => usedBySelectedVms && !isMapped,
+    );
+    const firstGeneral = cpn.sourceStorages.find(
+      ({ usedBySelectedVms, isMapped }) => !usedBySelectedVms && !isMapped,
+    );
+    const nextSource = firstUsedByVms || firstGeneral;
+    const nextDest = cpn.targetStorages[0];
+
+    console.warn(ADD_STORAGE_MAPPING, nextSource, nextDest);
+    if (nextDest && nextSource) {
+      cpn.sourceStorages = cpn.sourceStorages.map((m) => ({
+        ...m,
+        isMapped: m.label === nextSource.label ? true : m.isMapped,
+      }));
+      cpn.storageMappings = [
+        ...cpn.storageMappings,
+        { source: nextSource.label, destination: nextDest },
+      ];
+    }
+  },
+  [DELETE_STORAGE_MAPPING](
+    { calculatedPerNamespace: cpn },
+    { payload: { source } }: PageAction<CreateVmMigration, Mapping>,
+  ) {
+    const currentSource = cpn.sourceStorages.find(
+      ({ label, isMapped }) => label === source && isMapped,
+    );
+    console.warn(DELETE_STORAGE_MAPPING, source, currentSource);
+    if (currentSource) {
+      cpn.sourceStorages = cpn.sourceStorages.map((m) => ({
+        ...m,
+        isMapped: m.label === source ? false : m.isMapped,
+      }));
+      cpn.storageMappings = cpn.storageMappings.filter(
+        ({ source }) => source !== currentSource.label,
+      );
+    }
+  },
+  [REPLACE_STORAGE_MAPPING](
+    { calculatedPerNamespace: cpn },
+    { payload: { current, next } }: PageAction<CreateVmMigration, PlanMapping>,
+  ) {
+    console.warn(REPLACE_STORAGE_MAPPING, current, next);
+    const currentSource = cpn.sourceStorages.find(
+      ({ label, isMapped }) => label === current.source && isMapped,
+    );
+    const nextSource = cpn.sourceStorages.find(({ label }) => label === next.source);
+    const nextDest = cpn.targetStorages.find((label) => label === next.destination);
+    const sourceChanged = currentSource.label !== nextSource.label;
+    const destinationChanged = current.destination !== nextDest;
+
+    if (!currentSource || !nextSource || !nextDest || (!sourceChanged && !destinationChanged)) {
+      return;
+    }
+
+    if (sourceChanged) {
+      const labelToMappingState = { [currentSource.label]: false, [nextSource.label]: true };
+      cpn.sourceStorages = cpn.sourceStorages.map((m) => ({
+        ...m,
+        isMapped: labelToMappingState[m.label] ?? m.isMapped,
+      }));
+    }
+
+    const mappingIndex = cpn.storageMappings.findIndex(({ source }) => source === current.source);
+    mappingIndex > -1 && cpn.storageMappings.splice(mappingIndex, 1, next);
   },
 };
 
