@@ -62,23 +62,23 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
       <div className="forklift-edit-modal-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           Error: The format of the provided VDDK init image is invalid. Ensure the path is a valid
-          container image path. For example: {'<strong>'}quay.io/kubev2v/vddk:latest{'</strong>'}.
+          container image path. For example: <strong>quay.io/kubev2v/vddk:latest</strong>.
         </Trans>
       </div>
     ),
     success: (
       <div className="forklift-edit-modal-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          The path must be empty or a valid container image path. For example: {'<strong>'}
-          quay.io/kubev2v/vddk:latest{'</strong>'}.
+          The path must be empty or a valid container image path. For example:{' '}
+          <strong>quay.io/kubev2v/vddk:latest</strong>.
         </Trans>
       </div>
     ),
     default: (
       <div className="forklift-edit-modal-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          The path must be empty or a valid container image path. For example: {'<strong>'}
-          quay.io/kubev2v/vddk:latest{'</strong>'}.
+          The path must be empty or a valid container image path. For example:{' '}
+          <strong>quay.io/kubev2v/vddk:latest</strong>.
         </Trans>
       </div>
     ),
@@ -108,9 +108,10 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
       model={ProviderModel}
       body={
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Virtual Disk Development Kit (VDDK) container init image path.<br><br>Note: It is strongly recommended to specify a VDDK init image to accelerate migrations.'
-          }
+          Virtual Disk Development Kit (VDDK) container init image path.
+          <br />
+          <br />
+          Note: It is strongly recommended to specify a VDDK init image to accelerate migrations.
         </Trans>
       }
       helperText={vddkHelperTextMsgs.default}

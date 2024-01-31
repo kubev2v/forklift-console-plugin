@@ -19,8 +19,8 @@ export const OpenshiftEditURLModal: React.FC<EditProviderURLModalProps> = (props
       <div className="forklift-edit-modal-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
-          domain name, and, optionally, a port. For example: {'<strong>'}
-          https://api.&#8249;your-openshift-domain&#8250;:6443{'</strong>'}.
+          domain name, and, optionally, a port. For example:{' '}
+          <strong>https://api.openshift-domain.com:6443</strong>.
         </Trans>
       </div>
     ),

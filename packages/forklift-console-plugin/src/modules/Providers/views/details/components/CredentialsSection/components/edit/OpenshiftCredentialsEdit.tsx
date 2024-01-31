@@ -23,27 +23,24 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     error: (
       <div className="forklift-page-provider-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Error: The format of the provided token is invalid. Ensure the token is a valid Kubernetes service account token.'
-          }
+          Error: The format of the provided token is invalid. Ensure the token is a valid Kubernetes
+          service account token.
         </Trans>
       </div>
     ),
     success: (
       <div className="forklift-page-provider-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'A service account token with cluster admin privileges, required for authenticating the connection to the API server.'
-          }
+          A service account token with cluster admin privileges, required for authenticating the
+          connection to the API server.
         </Trans>
       </div>
     ),
     default: (
       <div className="forklift-page-provider-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'A service account token with cluster admin privileges, required for authenticating the connection to the API server.'
-          }
+          A service account token with cluster admin privileges, required for authenticating the
+          connection to the API server.
         </Trans>
       </div>
     ),

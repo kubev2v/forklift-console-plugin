@@ -25,36 +25,34 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
     error: (
       <div className="forklift--create-provider-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
-          }
+          Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
+          domain name, and a path. For example:{' '}
+          <strong>https://vCenter-host-example.com/sdk</strong>.
         </Trans>
       </div>
     ),
     warning: (
       <div className="forklift--create-provider-field-warning-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Warning: The provided URL does not end with the SDK endpoint path: <strong>"/sdk"</strong>. Ensure the URL includes the correct path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
-          }
+          Warning: The provided URL does not end with the SDK endpoint path: <strong>/sdk</strong>.
+          Ensure the URL includes the correct path. For example:{' '}
+          <strong>https://vCenter-host-example.com/sdk</strong>.
         </Trans>
       </div>
     ),
     success: (
       <div className="forklift--create-provider-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'URL of the vCenter API endpoint. Ensure the URL includes the <strong>"/sdk"</strong> path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
-          }
+          URL of the vCenter API endpoint. Ensure the URL includes the <strong>/sdk</strong> path.
+          For example: <strong>https://vCenter-host-example.com/sdk</strong>.
         </Trans>
       </div>
     ),
     default: (
       <div className="forklift--create-provider-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'URL of the vCenter API endpoint. Ensure the URL includes the <strong>"/sdk"</strong> path. For example: <strong>https://vCenter-host-example.com/sdk</strong> .'
-          }
+          URL of the vCenter API endpoint. Ensure the URL includes the <strong>/sdk</strong> path.
+          For example: <strong>https://vCenter-host-example.com/sdk</strong>.
         </Trans>
       </div>
     ),
@@ -65,7 +63,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
       <div className="forklift--create-provider-field-error-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           Error: The format of the provided VDDK init image is invalid. Ensure the path is a valid
-          container image path. For example: {'<strong>'}quay.io/kubev2v/vddk:latest{'</strong>'}.
+          container image path. For example: <strong>quay.io/kubev2v/vddk:latest</strong>.
         </Trans>
       </div>
     ),
@@ -73,8 +71,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
       <div className="forklift--create-provider-field-success-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           Virtual Disk Development Kit (VDDK) container init image path. The path must be empty or a
-          valid container image path. For example: {'<strong>'}quay.io/kubev2v/vddk:latest
-          {'</strong>'}.
+          valid container image path. For example: <strong>quay.io/kubev2v/vddk:latest</strong>.
         </Trans>
       </div>
     ),
@@ -82,8 +79,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
       <div className="forklift--create-provider-field-default-validation">
         <Trans t={t} ns="plugin__forklift-console-plugin">
           Virtual Disk Development Kit (VDDK) container init image path. The path must be empty or a
-          valid container image path. For example: {'<strong>'}quay.io/kubev2v/vddk:latest
-          {'</strong>'}.
+          valid container image path. For example: <strong>quay.io/kubev2v/vddk:latest</strong>.
         </Trans>
       </div>
     ),
@@ -91,7 +87,8 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
 
   const vddkHelperTextPopover = (
     <Trans t={t} ns="plugin__forklift-console-plugin">
-      {'Note: It is strongly recommended to specify a VDDK init image to accelerate migrations.'}
+      VDDK init image is optional, but it is strongly recommended to specify a VDDK init image to
+      accelerate migrations.
     </Trans>
   );
 

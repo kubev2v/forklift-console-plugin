@@ -41,8 +41,8 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
         canPatch={permissions.canPatch}
         helpContent={
           <Trans t={t} ns="plugin__forklift-console-plugin">
-            URL of the OpenStack Identity (Keystone) endpoint. For example: {'<strong>'}
-            https://identity_service.com:5000/v3{'</strong>'}.
+            URL of the OpenStack Identity (Keystone) endpoint. For example:{' '}
+            <strong>https://identity_service.com:5000/v3</strong>.
           </Trans>
         }
       />

@@ -50,7 +50,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
             URL of the API endpoint of the vCenter on which the source VM is mounted. Ensure that
             the URL includes the sdk path, usually <strong>/sdk</strong>.<br />
             <br />
-            For example, <strong>https://vCenter-host-example.com/sdk</strong>.<br />
+            For example: <strong>https://vCenter-host-example.com/sdk</strong>.<br />
             <br />
             If a certificate for FQDN is specified, the value of this field needs to match the FQDN
             in the certificate.

@@ -39,9 +39,11 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
       description: t("If true, the provider's CA certificate won't be validated."),
       helperTextPopover: (
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            "Note: If 'Skip certificate validation' is selected, migrations from this provider will not be secure.<br><br> Insecure migration means that the transferred data is sent over an insecure connection and potentially sensitive data could be exposed."
-          }
+          Note: If this field is checked/true, the migration from this provider will be insecure.
+          <br />
+          <br />
+          Insecure migration means that the transferred data is sent over an insecure connection and
+          potentially sensitive data could be exposed.
         </Trans>
       ),
     },
@@ -52,9 +54,11 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
       ),
       helperTextPopover: (
         <Trans t={t} ns="plugin__forklift-console-plugin">
-          {
-            'Note: Use the Manager CA certificate unless it was replaced by a third-party certificate, in which case use the Manager Apache CA certificate. <br><br>You can retrieve the Manager CA certificate at:<br>'
-          }
+          Note: Use the Manager CA certificate unless it was replaced by a third-party certificate,
+          in which case use the Manager Apache CA certificate. <br />
+          <br />
+          You can retrieve the Manager CA certificate at:
+          <br />
           <ExternalLink
             href="https://<rhv-host-example.com>/ovirt-engine/services/pki-resource?resource=ca-certificate&format=X509-PEM-CA"
             isInline

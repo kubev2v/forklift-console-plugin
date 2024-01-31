@@ -104,7 +104,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           'OpenStack application credential Secret needed for the application credential authentication.',
         )}
         helperTextInvalid={t(
-          "Error: The format of the provided application credential Secret is invalid. Ensure the secret doesn't include whitespace characters.",
+          "Error: The format of the provided application credential secret is invalid. Ensure the secret doesn't include whitespace characters.",
         )}
         validated={state.validation.applicationCredentialSecret}
       >
