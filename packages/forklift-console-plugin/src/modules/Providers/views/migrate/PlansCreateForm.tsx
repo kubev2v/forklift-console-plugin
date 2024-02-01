@@ -35,7 +35,9 @@ import { concernsMatcher, featuresMatcher, VmData } from '../details';
 
 import {
   addNetworkMapping,
+  addStorageMapping,
   deleteNetworkMapping,
+  deleteStorageMapping,
   PageAction,
   replaceNetworkMapping,
   replaceStorageMapping,
@@ -63,6 +65,7 @@ export const PlansCreateForm = ({
       targetNetworks,
       targetStorages,
       sourceNetworks,
+      sourceStorages,
       networkMappings,
       storageMappings,
     },
@@ -287,13 +290,13 @@ export const PlansCreateForm = ({
               </DescriptionListTerm>
               <DescriptionListDescription className="forklift-page-mapping-list">
                 <MappingList
-                  addMapping={() => dispatch(addNetworkMapping())}
+                  addMapping={() => dispatch(addStorageMapping())}
                   replaceMapping={({ current, next }) =>
                     dispatch(replaceStorageMapping({ current, next }))
                   }
-                  deleteMapping={() => undefined}
+                  deleteMapping={(current) => dispatch(deleteStorageMapping({ ...current }))}
                   availableDestinations={targetStorages}
-                  sources={[]}
+                  sources={sourceStorages}
                   mappings={storageMappings}
                   generalSourcesLabel={t('Other storages present on the source provider ')}
                   usedSourcesLabel={t('Storages used by the selected VMs')}

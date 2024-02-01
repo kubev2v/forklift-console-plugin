@@ -1,13 +1,18 @@
 import {
   OpenShiftNamespace,
   OpenShiftNetworkAttachmentDefinition,
+  OpenShiftStorageClass,
+  OpenstackVolume,
+  OVirtDisk,
   OVirtNicProfile,
   V1beta1NetworkMap,
   V1beta1Plan,
   V1beta1Provider,
+  V1beta1StorageMap,
 } from '@kubev2v/types';
 
 import { InventoryNetwork } from '../../hooks/useNetworks';
+import { InventoryStorage } from '../../hooks/useStorages';
 
 import { Mapping } from './MappingList';
 
@@ -22,14 +27,20 @@ export const SET_TARGET_NAMESPACE = 'SET_TARGET_NAMESPACE';
 export const SET_AVAILABLE_PROVIDERS = 'SET_AVAILABLE_PROVIDERS';
 export const SET_EXISTING_PLANS = 'SET_EXISTING_PLANS';
 export const SET_AVAILABLE_TARGET_NAMESPACES = 'SET_AVAILABLE_TARGET_NAMESPACES';
-export const REPLACE_NETWORK_MAPPING = 'REPLACE_NETWORK_MAPPING';
 export const REPLACE_STORAGE_MAPPING = 'REPLACE_STORAGE_MAPPING';
+export const ADD_STORAGE_MAPPING = 'ADD_STORAGE_MAPPING';
+export const DELETE_STORAGE_MAPPING = 'DELETE_STORAGE_MAPPING';
+export const REPLACE_NETWORK_MAPPING = 'REPLACE_NETWORK_MAPPING';
 export const ADD_NETWORK_MAPPING = 'ADD_NETWORK_MAPPING';
 export const DELETE_NETWORK_MAPPING = 'DELETE_NETWORK_MAPPING';
 export const SET_AVAILABLE_TARGET_NETWORKS = 'SET_AVAILABLE_TARGET_NETWORKS';
 export const SET_AVAILABLE_SOURCE_NETWORKS = 'SET_AVAILABLE_SOURCE_NETWORKS';
+export const SET_AVAILABLE_TARGET_STORAGES = 'SET_AVAILABLE_TARGET_STORAGES';
+export const SET_AVAILABLE_SOURCE_STORAGES = 'SET_AVAILABLE_SOURCE_STORAGES';
 export const SET_NICK_PROFILES = 'SET_NICK_PROFILES';
+export const SET_DISKS = 'SET_DISKS';
 export const SET_EXISTING_NET_MAPS = 'SET_EXISTING_NET_MAPS';
+export const SET_EXISTING_STORAGE_MAPS = 'SET_EXISTING_STORAGE_MAPS';
 export const START_CREATE = 'START_CREATE';
 export const SET_ERROR = 'SET_ERROR';
 
@@ -45,12 +56,18 @@ export type CreateVmMigration =
   | typeof ADD_NETWORK_MAPPING
   | typeof DELETE_NETWORK_MAPPING
   | typeof REPLACE_STORAGE_MAPPING
+  | typeof ADD_STORAGE_MAPPING
+  | typeof DELETE_STORAGE_MAPPING
   | typeof SET_AVAILABLE_TARGET_NETWORKS
   | typeof SET_AVAILABLE_SOURCE_NETWORKS
   | typeof SET_NICK_PROFILES
+  | typeof SET_DISKS
   | typeof SET_EXISTING_NET_MAPS
   | typeof START_CREATE
-  | typeof SET_ERROR;
+  | typeof SET_ERROR
+  | typeof SET_EXISTING_STORAGE_MAPS
+  | typeof SET_AVAILABLE_SOURCE_STORAGES
+  | typeof SET_AVAILABLE_TARGET_STORAGES;
 
 export interface PageAction<S, T> {
   type: S;
@@ -93,6 +110,12 @@ export interface PlanExistingNetMaps {
   error?: Error;
 }
 
+export interface PlanExistingStorageMaps {
+  existingStorageMaps: V1beta1StorageMap[];
+  loading: boolean;
+  error?: Error;
+}
+
 export interface PlanAvailableTargetNamespaces {
   availableTargetNamespaces: OpenShiftNamespace[];
   loading: boolean;
@@ -111,8 +134,26 @@ export interface PlanAvailableSourceNetworks {
   error?: Error;
 }
 
+export interface PlanAvailableTargetStorages {
+  availableTargetStorages: OpenShiftStorageClass[];
+  loading: boolean;
+  error?: Error;
+}
+
+export interface PlanAvailableSourceStorages {
+  availableSourceStorages: InventoryStorage[];
+  loading: boolean;
+  error?: Error;
+}
+
 export interface PlanNickProfiles {
   nickProfiles: OVirtNicProfile[];
+  loading: boolean;
+  error?: Error;
+}
+
+export interface PlanDisks {
+  disks: (OVirtDisk | OpenstackVolume)[];
   loading: boolean;
   error?: Error;
 }
@@ -195,6 +236,19 @@ export const setExistingNetMaps = (
   },
 });
 
+export const setExistingStorageMaps = (
+  existingStorageMaps: V1beta1StorageMap[],
+  loaded: boolean,
+  error: Error,
+): PageAction<CreateVmMigration, PlanExistingStorageMaps> => ({
+  type: 'SET_EXISTING_STORAGE_MAPS',
+  payload: {
+    existingStorageMaps: Array.isArray(existingStorageMaps) ? existingStorageMaps : [],
+    loading: !loaded,
+    error,
+  },
+});
+
 export const setAvailableTargetNamespaces = (
   availableTargetNamespaces: OpenShiftNamespace[],
   loading: boolean,
@@ -210,6 +264,19 @@ export const replaceStorageMapping = ({
 }: PlanMapping): PageAction<CreateVmMigration, PlanMapping> => ({
   type: 'REPLACE_STORAGE_MAPPING',
   payload: { current, next },
+});
+
+export const addStorageMapping = (): PageAction<CreateVmMigration, unknown> => ({
+  type: 'ADD_STORAGE_MAPPING',
+  payload: {},
+});
+
+export const deleteStorageMapping = ({
+  source,
+  destination,
+}: Mapping): PageAction<CreateVmMigration, Mapping> => ({
+  type: 'DELETE_STORAGE_MAPPING',
+  payload: { source, destination },
 });
 
 export const addNetworkMapping = (): PageAction<CreateVmMigration, unknown> => ({
@@ -251,6 +318,28 @@ export const setAvailableSourceNetworks = (
   payload: { availableSourceNetworks, loading, error },
 });
 
+export const setAvailableSourceStorages = (
+  availableSourceStorages: InventoryStorage[],
+  loading: boolean,
+  error?: Error,
+): PageAction<CreateVmMigration, PlanAvailableSourceStorages> => ({
+  type: 'SET_AVAILABLE_SOURCE_STORAGES',
+  payload: {
+    availableSourceStorages,
+    loading,
+    error,
+  },
+});
+
+export const setAvailableTargetStorages = (
+  availableTargetStorages: OpenShiftStorageClass[],
+  loading: boolean,
+  error?: Error,
+): PageAction<CreateVmMigration, PlanAvailableTargetStorages> => ({
+  type: 'SET_AVAILABLE_TARGET_STORAGES',
+  payload: { availableTargetStorages, loading, error },
+});
+
 export const setNicProfiles = (
   nickProfiles: OVirtNicProfile[],
   nicProfilesLoading: boolean,
@@ -258,6 +347,15 @@ export const setNicProfiles = (
 ): PageAction<CreateVmMigration, PlanNickProfiles> => ({
   type: 'SET_NICK_PROFILES',
   payload: { nickProfiles, loading: nicProfilesLoading, error: nicProfilesError },
+});
+
+export const setDisks = (
+  disks: (OVirtDisk | OpenstackVolume)[],
+  loading: boolean,
+  error?: Error,
+): PageAction<CreateVmMigration, PlanDisks> => ({
+  type: 'SET_DISKS',
+  payload: { disks, loading, error },
 });
 
 export const startCreate = (): PageAction<CreateVmMigration, unknown> => ({
