@@ -11,6 +11,7 @@ import {
 } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {
+  AlertVariant,
   Button,
   DescriptionList,
   DescriptionListDescription,
@@ -30,24 +31,47 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 
-import { DetailsItem, getIsTarget } from '../../utils';
-import { concernsMatcher, featuresMatcher, VmData } from '../details';
-
+import { DetailsItem, getIsTarget } from '../../../utils';
+import { concernsMatcher, featuresMatcher, VmData } from '../../details';
 import {
   addNetworkMapping,
   addStorageMapping,
   deleteNetworkMapping,
   deleteStorageMapping,
   PageAction,
+  removeAlert,
   replaceNetworkMapping,
   replaceStorageMapping,
   setPlanName,
   setPlanTargetNamespace,
   setPlanTargetProvider,
-} from './actions';
+} from '../reducer/actions';
+import { CreateVmMigrationPageState, NetworkAlerts, StorageAlerts } from '../types';
+
 import { EditableDescriptionItem } from './EditableDescriptionItem';
 import { MappingList } from './MappingList';
-import { CreateVmMigrationPageState } from './reducer';
+import { StateAlerts } from './StateAlerts';
+
+const buildNetworkMessages = (
+  t: (key: string) => string,
+): { [key in NetworkAlerts]: { title: string; body: string } } => ({
+  NET_MAP_NAME_REGENERATED: {
+    title: t('Network Map name re-generated'),
+    body: t('New name was generated for the Network Map due to naming conflict.'),
+  },
+  NETWORK_MAPPING_REGENERATED: {
+    title: t('Network mappings have been re-generated'),
+    body: t('All discovered networks have been mapped to the default network.'),
+  },
+});
+const buildStorageMessages = (
+  t: (key: string) => string,
+): { [key in StorageAlerts]: { title: string; body: string } } => ({
+  STORAGE_MAPPING_REGENERATED: {
+    title: t('Storage mappings have been re-generated'),
+    body: t('All discovered storages have been mapped to the default storage.'),
+  },
+});
 
 export const PlansCreateForm = ({
   state: {
@@ -56,6 +80,7 @@ export const PlansCreateForm = ({
     receivedAsParams: { selectedVms },
     calculatedOnce: {
       vmFieldsFactory: [vmFieldsFactory, RowMapper],
+      namespacesUsedBySelectedVms,
     },
     existingResources: {
       providers: availableProviders,
@@ -70,6 +95,7 @@ export const PlansCreateForm = ({
       storageMappings,
     },
     flow,
+    alerts,
   },
   dispatch,
 }: {
@@ -83,6 +109,8 @@ export const PlansCreateForm = ({
   const [isTargetNamespaceEdited, setIsTargetNamespaceEdited] = useState(false);
 
   const [isVmDetails, setIsVmDetails] = useState(false);
+  const networkMessages = buildNetworkMessages(t);
+  const storageMessages = buildStorageMessages(t);
   return (
     <Drawer isExpanded={isVmDetails}>
       <DrawerContent
@@ -122,6 +150,9 @@ export const PlansCreateForm = ({
                   isRequired
                   fieldId="planName"
                   validated={validation.planName}
+                  helperTextInvalid={t(
+                    "Error: Name is required and must be a unique within a namespace and valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).",
+                  )}
                 >
                   <TextInput
                     isRequired
@@ -169,6 +200,11 @@ export const PlansCreateForm = ({
                   isRequired
                   fieldId="targetProvider"
                   validated={validation.targetProvider}
+                  helperTextInvalid={
+                    availableProviders.filter(getIsTarget).length === 0
+                      ? t('No provider is available')
+                      : t('The chosen provider is no longer available.')
+                  }
                 >
                   <FormSelect
                     value={plan.spec.provider?.destination?.name}
@@ -176,13 +212,26 @@ export const PlansCreateForm = ({
                     validated={validation.targetProvider}
                     id="targetProvider"
                   >
-                    {availableProviders.filter(getIsTarget).map((provider, index) => (
+                    {[
                       <FormSelectOption
-                        key={provider?.metadata?.name || index}
-                        value={provider?.metadata?.name}
-                        label={provider?.metadata?.name ?? provider?.metadata?.uid ?? String(index)}
-                      />
-                    ))}
+                        key="placeholder"
+                        value={''}
+                        label={t('Select a provider')}
+                        isPlaceholder
+                        isDisabled
+                      />,
+                      ...availableProviders
+                        .filter(getIsTarget)
+                        .map((provider, index) => (
+                          <FormSelectOption
+                            key={provider?.metadata?.name || index}
+                            value={provider?.metadata?.name}
+                            label={
+                              provider?.metadata?.name ?? provider?.metadata?.uid ?? String(index)
+                            }
+                          />
+                        )),
+                    ]}
                   </FormSelect>
                 </FormGroup>
               </Form>
@@ -216,13 +265,23 @@ export const PlansCreateForm = ({
                     validated={validation.targetNamespace}
                     id="targetNamespace"
                   >
-                    {availableTargetNamespaces.map((ns, index) => (
+                    {[
                       <FormSelectOption
-                        key={ns?.name || index}
-                        value={ns?.name}
-                        label={ns?.name ?? String(index)}
-                      />
-                    ))}
+                        key="placeholder"
+                        value={''}
+                        label={t('Select a namespace')}
+                        isPlaceholder
+                        isDisabled
+                      />,
+                      ...availableTargetNamespaces.map((ns, index) => (
+                        <FormSelectOption
+                          key={ns?.name || index}
+                          value={ns?.name}
+                          label={ns?.name ?? String(index)}
+                          isDisabled={namespacesUsedBySelectedVms.includes(ns?.name)}
+                        />
+                      )),
+                    ]}
                   </FormSelect>
                 </FormGroup>
               </Form>
@@ -259,6 +318,14 @@ export const PlansCreateForm = ({
                 </span>
               </DescriptionListTerm>
               <DescriptionListDescription className="forklift-page-mapping-list">
+                <StateAlerts
+                  variant={AlertVariant.warning}
+                  messages={Array.from(alerts.networkMappings.warnings).map((key) => ({
+                    key,
+                    ...networkMessages[key],
+                  }))}
+                  onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
+                />
                 <MappingList
                   addMapping={() => dispatch(addNetworkMapping())}
                   replaceMapping={({ current, next }) =>
@@ -289,6 +356,14 @@ export const PlansCreateForm = ({
                 </span>
               </DescriptionListTerm>
               <DescriptionListDescription className="forklift-page-mapping-list">
+                <StateAlerts
+                  variant={AlertVariant.warning}
+                  messages={Array.from(alerts.storageMappings.warnings).map((key) => ({
+                    key,
+                    ...storageMessages[key],
+                  }))}
+                  onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
+                />
                 <MappingList
                   addMapping={() => dispatch(addStorageMapping())}
                   replaceMapping={({ current, next }) =>

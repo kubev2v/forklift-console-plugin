@@ -8,7 +8,7 @@ import {
 } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
 
-import './ProvidersCreateVmMigration.style.css';
+import '../ProvidersCreateVmMigration.style.css';
 
 export const EditableDescriptionItem: FC<{
   title: string;

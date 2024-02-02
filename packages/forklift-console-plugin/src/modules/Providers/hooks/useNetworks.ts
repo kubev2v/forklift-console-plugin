@@ -28,6 +28,7 @@ export const useSourceNetworks = (
   } = useProviderInventory<InventoryNetwork[]>({
     provider,
     subPath: providerType === 'openshift' ? '/networkattachmentdefinitions' : '/networks',
+    disabled: !provider,
   });
 
   const typedNetworks = useMemo(
@@ -51,7 +52,8 @@ export const useOpenShiftNetworks = (
     error,
   } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
     provider,
-    subPath: isOpenShift ? '/networkattachmentdefinitions' : '',
+    subPath: '/networkattachmentdefinitions',
+    disabled: !provider || !isOpenShift,
   });
 
   const typedNetworks: OpenShiftNetworkAttachmentDefinition[] = useMemo(

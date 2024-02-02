@@ -1,6 +1,6 @@
 import { OVirtNicProfile } from '@kubev2v/types';
 
-import { VmData } from '../details';
+import { VmData } from '../../details';
 
 import { POD_NETWORK } from './actions';
 

@@ -4,13 +4,21 @@ import { useHistory } from 'react-router';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Alert, Button, Flex, FlexItem, PageSection } from '@patternfly/react-core';
+import { Alert, AlertVariant, Button, Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
-import { startCreate } from './actions';
-import { PlansCreateForm } from './PlansCreateForm';
+import { PlansCreateForm } from './components/PlansCreateForm';
+import { StateAlerts } from './components/StateAlerts';
+import { startCreate } from './reducer/actions';
+import { GeneralAlerts } from './types';
 import { useFetchEffects } from './useFetchEffects';
 import { useSaveEffect } from './useSaveEffect';
+
+const generalMessages = (
+  t: (key: string) => string,
+): { [key in GeneralAlerts]: { title: string; body: string } } => ({
+  NEXT_VALID_PROVIDER_SELECTED: { title: t('Error'), body: t('No target provider exists ') },
+});
 
 const ProvidersCreateVmMigrationPage: FC = () => {
   const { t } = useForkliftTranslation();
@@ -49,11 +57,18 @@ const ProvidersCreateVmMigrationPage: FC = () => {
           className="co-alert co-alert--margin-top"
           isInline
           variant="danger"
-          title={t('Error')}
+          title={t('API Error')}
         >
           {state.flow.apiError.message || state.flow.apiError.toString()}
         </Alert>
       )}
+      <StateAlerts
+        variant={AlertVariant.danger}
+        messages={Array.from(state.alerts.general.errors).map((key) => ({
+          key,
+          ...generalMessages(t)[key],
+        }))}
+      />
       <Flex>
         <FlexItem>
           <Button

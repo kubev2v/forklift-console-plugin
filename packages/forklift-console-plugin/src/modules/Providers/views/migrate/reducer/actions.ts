@@ -11,10 +11,9 @@ import {
   V1beta1StorageMap,
 } from '@kubev2v/types';
 
-import { InventoryNetwork } from '../../hooks/useNetworks';
-import { InventoryStorage } from '../../hooks/useStorages';
-
-import { Mapping } from './MappingList';
+import { InventoryNetwork } from '../../../hooks/useNetworks';
+import { InventoryStorage } from '../../../hooks/useStorages';
+import { GeneralAlerts, Mapping, NetworkAlerts, StorageAlerts } from '../types';
 
 export const POD_NETWORK = 'Pod Networking';
 export const DEFAULT_NAMESPACE = 'default';
@@ -42,7 +41,8 @@ export const SET_DISKS = 'SET_DISKS';
 export const SET_EXISTING_NET_MAPS = 'SET_EXISTING_NET_MAPS';
 export const SET_EXISTING_STORAGE_MAPS = 'SET_EXISTING_STORAGE_MAPS';
 export const START_CREATE = 'START_CREATE';
-export const SET_ERROR = 'SET_ERROR';
+export const SET_API_ERROR = 'SET_API_ERROR';
+export const REMOVE_ALERT = 'REMOVE_ALERT';
 
 export type CreateVmMigration =
   | typeof SET_NAME
@@ -64,10 +64,11 @@ export type CreateVmMigration =
   | typeof SET_DISKS
   | typeof SET_EXISTING_NET_MAPS
   | typeof START_CREATE
-  | typeof SET_ERROR
+  | typeof SET_API_ERROR
   | typeof SET_EXISTING_STORAGE_MAPS
   | typeof SET_AVAILABLE_SOURCE_STORAGES
-  | typeof SET_AVAILABLE_TARGET_STORAGES;
+  | typeof SET_AVAILABLE_TARGET_STORAGES
+  | typeof REMOVE_ALERT;
 
 export interface PageAction<S, T> {
   type: S;
@@ -160,6 +161,10 @@ export interface PlanDisks {
 
 export interface PlanError {
   error: Error;
+}
+
+export interface PlanAlert {
+  alertKey: NetworkAlerts | StorageAlerts | GeneralAlerts;
 }
 
 export interface PlanMapping {
@@ -363,7 +368,14 @@ export const startCreate = (): PageAction<CreateVmMigration, unknown> => ({
   payload: {},
 });
 
-export const setError = (error: Error): PageAction<CreateVmMigration, PlanError> => ({
-  type: 'SET_ERROR',
+export const setAPiError = (error: Error): PageAction<CreateVmMigration, PlanError> => ({
+  type: 'SET_API_ERROR',
   payload: { error },
+});
+
+export const removeAlert = (
+  alertKey: NetworkAlerts | StorageAlerts | GeneralAlerts,
+): PageAction<CreateVmMigration, PlanAlert> => ({
+  type: 'REMOVE_ALERT',
+  payload: { alertKey },
 });

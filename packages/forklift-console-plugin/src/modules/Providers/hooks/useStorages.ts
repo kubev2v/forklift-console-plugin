@@ -12,21 +12,12 @@ import { TypedOvaResource } from '@kubev2v/types/dist/types/provider/ova/TypedRe
 
 import useProviderInventory from './useProviderInventory';
 
-const apiSlug = (providerType: ProviderType): string => {
-  switch (providerType) {
-    case 'vsphere':
-      return '/datastores';
-    case 'openstack':
-      return '/volumetypes';
-    case 'openshift':
-      return '/storageclasses?detail=1';
-    case 'ova':
-      return '/storages?detail=1';
-    case 'ovirt':
-      return '/storagedomains';
-    default:
-      return '';
-  }
+const subPath: { [keys in ProviderType]: string } = {
+  vsphere: '/datastores',
+  openstack: '/volumetypes',
+  openshift: '/storageclasses?detail=1',
+  ova: '/storages?detail=1',
+  ovirt: '/storagedomains',
 };
 
 export type InventoryStorage =
@@ -46,7 +37,8 @@ export const useSourceStorages = (
     error,
   } = useProviderInventory<InventoryStorage[]>({
     provider,
-    subPath: apiSlug(providerType),
+    subPath: subPath[providerType] ?? '',
+    disabled: !provider || !subPath[providerType],
   });
 
   const typedStorages = useMemo(
@@ -70,13 +62,14 @@ export const useOpenShiftStorages = (
     error,
   } = useProviderInventory<OpenShiftStorageClass[]>({
     provider,
-    subPath: apiSlug(providerType),
+    subPath: '/storageclasses?detail=1',
+    disabled: !provider || providerType !== 'openshift',
   });
 
   const typedStorages = useMemo(
     () =>
-      Array.isArray(storages) && providerType === 'openshift'
-        ? storages.map((st) => ({ ...st, providerType } as OpenShiftStorageClass))
+      Array.isArray(storages)
+        ? storages.map((st) => ({ ...st, providerType: 'openshift' } as OpenShiftStorageClass))
         : [],
     [storages],
   );
