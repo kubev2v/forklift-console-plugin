@@ -6,6 +6,10 @@
     border-top: 1px solid var(--pf-global--BorderColor--100);
 }
 
+.forklift-title {
+  font-size: 1rem;
+}
+
 .forklift-welcome__flex-text {
   align-self: normal;
 }
@@ -43,4 +47,9 @@
 
 .forklift-status-migration {
   padding-right: var(--pf-global--spacer--xl);
+}
+
+.forklift-status-migration-chart {
+  height: 60%;
+  width: 60%;
 }

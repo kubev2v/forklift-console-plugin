@@ -31,7 +31,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
 
   return (
     <Card>
-      <CardTitle>{t('Settings')}</CardTitle>
+      <CardTitle className="forklift-title">{t('Settings')}</CardTitle>
       <CardBody>
         <DescriptionList
           columnModifier={{

@@ -205,6 +205,7 @@
   "Message": "Message",
   "Message: {{message}}": "Message: {{message}}",
   "Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.": "Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.",
+  "Metrics": "Metrics",
   "Migrate": "Migrate",
   "Migrating virtualization workloads is a multi-step process. <2>Learn more</2>.": "Migrating virtualization workloads is a multi-step process. <2>Learn more</2>.",
   "Migration network maps are used to map network interfaces between source and target virtualization providers, at least one source and one target provider must be available in order to create a migration storage map, <2>Learn more</2>.": "Migration network maps are used to map network interfaces between source and target virtualization providers, at least one source and one target provider must be available in order to create a migration storage map, <2>Learn more</2>.",

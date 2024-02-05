@@ -5,8 +5,7 @@ import { useCreateOverviewContext } from 'src/modules/Overview/hooks/OverviewCon
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { Flex, FlexItem } from '@patternfly/react-core';
 
-import { ChartsCard } from './cards/ChartsCard';
-import { ConditionsCard, MigrationsCard, OperatorCard, OverviewCard, SettingsCard } from './cards';
+import { ConditionsCard, OperatorCard, OverviewCard, SettingsCard } from './cards';
 
 interface ForkliftControllerDetailsTabProps extends RouteComponentProps {
   obj: V1beta1ForkliftController;
@@ -25,8 +24,8 @@ export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTab
 
   return (
     <div className="co-dashboard-body">
-      <Flex>
-        <Flex direction={{ default: 'column' }} flex={{ default: 'flex_4' }}>
+      <Flex direction={{ default: 'column' }}>
+        <Flex>
           {!hideWelcomeCardByContext ? (
             <FlexItem>
               <OverviewCard
@@ -37,27 +36,23 @@ export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTab
               />
             </FlexItem>
           ) : null}
-
-          <FlexItem>
-            <MigrationsCard obj={obj} />
-          </FlexItem>
-
+        </Flex>
+        <Flex
+          direction={{ default: 'column' }}
+          flex={{ default: 'flex_1' }}
+          alignItems={{ default: 'alignItemsStretch' }}
+          alignContent={{ default: 'alignContentStretch' }}
+        >
           <FlexItem>
             <OperatorCard obj={obj} />
           </FlexItem>
-
-          <FlexItem>
+        </Flex>
+        <Flex>
+          <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
             <ConditionsCard obj={obj} />
           </FlexItem>
-        </Flex>
-
-        <Flex direction={{ default: 'column' }} alignSelf={{ default: 'alignSelfFlexStart' }}>
-          <FlexItem>
+          <FlexItem flex={{ default: 'flex_1' }}>
             <SettingsCard obj={obj} />
-          </FlexItem>
-
-          <FlexItem>
-            <ChartsCard obj={obj} />
           </FlexItem>
         </Flex>
       </Flex>

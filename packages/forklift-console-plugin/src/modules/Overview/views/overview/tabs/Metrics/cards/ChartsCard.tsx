@@ -107,7 +107,7 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="forklift-title">
           {isDaysViewSelected ? t('Migrations (last 7 days)') : t('Migrations (last 24 hours)')}
         </CardTitle>
         <CardActions>
@@ -138,7 +138,7 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
           />
         </CardActions>
       </CardHeader>
-      <CardBody className="forklift-status-migration">
+      <CardBody className="forklift-status-migration-chart">
         <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
           <Chart
             ariaDesc="Bar chart with migration statistics"
