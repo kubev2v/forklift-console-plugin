@@ -27,7 +27,7 @@ const ProvidersCreateVmMigrationPage: FC = () => {
 
   return (
     <PageSection variant="light">
-      <SectionHeading text={t('Create Plan')} />
+      <SectionHeading text={t('Create migration plan')} />
 
       <PlansCreateForm state={state} dispatch={dispatch} />
       {state.flow.apiError && (

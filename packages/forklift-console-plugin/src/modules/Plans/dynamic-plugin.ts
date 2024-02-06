@@ -2,6 +2,7 @@ import { PlanModel, PlanModelGroupVersionKind } from '@kubev2v/types';
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import {
   ActionProvider,
+  CreateResource,
   ModelMetadata,
   ResourceListPage,
   ResourceNSNavItem,
@@ -11,6 +12,7 @@ import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sd
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
   PlansPage: './modules/Plans/PlansWrapper',
+  PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
   PlanWizard: './modules/Plans/PlanWizardWrapper',
   VMMigrationDetails: './modules/Plans/VMMigrationDetailsWrapper',
   usePlanActions: './modules/Plans/UsePlanActions',
@@ -94,4 +96,15 @@ export const extensions: EncodedExtension[] = [
       ...PlanModel,
     },
   } as EncodedExtension<ModelMetadata>,
+
+  {
+    type: 'console.resource/create',
+    properties: {
+      component: {
+        $codeRef: 'PlanCreatePage',
+      },
+      model: PlanModelGroupVersionKind,
+      ...PlanModel,
+    },
+  } as EncodedExtension<CreateResource>,
 ];

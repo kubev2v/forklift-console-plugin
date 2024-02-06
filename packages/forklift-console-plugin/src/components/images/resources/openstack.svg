@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="svg1"
+   viewBox="0 0 150 150"
+   version="1.1"
+   sodipodi:docname="openstack.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="7.7666667"
+     inkscape:cx="75"
+     inkscape:cy="75"
+     inkscape:window-width="3440"
+     inkscape:window-height="1371"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <style
+     id="style1">.st1{fill:#dd1a32}</style>
+  <path
+     d="M0 0h150v150H0V0z"
+     fill="none"
+     id="Layer_3" />
+  <g
+     id="logosandtypes_com"
+     transform="translate(1.2844259,-17.636361)">
+    <path
+       class="st1"
+       d="M 121.2,19.6 H 28.9 c -5.8,0 -10.5,4.7 -10.5,10.5 V 54.9 H 44 v -4.1 c 0,-3.1 2.6,-5.7 5.7,-5.7 h 50.8 c 3.1,0 5.7,2.5 5.7,5.7 v 4.1 h 25.6 V 30.1 C 131.7,24.3 127,19.6 121.2,19.6 m -15.1,79.6 c 0,3.1 -2.6,5.7 -5.7,5.7 H 49.7 c -3.1,0 -5.7,-2.6 -5.7,-5.7 V 95.1 H 18.4 V 120 c 0,5.8 4.7,10.5 10.5,10.5 h 92.3 c 5.8,0 10.5,-4.7 10.5,-10.5 V 95.2 H 106.1 Z M 44,62.2 H 18.4 V 87.8 H 44 Z m 87.7,0 h -25.6 v 25.6 h 25.6 z"
+       id="path1" />
+  </g>
+</svg>
