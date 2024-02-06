@@ -74,11 +74,13 @@ export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
+  title,
   obj,
   loaded,
   loadError,
 }) => (
   <ProviderVirtualMachinesList
+    title={title}
     obj={obj}
     loaded={loaded}
     loadError={loadError}

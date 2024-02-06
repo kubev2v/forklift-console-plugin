@@ -89,11 +89,13 @@ export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 export const OVirtVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
+  title,
   obj,
   loaded,
   loadError,
 }) => (
   <ProviderVirtualMachinesList
+    title={title}
     obj={obj}
     loaded={loaded}
     loadError={loadError}

@@ -43,11 +43,13 @@ export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
+  title,
   obj,
   loaded,
   loadError,
 }) => (
   <ProviderVirtualMachinesList
+    title={title}
     obj={obj}
     loaded={loaded}
     loadError={loadError}

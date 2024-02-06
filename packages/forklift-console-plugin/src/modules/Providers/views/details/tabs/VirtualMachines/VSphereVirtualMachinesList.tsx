@@ -77,11 +77,13 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
+  title,
   obj,
   loaded,
   loadError,
 }) => (
   <ProviderVirtualMachinesList
+    title={title}
     obj={obj}
     loaded={loaded}
     loadError={loadError}
