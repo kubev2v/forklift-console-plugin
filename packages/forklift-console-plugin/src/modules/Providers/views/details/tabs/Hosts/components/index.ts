@@ -4,4 +4,5 @@ export * from './LinkSpeedCellRenderer';
 export * from './MTUCellRenderer';
 export * from './NameCellRenderer';
 export * from './NetworkCellRenderer';
+export * from './SelectNetworkButton';
 // @endindex

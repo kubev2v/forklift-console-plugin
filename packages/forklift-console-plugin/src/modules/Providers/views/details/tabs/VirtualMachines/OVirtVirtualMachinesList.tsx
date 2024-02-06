@@ -93,6 +93,8 @@ export const OVirtVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = 
   obj,
   loaded,
   loadError,
+  onSelect,
+  initialSelectedIds,
 }) => (
   <ProviderVirtualMachinesList
     title={title}
@@ -102,5 +104,7 @@ export const OVirtVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = 
     cellMapper={OVirtVirtualMachinesCells}
     fieldsMetadataFactory={oVirtVmFieldsMetadataFactory}
     pageId="OVirtVirtualMachinesList"
+    onSelect={onSelect}
+    initialSelectedIds={initialSelectedIds}
   />
 );

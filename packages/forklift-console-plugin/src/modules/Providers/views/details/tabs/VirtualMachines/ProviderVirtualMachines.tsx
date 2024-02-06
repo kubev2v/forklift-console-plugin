@@ -10,6 +10,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
+import { VmData } from './components';
 import { OpenShiftVirtualMachinesList } from './OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from './OpenStackVirtualMachinesList';
 import { OvaVirtualMachinesList } from './OvaVirtualMachinesList';
@@ -21,6 +22,8 @@ export interface ProviderVirtualMachinesProps extends RouteComponentProps {
   obj: ProviderData;
   loaded?: boolean;
   loadError?: unknown;
+  onSelect?: (selectedVMs: VmData[]) => void;
+  initialSelectedIds?: string[];
 }
 
 export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
@@ -44,9 +47,9 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
       <PageSection variant="light" className="forklift-page-section--info">
         <Alert customIcon={<BellIcon />} variant="info" title={t('How to create a migration plan')}>
           <Trans t={t} ns="plugin__forklift-console-plugin">
-            To migrate virtual machines from <strong>{obj?.provider.metadata.name}</strong>{' '}
-            provider, select the virtual machines to migrate from the list of available virtual
-            machines and click the <strong>Migrate</strong> button.
+            To migrate virtual machines from <strong>{name}</strong> provider, select the virtual
+            machines to migrate from the list of available virtual machines and click the{' '}
+            <strong>Migrate</strong> button.
           </Trans>
         </Alert>
       </PageSection>
@@ -65,6 +68,8 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
   obj,
   loaded,
   loadError,
+  onSelect,
+  initialSelectedIds,
 }) => {
   switch (obj?.provider?.spec?.type) {
     case 'openshift':
@@ -74,6 +79,8 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           obj={obj}
           loaded={loaded}
           loadError={loadError}
+          onSelect={onSelect}
+          initialSelectedIds={initialSelectedIds}
         />
       );
     case 'openstack':
@@ -83,19 +90,42 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           obj={obj}
           loaded={loaded}
           loadError={loadError}
+          onSelect={onSelect}
+          initialSelectedIds={initialSelectedIds}
         />
       );
     case 'ovirt':
       return (
-        <OVirtVirtualMachinesList title={title} obj={obj} loaded={loaded} loadError={loadError} />
+        <OVirtVirtualMachinesList
+          title={title}
+          obj={obj}
+          loaded={loaded}
+          loadError={loadError}
+          onSelect={onSelect}
+          initialSelectedIds={initialSelectedIds}
+        />
       );
     case 'vsphere':
       return (
-        <VSphereVirtualMachinesList title={title} obj={obj} loaded={loaded} loadError={loadError} />
+        <VSphereVirtualMachinesList
+          title={title}
+          obj={obj}
+          loaded={loaded}
+          loadError={loadError}
+          onSelect={onSelect}
+          initialSelectedIds={initialSelectedIds}
+        />
       );
     case 'ova':
       return (
-        <OvaVirtualMachinesList title={title} obj={obj} loaded={loaded} loadError={loadError} />
+        <OvaVirtualMachinesList
+          title={title}
+          obj={obj}
+          loaded={loaded}
+          loadError={loadError}
+          onSelect={onSelect}
+          initialSelectedIds={initialSelectedIds}
+        />
       );
     default:
       // unsupported provider or loading errors will be handled by parent page
