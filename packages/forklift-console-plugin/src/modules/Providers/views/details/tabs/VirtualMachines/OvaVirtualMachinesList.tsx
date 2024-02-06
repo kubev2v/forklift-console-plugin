@@ -47,6 +47,8 @@ export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
   obj,
   loaded,
   loadError,
+  onSelect,
+  initialSelectedIds,
 }) => (
   <ProviderVirtualMachinesList
     title={title}
@@ -56,5 +58,7 @@ export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
     cellMapper={OvaVirtualMachinesCells}
     fieldsMetadataFactory={ovaVmFieldsMetadataFactory}
     pageId="OvaVirtualMachinesList"
+    onSelect={onSelect}
+    initialSelectedIds={initialSelectedIds}
   />
 );

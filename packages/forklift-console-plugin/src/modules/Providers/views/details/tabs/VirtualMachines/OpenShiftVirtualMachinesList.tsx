@@ -78,6 +78,8 @@ export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps
   obj,
   loaded,
   loadError,
+  onSelect,
+  initialSelectedIds,
 }) => (
   <ProviderVirtualMachinesList
     title={title}
@@ -87,5 +89,7 @@ export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps
     cellMapper={OpenShiftVirtualMachinesCells}
     fieldsMetadataFactory={openShiftVmFieldsMetadataFactory}
     pageId="OpenShiftVirtualMachinesList"
+    onSelect={onSelect}
+    initialSelectedIds={initialSelectedIds}
   />
 );

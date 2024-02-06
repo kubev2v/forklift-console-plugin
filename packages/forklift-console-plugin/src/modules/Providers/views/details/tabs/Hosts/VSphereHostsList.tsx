@@ -1,22 +1,18 @@
 import React, { FC, useState } from 'react';
-import StandardPage from 'src/components/page/StandardPage';
-import { GlobalActionWithSelection, withIdBasedSelection } from 'src/components/page/withSelection';
+import {
+  GlobalActionWithSelection,
+  StandardPageWithSelection,
+  StandardPageWithSelectionProps,
+} from 'src/components/page/StandardPageWithSelection';
 import { useProviderInventory } from 'src/modules/Providers/hooks';
-import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
-import {
-  HostModelGroupVersionKind,
-  V1beta1Host,
-  V1beta1Provider,
-  VSphereHost,
-} from '@kubev2v/types';
+import { HostModelGroupVersionKind, V1beta1Host, VSphereHost } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, ToolbarItem } from '@patternfly/react-core';
 
-import { VSphereNetworkModal } from './modals/VSphereNetworkModal';
 import { InventoryHostPair, matchHostsToInventory } from './utils/helpers';
+import { SelectNetworkButton } from './components';
 import { ProviderHostsProps } from './ProviderHosts';
 import { VSphereHostsCells } from './VSphereHostsRow';
 
@@ -60,18 +56,18 @@ export const hostsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-const PageWithSelection = withIdBasedSelection<InventoryHostPair>({
-  toId: (item: InventoryHostPair) => item.inventory.id,
-  canSelect: (item: InventoryHostPair) => item?.inventory?.networkAdapters?.length > 0,
-});
+const PageWithSelection = StandardPageWithSelection<InventoryHostPair>;
+type PageWithSelectionProps = StandardPageWithSelectionProps<InventoryHostPair>;
+type PageGlobalActions = FC<GlobalActionWithSelection<InventoryHostPair>>[];
 
 export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
 
-  const [userSettings] = useState(() => loadUserSettings({ pageId: 'ProviderHosts' }));
-
   const { provider, permissions } = obj;
   const { namespace } = provider?.metadata || {};
+
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [userSettings] = useState(() => loadUserSettings({ pageId: 'ProviderHosts' }));
 
   const {
     inventory: hostsInventory,
@@ -91,45 +87,29 @@ export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
 
   const hostsData = matchHostsToInventory(hostsInventory, hosts, provider);
 
-  const Page = permissions?.canPatch ? PageWithSelection : StandardPage<InventoryHostPair>;
-  const actions: FC<GlobalActionWithSelection<InventoryHostPair>>[] = permissions?.canPatch
-    ? [({ selectedIds }) => <SelectNetworkBtn {...{ hostsData, provider, selectedIds }} />]
-    : [];
+  const actions: PageGlobalActions = [
+    ({ selectedIds }) => <SelectNetworkButton {...{ hostsData, provider, selectedIds }} />,
+  ];
 
-  return (
-    <Page
-      data-testid="hosts-list"
-      dataSource={[hostsData || [], !loading, error]}
-      CellMapper={VSphereHostsCells}
-      fieldsMetadata={hostsFieldsMetadataFactory(t)}
-      namespace={namespace}
-      title={t('Hosts')}
-      userSettings={userSettings}
-      GlobalActionToolbarItems={actions}
-    />
-  );
-};
+  const props: PageWithSelectionProps = {
+    dataSource: [hostsData || [], !loading, error],
+    CellMapper: VSphereHostsCells,
+    fieldsMetadata: hostsFieldsMetadataFactory(t),
+    namespace: namespace,
+    title: t('Hosts'),
+    userSettings: userSettings,
+  };
 
-const SelectNetworkBtn: FC<{
-  selectedIds: string[];
-  provider: V1beta1Provider;
-  hostsData: InventoryHostPair[];
-}> = ({ selectedIds, provider, hostsData }) => {
-  const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
-  return (
-    <ToolbarItem>
-      <Button
-        variant="secondary"
-        onClick={() =>
-          showModal(
-            <VSphereNetworkModal provider={provider} data={hostsData} selected={selectedIds} />,
-          )
-        }
-        isDisabled={!selectedIds?.length}
-      >
-        {t('Select migration network')}
-      </Button>
-    </ToolbarItem>
-  );
+  const extendedProps: PageWithSelectionProps = permissions?.canPatch
+    ? {
+        ...props,
+        toId: (item: InventoryHostPair) => item.inventory.id,
+        canSelect: (item: InventoryHostPair) => item?.inventory?.networkAdapters?.length > 0,
+        onSelect: setSelectedIds,
+        selectedIds: selectedIds,
+        GlobalActionToolbarItems: actions,
+      }
+    : props;
+
+  return <PageWithSelection {...extendedProps} />;
 };

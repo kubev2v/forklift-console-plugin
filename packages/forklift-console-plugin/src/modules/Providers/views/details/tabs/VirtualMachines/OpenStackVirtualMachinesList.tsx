@@ -109,6 +109,8 @@ export const OpenStackVirtualMachinesList: React.FC<ProviderVirtualMachinesProps
   obj,
   loaded,
   loadError,
+  onSelect,
+  initialSelectedIds,
 }) => (
   <ProviderVirtualMachinesList
     title={title}
@@ -118,5 +120,7 @@ export const OpenStackVirtualMachinesList: React.FC<ProviderVirtualMachinesProps
     cellMapper={OpenStackVirtualMachinesCells}
     fieldsMetadataFactory={openStackVmFieldsMetadataFactory}
     pageId="OpenStackVirtualMachinesList"
+    onSelect={onSelect}
+    initialSelectedIds={initialSelectedIds}
   />
 );
