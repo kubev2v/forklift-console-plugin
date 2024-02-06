@@ -28,7 +28,7 @@ export const OperatorCard: FC<OperatorCardProps> = ({ obj }) => {
 
   return (
     <Card>
-      <CardTitle>{t('Operator')}</CardTitle>
+      <CardTitle className="forklift-title">{t('Operator')}</CardTitle>
       <CardBody>
         <DescriptionList
           columnModifier={{

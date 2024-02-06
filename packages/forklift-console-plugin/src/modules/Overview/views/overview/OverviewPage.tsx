@@ -11,7 +11,11 @@ import { getOperatorPhase } from '../../utils/helpers/getOperatorPhase';
 import OperatorStatus from './components/OperatorStatus';
 import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
 import { HeaderTitle } from './components';
-import { ForkliftControllerDetailsTab, ForkliftControllerYAMLTab } from './tabs';
+import {
+  ForkliftControllerDetailsTab,
+  ForkliftControllerMetricsTab,
+  ForkliftControllerYAMLTab,
+} from './tabs';
 
 import './OverviewPage.style.css';
 
@@ -28,6 +32,11 @@ export const OverviewPage: React.FC<OverviewPageProps> = () => {
       href: 'yaml',
       name: t('YAML'),
       component: ForkliftControllerYAMLTabWrapper,
+    },
+    {
+      href: 'metrics',
+      name: t('Metrics'),
+      component: ForkliftControllerMetricsTabWrapper,
     },
   ];
 
@@ -85,6 +94,14 @@ const ForkliftControllerYAMLTabWrapper: React.FC = () => {
 
   return (
     <ForkliftControllerYAMLTab obj={forkliftController} loaded={loaded} loadError={loadError} />
+  );
+};
+
+const ForkliftControllerMetricsTabWrapper: React.FC = () => {
+  const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
+
+  return (
+    <ForkliftControllerMetricsTab obj={forkliftController} loaded={loaded} loadError={loadError} />
   );
 };
 

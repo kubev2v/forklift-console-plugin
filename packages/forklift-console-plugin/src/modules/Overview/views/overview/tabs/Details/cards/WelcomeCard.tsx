@@ -70,7 +70,7 @@ export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
                 dropdownItems={actionDropdownItems}
               />
             </CardActions>
-            <CardTitle>{t('Welcome')}</CardTitle>
+            <CardTitle className="forklift-title">{t('Welcome')}</CardTitle>
           </CardHeader>
           <CardBody>
             <Text className="forklift-welcome-text">
