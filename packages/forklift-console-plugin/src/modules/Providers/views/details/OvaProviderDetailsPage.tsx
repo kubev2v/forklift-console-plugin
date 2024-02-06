@@ -4,11 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
 
 import { ProviderPageHeadings } from './components';
-import {
-  ProviderDetailsWrapper,
-  ProviderVirtualMachinesWrapper,
-  ProviderYAMLPageWrapper,
-} from './tabs';
+import { ProviderDetailsWrapper, ProviderVirtualMachines, ProviderYAMLPageWrapper } from './tabs';
 
 // OvaProviderDetailsPage
 export const OvaProviderDetailsPage: React.FC<{ name: string; namespace: string }> = ({
@@ -31,7 +27,7 @@ export const OvaProviderDetailsPage: React.FC<{ name: string; namespace: string 
     {
       href: 'vms',
       name: t('Virtual Machines'),
-      component: () => <ProviderVirtualMachinesWrapper name={name} namespace={namespace} />,
+      component: () => <ProviderVirtualMachines name={name} namespace={namespace} />,
     },
   ];
 

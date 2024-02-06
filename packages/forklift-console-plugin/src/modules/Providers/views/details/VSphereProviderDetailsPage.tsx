@@ -8,7 +8,7 @@ import {
   ProviderCredentialsWrapper,
   ProviderDetailsWrapper,
   ProviderHostsWrapper,
-  ProviderVirtualMachinesWrapper,
+  ProviderVirtualMachines,
   ProviderYAMLPageWrapper,
 } from './tabs';
 
@@ -38,7 +38,7 @@ export const VSphereProviderDetailsPage: React.FC<{ name: string; namespace: str
     {
       href: 'vms',
       name: t('Virtual Machines'),
-      component: () => <ProviderVirtualMachinesWrapper name={name} namespace={namespace} />,
+      component: () => <ProviderVirtualMachines name={name} namespace={namespace} />,
     },
     {
       href: 'hosts',

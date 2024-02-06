@@ -50,11 +50,7 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
   return (
     <div>
       <PageSection variant="light" className="forklift-page-section--info">
-        <Alert
-          customIcon={<BellIcon />}
-          variant="warning"
-          title={t('How to create a migration plan')}
-        >
+        <Alert customIcon={<BellIcon />} variant="info" title={t('How to create a migration plan')}>
           <Trans t={t} ns="plugin__forklift-console-plugin">
             To migrate virtual machines from <strong>{provider.metadata.name}</strong> provider,
             select the virtual machines to migrate from the list of available virtual machines

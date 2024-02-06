@@ -1,10 +1,14 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import { RouteComponentProps } from 'react-router-dom';
 import { useProviderInventory } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderInventory, ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { Alert, PageSection } from '@patternfly/react-core';
+import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
 import { OpenShiftVirtualMachinesList } from './OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from './OpenStackVirtualMachinesList';
@@ -13,15 +17,18 @@ import { OVirtVirtualMachinesList } from './OVirtVirtualMachinesList';
 import { VSphereVirtualMachinesList } from './VSphereVirtualMachinesList';
 
 export interface ProviderVirtualMachinesProps extends RouteComponentProps {
+  title?: string;
   obj: ProviderData;
   loaded?: boolean;
   loadError?: unknown;
 }
 
-export const ProviderVirtualMachinesWrapper: React.FC<{ name: string; namespace: string }> = ({
+export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {
+  const { t } = useForkliftTranslation();
+
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,
@@ -30,43 +37,66 @@ export const ProviderVirtualMachinesWrapper: React.FC<{ name: string; namespace:
   });
 
   const { inventory } = useProviderInventory<ProviderInventory>({ provider });
+  const obj = { provider, inventory };
 
-  const data = { provider, inventory };
-  switch (provider?.spec?.type) {
+  return (
+    <>
+      <PageSection variant="light" className="forklift-page-section--info">
+        <Alert customIcon={<BellIcon />} variant="info" title={t('How to create a migration plan')}>
+          <Trans t={t} ns="plugin__forklift-console-plugin">
+            To migrate virtual machines from <strong>{obj?.provider.metadata.name}</strong>{' '}
+            provider, select the virtual machines to migrate from the list of available virtual
+            machines and click the <strong>Migrate</strong> button.
+          </Trans>
+        </Alert>
+      </PageSection>
+
+      <ProviderVirtualMachinesListWrapper
+        obj={obj}
+        loaded={providerLoaded}
+        loadError={providerLoadError}
+      />
+    </>
+  );
+};
+
+export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachinesProps> = ({
+  title,
+  obj,
+  loaded,
+  loadError,
+}) => {
+  switch (obj?.provider?.spec?.type) {
     case 'openshift':
       return (
         <OpenShiftVirtualMachinesList
-          obj={data}
-          loaded={providerLoaded}
-          loadError={providerLoadError}
+          title={title}
+          obj={obj}
+          loaded={loaded}
+          loadError={loadError}
         />
       );
     case 'openstack':
       return (
         <OpenStackVirtualMachinesList
-          obj={data}
-          loaded={providerLoaded}
-          loadError={providerLoadError}
+          title={title}
+          obj={obj}
+          loaded={loaded}
+          loadError={loadError}
         />
       );
     case 'ovirt':
       return (
-        <OVirtVirtualMachinesList
-          obj={data}
-          loaded={providerLoaded}
-          loadError={providerLoadError}
-        />
+        <OVirtVirtualMachinesList title={title} obj={obj} loaded={loaded} loadError={loadError} />
       );
     case 'vsphere':
       return (
-        <VSphereVirtualMachinesList
-          obj={data}
-          loaded={providerLoaded}
-          loadError={providerLoadError}
-        />
+        <VSphereVirtualMachinesList title={title} obj={obj} loaded={loaded} loadError={loadError} />
       );
     case 'ova':
-      return <OvaVirtualMachinesList obj={data} loaded={providerLoaded} />;
+      return (
+        <OvaVirtualMachinesList title={title} obj={obj} loaded={loaded} loadError={loadError} />
+      );
     default:
       // unsupported provider or loading errors will be handled by parent page
       return <></>;

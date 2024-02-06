@@ -69,3 +69,10 @@ typeahead
 immer
 networkattachmentdefinitions
 nicprofiles
+bootable
+consistencygroup
+multiattach
+volumetypes
+storageclasses
+storageclass
+storagedomains
