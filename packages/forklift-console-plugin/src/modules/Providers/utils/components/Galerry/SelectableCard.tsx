@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import { Card, CardBody, CardTitle, Level, LevelItem } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Split, SplitItem } from '@patternfly/react-core';
 
 interface SelectableCardProps {
   /** The title of the card. It can be any element - a string, a React component, etc. */
@@ -51,10 +51,10 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
     >
       {titleLogo ? (
         <CardTitle>
-          <Level className="forklift--create-provider-edit-card-title">
-            <LevelItem>{titleLogo}</LevelItem>
-            <LevelItem>{title}</LevelItem>
-          </Level>
+          <Split className="forklift--create-provider-edit-card-title">
+            <SplitItem>{titleLogo}</SplitItem>
+            <SplitItem isFilled>{title}</SplitItem>
+          </Split>
         </CardTitle>
       ) : (
         <CardTitle>{title}</CardTitle>

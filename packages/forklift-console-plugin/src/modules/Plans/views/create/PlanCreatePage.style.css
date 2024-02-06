@@ -1,0 +1,64 @@
+.forklift-create-provider-edit-section {
+  padding-top: 0;
+}
+
+.forklift-create-provider-edit-section-header {
+  margin-bottom: 0;
+}
+
+.forklift-section-create-deviser {
+  padding-top: var(--pf-global--spacer--md);
+  padding-bottom: var(--pf-global--spacer--md);
+}
+
+.forklift-create-subtitle {
+  padding-bottom: var(--pf-global--spacer--md);
+}
+
+.forklift-create-card--list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.forklift--create-provider-edit-card-selected {
+  min-width: 25%;
+}
+
+.forklift--create-provider-edit-card-title {
+  justify-content: normal;
+}
+
+.forklift--create-provider-edit-card-title-logo {
+  margin-right: var(--pf-global--spacer--sm);
+}
+
+.forklift--create-provider-field-error-validation {
+  color: var(--pf-c-form__helper-text--m-error--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
+
+.forklift--create-provider-field-warning-validation {
+  color: var(--pf-c-form__helper-text--m-warning--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
+
+.forklift--create-provider-field-success-validation {
+  color: var(--pf-c-form__helper-text--m-success--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
+
+.forklift--create-provider-field-default-validation {
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
+
+.forklift--create-plan--filters-toolbar {
+  padding-bottom: 0;
+}
+
+.forklift--create-plan--alert {
+  margin-top: var(--pf-global--spacer--md);
+}

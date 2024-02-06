@@ -8,7 +8,7 @@ import './SelectableGallery.style.css';
 
 export interface SelectableGalleryItem {
   /** The title of the item */
-  title: string;
+  title: ReactNode;
   /** The logo of the item */
   logo?: ReactNode;
   /** The content of the item */
