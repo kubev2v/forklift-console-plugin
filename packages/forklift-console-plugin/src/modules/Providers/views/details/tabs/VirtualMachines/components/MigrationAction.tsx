@@ -12,7 +12,8 @@ import { VmData } from './VMCellProps';
 export const MigrationAction: FC<{
   selectedVms: VmData[];
   provider: V1beta1Provider;
-}> = ({ selectedVms, provider }) => {
+  className?: string;
+}> = ({ selectedVms, provider, className }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
   const namespace = provider?.metadata?.namespace;
@@ -23,16 +24,16 @@ export const MigrationAction: FC<{
   });
   const { setData } = useCreateVmMigrationData();
   return (
-    <ToolbarItem>
+    <ToolbarItem className={className}>
       <Button
-        variant="secondary"
+        variant="primary"
         onClick={() => {
           setData({ selectedVms, provider });
           history.push(`${planListURL}/fast-create`);
         }}
         isDisabled={!selectedVms?.length}
       >
-        {t('Migrate')}
+        {t('Create migration plan')}
       </Button>
     </ToolbarItem>
   );
