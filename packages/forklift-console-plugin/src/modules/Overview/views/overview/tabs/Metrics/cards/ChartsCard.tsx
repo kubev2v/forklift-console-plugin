@@ -154,19 +154,19 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
               { name: t('Succeeded'), symbol: { fill: chart_color_green_400.var } },
               { name: t('Failed'), symbol: { fill: chart_color_red_100.var } },
             ]}
-            legendPosition="bottom-left"
+            legendPosition="bottom"
             height={400}
-            width={450}
+            width={900}
             padding={{
               bottom: 75,
-              left: isDaysViewSelected ? 100 : 110,
+              left: 100,
               right: 100,
               top: 50,
             }}
           >
             <ChartAxis />
             <ChartAxis dependentAxis showGrid />
-            <ChartGroup offset={11} horizontal>
+            <ChartGroup offset={11} horizontal={false}>
               <ChartBar
                 data={migrationsDataPoints.total.map(({ dateLabel, value }) => ({
                   x: dateLabel,
