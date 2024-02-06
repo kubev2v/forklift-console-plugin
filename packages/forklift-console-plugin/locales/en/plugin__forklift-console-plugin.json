@@ -65,6 +65,7 @@
   "Create a migration plan and select VMs from the source provider for migration.": "Create a migration plan and select VMs from the source provider for migration.",
   "Create and edit": "Create and edit",
   "Create and start": "Create and start",
+  "Create migration plan": "Create migration plan",
   "Create NetworkMap": "Create NetworkMap",
   "Create new provider": "Create new provider",
   "Create plan": "Create plan",
