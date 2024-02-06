@@ -30,8 +30,8 @@ export interface ProviderVirtualMachinesListProps extends RouteComponentProps {
   pageId: string;
 }
 
-export const toId = (item: VmData) =>
-  item.vm.providerType === 'openshift' ? item.vm.uid : item.vm.id;
+export const toId = (item: VmData) => item.vm.id;
+
 const PageWithSelection = withIdBasedSelection<VmData>({
   toId,
   canSelect: (item: VmData) => !!item,
