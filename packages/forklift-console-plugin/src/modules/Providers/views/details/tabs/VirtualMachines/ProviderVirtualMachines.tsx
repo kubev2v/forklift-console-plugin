@@ -24,6 +24,7 @@ export interface ProviderVirtualMachinesProps extends RouteComponentProps {
   loadError?: unknown;
   onSelect?: (selectedVMs: VmData[]) => void;
   initialSelectedIds?: string[];
+  className?: string;
 }
 
 export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
@@ -70,6 +71,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
   loadError,
   onSelect,
   initialSelectedIds,
+  className,
 }) => {
   switch (obj?.provider?.spec?.type) {
     case 'openshift':
@@ -81,6 +83,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          className={className}
         />
       );
     case 'openstack':
@@ -92,6 +95,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          className={className}
         />
       );
     case 'ovirt':
@@ -103,6 +107,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          className={className}
         />
       );
     case 'vsphere':
@@ -114,6 +119,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          className={className}
         />
       );
     case 'ova':
@@ -125,6 +131,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          className={className}
         />
       );
     default:

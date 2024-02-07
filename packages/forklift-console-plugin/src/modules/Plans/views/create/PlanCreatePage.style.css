@@ -59,6 +59,15 @@
   padding-bottom: 0;
 }
 
-.forklift--create-plan--alert {
+.forklift--create-plan--title-section {
+  padding-bottom: 0;
+}
+
+.forklift--create-plan--title {
   margin-top: var(--pf-global--spacer--md);
+  margin-bottom: 0;
+}
+
+.forklift--create-plan--bottom-toolbar {
+  padding-left: 0;
 }

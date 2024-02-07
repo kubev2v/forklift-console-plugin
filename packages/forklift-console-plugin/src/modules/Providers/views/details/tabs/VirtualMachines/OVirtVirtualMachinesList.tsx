@@ -95,6 +95,7 @@ export const OVirtVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = 
   loadError,
   onSelect,
   initialSelectedIds,
+  className,
 }) => (
   <ProviderVirtualMachinesList
     title={title}
@@ -106,5 +107,6 @@ export const OVirtVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = 
     pageId="OVirtVirtualMachinesList"
     onSelect={onSelect}
     initialSelectedIds={initialSelectedIds}
+    className={className}
   />
 );

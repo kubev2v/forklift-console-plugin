@@ -33,6 +33,7 @@ export interface ProviderVirtualMachinesListProps extends RouteComponentProps {
   pageId: string;
   onSelect?: (selectedVMs: VmData[]) => void;
   initialSelectedIds?: string[];
+  className?: string;
 }
 
 export const toId = (item: VmData) => item.vm.id;
@@ -47,6 +48,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   pageId,
   onSelect,
   initialSelectedIds,
+  className,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -78,6 +80,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
 
   return (
     <StandardPageWithSelection
+      className={className}
       data-testid="vm-list"
       dataSource={[vmData || [], !loading, null]}
       CellMapper={cellMapper}
