@@ -130,6 +130,19 @@ export function withIdBasedSelection<T>({
   return Enhanced;
 }
 
+/**
+ * Properties for the `StandardPageWithSelection` component.
+ * These properties extend the base `StandardPageProps` and add additional ones related to selection.
+ *
+ * @typedef {Object} StandardPageWithSelectionProps
+ * @property {Function} toId - A function that returns a unique identifier for each item.
+ * @property {Function} canSelect - A function that determines whether an item can be selected.
+ * @property {Function} onSelect - A callback function that is triggered when the selection changes.
+ * @property {string[]} selectedIds - An array of identifiers for the currently selected items.
+ * @property {...StandardPageProps<T>} - Other props that are passed through to the `StandardPage` component.
+ *
+ * @template T - The type of the items being displayed in the table.
+ */
 export interface StandardPageWithSelectionProps<T> extends StandardPageProps<T> {
   toId?: (item: T) => string;
   canSelect?: (item: T) => boolean;
@@ -137,6 +150,31 @@ export interface StandardPageWithSelectionProps<T> extends StandardPageProps<T> 
   selectedIds?: string[];
 }
 
+/**
+ * Renders a standard page with selection capabilities.
+ * This component wraps the `StandardPage` component and adds support for row selection.
+ * It uses the provided `toId`, `canSelect`, `onSelect`, and `selectedIds` props to manage the selection state.
+ *
+ * NOTE: if `onSelect` is missing, the component will return `StandardPage` without selections.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {Function} props.toId - A function that returns a unique identifier for each item.
+ * @param {Function} props.canSelect - A function that determines whether an item can be selected.
+ * @param {Function} props.onSelect - A callback function that is triggered when the selection changes.
+ * @param {string[]} props.selectedIds - An array of identifiers for the currently selected items.
+ * @param {...StandardPageProps<T>} props - Other props that are passed through to the `StandardPage` component.
+ *
+ * @template T - The type of the items being displayed in the table.
+ *
+ * @example
+ * <StandardPageWithSelection
+ *   toId={item => item.id}
+ *   canSelect={item => item.status !== 'archived'}
+ *   onSelect={selectedIds => console.log('Selected IDs:', selectedIds)}
+ *   selectedIds={['1', '2']}
+ *   // ...other props
+ * />
+ */
 export function StandardPageWithSelection<T>(props: StandardPageWithSelectionProps<T>) {
   const { toId, canSelect = () => true, onSelect, selectedIds, ...rest } = props;
 
