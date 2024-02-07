@@ -186,6 +186,11 @@ export interface StandardPageProps<T> {
    * Toolbar items with global actions.
    */
   GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<T>>[];
+
+  /**
+   * className
+   */
+  className?: string;
 }
 
 /**
@@ -239,6 +244,7 @@ export function StandardPage<T>({
   HeaderMapper = DefaultHeader<T>,
   GlobalActionToolbarItems = [],
   alerts,
+  className,
 }: StandardPageProps<T>) {
   const {
     t,
@@ -284,15 +290,17 @@ export function StandardPage<T>({
     .map(toFieldFilter(flatData));
 
   return (
-    <>
-      <PageSection variant="light" className="forklift-page__main-title">
-        <Level>
-          <LevelItem>
-            <Title headingLevel="h1">{title}</Title>
-          </LevelItem>
-          {addButton && <LevelItem>{addButton}</LevelItem>}
-        </Level>
-      </PageSection>
+    <span className={className}>
+      {title && (
+        <PageSection variant="light" className="forklift-page__main-title">
+          <Level>
+            <LevelItem>
+              <Title headingLevel="h1">{title}</Title>
+            </LevelItem>
+            {addButton && <LevelItem>{addButton}</LevelItem>}
+          </Level>
+        </PageSection>
+      )}
       {alerts && <PageSection variant="light">{alerts}</PageSection>}
       <PageSection variant="light">
         <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
@@ -397,7 +405,7 @@ export function StandardPage<T>({
           />
         )}
       </PageSection>
-    </>
+    </span>
   );
 }
 

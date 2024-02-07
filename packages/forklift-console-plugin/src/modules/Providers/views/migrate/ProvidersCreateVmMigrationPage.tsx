@@ -1,9 +1,11 @@
 import React, { FC } from 'react';
+import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Alert, Button, Flex, FlexItem, PageSection } from '@patternfly/react-core';
+import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
 import { startCreate } from './actions';
 import { PlansCreateForm } from './PlansCreateForm';
@@ -27,7 +29,19 @@ const ProvidersCreateVmMigrationPage: FC = () => {
 
   return (
     <PageSection variant="light">
-      <SectionHeading text={t('Create migration plan')} />
+      <Alert
+        className="co-alert forklift--create-vm-migration-plan--alert"
+        customIcon={<BellIcon />}
+        variant="info"
+        title={t('How to create a migration plan')}
+      >
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          To migrate virtual machines select target provider, namespace, mappings and click the{' '}
+          <strong>Create</strong> button to crete the plan.
+        </Trans>
+      </Alert>
+
+      <SectionHeading text={t('Select migration target')} />
 
       <PlansCreateForm state={state} dispatch={dispatch} />
       {state.flow.apiError && (

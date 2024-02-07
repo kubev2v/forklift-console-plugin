@@ -14,3 +14,7 @@
 .forklift-page-resource-link-in-description-item {
     padding-left: 8px;
 }
+
+.forklift--create-vm-migration-plan--alert {
+    margin-bottom:var(--pf-global--spacer--md);
+}

@@ -83,6 +83,7 @@ export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> 
   loadError,
   onSelect,
   initialSelectedIds,
+  className,
 }) => (
   <ProviderVirtualMachinesList
     title={title}
@@ -94,5 +95,6 @@ export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> 
     pageId="VSphereVirtualMachinesList"
     onSelect={onSelect}
     initialSelectedIds={initialSelectedIds}
+    className={className}
   />
 );

@@ -11,7 +11,8 @@ export const ProviderVirtualMachinesList: React.FC<{
   namespace: string;
   onSelect?: (selectedIds: VmData[]) => void;
   initialSelectedIds?: string[];
-}> = ({ title, name, namespace, onSelect, initialSelectedIds }) => {
+  className?: string;
+}> = ({ title, name, namespace, onSelect, initialSelectedIds, className }) => {
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,
@@ -30,6 +31,7 @@ export const ProviderVirtualMachinesList: React.FC<{
       loadError={providerLoadError}
       onSelect={onSelect}
       initialSelectedIds={initialSelectedIds}
+      className={className}
     />
   );
 };

@@ -78,7 +78,7 @@ export const PlanCreatePage: React.FC<{
 
         {!namespace && (
           <Alert
-            className="co-alert forklift--create-plan--alert "
+            className="co-alert forklift--create-plan--alert"
             isInline
             variant="warning"
             title={t('Namespace is not defined')}
@@ -91,45 +91,49 @@ export const PlanCreatePage: React.FC<{
           </Alert>
         )}
 
-        <PageSection>
-          <Title headingLevel="h1">{t('Select source provider')}</Title>
+        <Title headingLevel="h2" className="forklift--create-plan--title">
+          {t('Select source provider')}
+        </Title>
 
-          <PlanCreateForm
-            providers={filteredProviders}
-            filterState={filterState}
-            filterDispatch={filterDispatch}
-          />
-        </PageSection>
+        <PlanCreateForm
+          providers={filteredProviders}
+          filterState={filterState}
+          filterDispatch={filterDispatch}
+        />
 
         {filterState.selectedProviderUID && (
-          <ProviderVirtualMachinesList
-            title={t('Select virtual machines')}
-            name={selectedProviderName}
-            namespace={selectedProviderNamespace}
-            onSelect={(selectedVms) =>
-              filterDispatch({ type: 'UPDATE_SELECTED_VMS', payload: selectedVms })
-            }
-            initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
-          />
+          <>
+            <Title headingLevel="h2" className="forklift--create-plan--title">
+              {t('Select virtual machines')}
+            </Title>
+
+            <ProviderVirtualMachinesList
+              title=""
+              name={selectedProviderName}
+              namespace={selectedProviderNamespace}
+              onSelect={(selectedVms) =>
+                filterDispatch({ type: 'UPDATE_SELECTED_VMS', payload: selectedVms })
+              }
+              initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
+            />
+          </>
         )}
 
-        <PageSection>
-          <Toolbar>
-            <ToolbarContent>
-              <MigrationAction
-                {...{
-                  provider: selectedProvider,
-                  selectedVms: filterState.selectedVMs,
-                }}
-              />
-              <ToolbarItem>
-                <Button onClick={() => history.push(providersListURL)} variant="secondary">
-                  {t('Cancel')}
-                </Button>
-              </ToolbarItem>
-            </ToolbarContent>
-          </Toolbar>
-        </PageSection>
+        <Toolbar>
+          <ToolbarContent className="forklift--create-plan--bottom-toolbar">
+            <MigrationAction
+              {...{
+                provider: selectedProvider,
+                selectedVms: filterState.selectedVMs,
+              }}
+            />
+            <ToolbarItem>
+              <Button onClick={() => history.push(providersListURL)} variant="secondary">
+                {t('Cancel')}
+              </Button>
+            </ToolbarItem>
+          </ToolbarContent>
+        </Toolbar>
       </PageSection>
     </div>
   );
