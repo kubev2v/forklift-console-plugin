@@ -29,15 +29,21 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
       label: t('Password'),
       description: 'A user password for connecting to the vCenter API endpoint.',
     },
-    thumbprint: {
-      label: t('SSHA-1 fingerprint'),
-      description: t(
-        "The provider currently requires the SHA-1 fingerprint of the vCenter Server's TLS certificate in all circumstances. vSphere calls this the server's thumbprint.",
-      ),
-    },
     insecureSkipVerify: {
       label: t('Skip certificate validation'),
       description: t("If true, the provider's TLS certificate won't be validated."),
+    },
+    cacert: {
+      label: t('CA certificate'),
+      description: t(
+        'A CA certificate to be trusted when connecting to the vCenter API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
+      ),
+      helperTextPopover: (
+        <Trans t={t} ns="plugin__forklift-console-plugin">
+          Note: Use the Manager CA certificate unless it was replaced by a third-party certificate,
+          in which case use the Manager Apache CA certificate.
+        </Trans>
+      ),
     },
   };
 

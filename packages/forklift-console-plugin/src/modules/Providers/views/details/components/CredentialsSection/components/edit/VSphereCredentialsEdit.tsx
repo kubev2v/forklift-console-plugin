@@ -8,9 +8,19 @@ import {
 } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, Divider, Form, FormGroup, Switch, TextInput } from '@patternfly/react-core';
+import {
+  Button,
+  Divider,
+  FileUpload,
+  Form,
+  FormGroup,
+  Popover,
+  Switch,
+  TextInput,
+} from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
+import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
 
@@ -19,8 +29,24 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
 
   const user = safeBase64Decode(secret?.data?.user || '');
   const password = safeBase64Decode(secret?.data?.password || '');
-  const thumbprint = safeBase64Decode(secret?.data?.thumbprint || '');
+  const cacert = safeBase64Decode(secret?.data?.cacert || '');
   const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
+
+  const cacertHelperTextMsgs = {
+    error: t(
+      'Error: The format of the provided CA certificate is invalid. Ensure the CA certificate format is in a PEM encoded X.509 format.',
+    ),
+    success: t(
+      'A CA certificate to be trusted when connecting to the vCenter API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
+    ),
+  };
+
+  const cacertHelperTextPopover = (
+    <Trans t={t} ns="plugin__forklift-console-plugin">
+      Note: Use the Manager CA certificate unless it was replaced by a third-party certificate, in
+      which case use the Manager Apache CA certificate.
+    </Trans>
+  );
 
   const usernameHelperTextMsgs = {
     error: (
@@ -176,27 +202,6 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
       <Divider />
 
       <FormGroup
-        label={t('SSHA-1 fingerprint')}
-        isRequired
-        fieldId="thumbprint"
-        helperText={t(
-          "The provider currently requires the SHA-1 fingerprint of the vCenter Server's TLS certificate in all circumstances. vSphere calls this the server's thumbprint.",
-        )}
-        helperTextInvalid={t('Error: Fingerprint is required and must be valid.')}
-        validated={state.validation.thumbprint}
-      >
-        <TextInput
-          isRequired
-          type="text"
-          id="thumbprint"
-          name="thumbprint"
-          onChange={(value) => handleChange('thumbprint', value)}
-          value={thumbprint}
-          validated={state.validation.thumbprint}
-        />
-      </FormGroup>
-
-      <FormGroup
         label={t('Skip certificate validation')}
         fieldId="insecureSkipVerify"
         helperTextInvalid={t('Error: This field must be a boolean.')}
@@ -212,6 +217,46 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           isChecked={insecureSkipVerify}
           hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
+        />
+      </FormGroup>
+
+      <FormGroup
+        label={
+          insecureSkipVerify
+            ? t("CA certificate - disabled when 'Skip certificate validation' is selected")
+            : t('CA certificate - leave empty to use system CA certificates')
+        }
+        labelIcon={
+          <Popover
+            headerContent={<div>CA certificate</div>}
+            bodyContent={<div>{cacertHelperTextPopover}</div>}
+            alertSeverityVariant="info"
+          >
+            <button
+              type="button"
+              onClick={(e) => e.preventDefault()}
+              className="pf-c-form__group-label-help"
+            >
+              <HelpIcon noVerticalAlign />
+            </button>
+          </Popover>
+        }
+        fieldId="cacert"
+        helperText={cacertHelperTextMsgs.success}
+        validated={state.validation.cacert}
+        helperTextInvalid={cacertHelperTextMsgs.error}
+      >
+        <FileUpload
+          id="cacert"
+          type="text"
+          filenamePlaceholder="Drag and drop a file or upload one"
+          value={cacert}
+          validated={state.validation.cacert}
+          onDataChange={(value) => handleChange('cacert', value)}
+          onTextChange={(value) => handleChange('cacert', value)}
+          onClearClick={() => handleChange('cacert', '')}
+          browseButtonText="Upload"
+          isDisabled={insecureSkipVerify}
         />
       </FormGroup>
     </Form>
