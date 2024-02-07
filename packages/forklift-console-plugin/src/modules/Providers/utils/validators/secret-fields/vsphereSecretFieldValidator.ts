@@ -1,5 +1,5 @@
 import { Validation } from '../../types';
-import { validateFingerprint, validateNoSpaces, validateUsernameAndDomain } from '../common';
+import { validateNoSpaces, validatePublicCert, validateUsernameAndDomain } from '../common';
 
 /**
  * Validates form input fields based on their id.
@@ -28,8 +28,8 @@ export const vsphereSecretFieldValidator = (id: string, value: string) => {
     case 'insecureSkipVerify':
       validationState = 'default';
       break;
-    case 'thumbprint':
-      validationState = validateFingerprint(trimmedValue) ? 'success' : 'error';
+    case 'cacert':
+      validationState = validateCacert(trimmedValue);
       break;
     default:
       validationState = 'default';
@@ -49,4 +49,14 @@ const validateUser = (value: string) => {
 
 const validatePassword = (value: string) => {
   return validateNoSpaces(value);
+};
+
+const validateCacert = (value: string) => {
+  if (value === '') {
+    return 'default';
+  } else if (validatePublicCert(value)) {
+    return 'success';
+  } else {
+    return 'error';
+  }
 };
