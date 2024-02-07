@@ -34,13 +34,25 @@ export interface VSphereProviderSecret {
   /**
    * Indicate that the client can ignore certificate verification.
    *
-   * Provider type: OVirt
+   * Provider type: VSphere
    * Conditions: Optional
    *
    * @type {boolean}
    * @memberof ProviderSecret
    */
   insecureSkipVerify?: boolean;
+
+  /**
+   * VSphere server cacerts, can be a linked list of multiple certifications.
+   *
+   * Provider type: VSphere
+   * Validation Regexp:
+   *    ssl public key: .*
+   *
+   * @type {string}
+   * @memberof ProviderSecret
+   */
+  cacert?: string;
 
   /**
    * VSphere server thumbprint

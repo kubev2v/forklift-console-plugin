@@ -76,3 +76,4 @@ volumetypes
 storageclasses
 storageclass
 storagedomains
+esxi
