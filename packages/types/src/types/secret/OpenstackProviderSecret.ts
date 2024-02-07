@@ -82,7 +82,6 @@ export interface OpenstackProviderSecret {
    * openstack server cacerts, can be a linked list of multiple certifications.
    *
    * Provider type: openstack
-   * Conditions: Required if insecureSkipVerify is false
    * Validation Regexp:
    *    ssl public key: .*
    *

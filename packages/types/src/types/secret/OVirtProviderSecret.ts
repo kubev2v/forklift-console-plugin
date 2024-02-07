@@ -34,11 +34,7 @@ export interface OVirtProviderSecret {
   /**
    * OVirt server cacerts, can be a linked list of multiple certifications.
    *
-   * NOTE: ATM cacert is not optional because
-   *       insecureSkipVerify is not implemented in our ovirt image-io client
-   *
    * Provider type: OVirt
-   * Conditions: Required if insecureSkipVerify is false
    * Validation Regexp:
    *    ssl public key: .*
    *

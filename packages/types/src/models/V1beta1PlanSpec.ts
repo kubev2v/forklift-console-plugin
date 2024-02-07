@@ -45,6 +45,14 @@ export interface V1beta1PlanSpec {
    * @required {false}
    */
   provider?: V1beta1PlanSpecProvider;
+
+  /** preserveClusterCpuModel
+   * Allow the perseverance of the cluster CPU model from oVirt provider.
+   *
+   * @required {false}
+   */
+  preserveClusterCpuModel?: boolean;
+
   /** targetNamespace
    * Target namespace.
    *
