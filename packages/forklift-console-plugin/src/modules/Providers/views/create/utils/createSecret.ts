@@ -32,6 +32,7 @@ export async function createSecret(provider: V1beta1Provider, secret: V1Secret) 
 
   const encodedURL = url ? Base64.encode(url) : undefined;
   const generateName = `${provider.metadata.name}-`;
+  const cleanedData = cleanObject(secret?.data);
 
   const newSecret: V1Secret = {
     ...secret,
@@ -44,7 +45,7 @@ export async function createSecret(provider: V1beta1Provider, secret: V1Secret) 
         createdForResourceType: 'providers',
       },
     },
-    data: { ...secret?.data, url: encodedURL },
+    data: { ...cleanedData, url: encodedURL },
   };
 
   const obj = await k8sCreate({
@@ -53,4 +54,14 @@ export async function createSecret(provider: V1beta1Provider, secret: V1Secret) 
   });
 
   return obj;
+}
+
+function cleanObject(obj) {
+  const result = {};
+  for (const key in obj) {
+    if (obj[key] !== null && obj[key] !== '') {
+      result[key] = obj[key];
+    }
+  }
+  return result;
 }

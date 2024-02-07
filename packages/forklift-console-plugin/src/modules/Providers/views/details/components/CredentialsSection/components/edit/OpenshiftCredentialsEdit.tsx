@@ -8,9 +8,19 @@ import {
 } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, Form, FormGroup, TextInput } from '@patternfly/react-core';
+import {
+  Button,
+  Divider,
+  FileUpload,
+  Form,
+  FormGroup,
+  Popover,
+  Switch,
+  TextInput,
+} from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
+import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
 
@@ -18,6 +28,8 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
   const { t } = useForkliftTranslation();
 
   const token = safeBase64Decode(secret?.data?.token || '');
+  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
+  const cacert = safeBase64Decode(secret?.data?.cacert || '');
 
   const tokenHelperTextMsgs = {
     error: (
@@ -46,11 +58,43 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     ),
   };
 
+  const insecureSkipVerifyHelperTextMsgs = {
+    error: t('Error: this field must be set to a boolean value.'),
+    successAndSkipped: t("The provider's CA certificate won't be validated."),
+    successAndNotSkipped: t("The provider's CA certificate will be validated."),
+  };
+
+  const cacertHelperTextMsgs = {
+    error: t(
+      'Error: The format of the provided CA certificate is invalid. Ensure the CA certificate format is in a PEM encoded X.509 format.',
+    ),
+    success: t(
+      'A CA certificate to be trusted when connecting to Openshift API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
+    ),
+  };
+
+  const insecureSkipVerifyHelperTextPopover = (
+    <Trans t={t} ns="plugin__forklift-console-plugin">
+      Note: If <strong>Skip certificate validation</strong> is selected, migrations from this
+      provider will not be secure, meaning that the transferred data is sent over an insecure
+      connection and potentially sensitive data could be exposed.
+    </Trans>
+  );
+
+  const cacertHelperTextPopover = (
+    <Trans t={t} ns="plugin__forklift-console-plugin">
+      Note: Use the Manager CA certificate unless it was replaced by a third-party certificate, in
+      which case use the Manager Apache CA certificate.
+    </Trans>
+  );
+
   const initialState = {
     passwordHidden: true,
     validation: {
       token: 'default' as Validation,
       tokenHelperText: tokenHelperTextMsgs.default,
+      insecureSkipVerify: 'default' as Validation,
+      cacert: 'default' as Validation,
     },
   };
 
@@ -134,6 +178,82 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         >
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
+      </FormGroup>
+
+      <Divider />
+
+      <FormGroup
+        label={t('Skip certificate validation')}
+        labelIcon={
+          <Popover
+            headerContent={<div>Skip certificate validation</div>}
+            bodyContent={<div>{insecureSkipVerifyHelperTextPopover}</div>}
+            alertSeverityVariant="info"
+          >
+            <button
+              type="button"
+              onClick={(e) => e.preventDefault()}
+              className="pf-c-form__group-label-help"
+            >
+              <HelpIcon noVerticalAlign />
+            </button>
+          </Popover>
+        }
+        fieldId="insecureSkipVerify"
+        validated={state.validation.insecureSkipVerify}
+        helperTextInvalid={insecureSkipVerifyHelperTextMsgs.error}
+      >
+        <Switch
+          className="forklift-section-secret-edit-switch"
+          id="insecureSkipVerify"
+          name="insecureSkipVerify"
+          label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
+          labelOff={insecureSkipVerifyHelperTextMsgs.successAndNotSkipped}
+          aria-label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
+          isChecked={insecureSkipVerify}
+          hasCheckIcon
+          onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
+        />
+      </FormGroup>
+
+      <FormGroup
+        label={
+          insecureSkipVerify
+            ? t("CA certificate - disabled when 'Skip certificate validation' is selected")
+            : t('CA certificate - leave empty to use system CA certificates')
+        }
+        labelIcon={
+          <Popover
+            headerContent={<div>CA certificate</div>}
+            bodyContent={<div>{cacertHelperTextPopover}</div>}
+            alertSeverityVariant="info"
+          >
+            <button
+              type="button"
+              onClick={(e) => e.preventDefault()}
+              className="pf-c-form__group-label-help"
+            >
+              <HelpIcon noVerticalAlign />
+            </button>
+          </Popover>
+        }
+        fieldId="cacert"
+        helperText={cacertHelperTextMsgs.success}
+        validated={state.validation.cacert}
+        helperTextInvalid={cacertHelperTextMsgs.error}
+      >
+        <FileUpload
+          id="cacert"
+          type="text"
+          filenamePlaceholder="Drag and drop a file or upload one"
+          value={cacert}
+          validated={state.validation.cacert}
+          onDataChange={(value) => handleChange('cacert', value)}
+          onTextChange={(value) => handleChange('cacert', value)}
+          onClearClick={() => handleChange('cacert', '')}
+          browseButtonText="Upload"
+          isDisabled={insecureSkipVerify}
+        />
       </FormGroup>
     </Form>
   );

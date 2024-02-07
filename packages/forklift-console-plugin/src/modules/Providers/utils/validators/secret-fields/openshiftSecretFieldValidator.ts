@@ -1,5 +1,5 @@
 import { Validation } from '../../types';
-import { validateK8sToken } from '../common';
+import { validateK8sToken, validatePublicCert } from '../common';
 
 /**
  * Validates form input fields based on their id.
@@ -21,10 +21,26 @@ export const openshiftSecretFieldValidator = (id: string, value: string) => {
     case 'token':
       validationState = trimmedValue === '' || validateK8sToken(trimmedValue) ? 'success' : 'error';
       break;
+    case 'insecureSkipVerify':
+      validationState = 'default';
+      break;
+    case 'cacert':
+      validationState = validateCacert(trimmedValue);
+      break;
     default:
       validationState = 'default';
       break;
   }
 
   return validationState;
+};
+
+const validateCacert = (value: string) => {
+  if (value === '') {
+    return 'default';
+  } else if (validatePublicCert(value)) {
+    return 'success';
+  } else {
+    return 'error';
+  }
 };
