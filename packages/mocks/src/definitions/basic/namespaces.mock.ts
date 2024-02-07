@@ -14,6 +14,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
   [OPENSHIFT_HOST_UID]: [
     {
       uid: '11a0375f-f33e-489b-812a-d9a0929388ae',
+      id: '11a0375f-f33e-489b-812a-d9a0929388ae',
       version: '12515',
       namespace: '',
       name: NAMESPACE_MIGRATION,
@@ -23,6 +24,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
     },
     {
       uid: '68d88b58-22f4-49ba-8665-74f4256aa617',
+      id: '68d88b58-22f4-49ba-8665-74f4256aa617',
       version: '12558',
       namespace: '',
       name: NAMESPACE_FORKLIFT,
@@ -34,6 +36,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
   [OPENSHIFT_01_UID]: [
     {
       uid: '338c69a1-bee1-40a9-af33-e83b0ec3cb99',
+      id: '338c69a1-bee1-40a9-af33-e83b0ec3cb99',
       version: '191',
       namespace: '',
       name: 'example-namespace-1',
@@ -45,6 +48,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
   [OPENSHIFT_02_UID]: [
     {
       uid: '287d34b7-763f-4065-ba3a-2b7d6440baf6',
+      id: '287d34b7-763f-4065-ba3a-2b7d6440baf6',
       version: '814',
       namespace: '',
       name: 'example-namespace-2',
@@ -56,6 +60,7 @@ export const MOCK_OPENSHIFT_NAMESPACES: { [uid in OpenshiftProviderIDs]: OpenShi
   [OPENSHIFT_03_UID]: [
     {
       uid: 'c4f375bb-39dc-4276-913e-0d4c43691d2f',
+      id: 'c4f375bb-39dc-4276-913e-0d4c43691d2f',
       version: '51',
       namespace: '',
       name: 'example-namespace-3',

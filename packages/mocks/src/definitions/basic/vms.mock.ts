@@ -381,6 +381,7 @@ export const MOCK_OPENSHIFT_VMS: { [uid in OpenshiftProviderIDs]: OpenshiftVM[] 
       namespace: NAMESPACE_FORKLIFT,
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/vms/3dcaf3ec-6b51-4ca0-8345-6d61841731d7`,
       uid: '3dcaf3ec-6b51-4ca0-8345-6d61841731d7',
+      id: '3dcaf3ec-6b51-4ca0-8345-6d61841731d7',
       version: '',
       object: {
         kind: 'VirtualMachine',
@@ -501,6 +502,7 @@ export const MOCK_OPENSHIFT_VMS: { [uid in OpenshiftProviderIDs]: OpenshiftVM[] 
       namespace: NAMESPACE_FORKLIFT,
       selfLink: `providers/openshift/${OPENSHIFT_HOST_UID}/vms/029b9890-259e-4ade-b22f-3991c3359062`,
       uid: '029b9890-259e-4ade-b22f-3991c3359062',
+      id: '029b9890-259e-4ade-b22f-3991c3359062',
       version: '',
       providerType: 'openshift',
       object: {

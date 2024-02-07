@@ -120,6 +120,7 @@ export const vmwareProvider1: VSphereProvider = {
   datastoreCount: 3,
   datacenterCount: 0,
   apiVersion: 'v1beta1',
+  id: '',
 };
 
 const vmwareProvider2: VSphereProvider = {
@@ -230,6 +231,7 @@ const rhvProvider1: OVirtProvider = {
   vmCount: 36,
   networkCount: 15,
   storageDomainCount: 9,
+  id: '',
 };
 
 const rhvProvider1i: OVirtProvider = {
@@ -314,6 +316,7 @@ const openstackProvider1: OpenstackProvider = {
   volumeCount: 5,
   volumeTypeCount: 2,
   networkCount: 3,
+  id: '',
 };
 
 const openstackProvider2: OpenstackProvider = {
@@ -371,6 +374,7 @@ export const openshiftProvider1: OpenshiftProvider = {
   },
   vmCount: 26,
   networkCount: 8,
+  id: '',
 };
 
 const openshiftProvider2: OpenshiftProvider = {

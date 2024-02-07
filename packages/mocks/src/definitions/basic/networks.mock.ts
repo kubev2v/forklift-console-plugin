@@ -177,6 +177,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
   [OPENSHIFT_HOST_UID]: [
     {
       uid: 'e49f7782-7c59-4343-aac4-59a420201d07',
+      id: 'e49f7782-7c59-4343-aac4-59a420201d07',
       version: '13180',
       namespace: NAMESPACE_FORKLIFT,
       name: 'example-network-1',
@@ -195,6 +196,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
     },
     {
       uid: '8b6f4200-cba6-4579-8edd-ea08b7ddd97b',
+      id: '8b6f4200-cba6-4579-8edd-ea08b7ddd97b',
       version: '13',
       namespace: NAMESPACE_MIGRATION,
       name: 'example-network-2',
@@ -215,6 +217,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
   [OPENSHIFT_01_UID]: [
     {
       uid: 'foo-network-uid-1',
+      id: 'foo-network-uid-1',
       namespace: 'remote-namespace-1',
       name: 'ocp-network-1',
       version: '1',
@@ -234,6 +237,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
   [OPENSHIFT_02_UID]: [
     {
       uid: 'foo-network-uid-2',
+      id: 'foo-network-uid-2',
       namespace: 'remote-namespace-2',
       name: 'ocp-network-2',
       version: '1',
@@ -254,6 +258,7 @@ export const MOCK_OPENSHIFT_NETWORKS: {
   [OPENSHIFT_03_UID]: [
     {
       uid: 'foo-network-uid-3',
+      id: 'foo-network-uid-3',
       namespace: 'remote-namespace-3',
       version: '1',
       name: 'ocp-network-3',

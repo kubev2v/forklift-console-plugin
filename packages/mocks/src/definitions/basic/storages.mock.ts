@@ -262,6 +262,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
   [OPENSHIFT_HOST_UID]: [
     {
       uid: 'e9a5e83b-235c-4c75-92d1-2fcab54f6919',
+      id: 'e9a5e83b-235c-4c75-92d1-2fcab54f6919',
       version: '269',
       namespace: '',
       name: 'standard',
@@ -282,6 +283,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
     },
     {
       uid: 'uid-1',
+      id: 'uid-1',
       version: '1',
       namespace: '',
       name: 'large',
@@ -298,6 +300,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
     },
     {
       uid: 'uid-2',
+      id: 'uid-2',
       version: '1',
       namespace: '',
       name: 'small',
@@ -316,6 +319,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
   [OPENSHIFT_01_UID]: [
     {
       uid: 'test-1',
+      id: 'test-1',
       version: '1',
       namespace: '',
       name: 'standard',
@@ -337,6 +341,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
   [OPENSHIFT_02_UID]: [
     {
       uid: 'test-2',
+      id: 'test-2',
       version: '1',
       namespace: '',
       name: 'standard',
@@ -358,6 +363,7 @@ export const MOCK_OPENSHIFT_STORAGE_CLASS: {
   [OPENSHIFT_03_UID]: [
     {
       uid: 'test-3',
+      id: 'test-3',
       version: '1',
       namespace: '',
       name: 'standard',
