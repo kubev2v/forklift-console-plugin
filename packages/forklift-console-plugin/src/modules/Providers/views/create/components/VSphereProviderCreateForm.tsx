@@ -87,7 +87,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
 
   const vddkHelperTextPopover = (
     <Trans t={t} ns="plugin__forklift-console-plugin">
-      VDDK init image is optional, but it is strongly recommended to specify a VDDK init image to
+      A VDDK init image is optional, but it is strongly recommended to specify a VDDK init image to
       accelerate migrations.
     </Trans>
   );
