@@ -73,7 +73,27 @@ const reduceValueFilters = (
 };
 
 /**
- * @param T type to be displayed in the list
+ * Properties for the `StandardPage` component.
+ * These properties define the configuration and behavior of the standard list page.
+ *
+ * @typedef {Object} StandardPageProps
+ * @property {string} namespace - The namespace in which the data resides.
+ * @property {[T[], boolean, unknown]} dataSource - The data source tuple consisting of an array of items, a loading flag, and an error object.
+ * @property {FC<RowProps<T>>} [RowMapper=DefaultRow<T>] - Optional component to map resource data to a table row.
+ * @property {FC<RowProps<T>>} [CellMapper] - Optional component to map resource data to individual cells within a row.
+ * @property {string} title - The title displayed at the top of the page.
+ * @property {JSX.Element} [addButton] - Optional element to display as an "add" or "create" button.
+ * @property {ResourceField[]} fieldsMetadata - Metadata for the fields to be displayed.
+ * @property {{ [type: string]: FilterRenderer }} [extraSupportedFilters] - Optional additional filter types.
+ * @property {JSX.Element} [customNoResultsFound] - Optional custom message to display when no results are found.
+ * @property {JSX.Element} [customNoResultsMatchFilter] - Optional custom message to display when no results match the filter.
+ * @property {number | 'on' | 'off'} [pagination=DEFAULT_PER_PAGE] - Controls the display of pagination controls.
+ * @property {string} [filterPrefix=''] - Prefix for filters stored in the query params part of the URL.
+ * @property {UserSettings} [userSettings] - User settings store to initialize the page according to user preferences.
+ * @property {ReactNode} [alerts] - Optional alerts section below the page title.
+ * @property {FC<GlobalActionToolbarProps<T>>[]} [GlobalActionToolbarItems=[]] - Optional toolbar items with global actions.
+ *
+ * @template T - The type of the items being displayed in the table.
  */
 export interface StandardPageProps<T> {
   /**
@@ -169,7 +189,37 @@ export interface StandardPageProps<T> {
 }
 
 /**
- * Standard list page.
+ * Standard list page component.
+ * This component renders a list view with filtering, sorting, and pagination capabilities.
+ * It supports custom renderers for rows and headers, as well as global actions.
+ *
+ * @param {StandardPageProps<T>} props - The properties passed to the component.
+ * @param {string} props.namespace - The namespace in which the data resides.
+ * @param {T[]} props.dataSource - The data source tuple consisting of an array of items, a loading flag, and an error object.
+ * @param {FC<RowProps<T>>} [props.RowMapper=DefaultRow<T>] - Optional component to map resource data to a table row.
+ * @param {FC<RowProps<T>>} [props.CellMapper] - Optional component to map resource data to individual cells within a row.
+ * @param {string} props.title - The title displayed at the top of the page.
+ * @param {JSX.Element} [props.addButton] - Optional element to display as an "add" or "create" button.
+ * @param {ResourceField[]} props.fieldsMetadata - Metadata for the fields to be displayed.
+ * @param {{ [type: string]: FilterRenderer }} [props.extraSupportedFilters] - Optional additional filter types.
+ * @param {JSX.Element} [props.customNoResultsFound] - Optional custom message to display when no results are found.
+ * @param {JSX.Element} [props.customNoResultsMatchFilter] - Optional custom message to display when no results match the filter.
+ * @param {number | 'on' | 'off'} [props.pagination=DEFAULT_PER_PAGE] - Controls the display of pagination controls.
+ * @param {string} [props.filterPrefix=''] - Prefix for filters stored in the query params part of the URL.
+ * @param {UserSettings} [props.userSettings] - User settings store to initialize the page according to user preferences.
+ * @param {ReactNode} [props.alerts] - Optional alerts section below the page title.
+ * @param {FC<GlobalActionToolbarProps<T>>[]} [props.GlobalActionToolbarItems=[]] - Optional toolbar items with global actions.
+ *
+ * @template T - The type of the items being displayed in the table.
+ *
+ * @example
+ * <StandardPage
+ *   namespace="my-namespace"
+ *   dataSource={[myData, false, null]}
+ *   title="My List"
+ *   fieldsMetadata={myFieldsMetadata}
+ *   // ...other props
+ * />
  */
 export function StandardPage<T>({
   namespace,
