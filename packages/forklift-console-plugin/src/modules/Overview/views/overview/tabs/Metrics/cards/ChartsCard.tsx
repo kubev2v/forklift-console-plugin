@@ -27,7 +27,7 @@ interface MigrationDataPoint {
   value: number;
 }
 
-const toTotal = (m: V1beta1Migration): string => m.metadata?.creationTimestamp;
+const toStarted = (m: V1beta1Migration): string => m.status.started;
 const toFinished = (m: V1beta1Migration): string => m.status.completed;
 const hasTimestamp = (timestamp: string) => timestamp && DateTime.fromISO(timestamp).isValid;
 const toDateTime = (timestamp: string): DateTime => DateTime.fromISO(timestamp);
@@ -81,14 +81,13 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
     isList: true,
   });
   const migrationsDataPoints: {
-    total: MigrationDataPoint[];
+    running: MigrationDataPoint[];
     failed: MigrationDataPoint[];
     succeeded: MigrationDataPoint[];
   } = {
-    total: toDataPoints(migrations, toTotal, isDaysViewSelected),
-    succeeded: toDataPoints(
-      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Succeeded')),
-      toFinished,
+    running: toDataPoints(
+      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Running')),
+      toStarted,
       isDaysViewSelected,
     ),
     failed: toDataPoints(
@@ -96,12 +95,17 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
       toFinished,
       isDaysViewSelected,
     ),
+    succeeded: toDataPoints(
+      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Succeeded')),
+      toFinished,
+      isDaysViewSelected,
+    ),
   };
 
   const maxMigrationValue = Math.max(
-    ...migrationsDataPoints.total.map((m) => m.value),
-    ...migrationsDataPoints.succeeded.map((m) => m.value),
+    ...migrationsDataPoints.running.map((m) => m.value),
     ...migrationsDataPoints.failed.map((m) => m.value),
+    ...migrationsDataPoints.succeeded.map((m) => m.value),
   );
 
   return (
@@ -144,15 +148,15 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
             ariaDesc="Bar chart with migration statistics"
             colorScale={[
               chart_color_blue_200.var,
-              chart_color_green_400.var,
               chart_color_red_100.var,
+              chart_color_green_400.var,
             ]}
             domainPadding={{ x: [30, 25] }}
             maxDomain={{ y: maxMigrationValue ? undefined : 5 }}
             legendData={[
-              { name: t('Total'), symbol: { fill: chart_color_blue_200.var } },
-              { name: t('Succeeded'), symbol: { fill: chart_color_green_400.var } },
+              { name: t('Running'), symbol: { fill: chart_color_blue_200.var } },
               { name: t('Failed'), symbol: { fill: chart_color_red_100.var } },
+              { name: t('Succeeded'), symbol: { fill: chart_color_green_400.var } },
             ]}
             legendPosition="bottom"
             height={400}
@@ -168,20 +172,11 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
             <ChartAxis dependentAxis showGrid />
             <ChartGroup offset={11} horizontal={false}>
               <ChartBar
-                data={migrationsDataPoints.total.map(({ dateLabel, value }) => ({
+                data={migrationsDataPoints.running.map(({ dateLabel, value }) => ({
                   x: dateLabel,
                   y: value,
-                  name: t('Total'),
-                  label: t('{{dateLabel}} Started: {{value}}', { dateLabel, value }),
-                }))}
-                labelComponent={<ChartTooltip constrainToVisibleArea />}
-              />
-              <ChartBar
-                data={migrationsDataPoints.succeeded.map(({ dateLabel, value }) => ({
-                  x: dateLabel,
-                  y: value,
-                  name: 'Succeeded',
-                  label: t('{{dateLabel}} Succeeded: {{value}}', { dateLabel, value }),
+                  name: t('Running'),
+                  label: t('{{dateLabel}} Running: {{value}}', { dateLabel, value }),
                 }))}
                 labelComponent={<ChartTooltip constrainToVisibleArea />}
               />
@@ -191,6 +186,15 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
                   y: value,
                   name: t('Failed'),
                   label: t('{{dateLabel}} Failed: {{value}}', { dateLabel, value }),
+                }))}
+                labelComponent={<ChartTooltip constrainToVisibleArea />}
+              />
+              <ChartBar
+                data={migrationsDataPoints.succeeded.map(({ dateLabel, value }) => ({
+                  x: dateLabel,
+                  y: value,
+                  name: 'Succeeded',
+                  label: t('{{dateLabel}} Succeeded: {{value}}', { dateLabel, value }),
                 }))}
                 labelComponent={<ChartTooltip constrainToVisibleArea />}
               />
