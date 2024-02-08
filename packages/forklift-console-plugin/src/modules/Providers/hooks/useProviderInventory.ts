@@ -16,6 +16,7 @@ import { DEFAULT_FIELDS_TO_COMPARE } from './utils';
  * @property {number} [interval] - The polling interval in milliseconds.
  * @property {number} [fetchTimeout] - The fetch timeout in milliseconds.
  * @property {number} [cacheExpiryDuration] - Duration in milliseconds till the cache remains valid.
+ * @param {boolean} [disabled] - Prevent query execution.
  */
 export interface UseProviderInventoryParams {
   provider: V1beta1Provider;
@@ -23,6 +24,7 @@ export interface UseProviderInventoryParams {
   fieldsToCompare?: string[];
   interval?: number;
   fetchTimeout?: number;
+  disabled?: boolean;
 }
 
 /**
@@ -49,6 +51,7 @@ interface UseProviderInventoryResult<T> {
  * @param {string} [useProviderInventoryParams.subPath=''] Sub-path to append to the provider API URL
  * @param {Array} [useProviderInventoryParams.fieldsToCompare=DEFAULT_FIELDS_TO_COMPARE] Fields to use for comparing new data with old data
  * @param {number} [useProviderInventoryParams.interval=10000] Interval (in milliseconds) to fetch new data at
+ * @param {boolean} [useProviderInventoryParams.disabled=false] Prevent query execution.
  *
  * @returns {Object} useProviderInventoryResult Contains the inventory data (or null if loading, not fetched yet, or error),
  * the loading state, and the error state (or null if no errors)
@@ -61,6 +64,7 @@ export const useProviderInventory = <T>({
   fieldsToCompare = DEFAULT_FIELDS_TO_COMPARE,
   interval = 20000,
   fetchTimeout,
+  disabled = false,
 }: UseProviderInventoryParams): UseProviderInventoryResult<T> => {
   const [inventory, setInventory] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -74,6 +78,9 @@ export const useProviderInventory = <T>({
   // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {
+      if (disabled) {
+        return;
+      }
       if (!isValidProvider(provider)) {
         const e = new Error('Invalid provider data');
         handleError(e);
@@ -104,7 +111,7 @@ export const useProviderInventory = <T>({
 
     const intervalId = setInterval(fetchData, interval);
     return () => clearInterval(intervalId);
-  }, [stableProvider, subPath, interval]);
+  }, [stableProvider, subPath, interval, disabled]);
 
   /**
    * Handles any errors thrown when trying to fetch the inventory.
@@ -153,7 +160,9 @@ export const useProviderInventory = <T>({
     }
   }
 
-  return { inventory, loading, error };
+  return disabled
+    ? { inventory: null, loading: false, error: null }
+    : { inventory, loading, error };
 };
 
 export default useProviderInventory;
