@@ -22,7 +22,7 @@ interface OnSaveHostParams {
 }
 
 /**
- * Saves host data, including associated secrets, for a given set of host pairs.
+ * Saves hosts data, including associated secrets, for a given set of host+secret pairs.
  * If a host already exists for a host pair, the host is updated with the new properties.
  * Otherwise, a new host and secret are created.
  *
@@ -44,13 +44,14 @@ export const onSaveHost = async ({
     const hostNetwork = hostPair.inventory.networkAdapters.find(
       ({ name }) => name === network.name,
     );
-    const encodedIpAddress = Base64.encode(hostNetwork.ipAddress);
 
     if (!hostNetwork) {
       throw new Error(`can't find network ${network.name} on host ${hostPair.host.metadata.name}`);
     }
 
-    await processHostPair(
+    const encodedIpAddress = Base64.encode(hostNetwork.ipAddress);
+
+    await processHostSecretPair(
       provider,
       hostPair,
       hostNetwork.ipAddress,
@@ -74,7 +75,7 @@ export const onSaveHost = async ({
  * @param {string} encodedProvider - The Base64 encoded provider.
  * @param {string} encodedIpAddress - The Base64 encoded IP address.
  */
-async function processHostPair(
+async function processHostSecretPair(
   provider,
   hostPair,
   ipAddress,
@@ -86,6 +87,7 @@ async function processHostPair(
   const { host, inventory }: { host: V1beta1Host; inventory: VSphereHost } = hostPair;
 
   if (host?.metadata?.name) {
+    // Host already set, update network in the host and secret
     const { name: secretName, namespace: secretNamespace } = host.spec.secret;
 
     const secretData = await getSecret(secretName, secretNamespace);
@@ -93,6 +95,31 @@ async function processHostPair(
     await patchHost(host, ipAddress);
     await patchSecret(secretData, encodedIpAddress, encodedUser, encodedPassword);
   } else {
+    // Create a new host and secret pair
+
+    // Create a Secret
+    const secretData = {
+      kind: 'Secret',
+      apiVersion: 'v1',
+      metadata: {
+        generateName: `${provider.metadata.name}-${inventory.id}-`,
+        namespace: provider.metadata.namespace,
+        labels: {
+          createdForResourceType: 'hosts',
+          createdForResource: inventory.id,
+        },
+      },
+      data: {
+        ip: encodedIpAddress,
+        password: encodedPassword,
+        provider: encodedProvider,
+        user: encodedUser,
+      },
+      type: 'Opaque',
+    };
+    const createdSecret = await createSecret(secretData);
+
+    // Create Host
     const newHostData = {
       apiVersion: 'forklift.konveyor.io/v1beta1',
       kind: 'Host',
@@ -116,45 +143,20 @@ async function processHostPair(
           name: provider.metadata.name,
           namespace: provider.metadata.namespace,
         },
-        secret: {},
+        secret: {
+          name: createdSecret.metadata.name,
+          namespace: createdSecret.metadata.namespace,
+        },
       },
     };
     const createdHost = await createHost(newHostData);
 
-    const secretData = {
-      kind: 'Secret',
-      apiVersion: 'v1',
-      metadata: {
-        generateName: `${provider.metadata.name}-${inventory.id}-`,
-        namespace: provider.metadata.namespace,
-        labels: {
-          createdForResourceType: 'hosts',
-          createdForResource: inventory.id,
-        },
-        ownerReferences: [
-          {
-            apiVersion: 'forklift.konveyor.io/v1beta1',
-            kind: 'Host',
-            name: createdHost.metadata.name,
-            uid: createdHost.metadata.uid,
-          },
-        ],
-      },
-      data: {
-        ip: encodedIpAddress,
-        password: encodedPassword,
-        provider: encodedProvider,
-        user: encodedUser,
-      },
-      type: 'Opaque',
+    // Patch Secret owner Ref
+    const ownerRef = {
+      name: createdHost.metadata.name,
+      uid: createdHost.metadata.uid,
     };
-    const createdSecret = await createSecret(secretData);
-
-    const secretRef = {
-      name: createdSecret.metadata.name,
-      namespace: createdSecret.metadata.namespace,
-    };
-    await patchHostSecret(createdHost, secretRef);
+    await patchHostSecret(createdSecret, ownerRef);
   }
 }
 
@@ -222,18 +224,22 @@ async function createHost(newHostData: V1beta1Host) {
   return createdHost;
 }
 
-async function patchHostSecret(host: V1beta1Host, secretRef: { name: string; namespace: string }) {
+async function patchHostSecret(secret: V1Secret, ownerRef: { name: string; uid: string }) {
   await k8sPatch({
-    model: HostModel,
-    resource: host,
+    model: SecretModel,
+    resource: secret,
     data: [
       {
         op: 'replace',
-        path: '/spec/secret',
-        value: {
-          name: secretRef.name,
-          namespace: secretRef.namespace,
-        },
+        path: '/metadata/ownerReferences',
+        value: [
+          {
+            apiVersion: 'forklift.konveyor.io/v1beta1',
+            kind: 'Host',
+            name: ownerRef.name,
+            uid: ownerRef.uid,
+          },
+        ],
       },
     ],
   });
