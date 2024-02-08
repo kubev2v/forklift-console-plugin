@@ -11,9 +11,9 @@ K8S_TIMEOUT=${K8S_TIMEOUT:="360s"}
 #   https://github.com/kubevirt/hyperconverged-cluster-operator/blob/<release tag>/hack/config
 
 # Default version values
-KUBEVIRT_VERSION="v0.59.0"
-CDI_VERSION="v1.56.0"
-NETWORK_ADDONS_VERSION="v0.85.0"
+KUBEVIRT_VERSION="v1.2.0-beta.0"
+CDI_VERSION="v1.58.1"
+NETWORK_ADDONS_VERSION="v0.91.0"
 
 echo ""
 echo "Installing CDI, CNA and Kubevirt"
@@ -48,7 +48,6 @@ metadata:
 spec:
   multus: {}
   linuxBridge: {}
-  macvtap: {}
   imagePullPolicy: Always
 EOF
 
@@ -59,13 +58,22 @@ echo "==========================================================================
 
 while ! kubectl get network-attachment-definitions.k8s.cni.cncf.io; do sleep 10; done
 cat << EOF | kubectl apply -f -
-apiVersion: k8s.cni.cncf.io/v1
+apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
-metadata:
-  name: example
+metadata:                        
+  name: ocs-public
   namespace: cluster-network-addons
-spec:
-  config: '{}'
+spec:                              
+  config: '{
+        "cniVersion": "0.3.1",
+        "type": "macvlan",
+        "master": "ens2",
+        "mode": "bridge",
+        "ipam": {
+            "type": "whereabouts",
+            "range": "192.168.1.0/24"
+        }
+  }'
 EOF
 
 echo ""
