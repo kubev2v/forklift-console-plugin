@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 
-import { OpenstackVolume, OVirtDisk, V1beta1Provider } from '@kubev2v/types';
+import { OpenstackVolume, OVirtDisk, ProviderType, V1beta1Provider } from '@kubev2v/types';
 
 import useProviderInventory from './useProviderInventory';
 
-const subPath = {
+const subPath: { [keys in Partial<ProviderType>]?: string } = {
   ovirt: '/disks?detail=1',
   openstack: '/volumes?detail=1',
 };
@@ -23,6 +23,7 @@ export const useDisks = (
   } = useProviderInventory<(OVirtDisk | OpenstackVolume)[]>({
     provider,
     subPath: subPath[providerType] ?? '',
+    disabled: !provider || !subPath[providerType],
   });
 
   const stable = useMemo(() => {

@@ -36,10 +36,11 @@ import {
   setExistingPlans,
   setExistingStorageMaps,
   setNicProfiles,
-} from './actions';
+} from './reducer/actions';
+import { createInitialState } from './reducer/createInitialState';
+import { reducer } from './reducer/reducer';
 import { useCreateVmMigrationData } from './ProvidersCreateVmMigrationContext';
-import { CreateVmMigrationPageState, reducer } from './reducer';
-import { createInitialState } from './stateHelpers';
+import { CreateVmMigrationPageState } from './types';
 
 export const useFetchEffects = (): [
   CreateVmMigrationPageState,
@@ -121,7 +122,7 @@ export const useFetchEffects = (): [
   const [namespaces, nsLoading, nsError] = useNamespaces(targetProvider);
   useEffect(
     () => dispatch(setAvailableTargetNamespaces(namespaces, nsLoading, nsError)),
-    [namespaces, nsLoading, nsError],
+    [namespaces, nsLoading, nsError, targetProvider],
   );
 
   const [targetNetworks, targetNetworksLoading, targetNetworksError] =
@@ -131,7 +132,7 @@ export const useFetchEffects = (): [
       dispatch(
         setAvailableTargetNetworks(targetNetworks, targetNetworksLoading, targetNetworksError),
       ),
-    [targetNetworks, targetNetworksLoading, targetNetworksError],
+    [targetNetworks, targetNetworksLoading, targetNetworksError, targetProvider],
   );
 
   const [sourceStorages, sourceStoragesLoading, sourceStoragesError] =
@@ -151,7 +152,7 @@ export const useFetchEffects = (): [
       dispatch(
         setAvailableTargetStorages(targetStorages, targetStoragesLoading, targetStoragesError),
       ),
-    [targetStorages, targetStoragesLoading, targetStoragesError],
+    [targetStorages, targetStoragesLoading, targetStoragesError, targetProvider],
   );
 
   const [sourceNetworks, sourceNetworksLoading, sourceNetworksError] =

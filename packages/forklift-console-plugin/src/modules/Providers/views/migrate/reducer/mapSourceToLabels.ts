@@ -1,5 +1,5 @@
-import { InventoryNetwork } from '../../hooks/useNetworks';
-import { InventoryStorage } from '../../hooks/useStorages';
+import { InventoryNetwork } from '../../../hooks/useNetworks';
+import { InventoryStorage } from '../../../hooks/useStorages';
 
 export const mapSourceNetworksToLabels = (
   sources: InventoryNetwork[],
@@ -68,6 +68,7 @@ const resolveCollisions = (tuples: [string, string][]): { [key: string]: string 
     } else if (acc[label]) {
       // resolve conflict
       return {
+        // remove (filter out) existing label from keys list
         ...Object.fromEntries(Object.entries(acc).filter(([key]) => key !== label)),
         // existing entry: add suffix with ID
         [withSuffix(label, acc[label])]: acc[label],

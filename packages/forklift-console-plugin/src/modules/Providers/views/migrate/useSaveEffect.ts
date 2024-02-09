@@ -15,9 +15,9 @@ import { k8sCreate, K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin
 
 import { getResourceUrl } from '../../utils';
 
-import { setError } from './actions';
-import { CreateVmMigrationPageState } from './reducer';
-import { getObjectRef } from './stateHelpers';
+import { setAPiError } from './reducer/actions';
+import { getObjectRef } from './reducer/helpers';
+import { CreateVmMigrationPageState } from './types';
 
 const createStorage = (storageMap: V1beta1StorageMap) =>
   k8sCreate({
@@ -105,6 +105,6 @@ export const useSaveEffect = (state: CreateVmMigrationPageState, dispatch) => {
             }),
           ),
       )
-      .catch((error) => mounted.current && dispatch(setError(error)));
+      .catch((error) => mounted.current && dispatch(setAPiError(error)));
   }, [state.flow.editingDone, state.underConstruction.storageMap]);
 };

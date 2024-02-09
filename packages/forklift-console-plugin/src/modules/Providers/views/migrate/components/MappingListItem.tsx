@@ -3,7 +3,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   Button,
-  DataList,
   DataListAction,
   DataListCell,
   DataListItem,
@@ -14,98 +13,19 @@ import {
   SelectOption,
   SelectVariant,
 } from '@patternfly/react-core';
-import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
+import { MinusCircleIcon } from '@patternfly/react-icons';
 
-import { useToggle } from '../../hooks';
+import { useToggle } from '../../../hooks';
+import { Mapping, MappingSource } from '../types';
 
-import './ProvidersCreateVmMigration.style.css';
+import '../ProvidersCreateVmMigration.style.css';
 
-export interface Mapping {
-  source: string;
-  destination: string;
-}
-
-interface MappingListProps {
-  mappings: Mapping[];
-  sources: {
-    label: string;
-    usedBySelectedVms: boolean;
-    isMapped: boolean;
-  }[];
-  availableDestinations: string[];
-  replaceMapping: (val: { current: Mapping; next: Mapping }) => void;
-  deleteMapping: (mapping: Mapping) => void;
-  addMapping: () => void;
-  usedSourcesLabel: string;
-  generalSourcesLabel: string;
-  noSourcesLabel: string;
-  isDisabled: boolean;
-}
-
-export const MappingList: FC<MappingListProps> = ({
-  mappings,
-  sources,
-  availableDestinations,
-  replaceMapping,
-  deleteMapping,
-  addMapping,
-  usedSourcesLabel,
-  generalSourcesLabel,
-  noSourcesLabel,
-  isDisabled,
-}) => {
-  const { t } = useForkliftTranslation();
-  const usedSources = sources.filter(({ usedBySelectedVms }) => usedBySelectedVms);
-  const generalSources = sources.filter(({ usedBySelectedVms }) => !usedBySelectedVms);
-  const allMapped = sources.every(({ isMapped }) => isMapped);
-  return (
-    <>
-      <DataList isCompact aria-label="">
-        {mappings.map(({ source, destination }, index) => (
-          <MappingItem
-            source={source}
-            destination={destination}
-            destinations={availableDestinations}
-            generalSources={generalSources}
-            usedSources={usedSources}
-            replaceMapping={replaceMapping}
-            deleteMapping={deleteMapping}
-            index={index}
-            key={`${source}-${destination}`}
-            generalSourcesLabel={generalSourcesLabel}
-            usedSourcesLabel={usedSourcesLabel}
-            noSourcesLabel={noSourcesLabel}
-            isDisabled={isDisabled}
-          />
-        ))}
-      </DataList>
-      <Button
-        onClick={addMapping}
-        type="button"
-        variant="link"
-        isDisabled={allMapped || isDisabled}
-        icon={<PlusCircleIcon />}
-      >
-        {t('Add mapping')}
-      </Button>
-    </>
-  );
-};
-
-interface MappingItemProps {
+export interface MappingListItemProps {
   source: string;
   destination: string;
   destinations: string[];
-  generalSources: {
-    label: string;
-    usedBySelectedVms: boolean;
-    isMapped: boolean;
-  }[];
-  usedSources: {
-    label: string;
-    usedBySelectedVms: boolean;
-    isMapped: boolean;
-  }[];
+  generalSources: MappingSource[];
+  usedSources: MappingSource[];
   usedSourcesLabel: string;
   generalSourcesLabel: string;
   noSourcesLabel: string;
@@ -114,7 +34,8 @@ interface MappingItemProps {
   deleteMapping: (mapping: Mapping) => void;
   isDisabled: boolean;
 }
-const MappingItem: FC<MappingItemProps> = ({
+
+export const MappingListItem: FC<MappingListItemProps> = ({
   source,
   destination,
   destinations,
@@ -204,11 +125,7 @@ const MappingItem: FC<MappingItemProps> = ({
   );
 };
 
-const toGroup = (
-  sources: MappingListProps['sources'],
-  noSourcesLabel: string,
-  selectedSource: string,
-) =>
+const toGroup = (sources: MappingSource[], noSourcesLabel: string, selectedSource: string) =>
   sources.length !== 0 ? (
     sources.map(({ label, isMapped }) => (
       <SelectOption value={label} key={label} isDisabled={isMapped && label !== selectedSource} />

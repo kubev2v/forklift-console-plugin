@@ -15,7 +15,8 @@ export const useNicProfiles = (provider: V1beta1Provider): [OVirtNicProfile[], b
     error,
   } = useProviderInventory<OVirtNicProfile[]>({
     provider,
-    subPath: isOVirt ? '/nicprofiles?detail=1' : '',
+    subPath: '/nicprofiles?detail=1',
+    disabled: !provider || !isOVirt,
   });
 
   const stable = useMemo(() => {
