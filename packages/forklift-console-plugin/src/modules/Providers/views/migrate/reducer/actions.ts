@@ -13,7 +13,7 @@ import {
 
 import { InventoryNetwork } from '../../../hooks/useNetworks';
 import { InventoryStorage } from '../../../hooks/useStorages';
-import { GeneralAlerts, Mapping, NetworkAlerts, StorageAlerts } from '../types';
+import { Mapping, NetworkAlerts, StorageAlerts } from '../types';
 
 export const POD_NETWORK = 'Pod Networking';
 export const DEFAULT_NAMESPACE = 'default';
@@ -147,8 +147,8 @@ export interface PlanAvailableSourceStorages {
   error?: Error;
 }
 
-export interface PlanNickProfiles {
-  nickProfiles: OVirtNicProfile[];
+export interface PlanNicProfiles {
+  nicProfiles: OVirtNicProfile[];
   loading: boolean;
   error?: Error;
 }
@@ -164,7 +164,7 @@ export interface PlanError {
 }
 
 export interface PlanAlert {
-  alertKey: NetworkAlerts | StorageAlerts | GeneralAlerts;
+  alertKey: NetworkAlerts | StorageAlerts;
 }
 
 export interface PlanMapping {
@@ -204,8 +204,8 @@ export const setPlanName = (name: string): PageAction<CreateVmMigration, PlanNam
 
 export const setAvailableProviders = (
   availableProviders: V1beta1Provider[],
-  loaded: boolean,
-  error: Error,
+  loaded?: boolean,
+  error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableProviders> => ({
   type: 'SET_AVAILABLE_PROVIDERS',
   payload: {
@@ -217,8 +217,8 @@ export const setAvailableProviders = (
 
 export const setExistingPlans = (
   existingPlans: V1beta1Plan[],
-  loaded: boolean,
-  error: Error,
+  loaded?: boolean,
+  error?: Error,
 ): PageAction<CreateVmMigration, PlanExistingPlans> => ({
   type: 'SET_EXISTING_PLANS',
   payload: {
@@ -230,8 +230,8 @@ export const setExistingPlans = (
 
 export const setExistingNetMaps = (
   existingNetMaps: V1beta1NetworkMap[],
-  loaded: boolean,
-  error: Error,
+  loaded?: boolean,
+  error?: Error,
 ): PageAction<CreateVmMigration, PlanExistingNetMaps> => ({
   type: 'SET_EXISTING_NET_MAPS',
   payload: {
@@ -243,8 +243,8 @@ export const setExistingNetMaps = (
 
 export const setExistingStorageMaps = (
   existingStorageMaps: V1beta1StorageMap[],
-  loaded: boolean,
-  error: Error,
+  loaded?: boolean,
+  error?: Error,
 ): PageAction<CreateVmMigration, PlanExistingStorageMaps> => ({
   type: 'SET_EXISTING_STORAGE_MAPS',
   payload: {
@@ -256,7 +256,7 @@ export const setExistingStorageMaps = (
 
 export const setAvailableTargetNamespaces = (
   availableTargetNamespaces: OpenShiftNamespace[],
-  loading: boolean,
+  loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableTargetNamespaces> => ({
   type: 'SET_AVAILABLE_TARGET_NAMESPACES',
@@ -307,7 +307,7 @@ export const deleteNetworkMapping = ({
 
 export const setAvailableTargetNetworks = (
   availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[],
-  loading: boolean,
+  loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableTargetNetworks> => ({
   type: 'SET_AVAILABLE_TARGET_NETWORKS',
@@ -316,7 +316,7 @@ export const setAvailableTargetNetworks = (
 
 export const setAvailableSourceNetworks = (
   availableSourceNetworks: InventoryNetwork[],
-  loading: boolean,
+  loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableSourceNetworks> => ({
   type: 'SET_AVAILABLE_SOURCE_NETWORKS',
@@ -325,7 +325,7 @@ export const setAvailableSourceNetworks = (
 
 export const setAvailableSourceStorages = (
   availableSourceStorages: InventoryStorage[],
-  loading: boolean,
+  loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableSourceStorages> => ({
   type: 'SET_AVAILABLE_SOURCE_STORAGES',
@@ -338,7 +338,7 @@ export const setAvailableSourceStorages = (
 
 export const setAvailableTargetStorages = (
   availableTargetStorages: OpenShiftStorageClass[],
-  loading: boolean,
+  loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableTargetStorages> => ({
   type: 'SET_AVAILABLE_TARGET_STORAGES',
@@ -346,17 +346,17 @@ export const setAvailableTargetStorages = (
 });
 
 export const setNicProfiles = (
-  nickProfiles: OVirtNicProfile[],
-  nicProfilesLoading: boolean,
-  nicProfilesError: Error,
-): PageAction<CreateVmMigration, PlanNickProfiles> => ({
+  nicProfiles: OVirtNicProfile[],
+  nicProfilesLoading?: boolean,
+  nicProfilesError?: Error,
+): PageAction<CreateVmMigration, PlanNicProfiles> => ({
   type: 'SET_NICK_PROFILES',
-  payload: { nickProfiles, loading: nicProfilesLoading, error: nicProfilesError },
+  payload: { nicProfiles: nicProfiles, loading: nicProfilesLoading, error: nicProfilesError },
 });
 
 export const setDisks = (
   disks: (OVirtDisk | OpenstackVolume)[],
-  loading: boolean,
+  loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanDisks> => ({
   type: 'SET_DISKS',
@@ -374,7 +374,7 @@ export const setAPiError = (error: Error): PageAction<CreateVmMigration, PlanErr
 });
 
 export const removeAlert = (
-  alertKey: NetworkAlerts | StorageAlerts | GeneralAlerts,
+  alertKey: NetworkAlerts | StorageAlerts,
 ): PageAction<CreateVmMigration, PlanAlert> => ({
   type: 'REMOVE_ALERT',
   payload: { alertKey },

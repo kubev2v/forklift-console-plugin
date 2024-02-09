@@ -19,6 +19,8 @@ import { InventoryStorage } from '../../hooks/useStorages';
 import { Validation } from '../../utils';
 import { VmData } from '../details';
 
+import { CreateVmMigration } from './reducer/actions';
+
 export interface CreateVmMigrationPageState {
   underConstruction: {
     plan: V1beta1Plan;
@@ -30,12 +32,10 @@ export interface CreateVmMigrationPageState {
     planName: Validation;
     targetNamespace: Validation;
     targetProvider: Validation;
+    networkMappings: Validation;
+    storageMappings: Validation;
   };
   alerts: {
-    general: {
-      errors: GeneralAlerts[];
-      warnings: GeneralAlerts[];
-    };
     networkMappings: {
       errors: NetworkAlerts[];
       warnings: NetworkAlerts[];
@@ -54,9 +54,10 @@ export interface CreateVmMigrationPageState {
     sourceNetworks: InventoryNetwork[];
     targetStorages: OpenShiftStorageClass[];
     sourceStorages: InventoryStorage[];
-    nickProfiles: OVirtNicProfile[];
+    nicProfiles: OVirtNicProfile[];
     disks: (OVirtDisk | OpenstackVolume)[];
     netMaps: V1beta1NetworkMap[];
+    storageMaps: V1beta1StorageMap[];
   };
   calculatedOnce: {
     // calculated on start (exception:for ovirt/openstack we need to fetch disks)
@@ -94,12 +95,7 @@ export interface CreateVmMigrationPageState {
   flow: {
     editingDone: boolean;
     apiError?: Error;
-    disksLoaded: boolean;
-    nicProfilesLoaded: boolean;
-    targetNetworksLoaded: boolean;
-    sourceNetworkLoaded: boolean;
-    targetStoragesLoaded: boolean;
-    sourceStoragesLoaded: boolean;
+    initialLoading: { [keys in CreateVmMigration]?: boolean };
   };
 }
 export interface MappingSource {
@@ -116,9 +112,25 @@ export interface Mapping {
 }
 
 export const NET_MAP_NAME_REGENERATED = 'NET_MAP_NAME_REGENERATED';
-export const NEXT_VALID_PROVIDER_SELECTED = 'NEXT_VALID_PROVIDER_SELECTED';
 export const NETWORK_MAPPING_REGENERATED = 'NETWORK_MAPPING_REGENERATED';
+export const OVIRT_NICS_WITH_EMPTY_PROFILE = 'OVIRT_NICS_WITH_EMPTY_PROFILE';
+export const MULTIPLE_NICS_ON_THE_SAME_NETWORK = 'MULTIPLE_NICS_ON_THE_SAME_NETWORK';
+export const UNMAPPED_NETWORKS = 'UNMAPPED_NETWORKS';
+export const MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING = 'MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING';
+
 export const STORAGE_MAPPING_REGENERATED = 'STORAGE_MAPPING_REGENERATED';
-export type NetworkAlerts = typeof NET_MAP_NAME_REGENERATED | typeof NETWORK_MAPPING_REGENERATED;
-export type StorageAlerts = typeof STORAGE_MAPPING_REGENERATED;
-export type GeneralAlerts = typeof NEXT_VALID_PROVIDER_SELECTED;
+export const STORAGE_MAP_NAME_REGENERATED = 'STORAGE_MAP_NAME_REGENERATED';
+export const UNMAPPED_STORAGES = 'UNMAPPED_STORAGES';
+
+export type NetworkAlerts =
+  | typeof NET_MAP_NAME_REGENERATED
+  | typeof NETWORK_MAPPING_REGENERATED
+  | typeof UNMAPPED_NETWORKS
+  | typeof OVIRT_NICS_WITH_EMPTY_PROFILE
+  | typeof MULTIPLE_NICS_ON_THE_SAME_NETWORK
+  | typeof MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING;
+
+export type StorageAlerts =
+  | typeof STORAGE_MAPPING_REGENERATED
+  | typeof STORAGE_MAP_NAME_REGENERATED
+  | typeof UNMAPPED_STORAGES;
