@@ -16,6 +16,7 @@ echo "============================"
 
 FORKLIFT_IMAGE=quay.io/kubev2v/forklift-operator-index:latest
 FORKLIFT_NAMESPACE=konveyor-forklift
+MIGRATION_NAMESPACE=konveyor-migration
 
 cat << EOF | kubectl apply -f -
 ---
@@ -98,4 +99,10 @@ kubectl patch service -n ${FORKLIFT_NAMESPACE} forklift-inventory --type='merge'
   -p '{"spec":{"type":"NodePort","ports":[{"name":"api-https","protocol":"TCP","targetPort":8443,"port":8443,"nodePort":30444}]}}'
 
 # secondary namespace used in test data
-kubectl create namespace konveyor-migration
+cat << EOF | kubectl apply -f -
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${MIGRATION_NAMESPACE}
+EOF
