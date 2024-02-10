@@ -1,7 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
-import { Trans } from 'react-i18next';
 import { validateContainerImage, validateURL, Validation } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Provider } from '@kubev2v/types';
 import { Form, FormGroup, Popover, TextInput } from '@patternfly/react-core';
@@ -24,36 +23,36 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
   const urlHelperTextMsgs = {
     error: (
       <div className="forklift--create-provider-field-error-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
           domain name, and a path. For example:{' '}
           <strong>https://vCenter-host-example.com/sdk</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     warning: (
       <div className="forklift--create-provider-field-warning-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Warning: The provided URL does not end with the SDK endpoint path: <strong>/sdk</strong>.
           Ensure the URL includes the correct path. For example:{' '}
           <strong>https://vCenter-host-example.com/sdk</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     success: (
       <div className="forklift--create-provider-field-success-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           URL of the vCenter API endpoint. Ensure the URL includes the <strong>/sdk</strong> path.
           For example: <strong>https://vCenter-host-example.com/sdk</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     default: (
       <div className="forklift--create-provider-field-default-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           URL of the vCenter API endpoint. Ensure the URL includes the <strong>/sdk</strong> path.
           For example: <strong>https://vCenter-host-example.com/sdk</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
   };
@@ -61,35 +60,35 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
   const vddkHelperTextMsgs = {
     error: (
       <div className="forklift--create-provider-field-error-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Error: The format of the provided VDDK init image is invalid. Ensure the path is a valid
           container image path. For example: <strong>quay.io/kubev2v/vddk:latest</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     success: (
       <div className="forklift--create-provider-field-success-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Virtual Disk Development Kit (VDDK) container init image path. The path must be empty or a
           valid container image path. For example: <strong>quay.io/kubev2v/vddk:latest</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     default: (
       <div className="forklift--create-provider-field-default-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Virtual Disk Development Kit (VDDK) container init image path. The path must be empty or a
           valid container image path. For example: <strong>quay.io/kubev2v/vddk:latest</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
   };
 
   const vddkHelperTextPopover = (
-    <Trans t={t} ns="plugin__forklift-console-plugin">
+    <ForkliftTrans>
       A VDDK init image is optional, but it is strongly recommended to specify a VDDK init image to
       accelerate migrations.
-    </Trans>
+    </ForkliftTrans>
   );
 
   const initialState = {

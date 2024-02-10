@@ -1,8 +1,7 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
 import { DetailsItem } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
 import {
@@ -38,11 +37,11 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
       label: t('Skip certificate validation'),
       description: t("If true, the provider's CA certificate won't be validated."),
       helperTextPopover: (
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Note: If this field is checked/true, migrations from this provider will not be secure,
           meaning that the transferred data is sent over an insecure connection and potentially
           sensitive data could be exposed.
-        </Trans>
+        </ForkliftTrans>
       ),
     },
     cacert: {
@@ -51,7 +50,7 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
         'A CA certificate to be trusted when connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
       ),
       helperTextPopover: (
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Note: Use the Manager CA certificate unless it was replaced by a third-party certificate,
           in which case use the Manager Apache CA certificate. <br />
           <br />
@@ -65,7 +64,7 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
             https://&#8249;rhv-host-example.com&#8250;/ovirt-engine/services/pki-resource?resource=ca-certificate&format=X509-PEM-CA
           </ExternalLink>
           {' .'}
-        </Trans>
+        </ForkliftTrans>
       ),
     },
   };

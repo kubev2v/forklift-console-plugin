@@ -1,6 +1,5 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   getGroupVersionKindForResource,
@@ -26,7 +25,7 @@ export const ItemIsOwnedAlert: React.FC<ItemIsOwnedAlertProps> = ({ owner, names
       variant="warning"
       title={t('Managed resource')}
     >
-      <Trans t={t} ns="plugin__forklift-console-plugin">
+      <ForkliftTrans>
         This resource is managed by{' '}
         <ResourceLink
           className="modal__inline-resource-link"
@@ -38,7 +37,7 @@ export const ItemIsOwnedAlert: React.FC<ItemIsOwnedAlertProps> = ({ owner, names
           namespace={namespace}
         />{' '}
         and any modifications may be overwritten. Edit the managing resource to preserve changes.
-      </Trans>
+      </ForkliftTrans>
     </Alert>
   );
 };

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
 import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
@@ -60,26 +59,26 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
   const vddkHelperTextMsgs = {
     error: (
       <div className="forklift-edit-modal-field-error-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Error: The format of the provided VDDK init image is invalid. Ensure the path is a valid
           container image path. For example: <strong>quay.io/kubev2v/vddk:latest</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     success: (
       <div className="forklift-edit-modal-field-success-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           The path must be empty or a valid container image path. For example:{' '}
           <strong>quay.io/kubev2v/vddk:latest</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     default: (
       <div className="forklift-edit-modal-field-default-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           The path must be empty or a valid container image path. For example:{' '}
           <strong>quay.io/kubev2v/vddk:latest</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
   };
@@ -107,12 +106,12 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
       label={props?.label || t('VDDK init image')}
       model={ProviderModel}
       body={
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Virtual Disk Development Kit (VDDK) container init image path.
           <br />
           <br />
           Note: It is strongly recommended to specify a VDDK init image to accelerate migrations.
-        </Trans>
+        </ForkliftTrans>
       }
       helperText={vddkHelperTextMsgs.default}
       validationHook={imageValidationHook}

@@ -1,11 +1,10 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router-dom';
 import { SectionHeading } from 'src/components/headers/SectionHeading';
 import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
 import { getResourceUrl, ProviderData } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   ProviderInventory,
@@ -51,14 +50,14 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
     <div>
       <PageSection variant="light" className="forklift-page-section--info">
         <Alert customIcon={<BellIcon />} variant="info" title={t('How to create a migration plan')}>
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             To migrate virtual machines from <strong>{provider.metadata.name}</strong> provider,
             select the virtual machines to migrate from the list of available virtual machines
             located in the virtual machines tab.{' '}
             <Link to={`${providerURL}/vms`}>
               Go to <strong>Virtual Machines</strong> tab
             </Link>
-          </Trans>
+          </ForkliftTrans>
         </Alert>
       </PageSection>
 

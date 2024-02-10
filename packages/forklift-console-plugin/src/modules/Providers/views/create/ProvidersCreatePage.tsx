@@ -1,9 +1,8 @@
 import React, { useReducer } from 'react';
-import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef, V1beta1Provider, V1Secret } from '@kubev2v/types';
 import {
@@ -246,11 +245,11 @@ export const ProvidersCreatePage: React.FC<{
             variant="warning"
             title={t('Namespace is not defined')}
           >
-            <Trans t={t} ns="plugin__forklift-console-plugin">
+            <ForkliftTrans>
               This provider will be created in <strong>{defaultNamespace}</strong> namespace, if you
               wish to choose another namespace please cancel, and choose a namespace from the top
               bar.
-            </Trans>
+            </ForkliftTrans>
           </Alert>
         )}
 

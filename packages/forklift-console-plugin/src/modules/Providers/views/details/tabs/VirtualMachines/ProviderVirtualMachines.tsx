@@ -1,9 +1,8 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
 import { RouteComponentProps } from 'react-router-dom';
 import { useProviderInventory } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderInventory, ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
@@ -47,11 +46,11 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
     <>
       <PageSection variant="light" className="forklift-page-section--info">
         <Alert customIcon={<BellIcon />} variant="info" title={t('How to create a migration plan')}>
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             To migrate virtual machines from <strong>{name}</strong> provider, select the virtual
             machines to migrate from the list of available virtual machines and click the{' '}
             <strong>Create migration plan</strong> button.
-          </Trans>
+          </ForkliftTrans>
         </Alert>
       </PageSection>
 

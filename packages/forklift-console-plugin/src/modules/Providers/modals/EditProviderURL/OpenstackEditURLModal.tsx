@@ -1,6 +1,5 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
@@ -17,16 +16,16 @@ export const OpenstackEditURLModal: React.FC<EditProviderURLModalProps> = (props
   const helperTextMsgs = {
     error: (
       <div className="forklift-edit-modal-field-error-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
           domain name, and a path. For example:{' '}
           <strong>https://identity_service.com:5000/v3</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     warning: (
       <div className="forklift--edit-modal-field-warning-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Warning: The provided URL does not end with the API endpoint path:
           <strong>
             {'"'}/v3{'"'}
@@ -34,21 +33,21 @@ export const OpenstackEditURLModal: React.FC<EditProviderURLModalProps> = (props
           {'. '}
           Ensure the URL includes the correct path. For example:{' '}
           <strong>https://identity_service.com:5000/v3</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     success: (
       <div className="forklift-edit-modal-field-success-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           For example: <strong>https://identity_service.com:5000/v3</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     default: (
       <div className="forklift-edit-modal-field-default-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           For example: <strong>https://identity_service.com:5000/v3</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
   };

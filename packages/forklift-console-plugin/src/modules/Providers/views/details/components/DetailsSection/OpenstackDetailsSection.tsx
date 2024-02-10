@@ -1,6 +1,5 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
@@ -18,8 +17,6 @@ import {
 import { DetailsSectionProps } from './DetailsSection';
 
 export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
-  const { t } = useForkliftTranslation();
-
   const { provider, permissions } = data;
 
   return (
@@ -40,10 +37,10 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
         resource={provider}
         canPatch={permissions.canPatch}
         helpContent={
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             URL of the OpenStack Identity (Keystone) endpoint. For example:{' '}
             <strong>https://identity_service.com:5000/v3</strong>.
-          </Trans>
+          </ForkliftTrans>
         }
       />
 

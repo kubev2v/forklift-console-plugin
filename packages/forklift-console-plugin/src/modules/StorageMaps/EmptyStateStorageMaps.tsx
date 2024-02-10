@@ -1,11 +1,10 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import automationIcon from 'src/components/empty-states/images/automation.svg';
 import { AddMappingButton } from 'src/components/mappings/MappingPage';
 import { HELP_LINK_HREF } from 'src/utils/constants';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
 import { PROVIDERS_REFERENCE } from '@kubev2v/legacy/common/constants';
@@ -27,9 +26,9 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
       icon={AutomationIcon}
       title={
         namespace ? (
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             No StorageMaps found in namespace <strong>{namespace}</strong>.
-          </Trans>
+          </ForkliftTrans>
         ) : (
           t('No StorageMaps found.')
         )
@@ -38,7 +37,7 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
         !hasSufficientProviders ? (
           <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
             <FlexItem>
-              <Trans t={t} ns="plugin__forklift-console-plugin">
+              <ForkliftTrans>
                 Migration storage maps are used to map storage interfaces between source and target
                 workloads, at least one source and one target provider must be available in order to
                 create a migration plan,{' '}
@@ -46,7 +45,7 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
                   Learn more
                 </ExternalLink>
                 .
-              </Trans>
+              </ForkliftTrans>
             </FlexItem>
             <FlexItem>
               <Button variant="secondary">

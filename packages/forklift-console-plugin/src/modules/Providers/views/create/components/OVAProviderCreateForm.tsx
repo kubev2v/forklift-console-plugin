@@ -1,7 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
-import { Trans } from 'react-i18next';
 import { validateNFSMount, Validation } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Provider } from '@kubev2v/types';
 import { Form, FormGroup, TextInput } from '@patternfly/react-core';
@@ -22,29 +21,29 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
   const helperTextMsgs = {
     error: (
       <div className="forklift--create-provider-field-error-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Error: The format of the provided URL is invalid. Ensure the URL is in the following
           format: <strong>ip_or_hostname_of_nfs_server:/nfs_path</strong>. For example:{' '}
           <strong>10.10.0.10:/ova</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     success: (
       <div className="forklift--create-provider-field-success-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           URL of the NFS file share that serves the OVA. Ensure the URL is in the following format:{' '}
           <strong>ip_or_hostname_of_nfs_server:/nfs_path</strong>. For example:{' '}
           <strong>10.10.0.10:/ova</strong> .
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     default: (
       <div className="forklift--create-provider-field-default-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           URL of the NFS file share that serves the OVA. Ensure the URL is in the following format:{' '}
           <strong>ip_or_hostname_of_nfs_server:/nfs_path</strong>. For example:{' '}
           <strong>10.10.0.10:/ova</strong> .
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
   };
