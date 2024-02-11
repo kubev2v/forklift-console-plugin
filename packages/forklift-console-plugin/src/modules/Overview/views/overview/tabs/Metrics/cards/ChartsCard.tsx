@@ -27,26 +27,61 @@ interface MigrationDataPoint {
   value: number;
 }
 
+enum TimeRangeOptions {
+  Last7Days = 'Last7Days',
+  Last31Days = 'Last31Days',
+  Last24H = 'Last24H',
+}
+
 const toStarted = (m: V1beta1Migration): string => m.status.started;
 const toFinished = (m: V1beta1Migration): string => m.status.completed;
 const hasTimestamp = (timestamp: string) => timestamp && DateTime.fromISO(timestamp).isValid;
 const toDateTime = (timestamp: string): DateTime => DateTime.fromISO(timestamp);
 const isLast7Days = (date: DateTime) => date.diffNow('days').get('days') <= 7;
+const isLast31Days = (date: DateTime) => date.diffNow('days').get('days') <= 31;
 const isLast24H = (date: DateTime) => date.diffNow('hours').get('hours') <= 24;
 const toDayLabel = (date: DateTime): string => date.toFormat('LLL dd');
 const toHourLabel = (date: DateTime): string => date.toFormat('HH:mm');
-const createTimeBuckets = (isDaysViewSelected: boolean) =>
+
+const TimeRangeOptionsDictionary = {
+  Last7Days: {
+    // t('Migrations (last 7 days)')
+    labelKey: 'Migrations (last 7 days)',
+    span: { days: 7 },
+    bucket: { day: 1 },
+    unit: 'day',
+    filter: isLast7Days,
+  },
+  Last31Days: {
+    // t('Migrations (last 31 days)')
+    labelKey: 'Migrations (last 31 days)',
+    span: { days: 31 },
+    bucket: { day: 4 },
+    unit: 'day',
+    filter: isLast31Days,
+  },
+  Last24H: {
+    // t('Migrations (last 24 hours)')
+    labelKey: 'Migrations (last 24 hours)',
+    span: { hours: 24 },
+    bucket: { hour: 4 },
+    unit: 'hour',
+    filter: isLast24H,
+  },
+};
+
+const createTimeBuckets = (selectedTimeRange: TimeRangeOptions) =>
   Interval.fromDateTimes(
     DateTime.now()
-      .minus(isDaysViewSelected ? { days: 7 } : { hours: 24 })
+      .minus(TimeRangeOptionsDictionary[selectedTimeRange].span)
       // adjust the time window granularity i.e.
       // assume 24h window and current time 14:30
       // event that happened at 14:10 on the previous day is older then 24h when calculated with minute-precision
       // but should be included with hour-precision (as we show on the chart)
-      .startOf(isDaysViewSelected ? 'day' : 'hour'),
-    DateTime.now().endOf(isDaysViewSelected ? 'day' : 'hour'),
+      .startOf(TimeRangeOptionsDictionary[selectedTimeRange].unit),
+    DateTime.now().endOf(TimeRangeOptionsDictionary[selectedTimeRange].unit),
   )
-    .splitBy(isDaysViewSelected ? { day: 1 } : { hour: 4 })
+    .splitBy(TimeRangeOptionsDictionary[selectedTimeRange].bucket)
     .map((interval) => [interval, []]);
 
 const groupByBucket = (acc: [Interval, DateTime[]][], date: DateTime) =>
@@ -57,16 +92,21 @@ const groupByBucket = (acc: [Interval, DateTime[]][], date: DateTime) =>
 const toDataPoints = (
   allMigrations: V1beta1Migration[],
   toTimestamp: (m: V1beta1Migration) => string,
-  isDaysViewSelected: boolean,
+  selectedTimeRange: TimeRangeOptions,
 ): MigrationDataPoint[] =>
   allMigrations
     .map(toTimestamp)
     .filter(hasTimestamp)
     .map(toDateTime)
-    .filter(isDaysViewSelected ? isLast7Days : isLast24H)
-    .reduce(groupByBucket, createTimeBuckets(isDaysViewSelected))
+    .filter(TimeRangeOptionsDictionary[selectedTimeRange].filter)
+    .reduce(groupByBucket, createTimeBuckets(selectedTimeRange))
     .map(([interval, points]) => ({
-      dateLabel: isDaysViewSelected ? toDayLabel(interval.start) : toHourLabel(interval),
+      dateLabel:
+        selectedTimeRange === TimeRangeOptions.Last24H
+          ? toHourLabel(interval)
+          : selectedTimeRange === TimeRangeOptions.Last31Days
+          ? toDayLabel(interval)
+          : toDayLabel(interval.start),
       value: points.length,
     }));
 
@@ -74,7 +114,9 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
   const { t } = useForkliftTranslation();
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const onToggle = () => setIsDropdownOpened(!isDropdownOpened);
-  const [isDaysViewSelected, setIsDaysViewSelected] = useState(true);
+  const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRangeOptions>(
+    TimeRangeOptions.Last7Days,
+  );
   const [migrations] = useK8sWatchResource<V1beta1Migration[]>({
     groupVersionKind: MigrationModelGroupVersionKind,
     namespaced: true,
@@ -88,17 +130,17 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
     running: toDataPoints(
       migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Running')),
       toStarted,
-      isDaysViewSelected,
+      selectedTimeRange,
     ),
     failed: toDataPoints(
       migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Failed')),
       toFinished,
-      isDaysViewSelected,
+      selectedTimeRange,
     ),
     succeeded: toDataPoints(
       migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Succeeded')),
       toFinished,
-      isDaysViewSelected,
+      selectedTimeRange,
     ),
   };
 
@@ -112,7 +154,7 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
     <Card>
       <CardHeader>
         <CardTitle className="forklift-title">
-          {isDaysViewSelected ? t('Migrations (last 7 days)') : t('Migrations (last 24 hours)')}
+          {t(TimeRangeOptionsDictionary[selectedTimeRange].labelKey)}
         </CardTitle>
         <CardActions>
           <Dropdown
@@ -123,7 +165,7 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
               <DropdownItem
                 onClick={() => {
                   onToggle();
-                  setIsDaysViewSelected(true);
+                  setSelectedTimeRange(TimeRangeOptions.Last7Days);
                 }}
                 key="7days"
               >
@@ -132,7 +174,16 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
               <DropdownItem
                 onClick={() => {
                   onToggle();
-                  setIsDaysViewSelected(false);
+                  setSelectedTimeRange(TimeRangeOptions.Last31Days);
+                }}
+                key="31days"
+              >
+                {t('31 days')}
+              </DropdownItem>,
+              <DropdownItem
+                onClick={() => {
+                  onToggle();
+                  setSelectedTimeRange(TimeRangeOptions.Last24H);
                 }}
                 key="24hours"
               >
@@ -160,11 +211,11 @@ export const ChartsCard: React.FC<MigrationsCardProps> = () => {
             ]}
             legendPosition="bottom"
             height={400}
-            width={900}
+            width={1100}
             padding={{
               bottom: 75,
-              left: 100,
-              right: 100,
+              left: 50,
+              right: 30,
               top: 50,
             }}
           >
