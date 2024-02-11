@@ -1,7 +1,6 @@
 import React, { ReactNode, useCallback, useState } from 'react';
-import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   k8sDelete,
@@ -98,16 +97,16 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model
       actions={actions}
     >
       {namespace ? (
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Are you sure you want to delete{' '}
           <strong className="co-break-word">{{ resourceName: name }}</strong> in namespace{' '}
           <strong>{{ namespace: namespace }}</strong>?
-        </Trans>
+        </ForkliftTrans>
       ) : (
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Are you sure you want to delete{' '}
           <strong className="co-break-word">{{ resourceName: name }}</strong>?
-        </Trans>
+        </ForkliftTrans>
       )}
       {typeof owner === 'object' && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}
       {alertMessage}

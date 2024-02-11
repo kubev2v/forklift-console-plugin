@@ -1,7 +1,6 @@
 import React, { ComponentType, ReactNode } from 'react';
-import { Trans } from 'react-i18next';
 import { HELP_LINK_HREF } from 'src/utils/constants';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
 import {
@@ -45,13 +44,13 @@ export const ProvidersEmptyState: React.FC<ProvidersEmptyStateProps> = ({
                   {title}
                 </Title>
                 <Text>
-                  <Trans>
+                  <ForkliftTrans>
                     Migrating virtualization workloads is a multi-step process.{' '}
                     <ExternalLink href={HELP_LINK_HREF} isInline>
                       Learn more
                     </ExternalLink>
                     .
-                  </Trans>
+                  </ForkliftTrans>
                 </Text>
                 <TextList component="ol">
                   <TextListItem>

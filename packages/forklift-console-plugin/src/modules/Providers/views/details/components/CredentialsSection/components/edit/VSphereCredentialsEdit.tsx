@@ -1,12 +1,11 @@
 import React, { useCallback, useReducer } from 'react';
-import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
 import {
   safeBase64Decode,
   Validation,
   vsphereSecretFieldValidator,
 } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   Button,
@@ -42,43 +41,43 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
   };
 
   const cacertHelperTextPopover = (
-    <Trans t={t} ns="plugin__forklift-console-plugin">
+    <ForkliftTrans>
       Note: Use the Manager CA certificate unless it was replaced by a third-party certificate, in
       which case use the Manager Apache CA certificate.
-    </Trans>
+    </ForkliftTrans>
   );
 
   const usernameHelperTextMsgs = {
     error: (
       <div className="forklift-page-provider-field-error-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Error: The format of the provided username is invalid. Ensure the username does not
           include spaces.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     warning: (
       <div className="forklift-page-provider-field-warning-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Warning: The provided username does not include the user domain. Ensure the username
           includes the domain. For example: <strong>user@vsphere.local</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     success: (
       <div className="forklift-page-provider-field-success-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           A username for connecting to the vCenter API endpoint. Ensure the username includes the
           user domain. For example: <strong>user@vsphere.local</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
     default: (
       <div className="forklift-page-provider-field-default-validation">
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           A username for connecting to the vCenter API endpoint. Ensure the username includes the
           user domain. For example: <strong>user@vsphere.local</strong>.
-        </Trans>
+        </ForkliftTrans>
       </div>
     ),
   };

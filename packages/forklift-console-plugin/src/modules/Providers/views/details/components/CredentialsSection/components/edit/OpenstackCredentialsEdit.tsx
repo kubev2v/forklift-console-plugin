@@ -1,12 +1,11 @@
 import React, { useCallback, useReducer } from 'react';
-import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
 import {
   openstackSecretFieldValidator,
   safeBase64Decode,
   Validation,
 } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   Divider,
@@ -48,11 +47,11 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
   };
 
   const insecureSkipVerifyHelperTextPopover = (
-    <Trans t={t} ns="plugin__forklift-console-plugin">
+    <ForkliftTrans>
       Note: If <strong>Skip certificate validation</strong> is selected, migrations from this
       provider will not be secure, meaning that the transferred data is sent over an insecure
       connection and potentially sensitive data could be exposed.
-    </Trans>
+    </ForkliftTrans>
   );
 
   const authType = safeBase64Decode(secret?.data?.authType || '');

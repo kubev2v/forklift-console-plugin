@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Trans } from 'react-i18next';
 import StandardPage from 'src/components/page/StandardPage';
 import modernizeMigration from 'src/modules/Providers/images/modernizeMigration.svg';
 import { ProviderData, SOURCE_ONLY_PROVIDER_TYPES } from 'src/modules/Providers/utils';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { EnumToTuple, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import {
@@ -246,9 +245,9 @@ const EmptyState_: React.FC<EmptyStateProps> = ({ AddButton, namespace }) => {
       AddButton={AddButton}
       title={
         namespace ? (
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             No Providers found in namespace <strong>{namespace}</strong>.
-          </Trans>
+          </ForkliftTrans>
         ) : (
           t('No providers found')
         )

@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
-import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Alert, AlertVariant, Button, Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
@@ -43,10 +42,10 @@ const ProvidersCreateVmMigrationPage: FC = () => {
         variant="info"
         title={t('How to create a migration plan')}
       >
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           To migrate virtual machines select target provider, namespace, mappings and click the{' '}
           <strong>Create</strong> button to crete the plan.
-        </Trans>
+        </ForkliftTrans>
       </Alert>
 
       <SectionHeading text={t('Select migration target')} />

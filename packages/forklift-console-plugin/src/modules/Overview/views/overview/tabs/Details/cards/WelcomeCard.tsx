@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
-import { Trans } from 'react-i18next';
 import automationIcon from 'src/modules/Overview/images/automation.svg';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import {
@@ -74,25 +73,25 @@ export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
           </CardHeader>
           <CardBody>
             <Text className="forklift-welcome-text">
-              <Trans t={t} ns="plugin__forklift-console-plugin">
+              <ForkliftTrans>
                 Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale to Red
                 Hat OpenShift Virtualization. You can migrate virtual machines from VMware vSphere,
                 Red Hat Virtualization, OpenStack, OVA and OpenShift Virtualization source providers
                 to OpenShift Virtualization with the Migration Toolkit for Virtualization (MTV).
-              </Trans>
+              </ForkliftTrans>
             </Text>
             <Text className="forklift-welcome-text">
-              <Trans t={t} ns="plugin__forklift-console-plugin">
+              <ForkliftTrans>
                 This gives organizations the ability to more easily access workloads running on
                 virtual machines, while developing new cloud-native applications.
-              </Trans>
+              </ForkliftTrans>
             </Text>
             <Text className="forklift-welcome-text">
-              <Trans t={t} ns="plugin__forklift-console-plugin">
+              <ForkliftTrans>
                 Migrations are performed in a few simple steps, first by providing source and
                 destination credentials, then mapping the source and destination infrastructure and
                 creating a choreographed plan, and finally, executing the migration effort.
-              </Trans>
+              </ForkliftTrans>
             </Text>
           </CardBody>
         </SplitItem>

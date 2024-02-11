@@ -1,6 +1,5 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
@@ -46,7 +45,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
         resource={provider}
         canPatch={permissions.canPatch}
         helpContent={
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             URL of the API endpoint of the vCenter on which the source VM is mounted. Ensure that
             the URL includes the sdk path, usually <strong>/sdk</strong>.<br />
             <br />
@@ -54,7 +53,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
             <br />
             If a certificate for FQDN is specified, the value of this field needs to match the FQDN
             in the certificate.
-          </Trans>
+          </ForkliftTrans>
         }
       />
 

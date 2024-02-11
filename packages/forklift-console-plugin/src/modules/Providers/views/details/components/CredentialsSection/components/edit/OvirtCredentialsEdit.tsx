@@ -1,12 +1,11 @@
 import React, { useCallback, useReducer } from 'react';
-import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
 import {
   ovirtSecretFieldValidator,
   safeBase64Decode,
   Validation,
 } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
 import {
@@ -70,15 +69,15 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
   };
 
   const insecureSkipVerifyHelperTextPopover = (
-    <Trans t={t} ns="plugin__forklift-console-plugin">
+    <ForkliftTrans>
       Note: If <strong>Skip certificate validation</strong> is selected, migrations from this
       provider will not be secure, meaning that the transferred data is sent over an insecure
       connection and potentially sensitive data could be exposed.
-    </Trans>
+    </ForkliftTrans>
   );
 
   const cacertHelperTextPopover = (
-    <Trans t={t} ns="plugin__forklift-console-plugin">
+    <ForkliftTrans>
       Note: Use the Manager CA certificate unless it was replaced by a third-party certificate, in
       which case use the Manager Apache CA certificate.
       <br />
@@ -93,7 +92,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
         https://&#8249;rhv-host-example.com&#8250;/ovirt-engine/services/pki-resource?resource=ca-certificate&format=X509-PEM-CA
       </ExternalLink>
       {' .'}
-    </Trans>
+    </ForkliftTrans>
   );
 
   const initialState = {

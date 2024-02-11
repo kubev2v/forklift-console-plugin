@@ -1,10 +1,9 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import digitalTransformation from 'src/modules/Overview/images/digitalTransormation.svg';
 import { HELP_LINK_HREF } from 'src/utils/constants';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
 import { PROVIDERS_REFERENCE } from '@kubev2v/legacy/common/constants';
@@ -28,9 +27,9 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
       icon={AutomationIcon}
       title={
         namespace ? (
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             No Plans found in namespace <strong>{namespace}</strong>.
-          </Trans>
+          </ForkliftTrans>
         ) : (
           t('No Plans found.')
         )
@@ -39,7 +38,7 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
         !hasSufficientProviders ? (
           <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
             <FlexItem>
-              <Trans t={t} ns="plugin__forklift-console-plugin">
+              <ForkliftTrans>
                 Migration plans are used to plan migration or virtualization workloads from source
                 providers to target providers. At least one source and one target provider must be
                 available in order to create a migration plan,{' '}
@@ -47,7 +46,7 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
                   Learn more
                 </ExternalLink>
                 .
-              </Trans>
+              </ForkliftTrans>
             </FlexItem>
             <FlexItem>
               <Button variant="secondary">

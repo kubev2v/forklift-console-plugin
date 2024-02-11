@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Trans } from 'react-i18next';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { withActionServiceContext } from '@kubev2v/common';
 import { withQueryClient } from '@kubev2v/common';
@@ -376,10 +375,10 @@ const DeleteModal = ({
   const IsExecutingAlert = <Alert isInline variant="danger" title="Plan is currently running" />;
   const IsNotArchivedAlert = (
     <Alert isInline variant="info" title="Plan is not archived">
-      <Trans t={t} ns="plugin__forklift-console-plugin">
+      <ForkliftTrans>
         Deleting a migration plan does not remove temporary resources, it is recommended to{' '}
         <strong>archive</strong> the plan first before deleting it, to remove temporary resources.
-      </Trans>
+      </ForkliftTrans>
     </Alert>
   );
 
@@ -399,11 +398,11 @@ const DeleteModal = ({
           {isPlanExecuting ? IsExecutingAlert : ''}
           {isPlanArchived || !isPlanStarted ? '' : IsNotArchivedAlert}
           <TextContent>
-            <Trans t={t} ns="plugin__forklift-console-plugin">
+            <ForkliftTrans>
               Are you sure you want to delete{' '}
               <strong className="co-break-word">{{ resourceName: plan.name }}</strong> in namespace{' '}
               <strong>{{ namespace: plan.namespace }}</strong>?
-            </Trans>
+            </ForkliftTrans>
           </TextContent>
         </Stack>
       }

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ClipboardCopy, ClipboardCopyVariant, Text, TextVariants } from '@patternfly/react-core';
 
@@ -18,10 +17,10 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
       label: t('Username'),
       description: (
         <div className="forklift-page-provider-field-default-validation">
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             A username for connecting to the vCenter API endpoint. Ensure the username includes the
             user domain. For example: <strong>user@vsphere.local</strong>.
-          </Trans>
+          </ForkliftTrans>
         </div>
       ),
     },
@@ -39,10 +38,10 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
         'A CA certificate to be trusted when connecting to the vCenter API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
       ),
       helperTextPopover: (
-        <Trans t={t} ns="plugin__forklift-console-plugin">
+        <ForkliftTrans>
           Note: Use the Manager CA certificate unless it was replaced by a third-party certificate,
           in which case use the Manager Apache CA certificate.
-        </Trans>
+        </ForkliftTrans>
       ),
     },
   };

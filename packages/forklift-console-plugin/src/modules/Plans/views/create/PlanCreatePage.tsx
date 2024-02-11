@@ -1,9 +1,8 @@
 import React, { useReducer } from 'react';
-import { Trans } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { MigrationAction } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/MigrationAction';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
@@ -70,10 +69,10 @@ export const PlanCreatePage: React.FC<{
           variant="info"
           title={t('How to create a migration plan')}
         >
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             To migrate virtual machines select a provider, then select the virtual machines to
             migrate and click the <strong>Create migration plan</strong> button.
-          </Trans>
+          </ForkliftTrans>
         </Alert>
 
         {!namespace && (
@@ -83,11 +82,11 @@ export const PlanCreatePage: React.FC<{
             variant="warning"
             title={t('Namespace is not defined')}
           >
-            <Trans t={t} ns="plugin__forklift-console-plugin">
+            <ForkliftTrans>
               This plan will be created in <strong>{defaultNamespace}</strong> namespace, if you
               wish to choose another namespace please cancel, and choose a namespace from the top
               bar.
-            </Trans>
+            </ForkliftTrans>
           </Alert>
         )}
 

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
 import { Base64 } from 'js-base64';
 import { DetailsItem } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   ClipboardCopy,
@@ -63,11 +62,11 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
           "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             Note: If this field is checked/true, migrations from this provider will not be secure,
             meaning that the transferred data is sent over an insecure connection and potentially
             sensitive data could be exposed.
-          </Trans>
+          </ForkliftTrans>
         ),
       },
       cacert: {
@@ -95,11 +94,11 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
           "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             Note: If this field is checked/true, migrations from this provider will not be secure,
             meaning that the transferred data is sent over an insecure connection and potentially
             sensitive data could be exposed.
-          </Trans>
+          </ForkliftTrans>
         ),
       },
       cacert: {
@@ -128,11 +127,11 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
           "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             Note: If this field is checked/true, migrations from this provider will not be secure,
             meaning that the transferred data is sent over an insecure connection and potentially
             sensitive data could be exposed.
-          </Trans>
+          </ForkliftTrans>
         ),
       },
       cacert: {
@@ -166,11 +165,11 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
           "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             Note: If this field is checked/true, migrations from this provider will not be secure,
             meaning that the transferred data is sent over an insecure connection and potentially
             sensitive data could be exposed.
-          </Trans>
+          </ForkliftTrans>
         ),
       },
       cacert: {
@@ -206,11 +205,11 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
           "If true (check box is selected), the provider's CA certificate won't be validated.",
         ),
         helperTextPopover: (
-          <Trans t={t} ns="plugin__forklift-console-plugin">
+          <ForkliftTrans>
             Note: If this field is checked/true, migrations from this provider will not be secure,
             meaning that the transferred data is sent over an insecure connection and potentially
             sensitive data could be exposed.
-          </Trans>
+          </ForkliftTrans>
         ),
       },
       cacert: {
