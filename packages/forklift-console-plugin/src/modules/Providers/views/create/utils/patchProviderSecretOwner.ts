@@ -19,7 +19,7 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
  *  .then(() => console.log('Secret owner patched successfully'))
  *  .catch(err => console.error(err));
  */
-export async function patchSecretOwner(provider: V1beta1Provider, secret: V1Secret) {
+export async function patchProviderSecretOwner(provider: V1beta1Provider, secret: V1Secret) {
   // Sanity check, don't try to patch empty secret
   if (!secret) {
     return;

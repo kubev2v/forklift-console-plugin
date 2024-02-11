@@ -23,7 +23,7 @@ import { providerAndSecretValidator } from '../../utils/validators/providerAndSe
 
 import { ProvidersCreateForm } from './components';
 import { providerTemplate, secretTemplate } from './templates';
-import { createProvider, createSecret, patchSecretOwner } from './utils';
+import { createProvider, createProviderSecret, patchProviderSecretOwner } from './utils';
 
 import './ProvidersCreatePage.style.css';
 
@@ -162,7 +162,7 @@ export const ProvidersCreatePage: React.FC<{
     // add createdForProviderType label
     // add url
     try {
-      secret = await createSecret(state.newProvider, state.newSecret);
+      secret = await createProviderSecret(state.newProvider, state.newSecret);
     } catch (err) {
       dispatch({
         type: 'SET_API_ERROR',
@@ -189,7 +189,7 @@ export const ProvidersCreatePage: React.FC<{
 
     // set secret ownership using provider uid
     try {
-      await patchSecretOwner(provider, secret);
+      await patchProviderSecretOwner(provider, secret);
     } catch (err) {
       dispatch({
         type: 'SET_API_ERROR',

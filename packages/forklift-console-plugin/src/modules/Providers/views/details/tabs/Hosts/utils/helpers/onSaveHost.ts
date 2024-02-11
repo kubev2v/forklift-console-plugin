@@ -9,9 +9,12 @@ import {
   V1Secret,
   VSphereHost,
 } from '@kubev2v/types';
-import { k8sCreate, k8sGet, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { k8sGet, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
+import { createHost } from './createHost';
+import { createHostSecret } from './createHostSecret';
 import { InventoryHostPair } from './matchHostsToInventory';
+import { patchHostSecretOwner } from './patchHostSecretOwner';
 
 interface OnSaveHostParams {
   provider: V1beta1Provider;
@@ -117,7 +120,7 @@ async function processHostSecretPair(
       },
       type: 'Opaque',
     };
-    const createdSecret = await createSecret(secretData);
+    const createdSecret = await createHostSecret(secretData);
 
     // Create Host
     const newHostData = {
@@ -156,7 +159,7 @@ async function processHostSecretPair(
       name: createdHost.metadata.name,
       uid: createdHost.metadata.uid,
     };
-    await patchHostSecret(createdSecret, ownerRef);
+    await patchHostSecretOwner(createdSecret, ownerRef);
   }
 }
 
@@ -203,43 +206,6 @@ async function patchSecret(
         op: 'replace',
         path: '/data/password',
         value: encodedPassword,
-      },
-    ],
-  });
-}
-
-async function createSecret(secretData: V1Secret) {
-  const createdSecret = await k8sCreate({
-    model: SecretModel,
-    data: secretData,
-  });
-  return createdSecret;
-}
-
-async function createHost(newHostData: V1beta1Host) {
-  const createdHost = await k8sCreate({
-    model: HostModel,
-    data: newHostData,
-  });
-  return createdHost;
-}
-
-async function patchHostSecret(secret: V1Secret, ownerRef: { name: string; uid: string }) {
-  await k8sPatch({
-    model: SecretModel,
-    resource: secret,
-    data: [
-      {
-        op: 'replace',
-        path: '/metadata/ownerReferences',
-        value: [
-          {
-            apiVersion: 'forklift.konveyor.io/v1beta1',
-            kind: 'Host',
-            name: ownerRef.name,
-            uid: ownerRef.uid,
-          },
-        ],
       },
     ],
   });
