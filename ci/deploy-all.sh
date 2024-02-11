@@ -21,6 +21,7 @@ you may not be able to start a virtual machine or use some network interfaces.
   --with-openstack-provider   will install packstack simulator.
   --no-kubevirt               don't install kubebirt.
   --no-console                don't install OKD console.
+  --no-cluster-up             don't install Kind cluster.
   "
   exit 0
 fi
@@ -47,7 +48,9 @@ echo "Found: ${CONTAINER_CMD}"
 # ---------------
 
 # Create kind cluster
-bash ${script_dir}/deploy-cluster.sh
+if [[ $@ != *'--no-cluster-up'* ]]; then
+  bash ${script_dir}/deploy-cluster.sh
+fi
 
 # Install volume poplulator
 bash ${script_dir}/deploy-volume-populator.sh
