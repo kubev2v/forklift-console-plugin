@@ -1,10 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
-import {
-  openstackSecretFieldValidator,
-  safeBase64Decode,
-  Validation,
-} from 'src/modules/Providers/utils';
+import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, FormGroup, TextInput } from '@patternfly/react-core';
@@ -31,12 +27,24 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
   const initialState = {
     passwordHidden: true,
     validation: {
-      applicationCredentialName: 'default' as Validation,
-      applicationCredentialSecret: 'default' as Validation,
-      username: 'default' as Validation,
-      regionName: 'default' as Validation,
-      projectName: 'default' as Validation,
-      domainName: 'default' as Validation,
+      applicationCredentialName: {
+        type: 'default',
+        msg: 'OpenStack application credential name needed for application credential authentication.',
+      },
+      applicationCredentialSecret: {
+        type: 'default',
+        msg: 'OpenStack application credential Secret needed for the application credential authentication.',
+      },
+      username: {
+        type: 'default',
+        msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint.',
+      },
+      regionName: { type: 'default', msg: 'OpenStack region name.' },
+      projectName: {
+        type: 'default',
+        msg: 'OpenStack application credential name needed for application credential authentication.',
+      },
+      domainName: { type: 'default', msg: 'OpenStack domain name.' },
     },
   };
 
@@ -81,13 +89,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Application credential name')}
         isRequired
         fieldId="applicationCredentialName"
-        helperText={t(
-          'OpenStack application credential name needed for application credential authentication.',
-        )}
-        helperTextInvalid={t(
-          'Error: The format of the provided application credential name is invalid. Ensure the name does not include spaces.',
-        )}
-        validated={state.validation.applicationCredentialName}
+        helperText={state.validation.applicationCredentialName.msg}
+        helperTextInvalid={state.validation.applicationCredentialName.msg}
+        validated={state.validation.applicationCredentialName.type}
       >
         <TextInput
           isRequired
@@ -96,7 +100,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           name="applicationCredentialName"
           value={applicationCredentialName}
           onChange={(value) => handleChange('applicationCredentialName', value)}
-          validated={state.validation.applicationCredentialName}
+          validated={state.validation.applicationCredentialName.type}
         />
       </FormGroup>
 
@@ -104,13 +108,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Application credential secret')}
         isRequired
         fieldId="applicationCredentialSecret"
-        helperText={t(
-          'OpenStack application credential Secret needed for the application credential authentication.',
-        )}
-        helperTextInvalid={t(
-          'Error: The format of the provided application credential Secret is invalid. Ensure the Secret does not include spaces.',
-        )}
-        validated={state.validation.applicationCredentialSecret}
+        helperText={state.validation.applicationCredentialSecret.msg}
+        helperTextInvalid={state.validation.applicationCredentialSecret.msg}
+        validated={state.validation.applicationCredentialSecret.type}
       >
         <TextInput
           className="pf-u-w-75"
@@ -120,7 +120,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           name="applicationCredentialSecret"
           value={applicationCredentialSecret}
           onChange={(value) => handleChange('applicationCredentialSecret', value)}
-          validated={state.validation.applicationCredentialSecret}
+          validated={state.validation.applicationCredentialSecret.type}
         />
         <Button
           variant="control"
@@ -135,11 +135,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Username')}
         isRequired
         fieldId="username"
-        helperText={t('A username for connecting to the OpenStack Identity (Keystone) endpoint.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided username is invalid. Ensure the username does not include spaces.',
-        )}
-        validated={state.validation.username}
+        helperText={state.validation.username.msg}
+        helperTextInvalid={state.validation.username.msg}
+        validated={state.validation.username.type}
       >
         <TextInput
           isRequired
@@ -148,7 +146,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           name="username"
           value={username}
           onChange={(value) => handleChange('username', value)}
-          validated={state.validation.username}
+          validated={state.validation.username.type}
         />
       </FormGroup>
 
@@ -156,11 +154,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Region')}
         isRequired
         fieldId="regionName"
-        helperText={t('OpenStack region name.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided region name is invalid. Ensure the region name does not include spaces.',
-        )}
-        validated={state.validation.regionName}
+        helperText={state.validation.regionName.msg}
+        helperTextInvalid={state.validation.regionName.msg}
+        validated={state.validation.regionName.type}
       >
         <TextInput
           isRequired
@@ -169,7 +165,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           name="regionName"
           value={regionName}
           onChange={(value) => handleChange('regionName', value)}
-          validated={state.validation.regionName}
+          validated={state.validation.regionName.type}
         />
       </FormGroup>
 
@@ -177,11 +173,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Project')}
         isRequired
         fieldId="projectName"
-        helperText={t('OpenStack project name.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided project name is invalid. Ensure the project name does not include spaces.',
-        )}
-        validated={state.validation.projectName}
+        helperText={state.validation.projectName.msg}
+        helperTextInvalid={state.validation.projectName.msg}
+        validated={state.validation.projectName.type}
       >
         <TextInput
           isRequired
@@ -190,7 +184,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           name="projectName"
           value={projectName}
           onChange={(value) => handleChange('projectName', value)}
-          validated={state.validation.projectName}
+          validated={state.validation.projectName.type}
         />
       </FormGroup>
 
@@ -198,11 +192,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         label={t('Domain')}
         isRequired
         fieldId="domainName"
-        helperText={t('OpenStack domain name.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided domain name is invalid. Ensure the domain name does not include spaces.',
-        )}
-        validated={state.validation.domainName}
+        helperText={state.validation.domainName.msg}
+        helperTextInvalid={state.validation.domainName.msg}
+        validated={state.validation.domainName.type}
       >
         <TextInput
           isRequired
@@ -211,7 +203,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           name="domainName"
           value={domainName}
           onChange={(value) => handleChange('domainName', value)}
-          validated={state.validation.domainName}
+          validated={state.validation.domainName.type}
         />
       </FormGroup>
     </>

@@ -17,31 +17,18 @@ import { ListComponentProps } from '../BaseCredentialsSection';
 export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
   const { t } = useForkliftTranslation();
 
-  const usernameHelperTextMsg = t(
-    'A username for connecting to the OpenStack Identity (Keystone) endpoint.',
-  );
-  const passwordHelperTextMsg = t(
-    'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
-  );
-  const regionHelperTextMsg = t('OpenStack region name.');
-  const projectNameHelperTextMsg = t('OpenStack project name.');
-  const domainHelperTextMsg = t('OpenStack domain name.');
-  const tokenWithUserIdHelperTextMsg = t('OpenStack token for authentication using a user ID.');
-  const tokenWithUsernameHelperTextMsg = t('OpenStack token for authentication using a user name.');
-  const userIdHelperTextMsg = t(
-    'A user ID for connecting to the OpenStack Identity (Keystone) endpoint.',
-  );
-  const projectIdHelperTextMsg = t('OpenStack project ID.');
-  const applicationCredentialIDHelperTextMsg = t(
-    'OpenStack application credential ID needed for the application credential authentication.',
-  );
-  const applicationCredentialNameHelperTextMsg = t(
-    'OpenStack application credential name needed for application credential authentication.',
-  );
-  const applicationCredentialSecretHelperTextMsg = t(
-    'OpenStack application credential Secret needed for the application credential authentication.',
-  );
   const items = [];
+
+  const insecureSkipVerifyHelperTextPopover = (
+    <ForkliftTrans>
+      <p>
+        Select <strong>Skip certificate validation</strong> to skip certificate verification, which
+        proceeds with an insecure migration and then the certificate is not required. Insecure
+        migration means that the transferred data is sent over an insecure connection and
+        potentially sensitive data could be exposed.
+      </p>
+    </ForkliftTrans>
+  );
 
   const fields = {
     passwordSecretFields: {
@@ -51,23 +38,23 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
           'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
         ),
       },
-      username: { label: t('Username'), description: usernameHelperTextMsg },
-      password: { label: t('Password'), description: passwordHelperTextMsg },
-      regionName: { label: t('Region'), description: regionHelperTextMsg },
-      projectName: { label: t('Project'), description: projectNameHelperTextMsg },
-      domainName: { label: t('Domain'), description: domainHelperTextMsg },
+      username: {
+        label: t('Username'),
+        description: t('A username for connecting to the OpenStack Identity (Keystone) endpoint.'),
+      },
+      password: {
+        label: t('Password'),
+        description: t(
+          'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
+        ),
+      },
+      regionName: { label: t('Region'), description: t('OpenStack region name.') },
+      projectName: { label: t('Project'), description: t('OpenStack project name.') },
+      domainName: { label: t('Domain'), description: t('OpenStack domain name.') },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t(
-          "If true (check box is selected), the provider's CA certificate won't be validated.",
-        ),
-        helperTextPopover: (
-          <ForkliftTrans>
-            Note: If this field is checked/true, migrations from this provider will not be secure,
-            meaning that the transferred data is sent over an insecure connection and potentially
-            sensitive data could be exposed.
-          </ForkliftTrans>
-        ),
+        description: t('Migrate without validating a CA certificate'),
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
       },
       cacert: {
         label: t('CA certificate'),
@@ -84,27 +71,25 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
           'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
         ),
       },
-      token: { label: t('Token'), description: tokenWithUserIdHelperTextMsg },
-      userID: { label: t('User ID'), description: userIdHelperTextMsg },
-      projectID: { label: t('Project ID'), description: projectIdHelperTextMsg },
-      regionName: { label: t('Region'), description: regionHelperTextMsg },
+      token: {
+        label: t('Token'),
+        description: t('OpenStack token for authentication using a user ID.'),
+      },
+      userID: {
+        label: t('User ID'),
+        description: t('A user ID for connecting to the OpenStack Identity (Keystone) endpoint.'),
+      },
+      projectID: { label: t('Project ID'), description: t('OpenStack project ID.') },
+      regionName: { label: t('Region'), description: t('OpenStack region name.') },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t(
-          "If true (check box is selected), the provider's CA certificate won't be validated.",
-        ),
-        helperTextPopover: (
-          <ForkliftTrans>
-            Note: If this field is checked/true, migrations from this provider will not be secure,
-            meaning that the transferred data is sent over an insecure connection and potentially
-            sensitive data could be exposed.
-          </ForkliftTrans>
-        ),
+        description: t('Migrate without validating a CA certificate'),
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
         ),
       },
     },
@@ -116,28 +101,28 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
           'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
         ),
       },
-      token: { label: t('Token'), description: tokenWithUsernameHelperTextMsg },
-      username: { label: t('Username'), description: t(usernameHelperTextMsg) },
-      regionName: { label: t('Region'), description: regionHelperTextMsg },
-      projectName: { label: t('Project'), description: projectNameHelperTextMsg },
-      domainName: { label: t('Domain name'), description: domainHelperTextMsg },
+      token: {
+        label: t('Token'),
+        description: t('OpenStack token for authentication using a user name.'),
+      },
+      username: {
+        label: t('Username'),
+        description: t(
+          t('A username for connecting to the OpenStack Identity (Keystone) endpoint.'),
+        ),
+      },
+      regionName: { label: t('Region'), description: t('OpenStack region name.') },
+      projectName: { label: t('Project'), description: t('OpenStack project name.') },
+      domainName: { label: t('Domain name'), description: t('OpenStack domain name.') },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t(
-          "If true (check box is selected), the provider's CA certificate won't be validated.",
-        ),
-        helperTextPopover: (
-          <ForkliftTrans>
-            Note: If this field is checked/true, migrations from this provider will not be secure,
-            meaning that the transferred data is sent over an insecure connection and potentially
-            sensitive data could be exposed.
-          </ForkliftTrans>
-        ),
+        description: t('Migrate without validating a CA certificate'),
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
         ),
       },
     },
@@ -151,31 +136,27 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       },
       applicationCredentialID: {
         label: t('Application credential ID'),
-        description: applicationCredentialIDHelperTextMsg,
+        description: t(
+          'OpenStack application credential ID needed for the application credential authentication.',
+        ),
       },
       applicationCredentialSecret: {
         label: t('Application credential Secret'),
-        description: applicationCredentialSecretHelperTextMsg,
+        description: t(
+          'OpenStack application credential Secret needed for the application credential authentication.',
+        ),
       },
-      regionName: { label: t('Region'), description: regionHelperTextMsg },
-      projectName: { label: t('Project'), description: projectNameHelperTextMsg },
+      regionName: { label: t('Region'), description: t('OpenStack region name.') },
+      projectName: { label: t('Project'), description: t('OpenStack project name.') },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t(
-          "If true (check box is selected), the provider's CA certificate won't be validated.",
-        ),
-        helperTextPopover: (
-          <ForkliftTrans>
-            Note: If this field is checked/true, migrations from this provider will not be secure,
-            meaning that the transferred data is sent over an insecure connection and potentially
-            sensitive data could be exposed.
-          </ForkliftTrans>
-        ),
+        description: t('Migrate without validating a CA certificate'),
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
         ),
       },
     },
@@ -189,33 +170,34 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       },
       applicationCredentialName: {
         label: t('Application credential name'),
-        description: applicationCredentialNameHelperTextMsg,
+        description: t(
+          'OpenStack application credential name needed for application credential authentication.',
+        ),
       },
       applicationCredentialSecret: {
         label: t('Application credential Secret'),
-        description: applicationCredentialSecretHelperTextMsg,
+        description: t(
+          'OpenStack application credential Secret needed for the application credential authentication.',
+        ),
       },
-      username: { label: t('Username'), description: t(usernameHelperTextMsg) },
-      regionName: { label: t('Region'), description: regionHelperTextMsg },
-      projectName: { label: t('Project'), description: projectNameHelperTextMsg },
-      domainName: { label: t('Domain'), description: domainHelperTextMsg },
+      username: {
+        label: t('Username'),
+        description: t(
+          t('A username for connecting to the OpenStack Identity (Keystone) endpoint.'),
+        ),
+      },
+      regionName: { label: t('Region'), description: t('OpenStack region name.') },
+      projectName: { label: t('Project'), description: t('OpenStack project name.') },
+      domainName: { label: t('Domain'), description: t('OpenStack domain name.') },
       insecureSkipVerify: {
         label: t('Skip certificate validation'),
-        description: t(
-          "If true (check box is selected), the provider's CA certificate won't be validated.",
-        ),
-        helperTextPopover: (
-          <ForkliftTrans>
-            Note: If this field is checked/true, migrations from this provider will not be secure,
-            meaning that the transferred data is sent over an insecure connection and potentially
-            sensitive data could be exposed.
-          </ForkliftTrans>
-        ),
+        description: t('Migrate without validating a CA certificate'),
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'Custom certification used to verify the OpenStack REST API server, when empty use system certificate.',
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
         ),
       },
     },

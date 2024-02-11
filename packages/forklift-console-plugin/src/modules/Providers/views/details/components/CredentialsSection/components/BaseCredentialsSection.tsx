@@ -1,6 +1,6 @@
 import React, { ReactNode, useReducer, useState } from 'react';
 import { AlertMessageForModals } from 'src/modules/Providers/modals';
-import { isSecretDataChanged } from 'src/modules/Providers/utils';
+import { isSecretDataChanged, ValidationMsg } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1Secret } from '@kubev2v/types';
@@ -47,13 +47,13 @@ export interface BaseCredentialsSecretState {
   edit: boolean;
   newSecret: V1Secret;
   dataChanged: boolean;
-  dataError: Error | null;
+  dataError: ValidationMsg;
   alertMessage: ReactNode;
 }
 
 export type BaseCredentialsSectionProps = {
   secret: V1Secret;
-  validator: (secret: V1Secret) => Error | null;
+  validator: (secret: V1Secret) => ValidationMsg;
   ListComponent: React.FC<ListComponentProps>;
   EditComponent: React.FC<EditComponentProps>;
 };
@@ -80,7 +80,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
     edit: false,
     newSecret: secret,
     dataChanged: false,
-    dataError: null,
+    dataError: { type: 'default' },
     alertMessage: null,
   };
 
@@ -170,7 +170,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
           <Button
             variant="primary"
             onClick={onUpdate}
-            isDisabled={!state.dataChanged || state.dataError !== null}
+            isDisabled={!state.dataChanged || state.dataError.type === 'error'}
             isLoading={isLoading}
           >
             {t('Update credentials')}
@@ -185,8 +185,8 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
       </Flex>
 
       <HelperText className="forklift-section-secret-edit">
-        {state.dataError ? (
-          <HelperTextItem variant="error">{state.dataError.toString()}</HelperTextItem>
+        {state.dataError.type === 'error' ? (
+          <HelperTextItem variant="error">{state.dataError.msg}</HelperTextItem>
         ) : (
           <HelperTextItem variant="indeterminate">
             {t(

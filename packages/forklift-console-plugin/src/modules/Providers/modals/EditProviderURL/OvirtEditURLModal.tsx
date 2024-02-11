@@ -1,11 +1,11 @@
 import React from 'react';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { validateURL } from '../../utils';
-import { EditModal, ValidationHookType } from '../EditModal';
+import { validateOvirtURL } from '../../utils';
+import { EditModal } from '../EditModal';
 
 import { patchProviderURL } from './utils/patchProviderURL';
 import { EditProviderURLModalProps } from './EditProviderURLModal';
@@ -13,42 +13,17 @@ import { EditProviderURLModalProps } from './EditProviderURLModal';
 export const OvirtEditURLModal: React.FC<EditProviderURLModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
-  const helperTextMsgs = {
-    error: t(
-      'Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a domain name, and a path. For example: https://rhv-host-example.com/ovirt-engine/api.',
-    ),
-    warning: t(
-      'Warning: The provided URL does not end with the RHVM API endpoint path: "/ovirt-engine/api". Ensure the URL includes the correct path. For example: https://rhv-host-example.com/ovirt-engine/api.',
-    ),
-    success: t(
-      'Ensure the URL includes the "/ovirt-engine/api" path. For example: https://rhv-host-example.com/ovirt-engine/api.',
-    ),
-  };
-
-  const urlValidationHook: ValidationHookType = (value) => {
-    const trimmedUrl: string = value.toString().trim();
-    const isValidURL = validateURL(trimmedUrl);
-
-    // error
-    if (!isValidURL)
-      return {
-        validationHelpText: helperTextMsgs.error,
-        validated: 'error',
-      };
-
-    // warning
-    if (!trimmedUrl.endsWith('ovirt-engine/api') && !trimmedUrl.endsWith('ovirt-engine/api/'))
-      return {
-        validationHelpText: helperTextMsgs.warning,
-        validated: 'warning',
-      };
-
-    // success
-    return {
-      validationHelpText: helperTextMsgs.success,
-      validated: 'success',
-    };
-  };
+  const ModalBody = (
+    <ForkliftTrans>
+      <p>`URL of the Red Hat Virtualization Manager (RHVM) API endpoint.</p>
+      <br />
+      <p>
+        The format of the provided URL of the Red Hat Virtualization Manager (RHVM) API endpoint
+        should include a scheme, a domain name, path, and optionally a port. Usually the path will
+        end with /api, for example: <strong>https://rhv-host-example.com/ovirt-engine/api</strong>.
+      </p>
+    </ForkliftTrans>
+  );
 
   return (
     <EditModal
@@ -58,10 +33,12 @@ export const OvirtEditURLModal: React.FC<EditProviderURLModalProps> = (props) =>
       label={props?.label || t('URL')}
       model={ProviderModel}
       variant={ModalVariant.large}
-      body={t(`URL of the Red Hat Virtualization Manager (RHVM) API endpoint.`)}
-      helperText={helperTextMsgs.success}
+      body={ModalBody}
+      helperText={t(
+        'The URL of the Red Hat Virtualization Manager (RHVM) API endpoint, for example: https://rhv-host-example.com/ovirt-engine/api .',
+      )}
       onConfirmHook={patchProviderURL}
-      validationHook={urlValidationHook}
+      validationHook={validateOvirtURL}
     />
   );
 };

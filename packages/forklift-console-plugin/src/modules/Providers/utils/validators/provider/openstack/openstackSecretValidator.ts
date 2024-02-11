@@ -1,9 +1,11 @@
 import { V1Secret } from '@kubev2v/types';
 
-import { missingKeysInSecretData, safeBase64Decode } from '../../helpers';
-import { openstackSecretFieldValidator } from '../secret-fields';
+import { missingKeysInSecretData, safeBase64Decode } from '../../../helpers';
+import { ValidationMsg } from '../../common';
 
-export function openstackSecretValidator(secret: V1Secret) {
+import { openstackSecretFieldValidator } from './openstackSecretFieldValidator';
+
+export function openstackSecretValidator(secret: V1Secret): ValidationMsg {
   const authType = safeBase64Decode(secret?.data?.['authType']) || 'password';
 
   let requiredFields = [];
@@ -85,21 +87,24 @@ export function openstackSecretValidator(secret: V1Secret) {
       }
       break;
     default:
-      return new Error(`invalid authType`);
+      return { type: 'error', msg: 'invalid authType' };
   }
 
   const missingRequiredFields = missingKeysInSecretData(secret, requiredFields);
+
   if (missingRequiredFields.length > 0) {
-    return new Error(`missing required fields [${missingRequiredFields.join(', ')}]`);
+    return { type: 'error', msg: `missing required fields [${missingRequiredFields.join(', ')}]` };
   }
 
   for (const id of validateFields) {
     const value = safeBase64Decode(secret?.data?.[id] || '');
 
-    if (openstackSecretFieldValidator(id, value) === 'error') {
-      return new Error(`invalid ${id}`);
+    const validation = openstackSecretFieldValidator(id, value);
+
+    if (validation.type === 'error') {
+      return validation;
     }
   }
 
-  return null;
+  return { type: 'default' };
 }

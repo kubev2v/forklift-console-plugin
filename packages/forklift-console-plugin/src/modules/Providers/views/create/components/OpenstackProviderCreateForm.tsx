@@ -1,6 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
-import { validateURL, Validation } from 'src/modules/Providers/utils';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { validateOpenstackURL } from 'src/modules/Providers/utils';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Provider } from '@kubev2v/types';
 import { Form, FormGroup, TextInput } from '@patternfly/react-core';
@@ -16,52 +16,12 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
 }) => {
   const { t } = useForkliftTranslation();
 
-  const url = provider?.spec?.url || '';
-
-  const urlHelperTextMsgs = {
-    error: (
-      <div className="forklift--create-provider-field-error-validation">
-        <ForkliftTrans>
-          Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
-          domain name, and a path. For example:{' '}
-          <strong>https://identity_service.com:5000/v3</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-    warning: (
-      <div className="forklift--create-provider-field-warning-validation">
-        <ForkliftTrans>
-          Warning: The provided URL does not end with the API endpoint path:{' '}
-          <strong>
-            {'"'}/v3{'"'}
-          </strong>
-          . Ensure the URL includes the correct path. For example:{' '}
-          <strong>https://identity_service.com:5000/v3</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-    success: (
-      <div className="forklift--create-provider-field-success-validation">
-        <ForkliftTrans>
-          URL of the OpenStack Identity (Keystone) endpoint. For example:{' '}
-          <strong>https://identity_service.com:5000/v3</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-    default: (
-      <div className="forklift--create-provider-field-default-validation">
-        <ForkliftTrans>
-          URL of the OpenStack Identity (Keystone) endpoint. For example:{' '}
-          <strong>https://identity_service.com:5000/v3</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-  };
-
   const initialState = {
     validation: {
-      url: 'default' as Validation,
-      urlHelperText: urlHelperTextMsgs.default,
+      url: {
+        type: 'default',
+        msg: 'The URL of the OpenStack Identity (Keystone) API endpoint, for example: https://identity_service.com:5000/v3 .',
+      },
     },
   };
 
@@ -86,32 +46,18 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
     (id, value) => {
       if (id !== 'url') return;
 
-      const trimmedValue: string = value.trim();
-      const validationState = getURLValidationState(trimmedValue);
+      const trimmedURL: string = value.trim();
+      const validationState = validateOpenstackURL(trimmedURL);
 
       dispatch({
         type: 'SET_FIELD_VALIDATED',
         payload: { field: 'url', validationState },
       });
 
-      dispatch({
-        type: 'SET_FIELD_VALIDATED',
-        payload: {
-          field: 'urlHelperText',
-          validationState: urlHelperTextMsgs[validationState],
-        },
-      });
-
-      onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
+      onChange({ ...provider, spec: { ...provider.spec, url: trimmedURL } });
     },
     [provider],
   );
-
-  const getURLValidationState = (url: string): Validation => {
-    if (!validateURL(url)) return 'error';
-    if (!url.endsWith('v3') && !url.endsWith('v3/')) return 'warning';
-    return 'success';
-  };
 
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
@@ -119,17 +65,17 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
         label={t('URL')}
         isRequired
         fieldId="url"
-        helperText={state.validation.urlHelperText}
-        validated={state.validation.url}
-        helperTextInvalid={state.validation.urlHelperText}
+        helperText={state.validation.url.msg}
+        helperTextInvalid={state.validation.url.msg}
+        validated={state.validation.url.type}
       >
         <TextInput
           isRequired
           type="text"
           id="url"
           name="url"
-          value={url}
-          validated={state.validation.url}
+          value={provider?.spec?.url || ''}
+          validated={state.validation.url.type}
           onChange={(value) => handleChange('url', value)}
         />
       </FormGroup>

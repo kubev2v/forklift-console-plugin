@@ -1,3 +1,5 @@
+import { Base64 } from 'js-base64';
+
 import { SecretModel, V1Secret } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -11,6 +13,9 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 export async function patchSecretData(secret: V1Secret, clean?: boolean) {
   const op = secret?.data ? 'replace' : 'add';
 
+  // Sanitize secret data
+  const sanitizedData = cleanObject(secret.data);
+
   await k8sPatch({
     model: SecretModel,
     resource: secret,
@@ -18,7 +23,7 @@ export async function patchSecretData(secret: V1Secret, clean?: boolean) {
       {
         op,
         path: '/data',
-        value: clean ? { ...EmptyOpenstackCredentials, ...secret.data } : secret.data,
+        value: clean ? { ...EmptyOpenstackCredentials, ...sanitizedData } : sanitizedData,
       },
     ],
   });
@@ -39,3 +44,19 @@ const EmptyOpenstackCredentials = {
   applicationCredentialSecret: undefined,
   applicationCredentialName: undefined,
 };
+
+function cleanObject(obj) {
+  const result = {};
+  for (const key in obj) {
+    if (obj[key] !== null && obj[key] !== '') {
+      result[key] = obj[key];
+    }
+  }
+
+  // Don't save cacert when insecureSkipVerify is true
+  if (Base64.decode(obj?.insecureSkipVerify) === 'true') {
+    delete result['cacert'];
+  }
+
+  return result;
+}

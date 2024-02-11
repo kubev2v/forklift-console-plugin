@@ -17,8 +17,8 @@ import {
 } from '@patternfly/react-core';
 
 import { useK8sWatchProviderNames, useToggle } from '../../hooks';
-import { getResourceUrl, Validation } from '../../utils';
-import { providerAndSecretValidator } from '../../utils/validators/providerAndSecretValidator';
+import { getResourceUrl, ValidationMsg } from '../../utils';
+import { providerAndSecretValidator } from '../../utils/validators/provider/providerAndSecretValidator';
 
 import { ProvidersCreateForm } from './components';
 import { providerTemplate, secretTemplate } from './templates';
@@ -29,11 +29,8 @@ import './ProvidersCreatePage.style.css';
 interface ProvidersCreatePageState {
   newSecret: V1Secret;
   newProvider: V1beta1Provider;
-  validationError: Error | null;
+  validationError: ValidationMsg;
   apiError: Error | null;
-  validation: {
-    name: Validation;
-  };
 }
 
 export const ProvidersCreatePage: React.FC<{
@@ -62,11 +59,8 @@ export const ProvidersCreatePage: React.FC<{
         namespace: namespace || defaultNamespace,
       },
     },
-    validationError: new Error('Missing provider name'),
+    validationError: { type: 'error', msg: 'Missing provider name' },
     apiError: null,
-    validation: {
-      name: 'default',
-    },
   };
 
   function reducer(
@@ -79,11 +73,11 @@ export const ProvidersCreatePage: React.FC<{
         let validationError = providerAndSecretValidator(state.newProvider, value);
 
         if (providerNames.includes(state.newProvider?.metadata?.name)) {
-          validationError = new Error('new provider name is not unique');
+          validationError = { type: 'error', msg: 'Provider name is not unique' };
         }
 
         if (!state.newProvider?.metadata?.name) {
-          validationError = new Error('Missing provider name');
+          validationError = { type: 'error', msg: 'Missing provider name' };
         }
 
         return {
@@ -95,14 +89,14 @@ export const ProvidersCreatePage: React.FC<{
       }
       case 'SET_NEW_PROVIDER': {
         const value = action.payload as V1beta1Provider;
-        let validationError: Error;
+        let validationError: ValidationMsg = { type: 'default' };
 
         if (providerNames.includes(value?.metadata?.name)) {
-          validationError = new Error('new provider name is not unique');
+          validationError = { type: 'error', msg: 'Provider name is not unique' };
         }
 
         if (!value?.metadata?.name) {
-          validationError = new Error('Missing provider name');
+          validationError = { type: 'error', msg: 'Missing provider name' };
         }
 
         // Sync secret with new URL
@@ -111,7 +105,10 @@ export const ProvidersCreatePage: React.FC<{
           data: { ...state.newSecret.data, url: Base64.encode(value?.spec?.url || '') },
         };
 
-        validationError = validationError || providerAndSecretValidator(value, updatedSecret);
+        validationError =
+          validationError.type === 'error'
+            ? validationError
+            : providerAndSecretValidator(value, updatedSecret);
 
         return {
           ...state,
@@ -268,7 +265,7 @@ export const ProvidersCreatePage: React.FC<{
             <Button
               variant="primary"
               onClick={onUpdate}
-              isDisabled={state.validationError !== null}
+              isDisabled={state.validationError.type === 'error'}
               isLoading={isLoading}
             >
               {t('Create provider')}
@@ -282,10 +279,8 @@ export const ProvidersCreatePage: React.FC<{
         </Flex>
 
         <HelperText className="forklift-create-subtitle-errors">
-          {state.validationError && state?.newProvider?.spec?.type ? (
-            <HelperTextItem variant="indeterminate">
-              {state.validationError.toString()}
-            </HelperTextItem>
+          {state.validationError.type === 'error' && state?.newProvider?.spec?.type ? (
+            <HelperTextItem variant="indeterminate">{state.validationError.msg}</HelperTextItem>
           ) : (
             <HelperTextItem variant="indeterminate">{t('Create new provider')}</HelperTextItem>
           )}

@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import { Base64 } from 'js-base64';
-import { validateK8sName, Validation } from 'src/modules/Providers/utils';
+import { validateK8sName, ValidationMsg } from 'src/modules/Providers/utils';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Galerry/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -30,7 +30,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
 
   const initialState = {
     validation: {
-      name: 'default',
+      name: { type: 'default', msg: 'Unique Kubernetes resource name identifier.' },
     },
   };
 
@@ -45,8 +45,20 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
 
   const handleNameChange = (name: string) => {
     const trimmedValue = name.trim();
-    const validation: Validation =
-      !providerNames.includes(trimmedValue) && validateK8sName(trimmedValue) ? 'success' : 'error';
+    let validation: ValidationMsg;
+
+    if (trimmedValue === '') {
+      validation = { type: 'error', msg: 'Required, unique Kubernetes resource name identifier.' };
+    } else if (providerNames.includes(trimmedValue))
+      validation = {
+        type: 'error',
+        msg: `A provider named ${trimmedValue} already exists in the system`,
+      };
+    else if (!validateK8sName(trimmedValue)) {
+      validation = { type: 'error', msg: 'Invalid kubernetes resource name' };
+    } else {
+      validation = { type: 'success', msg: 'Unique Kubernetes resource name identifier.' };
+    }
 
     dispatch({
       type: 'SET_VALIDATION',
@@ -106,11 +118,9 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
               label={t('Provider resource name')}
               isRequired
               fieldId="k8sName"
-              helperText={t('Unique Kubernetes resource name identifier.')}
-              validated={state.validation.name}
-              helperTextInvalid={t(
-                "Error: Name is required and must be a unique within a namespace and valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).",
-              )}
+              helperText={state.validation.name.msg}
+              helperTextInvalid={state.validation.name.msg}
+              validated={state.validation.name.type}
             >
               <TextInput
                 isRequired
@@ -118,7 +128,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
                 id="k8sName"
                 name="name"
                 value={newProvider.metadata.name} // Use the appropriate prop value here
-                validated={state.validation.name}
+                validated={state.validation.name.type}
                 onChange={(value) => handleNameChange(value)} // Call the custom handler method
               />
             </FormGroup>

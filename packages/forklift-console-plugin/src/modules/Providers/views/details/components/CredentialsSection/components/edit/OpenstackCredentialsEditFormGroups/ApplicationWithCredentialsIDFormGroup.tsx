@@ -1,10 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
-import {
-  openstackSecretFieldValidator,
-  safeBase64Decode,
-  Validation,
-} from 'src/modules/Providers/utils';
+import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, FormGroup, TextInput } from '@patternfly/react-core';
@@ -29,10 +25,16 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
   const initialState = {
     passwordHidden: true,
     validation: {
-      applicationCredentialID: 'default' as Validation,
-      applicationCredentialSecret: 'default' as Validation,
-      regionName: 'default' as Validation,
-      projectName: 'default' as Validation,
+      applicationCredentialID: {
+        type: 'default',
+        msg: 'OpenStack application credential ID needed for the application credential authentication.',
+      },
+      applicationCredentialSecret: {
+        type: 'default',
+        msg: 'OpenStack application credential Secret needed for the application credential authentication.',
+      },
+      regionName: { type: 'default', msg: 'OpenStack region name.' },
+      projectName: { type: 'default', msg: 'OpenStack project name.' },
     },
   };
 
@@ -77,13 +79,9 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         label={t('Application credential ID')}
         isRequired
         fieldId="applicationCredentialID"
-        helperText={t(
-          'OpenStack application credential ID needed for the application credential authentication.',
-        )}
-        helperTextInvalid={t(
-          'Error: The format of the provided application credential ID is invalid. Ensure the ID does not include spaces.',
-        )}
-        validated={state.validation.applicationCredentialID}
+        helperText={state.validation.applicationCredentialID.msg}
+        helperTextInvalid={state.validation.applicationCredentialID.msg}
+        validated={state.validation.applicationCredentialID.type}
       >
         <TextInput
           isRequired
@@ -92,7 +90,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           name="applicationCredentialID"
           value={applicationCredentialID}
           onChange={(value) => handleChange('applicationCredentialID', value)}
-          validated={state.validation.applicationCredentialID}
+          validated={state.validation.applicationCredentialID.type}
         />
       </FormGroup>
 
@@ -100,13 +98,9 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         label={t('Application credential Secret')}
         isRequired
         fieldId="applicationCredentialSecret"
-        helperText={t(
-          'OpenStack application credential Secret needed for the application credential authentication.',
-        )}
-        helperTextInvalid={t(
-          'Error: The format of the provided application credential Secret is invalid. Ensure the Secret does not include spaces.',
-        )}
-        validated={state.validation.applicationCredentialSecret}
+        helperText={state.validation.applicationCredentialSecret.msg}
+        helperTextInvalid={state.validation.applicationCredentialSecret.msg}
+        validated={state.validation.applicationCredentialSecret.type}
       >
         <TextInput
           className="pf-u-w-75"
@@ -116,7 +110,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           name="applicationCredentialSecret"
           value={applicationCredentialSecret}
           onChange={(value) => handleChange('applicationCredentialSecret', value)}
-          validated={state.validation.applicationCredentialSecret}
+          validated={state.validation.applicationCredentialSecret.type}
         />
         <Button
           variant="control"
@@ -131,11 +125,9 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         label={t('Region')}
         isRequired
         fieldId="regionName"
-        helperText={t('OpenStack region name.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided region name is invalid. Ensure the region name does not include spaces.',
-        )}
-        validated={state.validation.regionName}
+        helperText={state.validation.regionName.msg}
+        helperTextInvalid={state.validation.regionName.msg}
+        validated={state.validation.regionName.type}
       >
         <TextInput
           isRequired
@@ -144,7 +136,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           name="regionName"
           value={regionName}
           onChange={(value) => handleChange('regionName', value)}
-          validated={state.validation.regionName}
+          validated={state.validation.regionName.type}
         />
       </FormGroup>
 
@@ -152,11 +144,9 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         label={t('Project')}
         isRequired
         fieldId="projectName"
-        helperText={t('OpenStack project name.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided project name is invalid. Ensure the project name does not include spaces.',
-        )}
-        validated={state.validation.projectName}
+        helperText={state.validation.projectName.msg}
+        helperTextInvalid={state.validation.projectName.msg}
+        validated={state.validation.projectName.type}
       >
         <TextInput
           isRequired
@@ -165,7 +155,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           name="projectName"
           value={projectName}
           onChange={(value) => handleChange('projectName', value)}
-          validated={state.validation.projectName}
+          validated={state.validation.projectName.type}
         />
       </FormGroup>
     </>

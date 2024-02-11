@@ -1,10 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
-import {
-  openstackSecretFieldValidator,
-  safeBase64Decode,
-  Validation,
-} from 'src/modules/Providers/utils';
+import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, FormGroup, TextInput } from '@patternfly/react-core';
@@ -28,11 +24,17 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
   const initialState = {
     passwordHidden: true,
     validation: {
-      username: 'default' as Validation,
-      password: 'default' as Validation,
-      regionName: 'default' as Validation,
-      projectName: 'default' as Validation,
-      domainName: 'default' as Validation,
+      username: {
+        type: 'default',
+        msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint.',
+      },
+      password: {
+        type: 'default',
+        msg: 'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
+      },
+      regionName: { type: 'default', msg: 'OpenStack region name.' },
+      projectName: { type: 'default', msg: 'OpenStack project name.' },
+      domainName: { type: 'default', msg: 'OpenStack domain name.' },
     },
   };
 
@@ -77,11 +79,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Username')}
         isRequired
         fieldId="username"
-        helperText={t('A username for connecting to the OpenStack Identity (Keystone) endpoint.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided username is invalid. Ensure the username does not include spaces.',
-        )}
-        validated={state.validation.username}
+        helperText={state.validation.username.msg}
+        helperTextInvalid={state.validation.username.msg}
+        validated={state.validation.username.type}
       >
         <TextInput
           isRequired
@@ -90,7 +90,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           name="username"
           value={username}
           onChange={(value) => handleChange('username', value)}
-          validated={state.validation.username}
+          validated={state.validation.username.type}
         />
       </FormGroup>
 
@@ -98,13 +98,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Password')}
         isRequired
         fieldId="password"
-        helperText={t(
-          'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
-        )}
-        helperTextInvalid={t(
-          'Error: The format of the provided user password is invalid. Ensure the user password does not include spaces.',
-        )}
-        validated={state.validation.password}
+        helperText={state.validation.password.msg}
+        helperTextInvalid={state.validation.password.msg}
+        validated={state.validation.password.type}
       >
         <TextInput
           className="pf-u-w-75"
@@ -113,7 +109,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           aria-label="Password input"
           value={password}
           onChange={(value) => handleChange('password', value)}
-          validated={state.validation.password}
+          validated={state.validation.password.type}
         />
         <Button
           variant="control"
@@ -128,11 +124,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Region')}
         isRequired
         fieldId="regionName"
-        helperText={t('OpenStack region name.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided region name is invalid. Ensure the region name does not include spaces.',
-        )}
-        validated={state.validation.regionName}
+        helperText={state.validation.regionName.msg}
+        helperTextInvalid={state.validation.regionName.msg}
+        validated={state.validation.regionName.type}
       >
         <TextInput
           isRequired
@@ -141,7 +135,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           name="regionName"
           value={regionName}
           onChange={(value) => handleChange('regionName', value)}
-          validated={state.validation.regionName}
+          validated={state.validation.regionName.type}
         />
       </FormGroup>
 
@@ -149,11 +143,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Project')}
         isRequired
         fieldId="projectName"
-        helperText={t('OpenStack project name.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided project name is invalid. Ensure the project name does not include spaces.',
-        )}
-        validated={state.validation.projectName}
+        helperText={state.validation.projectName.msg}
+        helperTextInvalid={state.validation.projectName.msg}
+        validated={state.validation.projectName.type}
       >
         <TextInput
           isRequired
@@ -162,7 +154,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           name="projectName"
           value={projectName}
           onChange={(value) => handleChange('projectName', value)}
-          validated={state.validation.projectName}
+          validated={state.validation.projectName.type}
         />
       </FormGroup>
 
@@ -170,11 +162,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         label={t('Domain')}
         isRequired
         fieldId="domainName"
-        helperText={t('OpenStack domain name.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided domain name is invalid. Ensure the domain name does not include spaces.',
-        )}
-        validated={state.validation.domainName}
+        helperText={state.validation.domainName.msg}
+        helperTextInvalid={state.validation.domainName.msg}
+        validated={state.validation.domainName.type}
       >
         <TextInput
           isRequired
@@ -183,7 +173,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           name="domainName"
           value={domainName}
           onChange={(value) => handleChange('domainName', value)}
-          validated={state.validation.domainName}
+          validated={state.validation.domainName.type}
         />
       </FormGroup>
     </>

@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react';
 
 import { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
+import { ValidationMsg } from '../../utils';
+
 import './EditModal.style.css';
 
 export interface EditModalProps {
@@ -49,15 +51,6 @@ export interface EditModalProps {
 }
 
 /**
- * ValidationResults type defines the possible states of a validation result.
- * 'success' means the validation was successful,
- * 'error' means the validation failed,
- * 'warning' indicates a potential issue but not a failure,
- * undefined indicates no validation state is set.
- */
-export type ValidationResults = 'success' | 'error' | 'warning' | undefined;
-
-/**
  * ModalInputComponentType defines the functional component type for the input fields used in the modal.
  * It accepts two props:
  * 'value' which can be a string or a number,
@@ -71,13 +64,10 @@ export type ModalInputComponentType = React.FC<{
 /**
  * ValidationHookType defines the structure of a hook function that performs validation.
  * It accepts a value, which can be a string or a number, and returns an object containing
- * 'validationHelpText' which is a string giving details about the result of the validation,
- * and 'validated' which indicates the status of the validation and is of type ValidationResults.
+ * 'msg' which is a string giving details about the result of the validation,
+ * and 'type' which indicates the status of the validation and is of type ValidationResults.
  */
-export type ValidationHookType = (value: string | number) => {
-  validationHelpText: string | React.JSX.Element;
-  validated: ValidationResults;
-};
+export type ValidationHookType = (value: string | number) => ValidationMsg;
 
 /**
  * OnConfirmHookType defines the structure of a hook function that is called when the confirmation action takes place.

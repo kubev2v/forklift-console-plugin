@@ -4,8 +4,8 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
 import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-import { validateContainerImage } from '../../utils';
-import { EditModal, EditModalProps, OnConfirmHookType, ValidationHookType } from '../EditModal';
+import { validateVDDKImage } from '../../utils/validators';
+import { EditModal, EditModalProps, OnConfirmHookType } from '../EditModal';
 
 /**
  * Handles the confirmation action for editing a resource annotations.
@@ -56,47 +56,24 @@ export type EditProviderVDDKImageProps = Modify<
 const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => {
   const { t } = useForkliftTranslation();
 
-  const vddkHelperTextMsgs = {
-    error: (
-      <div className="forklift-edit-modal-field-error-validation">
-        <ForkliftTrans>
-          Error: The format of the provided VDDK init image is invalid. Ensure the path is a valid
-          container image path. For example: <strong>quay.io/kubev2v/vddk:latest</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-    success: (
-      <div className="forklift-edit-modal-field-success-validation">
-        <ForkliftTrans>
-          The path must be empty or a valid container image path. For example:{' '}
-          <strong>quay.io/kubev2v/vddk:latest</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-    default: (
-      <div className="forklift-edit-modal-field-default-validation">
-        <ForkliftTrans>
-          The path must be empty or a valid container image path. For example:{' '}
-          <strong>quay.io/kubev2v/vddk:latest</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-  };
-
-  const imageValidationHook: ValidationHookType = (value) => {
-    const trimmedValue = value.toString().trim();
-    const isValidImage = trimmedValue === '' || validateContainerImage(value.toString().trim());
-
-    return isValidImage
-      ? {
-          validationHelpText: vddkHelperTextMsgs.success,
-          validated: 'success',
-        }
-      : {
-          validationHelpText: vddkHelperTextMsgs.error,
-          validated: 'error',
-        };
-  };
+  const ModalBody = (
+    <ForkliftTrans>
+      <p>VMware Virtual Disk Development Kit (VDDK) image.</p>
+      <br />
+      <p>
+        The Migration Toolkit for Virtualization (MTV) uses the VMware Virtual Disk Development Kit
+        (VDDK) SDK to transfer virtual disks from VMware vSphere.
+      </p>
+      <br />
+      <p>
+        The format of the URL of the VMware Virtual Disk Development Kit (VDDK) image should include
+        a registry, project, image name, and optionally a version, for example:{' '}
+        <strong>quay.io/kubev2v/vddk:latest</strong>.
+      </p>
+      <br />
+      <p>It is strongly recommended to specify a VDDK init image to accelerate migrations.</p>
+    </ForkliftTrans>
+  );
 
   return (
     <EditModal
@@ -105,16 +82,11 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
       title={props?.title || t('Edit VDDK init image')}
       label={props?.label || t('VDDK init image')}
       model={ProviderModel}
-      body={
-        <ForkliftTrans>
-          Virtual Disk Development Kit (VDDK) container init image path.
-          <br />
-          <br />
-          Note: It is strongly recommended to specify a VDDK init image to accelerate migrations.
-        </ForkliftTrans>
-      }
-      helperText={vddkHelperTextMsgs.default}
-      validationHook={imageValidationHook}
+      body={ModalBody}
+      helperText={t(
+        'VMware Virtual Disk Development Kit (VDDK) image, for example: quay.io/kubev2v/vddk:latest .',
+      )}
+      validationHook={validateVDDKImage}
       onConfirmHook={onConfirm}
     />
   );
