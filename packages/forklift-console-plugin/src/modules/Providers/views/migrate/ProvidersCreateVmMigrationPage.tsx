@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { useHistory } from 'react-router';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import { PlanCreateProgress } from 'src/modules/Plans/views/create';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Alert, AlertVariant, Button, Flex, FlexItem, PageSection } from '@patternfly/react-core';
@@ -47,6 +48,8 @@ const ProvidersCreateVmMigrationPage: FC = () => {
           <strong>Create</strong> button to crete the plan.
         </ForkliftTrans>
       </Alert>
+
+      <PlanCreateProgress step="migrate" />
 
       <SectionHeading text={t('Migrate')} />
 
