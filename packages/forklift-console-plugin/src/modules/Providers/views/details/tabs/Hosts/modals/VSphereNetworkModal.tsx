@@ -39,6 +39,7 @@ const initialState = {
     username: 'default',
     password: 'default',
   },
+  endpointType: 'vcenter',
 };
 
 function reducer(state, action) {
@@ -80,6 +81,11 @@ function reducer(state, action) {
 
 function shouldDisableSave(state, updatedFields) {
   const updatedState = { ...state, ...updatedFields };
+
+  if (state.endpointType === 'esxi') {
+    return !updatedState.network;
+  }
+
   return (
     !updatedState.network ||
     !updatedState.username ||
@@ -98,7 +104,9 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
   const { toggleModal } = useModal();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const endpointType = provider?.spec?.settings?.['sdkEndpoint'];
+
+  const [state, dispatch] = useReducer(reducer, { ...initialState, endpointType });
 
   const onSelectToggle = () => dispatch({ type: 'TOGGLE_OPEN' });
 
@@ -133,8 +141,8 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
         provider,
         hostPairs: selectedInventoryHostPairs,
         network: state.network,
-        user: state.username,
-        password: state.password,
+        user: endpointType === 'esxi' ? undefined : state.username,
+        password: endpointType === 'esxi' ? undefined : state.password,
       });
 
       toggleModal();
@@ -218,45 +226,48 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
           </Select>
         </FormGroup>
 
-        <FormGroup
-          label="ESXi host admin username"
-          isRequired
-          fieldId="username"
-          helperText={t('The username for the ESXi host admin')}
-          helperTextInvalid={t('Invalid username')}
-          validated={state.validation.username}
-        >
-          <TextInput
-            isRequired
-            type="text"
-            id="username"
-            value={state.username}
-            onChange={(value) => dispatch({ type: 'SET_USERNAME', payload: value })}
-            validated={state.validation.username}
-          />
-        </FormGroup>
-
-        <FormGroup
-          label="ESXi host admin password"
-          isRequired
-          fieldId="password"
-          helperText={t('The password for the ESXi host admin')}
-          helperTextInvalid={t('Invalid password')}
-          validated={state.validation.password}
-        >
-          <TextInput
-            className="forklift-host-modal-input-secret"
-            isRequired
-            type={state.passwordHidden ? 'password' : 'text'}
-            aria-label="Password input"
-            value={state.password}
-            onChange={(value) => dispatch({ type: 'SET_PASSWORD', payload: value })}
-            validated={state.validation.password}
-          />
-          <Button variant="control" onClick={togglePasswordHidden}>
-            {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
-          </Button>
-        </FormGroup>
+        {endpointType !== 'esxi' && (
+          <>
+            <FormGroup
+              label="ESXi host admin username"
+              isRequired
+              fieldId="username"
+              helperText={t('The username for the ESXi host admin')}
+              helperTextInvalid={t('Invalid username')}
+              validated={state.validation.username}
+            >
+              <TextInput
+                isRequired
+                type="text"
+                id="username"
+                value={state.username}
+                onChange={(value) => dispatch({ type: 'SET_USERNAME', payload: value })}
+                validated={state.validation.username}
+              />
+            </FormGroup>
+            <FormGroup
+              label="ESXi host admin password"
+              isRequired
+              fieldId="password"
+              helperText={t('The password for the ESXi host admin')}
+              helperTextInvalid={t('Invalid password')}
+              validated={state.validation.password}
+            >
+              <TextInput
+                className="forklift-host-modal-input-secret"
+                isRequired
+                type={state.passwordHidden ? 'password' : 'text'}
+                aria-label="Password input"
+                value={state.password}
+                onChange={(value) => dispatch({ type: 'SET_PASSWORD', payload: value })}
+                validated={state.validation.password}
+              />
+              <Button variant="control" onClick={togglePasswordHidden}>
+                {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
+              </Button>
+            </FormGroup>
+          </>
+        )}
       </Form>
 
       {alertMessage}

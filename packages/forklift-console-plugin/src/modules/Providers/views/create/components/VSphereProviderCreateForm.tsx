@@ -4,7 +4,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
-import { Form, FormGroup, Popover, TextInput } from '@patternfly/react-core';
+import { Form, FormGroup, Popover, Radio, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 const CREATE_VDDK_HELP_LINK =
@@ -23,6 +23,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
 
   const url = provider?.spec?.url || '';
   const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'] || '';
+  const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'] || '';
 
   const vddkHelperTextPopover = (
     <ForkliftTrans>
@@ -45,7 +46,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
     validation: {
       url: {
         type: 'default',
-        msg: 'The URL of the vCenter API endpoint for example: https://vCenter-host-example.com/sdk .',
+        msg: 'The URL of the vSphere API endpoint for example: https://host-example.com/sdk .',
       },
       vddkInitImage: {
         type: 'default',
@@ -91,7 +92,22 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
             ...provider?.spec,
             settings: {
               ...(provider?.spec?.settings as object),
-              vddkInitImage: trimmedValue,
+              vddkInitImage: trimmedValue || undefined,
+            },
+          },
+        });
+      }
+
+      if (id == 'sdkEndpoint') {
+        onChange({
+          ...provider,
+          spec: {
+            type: provider.spec.type,
+            url: provider.spec.url,
+            ...provider?.spec,
+            settings: {
+              ...(provider?.spec?.settings as object),
+              sdkEndpoint: trimmedValue || undefined,
             },
           },
         });
@@ -110,6 +126,28 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
 
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
+      <FormGroup
+        role="radiogroup"
+        fieldId="sdkEndpoint"
+        label={t('Endpoint type')}
+        helperText={t('Select vSphere provider endpoint type.')}
+      >
+        <Radio
+          name="sdkEndpoint"
+          label="vCenter"
+          id="sdkEndpoint-vcenter"
+          isChecked={!sdkEndpoint || sdkEndpoint === 'vcenter'}
+          onChange={() => handleChange('sdkEndpoint', 'vcenter')}
+        />
+        <Radio
+          name="sdkEndpoint"
+          label="ESXi"
+          id="sdkEndpoint-esxi"
+          isChecked={sdkEndpoint === 'esxi'}
+          onChange={() => handleChange('sdkEndpoint', 'esxi')}
+        />
+      </FormGroup>
+
       <FormGroup
         label={t('URL')}
         isRequired

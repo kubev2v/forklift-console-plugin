@@ -56,11 +56,11 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
     validation: {
       user: {
         type: 'default',
-        msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local.',
+        msg: 'A username and domain for the vSphere API endpoint, for example: user@vsphere.local.',
       },
       password: {
         type: 'default',
-        msg: 'A user password for connecting to the vCenter API endpoint.',
+        msg: 'A user password for connecting to the vSphere API endpoint.',
       },
       insecureSkipVerify: { type: 'default', msg: 'Skip certificate validation' },
       cacert: {

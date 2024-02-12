@@ -36,6 +36,16 @@ export const TypeDetailsItem: React.FC<ProviderDetailsItemProps> = ({
               {t('Host cluster')}
             </Label>
           )}
+          {provider?.spec?.type === 'vsphere' &&
+            (provider?.spec?.settings?.['sdkEndpoint'] === 'esxi' ? (
+              <Label isCompact color={'grey'} className="forklift-table__flex-cell-label">
+                {t('ESXi')}
+              </Label>
+            ) : (
+              <Label isCompact color={'grey'} className="forklift-table__flex-cell-label">
+                {t('vCenter')}
+              </Label>
+            ))}
         </>
       }
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
