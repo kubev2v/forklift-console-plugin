@@ -9,6 +9,12 @@ export const validateVDDKImage = (vddkImage: string | number): ValidationMsg => 
   const trimmedVddkImage: string = vddkImage.toString().trim();
   const isValidTrimmedVddkImage = validateContainerImage(trimmedVddkImage);
 
+  if (trimmedVddkImage === '')
+    return {
+      msg: 'The VDDK image is empty, it is recommended to provide an image, for example: quay.io/kubev2v/vddk:latest .',
+      type: 'warning',
+    };
+
   if (!isValidTrimmedVddkImage) {
     return {
       type: 'error',
@@ -16,14 +22,8 @@ export const validateVDDKImage = (vddkImage: string | number): ValidationMsg => 
     };
   }
 
-  if (trimmedVddkImage === '')
-    return {
-      msg: 'The VDDK image is empty, it is recommended to provide an image, for example: quay.io/kubev2v/vddk:latest .',
-      type: 'warning',
-    };
-
   return {
-    type: 'default',
+    type: 'success',
     msg: 'VMware Virtual Disk Development Kit (VDDK) image, for example: quay.io/kubev2v/vddk:latest .',
   };
 };
