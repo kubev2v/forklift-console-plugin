@@ -71,3 +71,11 @@
 .forklift--create-plan--bottom-toolbar {
   padding-left: 0;
 }
+
+.forklift--create-plan--progress {
+  margin-top: var(--pf-global--spacer--lg);
+}
+
+.forklift--create-plan--progress-current-step:hover {
+  cursor: pointer;
+}

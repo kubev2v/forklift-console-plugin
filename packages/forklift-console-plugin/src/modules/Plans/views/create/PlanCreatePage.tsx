@@ -17,7 +17,12 @@ import {
 } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
-import { findProviderByID, PlanCreateForm, ProviderVirtualMachinesList } from './components';
+import {
+  findProviderByID,
+  PlanCreateForm,
+  PlanCreateProgress,
+  ProviderVirtualMachinesList,
+} from './components';
 import { planCreatePageInitialState, planCreatePageReducer } from './states';
 
 import './PlanCreatePage.style.css';
@@ -71,7 +76,7 @@ export const PlanCreatePage: React.FC<{
         >
           <ForkliftTrans>
             To migrate virtual machines select a provider, then select the virtual machines to
-            migrate and click the <strong>Create migration plan</strong> button.
+            migrate and click the <strong>Migrate</strong> button.
           </ForkliftTrans>
         </Alert>
 
@@ -89,6 +94,8 @@ export const PlanCreatePage: React.FC<{
             </ForkliftTrans>
           </Alert>
         )}
+
+        <PlanCreateProgress step="select-source" />
 
         <Title headingLevel="h2" className="forklift--create-plan--title">
           {t('Select source provider')}
