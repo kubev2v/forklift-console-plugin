@@ -120,9 +120,9 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
         label={t('Username')}
         isRequired
         fieldId="user"
-        helperText={state.validation.userHelperText}
-        helperTextInvalid={state.validation.userHelperText}
-        validated={state.validation.user}
+        helperText={state.validation.user.msg}
+        helperTextInvalid={state.validation.user.msg}
+        validated={state.validation.user.type}
       >
         <TextInput
           isRequired
