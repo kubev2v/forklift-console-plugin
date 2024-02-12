@@ -21,30 +21,17 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
   });
 
   return [
-    <DropdownItemLink
-      key="EditProvider"
-      description={t('View and edit provider details.')}
-      href={providerURL}
-    >
+    <DropdownItemLink key="EditProvider" href={providerURL}>
       {t('Edit Provider')}
     </DropdownItemLink>,
-    <DropdownItemLink
-      key="EditCredentials"
-      description={t('Edit the provider credential secret.')}
-      href={`${providerURL}/credentials`}
-    >
+    <DropdownItemLink key="EditCredentials" href={`${providerURL}/credentials`}>
       {t('Edit Provider Credentials')}
     </DropdownItemLink>,
-    <DropdownItemLink
-      key="MigratePlan"
-      description={t('Select virtual machines and create a migration plan.')}
-      href={`${providerURL}/vms`}
-    >
+    <DropdownItemLink key="MigratePlan" href={`${providerURL}/vms`}>
       {t('Migrate')}
     </DropdownItemLink>,
     <DropdownItem
       key="delete"
-      description={t('Delete the provider resource.')}
       isDisabled={!data?.permissions?.canDelete}
       onClick={() => showModal(<DeleteModal resource={provider} model={ProviderModel} />)}
     >

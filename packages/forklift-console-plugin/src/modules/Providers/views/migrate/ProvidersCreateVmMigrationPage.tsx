@@ -48,7 +48,7 @@ const ProvidersCreateVmMigrationPage: FC = () => {
         </ForkliftTrans>
       </Alert>
 
-      <SectionHeading text={t('Select migration target')} />
+      <SectionHeading text={t('Migrate')} />
 
       <PlansCreateForm state={state} dispatch={dispatch} />
       {state.flow.apiError && (
