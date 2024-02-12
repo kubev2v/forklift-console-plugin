@@ -63,5 +63,11 @@ function cleanObject(obj) {
       result[key] = obj[key];
     }
   }
+
+  // Don't save cacert when insecureSkipVerify is true
+  if (Base64.decode(obj?.insecureSkipVerify) === 'true') {
+    delete result['cacert'];
+  }
+
   return result;
 }

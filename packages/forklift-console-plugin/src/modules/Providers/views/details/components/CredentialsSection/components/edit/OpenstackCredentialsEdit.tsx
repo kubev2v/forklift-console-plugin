@@ -1,10 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
-import {
-  openstackSecretFieldValidator,
-  safeBase64Decode,
-  Validation,
-} from 'src/modules/Providers/utils';
+import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -93,8 +89,11 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
   const initialState = {
     authenticationType: authenticationType,
     validation: {
-      cacert: 'default' as Validation,
-      insecureSkipVerify: 'default' as Validation,
+      cacert: {
+        type: 'default',
+        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
+      },
+      insecureSkipVerify: { type: 'default', msg: 'Migrate without validating a CA certificate' },
     },
   };
 

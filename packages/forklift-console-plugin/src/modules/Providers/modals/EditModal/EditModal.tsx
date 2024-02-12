@@ -14,12 +14,12 @@ import {
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { useToggle } from '../../hooks';
-import { getValueByJsonPath } from '../../utils';
+import { getValueByJsonPath, ValidationMsg } from '../../utils';
 import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
 import { useModal } from '../ModalHOC';
 
 import { defaultOnConfirm } from './utils/defaultOnConfirm';
-import { EditModalProps, ValidationResults } from './types';
+import { EditModalProps } from './types';
 
 import './EditModal.style.css';
 
@@ -68,10 +68,10 @@ export const EditModal: React.FC<EditModalProps> = ({
   const history = useHistory();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
   const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath) as string);
-  const [validation, setValidation] = useState<{
-    helperText: string | React.JSX.Element;
-    validated: ValidationResults;
-  }>({ helperText: '', validated: undefined });
+  const [validation, setValidation] = useState<ValidationMsg>({
+    msg: '',
+    type: 'default',
+  });
 
   const { namespace } = resource?.metadata || {};
   const owner = resource?.metadata?.ownerReferences?.[0];
@@ -84,10 +84,7 @@ export const EditModal: React.FC<EditModalProps> = ({
 
     if (validationHook) {
       const validationResult = validationHook(newValue);
-      setValidation({
-        helperText: validationResult.validationHelpText,
-        validated: validationResult.validated,
-      });
+      setValidation(validationResult);
     }
   };
 
@@ -142,7 +139,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       name="modal-with-form-form-field"
       value={value}
       onChange={(value) => handleValueChange(value)}
-      validated={validation.validated}
+      validated={validation.type}
     />
   );
 
@@ -151,7 +148,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       key="confirm"
       variant="primary"
       onClick={handleSave}
-      isDisabled={validation.validated === 'error'}
+      isDisabled={validation.type === 'error'}
       isLoading={isLoading}
     >
       {t('Save')}
@@ -178,9 +175,9 @@ export const EditModal: React.FC<EditModalProps> = ({
           label={label}
           labelIcon={LabelIcon}
           fieldId="modal-with-form-form-field"
-          helperText={validation.helperText ? validation.helperText : helperText}
-          helperTextInvalid={validation.helperText}
-          validated={validation.validated}
+          helperText={validation.msg || helperText}
+          helperTextInvalid={validation.msg || helperText}
+          validated={validation.type}
         >
           {InputComponent_}
         </FormGroup>

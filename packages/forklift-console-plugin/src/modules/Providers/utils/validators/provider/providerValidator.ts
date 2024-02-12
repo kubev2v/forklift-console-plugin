@@ -1,13 +1,15 @@
 import { V1beta1Provider } from '@kubev2v/types';
 
-import { openshiftProviderValidator } from './openshiftProviderValidator';
-import { openstackProviderValidator } from './openstackProviderValidator';
-import { ovaProviderValidator } from './ovaProviderValidator';
-import { ovirtProviderValidator } from './ovirtProviderValidator';
-import { vsphereProviderValidator } from './vsphereProviderValidator';
+import { ValidationMsg } from '../common';
 
-export function providerValidator(provider: V1beta1Provider) {
-  let validationError = null;
+import { openshiftProviderValidator } from './openshift/openshiftProviderValidator';
+import { openstackProviderValidator } from './openstack/openstackProviderValidator';
+import { ovaProviderValidator } from './ova/ovaProviderValidator';
+import { ovirtProviderValidator } from './ovirt/ovirtProviderValidator';
+import { vsphereProviderValidator } from './vsphere/vsphereProviderValidator';
+
+export function providerValidator(provider: V1beta1Provider): ValidationMsg {
+  let validationError: ValidationMsg;
 
   switch (provider.spec.type) {
     case 'openshift':
@@ -26,7 +28,7 @@ export function providerValidator(provider: V1beta1Provider) {
       validationError = ovaProviderValidator(provider);
       break;
     default:
-      validationError = new Error('bad provider type');
+      validationError = { type: 'error', msg: 'unknown provider type' };
   }
 
   return validationError;

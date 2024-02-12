@@ -4,8 +4,8 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { validateURL } from '../../utils';
-import { EditModal, ValidationHookType } from '../EditModal';
+import { validateOpenstackURL } from '../../utils/validators';
+import { EditModal } from '../EditModal';
 
 import { patchProviderURL } from './utils/patchProviderURL';
 import { EditProviderURLModalProps } from './EditProviderURLModal';
@@ -13,66 +13,17 @@ import { EditProviderURLModalProps } from './EditProviderURLModal';
 export const OpenstackEditURLModal: React.FC<EditProviderURLModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
-  const helperTextMsgs = {
-    error: (
-      <div className="forklift-edit-modal-field-error-validation">
-        <ForkliftTrans>
-          Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
-          domain name, and a path. For example:{' '}
-          <strong>https://identity_service.com:5000/v3</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-    warning: (
-      <div className="forklift--edit-modal-field-warning-validation">
-        <ForkliftTrans>
-          Warning: The provided URL does not end with the API endpoint path:
-          <strong>
-            {'"'}/v3{'"'}
-          </strong>
-          {'. '}
-          Ensure the URL includes the correct path. For example:{' '}
-          <strong>https://identity_service.com:5000/v3</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-    success: (
-      <div className="forklift-edit-modal-field-success-validation">
-        <ForkliftTrans>
-          For example: <strong>https://identity_service.com:5000/v3</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-    default: (
-      <div className="forklift-edit-modal-field-default-validation">
-        <ForkliftTrans>
-          For example: <strong>https://identity_service.com:5000/v3</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-  };
-
-  const urlValidationHook: ValidationHookType = (value) => {
-    const trimmedUrl: string = value.toString().trim();
-    const isValidURL = validateURL(trimmedUrl);
-    // error
-    if (!isValidURL)
-      return {
-        validationHelpText: helperTextMsgs.error,
-        validated: 'error',
-      };
-    // warning
-    if (!trimmedUrl.endsWith('v3') && !trimmedUrl.endsWith('v3/'))
-      return {
-        validationHelpText: helperTextMsgs.warning,
-        validated: 'warning',
-      };
-    // success
-    return {
-      validationHelpText: helperTextMsgs.success,
-      validated: 'success',
-    };
-  };
+  const ModalBody = (
+    <ForkliftTrans>
+      <p>URL of the OpenStack Identity (Keystone) endpoint.</p>
+      <br />
+      <p>
+        The format of the provided URL of the OpenStack Identity (Keystone) API endpoint should
+        include a scheme, a domain name, path, and optionally a port. Usually the path will indicate
+        the server version, for example: <strong>https://identity_service.com:5000/v3</strong>.
+      </p>
+    </ForkliftTrans>
+  );
 
   return (
     <EditModal
@@ -82,10 +33,12 @@ export const OpenstackEditURLModal: React.FC<EditProviderURLModalProps> = (props
       label={props?.label || t('URL')}
       model={ProviderModel}
       variant={ModalVariant.large}
-      body={t('URL of the OpenStack Identity (Keystone) endpoint.')}
-      helperText={helperTextMsgs.default}
+      body={ModalBody}
+      helperText={t(
+        'The URL of the OpenStack Identity (Keystone) endpoint, for example: https://identity_service.com:5000/v3',
+      )}
       onConfirmHook={patchProviderURL}
-      validationHook={urlValidationHook}
+      validationHook={validateOpenstackURL}
     />
   );
 };

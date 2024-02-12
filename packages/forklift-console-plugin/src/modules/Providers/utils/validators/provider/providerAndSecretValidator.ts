@@ -1,9 +1,14 @@
 import { V1beta1Provider, V1Secret } from '@kubev2v/types';
 
-import { providerValidator } from './provider/providerValidator';
-import { secretValidator } from './secret/secretValidator';
+import { ValidationMsg } from '../common';
 
-export function providerAndSecretValidator(provider: V1beta1Provider, secret: V1Secret) {
+import { providerValidator } from './providerValidator';
+import { secretValidator } from './secretValidator';
+
+export function providerAndSecretValidator(
+  provider: V1beta1Provider,
+  secret: V1Secret,
+): ValidationMsg {
   const providerValidation = providerValidator(provider);
   if (providerValidation) {
     return providerValidation;

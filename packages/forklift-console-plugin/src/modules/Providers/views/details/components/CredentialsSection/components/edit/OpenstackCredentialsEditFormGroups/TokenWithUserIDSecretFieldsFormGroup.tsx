@@ -1,10 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
-import {
-  openstackSecretFieldValidator,
-  safeBase64Decode,
-  Validation,
-} from 'src/modules/Providers/utils';
+import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, FormGroup, TextInput } from '@patternfly/react-core';
@@ -27,10 +23,13 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
   const initialState = {
     passwordHidden: true,
     validation: {
-      token: 'default' as Validation,
-      userID: 'default' as Validation,
-      projectID: 'default' as Validation,
-      regionName: 'default' as Validation,
+      token: { type: 'default', msg: 'OpenStack token for authentication using a user name.' },
+      userID: {
+        type: 'default',
+        msg: 'A user ID for connecting to the OpenStack Identity (Keystone) endpoint.',
+      },
+      projectID: { type: 'default', msg: 'OpenStack project ID.' },
+      regionName: { type: 'default', msg: 'OpenStack region name.' },
     },
   };
 
@@ -74,11 +73,9 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         label={t('Token')}
         isRequired
         fieldId="token"
-        helperText={t('OpenStack token for authentication using a user ID.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided token is invalid. Ensure the token does not include spaces.',
-        )}
-        validated={state.validation.token}
+        helperText={state.validation.token.msg}
+        helperTextInvalid={state.validation.token.msg}
+        validated={state.validation.token.type}
       >
         <TextInput
           className="pf-u-w-75"
@@ -88,7 +85,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           name="token"
           value={token}
           onChange={(value) => handleChange('token', value)}
-          validated={state.validation.token}
+          validated={state.validation.token.type}
         />
         <Button
           variant="control"
@@ -103,11 +100,9 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         label={t('User ID')}
         isRequired
         fieldId="userID"
-        helperText={t('A user ID for connecting to the OpenStack Identity (Keystone) endpoint.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided user ID is invalid. Ensure the user ID does not include spaces.',
-        )}
-        validated={state.validation.userID}
+        helperText={state.validation.userID.msg}
+        helperTextInvalid={state.validation.userID.msg}
+        validated={state.validation.userID.type}
       >
         <TextInput
           isRequired
@@ -116,7 +111,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           name="userID"
           value={userID}
           onChange={(value) => handleChange('userID', value)}
-          validated={state.validation.userID}
+          validated={state.validation.userID.type}
         />
       </FormGroup>
 
@@ -124,11 +119,9 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         label={t('Project ID')}
         isRequired
         fieldId="projectID"
-        helperText={t('OpenStack project ID.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided project ID is invalid. Ensure the project ID does not include spaces.',
-        )}
-        validated={state.validation.projectID}
+        helperText={state.validation.projectID.msg}
+        helperTextInvalid={state.validation.projectID.msg}
+        validated={state.validation.projectID.type}
       >
         <TextInput
           isRequired
@@ -137,7 +130,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           name="projectID"
           value={projectID}
           onChange={(value) => handleChange('projectID', value)}
-          validated={state.validation.projectID}
+          validated={state.validation.projectID.type}
         />
       </FormGroup>
 
@@ -145,11 +138,9 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         label={t('Region')}
         isRequired
         fieldId="regionName"
-        helperText={t('OpenStack region name.')}
-        helperTextInvalid={t(
-          'Error: The format of the provided region name is invalid. Ensure the region name does not include spaces.',
-        )}
-        validated={state.validation.regionName}
+        helperText={state.validation.regionName.msg}
+        helperTextInvalid={state.validation.regionName.msg}
+        validated={state.validation.regionName.type}
       >
         <TextInput
           isRequired
@@ -158,7 +149,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           name="regionName"
           value={regionName}
           onChange={(value) => handleChange('regionName', value)}
-          validated={state.validation.regionName}
+          validated={state.validation.regionName.type}
         />
       </FormGroup>
     </>

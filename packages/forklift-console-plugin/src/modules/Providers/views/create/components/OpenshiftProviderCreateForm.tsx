@@ -1,6 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
-import { validateURL, Validation } from 'src/modules/Providers/utils';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { validateOpenshiftURL } from 'src/modules/Providers/utils';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Provider } from '@kubev2v/types';
 import { Form, FormGroup, TextInput } from '@patternfly/react-core';
@@ -18,40 +18,12 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
 
   const url = provider?.spec?.url || '';
 
-  const helperTextMsgs = {
-    error: (
-      <div className="forklift--create-provider-field-error-validation">
-        <ForkliftTrans>
-          Error: The format of the provided URL is invalid. Ensure the URL includes a scheme, a
-          domain name, and, optionally, a port. For example:{' '}
-          <strong>https://api.openshift-domain.com:6443</strong>.
-        </ForkliftTrans>
-      </div>
-    ),
-    success: (
-      <div className="forklift--create-provider-field-success-validation">
-        <ForkliftTrans>
-          URL of the Openshift Virtualization API endpoint. If both <strong>URL</strong> and{' '}
-          <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster
-          is used.
-        </ForkliftTrans>
-      </div>
-    ),
-    default: (
-      <div className="forklift--create-provider-field-default-validation">
-        <ForkliftTrans>
-          URL of the Openshift Virtualization API endpoint. If both <strong>URL</strong> and{' '}
-          <strong>Service account bearer token</strong> are left blank, the local OpenShift cluster
-          is used.
-        </ForkliftTrans>
-      </div>
-    ),
-  };
-
   const initialState = {
     validation: {
-      url: 'default' as Validation,
-      urlHelperText: helperTextMsgs.default,
+      url: {
+        type: 'default',
+        msg: 'The URL of the Openshift Virtualization API endpoint, for example: https:example.com:6443 .',
+      },
     },
   };
 
@@ -76,47 +48,34 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
     (id, value) => {
       if (id !== 'url') return;
 
-      const trimmedValue: string = value.trim();
-      const validationState = getURLValidationState(trimmedValue);
+      const trimmedUrl: string = value.toString().trim();
+      const validationMsg = validateOpenshiftURL(trimmedUrl);
 
       dispatch({
         type: 'SET_FIELD_VALIDATED',
-        payload: { field: 'url', validationState },
+        payload: { field: 'url', validationMsg },
       });
 
-      dispatch({
-        type: 'SET_FIELD_VALIDATED',
-        payload: {
-          field: 'urlHelperText',
-          validationState: helperTextMsgs[validationState],
-        },
-      });
-
-      onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
+      onChange({ ...provider, spec: { ...provider.spec, url: trimmedUrl } });
     },
     [provider],
   );
-
-  const getURLValidationState = (url: string): Validation => {
-    if (url.length !== 0 && !validateURL(url)) return 'error';
-    return 'success';
-  };
 
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
       <FormGroup
         label={t('URL')}
         fieldId="url"
-        validated={state.validation.url}
-        helperText={state.validation.urlHelperText}
-        helperTextInvalid={state.validation.urlHelperText}
+        validated={state.validation.url.type}
+        helperText={state.validation.url.msg}
+        helperTextInvalid={state.validation.url.msg}
       >
         <TextInput
           type="text"
           id="url"
           name="url"
           value={url}
-          validated={state.validation.url}
+          validated={state.validation.url.type}
           onChange={(value) => handleChange('url', value)}
         />
       </FormGroup>

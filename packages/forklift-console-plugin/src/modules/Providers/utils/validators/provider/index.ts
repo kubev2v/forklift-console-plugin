@@ -1,8 +1,10 @@
-// @index(['./*.tsx', './*.ts', /__/g], f => `export * from '${f.path}';`)
-export * from './openshiftProviderValidator';
-export * from './openstackProviderValidator';
-export * from './ovaProviderValidator';
-export * from './ovirtProviderValidator';
+// @index(['./*', './*.tsx', './*.ts', /__/g], f => `export * from '${f.path}';`)
+export * from './openshift';
+export * from './openstack';
+export * from './ova';
+export * from './ovirt';
+export * from './providerAndSecretValidator';
 export * from './providerValidator';
-export * from './vsphereProviderValidator';
+export * from './secretValidator';
+export * from './vsphere';
 // @endindex

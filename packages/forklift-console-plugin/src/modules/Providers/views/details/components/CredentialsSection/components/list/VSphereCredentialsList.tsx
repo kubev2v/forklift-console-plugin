@@ -12,6 +12,30 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
 
   const items = [];
 
+  const insecureSkipVerifyHelperTextPopover = (
+    <ForkliftTrans>
+      <p>
+        Select <strong>Skip certificate validation</strong> to skip certificate verification, which
+        proceeds with an insecure migration and then the certificate is not required. Insecure
+        migration means that the transferred data is sent over an insecure connection and
+        potentially sensitive data could be exposed.
+      </p>
+    </ForkliftTrans>
+  );
+
+  const cacertHelperTextPopover = (
+    <ForkliftTrans>
+      <p>
+        Use the CA certificate of the Manager unless it was replaced by a third-party certificate,
+        in which case enter the Manager Apache CA certificate.
+      </p>
+      <p>When left empty the system CA certificate is used.</p>
+      <p>
+        The certificate is not verified when <strong>Skip certificate validation</strong> is set.
+      </p>
+    </ForkliftTrans>
+  );
+
   const fields = {
     user: {
       label: t('Username'),
@@ -31,18 +55,14 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
     insecureSkipVerify: {
       label: t('Skip certificate validation'),
       description: t("If true, the provider's TLS certificate won't be validated."),
+      cacertHelperTextPopover: insecureSkipVerifyHelperTextPopover,
     },
     cacert: {
       label: t('CA certificate'),
       description: t(
         'A CA certificate to be trusted when connecting to the vCenter API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
       ),
-      helperTextPopover: (
-        <ForkliftTrans>
-          Note: Use the Manager CA certificate unless it was replaced by a third-party certificate,
-          in which case use the Manager Apache CA certificate.
-        </ForkliftTrans>
-      ),
+      helperTextPopover: cacertHelperTextPopover,
     },
   };
 
