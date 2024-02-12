@@ -33,7 +33,7 @@ export const MigrationAction: FC<{
         }}
         isDisabled={!selectedVms?.length}
       >
-        {t('Create migration plan')}
+        {t('Migrate')}
       </Button>
     </ToolbarItem>
   );
