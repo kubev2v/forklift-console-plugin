@@ -62,6 +62,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
       <FormGroup
         label={t('URL')}
         fieldId="url"
+        isRequired
         validated={state.validation.url.type}
         helperText={state.validation.url.msg}
         helperTextInvalid={state.validation.url.msg}
@@ -70,6 +71,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
           type="text"
           id="url"
           name="url"
+          isRequired
           value={provider?.spec?.url || ''}
           validated={state.validation.url.type}
           onChange={(value) => handleChange('url', value)}
