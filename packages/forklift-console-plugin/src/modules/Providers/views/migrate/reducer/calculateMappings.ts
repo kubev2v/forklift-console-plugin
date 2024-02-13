@@ -4,7 +4,15 @@ import { universalComparator } from '@kubev2v/common';
 
 import { CreateVmMigrationPageState } from '../types';
 
-import { POD_NETWORK } from './actions';
+import {
+  POD_NETWORK,
+  SET_AVAILABLE_SOURCE_NETWORKS,
+  SET_AVAILABLE_SOURCE_STORAGES,
+  SET_AVAILABLE_TARGET_NETWORKS,
+  SET_AVAILABLE_TARGET_STORAGES,
+  SET_DISKS,
+  SET_NICK_PROFILES,
+} from './actions';
 
 export const calculateNetworks = (
   draft: Draft<CreateVmMigrationPageState>,
@@ -14,9 +22,13 @@ export const calculateNetworks = (
     underConstruction: { plan },
     calculatedOnce: { sourceNetworkLabelToId, networkIdsUsedBySelectedVms },
     calculatedPerNamespace: { sourceNetworks, targetNetworks, networkMappings },
-    flow: { nicProfilesLoaded, sourceNetworkLoaded, targetNetworksLoaded },
+    flow: { initialLoading },
   } = draft;
-  if (!sourceNetworkLoaded || !nicProfilesLoaded || !targetNetworksLoaded) {
+  if (
+    !initialLoading[SET_AVAILABLE_SOURCE_NETWORKS] ||
+    !initialLoading[SET_NICK_PROFILES] ||
+    !initialLoading[SET_AVAILABLE_TARGET_NETWORKS]
+  ) {
     return {
       sourceNetworks,
       targetNetworks,
@@ -68,10 +80,14 @@ export const calculateStorages = (
     underConstruction: { plan },
     calculatedOnce: { sourceStorageLabelToId, storageIdsUsedBySelectedVms },
     calculatedPerNamespace: { storageMappings, targetStorages, sourceStorages },
-    flow: { disksLoaded, sourceStoragesLoaded, targetStoragesLoaded },
+    flow: { initialLoading },
   } = draft;
 
-  if (!sourceStoragesLoaded || !targetStoragesLoaded || !disksLoaded) {
+  if (
+    !initialLoading[SET_AVAILABLE_SOURCE_STORAGES] ||
+    !initialLoading[SET_AVAILABLE_TARGET_STORAGES] ||
+    !initialLoading[SET_DISKS]
+  ) {
     // wait for all resources
     return {
       storageMappings,

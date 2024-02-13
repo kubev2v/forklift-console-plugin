@@ -30,6 +30,7 @@ fullname
 cncf
 omitempty
 nics
+NICS
 pnic
 virtio
 SSHA

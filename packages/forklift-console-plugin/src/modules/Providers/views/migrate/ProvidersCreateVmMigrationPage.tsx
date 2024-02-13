@@ -4,21 +4,15 @@ import SectionHeading from 'src/components/headers/SectionHeading';
 import { PlanCreateProgress } from 'src/modules/Plans/views/create';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { Alert, AlertVariant, Button, Flex, FlexItem, PageSection } from '@patternfly/react-core';
+import { LoadingDots } from '@kubev2v/common';
+import { Alert, Button, Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
 import { PlansCreateForm } from './components/PlansCreateForm';
-import { StateAlerts } from './components/StateAlerts';
 import { startCreate } from './reducer/actions';
-import { GeneralAlerts } from './types';
+import { isDone } from './reducer/helpers';
 import { useFetchEffects } from './useFetchEffects';
 import { useSaveEffect } from './useSaveEffect';
-
-const generalMessages = (
-  t: (key: string) => string,
-): { [key in GeneralAlerts]: { title: string; body: string } } => ({
-  NEXT_VALID_PROVIDER_SELECTED: { title: t('Error'), body: t('No target provider exists ') },
-});
 
 const ProvidersCreateVmMigrationPage: FC = () => {
   const { t } = useForkliftTranslation();
@@ -35,25 +29,29 @@ const ProvidersCreateVmMigrationPage: FC = () => {
     return <></>;
   }
 
+  if (!isDone(state.flow.initialLoading) && !state.flow.apiError) {
+    return <LoadingDots />;
+  }
+
   return (
     <PageSection variant="light">
-      <Alert
-        className="co-alert forklift--create-vm-migration-plan--alert"
-        customIcon={<BellIcon />}
-        variant="info"
-        title={t('How to create a migration plan')}
-      >
-        <ForkliftTrans>
-          To migrate virtual machines select target provider, namespace, mappings and click the{' '}
-          <strong>Create</strong> button to crete the plan.
-        </ForkliftTrans>
-      </Alert>
+      <PlansCreateForm state={state} dispatch={dispatch}>
+        <Alert
+          className="co-alert forklift--create-vm-migration-plan--alert"
+          customIcon={<BellIcon />}
+          variant="info"
+          title={t('How to create a migration plan')}
+        >
+          <ForkliftTrans>
+            To migrate virtual machines select target provider, namespace, mappings and click the{' '}
+            <strong>Create</strong> button to crete the plan.
+          </ForkliftTrans>
+        </Alert>
 
-      <PlanCreateProgress step="migrate" />
+        <PlanCreateProgress step="migrate" />
 
-      <SectionHeading text={t('Migrate')} />
-
-      <PlansCreateForm state={state} dispatch={dispatch} />
+        <SectionHeading text={t('Migrate')} />
+      </PlansCreateForm>
       {state.flow.apiError && (
         <Alert
           className="co-alert co-alert--margin-top"
@@ -64,29 +62,18 @@ const ProvidersCreateVmMigrationPage: FC = () => {
           {state.flow.apiError.message || state.flow.apiError.toString()}
         </Alert>
       )}
-      <StateAlerts
-        variant={AlertVariant.danger}
-        messages={Array.from(state.alerts.general.errors).map((key) => ({
-          key,
-          ...generalMessages(t)[key],
-        }))}
-      />
       <Flex>
         <FlexItem>
           <Button
             variant="primary"
-            isDisabled={Object.values(state.validation).some(
-              (validation) => validation === 'error',
-            )}
+            isDisabled={
+              !!state.flow.apiError ||
+              Object.values(state.validation).some((validation) => validation === 'error')
+            }
             isLoading={isLoading}
             onClick={() => dispatch(startCreate())}
           >
-            {t('Create and edit')}
-          </Button>
-        </FlexItem>
-        <FlexItem>
-          <Button variant="secondary" isDisabled={true} isLoading={isLoading}>
-            {t('Create and start')}
+            {t('Create')}
           </Button>
         </FlexItem>
         <FlexItem>

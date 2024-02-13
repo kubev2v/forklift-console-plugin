@@ -15,7 +15,8 @@ export const EditableDescriptionItem: FC<{
   content: ReactNode;
   ariaEditLabel: string;
   onEdit: () => void;
-}> = ({ title, content, ariaEditLabel = 'Edit', onEdit }) => (
+  isDisabled?: boolean;
+}> = ({ title, content, ariaEditLabel = 'Edit', onEdit, isDisabled = false }) => (
   <DescriptionListGroup>
     <DescriptionListTerm>{title}</DescriptionListTerm>
     <DescriptionListDescription>
@@ -25,9 +26,9 @@ export const EditableDescriptionItem: FC<{
           className="forklift-page-editable-description-item-button"
           style={{ paddingTop: 0 }}
           variant="plain"
-          icon={<PencilAltIcon />}
-          aria-label={ariaEditLabel}
-          onClick={onEdit}
+          {...(isDisabled
+            ? {}
+            : { icon: <PencilAltIcon />, onClick: onEdit, 'aria-Label': ariaEditLabel })}
         />
       </div>
     </DescriptionListDescription>

@@ -1,4 +1,4 @@
-import { OVirtNicProfile } from '@kubev2v/types';
+import { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
 
 import { VmData } from '../../details';
 
@@ -13,31 +13,38 @@ export const getNetworksUsedBySelectedVms = (
     new Set(
       selectedVMs
         ?.map(({ vm }) => vm)
-        .flatMap((vm) => {
-          switch (vm.providerType) {
-            case 'vsphere': {
-              return vm.networks?.map((network) => network?.id);
-            }
-            case 'openstack': {
-              return Object.keys(vm?.addresses ?? {});
-            }
-            case 'ovirt': {
-              const vmNicProfiles = vm.nics?.map((nic) =>
-                nicProfiles.find((nicProfile) => nicProfile?.id === nic?.profile),
-              );
-              const networkIds = vmNicProfiles?.map((nicProfile) => nicProfile?.network);
-              return networkIds;
-            }
-            case 'openshift': {
-              return vm?.object?.spec?.template?.spec?.networks?.map((network) =>
-                network?.pod ? POD_NETWORK : network?.multus?.networkName,
-              );
-            }
-            default:
-              return [];
-          }
-        })
+        .flatMap((vm) => toNetworks(vm, nicProfiles))
         .filter(Boolean),
     ),
   );
+};
+
+export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicProfile[]) =>
+  toNetworksOrProfiles(vm).map((network) =>
+    vm.providerType === 'ovirt' && nicProfiles
+      ? nicProfiles.find((nicProfile) => nicProfile?.id === network)?.network
+      : network,
+  );
+
+export const toNetworksOrProfiles = (vm) => {
+  switch (vm.providerType) {
+    case 'vsphere': {
+      return vm?.networks?.map((network) => network?.id) ?? [];
+    }
+    case 'openstack': {
+      return Object.keys(vm?.addresses ?? {});
+    }
+    case 'ovirt': {
+      return vm?.nics?.map((nic) => nic?.profile) ?? [];
+    }
+    case 'openshift': {
+      return (
+        vm?.object?.spec?.template?.spec?.networks?.map((network) =>
+          network?.pod ? POD_NETWORK : network?.multus?.networkName,
+        ) ?? []
+      );
+    }
+    default:
+      return [];
+  }
 };

@@ -25,6 +25,7 @@ import { getResourceUrl } from '../../utils';
 import {
   CreateVmMigration,
   PageAction,
+  setAPiError,
   setAvailableProviders,
   setAvailableSourceNetworks,
   setAvailableSourceStorages,
@@ -73,7 +74,19 @@ export const useFetchEffects = (): [
   );
   const {
     workArea: { targetProvider },
+    flow: { editingDone },
   } = state;
+
+  const dispatchWithFallback = (
+    action: PageAction<CreateVmMigration, unknown>,
+    loading: boolean,
+    error: Error,
+  ): void => {
+    if (loading) {
+      return;
+    }
+    error ? dispatch(setAPiError(error)) : dispatch(action);
+  };
 
   const [providers, providersLoaded, providerError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
@@ -82,7 +95,9 @@ export const useFetchEffects = (): [
     namespace,
   });
   useEffect(
-    () => dispatch(setAvailableProviders(providers, providersLoaded, providerError)),
+    () =>
+      !editingDone &&
+      dispatchWithFallback(setAvailableProviders(providers), !providersLoaded, providerError),
     [providers],
   );
 
@@ -93,7 +108,7 @@ export const useFetchEffects = (): [
     namespace,
   });
   useEffect(
-    () => dispatch(setExistingPlans(plans, plansLoaded, plansError)),
+    () => !editingDone && dispatchWithFallback(setExistingPlans(plans), !plansLoaded, plansError),
     [plans, plansLoaded, plansError],
   );
 
@@ -104,7 +119,9 @@ export const useFetchEffects = (): [
     namespace,
   });
   useEffect(
-    () => dispatch(setExistingNetMaps(netMaps, netMapsLoaded, netMapsError)),
+    () =>
+      !editingDone &&
+      dispatchWithFallback(setExistingNetMaps(netMaps), !netMapsLoaded, netMapsError),
     [netMaps, netMapsLoaded, netMapsError],
   );
 
@@ -115,13 +132,18 @@ export const useFetchEffects = (): [
     namespace,
   });
   useEffect(
-    () => dispatch(setExistingStorageMaps(stMaps, stMapsLoaded, stMapsError)),
+    () =>
+      !editingDone &&
+      dispatchWithFallback(setExistingStorageMaps(stMaps), !stMapsLoaded, stMapsError),
     [stMaps, stMapsLoaded, stMapsError],
   );
 
   const [namespaces, nsLoading, nsError] = useNamespaces(targetProvider);
   useEffect(
-    () => dispatch(setAvailableTargetNamespaces(namespaces, nsLoading, nsError)),
+    () =>
+      targetProvider &&
+      !editingDone &&
+      dispatchWithFallback(setAvailableTargetNamespaces(namespaces), nsLoading, nsError),
     [namespaces, nsLoading, nsError, targetProvider],
   );
 
@@ -129,8 +151,12 @@ export const useFetchEffects = (): [
     useOpenShiftNetworks(targetProvider);
   useEffect(
     () =>
-      dispatch(
-        setAvailableTargetNetworks(targetNetworks, targetNetworksLoading, targetNetworksError),
+      targetProvider &&
+      !editingDone &&
+      dispatchWithFallback(
+        setAvailableTargetNetworks(targetNetworks),
+        targetNetworksLoading,
+        targetNetworksError,
       ),
     [targetNetworks, targetNetworksLoading, targetNetworksError, targetProvider],
   );
@@ -139,8 +165,11 @@ export const useFetchEffects = (): [
     useSourceStorages(sourceProvider);
   useEffect(
     () =>
-      dispatch(
-        setAvailableSourceStorages(sourceStorages, sourceStoragesLoading, sourceStoragesError),
+      !editingDone &&
+      dispatchWithFallback(
+        setAvailableSourceStorages(sourceStorages),
+        sourceStoragesLoading,
+        sourceStoragesError,
       ),
     [sourceStorages, sourceStoragesLoading, sourceStoragesError],
   );
@@ -149,8 +178,12 @@ export const useFetchEffects = (): [
     useOpenShiftStorages(targetProvider);
   useEffect(
     () =>
-      dispatch(
-        setAvailableTargetStorages(targetStorages, targetStoragesLoading, targetStoragesError),
+      targetProvider &&
+      !editingDone &&
+      dispatchWithFallback(
+        setAvailableTargetStorages(targetStorages),
+        targetStoragesLoading,
+        targetStoragesError,
       ),
     [targetStorages, targetStoragesLoading, targetStoragesError, targetProvider],
   );
@@ -159,20 +192,25 @@ export const useFetchEffects = (): [
     useSourceNetworks(sourceProvider);
   useEffect(
     () =>
-      dispatch(
-        setAvailableSourceNetworks(sourceNetworks, sourceNetworksLoading, sourceNetworksError),
+      !editingDone &&
+      dispatchWithFallback(
+        setAvailableSourceNetworks(sourceNetworks),
+        sourceNetworksLoading,
+        sourceNetworksError,
       ),
     [sourceNetworks, sourceNetworksLoading, sourceNetworksError],
   );
 
   const [nicProfiles, nicProfilesLoading, nicProfilesError] = useNicProfiles(sourceProvider);
   useEffect(
-    () => dispatch(setNicProfiles(nicProfiles, nicProfilesLoading, nicProfilesError)),
+    () =>
+      !editingDone &&
+      dispatchWithFallback(setNicProfiles(nicProfiles), nicProfilesLoading, nicProfilesError),
     [nicProfiles, nicProfilesLoading, nicProfilesError],
   );
   const [disks, disksLoading, disksError] = useDisks(sourceProvider);
   useEffect(
-    () => dispatch(setDisks(disks, disksLoading, disksError)),
+    () => !editingDone && dispatchWithFallback(setDisks(disks), disksLoading, disksError),
     [disks, disksLoading, disksError],
   );
 

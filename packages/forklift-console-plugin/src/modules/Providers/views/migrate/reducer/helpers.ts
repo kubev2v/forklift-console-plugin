@@ -6,6 +6,7 @@ import { DefaultRow, ResourceFieldFactory, RowProps, withTr } from '@kubev2v/com
 import {
   IoK8sApimachineryPkgApisMetaV1ObjectMeta,
   OpenShiftNamespace,
+  OVirtNicProfile,
   ProviderType,
   V1beta1Plan,
   V1beta1Provider,
@@ -26,13 +27,20 @@ import { VSphereVirtualMachinesCells } from '../../details/tabs/VirtualMachines/
 import {
   CreateVmMigrationPageState,
   Mapping,
+  MappingSource,
+  MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING,
   NETWORK_MAPPING_REGENERATED,
   NetworkAlerts,
+  OVIRT_NICS_WITH_EMPTY_PROFILE,
   STORAGE_MAPPING_REGENERATED,
   StorageAlerts,
+  UNMAPPED_NETWORKS,
+  UNMAPPED_STORAGES,
 } from '../types';
 
+import { CreateVmMigration } from './actions';
 import { calculateNetworks, calculateStorages } from './calculateMappings';
+import { hasMultiplePodNetworkMappings } from './hasMultiplePodNetworkMappings';
 
 export const validateUniqueName = (name: string, existingNames: string[]) =>
   existingNames.every((existingName) => existingName !== name);
@@ -133,9 +141,9 @@ export const recalculateStorages = (draft) => {
     ...draft.calculatedPerNamespace,
     ...calculateStorages(draft),
   };
-
+  executeStorageMappingValidation(draft);
   if (
-    storageMappings?.length &&
+    storageMappings &&
     !areMappingsEqual(storageMappings, draft.calculatedPerNamespace.storageMappings)
   ) {
     addIfMissing<StorageAlerts>(STORAGE_MAPPING_REGENERATED, draft.alerts.storageMappings.warnings);
@@ -148,6 +156,7 @@ export const recalculateNetworks = (draft) => {
     ...draft.calculatedPerNamespace,
     ...calculateNetworks(draft),
   };
+  executeNetworkMappingValidation(draft);
   if (
     networkMappings &&
     !areMappingsEqual(networkMappings, draft.calculatedPerNamespace.networkMappings)
@@ -221,6 +230,15 @@ export const addIfMissing = <T>(key: T, keys: T[]) => {
   keys.push(key);
 };
 
+export const removeIfPresent = <T>(key: T, keys: T[]) => {
+  console.warn('removeIfPresent', key, keys);
+  const index = keys.findIndex((k) => k === key);
+  if (index === -1) {
+    return;
+  }
+  keys.splice(index, 1);
+};
+
 export const alreadyInUseBySelectedVms = ({
   namespace,
   sourceProvider,
@@ -235,3 +253,91 @@ export const alreadyInUseBySelectedVms = ({
   sourceProvider.spec?.url === targetProvider?.spec?.url &&
   sourceProvider.spec?.type === 'openshift' &&
   namespacesUsedBySelectedVms.some((name) => name === namespace);
+
+export const generateUniqueName = (
+  startName: string,
+  baseName: string,
+  existingMaps: { metadata?: IoK8sApimachineryPkgApisMetaV1ObjectMeta }[],
+) => {
+  const names = existingMaps.map((n) => n.metadata?.name).filter(Boolean);
+  let currentName: string = startName;
+  while (!validateUniqueName(currentName, names)) {
+    currentName = generateName(baseName);
+  }
+  return currentName;
+};
+
+export const validateNetworkMapping = ({
+  sources,
+  errors,
+  mappings,
+  selectedVms,
+  sourceNetworkLabelToId,
+  nicProfiles,
+}: {
+  sources: MappingSource[];
+  errors: NetworkAlerts[];
+  mappings: Mapping[];
+  selectedVms: VmData[];
+  sourceNetworkLabelToId: { [label: string]: string };
+  nicProfiles?: OVirtNicProfile[];
+}): [boolean, NetworkAlerts][] => [
+  [sources.some((src) => src.usedBySelectedVms && !src.isMapped), UNMAPPED_NETWORKS],
+  [errors.includes(OVIRT_NICS_WITH_EMPTY_PROFILE), OVIRT_NICS_WITH_EMPTY_PROFILE],
+  [
+    hasMultiplePodNetworkMappings(mappings, selectedVms, sourceNetworkLabelToId, nicProfiles),
+    MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING,
+  ],
+];
+
+export const executeNetworkMappingValidation = (draft: Draft<CreateVmMigrationPageState>) => {
+  const {
+    calculatedPerNamespace: cpn,
+    alerts: {
+      networkMappings: { errors },
+    },
+    receivedAsParams: { selectedVms },
+    calculatedOnce: { sourceNetworkLabelToId },
+    existingResources: { nicProfiles },
+    validation,
+  } = draft;
+  validation.networkMappings = validateNetworkMapping({
+    errors,
+    mappings: cpn.networkMappings,
+    selectedVms,
+    sourceNetworkLabelToId,
+    sources: cpn.sourceNetworks,
+    nicProfiles,
+  }).reduce((validation, [hasFailed, alert]) => {
+    hasFailed ? addIfMissing(alert, errors) : removeIfPresent(alert, errors);
+    return hasFailed ? 'error' : validation;
+  }, 'default');
+};
+
+export const validateStorageMapping = ({
+  sources,
+}: {
+  sources: MappingSource[];
+}): [boolean, StorageAlerts][] => [
+  [sources.some((src) => src.usedBySelectedVms && !src.isMapped), UNMAPPED_STORAGES],
+];
+
+export const executeStorageMappingValidation = (draft: Draft<CreateVmMigrationPageState>) => {
+  const {
+    calculatedPerNamespace: cpn,
+    alerts: {
+      storageMappings: { errors },
+    },
+    validation,
+  } = draft;
+  validation.storageMappings = validateStorageMapping({ sources: cpn.sourceStorages }).reduce(
+    (validation, [hasFailed, alert]) => {
+      hasFailed ? addIfMissing(alert, errors) : removeIfPresent(alert, errors);
+      return hasFailed ? 'error' : validation;
+    },
+    'default',
+  );
+};
+
+export const isDone = (initialLoading: { [key in CreateVmMigration]?: boolean }) =>
+  Object.values(initialLoading).every((value) => value);

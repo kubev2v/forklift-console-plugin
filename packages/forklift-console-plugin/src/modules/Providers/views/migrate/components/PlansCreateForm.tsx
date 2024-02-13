@@ -54,7 +54,7 @@ import { StateAlerts } from './StateAlerts';
 
 const buildNetworkMessages = (
   t: (key: string) => string,
-): { [key in NetworkAlerts]: { title: string; body: string } } => ({
+): { [key in NetworkAlerts]: { title: string; body: string; blocker?: boolean } } => ({
   NET_MAP_NAME_REGENERATED: {
     title: t('Network Map name re-generated'),
     body: t('New name was generated for the Network Map due to naming conflict.'),
@@ -63,17 +63,46 @@ const buildNetworkMessages = (
     title: t('Network mappings have been re-generated'),
     body: t('All discovered networks have been mapped to the default network.'),
   },
+  MULTIPLE_NICS_ON_THE_SAME_NETWORK: {
+    title: t('Multiple NICs on the same network'),
+    body: t('VM(s) with multiple NICs on the same network were detected.'),
+  },
+  OVIRT_NICS_WITH_EMPTY_PROFILE: {
+    title: t('NICs with empty NIC profile'),
+    body: t('VM(s) with NICs that are not linked with a NIC profile were detected.'),
+    blocker: true,
+  },
+  UNMAPPED_NETWORKS: {
+    title: t('Incomplete mapping'),
+    body: t('All networks detected on the selected VMs require a mapping.'),
+    blocker: true,
+  },
+  MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING: {
+    title: t('Multiple NICs mapped to Pod Networking '),
+    body: t('VM(s) with more than one interface mapped to Pod Networking were detected.'),
+    blocker: true,
+  },
 });
 const buildStorageMessages = (
   t: (key: string) => string,
-): { [key in StorageAlerts]: { title: string; body: string } } => ({
+): { [key in StorageAlerts]: { title: string; body: string; blocker?: boolean } } => ({
   STORAGE_MAPPING_REGENERATED: {
     title: t('Storage mappings have been re-generated'),
     body: t('All discovered storages have been mapped to the default storage.'),
   },
+  STORAGE_MAP_NAME_REGENERATED: {
+    title: t('Storage Map name re-generated'),
+    body: t('New name was generated for the Storage Map due to naming conflict.'),
+  },
+  UNMAPPED_STORAGES: {
+    title: t('Incomplete mapping'),
+    body: t('All storages detected on the selected VMs require a mapping.'),
+    blocker: true,
+  },
 });
 
 export const PlansCreateForm = ({
+  children,
   state: {
     underConstruction: { plan, netMap, storageMap },
     validation,
@@ -99,6 +128,7 @@ export const PlansCreateForm = ({
   },
   dispatch,
 }: {
+  children?;
   state: CreateVmMigrationPageState;
   dispatch: (action: PageAction<unknown, unknown>) => void;
 }) => {
@@ -137,6 +167,7 @@ export const PlansCreateForm = ({
         }
       >
         <DrawerContentBody>
+          {children}
           <DescriptionList
             className="forklift-create-provider-edit-section"
             columnModifier={{
@@ -160,6 +191,7 @@ export const PlansCreateForm = ({
                     id="planName"
                     value={plan.metadata.name}
                     validated={validation.planName}
+                    isDisabled={flow.editingDone}
                     onChange={(value) => dispatch(setPlanName(value?.trim() ?? ''))}
                   />
                 </FormGroup>
@@ -170,6 +202,7 @@ export const PlansCreateForm = ({
                 content={plan.metadata.name}
                 ariaEditLabel={t('Edit plan name')}
                 onEdit={() => setIsNameEdited(true)}
+                isDisabled={flow.editingDone}
               />
             )}
             <DetailsItem
@@ -211,6 +244,7 @@ export const PlansCreateForm = ({
                     onChange={(value) => dispatch(setPlanTargetProvider(value))}
                     validated={validation.targetProvider}
                     id="targetProvider"
+                    isDisabled={flow.editingDone}
                   >
                     {[
                       <FormSelectOption
@@ -247,6 +281,7 @@ export const PlansCreateForm = ({
                 }
                 ariaEditLabel={t('Edit target provider')}
                 onEdit={() => setIsTargetProviderEdited(true)}
+                isDisabled={flow.editingDone}
               />
             )}
             {isTargetNamespaceEdited ||
@@ -264,6 +299,7 @@ export const PlansCreateForm = ({
                     onChange={(value) => dispatch(setPlanTargetNamespace(value))}
                     validated={validation.targetNamespace}
                     id="targetNamespace"
+                    isDisabled={flow.editingDone}
                   >
                     {[
                       <FormSelectOption
@@ -302,6 +338,7 @@ export const PlansCreateForm = ({
                 }
                 ariaEditLabel={t('Edit target namespace')}
                 onEdit={() => setIsTargetNamespaceEdited(true)}
+                isDisabled={flow.editingDone}
               />
             )}
             <DescriptionListGroup>
@@ -318,6 +355,14 @@ export const PlansCreateForm = ({
                 </span>
               </DescriptionListTerm>
               <DescriptionListDescription className="forklift-page-mapping-list">
+                <StateAlerts
+                  variant={AlertVariant.danger}
+                  messages={Array.from(alerts.networkMappings.errors).map((key) => ({
+                    key,
+                    ...networkMessages[key],
+                  }))}
+                  onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
+                />
                 <StateAlerts
                   variant={AlertVariant.warning}
                   messages={Array.from(alerts.networkMappings.warnings).map((key) => ({
@@ -356,6 +401,14 @@ export const PlansCreateForm = ({
                 </span>
               </DescriptionListTerm>
               <DescriptionListDescription className="forklift-page-mapping-list">
+                <StateAlerts
+                  variant={AlertVariant.danger}
+                  messages={Array.from(alerts.storageMappings.errors).map((key) => ({
+                    key,
+                    ...storageMessages[key],
+                  }))}
+                  onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
+                />
                 <StateAlerts
                   variant={AlertVariant.warning}
                   messages={Array.from(alerts.storageMappings.warnings).map((key) => ({
