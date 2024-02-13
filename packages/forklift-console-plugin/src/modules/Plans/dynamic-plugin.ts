@@ -4,6 +4,7 @@ import {
   ActionProvider,
   CreateResource,
   ModelMetadata,
+  ResourceDetailsPage,
   ResourceListPage,
   ResourceNSNavItem,
   RoutePage,
@@ -13,6 +14,7 @@ import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sd
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
   PlansPage: './modules/Plans/PlansWrapper',
   PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
+  PlanDetailsPage: './modules/Plans/views/details/PlanDetailsPage',
   PlanWizard: './modules/Plans/PlanWizardWrapper',
   VMMigrationDetails: './modules/Plans/VMMigrationDetailsWrapper',
   usePlanActions: './modules/Plans/UsePlanActions',
@@ -35,6 +37,16 @@ export const extensions: EncodedExtension[] = [
       },
     },
   } as EncodedExtension<ResourceNSNavItem>,
+
+  {
+    type: 'console.page/resource/details',
+    properties: {
+      component: {
+        $codeRef: 'PlanDetailsPage',
+      },
+      model: PlanModelGroupVersionKind,
+    },
+  } as EncodedExtension<ResourceDetailsPage>,
 
   {
     type: 'console.page/resource/list',

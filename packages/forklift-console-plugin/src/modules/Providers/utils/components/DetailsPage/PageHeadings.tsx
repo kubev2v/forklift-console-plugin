@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelGroupVersionKind } from '@kubev2v/types';
 import {
+  getGroupVersionKindForResource,
   K8sGroupVersionKind,
   K8sModel,
   K8sResourceCommon,
@@ -25,6 +25,7 @@ export const PageHeadings: React.FC<PageHeadingsProps> = ({
   actions,
 }) => {
   const status = data?.['status']?.phase;
+  const groupVersionKind = data && getGroupVersionKindForResource(data);
 
   return (
     <div className="co-m-nav-title co-m-nav-title--detail forklift-page-headings">
@@ -34,7 +35,7 @@ export const PageHeadings: React.FC<PageHeadingsProps> = ({
           <Split hasGutter>
             <SplitItem>
               <ResourceIcon
-                groupVersionKind={ProviderModelGroupVersionKind}
+                groupVersionKind={groupVersionKind}
                 className="co-m-resource-icon--lg"
               />{' '}
               {data?.metadata?.name}
