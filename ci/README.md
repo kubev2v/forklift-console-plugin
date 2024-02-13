@@ -8,8 +8,9 @@ Scripts and tools to run Forklift console plugin on top of Openshift console web
 | K8S_AUTH_BEARER_TOKEN | k8s cluster token (example: `abcdef.0123456789abcdef` ) |
 | CONSOLE_IMAGE | The console image to run ( example: `quay.io/openshift/origin-console:4.12` )|
 | FORKLIFT_PLUGIN_IMAGE | The plugin image to build and use ( example: `localhost:5001/forklift-console-plugin:latest` )|
-| INVENTORY_SERVER_HOST | URL of Forklift inventory server ( default `http://localhost:30088` )|
-| MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `http://localhost:30089` )|
+| INVENTORY_SERVER_HOST | URL of Forklift inventory server ( default `http://localhost:30444` )|
+| MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `http://localhost:30445` )|
+| SERVICES_API_SERVER_HOST | URL of Forklift services server ( default `https://localhost:30446` )|
 | PLUGIN_URL | plugin dev server URL ( default `http://localhost:9001` } |
 | CONTAINER_NETWORK_TYPE | Podman network for running Openshift console (  default `host` ) |
 

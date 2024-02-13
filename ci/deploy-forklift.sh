@@ -93,10 +93,16 @@ spec:
   api_container_requests_cpu: "50m"
 EOF
 
-# Wait for forklift inventory service, then expose it on port 30088
+# Wait for forklift inventory service, then expose it on port 30444
 while ! kubectl get service -n ${FORKLIFT_NAMESPACE} forklift-inventory; do sleep 30; done
 kubectl patch service -n ${FORKLIFT_NAMESPACE} forklift-inventory --type='merge' \
   -p '{"spec":{"type":"NodePort","ports":[{"name":"api-https","protocol":"TCP","targetPort":8443,"port":8443,"nodePort":30444}]}}'
+
+# Wait for forklift services service, then expose it on port 30446
+while ! kubectl get service -n ${FORKLIFT_NAMESPACE} forklift-services; do sleep 30; done
+kubectl patch service -n ${FORKLIFT_NAMESPACE} forklift-services --type='merge' \
+  -p '{"spec":{"type":"NodePort","ports":[{"name":"api-https","protocol":"TCP","targetPort":8443,"port":8443,"nodePort":30446}]}}'
+
 
 # secondary namespace used in test data
 cat << EOF | kubectl apply -f -
