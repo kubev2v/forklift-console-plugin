@@ -14,6 +14,7 @@ CONSOLE_IMAGE=${CONSOLE_IMAGE:-"quay.io/openshift/origin-console:latest"}
 CONSOLE_PORT=${CONSOLE_PORT:-9000}
 INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:-"https://localhost:30444"}
 MUST_GATHER_API_SERVER_HOST=${MUST_GATHER_API_SERVER_HOST:-"https://localhost:30445"}
+SERVICES_API_SERVER_HOST=${SERVICES_API_SERVER_HOST:-"https://localhost:30446"}
 
 if [[ ${CONSOLE_IMAGE} =~ ^localhost/ ]]; then
     PULL_POLICY="never"
@@ -51,6 +52,11 @@ BRIDGE_PLUGIN_PROXY=$(cat << END | jq -c .
         "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/forklift-must-gather-api/",
         "endpoint":"${MUST_GATHER_API_SERVER_HOST}",
         "authorize":true
+    },
+    {
+        "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/forklift-services/",
+        "endpoint":"${SERVICES_API_SERVER_HOST}",
+        "authorize":true
     }
 ]}
 END
@@ -78,6 +84,7 @@ Container pull policy: ${PULL_POLICY}
 Plugins: ${BRIDGE_PLUGINS}
 Inventory server URL: ${INVENTORY_SERVER_HOST}
 Must gather API server URL: ${MUST_GATHER_API_SERVER_HOST}
+Services server URL: ${SERVICES_API_SERVER_HOST}
 Plugin proxy:
 $(echo ${BRIDGE_PLUGIN_PROXY} | jq .)
 "

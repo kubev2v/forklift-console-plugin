@@ -52,6 +52,8 @@ nodes:
     hostPort: 30443
   - containerPort: 30444
     hostPort: 30444
+  - containerPort: 30446
+    hostPort: 30446
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]

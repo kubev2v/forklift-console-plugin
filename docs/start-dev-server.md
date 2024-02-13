@@ -58,18 +58,19 @@ npm run cluster:up -- --with-all-providers
 npm run cluster:delete
 ```
 
-## Avaliable environment variables
+## Available environment variables
 
-| Environment varialbles | Description  |
+| Environment variables | Description  |
 | -------|--------------|
 | CONSOLE_IMAGE | The console image to run ( default `quay.io/openshift/origin-console:latest` )|
 | CONSOLE_PORT | Expose the console web application on port ( default `9000` )|
 | INVENTORY_SERVER_HOST | URL of Forklift inventory server ( default `https://localhost:30444` )|
 | MUST_GATHER_API_SERVER_HOST | URL of Forklift must gather server ( default `https://localhost:30445` )|
+| SERVICES_API_SERVER_HOST | URL of Forklift services server ( default `https://localhost:30446` )|
 | BRIDGE_K8S_AUTH_BEARER_TOKEN | Bearer token of user account ( on openshift token default to `$(oc whoami -t)` )|
 | BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT | Kubernetes API servere URL (default, guess useing kubeconfig file) |
 
-Scripts for pre-setting this environment varialbles are available in the [configure](./configure) directory.
+Scripts for pre-setting this environment variables are available in the [configure](./configure) directory.
 
 ## Finding the API server URL
 
@@ -104,4 +105,4 @@ export INVENTORY_SERVER_HOST=https://<route found>
 
 ### KinD
 
-The development cluster using kind will expose the inventory server on port 30443 `https://loclhost:30443`.
+The development cluster using kind will expose the inventory server on port 30444 `https://loclhost:30444`.
