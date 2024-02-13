@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { Flex, FlexItem } from '@patternfly/react-core';
 
-import { ChartsCard, MigrationsCard } from './cards';
+import { MigrationsCard, MigrationsChartCard, VmMigrationsChartCard } from './cards';
 
 interface ForkliftControllerMetricsTabProps extends RouteComponentProps {
   obj: V1beta1ForkliftController;
@@ -30,7 +30,10 @@ export const ForkliftControllerMetricsTab: React.FC<ForkliftControllerMetricsTab
             <MigrationsCard obj={obj} />
           </FlexItem>
           <FlexItem fullWidth={{ default: 'fullWidth' }}>
-            <ChartsCard obj={obj} />
+            <MigrationsChartCard obj={obj} />
+          </FlexItem>
+          <FlexItem fullWidth={{ default: 'fullWidth' }}>
+            <VmMigrationsChartCard obj={obj} />
           </FlexItem>
         </Flex>
       </Flex>
