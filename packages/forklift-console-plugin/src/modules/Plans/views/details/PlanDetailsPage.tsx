@@ -9,6 +9,7 @@ import {
   useK8sWatchResource,
 } from '@openshift-console/dynamic-plugin-sdk';
 
+import { Suspend } from './components';
 import { PlanDetails, PlanHooks, PlanMappings, PlanVirtualMachines, PlanYAML } from './tabs';
 
 import './PlanDetailsPage.style.css';
@@ -94,13 +95,15 @@ export const PlanDetailsPage: React.FC<PlanDetailsPageProps> = ({ name, namespac
   });
 
   return (
-    <MemoPlanDetailsPage
-      name={name}
-      namespace={namespace}
-      obj={plan}
-      loaded={loaded}
-      loadError={error}
-    />
+    <Suspend obj={plan} loaded={loaded} loadError={error}>
+      <MemoPlanDetailsPage
+        name={name}
+        namespace={namespace}
+        obj={plan}
+        loaded={loaded}
+        loadError={error}
+      />
+    </Suspend>
   );
 };
 PlanDetailsPage.displayName = 'PlanDetailsPage';
