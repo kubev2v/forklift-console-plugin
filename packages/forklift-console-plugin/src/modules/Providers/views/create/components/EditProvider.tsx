@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -54,12 +55,16 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
       );
     case 'vsphere':
       return (
-        <>
+        <ModalHOC>
           <VSphereProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
 
           <EditProviderSectionHeading text={t('Provider credentials')} />
-          <VSphereCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
-        </>
+          <VSphereCredentialsEdit
+            secret={newSecret}
+            url={newProvider?.spec?.url}
+            onChange={onNewSecretChange}
+          />
+        </ModalHOC>
       );
     case 'ova':
       return (

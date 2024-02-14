@@ -28,6 +28,7 @@ export interface ListComponentProps {
 
 export interface EditComponentProps {
   secret: IoK8sApiCoreV1Secret;
+  url?: string;
   onChange: (newValue: IoK8sApiCoreV1Secret) => void;
 }
 

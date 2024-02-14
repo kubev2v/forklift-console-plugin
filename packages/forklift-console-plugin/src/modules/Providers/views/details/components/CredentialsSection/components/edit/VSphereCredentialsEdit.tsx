@@ -1,12 +1,12 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { safeBase64Decode, vsphereSecretFieldValidator } from 'src/modules/Providers/utils';
+import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   Button,
   Divider,
-  FileUpload,
   Form,
   FormGroup,
   Popover,
@@ -19,7 +19,7 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
 
-export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
+export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, url, onChange }) => {
   const { t } = useForkliftTranslation();
 
   const user = safeBase64Decode(secret?.data?.user || '');
@@ -210,16 +210,12 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
         helperTextInvalid={state.validation.cacert.msg}
         validated={state.validation.cacert.type}
       >
-        <FileUpload
+        <CertificateUpload
           id="cacert"
-          type="text"
-          filenamePlaceholder="Drag and drop a file or upload one"
-          value={cacert}
+          url={url}
+          cacert={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(value) => handleChange('cacert', value)}
-          onTextChange={(value) => handleChange('cacert', value)}
-          onClearClick={() => handleChange('cacert', '')}
-          browseButtonText="Upload"
+          handleSave={(value) => handleChange('cacert', value)}
           isDisabled={insecureSkipVerify}
         />
       </FormGroup>
