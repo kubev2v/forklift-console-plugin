@@ -1,4 +1,4 @@
-import { V1beta1Provider, V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
 import { ValidationMsg } from '../common';
 
@@ -7,7 +7,7 @@ import { secretValidator } from './secretValidator';
 
 export function providerAndSecretValidator(
   provider: V1beta1Provider,
-  secret: V1Secret,
+  secret: IoK8sApiCoreV1Secret,
 ): ValidationMsg {
   const providerValidation = providerValidator(provider);
   if (providerValidation) {

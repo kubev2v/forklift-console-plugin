@@ -1,11 +1,11 @@
-import { ProviderModel, V1beta1Provider, V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, ProviderModel, V1beta1Provider } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Creates a new provider with the specified secret information.
  *
  * @param {V1beta1Provider} provider - The provider object to be cloned and modified.
- * @param {V1Secret} secret - The secret object used to update the provider's secret information.
+ * @param {IoK8sApiCoreV1Secret} secret - The secret object used to update the provider's secret information.
  * @returns {Promise<Object>} A Promise that resolves to the created provider object.
  *
  * @async
@@ -20,7 +20,7 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
  *  .then(newProvider => console.log(newProvider))
  *  .catch(err => console.error(err));
  */
-export async function createProvider(provider: V1beta1Provider, secret: V1Secret) {
+export async function createProvider(provider: V1beta1Provider, secret: IoK8sApiCoreV1Secret) {
   // Sanity check, don't try to create empty provider
   if (!provider) {
     return;

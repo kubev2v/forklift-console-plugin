@@ -2,11 +2,11 @@ import { Base64 } from 'js-base64';
 
 import {
   HostModel,
+  IoK8sApiCoreV1Secret,
   NetworkAdapters,
   SecretModel,
   V1beta1Host,
   V1beta1Provider,
-  V1Secret,
   VSphereHost,
 } from '@kubev2v/types';
 import { k8sGet, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
@@ -167,7 +167,7 @@ async function processHostSecretPair(
 }
 
 async function getSecret(name: string, namespace: string) {
-  const secret = await k8sGet<V1Secret>({ model: SecretModel, name, ns: namespace });
+  const secret = await k8sGet<IoK8sApiCoreV1Secret>({ model: SecretModel, name, ns: namespace });
   return secret;
 }
 
@@ -186,7 +186,7 @@ async function patchHost(host: V1beta1Host, ipAddress: string) {
 }
 
 async function patchSecret(
-  secretData: V1Secret,
+  secretData: IoK8sApiCoreV1Secret,
   encodedIpAddress: string,
   encodedUser: string,
   encodedPassword: string,

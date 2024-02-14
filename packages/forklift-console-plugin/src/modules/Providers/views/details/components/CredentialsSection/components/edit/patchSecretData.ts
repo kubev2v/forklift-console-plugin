@@ -1,16 +1,16 @@
 import { Base64 } from 'js-base64';
 
-import { SecretModel, V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Updates the data of a Kubernetes secret resource.
  *
- * @param {V1Secret} secret - The secret object containing the updated data.
+ * @param {IoK8sApiCoreV1Secret} secret - The secret object containing the updated data.
  * @param {boolean} clean - Clean old values from the secret before patching.
  * @returns {Promise<void>} A promise that resolves when the patch operation is complete.
  */
-export async function patchSecretData(secret: V1Secret, clean?: boolean) {
+export async function patchSecretData(secret: IoK8sApiCoreV1Secret, clean?: boolean) {
   const op = secret?.data ? 'replace' : 'add';
 
   // Sanitize secret data

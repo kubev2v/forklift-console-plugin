@@ -1,9 +1,9 @@
 /* eslint-disable @cspell/spellchecker */
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 import { EPOCH } from '../utils';
 
-export const secretInsecure = (namespace: string): V1Secret => ({
+export const secretInsecure = (namespace: string): IoK8sApiCoreV1Secret => ({
   kind: 'Secret',
   apiVersion: 'v1',
   metadata: {
@@ -26,7 +26,7 @@ export const secretInsecure = (namespace: string): V1Secret => ({
   type: 'Opaque',
 });
 
-export const secretSecure = (namespace: string): V1Secret => {
+export const secretSecure = (namespace: string): IoK8sApiCoreV1Secret => {
   const insecure = secretInsecure(namespace);
   return {
     ...insecure,

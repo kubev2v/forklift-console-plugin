@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { MigrationModelGroupVersionKind, V1beta1Migration } from '@kubev2v/types';
-import { V1beta1MigrationStatusVms } from '@kubev2v/types/dist/models/V1beta1MigrationStatusVms';
+import {
+  MigrationModelGroupVersionKind,
+  V1beta1Migration,
+  V1beta1MigrationStatusVms,
+} from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Chart, ChartAxis, ChartBar, ChartGroup, ChartTooltip } from '@patternfly/react-charts';
 import {

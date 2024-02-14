@@ -2,7 +2,7 @@ import React from 'react';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { OpenshiftCredentialsSection } from './OpenshiftCredentialsSection';
@@ -55,7 +55,7 @@ export const CredentialsSection_: React.FC<{ name: string; namespace: string; ty
 }) => {
   const { t } = useForkliftTranslation();
 
-  const [secret, loaded, loadError] = useK8sWatchResource<V1Secret>({
+  const [secret, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Secret>({
     groupVersionKind: { version: 'v1', kind: 'Secret' },
     namespaced: true,
     namespace: namespace,

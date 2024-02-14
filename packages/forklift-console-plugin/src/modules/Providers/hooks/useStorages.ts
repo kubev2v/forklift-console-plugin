@@ -5,10 +5,10 @@ import {
   OpenstackVolumeType,
   OVirtStorageDomain,
   ProviderType,
+  TypedOvaResource,
   V1beta1Provider,
   VSphereDataStore,
 } from '@kubev2v/types';
-import { TypedOvaResource } from '@kubev2v/types/dist/types/provider/ova/TypedResource';
 
 import useProviderInventory from './useProviderInventory';
 

@@ -1,4 +1,4 @@
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 import { ValidationMsg } from '../common';
 
@@ -7,7 +7,7 @@ import { openstackSecretValidator } from './openstack/openstackSecretValidator';
 import { ovirtSecretValidator } from './ovirt/ovirtSecretValidator';
 import { vsphereSecretValidator } from './vsphere/vsphereSecretValidator';
 
-export function secretValidator(type: string, secret: V1Secret): ValidationMsg {
+export function secretValidator(type: string, secret: IoK8sApiCoreV1Secret): ValidationMsg {
   let validationError: ValidationMsg;
 
   switch (type) {

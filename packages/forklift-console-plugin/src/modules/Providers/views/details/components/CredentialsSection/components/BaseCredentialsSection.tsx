@@ -3,7 +3,7 @@ import { AlertMessageForModals } from 'src/modules/Providers/modals';
 import { isSecretDataChanged, ValidationMsg } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -22,13 +22,13 @@ import { patchSecretData } from './edit';
 import './BaseCredentialsSection.style.css';
 
 export interface ListComponentProps {
-  secret: V1Secret;
+  secret: IoK8sApiCoreV1Secret;
   reveal: boolean;
 }
 
 export interface EditComponentProps {
-  secret: V1Secret;
-  onChange: (newValue: V1Secret) => void;
+  secret: IoK8sApiCoreV1Secret;
+  onChange: (newValue: IoK8sApiCoreV1Secret) => void;
 }
 
 /**
@@ -37,7 +37,7 @@ export interface EditComponentProps {
  * @typedef {Object} BaseCredentialsSecretState
  * @property {boolean} reveal - Determines whether the secret's values are visible.
  * @property {boolean} edit - Determines whether the secret is currently being edited.
- * @property {V1Secret} newSecret - The new version of the secret being edited.
+ * @property {IoK8sApiCoreV1Secret} newSecret - The new version of the secret being edited.
  * @property {boolean} dataChanged - Determines whether the secret's data has changed.
  * @property {boolean} dataIsValid - Determines whether the new secret's data is valid.
  * @property {ReactNode} alertMessage - The message to display when a validation error occurs.
@@ -45,15 +45,15 @@ export interface EditComponentProps {
 export interface BaseCredentialsSecretState {
   reveal: boolean;
   edit: boolean;
-  newSecret: V1Secret;
+  newSecret: IoK8sApiCoreV1Secret;
   dataChanged: boolean;
   dataError: ValidationMsg;
   alertMessage: ReactNode;
 }
 
 export type BaseCredentialsSectionProps = {
-  secret: V1Secret;
-  validator: (secret: V1Secret) => ValidationMsg;
+  secret: IoK8sApiCoreV1Secret;
+  validator: (secret: IoK8sApiCoreV1Secret) => ValidationMsg;
   ListComponent: React.FC<ListComponentProps>;
   EditComponent: React.FC<EditComponentProps>;
 };
@@ -86,7 +86,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
 
   function reducer(
     state: BaseCredentialsSecretState,
-    action: { type: string; payload?: V1Secret },
+    action: { type: string; payload?: IoK8sApiCoreV1Secret },
   ): BaseCredentialsSecretState {
     switch (action.type) {
       case 'TOGGLE_REVEAL':
@@ -128,7 +128,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
   }
 
   // Handle user edits
-  function onNewSecretChange(newValue: V1Secret) {
+  function onNewSecretChange(newValue: IoK8sApiCoreV1Secret) {
     // update staged secret with new value
     dispatch({ type: 'SET_NEW_SECRET', payload: newValue });
   }

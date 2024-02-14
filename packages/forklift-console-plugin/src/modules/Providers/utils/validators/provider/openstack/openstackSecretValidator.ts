@@ -1,11 +1,11 @@
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 import { missingKeysInSecretData, safeBase64Decode } from '../../../helpers';
 import { ValidationMsg } from '../../common';
 
 import { openstackSecretFieldValidator } from './openstackSecretFieldValidator';
 
-export function openstackSecretValidator(secret: V1Secret): ValidationMsg {
+export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
   const authType = safeBase64Decode(secret?.data?.['authType']) || 'password';
 
   let requiredFields = [];

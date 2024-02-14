@@ -1,13 +1,13 @@
 import { Base64 } from 'js-base64';
 
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 import { missingKeysInSecretData } from '../../../helpers';
 import { ValidationMsg } from '../../common';
 
 import { ovirtSecretFieldValidator } from './ovirtSecretFieldValidator';
 
-export function ovirtSecretValidator(secret: V1Secret): ValidationMsg {
+export function ovirtSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
   const requiredFields = ['user', 'password'];
   const validateFields = ['user', 'password', 'insecureSkipVerify', 'cacert'];
 

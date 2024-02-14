@@ -1,4 +1,4 @@
-import { V1VirtualMachine } from '../../k8s/V1VirtualMachine';
+import { V1VirtualMachine } from '../../../generated';
 
 import { TypedOpenshiftResource } from './TypedResource';
 

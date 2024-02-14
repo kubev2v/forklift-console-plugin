@@ -1,6 +1,6 @@
 import { Base64 } from 'js-base64';
 
-import { SecretModel, V1beta1Provider, V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, SecretModel, V1beta1Provider } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 import { OnConfirmHookType } from '../../EditModal';
@@ -20,7 +20,7 @@ export const patchProviderURL: OnConfirmHookType = async ({ resource, model, new
   const providerOp = provider?.spec?.url ? 'replace' : 'add';
 
   // Get providers secret stub
-  const secret: V1Secret = {
+  const secret: IoK8sApiCoreV1Secret = {
     kind: 'Secret',
     apiVersion: 'v1',
     metadata: {

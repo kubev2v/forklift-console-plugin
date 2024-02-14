@@ -1,4 +1,4 @@
-import { V1beta1Provider } from '../../../models';
+import { V1beta1Provider } from '../../../generated';
 
 import { OpenshiftResource } from './Resource';
 

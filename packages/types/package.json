@@ -20,10 +20,6 @@
     "build": "rollup -c --bundleConfigAsCjs",
     "start": "rollup -c --bundleConfigAsCjs --watch",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "generate:schemas": "bash ./ci/generate-schemas.sh"
-  },
-  "devDependencies": {
-    "ts-json-schema-generator": "^1.2.0"
+    "lint:fix": "eslint . --fix"
   }
 }

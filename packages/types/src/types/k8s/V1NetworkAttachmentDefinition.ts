@@ -1,4 +1,4 @@
-import { IoK8sApimachineryPkgApisMetaV1ObjectMeta } from '../../models';
+import { IoK8sApimachineryPkgApisMetaV1ObjectMeta } from '../../generated';
 
 export interface V1NetworkAttachmentDefinition {
   kind: 'NetworkAttachmentDefinition';

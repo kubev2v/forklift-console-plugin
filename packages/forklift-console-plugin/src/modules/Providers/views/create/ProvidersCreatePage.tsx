@@ -4,7 +4,7 @@ import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelRef, V1beta1Provider, V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
 import {
   Alert,
   Button,
@@ -27,7 +27,7 @@ import { createProvider, createProviderSecret, patchProviderSecretOwner } from '
 import './ProvidersCreatePage.style.css';
 
 interface ProvidersCreatePageState {
-  newSecret: V1Secret;
+  newSecret: IoK8sApiCoreV1Secret;
   newProvider: V1beta1Provider;
   validationError: ValidationMsg;
   apiError: Error | null;
@@ -65,7 +65,7 @@ export const ProvidersCreatePage: React.FC<{
 
   function reducer(
     state: ProvidersCreatePageState,
-    action: { type: string; payload?: string | V1Secret | V1beta1Provider },
+    action: { type: string; payload?: string | IoK8sApiCoreV1Secret | V1beta1Provider },
   ): ProvidersCreatePageState {
     switch (action.type) {
       case 'SET_NEW_SECRET': {
@@ -134,7 +134,7 @@ export const ProvidersCreatePage: React.FC<{
   }
 
   // Handle user edits
-  function onNewSecretChange(newValue: V1Secret) {
+  function onNewSecretChange(newValue: IoK8sApiCoreV1Secret) {
     // update staged secret with new value
     dispatch({ type: 'SET_NEW_SECRET', payload: newValue });
   }
@@ -147,7 +147,7 @@ export const ProvidersCreatePage: React.FC<{
 
   // Handle user clicking "save"
   async function onUpdate() {
-    let secret: V1Secret;
+    let secret: IoK8sApiCoreV1Secret;
     let provider: V1beta1Provider;
 
     toggleIsLoading();
