@@ -45,11 +45,6 @@ const PlanDetailsPage_: React.FC<{
       component: () => <PlanYAML plan={obj} loaded={loaded} loadError={loadError} />,
     },
     {
-      href: 'hooks',
-      name: t('Hooks'),
-      component: () => <PlanHooks plan={obj} loaded={loaded} loadError={loadError} />,
-    },
-    {
       href: 'vms',
       name: t('Virtual Machines'),
       component: () => <PlanVirtualMachines plan={obj} loaded={loaded} loadError={loadError} />,
@@ -58,6 +53,11 @@ const PlanDetailsPage_: React.FC<{
       href: 'mappings',
       name: t('Mappings'),
       component: () => <PlanMappings plan={obj} loaded={loaded} loadError={loadError} />,
+    },
+    {
+      href: 'hooks',
+      name: t('Hooks'),
+      component: () => <PlanHooks plan={obj} loaded={loaded} loadError={loadError} />,
     },
   ];
 
