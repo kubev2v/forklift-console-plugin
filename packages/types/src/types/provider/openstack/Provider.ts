@@ -1,4 +1,4 @@
-import { V1beta1Provider } from '../../../models';
+import { V1beta1Provider } from '../../../generated';
 import { OpenshiftResource } from '../openshift/Resource';
 
 // https://github.com/kubev2v/forklift/tree/main/pkg/controller/provider/web/openstack/provider.go

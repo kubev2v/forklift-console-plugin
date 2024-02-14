@@ -5,7 +5,7 @@ import { SelectableCard } from 'src/modules/Providers/utils/components/Galerry/S
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderType, V1beta1Provider, V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, ProviderType, V1beta1Provider } from '@kubev2v/types';
 import { Flex, FlexItem, Form, FormGroup, TextInput } from '@patternfly/react-core';
 
 import { EditProvider } from './EditProvider';
@@ -13,9 +13,9 @@ import { EditProviderSectionHeading } from './EditProviderSectionHeading';
 import { providerCardItems } from './providerCardItems';
 export interface ProvidersCreateFormProps {
   newProvider: V1beta1Provider;
-  newSecret: V1Secret;
+  newSecret: IoK8sApiCoreV1Secret;
   onNewProviderChange: (V1beta1Provider) => void;
-  onNewSecretChange: (V1Secret) => void;
+  onNewSecretChange: (IoK8sApiCoreV1Secret) => void;
   providerNames?: string[];
 }
 

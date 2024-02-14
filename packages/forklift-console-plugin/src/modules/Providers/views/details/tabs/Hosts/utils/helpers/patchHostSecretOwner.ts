@@ -1,15 +1,15 @@
-import { SecretModel, V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Patches a Kubernetes secret with the given owner reference.
  *
- * @param {V1Secret} secret - The secret object to be patched.
+ * @param {IoK8sApiCoreV1Secret} secret - The secret object to be patched.
  * @param {{ name: string; uid: string }} ownerRef - The owner reference to be added to the secret.
  * @returns {Promise<void>} A promise that resolves when the patch operation is complete.
  */
 export async function patchHostSecretOwner(
-  secret: V1Secret,
+  secret: IoK8sApiCoreV1Secret,
   ownerRef: { name: string; uid: string },
 ) {
   const patchedSecret = await k8sPatch({

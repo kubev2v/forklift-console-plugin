@@ -24,8 +24,8 @@ import {
   VSphereTreeNode,
   VSphereVM,
 } from '@kubev2v/types';
-import { V1beta1PlanSpecProviderDestination } from '@kubev2v/types/src/models/V1beta1PlanSpecProviderDestination';
-import { V1beta1PlanSpecProviderSource } from '@kubev2v/types/src/models/V1beta1PlanSpecProviderSource';
+import { V1beta1PlanSpecProviderDestination } from '@kubev2v/types';
+import { V1beta1PlanSpecProviderSource } from '@kubev2v/types';
 
 export const NAMESPACE_FORKLIFT = 'konveyor-forklift';
 export const NAMESPACE_MIGRATION = 'konveyor-migration';

@@ -1,7 +1,9 @@
 import { MigrationModelGroupVersionKind as gvk, V1beta1Migration } from '@kubev2v/types';
-import { V1beta1MigrationStatus } from '@kubev2v/types/dist/models/V1beta1MigrationStatus';
-import { V1beta1PlanStatusMigration } from '@kubev2v/types/dist/models/V1beta1PlanStatusMigration';
-import { V1beta1MigrationSpec } from '@kubev2v/types/src/models/V1beta1MigrationSpec';
+import {
+  V1beta1MigrationSpec,
+  V1beta1MigrationStatus,
+  V1beta1PlanStatusMigration,
+} from '@kubev2v/types';
 
 import { EPOCH, nameAndNamespace, NOW } from '../utils';
 

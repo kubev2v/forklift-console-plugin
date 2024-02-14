@@ -1,4 +1,4 @@
-import { V1NetworkAttachmentDefinition } from '../../k8s/V1NetworkAttachmentDefinition';
+import { V1NetworkAttachmentDefinition } from '../../k8s';
 
 import { TypedOpenshiftResource } from './TypedResource';
 

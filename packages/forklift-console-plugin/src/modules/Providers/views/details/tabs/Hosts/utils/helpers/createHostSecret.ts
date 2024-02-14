@@ -1,13 +1,13 @@
-import { SecretModel, V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Creates a Kubernetes secret with the given data.
  *
- * @param {V1Secret} secret - The secret object containing the data to be created.
- * @returns {Promise<V1Secret>} A promise that resolves to the created secret.
+ * @param {IoK8sApiCoreV1Secret} secret - The secret object containing the data to be created.
+ * @returns {Promise<IoK8sApiCoreV1Secret>} A promise that resolves to the created secret.
  */
-export async function createHostSecret(secret: V1Secret) {
+export async function createHostSecret(secret: IoK8sApiCoreV1Secret) {
   const secretData = cleanObject(secret.data);
   const cleanedSecret = { ...secret, data: secretData };
 

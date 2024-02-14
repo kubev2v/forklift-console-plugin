@@ -3,6 +3,7 @@
 module.exports = {
   root: true,
   extends: ['plugin:@kubev2v/eslint-plugin/typescript'],
+  ignorePatterns: ['src/generated/'],
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/prefer-as-const': 'off',

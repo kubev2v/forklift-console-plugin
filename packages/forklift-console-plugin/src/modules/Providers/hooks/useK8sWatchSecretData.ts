@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { useK8sWatchResource, WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -19,7 +19,7 @@ export const useK8sWatchSecretData = (resourceParams: WatchK8sResource): K8sSecr
   const [secretLoaded, setLoaded] = useState(false);
   const [secretLoadError, setLoadError] = useState<Error | null>(null);
 
-  const [secret, loaded, error] = useK8sWatchResource<V1Secret>(resourceParams);
+  const [secret, loaded, error] = useK8sWatchResource<IoK8sApiCoreV1Secret>(resourceParams);
 
   useEffect(() => {
     if (loaded && error) {
@@ -34,7 +34,7 @@ export const useK8sWatchSecretData = (resourceParams: WatchK8sResource): K8sSecr
     setLoaded(true);
   };
 
-  const handleLoadedSecret = (secret: V1Secret | null) => {
+  const handleLoadedSecret = (secret: IoK8sApiCoreV1Secret | null) => {
     setLoaded(true);
     if (JSON.stringify(secret?.data) !== JSON.stringify(secretData)) {
       setSecretData(secret?.data);

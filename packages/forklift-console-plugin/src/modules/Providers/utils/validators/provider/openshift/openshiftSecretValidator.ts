@@ -1,12 +1,12 @@
 import { Base64 } from 'js-base64';
 
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 import { ValidationMsg } from '../../common';
 
 import { openshiftSecretFieldValidator } from './openshiftSecretFieldValidator';
 
-export function openshiftSecretValidator(secret: V1Secret): ValidationMsg {
+export function openshiftSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
   const url = secret?.data?.url || '';
   const token = secret?.data?.token || '';
   const cacert = secret?.data?.cacert || '';

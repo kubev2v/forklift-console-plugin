@@ -1,4 +1,4 @@
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 import {
   disks,
@@ -71,7 +71,7 @@ const paths = [
     '/api/proxy/plugin/forklift-console-plugin/forklift-must-gather-api/must-gather/plan::',
     MOCK_MUST_GATHERS[0],
   ],
-  ...NAMESPACES.flatMap((namespace): [string, string, (n: string) => V1Secret][] => [
+  ...NAMESPACES.flatMap((namespace): [string, string, (n: string) => IoK8sApiCoreV1Secret][] => [
     [namespace, 'mock-insecure', secretInsecure],
     [namespace, 'mock-secure', secretSecure],
   ]).map(([namespace, secretName, createSecret]) => [

@@ -1,13 +1,16 @@
-import { V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 /**
  * Compares the data records between two versions of a secret.
  *
- * @param {V1Secret} secret1 - The first version of the secret.
- * @param {V1Secret} secret2 - The second version of the secret.
+ * @param {IoK8sApiCoreV1Secret} secret1 - The first version of the secret.
+ * @param {IoK8sApiCoreV1Secret} secret2 - The second version of the secret.
  * @returns {boolean} Returns true if the data records have changed, otherwise returns false.
  */
-export function isSecretDataChanged(secret1: V1Secret, secret2: V1Secret): boolean {
+export function isSecretDataChanged(
+  secret1: IoK8sApiCoreV1Secret,
+  secret2: IoK8sApiCoreV1Secret,
+): boolean {
   // Both secrets don't have data records
   if (!secret1.data && !secret2.data) {
     return false;

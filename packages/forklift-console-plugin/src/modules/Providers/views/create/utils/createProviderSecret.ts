@@ -1,13 +1,13 @@
 import { Base64 } from 'js-base64';
 
-import { SecretModel, V1beta1Provider, V1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, SecretModel, V1beta1Provider } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Creates a new Kubernetes secret using the provided provider and secret data.
  *
  * @param {V1beta1Provider} provider - The provider object which includes metadata and spec information.
- * @param {V1Secret} secret - The base secret object to be cloned and modified.
+ * @param {IoK8sApiCoreV1Secret} secret - The base secret object to be cloned and modified.
  * @returns {Promise<Object>} A Promise that resolves to the created Kubernetes secret object.
  *
  * @async
@@ -22,7 +22,10 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
  *  .then(newSecret => console.log(newSecret))
  *  .catch(err => console.error(err));
  */
-export async function createProviderSecret(provider: V1beta1Provider, secret: V1Secret) {
+export async function createProviderSecret(
+  provider: V1beta1Provider,
+  secret: IoK8sApiCoreV1Secret,
+) {
   const url = provider?.spec?.url;
 
   // Sanity check, don't try to create empty secret, or a secret without url
@@ -34,7 +37,7 @@ export async function createProviderSecret(provider: V1beta1Provider, secret: V1
   const generateName = `${provider.metadata.name}-`;
   const cleanedData = cleanObject(secret?.data);
 
-  const newSecret: V1Secret = {
+  const newSecret: IoK8sApiCoreV1Secret = {
     ...secret,
     metadata: {
       ...secret?.metadata,
