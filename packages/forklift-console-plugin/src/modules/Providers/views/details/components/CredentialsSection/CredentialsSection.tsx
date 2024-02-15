@@ -44,15 +44,17 @@ export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
       name={provider?.spec?.secret?.name}
       namespace={provider?.spec?.secret?.namespace}
       type={provider?.spec?.type}
+      url={provider?.spec?.url}
     />
   );
 };
 
-export const CredentialsSection_: React.FC<{ name: string; namespace: string; type: string }> = ({
-  name,
-  namespace,
-  type,
-}) => {
+export const CredentialsSection_: React.FC<{
+  name: string;
+  namespace: string;
+  type: string;
+  url: string;
+}> = ({ name, namespace, type, url }) => {
   const { t } = useForkliftTranslation();
 
   const [secret, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Secret>({
@@ -94,13 +96,13 @@ export const CredentialsSection_: React.FC<{ name: string; namespace: string; ty
 
   switch (type) {
     case 'ovirt':
-      return <OvirtCredentialsSection secret={secret} />;
+      return <OvirtCredentialsSection url={url} secret={secret} />;
     case 'openshift':
-      return <OpenshiftCredentialsSection secret={secret} />;
+      return <OpenshiftCredentialsSection url={url} secret={secret} />;
     case 'openstack':
-      return <OpenstackCredentialsSection secret={secret} />;
+      return <OpenstackCredentialsSection url={url} secret={secret} />;
     case 'vsphere':
-      return <VSphereCredentialsSection secret={secret} />;
+      return <VSphereCredentialsSection url={url} secret={secret} />;
     default:
       return <></>;
   }

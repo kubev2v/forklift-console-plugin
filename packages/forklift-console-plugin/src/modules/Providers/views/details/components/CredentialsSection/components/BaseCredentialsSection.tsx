@@ -54,6 +54,7 @@ export interface BaseCredentialsSecretState {
 
 export type BaseCredentialsSectionProps = {
   secret: IoK8sApiCoreV1Secret;
+  url: string;
   validator: (secret: IoK8sApiCoreV1Secret) => ValidationMsg;
   ListComponent: React.FC<ListComponentProps>;
   EditComponent: React.FC<EditComponentProps>;
@@ -61,6 +62,7 @@ export type BaseCredentialsSectionProps = {
 
 export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
   secret,
+  url,
   validator,
   ListComponent,
   EditComponent,
@@ -200,7 +202,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
       <Divider className="forklift-section-secret-edit" />
 
       {state.alertMessage}
-      <EditComponent secret={state.newSecret} onChange={onNewSecretChange} />
+      <EditComponent secret={state.newSecret} onChange={onNewSecretChange} url={url} />
     </>
   ) : (
     <>
