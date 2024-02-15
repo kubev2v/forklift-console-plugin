@@ -54,7 +54,7 @@ export interface BaseCredentialsSecretState {
 
 export type BaseCredentialsSectionProps = {
   secret: IoK8sApiCoreV1Secret;
-  url: string;
+  url?: string;
   validator: (secret: IoK8sApiCoreV1Secret) => ValidationMsg;
   ListComponent: React.FC<ListComponentProps>;
   EditComponent: React.FC<EditComponentProps>;

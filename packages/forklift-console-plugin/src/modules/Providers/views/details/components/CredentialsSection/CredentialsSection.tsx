@@ -53,7 +53,7 @@ export const CredentialsSection_: React.FC<{
   name: string;
   namespace: string;
   type: string;
-  url: string;
+  url?: string;
 }> = ({ name, namespace, type, url }) => {
   const { t } = useForkliftTranslation();
 
@@ -96,11 +96,11 @@ export const CredentialsSection_: React.FC<{
 
   switch (type) {
     case 'ovirt':
-      return <OvirtCredentialsSection url={url} secret={secret} />;
+      return <OvirtCredentialsSection secret={secret} />;
     case 'openshift':
-      return <OpenshiftCredentialsSection url={url} secret={secret} />;
+      return <OpenshiftCredentialsSection secret={secret} />;
     case 'openstack':
-      return <OpenstackCredentialsSection url={url} secret={secret} />;
+      return <OpenstackCredentialsSection secret={secret} />;
     case 'vsphere':
       return <VSphereCredentialsSection url={url} secret={secret} />;
     default:

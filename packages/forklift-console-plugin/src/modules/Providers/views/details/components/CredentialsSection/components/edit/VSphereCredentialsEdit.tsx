@@ -213,9 +213,11 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, u
         <CertificateUpload
           id="cacert"
           url={url}
-          cacert={cacert}
+          value={cacert}
           validated={state.validation.cacert.type}
-          handleSave={(value) => handleChange('cacert', value)}
+          onDataChange={(value) => handleChange('cacert', value)}
+          onTextChange={(value) => handleChange('cacert', value)}
+          onClearClick={() => handleChange('cacert', '')}
           isDisabled={insecureSkipVerify}
         />
       </FormGroup>

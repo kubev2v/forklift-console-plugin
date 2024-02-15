@@ -6,13 +6,8 @@ import { Button, FileUpload, FileUploadProps, Flex, FlexItem } from '@patternfly
 
 import { FetchCertificateModal } from './FetchCertificateModal';
 
-export interface CertificateUploadProps {
-  id?: string;
-  url: string;
-  cacert: string;
-  validated: FileUploadProps['validated'];
-  isDisabled: boolean;
-  handleSave: (cacert: string) => void;
+export interface CertificateUploadProps extends FileUploadProps {
+  url?: string;
 }
 
 /**
@@ -24,42 +19,54 @@ export interface CertificateUploadProps {
 export const CertificateUpload: FC<CertificateUploadProps> = ({
   id,
   url,
-  cacert,
-  handleSave,
+  value,
+  filenamePlaceholder,
+  browseButtonText,
   validated,
+  onDataChange,
+  onTextChange,
+  onClearClick,
   isDisabled,
+  type,
 }) => {
   const { showModal } = useModal();
   const { t } = useForkliftTranslation();
+  const isText = !type || type === 'text';
   return (
     <>
       <FileUpload
         id={id}
-        type="text"
-        filenamePlaceholder={t('Drag and drop a file or upload one')}
-        value={cacert}
+        type={type || 'text'}
+        filenamePlaceholder={filenamePlaceholder || t('Drag and drop a file or upload one')}
+        value={value}
         validated={validated}
-        onDataChange={handleSave}
-        onTextChange={handleSave}
-        onClearClick={() => handleSave('')}
-        browseButtonText={t('Upload')}
+        onDataChange={onDataChange}
+        onTextChange={onTextChange}
+        onClearClick={onClearClick}
+        browseButtonText={browseButtonText || t('Upload')}
         isDisabled={isDisabled}
       >
-        <Flex>
-          <FlexItem>
-            <Button
-              isDisabled={!url || isDisabled}
-              variant="link"
-              onClick={() =>
-                showModal(
-                  <FetchCertificateModal url={url} handleSave={handleSave} existingCert={cacert} />,
-                )
-              }
-            >
-              {t('Fetch and verify certificate')}
-            </Button>
-          </FlexItem>
-        </Flex>
+        {url && isText && (
+          <Flex>
+            <FlexItem>
+              <Button
+                isDisabled={isDisabled}
+                variant="link"
+                onClick={() =>
+                  showModal(
+                    <FetchCertificateModal
+                      url={url}
+                      handleSave={onTextChange}
+                      existingCert={String(value)}
+                    />,
+                  )
+                }
+              >
+                {t('Fetch and verify certificate')}
+              </Button>
+            </FlexItem>
+          </Flex>
+        )}
       </FileUpload>
     </>
   );
