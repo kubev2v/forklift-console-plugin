@@ -16,5 +16,13 @@
 }
 
 .forklift--create-vm-migration-plan--alert {
-    margin-bottom:var(--pf-global--spacer--md);
+    margin-bottom: var(--pf-global--spacer--md);
+}
+
+.forklift--create-vm-migration-plan--section-header {
+    margin-bottom: 0;
+}
+
+.forklift--create-vm-migration-plan--form-actions {
+    margin-top: var(--pf-global--spacer--md);
 }

@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { useHistory } from 'react-router';
-import SectionHeading from 'src/components/headers/SectionHeading';
 import { PlanCreateProgress } from 'src/modules/Plans/views/create';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -33,9 +32,48 @@ const ProvidersCreateVmMigrationPage: FC = () => {
     return <LoadingDots />;
   }
 
+  const FormAlerts = state.flow.apiError && (
+    <Alert
+      className="co-alert co-alert--margin-top"
+      isInline
+      variant="danger"
+      title={t('API Error')}
+    >
+      {state?.flow?.apiError?.message || state?.flow?.apiError?.toString()}
+    </Alert>
+  );
+
+  const FormActions = (
+    <Flex>
+      <FlexItem>
+        <Button
+          variant="primary"
+          isDisabled={
+            !!state.flow.apiError ||
+            Object.values(state.validation).some((validation) => validation === 'error')
+          }
+          isLoading={isLoading}
+          onClick={() => dispatch(startCreate())}
+        >
+          {t('Create migration plan')}
+        </Button>
+      </FlexItem>
+      <FlexItem>
+        <Button onClick={history.goBack} variant="secondary">
+          {t('Cancel')}
+        </Button>
+      </FlexItem>
+    </Flex>
+  );
+
   return (
     <PageSection variant="light">
-      <PlansCreateForm state={state} dispatch={dispatch}>
+      <PlansCreateForm
+        state={state}
+        dispatch={dispatch}
+        formAlerts={FormAlerts}
+        formActions={FormActions}
+      >
         <Alert
           className="co-alert forklift--create-vm-migration-plan--alert"
           customIcon={<BellIcon />}
@@ -44,44 +82,12 @@ const ProvidersCreateVmMigrationPage: FC = () => {
         >
           <ForkliftTrans>
             To migrate virtual machines select target provider, namespace, mappings and click the{' '}
-            <strong>Create</strong> button to crete the plan.
+            <strong>Create migration plan</strong> button to crete the plan.
           </ForkliftTrans>
         </Alert>
 
         <PlanCreateProgress step="migrate" />
-
-        <SectionHeading text={t('Migrate')} />
       </PlansCreateForm>
-      {state.flow.apiError && (
-        <Alert
-          className="co-alert co-alert--margin-top"
-          isInline
-          variant="danger"
-          title={t('API Error')}
-        >
-          {state.flow.apiError.message || state.flow.apiError.toString()}
-        </Alert>
-      )}
-      <Flex>
-        <FlexItem>
-          <Button
-            variant="primary"
-            isDisabled={
-              !!state.flow.apiError ||
-              Object.values(state.validation).some((validation) => validation === 'error')
-            }
-            isLoading={isLoading}
-            onClick={() => dispatch(startCreate())}
-          >
-            {t('Create')}
-          </Button>
-        </FlexItem>
-        <FlexItem>
-          <Button onClick={history.goBack} variant="secondary">
-            {t('Cancel')}
-          </Button>
-        </FlexItem>
-      </Flex>
     </PageSection>
   );
 };
