@@ -49,11 +49,11 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
       if (id !== 'url') return;
 
       const trimmedUrl: string = value.toString().trim();
-      const validationMsg = validateOpenshiftURL(trimmedUrl);
+      const validationState = validateOpenshiftURL(trimmedUrl);
 
       dispatch({
         type: 'SET_FIELD_VALIDATED',
-        payload: { field: 'url', validationMsg },
+        payload: { field: 'url', validationState },
       });
 
       onChange({ ...provider, spec: { ...provider.spec, url: trimmedUrl } });
