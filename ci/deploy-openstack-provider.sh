@@ -4,7 +4,7 @@ set -euo pipefail
 script_dir=$(dirname "$0")
 
 echo ""
-echo "Install mock providers"
+echo "Install mock openstack"
 echo "======================"
 
 # Setup NFS 

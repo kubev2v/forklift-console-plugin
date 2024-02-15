@@ -4,8 +4,8 @@ set -euo pipefail
 script_dir=$(dirname "$0")
 
 echo ""
-echo "Install mock providers"
-echo "======================"
+echo "Install all mock providers"
+echo "=========================="
 
 # Setup NFS 
 # Uncomment for install NFS one time (requires sudo)
