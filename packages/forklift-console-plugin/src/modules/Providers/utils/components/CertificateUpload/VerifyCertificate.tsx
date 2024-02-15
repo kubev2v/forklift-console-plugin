@@ -35,7 +35,7 @@ export const VerifyCertificate: FC<{
           title={t('The authenticity of this host cannot be established')}
         >
           {t(
-            "This certificate's fingerprint does not match the previously known certificate. Manually validate the fingerprint before proceeding.",
+            "This certificate's fingerprint does not match the previously verified certificate. Manually validate the fingerprint before proceeding.",
           )}
         </Alert>
       )}
@@ -61,7 +61,6 @@ export const VerifyCertificate: FC<{
         <FlexItem>
           <Checkbox
             label={t('I trust the authenticity of this certificate')}
-            aria-label={t('Validate Certificate')}
             id="certificate-check"
             name="certificateCheck"
             isChecked={isTrusted}

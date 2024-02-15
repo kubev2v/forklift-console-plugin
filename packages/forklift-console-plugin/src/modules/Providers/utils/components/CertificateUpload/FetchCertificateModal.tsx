@@ -56,7 +56,7 @@ export const FetchCertificateModal: FC<{
 
       {certError && (
         <Alert isInline title={'Error'} variant="danger">
-          {t('The certificate is not a valid PEM encoded X.509 certificate')}
+          {t('The certificate is not a valid PEM-encoded X.509 certificate')}
         </Alert>
       )}
 
