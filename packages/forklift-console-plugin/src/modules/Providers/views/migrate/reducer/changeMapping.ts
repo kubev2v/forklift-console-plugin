@@ -53,7 +53,7 @@ export const replaceMapping = (
   const destinationChanged = current.destination !== nextDest;
 
   if (!currentSource || !nextSource || !nextDest || (!sourceChanged && !destinationChanged)) {
-    return;
+    return {};
   }
 
   const updatedSources = sourceChanged
