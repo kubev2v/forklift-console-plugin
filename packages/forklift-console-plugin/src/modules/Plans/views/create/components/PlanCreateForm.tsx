@@ -1,9 +1,10 @@
 import React from 'react';
+import { SelectableCard } from 'src/modules/Providers/utils/components/Galerry/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
 import { VmData } from 'src/modules/Providers/views';
 
 import { V1beta1Provider } from '@kubev2v/types';
-import { Form, FormGroup } from '@patternfly/react-core';
+import { Flex, FlexItem, Form, FormGroup } from '@patternfly/react-core';
 
 import { PlanCreatePageState } from '../states';
 
@@ -46,11 +47,25 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
           />
           <ChipsToolbarProviders filterState={filterState} filterDispatch={filterDispatch} />
 
-          <SelectableGallery
-            selectedID={filterState.selectedProviderUID}
-            items={providerCardItems}
-            onChange={onChange}
-          />
+          {filterState.selectedProviderUID ? (
+            <Flex>
+              <FlexItem className="forklift--create-provider-edit-card-selected">
+                <SelectableCard
+                  title={providerCardItems[filterState.selectedProviderUID]?.title}
+                  titleLogo={providerCardItems[filterState.selectedProviderUID]?.logo}
+                  onChange={() => onChange('')}
+                  isSelected
+                  isCompact
+                />
+              </FlexItem>
+            </Flex>
+          ) : (
+            <SelectableGallery
+              selectedID={filterState.selectedProviderUID}
+              items={providerCardItems}
+              onChange={onChange}
+            />
+          )}
         </FormGroup>
       </Form>
     </div>
