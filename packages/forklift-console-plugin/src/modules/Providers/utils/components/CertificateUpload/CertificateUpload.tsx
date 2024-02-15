@@ -6,6 +6,8 @@ import { Button, FileUpload, FileUploadProps, Flex, FlexItem } from '@patternfly
 
 import { FetchCertificateModal } from './FetchCertificateModal';
 
+import './CertificateUpload.style.css';
+
 export interface CertificateUploadProps extends FileUploadProps {
   url?: string;
 }
@@ -50,8 +52,9 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
           <Flex>
             <FlexItem>
               <Button
+                className="forklift-certificate-upload-margin"
                 isDisabled={isDisabled}
-                variant="link"
+                variant="secondary"
                 onClick={() =>
                   showModal(
                     <FetchCertificateModal
@@ -62,7 +65,7 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
                   )
                 }
               >
-                {t('Fetch and verify certificate')}
+                {t('Fetch certificate from URL')}
               </Button>
             </FlexItem>
           </Flex>

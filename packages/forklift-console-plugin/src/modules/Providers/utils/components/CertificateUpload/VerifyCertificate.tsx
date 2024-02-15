@@ -29,13 +29,9 @@ export const VerifyCertificate: FC<{
   return (
     <>
       {hasThumbprintChanged && (
-        <Alert
-          variant="warning"
-          isInline
-          title={t('The authenticity of this host cannot be established')}
-        >
+        <Alert variant="warning" isInline title={t('Certificate change detected')}>
           {t(
-            "This certificate's fingerprint does not match the previously verified certificate. Manually validate the fingerprint before proceeding.",
+            'The current certificate does not match the certificate fetched from URL. Manually validate the fingerprint before proceeding.',
           )}
         </Alert>
       )}

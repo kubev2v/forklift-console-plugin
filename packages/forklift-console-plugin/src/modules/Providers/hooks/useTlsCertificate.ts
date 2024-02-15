@@ -20,12 +20,25 @@ const parseToX509 = (value: string) => {
   }
 };
 
+export const toColonSeparatedHex = (hexString: string) =>
+  Array.from(hexString.toUpperCase())
+    // [a,b,c,d] => [[c,d][a,b]]
+    .reduce(
+      ([last = [], ...rest]: string[][], char: string) =>
+        last.length != 2 ? [[...last, char], ...rest] : [[char], last, ...rest],
+      [],
+    )
+    // [[c,d][a,b]] => [[a,b], [c,d]]
+    .reverse()
+    .map((tuples) => tuples.join(''))
+    .join(':');
+
 /**
  * @param pemEncodedCert valid PEM encoded certificate
  * @returns SHA1 thumbprint
  */
 export const calculateThumbprint = (pemEncodedCert: string) =>
-  KJUR.crypto.Util.hashHex(pemtohex(pemEncodedCert), 'sha1');
+  toColonSeparatedHex(KJUR.crypto.Util.hashHex(pemtohex(pemEncodedCert), 'sha1'));
 
 /**
  * @param url URL param for the tls-certificate endpoint
