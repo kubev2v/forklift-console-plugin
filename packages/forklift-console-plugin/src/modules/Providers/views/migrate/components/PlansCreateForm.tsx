@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
+import SectionHeading from 'src/components/headers/SectionHeading';
 import StandardPage from 'src/components/page/StandardPage';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
@@ -101,9 +102,24 @@ const buildStorageMessages = (
   },
 });
 
+export type PlansCreateFormProps = {
+  children?: ReactNode;
+  formAlerts?: ReactNode;
+  formActions?: ReactNode;
+  state: CreateVmMigrationPageState;
+  dispatch: (action: PageAction<unknown, unknown>) => void;
+};
+
 export const PlansCreateForm = ({
   children,
-  state: {
+  state,
+  dispatch,
+  formAlerts,
+  formActions,
+}: PlansCreateFormProps) => {
+  const { t } = useForkliftTranslation();
+
+  const {
     underConstruction: { plan, netMap, storageMap },
     validation,
     receivedAsParams: { selectedVms },
@@ -125,14 +141,8 @@ export const PlansCreateForm = ({
     },
     flow,
     alerts,
-  },
-  dispatch,
-}: {
-  children?;
-  state: CreateVmMigrationPageState;
-  dispatch: (action: PageAction<unknown, unknown>) => void;
-}) => {
-  const { t } = useForkliftTranslation();
+  } = state;
+
   const vmFields = vmFieldsFactory(t);
   const [isNameEdited, setIsNameEdited] = useState(false);
   const [isTargetProviderEdited, setIsTargetProviderEdited] = useState(false);
@@ -141,6 +151,7 @@ export const PlansCreateForm = ({
   const [isVmDetails, setIsVmDetails] = useState(false);
   const networkMessages = buildNetworkMessages(t);
   const storageMessages = buildStorageMessages(t);
+
   return (
     <Drawer isExpanded={isVmDetails}>
       <DrawerContent
@@ -174,6 +185,11 @@ export const PlansCreateForm = ({
               default: '1Col',
             }}
           >
+            <SectionHeading
+              text={t('Create migration plan')}
+              className="forklift--create-plan--title"
+            />
+
             {isNameEdited || validation.planName === 'error' ? (
               <Form isWidthLimited>
                 <FormGroup
@@ -205,6 +221,12 @@ export const PlansCreateForm = ({
                 isDisabled={flow.editingDone}
               />
             )}
+
+            <SectionHeading
+              text={t('Source')}
+              className="forklift--create-vm-migration-plan--section-header"
+            />
+
             <DetailsItem
               title={t('Source provider')}
               content={
@@ -223,6 +245,11 @@ export const PlansCreateForm = ({
                 </Button>
               </DescriptionListDescription>
             </DescriptionListGroup>
+
+            <SectionHeading
+              text={t('Target')}
+              className="forklift--create-vm-migration-plan--section-header"
+            />
 
             {isTargetProviderEdited ||
             validation.targetProvider === 'error' ||
@@ -341,6 +368,12 @@ export const PlansCreateForm = ({
                 isDisabled={flow.editingDone}
               />
             )}
+
+            <SectionHeading
+              text={t('Mappings')}
+              className="forklift--create-vm-migration-plan--section-header"
+            />
+
             <DescriptionListGroup>
               <DescriptionListTerm>
                 <span className="forklift-page-editable-description-item">
@@ -434,6 +467,8 @@ export const PlansCreateForm = ({
               </DescriptionListDescription>
             </DescriptionListGroup>
           </DescriptionList>
+          {formAlerts}
+          <div className="forklift--create-vm-migration-plan--form-actions">{formActions}</div>
         </DrawerContentBody>
       </DrawerContent>
     </Drawer>

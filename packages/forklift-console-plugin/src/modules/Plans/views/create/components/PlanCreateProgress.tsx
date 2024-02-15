@@ -26,7 +26,7 @@ export const PlanCreateProgress: React.FC<{ step: 'select-source' | 'migrate' }>
         aria-label="select source"
         onClick={history.goBack}
       >
-        {t('Select provider')}
+        {t('Select source')}
       </ProgressStep>
       <ProgressStep
         variant={step === 'migrate' ? 'info' : 'pending'}
@@ -36,7 +36,7 @@ export const PlanCreateProgress: React.FC<{ step: 'select-source' | 'migrate' }>
         titleId="basic-alignment-step3-title"
         aria-label="migrate"
       >
-        {t('Migrate')}
+        {t('Select target')}
       </ProgressStep>
     </ProgressStepper>
   );
