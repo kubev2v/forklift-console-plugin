@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalHOC } from 'src/modules/Providers/modals';
 import { vsphereSecretValidator } from 'src/modules/Providers/utils';
 
 import {
@@ -14,10 +15,12 @@ export type VSphereCredentialsSectionProps = Omit<
 >;
 
 export const VSphereCredentialsSection: React.FC<VSphereCredentialsSectionProps> = (props) => (
-  <BaseCredentialsSection
-    {...props}
-    validator={vsphereSecretValidator}
-    ListComponent={VSphereCredentialsList}
-    EditComponent={VSphereCredentialsEdit}
-  />
+  <ModalHOC>
+    <BaseCredentialsSection
+      {...props}
+      validator={vsphereSecretValidator}
+      ListComponent={VSphereCredentialsList}
+      EditComponent={VSphereCredentialsEdit}
+    />
+  </ModalHOC>
 );

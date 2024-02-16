@@ -1,12 +1,12 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { safeBase64Decode, vsphereSecretFieldValidator } from 'src/modules/Providers/utils';
+import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   Button,
   Divider,
-  FileUpload,
   Form,
   FormGroup,
   Popover,
@@ -23,6 +23,7 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
   const { t } = useForkliftTranslation();
 
   const user = safeBase64Decode(secret?.data?.user || '');
+  const url = safeBase64Decode(secret?.data?.url || '');
   const password = safeBase64Decode(secret?.data?.password || '');
   const cacert = safeBase64Decode(secret?.data?.cacert || '');
   const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
@@ -210,16 +211,14 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
         helperTextInvalid={state.validation.cacert.msg}
         validated={state.validation.cacert.type}
       >
-        <FileUpload
+        <CertificateUpload
           id="cacert"
-          type="text"
-          filenamePlaceholder="Drag and drop a file or upload one"
+          url={url}
           value={cacert}
           validated={state.validation.cacert.type}
           onDataChange={(value) => handleChange('cacert', value)}
           onTextChange={(value) => handleChange('cacert', value)}
           onClearClick={() => handleChange('cacert', '')}
-          browseButtonText="Upload"
           isDisabled={insecureSkipVerify}
         />
       </FormGroup>
