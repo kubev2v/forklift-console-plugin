@@ -9,7 +9,13 @@ import { ovirtSecretFieldValidator } from './ovirtSecretFieldValidator';
 
 export function ovirtSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
   const requiredFields = ['user', 'password'];
-  const validateFields = ['user', 'password', 'insecureSkipVerify', 'cacert'];
+  const validateFields = ['user', 'password', 'insecureSkipVerify'];
+
+  // Add ca cert validation if not insecureSkipVerify
+  const insecureSkipVerify = Base64.decode(secret?.data?.['insecureSkipVerify'] || '');
+  if (insecureSkipVerify !== 'true') {
+    validateFields.push('cacert');
+  }
 
   const missingRequiredFields = missingKeysInSecretData(secret, requiredFields);
   if (missingRequiredFields.length > 0) {
