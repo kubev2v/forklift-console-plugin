@@ -52,9 +52,9 @@ export function planCreatePageReducer(
 ): typeof planCreatePageInitialState {
   switch (action.type) {
     case SET_NAME_FILTER:
-      return { ...state, nameFilter: action.payload };
+      return { ...state, nameFilter: action.payload, selectedProviderUID: '', selectedVMs: [] };
     case UPDATE_TYPE_FILTERS:
-      return { ...state, typeFilters: action.payload };
+      return { ...state, typeFilters: action.payload, selectedProviderUID: '', selectedVMs: [] };
     case SELECT_PROVIDER:
       return { ...state, selectedProviderUID: action.payload, selectedVMs: [] };
     case UPDATE_SELECTED_VMS:
