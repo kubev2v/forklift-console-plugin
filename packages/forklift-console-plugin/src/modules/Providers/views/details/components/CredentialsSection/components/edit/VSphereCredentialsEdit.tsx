@@ -19,10 +19,11 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
 
-export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, url, onChange }) => {
+export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
   const { t } = useForkliftTranslation();
 
   const user = safeBase64Decode(secret?.data?.user || '');
+  const url = safeBase64Decode(secret?.data?.url || '');
   const password = safeBase64Decode(secret?.data?.password || '');
   const cacert = safeBase64Decode(secret?.data?.cacert || '');
   const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';

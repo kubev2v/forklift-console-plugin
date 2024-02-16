@@ -59,11 +59,7 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
           <VSphereProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
 
           <EditProviderSectionHeading text={t('Provider credentials')} />
-          <VSphereCredentialsEdit
-            secret={newSecret}
-            url={newProvider?.spec?.url}
-            onChange={onNewSecretChange}
-          />
+          <VSphereCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
         </ModalHOC>
       );
     case 'ova':
