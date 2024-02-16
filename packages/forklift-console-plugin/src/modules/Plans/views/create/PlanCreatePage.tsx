@@ -37,12 +37,15 @@ export const PlanCreatePage: React.FC<{
     planCreatePageInitialState,
   );
 
-  const [providers] = useK8sWatchResource<V1beta1Provider[]>({
+  const [allProviders] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,
     isList: true,
     namespace,
   });
+
+  // Get the ready providers (note: currently forklift does not allow filter be status.phase)
+  const providers = allProviders.filter((p) => p?.status?.phase === 'Ready');
 
   const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
 
