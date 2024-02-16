@@ -9,7 +9,6 @@ import { openshiftSecretFieldValidator } from './openshiftSecretFieldValidator';
 export function openshiftSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
   const url = secret?.data?.url || '';
   const token = secret?.data?.token || '';
-  const cacert = secret?.data?.cacert || '';
 
   // Empty URL + token is valid as host providers
   if (url === '' && token === '') {
@@ -26,19 +25,23 @@ export function openshiftSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
     return { type: 'error', msg: `Missing required fields [url]` };
   }
 
-  // if we have url and token, validate token
-  // url will be validated using the provider rules
-  if (token !== '') {
-    const value = Base64.decode(token);
+  // Validate fields
+  const validateFields = ['user', 'token', 'insecureSkipVerify'];
 
-    return openshiftSecretFieldValidator('token', value);
+  // Add ca cert validation if not insecureSkipVerify
+  const insecureSkipVerify = Base64.decode(secret?.data?.['insecureSkipVerify'] || '');
+  if (insecureSkipVerify !== 'true') {
+    validateFields.push('cacert');
   }
 
-  // If we have cacert, validate it
-  if (cacert !== '') {
-    const value = Base64.decode(cacert);
+  for (const id of validateFields) {
+    const value = Base64.decode(secret?.data?.[id] || '');
 
-    return openshiftSecretFieldValidator('cacert', value);
+    const validation = openshiftSecretFieldValidator(id, value);
+
+    if (validation.type === 'error') {
+      return validation;
+    }
   }
 
   return { type: 'default' };

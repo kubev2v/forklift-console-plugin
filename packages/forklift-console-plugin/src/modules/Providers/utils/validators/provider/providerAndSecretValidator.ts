@@ -9,16 +9,29 @@ export function providerAndSecretValidator(
   provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret,
 ): ValidationMsg {
+  const type = provider?.spec?.type || '';
+
+  const secretValidation = secretValidator(type, secret);
   const providerValidation = providerValidator(provider);
-  if (providerValidation) {
+
+  // Test for validation errors
+  if (providerValidation?.type === 'error') {
     return providerValidation;
   }
 
-  const type = provider?.spec?.type || '';
-  const secretValidation = secretValidator(type, secret);
-  if (secretValidation) {
+  if (secretValidation?.type === 'error') {
     return secretValidation;
   }
 
-  return null;
+  // Test for validation warning
+  if (providerValidation?.type === 'warning') {
+    return providerValidation;
+  }
+
+  if (secretValidation?.type === 'warning') {
+    return secretValidation;
+  }
+
+  // Return provider validation
+  return providerValidation;
 }

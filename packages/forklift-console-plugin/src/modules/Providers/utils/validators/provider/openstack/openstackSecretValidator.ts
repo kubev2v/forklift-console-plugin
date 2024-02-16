@@ -21,7 +21,6 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
         'regionName',
         'projectName',
         'domainName',
-        'cacert',
         'insecureSkipVerify',
       ];
       break;
@@ -34,19 +33,11 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
           'regionName',
           'projectName',
           'domainName',
-          'cacert',
           'insecureSkipVerify',
         ];
       } else {
         requiredFields = ['token', 'userID', 'projectID', 'regionName'];
-        validateFields = [
-          'token',
-          'userID',
-          'projectID',
-          'regionName',
-          'cacert',
-          'insecureSkipVerify',
-        ];
+        validateFields = ['token', 'userID', 'projectID', 'regionName', 'insecureSkipVerify'];
       }
       break;
     case 'applicationcredential':
@@ -66,7 +57,6 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
           'regionName',
           'projectName',
           'domainName',
-          'cacert',
           'insecureSkipVerify',
         ];
       } else {
@@ -81,7 +71,6 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
           'applicationCredentialSecret',
           'regionName',
           'projectName',
-          'cacert',
           'insecureSkipVerify',
         ];
       }
@@ -94,6 +83,12 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
 
   if (missingRequiredFields.length > 0) {
     return { type: 'error', msg: `missing required fields [${missingRequiredFields.join(', ')}]` };
+  }
+
+  // Add ca cert validation if not insecureSkipVerify
+  const insecureSkipVerify = safeBase64Decode(secret?.data?.['insecureSkipVerify'] || '');
+  if (insecureSkipVerify !== 'true') {
+    validateFields.push('cacert');
   }
 
   for (const id of validateFields) {

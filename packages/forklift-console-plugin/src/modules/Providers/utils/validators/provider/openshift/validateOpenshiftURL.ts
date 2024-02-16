@@ -12,19 +12,19 @@ export const validateOpenshiftURL = (url: string | number): ValidationMsg => {
   if (trimmedUrl === '') {
     return {
       type: 'default',
-      msg: 'The URL of the Openshift Virtualization API endpoint, for example: https:example.com:6443 .',
+      msg: 'The URL of the Openshift Virtualization API endpoint, for example: https://example.com:6443 .',
     };
   }
 
   if (!isValidURL) {
     return {
       type: 'error',
-      msg: 'The URL is invalid. URL should include the schema, for example: https:example.com:6443 .',
+      msg: 'The URL is invalid. URL should include the schema, for example: https://example.com:6443 .',
     };
   }
 
   return {
     type: 'success',
-    msg: 'The URL of the Openshift Virtualization API endpoint, for example: https:example.com:6443 .',
+    msg: 'The URL of the Openshift Virtualization API endpoint, for example: https://example.com:6443 .',
   };
 };

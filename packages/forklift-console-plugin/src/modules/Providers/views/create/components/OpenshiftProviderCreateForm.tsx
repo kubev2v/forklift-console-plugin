@@ -22,7 +22,7 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
     validation: {
       url: {
         type: 'default',
-        msg: 'The URL of the Openshift Virtualization API endpoint, for example: https:example.com:6443 .',
+        msg: 'The URL of the Openshift Virtualization API endpoint, for example: https://example.com:6443 .',
       },
     },
   };
