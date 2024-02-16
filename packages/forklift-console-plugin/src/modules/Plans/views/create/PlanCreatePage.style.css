@@ -76,6 +76,6 @@
   margin-top: var(--pf-global--spacer--lg);
 }
 
-.forklift--create-plan--progress-current-step:hover {
+.forklift--create-plan--progress-current-step-clickable:hover {
   cursor: pointer;
 }
