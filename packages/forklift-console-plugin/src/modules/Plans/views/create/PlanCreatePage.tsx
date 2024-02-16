@@ -2,6 +2,7 @@ import React, { useReducer } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { MigrationAction } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/MigrationAction';
+import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
@@ -32,10 +33,16 @@ export const PlanCreatePage: React.FC<{
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
-  const [filterState, filterDispatch] = useReducer(
-    planCreatePageReducer,
-    planCreatePageInitialState,
-  );
+
+  // Get optional initial state context
+  const { data } = useCreateVmMigrationData();
+
+  // Init form state
+  const [filterState, filterDispatch] = useReducer(planCreatePageReducer, {
+    ...planCreatePageInitialState,
+    selectedProviderUID: data?.provider?.metadata?.uid,
+    selectedVMs: data?.selectedVms,
+  });
 
   const [allProviders] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
