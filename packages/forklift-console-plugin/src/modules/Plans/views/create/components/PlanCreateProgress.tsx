@@ -10,6 +10,11 @@ export const PlanCreateProgress: React.FC<{ step: 'select-source' | 'migrate' }>
   const { t } = useForkliftTranslation();
   const history = useHistory();
 
+  // If we are in migration step, allow going back by clicking on the select-source
+  const selectSourceStepClassName =
+    step === 'migrate' ? 'forklift--create-plan--progress-current-step-clickable' : undefined;
+  const selectSourceOnClick = step === 'migrate' ? history.goBack : undefined;
+
   return (
     <ProgressStepper
       isVertical={false}
@@ -17,14 +22,14 @@ export const PlanCreateProgress: React.FC<{ step: 'select-source' | 'migrate' }>
       className="forklift--create-plan--progress"
     >
       <ProgressStep
-        className="forklift--create-plan--progress-current-step"
+        className={selectSourceStepClassName}
         variant={step === 'select-source' ? 'info' : 'success'}
         isCurrent={step === 'select-source'}
         description={t('Select source provider and virtual machines')}
         id="basic-alignment-step1"
         titleId="basic-alignment-step1-title"
         aria-label="select source"
-        onClick={history.goBack}
+        onClick={selectSourceOnClick}
       >
         {t('Select source')}
       </ProgressStep>
