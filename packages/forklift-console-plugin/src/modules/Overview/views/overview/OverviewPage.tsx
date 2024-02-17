@@ -10,6 +10,7 @@ import { getOperatorPhase } from '../../utils/helpers/getOperatorPhase';
 
 import OperatorStatus from './components/OperatorStatus';
 import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
+import ForkliftControllerPodsTab from './tabs/Pods/ForkliftControllerPodsTab';
 import { HeaderTitle } from './components';
 import {
   ForkliftControllerDetailsTab,
@@ -37,6 +38,11 @@ export const OverviewPage: React.FC<OverviewPageProps> = () => {
       href: 'metrics',
       name: t('Metrics'),
       component: ForkliftControllerMetricsTabWrapper,
+    },
+    {
+      href: 'pods',
+      name: t('Pods'),
+      component: ForkliftControllerPodsTabWrapper,
     },
   ];
 
@@ -102,6 +108,14 @@ const ForkliftControllerMetricsTabWrapper: React.FC = () => {
 
   return (
     <ForkliftControllerMetricsTab obj={forkliftController} loaded={loaded} loadError={loadError} />
+  );
+};
+
+const ForkliftControllerPodsTabWrapper: React.FC = () => {
+  const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
+
+  return (
+    <ForkliftControllerPodsTab obj={forkliftController} loaded={loaded} loadError={loadError} />
   );
 };
 
