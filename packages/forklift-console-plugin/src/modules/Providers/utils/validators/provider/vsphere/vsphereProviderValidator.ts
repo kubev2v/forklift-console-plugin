@@ -24,5 +24,5 @@ export function vsphereProviderValidator(provider: V1beta1Provider): ValidationM
     return { type: 'error', msg: 'invalided sdkEndpoint, can be vcenter or esxi' };
   }
 
-  return null;
+  return { type: 'default' };
 }
