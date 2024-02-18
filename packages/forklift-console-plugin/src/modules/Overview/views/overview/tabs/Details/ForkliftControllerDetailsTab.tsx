@@ -3,9 +3,9 @@ import { RouteComponentProps } from 'react-router-dom';
 import { useCreateOverviewContext } from 'src/modules/Overview/hooks/OverviewContextProvider';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
-import { Flex, FlexItem } from '@patternfly/react-core';
+import { Flex, FlexItem, Stack, StackItem } from '@patternfly/react-core';
 
-import { ConditionsCard, OperatorCard, OverviewCard, SettingsCard } from './cards';
+import { ConditionsCard, ControllerCard, OperatorCard, OverviewCard, SettingsCard } from './cards';
 
 interface ForkliftControllerDetailsTabProps extends RouteComponentProps {
   obj: V1beta1ForkliftController;
@@ -25,36 +25,44 @@ export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTab
   return (
     <div className="co-dashboard-body">
       <Flex direction={{ default: 'column' }}>
-        <Flex>
-          {!hideWelcomeCardByContext ? (
-            <FlexItem>
-              <OverviewCard
-                obj={obj}
-                onHide={() => {
-                  setData({ hideWelcomeCardByContext: true });
-                }}
-              />
-            </FlexItem>
-          ) : null}
-        </Flex>
-        <Flex
-          direction={{ default: 'column' }}
-          flex={{ default: 'flex_1' }}
-          alignItems={{ default: 'alignItemsStretch' }}
-          alignContent={{ default: 'alignContentStretch' }}
-        >
+        {!hideWelcomeCardByContext ? (
           <FlexItem>
-            <OperatorCard obj={obj} />
+            <OverviewCard
+              obj={obj}
+              onHide={() => {
+                setData({ hideWelcomeCardByContext: true });
+              }}
+            />
           </FlexItem>
-        </Flex>
-        <Flex>
-          <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
-            <ConditionsCard obj={obj} />
-          </FlexItem>
-          <FlexItem flex={{ default: 'flex_1' }}>
-            <SettingsCard obj={obj} />
-          </FlexItem>
-        </Flex>
+        ) : null}
+
+        <FlexItem>
+          <OperatorCard obj={obj} />
+        </FlexItem>
+
+        <FlexItem>
+          <Flex direction={{ default: 'row' }}>
+            <FlexItem flex={{ default: 'flex_1' }}>
+              <Stack hasGutter>
+                <StackItem>
+                  <ControllerCard obj={obj} />
+                </StackItem>
+
+                <StackItem>
+                  <ConditionsCard obj={obj} />
+                </StackItem>
+              </Stack>
+            </FlexItem>
+
+            <FlexItem>
+              <Stack hasGutter>
+                <StackItem>
+                  <SettingsCard obj={obj} />
+                </StackItem>
+              </Stack>
+            </FlexItem>
+          </Flex>
+        </FlexItem>
       </Flex>
     </div>
   );

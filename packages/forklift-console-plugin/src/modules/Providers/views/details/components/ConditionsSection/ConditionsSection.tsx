@@ -38,7 +38,7 @@ export const ConditionsSection: React.FC<ConditionsProps> = ({ conditions }) => 
           <Tr>
             <Th width={10}>{t('Type')}</Th>
             <Th width={10}>{t('Status')}</Th>
-            <Th width={15}>{t('Updated')}</Th>
+            <Th width={20}>{t('Updated')}</Th>
             <Th width={10}>{t('Reason')}</Th>
             <Th> {t('Message')}</Th>
           </Tr>
