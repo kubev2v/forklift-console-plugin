@@ -123,7 +123,7 @@ echo ""
 echo "  API Server: https://127.0.0.1:6443/"
 echo "  Web console: https://localhost:30443/"
 echo ""
-echo "  configuration file - '${config_path}' ( example: cp ${config_path} ~/.kube/config )"
+echo "  configuration file - '${config_path}' ( example: sudo cp ${config_path} ~/.kube/config )"
 echo "  admin token        - 'abcdef.0123456789abcdef'"
 echo ""
 
