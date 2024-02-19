@@ -91,7 +91,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     validation: {
       cacert: {
         type: 'default',
-        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
+        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
       },
       insecureSkipVerify: { type: 'default', msg: 'Migrate without validating a CA certificate' },
     },

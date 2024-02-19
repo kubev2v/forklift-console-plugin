@@ -66,7 +66,7 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
       insecureSkipVerify: { type: 'default', msg: 'Skip certificate validation' },
       cacert: {
         type: 'default',
-        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
+        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
       },
     },
   };
