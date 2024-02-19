@@ -89,7 +89,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
         ),
       },
     },
@@ -122,7 +122,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
         ),
       },
     },
@@ -156,7 +156,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
         ),
       },
     },
@@ -197,7 +197,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
       cacert: {
         label: t('CA certificate'),
         description: t(
-          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
         ),
       },
     },

@@ -386,7 +386,7 @@
   "The interval in seconds for snapshot pooling. Default value is 10.": "The interval in seconds for snapshot pooling. Default value is 10.",
   "The limit for CPU usage by the controller, specified in milliCPU. Default value is 500m.": "The limit for CPU usage by the controller, specified in milliCPU. Default value is 500m.",
   "The limit for memory usage by the controller, specified in Megabytes (Mi). Default value is 800Mi.": "The limit for memory usage by the controller, specified in Megabytes (Mi). Default value is 800Mi.",
-  "The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.": "The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.",
+  "The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.": "The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.",
   "The maximum age in hours for must gather cleanup. Default value is -1, which implies never.": "The maximum age in hours for must gather cleanup. Default value is -1, which implies never.",
   "The password for the ESXi host admin": "The password for the ESXi host admin",
   "The provider is not ready - ": "The provider is not ready - ",

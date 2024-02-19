@@ -285,14 +285,14 @@ const validateCacert = (value: string): ValidationMsg => {
   if (value === '') {
     return {
       type: 'default',
-      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
+      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
     };
   }
 
   if (valid) {
     return {
       type: 'success',
-      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case enter the Manager Apache CA certificate.',
+      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
     };
   }
 
