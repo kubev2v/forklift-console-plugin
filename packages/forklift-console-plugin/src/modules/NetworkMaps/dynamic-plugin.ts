@@ -11,6 +11,7 @@ import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sd
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
   NetworkMapsListPage: './modules/NetworkMaps/views/list/NetworkMapsListPage',
   NetworkMapDetailsPage: './modules/NetworkMaps/views/details/NetworkMapDetailsPage',
+  yamlTemplates: './modules/NetworkMaps/yamlTemplates',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -58,4 +59,14 @@ export const extensions: EncodedExtension[] = [
       ...NetworkMapModel,
     },
   } as EncodedExtension<ModelMetadata>,
+
+  {
+    type: 'console.yaml-template',
+    properties: {
+      name: 'default',
+      model: NetworkMapModelGroupVersionKind,
+      ...NetworkMapModel,
+      template: { $codeRef: 'yamlTemplates.defaultYamlTemplate' },
+    },
+  },
 ];
