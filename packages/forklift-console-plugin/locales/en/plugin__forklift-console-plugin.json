@@ -64,7 +64,6 @@
   "Conditions": "Conditions",
   "Confirm": "Confirm",
   "Connection Failed": "Connection Failed",
-  "Controller": "Controller",
   "Controller CPU limit": "Controller CPU limit",
   "Controller Memory limit": "Controller Memory limit",
   "Controls the interval at which a new snapshot is requested prior to initiating a warm migration. The default value is 60 minutes.": "Controls the interval at which a new snapshot is requested prior to initiating a warm migration. The default value is 60 minutes.",

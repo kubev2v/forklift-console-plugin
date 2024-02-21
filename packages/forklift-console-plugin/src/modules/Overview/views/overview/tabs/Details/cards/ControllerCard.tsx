@@ -20,12 +20,12 @@ export const ControllerCard: FC<ControllerCardProps> = ({ obj }) => {
     namespaced: true,
     isList: true,
     namespace: obj?.metadata?.namespace,
-    selector: { matchLabels: { app: 'forklift', 'control-plane': 'controller-manager' } },
+    selector: { matchLabels: { app: 'forklift' } },
   });
 
   return (
     <Card>
-      <CardTitle className="forklift-title">{t('Controller')}</CardTitle>
+      <CardTitle className="forklift-title">{t('Pods')}</CardTitle>
       <Suspend obj={pods} loaded={loaded} loadError={loadError}>
         <CardBody>
           <PodsTable pods={pods} />
