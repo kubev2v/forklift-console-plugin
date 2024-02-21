@@ -1,16 +1,16 @@
 import { NetworkMapModel, NetworkMapModelGroupVersionKind } from '@kubev2v/types';
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import {
-  ActionProvider,
   ModelMetadata,
+  ResourceDetailsPage,
   ResourceListPage,
   ResourceNSNavItem,
 } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
-  NetworkMappingsPage: './modules/NetworkMaps/NetworkMappingsWrapper',
-  useNetworkMappingActions: './modules/NetworkMaps/UseNetworkMappingActions',
+  NetworkMapsListPage: './modules/NetworkMaps/views/list/NetworkMapsListPage',
+  NetworkMapDetailsPage: './modules/NetworkMaps/views/details/NetworkMapDetailsPage',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -35,20 +35,21 @@ export const extensions: EncodedExtension[] = [
     type: 'console.page/resource/list',
     properties: {
       component: {
-        $codeRef: 'NetworkMappingsPage',
+        $codeRef: 'NetworkMapsListPage',
       },
       model: NetworkMapModelGroupVersionKind,
     },
   } as EncodedExtension<ResourceListPage>,
+
   {
-    type: 'console.action/provider',
+    type: 'console.page/resource/details',
     properties: {
-      contextId: 'forklift-flat-network-mapping',
-      provider: {
-        $codeRef: 'useNetworkMappingActions',
+      component: {
+        $codeRef: 'NetworkMapDetailsPage',
       },
+      model: NetworkMapModelGroupVersionKind,
     },
-  } as EncodedExtension<ActionProvider>,
+  } as EncodedExtension<ResourceDetailsPage>,
 
   {
     type: 'console.model-metadata',
