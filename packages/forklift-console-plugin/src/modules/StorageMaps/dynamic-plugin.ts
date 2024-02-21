@@ -1,32 +1,33 @@
 import { StorageMapModel, StorageMapModelGroupVersionKind } from '@kubev2v/types';
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import {
-  ActionProvider,
   ModelMetadata,
+  ResourceDetailsPage,
   ResourceListPage,
   ResourceNSNavItem,
 } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
-  StorageMappingsPage: './modules/StorageMaps/StorageMappingsWrapper',
-  useStorageMappingActions: './modules/StorageMaps/UseStorageMappingActions',
+  StorageMapsListPage: './modules/StorageMaps/views/list/StorageMapsListPage',
+  StorageMapDetailsPage: './modules/StorageMaps/views/details/StorageMapDetailsPage',
+  yamlTemplates: './modules/StorageMaps/yamlTemplates',
 };
 
 export const extensions: EncodedExtension[] = [
   {
     type: 'console.navigation/resource-ns',
     properties: {
-      id: 'storageMappings',
-      insertAfter: 'networkMappings',
+      id: 'StorageMappings',
+      insertAfter: 'plans',
       perspective: 'admin',
       section: 'migration',
       // t('plugin__forklift-console-plugin~StorageMaps for virtualization')
       name: '%plugin__forklift-console-plugin~StorageMaps for virtualization%',
       model: StorageMapModelGroupVersionKind,
       dataAttributes: {
-        'data-quickstart-id': 'qs-nav-storage-mappings',
-        'data-testid': 'storage-mappings-nav-item',
+        'data-quickstart-id': 'qs-nav-network-mappings',
+        'data-testid': 'network-mappings-nav-item',
       },
     },
   } as EncodedExtension<ResourceNSNavItem>,
@@ -35,20 +36,22 @@ export const extensions: EncodedExtension[] = [
     type: 'console.page/resource/list',
     properties: {
       component: {
-        $codeRef: 'StorageMappingsPage',
+        $codeRef: 'StorageMapsListPage',
       },
       model: StorageMapModelGroupVersionKind,
     },
   } as EncodedExtension<ResourceListPage>,
+
   {
-    type: 'console.action/provider',
+    type: 'console.page/resource/details',
     properties: {
-      contextId: 'forklift-flat-storage-mapping',
-      provider: {
-        $codeRef: 'useStorageMappingActions',
+      component: {
+        $codeRef: 'StorageMapDetailsPage',
       },
+      model: StorageMapModelGroupVersionKind,
     },
-  } as EncodedExtension<ActionProvider>,
+  } as EncodedExtension<ResourceDetailsPage>,
+
   {
     type: 'console.model-metadata',
     properties: {
@@ -56,4 +59,14 @@ export const extensions: EncodedExtension[] = [
       ...StorageMapModel,
     },
   } as EncodedExtension<ModelMetadata>,
+
+  {
+    type: 'console.yaml-template',
+    properties: {
+      name: 'default',
+      model: StorageMapModelGroupVersionKind,
+      ...StorageMapModel,
+      template: { $codeRef: 'yamlTemplates.defaultYamlTemplate' },
+    },
+  },
 ];

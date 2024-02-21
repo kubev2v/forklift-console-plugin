@@ -1,0 +1,8 @@
+.forklift-empty-state__icon {
+  max-width: 14rem;
+  max-height: 14rem;
+}
+
+.forklift-providers-list-header__alert {
+  padding-top: var(--pf-global--spacer--sm);
+}
