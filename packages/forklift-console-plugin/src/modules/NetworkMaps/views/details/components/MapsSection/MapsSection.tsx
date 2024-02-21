@@ -98,6 +98,11 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     );
     const nextSourceNet = sourceNetworks.find((n) => n?.name === next.source);
 
+    // sanity check, names may not be valid
+    if (!nextSourceNet) {
+      return;
+    }
+
     const nextMap: V1beta1NetworkMapSpecMap = {
       source: convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(nextSourceNet),
       destination:
@@ -244,4 +249,4 @@ function convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDe
 }
 
 const OpenShiftNetworkAttachmentDefinitionToName = (net) =>
-  net?.namespace ? `${net?.namespace}/${net?.name}` : net?.name;
+  net?.namespace ? `${net?.namespace}/${net?.name}` : net?.name || 'Pod';
