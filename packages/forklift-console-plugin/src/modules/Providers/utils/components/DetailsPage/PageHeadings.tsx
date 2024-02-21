@@ -25,7 +25,7 @@ export const PageHeadings: React.FC<PageHeadingsProps> = ({
   actions,
 }) => {
   const status = data?.['status']?.phase;
-  const groupVersionKind = data && getGroupVersionKindForResource(data);
+  const groupVersionKind = data?.kind && getGroupVersionKindForResource(data);
 
   return (
     <div className="co-m-nav-title co-m-nav-title--detail forklift-page-headings">
