@@ -131,6 +131,7 @@ export const PlanCreatePage: React.FC<{
                 filterDispatch({ type: 'UPDATE_SELECTED_VMS', payload: selectedVms })
               }
               initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
+              showActions={false}
             />
           </>
         )}
