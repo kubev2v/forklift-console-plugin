@@ -23,6 +23,7 @@ export interface ProviderVirtualMachinesProps extends RouteComponentProps {
   loadError?: unknown;
   onSelect?: (selectedVMs: VmData[]) => void;
   initialSelectedIds?: string[];
+  showActions: boolean;
   className?: string;
 }
 
@@ -58,6 +59,7 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
         obj={obj}
         loaded={providerLoaded}
         loadError={providerLoadError}
+        showActions={true}
       />
     </>
   );
@@ -70,6 +72,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
   loadError,
   onSelect,
   initialSelectedIds,
+  showActions,
   className,
 }) => {
   switch (obj?.provider?.spec?.type) {
@@ -82,6 +85,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          showActions={showActions}
           className={className}
         />
       );
@@ -94,6 +98,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          showActions={showActions}
           className={className}
         />
       );
@@ -106,6 +111,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          showActions={showActions}
           className={className}
         />
       );
@@ -118,6 +124,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          showActions={showActions}
           className={className}
         />
       );
@@ -130,6 +137,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          showActions={showActions}
           className={className}
         />
       );

@@ -33,6 +33,7 @@ export interface ProviderVirtualMachinesListProps extends RouteComponentProps {
   pageId: string;
   onSelect?: (selectedVMs: VmData[]) => void;
   initialSelectedIds?: string[];
+  showActions: boolean;
   className?: string;
 }
 
@@ -48,6 +49,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   pageId,
   onSelect,
   initialSelectedIds,
+  showActions,
   className,
 }) => {
   const { t } = useForkliftTranslation();
@@ -93,7 +95,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
         features: EnumFilter,
       }}
       extraSupportedMatchers={[concernsMatcher, featuresMatcher]}
-      GlobalActionToolbarItems={actions}
+      GlobalActionToolbarItems={showActions ? actions : undefined}
       toId={toId}
       onSelect={onSelectedIds}
       selectedIds={selectedIds}
