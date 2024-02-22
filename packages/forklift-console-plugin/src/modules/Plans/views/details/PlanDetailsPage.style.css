@@ -25,24 +25,28 @@
 }
 
 .forklift-page-plan-field-error-validation {
-    color: var(--pf-c-form__helper-text--m-error--Color);
-    font-size: small;
-    padding-top: var(--pf-c-form__helper-text--MarginTop);
-  }
+  color: var(--pf-c-form__helper-text--m-error--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
 
-  .forklift-page-plan-field-warning-validation {
-    color: var(--pf-c-form__helper-text--m-warning--Color);
-    font-size: small;
-    padding-top: var(--pf-c-form__helper-text--MarginTop);
-  }
+.forklift-page-plan-field-warning-validation {
+  color: var(--pf-c-form__helper-text--m-warning--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
 
-  .forklift-page-plan-field-success-validation {
-    color: var(--pf-c-form__helper-text--m-success--Color);
-    font-size: small;
-    padding-top: var(--pf-c-form__helper-text--MarginTop);
-  }
+.forklift-page-plan-field-success-validation {
+  color: var(--pf-c-form__helper-text--m-success--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
 
-  .forklift-page-plan-field-default-validation {
-    font-size: small;
-    padding-top: var(--pf-c-form__helper-text--MarginTop);
-  }
+.forklift-page-plan-field-default-validation {
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
+
+.forklift-network-map__details-tab--update-button {
+  margin-bottom: var(--pf-global--spacer--md);
+}
