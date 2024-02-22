@@ -10,7 +10,7 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 
 import { Suspend } from './components';
-import { PlanDetails, PlanHooks, PlanMappings, PlanVirtualMachines, PlanYAML } from './tabs';
+import { PlanDetails, PlanYAML } from './tabs';
 
 import './PlanDetailsPage.style.css';
 
@@ -44,6 +44,7 @@ const PlanDetailsPage_: React.FC<{
       name: t('YAML'),
       component: () => <PlanYAML plan={obj} loaded={loaded} loadError={loadError} />,
     },
+    /*
     {
       href: 'vms',
       name: t('Virtual Machines'),
@@ -59,6 +60,7 @@ const PlanDetailsPage_: React.FC<{
       name: t('Hooks'),
       component: () => <PlanHooks plan={obj} loaded={loaded} loadError={loadError} />,
     },
+    */
   ];
 
   return (
