@@ -46,19 +46,17 @@ export const NetworkMapPageHeadings: React.FC<{ name: string; namespace: string 
   }
 
   return (
-    <>
-      <PageHeadings
-        model={NetworkMapModel}
-        obj={obj}
-        namespace={namespace}
-        actions={<NetworkMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />}
-      >
-        {alerts && alerts.length > 0 && (
-          <PageSection variant="light" className="forklift-page-headings-alerts">
-            {alerts}
-          </PageSection>
-        )}
-      </PageHeadings>
-    </>
+    <PageHeadings
+      model={NetworkMapModel}
+      obj={obj}
+      namespace={namespace}
+      actions={<NetworkMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />}
+    >
+      {alerts && alerts.length > 0 && (
+        <PageSection variant="light" className="forklift-page-headings-alerts">
+          {alerts}
+        </PageSection>
+      )}
+    </PageHeadings>
   );
 };

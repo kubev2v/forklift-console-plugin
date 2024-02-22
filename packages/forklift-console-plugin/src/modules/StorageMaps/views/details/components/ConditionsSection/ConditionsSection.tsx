@@ -3,6 +3,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { K8sResourceCondition } from '@kubev2v/types';
 import { Timestamp } from '@openshift-console/dynamic-plugin-sdk';
+import { HelperText, HelperTextItem } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 /**
@@ -17,7 +18,11 @@ export const ConditionsSection: React.FC<ConditionsSectionProps> = ({ conditions
   const { t } = useForkliftTranslation();
 
   if (!conditions) {
-    return <></>;
+    return (
+      <HelperText>
+        <HelperTextItem>{t('Conditions not found')}</HelperTextItem>
+      </HelperText>
+    );
   }
 
   const getStatusLabel = (status: string) => {
