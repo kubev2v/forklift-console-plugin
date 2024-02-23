@@ -6,10 +6,19 @@ import {
   MigrationModelGroupVersionKind,
   PlanModelGroupVersionKind,
   V1beta1Migration,
-  V1beta1MigrationStatusConditions,
 } from '@kubev2v/types';
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
-import { HelperText, HelperTextItem, Split, SplitItem } from '@patternfly/react-core';
+import {
+  HelperText,
+  HelperTextItem,
+  Progress,
+  ProgressMeasureLocation,
+  ProgressSize,
+  ProgressVariant,
+  Split,
+  SplitItem,
+} from '@patternfly/react-core';
+import { VirtualMachineIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, showOwner }) => {
@@ -23,6 +32,8 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
     );
   }
 
+  sortMigrationsByStartedAtDate(migrations);
+
   return (
     <TableComposable aria-label="Expandable table" variant="compact">
       <Thead>
@@ -30,9 +41,9 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
           <Th width={20}>{t('Migration')}</Th>
           {showOwner && <Th width={20}>{t('Owner')}</Th>}
           <Th width={10}>{t('Status')}</Th>
-          <Th width={10}>{t('VMs')}</Th>
-          <Th width={15}>{t('Started at')}</Th>
-          <Th width={15}>{t('Completed at')}</Th>
+          <Th width={15}>{t('VMs')}</Th>
+          <Th width={10}>{t('Started at')}</Th>
+          <Th width={10}>{t('Completed at')}</Th>
         </Tr>
       </Thead>
       <Tbody>
@@ -58,8 +69,12 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
                 )}
               </Td>
             )}
-            <Td>{getStatusLabel(migration?.status?.conditions)}</Td>
-            <Td>{migration?.status?.vms?.length || '-'}</Td>
+            <Td>
+              <StatusLabel migration={migration} />
+            </Td>
+            <Td>
+              <VMsLabel migration={migration} />
+            </Td>
             <Td>
               <Timestamp timestamp={migration?.status?.started} />
             </Td>
@@ -73,8 +88,14 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
   );
 };
 
-const getStatusLabel = (conditions: V1beta1MigrationStatusConditions[]) => {
-  let phase: string;
+const getMigrationPhase = (migration) => {
+  let phase = 'Unknown';
+
+  const conditions = migration?.status?.conditions;
+
+  if (!conditions || conditions.length < 1) {
+    return phase;
+  }
 
   const phases = ['Ready', 'Running', 'Succeeded', 'Failed'];
 
@@ -86,6 +107,31 @@ const getStatusLabel = (conditions: V1beta1MigrationStatusConditions[]) => {
     }
   });
 
+  return phase;
+};
+
+const getMigrationVmsCounts = (migration) => {
+  const vms = migration?.status?.vms;
+
+  if (!vms || vms.length < 1) {
+    return {};
+  }
+
+  const vmsCanceled = vms.filter((vm) =>
+    (vm?.conditions || []).find((c) => c.type === 'Canceled' && c.status === 'True'),
+  );
+  const vmsCompleted = vms.filter((vm) => vm?.completed);
+
+  return {
+    completed: vmsCompleted.length,
+    total: vms.length,
+    canceled: vmsCanceled.length,
+  };
+};
+
+const StatusLabel: React.FC<{ migration: V1beta1Migration }> = ({ migration }) => {
+  const phase = getMigrationPhase(migration);
+
   return (
     <Split>
       <SplitItem className="forklift-overview__controller-card__status-icon">
@@ -94,6 +140,54 @@ const getStatusLabel = (conditions: V1beta1MigrationStatusConditions[]) => {
       <SplitItem>{phase}</SplitItem>
     </Split>
   );
+};
+
+const VMsLabel: React.FC<{ migration: V1beta1Migration }> = ({ migration }) => {
+  const { t } = useForkliftTranslation();
+
+  const phase = getMigrationPhase(migration);
+  let progressVariant;
+
+  switch (phase) {
+    case 'Failed':
+      progressVariant = ProgressVariant.danger;
+      break;
+    case 'Succeeded':
+      progressVariant = ProgressVariant.success;
+      break;
+  }
+
+  const counters = getMigrationVmsCounts(migration);
+
+  if (!counters?.total || counters.total === 0) {
+    return <>-</>;
+  }
+
+  return (
+    <Split>
+      <SplitItem className="forklift-overview__controller-card__status-icon">
+        <VirtualMachineIcon />
+      </SplitItem>
+      <SplitItem>
+        {t('{{completed}} of {{total}} VMs migrated, {{canceled}} canceled', counters)}
+
+        <Progress
+          value={(100 * counters?.completed) / counters?.total}
+          size={ProgressSize.sm}
+          measureLocation={ProgressMeasureLocation.none}
+          variant={progressVariant}
+        />
+      </SplitItem>
+    </Split>
+  );
+};
+
+const sortMigrationsByStartedAtDate = (migrations: V1beta1Migration[]) => {
+  migrations.sort((a, b) => {
+    const dateA = new Date(a?.status?.started);
+    const dateB = new Date(b?.status?.started);
+    return dateB.getTime() - dateA.getTime();
+  });
 };
 
 export type MigrationTableProps = {

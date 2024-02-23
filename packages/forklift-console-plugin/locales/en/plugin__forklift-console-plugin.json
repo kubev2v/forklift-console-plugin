@@ -1,5 +1,6 @@
 {
   "{{Canceled}} canceled": "{{Canceled}} canceled",
+  "{{completed}} of {{total}} VMs migrated, {{canceled}} canceled": "{{completed}} of {{total}} VMs migrated, {{canceled}} canceled",
   "{{dateLabel}} Failed: {{value}}": "{{dateLabel}} Failed: {{value}}",
   "{{dateLabel}} Running: {{value}}": "{{dateLabel}} Running: {{value}}",
   "{{dateLabel}} Succeeded: {{value}}": "{{dateLabel}} Succeeded: {{value}}",
