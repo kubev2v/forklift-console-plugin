@@ -4,7 +4,13 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PageSection } from '@patternfly/react-core';
 
-import { ConditionsSection, DetailsSection, ProvidersSection, Suspend } from '../../components';
+import {
+  ConditionsSection,
+  DetailsSection,
+  MigrationsSection,
+  ProvidersSection,
+  Suspend,
+} from '../../components';
 import { PlanDetailsTabProps } from '../../PlanDetailsPage';
 
 export const PlanDetails: React.FC<PlanDetailsTabProps> = ({ plan, loaded, loadError }) => {
@@ -20,6 +26,11 @@ export const PlanDetails: React.FC<PlanDetailsTabProps> = ({ plan, loaded, loadE
       <PageSection variant="light" className="forklift-page-section">
         <SectionHeading text={t('Providers')} />
         <ProvidersSection obj={plan} />
+      </PageSection>
+
+      <PageSection variant="light" className="forklift-page-section">
+        <SectionHeading text={t('Migrations')} />
+        <MigrationsSection obj={plan} />
       </PageSection>
 
       <PageSection variant="light" className="forklift-page-section">
