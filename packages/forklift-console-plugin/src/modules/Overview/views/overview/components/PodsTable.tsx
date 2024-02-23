@@ -4,26 +4,19 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Pod } from '@kubev2v/types';
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
-import { Split, SplitItem } from '@patternfly/react-core';
+import { HelperText, HelperTextItem, Split, SplitItem } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
   const { t } = useForkliftTranslation();
 
   if (!pods) {
-    return <></>;
-  }
-
-  const getStatusLabel = (phase: string) => {
     return (
-      <Split>
-        <SplitItem className="forklift-overview__controller-card__status-icon">
-          <StatusIcon phase={phase} />
-        </SplitItem>
-        <SplitItem>{phase}</SplitItem>
-      </Split>
+      <HelperText>
+        <HelperTextItem>{t('Pods not found')}</HelperTextItem>
+      </HelperText>
     );
-  };
+  }
 
   return (
     <TableComposable aria-label="Expandable table" variant="compact">
@@ -66,6 +59,17 @@ export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
         ))}
       </Tbody>
     </TableComposable>
+  );
+};
+
+const getStatusLabel = (phase: string) => {
+  return (
+    <Split>
+      <SplitItem className="forklift-overview__controller-card__status-icon">
+        <StatusIcon phase={phase} />
+      </SplitItem>
+      <SplitItem>{phase}</SplitItem>
+    </Split>
   );
 };
 
