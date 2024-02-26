@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import { Base64 } from 'js-base64';
+import { ModalHOC } from 'src/modules/Providers/modals';
 import { validateK8sName, ValidationMsg } from 'src/modules/Providers/utils';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Galerry/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
@@ -84,7 +85,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
   };
 
   return (
-    <>
+    <ModalHOC>
       <div className="forklift-create-provider-edit-section">
         <EditProviderSectionHeading text={t('Provider details')} />
 
@@ -144,7 +145,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
           onNewSecretChange={onNewSecretChange}
         />
       </div>
-    </>
+    </ModalHOC>
   );
 };
 

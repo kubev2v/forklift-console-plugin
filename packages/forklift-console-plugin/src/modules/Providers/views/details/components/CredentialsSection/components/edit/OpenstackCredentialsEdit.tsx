@@ -1,17 +1,10 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
+import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  Divider,
-  FileUpload,
-  Form,
-  FormGroup,
-  Popover,
-  Radio,
-  Switch,
-} from '@patternfly/react-core';
+import { Divider, Form, FormGroup, Popover, Radio, Switch } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
@@ -50,6 +43,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     </ForkliftTrans>
   );
 
+  const url = safeBase64Decode(secret?.data?.url || '');
   const authType = safeBase64Decode(secret?.data?.authType || '');
   const username = safeBase64Decode(secret?.data?.username || '');
   const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
@@ -288,7 +282,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         validated={state.validation.cacert}
         helperTextInvalid={cacertHelperTextMsgs.error}
       >
-        <FileUpload
+        <CertificateUpload
           id="cacert"
           type="text"
           filenamePlaceholder="Drag and drop a file or upload one"
@@ -298,6 +292,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           onTextChange={(value) => handleChange('cacert', value)}
           onClearClick={() => handleChange('cacert', '')}
           browseButtonText="Upload"
+          url={url}
           isDisabled={insecureSkipVerify}
         />
       </FormGroup>

@@ -53,7 +53,7 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
             <FlexItem>
               <Button
                 className="forklift-certificate-upload-margin"
-                isDisabled={isDisabled}
+                isDisabled={isDisabled || !url?.trim().startsWith('https://')}
                 variant="secondary"
                 onClick={() =>
                   showModal(

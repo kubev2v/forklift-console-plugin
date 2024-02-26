@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalHOC } from 'src/modules/Providers/modals';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -40,11 +41,13 @@ export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
   }
 
   return (
-    <CredentialsSection_
-      name={provider?.spec?.secret?.name}
-      namespace={provider?.spec?.secret?.namespace}
-      type={provider?.spec?.type}
-    />
+    <ModalHOC>
+      <CredentialsSection_
+        name={provider?.spec?.secret?.name}
+        namespace={provider?.spec?.secret?.namespace}
+        type={provider?.spec?.type}
+      />
+    </ModalHOC>
   );
 };
 
