@@ -37,8 +37,17 @@ export const toColonSeparatedHex = (hexString: string) =>
  * @param pemEncodedCert valid PEM encoded certificate
  * @returns SHA1 thumbprint
  */
-export const calculateThumbprint = (pemEncodedCert: string) =>
-  toColonSeparatedHex(KJUR.crypto.Util.hashHex(pemtohex(pemEncodedCert), 'sha1'));
+export const calculateThumbprint = (pemEncodedCert: string) => {
+  let thumbprint: string;
+
+  try {
+    thumbprint = toColonSeparatedHex(KJUR.crypto.Util.hashHex(pemtohex(pemEncodedCert), 'sha1'));
+  } catch {
+    thumbprint = '';
+  }
+
+  return thumbprint;
+};
 
 /**
  * @param url URL param for the tls-certificate endpoint
