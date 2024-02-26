@@ -5,7 +5,7 @@ import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
 
 import { PlanDetailsTabProps } from '../../PlanDetailsPage';
 
-export const PlanYAML: React.FC<PlanDetailsTabProps> = ({ plan, loaded, loadError }) => {
+export const PlanYAML: React.FC<PlanDetailsTabProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
 
   return <ResourceYAMLEditor header={t('Provider YAML')} initialResource={plan} />;

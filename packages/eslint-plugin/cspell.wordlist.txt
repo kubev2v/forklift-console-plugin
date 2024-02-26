@@ -78,3 +78,4 @@ storageclasses
 storageclass
 storagedomains
 esxi
+KJUR

@@ -7,7 +7,7 @@ import { PageSection, Title } from '@patternfly/react-core';
 
 import { PlanDetailsTabProps } from '../../PlanDetailsPage';
 
-export const PlanMappings: React.FC<PlanDetailsTabProps> = ({ plan, loaded, loadError }) => {
+export const PlanMappings: React.FC<PlanDetailsTabProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
 
   return (
