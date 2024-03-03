@@ -1,101 +1,157 @@
 import React, { useReducer } from 'react';
 import { useHistory } from 'react-router';
-import { getResourceUrl } from 'src/modules/Providers/utils';
-import { MigrationAction } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/MigrationAction';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
+import ProvidersCreateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationPage';
+import { startCreate } from 'src/modules/Providers/views/migrate/reducer/actions';
+import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
+import { useSaveEffect } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelGroupVersionKind, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import {
-  Alert,
-  Button,
-  PageSection,
-  Title,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-} from '@patternfly/react-core';
-import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
+import { Alert, PageSection, Title, Wizard } from '@patternfly/react-core';
 
+import { findProviderByID, PlanCreateForm, ProviderVirtualMachinesList } from './components';
 import {
-  findProviderByID,
-  PlanCreateForm,
-  PlanCreateProgress,
-  ProviderVirtualMachinesList,
-} from './components';
-import { planCreatePageInitialState, planCreatePageReducer } from './states';
+  PlanCreatePageActionTypes,
+  planCreatePageInitialState,
+  planCreatePageReducer,
+  PlanCreatePageState,
+} from './states';
 
 import './PlanCreatePage.style.css';
 
-export const PlanCreatePage: React.FC<{
+export const PlanCreatePage_: React.FC<{
   namespace: string;
-}> = ({ namespace }) => {
+  filterState: PlanCreatePageState;
+  filterDispatch: React.Dispatch<PlanCreatePageActionTypes>;
+  providers: V1beta1Provider[];
+  selectedProvider: V1beta1Provider;
+}> = ({ filterState, filterDispatch, providers, selectedProvider }) => {
   const { t } = useForkliftTranslation();
-  const history = useHistory();
-
-  // Get optional initial state context
-  const { data } = useCreateVmMigrationData();
-
-  // Init form state
-  const [filterState, filterDispatch] = useReducer(planCreatePageReducer, {
-    ...planCreatePageInitialState,
-    selectedProviderUID: data?.provider?.metadata?.uid,
-    selectedVMs: data?.selectedVms,
-  });
-
-  const [allProviders] = useK8sWatchResource<V1beta1Provider[]>({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
-    isList: true,
-    namespace,
-  });
 
   // Get the ready providers (note: currently forklift does not allow filter be status.phase)
-  const providers = allProviders.filter((p) => p?.status?.phase === 'Ready');
+  const readyProviders = providers.filter((p) => p?.status?.phase === 'Ready');
 
-  const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
-
-  const providersListURL = getResourceUrl({
-    reference: ProviderModelRef,
-    namespace: namespace,
-  });
-
-  const filteredProviders = providers.filter(
+  const filteredProviders = readyProviders.filter(
     (provider) =>
       provider.metadata.name.toLowerCase().includes(filterState.nameFilter.toLowerCase()) &&
       (filterState.typeFilters.length === 0 ||
         filterState.typeFilters.includes(provider.spec.type)),
   );
 
-  const selectedProvider =
-    filterState.selectedProviderUID !== ''
-      ? findProviderByID(filterState.selectedProviderUID, providers)
-      : undefined;
   const selectedProviderName = selectedProvider?.metadata?.name;
   const selectedProviderNamespace = selectedProvider?.metadata?.namespace;
 
   return (
-    <div>
-      <PageSection variant="light">
-        <Alert
-          className="co-alert co-alert--margin-top"
-          customIcon={<BellIcon />}
-          variant="info"
-          title={t('How to create a migration plan')}
-        >
-          <ForkliftTrans>
-            To migrate virtual machines select a provider, then select the virtual machines to
-            migrate and click the <strong>Migrate</strong> button.
-          </ForkliftTrans>
-        </Alert>
+    <>
+      <Title headingLevel="h2">{t('Select source provider')}</Title>
 
+      <PlanCreateForm
+        providers={filteredProviders}
+        filterState={filterState}
+        filterDispatch={filterDispatch}
+      />
+
+      {filterState.selectedProviderUID && (
+        <>
+          <Title headingLevel="h2" className="forklift--create-plan--title">
+            {t('Select virtual machines')}
+          </Title>
+
+          <ProviderVirtualMachinesList
+            title=""
+            name={selectedProviderName}
+            namespace={selectedProviderNamespace}
+            onSelect={(selectedVms) =>
+              filterDispatch({ type: 'UPDATE_SELECTED_VMS', payload: selectedVms })
+            }
+            initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
+            showActions={false}
+          />
+        </>
+      )}
+    </>
+  );
+};
+
+export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) => {
+  // Get optional initial state context
+  const { data } = useCreateVmMigrationData();
+  const history = useHistory();
+  const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
+  const startAtStep = data?.provider !== undefined ? 2 : 1;
+
+  // Init Select source provider form state
+  const [filterState, filterDispatch] = useReducer(planCreatePageReducer, {
+    ...planCreatePageInitialState,
+    selectedProviderUID: data?.provider?.metadata?.uid,
+    selectedVMs: data?.selectedVms,
+  });
+
+  const [providers] = useK8sWatchResource<V1beta1Provider[]>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
+    isList: true,
+    namespace,
+  });
+  const selectedProvider =
+    filterState.selectedProviderUID !== ''
+      ? findProviderByID(filterState.selectedProviderUID, providers)
+      : undefined;
+
+  // Init Create migration plan form state
+  const [state, dispatch, emptyContext] = useFetchEffects({
+    data: { selectedVms: filterState.selectedVMs, provider: selectedProvider || data?.provider },
+  });
+  useSaveEffect(state, dispatch);
+
+  const steps = [
+    {
+      id: 'step-1',
+      name: 'Select source provider',
+      component: (
+        <PlanCreatePage_
+          namespace={namespace}
+          filterState={filterState}
+          filterDispatch={filterDispatch}
+          providers={providers}
+          selectedProvider={selectedProvider}
+        />
+      ),
+      enableNext: filterState?.selectedVMs?.length > 0,
+    },
+    {
+      id: 'step-2',
+      name: 'Create migration plan',
+      component: (
+        <ProvidersCreateVmMigrationPage
+          state={state}
+          dispatch={dispatch}
+          emptyContext={emptyContext}
+        />
+      ),
+      enableNext:
+        !emptyContext &&
+        !(
+          !!state?.flow?.apiError ||
+          Object.values(state?.validation || []).some((validation) => validation === 'error')
+        ),
+      canJumpTo: filterState?.selectedVMs?.length > 0,
+      nextButtonText: 'Create migration plan',
+    },
+  ];
+
+  const title = 'Plans wizard';
+  return (
+    <>
+      <PageSection variant="light">
         {!namespace && (
           <Alert
             className="co-alert forklift--create-plan--alert"
             isInline
             variant="warning"
-            title={t('Namespace is not defined')}
+            title={'Namespace is not defined'}
           >
             <ForkliftTrans>
               This plan will be created in <strong>{defaultNamespace}</strong> namespace, if you
@@ -105,54 +161,20 @@ export const PlanCreatePage: React.FC<{
           </Alert>
         )}
 
-        <PlanCreateProgress step="select-source" />
-
-        <Title headingLevel="h2" className="forklift--create-plan--title">
-          {t('Select source provider')}
-        </Title>
-
-        <PlanCreateForm
-          providers={filteredProviders}
-          filterState={filterState}
-          filterDispatch={filterDispatch}
-        />
-
-        {filterState.selectedProviderUID && (
-          <>
-            <Title headingLevel="h2" className="forklift--create-plan--title">
-              {t('Select virtual machines')}
-            </Title>
-
-            <ProviderVirtualMachinesList
-              title=""
-              name={selectedProviderName}
-              namespace={selectedProviderNamespace}
-              onSelect={(selectedVms) =>
-                filterDispatch({ type: 'UPDATE_SELECTED_VMS', payload: selectedVms })
-              }
-              initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
-              showActions={false}
-            />
-          </>
-        )}
-
-        <Toolbar>
-          <ToolbarContent className="forklift--create-plan--bottom-toolbar">
-            <MigrationAction
-              {...{
-                provider: selectedProvider,
-                selectedVms: filterState.selectedVMs,
-              }}
-            />
-            <ToolbarItem>
-              <Button onClick={() => history.push(providersListURL)} variant="secondary">
-                {t('Cancel')}
-              </Button>
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
+        <Title headingLevel="h2">{'Create migration plan'}</Title>
       </PageSection>
-    </div>
+
+      <PageSection variant="light">
+        <Wizard
+          navAriaLabel={`${title} steps`}
+          mainAriaLabel={`${title} content`}
+          steps={steps}
+          onSave={() => dispatch(startCreate())}
+          onClose={history.goBack}
+          startAtStep={startAtStep}
+        />
+      </PageSection>
+    </>
   );
 };
 

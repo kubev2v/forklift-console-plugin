@@ -29,7 +29,7 @@ export const MigrationAction: FC<{
         variant="primary"
         onClick={() => {
           setData({ selectedVms, provider });
-          history.push(`${planListURL}/fast-create`);
+          history.push(`${planListURL}/~new`);
         }}
         isDisabled={!selectedVms?.length}
       >

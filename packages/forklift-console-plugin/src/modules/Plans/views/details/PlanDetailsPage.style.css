@@ -54,3 +54,11 @@
 .forklift-overview__controller-card__status-icon {
   padding-right: var(--pf-global--spacer--sm);
 }
+
+.forklift-table__status-cell-progress {
+  padding-right: var(--pf-global--spacer--xl);;
+}
+
+.forklift-table__status-cell-progress div {
+  grid-gap: var(--pf-global--spacer--xs);
+}

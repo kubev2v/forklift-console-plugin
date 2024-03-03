@@ -3,7 +3,6 @@ export * from './ChipsToolbarProviders';
 export * from './createProviderCardItems';
 export * from './FiltersToolbarProviders';
 export * from './PlanCreateForm';
-export * from './PlanCreateProgress';
 export * from './ProviderCardContent';
 export * from './ProviderCardItems';
 export * from './providerCardTitle';
