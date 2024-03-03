@@ -3,7 +3,14 @@ import { useToggle } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Dropdown, DropdownPosition, DropdownToggle, KebabToggle } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownPosition,
+  DropdownToggle,
+  Flex,
+  FlexItem,
+  KebabToggle,
+} from '@patternfly/react-core';
 
 import { CellProps } from '../views/list/components';
 
@@ -44,7 +51,12 @@ const NetworkMapActionsKebabDropdown_: React.FC<NetworkMapActionsDropdownProps> 
 
 export const NetworkMapActionsDropdown: React.FC<NetworkMapActionsDropdownProps> = (props) => (
   <ModalHOC>
-    <NetworkMapActionsKebabDropdown_ {...props} />
+    <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
+      <FlexItem grow={{ default: 'grow' }}></FlexItem>
+      <FlexItem align={{ default: 'alignRight' }}>
+        <NetworkMapActionsKebabDropdown_ {...props} />
+      </FlexItem>
+    </Flex>
   </ModalHOC>
 );
 
