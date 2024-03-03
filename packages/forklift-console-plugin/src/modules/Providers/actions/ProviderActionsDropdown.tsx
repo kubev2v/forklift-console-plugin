@@ -1,7 +1,14 @@
 import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Dropdown, DropdownPosition, DropdownToggle, KebabToggle } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownPosition,
+  DropdownToggle,
+  Flex,
+  FlexItem,
+  KebabToggle,
+} from '@patternfly/react-core';
 
 import { useToggle } from '../hooks';
 import { ModalHOC } from '../modals';
@@ -56,7 +63,12 @@ const ProviderActionsKebabDropdown_: React.FC<ProviderActionsDropdownProps> = ({
  */
 export const ProviderActionsDropdown: React.FC<ProviderActionsDropdownProps> = (props) => (
   <ModalHOC>
-    <ProviderActionsKebabDropdown_ {...props} />
+    <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
+      <FlexItem grow={{ default: 'grow' }}></FlexItem>
+      <FlexItem align={{ default: 'alignRight' }}>
+        <ProviderActionsKebabDropdown_ {...props} />
+      </FlexItem>
+    </Flex>
   </ModalHOC>
 );
 
