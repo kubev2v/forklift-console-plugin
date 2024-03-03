@@ -5,6 +5,7 @@ import { ENV, PATH_PREFIX } from 'legacy/src/common/constants';
 import StandardPage from 'src/components/page/StandardPage';
 import * as C from 'src/utils/constants';
 import { PLAN_STATUS_FILTER } from 'src/utils/enums';
+import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { ResourceConsolePageProps } from 'src/utils/types';
 
@@ -16,7 +17,7 @@ import { PlanModel } from '@kubev2v/types';
 import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, HelperText, HelperTextItem } from '@patternfly/react-core';
 
-import { FlatPlan, useFlatPlans, useHasSufficientProviders } from './data';
+import { FlatPlan, useFlatPlans } from './data';
 import EmptyStatePlans from './EmptyStatePlans';
 import PlanRow from './PlanRow';
 
