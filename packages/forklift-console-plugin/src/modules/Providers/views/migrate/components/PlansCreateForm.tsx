@@ -1,10 +1,8 @@
 import React, { ReactNode, useState } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import StandardPage from 'src/components/page/StandardPage';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
 
-import { EnumFilter, SearchableGroupedEnumFilter } from '@kubev2v/common';
 import {
   NetworkMapModelGroupVersionKind,
   ProviderModelGroupVersionKind,
@@ -13,18 +11,10 @@ import {
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {
   AlertVariant,
-  Button,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Drawer,
-  DrawerActions,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerContentBody,
-  DrawerHead,
-  DrawerPanelContent,
   Form,
   FormGroup,
   FormSelect,
@@ -33,7 +23,6 @@ import {
 } from '@patternfly/react-core';
 
 import { DetailsItem, getIsTarget } from '../../../utils';
-import { concernsMatcher, featuresMatcher, VmData } from '../../details';
 import {
   addNetworkMapping,
   addStorageMapping,
@@ -122,11 +111,7 @@ export const PlansCreateForm = ({
   const {
     underConstruction: { plan, netMap, storageMap },
     validation,
-    receivedAsParams: { selectedVms },
-    calculatedOnce: {
-      vmFieldsFactory: [vmFieldsFactory, RowMapper],
-      namespacesUsedBySelectedVms,
-    },
+    calculatedOnce: { namespacesUsedBySelectedVms },
     existingResources: {
       providers: availableProviders,
       targetNamespaces: availableTargetNamespaces,
@@ -143,334 +128,297 @@ export const PlansCreateForm = ({
     alerts,
   } = state;
 
-  const vmFields = vmFieldsFactory(t);
   const [isNameEdited, setIsNameEdited] = useState(false);
   const [isTargetProviderEdited, setIsTargetProviderEdited] = useState(false);
   const [isTargetNamespaceEdited, setIsTargetNamespaceEdited] = useState(false);
 
-  const [isVmDetails, setIsVmDetails] = useState(false);
   const networkMessages = buildNetworkMessages(t);
   const storageMessages = buildStorageMessages(t);
 
   return (
-    <Drawer isExpanded={isVmDetails}>
-      <DrawerContent
-        panelContent={
-          <DrawerPanelContent widths={{ default: 'width_75' }}>
-            <DrawerHead>
-              <DrawerActions>
-                <DrawerCloseButton onClick={() => setIsVmDetails(false)} />
-              </DrawerActions>
-            </DrawerHead>
-            <StandardPage<VmData>
-              title={t('Selected VMs')}
-              dataSource={[selectedVms, true, false]}
-              fieldsMetadata={vmFields}
-              RowMapper={RowMapper}
-              namespace={plan.spec.provider?.source?.namespace}
-              extraSupportedFilters={{
-                concerns: SearchableGroupedEnumFilter,
-                features: EnumFilter,
-              }}
-              extraSupportedMatchers={[concernsMatcher, featuresMatcher]}
-            />
-          </DrawerPanelContent>
-        }
+    <>
+      {children}
+      <DescriptionList
+        className="forklift-create-provider-edit-section"
+        columnModifier={{
+          default: '1Col',
+        }}
       >
-        <DrawerContentBody>
-          {children}
-          <DescriptionList
-            className="forklift-create-provider-edit-section"
-            columnModifier={{
-              default: '1Col',
-            }}
-          >
-            <SectionHeading
-              text={t('Create migration plan')}
-              className="forklift--create-plan--title"
-            />
-
-            {isNameEdited || validation.planName === 'error' ? (
-              <Form isWidthLimited>
-                <FormGroup
-                  label={t('Plan name')}
-                  isRequired
-                  fieldId="planName"
-                  validated={validation.planName}
-                  helperTextInvalid={t(
-                    "Error: Name is required and must be a unique within a namespace and valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).",
-                  )}
-                >
-                  <TextInput
-                    isRequired
-                    type="text"
-                    id="planName"
-                    value={plan.metadata.name}
-                    validated={validation.planName}
-                    isDisabled={flow.editingDone}
-                    onChange={(value) => dispatch(setPlanName(value?.trim() ?? ''))}
-                  />
-                </FormGroup>
-              </Form>
-            ) : (
-              <EditableDescriptionItem
-                title={t('Plan name')}
-                content={plan.metadata.name}
-                ariaEditLabel={t('Edit plan name')}
-                onEdit={() => setIsNameEdited(true)}
+        {isNameEdited || validation.planName === 'error' ? (
+          <Form isWidthLimited>
+            <FormGroup
+              label={t('Plan name')}
+              isRequired
+              fieldId="planName"
+              validated={validation.planName}
+              helperTextInvalid={t(
+                "Error: Name is required and must be a unique within a namespace and valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).",
+              )}
+            >
+              <TextInput
+                isRequired
+                type="text"
+                id="planName"
+                value={plan.metadata.name}
+                validated={validation.planName}
                 isDisabled={flow.editingDone}
+                onChange={(value) => dispatch(setPlanName(value?.trim() ?? ''))}
               />
-            )}
+            </FormGroup>
+          </Form>
+        ) : (
+          <EditableDescriptionItem
+            title={t('Plan name')}
+            content={plan.metadata.name}
+            ariaEditLabel={t('Edit plan name')}
+            onEdit={() => setIsNameEdited(true)}
+            isDisabled={flow.editingDone}
+          />
+        )}
 
-            <SectionHeading
-              text={t('Source')}
-              className="forklift--create-vm-migration-plan--section-header"
+        <SectionHeading
+          text={t('Source provider')}
+          className="forklift--create-vm-migration-plan--section-header"
+        />
+
+        <DetailsItem
+          title={t('Source provider')}
+          content={
+            <ResourceLink
+              name={plan.spec.provider?.source?.name}
+              namespace={plan.spec.provider?.source?.namespace}
+              groupVersionKind={ProviderModelGroupVersionKind}
             />
+          }
+        />
+        <DescriptionListGroup>
+          <DescriptionListTerm>{t('Selected VMs')}</DescriptionListTerm>
+          <DescriptionListDescription>
+            {t('{{vmCount}} VMs selected ', { vmCount: plan.spec.vms?.length ?? 0 })}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
 
-            <DetailsItem
-              title={t('Source provider')}
-              content={
-                <ResourceLink
-                  name={plan.spec.provider?.source?.name}
-                  namespace={plan.spec.provider?.source?.namespace}
-                  groupVersionKind={ProviderModelGroupVersionKind}
-                />
+        <SectionHeading
+          text={t('Target provider')}
+          className="forklift--create-vm-migration-plan--section-header"
+        />
+
+        {isTargetProviderEdited ||
+        validation.targetProvider === 'error' ||
+        !plan.spec.provider?.destination ? (
+          <Form isWidthLimited>
+            <FormGroup
+              label={t('Target provider')}
+              isRequired
+              fieldId="targetProvider"
+              validated={validation.targetProvider}
+              helperTextInvalid={
+                availableProviders.filter(getIsTarget).length === 0
+                  ? t('No provider is available')
+                  : t('The chosen provider is no longer available.')
               }
-            />
-            <DescriptionListGroup>
-              <DescriptionListTerm>{t('Selected VMs')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                <Button onClick={() => setIsVmDetails(!isVmDetails)} variant="link" isInline>
-                  {t('{{vmCount}} VMs selected ', { vmCount: plan.spec.vms?.length ?? 0 })}
-                </Button>
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-
-            <SectionHeading
-              text={t('Target')}
-              className="forklift--create-vm-migration-plan--section-header"
-            />
-
-            {isTargetProviderEdited ||
-            validation.targetProvider === 'error' ||
-            !plan.spec.provider?.destination ? (
-              <Form isWidthLimited>
-                <FormGroup
-                  label={t('Target provider')}
-                  isRequired
-                  fieldId="targetProvider"
-                  validated={validation.targetProvider}
-                  helperTextInvalid={
-                    availableProviders.filter(getIsTarget).length === 0
-                      ? t('No provider is available')
-                      : t('The chosen provider is no longer available.')
-                  }
-                >
-                  <FormSelect
-                    value={plan.spec.provider?.destination?.name}
-                    onChange={(value) => dispatch(setPlanTargetProvider(value))}
-                    validated={validation.targetProvider}
-                    id="targetProvider"
-                    isDisabled={flow.editingDone}
-                  >
-                    {[
-                      <FormSelectOption
-                        key="placeholder"
-                        value={''}
-                        label={t('Select a provider')}
-                        isPlaceholder
-                        isDisabled
-                      />,
-                      ...availableProviders
-                        .filter(getIsTarget)
-                        .map((provider, index) => (
-                          <FormSelectOption
-                            key={provider?.metadata?.name || index}
-                            value={provider?.metadata?.name}
-                            label={
-                              provider?.metadata?.name ?? provider?.metadata?.uid ?? String(index)
-                            }
-                          />
-                        )),
-                    ]}
-                  </FormSelect>
-                </FormGroup>
-              </Form>
-            ) : (
-              <EditableDescriptionItem
-                title={t('Target provider')}
-                content={
-                  <ResourceLink
-                    name={plan.spec.provider?.destination?.name}
-                    namespace={plan.spec.provider?.destination?.namespace}
-                    groupVersionKind={ProviderModelGroupVersionKind}
-                  />
-                }
-                ariaEditLabel={t('Edit target provider')}
-                onEdit={() => setIsTargetProviderEdited(true)}
+            >
+              <FormSelect
+                value={plan.spec.provider?.destination?.name}
+                onChange={(value) => dispatch(setPlanTargetProvider(value))}
+                validated={validation.targetProvider}
+                id="targetProvider"
                 isDisabled={flow.editingDone}
-              />
-            )}
-            {isTargetNamespaceEdited ||
-            validation.targetNamespace === 'error' ||
-            !plan.spec.targetNamespace ? (
-              <Form isWidthLimited>
-                <FormGroup
-                  label={t('Target namespace')}
-                  isRequired
-                  id="targetNamespace"
-                  validated={validation.targetNamespace}
-                >
-                  <FormSelect
-                    value={plan.spec.targetNamespace}
-                    onChange={(value) => dispatch(setPlanTargetNamespace(value))}
-                    validated={validation.targetNamespace}
-                    id="targetNamespace"
-                    isDisabled={flow.editingDone}
-                  >
-                    {[
+              >
+                {[
+                  <FormSelectOption
+                    key="placeholder"
+                    value={''}
+                    label={t('Select a provider')}
+                    isPlaceholder
+                    isDisabled
+                  />,
+                  ...availableProviders
+                    .filter(getIsTarget)
+                    .map((provider, index) => (
                       <FormSelectOption
-                        key="placeholder"
-                        value={''}
-                        label={t('Select a namespace')}
-                        isPlaceholder
-                        isDisabled
-                      />,
-                      ...availableTargetNamespaces.map((ns, index) => (
-                        <FormSelectOption
-                          key={ns?.name || index}
-                          value={ns?.name}
-                          label={ns?.name ?? String(index)}
-                          isDisabled={namespacesUsedBySelectedVms.includes(ns?.name)}
-                        />
-                      )),
-                    ]}
-                  </FormSelect>
-                </FormGroup>
-              </Form>
-            ) : (
-              <EditableDescriptionItem
-                title={t('Target namespace')}
-                content={
-                  <ResourceLink
-                    name={plan.spec.targetNamespace}
-                    namespace=""
-                    groupVersionKind={{ kind: 'Namespace', version: 'v1', group: '' }}
-                    linkTo={isProviderLocalOpenshift(
-                      availableProviders.find(
-                        (p) => p?.metadata?.name === plan.spec.provider?.destination?.name,
-                      ),
-                    )}
-                  />
-                }
-                ariaEditLabel={t('Edit target namespace')}
-                onEdit={() => setIsTargetNamespaceEdited(true)}
-                isDisabled={flow.editingDone}
+                        key={provider?.metadata?.name || index}
+                        value={provider?.metadata?.name}
+                        label={provider?.metadata?.name ?? provider?.metadata?.uid ?? String(index)}
+                      />
+                    )),
+                ]}
+              </FormSelect>
+            </FormGroup>
+          </Form>
+        ) : (
+          <EditableDescriptionItem
+            title={t('Target provider')}
+            content={
+              <ResourceLink
+                name={plan.spec.provider?.destination?.name}
+                namespace={plan.spec.provider?.destination?.namespace}
+                groupVersionKind={ProviderModelGroupVersionKind}
               />
-            )}
+            }
+            ariaEditLabel={t('Edit target provider')}
+            onEdit={() => setIsTargetProviderEdited(true)}
+            isDisabled={flow.editingDone}
+          />
+        )}
+        {isTargetNamespaceEdited ||
+        validation.targetNamespace === 'error' ||
+        !plan.spec.targetNamespace ? (
+          <Form isWidthLimited>
+            <FormGroup
+              label={t('Target namespace')}
+              isRequired
+              id="targetNamespace"
+              validated={validation.targetNamespace}
+            >
+              <FormSelect
+                value={plan.spec.targetNamespace}
+                onChange={(value) => dispatch(setPlanTargetNamespace(value))}
+                validated={validation.targetNamespace}
+                id="targetNamespace"
+                isDisabled={flow.editingDone}
+              >
+                {[
+                  <FormSelectOption
+                    key="placeholder"
+                    value={''}
+                    label={t('Select a namespace')}
+                    isPlaceholder
+                    isDisabled
+                  />,
+                  ...availableTargetNamespaces.map((ns, index) => (
+                    <FormSelectOption
+                      key={ns?.name || index}
+                      value={ns?.name}
+                      label={ns?.name ?? String(index)}
+                      isDisabled={namespacesUsedBySelectedVms.includes(ns?.name)}
+                    />
+                  )),
+                ]}
+              </FormSelect>
+            </FormGroup>
+          </Form>
+        ) : (
+          <EditableDescriptionItem
+            title={t('Target namespace')}
+            content={
+              <ResourceLink
+                name={plan.spec.targetNamespace}
+                namespace=""
+                groupVersionKind={{ kind: 'Namespace', version: 'v1', group: '' }}
+                linkTo={isProviderLocalOpenshift(
+                  availableProviders.find(
+                    (p) => p?.metadata?.name === plan.spec.provider?.destination?.name,
+                  ),
+                )}
+              />
+            }
+            ariaEditLabel={t('Edit target namespace')}
+            onEdit={() => setIsTargetNamespaceEdited(true)}
+            isDisabled={flow.editingDone}
+          />
+        )}
 
-            <SectionHeading
-              text={t('Mappings')}
-              className="forklift--create-vm-migration-plan--section-header"
+        <SectionHeading
+          text={t('Storage and network mappings')}
+          className="forklift--create-vm-migration-plan--section-header"
+        />
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            <span className="forklift-page-editable-description-item">
+              {t('Network map:')}
+              <ResourceLink
+                groupVersionKind={NetworkMapModelGroupVersionKind}
+                namespace={netMap.metadata?.namespace}
+                name={netMap.metadata?.name}
+                className="forklift-page-resource-link-in-description-item"
+                linkTo={false}
+              />
+            </span>
+          </DescriptionListTerm>
+          <DescriptionListDescription className="forklift-page-mapping-list">
+            <StateAlerts
+              variant={AlertVariant.danger}
+              messages={Array.from(alerts.networkMappings.errors).map((key) => ({
+                key,
+                ...networkMessages[key],
+              }))}
+              onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
             />
-
-            <DescriptionListGroup>
-              <DescriptionListTerm>
-                <span className="forklift-page-editable-description-item">
-                  {t('Network map:')}
-                  <ResourceLink
-                    groupVersionKind={NetworkMapModelGroupVersionKind}
-                    namespace={netMap.metadata?.namespace}
-                    name={netMap.metadata?.name}
-                    className="forklift-page-resource-link-in-description-item"
-                    linkTo={false}
-                  />
-                </span>
-              </DescriptionListTerm>
-              <DescriptionListDescription className="forklift-page-mapping-list">
-                <StateAlerts
-                  variant={AlertVariant.danger}
-                  messages={Array.from(alerts.networkMappings.errors).map((key) => ({
-                    key,
-                    ...networkMessages[key],
-                  }))}
-                  onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
-                />
-                <StateAlerts
-                  variant={AlertVariant.warning}
-                  messages={Array.from(alerts.networkMappings.warnings).map((key) => ({
-                    key,
-                    ...networkMessages[key],
-                  }))}
-                  onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
-                />
-                <MappingList
-                  addMapping={() => dispatch(addNetworkMapping())}
-                  replaceMapping={({ current, next }) =>
-                    dispatch(replaceNetworkMapping({ current, next }))
-                  }
-                  deleteMapping={(current) => dispatch(deleteNetworkMapping({ ...current }))}
-                  availableDestinations={targetNetworks}
-                  sources={sourceNetworks}
-                  mappings={networkMappings}
-                  generalSourcesLabel={t('Other networks present on the source provider ')}
-                  usedSourcesLabel={t('Networks used by the selected VMs')}
-                  noSourcesLabel={t('No networks in this category')}
-                  isDisabled={flow.editingDone}
-                />
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-            <DescriptionListGroup>
-              <DescriptionListTerm>
-                <span className="forklift-page-editable-description-item">
-                  {t('Storage map:')}
-                  <ResourceLink
-                    groupVersionKind={StorageMapModelGroupVersionKind}
-                    namespace={storageMap.metadata?.namespace}
-                    name={storageMap.metadata?.name}
-                    className="forklift-page-resource-link-in-description-item"
-                    linkTo={false}
-                  />
-                </span>
-              </DescriptionListTerm>
-              <DescriptionListDescription className="forklift-page-mapping-list">
-                <StateAlerts
-                  variant={AlertVariant.danger}
-                  messages={Array.from(alerts.storageMappings.errors).map((key) => ({
-                    key,
-                    ...storageMessages[key],
-                  }))}
-                  onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
-                />
-                <StateAlerts
-                  variant={AlertVariant.warning}
-                  messages={Array.from(alerts.storageMappings.warnings).map((key) => ({
-                    key,
-                    ...storageMessages[key],
-                  }))}
-                  onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
-                />
-                <MappingList
-                  addMapping={() => dispatch(addStorageMapping())}
-                  replaceMapping={({ current, next }) =>
-                    dispatch(replaceStorageMapping({ current, next }))
-                  }
-                  deleteMapping={(current) => dispatch(deleteStorageMapping({ ...current }))}
-                  availableDestinations={targetStorages}
-                  sources={sourceStorages}
-                  mappings={storageMappings}
-                  generalSourcesLabel={t('Other storages present on the source provider ')}
-                  usedSourcesLabel={t('Storages used by the selected VMs')}
-                  noSourcesLabel={t('No storages in this category')}
-                  isDisabled={flow.editingDone}
-                />
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-          </DescriptionList>
-          {formAlerts}
-          <div className="forklift--create-vm-migration-plan--form-actions">{formActions}</div>
-        </DrawerContentBody>
-      </DrawerContent>
-    </Drawer>
+            <StateAlerts
+              variant={AlertVariant.warning}
+              messages={Array.from(alerts.networkMappings.warnings).map((key) => ({
+                key,
+                ...networkMessages[key],
+              }))}
+              onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
+            />
+            <MappingList
+              addMapping={() => dispatch(addNetworkMapping())}
+              replaceMapping={({ current, next }) =>
+                dispatch(replaceNetworkMapping({ current, next }))
+              }
+              deleteMapping={(current) => dispatch(deleteNetworkMapping({ ...current }))}
+              availableDestinations={targetNetworks}
+              sources={sourceNetworks}
+              mappings={networkMappings}
+              generalSourcesLabel={t('Other networks present on the source provider ')}
+              usedSourcesLabel={t('Networks used by the selected VMs')}
+              noSourcesLabel={t('No networks in this category')}
+              isDisabled={flow.editingDone}
+            />
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            <span className="forklift-page-editable-description-item">
+              {t('Storage map:')}
+              <ResourceLink
+                groupVersionKind={StorageMapModelGroupVersionKind}
+                namespace={storageMap.metadata?.namespace}
+                name={storageMap.metadata?.name}
+                className="forklift-page-resource-link-in-description-item"
+                linkTo={false}
+              />
+            </span>
+          </DescriptionListTerm>
+          <DescriptionListDescription className="forklift-page-mapping-list">
+            <StateAlerts
+              variant={AlertVariant.danger}
+              messages={Array.from(alerts.storageMappings.errors).map((key) => ({
+                key,
+                ...storageMessages[key],
+              }))}
+              onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
+            />
+            <StateAlerts
+              variant={AlertVariant.warning}
+              messages={Array.from(alerts.storageMappings.warnings).map((key) => ({
+                key,
+                ...storageMessages[key],
+              }))}
+              onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
+            />
+            <MappingList
+              addMapping={() => dispatch(addStorageMapping())}
+              replaceMapping={({ current, next }) =>
+                dispatch(replaceStorageMapping({ current, next }))
+              }
+              deleteMapping={(current) => dispatch(deleteStorageMapping({ ...current }))}
+              availableDestinations={targetStorages}
+              sources={sourceStorages}
+              mappings={storageMappings}
+              generalSourcesLabel={t('Other storages present on the source provider ')}
+              usedSourcesLabel={t('Storages used by the selected VMs')}
+              noSourcesLabel={t('No storages in this category')}
+              isDisabled={flow.editingDone}
+            />
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+      </DescriptionList>
+      {formAlerts}
+      <div className="forklift--create-vm-migration-plan--form-actions">{formActions}</div>
+    </>
   );
 };

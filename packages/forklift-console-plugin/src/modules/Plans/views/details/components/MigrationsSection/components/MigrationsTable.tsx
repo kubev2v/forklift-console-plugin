@@ -1,5 +1,10 @@
 import React from 'react';
-import StatusIcon from 'src/components/status/StatusIcon';
+import {
+  getMigrationVmsCounts,
+  getPhaseLabel,
+  getPlanProgressVariant,
+} from 'src/modules/Plans/utils';
+import { getMigrationPhase } from 'src/modules/Plans/utils/helpers/getMigrationPhase';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -14,11 +19,7 @@ import {
   Progress,
   ProgressMeasureLocation,
   ProgressSize,
-  ProgressVariant,
-  Split,
-  SplitItem,
 } from '@patternfly/react-core';
-import { VirtualMachineIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, showOwner }) => {
@@ -40,7 +41,6 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
         <Tr>
           <Th width={20}>{t('Migration')}</Th>
           {showOwner && <Th width={20}>{t('Owner')}</Th>}
-          <Th width={10}>{t('Status')}</Th>
           <Th width={15}>{t('VMs')}</Th>
           <Th width={10}>{t('Started at')}</Th>
           <Th width={10}>{t('Completed at')}</Th>
@@ -70,9 +70,6 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
               </Td>
             )}
             <Td>
-              <StatusLabel migration={migration} />
-            </Td>
-            <Td>
               <VMsLabel migration={migration} />
             </Td>
             <Td>
@@ -88,97 +85,30 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
   );
 };
 
-const getMigrationPhase = (migration) => {
-  let phase = 'Unknown';
-
-  const conditions = migration?.status?.conditions;
-
-  if (!conditions || conditions.length < 1) {
-    return phase;
-  }
-
-  const phases = ['Ready', 'Running', 'Succeeded', 'Failed'];
-
-  // Look for a condition indicating a migration phase
-  phases.forEach((p) => {
-    const condition = conditions.find((c) => c.type === p && c.status === 'True');
-    if (condition) {
-      phase = p;
-    }
-  });
-
-  return phase;
-};
-
-const getMigrationVmsCounts = (migration) => {
-  const vms = migration?.status?.vms;
-
-  if (!vms || vms.length < 1) {
-    return {};
-  }
-
-  const vmsCanceled = vms.filter((vm) =>
-    (vm?.conditions || []).find((c) => c.type === 'Canceled' && c.status === 'True'),
-  );
-  const vmsCompleted = vms.filter((vm) => vm?.completed);
-
-  return {
-    completed: vmsCompleted.length,
-    total: vms.length,
-    canceled: vmsCanceled.length,
-  };
-};
-
-const StatusLabel: React.FC<{ migration: V1beta1Migration }> = ({ migration }) => {
-  const phase = getMigrationPhase(migration);
-
-  return (
-    <Split>
-      <SplitItem className="forklift-overview__controller-card__status-icon">
-        <StatusIcon phase={phase} />
-      </SplitItem>
-      <SplitItem>{phase}</SplitItem>
-    </Split>
-  );
-};
-
 const VMsLabel: React.FC<{ migration: V1beta1Migration }> = ({ migration }) => {
   const { t } = useForkliftTranslation();
 
   const phase = getMigrationPhase(migration);
-  let progressVariant;
-
-  switch (phase) {
-    case 'Failed':
-      progressVariant = ProgressVariant.danger;
-      break;
-    case 'Succeeded':
-      progressVariant = ProgressVariant.success;
-      break;
-  }
-
-  const counters = getMigrationVmsCounts(migration);
+  const phaseLabel = t(getPhaseLabel(phase));
+  const progressVariant = getPlanProgressVariant(phase);
+  const counters = getMigrationVmsCounts(migration?.status?.vms);
 
   if (!counters?.total || counters.total === 0) {
     return <>-</>;
   }
 
   return (
-    <Split>
-      <SplitItem className="forklift-overview__controller-card__status-icon">
-        <VirtualMachineIcon />
-      </SplitItem>
-      <SplitItem>
-        {t('{{completed}} of {{total}} VMs migrated, {{canceled}} canceled', counters)}
-
-        <Progress
-          value={(100 * counters?.completed) / counters?.total}
-          size={ProgressSize.sm}
-          measureLocation={ProgressMeasureLocation.none}
-          variant={progressVariant}
-        />
-      </SplitItem>
-    </Split>
+    <div className="forklift-table__status-cell-progress">
+      <Progress
+        title={t('{{success}} of {{total}} VMs migrated', counters)}
+        value={counters?.total > 0 ? (100 * counters?.success) / counters?.total : 0}
+        label={phaseLabel}
+        valueText={phaseLabel}
+        size={ProgressSize.sm}
+        measureLocation={ProgressMeasureLocation.top}
+        variant={progressVariant}
+      />
+    </div>
   );
 };
 

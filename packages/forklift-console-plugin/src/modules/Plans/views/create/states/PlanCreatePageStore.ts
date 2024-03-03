@@ -40,7 +40,7 @@ interface UpdateSelectedVMsAction {
   payload: VmData[];
 }
 
-type PlanCreatePageActionTypes =
+export type PlanCreatePageActionTypes =
   | SetNameFilterAction
   | UpdateTypeFiltersAction
   | SelectProviderAction

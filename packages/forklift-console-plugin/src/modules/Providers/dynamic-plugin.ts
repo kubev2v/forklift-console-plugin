@@ -7,7 +7,6 @@ import {
   ResourceDetailsPage,
   ResourceListPage,
   ResourceNSNavItem,
-  RoutePage,
 } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
@@ -17,12 +16,7 @@ export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
   ProvidersCreatePage: './modules/Providers/views/create/ProvidersCreatePage',
   ProvidersCreateVmMigrationContext:
     './modules/Providers/views/migrate/ProvidersCreateVmMigrationContext',
-  ProvidersCreateVmMigrationPage:
-    './modules/Providers/views/migrate/ProvidersCreateVmMigrationPage',
 };
-
-const plansListURL = '/k8s/ns/:ns/forklift.konveyor.io~v1beta1~Plan';
-const plansListURLAllNamespaces = '/k8s/all-namespaces/forklift.konveyor.io~v1beta1~Plan';
 
 export const extensions: EncodedExtension[] = [
   {
@@ -80,6 +74,7 @@ export const extensions: EncodedExtension[] = [
       ...ProviderModel,
     },
   } as EncodedExtension<CreateResource>,
+
   {
     type: 'console.context-provider',
     properties: {
@@ -89,15 +84,4 @@ export const extensions: EncodedExtension[] = [
       },
     },
   } as EncodedExtension<ContextProvider>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'ProvidersCreateVmMigrationPage',
-      },
-      path: [`${plansListURL}/fast-create`, `${plansListURLAllNamespaces}/fast-create`],
-      exact: false,
-    },
-  } as EncodedExtension<RoutePage>,
 ];
