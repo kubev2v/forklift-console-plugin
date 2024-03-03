@@ -19,6 +19,7 @@ import {
   DEFAULT_NAMESPACE,
   DELETE_NETWORK_MAPPING,
   DELETE_STORAGE_MAPPING,
+  INIT,
   PageAction,
   PlanAlert,
   PlanAvailableProviders,
@@ -59,6 +60,7 @@ import {
   START_CREATE,
 } from './actions';
 import { addMapping, deleteMapping, replaceMapping } from './changeMapping';
+import { createInitialState, InitialStateParameters } from './createInitialState';
 import { getNetworksUsedBySelectedVms } from './getNetworksUsedBySelectedVMs';
 import { getStoragesUsedBySelectedVms } from './getStoragesUsedBySelectedVMs';
 import { hasMultipleNicsOnTheSameNetwork } from './hasMultipleNicsOnTheSameNetwork';
@@ -463,6 +465,20 @@ const handlers: {
         alerts.splice(index, 1);
       }
     });
+  },
+  [INIT](
+    draft,
+    {
+      payload: { namespace, sourceProvider, selectedVms },
+    }: PageAction<CreateVmMigration, InitialStateParameters>,
+  ) {
+    const newDraft = createInitialState({ namespace, sourceProvider, selectedVms });
+
+    draft.underConstruction = newDraft.underConstruction;
+    draft.calculatedOnce = newDraft.calculatedOnce;
+    draft.calculatedPerNamespace = newDraft.calculatedPerNamespace;
+    draft.receivedAsParams = newDraft.receivedAsParams;
+    draft.alerts = newDraft.alerts;
   },
 };
 
