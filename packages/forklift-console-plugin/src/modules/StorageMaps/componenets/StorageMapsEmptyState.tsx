@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import automationIcon from 'src/components/empty-states/images/automation.svg';
-import { useHasSufficientProviders } from 'src/modules/Plans/data';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { HELP_LINK_HREF } from 'src/utils/constants';
+import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';

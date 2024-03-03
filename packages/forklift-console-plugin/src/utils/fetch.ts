@@ -136,3 +136,25 @@ export const useNetworkMappings = IS_MOCK
 export const useStorageMappings = IS_MOCK
   ? useMockStorageMappings
   : createRealK8sWatchResourceHook<StorageMapResource>(StorageMapModelGroupVersionKind);
+
+export const useHasSourceAndTargetProviders = (
+  namespace?: string,
+): [boolean, boolean, boolean, unknown] => {
+  const [providers, providersLoaded, providersError] = useProviders({
+    namespace,
+  });
+
+  const hasSourceProviders = providers.length > 0;
+  const hasTargetProviders = providers.some((p) => p?.spec?.type === 'openshift');
+
+  return [hasSourceProviders, hasTargetProviders, providersLoaded, providersError];
+};
+
+export const useHasSufficientProviders = (namespace?: string) => {
+  const [hasSourceProviders, hasTargetProviders, providersLoaded, providersError] =
+    useHasSourceAndTargetProviders(namespace);
+  const hasSufficientProviders =
+    hasSourceProviders && hasTargetProviders && providersLoaded && !providersError;
+
+  return hasSufficientProviders;
+};

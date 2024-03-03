@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import digitalTransformation from 'src/modules/Overview/images/digitalTransormation.svg';
 import { HELP_LINK_HREF } from 'src/utils/constants';
+import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
@@ -10,8 +11,6 @@ import { PROVIDERS_REFERENCE } from '@kubev2v/legacy/common/constants';
 import { CreatePlanButton } from '@kubev2v/legacy/Plans/components/CreatePlanButton';
 import { createK8sPath } from '@kubev2v/legacy/queries/helpers';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
-
-import { useHasSufficientProviders } from './data';
 
 const AutomationIcon = () => (
   <img src={digitalTransformation} className="forklift-empty-state__icon" />
