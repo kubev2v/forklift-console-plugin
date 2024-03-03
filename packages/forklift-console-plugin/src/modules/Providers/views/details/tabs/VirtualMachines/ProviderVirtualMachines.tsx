@@ -50,7 +50,7 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
           <ForkliftTrans>
             To migrate virtual machines from <strong>{name}</strong> provider, select the virtual
             machines to migrate from the list of available virtual machines and click the{' '}
-            <strong>Migrate</strong> button.
+            <strong>Create migration plan</strong> button.
           </ForkliftTrans>
         </Alert>
       </PageSection>
