@@ -10,13 +10,21 @@ import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 import { PlansCreateForm } from './components/PlansCreateForm';
 import { startCreate } from './reducer/actions';
 import { isDone } from './reducer/helpers';
+import { useCreateVmMigrationData } from './ProvidersCreateVmMigrationContext';
 import { useFetchEffects } from './useFetchEffects';
 import { useSaveEffect } from './useSaveEffect';
 
 const ProvidersCreateVmMigrationPage: FC = () => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
-  const [state, dispatch, emptyContext] = useFetchEffects();
+  const { data } = useCreateVmMigrationData();
+
+  const [state, dispatch, emptyContext] = useFetchEffects({
+    data: {
+      selectedVms: data.selectedVms,
+      provider: data.provider,
+    },
+  });
   useSaveEffect(state, dispatch);
 
   const isLoading = state.flow.editingDone && !state.flow.apiError;

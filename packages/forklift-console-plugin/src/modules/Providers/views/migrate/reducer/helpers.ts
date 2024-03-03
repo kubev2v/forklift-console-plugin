@@ -232,8 +232,8 @@ export const addIfMissing = <T>(key: T, keys: T[]) => {
 
 export const removeIfPresent = <T>(key: T, keys: T[]) => {
   console.warn('removeIfPresent', key, keys);
-  const index = keys.findIndex((k) => k === key);
-  if (index === -1) {
+  const index = keys?.findIndex((k) => k === key);
+  if (!index || index === -1) {
     return;
   }
   keys.splice(index, 1);
