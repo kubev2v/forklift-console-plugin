@@ -13,7 +13,10 @@ import {
 
 import { InventoryNetwork } from '../../../hooks/useNetworks';
 import { InventoryStorage } from '../../../hooks/useStorages';
+import { VmData } from '../../details';
 import { Mapping, NetworkAlerts, StorageAlerts } from '../types';
+
+import { InitialStateParameters } from './createInitialState';
 
 export const POD_NETWORK = 'Pod Networking';
 export const DEFAULT_NAMESPACE = 'default';
@@ -43,6 +46,7 @@ export const SET_EXISTING_STORAGE_MAPS = 'SET_EXISTING_STORAGE_MAPS';
 export const START_CREATE = 'START_CREATE';
 export const SET_API_ERROR = 'SET_API_ERROR';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
+export const INIT = 'INIT';
 
 export type CreateVmMigration =
   | typeof SET_NAME
@@ -68,7 +72,8 @@ export type CreateVmMigration =
   | typeof SET_EXISTING_STORAGE_MAPS
   | typeof SET_AVAILABLE_SOURCE_STORAGES
   | typeof SET_AVAILABLE_TARGET_STORAGES
-  | typeof REMOVE_ALERT;
+  | typeof REMOVE_ALERT
+  | typeof INIT;
 
 export interface PageAction<S, T> {
   type: S;
@@ -378,4 +383,17 @@ export const removeAlert = (
 ): PageAction<CreateVmMigration, PlanAlert> => ({
   type: 'REMOVE_ALERT',
   payload: { alertKey },
+});
+
+export const initState = (
+  namespace: string,
+  sourceProvider: V1beta1Provider,
+  selectedVms: VmData[],
+): PageAction<CreateVmMigration, InitialStateParameters> => ({
+  type: 'INIT',
+  payload: {
+    namespace,
+    sourceProvider,
+    selectedVms,
+  },
 });

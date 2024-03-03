@@ -20,7 +20,7 @@ export interface CreateVmMigrationContextData {
 
 export interface CreateVmMigrationContextType {
   data?: CreateVmMigrationContextData;
-  setData: (data: CreateVmMigrationContextData) => void;
+  setData?: (data: CreateVmMigrationContextData) => void;
 }
 
 export const CreateVmMigrationContext = createContext<CreateVmMigrationContextType>({

@@ -1,12 +1,10 @@
 import { Dispatch, useEffect } from 'react';
-import { useHistory } from 'react-router';
 import { useImmerReducer } from 'use-immer';
 
 import {
   NetworkMapModelGroupVersionKind,
   PlanModelGroupVersionKind,
   ProviderModelGroupVersionKind,
-  ProviderModelRef,
   StorageMapModelGroupVersionKind,
   V1beta1NetworkMap,
   V1beta1Plan,
@@ -20,10 +18,10 @@ import { useNamespaces } from '../../hooks/useNamespaces';
 import { useOpenShiftNetworks, useSourceNetworks } from '../../hooks/useNetworks';
 import { useNicProfiles } from '../../hooks/useNicProfiles';
 import { useOpenShiftStorages, useSourceStorages } from '../../hooks/useStorages';
-import { getResourceUrl } from '../../utils';
 
 import {
   CreateVmMigration,
+  initState,
   PageAction,
   setAPiError,
   setAvailableProviders,
@@ -40,38 +38,24 @@ import {
 } from './reducer/actions';
 import { createInitialState } from './reducer/createInitialState';
 import { reducer } from './reducer/reducer';
-import { useCreateVmMigrationData } from './ProvidersCreateVmMigrationContext';
+import { CreateVmMigrationContextType } from './ProvidersCreateVmMigrationContext';
 import { CreateVmMigrationPageState } from './types';
 
-export const useFetchEffects = (): [
-  CreateVmMigrationPageState,
-  Dispatch<PageAction<CreateVmMigration, unknown>>,
-  boolean,
-] => {
-  const history = useHistory();
+export const useFetchEffects = (
+  createVmMigrationContext: CreateVmMigrationContextType,
+): [CreateVmMigrationPageState, Dispatch<PageAction<CreateVmMigration, unknown>>, boolean] => {
+  const { selectedVms, provider: sourceProvider } = createVmMigrationContext?.data || {};
 
-  const { data: { selectedVms = [], provider: sourceProvider = undefined } = {} } =
-    useCreateVmMigrationData();
   // error state - the page was entered directly without choosing the VMs
   const emptyContext = !selectedVms?.length || !sourceProvider;
   const namespace = sourceProvider?.metadata?.namespace ?? '';
-  // error recovery - redirect to provider list
-  useEffect(() => {
-    if (emptyContext) {
-      history.push(
-        getResourceUrl({
-          reference: ProviderModelRef,
-          namespace: namespace,
-        }),
-      );
-    }
-  }, [emptyContext]);
 
   const [state, dispatch] = useImmerReducer(
     reducer,
     { namespace, sourceProvider, selectedVms },
     createInitialState,
   );
+
   const {
     workArea: { targetProvider },
     flow: { editingDone },
@@ -88,6 +72,11 @@ export const useFetchEffects = (): [
     error ? dispatch(setAPiError(error)) : dispatch(action);
   };
 
+  useEffect(
+    () => !editingDone && dispatch(initState(namespace, sourceProvider, selectedVms)),
+    [selectedVms],
+  );
+
   const [providers, providersLoaded, providerError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,
@@ -98,7 +87,7 @@ export const useFetchEffects = (): [
     () =>
       !editingDone &&
       dispatchWithFallback(setAvailableProviders(providers), !providersLoaded, providerError),
-    [providers],
+    [providers, providersLoaded, providerError, selectedVms],
   );
 
   const [plans, plansLoaded, plansError] = useK8sWatchResource<V1beta1Plan[]>({
@@ -109,7 +98,7 @@ export const useFetchEffects = (): [
   });
   useEffect(
     () => !editingDone && dispatchWithFallback(setExistingPlans(plans), !plansLoaded, plansError),
-    [plans, plansLoaded, plansError],
+    [plans, plansLoaded, plansError, selectedVms],
   );
 
   const [netMaps, netMapsLoaded, netMapsError] = useK8sWatchResource<V1beta1NetworkMap[]>({
@@ -122,7 +111,7 @@ export const useFetchEffects = (): [
     () =>
       !editingDone &&
       dispatchWithFallback(setExistingNetMaps(netMaps), !netMapsLoaded, netMapsError),
-    [netMaps, netMapsLoaded, netMapsError],
+    [netMaps, netMapsLoaded, netMapsError, selectedVms],
   );
 
   const [stMaps, stMapsLoaded, stMapsError] = useK8sWatchResource<V1beta1StorageMap[]>({
@@ -135,7 +124,7 @@ export const useFetchEffects = (): [
     () =>
       !editingDone &&
       dispatchWithFallback(setExistingStorageMaps(stMaps), !stMapsLoaded, stMapsError),
-    [stMaps, stMapsLoaded, stMapsError],
+    [stMaps, stMapsLoaded, stMapsError, selectedVms],
   );
 
   const [namespaces, nsLoading, nsError] = useNamespaces(targetProvider);
@@ -144,7 +133,7 @@ export const useFetchEffects = (): [
       targetProvider &&
       !editingDone &&
       dispatchWithFallback(setAvailableTargetNamespaces(namespaces), nsLoading, nsError),
-    [namespaces, nsLoading, nsError, targetProvider],
+    [namespaces, nsLoading, nsError, targetProvider, selectedVms],
   );
 
   const [targetNetworks, targetNetworksLoading, targetNetworksError] =
@@ -158,7 +147,7 @@ export const useFetchEffects = (): [
         targetNetworksLoading,
         targetNetworksError,
       ),
-    [targetNetworks, targetNetworksLoading, targetNetworksError, targetProvider],
+    [targetNetworks, targetNetworksLoading, targetNetworksError, targetProvider, selectedVms],
   );
 
   const [sourceStorages, sourceStoragesLoading, sourceStoragesError] =
@@ -171,7 +160,7 @@ export const useFetchEffects = (): [
         sourceStoragesLoading,
         sourceStoragesError,
       ),
-    [sourceStorages, sourceStoragesLoading, sourceStoragesError],
+    [sourceStorages, sourceStoragesLoading, sourceStoragesError, selectedVms],
   );
 
   const [targetStorages, targetStoragesLoading, targetStoragesError] =
@@ -185,7 +174,7 @@ export const useFetchEffects = (): [
         targetStoragesLoading,
         targetStoragesError,
       ),
-    [targetStorages, targetStoragesLoading, targetStoragesError, targetProvider],
+    [targetStorages, targetStoragesLoading, targetStoragesError, targetProvider, selectedVms],
   );
 
   const [sourceNetworks, sourceNetworksLoading, sourceNetworksError] =
@@ -198,7 +187,7 @@ export const useFetchEffects = (): [
         sourceNetworksLoading,
         sourceNetworksError,
       ),
-    [sourceNetworks, sourceNetworksLoading, sourceNetworksError],
+    [sourceNetworks, sourceNetworksLoading, sourceNetworksError, selectedVms],
   );
 
   const [nicProfiles, nicProfilesLoading, nicProfilesError] = useNicProfiles(sourceProvider);
@@ -206,12 +195,13 @@ export const useFetchEffects = (): [
     () =>
       !editingDone &&
       dispatchWithFallback(setNicProfiles(nicProfiles), nicProfilesLoading, nicProfilesError),
-    [nicProfiles, nicProfilesLoading, nicProfilesError],
+    [nicProfiles, nicProfilesLoading, nicProfilesError, selectedVms],
   );
+
   const [disks, disksLoading, disksError] = useDisks(sourceProvider);
   useEffect(
     () => !editingDone && dispatchWithFallback(setDisks(disks), disksLoading, disksError),
-    [disks, disksLoading, disksError],
+    [disks, disksLoading, disksError, selectedVms],
   );
 
   return [state, dispatch, emptyContext];

@@ -22,6 +22,6 @@ export const hasMultiplePodNetworkMappings = (
       ?.map(({ source }) => sourceNetworkLabelToId[source]) ?? [],
   );
   return selectedVMs
-    .map(({ vm }) => toNetworks(vm, nicProfiles))
-    .some((networks) => networks.filter((id) => netIdsMappedToPodNet.has(id)).length >= 2);
+    ?.map(({ vm }) => toNetworks(vm, nicProfiles))
+    ?.some((networks) => networks.filter((id) => netIdsMappedToPodNet.has(id)).length >= 2);
 };

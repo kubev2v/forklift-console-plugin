@@ -17,21 +17,43 @@ export const TableLabelCell: React.FC<TableLabelCellProps> = ({
   label,
   labelColor = 'grey',
 }) => {
+  let labels: ReactNode[];
+  let labelColors: Colors[];
+
+  if (Array.isArray(label)) {
+    labels = label;
+  } else {
+    labels = [label];
+  }
+
+  if (Array.isArray(labelColor)) {
+    labelColors = labelColor;
+  } else {
+    labelColors = labels.map(() => labelColor);
+  }
+
   return (
     <TableCell isWrap={isWrap}>
       {children}
-      {hasLabel && (
-        <Label isCompact color={labelColor} className="forklift-table__flex-cell-label">
-          {label}
-        </Label>
-      )}
+      {hasLabel &&
+        labels.map((_, i) => (
+          <Label
+            key={labels[i].toString()}
+            isCompact
+            color={labelColors[i]}
+            className="forklift-table__flex-cell-label"
+          >
+            {labels[i]}
+          </Label>
+        ))}
     </TableCell>
   );
 };
 
+type Colors = 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey';
 export interface TableLabelCellProps extends TableCellProps {
   hasLabel?: boolean;
-  label?: ReactNode;
-  labelColor?: 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey';
+  label?: ReactNode | ReactNode[];
+  labelColor?: Colors | Colors[];
   isWrap?: boolean;
 }

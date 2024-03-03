@@ -20,6 +20,12 @@ import { hasMultipleNicsOnTheSameNetwork } from './hasMultipleNicsOnTheSameNetwo
 import { hasNicWithEmptyProfile } from './hasNicWithEmptyProfile';
 import { generateName, getObjectRef, resourceFieldsForType } from './helpers';
 
+export type InitialStateParameters = {
+  namespace: string;
+  sourceProvider: V1beta1Provider;
+  selectedVms: VmData[];
+};
+
 export const createInitialState = ({
   namespace,
   sourceProvider = {
@@ -28,12 +34,9 @@ export const createInitialState = ({
     kind: ProviderGVK.kind,
   },
   selectedVms = [],
-}: {
-  namespace: string;
-  sourceProvider: V1beta1Provider;
-  selectedVms: VmData[];
-}): CreateVmMigrationPageState => {
+}: InitialStateParameters): CreateVmMigrationPageState => {
   const hasVmNicWithEmptyProfile = hasNicWithEmptyProfile(sourceProvider, selectedVms);
+
   return {
     underConstruction: {
       plan: {
