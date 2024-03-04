@@ -4,4 +4,5 @@ export * from './NameDetailsItem';
 export * from './NamespaceDetailsItem';
 export * from './OwnerDetailsItem';
 export * from './PlanDetailsItemProps';
+export * from './StatusDetailsItem';
 // @endindex

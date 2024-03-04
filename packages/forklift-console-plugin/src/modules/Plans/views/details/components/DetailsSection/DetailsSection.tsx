@@ -1,14 +1,18 @@
 import React from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals';
+import { PlanStartMigrationModal } from 'src/modules/Plans/modals';
+import { getPlanPhase } from 'src/modules/Plans/utils';
+import { ModalHOC, useModal } from 'src/modules/Providers/modals';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1Plan } from '@kubev2v/types';
-import { DescriptionList } from '@patternfly/react-core';
+import { PlanModel, V1beta1Plan } from '@kubev2v/types';
+import { Button, DescriptionList, FlexItem } from '@patternfly/react-core';
 
 import {
   CreatedAtDetailsItem,
   NameDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
+  StatusDetailsItem,
 } from './components';
 
 export const DetailsSection: React.FC<DetailsSectionProps> = (props) => (
@@ -22,19 +26,42 @@ export type DetailsSectionProps = {
 };
 
 export const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) => {
+  const { t } = useForkliftTranslation();
+  const { showModal } = useModal();
+
+  const phase = getPlanPhase({ obj });
+  const canStart = ['Ready', 'Warning', 'Canceled', 'Failed'].includes(phase);
+
   return (
-    <DescriptionList
-      columnModifier={{
-        default: '1Col',
-      }}
-    >
-      <NameDetailsItem resource={obj} />
+    <>
+      <FlexItem>
+        <div className="forklift-page-section--details-start-button">
+          <Button
+            isAriaDisabled={!canStart}
+            variant="primary"
+            onClick={() => showModal(<PlanStartMigrationModal resource={obj} model={PlanModel} />)}
+          >
+            {t('Start')}
+          </Button>
+        </div>
+      </FlexItem>
 
-      <NamespaceDetailsItem resource={obj} />
+      <DescriptionList
+        className="forklift-page-section--details-status"
+        columnModifier={{
+          default: '1Col',
+        }}
+      >
+        <StatusDetailsItem resource={obj} />
 
-      <CreatedAtDetailsItem resource={obj} />
+        <NameDetailsItem resource={obj} />
 
-      <OwnerDetailsItem resource={obj} />
-    </DescriptionList>
+        <NamespaceDetailsItem resource={obj} />
+
+        <CreatedAtDetailsItem resource={obj} />
+
+        <OwnerDetailsItem resource={obj} />
+      </DescriptionList>
+    </>
   );
 };

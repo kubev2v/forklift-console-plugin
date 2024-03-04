@@ -62,3 +62,12 @@
 .forklift-table__status-cell-progress div {
   grid-gap: var(--pf-global--spacer--xs);
 }
+
+.forklift-page-section--details-status {
+  width: 50%;
+}
+
+
+.forklift-page-section--details-start-button {
+  padding-bottom: var(--pf-global--spacer--lg);
+}

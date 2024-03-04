@@ -2,6 +2,7 @@ export type PlanPhase =
   | 'Error'
   | 'vmError'
   | 'Unknown'
+  | 'Archiving'
   | 'Archived'
   | 'Failed'
   | 'Canceled'

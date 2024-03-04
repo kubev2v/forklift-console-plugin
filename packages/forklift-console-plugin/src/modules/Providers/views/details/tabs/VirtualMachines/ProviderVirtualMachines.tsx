@@ -46,13 +46,19 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
   return (
     <>
       <PageSection variant="light" className="forklift-page-section--info">
-        <Alert customIcon={<BellIcon />} variant="info" title={t('How to create a migration plan')}>
-          <ForkliftTrans>
-            To migrate virtual machines from <strong>{name}</strong> provider, select the virtual
-            machines to migrate from the list of available virtual machines and click the{' '}
-            <strong>Create migration plan</strong> button.
-          </ForkliftTrans>
-        </Alert>
+        {inventory?.vmCount > 0 && (
+          <Alert
+            customIcon={<BellIcon />}
+            variant="info"
+            title={t('How to create a migration plan')}
+          >
+            <ForkliftTrans>
+              To migrate virtual machines from <strong>{name}</strong> provider, select the virtual
+              machines to migrate from the list of available virtual machines and click the{' '}
+              <strong>Create migration plan</strong> button.
+            </ForkliftTrans>
+          </Alert>
+        )}
       </PageSection>
 
       <ProviderVirtualMachinesListWrapper

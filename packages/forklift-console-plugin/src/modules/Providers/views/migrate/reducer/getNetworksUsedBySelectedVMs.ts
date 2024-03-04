@@ -4,7 +4,7 @@ import { VmData } from '../../details';
 
 import { POD_NETWORK } from './actions';
 
-// based on packages/legacy/src/Plans/components/Wizard/helpers.tsx
+// based on packages legacy/src/Plans/components/Wizard/helpers.tsx
 export const getNetworksUsedBySelectedVms = (
   selectedVMs: VmData[],
   nicProfiles: OVirtNicProfile[],

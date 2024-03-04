@@ -17,6 +17,8 @@ const phaseLabels: Record<PlanPhase, string> = {
   Failed: 'Failed',
   // t('Archived')
   Archived: 'Archived',
+  // t('Archiving')
+  Archiving: 'Archiving',
   // t('Error')
   Error: 'Error',
   // t('Warning')

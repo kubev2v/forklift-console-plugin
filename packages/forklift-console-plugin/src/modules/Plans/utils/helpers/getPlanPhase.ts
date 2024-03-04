@@ -21,10 +21,6 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
     (c) => c.category === 'Warn' && c.status === 'True',
   );
 
-  if (isWarn) {
-    return 'Warning';
-  }
-
   // Check for vm errors
   const vmError = plan?.status?.migration?.vms?.find((vm) => vm?.error);
 
@@ -33,6 +29,10 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
 
   if (!conditions || conditions?.length < 1) {
     return 'Unknown';
+  }
+
+  if (plan?.spec?.archived && !conditions.includes('Archived')) {
+    return 'Archiving';
   }
 
   if (conditions.includes('Archived')) {
@@ -45,6 +45,10 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
 
   if (vmError) {
     return 'vmError';
+  }
+
+  if (isWarn) {
+    return 'Warning';
   }
 
   if (conditions.includes('Canceled')) {

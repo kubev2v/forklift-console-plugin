@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
+import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef } from '@kubev2v/types';
@@ -14,6 +15,7 @@ export const PlansAddButton: React.FC<{ namespace: string; dataTestId?: string }
   const { t } = useForkliftTranslation();
   const history = useHistory();
   const { setData } = useCreateVmMigrationData();
+  const hasSufficientProviders = useHasSufficientProviders(namespace);
 
   const PlansListURL = getResourceUrl({
     reference: PlanModelRef,
@@ -29,7 +31,12 @@ export const PlansAddButton: React.FC<{ namespace: string; dataTestId?: string }
   };
 
   return (
-    <Button data-testid={dataTestId} variant="primary" onClick={onClick}>
+    <Button
+      data-testid={dataTestId}
+      variant="primary"
+      isAriaDisabled={!hasSufficientProviders}
+      onClick={onClick}
+    >
       {t('Create Plan')}
     </Button>
   );
