@@ -6,10 +6,15 @@
   "private": true,
   "repository": "https://github.com/kubev2v/forklift-console-plugin.git",
   "workspaces": [
-    "packages/*"
+    "packages/eslint-plugin",
+    "packages/build",
+    "packages/webpack",
+    "packages/types",
+    "packages/common",
+    "packages/forklift-console-plugin"
   ],
   "config": {
-    "libs": "-w @kubev2v/webpack -w @kubev2v/types -w @kubev2v/legacy -w @kubev2v/common -w @kubev2v/mocks"
+    "libs": "-w @kubev2v/webpack -w @kubev2v/types -w @kubev2v/common"
   },
   "scripts": {
     "clean": "rm -rf ./dist ./coverage && npm run clean -ws --if-present",

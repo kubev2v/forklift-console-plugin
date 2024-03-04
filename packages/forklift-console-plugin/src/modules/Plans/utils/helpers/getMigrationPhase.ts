@@ -3,7 +3,7 @@ import { V1beta1Migration } from '@kubev2v/types';
 import { MigrationPhase } from '../types';
 
 export const getMigrationPhase = (migration: V1beta1Migration): MigrationPhase => {
-  let phase: MigrationPhase = 'Unknown';
+  let phase: MigrationPhase;
 
   const conditions = migration?.status?.conditions;
 
@@ -13,10 +13,6 @@ export const getMigrationPhase = (migration: V1beta1Migration): MigrationPhase =
 
   // Check for vm errors
   const vmError = migration?.status.vms?.find((vm) => vm?.error);
-
-  if (vmError) {
-    return 'vmError';
-  }
 
   const phases: MigrationPhase[] = ['Ready', 'Running', 'Succeeded', 'Failed'];
 
@@ -28,5 +24,9 @@ export const getMigrationPhase = (migration: V1beta1Migration): MigrationPhase =
     }
   });
 
-  return phase;
+  if (vmError && phase !== 'Failed') {
+    return 'vmError';
+  }
+
+  return phase ?? 'Unknown';
 };

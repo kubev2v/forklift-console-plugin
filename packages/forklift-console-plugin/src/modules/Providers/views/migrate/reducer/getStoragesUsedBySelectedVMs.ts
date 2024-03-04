@@ -2,7 +2,7 @@ import { OpenstackVolume, OVirtDisk } from '@kubev2v/types';
 
 import { VmData } from '../../details';
 
-// based on packages/legacy/src/Plans/components/Wizard/helpers.tsx
+// based on packages legacy/src/Plans/components/Wizard/helpers.tsx
 export const getStoragesUsedBySelectedVms = (
   selectedVMs: VmData[],
   disks: (OVirtDisk | OpenstackVolume)[],

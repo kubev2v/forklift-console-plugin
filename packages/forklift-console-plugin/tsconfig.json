@@ -8,12 +8,7 @@
 
     "paths": {
       "src/*": ["./src/*"],
-      "common/src/*": ["../common/src/*"],
-      "legacy/src/*": ["../legacy/src/*"]
+      "common/src/*": ["../common/src/*"]
     }
-  },
-
-  "references": [
-    { "path": "../legacy" }
-  ]
+  }
 }

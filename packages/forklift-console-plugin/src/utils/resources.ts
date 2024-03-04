@@ -1,9 +1,5 @@
-import { hasCondition } from '@kubev2v/legacy/common/helpers';
-import { IStatusCondition } from '@kubev2v/legacy/queries/types';
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
-import { K8sResourceCommon, ObjectReference } from '@openshift-console/dynamic-plugin-sdk';
-
-import { ProviderRef } from './types';
+import { V1beta1Provider } from '@kubev2v/types';
+import { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Get reference group version kind string for group version kind strings
@@ -43,25 +39,6 @@ export const groupVersionKindForReference = (reference: string) => {
 export const referenceForObj = (obj: K8sResourceCommon) => {
   const { group, version, kind } = groupVersionKindForObj(obj);
   return referenceFor(group, version, kind);
-};
-
-/**
- * Resolve GVK based on the provided list (or fallback if matching provider is missing).
- */
-export const resolveProviderRef = (
-  { name, namespace }: ObjectReference,
-  providers: V1beta1Provider[],
-): ProviderRef => {
-  const provider = providers.find(
-    (p) => p.metadata?.namespace === namespace && p.metadata?.name === name,
-  );
-
-  return {
-    resolved: !!provider,
-    name,
-    gvk: provider ? groupVersionKindForObj(provider) : ProviderModelGroupVersionKind,
-    ready: hasCondition((provider?.status?.conditions ?? []) as IStatusCondition[], 'Ready'),
-  };
 };
 
 export enum ResourceKind {

@@ -34,7 +34,7 @@ interface ProviderDetailsProps extends RouteComponentProps {
 
 export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, loadError }) => {
   const { t } = useForkliftTranslation();
-  const { provider } = obj;
+  const { provider, inventory } = obj;
 
   if (!loaded || loadError || !provider?.metadata?.name) {
     return <></>;
@@ -49,16 +49,22 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
   return (
     <div>
       <PageSection variant="light" className="forklift-page-section--info">
-        <Alert customIcon={<BellIcon />} variant="info" title={t('How to create a migration plan')}>
-          <ForkliftTrans>
-            To migrate virtual machines from <strong>{provider.metadata.name}</strong> provider,
-            select the virtual machines to migrate from the list of available virtual machines
-            located in the virtual machines tab.{' '}
-            <Link to={`${providerURL}/vms`}>
-              Go to <strong>Virtual Machines</strong> tab
-            </Link>
-          </ForkliftTrans>
-        </Alert>
+        {inventory?.vmCount > 0 && (
+          <Alert
+            customIcon={<BellIcon />}
+            variant="info"
+            title={t('How to create a migration plan')}
+          >
+            <ForkliftTrans>
+              To migrate virtual machines from <strong>{provider.metadata.name}</strong> provider,
+              select the virtual machines to migrate from the list of available virtual machines
+              located in the virtual machines tab.{' '}
+              <Link to={`${providerURL}/vms`}>
+                Go to <strong>Virtual Machines</strong> tab
+              </Link>
+            </ForkliftTrans>
+          </Alert>
+        )}
       </PageSection>
 
       <PageSection variant="light" className="forklift-page-section--details">

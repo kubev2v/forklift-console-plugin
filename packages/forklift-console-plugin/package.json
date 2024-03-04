@@ -15,7 +15,7 @@
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.mjs",
     "build": "NODE_ENV=production webpack",
     "build:dev": "webpack --progress",
-    "start": "msw init ./dist --save; NODE_ENV=development webpack serve",
+    "start": "NODE_ENV=development webpack serve",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "test": "TZ=UTC jest",
@@ -24,14 +24,11 @@
   },
   "dependencies": {
     "@kubev2v/common": "*",
-    "@kubev2v/legacy": "*",
-    "@migtools/lib-ui": "8.4.1",
     "@types/jsrsasign": "10.5.12",
     "immer": "^10.0.3",
     "jsonpath": "^1.1.1",
     "jsrsasign": "11.1.0",
     "luxon": "^3.3.0",
-    "msw": "^1.2.3",
     "streamsaver": "^2.0.6",
     "use-immer": "^0.9.0",
     "uuid": "^9.0.1"
@@ -41,15 +38,14 @@
     "@openshift/dynamic-plugin-sdk": "3.0.0",
     "@patternfly/react-core": "4.276.6",
     "@patternfly/react-table": "4.112.39",
-    "@patternfly/react-charts": "6.94.18",
+    "@patternfly/react-charts": "7.2.1",
     "react-dom": "^17.0.1",
     "react": "^17.0.1",
     "react-i18next": "^11.7.3",
-    "react-router": "5.2.0",
-    "react-router-dom": "5.2.0"
+    "react-router": "5.3.x",
+    "react-router-dom": "5.3.x"
   },
   "devDependencies": {
-    "@kubev2v/mocks": "*",
     "@kubev2v/types": "*",
     "@kubev2v/webpack": "*",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.9",
@@ -67,8 +63,5 @@
     "webpack": "^5.79.0",
     "webpack-cli": "^5.0.2",
     "webpack-dev-server": "^4.15.1"
-  },
-  "msw": {
-    "workerDirectory": "dist"
   }
 }

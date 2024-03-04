@@ -1,23 +1,18 @@
 import { PlanModel, PlanModelGroupVersionKind } from '@kubev2v/types';
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
 import {
-  ActionProvider,
   CreateResource,
   ModelMetadata,
   ResourceDetailsPage,
   ResourceListPage,
   ResourceNSNavItem,
-  RoutePage,
 } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
 
 export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
-  PlansPage: './modules/Plans/PlansWrapper',
+  PlansListPage: './modules/Plans/views/list/PlansListPage',
   PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
   PlanDetailsPage: './modules/Plans/views/details/PlanDetailsPage',
-  PlanWizard: './modules/Plans/PlanWizardWrapper',
-  VMMigrationDetails: './modules/Plans/VMMigrationDetailsWrapper',
-  usePlanActions: './modules/Plans/UsePlanActions',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -39,6 +34,16 @@ export const extensions: EncodedExtension[] = [
   } as EncodedExtension<ResourceNSNavItem>,
 
   {
+    type: 'console.page/resource/list',
+    properties: {
+      component: {
+        $codeRef: 'PlansListPage',
+      },
+      model: PlanModelGroupVersionKind,
+    },
+  } as EncodedExtension<ResourceListPage>,
+
+  {
     type: 'console.page/resource/details',
     properties: {
       component: {
@@ -47,67 +52,6 @@ export const extensions: EncodedExtension[] = [
       model: PlanModelGroupVersionKind,
     },
   } as EncodedExtension<ResourceDetailsPage>,
-
-  {
-    type: 'console.page/resource/list',
-    properties: {
-      component: {
-        $codeRef: 'PlansPage',
-      },
-      model: PlanModelGroupVersionKind,
-    },
-  } as EncodedExtension<ResourceListPage>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'PlanWizard',
-      },
-      path: ['/mtv/plans/ns/:ns/create'],
-      exact: false,
-    },
-  } as EncodedExtension<RoutePage>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'PlanWizard',
-      },
-      path: ['/mtv/plans/ns/:ns/:planName/edit', '/mtv/plans/ns/:ns/:planName/duplicate'],
-      exact: false,
-    },
-  } as EncodedExtension<RoutePage>,
-
-  {
-    type: 'console.page/route',
-    properties: {
-      component: {
-        $codeRef: 'VMMigrationDetails',
-      },
-      path: ['/mtv/plans/ns/:ns/:planName'],
-      exact: false,
-    },
-  } as EncodedExtension<RoutePage>,
-
-  {
-    type: 'console.action/provider',
-    properties: {
-      contextId: 'forklift-flat-plan',
-      provider: {
-        $codeRef: 'usePlanActions',
-      },
-    },
-  } as EncodedExtension<ActionProvider>,
-
-  {
-    type: 'console.model-metadata',
-    properties: {
-      model: PlanModelGroupVersionKind,
-      ...PlanModel,
-    },
-  } as EncodedExtension<ModelMetadata>,
 
   {
     type: 'console.resource/create',
@@ -119,4 +63,12 @@ export const extensions: EncodedExtension[] = [
       ...PlanModel,
     },
   } as EncodedExtension<CreateResource>,
+
+  {
+    type: 'console.model-metadata',
+    properties: {
+      model: PlanModelGroupVersionKind,
+      ...PlanModel,
+    },
+  } as EncodedExtension<ModelMetadata>,
 ];

@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
-import { PageHeadings } from 'src/modules/Providers/utils';
+import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
+import { PageHeadings, ProvidersPermissionStatus } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/types';
@@ -8,6 +9,8 @@ import {
   K8sModel,
   useK8sWatchResource,
 } from '@openshift-console/dynamic-plugin-sdk';
+
+import { PlanActionsDropdown } from '../../actions';
 
 import { Suspend } from './components';
 import { PlanDetails, PlanYAML } from './tabs';
@@ -22,27 +25,37 @@ export type PlanDetailsPageProps = {
   namespace?: string;
 };
 
-export type PlanDetailsTabProps = { plan: V1beta1Plan; loaded?: boolean; loadError?: unknown };
+export type PlanDetailsTabProps = {
+  plan: V1beta1Plan;
+  permissions: ProvidersPermissionStatus;
+  loaded?: boolean;
+  loadError?: unknown;
+};
 
 const PlanDetailsPage_: React.FC<{
   name: string;
   namespace: string;
   obj: V1beta1Plan;
+  permissions: ProvidersPermissionStatus;
   loaded: boolean;
   loadError: unknown;
-}> = ({ namespace, obj, loaded, loadError }) => {
+}> = ({ namespace, obj, permissions, loaded, loadError }) => {
   const { t } = useForkliftTranslation();
 
   const pages = [
     {
       href: '',
       name: t('Details'),
-      component: () => <PlanDetails plan={obj} loaded={loaded} loadError={loadError} />,
+      component: () => (
+        <PlanDetails plan={obj} loaded={loaded} loadError={loadError} permissions={permissions} />
+      ),
     },
     {
       href: 'yaml',
       name: t('YAML'),
-      component: () => <PlanYAML plan={obj} loaded={loaded} loadError={loadError} />,
+      component: () => (
+        <PlanYAML plan={obj} loaded={loaded} loadError={loadError} permissions={permissions} />
+      ),
     },
     /*
     {
@@ -65,7 +78,12 @@ const PlanDetailsPage_: React.FC<{
 
   return (
     <>
-      <PageHeadings model={PlanModel} obj={obj} namespace={namespace}></PageHeadings>
+      <PageHeadings
+        model={PlanModel}
+        obj={obj}
+        namespace={namespace}
+        actions={<PlanActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />}
+      ></PageHeadings>
       <HorizontalNav pages={pages} />
     </>
   );
@@ -96,12 +114,18 @@ export const PlanDetailsPage: React.FC<PlanDetailsPageProps> = ({ name, namespac
     namespace,
   });
 
+  const permissions = useGetDeleteAndEditAccessReview({
+    model: PlanModel,
+    namespace,
+  });
+
   return (
     <Suspend obj={plan} loaded={loaded} loadError={error}>
       <MemoPlanDetailsPage
         name={name}
         namespace={namespace}
         obj={plan}
+        permissions={permissions}
         loaded={loaded}
         loadError={error}
       />

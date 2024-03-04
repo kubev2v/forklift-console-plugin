@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
-import automationIcon from 'src/components/empty-states/images/automation.svg';
+import digitalTransformation from 'src/modules/Overview/images/digitalTransormation.svg';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { HELP_LINK_HREF } from 'src/utils/constants';
 import { useHasSufficientProviders } from 'src/utils/fetch';
@@ -11,9 +11,11 @@ import { ExternalLink } from '@kubev2v/common';
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
-import { PlansAddButton } from './PlansAddButton';
+import PlansAddButton from './PlansAddButton';
 
-const AutomationIcon = () => <img src={automationIcon} className="forklift-empty-state__icon" />;
+const AutomationIcon = () => (
+  <img src={digitalTransformation} className="forklift-empty-state__icon" />
+);
 
 const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
@@ -43,9 +45,9 @@ const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
           <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
             <FlexItem>
               <ForkliftTrans>
-                Migration network maps are used to map network interfaces between source and target
-                virtualization providers, at least one source and one target provider must be
-                available in order to create a migration storage map,{' '}
+                Migration plans are used to plan migration or virtualization workloads from source
+                providers to target providers. At least one source and one target provider must be
+                available in order to create a migration plan,{' '}
                 <ExternalLink href={HELP_LINK_HREF} isInline>
                   Learn more
                 </ExternalLink>
@@ -60,7 +62,7 @@ const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
           </Flex>
         ) : (
           t(
-            'Migration networks maps are used to map network interfaces between source and target workloads.',
+            'Migration plans are used to plan migration or virtualization workloads from source providers to target providers.',
           )
         )
       }
