@@ -28,6 +28,10 @@ export const MustGatherBtn: React.FunctionComponent<IMustGatherBtn> = ({
     notifyDownloadFailed,
   } = React.useContext(MustGatherContext);
 
+  if (!withNs) {
+    return <></>;
+  }
+
   const namespacedName = withNs(displayName, planUid, type);
   const mustGather = latestAssociatedMustGather(namespacedName);
 

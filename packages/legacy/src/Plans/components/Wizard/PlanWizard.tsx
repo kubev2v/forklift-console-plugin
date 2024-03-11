@@ -12,6 +12,7 @@ import {
   WizardStepFunctionType,
 } from '@patternfly/react-core';
 import { Redirect, RouteComponentProps, useHistory, useRouteMatch } from 'react-router-dom';
+import { matchPath, useLocation } from 'react-router-dom';
 import { UseQueryResult } from 'react-query';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import { useFormField, useFormState } from '@migtools/lib-ui';
@@ -157,7 +158,14 @@ const usePlanWizardFormState = (
 
 export type PlanWizardFormState = ReturnType<typeof usePlanWizardFormState>; // ✨ Magic
 
-export const PlanWizard: React.FunctionComponent<RouteComponentProps<{ ns: string }>> = (props) => {
+export const PlanWizard: React.FunctionComponent<RouteComponentProps<{ ns: string }>> = () => {
+  // path: ['/mtv/plans/ns/:ns/:planName/edit', '/mtv/plans/ns/:ns/:planName/duplicate'],
+  const { pathname } = useLocation();
+  const match = matchPath<{ planName: string; ns: string }>(pathname, {
+    path: '/mtv/plans/ns/:ns/:planName',
+  });
+  const props = { match };
+
   // namespace is mandatory in all paths: create, edit, duplicate
   const prefillPlanNamespace = props.match?.params?.ns;
   const history = useHistory();

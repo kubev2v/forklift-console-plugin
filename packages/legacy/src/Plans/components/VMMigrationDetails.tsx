@@ -67,6 +67,7 @@ import { MustGatherBtn } from 'legacy/src/common/components/MustGatherBtn';
 import { VMNameWithPowerState } from 'legacy/src/common/components/VMNameWithPowerState';
 import { PLANS_REFERENCE } from 'legacy/src/common/constants';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { matchPath, useLocation } from 'react-router-dom';
 
 export interface IPlanMatchParams {
   url: string;
@@ -93,7 +94,13 @@ export type VMMigrationDetailsProps = {
   };
 };
 
-export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps> = ({ match }) => {
+export const VMMigrationDetails: React.FunctionComponent<VMMigrationDetailsProps> = () => {
+  // path: ['/mtv/plans/ns/:ns/:planName'],
+  const { pathname } = useLocation();
+  const match = matchPath<{ planName: string; ns: string }>(pathname, {
+    path: '/mtv/plans/ns/:ns/:planName',
+  });
+
   const resourceNamespace = match?.params?.ns;
   const plansQuery = usePlansQuery(resourceNamespace);
   const plan = plansQuery.data?.items.find((item) => item.metadata.name === match?.params.planName);
