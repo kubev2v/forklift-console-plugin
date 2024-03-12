@@ -6,6 +6,7 @@ import { ValidationMsg } from '../../utils';
 
 import './EditModal.style.css';
 
+export type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => unknown);
 export interface EditModalProps {
   /** The Kubernetes resource being edited. This object contains all the information about the Kubernetes resource including its metadata, status, and spec. */
   resource: K8sResourceCommon;
@@ -14,7 +15,7 @@ export interface EditModalProps {
   model: K8sModel;
 
   /** The JSON path of the value in the resource object that needs to be edited. This can either be a string or an array of strings. */
-  jsonPath: string | string[];
+  jsonPath: OpenApiJsonPath;
 
   /** The title of the modal that will be displayed at the top. */
   title: string;
@@ -86,6 +87,6 @@ export type OnConfirmHookType = ({
 }: {
   resource: K8sResourceCommon;
   newValue: unknown;
-  jsonPath?: string | string[];
+  jsonPath?: OpenApiJsonPath;
   model?: K8sModel;
 }) => Promise<K8sResourceCommon>;

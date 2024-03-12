@@ -2,10 +2,18 @@ import React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { ProvidersPermissionStatus } from 'src/modules/Providers/utils';
 
-import { V1beta1Plan } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 
-import { TransferNetworkDetailsItem } from './components';
+import { Suspend } from '../Suspend';
+
+import {
+  PreserveClusterCpuModelDetailsItem,
+  TargetNamespaceDetailsItem,
+  TransferNetworkDetailsItem,
+  WarmDetailsItem,
+} from './components';
 
 export const SettingsSection: React.FC<SettingsSectionProps> = (props) => (
   <ModalHOC>
@@ -19,15 +27,62 @@ export type SettingsSectionProps = {
 };
 
 export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, permissions }) => {
+  const [sourceProvider, loaded, loadError] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
+    name: obj?.spec?.provider?.source?.name,
+    namespace: obj?.spec?.provider?.source?.namespace,
+  });
+
+  const [destinationProvider, destinationLoaded, destinationLoadError] =
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      namespaced: true,
+      name: obj?.spec?.provider?.destination?.name,
+      namespace: obj?.spec?.provider?.destination?.namespace,
+    });
+
   return (
     <>
       <DescriptionList
         className="forklift-page-section--details-status"
         columnModifier={{
-          default: '1Col',
+          default: '2Col',
         }}
       >
-        <TransferNetworkDetailsItem resource={obj} canPatch={permissions.canPatch} />
+        {['vsphere', 'ovirt'].includes(sourceProvider?.spec?.type) && (
+          <WarmDetailsItem resource={obj} canPatch={permissions.canPatch} />
+        )}
+
+        <Suspend
+          obj={destinationProvider}
+          loaded={destinationLoaded}
+          loadError={destinationLoadError}
+        >
+          <TransferNetworkDetailsItem
+            resource={obj}
+            canPatch={permissions.canPatch}
+            destinationProvider={destinationProvider}
+          />
+        </Suspend>
+
+        <Suspend
+          obj={destinationProvider}
+          loaded={destinationLoaded}
+          loadError={destinationLoadError}
+        >
+          <TargetNamespaceDetailsItem
+            resource={obj}
+            canPatch={permissions.canPatch}
+            destinationProvider={destinationProvider}
+          />
+        </Suspend>
+
+        {['ovirt'].includes(sourceProvider?.spec?.type) && (
+          <Suspend obj={sourceProvider} loaded={loaded} loadError={loadError}>
+            <PreserveClusterCpuModelDetailsItem resource={obj} canPatch={permissions.canPatch} />
+          </Suspend>
+        )}
       </DescriptionList>
     </>
   );

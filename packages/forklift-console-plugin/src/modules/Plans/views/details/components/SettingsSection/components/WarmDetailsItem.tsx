@@ -1,0 +1,46 @@
+import React from 'react';
+import { useModal } from 'src/modules/Providers/modals';
+import { DetailsItem } from 'src/modules/Providers/utils';
+import { useForkliftTranslation } from 'src/utils/i18n';
+
+import { Label } from '@patternfly/react-core';
+
+import { PlanDetailsItemProps } from '../../DetailsSection';
+import { EditPlanWarm } from '../modals';
+
+export const WarmDetailsItem: React.FC<PlanDetailsItemProps> = ({
+  resource,
+  canPatch,
+  helpContent,
+  destinationProvider,
+}) => {
+  const { t } = useForkliftTranslation();
+  const { showModal } = useModal();
+
+  const defaultHelpContent = t('Whether this is a warm migration.');
+
+  const WarmLabel = (
+    <Label isCompact color={'orange'}>
+      warm
+    </Label>
+  );
+  const ColdLabel = (
+    <Label isCompact color={'blue'}>
+      cold
+    </Label>
+  );
+
+  return (
+    <DetailsItem
+      title={t('Warm migration')}
+      content={resource?.spec?.warm ? WarmLabel : ColdLabel}
+      helpContent={helpContent ?? defaultHelpContent}
+      crumbs={['spec', 'warm ']}
+      onEdit={
+        canPatch &&
+        (() =>
+          showModal(<EditPlanWarm resource={resource} destinationProvider={destinationProvider} />))
+      }
+    />
+  );
+};

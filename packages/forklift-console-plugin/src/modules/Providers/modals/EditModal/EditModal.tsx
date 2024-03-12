@@ -170,7 +170,7 @@ export const EditModal: React.FC<EditModalProps> = ({
     >
       <div className="forklift-edit-modal-body">{body}</div>
 
-      <Form id="modal-with-form-form">
+      <Form id="modal-with-form-form" className="forklift-edit-modal-form">
         <FormGroup
           label={label}
           labelIcon={LabelIcon}

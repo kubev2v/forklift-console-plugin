@@ -151,7 +151,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
           <Button
             variant="secondary"
             onClick={() => dispatch({ type: 'INIT', payload: obj })}
-            isDisabled={state.updating}
+            isDisabled={!state.hasChanges || state.updating}
           >
             {t('Cancel')}
           </Button>

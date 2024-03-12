@@ -61,17 +61,28 @@ const PlanDetailsPage_: React.FC<{
     {
       href: 'vms',
       name: t('Virtual Machines'),
-      component: () => <PlanVirtualMachines plan={obj} loaded={loaded} loadError={loadError} />,
+      component: () => (
+        <PlanVirtualMachines
+          plan={obj}
+          loaded={loaded}
+          loadError={loadError}
+          permissions={permissions}
+        />
+      ),
     },
     {
       href: 'mappings',
       name: t('Mappings'),
-      component: () => <PlanMappings plan={obj} loaded={loaded} loadError={loadError} />,
+      component: () => (
+        <PlanMappings plan={obj} loaded={loaded} loadError={loadError} permissions={permissions} />
+      ),
     },
     {
       href: 'hooks',
       name: t('Hooks'),
-      component: () => <PlanHooks plan={obj} loaded={loaded} loadError={loadError} />,
+      component: () => (
+        <PlanHooks plan={obj} loaded={loaded} loadError={loadError} permissions={permissions} />
+      ),
     },
     */
   ];
