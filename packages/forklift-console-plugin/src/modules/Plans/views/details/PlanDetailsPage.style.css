@@ -71,3 +71,8 @@
 .forklift-page-section--details-start-button {
   padding-bottom: var(--pf-global--spacer--lg);
 }
+
+.forklift-page-details-edit-pencil{
+  color: var(--pf-c-button--m-plain--Color);
+  margin-left: var(--pf-global--spacer--sm);
+}

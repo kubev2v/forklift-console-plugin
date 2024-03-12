@@ -3,6 +3,11 @@
   padding-bottom: var(--pf-global--spacer--md);
 }
 
+.forklift-edit-modal-form {
+  margin: 0;
+  padding-bottom: var(--pf-global--spacer--md);
+}
+
 .forklift-edit-modal-field-error-validation {
   color: var(--pf-c-form__helper-text--m-error--Color);
   font-size: small;

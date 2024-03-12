@@ -9,11 +9,17 @@ import {
   DetailsSection,
   MigrationsSection,
   ProvidersSection,
+  SettingsSection,
   Suspend,
 } from '../../components';
 import { PlanDetailsTabProps } from '../../PlanDetailsPage';
 
-export const PlanDetails: React.FC<PlanDetailsTabProps> = ({ plan, loaded, loadError }) => {
+export const PlanDetails: React.FC<PlanDetailsTabProps> = ({
+  plan,
+  permissions,
+  loaded,
+  loadError,
+}) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -21,6 +27,11 @@ export const PlanDetails: React.FC<PlanDetailsTabProps> = ({ plan, loaded, loadE
       <PageSection variant="light" className="forklift-page-section--details">
         <SectionHeading text={t('Plan details')} />
         <DetailsSection obj={plan} />
+      </PageSection>
+
+      <PageSection variant="light" className="forklift-page-section">
+        <SectionHeading text={t('Settings')} />
+        <SettingsSection obj={plan} permissions={permissions} />
       </PageSection>
 
       <PageSection variant="light" className="forklift-page-section">
