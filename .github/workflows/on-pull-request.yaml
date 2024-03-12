@@ -12,6 +12,9 @@ jobs:
     name: Run linter and tests
     runs-on: ubuntu-latest
     steps:
+      - name: Increase File Descriptors Limit
+        run: ulimit -n 4096
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -44,6 +47,9 @@ jobs:
     name: Run e2e tests
     runs-on: ubuntu-latest
     steps:
+      - name: Increase File Descriptors Limit
+        run: ulimit -n 4096
+
       - name: Checkout
         uses: actions/checkout@v3
     
