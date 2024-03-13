@@ -1,0 +1,34 @@
+name: Build and Push to Quay
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Increase File Descriptors Limit
+        run: ulimit -n 4096
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Log in to Quay.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./build/Containerfile
+          push: true
+          tags: quay.io/kubev2v/forklift-console-plugin:latest
+
+      - name: Logout from Quay.io
+        run: docker logout quay.io
