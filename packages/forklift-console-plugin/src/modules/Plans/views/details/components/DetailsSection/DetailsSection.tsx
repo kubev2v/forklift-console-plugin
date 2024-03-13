@@ -41,7 +41,7 @@ export const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) =
             variant="primary"
             onClick={() => showModal(<PlanStartMigrationModal resource={obj} model={PlanModel} />)}
           >
-            {t('Start')}
+            {t('Start migration')}
           </Button>
         </div>
       </FlexItem>
