@@ -10,8 +10,9 @@ export function providerAndSecretValidator(
   secret: IoK8sApiCoreV1Secret,
 ): ValidationMsg {
   const type = provider?.spec?.type || '';
+  const subType = provider?.spec?.settings?.['sdkEndpoint'] || '';
 
-  const secretValidation = secretValidator(type, secret);
+  const secretValidation = secretValidator(type, subType, secret);
   const providerValidation = providerValidator(provider);
 
   // Test for validation errors

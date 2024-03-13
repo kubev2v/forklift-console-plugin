@@ -5,9 +5,9 @@ import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { missingKeysInSecretData } from '../../../helpers';
 import { ValidationMsg } from '../../common';
 
-import { vsphereSecretFieldValidator } from './vsphereSecretFieldValidator';
+import { esxiSecretFieldValidator } from './esxiSecretFieldValidator';
 
-export function vsphereSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
+export function esxiSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
   const requiredFields = ['user', 'password'];
   const validateFields = ['user', 'password', 'insecureSkipVerify'];
 
@@ -25,7 +25,7 @@ export function vsphereSecretValidator(secret: IoK8sApiCoreV1Secret): Validation
   for (const id of validateFields) {
     const value = Base64.decode(secret?.data?.[id] || '');
 
-    const validation = vsphereSecretFieldValidator(id, value);
+    const validation = esxiSecretFieldValidator(id, value);
 
     if (validation.type === 'error') {
       return validation;

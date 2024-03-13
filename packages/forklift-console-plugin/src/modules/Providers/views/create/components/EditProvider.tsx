@@ -2,10 +2,11 @@ import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
+  EsxiCredentialsEdit,
   OpenshiftCredentialsEdit,
   OpenstackCredentialsEdit,
   OvirtCredentialsEdit,
-  VSphereCredentialsEdit,
+  VCenterCredentialsEdit,
 } from '../../details';
 
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
@@ -24,7 +25,10 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  switch (newProvider?.spec?.type) {
+  const type = newProvider?.spec?.type || '';
+  const subType = newProvider?.spec?.settings?.['sdkEndpoint'] || '';
+
+  switch (type) {
     case 'openstack':
       return (
         <>
@@ -53,14 +57,26 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
         </>
       );
     case 'vsphere':
-      return (
-        <>
-          <VSphereProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
+      switch (subType) {
+        case 'esxi':
+          return (
+            <>
+              <VSphereProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
 
-          <EditProviderSectionHeading text={t('Provider credentials')} />
-          <VSphereCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
-        </>
-      );
+              <EditProviderSectionHeading text={t('Provider credentials')} />
+              <EsxiCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
+            </>
+          );
+        default:
+          return (
+            <>
+              <VSphereProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
+
+              <EditProviderSectionHeading text={t('Provider credentials')} />
+              <VCenterCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
+            </>
+          );
+      }
     case 'ova':
       return (
         <>

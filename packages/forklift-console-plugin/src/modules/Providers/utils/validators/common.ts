@@ -19,11 +19,11 @@ const PROTOCOL = '(https?:\\/\\/)';
 const IPV4 = '((?:[0-9]{1,3}\\.){3}[0-9]{1,3})';
 const HOSTNAME = '([a-zA-Z0-9-_]+\\.[a-zA-Z0-9-_\\.]+)';
 const PORT = '(:[0-9]+)?';
-const PATH = '(\\/[^ ]*)*';
+const PATH = '((\\/[^ ]*)*)?';
 const QUERY_PARAMS = '(\\?[a-zA-Z0-9=&_]*)?';
 
 const URL_REGEX = new RegExp(
-  `^${PROTOCOL}((${IPV4})|(${HOSTNAME}))((${PORT})(${PATH})?(${QUERY_PARAMS})?)?$`,
+  `^${PROTOCOL}((${IPV4})|(${HOSTNAME}))((${PORT})(${PATH})(${QUERY_PARAMS})?)?$`,
 );
 
 // validate NFS mount NFS_SERVER:EXPORTED_DIRECTORY

@@ -17,8 +17,8 @@ import {
  * 'error' - The field's value has failed validation.
  * 'warning' - The field's value has passed validation but does not fit the standard format, it's the user's choice if to accept that value.
  */
-export const vsphereSecretFieldValidator = (id: string, value: string): ValidationMsg => {
-  const trimmedValue = value.trim();
+export const vcenterSecretFieldValidator = (id: string, value: string): ValidationMsg => {
+  const trimmedValue = value?.trim() || '';
 
   let validationState: ValidationMsg;
 
@@ -49,7 +49,7 @@ const validateUser = (value: string): ValidationMsg => {
   if (value === '') {
     return {
       type: 'error',
-      msg: 'A username and domain for the vSphere API endpoint, for example: user@vsphere.local. [required]',
+      msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local. [required]',
     };
   }
 
@@ -68,7 +68,7 @@ const validateUser = (value: string): ValidationMsg => {
 
   return {
     type: 'success',
-    msg: 'A username and domain for the vSphere API endpoint, for example: user@vsphere.local.',
+    msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local.',
   };
 };
 
@@ -78,12 +78,12 @@ const validatePassword = (value: string): ValidationMsg => {
   if (value === '') {
     return {
       type: 'error',
-      msg: 'A user password for connecting to the vSphere API endpoint. [required]',
+      msg: 'A user password for connecting to the vCenter API endpoint. [required]',
     };
   }
 
   if (valid) {
-    return { type: 'success', msg: 'A user password for connecting to the vSphere API endpoint.' };
+    return { type: 'success', msg: 'A user password for connecting to the vCenter API endpoint.' };
   }
 
   return { type: 'error', msg: 'Invalid password, spaces are not allowed' };

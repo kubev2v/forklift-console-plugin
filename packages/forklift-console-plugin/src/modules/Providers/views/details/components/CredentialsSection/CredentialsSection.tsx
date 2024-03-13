@@ -1,20 +1,24 @@
 import React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
-import { ProviderData } from 'src/modules/Providers/utils';
+import { ProviderData, SecretSubType } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import { EsxiCredentialsSection } from './EsxiCredentialsSection';
 import { OpenshiftCredentialsSection } from './OpenshiftCredentialsSection';
 import { OpenstackCredentialsSection } from './OpenstackCredentialsSection';
 import { OvirtCredentialsSection } from './OvirtCredentialsSection';
-import { VSphereCredentialsSection } from './VSphereCredentialsSection';
+import { VCenterCredentialsSection } from './VCenterCredentialsSection';
 
 export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
   const { t } = useForkliftTranslation();
   const { data, loaded, loadError } = props;
   const { provider } = data;
+
+  const type = provider?.spec?.type;
+  const subType = provider?.spec?.settings?.['sdkEndpoint'] || '';
 
   if (!provider?.spec?.secret?.name || !provider?.spec?.secret?.namespace) {
     return (
@@ -45,17 +49,19 @@ export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
       <CredentialsSection_
         name={provider?.spec?.secret?.name}
         namespace={provider?.spec?.secret?.namespace}
-        type={provider?.spec?.type}
+        type={type}
+        subType={subType}
       />
     </ModalHOC>
   );
 };
 
-export const CredentialsSection_: React.FC<{ name: string; namespace: string; type: string }> = ({
-  name,
-  namespace,
-  type,
-}) => {
+export const CredentialsSection_: React.FC<{
+  name: string;
+  namespace: string;
+  type: string;
+  subType: SecretSubType;
+}> = ({ name, namespace, type, subType }) => {
   const { t } = useForkliftTranslation();
 
   const [secret, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Secret>({
@@ -103,7 +109,11 @@ export const CredentialsSection_: React.FC<{ name: string; namespace: string; ty
     case 'openstack':
       return <OpenstackCredentialsSection secret={secret} />;
     case 'vsphere':
-      return <VSphereCredentialsSection secret={secret} />;
+      if (subType === 'esxi') {
+        return <EsxiCredentialsSection secret={secret} />;
+      } else {
+        return <VCenterCredentialsSection secret={secret} />;
+      }
     default:
       return <></>;
   }

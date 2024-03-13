@@ -1,6 +1,6 @@
 import { validateURL, ValidationMsg } from '../../common';
 
-export const validateVCenterURL = (url: string | number): ValidationMsg => {
+export const validateEsxiURL = (url: string | number): ValidationMsg => {
   // Sanity check
   if (typeof url !== 'string') {
     return { type: 'error', msg: 'URL is not a string' };
@@ -12,7 +12,7 @@ export const validateVCenterURL = (url: string | number): ValidationMsg => {
   if (trimmedUrl === '') {
     return {
       type: 'error',
-      msg: 'The URL is required, URL of the vSphere API endpoint for example: https://host-example.com/sdk .',
+      msg: 'The URL is required, URL of the ESXi API endpoint for example: https://host-example.com/sdk .',
     };
   }
 
@@ -31,6 +31,6 @@ export const validateVCenterURL = (url: string | number): ValidationMsg => {
 
   return {
     type: 'success',
-    msg: 'The URL of the vSphere API endpoint for example: https://host-example.com/sdk .',
+    msg: 'The URL of the ESXi API endpoint for example: https://host-example.com/sdk .',
   };
 };
