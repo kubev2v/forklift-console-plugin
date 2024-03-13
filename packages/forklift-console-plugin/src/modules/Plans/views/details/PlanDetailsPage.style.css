@@ -94,3 +94,8 @@ padding-bottom: var(--pf-global--spacer--lg);
   color: var(--pf-c-button--m-plain--Color);
   margin-left: var(--pf-global--spacer--sm);
 }
+
+.forklift-section-mappings-edit {
+  padding-top: var(--pf-global--spacer--md);
+  padding-bottom: var(--pf-global--spacer--sm);
+}
