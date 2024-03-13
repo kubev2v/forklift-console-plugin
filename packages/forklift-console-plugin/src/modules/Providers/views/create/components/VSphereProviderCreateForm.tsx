@@ -1,5 +1,10 @@
 import React, { useCallback, useReducer } from 'react';
-import { validateVCenterURL, validateVDDKImage } from 'src/modules/Providers/utils';
+import {
+  validateEsxiURL,
+  validateVCenterURL,
+  validateVDDKImage,
+  ValidationMsg,
+} from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
@@ -99,6 +104,20 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
       }
 
       if (id == 'sdkEndpoint') {
+        const sdkEndpoint = trimmedValue || undefined;
+
+        let validationState: ValidationMsg;
+
+        // Revalidate URL - VCenter of ESXi
+        const trimmedURL = provider?.spec?.url?.trim() || '';
+        if (sdkEndpoint === 'esxi') {
+          validationState = validateEsxiURL(trimmedURL);
+        } else {
+          validationState = validateVCenterURL(trimmedURL);
+        }
+
+        dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
+
         onChange({
           ...provider,
           spec: {
@@ -107,14 +126,22 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
             ...provider?.spec,
             settings: {
               ...(provider?.spec?.settings as object),
-              sdkEndpoint: trimmedValue || undefined,
+              sdkEndpoint: sdkEndpoint,
             },
           },
         });
       }
 
       if (id === 'url') {
-        const validationState = validateVCenterURL(trimmedValue);
+        let validationState: ValidationMsg;
+
+        // Validate URL - VCenter of ESXi
+        const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'] || '';
+        if (sdkEndpoint === 'esxi') {
+          validationState = validateEsxiURL(trimmedValue);
+        } else {
+          validationState = validateVCenterURL(trimmedValue);
+        }
 
         dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
 

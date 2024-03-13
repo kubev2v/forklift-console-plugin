@@ -1,6 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
-import { safeBase64Decode, vsphereSecretFieldValidator } from 'src/modules/Providers/utils';
+import { esxiSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -19,7 +19,7 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
 
-export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
+export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
   const { t } = useForkliftTranslation();
 
   const user = safeBase64Decode(secret?.data?.user || '');
@@ -55,14 +55,8 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
   const initialState = {
     passwordHidden: true,
     validation: {
-      user: {
-        type: 'default',
-        msg: 'A username and domain for the vSphere API endpoint, for example: user@vsphere.local.',
-      },
-      password: {
-        type: 'default',
-        msg: 'A user password for connecting to the vSphere API endpoint.',
-      },
+      user: esxiSecretFieldValidator('user', secret?.data?.user),
+      password: esxiSecretFieldValidator('password', secret?.data?.password),
       insecureSkipVerify: { type: 'default', msg: 'Skip certificate validation' },
       cacert: {
         type: 'default',
@@ -92,7 +86,7 @@ export const VSphereCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
 
   const handleChange = useCallback(
     (id, value) => {
-      const validationState = vsphereSecretFieldValidator(id, value);
+      const validationState = esxiSecretFieldValidator(id, value);
       dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
       // don't trim fields that allow spaces

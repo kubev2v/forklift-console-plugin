@@ -5,9 +5,15 @@ import { ValidationMsg } from '../common';
 import { openshiftSecretValidator } from './openshift/openshiftSecretValidator';
 import { openstackSecretValidator } from './openstack/openstackSecretValidator';
 import { ovirtSecretValidator } from './ovirt/ovirtSecretValidator';
-import { vsphereSecretValidator } from './vsphere/vsphereSecretValidator';
+import { esxiSecretValidator, vcenterSecretValidator } from './vsphere';
 
-export function secretValidator(type: string, secret: IoK8sApiCoreV1Secret): ValidationMsg {
+export type SecretSubType = 'esxi' | 'vcenter';
+
+export function secretValidator(
+  type: string,
+  subType: SecretSubType,
+  secret: IoK8sApiCoreV1Secret,
+): ValidationMsg {
   let validationError: ValidationMsg;
 
   switch (type) {
@@ -21,7 +27,11 @@ export function secretValidator(type: string, secret: IoK8sApiCoreV1Secret): Val
       validationError = ovirtSecretValidator(secret);
       break;
     case 'vsphere':
-      validationError = vsphereSecretValidator(secret);
+      if (subType === 'esxi') {
+        validationError = esxiSecretValidator(secret);
+      } else {
+        validationError = vcenterSecretValidator(secret);
+      }
       break;
     case 'ova':
       validationError = { type: 'default' };

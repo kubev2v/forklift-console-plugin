@@ -1,26 +1,26 @@
 import React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
-import { vsphereSecretValidator } from 'src/modules/Providers/utils';
+import { esxiSecretValidator } from 'src/modules/Providers/utils';
 
 import {
   BaseCredentialsSection,
   BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
-import { VSphereCredentialsEdit } from './components/edit/VSphereCredentialsEdit';
+import { EsxiCredentialsEdit } from './components/edit/EsxiCredentialsEdit';
 import { VSphereCredentialsList } from './components/list/VSphereCredentialsList';
 
-export type VSphereCredentialsSectionProps = Omit<
+export type EsxiCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
   'ListComponent' | 'EditComponent' | 'validator'
 >;
 
-export const VSphereCredentialsSection: React.FC<VSphereCredentialsSectionProps> = (props) => (
+export const EsxiCredentialsSection: React.FC<EsxiCredentialsSectionProps> = (props) => (
   <ModalHOC>
     <BaseCredentialsSection
       {...props}
-      validator={vsphereSecretValidator}
+      validator={esxiSecretValidator}
       ListComponent={VSphereCredentialsList}
-      EditComponent={VSphereCredentialsEdit}
+      EditComponent={EsxiCredentialsEdit}
     />
   </ModalHOC>
 );
