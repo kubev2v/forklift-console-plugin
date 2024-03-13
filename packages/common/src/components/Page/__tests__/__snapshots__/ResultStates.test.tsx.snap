@@ -10,11 +10,10 @@ exports[`NoResultsMatchFilter 1`] = `
     >
       <svg
         aria-hidden="true"
-        class="pf-c-empty-state__icon"
+        class="pf-v5-svg pf-c-empty-state__icon"
         fill="currentColor"
         height="1em"
         role="img"
-        style="vertical-align: -0.125em;"
         viewBox="0 0 512 512"
         width="1em"
       >

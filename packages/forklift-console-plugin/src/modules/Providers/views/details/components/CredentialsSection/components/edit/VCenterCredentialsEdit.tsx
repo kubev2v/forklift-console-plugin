@@ -164,7 +164,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
               onClick={(e) => e.preventDefault()}
               className="pf-c-form__group-label-help"
             >
-              <HelpIcon noVerticalAlign />
+              <HelpIcon />
             </button>
           </Popover>
         }
@@ -196,7 +196,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
               onClick={(e) => e.preventDefault()}
               className="pf-c-form__group-label-help"
             >
-              <HelpIcon noVerticalAlign />
+              <HelpIcon />
             </button>
           </Popover>
         }

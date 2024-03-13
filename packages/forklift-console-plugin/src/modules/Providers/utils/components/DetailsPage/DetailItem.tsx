@@ -113,7 +113,7 @@ export const DescriptionTitleWithHelp: React.FC<{
           onClick={(e) => e.preventDefault()}
           className="pf-c-form__group-label-help"
         >
-          <HelpIcon noVerticalAlign />
+          <HelpIcon />
         </button>
       ) : (
         <DescriptionListTermHelpTextButton> {title} </DescriptionListTermHelpTextButton>

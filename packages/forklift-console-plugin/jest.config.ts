@@ -18,7 +18,6 @@ const moduleNameMapper = {
 
   // Mappings for monorepo packages
   '@kubev2v/common/(.*)$': '<rootDir>/../common/dist/$1',
-  '@kubev2v/types/(.*)$': '<rootDir>/../types/dist/$1',
 };
 
 // Sync object

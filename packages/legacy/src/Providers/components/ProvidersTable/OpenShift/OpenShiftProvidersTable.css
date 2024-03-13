@@ -1,9 +1,0 @@
-ul.pf-c-list.provider-storage-classes-list {
-  list-style: none;
-}
-
-@-moz-document url-prefix() {
-  .pf-c-table__compound-expansion-toggle.center-cell {
-    vertical-align: bottom;
-  }
-}

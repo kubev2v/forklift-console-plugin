@@ -123,7 +123,7 @@ export const EditModal: React.FC<EditModalProps> = ({
         aria-describedby="modal-with-form-form-field"
         className="pf-c-form__group-label-help"
       >
-        <HelpIcon noVerticalAlign />
+        <HelpIcon />
       </button>
     </Popover>
   );
