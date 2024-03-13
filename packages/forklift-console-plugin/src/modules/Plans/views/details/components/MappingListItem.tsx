@@ -72,6 +72,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 isDisabled={!isEditable}
                 aria-labelledby=""
                 isGrouped
+                menuAppendTo={() => document.body}
               >
                 <SelectGroup label={generalSourcesLabel} key="generalSources">
                   {isEditable ? toSelectedOptions(sources, noSourcesLabel) : null}
@@ -94,6 +95,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 isOpen={isTrgOpen}
                 isDisabled={!isEditable}
                 aria-labelledby=""
+                menuAppendTo={() => document.body}
               >
                 {destinations?.map((label) => (
                   <SelectOption value={label} key={label} />
