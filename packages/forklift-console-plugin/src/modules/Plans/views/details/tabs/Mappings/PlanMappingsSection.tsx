@@ -654,7 +654,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
           </Button>
         </FlexItem>
       </Flex>
-      <HelperText>
+      <HelperText className="forklift-section-mappings-edit">
         <HelperTextItem variant="indeterminate">
           {t(
             'Click the update mappings button to save your changes, button is disabled until a change is detected.',

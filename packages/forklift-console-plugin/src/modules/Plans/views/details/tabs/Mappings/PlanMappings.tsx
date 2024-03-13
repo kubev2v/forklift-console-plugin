@@ -1,4 +1,5 @@
 import React from 'react';
+import { SectionHeading } from 'src/components/headers/SectionHeading';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -13,7 +14,7 @@ import {
   V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { PageSection, Title } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core';
 
 import { PlanDetailsTabProps } from '../../PlanDetailsPage';
 
@@ -32,9 +33,7 @@ export const PlanMappings: React.FC<PlanDetailsTabProps> = ({ plan, loaded, load
     <>
       <div>
         <PageSection variant="light">
-          <Title headingLevel={'h1'}>{t('Mappings')}</Title>
-        </PageSection>
-        <PageSection variant="light" className="forklift-page-section--info">
+          <SectionHeading text={t('Mappings')} />
           <PlanMappingsInitSection plan={plan} loaded={loaded} loadError={loadError} />
         </PageSection>
       </div>
