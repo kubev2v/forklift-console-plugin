@@ -176,7 +176,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
               onClick={(e) => e.preventDefault()}
               className="pf-c-form__group-label-help"
             >
-              <HelpIcon noVerticalAlign />
+              <HelpIcon />
             </button>
           </Popover>
         }
@@ -208,7 +208,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
               onClick={(e) => e.preventDefault()}
               className="pf-c-form__group-label-help"
             >
-              <HelpIcon noVerticalAlign />
+              <HelpIcon />
             </button>
           </Popover>
         }

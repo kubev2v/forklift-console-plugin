@@ -1,9 +1,0 @@
-.pf-c-table.migration-details-table tbody > tr > td.pf-c-table__toggle {
-  padding-bottom: var(--pf-c-table--tbody--cell--PaddingBottom);
-  vertical-align: middle;
-}
-
-.pf-c-table.migration-details-table tbody > tr > td.pf-c-table__check {
-  padding-bottom: var(--pf-c-table--tbody--cell--PaddingBottom);
-  vertical-align: middle;
-}

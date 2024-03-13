@@ -12,9 +12,9 @@ export interface MigrationDataPoint {
   value: number;
 }
 
-const groupByBucket = (acc: [Interval, DateTime[]][], date: DateTime) =>
-  acc.map(([interval, points]) =>
-    interval.contains(date) ? [interval, [...points, date]] : [interval, points],
+const groupByBucket = (acc: { interval: Interval; points: DateTime[] }[], date: DateTime) =>
+  acc.map(({ interval, points }) =>
+    interval.contains(date) ? { interval, points: [...points, date] } : { interval, points },
   );
 
 const createTimeBuckets = (selectedTimeRange: TimeRangeOptions) =>
@@ -29,23 +29,24 @@ const createTimeBuckets = (selectedTimeRange: TimeRangeOptions) =>
     DateTime.now().endOf(TimeRangeOptionsDictionary[selectedTimeRange].unit),
   )
     .splitBy(TimeRangeOptionsDictionary[selectedTimeRange].bucket)
-    .map((interval) => [interval, []]);
+    .map((interval) => ({ interval, points: [] }));
 
 export const toDataPoints = (
   filteredMigrations: string[],
   selectedTimeRange: TimeRangeOptions,
-): MigrationDataPoint[] =>
-  filteredMigrations
+): MigrationDataPoint[] => {
+  const timePoints = filteredMigrations
     .filter(hasTimestamp)
     .map(toDateTime)
-    .filter(TimeRangeOptionsDictionary[selectedTimeRange].filter)
-    .reduce(groupByBucket, createTimeBuckets(selectedTimeRange))
-    .map(([interval, points]) => ({
-      dateLabel:
-        selectedTimeRange === TimeRangeOptions.Last24H
-          ? toHourLabel(interval)
-          : selectedTimeRange === TimeRangeOptions.Last31Days
-          ? toDayLabel(interval)
-          : toDayLabel(interval.start),
-      value: points.length,
-    }));
+    .filter(TimeRangeOptionsDictionary[selectedTimeRange].filter);
+
+  const timeBuckets = timePoints.reduce(groupByBucket, createTimeBuckets(selectedTimeRange));
+
+  return timeBuckets.map(({ interval, points }) => ({
+    dateLabel:
+      selectedTimeRange === TimeRangeOptions.Last24H
+        ? toHourLabel(interval.start)
+        : toDayLabel(interval.start),
+    value: points.length,
+  }));
+};

@@ -211,7 +211,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
               onClick={(e) => e.preventDefault()}
               className="pf-c-form__group-label-help"
             >
-              <HelpIcon noVerticalAlign />
+              <HelpIcon />
             </button>
           </Popover>
         }

@@ -1,1 +1,0 @@
-export { MappingDetailView } from './MappingDetailView';

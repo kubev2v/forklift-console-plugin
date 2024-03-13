@@ -1,6 +1,0 @@
-.pf-c-wizard__main-body {
-  /* Fixes double scrollbar when wizard body contents are tall enough for scrolling. */
-  /* This should absolutely not be necessary, there is something funky going on here with heights and overflow. */
-  /* See https://github.com/konveyor/forklift-ui/issues/550 */
-  max-height: calc(100vh - 286px);
-}

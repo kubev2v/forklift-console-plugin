@@ -9,19 +9,18 @@
     "packages/eslint-plugin",
     "packages/build",
     "packages/webpack",
-    "packages/types",
     "packages/common",
     "packages/forklift-console-plugin"
   ],
   "config": {
-    "libs": "-w @kubev2v/webpack -w @kubev2v/types -w @kubev2v/common"
+    "libs": "-w @kubev2v/webpack -w @kubev2v/common"
   },
   "scripts": {
     "clean": "rm -rf ./dist ./coverage && npm run clean -ws --if-present",
     "clean:all": "npm run clean && npm run clean:all -ws --if-present && rm -rf ./node_modules ./tmp ",
     "build": "NODE_ENV=production npm run build $npm_package_config_libs -w @kubev2v/forklift-console-plugin",
     "build:dev": "npm run build $npm_package_config_libs && npm run build:dev -w @kubev2v/forklift-console-plugin",
-    "start": "concurrently --kill-others \"npm run start -w @kubev2v/types\" \"npm run start -w @kubev2v/common\" \"npm run start -w @kubev2v/forklift-console-plugin\"",
+    "start": "concurrently --kill-others \"npm run start -w @kubev2v/common\" \"npm run start -w @kubev2v/forklift-console-plugin\"",
     "start:overlay-proxy": "npm run build $npm_package_config_libs && npm run start -w @kubev2v/forklift-console-plugin -- -c webpack.proxy.config.ts",
     "i18n": "npm run i18n -w @kubev2v/forklift-console-plugin",
     "lint": "npm run lint -ws --if-present",

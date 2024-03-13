@@ -29,16 +29,19 @@
     "storybook:build": "storybook build"
   },
   "peerDependencies": {
-    "@openshift-console/dynamic-plugin-sdk": "0.0.18",
-    "@openshift/dynamic-plugin-sdk": "3.0.0",
+    "@openshift-console/dynamic-plugin-sdk": "0.0.21",
     "@patternfly/react-core": "4.276.6",
     "@patternfly/react-table": "4.112.39",
+    "@patternfly/react-icons": "5.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-i18next": "^11.7.3",
     "react-query": "^3.39.2",
     "react-router": "5.3.x",
-    "react-router-dom": "5.3.x"
+    "react-router-dom": "5.3.x",
+    "jsonpath": "^1.1.1",
+    "jsrsasign": "11.1.0",
+    "luxon": "^3.3.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.14",
