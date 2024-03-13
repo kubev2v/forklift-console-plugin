@@ -570,7 +570,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                 {t('Edit mappings')}
               </Button>
               {DisableEditMappings ? (
-                <HelperText>
+                <HelperText className="forklift-section-mappings-edit">
                   <HelperTextItem variant="indeterminate">
                     {t(
                       'The edit mappings button is disabled if the plan started running and at least one virtual machine was migrated successfully.',
