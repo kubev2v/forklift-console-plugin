@@ -12,10 +12,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import typescript from '@rollup/plugin-typescript';
 
-import har from './rollup/plugin-har';
-import writeJSONFile from './rollup/plugin-write-json-file';
-import { createBannerComment, getBuildMetadata } from './metadata';
-
 /**
  * @param {import('type-fest').PackageJson} pkg
  * @returns {Record<string, string>} external modules as dictionary.
@@ -32,7 +28,6 @@ export const getExternalModules = ({ dependencies, peerDependencies }) =>
  * @returns {import('rollup').RollupOptions}
  */
 export const tsLibConfig = (pkg, inputFile, format = 'esm') => {
-  const buildMetadata = getBuildMetadata(pkg);
   const externalModules = getExternalModules(pkg);
 
   return {
@@ -40,7 +35,6 @@ export const tsLibConfig = (pkg, inputFile, format = 'esm') => {
     output: {
       file: 'dist/index.js',
       format,
-      banner: createBannerComment(pkg, buildMetadata),
       sourcemap: true,
     },
     external: externalModules.map((m) => new RegExp(`^${m}(\\/.+)*$`)),
@@ -50,20 +44,12 @@ export const tsLibConfig = (pkg, inputFile, format = 'esm') => {
         compact: true,
         preferConst: true,
       }),
-      har({
-        compact: true,
-        preferConst: true,
-      }),
       css({
         output: 'dist/index.css',
       }),
       typescript({
         tsconfig: './tsconfig.json',
         jsx: 'react',
-      }),
-      writeJSONFile({
-        fileName: 'build-metadata.json',
-        value: buildMetadata,
       }),
     ],
   };
