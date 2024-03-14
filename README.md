@@ -2,7 +2,7 @@
 
 # OpenShift Console Plugin For Forklift
 
-[![Operator Repository on Quay](https://quay.io/repository/kubev2v/forklift-console-plugin/status "Plugin Repository on Quay")](https://quay.io/repository/kubev2v/forklift-console-plugin)
+[![CI Workflow](https://github.com/kubev2v/forklift-console-plugin/actions/workflows/on-push.yaml/badge.svg)](https://quay.io/repository/kubev2v/forklift-console-plugin)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kubev2v_forklift-console-plugin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kubev2v_forklift-console-plugin)
 
 forklift-console-plugin is an open source project providing [Openshift web console](https://github.com/openshift/console) plugin for [Migration Toolkit for Virtualization](https://github.com/kubev2v/forklift). The plugin adds a web based user interface for Migration Toolkit for Virtualization inside Openshift web console.
@@ -13,8 +13,8 @@ Forklift console plugin is managed by Migration Toolkit for Virtualization opera
 
 ### Prerequisites
 
-* [__Forklift Operator 2.4.0+__](https://github.com/kubev2v/forklift/)
-* [__OpenShift Console 4.12+__](https://www.openshift.com/)
+* [__Forklift Operator__](https://github.com/kubev2v/forklift/)
+* [__OpenShift Console__](https://github.com/openshift/console/)
 
 ## Installation
 
