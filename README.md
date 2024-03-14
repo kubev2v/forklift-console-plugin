@@ -40,12 +40,15 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 # - To close the console server run:
 #   npm run console:stop
 
-# Optional enviorment variables examples:
+# Setting the console image and forklift setvice URLs as enviorment variables:
+#
+# Note: default values works with the local development cluster, you can create using the CI.
+#       set this variables if you use a different cluster.
 export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your caluster address>
 export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your caluster address>
 export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.15
 
-# Run the web console locally
+# Run the web console locally (uses the enviorment variables we defined above)
 npm run console
 
 # If this is the first time running, npm run build will build the required dependencies
@@ -66,8 +69,9 @@ npm run cluster:up
 # Example: setup a local KinD cluster with ovirt mock provider
 #          [ options: --with-all-providers --with-ovirt-provider, --with-vmware-provider, --with-openstack-provider]
 #
-# Note I: mock providers requires forkliftci, clone on the ci directory
-# Note II: openstack-provider requires NFS server running, look at forkliftci documentation for more details.
+# Note I:  mock providers requires forkliftci, clone on the ci directory
+# Note II: mock providers requires NFS server running, look at forkliftci documentation for more details.
+#          See: forkliftci/cluster/providers/utils/install_nfs.sh
 git clone git@github.com:kubev2v/forkliftci.git ./ci/forkliftci
 npm run cluster:up -- --with-ovirt-provider
 
