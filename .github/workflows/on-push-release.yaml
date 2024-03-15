@@ -1,4 +1,4 @@
-name: Build and Push to Quay
+name: Release image
 
 on:
   push:
