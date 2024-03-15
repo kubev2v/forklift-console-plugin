@@ -1,28 +1,28 @@
 .forklift-page-editable-description-item {
-    display: flex;
+  display: flex;
 }
 
 .forklift-page-editable-description-item-button {
-    padding-top: 0;
+  padding-top: 0;
 }
 
 .forklift-page-mapping-list {
-    /* <Form isWidthLimited> */
-    max-width: 55rem;
+  /* <Form isWidthLimited> */
+  max-width: 55rem;
 }
 
 .forklift-page-resource-link-in-description-item {
-    padding-left: 8px;
+  padding-left: 8px;
 }
 
 .forklift--create-vm-migration-plan--alert {
-    margin-bottom: var(--pf-global--spacer--md);
+  margin-bottom: var(--pf-global--spacer--md);
 }
 
 .forklift--create-vm-migration-plan--section-header {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .forklift--create-vm-migration-plan--form-actions {
-    margin-top: var(--pf-global--spacer--md);
+  margin-top: var(--pf-global--spacer--md);
 }

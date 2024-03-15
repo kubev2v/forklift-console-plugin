@@ -1,10 +1,10 @@
 .forklift-page-headings-alerts {
-    padding-left: 0;
-    padding-top: 0;
+  padding-left: 0;
+  padding-top: 0;
 }
 
 .forklift-page-section {
-    border-top: 1px solid var(--pf-global--BorderColor--100);
+  border-top: 1px solid var(--pf-global--BorderColor--100);
 }
 
 .forklift-page-section--info {
@@ -17,32 +17,32 @@
 }
 
 .forklift-page-provider-networks-button {
-    padding-bottom: var(--pf-global--spacer--lg);
+  padding-bottom: var(--pf-global--spacer--lg);
 }
 
 .forklift-page-provider-vm_concern-button {
-    padding: var(--pf-global--spacer--xs);
+  padding: var(--pf-global--spacer--xs);
 }
 
 .forklift-page-provider-field-error-validation {
-    color: var(--pf-c-form__helper-text--m-error--Color);
-    font-size: small;
-    padding-top: var(--pf-c-form__helper-text--MarginTop);
-  }
+  color: var(--pf-c-form__helper-text--m-error--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
 
-  .forklift-page-provider-field-warning-validation {
-    color: var(--pf-c-form__helper-text--m-warning--Color);
-    font-size: small;
-    padding-top: var(--pf-c-form__helper-text--MarginTop);
-  }
+.forklift-page-provider-field-warning-validation {
+  color: var(--pf-c-form__helper-text--m-warning--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
 
-  .forklift-page-provider-field-success-validation {
-    color: var(--pf-c-form__helper-text--m-success--Color);
-    font-size: small;
-    padding-top: var(--pf-c-form__helper-text--MarginTop);
-  }
+.forklift-page-provider-field-success-validation {
+  color: var(--pf-c-form__helper-text--m-success--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}
 
-  .forklift-page-provider-field-default-validation {
-    font-size: small;
-    padding-top: var(--pf-c-form__helper-text--MarginTop);
-  }
+.forklift-page-provider-field-default-validation {
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
+}

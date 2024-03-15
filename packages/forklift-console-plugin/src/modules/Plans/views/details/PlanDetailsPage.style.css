@@ -13,12 +13,12 @@
 }
 
 .forklift-page-section--info {
-border-bottom: 0;
-padding-bottom: 0;
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .forklift-page-section--details {
-border-top: 0;
+  border-top: 0;
 }
 
 .forklift-page-plan-networks-button {
@@ -30,50 +30,50 @@ border-top: 0;
 }
 
 .forklift-page-plan-field-error-validation {
-color: var(--pf-c-form__helper-text--m-error--Color);
-font-size: small;
-padding-top: var(--pf-c-form__helper-text--MarginTop);
+  color: var(--pf-c-form__helper-text--m-error--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
 }
 
 .forklift-page-plan-field-warning-validation {
-color: var(--pf-c-form__helper-text--m-warning--Color);
-font-size: small;
-padding-top: var(--pf-c-form__helper-text--MarginTop);
+  color: var(--pf-c-form__helper-text--m-warning--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
 }
 
 .forklift-page-plan-field-success-validation {
-color: var(--pf-c-form__helper-text--m-success--Color);
-font-size: small;
-padding-top: var(--pf-c-form__helper-text--MarginTop);
+  color: var(--pf-c-form__helper-text--m-success--Color);
+  font-size: small;
+  padding-top: var(--pf-c-form__helper-text--MarginTop);
 }
 
 .forklift-network-map__details-tab--update-button {
-margin-bottom: var(--pf-global--spacer--md);
+  margin-bottom: var(--pf-global--spacer--md);
 }
 
 .forklift-overview__controller-card__status-icon {
-padding-right: var(--pf-global--spacer--sm);
+  padding-right: var(--pf-global--spacer--sm);
 }
 
 .forklift-table__status-cell-progress {
-padding-right: var(--pf-global--spacer--xl);;
+  padding-right: var(--pf-global--spacer--xl);;
 }
 
 .forklift-table__status-cell-progress div {
-grid-gap: var(--pf-global--spacer--xs);
+  grid-gap: var(--pf-global--spacer--xs);
 }
 
 .forklift-page-section--details-status {
-width: 50%;
+  width: 50%;
 }
 
 
 .forklift-page-section--details-start-button {
-padding-bottom: var(--pf-global--spacer--lg);
+  padding-bottom: var(--pf-global--spacer--lg);
 }
 
 .forklift-page-plan-mapping-list {
-   max-width: 55rem;
+  max-width: 55rem;
 }
 
 .forklift-page-plan-mapping {
