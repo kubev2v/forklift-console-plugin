@@ -7,7 +7,6 @@
   "repository": "https://github.com/kubev2v/forklift-console-plugin.git",
   "workspaces": [
     "packages/eslint-plugin",
-    "packages/build",
     "packages/webpack",
     "packages/common",
     "packages/forklift-console-plugin"

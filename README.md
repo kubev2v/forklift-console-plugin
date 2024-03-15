@@ -21,7 +21,7 @@ Forklift console plugin is managed by Migration Toolkit for Virtualization opera
 To get started, clone the repo to your development workstation and install the required dependencies locally with NPM.
 
 ``` bash
-git clone --recurse-submodules https://github.com/kubev2v/forklift-console-plugin.git
+git clone https://github.com/kubev2v/forklift-console-plugin.git
 cd forklift-console-plugin
 npm install
 ```

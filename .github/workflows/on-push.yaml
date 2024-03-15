@@ -1,4 +1,4 @@
-name: Build and Push to Quay
+name: Container image
 
 on:
   push:
