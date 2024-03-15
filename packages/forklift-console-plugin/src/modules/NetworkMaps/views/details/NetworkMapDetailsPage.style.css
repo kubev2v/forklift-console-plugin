@@ -1,9 +1,9 @@
 .forklift-page-headings-alerts {
-    padding-left: 0;
+  padding-left: 0;
 }
 
 .forklift-page-section {
-    border-top: 1px solid var(--pf-global--BorderColor--100);
+  border-top: 1px solid var(--pf-global--BorderColor--100);
 }
 
 .forklift-title {
@@ -15,7 +15,7 @@
 }
 
 .forklift-welcome-text {
-    padding-bottom: var(--pf-global--spacer--sm);
+  padding-bottom: var(--pf-global--spacer--sm);
 }
 
 .forklift-welcome__flex-icon {
