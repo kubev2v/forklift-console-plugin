@@ -13,7 +13,7 @@ import {
 import { PlanActionsDropdown } from '../../actions';
 
 import { Suspend } from './components';
-import { PlanDetails, PlanMappings, PlanYAML } from './tabs';
+import { PlanDetails, PlanHooks, PlanMappings, PlanYAML } from './tabs';
 
 import './PlanDetailsPage.style.css';
 
@@ -64,6 +64,13 @@ const PlanDetailsPage_: React.FC<{
         <PlanMappings plan={obj} loaded={loaded} loadError={loadError} permissions={permissions} />
       ),
     },
+    {
+      href: 'hooks',
+      name: t('Hooks'),
+      component: () => (
+        <PlanHooks plan={obj} loaded={loaded} loadError={loadError} permissions={permissions} />
+      ),
+    },
     /*
     {
       href: 'vms',
@@ -75,13 +82,6 @@ const PlanDetailsPage_: React.FC<{
           loadError={loadError}
           permissions={permissions}
         />
-      ),
-    },
-    {
-      href: 'hooks',
-      name: t('Hooks'),
-      component: () => (
-        <PlanHooks plan={obj} loaded={loaded} loadError={loadError} permissions={permissions} />
       ),
     },
     */

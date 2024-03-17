@@ -34,9 +34,9 @@ import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
 import { Mapping, MappingList } from '../../components';
 import {
-  canDeleteAndPatchPlanMaps,
+  canDeleteAndPatchPlanHooks,
+  hasPlanEditable,
   hasPlanMappingsChanged,
-  hasPlanMappingsEditable,
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
   mapTargetNetworksIdsToLabels,
@@ -554,12 +554,12 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
   const PlanMappingsSectionViewMode: React.FC = () => {
     const { t } = useForkliftTranslation();
-    const DisableEditMappings = !hasPlanMappingsEditable(plan);
+    const DisableEditMappings = !hasPlanEditable(plan);
 
     return (
       <>
         <Drawer>
-          {canDeleteAndPatchPlanMaps(plan) && (
+          {canDeleteAndPatchPlanHooks(plan) && (
             <FlexItem>
               <Button
                 variant="secondary"
@@ -570,7 +570,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                 {t('Edit mappings')}
               </Button>
               {DisableEditMappings ? (
-                <HelperText className="forklift-section-mappings-edit">
+                <HelperText className="forklift-section-plan-helper-text">
                   <HelperTextItem variant="indeterminate">
                     {t(
                       'The edit mappings button is disabled if the plan started running and at least one virtual machine was migrated successfully.',
@@ -654,7 +654,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
           </Button>
         </FlexItem>
       </Flex>
-      <HelperText className="forklift-section-mappings-edit">
+      <HelperText className="forklift-section-plan-helper-text">
         <HelperTextItem variant="indeterminate">
           {t(
             'Click the update mappings button to save your changes, button is disabled until a change is detected.',
