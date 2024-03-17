@@ -44,6 +44,10 @@ if ! [ -x "$(command -v ${CONTAINER_CMD})" ]; then
 fi
 echo "Found: ${CONTAINER_CMD}"
 
+# Clone forkliftci
+# ---------------
+bash ${script_dir}/git-clone-forkliftci.sh
+
 # Install cluster
 # ---------------
 
