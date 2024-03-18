@@ -27,8 +27,5 @@
     "@openshift/dynamic-plugin-sdk": "3.0.0",
     "@openshift/dynamic-plugin-sdk-webpack": "3.0.0",
     "webpack": "^5.79.0"
-  },
-  "dependencies": {
-    "@kubev2v/build": "*"
   }
 }
