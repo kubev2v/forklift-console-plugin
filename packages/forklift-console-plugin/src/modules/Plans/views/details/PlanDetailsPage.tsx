@@ -13,7 +13,7 @@ import {
 import { PlanActionsDropdown } from '../../actions';
 
 import { Suspend } from './components';
-import { PlanDetails, PlanHooks, PlanMappings, PlanYAML } from './tabs';
+import { PlanDetails, PlanHooks, PlanMappings, PlanVirtualMachines, PlanYAML } from './tabs';
 
 import './PlanDetailsPage.style.css';
 
@@ -71,7 +71,6 @@ const PlanDetailsPage_: React.FC<{
         <PlanHooks plan={obj} loaded={loaded} loadError={loadError} permissions={permissions} />
       ),
     },
-    /*
     {
       href: 'vms',
       name: t('Virtual Machines'),
@@ -84,7 +83,6 @@ const PlanDetailsPage_: React.FC<{
         />
       ),
     },
-    */
   ];
 
   return (
