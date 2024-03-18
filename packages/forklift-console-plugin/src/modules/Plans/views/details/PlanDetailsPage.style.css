@@ -95,7 +95,23 @@
   margin-left: var(--pf-global--spacer--sm);
 }
 
-.forklift-section-mappings-edit {
+.forklift-section-plan-helper-text {
   padding-top: var(--pf-global--spacer--md);
   padding-bottom: var(--pf-global--spacer--sm);
+}
+
+.forklift-page-plan-details-hooks-msg {
+  padding-top: 50px;
+  padding-bottom: var(--pf-global--spacer--sm);
+  align-self: center;
+  font-size: 16px;
+}
+
+.forklift-page-plan-details-hooks-section {
+  margin-top: var(--pf-global--spacer--xl);
+}
+
+.forklift-page-plan-details-hooks.playbook-yaml-popover {
+  max-width: 35vw;
+  overflow-y: auto;
 }

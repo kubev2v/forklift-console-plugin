@@ -1,6 +1,6 @@
 import { V1beta1Plan } from '@kubev2v/types';
 
-export const hasPlanMappingsEditable = (plan: V1beta1Plan) => {
+export const hasPlanEditable = (plan: V1beta1Plan) => {
   const planHasNeverStarted = !plan.status?.migration?.started ? true : false;
 
   const migrationHasSomeCompleteRunningVMs =
