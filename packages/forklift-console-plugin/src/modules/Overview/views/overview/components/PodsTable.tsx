@@ -2,10 +2,10 @@ import React from 'react';
 import StatusIcon from 'src/components/status/StatusIcon';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { IoK8sApiCoreV1Pod } from '@kubev2v/types';
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Split, SplitItem } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
   const { t } = useForkliftTranslation();

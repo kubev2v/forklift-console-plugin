@@ -5,22 +5,41 @@ import {
   GlobalActionToolbarProps,
   RowProps,
   TableViewHeaderProps,
+  withTr,
 } from '@kubev2v/common';
-import { Td, Th } from '@patternfly/react-table';
+import { Td, Th } from '@kubev2v/common';
 
 import StandardPage, { StandardPageProps } from './StandardPage';
 
-export function withRowSelection<T>({ CellMapper, isSelected, toggleSelectFor, canSelect }) {
+export function withRowSelection<T>({
+  CellMapper,
+  isSelected,
+  isExpanded,
+  toggleSelectFor,
+  toggleExpandFor,
+  canSelect,
+}) {
   const Enhanced = (props: RowProps<T>) => (
     <>
-      <Td
-        select={{
-          rowIndex: props.resourceIndex,
-          onSelect: () => toggleSelectFor([props.resourceData]),
-          isSelected: isSelected(props.resourceData),
-          disable: !canSelect(props.resourceData),
-        }}
-      />
+      {isExpanded && (
+        <Td
+          expand={{
+            rowIndex: props.resourceIndex,
+            isExpanded: isExpanded(props.resourceData),
+            onToggle: () => toggleExpandFor([props.resourceData]),
+          }}
+        />
+      )}
+      {isSelected && (
+        <Td
+          select={{
+            rowIndex: props.resourceIndex,
+            onSelect: () => toggleSelectFor([props.resourceData]),
+            isSelected: isSelected(props.resourceData),
+            disable: !canSelect(props.resourceData),
+          }}
+        />
+      )}
       <CellMapper {...props} />
     </>
   );
@@ -28,19 +47,28 @@ export function withRowSelection<T>({ CellMapper, isSelected, toggleSelectFor, c
   return Enhanced;
 }
 
-export function withHeaderSelection<T>({ HeaderMapper, isSelected, canSelect, toggleSelectFor }) {
+export function withHeaderSelection<T>({
+  HeaderMapper,
+  isSelected,
+  isExpanded,
+  toggleSelectFor,
+  canSelect,
+}) {
   const Enhanced = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
     const selectableItems = dataOnScreen.filter(canSelect);
     const allSelected = selectableItems.every((it) => isSelected(it));
     return (
       <>
-        <Th
-          select={{
-            onSelect: () => toggleSelectFor(selectableItems),
-            isSelected: allSelected,
-            isHeaderSelectDisabled: !selectableItems?.length, // Disable if no selectable items
-          }}
-        />
+        {isExpanded && <Th />}
+        {isSelected && (
+          <Th
+            select={{
+              onSelect: () => toggleSelectFor(selectableItems),
+              isSelected: allSelected,
+              isHeaderSelectDisabled: !selectableItems?.length, // Disable if no selectable items
+            }}
+          />
+        )}
         <HeaderMapper {...{ ...other, dataOnScreen }} />
       </>
     );
@@ -53,22 +81,32 @@ export interface IdBasedSelectionProps<T> {
   /**
    * @returns string that can be used as an unique identifier
    */
-  toId: (item: T) => string;
+  toId?: (item: T) => string;
 
   /**
    * @returns true if items can be selected, false otherwise
    */
-  canSelect: (item: T) => boolean;
+  canSelect?: (item: T) => boolean;
 
   /**
    * onSelect is called when selection changes
    */
-  onSelect: (selectedIds: string[]) => void;
+  onSelect?: (selectedIds: string[]) => void;
 
   /**
    * Selected ids
    */
-  selectedIds: string[];
+  selectedIds?: string[];
+
+  /**
+   * onExpand is called when expand changes
+   */
+  onExpand?: (expandedIds: string[]) => void;
+
+  /**
+   * Expanded ids
+   */
+  expandedIds?: string[];
 }
 
 export type GlobalActionWithSelection<T> = GlobalActionToolbarProps<T> & {
@@ -86,34 +124,60 @@ export function withIdBasedSelection<T>({
   canSelect,
   onSelect,
   selectedIds,
+  onExpand,
+  expandedIds,
 }: IdBasedSelectionProps<T>) {
   const Enhanced = (props: StandardPageProps<T>) => {
-    const isSelected = (item: T) => selectedIds.includes(toId(item));
+    const isSelected = onSelect ? (item: T) => selectedIds.includes(toId(item)) : undefined;
+    const isExpanded = onExpand ? (item: T) => expandedIds.includes(toId(item)) : undefined;
 
     const toggleSelectFor = (items: T[]) => {
       const ids = items.map(toId);
-      const allSelected = ids.every((id) => selectedIds.includes(id));
+      const allSelected = ids.every((id) => selectedIds?.includes(id));
       const newSelectedIds = [
-        ...selectedIds.filter((it) => !ids.includes(it)),
+        ...(selectedIds || []).filter((it) => !ids.includes(it)),
         ...(allSelected ? [] : ids),
       ];
 
       onSelect(newSelectedIds);
     };
 
+    const toggleExpandFor = (items: T[]) => {
+      const ids = items.map(toId);
+      const allExpanded = ids.every((id) => expandedIds?.includes(id));
+      const newExpandedIds = [
+        ...(expandedIds || []).filter((it) => !ids.includes(it)),
+        ...(allExpanded ? [] : ids),
+      ];
+
+      onExpand(newExpandedIds);
+    };
+
+    const { CellMapper, ExpandedComponent, ...rest } = props;
+
+    const RowMapper = withTr(
+      withRowSelection({
+        CellMapper: CellMapper,
+        canSelect,
+        isSelected,
+        isExpanded,
+        toggleSelectFor,
+        toggleExpandFor,
+      }),
+      ExpandedComponent,
+    );
+
     return (
       <StandardPage
-        {...props}
-        CellMapper={withRowSelection({
-          CellMapper: props.CellMapper,
-          canSelect,
-          isSelected,
-          toggleSelectFor,
-        })}
+        {...rest}
+        expandedIds={expandedIds}
+        toId={toId}
+        RowMapper={RowMapper}
         HeaderMapper={withHeaderSelection({
           HeaderMapper: props.HeaderMapper ?? DefaultHeader,
           canSelect,
           isSelected,
+          isExpanded,
           toggleSelectFor,
         })}
         GlobalActionToolbarItems={props.GlobalActionToolbarItems?.map(
@@ -139,6 +203,8 @@ export function withIdBasedSelection<T>({
  * @property {Function} canSelect - A function that determines whether an item can be selected.
  * @property {Function} onSelect - A callback function that is triggered when the selection changes.
  * @property {string[]} selectedIds - An array of identifiers for the currently selected items.
+ * @property {Function} onExpand - A callback function that is triggered when row is expanded or un expanded.
+ * @property {string[]} expandedIds - An array of identifiers for the currently expanded items.
  * @property {...StandardPageProps<T>} - Other props that are passed through to the `StandardPage` component.
  *
  * @template T - The type of the items being displayed in the table.
@@ -148,6 +214,8 @@ export interface StandardPageWithSelectionProps<T> extends StandardPageProps<T> 
   canSelect?: (item: T) => boolean;
   onSelect?: (selectedIds: string[]) => void;
   selectedIds?: string[];
+  onExpand?: (expandedIds: string[]) => void;
+  expandedIds?: string[];
 }
 
 /**
@@ -176,10 +244,22 @@ export interface StandardPageWithSelectionProps<T> extends StandardPageProps<T> 
  * />
  */
 export function StandardPageWithSelection<T>(props: StandardPageWithSelectionProps<T>) {
-  const { toId, canSelect = () => true, onSelect, selectedIds, ...rest } = props;
+  const {
+    toId,
+    canSelect = () => true,
+    onSelect,
+    selectedIds,
+    onExpand,
+    expandedIds,
+    ...rest
+  } = props;
 
   if (onSelect && (!toId || !selectedIds)) {
     throw new Error('Missing required properties: toId, selectedIds');
+  }
+
+  if (onExpand && (!toId || !expandedIds)) {
+    throw new Error('Missing required properties: toId, expandedIds');
   }
 
   const EnhancedStandardPage = withIdBasedSelection<T>({
@@ -187,6 +267,8 @@ export function StandardPageWithSelection<T>(props: StandardPageWithSelectionPro
     canSelect,
     onSelect,
     selectedIds,
+    onExpand,
+    expandedIds,
   });
 
   return onSelect ? <EnhancedStandardPage {...rest} /> : <StandardPage {...rest} />;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { K8sResourceCondition } from '@kubev2v/types';
 import { Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 /**
  * React Component to display a table of conditions.

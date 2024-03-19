@@ -30,6 +30,8 @@ export function DefaultHeader<T>({
               setActiveSort,
             })
           }
+          onPointerEnterCapture={undefined}
+          onPointerLeaveCapture={undefined}
         >
           {label}
         </Th>

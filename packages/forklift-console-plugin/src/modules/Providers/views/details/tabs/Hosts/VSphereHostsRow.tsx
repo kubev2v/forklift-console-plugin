@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
-import { Td } from '@patternfly/react-table';
+import { Td } from '@kubev2v/common';
 
 import { NameCellRenderer } from './components/NameCellRenderer';
 import { InventoryHostPair } from './utils/helpers';

@@ -31,20 +31,33 @@ export function TableView<T>({
   setActiveSort,
   currentNamespace,
   Header,
+  toId,
+  expandedIds,
 }: TableViewProps<T>) {
   const hasChildren = children.filter(Boolean).length > 0;
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
+
   return (
-    <TableComposable aria-label={ariaLabel} variant="compact" isStickyHeader>
-      <Thead>
-        <Tr>
+    <TableComposable
+      aria-label={ariaLabel}
+      variant="compact"
+      isStickyHeader
+      onPointerEnterCapture={undefined}
+      onPointerLeaveCapture={undefined}
+    >
+      <Thead onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+        <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
           <Header {...{ activeSort, setActiveSort, visibleColumns, dataOnScreen: entities }} />
         </Tr>
       </Thead>
-      <Tbody>
+      <Tbody onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
         {hasChildren && (
-          <Tr>
-            <Td colSpan={visibleColumns.length || 1}>
+          <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <Td
+              colSpan={visibleColumns.length || 1}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
               <Bullseye>{children}</Bullseye>
             </Td>
           </Tr>
@@ -57,6 +70,8 @@ export function TableView<T>({
               resourceFields={visibleColumns}
               namespace={currentNamespace}
               resourceIndex={index}
+              length={visibleColumns.length}
+              isExpanded={expandedIds?.includes(toId(resourceData))}
             />
           ))}
       </Tbody>
@@ -105,4 +120,34 @@ interface TableViewProps<T> {
    * Maps resourceFields to header rows.
    */
   Header(props: TableViewHeaderProps<T>): JSX.Element;
+
+  /**
+   * @returns string that can be used as an unique identifier
+   */
+  toId?: (item: T) => string;
+
+  /**
+   * @returns true if items can be selected, false otherwise
+   */
+  canSelect?: (item: T) => boolean;
+
+  /**
+   * onSelect is called when selection changes
+   */
+  onSelect?: (selectedIds: string[]) => void;
+
+  /**
+   * Selected ids
+   */
+  selectedIds?: string[];
+
+  /**
+   * onExpand is called when expand changes
+   */
+  onExpand?: (expandedIds: string[]) => void;
+
+  /**
+   * Expanded ids
+   */
+  expandedIds?: string[];
 }

@@ -12,7 +12,9 @@ export interface RowProps<T> {
   resourceIndex: number;
   namespace: string;
   isSelected?: boolean;
+  isExpanded?: boolean;
   toggleSelect?: () => void;
+  length?: number;
 }
 
 export interface TableViewHeaderProps<T> {

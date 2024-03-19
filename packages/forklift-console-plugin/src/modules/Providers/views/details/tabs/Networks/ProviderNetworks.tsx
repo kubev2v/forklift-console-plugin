@@ -10,6 +10,7 @@ import {
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import {
   CnoConfig,
   OpenShiftNetworkAttachmentDefinition,
@@ -19,7 +20,6 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Label, PageSection } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 interface ProviderNetworksProps extends RouteComponentProps {
   obj: ProviderData;

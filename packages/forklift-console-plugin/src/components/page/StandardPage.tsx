@@ -128,6 +128,11 @@ export interface StandardPageProps<T> {
   CellMapper?: FC<RowProps<T>>;
 
   /**
+   * (optional) Maps entity to a list of cells (without wrapping them in <Tr>).
+   * If present, it is used instead of RowMapper.
+   */
+  ExpandedComponent?: FC<RowProps<T>>;
+  /**
    * (optional) Maps field list to table header.
    * Defaults to all visible fields.
    */
@@ -191,6 +196,36 @@ export interface StandardPageProps<T> {
    * className
    */
   className?: string;
+
+  /**
+   * @returns string that can be used as an unique identifier
+   */
+  toId?: (item: T) => string;
+
+  /**
+   * @returns true if items can be selected, false otherwise
+   */
+  canSelect?: (item: T) => boolean;
+
+  /**
+   * onSelect is called when selection changes
+   */
+  onSelect?: (selectedIds: string[]) => void;
+
+  /**
+   * Selected ids
+   */
+  selectedIds?: string[];
+
+  /**
+   * onExpand is called when expand changes
+   */
+  onExpand?: (expandedIds: string[]) => void;
+
+  /**
+   * Expanded ids
+   */
+  expandedIds?: string[];
 }
 
 /**
@@ -244,6 +279,8 @@ export function StandardPage<T>({
   HeaderMapper = DefaultHeader<T>,
   GlobalActionToolbarItems = [],
   alerts,
+  toId,
+  expandedIds,
   className,
 }: StandardPageProps<T>) {
   const {
@@ -371,6 +408,8 @@ export function StandardPage<T>({
           activeSort={activeSort}
           setActiveSort={setActiveSort}
           currentNamespace={namespace}
+          toId={toId}
+          expandedIds={expandedIds}
         >
           {!loaded && <Loading key="loading" title={t('Loading')} />}
           {errorFetchingData && <ErrorState key="error" title={t('Unable to retrieve data')} />}
