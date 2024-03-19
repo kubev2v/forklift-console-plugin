@@ -38,7 +38,7 @@ export const VMsProgressCell: React.FC<CellProps> = ({ data }) => {
 
   if (!vms) {
     return (
-      <Link to={`${planURL}`}>
+      <Link to={`${planURL}/vms`}>
         <Split>
           <SplitItem className="forklift-overview__controller-card__status-icon">
             <VirtualMachineIcon />
@@ -53,7 +53,7 @@ export const VMsProgressCell: React.FC<CellProps> = ({ data }) => {
   const progressVariant = getPlanProgressVariant(phase);
 
   return (
-    <Link to={`${planURL}`}>
+    <Link to={`${planURL}/vms`}>
       <div className="forklift-table__status-cell-progress">
         <Progress
           width={100}

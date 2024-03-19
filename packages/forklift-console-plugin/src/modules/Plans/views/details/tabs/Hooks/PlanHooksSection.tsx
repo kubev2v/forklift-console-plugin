@@ -5,6 +5,7 @@ import a11yLight from 'react-syntax-highlighter/dist/cjs/styles/hljs/a11y-light'
 import { Base64 } from 'js-base64';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import {
   HookModelGroupVersionKind,
   V1beta1Hook,
@@ -25,7 +26,6 @@ import {
   Popover,
 } from '@patternfly/react-core';
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { hasPlanEditable } from '../../utils';
 import { canDeleteAndPatchPlanHooks } from '../../utils/canDeleteAndPatchPlan';

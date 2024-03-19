@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { RowProps } from '@kubev2v/common';
 import { NAME, NAMESPACE } from '@kubev2v/common';
-import { Td, Tr } from '@patternfly/react-table';
+import { Td, Tr } from '@kubev2v/common';
 import { cleanup, render } from '@testing-library/react';
 
 import { StandardPage } from '../StandardPage';

@@ -115,3 +115,12 @@
   max-width: 35vw;
   overflow-y: auto;
 }
+
+.forklift-page-plan-details-vm-status:hover {
+  cursor: pointer;
+}
+
+.forklift-page-plan-details-vm-status__section-header {
+  margin-bottom: var(--pf-global--spacer--xs);
+  margin-top: var(--pf-global--spacer--md);
+}

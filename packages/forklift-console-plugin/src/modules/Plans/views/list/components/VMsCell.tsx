@@ -21,7 +21,7 @@ export const VMsCell: React.FC<CellProps> = ({ data }) => {
   });
 
   return (
-    <Link to={`${planURL}`}>
+    <Link to={`${planURL}/vms`}>
       <Split>
         <SplitItem className="forklift-overview__controller-card__status-icon">
           <VirtualMachineIcon />

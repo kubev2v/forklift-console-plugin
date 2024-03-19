@@ -11,7 +11,7 @@ const meta: Meta<typeof DefaultHeader> = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <TableComposable>
+      <TableComposable onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
         <Story />
       </TableComposable>
     ),

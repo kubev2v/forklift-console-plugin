@@ -2,8 +2,8 @@ import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
 
 import { getResourceFieldValue, ResourceField, RowProps } from '@kubev2v/common';
+import { Td, Tr } from '@kubev2v/common';
 import { Timestamp } from '@openshift-console/dynamic-plugin-sdk';
-import { Td, Tr } from '@patternfly/react-table';
 
 import { PlanData } from '../../utils';
 

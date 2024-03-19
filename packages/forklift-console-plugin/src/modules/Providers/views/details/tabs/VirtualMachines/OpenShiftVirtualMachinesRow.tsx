@@ -2,7 +2,7 @@ import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
-import { Td } from '@patternfly/react-table';
+import { Td } from '@kubev2v/common';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import { withResourceLink } from './components/VmResourceLinkRenderer';

@@ -58,6 +58,17 @@ const PlanDetailsPage_: React.FC<{
       ),
     },
     {
+      href: 'vms',
+      name: t('Virtual Machines'),
+      component: () => (
+        <PlanVirtualMachines
+          obj={{ plan: obj, permissions: permissions }}
+          loaded={loaded}
+          loadError={loadError}
+        />
+      ),
+    },
+    {
       href: 'mappings',
       name: t('Mappings'),
       component: () => (
@@ -69,18 +80,6 @@ const PlanDetailsPage_: React.FC<{
       name: t('Hooks'),
       component: () => (
         <PlanHooks plan={obj} loaded={loaded} loadError={loadError} permissions={permissions} />
-      ),
-    },
-    {
-      href: 'vms',
-      name: t('Virtual Machines'),
-      component: () => (
-        <PlanVirtualMachines
-          plan={obj}
-          loaded={loaded}
-          loadError={loadError}
-          permissions={permissions}
-        />
       ),
     },
   ];
