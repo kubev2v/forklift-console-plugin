@@ -79,3 +79,4 @@ storageclass
 storagedomains
 esxi
 KJUR
+millicores
