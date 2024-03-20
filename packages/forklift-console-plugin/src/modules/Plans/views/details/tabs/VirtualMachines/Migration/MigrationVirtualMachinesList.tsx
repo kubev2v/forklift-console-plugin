@@ -18,8 +18,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
 import { MigrationVMsCancelButton } from '../components';
-import { PlanData } from '../PlanVirtualMachines';
-import { VMData } from '../types';
+import { PlanData, VMData } from '../types';
 
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
 import { MigrationVirtualMachinesRowExtended } from './MigrationVirtualMachinesRowExtended';

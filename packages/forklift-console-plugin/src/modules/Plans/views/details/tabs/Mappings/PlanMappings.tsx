@@ -6,6 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   NetworkMapModelGroupVersionKind,
+  PlanModelGroupVersionKind,
   ProviderModelGroupVersionKind,
   StorageMapModelGroupVersionKind,
   V1beta1NetworkMap,
@@ -16,8 +17,6 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-import { PlanDetailsTabProps } from '../../PlanDetailsPage';
-
 import { PlanMappingsSection } from './PlanMappingsSection';
 
 export type PlanMappingsInitSectionProps = {
@@ -26,8 +25,18 @@ export type PlanMappingsInitSectionProps = {
   loadError: unknown;
 };
 
-export const PlanMappings: React.FC<PlanDetailsTabProps> = ({ plan, loaded, loadError }) => {
+export const PlanMappings: React.FC<{ name: string; namespace: string }> = ({
+  name,
+  namespace,
+}) => {
   const { t } = useForkliftTranslation();
+
+  const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
+    groupVersionKind: PlanModelGroupVersionKind,
+    namespaced: true,
+    name,
+    namespace,
+  });
 
   return (
     <>

@@ -1,7 +1,10 @@
 import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
 import {
@@ -12,15 +15,21 @@ import {
   SettingsSection,
   Suspend,
 } from '../../components';
-import { PlanDetailsTabProps } from '../../PlanDetailsPage';
 
-export const PlanDetails: React.FC<PlanDetailsTabProps> = ({
-  plan,
-  permissions,
-  loaded,
-  loadError,
-}) => {
+export const PlanDetails: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+
+  const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
+    groupVersionKind: PlanModelGroupVersionKind,
+    namespaced: true,
+    name,
+    namespace,
+  });
+
+  const permissions = useGetDeleteAndEditAccessReview({
+    model: PlanModel,
+    namespace,
+  });
 
   return (
     <Suspend obj={plan} loaded={loaded} loadError={loadError}>

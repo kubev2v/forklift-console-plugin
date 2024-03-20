@@ -2,11 +2,14 @@ import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HookModelGroupVersionKind, V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
+import {
+  HookModelGroupVersionKind,
+  PlanModelGroupVersionKind,
+  V1beta1Hook,
+  V1beta1Plan,
+} from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
-
-import { PlanDetailsTabProps } from '../../PlanDetailsPage';
 
 import { PlanHooksSection } from './PlanHooksSection';
 
@@ -16,8 +19,15 @@ export type PlanHooksInitSectionProps = {
   loadError: unknown;
 };
 
-export const PlanHooks: React.FC<PlanDetailsTabProps> = ({ plan, loaded, loadError }) => {
+export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+
+  const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
+    groupVersionKind: PlanModelGroupVersionKind,
+    namespaced: true,
+    name,
+    namespace,
+  });
 
   return (
     <>

@@ -2,18 +2,15 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
-import { ProvidersPermissionStatus } from 'src/modules/Providers/utils/types/ProvidersPermissionStatus';
 
 import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import { Suspend } from '../../components';
+
 import { MigrationVirtualMachinesList } from './Migration';
 import { PlanVirtualMachinesList } from './Plan';
-
-export interface PlanData {
-  plan?: V1beta1Plan;
-  permissions?: ProvidersPermissionStatus;
-}
+import { PlanData } from './types';
 
 export interface PlanVirtualMachinesProps extends RouteComponentProps {
   obj: PlanData;
@@ -33,13 +30,7 @@ const PlanVirtualMachines_: React.FC<PlanVirtualMachinesProps> = (props) => {
   }
 };
 
-export const PlanVirtualMachines: React.FC<PlanVirtualMachinesProps> = (props) => (
-  <ModalHOC>
-    <PlanVirtualMachines_ {...props} />
-  </ModalHOC>
-);
-
-export const PlanVirtualMachinesWrapper: React.FC<{ name: string; namespace: string }> = ({
+export const PlanVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {
@@ -54,5 +45,11 @@ export const PlanVirtualMachinesWrapper: React.FC<{ name: string; namespace: str
 
   const data = { plan, permissions };
 
-  return <PlanVirtualMachines obj={data} loaded={planLoaded} loadError={planLoadError} />;
+  return (
+    <ModalHOC>
+      <Suspend obj={plan} loaded={planLoaded} loadError={planLoadError}>
+        <PlanVirtualMachines_ obj={data} loaded={planLoaded} loadError={planLoadError} />
+      </Suspend>
+    </ModalHOC>
+  );
 };
