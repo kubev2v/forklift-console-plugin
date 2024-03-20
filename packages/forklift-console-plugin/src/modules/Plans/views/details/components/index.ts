@@ -5,6 +5,8 @@ export * from './Loading';
 export * from './MappingList';
 export * from './MappingListItem';
 export * from './MigrationsSection';
+export * from './PlanCriticalCondition';
+export * from './PlanPageHeadings';
 export * from './ProvidersSection';
 export * from './SettingsSection';
 export * from './Suspend';

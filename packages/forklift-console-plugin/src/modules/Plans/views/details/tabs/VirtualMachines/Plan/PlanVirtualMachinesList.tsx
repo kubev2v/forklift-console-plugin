@@ -10,8 +10,7 @@ import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import { V1beta1PlanSpecVms, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
 
 import { PlanVMsDeleteButton } from '../components';
-import { PlanData } from '../PlanVirtualMachines';
-import { VMData } from '../types';
+import { PlanData, VMData } from '../types';
 
 import { PlanVirtualMachinesRow } from './PlanVirtualMachinesRow';
 
