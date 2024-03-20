@@ -4,7 +4,14 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 import { PlanPageHeadings } from './components';
-import { PlanDetails, PlanHooks, PlanMappings, PlanVirtualMachines, PlanYAML } from './tabs';
+import {
+  PlanDetails,
+  PlanHooks,
+  PlanMappings,
+  PlanResources,
+  PlanVirtualMachines,
+  PlanYAML,
+} from './tabs';
 
 import './PlanDetailsPage.style.css';
 
@@ -34,6 +41,11 @@ const PlanDetailsPage_: React.FC<{ name: string; namespace: string }> = ({ name,
       href: 'vms',
       name: t('Virtual Machines'),
       component: () => <PlanVirtualMachines name={name} namespace={namespace} />,
+    },
+    {
+      href: 'resources',
+      name: t('Resources'),
+      component: () => <PlanResources name={name} namespace={namespace} />,
     },
     {
       href: 'mappings',
