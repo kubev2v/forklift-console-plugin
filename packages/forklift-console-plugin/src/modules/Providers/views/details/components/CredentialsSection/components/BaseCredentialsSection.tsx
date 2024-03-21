@@ -93,6 +93,9 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
         return { ...state, reveal: !state.reveal };
       case 'TOGGLE_EDIT':
         return { ...state, edit: !state.edit };
+      case 'RESET_DATA_CHANGED': {
+        return { ...state, dataChanged: false };
+      }
       case 'SET_NEW_SECRET': {
         const dataChanged = isSecretDataChanged(secret, action.payload);
         const validationError = validator(action.payload);
@@ -127,6 +130,11 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
     dispatch({ type: 'TOGGLE_REVEAL' });
   }
 
+  // mark data as unchanged, i.e. current staged secret data is equal to saved secret data
+  function resetDataChanged() {
+    dispatch({ type: 'RESET_DATA_CHANGED' });
+  }
+
   // Handle user edits
   function onNewSecretChange(newValue: IoK8sApiCoreV1Secret) {
     // update staged secret with new value
@@ -150,6 +158,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
       await patchSecretData(state.newSecret, true);
 
       setIsLoading(false);
+      resetDataChanged();
       toggleEdit();
     } catch (err) {
       dispatch({
