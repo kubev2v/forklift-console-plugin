@@ -61,6 +61,7 @@ const PlanHooksInitSection: React.FC<PlanHooksInitSectionProps> = (props) => {
       </div>
     );
 
+  /*
   // Search for the Plan k8s Hooks
   const planHooks =
     hooks?.filter((hook) =>
@@ -72,6 +73,7 @@ const PlanHooksInitSection: React.FC<PlanHooksInitSectionProps> = (props) => {
         ),
       ),
     ) || [];
+   */
 
-  return <PlanHooksSection plan={plan} planHooks={planHooks} />;
+  return <PlanHooksSection plan={plan} hooks={hooks || []} />;
 };
