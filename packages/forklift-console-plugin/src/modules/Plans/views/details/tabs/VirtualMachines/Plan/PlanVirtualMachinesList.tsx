@@ -52,6 +52,7 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
     specVM: m,
     statusVM: vmDict[m.id],
     pods: [],
+    jobs: [],
     targetNamespace: plan?.spec?.targetNamespace,
   }));
 

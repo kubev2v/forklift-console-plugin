@@ -8,6 +8,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import {
+  IoK8sApiBatchV1Job,
   IoK8sApiCoreV1Pod,
   MigrationModelGroupVersionKind,
   V1beta1Migration,
@@ -88,7 +89,7 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: 'status',
     jsonPath: (obj: VMData) => {
-      const completed = obj.statusVM?.pipeline.filter((p) => p.phase === 'Completed');
+      const completed = obj.statusVM?.pipeline.filter((p) => p?.phase === 'Completed');
 
       return (completed || []).length;
     },
@@ -142,6 +143,21 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
       : (podsDict[p.metadata.labels.vmID] = [p]),
   );
 
+  const [jobs, jobsLoaded, jobsLoadError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
+    groupVersionKind: { kind: 'Job', group: 'batch', version: 'v1' },
+    namespaced: true,
+    isList: true,
+    namespace: plan?.spec?.targetNamespace,
+    selector: { matchLabels: { plan: plan?.metadata?.uid } },
+  });
+
+  const jobsDict: Record<string, IoK8sApiBatchV1Job[]> = {};
+  (jobs && jobsLoaded && !jobsLoadError ? jobs : []).forEach((j) =>
+    jobsDict[j.metadata.labels.vmID]
+      ? jobsDict[j.metadata.labels.vmID].push(j)
+      : (jobsDict[j.metadata.labels.vmID] = [j]),
+  );
+
   const [selectedIds, setSelectedIds] = useState([]);
   const [expandedIds, setExpandedIds] = useState([]);
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'PlanVirtualMachines' }));
@@ -157,6 +173,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     specVM: m,
     statusVM: vmDict[m.id],
     pods: podsDict[m.id],
+    jobs: jobsDict[m.id],
     targetNamespace: plan?.spec?.targetNamespace,
   }));
 
