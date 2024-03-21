@@ -30,14 +30,36 @@ const preHookTemplate = (plan: V1beta1Plan) => ({
   spec: { image: 'quay.io/konveyor/hook-runner', playbook: '' },
   apiVersion: 'forklift.konveyor.io/v1beta1',
   kind: 'Hook',
-  metadata: { name: `${plan?.metadata?.name}-pre-hook`, namespace: plan?.metadata?.namespace },
+  metadata: {
+    name: `${plan?.metadata?.name}-pre-hook`,
+    namespace: plan?.metadata?.namespace,
+    ownerReferences: [
+      {
+        apiVersion: plan.apiVersion,
+        kind: plan.kind,
+        name: plan.metadata.name,
+        uid: plan.metadata.uid,
+      },
+    ],
+  },
 });
 
 const postHookTemplate = (plan: V1beta1Plan) => ({
   spec: { image: 'quay.io/konveyor/hook-runner', playbook: '' },
   apiVersion: 'forklift.konveyor.io/v1beta1',
   kind: 'Hook',
-  metadata: { name: `${plan?.metadata?.name}-post-hook`, namespace: plan?.metadata?.namespace },
+  metadata: {
+    name: `${plan?.metadata?.name}-post-hook`,
+    namespace: plan?.metadata?.namespace,
+    ownerReferences: [
+      {
+        apiVersion: plan.apiVersion,
+        kind: plan.kind,
+        name: plan.metadata.name,
+        uid: plan.metadata.uid,
+      },
+    ],
+  },
 });
 
 const initialState = (
