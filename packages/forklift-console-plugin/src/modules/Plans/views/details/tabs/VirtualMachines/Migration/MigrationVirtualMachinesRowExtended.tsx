@@ -22,7 +22,9 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
   const conditions = props.resourceData.statusVM?.conditions;
   const pods = props.resourceData.pods;
   const jobs = props.resourceData.jobs;
-  const success = conditions?.find((c) => c.type === 'Succeeded' && c.status === 'True');
+  const vmCreated = pipeline.find(
+    (p) => p?.name === 'VirtualMachineCreation' && p?.phase === 'Completed',
+  );
 
   const getStatusLabel = (status: string) => {
     switch (status) {
@@ -37,7 +39,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
 
   return (
     <PageSection>
-      {success && (
+      {vmCreated && (
         <>
           <SectionHeading
             text={'Virtual machine'}

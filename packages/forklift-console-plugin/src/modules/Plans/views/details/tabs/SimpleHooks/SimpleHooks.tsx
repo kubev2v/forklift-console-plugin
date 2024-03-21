@@ -2,19 +2,13 @@ import React, { useEffect, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { deepCopy } from 'src/modules/Plans/utils';
-import { AlertMessageForModals } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  HookModelGroupVersionKind,
-  PlanModelGroupVersionKind,
-  V1beta1Hook,
-  V1beta1Plan,
-  V1beta1PlanSpecVmsHooks,
-} from '@kubev2v/types';
-import { CodeEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
+import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
+  Divider,
   Flex,
   FlexItem,
   Form,
@@ -28,8 +22,9 @@ import {
 
 import { Suspend } from '../../components';
 
+import { usePlanHooks } from './hooks';
 import { formReducer, FormState } from './state';
-import { createHook, deleteHook, updateHook } from './utils';
+import { onUpdatePlanHooks } from './utils';
 
 const preHookTemplate = (plan: V1beta1Plan) => ({
   spec: { image: 'quay.io/konveyor/hook-runner', playbook: '' },
@@ -62,25 +57,10 @@ const initialState = (
 export const SimpleHooks: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
-  const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
-    groupVersionKind: PlanModelGroupVersionKind,
-    namespaced: true,
+  const [plan, preHookResource, postHookResource, loaded, loadError] = usePlanHooks(
     name,
     namespace,
-  });
-  const hooks: V1beta1PlanSpecVmsHooks[] = plan?.spec?.vms?.[0]?.hooks || [];
-  const postHook = hooks.find((h) => h.step === 'PostHook');
-  const preHook = hooks.find((h) => h.step === 'PreHook');
-
-  const [hookRecourses] = useK8sWatchResource<V1beta1Hook[]>({
-    groupVersionKind: HookModelGroupVersionKind,
-    namespaced: true,
-    isList: true,
-    namespace: plan?.metadata?.namespace,
-  });
-
-  const postHookResource = hookRecourses.find((h) => h.metadata.name === postHook?.hook?.name);
-  const preHookResource = hookRecourses.find((h) => h.metadata.name === preHook?.hook?.name);
+  );
 
   const [state, dispatch] = useReducer(
     formReducer,
@@ -97,86 +77,52 @@ export const SimpleHooks: React.FC<{ name: string; namespace: string }> = ({ nam
 
   // Handle user clicking "save"
   async function onUpdate() {
-    dispatch({ type: 'SET_LOADING', payload: true });
-
-    let newPlan = deepCopy(plan);
-
-    try {
-      if (state.preHookSet) {
-        if (preHookResource) {
-          // Patch new hook
-          await updateHook(state.preHook);
-        } else {
-          // Create hook
-          newPlan = await createHook(newPlan, state.preHook, 'PreHook');
-        }
-      } else {
-        if (preHookResource) {
-          // Delete hook
-          newPlan = await deleteHook(newPlan, preHookResource, 'PreHook');
-        }
-      }
-
-      if (state.postHookSet) {
-        if (postHookResource) {
-          // Patch new hook
-          await updateHook(state.postHook);
-        } else {
-          // Create hook
-          await createHook(newPlan, state.postHook, 'PostHook');
-        }
-      } else {
-        if (postHookResource) {
-          // Delete hook
-          await deleteHook(newPlan, postHookResource, 'PostHook');
-        }
-      }
-
-      dispatch({ type: 'SET_LOADING', payload: false });
-    } catch (err) {
-      dispatch({
-        type: 'SET_ALERT_MESSAGE',
-        payload: (
-          <AlertMessageForModals title={t('Error')} message={err.message || err.toString()} />
-        ),
-      });
-
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
+    onUpdatePlanHooks({ plan, preHookResource, postHookResource, dispatch, state });
   }
+
+  const HooksTabAction = (
+    <Flex className="forklift-page-plan-details-vm-status__actions">
+      <FlexItem>
+        <Button
+          variant="primary"
+          onClick={onUpdate}
+          isDisabled={!state.hasChanges}
+          isLoading={state.isLoading}
+        >
+          {t('Update hooks')}
+        </Button>
+      </FlexItem>
+
+      <FlexItem>
+        <Button
+          variant="secondary"
+          isDisabled={!state.hasChanges}
+          onClick={() =>
+            dispatch({
+              type: 'INIT',
+              payload: initialState(plan, preHookResource, postHookResource),
+            })
+          }
+        >
+          {t('Cancel')}
+        </Button>
+      </FlexItem>
+    </Flex>
+  );
 
   return (
     <Suspend obj={plan} loaded={loaded} loadError={loadError}>
-      <PageSection variant="light">
-        <Flex>
-          <FlexItem>
-            <Button
-              variant="primary"
-              onClick={onUpdate}
-              isDisabled={!state.hasChanges}
-              isLoading={state.isLoading}
-            >
-              {t('Update hooks')}
-            </Button>
-          </FlexItem>
+      {state.alertMessage && <PageSection variant="light">{state.alertMessage}</PageSection>}
 
-          <FlexItem>
-            <Button
-              variant="secondary"
-              isDisabled={!state.hasChanges}
-              onClick={() =>
-                dispatch({
-                  type: 'INIT',
-                  payload: initialState(plan, preHookResource, postHookResource),
-                })
-              }
-            >
-              {t('Cancel')}
-            </Button>
-          </FlexItem>
-        </Flex>
-        {state.alertMessage}
+      <PageSection
+        variant="light"
+        className="forklift-page-plan-details-vm-status__section-actions"
+      >
+        <SectionHeading text={t('Migration hook')} />
+        {HooksTabAction}
+        <Divider />
       </PageSection>
+
       <PageSection variant="light">
         <SectionHeading text={t('Pre migration hook')} />
         <Form>
