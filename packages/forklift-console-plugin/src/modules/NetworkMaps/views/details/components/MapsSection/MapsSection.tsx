@@ -129,7 +129,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     const currentDestinationNet = destinationNetworks.find(
       (n) => OpenShiftNetworkAttachmentDefinitionToName(n) == current.destination,
     ) || { type: 'pod' };
-    const currentSourceNet = sourceNetworks.find((n) => n.name === current.source);
+    const currentSourceNet = sourceNetworks.find((n) => n?.name === current.source);
 
     dispatch({
       type: 'SET_MAP',

@@ -3,7 +3,7 @@ import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { RowProps, TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
-import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
+import { IoK8sApiBatchV1Job, V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
@@ -21,6 +21,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
   const pipeline = props.resourceData.statusVM?.pipeline;
   const conditions = props.resourceData.statusVM?.conditions;
   const pods = props.resourceData.pods;
+  const jobs = props.resourceData.jobs;
   const success = conditions?.find((c) => c.type === 'Succeeded' && c.status === 'True');
 
   const getStatusLabel = (status: string) => {
@@ -52,7 +53,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                       version: 'v1',
                       kind: 'VirtualMachine',
                     }}
-                    name={props.resourceData.statusVM.name}
+                    name={props.resourceData.statusVM?.name}
                     namespace={props.resourceData.targetNamespace}
                   />
                 </Td>
@@ -83,6 +84,37 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                       </FlexItem>
                       <FlexItem>
                         <Status status={pod?.status?.phase}></Status>
+                      </FlexItem>
+                    </Flex>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </>
+      )}
+
+      {(jobs || []).length > 0 && (
+        <>
+          <SectionHeading
+            text={'Jobs'}
+            className="forklift-page-plan-details-vm-status__section-header"
+          />
+          <TableComposable aria-label="Expandable table" variant="compact">
+            <Tbody>
+              {(jobs || []).map((job) => (
+                <Tr key={job.metadata.uid}>
+                  <Td>
+                    <Flex>
+                      <FlexItem>
+                        <ResourceLink
+                          groupVersionKind={{ group: 'batch', version: 'v1', kind: 'Job' }}
+                          name={job?.metadata?.name}
+                          namespace={job?.metadata?.namespace}
+                        />
+                      </FlexItem>
+                      <FlexItem>
+                        <Status status={getJobPhase(job)}></Status>
                       </FlexItem>
                     </Flex>
                   </Td>
@@ -161,7 +193,7 @@ const getIcon: GetIconType = (p) => {
     return <ResourcesAlmostFullIcon color="red" />;
   }
 
-  switch (p.phase) {
+  switch (p?.phase) {
     case 'Completed':
       return <ResourcesFullIcon color="green" />;
     case 'Pending':
@@ -171,4 +203,21 @@ const getIcon: GetIconType = (p) => {
     default:
       return <ResourcesEmptyIcon color="grey" />;
   }
+};
+
+const getJobPhase = (job: IoK8sApiBatchV1Job) => {
+  const conditions = job?.status?.conditions || [];
+
+  const conditionFailed = conditions.find((c) => c.type === 'Failed' && c.status === 'True');
+  const conditionComplete = conditions.find((c) => c.type === 'Complete' && c.status === 'True');
+
+  if (conditionFailed) {
+    return 'Error';
+  }
+
+  if (conditionComplete) {
+    return 'Complete';
+  }
+
+  return 'Pending';
 };

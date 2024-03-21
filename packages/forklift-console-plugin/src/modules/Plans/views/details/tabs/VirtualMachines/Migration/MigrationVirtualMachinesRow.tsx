@@ -47,7 +47,7 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
     return <Timestamp timestamp={value} />;
   },
   transfer: (props: PlanVMsCellProps) => {
-    const diskTransfer = props.data.statusVM?.pipeline.find((p) => p.name === 'DiskTransfer');
+    const diskTransfer = props.data.statusVM?.pipeline.find((p) => p?.name === 'DiskTransfer');
     const annotations: { unit: string } = diskTransfer?.annotations as undefined;
 
     return annotations?.unit ? (
@@ -63,12 +63,12 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
     const pipeline = props.data.statusVM?.pipeline;
     let lastRunningItem: V1beta1PlanStatusMigrationVmsPipeline;
 
-    if (pipeline[0].phase === 'Pending') {
+    if (pipeline[0]?.phase === 'Pending') {
       lastRunningItem = pipeline[0];
-    } else if (pipeline[pipeline.length - 1].phase === 'Completed') {
+    } else if (pipeline[pipeline.length - 1]?.phase === 'Completed') {
       lastRunningItem = pipeline[pipeline.length - 1];
     } else {
-      const lastNonePendingIndex = pipeline.findIndex((p) => p.phase === 'Pending') - 1;
+      const lastNonePendingIndex = pipeline.findIndex((p) => p?.phase === 'Pending') - 1;
       lastRunningItem = pipeline[lastNonePendingIndex];
     }
 
@@ -79,7 +79,7 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
         showClose={false}
         alertSeverityVariant={alertSeverityVariant}
         headerIcon={getIcon(lastRunningItem)}
-        headerContent={lastRunningItem.name}
+        headerContent={lastRunningItem?.name}
         bodyContent={
           <Table variant="compact">
             <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
@@ -120,13 +120,13 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
         >
           {pipeline.map((p) => (
             <ProgressStep
-              key={p.name}
+              key={p?.name}
               variant={getVariant(p)}
               icon={getIcon(p)}
-              id={p.name}
-              titleId={p.name}
+              id={p?.name}
+              titleId={p?.name}
             >
-              {p.name}
+              {p?.name}
             </ProgressStep>
           ))}
         </ProgressStepper>
@@ -154,7 +154,7 @@ const getVariant: GetVariantType = (p) => {
     return 'danger';
   }
 
-  switch (p.phase) {
+  switch (p?.phase) {
     case 'Completed':
       return 'success';
     case 'Pending':
@@ -171,7 +171,7 @@ const gePopoverVariant: GetPopoverVariantType = (p) => {
     return 'danger';
   }
 
-  switch (p.phase) {
+  switch (p?.phase) {
     case 'Completed':
       return 'success';
     case 'Pending':
@@ -187,7 +187,7 @@ const getIcon: GetIconType = (p) => {
     return <ResourcesAlmostFullIcon />;
   }
 
-  switch (p.phase) {
+  switch (p?.phase) {
     case 'Completed':
       return <ResourcesFullIcon />;
     case 'Pending':
