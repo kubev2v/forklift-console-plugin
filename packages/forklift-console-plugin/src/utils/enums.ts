@@ -1,7 +1,6 @@
-import { K8sConditionStatus } from '@kubev2v/common';
 import { ProviderType } from '@kubev2v/types';
 
-import { MappingStatus, ProviderStatus } from './types';
+import { ProviderStatus } from './types';
 
 export const PROVIDERS: Record<ProviderType, string> =
   process.env.BRAND_TYPE === 'RedHat'
@@ -20,26 +19,10 @@ export const PROVIDERS: Record<ProviderType, string> =
         ova: 'OVA',
       };
 
-export const CONDITIONS: Record<K8sConditionStatus, string> = {
-  True: 'True',
-  False: 'False',
-  Unknown: 'Unknown',
-};
-
-export const MAPPING_STATUS = (t: (k: string) => string): Record<MappingStatus, string> => ({
-  Ready: t('Ready'),
-  NotReady: t('Not Ready'),
-});
-
 export const PROVIDER_STATUS: Record<ProviderStatus, string> = {
   Ready: 'Ready',
   ConnectionFailed: 'Connection Failed',
   Staging: 'Staging',
   ValidationFailed: 'Validation Failed',
   Unknown: 'Unknown',
-};
-
-export const PLAN_TYPE: Record<string, string> = {
-  Warm: 'Warm',
-  Cold: 'Cold',
 };

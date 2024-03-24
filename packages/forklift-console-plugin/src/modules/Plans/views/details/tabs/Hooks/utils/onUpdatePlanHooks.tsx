@@ -1,6 +1,6 @@
 import React from 'react';
-import { deepCopy } from 'src/modules/Plans/utils';
 import { AlertMessageForModals } from 'src/modules/Providers/modals';
+import { deepCopy } from 'src/utils';
 
 import { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
 
@@ -35,11 +35,9 @@ export async function onUpdatePlanHooks(props: onUpdatePlanHooksProps) {
         // Create hook
         newPlan = await createHook(newPlan, state.preHook, 'PreHook');
       }
-    } else {
-      if (preHookResource) {
-        // Delete hook
-        newPlan = await deleteHook(newPlan, preHookResource, 'PreHook');
-      }
+    } else if (preHookResource) {
+      // Delete hook
+      newPlan = await deleteHook(newPlan, preHookResource, 'PreHook');
     }
 
     if (state.postHookSet) {
@@ -50,11 +48,9 @@ export async function onUpdatePlanHooks(props: onUpdatePlanHooksProps) {
         // Create hook
         await createHook(newPlan, state.postHook, 'PostHook');
       }
-    } else {
-      if (postHookResource) {
-        // Delete hook
-        await deleteHook(newPlan, postHookResource, 'PostHook');
-      }
+    } else if (postHookResource) {
+      // Delete hook
+      await deleteHook(newPlan, postHookResource, 'PostHook');
     }
 
     dispatch({ type: 'SET_LOADING', payload: false });

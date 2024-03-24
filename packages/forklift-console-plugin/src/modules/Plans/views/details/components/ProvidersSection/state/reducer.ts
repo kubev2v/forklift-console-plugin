@@ -1,4 +1,4 @@
-import { deepCopy } from 'src/modules/NetworkMaps/utils';
+import { deepCopy } from 'src/utils';
 
 import { V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 

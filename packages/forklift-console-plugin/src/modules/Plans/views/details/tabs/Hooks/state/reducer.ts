@@ -1,5 +1,5 @@
 import { Base64 } from 'js-base64';
-import { deepCopy } from 'src/modules/Plans/utils';
+import { deepCopy } from 'src/utils';
 
 import { V1beta1Hook } from '@kubev2v/types';
 

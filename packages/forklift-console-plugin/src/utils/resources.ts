@@ -41,16 +41,6 @@ export const referenceForObj = (obj: K8sResourceCommon) => {
   return referenceFor(group, version, kind);
 };
 
-export enum ResourceKind {
-  Provider = 'Provider',
-  NetworkMap = 'NetworkMap',
-  StorageMap = 'StorageMap',
-  Plan = 'Plan',
-  Migration = 'Migration',
-  Host = 'Host',
-  Hook = 'Hook',
-}
-
 /**
  * Can this provider be considered a local target provider?
  */
