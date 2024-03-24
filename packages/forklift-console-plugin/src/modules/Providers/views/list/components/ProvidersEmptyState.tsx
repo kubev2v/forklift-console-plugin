@@ -1,5 +1,4 @@
 import React, { ComponentType, ReactNode } from 'react';
-import { HELP_LINK_HREF } from 'src/utils/constants';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
@@ -16,6 +15,9 @@ import {
   TextListItem,
   Title,
 } from '@patternfly/react-core';
+
+const HELP_LINK_HREF =
+  'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/';
 
 interface ProvidersEmptyStateProps {
   AddButton: ReactNode;

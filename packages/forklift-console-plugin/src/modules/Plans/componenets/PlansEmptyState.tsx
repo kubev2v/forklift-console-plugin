@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import digitalTransformation from 'src/modules/Overview/images/digitalTransormation.svg';
 import { getResourceUrl } from 'src/modules/Providers/utils';
-import { HELP_LINK_HREF } from 'src/utils/constants';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -12,6 +11,9 @@ import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
 import PlansAddButton from './PlansAddButton';
+
+const HELP_LINK_HREF =
+  'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/';
 
 const AutomationIcon = () => (
   <img src={digitalTransformation} className="forklift-empty-state__icon" />

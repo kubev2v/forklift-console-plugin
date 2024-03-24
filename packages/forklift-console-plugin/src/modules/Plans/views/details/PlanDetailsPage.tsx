@@ -6,11 +6,11 @@ import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { PlanPageHeadings } from './components';
 import {
   PlanDetails,
+  PlanHooks,
   PlanMappings,
   PlanResources,
   PlanVirtualMachines,
   PlanYAML,
-  SimpleHooks,
 } from './tabs';
 
 import './PlanDetailsPage.style.css';
@@ -55,7 +55,7 @@ const PlanDetailsPage_: React.FC<{ name: string; namespace: string }> = ({ name,
     {
       href: 'hooks',
       name: t('Hooks'),
-      component: () => <SimpleHooks name={name} namespace={namespace} />,
+      component: () => <PlanHooks name={name} namespace={namespace} />,
     },
   ];
 
