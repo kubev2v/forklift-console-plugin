@@ -18,7 +18,10 @@ export const TransferNetworkDetailsItem: React.FC<PlanDetailsItemProps> = ({
   const { showModal } = useModal();
 
   const defaultHelpContent = t(
-    `The network attachment definition that should be used for disk transfer.`,
+    `You can change the migration transfer network for this plan.
+    If you defined a migration transfer network for the OpenShift Virtualization provider
+    and if the network is in the target namespace, the network that you defined is the default
+    network for all migration plans. Otherwise, the pod network is used.`,
   );
 
   const TransferNetworkToName = (n: V1beta1PlanSpecTransferNetwork) =>
