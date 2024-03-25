@@ -134,6 +134,7 @@ const PlansListPage: React.FC<{
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'Plans' }));
+  const [page, setPage] = useState(1);
 
   const [plans, plansLoaded, plansLoadError] = useK8sWatchResource<V1beta1Plan[]>({
     groupVersionKind: PlanModelGroupVersionKind,
@@ -177,6 +178,8 @@ const PlansListPage: React.FC<{
         title={t('Plans')}
         userSettings={userSettings}
         customNoResultsFound={EmptyState}
+        page={page}
+        setPage={setPage}
       />
     </ModalHOC>
   );

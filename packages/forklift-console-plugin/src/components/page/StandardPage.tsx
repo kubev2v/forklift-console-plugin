@@ -172,6 +172,18 @@ export interface StandardPageProps<T> {
   pagination?: number | 'on' | 'off';
 
   /**
+   * page number
+   */
+  page: number;
+
+  /**
+   * Update page number
+   *
+   * @param number Update page
+   */
+  setPage: (number) => void;
+
+  /**
    * Prefix for filters stored in the query params part of the URL.
    * By default no prefix is used - the field ID is used directly.
    */
@@ -258,6 +270,8 @@ export interface StandardPageProps<T> {
  *   dataSource={[myData, false, null]}
  *   title="My List"
  *   fieldsMetadata={myFieldsMetadata}
+ *   page={page}
+ *   setPage={setPage}
  *   // ...other props
  * />
  */
@@ -273,6 +287,8 @@ export function StandardPage<T>({
   customNoResultsFound,
   customNoResultsMatchFilter,
   pagination = DEFAULT_PER_PAGE,
+  page,
+  setPage,
   userSettings,
   filterPrefix = '',
   extraSupportedMatchers,
@@ -310,13 +326,20 @@ export function StandardPage<T>({
     [flatData, selectedFilters, fields, compareFn],
   );
 
-  const { pageData, showPagination, itemsPerPage, currentPage, setPage, setPerPage } =
-    usePagination({
-      pagination,
-      filteredData,
-      flattenData: flatData,
-      userSettings: userSettings?.pagination,
-    });
+  const showPagination =
+    pagination === 'on' || (typeof pagination === 'number' && flatData.length > pagination);
+
+  const { itemsPerPage, lastPage, setPerPage } = usePagination({
+    filteredDataLength: filteredData.length,
+    userSettings: userSettings?.pagination,
+  });
+
+  const currentPage = Math.min(page, lastPage);
+
+  const pageData = useMemo(
+    () => filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredData, currentPage, itemsPerPage],
+  );
 
   const errorFetchingData = loaded && error;
   const noResults = loaded && !error && flatData.length == 0;
