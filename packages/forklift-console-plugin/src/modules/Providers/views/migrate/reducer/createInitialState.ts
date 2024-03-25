@@ -53,7 +53,11 @@ export const createInitialState = ({
             destination: undefined,
           },
           targetNamespace: undefined,
-          vms: selectedVms.map((data) => ({ name: data.name, id: toId(data) })),
+          vms: selectedVms.map((data) => ({
+            name: data.name,
+            namespace: data.namespace,
+            id: toId(data),
+          })),
         },
       },
       netMap: {

@@ -1,8 +1,8 @@
 import { useProviderInventory, UseProviderInventoryParams } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
-import { isProviderLocalOpenshift } from 'src/utils/resources';
+import { isProviderLocalOpenshift, isProviderOpenshift } from 'src/utils/resources';
 
-import { ProviderVirtualMachine } from '@kubev2v/types';
+import { OpenshiftVM, ProviderVirtualMachine } from '@kubev2v/types';
 
 import { VmData } from '../components';
 
@@ -45,6 +45,7 @@ export const useInventoryVms = (
             providerType: provider?.spec?.type,
           } as ProviderVirtualMachine,
           name: vm.name,
+          namespace: isProviderOpenshift(validProvider) ? (vm as OpenshiftVM).namespace : undefined,
           isProviderLocalOpenshift: isProviderLocalOpenshift(validProvider),
         }))
       : [];

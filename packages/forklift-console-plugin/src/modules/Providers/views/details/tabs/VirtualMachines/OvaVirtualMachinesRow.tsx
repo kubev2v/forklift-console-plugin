@@ -5,13 +5,7 @@ import { ResourceField, RowProps } from '@kubev2v/common';
 import { Td } from '@kubev2v/common';
 import { OvaVM } from '@kubev2v/types';
 
-import { VMCellProps, VMConcernsCellRenderer, VMNameCellRenderer } from './components';
-
-export interface VmData {
-  vm: OvaVM;
-  name: string;
-  concerns: string;
-}
+import { VMCellProps, VMConcernsCellRenderer, VmData, VMNameCellRenderer } from './components';
 
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
   const fieldId = resourceFieldId;
