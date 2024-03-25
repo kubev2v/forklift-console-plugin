@@ -9,14 +9,9 @@ import {
   PowerStateCellRenderer,
   VMCellProps,
   VMConcernsCellRenderer,
+  VmData,
   VMNameCellRenderer,
 } from './components';
-
-export interface VmData {
-  vm: VSphereVM;
-  name: string;
-  concerns: string;
-}
 
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
   const fieldId = resourceFieldId;

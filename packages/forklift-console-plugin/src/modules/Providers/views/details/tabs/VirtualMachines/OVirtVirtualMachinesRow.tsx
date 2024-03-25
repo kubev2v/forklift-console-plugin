@@ -6,13 +6,7 @@ import { Td } from '@kubev2v/common';
 import { OVirtVM } from '@kubev2v/types';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
-import { VMCellProps, VMConcernsCellRenderer, VMNameCellRenderer } from './components';
-
-export interface VmData {
-  vm: OVirtVM;
-  name: string;
-  concerns: string;
-}
+import { VMCellProps, VMConcernsCellRenderer, VmData, VMNameCellRenderer } from './components';
 
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
   const fieldId = resourceFieldId;
