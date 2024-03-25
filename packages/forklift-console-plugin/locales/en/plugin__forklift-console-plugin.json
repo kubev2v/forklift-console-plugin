@@ -57,6 +57,7 @@
   "Certificate change detected": "Certificate change detected",
   "Clear all filters": "Clear all filters",
   "Click the update credentials button to save your changes, button is disabled until a change is detected.": "Click the update credentials button to save your changes, button is disabled until a change is detected.",
+  "Click the update hooks button to save your changes, button is disabled until a change is detected.": "Click the update hooks button to save your changes, button is disabled until a change is detected.",
   "Click the update mappings button to save your changes, button is disabled until a change is detected.": "Click the update mappings button to save your changes, button is disabled until a change is detected.",
   "Cluster": "Cluster",
   "Clusters": "Clusters",

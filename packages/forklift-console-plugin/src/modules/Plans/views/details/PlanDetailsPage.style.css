@@ -128,8 +128,3 @@
 .forklift-page-plan-details-vm-status__section-actions {
   padding-bottom: 0;
 }
-
-.forklift-page-plan-details-vm-status__actions {
-  margin-bottom: var(--pf-global--spacer--md);
-  margin-top: var(--pf-global--spacer--xs);
-}

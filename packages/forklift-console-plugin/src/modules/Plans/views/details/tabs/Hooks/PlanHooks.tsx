@@ -51,33 +51,45 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
   }
 
   const HooksTabAction = (
-    <Flex className="forklift-page-plan-details-vm-status__actions">
-      <FlexItem>
-        <Button
-          variant="primary"
-          onClick={onUpdate}
-          isDisabled={!state.hasChanges}
-          isLoading={state.isLoading}
-        >
-          {t('Update hooks')}
-        </Button>
-      </FlexItem>
+    <>
+      <Flex>
+        <FlexItem>
+          <Button
+            variant="primary"
+            onClick={onUpdate}
+            isDisabled={!state.hasChanges}
+            isLoading={state.isLoading}
+          >
+            {t('Update hooks')}
+          </Button>
+        </FlexItem>
 
-      <FlexItem>
-        <Button
-          variant="secondary"
-          isDisabled={!state.hasChanges}
-          onClick={() =>
-            dispatch({
-              type: 'INIT',
-              payload: initialState(plan, preHookResource, postHookResource),
-            })
-          }
-        >
-          {t('Cancel')}
-        </Button>
-      </FlexItem>
-    </Flex>
+        <FlexItem>
+          <Button
+            variant="secondary"
+            isDisabled={!state.hasChanges}
+            onClick={() =>
+              dispatch({
+                type: 'INIT',
+                payload: initialState(plan, preHookResource, postHookResource),
+              })
+            }
+          >
+            {t('Cancel')}
+          </Button>
+        </FlexItem>
+      </Flex>
+
+      <HelperText className="forklift-section-plan-helper-text">
+        <HelperTextItem variant="indeterminate">
+          {t(
+            'Click the update hooks button to save your changes, button is disabled until a change is detected.',
+          )}
+        </HelperTextItem>
+      </HelperText>
+
+      <Divider />
+    </>
   );
 
   return (
@@ -90,7 +102,6 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
       >
         <SectionHeading text={t('Migration hook')} />
         {HooksTabAction}
-        <Divider />
       </PageSection>
 
       <PageSection variant="light">
