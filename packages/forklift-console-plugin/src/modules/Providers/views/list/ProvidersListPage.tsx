@@ -170,6 +170,7 @@ const ProvidersListPage: React.FC<{
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'Providers' }));
+  const [page, setPage] = useState(1);
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
@@ -224,6 +225,8 @@ const ProvidersListPage: React.FC<{
           : undefined
       }
       customNoResultsFound={EmptyState}
+      page={page}
+      setPage={setPage}
     />
   );
 };

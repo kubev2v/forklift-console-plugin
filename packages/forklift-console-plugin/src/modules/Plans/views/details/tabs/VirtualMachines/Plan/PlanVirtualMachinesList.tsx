@@ -38,6 +38,7 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
 
   const { plan } = obj;
 
+  const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState([]);
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'PlanVirtualMachines' }));
 
@@ -67,6 +68,8 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
     title: t('Virtual Machines'),
     userSettings: userSettings,
     namespace: '',
+    page,
+    setPage,
   };
 
   const extendedProps = {

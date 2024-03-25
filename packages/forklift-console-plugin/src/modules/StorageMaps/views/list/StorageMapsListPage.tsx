@@ -104,6 +104,7 @@ const StorageMapsListPage: React.FC<{
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'StorageMaps' }));
+  const [page, setPage] = useState(1);
 
   const [StorageMaps, StorageMapsLoaded, StorageMapsLoadError] = useK8sWatchResource<
     V1beta1StorageMap[]
@@ -151,6 +152,8 @@ const StorageMapsListPage: React.FC<{
       title={t('StorageMaps')}
       userSettings={userSettings}
       customNoResultsFound={EmptyState}
+      page={page}
+      setPage={setPage}
     />
   );
 };

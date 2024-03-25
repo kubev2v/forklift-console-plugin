@@ -66,6 +66,7 @@ export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
   const { provider, permissions } = obj;
   const { namespace } = provider?.metadata || {};
 
+  const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState([]);
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'ProviderHosts' }));
 
@@ -98,6 +99,8 @@ export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
     namespace: namespace,
     title: t('Hosts'),
     userSettings: userSettings,
+    page,
+    setPage,
   };
 
   const extendedProps: PageWithSelectionProps = permissions?.canPatch

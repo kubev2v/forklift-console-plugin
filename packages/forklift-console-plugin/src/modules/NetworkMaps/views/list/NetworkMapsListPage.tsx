@@ -104,6 +104,7 @@ const NetworkMapsListPage: React.FC<{
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'NetworkMaps' }));
+  const [page, setPage] = useState(1);
 
   const [networkMaps, networkMapsLoaded, networkMapsLoadError] = useK8sWatchResource<
     V1beta1NetworkMap[]
@@ -151,6 +152,8 @@ const NetworkMapsListPage: React.FC<{
       title={t('NetworkMaps')}
       userSettings={userSettings}
       customNoResultsFound={EmptyState}
+      page={page}
+      setPage={setPage}
     />
   );
 };

@@ -53,6 +53,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   className,
 }) => {
   const { t } = useForkliftTranslation();
+  const [page, setPage] = useState(1);
 
   const initialSelectedIds_ = initialSelectedIds || [];
 
@@ -99,6 +100,8 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       toId={toId}
       onSelect={onSelectedIds}
       selectedIds={selectedIds}
+      page={page}
+      setPage={setPage}
     />
   );
 };

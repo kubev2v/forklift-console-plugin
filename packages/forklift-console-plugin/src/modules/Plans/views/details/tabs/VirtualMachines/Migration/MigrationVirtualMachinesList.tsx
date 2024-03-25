@@ -105,6 +105,7 @@ type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
 export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
   const { t } = useForkliftTranslation();
+  const [page, setPage] = useState(1);
 
   const { plan } = obj;
 
@@ -191,6 +192,8 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     title: t('Virtual Machines'),
     userSettings: userSettings,
     namespace: '',
+    page,
+    setPage,
   };
 
   const extendedProps = {
