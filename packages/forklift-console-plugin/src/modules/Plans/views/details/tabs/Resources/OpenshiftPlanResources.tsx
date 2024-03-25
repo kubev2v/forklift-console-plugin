@@ -115,6 +115,14 @@ function k8sMemoryToBytes(memoryString) {
 }
 
 function k8sCpuToCores(cpuString) {
+  if (cpuString === undefined) {
+    return undefined;
+  }
+
+  if (typeof cpuString === 'number') {
+    return cpuString;
+  }
+
   if (cpuString.endsWith('m')) {
     // Remove the "m" and convert to millicores, then to cores.
     const millicores = parseInt(cpuString.slice(0, -1), 10);

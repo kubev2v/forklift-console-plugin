@@ -205,7 +205,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
         )}
       </HelperText>
 
-      <Divider className="forklift-section-secret-edit" />
+      <Divider />
 
       {state.alertMessage}
       <EditComponent secret={state.newSecret} onChange={onNewSecretChange} />

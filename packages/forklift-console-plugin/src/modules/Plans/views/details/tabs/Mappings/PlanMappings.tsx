@@ -59,7 +59,7 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,
     isList: true,
-    namespace: plan.metadata?.namespace,
+    namespace: plan?.metadata?.namespace,
   });
 
   // Retrieve all k8s Network Mappings
@@ -69,7 +69,7 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     groupVersionKind: NetworkMapModelGroupVersionKind,
     namespaced: true,
     isList: true,
-    namespace: plan.metadata?.namespace,
+    namespace: plan?.metadata?.namespace,
   });
 
   // Retrieve all k8s Storage Mappings
@@ -79,11 +79,11 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     groupVersionKind: StorageMapModelGroupVersionKind,
     namespaced: true,
     isList: true,
-    namespace: plan.metadata?.namespace,
+    namespace: plan?.metadata?.namespace,
   });
 
   const planNetworkMaps = networkMaps
-    ? networkMaps.find((net) => net?.metadata?.name === plan.spec.map?.network?.name)
+    ? networkMaps.find((net) => net?.metadata?.name === plan?.spec?.map?.network?.name)
     : null;
   const planStorageMaps = storageMaps
     ? storageMaps.find((storage) => storage?.metadata?.name === plan.spec.map?.storage?.name)
