@@ -53,6 +53,9 @@ export const mapSourceNetworksIdsToLabels = (
         case 'vsphere': {
           return [net.id, net.name];
         }
+        case 'ova': {
+          return [net.id, net.name];
+        }
         default: {
           return undefined;
         }
@@ -79,6 +82,9 @@ export const mapSourceStoragesIdsToLabels = (
           return [storage.id, storage.path ?? storage.name];
         }
         case 'vsphere': {
+          return [storage.id, storage.name];
+        }
+        case 'ova': {
           return [storage.id, storage.name];
         }
         default: {

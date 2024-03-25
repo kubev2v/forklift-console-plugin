@@ -44,6 +44,9 @@ export const toNetworksOrProfiles = (vm) => {
         ) ?? []
       );
     }
+    case 'ova': {
+      return vm?.networks?.map((network) => Object.values(network)[0]) ?? [];
+    }
     default:
       return [];
   }

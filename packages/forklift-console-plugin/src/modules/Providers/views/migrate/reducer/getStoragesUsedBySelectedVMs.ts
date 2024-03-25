@@ -1,9 +1,14 @@
+import { Draft } from 'immer';
+
 import { OpenstackVolume, OVirtDisk } from '@kubev2v/types';
 
 import { VmData } from '../../details';
 
 // based on packages legacy/src/Plans/components/Wizard/helpers.tsx
 export const getStoragesUsedBySelectedVms = (
+  sourceStorageLabelToId: Draft<{
+    [label: string]: string;
+  }>,
   selectedVMs: VmData[],
   disks: (OVirtDisk | OpenstackVolume)[],
 ): string[] => {
@@ -30,6 +35,9 @@ export const getStoragesUsedBySelectedVms = (
               );
               const storageDomainIds = vmDisks?.map((disk) => disk?.storageDomain);
               return storageDomainIds;
+            }
+            case 'ova': {
+              return [Object.values(sourceStorageLabelToId)[0]];
             }
             default:
               return [];

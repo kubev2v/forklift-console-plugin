@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import {
   OpenShiftNetworkAttachmentDefinition,
   OpenstackNetwork,
+  OvaNetwork,
   OVirtNetwork,
   ProviderType,
   V1beta1Provider,
@@ -15,7 +16,8 @@ export type InventoryNetwork =
   | OpenShiftNetworkAttachmentDefinition
   | OpenstackNetwork
   | OVirtNetwork
-  | VSphereNetwork;
+  | VSphereNetwork
+  | OvaNetwork;
 
 export const useSourceNetworks = (
   provider: V1beta1Provider,
