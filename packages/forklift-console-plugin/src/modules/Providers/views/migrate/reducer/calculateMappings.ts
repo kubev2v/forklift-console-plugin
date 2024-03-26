@@ -51,7 +51,7 @@ export const calculateNetworks = (
     .sort((a, b) => universalComparator(a, b, 'en'))
     .map((label) => {
       const usedBySelectedVms = networkIdsUsedBySelectedVms.some(
-        (id) => id === sourceNetworkLabelToId[label],
+        (id) => id === sourceNetworkLabelToId[label] || id === label,
       );
       return {
         label,
@@ -119,7 +119,7 @@ export const calculateStorages = (
     .sort((a, b) => universalComparator(a, b, 'en'))
     .map((label) => {
       const usedBySelectedVms = storageIdsUsedBySelectedVms.some(
-        (id) => id === sourceStorageLabelToId[label],
+        (id) => id === sourceStorageLabelToId[label] || id === label,
       );
       return {
         label,
