@@ -49,7 +49,7 @@ export const replaceMapping = (
   const currentSource = sources.find(({ label, isMapped }) => label === current.source && isMapped);
   const nextSource = sources.find(({ label }) => label === next.source);
   const nextDest = targets.find((label) => label === next.destination);
-  const sourceChanged = currentSource.label !== nextSource.label;
+  const sourceChanged = currentSource?.label !== nextSource?.label;
   const destinationChanged = current.destination !== nextDest;
 
   if (!currentSource || !nextSource || !nextDest || (!sourceChanged && !destinationChanged)) {
