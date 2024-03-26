@@ -276,7 +276,11 @@ const handlers: {
     } = draft;
     existingResources.disks = disks;
 
-    calculatedOnce.storageIdsUsedBySelectedVms = getStoragesUsedBySelectedVms(selectedVms, disks);
+    calculatedOnce.storageIdsUsedBySelectedVms = getStoragesUsedBySelectedVms(
+      draft.calculatedOnce.sourceStorageLabelToId,
+      selectedVms,
+      disks,
+    );
     recalculateStorages(draft);
   },
   [SET_EXISTING_NET_MAPS](

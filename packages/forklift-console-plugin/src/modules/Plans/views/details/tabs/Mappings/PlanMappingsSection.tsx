@@ -270,7 +270,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
         (obj.providerType === 'vsphere' && vsphereFindObj(obj, next.source)) ||
         (obj.providerType === 'openstack' && openstackFindObj(obj, next.source)) ||
         (obj.providerType === 'openshift' &&
-          openshiftFindObj(obj as OpenShiftNetworkAttachmentDefinition, next.source)),
+          openshiftFindObj(obj as OpenShiftNetworkAttachmentDefinition, next.source)) ||
+        (obj.providerType === 'ova' && ovaFindObj(obj, next.source)),
     );
 
     const nextTargetIndex = targetNetworks.findIndex(
@@ -381,6 +382,10 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     nextName: string,
   ) => {
     return `${obj.namespace}/${obj.name}` === nextName || obj.name === nextName;
+  };
+
+  const ovaFindObj = (obj, nextName: string) => {
+    return obj.path === nextName || obj.name === nextName;
   };
 
   const createReplacedNetworkMap = (

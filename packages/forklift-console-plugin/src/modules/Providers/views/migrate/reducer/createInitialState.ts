@@ -137,7 +137,7 @@ export const createInitialState = ({
       sourceStorageLabelToId: {},
       storageIdsUsedBySelectedVms: ['ovirt', 'openstack'].includes(sourceProvider.spec?.type)
         ? []
-        : getStoragesUsedBySelectedVms(selectedVms, []),
+        : getStoragesUsedBySelectedVms({}, selectedVms, []),
       namespacesUsedBySelectedVms:
         sourceProvider.spec?.type === 'openshift'
           ? getNamespacesUsedBySelectedVms(selectedVms)
