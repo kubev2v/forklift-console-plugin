@@ -144,6 +144,7 @@ export const recalculateStorages = (draft) => {
   executeStorageMappingValidation(draft);
   if (
     storageMappings &&
+    storageMappings.length !== 0 &&
     !areMappingsEqual(storageMappings, draft.calculatedPerNamespace.storageMappings)
   ) {
     addIfMissing<StorageAlerts>(STORAGE_MAPPING_REGENERATED, draft.alerts.storageMappings.warnings);
@@ -159,6 +160,7 @@ export const recalculateNetworks = (draft) => {
   executeNetworkMappingValidation(draft);
   if (
     networkMappings &&
+    networkMappings.length !== 0 &&
     !areMappingsEqual(networkMappings, draft.calculatedPerNamespace.networkMappings)
   ) {
     addIfMissing<NetworkAlerts>(NETWORK_MAPPING_REGENERATED, draft.alerts.networkMappings.warnings);
