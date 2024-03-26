@@ -1,6 +1,6 @@
-import React, { ReactNode, useReducer, useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import { AlertMessageForModals } from 'src/modules/Providers/modals';
-import { isSecretDataChanged, ValidationMsg } from 'src/modules/Providers/utils';
+import { ValidationMsg } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
@@ -18,6 +18,7 @@ import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon'
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
 import { patchSecretData } from './edit';
+import { baseCredentialsSectionReducerFactory, BaseCredentialsSectionState } from './state';
 
 import './BaseCredentialsSection.style.css';
 
@@ -29,26 +30,6 @@ export interface ListComponentProps {
 export interface EditComponentProps {
   secret: IoK8sApiCoreV1Secret;
   onChange: (newValue: IoK8sApiCoreV1Secret) => void;
-}
-
-/**
- * Represents the state of the secret edit form.
- *
- * @typedef {Object} BaseCredentialsSecretState
- * @property {boolean} reveal - Determines whether the secret's values are visible.
- * @property {boolean} edit - Determines whether the secret is currently being edited.
- * @property {IoK8sApiCoreV1Secret} newSecret - The new version of the secret being edited.
- * @property {boolean} dataChanged - Determines whether the secret's data has changed.
- * @property {boolean} dataIsValid - Determines whether the new secret's data is valid.
- * @property {ReactNode} alertMessage - The message to display when a validation error occurs.
- */
-export interface BaseCredentialsSecretState {
-  reveal: boolean;
-  edit: boolean;
-  newSecret: IoK8sApiCoreV1Secret;
-  dataChanged: boolean;
-  dataError: ValidationMsg;
-  alertMessage: ReactNode;
 }
 
 export type BaseCredentialsSectionProps = {
@@ -75,7 +56,7 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
     name: secret.metadata.name,
   });
 
-  const initialState: BaseCredentialsSecretState = {
+  const initialState: BaseCredentialsSectionState = {
     reveal: false,
     edit: false,
     newSecret: secret,
@@ -84,37 +65,10 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
     alertMessage: null,
   };
 
-  function reducer(
-    state: BaseCredentialsSecretState,
-    action: { type: string; payload?: IoK8sApiCoreV1Secret },
-  ): BaseCredentialsSecretState {
-    switch (action.type) {
-      case 'TOGGLE_REVEAL':
-        return { ...state, reveal: !state.reveal };
-      case 'TOGGLE_EDIT':
-        return { ...state, edit: !state.edit };
-      case 'RESET_DATA_CHANGED': {
-        return { ...state, dataChanged: false };
-      }
-      case 'SET_NEW_SECRET': {
-        const dataChanged = isSecretDataChanged(secret, action.payload);
-        const validationError = validator(action.payload);
-
-        return {
-          ...state,
-          dataChanged,
-          dataError: validationError,
-          newSecret: action.payload,
-          alertMessage: null,
-        };
-      }
-      case 'SET_ALERT_MESSAGE':
-        return { ...state, alertMessage: action.payload };
-      default:
-        return state;
-    }
-  }
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(
+    baseCredentialsSectionReducerFactory(secret, validator),
+    initialState,
+  );
 
   if (!secret?.data) {
     return <span className="text-muted">{t('No credentials found.')}</span>;
@@ -153,12 +107,12 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
     setIsLoading(true);
 
     try {
-      // Patch provider secret, set clean to `true`
-      // to remove old values from the secret
+      // Patch provider secret, set clean to `true` to remove old values from the secret
+      // if successful reset data change
       await patchSecretData(state.newSecret, true);
+      resetDataChanged();
 
       setIsLoading(false);
-      resetDataChanged();
       toggleEdit();
     } catch (err) {
       dispatch({
