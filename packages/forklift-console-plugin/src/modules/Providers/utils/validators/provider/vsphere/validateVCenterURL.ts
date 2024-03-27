@@ -1,10 +1,5 @@
 import { validateURL, ValidationMsg } from '../../common';
 
-export const defaultVCenterUrlMsg = {
-  msg: 'The URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
-  type: 'default',
-};
-
 export const validateVCenterURL = (url: string | number): ValidationMsg => {
   // Sanity check
   if (typeof url !== 'string') {
