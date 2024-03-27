@@ -1,5 +1,7 @@
 import React, { useCallback, useReducer } from 'react';
 import {
+  defaultEsxiUrlMsg,
+  defaultVCenterUrlMsg,
   validateEsxiURL,
   validateVCenterURL,
   validateVDDKImage,
@@ -47,12 +49,11 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
     </ForkliftTrans>
   );
 
+  const defaultUrlMsg = sdkEndpoint === 'esxi' ? defaultEsxiUrlMsg : defaultVCenterUrlMsg;
+
   const initialState = {
     validation: {
-      url: {
-        type: 'default',
-        msg: 'The URL of the vSphere API endpoint for example: https://host-example.com/sdk .',
-      },
+      url: defaultUrlMsg,
       vddkInitImage: {
         type: 'default',
         msg: 'VMware Virtual Disk Development Kit (VDDK) image, for example: quay.io/kubev2v/vddk:latest .',
@@ -108,7 +109,7 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
 
         let validationState: ValidationMsg;
 
-        // Revalidate URL - VCenter of ESXi
+        // Revalidate URL - VCenter or ESXi
         const trimmedURL = provider?.spec?.url?.trim() || '';
         if (sdkEndpoint === 'esxi') {
           validationState = validateEsxiURL(trimmedURL);
