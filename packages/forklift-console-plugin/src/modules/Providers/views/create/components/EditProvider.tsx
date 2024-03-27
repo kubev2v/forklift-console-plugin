@@ -10,12 +10,13 @@ import {
 } from '../../details';
 
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
+import { EsxiProviderCreateForm } from './EsxiProviderCreateForm';
 import { OpenshiftProviderFormCreate } from './OpenshiftProviderCreateForm';
 import { OpenstackProviderCreateForm } from './OpenstackProviderCreateForm';
 import { OVAProviderCreateForm } from './OVAProviderCreateForm';
 import { OvirtProviderCreateForm } from './OvirtProviderCreateForm';
 import { ProvidersCreateFormProps } from './ProviderCreateForm';
-import { VSphereProviderCreateForm } from './VSphereProviderCreateForm';
+import { VCenterProviderCreateForm } from './VCenterProviderCreateForm';
 
 export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
   newProvider,
@@ -61,7 +62,7 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
         case 'esxi':
           return (
             <>
-              <VSphereProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
+              <EsxiProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
 
               <EditProviderSectionHeading text={t('Provider credentials')} />
               <EsxiCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
@@ -70,7 +71,7 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
         default:
           return (
             <>
-              <VSphereProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
+              <VCenterProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
 
               <EditProviderSectionHeading text={t('Provider credentials')} />
               <VCenterCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />

@@ -1,10 +1,5 @@
 import { validateURL, ValidationMsg } from '../../common';
 
-export const defaultEsxiUrlMsg = {
-  msg: 'The URL of the ESXi API endpoint for example: https://host-example.com/sdk .',
-  type: 'default',
-};
-
 export const validateEsxiURL = (url: string | number): ValidationMsg => {
   // Sanity check
   if (typeof url !== 'string') {

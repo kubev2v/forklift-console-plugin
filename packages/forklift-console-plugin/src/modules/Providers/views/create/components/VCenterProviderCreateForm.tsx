@@ -1,12 +1,5 @@
 import React, { useCallback, useReducer } from 'react';
-import {
-  defaultEsxiUrlMsg,
-  defaultVCenterUrlMsg,
-  validateEsxiURL,
-  validateVCenterURL,
-  validateVDDKImage,
-  ValidationMsg,
-} from 'src/modules/Providers/utils';
+import { validateVCenterURL, validateVDDKImage } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
@@ -17,12 +10,12 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 const CREATE_VDDK_HELP_LINK =
   'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
 
-export interface VSphereProviderCreateFormProps {
+export interface VCenterProviderCreateFormProps {
   provider: V1beta1Provider;
   onChange: (newValue: V1beta1Provider) => void;
 }
 
-export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps> = ({
+export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps> = ({
   provider,
   onChange,
 }) => {
@@ -49,11 +42,12 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
     </ForkliftTrans>
   );
 
-  const defaultUrlMsg = sdkEndpoint === 'esxi' ? defaultEsxiUrlMsg : defaultVCenterUrlMsg;
-
   const initialState = {
     validation: {
-      url: defaultUrlMsg,
+      url: {
+        msg: 'The URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
+        type: 'default',
+      },
       vddkInitImage: {
         type: 'default',
         msg: 'VMware Virtual Disk Development Kit (VDDK) image, for example: quay.io/kubev2v/vddk:latest .',
@@ -107,15 +101,9 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
       if (id == 'sdkEndpoint') {
         const sdkEndpoint = trimmedValue || undefined;
 
-        let validationState: ValidationMsg;
-
         // Revalidate URL - VCenter or ESXi
         const trimmedURL = provider?.spec?.url?.trim() || '';
-        if (sdkEndpoint === 'esxi') {
-          validationState = validateEsxiURL(trimmedURL);
-        } else {
-          validationState = validateVCenterURL(trimmedURL);
-        }
+        const validationState = validateVCenterURL(trimmedURL);
 
         dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
 
@@ -134,15 +122,8 @@ export const VSphereProviderCreateForm: React.FC<VSphereProviderCreateFormProps>
       }
 
       if (id === 'url') {
-        let validationState: ValidationMsg;
-
         // Validate URL - VCenter of ESXi
-        const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'] || '';
-        if (sdkEndpoint === 'esxi') {
-          validationState = validateEsxiURL(trimmedValue);
-        } else {
-          validationState = validateVCenterURL(trimmedValue);
-        }
+        const validationState = validateVCenterURL(trimmedValue);
 
         dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
 
