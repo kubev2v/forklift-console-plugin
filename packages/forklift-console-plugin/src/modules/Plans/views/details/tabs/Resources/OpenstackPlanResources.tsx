@@ -34,15 +34,15 @@ export const OpenstackPlanResources: React.FC<{ planInventory: OpenstackVM[] }> 
             <Th width={10}>
               <strong>{t('Total CPU count:')}</strong>
             </Th>
-            <Td width={10}>- Cores</Td>
-            <Td width={10}>- Cores</Td>
+            <Td width={10}>-</Td>
+            <Td width={10}>-</Td>
           </Tr>
           <Tr>
             <Th width={10}>
               <strong>{t('Total memory:')}</strong>
             </Th>
-            <Td width={10}>- MB</Td>
-            <Td width={10}>- MB</Td>
+            <Td width={10}>-</Td>
+            <Td width={10}>-</Td>
           </Tr>
         </Tbody>
       </TableComposable>

@@ -35,6 +35,9 @@ export const OpenshiftPlanResources: React.FC<{ planInventory: OpenshiftVM[] }> 
     { cpuCount: 0, memoryMB: 0 },
   );
 
+  const missingCPUInfo = planInventory.find(({ object }) => getK8sCPU(object) === '0');
+  const missingMemoryInfo = planInventory.find(({ object }) => getK8sVMMemory(object) === '0Mi');
+
   return (
     <PageSection variant="light">
       <SectionHeading text={t('Calculated resources')} />
@@ -56,15 +59,15 @@ export const OpenshiftPlanResources: React.FC<{ planInventory: OpenshiftVM[] }> 
             <Th width={10}>
               <strong>{t('Total CPU count:')}</strong>
             </Th>
-            <Td width={10}>{totalResources.cpuCount || '-'} Cores</Td>
-            <Td width={10}>{totalResourcesRunning.cpuCount || '-'} Cores</Td>
+            <Td width={10}>{missingCPUInfo ? '-' : `${totalResources.cpuCount} Cores`}</Td>
+            <Td width={10}>{missingCPUInfo ? '-' : `${totalResourcesRunning.cpuCount} Cores`}</Td>
           </Tr>
           <Tr>
             <Th width={10}>
               <strong>{t('Total memory:')}</strong>
             </Th>
-            <Td width={10}>{totalResources.memoryMB || '-'} MB</Td>
-            <Td width={10}>{totalResourcesRunning.memoryMB || '-'} MB</Td>
+            <Td width={10}>{missingMemoryInfo ? '-' : `${totalResources.memoryMB} MB`}</Td>
+            <Td width={10}>{missingMemoryInfo ? '-' : `${totalResourcesRunning.memoryMB} MB`}</Td>
           </Tr>
         </Tbody>
       </TableComposable>
