@@ -8,7 +8,7 @@ import { Form, FormGroup, Popover, Radio, TextInput } from '@patternfly/react-co
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 const CREATE_VDDK_HELP_LINK =
-  'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
+  'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
 
 export interface VCenterProviderCreateFormProps {
   provider: V1beta1Provider;
