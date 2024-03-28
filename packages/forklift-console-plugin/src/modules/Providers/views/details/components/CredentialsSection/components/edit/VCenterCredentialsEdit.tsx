@@ -55,13 +55,10 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
   const initialState = {
     passwordHidden: true,
     validation: {
-      user: vcenterSecretFieldValidator('user', secret?.data?.user),
-      password: vcenterSecretFieldValidator('password', secret?.data?.password),
+      user: vcenterSecretFieldValidator('user', user),
+      password: vcenterSecretFieldValidator('password', password),
       insecureSkipVerify: { type: 'default', msg: 'Skip certificate validation' },
-      cacert: {
-        type: 'default',
-        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
-      },
+      cacert: vcenterSecretFieldValidator('cacert', cacert),
     },
   };
 

@@ -11,7 +11,7 @@ export const validateVCenterURL = (url: string | number): ValidationMsg => {
 
   if (trimmedUrl === '') {
     return {
-      type: 'error',
+      type: 'default',
       msg: 'The URL is required, URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
     };
   }

@@ -43,7 +43,7 @@ const validateUser = (value: string): ValidationMsg => {
 
   if (value === '') {
     return {
-      type: 'error',
+      type: 'default',
       msg: 'A username and domain for the ESXi API endpoint, for example: user . [required]',
     };
   }
@@ -63,7 +63,7 @@ const validatePassword = (value: string): ValidationMsg => {
 
   if (value === '') {
     return {
-      type: 'error',
+      type: 'default',
       msg: 'A user password for connecting to the ESXi API endpoint. [required]',
     };
   }
