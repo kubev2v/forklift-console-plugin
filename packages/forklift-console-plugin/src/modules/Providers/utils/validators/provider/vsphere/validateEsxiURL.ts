@@ -11,7 +11,7 @@ export const validateEsxiURL = (url: string | number): ValidationMsg => {
 
   if (trimmedUrl === '') {
     return {
-      type: 'error',
+      type: 'default',
       msg: 'The URL is required, URL of the ESXi API endpoint for example: https://host-example.com/sdk .',
     };
   }

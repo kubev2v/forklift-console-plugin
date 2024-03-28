@@ -44,14 +44,8 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
 
   const initialState = {
     validation: {
-      url: {
-        msg: 'The URL of the ESXi API endpoint for example: https://host-example.com/sdk .',
-        type: 'default',
-      },
-      vddkInitImage: {
-        type: 'default',
-        msg: 'VMware Virtual Disk Development Kit (VDDK) image, for example: quay.io/kubev2v/vddk:latest .',
-      },
+      url: validateEsxiURL(url),
+      vddkInitImage: validateVDDKImage(vddkInitImage),
     },
   };
 
@@ -87,9 +81,9 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
         onChange({
           ...provider,
           spec: {
+            ...provider?.spec,
             type: provider.spec.type,
             url: provider.spec.url,
-            ...provider?.spec,
             settings: {
               ...(provider?.spec?.settings as object),
               vddkInitImage: trimmedValue || undefined,
@@ -101,18 +95,13 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
       if (id == 'sdkEndpoint') {
         const sdkEndpoint = trimmedValue || undefined;
 
-        // Revalidate URL - VCenter or ESXi
-        const trimmedURL = provider?.spec?.url?.trim() || '';
-        const validationState = validateEsxiURL(trimmedURL);
-
-        dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
-
         onChange({
           ...provider,
           spec: {
+            ...provider?.spec,
             type: provider.spec.type,
             url: provider.spec.url,
-            ...provider?.spec,
+
             settings: {
               ...(provider?.spec?.settings as object),
               sdkEndpoint: sdkEndpoint,

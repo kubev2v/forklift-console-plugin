@@ -48,7 +48,7 @@ const validateUser = (value: string): ValidationMsg => {
 
   if (value === '') {
     return {
-      type: 'error',
+      type: 'default',
       msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local. [required]',
     };
   }
@@ -77,7 +77,7 @@ const validatePassword = (value: string): ValidationMsg => {
 
   if (value === '') {
     return {
-      type: 'error',
+      type: 'default',
       msg: 'A user password for connecting to the vCenter API endpoint. [required]',
     };
   }
