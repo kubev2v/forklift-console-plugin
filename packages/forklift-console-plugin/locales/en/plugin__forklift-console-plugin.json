@@ -142,7 +142,6 @@
   "Error": "Error",
   "Error: Insecure Skip Verify must be a boolean value.": "Error: Insecure Skip Verify must be a boolean value.",
   "Error: Name is required and must be a unique within a namespace and valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).": "Error: Name is required and must be a unique within a namespace and valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).",
-  "Error: The format of the provided CA certificate is invalid. Ensure the CA certificate format is valid.": "Error: The format of the provided CA certificate is invalid. Ensure the CA certificate format is valid.",
   "Error: this field must be set to a boolean value.": "Error: this field must be set to a boolean value.",
   "ESXi": "ESXi",
   "Expiration date": "Expiration date",
