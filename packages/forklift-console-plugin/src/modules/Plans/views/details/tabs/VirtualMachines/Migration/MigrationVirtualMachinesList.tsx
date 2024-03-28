@@ -120,7 +120,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const planMigrations = (
     migrations && migrationLoaded && !migrationLoadError ? migrations : []
-  ).filter((m) => m.metadata.ownerReferences[0].uid === plan.metadata.uid);
+  ).filter((m) => m?.metadata?.ownerReferences?.[0]?.uid === plan.metadata.uid);
 
   planMigrations?.sort(
     (a, b) =>
