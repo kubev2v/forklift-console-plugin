@@ -79,16 +79,17 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
       return { type: 'error', msg: 'invalid authType' };
   }
 
-  const missingRequiredFields = missingKeysInSecretData(secret, requiredFields);
-
-  if (missingRequiredFields.length > 0) {
-    return { type: 'error', msg: `missing required fields [${missingRequiredFields.join(', ')}]` };
-  }
-
   // Add ca cert validation if not insecureSkipVerify
   const insecureSkipVerify = safeBase64Decode(secret?.data?.['insecureSkipVerify'] || '');
   if (insecureSkipVerify !== 'true') {
     validateFields.push('cacert');
+    requiredFields.push('cacert');
+  }
+
+  const missingRequiredFields = missingKeysInSecretData(secret, requiredFields);
+
+  if (missingRequiredFields.length > 0) {
+    return { type: 'error', msg: `missing required fields [${missingRequiredFields.join(', ')}]` };
   }
 
   for (const id of validateFields) {

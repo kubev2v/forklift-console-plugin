@@ -15,6 +15,7 @@ export function esxiSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg
   const insecureSkipVerify = Base64.decode(secret?.data?.['insecureSkipVerify'] || '');
   if (insecureSkipVerify !== 'true') {
     validateFields.push('cacert');
+    requiredFields.push('cacert');
   }
 
   const missingRequiredFields = missingKeysInSecretData(secret, requiredFields);
