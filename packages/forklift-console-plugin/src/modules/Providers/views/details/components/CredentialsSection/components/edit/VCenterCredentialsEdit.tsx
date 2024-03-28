@@ -22,9 +22,9 @@ import { EditComponentProps } from '../BaseCredentialsSection';
 export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
   const { t } = useForkliftTranslation();
 
-  const user = safeBase64Decode(secret?.data?.user || '');
-  const url = safeBase64Decode(secret?.data?.url || '');
-  const password = safeBase64Decode(secret?.data?.password || '');
+  const user = safeBase64Decode(secret?.data?.user);
+  const password = safeBase64Decode(secret?.data?.password);
+  const url = safeBase64Decode(secret?.data?.url);
   const cacert = safeBase64Decode(secret?.data?.cacert || '');
   const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
 
@@ -58,10 +58,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
       user: vcenterSecretFieldValidator('user', user),
       password: vcenterSecretFieldValidator('password', password),
       insecureSkipVerify: { type: 'default', msg: 'Skip certificate validation' },
-      cacert: {
-        type: 'default',
-        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
-      },
+      cacert: vcenterSecretFieldValidator('cacert', cacert),
     },
   };
 

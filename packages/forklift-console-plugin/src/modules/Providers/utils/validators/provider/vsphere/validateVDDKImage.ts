@@ -1,6 +1,12 @@
 import { validateContainerImage, ValidationMsg } from '../../common';
 
 export const validateVDDKImage = (vddkImage: string | number): ValidationMsg => {
+  if (vddkImage === undefined)
+    return {
+      msg: 'The VDDK image is empty, it is recommended to provide an image, for example: quay.io/kubev2v/vddk:latest .',
+      type: 'default',
+    };
+
   // Sanity check
   if (typeof vddkImage !== 'string') {
     return { type: 'error', msg: 'VDDK image is not a string' };

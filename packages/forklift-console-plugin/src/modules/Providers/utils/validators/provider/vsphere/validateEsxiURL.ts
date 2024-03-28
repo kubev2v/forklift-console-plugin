@@ -1,6 +1,13 @@
 import { validateURL, ValidationMsg } from '../../common';
 
 export const validateEsxiURL = (url: string | number): ValidationMsg => {
+  if (url === undefined) {
+    return {
+      type: 'default',
+      msg: 'The URL is required, URL of the ESXi API endpoint for example: https://host-example.com/sdk .',
+    };
+  }
+
   // Sanity check
   if (typeof url !== 'string') {
     return { type: 'error', msg: 'URL is not a string' };
