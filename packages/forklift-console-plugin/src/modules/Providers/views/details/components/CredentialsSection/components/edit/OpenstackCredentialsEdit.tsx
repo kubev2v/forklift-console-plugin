@@ -26,15 +26,6 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     successAndNotSkipped: t("The provider's CA certificate will be validated."),
   };
 
-  const cacertHelperTextMsgs = {
-    error: t(
-      'Error: The format of the provided CA certificate is invalid. Ensure the CA certificate format is valid.',
-    ),
-    success: t(
-      'A CA certificate to be trusted when connecting to the OpenStack Identity (Keystone) endpoint. Ensure the CA certificate format is valid. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
-    ),
-  };
-
   const insecureSkipVerifyHelperTextPopover = (
     <ForkliftTrans>
       Note: If <strong>Skip certificate validation</strong> is selected, migrations from this
@@ -278,16 +269,16 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
             : t('CA certificate - leave empty to use system CA certificates')
         }
         fieldId="cacert"
-        helperText={cacertHelperTextMsgs.success}
-        validated={state.validation.cacert}
-        helperTextInvalid={cacertHelperTextMsgs.error}
+        helperText={state.validation.cacert.msg}
+        validated={state.validation.cacert.type}
+        helperTextInvalid={state.validation.cacert.msg}
       >
         <CertificateUpload
           id="cacert"
           type="text"
           filenamePlaceholder="Drag and drop a file or upload one"
           value={cacert}
-          validated={state.validation.cacert}
+          validated={state.validation.cacert.type}
           onDataChange={(value) => handleChange('cacert', value)}
           onTextChange={(value) => handleChange('cacert', value)}
           onClearClick={() => handleChange('cacert', '')}
