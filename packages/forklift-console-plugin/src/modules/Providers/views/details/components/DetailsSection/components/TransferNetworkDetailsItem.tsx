@@ -16,7 +16,7 @@ export const TransferNetworkDetailsItem: React.FC<ProviderDetailsItemProps> = ({
   const { showModal } = useModal();
 
   const defaultMoreInfoLink =
-    'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#selecting-migration-network-for-virt-provider_mtv';
+    'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#selecting-migration-network-for-virt-provider_mtv';
   const defaultHelpContent = t(
     `You can select a default migration network for an OpenShift Virtualization provider in the
     Red Hat OpenShift web console to improve performance. The default migration network is used to
