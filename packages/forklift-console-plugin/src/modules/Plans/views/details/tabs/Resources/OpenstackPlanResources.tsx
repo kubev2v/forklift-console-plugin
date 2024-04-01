@@ -6,6 +6,8 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { OpenstackVM } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';
 
+import { AlignedDecimal } from './AlignedDecimal';
+
 export const OpenstackPlanResources: React.FC<{ planInventory: OpenstackVM[] }> = ({
   planInventory,
 }) => {
@@ -27,22 +29,34 @@ export const OpenstackPlanResources: React.FC<{ planInventory: OpenstackVM[] }> 
             <Td width={10}>
               <strong>{t('Virtual machines:')}</strong>
             </Td>
-            <Td width={10}>{planInventory?.length}</Td>
-            <Td width={10}>{planInventoryRunning?.length}</Td>
+            <Td width={10}>
+              <AlignedDecimal value={planInventory?.length} />
+            </Td>
+            <Td width={10}>
+              <AlignedDecimal value={planInventoryRunning?.length} />
+            </Td>
           </Tr>
           <Tr>
             <Th width={10}>
               <strong>{t('Total CPU count:')}</strong>
             </Th>
-            <Td width={10}>-</Td>
-            <Td width={10}>-</Td>
+            <Td width={10}>
+              <div className="forklift-page-plan-resources-td-integer">-</div>
+            </Td>
+            <Td width={10}>
+              <div className="forklift-page-plan-resources-td-integer">-</div>
+            </Td>
           </Tr>
           <Tr>
             <Th width={10}>
               <strong>{t('Total memory:')}</strong>
             </Th>
-            <Td width={10}>-</Td>
-            <Td width={10}>-</Td>
+            <Td width={10}>
+              <div className="forklift-page-plan-resources-td-integer">-</div>
+            </Td>
+            <Td width={10}>
+              <div className="forklift-page-plan-resources-td-integer">-</div>
+            </Td>
           </Tr>
         </Tbody>
       </TableComposable>
