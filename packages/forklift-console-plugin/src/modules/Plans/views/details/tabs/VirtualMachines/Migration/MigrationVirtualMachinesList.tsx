@@ -4,14 +4,14 @@ import {
   StandardPageWithSelection,
   StandardPageWithSelectionProps,
 } from 'src/components/page/StandardPageWithSelection';
+import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
+import { isPlanExecuting } from 'src/modules/Plans/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1Pod,
-  MigrationModelGroupVersionKind,
-  V1beta1Migration,
   V1beta1PlanSpecVms,
   V1beta1PlanStatusMigrationVms,
 } from '@kubev2v/types';
@@ -109,25 +109,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const { plan } = obj;
 
-  const [migrations, migrationLoaded, migrationLoadError] = useK8sWatchResource<V1beta1Migration[]>(
-    {
-      groupVersionKind: MigrationModelGroupVersionKind,
-      namespaced: true,
-      isList: true,
-      namespace: plan?.metadata?.namespace,
-    },
-  );
-
-  const planMigrations = (
-    migrations && migrationLoaded && !migrationLoadError ? migrations : []
-  ).filter((m) => m?.metadata?.ownerReferences?.[0]?.uid === plan.metadata.uid);
-
-  planMigrations?.sort(
-    (a, b) =>
-      new Date(b.metadata.creationTimestamp).getTime() -
-      new Date(a.metadata.creationTimestamp).getTime(),
-  );
-  const lastMigration = planMigrations[0];
+  const [lastMigration] = usePlanMigration(plan);
 
   const [pods, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
     kind: 'Pod',
@@ -178,6 +160,8 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     targetNamespace: plan?.spec?.targetNamespace,
   }));
 
+  const isExecuting = isPlanExecuting(plan);
+
   const actions: PageGlobalActions = [
     ({ selectedIds }) => (
       <MigrationVMsCancelButton selectedIds={selectedIds || []} migration={lastMigration} />
@@ -199,7 +183,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   const extendedProps = {
     ...props,
     toId: (item: VMData) => item?.specVM?.id,
-    canSelect: (item: VMData) => item?.statusVM?.completed === undefined,
+    canSelect: (item: VMData) => item?.statusVM?.completed === undefined && isExecuting,
     onSelect: setSelectedIds,
     selectedIds: selectedIds,
     onExpand: setExpandedIds,

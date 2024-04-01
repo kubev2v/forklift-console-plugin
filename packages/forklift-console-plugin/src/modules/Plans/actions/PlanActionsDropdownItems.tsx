@@ -7,8 +7,14 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
-import { ArchiveModal, DuplicateModal, PlanDeleteModal, PlanStartMigrationModal } from '../modals';
-import { getPlanPhase, PlanData } from '../utils';
+import {
+  ArchiveModal,
+  DuplicateModal,
+  PlanCutoverMigrationModal,
+  PlanDeleteModal,
+  PlanStartMigrationModal,
+} from '../modals';
+import { canPlanReStart, canPlanStart, getPlanPhase, isPlanExecuting, PlanData } from '../utils';
 
 export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
@@ -24,17 +30,37 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
 
   const phase = getPlanPhase(data);
 
+  const canStart = canPlanStart(plan);
+  const canReStart = canPlanReStart(plan);
+  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
+
+  const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
+
   return [
     <DropdownItemLink key="EditPlan" href={planURL}>
       {t('Edit Plan')}
     </DropdownItemLink>,
+
     <DropdownItem
       key="start"
-      isDisabled={!['Ready', 'Warning', 'Canceled', 'Failed'].includes(phase)}
-      onClick={() => showModal(<PlanStartMigrationModal resource={plan} model={PlanModel} />)}
+      isDisabled={!canStart}
+      onClick={() =>
+        showModal(
+          <PlanStartMigrationModal resource={plan} model={PlanModel} title={buttonStartLabel} />,
+        )
+      }
     >
-      {t('Start migration')}
+      {buttonStartLabel}
     </DropdownItem>,
+
+    <DropdownItem
+      key="cutover"
+      isDisabled={!isWarmAndExecuting}
+      onClick={() => showModal(<PlanCutoverMigrationModal resource={plan} />)}
+    >
+      {t('Cutover')}
+    </DropdownItem>,
+
     <DropdownItem
       key="duplicate"
       isDisabled={!data?.permissions?.canDelete}
@@ -42,6 +68,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     >
       {t('Duplicate Plan')}
     </DropdownItem>,
+
     <DropdownItem
       key="archive"
       isDisabled={!data?.permissions?.canDelete || ['Archived', 'Archiving'].includes(phase)}
@@ -49,6 +76,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     >
       {t('Archive Plan')}
     </DropdownItem>,
+
     <DropdownItem
       key="delete"
       isDisabled={!data?.permissions?.canDelete}
