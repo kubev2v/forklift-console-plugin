@@ -1,11 +1,13 @@
 import React from 'react';
 import { PlanStartMigrationModal } from 'src/modules/Plans/modals';
-import { getPlanPhase } from 'src/modules/Plans/utils';
+import { canPlanReStart, canPlanStart, isPlanExecuting } from 'src/modules/Plans/utils';
 import { ModalHOC, useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, V1beta1Plan } from '@kubev2v/types';
-import { Button, DescriptionList, FlexItem } from '@patternfly/react-core';
+import { Button, DescriptionList, FlexItem, Level, LevelItem } from '@patternfly/react-core';
+import StartIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
+import ReStartIcon from '@patternfly/react-icons/dist/esm/icons/redo-icon';
 
 import {
   CreatedAtDetailsItem,
@@ -29,8 +31,21 @@ export const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) =
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const phase = getPlanPhase({ obj });
-  const canStart = ['Ready', 'Warning', 'Canceled', 'Failed'].includes(phase);
+  const canStart = canPlanStart(obj);
+  const canReStart = canPlanReStart(obj);
+  const isExecuting = isPlanExecuting(obj);
+
+  const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
+  const buttonStartIcon = canReStart ? (
+    <ReStartIcon color="green" className="forklift-page-section--details-start-button__icon" />
+  ) : (
+    <StartIcon color="green" className="forklift-page-section--details-start-button__icon" />
+  );
+
+  const canNotRunIcon = (
+    <StartIcon color="gray" className="forklift-page-section--details-start-button__icon" />
+  );
+  const canNotRunLabel = isExecuting ? t('Plan running') : t('Plane not ready');
 
   return (
     <>
@@ -38,10 +53,30 @@ export const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) =
         <div className="forklift-page-section--details-start-button">
           <Button
             isAriaDisabled={!canStart}
-            variant="primary"
-            onClick={() => showModal(<PlanStartMigrationModal resource={obj} model={PlanModel} />)}
+            variant="link"
+            onClick={() =>
+              showModal(
+                <PlanStartMigrationModal
+                  resource={obj}
+                  model={PlanModel}
+                  title={buttonStartLabel}
+                />,
+              )
+            }
           >
-            {t('Start migration')}
+            <Level hasGutter>
+              {canStart ? (
+                <>
+                  <LevelItem>{buttonStartIcon}</LevelItem>
+                  <LevelItem>{buttonStartLabel}</LevelItem>
+                </>
+              ) : (
+                <>
+                  <LevelItem>{canNotRunIcon}</LevelItem>
+                  <LevelItem>{canNotRunLabel}</LevelItem>
+                </>
+              )}
+            </Level>
           </Button>
         </div>
       </FlexItem>

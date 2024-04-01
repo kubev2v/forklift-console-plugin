@@ -80,3 +80,4 @@ storagedomains
 esxi
 KJUR
 millicores
+inputgroup

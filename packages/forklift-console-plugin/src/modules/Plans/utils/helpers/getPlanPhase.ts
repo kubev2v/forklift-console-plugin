@@ -39,6 +39,10 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
     return 'Archived';
   }
 
+  if (conditions.includes('Succeeded')) {
+    return 'Succeeded';
+  }
+
   if (conditions.includes('Failed')) {
     return 'Failed';
   }
@@ -55,10 +59,6 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
     return 'Canceled';
   }
 
-  if (conditions.includes('Succeeded')) {
-    return 'Succeeded';
-  }
-
   if (conditions.includes('Executing')) {
     return 'Running';
   }
@@ -68,6 +68,26 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
   }
 
   return 'NotReady';
+};
+
+export const canPlanStart = (plan: V1beta1Plan) => {
+  const conditions = getConditions(plan);
+
+  return (
+    conditions?.includes('Ready') && !conditions?.includes('Executing') && !plan?.spec?.archived
+  );
+};
+
+export const canPlanReStart = (plan: V1beta1Plan) => {
+  const conditions = getConditions(plan);
+
+  return conditions?.includes('Failed') || conditions?.includes('Canceled');
+};
+
+export const isPlanExecuting = (plan: V1beta1Plan) => {
+  const conditions = getConditions(plan);
+
+  return conditions?.includes('Executing');
 };
 
 const getConditions = (obj: V1beta1Plan) =>

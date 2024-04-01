@@ -1,7 +1,7 @@
 import React from 'react';
 import { PlanActionsDropdown } from 'src/modules/Plans/actions';
-import { PlanStartMigrationModal } from 'src/modules/Plans/modals';
-import { getPlanPhase } from 'src/modules/Plans/utils';
+import { PlanCutoverMigrationModal, PlanStartMigrationModal } from 'src/modules/Plans/modals';
+import { canPlanReStart, canPlanStart, isPlanExecuting } from 'src/modules/Plans/utils';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -14,24 +14,49 @@ export const ActionsCell = ({ data }: CellProps) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const phase = getPlanPhase(data);
-  const canStart = ['Ready', 'Warning', 'Canceled', 'Failed'].includes(phase);
+  const plan = data.obj;
+
+  const canStart = canPlanStart(plan);
+  const canReStart = canPlanReStart(plan);
+
+  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
+
+  const buttonStartLabel = canReStart ? t('Restart') : t('start');
 
   return (
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
       <FlexItem grow={{ default: 'grow' }}></FlexItem>
+
       {canStart && (
         <FlexItem align={{ default: 'alignRight' }}>
           <Button
             variant="secondary"
             onClick={() =>
-              showModal(<PlanStartMigrationModal resource={data.obj} model={PlanModel} />)
+              showModal(
+                <PlanStartMigrationModal
+                  resource={data.obj}
+                  model={PlanModel}
+                  title={buttonStartLabel}
+                />,
+              )
             }
           >
-            {t('Start')}
+            {buttonStartLabel}
           </Button>
         </FlexItem>
       )}
+
+      {isWarmAndExecuting && (
+        <FlexItem align={{ default: 'alignRight' }}>
+          <Button
+            variant="secondary"
+            onClick={() => showModal(<PlanCutoverMigrationModal resource={data.obj} />)}
+          >
+            {t('Cutover')}
+          </Button>
+        </FlexItem>
+      )}
+
       <FlexItem align={{ default: 'alignRight' }}>
         <PlanActionsDropdown isKebab data={data} fieldId={'actions'} fields={[]} />
       </FlexItem>
