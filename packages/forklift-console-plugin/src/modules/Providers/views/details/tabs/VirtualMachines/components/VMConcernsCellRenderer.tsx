@@ -28,7 +28,7 @@ export const VMConcernsCellRenderer: React.FC<VMCellProps> = ({ data }) => {
 
   return (
     <TableCell>
-      <Flex spaceItems={{ default: 'spaceItemsNone' }}>
+      <Flex spaceItems={{ default: 'spaceItemsNone' }} flexWrap={{ default: 'nowrap' }}>
         {['Critical', 'Information', 'Warning'].map((category) => (
           <FlexItem key={category}>
             <ConcernPopover category={category} concerns={groupedConcerns[category] || []} />
