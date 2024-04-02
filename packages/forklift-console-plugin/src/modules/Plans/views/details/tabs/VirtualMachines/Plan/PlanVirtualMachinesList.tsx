@@ -75,7 +75,8 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
   const extendedProps = {
     ...props,
     toId: (item: VMData) => item?.specVM?.id,
-    canSelect: (item: VMData) => item?.statusVM?.started === undefined,
+    canSelect: (item: VMData) =>
+      item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined,
     onSelect: setSelectedIds,
     selectedIds: selectedIds,
     GlobalActionToolbarItems: actions,
