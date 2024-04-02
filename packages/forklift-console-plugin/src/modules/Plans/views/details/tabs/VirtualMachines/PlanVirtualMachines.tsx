@@ -1,5 +1,6 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { isPlanExecuting } from 'src/modules/Plans/utils';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
 
@@ -21,12 +22,12 @@ export interface PlanVirtualMachinesProps extends RouteComponentProps {
 }
 
 const PlanVirtualMachines_: React.FC<PlanVirtualMachinesProps> = (props) => {
-  const migration = props?.obj?.plan?.status?.migration.vms;
+  const plan = props?.obj.plan;
 
-  if (migration === undefined) {
-    return <PlanVirtualMachinesList {...props} />;
-  } else {
+  if (isPlanExecuting(plan)) {
     return <MigrationVirtualMachinesList {...props} />;
+  } else {
+    return <PlanVirtualMachinesList {...props} />;
   }
 };
 
