@@ -74,7 +74,10 @@ export const canPlanStart = (plan: V1beta1Plan) => {
   const conditions = getConditions(plan);
 
   return (
-    conditions?.includes('Ready') && !conditions?.includes('Executing') && !plan?.spec?.archived
+    conditions?.includes('Ready') &&
+    !conditions?.includes('Executing') &&
+    !conditions?.includes('Succeeded') &&
+    !plan?.spec?.archived
   );
 };
 
@@ -88,6 +91,12 @@ export const isPlanExecuting = (plan: V1beta1Plan) => {
   const conditions = getConditions(plan);
 
   return conditions?.includes('Executing');
+};
+
+export const isPlanSucceeded = (plan: V1beta1Plan) => {
+  const conditions = getConditions(plan);
+
+  return conditions?.includes('Succeeded');
 };
 
 const getConditions = (obj: V1beta1Plan) =>

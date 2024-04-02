@@ -1,6 +1,11 @@
 import React from 'react';
 import { PlanStartMigrationModal } from 'src/modules/Plans/modals';
-import { canPlanReStart, canPlanStart, isPlanExecuting } from 'src/modules/Plans/utils';
+import {
+  canPlanReStart,
+  canPlanStart,
+  isPlanExecuting,
+  isPlanSucceeded,
+} from 'src/modules/Plans/utils';
 import { ModalHOC, useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -34,6 +39,7 @@ export const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) =
   const canStart = canPlanStart(obj);
   const canReStart = canPlanReStart(obj);
   const isExecuting = isPlanExecuting(obj);
+  const isSucceeded = isPlanSucceeded(obj);
 
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
   const buttonStartIcon = canReStart ? (
@@ -45,7 +51,14 @@ export const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) =
   const canNotRunIcon = (
     <StartIcon color="gray" className="forklift-page-section--details-start-button__icon" />
   );
-  const canNotRunLabel = isExecuting ? t('Plan running') : t('Plane not ready');
+  let canNotRunLabel: string;
+  if (isExecuting) {
+    canNotRunLabel = t('Plan running');
+  } else if (isSucceeded) {
+    canNotRunLabel = t('Plane Succeeded');
+  } else {
+    canNotRunLabel = t('Plane not ready');
+  }
 
   return (
     <>
