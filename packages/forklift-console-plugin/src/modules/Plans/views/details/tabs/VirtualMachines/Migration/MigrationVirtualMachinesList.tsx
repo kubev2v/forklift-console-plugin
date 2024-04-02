@@ -18,7 +18,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
-import { MigrationVMsCancelButton } from '../components';
+import { MigrationVMsCancelButton, PlanVMsDeleteButton } from '../components';
 import { PlanData, VMData } from '../types';
 
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
@@ -162,11 +162,25 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const isExecuting = isPlanExecuting(plan);
 
-  const actions: PageGlobalActions = [
-    ({ selectedIds }) => (
-      <MigrationVMsCancelButton selectedIds={selectedIds || []} migration={lastMigration} />
-    ),
-  ];
+  // If plan executing allow to cancel vms, o/w remove from plan
+  let actions: PageGlobalActions;
+  if (isExecuting) {
+    actions = [
+      ({ selectedIds }) => (
+        <MigrationVMsCancelButton selectedIds={selectedIds || []} migration={lastMigration} />
+      ),
+    ];
+  } else {
+    actions = [
+      ({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />,
+    ];
+  }
+
+  const canSelectWhenExecuting = (item: VMData) =>
+    item?.statusVM?.completed === undefined && isExecuting;
+
+  const canSelectWhenNotExecuting = (item: VMData) =>
+    (item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined) && !isExecuting;
 
   const props: PageWithSelectionProps = {
     dataSource: [vmData || [], true, undefined],
@@ -183,7 +197,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   const extendedProps = {
     ...props,
     toId: (item: VMData) => item?.specVM?.id,
-    canSelect: (item: VMData) => item?.statusVM?.completed === undefined && isExecuting,
+    canSelect: (item: VMData) => canSelectWhenExecuting(item) || canSelectWhenNotExecuting(item),
     onSelect: setSelectedIds,
     selectedIds: selectedIds,
     onExpand: setExpandedIds,
