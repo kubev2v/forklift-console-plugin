@@ -55,8 +55,8 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
   const initialState = {
     passwordHidden: true,
     validation: {
-      user: esxiSecretFieldValidator('user', secret?.data?.user),
-      password: esxiSecretFieldValidator('password', secret?.data?.password),
+      user: esxiSecretFieldValidator('user', user),
+      password: esxiSecretFieldValidator('password', password),
       insecureSkipVerify: { type: 'default', msg: 'Skip certificate validation' },
       cacert: {
         type: 'default',
