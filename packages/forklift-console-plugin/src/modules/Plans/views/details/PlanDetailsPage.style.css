@@ -132,3 +132,14 @@
 .forklift-page-plan-details-vm-status__section-actions {
   padding-bottom: 0;
 }
+
+.forklift-page-plan-resources-td-integer {
+  width: 7em;
+  text-align: right;
+  display: inline-block;
+}
+
+.forklift-page-plan-resources-td-fractional {
+  text-align: left;
+  display: inline-block;
+}

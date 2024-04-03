@@ -6,6 +6,8 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { OvaVM } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';
 
+import { AlignedDecimal } from './AlignedDecimal';
+
 export const OVAPlanResources: React.FC<{ planInventory: OvaVM[] }> = ({ planInventory }) => {
   const { t } = useForkliftTranslation();
 
@@ -45,22 +47,34 @@ export const OVAPlanResources: React.FC<{ planInventory: OvaVM[] }> = ({ planInv
             <Td width={10}>
               <strong>{t('Virtual machines:')}</strong>
             </Td>
-            <Td width={10}>{planInventory?.length}</Td>
-            <Td width={10}>{planInventoryRunning?.length}</Td>
+            <Td width={10}>
+              <AlignedDecimal value={planInventory?.length} />
+            </Td>
+            <Td width={10}>
+              <AlignedDecimal value={planInventoryRunning?.length} />
+            </Td>
           </Tr>
           <Tr>
             <Th width={10}>
               <strong>{t('Total CPU count:')}</strong>
             </Th>
-            <Td width={10}>{totalResources.cpuCount} Cores</Td>
-            <Td width={10}>{totalResourcesRunning.cpuCount} Cores</Td>
+            <Td width={10}>
+              <AlignedDecimal value={totalResources.cpuCount} unit={'Cores'} />
+            </Td>
+            <Td width={10}>
+              <AlignedDecimal value={totalResourcesRunning.cpuCount} unit={'Cores'} />
+            </Td>
           </Tr>
           <Tr>
             <Th width={10}>
               <strong>{t('Total memory:')}</strong>
             </Th>
-            <Td width={10}>{totalResources.memoryMB} MB</Td>
-            <Td width={10}>{totalResourcesRunning.memoryMB} MB</Td>
+            <Td width={10}>
+              <AlignedDecimal value={totalResources.memoryMB} unit={'MB'} />
+            </Td>
+            <Td width={10}>
+              <AlignedDecimal value={totalResourcesRunning.memoryMB} unit={'MB'} />
+            </Td>
           </Tr>
         </Tbody>
       </TableComposable>

@@ -6,6 +6,8 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { OpenshiftVM, V1VirtualMachine } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';
 
+import { AlignedDecimal } from './AlignedDecimal';
+
 export const OpenshiftPlanResources: React.FC<{ planInventory: OpenshiftVM[] }> = ({
   planInventory,
 }) => {
@@ -52,22 +54,50 @@ export const OpenshiftPlanResources: React.FC<{ planInventory: OpenshiftVM[] }> 
             <Td width={10}>
               <strong>{t('Virtual machines:')}</strong>
             </Td>
-            <Td width={10}>{planInventory?.length}</Td>
-            <Td width={10}>{planInventoryRunning?.length}</Td>
+            <Td width={10}>
+              <AlignedDecimal value={planInventory?.length} />
+            </Td>
+            <Td width={10}>
+              <AlignedDecimal value={planInventoryRunning?.length} />
+            </Td>
           </Tr>
           <Tr>
             <Th width={10}>
               <strong>{t('Total CPU count:')}</strong>
             </Th>
-            <Td width={10}>{missingCPUInfo ? '-' : `${totalResources.cpuCount} Cores`}</Td>
-            <Td width={10}>{missingCPUInfo ? '-' : `${totalResourcesRunning.cpuCount} Cores`}</Td>
+            <Td width={10}>
+              {missingCPUInfo ? (
+                <div className="forklift-page-plan-resources-td-integer">-</div>
+              ) : (
+                <AlignedDecimal value={totalResources.cpuCount} unit={'Cores'} />
+              )}
+            </Td>
+            <Td width={10}>
+              {missingCPUInfo ? (
+                <div className="forklift-page-plan-resources-td-integer">-</div>
+              ) : (
+                <AlignedDecimal value={totalResourcesRunning.cpuCount} unit={'Cores'} />
+              )}
+            </Td>
           </Tr>
           <Tr>
             <Th width={10}>
               <strong>{t('Total memory:')}</strong>
             </Th>
-            <Td width={10}>{missingMemoryInfo ? '-' : `${totalResources.memoryMB} MB`}</Td>
-            <Td width={10}>{missingMemoryInfo ? '-' : `${totalResourcesRunning.memoryMB} MB`}</Td>
+            <Td width={10}>
+              {missingMemoryInfo ? (
+                <div className="forklift-page-plan-resources-td-integer">-</div>
+              ) : (
+                <AlignedDecimal value={totalResources.memoryMB} unit={'MB'} />
+              )}
+            </Td>
+            <Td width={10}>
+              {missingMemoryInfo ? (
+                <div className="forklift-page-plan-resources-td-integer">-</div>
+              ) : (
+                <AlignedDecimal value={totalResourcesRunning.memoryMB} unit={'MB'} />
+              )}
+            </Td>
           </Tr>
         </Tbody>
       </TableComposable>
