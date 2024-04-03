@@ -12,6 +12,18 @@ import {
 
 import useProviderInventory from './useProviderInventory';
 
+const glanceStorage: InventoryStorage = {
+  providerType: 'openstack',
+  id: 'glance',
+  revision: 1,
+  name: 'glance',
+  selfLink: '',
+  description: '',
+  isPublic: true,
+  qosSpecsID: '',
+  publicAccess: true,
+};
+
 const subPath: { [keys in ProviderType]: string } = {
   vsphere: '/datastores',
   openstack: '/volumetypes',
@@ -41,13 +53,17 @@ export const useSourceStorages = (
     disabled: !provider || !subPath[providerType],
   });
 
-  const typedStorages = useMemo(
-    () =>
-      Array.isArray(storages)
-        ? storages.map((st) => ({ ...st, providerType } as InventoryStorage))
-        : [],
-    [storages],
-  );
+  const typedStorages = useMemo(() => {
+    const storageList = Array.isArray(storages)
+      ? storages.map((st) => ({ ...st, providerType } as InventoryStorage))
+      : [];
+
+    if (Array.isArray(storages) && providerType === 'openstack') {
+      storageList.push(glanceStorage);
+    }
+
+    return storageList;
+  }, [storages]);
 
   return [typedStorages, loading, error];
 };

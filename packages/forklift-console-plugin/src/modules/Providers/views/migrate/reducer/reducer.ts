@@ -345,12 +345,23 @@ const handlers: {
           ? { type: 'pod' }
           : { name: destination, namespace: plan.spec.targetNamespace, type: 'multus' },
     }));
-    storageMap.spec.map = storageMappings.map(({ source, destination }) => ({
-      source: {
-        id: sourceStorageLabelToId[source],
-      },
-      destination: { storageClass: destination },
-    }));
+    storageMap.spec.map = storageMappings.map(({ source, destination }) => {
+      if (source === 'glance') {
+        return {
+          source: {
+            name: 'glance',
+          },
+          destination: { storageClass: destination },
+        };
+      }
+
+      return {
+        source: {
+          id: sourceStorageLabelToId[source],
+        },
+        destination: { storageClass: destination },
+      };
+    });
   },
   [SET_API_ERROR]({ flow }, { payload: { error } }: PageAction<CreateVmMigration, PlanError>) {
     // triggered by the API callback (on failure)

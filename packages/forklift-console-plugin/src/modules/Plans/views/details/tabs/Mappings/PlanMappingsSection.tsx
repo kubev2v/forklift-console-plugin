@@ -442,7 +442,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   }));
 
   const labeledSelectedStorageMaps: Mapping[] = state.updatedStorage?.map((obj) => ({
-    source: mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id],
+    source: mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] || obj.source?.name,
     destination: mapTargetStoragesLabelsToIds(targetStorages, plan)[obj.destination.storageClass]
       ? obj.destination.storageClass
       : 'Not available',

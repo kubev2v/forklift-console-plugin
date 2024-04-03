@@ -170,7 +170,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
             isMapped: isStorageMapped(n?.id),
           }))}
           mappings={state?.StorageMap?.spec?.map.map((m) => ({
-            source: getInventoryStorageName(m.source.id),
+            source: getInventoryStorageName(m.source.id) || m.source?.name,
             destination: m.destination.storageClass,
           }))}
           generalSourcesLabel={t('Other storages present on the source provider ')}

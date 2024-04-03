@@ -144,7 +144,7 @@ export const recalculateStorages = (draft) => {
   executeStorageMappingValidation(draft);
   if (
     storageMappings &&
-    storageMappings.length !== 0 &&
+    storageMappings.length > 1 &&
     !areMappingsEqual(storageMappings, draft.calculatedPerNamespace.storageMappings)
   ) {
     addIfMissing<StorageAlerts>(STORAGE_MAPPING_REGENERATED, draft.alerts.storageMappings.warnings);

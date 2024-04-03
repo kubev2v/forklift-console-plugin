@@ -43,7 +43,7 @@ export const createInitialState = ({
         ...planTemplate,
         metadata: {
           ...planTemplate?.metadata,
-          name: generateName(sourceProvider.metadata.name),
+          name: '',
           namespace,
         },
         spec: {

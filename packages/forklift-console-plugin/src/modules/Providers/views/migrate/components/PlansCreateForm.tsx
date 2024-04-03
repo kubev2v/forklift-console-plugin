@@ -128,7 +128,7 @@ export const PlansCreateForm = ({
     alerts,
   } = state;
 
-  const [isNameEdited, setIsNameEdited] = useState(false);
+  const [isNameEdited, setIsNameEdited] = useState(true);
   const [isTargetProviderEdited, setIsTargetProviderEdited] = useState(false);
   const [isTargetNamespaceEdited, setIsTargetNamespaceEdited] = useState(false);
 
@@ -152,7 +152,7 @@ export const PlansCreateForm = ({
               fieldId="planName"
               validated={validation.planName}
               helperTextInvalid={t(
-                "Error: Name is required and must be a unique within a namespace and valid Kubernetes name (i.e., must contain no more than 253 characters, consists of lower case alphanumeric characters , '-' or '.' and starts and ends with an alphanumeric character).",
+                'Name is required and must be a unique within a namespace and valid Kubernetes name.',
               )}
             >
               <TextInput

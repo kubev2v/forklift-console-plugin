@@ -9,6 +9,26 @@ const subPath: { [keys in Partial<ProviderType>]?: string } = {
   openstack: '/volumes?detail=1',
 };
 
+const glanceStorage: OpenstackVolume = {
+  providerType: 'openstack',
+  id: 'glance',
+  revision: 1,
+  name: 'glance',
+  selfLink: '',
+  status: 'available',
+  size: 1,
+  availabilityZone: '',
+  createdAt: '',
+  updatedAt: '',
+  attachments: [],
+  volumeType: 'glance',
+  userID: '0',
+  bootable: 'false',
+  encrypted: false,
+  replicationStatus: '',
+  multiattach: false,
+};
+
 /**
  * Works only for oVirt and OpenStack
  */
@@ -30,9 +50,16 @@ export const useDisks = (
     if (!subPath[providerType]) {
       return [];
     }
-    return Array.isArray(disks)
+
+    const storageList = Array.isArray(disks)
       ? disks.map((d) => ({ ...d, providerType } as OVirtDisk | OpenstackVolume))
       : [];
+
+    if (providerType === 'openstack') {
+      storageList.push(glanceStorage);
+    }
+
+    return storageList;
   }, [providerType, disks]);
 
   return [stable, loading, error];

@@ -118,9 +118,12 @@ export const calculateStorages = (
   const generatedSourceStorages = Object.keys(sourceStorageLabelToId)
     .sort((a, b) => universalComparator(a, b, 'en'))
     .map((label) => {
-      const usedBySelectedVms = storageIdsUsedBySelectedVms.some(
+      let usedBySelectedVms = storageIdsUsedBySelectedVms.some(
         (id) => id === sourceStorageLabelToId[label] || id === label,
       );
+      if (label === 'glance') {
+        usedBySelectedVms = true;
+      }
       return {
         label,
         usedBySelectedVms,
