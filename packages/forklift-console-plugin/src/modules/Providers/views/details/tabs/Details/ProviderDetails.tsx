@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router-dom';
 import { SectionHeading } from 'src/components/headers/SectionHeading';
+import { Loading } from 'src/modules/Plans/views/details';
 import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
 import { getResourceUrl, ProviderData } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
@@ -14,7 +15,7 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Alert, PageSection } from '@patternfly/react-core';
+import { Alert, Bullseye, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
 import {
@@ -37,7 +38,11 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
   const { provider, inventory } = obj;
 
   if (!loaded || loadError || !provider?.metadata?.name) {
-    return <></>;
+    return (
+      <Bullseye>
+        <Loading />
+      </Bullseye>
+    );
   }
 
   const providerURL = getResourceUrl({

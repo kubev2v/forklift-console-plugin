@@ -24,15 +24,13 @@ export type SuspendProps = {
  * @returns {JSX.Element} The JSX element containing the children or a loading indicator.
  */
 export const Suspend: React.FC<SuspendProps> = ({ obj, loaded, loadError, children }) => {
+  if (obj && loaded && !loadError) {
+    return <>{children}</>;
+  }
+
   return (
-    <React.Suspense
-      fallback={
-        <Bullseye>
-          <Loading />
-        </Bullseye>
-      }
-    >
-      {obj && loaded && !loadError && children}
-    </React.Suspense>
+    <Bullseye>
+      <Loading />
+    </Bullseye>
   );
 };

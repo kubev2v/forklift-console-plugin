@@ -14,8 +14,9 @@ import {
   VSphereVM,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { Bullseye } from '@patternfly/react-core';
 
-import { Suspend } from '../../components';
+import { Loading, Suspend } from '../../components';
 
 import { OpenshiftPlanResources } from './OpenshiftPlanResources';
 import { OpenstackPlanResources } from './OpenstackPlanResources';
@@ -34,7 +35,7 @@ export const PlanResources: React.FC<{ name: string; namespace: string }> = ({
     namespace,
   });
 
-  const [provider] = useK8sWatchResource<V1beta1Provider>({
+  const [provider, providerLoaded, providerLodeError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,
     name: plan?.spec?.provider?.source?.name,
@@ -44,7 +45,7 @@ export const PlanResources: React.FC<{ name: string; namespace: string }> = ({
   const inventoryOptions: UseProviderInventoryParams = {
     provider: provider,
     subPath: 'vms?detail=4',
-    disabled: !loaded || loadError,
+    disabled: !loaded || loadError || !providerLoaded || providerLodeError,
   };
 
   const {
@@ -90,6 +91,10 @@ export const PlanResources: React.FC<{ name: string; namespace: string }> = ({
         </Suspend>
       );
     default:
-      return <></>;
+      return (
+        <Bullseye>
+          <Loading></Loading>
+        </Bullseye>
+      );
   }
 };
