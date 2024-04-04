@@ -30,7 +30,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
   const criticalCondition =
     loaded &&
     !error &&
-    plan?.status?.conditions.find((condition) => condition?.category === 'Critical');
+    plan?.status?.conditions?.find((condition) => condition?.category === 'Critical');
 
   if (criticalCondition) {
     alerts.push(
