@@ -55,9 +55,9 @@ export const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) =
   if (isExecuting) {
     canNotRunLabel = t('Plan running');
   } else if (isSucceeded) {
-    canNotRunLabel = t('Plane Succeeded');
+    canNotRunLabel = t('Plan Succeeded');
   } else {
-    canNotRunLabel = t('Plane not ready');
+    canNotRunLabel = t('Plan not ready');
   }
 
   return (
