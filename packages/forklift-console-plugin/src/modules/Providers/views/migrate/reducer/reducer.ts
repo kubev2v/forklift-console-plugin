@@ -337,9 +337,12 @@ const handlers: {
     // triggered by the user
     flow.editingDone = true;
     netMap.spec.map = networkMappings.map(({ source, destination }) => ({
-      source: {
-        id: sourceNetworkLabelToId[source],
-      },
+      source:
+        sourceNetworkLabelToId[source] === 'pod'
+          ? { type: 'pod' }
+          : {
+              id: sourceNetworkLabelToId[source],
+            },
       destination:
         destination === POD_NETWORK
           ? { type: 'pod' }

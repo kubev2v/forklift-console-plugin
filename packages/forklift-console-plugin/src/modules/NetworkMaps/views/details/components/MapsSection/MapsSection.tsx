@@ -91,7 +91,9 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     const currentDestinationNet = destinationNetworks.find(
       (n) => OpenShiftNetworkAttachmentDefinitionToName(n) == current.destination,
     );
-    const currentSourceNet = sourceNetworks.find((n) => n?.name === current.source);
+    const currentSourceNet = sourceNetworks.find((n) => n?.name === current.source) || {
+      id: 'pod',
+    };
 
     const nextDestinationNet = destinationNetworks.find(
       (n) => OpenShiftNetworkAttachmentDefinitionToName(n) == next.destination,
@@ -112,7 +114,8 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     };
 
     const payload = state?.networkMap?.spec?.map?.map((map) => {
-      return map?.source?.id === currentSourceNet?.id &&
+      return (map?.source?.id === currentSourceNet?.id ||
+        map.source?.type === currentSourceNet?.id) &&
         (map.destination?.name === currentDestinationNet?.['name'] ||
           map.destination?.type === currentDestinationNet?.['type'])
         ? nextMap
@@ -129,7 +132,9 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     const currentDestinationNet = destinationNetworks.find(
       (n) => OpenShiftNetworkAttachmentDefinitionToName(n) == current.destination,
     ) || { type: 'pod' };
-    const currentSourceNet = sourceNetworks.find((n) => n?.name === current.source);
+    const currentSourceNet = sourceNetworks.find((n) => n?.name === current.source) || {
+      id: 'pod',
+    };
 
     dispatch({
       type: 'SET_MAP',
@@ -137,7 +142,8 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
         ...(state?.networkMap?.spec?.map.filter(
           (map) =>
             !(
-              map?.source?.id === currentSourceNet?.id &&
+              (map?.source?.id === currentSourceNet?.id ||
+                map.source?.type === currentSourceNet?.id) &&
               (map.destination?.name === currentDestinationNet['name'] ||
                 map.destination?.type === currentDestinationNet['type'])
             ),
@@ -186,7 +192,8 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
             isMapped: isNetMapped(n?.id),
           }))}
           mappings={state?.networkMap?.spec?.map.map((m) => ({
-            source: getSourceNetName(sourceNetworks, m.source),
+            source:
+              m.source?.type === 'pod' ? 'Pod network' : getSourceNetName(sourceNetworks, m.source),
             destination: getDestinationNetName(destinationNetworks, m.destination),
           }))}
           generalSourcesLabel={t('Other networks present on the source provider ')}
@@ -225,6 +232,10 @@ function convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(
 ): V1beta1NetworkMapSpecMapSource {
   if (!inventoryNetwork) {
     return undefined;
+  }
+
+  if (inventoryNetwork?.id === 'pod') {
+    return { type: 'pod' };
   }
 
   return {

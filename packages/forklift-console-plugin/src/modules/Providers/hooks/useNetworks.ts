@@ -12,6 +12,17 @@ import {
 
 import useProviderInventory from './useProviderInventory';
 
+const podNetwork: InventoryNetwork = {
+  providerType: 'openshift',
+  object: undefined,
+  uid: 'pod',
+  version: '',
+  namespace: '',
+  name: 'Pod network',
+  selfLink: '',
+  id: 'pod',
+};
+
 export type InventoryNetwork =
   | OpenShiftNetworkAttachmentDefinition
   | OpenstackNetwork
@@ -33,13 +44,17 @@ export const useSourceNetworks = (
     disabled: !provider,
   });
 
-  const typedNetworks = useMemo(
-    () =>
-      Array.isArray(networks)
-        ? networks.map((net) => ({ ...net, providerType } as InventoryNetwork))
-        : [],
-    [networks],
-  );
+  const typedNetworks = useMemo(() => {
+    const networksList = Array.isArray(networks)
+      ? networks.map((net) => ({ ...net, providerType } as InventoryNetwork))
+      : [];
+
+    if (Array.isArray(networks) && provider?.spec?.type === 'openshift') {
+      networksList.push(podNetwork);
+    }
+
+    return networksList;
+  }, [networks]);
 
   return [typedNetworks, loading, error];
 };

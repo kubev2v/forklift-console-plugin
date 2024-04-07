@@ -224,10 +224,11 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   const onDeleteNetworkMapping = ({ source, destination }: Mapping) => {
     const newState = state.updatedNetwork.filter(
       (obj) =>
-        mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id] != source ||
+        (mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id] !== source &&
+          !(obj.source.type === 'pod' && source.includes('Pod'))) ||
         (mapTargetNetworksIdsToLabels(targetNetworks, plan)[obj.destination.type] ??
           obj.destination?.name ??
-          'Not available') != destination,
+          'Not available') !== destination,
     );
 
     setIsAddNetworkMapAvailable(true);
@@ -258,7 +259,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   const onReplaceNetworkMapping = ({ current, next }) => {
     const replacedIndex = state.updatedNetwork.findIndex(
       (obj) =>
-        mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id] == current.source &&
+        (mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id] == current.source ||
+          (obj.source.type === 'pod' && current.source.includes('Pod'))) &&
         (mapTargetNetworksIdsToLabels(targetNetworks, plan)[obj.destination.type] ??
           obj.destination?.name ??
           'Not available') == current.destination,
@@ -407,11 +409,14 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
             : targetNetworks[nextTargetIndex].namespace,
         type: nextTargetIndex < 0 && targetName === POD_NETWORK ? 'pod' : 'multus',
       },
-      source: {
-        id: sourceNetworks[nextSourceIndex].id,
-        name: sourceNetworks[nextSourceIndex].name,
-        type: sourceNetworks[nextSourceIndex].providerType,
-      },
+      source:
+        sourceNetworks[nextSourceIndex].id === 'pod'
+          ? { type: 'pod' }
+          : {
+              id: sourceNetworks[nextSourceIndex].id,
+              name: sourceNetworks[nextSourceIndex].name,
+              type: sourceNetworks[nextSourceIndex].providerType,
+            },
     };
   };
 
@@ -434,7 +439,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   };
 
   const labeledSelectedNetworkMaps: Mapping[] = state.updatedNetwork?.map((obj) => ({
-    source: mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id],
+    source: mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id || obj.source?.type],
     destination:
       mapTargetNetworksIdsToLabels(targetNetworks, plan)[obj.destination.type] ??
       obj.destination?.name ??
