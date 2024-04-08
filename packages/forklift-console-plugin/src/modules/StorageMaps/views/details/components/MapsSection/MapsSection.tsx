@@ -67,7 +67,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
 
   const availableSources = sourceStorages?.filter((n) => !isStorageMapped(n?.id));
 
-  const getInventoryStorageName = (id: string) => sourceStorages.find((s) => s.id === id)?.name;
+  const getInventoryStorageName = (id: string) => sourceStorages?.find((s) => s.id === id)?.name;
 
   const onAdd = () =>
     availableSources.length > 0 &&
@@ -75,10 +75,15 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
       type: 'SET_MAP',
       payload: [
         ...(state.StorageMap?.spec?.map || []),
-        {
-          source: availableSources[0],
-          destination: { storageClass: destinationStorages?.[0].name },
-        },
+        sourceProvider?.spec?.type === 'openshift'
+          ? {
+              source: { name: availableSources?.[0]?.name },
+              destination: { storageClass: destinationStorages?.[0].name },
+            }
+          : {
+              source: { id: availableSources?.[0]?.id },
+              destination: { storageClass: destinationStorages?.[0].name },
+            },
       ],
     });
 
@@ -86,20 +91,26 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     const currentDestinationStorage = destinationStorages.find(
       (n) => n.name == current.destination,
     );
-    const currentSourceStorage = sourceStorages.find((n) => n?.name === current.source);
+    const currentSourceStorage = sourceStorages?.find((n) => n?.name === current.source);
 
     const nextDestinationStorage = destinationStorages.find((n) => n.name == next.destination);
-    const nextSourceStorage = sourceStorages.find((n) => n?.name === next.source);
+    const nextSourceStorage = sourceStorages?.find((n) => n?.name === next.source);
 
     // sanity check, names may not be valid
     if (!nextSourceStorage || !nextDestinationStorage) {
       return;
     }
 
-    const nextMap: V1beta1StorageMapSpecMap = {
-      source: { id: nextSourceStorage.id },
-      destination: { storageClass: nextDestinationStorage.name },
-    };
+    const nextMap: V1beta1StorageMapSpecMap =
+      sourceProvider?.spec?.type === 'openshift'
+        ? {
+            source: { name: nextSourceStorage.name },
+            destination: { storageClass: nextDestinationStorage.name },
+          }
+        : {
+            source: { id: nextSourceStorage.id },
+            destination: { storageClass: nextDestinationStorage.name },
+          };
 
     const payload = state?.StorageMap?.spec?.map?.map((map) => {
       return map?.source?.id === currentSourceStorage?.id &&
@@ -116,7 +127,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
 
   const onDelete = (current: Mapping) => {
     const references = storageNameToIDReference(state?.StorageMap?.status?.references || []);
-    const currentSourceStorage = sourceStorages.find((n) => n.name === current.source);
+    const currentSourceStorage = sourceStorages?.find((n) => n.name === current.source);
 
     dispatch({
       type: 'SET_MAP',
@@ -125,6 +136,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
           (map) =>
             !(
               (map?.source?.id === currentSourceStorage?.id ||
+                map?.source?.name === current.source ||
                 map?.source?.id === references[current.source]) &&
               map.destination?.storageClass === current.destination
             ),
