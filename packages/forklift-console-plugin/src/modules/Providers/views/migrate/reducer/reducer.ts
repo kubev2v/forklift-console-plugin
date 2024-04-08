@@ -330,6 +330,7 @@ const handlers: {
   },
   [START_CREATE]({
     flow,
+    receivedAsParams: { sourceProvider },
     underConstruction: { plan, netMap, storageMap },
     calculatedOnce: { sourceNetworkLabelToId, sourceStorageLabelToId },
     calculatedPerNamespace: { networkMappings, storageMappings },
@@ -349,6 +350,15 @@ const handlers: {
           : { name: destination, namespace: plan.spec.targetNamespace, type: 'multus' },
     }));
     storageMap.spec.map = storageMappings.map(({ source, destination }) => {
+      if (sourceProvider?.spec?.type === 'openshift') {
+        return {
+          source: {
+            name: source.replace(/^\//g, ''),
+          },
+          destination: { storageClass: destination },
+        };
+      }
+
       if (source === 'glance') {
         return {
           source: {
