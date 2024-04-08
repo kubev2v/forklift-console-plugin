@@ -291,7 +291,10 @@ export const PlansCreateForm = ({
                       key={ns?.name || index}
                       value={ns?.name}
                       label={ns?.name ?? String(index)}
-                      isDisabled={namespacesUsedBySelectedVms.includes(ns?.name)}
+                      isDisabled={
+                        namespacesUsedBySelectedVms.includes(ns?.name) &&
+                        plan.spec.provider?.destination?.name === plan.spec.provider.source.name
+                      }
                     />
                   )),
                 ]}
