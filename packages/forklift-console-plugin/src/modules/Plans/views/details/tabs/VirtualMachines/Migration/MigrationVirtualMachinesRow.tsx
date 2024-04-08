@@ -47,7 +47,9 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
     return <Timestamp timestamp={value} />;
   },
   transfer: (props: PlanVMsCellProps) => {
-    const diskTransfer = props.data.statusVM?.pipeline.find((p) => p?.name === 'DiskTransfer');
+    const diskTransfer = props.data.statusVM?.pipeline.find((p) =>
+      p?.name?.startsWith('DiskTransfer'),
+    );
     const annotations: { unit: string } = diskTransfer?.annotations as undefined;
 
     return annotations?.unit ? (
