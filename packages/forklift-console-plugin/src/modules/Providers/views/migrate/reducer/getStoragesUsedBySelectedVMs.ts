@@ -27,6 +27,11 @@ export const getStoragesUsedBySelectedVms = (
                   (disks as OpenstackVolume[]).find((disk) => disk.id === av.ID),
                 ) ?? [];
               const volumeTypeIds = vmDisks.map((disk) => disk?.volumeType);
+
+              if (vm?.imageID) {
+                volumeTypeIds.push('glance');
+              }
+
               return volumeTypeIds;
             }
             case 'ovirt': {

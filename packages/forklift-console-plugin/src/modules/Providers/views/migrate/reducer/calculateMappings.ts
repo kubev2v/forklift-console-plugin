@@ -76,7 +76,6 @@ export const calculateStorages = (
   draft: Draft<CreateVmMigrationPageState>,
 ): Partial<CreateVmMigrationPageState['calculatedPerNamespace']> => {
   const {
-    receivedAsParams: { sourceProvider },
     existingResources,
     underConstruction: { plan },
     calculatedOnce: { sourceStorageLabelToId, storageIdsUsedBySelectedVms },
@@ -119,12 +118,9 @@ export const calculateStorages = (
   const generatedSourceStorages = Object.keys(sourceStorageLabelToId)
     .sort((a, b) => universalComparator(a, b, 'en'))
     .map((label) => {
-      let usedBySelectedVms = storageIdsUsedBySelectedVms.some(
+      const usedBySelectedVms = storageIdsUsedBySelectedVms.some(
         (id) => id === sourceStorageLabelToId[label] || id === label,
       );
-      if (label === 'glance' && sourceProvider?.spec?.type === 'openstack') {
-        usedBySelectedVms = true;
-      }
       return {
         label,
         usedBySelectedVms,
