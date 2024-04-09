@@ -29,9 +29,11 @@ import {
   Mapping,
   MappingSource,
   MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING,
+  NETWORK_MAPPING_EMPTY,
   NETWORK_MAPPING_REGENERATED,
   NetworkAlerts,
   OVIRT_NICS_WITH_EMPTY_PROFILE,
+  STORAGE_MAPPING_EMPTY,
   STORAGE_MAPPING_REGENERATED,
   StorageAlerts,
   UNMAPPED_NETWORKS,
@@ -136,12 +138,18 @@ export const areMappingsEqual = (a: Mapping[], b: Mapping[]) => {
 };
 
 export const recalculateStorages = (draft) => {
-  const storageMappings = draft.calculatedPerNamespace.storageMappings;
   draft.calculatedPerNamespace = {
     ...draft.calculatedPerNamespace,
     ...calculateStorages(draft),
   };
   executeStorageMappingValidation(draft);
+  reTestStorages(draft);
+};
+
+export const reTestStorages = (draft) => {
+  draft.alerts.storageMappings.warnings = [];
+
+  const storageMappings = draft.calculatedPerNamespace.storageMappings;
   if (
     storageMappings &&
     storageMappings.length > 1 &&
@@ -149,21 +157,33 @@ export const recalculateStorages = (draft) => {
   ) {
     addIfMissing<StorageAlerts>(STORAGE_MAPPING_REGENERATED, draft.alerts.storageMappings.warnings);
   }
+  if (storageMappings?.length === 0) {
+    addIfMissing<StorageAlerts>(STORAGE_MAPPING_EMPTY, draft.alerts.storageMappings.warnings);
+  }
 };
 
 export const recalculateNetworks = (draft) => {
-  const networkMappings = draft.calculatedPerNamespace.networkMappings;
   draft.calculatedPerNamespace = {
     ...draft.calculatedPerNamespace,
     ...calculateNetworks(draft),
   };
   executeNetworkMappingValidation(draft);
+  reTestNetworks(draft);
+};
+
+export const reTestNetworks = (draft) => {
+  draft.alerts.networkMappings.warnings = [];
+
+  const networkMappings = draft.calculatedPerNamespace.networkMappings;
   if (
     networkMappings &&
     networkMappings.length !== 0 &&
     !areMappingsEqual(networkMappings, draft.calculatedPerNamespace.networkMappings)
   ) {
     addIfMissing<NetworkAlerts>(NETWORK_MAPPING_REGENERATED, draft.alerts.networkMappings.warnings);
+  }
+  if (networkMappings?.length === 0) {
+    addIfMissing<NetworkAlerts>(NETWORK_MAPPING_EMPTY, draft.alerts.networkMappings.warnings);
   }
 };
 
