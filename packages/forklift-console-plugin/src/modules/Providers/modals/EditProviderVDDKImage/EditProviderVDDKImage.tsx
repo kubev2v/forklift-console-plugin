@@ -20,9 +20,11 @@ import { EditModal, EditModalProps, OnConfirmHookType } from '../EditModal';
 const onConfirm: OnConfirmHookType = async ({ resource, model, newValue: value }) => {
   const provider = resource as V1beta1Provider;
   const currentSettings = provider?.spec?.settings as object;
+  const vddkInitImage: string = value as string;
+
   const settings = {
     ...currentSettings,
-    vddkInitImage: value || undefined,
+    vddkInitImage: vddkInitImage?.trim() || undefined,
   };
 
   const op = provider?.spec?.settings ? 'replace' : 'add';
