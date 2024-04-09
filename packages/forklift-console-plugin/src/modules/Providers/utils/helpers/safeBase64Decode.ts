@@ -4,6 +4,6 @@ export function safeBase64Decode(value: string) {
   try {
     return Base64.decode(value);
   } catch {
-    return '';
+    return undefined;
   }
 }

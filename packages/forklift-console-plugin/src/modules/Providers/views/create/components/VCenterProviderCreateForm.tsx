@@ -21,9 +21,9 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
 }) => {
   const { t } = useForkliftTranslation();
 
-  const url = provider?.spec?.url || '';
-  const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'] || '';
-  const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'] || '';
+  const url = provider?.spec?.url;
+  const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'];
+  const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'];
 
   const vddkHelperTextPopover = (
     <ForkliftTrans>
@@ -44,14 +44,8 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
 
   const initialState = {
     validation: {
-      url: {
-        msg: 'The URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
-        type: 'default',
-      },
-      vddkInitImage: {
-        type: 'default',
-        msg: 'VMware Virtual Disk Development Kit (VDDK) image, for example: quay.io/kubev2v/vddk:latest .',
-      },
+      url: validateVCenterURL(url),
+      vddkInitImage: validateVDDKImage(vddkInitImage),
     },
   };
 
@@ -74,7 +68,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
 
   const handleChange = useCallback(
     (id, value) => {
-      const trimmedValue = value.trim();
+      const trimmedValue = value?.trim();
 
       if (id == 'vddkInitImage') {
         const validationState = validateVDDKImage(trimmedValue);
@@ -87,8 +81,6 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
         onChange({
           ...provider,
           spec: {
-            type: provider.spec.type,
-            url: provider.spec.url,
             ...provider?.spec,
             settings: {
               ...(provider?.spec?.settings as object),
@@ -101,17 +93,9 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
       if (id == 'sdkEndpoint') {
         const sdkEndpoint = trimmedValue || undefined;
 
-        // Revalidate URL - VCenter or ESXi
-        const trimmedURL = provider?.spec?.url?.trim() || '';
-        const validationState = validateVCenterURL(trimmedURL);
-
-        dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
-
         onChange({
           ...provider,
           spec: {
-            type: provider.spec.type,
-            url: provider.spec.url,
             ...provider?.spec,
             settings: {
               ...(provider?.spec?.settings as object),

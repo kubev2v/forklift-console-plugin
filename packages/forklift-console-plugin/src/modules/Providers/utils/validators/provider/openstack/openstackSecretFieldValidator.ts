@@ -12,7 +12,7 @@ import { validateNoSpaces, validatePublicCert, ValidationMsg } from '../../commo
  * 'error' - The field's value has failed validation.
  */
 export const openstackSecretFieldValidator = (id: string, value: string): ValidationMsg => {
-  const trimmedValue = value.trim();
+  const trimmedValue = value?.trim();
 
   let validationState: ValidationMsg;
 
