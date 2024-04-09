@@ -53,6 +53,12 @@ const buildNetworkMessages = (
     title: t('Network mappings have been re-generated'),
     body: t('All discovered networks have been mapped to the default network.'),
   },
+  NETWORK_MAPPING_EMPTY: {
+    title: t('Network mappings is empty'),
+    body: t(
+      'Network mapping is empty, make sure no mappings are required for this migration plan.',
+    ),
+  },
   MULTIPLE_NICS_ON_THE_SAME_NETWORK: {
     title: t('Multiple NICs on the same network'),
     body: t('VM(s) with multiple NICs on the same network were detected.'),
@@ -88,6 +94,12 @@ const buildStorageMessages = (
     title: t('Incomplete mapping'),
     body: t('All storages detected on the selected VMs require a mapping.'),
     blocker: true,
+  },
+  STORAGE_MAPPING_EMPTY: {
+    title: t('Storage mappings is empty'),
+    body: t(
+      'Storage mapping is empty, make sure no mappings are required for this migration plan.',
+    ),
   },
 });
 

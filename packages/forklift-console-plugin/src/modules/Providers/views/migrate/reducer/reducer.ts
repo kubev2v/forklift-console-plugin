@@ -72,6 +72,8 @@ import {
   generateUniqueName,
   recalculateNetworks,
   recalculateStorages,
+  reTestNetworks,
+  reTestStorages,
   setTargetNamespace,
   setTargetProvider,
   validatePlanName,
@@ -393,6 +395,8 @@ const handlers: {
       cpn.networkMappings = mappings;
     }
     executeNetworkMappingValidation(draft);
+
+    reTestNetworks(draft);
   },
   [DELETE_NETWORK_MAPPING](draft, { payload: { source } }: PageAction<CreateVmMigration, Mapping>) {
     const { calculatedPerNamespace: cpn } = draft;
@@ -410,6 +414,8 @@ const handlers: {
       );
     }
     executeNetworkMappingValidation(draft);
+
+    reTestNetworks(draft);
   },
   [REPLACE_NETWORK_MAPPING](
     draft,
@@ -431,6 +437,8 @@ const handlers: {
       cpn.networkMappings = mappings;
     }
     executeNetworkMappingValidation(draft);
+
+    reTestNetworks(draft);
   },
   [ADD_STORAGE_MAPPING](draft) {
     const { calculatedPerNamespace: cpn } = draft;
@@ -445,6 +453,8 @@ const handlers: {
       cpn.storageMappings = mappings;
     }
     executeStorageMappingValidation(draft);
+
+    reTestStorages(draft);
   },
   [DELETE_STORAGE_MAPPING](draft, { payload: { source } }: PageAction<CreateVmMigration, Mapping>) {
     const { calculatedPerNamespace: cpn } = draft;
@@ -456,6 +466,8 @@ const handlers: {
       cpn.storageMappings = mappings;
     }
     executeStorageMappingValidation(draft);
+
+    reTestStorages(draft);
   },
   [REPLACE_STORAGE_MAPPING](
     draft,
@@ -477,6 +489,8 @@ const handlers: {
       cpn.storageMappings = mappings;
     }
     executeStorageMappingValidation(draft);
+
+    reTestStorages(draft);
   },
   [REMOVE_ALERT](
     { alerts: { networkMappings, storageMappings } },
