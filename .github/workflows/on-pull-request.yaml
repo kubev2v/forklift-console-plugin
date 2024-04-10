@@ -40,8 +40,6 @@ jobs:
 
       - name: Test coverage
         uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: true
 
   e2e:
     name: Run e2e tests
