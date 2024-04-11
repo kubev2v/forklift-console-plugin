@@ -40,12 +40,12 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: 'host',
     jsonPath: '$.vm.host',
-    label: t('Host'),
+    label: t('Host ID'),
     isVisible: true,
     isIdentity: false,
     filter: {
       type: 'freetext',
-      placeholderLabel: t('Filter by host'),
+      placeholderLabel: t('Filter by host ID'),
     },
     sortable: true,
   },

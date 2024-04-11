@@ -7,6 +7,7 @@ import { NameCellRenderer } from './components/NameCellRenderer';
 import { InventoryHostPair } from './utils/helpers';
 import {
   HostCellProps,
+  IDCellRenderer,
   LinkSpeedCellRenderer,
   MTUCellRenderer,
   NetworkCellRenderer,
@@ -50,6 +51,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 
 const cellRenderers: Record<string, React.FC<HostCellProps>> = {
   name: NameCellRenderer,
+  id: IDCellRenderer,
   network: NetworkCellRenderer,
   linkSpeed: LinkSpeedCellRenderer,
   mtu: MTUCellRenderer,
