@@ -1,15 +1,16 @@
 import React from 'react';
-import { TFunction } from 'react-i18next';
 import { TableCell, TableEmptyCell } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Concern } from '@kubev2v/types';
-import {
-  BlueInfoCircleIcon,
-  RedExclamationCircleIcon,
-  YellowExclamationTriangleIcon,
-} from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Flex, FlexItem, Label, Popover, Stack, StackItem } from '@patternfly/react-core';
+
+import {
+  getCategoryColor,
+  getCategoryIcon,
+  getCategoryTitle,
+  groupConcernsByCategory,
+} from '../utils';
 
 import { VMCellProps } from './VMCellProps';
 
@@ -87,75 +88,3 @@ const ConcernList: React.FC<{ concerns: Concern[] }> = ({ concerns }) => (
     ))}
   </Stack>
 );
-
-/**
- * Groups concerns by their category.
- *
- * @param {Concern[]} concerns - The list of concerns to group.
- * @returns {Record<string, Concern[]>} The grouped concerns by category.
- */
-const groupConcernsByCategory = (concerns: Concern[] = []): Record<string, Concern[]> => {
-  return concerns.reduce(
-    (acc, concern) => {
-      if (!acc[concern.category]) {
-        acc[concern.category] = [];
-      }
-      acc[concern.category].push(concern);
-      return acc;
-    },
-    {
-      Critical: [],
-      Information: [],
-      Warning: [],
-    },
-  );
-};
-
-/**
- * Retrieves the title for a given concern category.
- *
- * @param {string} category - The category of the concern.
- * @param {TFunction} t - The translation function.
- * @returns {string} The title for the given category.
- */
-const getCategoryTitle = (category: string, t: TFunction): string => {
-  const titles = {
-    Critical: t('Critical concerns'),
-    Information: t('Information concerns'),
-    Warning: t('Warning concerns'),
-  };
-
-  return titles[category] || '';
-};
-
-/**
- * Retrieves the icon for a given concern category.
- *
- * @param {string} category - The category of the concern.
- * @returns {ReactElement} The icon for the given category.
- */
-const getCategoryIcon = (category: string) => {
-  const icons = {
-    Critical: <RedExclamationCircleIcon />,
-    Information: <BlueInfoCircleIcon />,
-    Warning: <YellowExclamationTriangleIcon />,
-  };
-
-  return icons[category] || <></>;
-};
-
-/**
- * Retrieves the color for a given concern category.
- *
- * @param {string} category - The category of the concern.
- * @returns {string} The color for the given category.
- */
-const getCategoryColor = (category: string) => {
-  const colors = {
-    Critical: 'red',
-    Information: 'blue',
-    Warning: 'orange',
-  };
-
-  return colors[category] || 'grey';
-};
