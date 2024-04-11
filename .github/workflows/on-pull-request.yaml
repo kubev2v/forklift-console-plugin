@@ -16,10 +16,10 @@ jobs:
         run: ulimit -n 4096
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -39,9 +39,10 @@ jobs:
         run: npm run test:coverage
 
       - name: Test coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   e2e:
     name: Run e2e tests
@@ -51,13 +52,13 @@ jobs:
         run: ulimit -n 4096
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
     
       - name: Run pre e2e test tasks
         run: npm run e2e:pre-test
 
       - name: Run cypress
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           wait-on: "http://localhost:30080"
           browser: chrome
@@ -65,7 +66,7 @@ jobs:
           config-file: cypress/cypress.config.cjs
 
       - name: Upload videos
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cypress-videos
