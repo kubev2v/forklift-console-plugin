@@ -45,7 +45,6 @@ export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, p
   return (
     <>
       <DescriptionList
-        className="forklift-page-section--details-status"
         columnModifier={{
           default: '2Col',
         }}

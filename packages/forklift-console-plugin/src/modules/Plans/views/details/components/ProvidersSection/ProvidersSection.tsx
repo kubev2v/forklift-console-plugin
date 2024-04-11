@@ -37,7 +37,7 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
     <Suspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
       <DescriptionList
         columnModifier={{
-          default: '1Col',
+          default: '2Col',
         }}
       >
         <DetailsItem
