@@ -21,7 +21,7 @@ export const ActionsCell = ({ data }: CellProps) => {
 
   const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
 
-  const buttonStartLabel = canReStart ? t('Restart') : t('start');
+  const buttonStartLabel = canReStart ? t('Restart') : t('Start');
 
   return (
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
