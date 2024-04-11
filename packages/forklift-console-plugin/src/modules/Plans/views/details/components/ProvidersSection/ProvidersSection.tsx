@@ -1,17 +1,12 @@
 import React, { useReducer } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components';
+import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  PlanModel,
-  ProviderModelGroupVersionKind,
-  V1beta1Plan,
-  V1beta1Provider,
-} from '@kubev2v/types';
-import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, DescriptionList, Flex, FlexItem, Spinner } from '@patternfly/react-core';
+import { ProviderModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
+import { ResourceLink, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { DescriptionList } from '@patternfly/react-core';
 
-import { ProvidersEdit } from './components';
 import { providersSectionReducer, ProvidersSectionState } from './state';
 
 const initialState: ProvidersSectionState = {
@@ -38,75 +33,39 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
     namespace: obj.metadata.namespace,
   });
 
-  const targetProviders = providers.filter((p) => ['openshift'].includes(p?.spec?.type));
-
-  const onUpdate = async () => {
-    dispatch({ type: 'SET_UPDATING', payload: true });
-    await k8sUpdate({ model: PlanModel, data: state.plan });
-  };
-
   return (
     <Suspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
-      <Flex className="forklift-network-map__details-tab--update-button">
-        <FlexItem>
-          <Button
-            variant="primary"
-            onClick={onUpdate}
-            isDisabled={!state.hasChanges || state.updating}
-            icon={state.updating ? <Spinner size="sm" /> : undefined}
-          >
-            {t('Update providers')}
-          </Button>
-        </FlexItem>
-
-        <FlexItem>
-          <Button
-            variant="secondary"
-            onClick={() => dispatch({ type: 'INIT', payload: obj })}
-            isDisabled={!state.hasChanges || state.updating}
-          >
-            {t('Cancel')}
-          </Button>
-        </FlexItem>
-      </Flex>
-
       <DescriptionList
         columnModifier={{
           default: '1Col',
         }}
       >
-        <ProvidersEdit
-          providers={providers}
-          selectedProviderName={state.plan?.spec?.provider?.source?.name}
-          label={t('Source provider')}
-          placeHolderLabel={t('Select a provider')}
-          onChange={(value) =>
-            dispatch({
-              type: 'SET_SOURCE_PROVIDER',
-              payload: providers.find((p) => p?.metadata?.name === value),
-            })
+        <DetailsItem
+          title={t('Source provider')}
+          content={
+            <ResourceLink
+              inline
+              name={state.plan?.spec?.provider?.source?.name}
+              namespace={state.plan?.spec?.provider?.source?.namespace}
+              groupVersionKind={ProviderModelGroupVersionKind}
+            />
           }
-          invalidLabel={t('The chosen provider is no longer available.')}
-          mode={state.sourceProviderMode}
-          helpContent="source provider"
-          setMode={() => dispatch({ type: 'SET_SOURCE_PROVIDER_MODE', payload: 'edit' })}
+          helpContent={'source provider'}
+          crumbs={['spec', 'providers', 'source']}
         />
 
-        <ProvidersEdit
-          providers={targetProviders}
-          selectedProviderName={state.plan?.spec?.provider?.destination?.name}
-          label={t('Target provider')}
-          placeHolderLabel={t('Select a provider')}
-          onChange={(value) =>
-            dispatch({
-              type: 'SET_TARGET_PROVIDER',
-              payload: providers.find((p) => p?.metadata?.name === value),
-            })
+        <DetailsItem
+          title={t('Target provider')}
+          content={
+            <ResourceLink
+              inline
+              name={state.plan?.spec?.provider?.destination?.name}
+              namespace={state.plan?.spec?.provider?.destination?.namespace}
+              groupVersionKind={ProviderModelGroupVersionKind}
+            />
           }
-          invalidLabel={t('The chosen provider is no longer available.')}
-          mode={state.targetProviderMode}
-          helpContent="Target provider"
-          setMode={() => dispatch({ type: 'SET_TARGET_PROVIDER_MODE', payload: 'edit' })}
+          helpContent={'destination provider'}
+          crumbs={['spec', 'providers', 'destination']}
         />
       </DescriptionList>
     </Suspend>
