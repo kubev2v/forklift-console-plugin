@@ -20,3 +20,12 @@
 .forklift-table__status-cell-progress div {
   grid-gap: var(--pf-global--spacer--xs);
 }
+
+.forklift-providers-list-buttons__icon {
+  font-size: smaller;
+}
+
+.forklift-providers-list-buttons {
+  min-width: 98px;
+  text-align: left;
+}
