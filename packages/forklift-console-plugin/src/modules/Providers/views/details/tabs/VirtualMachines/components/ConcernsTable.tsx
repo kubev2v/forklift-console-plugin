@@ -1,0 +1,67 @@
+import React from 'react';
+import { useForkliftTranslation } from 'src/utils/i18n';
+
+import { RowProps, TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
+import { HelperText, HelperTextItem, Label, PageSection } from '@patternfly/react-core';
+
+import {
+  getCategoryColor,
+  getCategoryIcon,
+  getCategoryTitle,
+  groupConcernsByCategory,
+} from '../utils';
+
+import { VmData } from './VMCellProps';
+
+/**
+ * React Component to display a table of concerns.
+ */
+export const ConcernsTable: React.FC<RowProps<VmData>> = ({ resourceData }) => {
+  const { t } = useForkliftTranslation();
+
+  if (!resourceData?.vm?.['concerns'] || resourceData?.vm?.['concerns']?.length < 1) {
+    return (
+      <PageSection>
+        <HelperText>
+          <HelperTextItem variant="indeterminate">
+            {t('No concerns found for this virtual machine.')}
+          </HelperTextItem>
+        </HelperText>
+      </PageSection>
+    );
+  }
+
+  const groupedConcerns = groupConcernsByCategory(resourceData?.vm?.['concerns']);
+
+  return (
+    <PageSection>
+      <TableComposable aria-label="Expandable table" variant="compact">
+        <Thead>
+          <Tr>
+            <Th width={10}>{t('Label')}</Th>
+            <Th width={10}>{t('Category')}</Th>
+            <Th width={30}>{t('Assessment')}</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {['Critical', 'Warning', 'Information'].map((category) =>
+            groupedConcerns?.[category]?.map((concern) => (
+              <Tr key={concern.label}>
+                <Td modifier="truncate">{concern.label}</Td>
+                <Td>
+                  <Label
+                    color={getCategoryColor(concern.category)}
+                    icon={getCategoryIcon(concern.category)}
+                  >
+                    {getCategoryTitle(concern.category, t)}
+                  </Label>
+                </Td>
+                <Td>{concern?.assessment || '-'}</Td>
+              </Tr>
+            )),
+          )}
+        </Tbody>
+      </TableComposable>
+    </PageSection>
+  );
+};
