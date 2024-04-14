@@ -25,12 +25,8 @@ export const ActionsCell = ({ data }: CellProps) => {
   const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
 
   const buttonStartLabel = canReStart ? t('Restart') : t('Start');
-  const buttonStartIcon = canReStart ? (
-    <ReStartIcon className="forklift-providers-list-buttons__icon" />
-  ) : (
-    <StartIcon className="forklift-providers-list-buttons__icon" />
-  );
-  const buttonCutoverIcon = <CutoverIcon className="forklift-providers-list-buttons__icon" />;
+  const buttonStartIcon = canReStart ? <ReStartIcon /> : <StartIcon />;
+  const buttonCutoverIcon = <CutoverIcon />;
 
   return (
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
@@ -39,7 +35,6 @@ export const ActionsCell = ({ data }: CellProps) => {
       {canStart && (
         <FlexItem align={{ default: 'alignRight' }}>
           <Button
-            className="forklift-providers-list-buttons"
             variant="secondary"
             icon={buttonStartIcon}
             onClick={() =>
@@ -60,7 +55,6 @@ export const ActionsCell = ({ data }: CellProps) => {
       {isWarmAndExecuting && (
         <FlexItem align={{ default: 'alignRight' }}>
           <Button
-            className="forklift-providers-list-buttons"
             variant="secondary"
             icon={buttonCutoverIcon}
             onClick={() => showModal(<PlanCutoverMigrationModal resource={data.obj} />)}

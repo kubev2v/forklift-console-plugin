@@ -396,7 +396,6 @@
   "Specifies the duration for retaining 'must gather' reports before they are automatically deleted. The default value is -1, which implies automatic cleanup is disabled.": "Specifies the duration for retaining 'must gather' reports before they are automatically deleted. The default value is -1, which implies automatic cleanup is disabled.",
   "Specify the type of source provider. Allowed values are ova, ovirt, vsphere,\n      openshift, and openstack. This label is needed to verify the credentials are correct when the remote system is accessible and, for RHV, to retrieve the Manager CA certificate when\n      a third-party certificate is specified.": "Specify the type of source provider. Allowed values are ova, ovirt, vsphere,\n      openshift, and openstack. This label is needed to verify the credentials are correct when the remote system is accessible and, for RHV, to retrieve the Manager CA certificate when\n      a third-party certificate is specified.",
   "Staging": "Staging",
-  "start": "start",
   "Start": "Start",
   "Start migration": "Start migration",
   "Started at": "Started at",
