@@ -2,9 +2,9 @@ import React from 'react';
 import { Base64 } from 'js-base64';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ClipboardCopy, ClipboardCopyVariant, Text, TextVariants } from '@patternfly/react-core';
+import { Text, TextVariants } from '@patternfly/react-core';
 
-import { MaskedData } from '../../MaskedData';
+import { ShowFieldWithClipboardCopy, ShowMaskedField } from '../../';
 import { ListComponentProps } from '../BaseCredentialsSection';
 
 export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
@@ -82,19 +82,7 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
           </Text>
         </div>
         <div className="forklift-page-secret-content-div">
-          {reveal ? (
-            <ClipboardCopy
-              isReadOnly
-              hoverTip={t('Copy')}
-              clickTip={t('Copied')}
-              isCode
-              variant={value && value.length > 128 ? ClipboardCopyVariant.expansion : undefined}
-            >
-              {value}
-            </ClipboardCopy>
-          ) : (
-            <MaskedData />
-          )}
+          {reveal ? <ShowFieldWithClipboardCopy value={value} /> : <ShowMaskedField />}
         </div>
       </>,
     );
