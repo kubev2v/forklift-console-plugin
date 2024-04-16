@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Draft } from 'immer';
-import { v4 as randomId } from 'uuid';
 
 import { DefaultRow, ResourceFieldFactory, RowProps, withTr } from '@kubev2v/common';
 import {
@@ -223,8 +222,6 @@ export const getObjectRef = (
   uid,
 });
 
-export const generateName = (base: string) => `${base}-${randomId().substring(0, 8)}`;
-
 export const resourceFieldsForType = (
   type: ProviderType,
 ): [ResourceFieldFactory, FC<RowProps<VmData>>] => {
@@ -275,19 +272,6 @@ export const alreadyInUseBySelectedVms = ({
   sourceProvider.spec?.url === targetProvider?.spec?.url &&
   sourceProvider.spec?.type === 'openshift' &&
   namespacesUsedBySelectedVms.some((name) => name === namespace);
-
-export const generateUniqueName = (
-  startName: string,
-  baseName: string,
-  existingMaps: { metadata?: IoK8sApimachineryPkgApisMetaV1ObjectMeta }[],
-) => {
-  const names = existingMaps.map((n) => n.metadata?.name).filter(Boolean);
-  let currentName: string = startName;
-  while (!validateUniqueName(currentName, names)) {
-    currentName = generateName(baseName);
-  }
-  return currentName;
-};
 
 export const validateNetworkMapping = ({
   sources,

@@ -2,15 +2,7 @@ import { Draft } from 'immer';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
 
 import { getIsTarget } from '../../../utils';
-import {
-  CreateVmMigrationPageState,
-  Mapping,
-  MULTIPLE_NICS_ON_THE_SAME_NETWORK,
-  NET_MAP_NAME_REGENERATED,
-  NetworkAlerts,
-  STORAGE_MAP_NAME_REGENERATED,
-  StorageAlerts,
-} from '../types';
+import { CreateVmMigrationPageState, Mapping, MULTIPLE_NICS_ON_THE_SAME_NETWORK } from '../types';
 
 import {
   ADD_NETWORK_MAPPING,
@@ -69,7 +61,6 @@ import {
   alreadyInUseBySelectedVms,
   executeNetworkMappingValidation,
   executeStorageMappingValidation,
-  generateUniqueName,
   recalculateNetworks,
   recalculateStorages,
   reTestNetworks,
@@ -286,49 +277,18 @@ const handlers: {
     recalculateStorages(draft);
   },
   [SET_EXISTING_NET_MAPS](
-    {
-      existingResources,
-      underConstruction: { netMap },
-      receivedAsParams: { sourceProvider },
-      alerts,
-    },
+    { existingResources },
     { payload: { existingNetMaps } }: PageAction<CreateVmMigration, PlanExistingNetMaps>,
   ) {
     // triggered from useEffect on any data change
     existingResources.netMaps = existingNetMaps;
-    const oldName = netMap.metadata.name;
-
-    netMap.metadata.name = generateUniqueName(
-      oldName,
-      sourceProvider.metadata.name,
-      existingNetMaps,
-    );
-    if (oldName !== netMap.metadata.name) {
-      addIfMissing<NetworkAlerts>(NET_MAP_NAME_REGENERATED, alerts.networkMappings.warnings);
-    }
   },
   [SET_EXISTING_STORAGE_MAPS](
-    {
-      existingResources,
-      underConstruction: { storageMap },
-      receivedAsParams: { sourceProvider },
-      alerts,
-    },
+    { existingResources },
     { payload: { existingStorageMaps } }: PageAction<CreateVmMigration, PlanExistingStorageMaps>,
   ) {
     // triggered from useEffect on any data change
     existingResources.storageMaps = existingStorageMaps;
-    const oldName = storageMap.metadata.name;
-
-    storageMap.metadata.name = generateUniqueName(
-      oldName,
-      sourceProvider.metadata.name,
-      existingStorageMaps,
-    );
-
-    if (oldName !== storageMap.metadata.name) {
-      addIfMissing<StorageAlerts>(STORAGE_MAP_NAME_REGENERATED, alerts.storageMappings.warnings);
-    }
   },
   [START_CREATE]({
     flow,

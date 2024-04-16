@@ -18,7 +18,7 @@ import { getNetworksUsedBySelectedVms } from './getNetworksUsedBySelectedVMs';
 import { getStoragesUsedBySelectedVms } from './getStoragesUsedBySelectedVMs';
 import { hasMultipleNicsOnTheSameNetwork } from './hasMultipleNicsOnTheSameNetwork';
 import { hasNicWithEmptyProfile } from './hasNicWithEmptyProfile';
-import { generateName, getObjectRef, resourceFieldsForType } from './helpers';
+import { getObjectRef, resourceFieldsForType } from './helpers';
 
 export type InitialStateParameters = {
   namespace: string;
@@ -64,7 +64,7 @@ export const createInitialState = ({
         ...networkMapTemplate,
         metadata: {
           ...networkMapTemplate?.metadata,
-          name: generateName(sourceProvider.metadata.name),
+          generateName: `${sourceProvider.metadata.name}-`,
           namespace,
         },
         spec: {
@@ -79,7 +79,7 @@ export const createInitialState = ({
         ...storageMapTemplate,
         metadata: {
           ...storageMapTemplate?.metadata,
-          name: generateName(sourceProvider.metadata.name),
+          generateName: `${sourceProvider.metadata.name}-`,
           namespace,
         },
         spec: {
