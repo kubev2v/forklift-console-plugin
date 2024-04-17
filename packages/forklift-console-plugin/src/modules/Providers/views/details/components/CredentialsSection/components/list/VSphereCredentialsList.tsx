@@ -4,8 +4,11 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Text, TextVariants } from '@patternfly/react-core';
 
-import { ShowFieldWithClipboardCopy, ShowMaskedField } from '../../';
+import { FieldWithClipboardCopy } from '../../FieldWithClipboardCopy';
+import { MaskedField } from '../../MaskedField';
 import { ListComponentProps } from '../BaseCredentialsSection';
+
+import { Fields } from './Fields';
 
 export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
   const { t } = useForkliftTranslation();
@@ -36,7 +39,7 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
     </ForkliftTrans>
   );
 
-  const fields = {
+  const fields: Fields = {
     user: {
       label: t('Username'),
       description: (
@@ -56,6 +59,7 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
       label: t('Skip certificate validation'),
       description: t("If true, the provider's TLS certificate won't be validated."),
       cacertHelperTextPopover: insecureSkipVerifyHelperTextPopover,
+      displayType: 'switch',
     },
     cacert: {
       label: t('CA certificate'),
@@ -63,6 +67,7 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
         'A CA certificate to be trusted when connecting to the vCenter API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
       ),
       helperTextPopover: cacertHelperTextPopover,
+      displayType: 'textArea',
     },
   };
 
@@ -82,7 +87,7 @@ export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, r
           </Text>
         </div>
         <div className="forklift-page-secret-content-div">
-          {reveal ? <ShowFieldWithClipboardCopy value={value} /> : <ShowMaskedField />}
+          {reveal ? <FieldWithClipboardCopy field={field} value={value} /> : <MaskedField />}
         </div>
       </>,
     );
