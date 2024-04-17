@@ -1,3 +1,3 @@
 // @index(['./*', /style/g], f => `export * from '${f.path}';`)
-export * from './plan-status';
+export * from './planPhases';
 // @endindex

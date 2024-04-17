@@ -4,7 +4,7 @@ import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { EnumToTuple, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
@@ -80,7 +80,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       type: 'enum',
       primary: true,
       placeholderLabel: t('Status'),
-      values: EnumToTuple(planPhases),
+      values: planPhases,
     },
     sortable: true,
   },
