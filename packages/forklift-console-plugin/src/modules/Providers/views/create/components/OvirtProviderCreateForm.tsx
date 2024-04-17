@@ -16,12 +16,11 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
 }) => {
   const { t } = useForkliftTranslation();
 
+  const url = provider?.spec?.url;
+
   const initialState = {
     validation: {
-      url: {
-        type: 'default',
-        msg: 'The URL of the Red Hat Virtualization Manager (RHVM) API endpoint, for example: https://rhv-host-example.com/ovirt-engine/api .',
-      },
+      url: validateOvirtURL(url),
     },
   };
 
@@ -46,7 +45,7 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
     (id, value) => {
       if (id !== 'url') return;
 
-      const trimmedValue: string = value.trim();
+      const trimmedValue: string = value?.trim();
       const validationState = validateOvirtURL(trimmedValue);
 
       dispatch({
@@ -74,7 +73,7 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
           type="text"
           id="url"
           name="url"
-          value={provider?.spec?.url || ''}
+          value={url || ''}
           validated={state.validation.url.type}
           onChange={(value) => handleChange('url', value)}
         />

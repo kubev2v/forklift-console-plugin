@@ -25,7 +25,7 @@ export const esxiSecretFieldValidator = (id: string, value: string): ValidationM
       validationState = validatePassword(trimmedValue);
       break;
     case 'insecureSkipVerify':
-      validationState = { type: 'default', msg: 'Migrate without validating a CA certificate' };
+      validationState = validateInsecureSkipVerify(trimmedValue);
       break;
     case 'cacert':
       validationState = validateCacert(trimmedValue);
@@ -41,6 +41,7 @@ export const esxiSecretFieldValidator = (id: string, value: string): ValidationM
 const validateUser = (value: string): ValidationMsg => {
   const noSpaces = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
       type: 'default',
@@ -68,6 +69,7 @@ const validateUser = (value: string): ValidationMsg => {
 const validatePassword = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
       type: 'default',
@@ -89,10 +91,25 @@ const validatePassword = (value: string): ValidationMsg => {
   return { type: 'error', msg: 'Invalid password, spaces are not allowed' };
 };
 
+const validateInsecureSkipVerify = (value: string): ValidationMsg => {
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return { type: 'default', msg: 'Migrate without validating a CA certificate' };
+  }
+
+  const valid = ['true', 'false', ''].includes(value);
+
+  if (valid) {
+    return { type: 'success', msg: 'Migrate without validating a CA certificate' };
+  }
+
+  return { type: 'error', msg: 'Invalid Skip certificate validation value, must be true or false' };
+};
+
 const validateCacert = (value: string): ValidationMsg => {
   const valid = validatePublicCert(value);
 
-  if (value === '') {
+  if (value === undefined || value === '') {
     return {
       type: 'default',
       msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',

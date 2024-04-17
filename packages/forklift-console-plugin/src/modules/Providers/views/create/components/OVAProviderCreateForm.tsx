@@ -16,12 +16,11 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
+  const url = provider?.spec?.url;
+
   const initialState = {
     validation: {
-      url: {
-        type: 'default',
-        msg: 'The NFS shared directory containing the Open Virtual Appliance (OVA) files, for example: 10.10.0.10:/ova .',
-      },
+      url: validateOvaNfsPath(url),
     },
   };
 
@@ -44,7 +43,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
 
   const handleChange = useCallback(
     (id, value) => {
-      const trimmedValue = value.trim();
+      const trimmedValue = value?.trim();
 
       if (id === 'url') {
         const validationState = validateOvaNfsPath(trimmedValue);
@@ -72,7 +71,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
           id="url"
           name="url"
           isRequired
-          value={provider?.spec?.url || ''}
+          value={url || ''}
           validated={state.validation.url.type}
           onChange={(value) => handleChange('url', value)}
         />

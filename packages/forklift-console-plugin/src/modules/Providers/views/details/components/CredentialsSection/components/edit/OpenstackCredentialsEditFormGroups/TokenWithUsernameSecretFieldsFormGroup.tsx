@@ -15,23 +15,20 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
 }) => {
   const { t } = useForkliftTranslation();
 
-  const token = safeBase64Decode(secret?.data?.token || '');
-  const username = safeBase64Decode(secret?.data?.username || '');
-  const regionName = safeBase64Decode(secret?.data?.regionName || '');
-  const projectName = safeBase64Decode(secret?.data?.projectName || '');
-  const domainName = safeBase64Decode(secret?.data?.domainName || '');
+  const token = safeBase64Decode(secret?.data?.token);
+  const username = safeBase64Decode(secret?.data?.username);
+  const regionName = safeBase64Decode(secret?.data?.regionName);
+  const projectName = safeBase64Decode(secret?.data?.projectName);
+  const domainName = safeBase64Decode(secret?.data?.domainName);
 
   const initialState = {
     passwordHidden: true,
     validation: {
-      token: { type: 'default', msg: 'OpenStack token for authentication using a user name.' },
-      username: {
-        type: 'default',
-        msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint.',
-      },
-      regionName: { type: 'default', msg: 'OpenStack region name.' },
-      projectName: { type: 'default', msg: 'OpenStack project name.' },
-      domainName: { type: 'default', msg: 'OpenStack domain name.' },
+      token: openstackSecretFieldValidator('token', token),
+      username: openstackSecretFieldValidator('username', username),
+      regionName: openstackSecretFieldValidator('regionName', regionName),
+      projectName: openstackSecretFieldValidator('projectName', projectName),
+      domainName: openstackSecretFieldValidator('domainName', domainName),
     },
   };
 
@@ -59,7 +56,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
       const validationState = openstackSecretFieldValidator(id, value);
       dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
-      const encodedValue = Base64.encode(value.trim());
+      const encodedValue = Base64.encode(value?.trim() || '');
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
     [secret, onChange],

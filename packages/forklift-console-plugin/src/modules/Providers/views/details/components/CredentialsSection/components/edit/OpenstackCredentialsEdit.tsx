@@ -34,11 +34,11 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     </ForkliftTrans>
   );
 
-  const url = safeBase64Decode(secret?.data?.url || '');
-  const authType = safeBase64Decode(secret?.data?.authType || '');
-  const username = safeBase64Decode(secret?.data?.username || '');
-  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
-  const cacert = safeBase64Decode(secret?.data?.cacert || '');
+  const url = safeBase64Decode(secret?.data?.url);
+  const authType = safeBase64Decode(secret?.data?.authType);
+  const username = safeBase64Decode(secret?.data?.username);
+  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify);
+  const cacert = safeBase64Decode(secret?.data?.cacert);
 
   let authenticationType:
     | 'passwordSecretFields'
@@ -74,11 +74,8 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
   const initialState = {
     authenticationType: authenticationType,
     validation: {
-      cacert: {
-        type: 'default',
-        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
-      },
-      insecureSkipVerify: { type: 'default', msg: 'Migrate without validating a CA certificate' },
+      cacert: openstackSecretFieldValidator('cacert', cacert),
+      insecureSkipVerify: openstackSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
     },
   };
 
@@ -112,8 +109,8 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
       // don't trim fields that allow spaces
       const encodedValue = ['cacert'].includes(id)
-        ? Base64.encode(value)
-        : Base64.encode(value.trim());
+        ? Base64.encode(value || '')
+        : Base64.encode(value?.trim() || '');
 
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
@@ -139,8 +136,8 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
             data: {
               ...secret.data,
               ['authType']: Base64.encode('token'),
-              userID: '',
-              username: '',
+              userID: undefined,
+              username: undefined,
             },
           });
           break;
@@ -152,8 +149,8 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
             data: {
               ...secret.data,
               ['authType']: Base64.encode('applicationcredential'),
-              applicationCredentialID: '',
-              username: '',
+              applicationCredentialID: undefined,
+              username: undefined,
             },
           });
           break;
@@ -257,14 +254,14 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
           labelOff={insecureSkipVerifyHelperTextMsgs.successAndNotSkipped}
           aria-label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
-          isChecked={insecureSkipVerify}
+          isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
       </FormGroup>
       <FormGroup
         label={
-          insecureSkipVerify
+          insecureSkipVerify === 'true'
             ? t("CA certificate - disabled when 'Skip certificate validation' is selected")
             : t('CA certificate - leave empty to use system CA certificates')
         }
@@ -284,7 +281,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           onClearClick={() => handleChange('cacert', '')}
           browseButtonText="Upload"
           url={url}
-          isDisabled={insecureSkipVerify}
+          isDisabled={insecureSkipVerify === 'true'}
         />
       </FormGroup>
     </Form>

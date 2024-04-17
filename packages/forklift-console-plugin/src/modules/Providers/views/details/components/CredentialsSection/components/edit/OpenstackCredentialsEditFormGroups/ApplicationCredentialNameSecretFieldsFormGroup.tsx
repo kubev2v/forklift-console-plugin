@@ -15,36 +15,28 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
 }) => {
   const { t } = useForkliftTranslation();
 
-  const applicationCredentialName = safeBase64Decode(secret?.data?.applicationCredentialName || '');
-  const applicationCredentialSecret = safeBase64Decode(
-    secret?.data?.applicationCredentialSecret || '',
-  );
-  const username = safeBase64Decode(secret?.data?.username || '');
-  const regionName = safeBase64Decode(secret?.data?.regionName || '');
-  const projectName = safeBase64Decode(secret?.data?.projectName || '');
-  const domainName = safeBase64Decode(secret?.data?.domainName || '');
+  const applicationCredentialName = safeBase64Decode(secret?.data?.applicationCredentialName);
+  const applicationCredentialSecret = safeBase64Decode(secret?.data?.applicationCredentialSecret);
+  const username = safeBase64Decode(secret?.data?.username);
+  const regionName = safeBase64Decode(secret?.data?.regionName);
+  const projectName = safeBase64Decode(secret?.data?.projectName);
+  const domainName = safeBase64Decode(secret?.data?.domainName);
 
   const initialState = {
     passwordHidden: true,
     validation: {
-      applicationCredentialName: {
-        type: 'default',
-        msg: 'OpenStack application credential name needed for application credential authentication.',
-      },
-      applicationCredentialSecret: {
-        type: 'default',
-        msg: 'OpenStack application credential Secret needed for the application credential authentication.',
-      },
-      username: {
-        type: 'default',
-        msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint.',
-      },
-      regionName: { type: 'default', msg: 'OpenStack region name.' },
-      projectName: {
-        type: 'default',
-        msg: 'OpenStack application credential name needed for application credential authentication.',
-      },
-      domainName: { type: 'default', msg: 'OpenStack domain name.' },
+      applicationCredentialName: openstackSecretFieldValidator(
+        'applicationCredentialName',
+        applicationCredentialName,
+      ),
+      applicationCredentialSecret: openstackSecretFieldValidator(
+        'applicationCredentialSecret',
+        applicationCredentialSecret,
+      ),
+      username: openstackSecretFieldValidator('username', username),
+      regionName: openstackSecretFieldValidator('regionName', regionName),
+      projectName: openstackSecretFieldValidator('projectName', projectName),
+      domainName: openstackSecretFieldValidator('domainName', domainName),
     },
   };
 
@@ -73,7 +65,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
       const validationState = openstackSecretFieldValidator(id, value);
       dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
-      const encodedValue = Base64.encode(value.trim());
+      const encodedValue = Base64.encode(value?.trim() || '');
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
     [secret, onChange],

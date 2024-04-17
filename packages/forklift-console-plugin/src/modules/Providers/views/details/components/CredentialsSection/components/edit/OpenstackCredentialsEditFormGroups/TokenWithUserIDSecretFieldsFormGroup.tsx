@@ -15,21 +15,18 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
 }) => {
   const { t } = useForkliftTranslation();
 
-  const token = safeBase64Decode(secret?.data?.token || '');
-  const userID = safeBase64Decode(secret?.data?.userID || '');
-  const projectID = safeBase64Decode(secret?.data?.projectID || '');
-  const regionName = safeBase64Decode(secret?.data?.regionName || '');
+  const token = safeBase64Decode(secret?.data?.token);
+  const userID = safeBase64Decode(secret?.data?.userID);
+  const projectID = safeBase64Decode(secret?.data?.projectID);
+  const regionName = safeBase64Decode(secret?.data?.regionName);
 
   const initialState = {
     passwordHidden: true,
     validation: {
-      token: { type: 'default', msg: 'OpenStack token for authentication using a user name.' },
-      userID: {
-        type: 'default',
-        msg: 'A user ID for connecting to the OpenStack Identity (Keystone) endpoint.',
-      },
-      projectID: { type: 'default', msg: 'OpenStack project ID.' },
-      regionName: { type: 'default', msg: 'OpenStack region name.' },
+      token: openstackSecretFieldValidator('token', token),
+      userID: openstackSecretFieldValidator('userID', userID),
+      projectID: openstackSecretFieldValidator('projectID', projectID),
+      regionName: openstackSecretFieldValidator('regionName', regionName),
     },
   };
 
@@ -57,7 +54,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
       const validationState = openstackSecretFieldValidator(id, value);
       dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
-      const encodedValue = Base64.encode(value.trim());
+      const encodedValue = Base64.encode(value?.trim() || '');
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
     [secret, onChange],

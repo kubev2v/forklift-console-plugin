@@ -16,12 +16,11 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
 }) => {
   const { t } = useForkliftTranslation();
 
+  const url = provider?.spec?.url;
+
   const initialState = {
     validation: {
-      url: {
-        type: 'default',
-        msg: 'The URL of the OpenStack Identity (Keystone) API endpoint, for example: https://identity_service.com:5000/v3 .',
-      },
+      url: validateOpenstackURL(url),
     },
   };
 
@@ -46,7 +45,7 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
     (id, value) => {
       if (id !== 'url') return;
 
-      const trimmedURL: string = value.trim();
+      const trimmedURL: string = value?.trim();
       const validationState = validateOpenstackURL(trimmedURL);
 
       dispatch({
@@ -74,7 +73,7 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
           type="text"
           id="url"
           name="url"
-          value={provider?.spec?.url || ''}
+          value={url || ''}
           validated={state.validation.url.type}
           onChange={(value) => handleChange('url', value)}
         />

@@ -15,26 +15,24 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
 }) => {
   const { t } = useForkliftTranslation();
 
-  const applicationCredentialID = safeBase64Decode(secret?.data?.applicationCredentialID || '');
-  const applicationCredentialSecret = safeBase64Decode(
-    secret?.data?.applicationCredentialSecret || '',
-  );
-  const regionName = safeBase64Decode(secret?.data?.regionName || '');
-  const projectName = safeBase64Decode(secret?.data?.projectName || '');
+  const applicationCredentialID = safeBase64Decode(secret?.data?.applicationCredentialID);
+  const applicationCredentialSecret = safeBase64Decode(secret?.data?.applicationCredentialSecret);
+  const regionName = safeBase64Decode(secret?.data?.regionName);
+  const projectName = safeBase64Decode(secret?.data?.projectName);
 
   const initialState = {
     passwordHidden: true,
     validation: {
-      applicationCredentialID: {
-        type: 'default',
-        msg: 'OpenStack application credential ID needed for the application credential authentication.',
-      },
-      applicationCredentialSecret: {
-        type: 'default',
-        msg: 'OpenStack application credential Secret needed for the application credential authentication.',
-      },
-      regionName: { type: 'default', msg: 'OpenStack region name.' },
-      projectName: { type: 'default', msg: 'OpenStack project name.' },
+      applicationCredentialID: openstackSecretFieldValidator(
+        'applicationCredentialID',
+        applicationCredentialID,
+      ),
+      applicationCredentialSecret: openstackSecretFieldValidator(
+        'applicationCredentialSecret',
+        applicationCredentialSecret,
+      ),
+      regionName: openstackSecretFieldValidator('regionName', regionName),
+      projectName: openstackSecretFieldValidator('projectName', projectName),
     },
   };
 
@@ -63,7 +61,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
       const validationState = openstackSecretFieldValidator(id, value);
       dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
-      const encodedValue = Base64.encode(value.trim());
+      const encodedValue = Base64.encode(value?.trim() || '');
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
     [secret, onChange],
