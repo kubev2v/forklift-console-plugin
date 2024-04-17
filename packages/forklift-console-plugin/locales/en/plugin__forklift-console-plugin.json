@@ -3,6 +3,7 @@
   "{{dateLabel}} Failed: {{value}}": "{{dateLabel}} Failed: {{value}}",
   "{{dateLabel}} Running: {{value}}": "{{dateLabel}} Running: {{value}}",
   "{{dateLabel}} Succeeded: {{value}}": "{{dateLabel}} Succeeded: {{value}}",
+  "{{label}} field is missing from the secret data.": "{{label}} field is missing from the secret data.",
   "{{name}} Details": "{{name}} Details",
   "{{selectedLength}} hosts selected.": "{{selectedLength}} hosts selected.",
   "{{success}} of {{total}} VMs migrated": "{{success}} of {{total}} VMs migrated",

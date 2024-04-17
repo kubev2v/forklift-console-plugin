@@ -5,8 +5,11 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList, Text, TextVariants } from '@patternfly/react-core';
 
-import { ShowFieldWithClipboardCopy, ShowMaskedField } from '../../';
+import { FieldWithClipboardCopy } from '../../FieldWithClipboardCopy';
+import { MaskedField } from '../../MaskedField';
 import { ListComponentProps } from '../BaseCredentialsSection';
+
+import { Fields } from './Fields';
 
 export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
   const { t } = useForkliftTranslation();
@@ -39,7 +42,7 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
     </ForkliftTrans>
   );
 
-  const fields = {
+  const fields: Fields = {
     user: {
       label: t('Username'),
       description: t(
@@ -56,6 +59,7 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
       label: t('Skip certificate validation'),
       description: t("If true, the provider's CA certificate won't be validated."),
       helperTextPopover: insecureSkipVerifyHelperTextPopover,
+      displayType: 'switch',
     },
     cacert: {
       label: t('CA certificate'),
@@ -63,6 +67,7 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
         'A CA certificate to be trusted when connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
       ),
       helperTextPopover: cacertHelperTextPopover,
+      displayType: 'textArea',
     },
   };
 
@@ -91,7 +96,7 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
           </Text>
         </div>
         <div className="forklift-page-secret-content-div">
-          {reveal ? <ShowFieldWithClipboardCopy value={value} /> : <ShowMaskedField />}
+          {reveal ? <FieldWithClipboardCopy field={field} value={value} /> : <MaskedField />}
         </div>
       </>,
     );

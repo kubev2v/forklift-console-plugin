@@ -5,8 +5,11 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList, Text, TextVariants } from '@patternfly/react-core';
 
-import { ShowFieldWithClipboardCopy, ShowMaskedField } from '../../';
+import { FieldWithClipboardCopy } from '../../FieldWithClipboardCopy';
+import { MaskedField } from '../../MaskedField';
 import { ListComponentProps } from '../BaseCredentialsSection';
+
+import { Fields } from './Fields';
 
 export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
   const { t } = useForkliftTranslation();
@@ -24,7 +27,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
     </ForkliftTrans>
   );
 
-  const fields = {
+  const fields: Record<string, Fields> = {
     passwordSecretFields: {
       authType: {
         label: t('Authentication type'),
@@ -49,12 +52,14 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         label: t('Skip certificate validation'),
         description: t('Migrate without validating a CA certificate'),
         helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        displayType: 'switch',
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
           'A CA certificate to be trusted when connecting to the OpenStack Identity (Keystone) endpoint. Ensure the CA certificate format is valid. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
         ),
+        displayType: 'textArea',
       },
     },
 
@@ -79,12 +84,14 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         label: t('Skip certificate validation'),
         description: t('Migrate without validating a CA certificate'),
         helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        displayType: 'switch',
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
           'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
         ),
+        displayType: 'textArea',
       },
     },
 
@@ -112,12 +119,14 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         label: t('Skip certificate validation'),
         description: t('Migrate without validating a CA certificate'),
         helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        displayType: 'switch',
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
           'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
         ),
+        displayType: 'textArea',
       },
     },
 
@@ -146,12 +155,14 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         label: t('Skip certificate validation'),
         description: t('Migrate without validating a CA certificate'),
         helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        displayType: 'switch',
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
           'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
         ),
+        displayType: 'textArea',
       },
     },
 
@@ -187,12 +198,14 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
         label: t('Skip certificate validation'),
         description: t('Migrate without validating a CA certificate'),
         helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        displayType: 'switch',
       },
       cacert: {
         label: t('CA certificate'),
         description: t(
           'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
         ),
+        displayType: 'textArea',
       },
     },
   };
@@ -250,7 +263,7 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
           </Text>
         </div>
         <div className="forklift-page-secret-content-div">
-          {reveal ? <ShowFieldWithClipboardCopy value={value} /> : <ShowMaskedField />}
+          {reveal ? <FieldWithClipboardCopy field={field} value={value} /> : <MaskedField />}
         </div>
       </>,
     );
