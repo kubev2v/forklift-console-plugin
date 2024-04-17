@@ -63,7 +63,13 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
           <DetailsItem
             title={'Must gather cleanup after (hours)'}
             showHelpIconNextToTitle={true}
-            content={mustGatherAPICleanupMaxAge || <span className="text-muted">{'Disabled'}</span>}
+            content={
+              mustGatherAPICleanupMaxAge && mustGatherAPICleanupMaxAge !== '-1' ? (
+                mustGatherAPICleanupMaxAge
+              ) : (
+                <span className="text-muted">{'Disabled'}</span>
+              )
+            }
             moreInfoLink={
               'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
             }
