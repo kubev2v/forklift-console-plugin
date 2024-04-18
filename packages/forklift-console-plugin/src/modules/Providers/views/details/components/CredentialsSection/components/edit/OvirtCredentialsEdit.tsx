@@ -22,11 +22,11 @@ import { EditComponentProps } from '../BaseCredentialsSection';
 export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
   const { t } = useForkliftTranslation();
 
-  const user = safeBase64Decode(secret?.data?.user || '');
-  const url = safeBase64Decode(secret?.data?.url || '');
-  const password = safeBase64Decode(secret?.data?.password || '');
-  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
-  const cacert = safeBase64Decode(secret?.data?.cacert || '');
+  const url = safeBase64Decode(secret?.data?.url);
+  const user = safeBase64Decode(secret?.data?.user);
+  const password = safeBase64Decode(secret?.data?.password);
+  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify);
+  const cacert = safeBase64Decode(secret?.data?.cacert);
 
   const insecureSkipVerifyHelperTextPopover = (
     <ForkliftTrans>
@@ -57,19 +57,10 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
   const initialState = {
     passwordHidden: true,
     validation: {
-      user: {
-        type: 'default',
-        msg: 'A username for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint, for example: name@internal .',
-      },
-      password: {
-        type: 'default',
-        msg: 'A user password for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint.',
-      },
-      insecureSkipVerify: { type: 'default', msg: 'Skip certificate validation' },
-      cacert: {
-        type: 'default',
-        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
-      },
+      user: ovirtSecretFieldValidator('user', user),
+      password: ovirtSecretFieldValidator('password', password),
+      insecureSkipVerify: ovirtSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
+      cacert: ovirtSecretFieldValidator('cacert', cacert),
     },
   };
 
@@ -103,8 +94,8 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
 
       // don't trim fields that allow spaces
       const encodedValue = ['cacert'].includes(id)
-        ? Base64.encode(value)
-        : Base64.encode(value.trim());
+        ? Base64.encode(value || '')
+        : Base64.encode(value?.trim() || '');
 
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
@@ -131,7 +122,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           id="user"
           name="user"
           value={user}
-          validated={state.validation.user}
+          validated={state.validation.user.type}
           onChange={(value) => handleChange('user', value)}
         />
       </FormGroup>
@@ -189,7 +180,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           id="insecureSkipVerify"
           name="insecureSkipVerify"
           label={t('Skip certificate validation')}
-          isChecked={insecureSkipVerify}
+          isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
@@ -228,7 +219,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           onClearClick={() => handleChange('cacert', '')}
           browseButtonText="Upload"
           url={url}
-          isDisabled={insecureSkipVerify}
+          isDisabled={insecureSkipVerify === 'true'}
         />
       </FormGroup>
     </Form>

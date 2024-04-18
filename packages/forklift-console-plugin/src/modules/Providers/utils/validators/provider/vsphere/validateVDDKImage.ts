@@ -1,6 +1,7 @@
 import { validateContainerImage, ValidationMsg } from '../../common';
 
 export const validateVDDKImage = (vddkImage: string | number): ValidationMsg => {
+  // For a newly opened form where the field is not set yet, set the validation type to default.
   if (vddkImage === undefined)
     return {
       msg: 'The VDDK image is empty, it is recommended to provide an image, for example: quay.io/kubev2v/vddk:latest .',
@@ -12,7 +13,7 @@ export const validateVDDKImage = (vddkImage: string | number): ValidationMsg => 
     return { type: 'error', msg: 'VDDK image is not a string' };
   }
 
-  const trimmedVddkImage: string = vddkImage.toString().trim();
+  const trimmedVddkImage: string = vddkImage.trim();
   const isValidTrimmedVddkImage = validateContainerImage(trimmedVddkImage);
 
   if (trimmedVddkImage === '')

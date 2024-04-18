@@ -18,7 +18,7 @@ import {
  * 'error' - The field's value has failed validation.
  */
 export const ovirtSecretFieldValidator = (id: string, value: string): ValidationMsg => {
-  const trimmedValue = value.trim();
+  const trimmedValue = value?.trim();
 
   let validationState: ValidationMsg;
 
@@ -30,7 +30,7 @@ export const ovirtSecretFieldValidator = (id: string, value: string): Validation
       validationState = validatePassword(trimmedValue);
       break;
     case 'insecureSkipVerify':
-      validationState = { type: 'default', msg: 'Migrate without validating a CA certificate' };
+      validationState = validateInsecureSkipVerify(trimmedValue);
       break;
     case 'cacert':
       validationState = validateCacert(trimmedValue);
@@ -45,6 +45,14 @@ export const ovirtSecretFieldValidator = (id: string, value: string): Validation
 
 const validateUser = (value: string): ValidationMsg => {
   const noSpaces = validateNoSpaces(value);
+
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'A username for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint, for example: name@internal . [required]',
+    };
+  }
 
   if (value === '') {
     return {
@@ -75,6 +83,14 @@ const validateUser = (value: string): ValidationMsg => {
 const validatePassword = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'User name password is required, user password for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint.',
+    };
+  }
+
   if (value === '') {
     return {
       type: 'error',
@@ -95,7 +111,8 @@ const validatePassword = (value: string): ValidationMsg => {
 const validateCacert = (value: string): ValidationMsg => {
   const valid = validatePublicCert(value);
 
-  if (value === '') {
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined || value === '') {
     return {
       type: 'default',
       msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
@@ -113,4 +130,19 @@ const validateCacert = (value: string): ValidationMsg => {
     type: 'error',
     msg: 'Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.',
   };
+};
+
+const validateInsecureSkipVerify = (value: string): ValidationMsg => {
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return { type: 'default', msg: 'Migrate without validating a CA certificate' };
+  }
+
+  const valid = ['true', 'false', ''].includes(value);
+
+  if (valid) {
+    return { type: 'success', msg: 'Migrate without validating a CA certificate' };
+  }
+
+  return { type: 'error', msg: 'Invalid Skip certificate validation value, must be true or false' };
 };

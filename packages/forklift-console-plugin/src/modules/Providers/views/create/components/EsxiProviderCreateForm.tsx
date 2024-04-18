@@ -23,7 +23,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
 
   const url = provider?.spec?.url;
   const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'];
-  const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'] || '';
+  const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'];
 
   const vddkHelperTextPopover = (
     <ForkliftTrans>

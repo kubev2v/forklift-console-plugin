@@ -67,6 +67,14 @@ export const openstackSecretFieldValidator = (id: string, value: string): Valida
 const validateUsername = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
+    };
+  }
+
   if (value === '') {
     return {
       type: 'error',
@@ -86,6 +94,14 @@ const validateUsername = (value: string): ValidationMsg => {
 
 const validatePassword = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
+
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'A user password for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
+    };
+  }
 
   if (value === '') {
     return {
@@ -107,6 +123,14 @@ const validatePassword = (value: string): ValidationMsg => {
 const validateRegionName = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'OpenStack region name. [required]',
+    };
+  }
+
   if (value === '') {
     return {
       type: 'error',
@@ -123,6 +147,14 @@ const validateRegionName = (value: string): ValidationMsg => {
 
 const validateProjectName = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
+
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'OpenStack project name. [required]',
+    };
+  }
 
   if (value === '') {
     return {
@@ -141,6 +173,14 @@ const validateProjectName = (value: string): ValidationMsg => {
 const validateDomainName = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'OpenStack domain name. [required]',
+    };
+  }
+
   if (value === '') {
     return {
       type: 'error',
@@ -158,6 +198,14 @@ const validateDomainName = (value: string): ValidationMsg => {
 const validateToken = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'OpenStack token for authentication using a user name. [required]',
+    };
+  }
+
   if (value === '') {
     return {
       type: 'error',
@@ -174,6 +222,14 @@ const validateToken = (value: string): ValidationMsg => {
 
 const validateUserID = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
+
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'A user ID for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
+    };
+  }
 
   if (value === '') {
     return {
@@ -195,6 +251,14 @@ const validateUserID = (value: string): ValidationMsg => {
 const validateProjectID = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'OpenStack project ID. [required]',
+    };
+  }
+
   if (value === '') {
     return {
       type: 'error',
@@ -211,6 +275,14 @@ const validateProjectID = (value: string): ValidationMsg => {
 
 const validateApplicationCredentialID = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
+
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'OpenStack application credential ID needed for the application credential authentication. [required]',
+    };
+  }
 
   if (value === '') {
     return {
@@ -232,6 +304,14 @@ const validateApplicationCredentialID = (value: string): ValidationMsg => {
 const validateApplicationCredentialSecret = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'OpenStack application credential Secret needed for the application credential authentication. [required]',
+    };
+  }
+
   if (value === '') {
     return {
       type: 'error',
@@ -252,6 +332,14 @@ const validateApplicationCredentialSecret = (value: string): ValidationMsg => {
 const validateApplicationCredentialName = (value: string): ValidationMsg => {
   const valid = validateNoSpaces(value);
 
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return {
+      type: 'default',
+      msg: 'OpenStack application credential name needed for application credential authentication. [required]',
+    };
+  }
+
   if (value === '') {
     return {
       type: 'error',
@@ -270,19 +358,24 @@ const validateApplicationCredentialName = (value: string): ValidationMsg => {
 };
 
 const validateInsecureSkipVerify = (value: string): ValidationMsg => {
+  // For a newly opened form where the field is not set yet, set the validation type to default.
+  if (value === undefined) {
+    return { type: 'default', msg: 'Migrate without validating a CA certificate' };
+  }
+
   const valid = ['true', 'false', ''].includes(value);
 
   if (valid) {
     return { type: 'success', msg: 'Migrate without validating a CA certificate' };
   }
 
-  return { type: 'error', msg: 'Invalid skip verify flag, must be true or false' };
+  return { type: 'error', msg: 'Invalid Skip certificate validation value, must be true or false' };
 };
 
 const validateCacert = (value: string): ValidationMsg => {
   const valid = validatePublicCert(value);
 
-  if (value === '') {
+  if (value === undefined || value === '') {
     return {
       type: 'default',
       msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',

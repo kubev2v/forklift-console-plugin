@@ -16,14 +16,11 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
 }) => {
   const { t } = useForkliftTranslation();
 
-  const url = provider?.spec?.url || '';
+  const url = provider?.spec?.url;
 
   const initialState = {
     validation: {
-      url: {
-        type: 'default',
-        msg: 'The URL of the Openshift Virtualization API endpoint, for example: https://example.com:6443 .',
-      },
+      url: validateOpenshiftURL(url),
     },
   };
 
@@ -48,7 +45,7 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
     (id, value) => {
       if (id !== 'url') return;
 
-      const trimmedUrl: string = value.toString().trim();
+      const trimmedUrl: string = value?.toString().trim();
       const validationState = validateOpenshiftURL(trimmedUrl);
 
       dispatch({

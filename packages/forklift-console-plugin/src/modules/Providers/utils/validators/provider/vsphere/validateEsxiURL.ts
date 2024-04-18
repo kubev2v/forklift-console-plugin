@@ -1,6 +1,7 @@
 import { validateURL, ValidationMsg } from '../../common';
 
 export const validateEsxiURL = (url: string | number): ValidationMsg => {
+  // For a newly opened form where the field is not set yet, set the validation type to default.
   if (url === undefined) {
     return {
       type: 'default',
@@ -13,7 +14,7 @@ export const validateEsxiURL = (url: string | number): ValidationMsg => {
     return { type: 'error', msg: 'URL is not a string' };
   }
 
-  const trimmedUrl: string = url.toString().trim();
+  const trimmedUrl: string = url.trim();
   const isValidURL = validateURL(trimmedUrl);
 
   if (trimmedUrl === '') {

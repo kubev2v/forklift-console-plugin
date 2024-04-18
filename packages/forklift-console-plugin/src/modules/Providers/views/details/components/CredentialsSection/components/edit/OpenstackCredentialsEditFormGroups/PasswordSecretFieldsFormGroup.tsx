@@ -15,26 +15,20 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const username = safeBase64Decode(secret?.data?.username || '');
-  const password = safeBase64Decode(secret?.data?.password || '');
-  const regionName = safeBase64Decode(secret?.data?.regionName || '');
-  const projectName = safeBase64Decode(secret?.data?.projectName || '');
-  const domainName = safeBase64Decode(secret?.data?.domainName || '');
+  const username = safeBase64Decode(secret?.data?.username);
+  const password = safeBase64Decode(secret?.data?.password);
+  const regionName = safeBase64Decode(secret?.data?.regionName);
+  const projectName = safeBase64Decode(secret?.data?.projectName);
+  const domainName = safeBase64Decode(secret?.data?.domainName);
 
   const initialState = {
     passwordHidden: true,
     validation: {
-      username: {
-        type: 'default',
-        msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint.',
-      },
-      password: {
-        type: 'default',
-        msg: 'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
-      },
-      regionName: { type: 'default', msg: 'OpenStack region name.' },
-      projectName: { type: 'default', msg: 'OpenStack project name.' },
-      domainName: { type: 'default', msg: 'OpenStack domain name.' },
+      username: openstackSecretFieldValidator('username', username),
+      password: openstackSecretFieldValidator('password', password),
+      regionName: openstackSecretFieldValidator('regionName', regionName),
+      projectName: openstackSecretFieldValidator('projectName', projectName),
+      domainName: openstackSecretFieldValidator('domainName', domainName),
     },
   };
 
@@ -63,7 +57,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
       const validationState = openstackSecretFieldValidator(id, value);
       dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
-      const encodedValue = Base64.encode(value.trim());
+      const encodedValue = Base64.encode(value?.trim() || '');
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
     [secret, onChange],

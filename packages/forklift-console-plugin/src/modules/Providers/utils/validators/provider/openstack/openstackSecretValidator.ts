@@ -86,7 +86,7 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
   }
 
   // Add ca cert validation if not insecureSkipVerify
-  const insecureSkipVerify = safeBase64Decode(secret?.data?.['insecureSkipVerify'] || '');
+  const insecureSkipVerify = safeBase64Decode(secret?.data?.['insecureSkipVerify']);
   if (insecureSkipVerify !== 'true') {
     validateFields.push('cacert');
   }

@@ -25,8 +25,8 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
   const user = safeBase64Decode(secret?.data?.user);
   const password = safeBase64Decode(secret?.data?.password);
   const url = safeBase64Decode(secret?.data?.url);
-  const cacert = safeBase64Decode(secret?.data?.cacert || '');
-  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
+  const cacert = safeBase64Decode(secret?.data?.cacert);
+  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify);
 
   const insecureSkipVerifyHelperTextPopover = (
     <ForkliftTrans>
@@ -57,7 +57,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
     validation: {
       user: vcenterSecretFieldValidator('user', user),
       password: vcenterSecretFieldValidator('password', password),
-      insecureSkipVerify: { type: 'default', msg: 'Skip certificate validation' },
+      insecureSkipVerify: vcenterSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
       cacert: vcenterSecretFieldValidator('cacert', cacert),
     },
   };
@@ -88,8 +88,8 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
 
       // don't trim fields that allow spaces
       const encodedValue = ['cacert'].includes(id)
-        ? Base64.encode(value)
-        : Base64.encode(value.trim());
+        ? Base64.encode(value || '')
+        : Base64.encode(value?.trim() || '');
 
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
@@ -174,7 +174,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           id="insecureSkipVerify"
           name="insecureSkipVerify"
           label={t('Skip certificate validation')}
-          isChecked={insecureSkipVerify}
+          isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
@@ -210,7 +210,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           onDataChange={(value) => handleChange('cacert', value)}
           onTextChange={(value) => handleChange('cacert', value)}
           onClearClick={() => handleChange('cacert', '')}
-          isDisabled={insecureSkipVerify}
+          isDisabled={insecureSkipVerify === 'true'}
         />
       </FormGroup>
     </Form>

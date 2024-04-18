@@ -22,10 +22,10 @@ import { EditComponentProps } from '../BaseCredentialsSection';
 export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
   const { t } = useForkliftTranslation();
 
-  const url = safeBase64Decode(secret?.data?.url || '');
-  const token = safeBase64Decode(secret?.data?.token || '');
-  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify || '') === 'true';
-  const cacert = safeBase64Decode(secret?.data?.cacert || '');
+  const url = safeBase64Decode(secret?.data?.url);
+  const token = safeBase64Decode(secret?.data?.token);
+  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify);
+  const cacert = safeBase64Decode(secret?.data?.cacert);
 
   const insecureSkipVerifyHelperTextPopover = (
     <ForkliftTrans>
@@ -54,15 +54,9 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
   const initialState = {
     passwordHidden: true,
     validation: {
-      token: {
-        type: 'default',
-        msg: 'A service account token, required for authenticating the the connection to the API server.',
-      },
-      insecureSkipVerify: { type: 'default', msg: 'Migrate without validating a CA certificate' },
-      cacert: {
-        type: 'default',
-        msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
-      },
+      token: openshiftSecretFieldValidator('token', token),
+      insecureSkipVerify: openshiftSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
+      cacert: openshiftSecretFieldValidator('cacert', cacert),
     },
   };
 
@@ -93,8 +87,8 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
       // don't trim fields that allow spaces
       const encodedValue = ['cacert'].includes(id)
-        ? Base64.encode(value)
-        : Base64.encode(value.trim());
+        ? Base64.encode(value || '')
+        : Base64.encode(value?.trim() || '');
 
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
@@ -155,15 +149,14 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         }
         fieldId="insecureSkipVerify"
         validated={state.validation.insecureSkipVerify.type}
-        helperText={state.validation.insecureSkipVerify.msg}
         helperTextInvalid={state.validation.insecureSkipVerify.msg}
       >
         <Switch
           className="forklift-section-secret-edit-switch"
           id="insecureSkipVerify"
           name="insecureSkipVerify"
-          label={t('Migrate without validating a CA certificate')}
-          isChecked={insecureSkipVerify}
+          label={t('Skip certificate validation')}
+          isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
@@ -202,7 +195,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           onClearClick={() => handleChange('cacert', '')}
           browseButtonText="Upload"
           url={url}
-          isDisabled={insecureSkipVerify}
+          isDisabled={insecureSkipVerify === 'true'}
         />
       </FormGroup>
     </Form>
