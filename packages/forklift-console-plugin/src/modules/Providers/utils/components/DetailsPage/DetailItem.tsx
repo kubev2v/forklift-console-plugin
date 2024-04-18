@@ -132,21 +132,24 @@ export const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
 );
 
 /**
- * Component for displaying an inline link button with editable content.
+ * Component for displaying an editable content in the following format:
+ * The content field's element and next to that appears a press-able inline
+ * link edit button with the pencil icon, for triggering the onEdit callback.
  *
  * @component
- * @param {ReactNode} content - The content of the button.
+ * @param {ReactNode} content - The field's content element.
  * @param {Function} onEdit - Function to be called when the button is clicked.
  */
-export const EditableContentButton: React.FC<{ content: ReactNode; onEdit: () => void }> = ({
-  content,
-  onEdit,
-}) => (
-  <Button variant="link" isInline onClick={onEdit}>
-    <DescriptionListDescription>
-      {content} <Pencil className="forklift-page-details-edit-pencil" />
-    </DescriptionListDescription>
-  </Button>
+export const EditableContentButton: React.FC<{
+  content: ReactNode;
+  onEdit: () => void;
+}> = ({ content, onEdit }) => (
+  <DescriptionListDescription>
+    {content}
+    <Button variant="link" isInline onClick={onEdit}>
+      <Pencil className="forklift-page-details-edit-pencil" />
+    </Button>
+  </DescriptionListDescription>
 );
 
 /**
