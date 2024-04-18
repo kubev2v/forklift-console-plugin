@@ -12,14 +12,14 @@ import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 /**
  * @typedef {Object} NameDetailsItemProps - extends ProviderDetailsItemProps
-
- * @property {string} [webUILinkText - A text to be displayed as a content.
- * @property {function} [calcWebUILink] - A method for auto calculating the provider's UI path.
- **/
+ *
+ * @property {string} [webUILinkText - A label text to be displayed as a content.
+ * @property {string} [webUILinkCalcVal] - provider's auto calculated UI link (uses as a default if no value is set by the user).
+ */
 
 export interface NameAndUiLinkDetailsItemProps extends ProviderDetailsItemProps {
   webUILinkText?: string;
-  calcWebUILink?: (provider: V1beta1Provider) => string;
+  webUILinkCalcVal?: string;
 }
 
 const getProviderUIAnnotation = (provider: V1beta1Provider): string =>
@@ -40,7 +40,7 @@ export const NameAndUiLinkDetailsItem: React.FC<NameAndUiLinkDetailsItemProps> =
   helpContent,
   canPatch,
   webUILinkText,
-  calcWebUILink,
+  webUILinkCalcVal,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -65,8 +65,7 @@ export const NameAndUiLinkDetailsItem: React.FC<NameAndUiLinkDetailsItemProps> =
   const nameContent = provider?.metadata?.name;
 
   // Read the annotation for getting the web UI link and only if empty, try to auto calculate the provider web UI path
-  const webUILink =
-    getProviderUIAnnotation(provider) ?? (calcWebUILink ? calcWebUILink(provider) : null);
+  const webUILink = getProviderUIAnnotation(provider) ?? webUILinkCalcVal;
 
   const webUILinkContent = (
     <ExternalLink text={webUILinkText} href={webUILink} isInline={true}>
