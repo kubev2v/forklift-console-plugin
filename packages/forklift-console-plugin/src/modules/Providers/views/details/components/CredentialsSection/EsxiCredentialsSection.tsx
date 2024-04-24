@@ -7,7 +7,7 @@ import {
   BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { EsxiCredentialsEdit } from './components/edit/EsxiCredentialsEdit';
-import { VSphereCredentialsList } from './components/list/VSphereCredentialsList';
+import { EsxiCredentialsList } from './components/list';
 
 export type EsxiCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
@@ -19,7 +19,7 @@ export const EsxiCredentialsSection: React.FC<EsxiCredentialsSectionProps> = (pr
     <BaseCredentialsSection
       {...props}
       validator={esxiSecretValidator}
-      ListComponent={VSphereCredentialsList}
+      ListComponent={EsxiCredentialsList}
       EditComponent={EsxiCredentialsEdit}
     />
   </ModalHOC>

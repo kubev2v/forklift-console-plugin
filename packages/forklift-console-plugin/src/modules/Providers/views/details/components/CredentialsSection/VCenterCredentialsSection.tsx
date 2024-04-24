@@ -7,7 +7,7 @@ import {
   BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { VCenterCredentialsEdit } from './components/edit/VCenterCredentialsEdit';
-import { VSphereCredentialsList } from './components/list/VSphereCredentialsList';
+import { VCenterCredentialsList } from './components/list/VCenterCredentialsList';
 
 export type VCenterCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
@@ -19,7 +19,7 @@ export const VCenterCredentialsSection: React.FC<VCenterCredentialsSectionProps>
     <BaseCredentialsSection
       {...props}
       validator={vcenterSecretValidator}
-      ListComponent={VSphereCredentialsList}
+      ListComponent={VCenterCredentialsList}
       EditComponent={VCenterCredentialsEdit}
     />
   </ModalHOC>
