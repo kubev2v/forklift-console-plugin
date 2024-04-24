@@ -10,7 +10,7 @@ import { ListComponentProps } from '../BaseCredentialsSection';
 
 import { Fields } from './Fields';
 
-export const VSphereCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
+export const VCenterCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
   const { t } = useForkliftTranslation();
 
   const items = [];
