@@ -103,7 +103,7 @@ export const mapTargetNetworksIdsToLabels = (
   plan: V1beta1Plan,
 ): { [label: string]: string } => {
   const tuples: [string, string][] = targets
-    .filter(({ namespace }) => namespace === plan.spec.targetNamespace)
+    .filter(({ namespace }) => namespace === plan.spec.targetNamespace || namespace === 'default')
     .map((net) => [net.uid, net.name]);
 
   tuples.push(['pod', POD_NETWORK]);

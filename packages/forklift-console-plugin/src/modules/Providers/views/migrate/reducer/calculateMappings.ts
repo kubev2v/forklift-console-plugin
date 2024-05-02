@@ -38,7 +38,7 @@ export const calculateNetworks = (
 
   const targetNetworkNameToUid = Object.fromEntries(
     existingResources.targetNetworks
-      .filter(({ namespace }) => namespace === plan.spec.targetNamespace)
+      .filter(({ namespace }) => namespace === plan.spec.targetNamespace || namespace === 'default')
       .map((net) => [net.name, net.uid]),
   );
   const targetNetworkLabels = [
