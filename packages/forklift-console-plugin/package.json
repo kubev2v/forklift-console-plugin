@@ -45,7 +45,7 @@
     "react-router-dom": "5.3.x"
   },
   "devDependencies": {
-    "@kubev2v/types": "0.0.12",
+    "@kubev2v/types": "0.0.15",
     "@kubev2v/webpack": "*",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.11",
     "@types/react": "^17.0.1",
