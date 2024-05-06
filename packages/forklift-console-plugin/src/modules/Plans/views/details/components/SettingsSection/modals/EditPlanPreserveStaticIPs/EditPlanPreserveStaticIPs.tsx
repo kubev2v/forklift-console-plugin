@@ -38,6 +38,8 @@ interface SwitchRendererProps {
 }
 
 const PreserveStaticIPsInputFactory: () => ModalInputComponentType = () => {
+  const { t } = useForkliftTranslation();
+
   const SwitchRenderer: React.FC<SwitchRendererProps> = ({ value, onChange }) => {
     const onChangeInternal = (v) => {
       onChange(v ? 'true' : 'false');
@@ -46,8 +48,12 @@ const PreserveStaticIPsInputFactory: () => ModalInputComponentType = () => {
     return (
       <Switch
         id="simple-switch"
-        label="Preserve the static IPs that the VM runs with in vSphere provider's environment."
-        labelOff="Do not try to preserve the static IPs that the VM runs with in vSphere provider's environment."
+        label={t(
+          'Preserve the static IPs of VMs with Windows guest operating system from vSphere.',
+        )}
+        labelOff={t(
+          'Do not try to preserve the static IPs of VMs with Windows guest operating system from vSphere.',
+        )}
         isChecked={value === 'true'}
         onChange={onChangeInternal}
       />
@@ -68,7 +74,7 @@ const EditPlanPreserveStaticIPs_: React.FC<EditPlanPreserveStaticIPsProps> = (pr
       label={props?.label || t('Whether to preserve the static IPs')}
       model={PlanModel}
       onConfirmHook={onConfirm}
-      body={t(`Preserve the static IPs that the VM runs with in vSphere provider's environment.`)}
+      body={t(`Preserve the static IPs of VMs with Windows guest operating system from vSphere.`)}
       InputComponent={PreserveStaticIPsInputFactory()}
     />
   );
