@@ -54,8 +54,8 @@ function setup_bridge_for_openshift_oauth () {
     BRIDGE_K8S_MODE_OFF_CLUSTER_SKIP_VERIFY_TLS=true
     BRIDGE_USER_SETTINGS_LOCATION="localstorage"
 
-    BRIDGE_K8S_AUTH="openshift"
-    BRIDGE_USER_AUTH="openshift"
+    BRIDGE_K8S_AUTH="bearer-token"
+    BRIDGE_K8S_AUTH_BEARER_TOKEN=$(oc whoami --show-token 2>/dev/null)
 
     if oc_available_loggedin; then
         BRIDGE_USER_AUTH_OIDC_CLIENT_ID="console-oauth-client-dev"
