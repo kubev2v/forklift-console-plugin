@@ -8,7 +8,7 @@ import { DetailsItem } from '../../../../utils';
 import {
   CreatedAtDetailsItem,
   CredentialsDetailsItem,
-  NameDetailsItem,
+  NameAndUiLinkDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
   TransferNetworkDetailsItem,
@@ -32,7 +32,7 @@ export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data })
 
       <DetailsItem title={''} content={''} />
 
-      <NameDetailsItem resource={provider} />
+      <NameAndUiLinkDetailsItem resource={provider} />
 
       <NamespaceDetailsItem resource={provider} />
 

@@ -18,6 +18,8 @@ import {
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
+import { ensureArray } from '../../helpers';
+
 /**
  * Component for displaying a details item.
  * It can optionally include a help text popover, breadcrumbs, and an edit button.
@@ -27,36 +29,65 @@ import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
  */
 export const DetailsItem: React.FC<DetailsItemProps> = ({
   title,
-  content,
   helpContent,
   showHelpIconNextToTitle,
   moreInfoLabel,
   moreInfoLink,
   crumbs,
+  content,
   onEdit,
 }) => {
+  const contents = ensureArray(content);
+  const onEdits = ensureArray(onEdit);
+
   return (
     <DescriptionListGroup>
-      {helpContent ? (
-        <DescriptionTitleWithHelp
-          title={title}
-          helpContent={helpContent}
-          showHelpIconNextToTitle={showHelpIconNextToTitle}
-          moreInfoLabel={moreInfoLabel}
-          moreInfoLink={moreInfoLink}
-          crumbs={crumbs}
-        />
-      ) : (
-        <DescriptionTitle title={title} />
-      )}
-      {onEdit ? (
-        <EditableContentButton content={content} onEdit={onEdit} />
-      ) : (
-        <NonEditableContent content={content} />
-      )}
+      <DisplayTitle
+        title={title}
+        helpContent={helpContent}
+        showHelpIconNextToTitle={showHelpIconNextToTitle}
+        moreInfoLabel={moreInfoLabel}
+        moreInfoLink={moreInfoLink}
+        crumbs={crumbs}
+      />
+      <DescriptionListDescription>
+        {contents?.map((value, index) => (
+          <ContentField
+            key={'content-field-' + index}
+            content={value}
+            onEdit={onEdits ? (onEdits[index] as () => void) : null}
+          />
+        ))}
+      </DescriptionListDescription>
     </DescriptionListGroup>
   );
 };
+
+/**
+ * Component for displaying an item's title
+ *
+ * @component
+ */
+export const DisplayTitle: React.FC<{
+  title: string;
+  helpContent: ReactNode;
+  showHelpIconNextToTitle: boolean;
+  moreInfoLabel?: string;
+  moreInfoLink?: string;
+  crumbs?: string[];
+}> = ({ title, helpContent, showHelpIconNextToTitle, moreInfoLabel, moreInfoLink, crumbs }) =>
+  helpContent ? (
+    <DescriptionTitleWithHelp
+      title={title}
+      helpContent={helpContent}
+      showHelpIconNextToTitle={showHelpIconNextToTitle}
+      moreInfoLabel={moreInfoLabel}
+      moreInfoLink={moreInfoLink}
+      crumbs={crumbs}
+    />
+  ) : (
+    <DescriptionTitle title={title} />
+  );
 
 /**
  * Component for displaying title with help text in a popover.
@@ -123,7 +154,7 @@ export const DescriptionTitleWithHelp: React.FC<{
 );
 
 /**
- * Component for displaying title.
+ * Component for displaying title without a popover.
  *
  * @component
  */
@@ -132,55 +163,49 @@ export const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
 );
 
 /**
- * Component for displaying an editable content in the following format:
- * The content field's element and next to that appears a press-able inline
+ * Component for displaying an editable or non editable content field with the following format:
+ * The content field's element and if editable, next to that appears a press-able inline
  * link edit button with the pencil icon, for triggering the onEdit callback.
  *
  * @component
  * @param {ReactNode} content - The field's content element.
  * @param {Function} onEdit - Function to be called when the button is clicked.
  */
-export const EditableContentButton: React.FC<{
+
+export const ContentField: React.FC<{
   content: ReactNode;
   onEdit: () => void;
-}> = ({ content, onEdit }) => (
-  <DescriptionListDescription>
-    {content}
-    <Button variant="link" isInline onClick={onEdit}>
-      <Pencil className="forklift-page-details-edit-pencil" />
-    </Button>
-  </DescriptionListDescription>
-);
-
-/**
- * Component for displaying a non-editable content.
- *
- * @component
- * @param {ReactNode} content - The content of the description.
- */
-export const NonEditableContent: React.FC<{ content: ReactNode }> = ({ content }) => (
-  <DescriptionListDescription>{content}</DescriptionListDescription>
-);
+}> = ({ content, onEdit }) =>
+  onEdit ? (
+    <DescriptionListDescription>
+      {content}
+      <Button variant="link" isInline onClick={onEdit}>
+        <Pencil className="forklift-page-details-edit-pencil" />
+      </Button>
+    </DescriptionListDescription>
+  ) : (
+    <DescriptionListDescription>{content}</DescriptionListDescription>
+  );
 
 /**
  * Type for the props of the DetailsItem component.
  *
  * @typedef {Object} DetailsItemProps
  * @property {string} title - The title of the details item.
- * @property {ReactNode} content - The content of the details item.
  * @property {ReactNode} [helpContent] - The content to display in the help popover.
  * @property {ReactNode} [showHelpIconNextToTitle] - if true, adding a help icon next to the title for displaying the help popover.
  *    If false, show the default Patternfly dashed line under the title.
  * @property {string[]} [crumbs] - Breadcrumbs for the details item.
- * @property {Function} [onEdit] - Function to be called when the edit button is clicked.
+ * @property {ReactNode | ReactNode[]} content - Array of content fields to be displayed for the details item.
+ * @property {Function | Function[]} onEdit - Array of functions per content field to be called when the edit button is clicked or null if the field is non editable.
  */
 export type DetailsItemProps = {
   title: string;
-  content: ReactNode;
   helpContent?: ReactNode;
   showHelpIconNextToTitle?: boolean;
   moreInfoLabel?: string;
   moreInfoLink?: string;
   crumbs?: string[];
-  onEdit?: () => void;
+  content: ReactNode | ReactNode[];
+  onEdit?: (() => void) | (() => void)[];
 };
