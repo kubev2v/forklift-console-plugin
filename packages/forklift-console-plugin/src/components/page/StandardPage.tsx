@@ -177,13 +177,6 @@ export interface StandardPageProps<T> {
   page: number;
 
   /**
-   * Update page number
-   *
-   * @param number Update page
-   */
-  setPage: (number) => void;
-
-  /**
    * Prefix for filters stored in the query params part of the URL.
    * By default no prefix is used - the field ID is used directly.
    */
@@ -271,7 +264,6 @@ export interface StandardPageProps<T> {
  *   title="My List"
  *   fieldsMetadata={myFieldsMetadata}
  *   page={page}
- *   setPage={setPage}
  *   // ...other props
  * />
  */
@@ -287,8 +279,7 @@ export function StandardPage<T>({
   customNoResultsFound,
   customNoResultsMatchFilter,
   pagination = DEFAULT_PER_PAGE,
-  page,
-  setPage,
+  page: initialPage,
   userSettings,
   filterPrefix = '',
   extraSupportedMatchers,
@@ -303,6 +294,7 @@ export function StandardPage<T>({
     t,
     i18n: { resolvedLanguage },
   } = useForkliftTranslation();
+  const [page, setPage] = useState(initialPage);
   const [filteredData, setFilteredData] = useState([]);
 
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
