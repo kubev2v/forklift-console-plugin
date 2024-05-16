@@ -17,8 +17,6 @@ import {
 } from '@kubev2v/common';
 import { Concern } from '@kubev2v/types';
 
-import { useInventoryVms } from '../utils/useInventoryVms';
-
 import { ConcernsTable } from './ConcernsTable';
 import { MigrationAction } from './MigrationAction';
 import { VmData } from './VMCellProps';
@@ -42,8 +40,6 @@ export const toId = (item: VmData) => item.vm.id;
 export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
   title,
   obj,
-  loaded,
-  loadError,
   cellMapper,
   fieldsMetadataFactory,
   pageId,
@@ -54,14 +50,12 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
 }) => {
   const { t } = useForkliftTranslation();
   const [page, setPage] = useState(1);
-
-  const initialSelectedIds_ = initialSelectedIds || [];
-
-  const [selectedIds, setSelectedIds] = useState(initialSelectedIds_);
-  const [expandedIds, setExpandedIds] = useState([]);
   const [userSettings] = useState(() => loadUserSettings({ pageId }));
 
-  const [vmData, loading] = useInventoryVms(obj, loaded, loadError);
+  const initialSelectedIds_ = initialSelectedIds || [];
+  const initialExpandedIds_ = [];
+  const { vmData, vmDataLoading } = obj;
+
   const actions: FC<GlobalActionWithSelection<VmData>>[] = [
     ({ selectedIds }) => (
       <MigrationAction
@@ -74,8 +68,6 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   ];
 
   const onSelectedIds = (selectedIds: string[]) => {
-    setSelectedIds(selectedIds);
-
     if (onSelect) {
       const selectedVms = vmData.filter((data) => selectedIds.includes(toId(data)));
       onSelect(selectedVms);
@@ -86,7 +78,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
     <StandardPageWithSelection
       className={className}
       data-testid="vm-list"
-      dataSource={[vmData || [], !loading, null]}
+      dataSource={[vmData || [], !vmDataLoading, null]}
       CellMapper={cellMapper}
       fieldsMetadata={fieldsMetadataFactory(t)}
       namespace={obj?.provider?.metadata?.namespace}
@@ -100,11 +92,10 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       GlobalActionToolbarItems={showActions ? actions : undefined}
       toId={toId}
       onSelect={onSelectedIds}
-      selectedIds={selectedIds}
+      selectedIds={initialSelectedIds_}
       page={page}
       setPage={setPage}
-      expandedIds={expandedIds}
-      onExpand={setExpandedIds}
+      expandedIds={initialExpandedIds_}
       ExpandedComponent={ConcernsTable}
     />
   );

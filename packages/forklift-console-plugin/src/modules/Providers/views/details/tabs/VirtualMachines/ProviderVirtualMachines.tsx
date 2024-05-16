@@ -1,14 +1,14 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderInventory, ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
+import { useInventoryVms } from './utils/useInventoryVms';
 import { VmData } from './components';
 import { OpenShiftVirtualMachinesList } from './OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from './OpenStackVirtualMachinesList';
@@ -40,13 +40,13 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
     namespace,
   });
 
-  const { inventory } = useProviderInventory<ProviderInventory>({ provider });
-  const obj = { provider, inventory };
+  const [vmData, vmDataLoading] = useInventoryVms({ provider }, providerLoaded, providerLoadError);
+  const obj = { provider, vmData, vmDataLoading };
 
   return (
     <>
       <PageSection variant="light" className="forklift-page-section--info">
-        {inventory?.vmCount > 0 && (
+        {vmData?.length > 0 && (
           <Alert
             customIcon={<BellIcon />}
             variant="info"

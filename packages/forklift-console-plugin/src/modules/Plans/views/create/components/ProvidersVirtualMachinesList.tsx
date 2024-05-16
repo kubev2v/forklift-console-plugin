@@ -1,8 +1,8 @@
 import React from 'react';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
 import { ProviderVirtualMachinesListWrapper, VmData } from 'src/modules/Providers/views';
+import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/useInventoryVms';
 
-import { ProviderInventory, ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 export const ProviderVirtualMachinesList: React.FC<{
@@ -21,8 +21,8 @@ export const ProviderVirtualMachinesList: React.FC<{
     namespace,
   });
 
-  const { inventory } = useProviderInventory<ProviderInventory>({ provider });
-  const obj = { provider, inventory };
+  const [vmData, vmDataLoading] = useInventoryVms({ provider }, providerLoaded, providerLoadError);
+  const obj = { provider, vmData, vmDataLoading: vmDataLoading || vmData?.length === 0 };
 
   return (
     <ProviderVirtualMachinesListWrapper

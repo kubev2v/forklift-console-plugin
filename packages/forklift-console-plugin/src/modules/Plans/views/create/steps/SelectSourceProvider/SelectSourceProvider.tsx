@@ -6,7 +6,8 @@ import { Title } from '@patternfly/react-core';
 
 import { PlanCreatePageActionTypes, PlanCreatePageState } from '../../states';
 
-import { PlanCreateForm, ProviderVirtualMachinesList } from './../../components';
+import { PlanCreateForm } from './../../components';
+import { MemoizedProviderVirtualMachinesList } from './MemoizedProviderVirtualMachinesList';
 
 export const SelectSourceProvider: React.FC<{
   namespace: string;
@@ -46,7 +47,7 @@ export const SelectSourceProvider: React.FC<{
             {t('Select virtual machines')}
           </Title>
 
-          <ProviderVirtualMachinesList
+          <MemoizedProviderVirtualMachinesList
             title=""
             name={selectedProviderName}
             namespace={selectedProviderNamespace}

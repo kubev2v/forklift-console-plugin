@@ -16,19 +16,15 @@ import { VmData } from '../components';
  * @returns {Array} tuple containing: the data, loading status and load error (if any)
  */
 export const useInventoryVms = (
-  { provider, inventory }: ProviderData,
+  { provider }: ProviderData,
   providerLoaded: boolean,
   providerLoadError: unknown,
 ): [VmData[], boolean, Error] => {
-  const largeInventory = inventory?.vmCount > 1000;
-  const customTimeoutAndInterval = largeInventory ? 250000 : undefined;
   const validProvider = providerLoaded && !providerLoadError && provider;
 
   const inventoryOptions: UseProviderInventoryParams = {
     provider: validProvider,
     subPath: 'vms?detail=4',
-    fetchTimeout: customTimeoutAndInterval,
-    interval: customTimeoutAndInterval,
   };
 
   const {
