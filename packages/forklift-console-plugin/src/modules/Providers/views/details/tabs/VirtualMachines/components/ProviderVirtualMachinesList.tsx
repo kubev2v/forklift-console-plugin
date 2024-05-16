@@ -49,7 +49,6 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   className,
 }) => {
   const { t } = useForkliftTranslation();
-  const [page, setPage] = useState(1);
   const [userSettings] = useState(() => loadUserSettings({ pageId }));
 
   const initialSelectedIds_ = initialSelectedIds || [];
@@ -93,8 +92,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       toId={toId}
       onSelect={onSelectedIds}
       selectedIds={initialSelectedIds_}
-      page={page}
-      setPage={setPage}
+      page={1}
       expandedIds={initialExpandedIds_}
       ExpandedComponent={ConcernsTable}
     />
