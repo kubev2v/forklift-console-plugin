@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 import {
   DefaultHeader,
@@ -123,13 +123,18 @@ export function withIdBasedSelection<T>({
   toId,
   canSelect,
   onSelect,
-  selectedIds,
   onExpand,
-  expandedIds,
+  selectedIds: initialSelectedIds,
+  expandedIds: initialExpandedIds,
 }: IdBasedSelectionProps<T>) {
   const Enhanced = (props: StandardPageProps<T>) => {
-    const isSelected = onSelect ? (item: T) => selectedIds.includes(toId(item)) : undefined;
-    const isExpanded = onExpand ? (item: T) => expandedIds.includes(toId(item)) : undefined;
+    const [selectedIds, setSelectedIds] = useState(initialSelectedIds);
+    const [expandedIds, setExpandedIds] = useState(initialExpandedIds);
+
+    const isSelected =
+      onSelect || selectedIds ? (item: T) => selectedIds.includes(toId(item)) : undefined;
+    const isExpanded =
+      onExpand || expandedIds ? (item: T) => expandedIds.includes(toId(item)) : undefined;
 
     const toggleSelectFor = (items: T[]) => {
       const ids = items.map(toId);
@@ -139,7 +144,11 @@ export function withIdBasedSelection<T>({
         ...(allSelected ? [] : ids),
       ];
 
-      onSelect(newSelectedIds);
+      setSelectedIds(newSelectedIds);
+
+      if (onSelect) {
+        onSelect(newSelectedIds);
+      }
     };
 
     const toggleExpandFor = (items: T[]) => {
@@ -150,7 +159,10 @@ export function withIdBasedSelection<T>({
         ...(allExpanded ? [] : ids),
       ];
 
-      onExpand(newExpandedIds);
+      setExpandedIds(newExpandedIds);
+      if (onExpand) {
+        onExpand(newExpandedIds);
+      }
     };
 
     const { CellMapper, ExpandedComponent, ...rest } = props;
@@ -167,19 +179,21 @@ export function withIdBasedSelection<T>({
       ExpandedComponent,
     );
 
+    const HeaderMapper = withHeaderSelection({
+      HeaderMapper: props.HeaderMapper ?? DefaultHeader,
+      canSelect,
+      isSelected,
+      isExpanded,
+      toggleSelectFor,
+    });
+
     return (
       <StandardPage
         {...rest}
         expandedIds={expandedIds}
         toId={toId}
         RowMapper={RowMapper}
-        HeaderMapper={withHeaderSelection({
-          HeaderMapper: props.HeaderMapper ?? DefaultHeader,
-          canSelect,
-          isSelected,
-          isExpanded,
-          toggleSelectFor,
-        })}
+        HeaderMapper={HeaderMapper}
         GlobalActionToolbarItems={props.GlobalActionToolbarItems?.map(
           (Action: FC<GlobalActionWithSelection<T>>) => {
             const ActionWithSelection = (props) => <Action {...{ ...props, selectedIds }} />;

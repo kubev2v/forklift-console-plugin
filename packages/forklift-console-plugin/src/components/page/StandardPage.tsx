@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo } from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -303,6 +303,8 @@ export function StandardPage<T>({
     t,
     i18n: { resolvedLanguage },
   } = useForkliftTranslation();
+  const [filteredData, setFilteredData] = useState([]);
+
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
     fields: fieldsMetadata,
     filterPrefix,
@@ -318,13 +320,23 @@ export function StandardPage<T>({
     ? { ...defaultSupportedFilters, ...extraSupportedFilters }
     : defaultSupportedFilters;
 
-  const filteredData = useMemo(
-    () =>
-      flatData
+  const performFilterAndSort = useCallback(async () => {
+    const result: T[] = await new Promise((resolve) => {
+      const filtered = flatData
         .filter(createMetaMatcher(selectedFilters, fields, supportedMatchers))
-        .sort(compareFn),
-    [flatData, selectedFilters, fields, compareFn],
-  );
+        .sort(compareFn);
+      resolve(filtered);
+    });
+
+    setFilteredData(result);
+  }, [flatData, selectedFilters, fields, compareFn]);
+
+  useEffect(() => {
+    if (!loaded) {
+      return; // Prevent filter and sort if loaded is false
+    }
+    performFilterAndSort();
+  }, [flatData, selectedFilters, fields, compareFn, loaded]);
 
   const showPagination =
     pagination === 'on' || (typeof pagination === 'number' && flatData.length > pagination);
