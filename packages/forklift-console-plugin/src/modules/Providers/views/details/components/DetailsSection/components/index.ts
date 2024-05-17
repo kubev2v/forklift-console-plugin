@@ -1,7 +1,8 @@
 // @index(['./*', /style/g], f => `export * from '${f.path}';`)
 export * from './CreatedAtDetailsItem';
 export * from './CredentialsDetailsItem';
-export * from './NameAndUiLinkDetailsItem';
+export * from './ExternalManagementLinkDetailsItem';
+export * from './NamDetailsItem';
 export * from './NamespaceDetailsItem';
 export * from './OwnerDetailsItem';
 export * from './ProviderDetailsItem';
