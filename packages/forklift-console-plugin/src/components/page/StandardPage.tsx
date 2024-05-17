@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -294,8 +294,9 @@ export function StandardPage<T>({
     t,
     i18n: { resolvedLanguage },
   } = useForkliftTranslation();
-  const [page, setPage] = useState(initialPage);
+  const [sortedData, setSortedData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [page, setPage] = useState(initialPage);
 
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
     fields: fieldsMetadata,
@@ -312,26 +313,22 @@ export function StandardPage<T>({
     ? { ...defaultSupportedFilters, ...extraSupportedFilters }
     : defaultSupportedFilters;
 
-  const performFilterAndSort = useCallback(async () => {
-    const result: T[] = await new Promise((resolve) => {
-      const filtered = flatData
-        .filter(createMetaMatcher(selectedFilters, fields, supportedMatchers))
-        .sort(compareFn);
-      resolve(filtered);
-    });
-
-    setFilteredData(result);
-  }, [flatData, selectedFilters, fields, compareFn]);
+  useEffect(() => {
+    if (flatData) {
+      setSortedData([...flatData].sort(compareFn));
+    }
+  }, [flatData, compareFn, loaded]);
 
   useEffect(() => {
-    if (!loaded) {
-      return; // Prevent filter and sort if loaded is false
+    if (sortedData) {
+      setFilteredData(
+        sortedData.filter(createMetaMatcher(selectedFilters, fields, supportedMatchers)),
+      );
     }
-    performFilterAndSort();
-  }, [flatData, selectedFilters, fields, compareFn, loaded]);
+  }, [sortedData, selectedFilters, fields]);
 
   const showPagination =
-    pagination === 'on' || (typeof pagination === 'number' && flatData.length > pagination);
+    pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination);
 
   const { itemsPerPage, lastPage, setPerPage } = usePagination({
     filteredDataLength: filteredData.length,
@@ -346,12 +343,12 @@ export function StandardPage<T>({
   );
 
   const errorFetchingData = loaded && error;
-  const noResults = loaded && !error && flatData.length == 0;
-  const noMatchingResults = loaded && !error && filteredData.length === 0 && flatData.length > 0;
+  const noResults = loaded && !error && sortedData.length == 0;
+  const noMatchingResults = loaded && !error && filteredData.length === 0 && sortedData.length > 0;
 
   const primaryFilters = fields
     .filter((field) => field.filter?.primary)
-    .map(toFieldFilter(flatData));
+    .map(toFieldFilter(sortedData));
 
   return (
     <span className={className}>
