@@ -15,17 +15,8 @@ export const OvirtEditUIModal: React.FC<EditProviderUIModalProps> = (props) => {
 
   const ModalBody = (
     <ForkliftTrans>
-      <p>Link for the Red Hat Virtualization Manager (RHVM) landing page.</p>
-      <br />
-      <p>Use this link to access the RHVM user interface for RHV VMs management.</p>
-      <br />
-      <p>
-        The format of the provided link for the Red Hat Virtualization Manager (RHVM) landing page
-        should include a scheme, a domain name, path, and optionally a port. Usually the path will
-        end with /ovirt-engine, for example:{' '}
-        <strong>https://rhv-host-example.com/ovirt-engine</strong>.
-      </p>
-      <br />
+      <p>Link for the Provider Virtualization Manager landing page.</p>
+      <p>Use this link to access the user interface for the providers virtualization management.</p>
       <p>If no link value is specify then a default auto calculated or an empty value is set.</p>
     </ForkliftTrans>
   );
@@ -40,7 +31,7 @@ export const OvirtEditUIModal: React.FC<EditProviderUIModalProps> = (props) => {
       variant={ModalVariant.large}
       body={ModalBody}
       helperText={t(
-        'Link for the Red Hat Virtualization Manager (RHVM) landing page. For example, https://rhv-host-example.com/ovirt-engine.',
+        'Link for the provider Virtualization Manager landing page. For example, https://rhv-host-example.com/ovirt-engine.',
       )}
       onConfirmHook={patchProviderUI}
       validationHook={validateOvirtUILink}
