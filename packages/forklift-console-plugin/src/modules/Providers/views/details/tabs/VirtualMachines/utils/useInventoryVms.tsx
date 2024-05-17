@@ -25,6 +25,7 @@ export const useInventoryVms = (
   const inventoryOptions: UseProviderInventoryParams = {
     provider: validProvider,
     subPath: 'vms?detail=4',
+    interval: 180000,
   };
 
   const {
