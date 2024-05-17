@@ -21,11 +21,11 @@ export type EditProviderUIModalProps = Modify<
 
 export const EditProviderUIModal: React.FC<EditProviderUIModalProps> = (props) => {
   switch (props.resource?.spec?.type) {
+    case 'vsphere':
     case 'ovirt':
       return <OvirtEditUIModal {...props} />;
     case 'openshift':
     case 'openstack':
-    case 'vsphere':
     default:
       return <></>;
   }

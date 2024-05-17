@@ -8,6 +8,7 @@ import { DetailsItem } from '../../../../utils';
 import {
   CreatedAtDetailsItem,
   CredentialsDetailsItem,
+  ExternalManagementLinkDetailsItem,
   NameDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
@@ -16,11 +17,13 @@ import {
   VDDKDetailsItem,
 } from './components';
 import { DetailsSectionProps } from './DetailsSection';
+import { getVSphereProviderWebUILink } from './utils';
 
 export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
   const { provider, permissions } = data;
+  const webUILink = getVSphereProviderWebUILink(provider);
 
   return (
     <DescriptionList
@@ -39,7 +42,12 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
 
       <NameDetailsItem resource={provider} />
 
-      <NamespaceDetailsItem resource={provider} />
+      <ExternalManagementLinkDetailsItem
+        resource={provider}
+        canPatch={permissions.canPatch}
+        webUILinkText={t(`VMware UI`)}
+        webUILink={webUILink}
+      />
 
       <URLDetailsItem
         resource={provider}
@@ -57,13 +65,15 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
         }
       />
 
-      <CredentialsDetailsItem resource={provider} />
+      <NamespaceDetailsItem resource={provider} />
 
       <CreatedAtDetailsItem resource={provider} />
 
-      <VDDKDetailsItem resource={provider} canPatch={permissions.canPatch} />
+      <CredentialsDetailsItem resource={provider} />
 
       <OwnerDetailsItem resource={provider} />
+
+      <VDDKDetailsItem resource={provider} canPatch={permissions.canPatch} />
     </DescriptionList>
   );
 };
