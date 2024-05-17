@@ -8,7 +8,7 @@ import { DetailsItem } from '../../../../utils';
 import {
   CreatedAtDetailsItem,
   CredentialsDetailsItem,
-  NameAndUiLinkDetailsItem,
+  NameDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
   TypeDetailsItem,
@@ -37,7 +37,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
         crumbs={['Inventory', 'providers', `${provider.spec.type}`, '[UID]']}
       />
 
-      <NameAndUiLinkDetailsItem resource={provider} />
+      <NameDetailsItem resource={provider} />
 
       <NamespaceDetailsItem resource={provider} />
 

@@ -7,7 +7,7 @@ import { DetailsItem } from '../../../../utils';
 
 import {
   CreatedAtDetailsItem,
-  NameAndUiLinkDetailsItem,
+  NameDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
   TypeDetailsItem,
@@ -30,7 +30,7 @@ export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
 
       <DetailsItem title={''} content={''} />
 
-      <NameAndUiLinkDetailsItem resource={provider} />
+      <NameDetailsItem resource={provider} />
 
       <NamespaceDetailsItem resource={provider} />
 
