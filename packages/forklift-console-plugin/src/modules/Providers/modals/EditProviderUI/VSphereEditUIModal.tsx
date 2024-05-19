@@ -4,18 +4,18 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { validateOvirtUILink } from '../../utils';
+import { validateVSphereUILink } from '../../utils';
 import { EditModal } from '../EditModal';
 
 import { patchProviderUI } from './utils/patchProviderUI';
 import { EditProviderUIModalProps } from './EditProviderUIModal';
 
-export const OvirtEditUIModal: React.FC<EditProviderUIModalProps> = (props) => {
+export const VSphereEditUIModal: React.FC<EditProviderUIModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const ModalBody = (
     <ForkliftTrans>
-      <p>Link for the Red Hat Virtualization Manager landing page.</p>
+      <p>Link for the VMware vSphere UI.</p>
       <p>
         Use this link to access the user interface for the provider&apos;s virtualization
         management.
@@ -34,10 +34,10 @@ export const OvirtEditUIModal: React.FC<EditProviderUIModalProps> = (props) => {
       variant={ModalVariant.large}
       body={ModalBody}
       helperText={t(
-        'Link for the Red Hat Virtualization Manager landing page. For example, https://rhv-host-example.com/ovirt-engine.',
+        'Link for the VMware vSphere UI. For example, https://vSphere-host-example.com/ui.',
       )}
       onConfirmHook={patchProviderUI}
-      validationHook={validateOvirtUILink}
+      validationHook={validateVSphereUILink}
     />
   );
 };

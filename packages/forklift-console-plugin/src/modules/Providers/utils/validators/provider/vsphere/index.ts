@@ -4,6 +4,7 @@ export * from './esxiSecretValidator';
 export * from './validateEsxiURL';
 export * from './validateVCenterURL';
 export * from './validateVDDKImage';
+export * from './validateVSphereUILink';
 export * from './vcenterSecretFieldValidator';
 export * from './vcenterSecretValidator';
 export * from './vsphereProviderValidator';

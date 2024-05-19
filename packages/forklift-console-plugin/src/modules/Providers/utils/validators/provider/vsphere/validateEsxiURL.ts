@@ -31,7 +31,7 @@ export const validateEsxiURL = (url: string | number): ValidationMsg => {
     };
   }
 
-  if (!trimmedUrl.endsWith('sdk') && !trimmedUrl.endsWith('sdk/'))
+  if (!trimmedUrl.endsWith('sdk'))
     return {
       msg: 'The URL does not end with a /sdk path, for example a URL with sdk path: https://host-example.com/sdk .',
       type: 'warning',

@@ -45,7 +45,7 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
       <ExternalManagementLinkDetailsItem
         resource={provider}
         canPatch={permissions.canPatch}
-        webUILinkText={t(`VMware UI`)}
+        webUILinkText={t(`VMware vSphere UI`)}
         webUILink={webUILink}
       />
 
