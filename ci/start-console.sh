@@ -12,8 +12,16 @@ PLUGIN_URL=${PLUGIN_URL:-"http://localhost:9001"}
 CONTAINER_NETWORK_TYPE=${CONTAINER_NETWORK_TYPE:-"host"}
 CONSOLE_IMAGE=${CONSOLE_IMAGE:-"quay.io/openshift/origin-console:latest"}
 CONSOLE_PORT=${CONSOLE_PORT:-9000}
+
+# Look for forklift routes
+if oc_available_loggedin; then
+    routes=$(oc get routes -A -o template --template='{{range .items}}{{.spec.host}}{{"\n"}}{{end}}' 2>/dev/null || true)
+    INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:-$(echo "$routes" | grep forklift-inventory)}
+    SERVICES_API_SERVER_HOST=${SERVICES_API_SERVER_HOST:-$(echo "$routes" | grep forklift-services)}
+fi
+
+# Default to localhost if no route found
 INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:-"https://localhost:30444"}
-MUST_GATHER_API_SERVER_HOST=${MUST_GATHER_API_SERVER_HOST:-"https://localhost:30445"}
 SERVICES_API_SERVER_HOST=${SERVICES_API_SERVER_HOST:-"https://localhost:30446"}
 
 if [[ ${CONSOLE_IMAGE} =~ ^localhost/ ]]; then
@@ -49,11 +57,6 @@ BRIDGE_PLUGIN_PROXY=$(cat << END | jq -c .
         "authorize":true
     },
     {
-        "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/forklift-must-gather-api/",
-        "endpoint":"${MUST_GATHER_API_SERVER_HOST}",
-        "authorize":true
-    },
-    {
         "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/forklift-services/",
         "endpoint":"${SERVICES_API_SERVER_HOST}",
         "authorize":true
@@ -83,7 +86,6 @@ Container pull policy: ${PULL_POLICY}
 
 Plugins: ${BRIDGE_PLUGINS}
 Inventory server URL: ${INVENTORY_SERVER_HOST}
-Must gather API server URL: ${MUST_GATHER_API_SERVER_HOST}
 Services server URL: ${SERVICES_API_SERVER_HOST}
 Plugin proxy:
 $(echo ${BRIDGE_PLUGIN_PROXY} | jq .)
