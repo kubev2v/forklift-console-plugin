@@ -31,7 +31,7 @@ export const validateOvirtURL = (url: string | number): ValidationMsg => {
     };
   }
 
-  if (!trimmedUrl.endsWith('ovirt-engine/api') && !trimmedUrl.endsWith('ovirt-engine/api/'))
+  if (!trimmedUrl.endsWith('ovirt-engine/api'))
     return {
       msg: 'The URL does not end with a /ovirt-engine/api path, for example a URL with a path: https://rhv-host-example.com/ovirt-engine/api .',
       type: 'warning',

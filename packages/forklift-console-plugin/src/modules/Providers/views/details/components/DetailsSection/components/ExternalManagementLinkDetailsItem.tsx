@@ -34,10 +34,7 @@ export const ExternalManagementLinkDetailsItem: React.FC<
 
   const defaultHelpContent = (
     <ForkliftTrans>
-      <p>
-        Use the external management system link to access the web-based user interface for the
-        provider virtual machine management system.
-      </p>
+      <p>Use the external web UI link to access the provider virtual machine management system.</p>
       <p>You can edit and store the link to the management system to customize the link URL.</p>
     </ForkliftTrans>
   );
@@ -57,7 +54,7 @@ export const ExternalManagementLinkDetailsItem: React.FC<
   return (
     <DescriptionListDescription>
       <DetailsItem
-        title={t('External management system')}
+        title={t('External web UI link')}
         moreInfoLink={moreInfoLink}
         helpContent={helpContent ?? defaultHelpContent}
         crumbs={['metadata', 'annotations', 'forklift.konveyor.io/providerUI']}
