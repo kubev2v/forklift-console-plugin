@@ -5,6 +5,7 @@ import { K8sModel } from '@openshift-console/dynamic-plugin-sdk/lib/api/core-api
 
 import { EditModalProps } from '../EditModal';
 
+import { OpenstackEditUIModal } from './OpenstackEditUIModal';
 import { OvirtEditUIModal } from './OvirtEditUIModal';
 import { VSphereEditUIModal } from './VSphereEditUIModal';
 
@@ -28,6 +29,7 @@ export const EditProviderUIModal: React.FC<EditProviderUIModalProps> = (props) =
       return <OvirtEditUIModal {...props} />;
     case 'openshift':
     case 'openstack':
+      return <OpenstackEditUIModal {...props} />;
     default:
       return <></>;
   }
