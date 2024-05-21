@@ -31,7 +31,7 @@ export const validateOpenstackURL = (url: string | number): ValidationMsg => {
     };
   }
 
-  if (!trimmedUrl.endsWith('v3') && !trimmedUrl.endsWith('v3/'))
+  if (!trimmedUrl.endsWith('v3'))
     return {
       msg: 'The URL does not end with a /v3 path, for example a URL with v3 path: https://identity_service.com:5000/v3 .',
       type: 'warning',

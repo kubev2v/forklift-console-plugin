@@ -1,5 +1,5 @@
 import React from 'react';
-import { ForkliftTrans } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
@@ -8,6 +8,7 @@ import { DetailsItem } from '../../../../utils';
 import {
   CreatedAtDetailsItem,
   CredentialsDetailsItem,
+  ExternalManagementLinkDetailsItem,
   NameDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
@@ -15,9 +16,12 @@ import {
   URLDetailsItem,
 } from './components';
 import { DetailsSectionProps } from './DetailsSection';
+import { getOpenstackProviderWebUILink } from './utils';
 
 export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
+  const { t } = useForkliftTranslation();
   const { provider, permissions } = data;
+  const webUILink = getOpenstackProviderWebUILink(provider);
 
   return (
     <DescriptionList
@@ -27,7 +31,12 @@ export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data })
     >
       <TypeDetailsItem resource={provider} />
 
-      <DetailsItem title={''} content={''} />
+      <ExternalManagementLinkDetailsItem
+        resource={provider}
+        canPatch={permissions.canPatch}
+        webUILinkText={t(`OpenStack dashboard UI`)}
+        webUILink={webUILink}
+      />
 
       <NameDetailsItem resource={provider} />
 
