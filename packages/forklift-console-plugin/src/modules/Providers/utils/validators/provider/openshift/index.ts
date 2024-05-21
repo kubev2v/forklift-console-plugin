@@ -2,5 +2,6 @@
 export * from './openshiftProviderValidator';
 export * from './openshiftSecretFieldValidator';
 export * from './openshiftSecretValidator';
+export * from './validateOpenshiftUILink';
 export * from './validateOpenshiftURL';
 // @endindex

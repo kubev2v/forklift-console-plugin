@@ -8,6 +8,7 @@ import { DetailsItem } from '../../../../utils';
 import {
   CreatedAtDetailsItem,
   CredentialsDetailsItem,
+  ExternalManagementLinkDetailsItem,
   NameDetailsItem,
   NamespaceDetailsItem,
   OwnerDetailsItem,
@@ -16,11 +17,13 @@ import {
   URLDetailsItem,
 } from './components';
 import { DetailsSectionProps } from './DetailsSection';
+import { getOpenshiftProviderWebUILink } from './utils';
 
 export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
   const { provider, permissions } = data;
+  const webUILink = getOpenshiftProviderWebUILink(provider);
 
   return (
     <DescriptionList
@@ -30,7 +33,17 @@ export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data })
     >
       <TypeDetailsItem resource={provider} />
 
-      <DetailsItem title={''} content={''} />
+      {/* Avoid displaying the external web ui link for the local cluster */}
+      {provider?.spec?.url ? (
+        <ExternalManagementLinkDetailsItem
+          resource={provider}
+          canPatch={permissions.canPatch}
+          webUILinkText={t(`OpenShift web console UI`)}
+          webUILink={webUILink}
+        />
+      ) : (
+        <DetailsItem title={''} content={''} />
+      )}
 
       <NameDetailsItem resource={provider} />
 
