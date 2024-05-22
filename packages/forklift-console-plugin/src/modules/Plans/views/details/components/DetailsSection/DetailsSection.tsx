@@ -17,23 +17,21 @@ export type DetailsSectionProps = {
 
 export const DetailsSection: React.FC<DetailsSectionProps> = ({ obj }) => {
   return (
-    <>
-      <DescriptionList
-        className="forklift-page-section--details-status"
-        columnModifier={{
-          default: '1Col',
-        }}
-      >
-        <StatusDetailsItem resource={obj} />
+    <DescriptionList
+      className="forklift-page-section--details-status"
+      columnModifier={{
+        default: '1Col',
+      }}
+    >
+      <StatusDetailsItem resource={obj} />
 
-        <NameDetailsItem resource={obj} />
+      <NameDetailsItem resource={obj} />
 
-        <NamespaceDetailsItem resource={obj} />
+      <NamespaceDetailsItem resource={obj} />
 
-        <CreatedAtDetailsItem resource={obj} />
+      <CreatedAtDetailsItem resource={obj} />
 
-        <OwnerDetailsItem resource={obj} />
-      </DescriptionList>
-    </>
+      <OwnerDetailsItem resource={obj} />
+    </DescriptionList>
   );
 };
