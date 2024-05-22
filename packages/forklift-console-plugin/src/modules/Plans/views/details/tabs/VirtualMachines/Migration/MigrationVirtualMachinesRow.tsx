@@ -151,7 +151,7 @@ type GetPopoverVariantType = (p: V1beta1PlanStatusMigrationVmsPipeline) => Popov
 
 type GetIconType = (p: V1beta1PlanStatusMigrationVmsPipeline) => React.ReactNode;
 
-const getVariant: GetVariantType = (p) => {
+export const getVariant: GetVariantType = (p) => {
   if (p?.error) {
     return 'danger';
   }
@@ -184,7 +184,7 @@ const gePopoverVariant: GetPopoverVariantType = (p) => {
   }
 };
 
-const getIcon: GetIconType = (p) => {
+export const getIcon: GetIconType = (p) => {
   if (p?.error) {
     return <ResourcesAlmostFullIcon />;
   }
