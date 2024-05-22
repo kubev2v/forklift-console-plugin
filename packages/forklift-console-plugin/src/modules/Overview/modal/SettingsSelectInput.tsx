@@ -21,10 +21,10 @@ interface Option {
  * @property {(value: string) => void} onChange - Function to call when the value changes
  * @property {Option[]} options - The options to present to the user
  */
-interface SettingsSelectInputProps {
+export interface SettingsSelectInputProps {
   value: number | string;
   onChange: (value: number | string) => void;
-  options: Option[];
+  options?: Option[];
 }
 
 /**
