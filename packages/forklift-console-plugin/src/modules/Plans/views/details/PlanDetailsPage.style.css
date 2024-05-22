@@ -72,10 +72,6 @@
   padding-bottom: var(--pf-global--spacer--lg);
 }
 
-.forklift-page-section--details-start-button__icon {
-  font-size: var(--pf-global--icon--FontSize--lg);
-}
-
 .forklift-page-plan-mapping-list {
   max-width: 55rem;
 }

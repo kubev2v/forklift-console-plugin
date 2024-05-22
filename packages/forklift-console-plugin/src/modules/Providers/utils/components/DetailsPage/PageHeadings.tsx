@@ -23,8 +23,9 @@ export const PageHeadings: React.FC<PageHeadingsProps> = ({
   obj: data,
   children,
   actions,
+  status: status_,
 }) => {
-  const status = data?.['status']?.phase;
+  const status = status_ ?? data?.['status']?.phase;
   const groupVersionKind = data?.kind && getGroupVersionKindForResource(data);
 
   return (
@@ -62,6 +63,7 @@ export interface PageHeadingsProps {
   obj?: K8sResourceCommon;
   title?: ReactNode;
   actions?: ReactNode;
+  status?: string;
 }
 
 const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ model, namespace }) => {

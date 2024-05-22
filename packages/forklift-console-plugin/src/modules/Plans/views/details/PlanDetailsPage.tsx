@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
@@ -60,10 +61,10 @@ const PlanDetailsPage_: React.FC<{ name: string; namespace: string }> = ({ name,
   ];
 
   return (
-    <>
+    <ModalHOC>
       <PlanPageHeadings name={name} namespace={namespace} />
       <HorizontalNav pages={pages} />
-    </>
+    </ModalHOC>
   );
 };
 
