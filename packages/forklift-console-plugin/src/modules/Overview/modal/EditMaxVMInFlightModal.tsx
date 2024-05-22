@@ -6,34 +6,30 @@ import { ForkliftControllerModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
 import { EditSettingsModalProps } from './EditSettingsModalProps';
-import SettingsSelectInput from './SettingsSelectInput';
-
-// Define the options
-const options = [
-  { key: 2, name: 2, description: 'Very low concurrent VM migrations' },
-  { key: 10, name: 10, description: 'Low concurrent VM migrations' },
-  { key: 20, name: 20, description: 'Moderate concurrent VM migrations' },
-  { key: 50, name: 50, description: 'High concurrent VM migrations' },
-  { key: 100, name: 100, description: 'Very high concurrent VM migrations' },
-];
+import SettingsNumberInput from './SettingsNumberInput';
 
 /**
- * MaxVMInFlightSelect component.
- * Wraps the SettingsSelectInput component with pre-defined options.
+ * MaxVMInFlightNumberInput component.
+ * Wraps the SettingsNumberInput component with pre-defined default value.
  *
  * @param {ModalInputComponentProps} props - Properties passed to the component
  * @returns {JSX.Element}
  */
-const MaxVMInFlightSelect: ModalInputComponentType = (props) => {
-  return <SettingsSelectInput {...props} options={options} />;
+const MaxVMInFlightNumberInput: ModalInputComponentType = (props) => {
+  return <SettingsNumberInput {...props} />;
 };
 
 export const EditMaxVMInFlightModal: React.FC<EditSettingsModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
+  // Set default value to 20
+  const resource = props.resource;
+  resource.spec['controller_max_vm_inflight'] = resource.spec['controller_max_vm_inflight'] || 20;
+
   return (
     <EditModal
       {...props}
+      resource={resource}
       jsonPath={'spec.controller_max_vm_inflight'}
       title={props?.title || t('Edit Maximum concurrent VM migrations')}
       label={props?.label || t('Maximum concurrent VM migrations')}
@@ -43,7 +39,7 @@ export const EditMaxVMInFlightModal: React.FC<EditSettingsModalProps> = (props) 
       helperText={t(
         'Please enter the maximum number of concurrent VM migrations, if empty default value will be used.',
       )}
-      InputComponent={MaxVMInFlightSelect}
+      InputComponent={MaxVMInFlightNumberInput}
     />
   );
 };
