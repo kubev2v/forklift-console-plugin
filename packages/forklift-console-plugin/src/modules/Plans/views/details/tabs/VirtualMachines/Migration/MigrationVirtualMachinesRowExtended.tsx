@@ -3,17 +3,14 @@ import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { RowProps, TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
-import { IoK8sApiBatchV1Job, V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
+import { IoK8sApiBatchV1Job } from '@kubev2v/types';
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
-import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
-import {
-  ResourcesAlmostFullIcon,
-  ResourcesEmptyIcon,
-  ResourcesFullIcon,
-} from '@patternfly/react-icons';
+import { Flex, FlexItem, PageSection, ProgressStep, ProgressStepper } from '@patternfly/react-core';
 
 import { VMData } from '../types';
+
+import { getIcon, getVariant } from './MigrationVirtualMachinesRow';
 
 export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (props) => {
   const { t } = useForkliftTranslation();
@@ -173,7 +170,16 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
           {(pipeline || []).map((p) => (
             <Tr key={p?.name}>
               <Td>
-                {getIcon(p)} {p?.name}
+                <ProgressStepper isCompact isVertical={true} isCenterAligned={false}>
+                  <ProgressStep
+                    key={p?.name}
+                    variant={getVariant(p)}
+                    icon={getIcon(p)}
+                    id={p?.name}
+                    titleId={p?.name}
+                  />
+                </ProgressStepper>
+                {p?.name}
               </Td>
               <Td>{p?.description}</Td>
               <Td>
@@ -186,25 +192,6 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
       </TableComposable>
     </PageSection>
   );
-};
-
-type GetIconType = (p: V1beta1PlanStatusMigrationVmsPipeline) => React.ReactNode;
-
-const getIcon: GetIconType = (p) => {
-  if (p?.error) {
-    return <ResourcesAlmostFullIcon color="red" />;
-  }
-
-  switch (p?.phase) {
-    case 'Completed':
-      return <ResourcesFullIcon color="green" />;
-    case 'Pending':
-      return <ResourcesEmptyIcon color="grey" />;
-    case 'Running':
-      return <ResourcesAlmostFullIcon color="blue" />;
-    default:
-      return <ResourcesEmptyIcon color="grey" />;
-  }
 };
 
 const getJobPhase = (job: IoK8sApiBatchV1Job) => {
