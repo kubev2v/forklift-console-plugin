@@ -8,6 +8,10 @@
   padding-top: 0;
 }
 
+.forklift-page-section-alerts {
+  padding-bottom: var(--pf-global--spacer--lg);
+}
+
 .forklift-page-section {
   border-top: 1px solid var(--pf-global--BorderColor--100);
 }
