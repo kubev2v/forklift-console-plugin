@@ -3,7 +3,7 @@ import React from 'react';
 import { ResourceField, RowProps } from '@kubev2v/common';
 import { Td } from '@kubev2v/common';
 
-import { PlanVMsCellProps } from '../components';
+import { ConditionsCellRenderer, PlanVMsCellProps } from '../components';
 import { NameCellRenderer } from '../components/NameCellRenderer';
 import { VMData } from '../types';
 
@@ -33,6 +33,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 
 const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
   name: NameCellRenderer,
+  conditions: ConditionsCellRenderer,
 };
 
 interface RenderTdProps {
