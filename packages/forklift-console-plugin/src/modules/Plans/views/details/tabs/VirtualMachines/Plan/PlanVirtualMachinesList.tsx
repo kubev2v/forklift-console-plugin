@@ -7,7 +7,11 @@ import {
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
-import { V1beta1PlanSpecVms, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import {
+  V1beta1PlanSpecVms,
+  V1beta1PlanStatusConditions,
+  V1beta1PlanStatusMigrationVms,
+} from '@kubev2v/types';
 
 import { PlanVMsDeleteButton } from '../components';
 import { PlanData, VMData } from '../types';
@@ -25,6 +29,15 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       type: 'freetext',
       placeholderLabel: t('Filter by name'),
     },
+    sortable: true,
+  },
+  {
+    resourceFieldId: 'conditions',
+    jsonPath: (obj: VMData) => {
+      return obj?.conditions?.[0]?.category;
+    },
+    label: t('Conditions'),
+    isVisible: true,
     sortable: true,
   },
 ];
@@ -48,12 +61,22 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
   const vmDict: Record<string, V1beta1PlanStatusMigrationVms> = {};
   migrationVirtualMachines.forEach((m) => (vmDict[m.id] = m));
 
+  const conditions = plan?.status?.conditions?.filter((c) => c?.items && c.items.length > 0);
+  const conditionsDict: Record<string, V1beta1PlanStatusConditions[]> = {};
+  conditions?.forEach((c) => {
+    c.items.forEach((i) => {
+      const { id: vmID } = extractIdAndNameFromConditionItem(i);
+      conditionsDict[vmID] ? conditionsDict[vmID].push(c) : (conditionsDict[vmID] = [c]);
+    });
+  });
+
   const vmData: VMData[] = virtualMachines.map((m) => ({
     specVM: m,
     statusVM: vmDict[m.id],
     pods: [],
     jobs: [],
     pvcs: [],
+    conditions: conditionsDict[m.id],
     targetNamespace: plan?.spec?.targetNamespace,
   }));
 
@@ -83,3 +106,26 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
 
   return <PageWithSelection {...extendedProps} />;
 };
+
+/**
+ * Extracts the ID and name from a condition item string.
+ *
+ * This function parses a string containing condition item details and extracts the ID and name.
+ * The string format expected is something like "id:<some_id> name:'<some_name>'".
+ *
+ * @param {string} input - The string containing the condition item details.
+ * @returns {{ id: string; name: string }} An object containing the extracted ID and name.
+ */
+function extractIdAndNameFromConditionItem(input: string): { id: string; name: string } {
+  const idMatch = /id:([^ ]+)/.exec(input);
+  const nameMatch = /name:'([^']+)'/.exec(input);
+
+  if (!idMatch || !nameMatch) {
+    return { id: '', name: '' };
+  }
+
+  return {
+    id: idMatch[1],
+    name: nameMatch[1],
+  };
+}
