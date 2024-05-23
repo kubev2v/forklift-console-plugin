@@ -19,6 +19,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
   const conditions = props.resourceData.statusVM?.conditions;
   const pods = props.resourceData.pods;
   const jobs = props.resourceData.jobs;
+  const pvcs = props.resourceData.pvcs;
   const vmCreated = pipeline.find(
     (p) => p?.name === 'VirtualMachineCreation' && p?.phase === 'Completed',
   );
@@ -114,6 +115,37 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                       </FlexItem>
                       <FlexItem>
                         <Status status={getJobPhase(job)}></Status>
+                      </FlexItem>
+                    </Flex>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </>
+      )}
+
+      {(pvcs || []).length > 0 && (
+        <>
+          <SectionHeading
+            text={'PersistentVolumeClaims'}
+            className="forklift-page-plan-details-vm-status__section-header"
+          />
+          <TableComposable aria-label="Expandable table" variant="compact">
+            <Tbody>
+              {(pvcs || []).map((pvc) => (
+                <Tr key={pvc.metadata.uid}>
+                  <Td>
+                    <Flex>
+                      <FlexItem>
+                        <ResourceLink
+                          groupVersionKind={{ version: 'v1', kind: 'PersistentVolumeClaim' }}
+                          name={pvc?.metadata?.name}
+                          namespace={pvc?.metadata?.namespace}
+                        />
+                      </FlexItem>
+                      <FlexItem>
+                        <Status status={pvc.status.phase}></Status>
                       </FlexItem>
                     </Flex>
                   </Td>
