@@ -1,5 +1,6 @@
 import {
   IoK8sApiBatchV1Job,
+  IoK8sApiCoreV1PersistentVolumeClaim,
   IoK8sApiCoreV1Pod,
   V1beta1PlanSpecVms,
   V1beta1PlanStatusMigrationVms,
@@ -10,5 +11,6 @@ export type VMData = {
   statusVM?: V1beta1PlanStatusMigrationVms;
   pods: IoK8sApiCoreV1Pod[];
   jobs: IoK8sApiBatchV1Job[];
+  pvcs: IoK8sApiCoreV1PersistentVolumeClaim[];
   targetNamespace: string;
 };

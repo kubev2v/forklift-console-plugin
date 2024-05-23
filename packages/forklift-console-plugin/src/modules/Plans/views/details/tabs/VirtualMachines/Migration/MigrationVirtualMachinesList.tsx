@@ -11,6 +11,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import {
   IoK8sApiBatchV1Job,
+  IoK8sApiCoreV1PersistentVolumeClaim,
   IoK8sApiCoreV1Pod,
   V1beta1PlanSpecVms,
   V1beta1PlanStatusMigrationVms,
@@ -139,6 +140,23 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
       : (jobsDict[j.metadata.labels.vmID] = [j]),
   );
 
+  const [pvcs, pvcsLoaded, pvcsLoadError] = useK8sWatchResource<
+    IoK8sApiCoreV1PersistentVolumeClaim[]
+  >({
+    groupVersionKind: { kind: 'PersistentVolumeClaim', version: 'v1' },
+    namespaced: true,
+    isList: true,
+    namespace: plan?.spec?.targetNamespace,
+    selector: { matchLabels: { plan: plan?.metadata?.uid } },
+  });
+
+  const pvcsDict: Record<string, IoK8sApiCoreV1PersistentVolumeClaim[]> = {};
+  (pvcs && pvcsLoaded && !pvcsLoadError ? pvcs : []).forEach((p) =>
+    pvcsDict[p.metadata.labels.vmID]
+      ? pvcsDict[p.metadata.labels.vmID].push(p)
+      : (pvcsDict[p.metadata.labels.vmID] = [p]),
+  );
+
   const [selectedIds, setSelectedIds] = useState([]);
   const [expandedIds, setExpandedIds] = useState([]);
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'PlanVirtualMachines' }));
@@ -155,6 +173,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     statusVM: vmDict[m.id],
     pods: podsDict[m.id],
     jobs: jobsDict[m.id],
+    pvcs: pvcsDict[m.id],
     targetNamespace: plan?.spec?.targetNamespace,
   }));
 
