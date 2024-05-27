@@ -30,7 +30,7 @@ export async function patchPlanMappingsData(
       {
         op: 'replace',
         path: '/spec/map',
-        value: updatedNetwork,
+        value: updateNetworkMapSpecMapDestination(updatedNetwork),
       },
     ],
   });
@@ -46,4 +46,25 @@ export async function patchPlanMappingsData(
       },
     ],
   });
+}
+
+/**
+ * Updates the destination name and namespace in the network map entries.
+ * If the destination name contains a '/', it splits the name into two parts.
+ * The first part becomes the new namespace, and the second part becomes the new name.
+ *
+ * @param {NetworkMap} networkMap - The network map object to update.
+ * @returns {NetworkMap} The updated network map object.
+ */
+export function updateNetworkMapSpecMapDestination(
+  networkMaps: V1beta1NetworkMapSpecMap[],
+): V1beta1NetworkMapSpecMap[] {
+  networkMaps?.forEach((entry) => {
+    const parts = entry.destination.name.split('/');
+    if (parts.length === 2) {
+      entry.destination.namespace = parts[0];
+      entry.destination.name = parts[1];
+    }
+  });
+  return networkMaps;
 }

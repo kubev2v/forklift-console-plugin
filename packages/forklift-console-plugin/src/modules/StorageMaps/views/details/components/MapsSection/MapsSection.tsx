@@ -155,7 +155,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
             isDisabled={!state.hasChanges || state.updating}
             icon={state.updating ? <Spinner size="sm" /> : undefined}
           >
-            {t('Update providers')}
+            {t('Update mappings')}
           </Button>
         </FlexItem>
 

@@ -7,6 +7,7 @@ import {
 } from 'src/modules/Providers/hooks/useNetworks';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
 import { Mapping } from 'src/modules/Providers/views/migrate/types';
+import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -64,7 +65,10 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
 
   const onUpdate = async () => {
     dispatch({ type: 'SET_UPDATING', payload: true });
-    await k8sUpdate({ model: NetworkMapModel, data: state.networkMap });
+    await k8sUpdate({
+      model: NetworkMapModel,
+      data: updateNetworkMapDestination(state.networkMap),
+    });
     dispatch({ type: 'SET_UPDATING', payload: false });
   };
 
@@ -162,7 +166,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
             isDisabled={!state.hasChanges || state.updating}
             icon={state.updating ? <Spinner size="sm" /> : undefined}
           >
-            {t('Update providers')}
+            {t('Update mappings')}
           </Button>
         </FlexItem>
 
