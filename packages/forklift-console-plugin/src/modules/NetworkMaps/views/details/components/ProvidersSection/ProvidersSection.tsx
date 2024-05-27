@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components';
+import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -42,7 +43,10 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
 
   const onUpdate = async () => {
     dispatch({ type: 'SET_UPDATING', payload: true });
-    await k8sUpdate({ model: NetworkMapModel, data: state.networkMap });
+    await k8sUpdate({
+      model: NetworkMapModel,
+      data: updateNetworkMapDestination(state.networkMap),
+    });
   };
 
   return (

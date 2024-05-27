@@ -104,7 +104,7 @@ export const mapTargetNetworksIdsToLabels = (
 ): { [label: string]: string } => {
   const tuples: [string, string][] = targets
     .filter(({ namespace }) => namespace === plan.spec.targetNamespace || namespace === 'default')
-    .map((net) => [net.uid, net.name]);
+    .map((net) => [net.uid, `${net.namespace}/${net.name}`]);
 
   tuples.push(['pod', POD_NETWORK]);
   const labelToId = resolveCollisions(tuples);
