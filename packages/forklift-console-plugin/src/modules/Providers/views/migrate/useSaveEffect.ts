@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { produce } from 'immer';
+import { deepCopy } from 'src/utils';
 
 import {
   NetworkMapModel,
@@ -25,11 +26,12 @@ const createStorage = (storageMap: V1beta1StorageMap) =>
     data: storageMap,
   });
 
-const createNetwork = (netMap: V1beta1NetworkMap) =>
-  k8sCreate({
+const createNetwork = (netMap: V1beta1NetworkMap) => {
+  return k8sCreate({
     model: NetworkMapModel,
-    data: netMap,
+    data: updateNetworkMapDestination(netMap),
   });
+};
 
 const createPlan = async (
   plan: V1beta1Plan,
@@ -108,3 +110,24 @@ export const useSaveEffect = (state: CreateVmMigrationPageState, dispatch) => {
       .catch((error) => mounted.current && dispatch(setAPiError(error)));
   }, [state.flow.editingDone, state.underConstruction.storageMap]);
 };
+
+/**
+ * Updates the destination name and namespace in the network map entries.
+ * If the destination name contains a '/', it splits the name into two parts.
+ * The first part becomes the new namespace, and the second part becomes the new name.
+ *
+ * @param {NetworkMap} networkMap - The network map object to update.
+ * @returns {NetworkMap} The updated network map object.
+ */
+export function updateNetworkMapDestination(networkMap: V1beta1NetworkMap): V1beta1NetworkMap {
+  const networkMapCopy = deepCopy(networkMap);
+
+  networkMapCopy.spec.map?.forEach((entry) => {
+    const parts = entry.destination.name.split('/');
+    if (parts.length === 2) {
+      entry.destination.namespace = parts[0];
+      entry.destination.name = parts[1];
+    }
+  });
+  return networkMapCopy;
+}
