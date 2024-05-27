@@ -10,7 +10,6 @@ import { Suspend } from '../Suspend';
 
 import {
   PreserveClusterCpuModelDetailsItem,
-  PreserveStaticIPsDetailsItem,
   TargetNamespaceDetailsItem,
   TransferNetworkDetailsItem,
   WarmDetailsItem,
@@ -81,11 +80,6 @@ export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, p
         {['ovirt'].includes(sourceProvider?.spec?.type) && (
           <Suspend obj={sourceProvider} loaded={loaded} loadError={loadError}>
             <PreserveClusterCpuModelDetailsItem resource={obj} canPatch={permissions.canPatch} />
-          </Suspend>
-        )}
-        {['vsphere'].includes(sourceProvider?.spec?.type) && (
-          <Suspend obj={sourceProvider} loaded={loaded} loadError={loadError}>
-            <PreserveStaticIPsDetailsItem resource={obj} canPatch={permissions.canPatch} />
           </Suspend>
         )}
       </DescriptionList>
