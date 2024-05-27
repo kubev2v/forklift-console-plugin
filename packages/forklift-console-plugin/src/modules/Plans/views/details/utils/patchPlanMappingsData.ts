@@ -60,8 +60,8 @@ export function updateNetworkMapSpecMapDestination(
   networkMaps: V1beta1NetworkMapSpecMap[],
 ): V1beta1NetworkMapSpecMap[] {
   networkMaps?.forEach((entry) => {
-    const parts = entry.destination.name.split('/');
-    if (parts.length === 2) {
+    const parts = entry?.destination?.name?.split('/');
+    if (parts?.length === 2) {
       entry.destination.namespace = parts[0];
       entry.destination.name = parts[1];
     }

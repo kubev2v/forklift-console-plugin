@@ -123,8 +123,8 @@ export function updateNetworkMapDestination(networkMap: V1beta1NetworkMap): V1be
   const networkMapCopy = deepCopy(networkMap);
 
   networkMapCopy.spec.map?.forEach((entry) => {
-    const parts = entry.destination.name.split('/');
-    if (parts.length === 2) {
+    const parts = entry?.destination?.name?.split('/');
+    if (parts?.length === 2) {
       entry.destination.namespace = parts[0];
       entry.destination.name = parts[1];
     }
