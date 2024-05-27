@@ -1,9 +1,10 @@
 import React, { ReactNode } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils';
 
+import { FormGroupWithHelpText } from '@kubev2v/common';
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Form, FormGroup, FormSelect, FormSelectOption } from '@patternfly/react-core';
+import { Form, FormSelect, FormSelectOption } from '@patternfly/react-core';
 
 export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
   providers,
@@ -24,7 +25,7 @@ export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
   if (mode === 'edit') {
     return (
       <Form isWidthLimited>
-        <FormGroup
+        <FormGroupWithHelpText
           label={label}
           isRequired
           fieldId="targetProvider"
@@ -49,7 +50,7 @@ export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
               ...providers.map(ProviderOption),
             ]}
           </FormSelect>
-        </FormGroup>
+        </FormGroupWithHelpText>
       </Form>
     );
   } else {

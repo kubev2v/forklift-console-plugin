@@ -3,7 +3,8 @@ import { Base64 } from 'js-base64';
 import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, FormGroup, TextInput } from '@patternfly/react-core';
+import { FormGroupWithHelpText } from '@kubev2v/common';
+import { Button, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 
@@ -66,7 +67,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
 
   return (
     <>
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Token')}
         isRequired
         fieldId="token"
@@ -91,9 +92,9 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         >
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('User ID')}
         isRequired
         fieldId="userID"
@@ -110,9 +111,9 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           onChange={(value) => handleChange('userID', value)}
           validated={state.validation.userID.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Project ID')}
         isRequired
         fieldId="projectID"
@@ -129,9 +130,9 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           onChange={(value) => handleChange('projectID', value)}
           validated={state.validation.projectID.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Region')}
         isRequired
         fieldId="regionName"
@@ -148,7 +149,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           onChange={(value) => handleChange('regionName', value)}
           validated={state.validation.regionName.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
     </>
   );
 };

@@ -4,7 +4,8 @@ import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Pro
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { Divider, Form, FormGroup, Popover, Radio, Switch } from '@patternfly/react-core';
+import { FormGroupWithHelpText } from '@kubev2v/common';
+import { Divider, Form, Popover, Radio, Switch } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
@@ -161,7 +162,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
-      <FormGroup
+      <FormGroupWithHelpText
         role="radiogroup"
         fieldId="authType"
         label={t('Authentication type')}
@@ -204,7 +205,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           isChecked={state.authenticationType === 'passwordSecretFields'}
           onChange={() => handleAuthTypeChange('passwordSecretFields')}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
       <Divider />
 
@@ -226,7 +227,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
       <Divider />
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Skip certificate validation')}
         labelIcon={
           <Popover
@@ -258,8 +259,8 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
-      </FormGroup>
-      <FormGroup
+      </FormGroupWithHelpText>
+      <FormGroupWithHelpText
         label={
           insecureSkipVerify === 'true'
             ? t("CA certificate - disabled when 'Skip certificate validation' is selected")
@@ -283,7 +284,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           url={url}
           isDisabled={insecureSkipVerify === 'true'}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
     </Form>
   );
 };

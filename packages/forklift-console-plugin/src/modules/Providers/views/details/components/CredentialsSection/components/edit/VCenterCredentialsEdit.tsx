@@ -4,15 +4,8 @@ import { safeBase64Decode, vcenterSecretFieldValidator } from 'src/modules/Provi
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  Button,
-  Divider,
-  Form,
-  FormGroup,
-  Popover,
-  Switch,
-  TextInput,
-} from '@patternfly/react-core';
+import { FormGroupWithHelpText } from '@kubev2v/common';
+import { Button, Divider, Form, Popover, Switch, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
@@ -102,7 +95,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
 
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Username')}
         isRequired
         fieldId="username"
@@ -119,8 +112,8 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           value={user}
           validated={state.validation.user.type}
         />
-      </FormGroup>
-      <FormGroup
+      </FormGroupWithHelpText>
+      <FormGroupWithHelpText
         label={t('Password')}
         isRequired
         fieldId="password"
@@ -144,11 +137,11 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
         >
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
-      </FormGroup>
+      </FormGroupWithHelpText>
 
       <Divider />
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Skip certificate validation')}
         labelIcon={
           <Popover
@@ -178,9 +171,9 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('CA certificate')}
         labelIcon={
           <Popover
@@ -212,7 +205,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           onClearClick={() => handleChange('cacert', '')}
           isDisabled={insecureSkipVerify === 'true'}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
     </Form>
   );
 };

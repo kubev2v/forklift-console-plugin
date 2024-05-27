@@ -2,15 +2,8 @@ import React, { ReactNode, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  Button,
-  Form,
-  FormGroup,
-  Modal,
-  ModalVariant,
-  Popover,
-  TextInput,
-} from '@patternfly/react-core';
+import { FormGroupWithHelpText } from '@kubev2v/common';
+import { Button, Form, Modal, ModalVariant, Popover, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { useToggle } from '../../hooks';
@@ -171,7 +164,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       <div className="forklift-edit-modal-body">{body}</div>
 
       <Form id="modal-with-form-form" className="forklift-edit-modal-form">
-        <FormGroup
+        <FormGroupWithHelpText
           label={label}
           labelIcon={LabelIcon}
           fieldId="modal-with-form-form-field"
@@ -180,7 +173,7 @@ export const EditModal: React.FC<EditModalProps> = ({
           validated={validation.type}
         >
           {InputComponent_}
-        </FormGroup>
+        </FormGroupWithHelpText>
       </Form>
 
       {typeof owner === 'object' && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}

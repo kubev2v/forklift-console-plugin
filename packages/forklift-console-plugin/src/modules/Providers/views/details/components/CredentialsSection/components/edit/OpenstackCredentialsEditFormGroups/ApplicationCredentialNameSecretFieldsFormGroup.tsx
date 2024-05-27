@@ -3,7 +3,8 @@ import { Base64 } from 'js-base64';
 import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, FormGroup, TextInput } from '@patternfly/react-core';
+import { FormGroupWithHelpText } from '@kubev2v/common';
+import { Button, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 
@@ -77,7 +78,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
 
   return (
     <>
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Application credential name')}
         isRequired
         fieldId="applicationCredentialName"
@@ -94,9 +95,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           onChange={(value) => handleChange('applicationCredentialName', value)}
           validated={state.validation.applicationCredentialName.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Application credential secret')}
         isRequired
         fieldId="applicationCredentialSecret"
@@ -121,9 +122,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         >
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Username')}
         isRequired
         fieldId="username"
@@ -140,9 +141,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           onChange={(value) => handleChange('username', value)}
           validated={state.validation.username.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Region')}
         isRequired
         fieldId="regionName"
@@ -159,9 +160,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           onChange={(value) => handleChange('regionName', value)}
           validated={state.validation.regionName.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Project')}
         isRequired
         fieldId="projectName"
@@ -178,9 +179,9 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           onChange={(value) => handleChange('projectName', value)}
           validated={state.validation.projectName.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Domain')}
         isRequired
         fieldId="domainName"
@@ -197,7 +198,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           onChange={(value) => handleChange('domainName', value)}
           validated={state.validation.domainName.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
     </>
   );
 };

@@ -4,15 +4,8 @@ import { openshiftSecretFieldValidator, safeBase64Decode } from 'src/modules/Pro
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  Button,
-  Divider,
-  Form,
-  FormGroup,
-  Popover,
-  Switch,
-  TextInput,
-} from '@patternfly/react-core';
+import { FormGroupWithHelpText } from '@kubev2v/common';
+import { Button, Divider, Form, Popover, Switch, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
@@ -102,7 +95,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
 
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Service account bearer token')}
         isRequired
         fieldId="token"
@@ -126,11 +119,11 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         >
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
-      </FormGroup>
+      </FormGroupWithHelpText>
 
       <Divider />
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Skip certificate validation')}
         labelIcon={
           <Popover
@@ -160,9 +153,9 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           hasCheckIcon
           onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('CA certificate')}
         labelIcon={
           <Popover
@@ -197,7 +190,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           url={url}
           isDisabled={insecureSkipVerify === 'true'}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
     </Form>
   );
 };

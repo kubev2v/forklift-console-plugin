@@ -3,8 +3,9 @@ import { SelectableCard } from 'src/modules/Providers/utils/components/Galerry/S
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
 import { VmData } from 'src/modules/Providers/views';
 
+import { FormGroupWithHelpText } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
-import { Flex, FlexItem, Form, FormGroup } from '@patternfly/react-core';
+import { Flex, FlexItem, Form } from '@patternfly/react-core';
 
 import { PlanCreatePageState } from '../states';
 
@@ -39,7 +40,7 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
   return (
     <div className="forklift-create-provider-edit-section">
       <Form isWidthLimited className="forklift-section-secret-edit">
-        <FormGroup fieldId="type">
+        <FormGroupWithHelpText fieldId="type">
           <FiltersToolbarProviders
             className="forklift--create-plan--filters-toolbar"
             filterState={filterState}
@@ -66,7 +67,7 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
               onChange={onChange}
             />
           )}
-        </FormGroup>
+        </FormGroupWithHelpText>
       </Form>
     </div>
   );

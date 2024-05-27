@@ -3,6 +3,7 @@ import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
 
+import { FormGroupWithHelpText } from '@kubev2v/common';
 import {
   NetworkMapModelGroupVersionKind,
   ProviderModelGroupVersionKind,
@@ -16,7 +17,6 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
   Form,
-  FormGroup,
   FormSelect,
   FormSelectOption,
   TextInput,
@@ -158,7 +158,7 @@ export const PlansCreateForm = ({
       >
         {isNameEdited || validation.planName === 'error' ? (
           <Form isWidthLimited>
-            <FormGroup
+            <FormGroupWithHelpText
               label={t('Plan name')}
               isRequired
               fieldId="planName"
@@ -176,7 +176,7 @@ export const PlansCreateForm = ({
                 isDisabled={flow.editingDone}
                 onChange={(value) => dispatch(setPlanName(value?.trim() ?? ''))}
               />
-            </FormGroup>
+            </FormGroupWithHelpText>
           </Form>
         ) : (
           <EditableDescriptionItem
@@ -219,7 +219,7 @@ export const PlansCreateForm = ({
         validation.targetProvider === 'error' ||
         !plan.spec.provider?.destination ? (
           <Form isWidthLimited>
-            <FormGroup
+            <FormGroupWithHelpText
               label={t('Target provider')}
               isRequired
               fieldId="targetProvider"
@@ -256,7 +256,7 @@ export const PlansCreateForm = ({
                     )),
                 ]}
               </FormSelect>
-            </FormGroup>
+            </FormGroupWithHelpText>
           </Form>
         ) : (
           <EditableDescriptionItem
@@ -277,7 +277,7 @@ export const PlansCreateForm = ({
         validation.targetNamespace === 'error' ||
         !plan.spec.targetNamespace ? (
           <Form isWidthLimited>
-            <FormGroup
+            <FormGroupWithHelpText
               label={t('Target namespace')}
               isRequired
               id="targetNamespace"
@@ -311,7 +311,7 @@ export const PlansCreateForm = ({
                   )),
                 ]}
               </FormSelect>
-            </FormGroup>
+            </FormGroupWithHelpText>
           </Form>
         ) : (
           <EditableDescriptionItem

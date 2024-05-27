@@ -2,8 +2,9 @@ import React, { useCallback, useReducer } from 'react';
 import { validateOvaNfsPath } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { FormGroupWithHelpText } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
-import { Form, FormGroup, TextInput } from '@patternfly/react-core';
+import { Form, TextInput } from '@patternfly/react-core';
 
 export interface OVAProviderCreateFormProps {
   provider: V1beta1Provider;
@@ -58,7 +59,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
 
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('URL')}
         fieldId="url"
         isRequired
@@ -75,7 +76,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
           validated={state.validation.url.type}
           onChange={(value) => handleChange('url', value)}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
     </Form>
   );
 };

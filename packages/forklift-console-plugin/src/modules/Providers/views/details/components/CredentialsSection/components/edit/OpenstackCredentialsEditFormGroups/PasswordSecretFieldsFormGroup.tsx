@@ -3,7 +3,8 @@ import { Base64 } from 'js-base64';
 import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, FormGroup, TextInput } from '@patternfly/react-core';
+import { FormGroupWithHelpText } from '@kubev2v/common';
+import { Button, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 
@@ -69,7 +70,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
 
   return (
     <>
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Username')}
         isRequired
         fieldId="username"
@@ -86,9 +87,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           onChange={(value) => handleChange('username', value)}
           validated={state.validation.username.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Password')}
         isRequired
         fieldId="password"
@@ -112,9 +113,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         >
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Region')}
         isRequired
         fieldId="regionName"
@@ -131,9 +132,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           onChange={(value) => handleChange('regionName', value)}
           validated={state.validation.regionName.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Project')}
         isRequired
         fieldId="projectName"
@@ -150,9 +151,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           onChange={(value) => handleChange('projectName', value)}
           validated={state.validation.projectName.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('Domain')}
         isRequired
         fieldId="domainName"
@@ -169,7 +170,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           onChange={(value) => handleChange('domainName', value)}
           validated={state.validation.domainName.type}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
     </>
   );
 };

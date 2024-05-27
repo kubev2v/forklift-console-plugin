@@ -5,6 +5,7 @@ import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { validateK8sName, Validation } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import { FormGroupWithHelpText } from '@kubev2v/common';
 import {
   K8sResourceCommon,
   NetworkMapModel,
@@ -19,7 +20,7 @@ import {
 } from '@kubev2v/types';
 import { k8sCreate, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, Form, FormGroup, Modal, ModalVariant, TextInput } from '@patternfly/react-core';
+import { Button, Form, Modal, ModalVariant, TextInput } from '@patternfly/react-core';
 
 import { Suspend } from '../views/details/components';
 
@@ -221,7 +222,7 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
             <br />
 
             <Form>
-              <FormGroup
+              <FormGroupWithHelpText
                 label="New migration plan name"
                 fieldId="name"
                 validated={newNameValidation}
@@ -237,7 +238,7 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
                   aria-describedby="name-helper"
                   onChange={onChange}
                 />
-              </FormGroup>
+              </FormGroupWithHelpText>
             </Form>
             <br />
 
