@@ -156,34 +156,38 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
         </>
       )}
 
-      <SectionHeading
-        text={'Conditions'}
-        className="forklift-page-plan-details-vm-status__section-header"
-      />
-      <TableComposable aria-label="Expandable table" variant="compact">
-        <Thead>
-          <Tr>
-            <Th width={10}>{t('Type')}</Th>
-            <Th width={10}>{t('Status')}</Th>
-            <Th width={20}>{t('Updated')}</Th>
-            <Th width={10}>{t('Reason')}</Th>
-            <Th> {t('Message')}</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {(conditions || []).map((condition) => (
-            <Tr key={condition.type}>
-              <Td>{condition.type}</Td>
-              <Td>{getStatusLabel(condition.status)}</Td>
-              <Td>
-                <Timestamp timestamp={condition.lastTransitionTime} />
-              </Td>
-              <Td>{condition.reason}</Td>
-              <Td modifier="truncate">{condition?.message || '-'}</Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </TableComposable>
+      {(conditions || []).length > 0 && (
+        <>
+          <SectionHeading
+            text={'Conditions'}
+            className="forklift-page-plan-details-vm-status__section-header"
+          />
+          <TableComposable aria-label="Expandable table" variant="compact">
+            <Thead>
+              <Tr>
+                <Th width={10}>{t('Type')}</Th>
+                <Th width={10}>{t('Status')}</Th>
+                <Th width={20}>{t('Updated')}</Th>
+                <Th width={10}>{t('Reason')}</Th>
+                <Th> {t('Message')}</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {(conditions || []).map((condition) => (
+                <Tr key={condition.type}>
+                  <Td>{condition.type}</Td>
+                  <Td>{getStatusLabel(condition.status)}</Td>
+                  <Td>
+                    <Timestamp timestamp={condition.lastTransitionTime} />
+                  </Td>
+                  <Td>{condition.reason}</Td>
+                  <Td modifier="truncate">{condition?.message || '-'}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </>
+      )}
 
       <SectionHeading
         text={'Pipeline'}
