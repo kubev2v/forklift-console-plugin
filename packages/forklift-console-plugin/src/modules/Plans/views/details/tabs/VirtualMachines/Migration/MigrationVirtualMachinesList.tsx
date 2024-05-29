@@ -25,6 +25,35 @@ import { PlanData, VMData } from '../types';
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
 import { MigrationVirtualMachinesRowExtended } from './MigrationVirtualMachinesRowExtended';
 
+const vmStatuses = [
+  { id: 'Failed', label: 'Failed' },
+  { id: 'Running', label: 'Running' },
+  { id: 'Succeeded', label: 'Succeeded' },
+  { id: 'Unknown', label: 'Unknown' },
+];
+
+const getVMMigrationStatus = (obj: VMData) => {
+  const isError = obj.statusVM?.conditions?.find((c) => c.type === 'Failed' && c.status === 'True');
+  const isSuccess = obj.statusVM?.conditions?.find(
+    (c) => c.type === 'Succeeded' && c.status === 'True',
+  );
+  const isRunning = obj.statusVM?.completed === undefined;
+
+  if (isError) {
+    return 'Failed';
+  }
+
+  if (isSuccess) {
+    return 'Succeeded';
+  }
+
+  if (isRunning) {
+    return 'Running';
+  }
+
+  return 'Unknown';
+};
+
 const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: 'name',
@@ -89,14 +118,16 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'status',
-    jsonPath: (obj: VMData) => {
-      const completed = obj.statusVM?.pipeline.filter((p) => p?.phase === 'Completed');
-
-      return (completed || []).length;
-    },
+    jsonPath: getVMMigrationStatus,
     label: t('Status'),
     isVisible: true,
     sortable: true,
+    filter: {
+      type: 'enum',
+      primary: true,
+      placeholderLabel: t('Status'),
+      values: vmStatuses,
+    },
   },
 ];
 
