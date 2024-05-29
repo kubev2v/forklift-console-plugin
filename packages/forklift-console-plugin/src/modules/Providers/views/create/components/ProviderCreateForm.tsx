@@ -6,8 +6,9 @@ import { SelectableCard } from 'src/modules/Providers/utils/components/Galerry/S
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { FormGroupWithHelpText } from '@kubev2v/common';
 import { IoK8sApiCoreV1Secret, ProviderType, V1beta1Provider } from '@kubev2v/types';
-import { Flex, FlexItem, Form, FormGroup, TextInput } from '@patternfly/react-core';
+import { Flex, FlexItem, Form, TextInput } from '@patternfly/react-core';
 
 import { EditProvider } from './EditProvider';
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
@@ -90,7 +91,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
         <EditProviderSectionHeading text={t('Provider details')} />
 
         <Form isWidthLimited className="forklift-section-secret-edit">
-          <FormGroup label={t('Select provider type')} isRequired fieldId="type">
+          <FormGroupWithHelpText label={t('Select provider type')} isRequired fieldId="type">
             {newProvider?.spec?.type ? (
               <Flex>
                 <FlexItem className="forklift--create-provider-edit-card-selected">
@@ -110,12 +111,12 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
                 onChange={handleTypeChange}
               />
             )}
-          </FormGroup>
+          </FormGroupWithHelpText>
         </Form>
 
         {newProvider?.spec?.type && (
           <Form isWidthLimited className="forklift-create-provider-edit-section">
-            <FormGroup
+            <FormGroupWithHelpText
               label={t('Provider resource name')}
               isRequired
               fieldId="k8sName"
@@ -132,7 +133,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
                 validated={state.validation.name.type}
                 onChange={(value) => handleNameChange(value)} // Call the custom handler method
               />
-            </FormGroup>
+            </FormGroupWithHelpText>
           </Form>
         )}
       </div>

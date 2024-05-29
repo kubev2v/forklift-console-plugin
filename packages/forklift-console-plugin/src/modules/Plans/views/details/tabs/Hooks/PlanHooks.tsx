@@ -3,6 +3,7 @@ import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { FormGroupWithHelpText } from '@kubev2v/common';
 import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -10,7 +11,6 @@ import {
   Flex,
   FlexItem,
   Form,
-  FormGroup,
   HelperText,
   HelperTextItem,
   PageSection,
@@ -107,7 +107,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
       <PageSection variant="light">
         <SectionHeading text={t('Pre migration hook')} />
         <Form>
-          <FormGroup label="Enable hook" isRequired fieldId="pre-hook-set">
+          <FormGroupWithHelpText label="Enable hook" isRequired fieldId="pre-hook-set">
             <Switch
               id="pre-hook-set"
               label="Enable pre migration hook"
@@ -115,11 +115,11 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               isChecked={state.preHookSet}
               onChange={(value) => dispatch({ type: 'PRE_HOOK_SET', payload: value })}
             />
-          </FormGroup>
+          </FormGroupWithHelpText>
 
           {state.preHookSet && (
             <>
-              <FormGroup label="Hook runner image" isRequired fieldId="pre-hook-image">
+              <FormGroupWithHelpText label="Hook runner image" isRequired fieldId="pre-hook-image">
                 <TextInput
                   value={state.preHook?.spec?.image}
                   type="url"
@@ -132,8 +132,8 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                     quay.io/konveyor/hook-runner .
                   </HelperTextItem>
                 </HelperText>
-              </FormGroup>
-              <FormGroup label="Ansible playbook" fieldId="pre-hook-image">
+              </FormGroupWithHelpText>
+              <FormGroupWithHelpText label="Ansible playbook" fieldId="pre-hook-image">
                 <CodeEditor
                   language="yaml"
                   value={Base64.decode(state.preHook?.spec?.playbook || '')}
@@ -147,7 +147,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                     hook-runner.
                   </HelperTextItem>
                 </HelperText>
-              </FormGroup>
+              </FormGroupWithHelpText>
             </>
           )}
         </Form>
@@ -156,7 +156,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
       <PageSection variant="light">
         <SectionHeading text={t('Post migration hook')} />
         <Form>
-          <FormGroup label="Enable hook" isRequired fieldId="post-hook-set">
+          <FormGroupWithHelpText label="Enable hook" isRequired fieldId="post-hook-set">
             <Switch
               id="post-hook-set"
               label="Enable post migration hook"
@@ -164,11 +164,11 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               isChecked={state.postHookSet}
               onChange={(value) => dispatch({ type: 'POST_HOOK_SET', payload: value })}
             />
-          </FormGroup>
+          </FormGroupWithHelpText>
 
           {state.postHookSet && (
             <>
-              <FormGroup label="Hook runner image" isRequired fieldId="post-hook-image">
+              <FormGroupWithHelpText label="Hook runner image" isRequired fieldId="post-hook-image">
                 <TextInput
                   value={state.postHook?.spec?.image}
                   type="url"
@@ -181,8 +181,8 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                     quay.io/konveyor/hook-runner .
                   </HelperTextItem>
                 </HelperText>
-              </FormGroup>
-              <FormGroup label="Ansible playbook" fieldId="post-hook-image">
+              </FormGroupWithHelpText>
+              <FormGroupWithHelpText label="Ansible playbook" fieldId="post-hook-image">
                 <CodeEditor
                   language="yaml"
                   value={Base64.decode(state.postHook?.spec?.playbook || '')}
@@ -196,7 +196,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                     hook-runner.
                   </HelperTextItem>
                 </HelperText>
-              </FormGroup>
+              </FormGroupWithHelpText>
             </>
           )}
         </Form>

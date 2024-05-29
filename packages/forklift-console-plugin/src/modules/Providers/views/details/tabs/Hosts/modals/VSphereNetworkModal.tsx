@@ -3,11 +3,11 @@ import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { validateNoSpaces } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { FormGroupWithHelpText } from '@kubev2v/common';
 import { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
 import {
   Button,
   Form,
-  FormGroup,
   Modal,
   ModalVariant,
   Select,
@@ -202,7 +202,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
       </div>
 
       <Form id="modal-with-form-form">
-        <FormGroup label="Network" isRequired fieldId="network">
+        <FormGroupWithHelpText label="Network" isRequired fieldId="network">
           <Select
             variant={SelectVariant.single}
             placeholderText="Select a network"
@@ -224,11 +224,11 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
               />
             ))}
           </Select>
-        </FormGroup>
+        </FormGroupWithHelpText>
 
         {endpointType !== 'esxi' && (
           <>
-            <FormGroup
+            <FormGroupWithHelpText
               label="ESXi host admin username"
               isRequired
               fieldId="username"
@@ -244,8 +244,8 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                 onChange={(value) => dispatch({ type: 'SET_USERNAME', payload: value })}
                 validated={state.validation.username}
               />
-            </FormGroup>
-            <FormGroup
+            </FormGroupWithHelpText>
+            <FormGroupWithHelpText
               label="ESXi host admin password"
               isRequired
               fieldId="password"
@@ -265,7 +265,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
               <Button variant="control" onClick={togglePasswordHidden}>
                 {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
               </Button>
-            </FormGroup>
+            </FormGroupWithHelpText>
           </>
         )}
       </Form>

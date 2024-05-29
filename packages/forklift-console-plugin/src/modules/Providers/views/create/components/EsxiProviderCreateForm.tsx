@@ -2,9 +2,9 @@ import React, { useCallback, useReducer } from 'react';
 import { validateEsxiURL, validateVDDKImage } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from '@kubev2v/common';
+import { ExternalLink, FormGroupWithHelpText } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
-import { Form, FormGroup, Popover, Radio, TextInput } from '@patternfly/react-core';
+import { Form, Popover, Radio, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 const CREATE_VDDK_HELP_LINK =
@@ -119,7 +119,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
 
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
-      <FormGroup
+      <FormGroupWithHelpText
         role="radiogroup"
         fieldId="sdkEndpoint"
         label={t('Endpoint type')}
@@ -139,9 +139,9 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
           isChecked={sdkEndpoint === 'esxi'}
           onChange={() => handleChange('sdkEndpoint', 'esxi')}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('URL')}
         isRequired
         fieldId="url"
@@ -158,9 +158,9 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
           validated={state.validation.url.type}
           onChange={(value) => handleChange('url', value)}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
 
-      <FormGroup
+      <FormGroupWithHelpText
         label={t('VDDK init image')}
         fieldId="vddkInitImage"
         helperText={state.validation.vddkInitImage.msg}
@@ -190,7 +190,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
           validated={state.validation.vddkInitImage.type}
           onChange={(value) => handleChange('vddkInitImage', value)}
         />
-      </FormGroup>
+      </FormGroupWithHelpText>
     </Form>
   );
 };
