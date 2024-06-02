@@ -18,7 +18,8 @@ export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
   const { provider } = data;
 
   const type = provider?.spec?.type;
-  const subType = provider?.spec?.settings?.['sdkEndpoint'] || '';
+  const subTypeString = provider?.spec?.settings?.['sdkEndpoint'] || '';
+  const subType = subTypeString === 'esxi' ? 'esxi' : 'vcenter';
 
   if (!provider?.spec?.secret?.name || !provider?.spec?.secret?.namespace) {
     return (

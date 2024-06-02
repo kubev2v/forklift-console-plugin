@@ -8,7 +8,12 @@ export const planTemplate: V1beta1Plan = {
     namespace: undefined,
   },
   spec: {
-    map: {},
+    map: {
+      network: undefined,
+      storage: undefined,
+    },
     targetNamespace: '',
+    provider: undefined,
+    vms: [],
   },
 };

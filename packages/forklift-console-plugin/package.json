@@ -28,7 +28,6 @@
     "jsonpath": "^1.1.1",
     "jsrsasign": "11.1.0",
     "luxon": "^3.3.0",
-    "streamsaver": "^2.0.6",
     "use-immer": "^0.9.0"
   },
   "peerDependencies": {
@@ -45,7 +44,7 @@
     "react-router-dom": "5.3.x"
   },
   "devDependencies": {
-    "@kubev2v/types": "0.0.15",
+    "@kubev2v/types": "0.0.16",
     "@kubev2v/webpack": "*",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.11",
     "@types/react": "^17.0.1",
