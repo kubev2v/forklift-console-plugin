@@ -10,7 +10,8 @@ export function providerAndSecretValidator(
   secret: IoK8sApiCoreV1Secret,
 ): ValidationMsg {
   const type = provider?.spec?.type || '';
-  const subType = provider?.spec?.settings?.['sdkEndpoint'] || '';
+  const subTypeString = provider?.spec?.settings?.['sdkEndpoint'] || '';
+  const subType = subTypeString === 'esxi' ? 'esxi' : 'vcenter';
 
   const secretValidation = secretValidator(type, subType, secret);
   const providerValidation = providerValidator(provider);
