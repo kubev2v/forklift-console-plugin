@@ -72,6 +72,7 @@ const base = {
     'dist/',
     'generated/',
     'node_modules/',
+    'storybook-static/',
   ],
 
   // this is a hack to make sure eslint will look at all of the file extensions we
