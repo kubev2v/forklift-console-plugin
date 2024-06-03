@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ResourceFieldFactory } from '@kubev2v/common';
 
-import { concernFilter } from './utils/concernFilter';
+import { concernFilter } from './utils/filters/concernFilter';
 import { ProviderVirtualMachinesList } from './components';
 import { OvaVirtualMachinesCells } from './OvaVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';

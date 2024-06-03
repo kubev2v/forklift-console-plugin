@@ -33,7 +33,8 @@ interface RenderTdProps {
 const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   name: VMNameCellRenderer,
   concerns: VMConcernsCellRenderer,
-  host: ({ data }) => <TableCell>{(data?.vm as VSphereVM)?.host}</TableCell>,
+  host: ({ data }) => <TableCell>{data?.hostName}</TableCell>,
+  folder: ({ data }) => <TableCell>{data?.folderName}</TableCell>,
   isTemplate: ({ data }) => (
     <TableCell>{Boolean((data?.vm as VSphereVM)?.isTemplate).toString()}</TableCell>
   ),

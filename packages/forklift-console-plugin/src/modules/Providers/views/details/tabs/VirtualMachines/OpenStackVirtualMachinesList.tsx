@@ -2,7 +2,7 @@ import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
-import { concernFilter } from './utils/concernFilter';
+import { concernFilter } from './utils/filters/concernFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { ProviderVirtualMachinesList, VmData } from './components';
 import { OpenStackVirtualMachinesCells } from './OpenStackVirtualMachinesRow';

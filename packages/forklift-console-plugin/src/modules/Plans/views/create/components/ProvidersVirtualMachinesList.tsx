@@ -1,6 +1,9 @@
 import React from 'react';
-import { ProviderVirtualMachinesListWrapper, VmData } from 'src/modules/Providers/views';
-import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/useInventoryVms';
+import {
+  ProviderVirtualMachinesListWrapper,
+  useInventoryVms,
+  VmData,
+} from 'src/modules/Providers/views';
 
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';

@@ -1,11 +1,12 @@
 import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
+import { VSphereVM } from '@kubev2v/types';
 
-import { concernFilter } from './utils/concernFilter';
+import { concernFilter } from './utils/filters/concernFilter';
 import { ProviderVirtualMachinesList, VmData } from './components';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
-import { getVmPowerState } from './utils';
+import { getVmPowerState, useVSphereInventoryVms } from './utils';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
 export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
@@ -39,13 +40,25 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'host',
-    jsonPath: '$.vm.host',
-    label: t('Host ID'),
+    jsonPath: '$.hostName',
+    label: t('Host'),
     isVisible: true,
     isIdentity: false,
     filter: {
       type: 'freetext',
-      placeholderLabel: t('Filter by host ID'),
+      placeholderLabel: t('Filter by host'),
+    },
+    sortable: true,
+  },
+  {
+    resourceFieldId: 'folder',
+    jsonPath: '$.folderName',
+    label: t('Folder'),
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by folder'),
     },
     sortable: true,
   },
@@ -53,7 +66,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     resourceFieldId: 'path',
     jsonPath: '$.vm.path',
     label: t('Path'),
-    isVisible: true,
+    isVisible: false,
     isIdentity: false,
     filter: {
       type: 'freetext',
@@ -85,18 +98,41 @@ export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> 
   initialSelectedIds,
   showActions,
   className,
-}) => (
-  <ProviderVirtualMachinesList
-    title={title}
-    obj={obj}
-    loaded={loaded}
-    loadError={loadError}
-    cellMapper={VSphereVirtualMachinesCells}
-    fieldsMetadataFactory={vSphereVmFieldsMetadataFactory}
-    pageId="VSphereVirtualMachinesList"
-    onSelect={onSelect}
-    initialSelectedIds={initialSelectedIds}
-    showActions={showActions}
-    className={className}
-  />
-);
+}) => {
+  const [hostsDict, foldersDict] = useVSphereInventoryVms({ provider: obj.provider }, true, null);
+  const { vmData } = obj;
+
+  /**
+   * Processes the vmData to include folderName and hostName for each VM.
+   *
+   * @param {Array} vmData - The array of VM data objects.
+   * @returns {Array} An array with updated VM data objects.
+   */
+  const newVMData = vmData.map((data) => {
+    const vm = data.vm as VSphereVM;
+    const folder = foldersDict?.[vm.parent.id];
+    const host = hostsDict?.[vm.host];
+
+    return {
+      ...data,
+      folderName: folder?.name,
+      hostName: host?.name,
+    };
+  });
+
+  return (
+    <ProviderVirtualMachinesList
+      title={title}
+      obj={{ ...obj, vmData: newVMData }}
+      loaded={loaded}
+      loadError={loadError}
+      cellMapper={VSphereVirtualMachinesCells}
+      fieldsMetadataFactory={vSphereVmFieldsMetadataFactory}
+      pageId="VSphereVirtualMachinesList"
+      onSelect={onSelect}
+      initialSelectedIds={initialSelectedIds}
+      showActions={showActions}
+      className={className}
+    />
+  );
+};
