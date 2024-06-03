@@ -17,7 +17,7 @@
   "scripts": {
     "clean": "rm -rf ./dist ./coverage && npm run clean -ws --if-present",
     "clean:all": "npm run clean && npm run clean:all -ws --if-present && rm -rf ./node_modules ./tmp ",
-    "build": "NODE_ENV=production npm run build $npm_package_config_libs -w @kubev2v/forklift-console-plugin",
+    "build": "NODE_ENV=production npm run build $npm_package_config_libs && NODE_ENV=production npm run build -w @kubev2v/forklift-console-plugin",
     "build:dev": "npm run build $npm_package_config_libs && npm run build:dev -w @kubev2v/forklift-console-plugin",
     "start": "npm run start -w @kubev2v/forklift-console-plugin",
     "start:overlay-proxy": "npm run build $npm_package_config_libs && npm run start -w @kubev2v/forklift-console-plugin -- -c webpack.proxy.config.ts",

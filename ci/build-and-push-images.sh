@@ -14,7 +14,7 @@ echo ""
 echo "Build plugin image"
 echo "=================="
 
-podman build --ulimit nofile=4096:4096 --tag ${FORKLIFT_PLUGIN_IMAGE} -f build/Containerfile . 
+podman build --ulimit nofile=8192 --tag ${FORKLIFT_PLUGIN_IMAGE} -f build/Containerfile .
 
 echo ""
 echo "Push plugin image"
