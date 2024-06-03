@@ -8,7 +8,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
-import { useInventoryVms } from './utils/useInventoryVms';
+import { useInventoryVms } from './utils/hooks/useInventoryVms';
 import { VmData } from './components';
 import { OpenShiftVirtualMachinesList } from './OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from './OpenStackVirtualMachinesList';

@@ -30,17 +30,6 @@ export const hostsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    resourceFieldId: 'id',
-    jsonPath: '$.inventory.id',
-    label: t('Host ID'),
-    isVisible: true,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by host ID'),
-    },
-    sortable: true,
-  },
-  {
     resourceFieldId: 'network',
     jsonPath: '$.networkAdapter.name',
     label: t('Network for data transfer'),

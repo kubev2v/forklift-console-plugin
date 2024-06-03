@@ -4,7 +4,7 @@ import { isProviderLocalOpenshift, isProviderOpenshift } from 'src/utils/resourc
 
 import { OpenshiftVM, ProviderVirtualMachine } from '@kubev2v/types';
 
-import { VmData } from '../components';
+import { VmData } from '../../components';
 
 /**
  * A hook for retrieving VMs from the inventory.

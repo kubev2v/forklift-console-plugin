@@ -6,6 +6,8 @@ export interface VmData {
   name: string;
   namespace: string;
   isProviderLocalOpenshift?: boolean;
+  folderName?: string;
+  hostName?: string;
 }
 
 export interface VMCellProps {
