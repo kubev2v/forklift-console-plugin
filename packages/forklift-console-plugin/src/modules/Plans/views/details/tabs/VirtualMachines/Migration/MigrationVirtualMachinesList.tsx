@@ -119,13 +119,13 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: 'status',
     jsonPath: getVMMigrationStatus,
-    label: t('Status'),
+    label: t('Pipeline status'),
     isVisible: true,
     sortable: true,
     filter: {
       type: 'enum',
       primary: true,
-      placeholderLabel: t('Status'),
+      placeholderLabel: t('Pipeline status'),
       values: vmStatuses,
     },
   },
