@@ -25,6 +25,7 @@
   },
 
   "include": ["./src/**/*"],
+  "exclude": ["./src/components-stories/**/*", "./src/components-stories/*"],
 
   "ts-node": {
     "files": true,
