@@ -83,3 +83,4 @@ millicores
 inputgroup
 pvc
 pvcs
+LUKS
