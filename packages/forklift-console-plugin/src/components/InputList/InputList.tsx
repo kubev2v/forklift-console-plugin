@@ -5,7 +5,7 @@ import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 
 import './InputList.style.css';
 
-export type InputListRow<T> = React.FC<{ data: T; onChange: (value: T) => void }>;
+export type InputListRow<T> = React.FC<{ value: T; onChange: (value: T) => void }>;
 
 /**
  * Props for InputList component.
@@ -77,7 +77,7 @@ export const InputList = <T,>({
         <ListItem key={id} id={id}>
           <Flex alignItems={{ default: 'alignItemsCenter', lg: 'alignItemsBaseline' }}>
             <FlexItem>
-              <InputRow data={content} onChange={(newValue) => handleItemChange(id, newValue)} />
+              <InputRow value={content} onChange={(newValue) => handleItemChange(id, newValue)} />
             </FlexItem>
             <FlexItem>
               <Tooltip content={removeIconContent}>

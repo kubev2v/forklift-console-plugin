@@ -66,6 +66,7 @@ export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, p
         {['ovirt'].includes(sourceProvider?.spec?.type) && (
           <PreserveClusterCpuModelDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
+
         {['vsphere'].includes(sourceProvider?.spec?.type) && (
           <PreserveStaticIPsDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
