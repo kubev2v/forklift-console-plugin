@@ -112,7 +112,20 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
         ? diskTransfer?.progress?.completed / diskTransfer?.progress?.total
         : 0;
     },
-    label: t('Disk Transfer'),
+    label: t('Disk transfer'),
+    isVisible: true,
+    sortable: true,
+  },
+  {
+    resourceFieldId: 'diskCounter',
+    jsonPath: (obj: VMData) => {
+      const diskTransfer = obj.statusVM?.pipeline.find((p) => p.name === 'DiskTransfer');
+
+      return diskTransfer && diskTransfer?.progress?.total
+        ? diskTransfer?.progress?.completed / diskTransfer?.progress?.total
+        : 0;
+    },
+    label: t('Disk counter'),
     isVisible: true,
     sortable: true,
   },

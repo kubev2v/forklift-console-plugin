@@ -51,11 +51,26 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
       p?.name?.startsWith('DiskTransfer'),
     );
     const annotations: { unit: string } = diskTransfer?.annotations as undefined;
+    const { completed, total } = getTransferProgress(diskTransfer);
 
     return annotations?.unit ? (
       <>
-        {diskTransfer?.progress?.completed || '-'} / {diskTransfer?.progress?.total || '-'}{' '}
-        {annotations?.unit || '-'}
+        {completed} / {total} {annotations?.unit || '-'}
+      </>
+    ) : (
+      <>-</>
+    );
+  },
+  diskCounter: (props: PlanVMsCellProps) => {
+    const diskTransfer = props.data.statusVM?.pipeline.find((p) =>
+      p?.name?.startsWith('DiskTransfer'),
+    );
+
+    const { totalTasks, completedTasks } = countTasks(diskTransfer);
+
+    return totalTasks ? (
+      <>
+        {completedTasks || '-'} / {totalTasks || '-'} Discs
       </>
     ) : (
       <>-</>
@@ -199,4 +214,27 @@ export const getIcon: GetIconType = (p) => {
     default:
       return undefined;
   }
+};
+
+const countTasks = (diskTransfer: V1beta1PlanStatusMigrationVmsPipeline) => {
+  if (!diskTransfer || !Array.isArray(diskTransfer?.tasks)) {
+    return { totalTasks: 0, completedTasks: 0 };
+  }
+
+  const totalTasks = diskTransfer.tasks.length;
+  const completedTasks = diskTransfer.tasks.filter((task) => task.phase === 'Completed').length;
+
+  return { totalTasks, completedTasks };
+};
+
+const getTransferProgress = (diskTransfer) => {
+  if (!diskTransfer || !diskTransfer.progress) {
+    return { completed: '-', total: '-' };
+  }
+
+  const { completed, total } = diskTransfer.progress;
+  return {
+    completed: completed !== undefined ? completed : '-',
+    total: total !== undefined ? total : '-',
+  };
 };
