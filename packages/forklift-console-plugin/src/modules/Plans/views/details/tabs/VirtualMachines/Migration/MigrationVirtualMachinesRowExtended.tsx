@@ -1,19 +1,29 @@
 import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { RowProps, TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { IoK8sApiBatchV1Job } from '@kubev2v/types';
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
-import { Flex, FlexItem, PageSection, ProgressStep, ProgressStepper } from '@patternfly/react-core';
+import {
+  Button,
+  Flex,
+  FlexItem,
+  PageSection,
+  ProgressStep,
+  ProgressStepper,
+} from '@patternfly/react-core';
 
+import { PipelineTasksModal } from '../modals';
 import { VMData } from '../types';
 
 import { getIcon, getVariant } from './MigrationVirtualMachinesRow';
 
 export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (props) => {
   const { t } = useForkliftTranslation();
+  const { showModal } = useModal();
 
   const pipeline = props.resourceData.statusVM?.pipeline;
   const conditions = props.resourceData.statusVM?.conditions;
@@ -198,6 +208,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
           <Tr>
             <Th>{t('Name')}</Th>
             <Th>{t('Description')}</Th>
+            <Th>{t('Tasks')}</Th>
             <Th>{t('Started at')}</Th>
             <Th>{t('Error')}</Th>
           </Tr>
@@ -218,6 +229,17 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 {p?.name}
               </Td>
               <Td>{p?.description}</Td>
+              <Td>
+                {p?.tasks?.length > 0 && (
+                  <Button
+                    className="forklift-page-plan-details-vm-tasks"
+                    variant="link"
+                    onClick={() => showModal(<PipelineTasksModal name={p?.name} tasks={p.tasks} />)}
+                  >
+                    {p.tasks.length} Tasks
+                  </Button>
+                )}
+              </Td>
               <Td>
                 <Timestamp timestamp={p?.started} />
               </Td>
