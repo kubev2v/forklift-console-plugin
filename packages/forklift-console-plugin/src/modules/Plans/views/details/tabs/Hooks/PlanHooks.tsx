@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import { AlertMessageForModals } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
@@ -27,7 +28,7 @@ import { onUpdatePlanHooks } from './utils';
 export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
-  const [plan, preHookResource, postHookResource, loaded, loadError] = usePlanHooks(
+  const [plan, preHookResource, postHookResource, loaded, loadError, warning] = usePlanHooks(
     name,
     namespace,
   );
@@ -95,6 +96,24 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
   return (
     <Suspend obj={plan} loaded={loaded} loadError={loadError}>
       {state.alertMessage && <PageSection variant="light">{state.alertMessage}</PageSection>}
+
+      {warning && (
+        <PageSection
+          variant="light"
+          className="forklift-page-plan-details-vm-status__section-actions"
+        >
+          <AlertMessageForModals
+            variant="warning"
+            title={'The plan hooks were manually configured'}
+            message={
+              <>
+                <p>Warning: {warning},</p>
+                <p>updating the hooks will override the current configuration.</p>
+              </>
+            }
+          />
+        </PageSection>
+      )}
 
       <PageSection
         variant="light"
