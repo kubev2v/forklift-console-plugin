@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 
-import { Button, Flex, FlexItem, List, ListItem, Tooltip } from '@patternfly/react-core';
+import {
+  Button,
+  DataList,
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  Tooltip,
+} from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 
 import './InputList.style.css';
@@ -72,41 +81,50 @@ export const InputList = <T,>({
   const isDeleteDisabled = localItems.length === 1;
 
   return (
-    <List isPlain>
-      {localItems.map(({ content, id }) => (
-        <ListItem key={id} id={id}>
-          <Flex alignItems={{ default: 'alignItemsCenter', lg: 'alignItemsBaseline' }}>
-            <FlexItem>
-              <InputRow value={content} onChange={(newValue) => handleItemChange(id, newValue)} />
-            </FlexItem>
-            <FlexItem>
-              <Tooltip content={removeIconContent}>
-                <Button
-                  className="forklift--input-list-icon"
-                  variant="plain"
-                  aria-label="Remove item"
-                  isDisabled={isDeleteDisabled}
-                  onClick={() => handleItemDelete(id)}
-                >
-                  <MinusCircleIcon />
-                </Button>
-              </Tooltip>
-            </FlexItem>
-          </Flex>
-        </ListItem>
-      ))}
-
-      <ListItem>
-        <Button
-          className="forklift--input-list-icon"
-          variant="link"
-          icon={<PlusCircleIcon />}
-          onClick={handleAddItem}
-        >
-          {addButtonText}
-        </Button>
-      </ListItem>
-    </List>
+    <>
+      <DataList aria-label={'input data list'} isCompact>
+        {localItems.map(({ content, id }) => (
+          <DataListItem key={id} id={id}>
+            <DataListItemRow>
+              <DataListItemCells
+                dataListCells={[
+                  <DataListCell key="primary content">
+                    <InputRow
+                      value={content}
+                      onChange={(newValue) => handleItemChange(id, newValue)}
+                    />
+                  </DataListCell>,
+                ]}
+              />
+              <DataListAction
+                id={`mapping_list_item_${id}`}
+                aria-label={'Actions'}
+                aria-labelledby=""
+              >
+                <Tooltip content={removeIconContent}>
+                  <Button
+                    onClick={() => handleItemDelete(id)}
+                    variant="plain"
+                    aria-label={removeIconContent}
+                    key="delete-action"
+                    icon={<MinusCircleIcon />}
+                    isDisabled={isDeleteDisabled}
+                  />
+                </Tooltip>
+              </DataListAction>
+            </DataListItemRow>
+          </DataListItem>
+        ))}
+      </DataList>
+      <Button
+        className="forklift--input-list-icon"
+        variant="link"
+        icon={<PlusCircleIcon />}
+        onClick={handleAddItem}
+      >
+        {addButtonText}
+      </Button>
+    </>
   );
 };
 
