@@ -124,6 +124,11 @@
   cursor: pointer;
 }
 
+
+.forklift-page-plan-details-vm-tasks {
+  padding: 0;
+}
+
 .forklift-page-plan-details-vm-status__section-header {
   margin-bottom: var(--pf-global--spacer--xs);
   margin-top: var(--pf-global--spacer--md);
