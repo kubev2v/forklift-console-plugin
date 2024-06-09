@@ -178,10 +178,14 @@ export const ContentField: React.FC<{
 }> = ({ content, onEdit }) =>
   onEdit ? (
     <DescriptionListDescription>
-      {content}
-      <Button variant="link" isInline onClick={onEdit}>
-        <Pencil className="forklift-page-details-edit-pencil" />
-      </Button>
+      <Flex alignItems={{ default: 'alignItemsCenter' }}>
+        <FlexItem spacer={{ default: 'spacerNone' }}>{content}</FlexItem>
+        <FlexItem spacer={{ default: 'spacerNone' }}>
+          <Button variant="link" isInline onClick={onEdit}>
+            <Pencil className="forklift-page-details-edit-pencil" />
+          </Button>
+        </FlexItem>
+      </Flex>
     </DescriptionListDescription>
   ) : (
     <DescriptionListDescription>{content}</DescriptionListDescription>

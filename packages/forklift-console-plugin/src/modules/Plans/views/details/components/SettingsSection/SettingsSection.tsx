@@ -9,6 +9,7 @@ import { DescriptionList } from '@patternfly/react-core';
 import {
   PreserveClusterCpuModelDetailsItem,
   PreserveStaticIPsDetailsItem,
+  SetLUKSEncryptionPasswordsDetailsItem,
   TargetNamespaceDetailsItem,
   TransferNetworkDetailsItem,
   WarmDetailsItem,
@@ -69,6 +70,10 @@ export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, p
 
         {['vsphere'].includes(sourceProvider?.spec?.type) && (
           <PreserveStaticIPsDetailsItem resource={obj} canPatch={permissions.canPatch} />
+        )}
+
+        {['vsphere'].includes(sourceProvider?.spec?.type) && (
+          <SetLUKSEncryptionPasswordsDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
       </DescriptionList>
     </>
