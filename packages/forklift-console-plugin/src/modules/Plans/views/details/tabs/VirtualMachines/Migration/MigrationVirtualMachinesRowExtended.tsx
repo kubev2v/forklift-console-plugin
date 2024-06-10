@@ -14,7 +14,9 @@ import {
   PageSection,
   ProgressStep,
   ProgressStepper,
+  Tooltip,
 } from '@patternfly/react-core';
+import { TaskIcon } from '@patternfly/react-icons';
 
 import { PipelineTasksModal } from '../modals';
 import { VMData } from '../types';
@@ -231,13 +233,22 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
               <Td>{p?.description}</Td>
               <Td>
                 {p?.tasks?.length > 0 && (
-                  <Button
-                    className="forklift-page-plan-details-vm-tasks"
-                    variant="link"
-                    onClick={() => showModal(<PipelineTasksModal name={p?.name} tasks={p.tasks} />)}
+                  <Tooltip
+                    content={t('Total of {{length}} {{name}} tasks', {
+                      length: p.tasks.length,
+                      name: p?.name,
+                    })}
                   >
-                    {p.tasks.length} Tasks
-                  </Button>
+                    <Button
+                      className="forklift-page-plan-details-vm-tasks"
+                      variant="link"
+                      onClick={() =>
+                        showModal(<PipelineTasksModal name={p?.name} tasks={p.tasks} />)
+                      }
+                    >
+                      <TaskIcon /> {p.tasks.length}
+                    </Button>
+                  </Tooltip>
                 )}
               </Td>
               <Td>
