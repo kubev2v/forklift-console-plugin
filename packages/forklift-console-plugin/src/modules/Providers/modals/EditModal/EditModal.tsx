@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -68,6 +68,16 @@ export const EditModal: React.FC<EditModalProps> = ({
 
   const { namespace } = resource?.metadata || {};
   const owner = resource?.metadata?.ownerReferences?.[0];
+
+  /*
+   * Init validation
+   */
+  useEffect(() => {
+    if (validationHook) {
+      const validationResult = validationHook(value);
+      setValidation(validationResult);
+    }
+  }, []);
 
   /**
    * Handles value change.

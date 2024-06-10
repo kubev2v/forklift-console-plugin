@@ -518,7 +518,6 @@
   "VM(s) with NICs that are not linked with a NIC profile were detected.": "VM(s) with NICs that are not linked with a NIC profile were detected.",
   "VMs": "VMs",
   "VMware only: vSphere product name.": "VMware only: vSphere product name.",
-  "VMware Virtual Disk Development Kit (VDDK) image, for example: quay.io/kubev2v/vddk:latest .": "VMware Virtual Disk Development Kit (VDDK) image, for example: quay.io/kubev2v/vddk:latest .",
   "VMware vSphere UI": "VMware vSphere UI",
   "Volume Types": "Volume Types",
   "Volumes": "Volumes",

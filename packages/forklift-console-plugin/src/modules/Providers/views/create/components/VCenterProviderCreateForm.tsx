@@ -1,14 +1,11 @@
 import React, { useCallback, useReducer } from 'react';
-import { validateVCenterURL, validateVDDKImage } from 'src/modules/Providers/utils';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { validateVCenterURL, validateVDDKImage, VDDKHelperText } from 'src/modules/Providers/utils';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink, FormGroupWithHelpText } from '@kubev2v/common';
+import { FormGroupWithHelpText } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
 import { Form, Popover, Radio, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
-
-const CREATE_VDDK_HELP_LINK =
-  'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
 
 export interface VCenterProviderCreateFormProps {
   provider: V1beta1Provider;
@@ -24,23 +21,6 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
   const url = provider?.spec?.url;
   const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'];
   const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'];
-
-  const vddkHelperTextPopover = (
-    <ForkliftTrans>
-      <p>
-        VMware Virtual Disk Development Kit (VDDK) image in a secure registry that is accessible to
-        all clusters, for example: quay.io/kubev2v/vddk:latest .
-      </p>
-      <p>
-        It is strongly recommended to create a VDDK init image to accelerate migrations. For more
-        information, see{' '}
-        <ExternalLink isInline href={CREATE_VDDK_HELP_LINK}>
-          Creating VDDK image
-        </ExternalLink>
-        .
-      </p>
-    </ForkliftTrans>
-  );
 
   const initialState = {
     validation: {
@@ -169,7 +149,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
         labelIcon={
           <Popover
             headerContent={t('VDDK init image')}
-            bodyContent={vddkHelperTextPopover}
+            bodyContent={VDDKHelperText}
             alertSeverityVariant="info"
           >
             <button

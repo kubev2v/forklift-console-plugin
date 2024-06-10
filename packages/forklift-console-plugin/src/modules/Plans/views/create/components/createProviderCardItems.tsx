@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
+import { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 
 import { V1beta1Provider } from '@kubev2v/types';
 
