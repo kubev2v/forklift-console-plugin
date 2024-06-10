@@ -29,7 +29,7 @@ export const PipelineTasksModal: React.FC<PipelineTasksModalProps> = ({ name, ta
           <Tr>
             <Th>{t('Name')}</Th>
             <Th>{t('Phase')}</Th>
-            <Th>{t('Transfer')}</Th>
+            <Th>{t('Progress')}</Th>
             <Th>{t('Started at')}</Th>
             <Th>{t('Error')}</Th>
           </Tr>
