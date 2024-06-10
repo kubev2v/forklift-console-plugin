@@ -5,7 +5,7 @@ import {
   redhatLogo,
   vmLogo,
 } from 'src/components/images/logos';
-import { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
+import { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 
 export const providerCardItems: Record<string, SelectableGalleryItem> = {
   vsphere: {

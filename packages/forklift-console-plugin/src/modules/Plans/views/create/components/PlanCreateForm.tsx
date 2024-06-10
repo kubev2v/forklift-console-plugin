@@ -1,6 +1,6 @@
 import React from 'react';
-import { SelectableCard } from 'src/modules/Providers/utils/components/Galerry/SelectableCard';
-import { SelectableGallery } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
+import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
+import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 import { VmData } from 'src/modules/Providers/views';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';

@@ -1,9 +1,10 @@
 import React from 'react';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
 import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
+import { VDDKHelperText } from '../../utils';
 import { validateVDDKImage } from '../../utils/validators';
 import { EditModal, EditModalProps, OnConfirmHookType } from '../EditModal';
 
@@ -58,25 +59,6 @@ export type EditProviderVDDKImageProps = Modify<
 const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => {
   const { t } = useForkliftTranslation();
 
-  const ModalBody = (
-    <ForkliftTrans>
-      <p>VMware Virtual Disk Development Kit (VDDK) image.</p>
-      <br />
-      <p>
-        The Migration Toolkit for Virtualization (MTV) uses the VMware Virtual Disk Development Kit
-        (VDDK) SDK to transfer virtual disks from VMware vSphere.
-      </p>
-      <br />
-      <p>
-        The format of the URL of the VMware Virtual Disk Development Kit (VDDK) image should include
-        a registry, project, image name, and optionally a version, for example:{' '}
-        <strong>quay.io/kubev2v/vddk:latest</strong>.
-      </p>
-      <br />
-      <p>It is strongly recommended to specify a VDDK init image to accelerate migrations.</p>
-    </ForkliftTrans>
-  );
-
   return (
     <EditModal
       {...props}
@@ -84,10 +66,7 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
       title={props?.title || t('Edit VDDK init image')}
       label={props?.label || t('VDDK init image')}
       model={ProviderModel}
-      body={ModalBody}
-      helperText={t(
-        'VMware Virtual Disk Development Kit (VDDK) image, for example: quay.io/kubev2v/vddk:latest .',
-      )}
+      body={VDDKHelperText}
       validationHook={validateVDDKImage}
       onConfirmHook={onConfirm}
     />

@@ -2,8 +2,8 @@ import React, { useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { validateK8sName, ValidationMsg } from 'src/modules/Providers/utils';
-import { SelectableCard } from 'src/modules/Providers/utils/components/Galerry/SelectableCard';
-import { SelectableGallery } from 'src/modules/Providers/utils/components/Galerry/SelectableGallery';
+import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
+import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
