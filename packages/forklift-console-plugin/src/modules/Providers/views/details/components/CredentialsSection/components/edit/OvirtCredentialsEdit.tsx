@@ -99,6 +99,16 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
+  const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (
+    event,
+  ) => {
+    event.preventDefault();
+  };
+
+  const onClickTogglePassword = () => {
+    togglePasswordHidden();
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -138,7 +148,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
         />
         <Button
           variant="control"
-          onClick={() => togglePasswordHidden()}
+          onClick={onClickTogglePassword}
           aria-label={state.passwordHidden ? 'Show password' : 'Hide password'}
         >
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
@@ -157,7 +167,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           >
             <button
               type="button"
-              onClick={(e) => e.preventDefault()}
+              onClick={onClickEventPreventDef}
               className="pf-c-form__group-label-help"
             >
               <HelpIcon />
@@ -189,7 +199,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           >
             <button
               type="button"
-              onClick={(e) => e.preventDefault()}
+              onClick={onClickEventPreventDef}
               className="pf-c-form__group-label-help"
             >
               <HelpIcon />

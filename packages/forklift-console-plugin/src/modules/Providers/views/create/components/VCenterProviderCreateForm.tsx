@@ -117,6 +117,10 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
     [provider],
   );
 
+  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
       <FormGroupWithHelpText
@@ -172,11 +176,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
             bodyContent={vddkHelperTextPopover}
             alertSeverityVariant="info"
           >
-            <button
-              type="button"
-              onClick={(e) => e.preventDefault()}
-              className="pf-c-form__group-label-help"
-            >
+            <button type="button" onClick={onClick} className="pf-c-form__group-label-help">
               <HelpIcon />
             </button>
           </Popover>

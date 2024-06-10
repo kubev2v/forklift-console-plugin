@@ -28,25 +28,23 @@ export const ActionsCell = ({ data }: CellProps) => {
   const buttonStartIcon = canReStart ? <ReStartIcon /> : <StartIcon />;
   const buttonCutoverIcon = <CutoverIcon />;
 
+  const onClickPlanStartMigration = () => {
+    showModal(
+      <PlanStartMigrationModal resource={data.obj} model={PlanModel} title={buttonStartLabel} />,
+    );
+  };
+
+  const onClickPlanCutoverMigration = () => {
+    showModal(<PlanCutoverMigrationModal resource={data.obj} />);
+  };
+
   return (
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
       <FlexItem grow={{ default: 'grow' }}></FlexItem>
 
       {canStart && (
         <FlexItem align={{ default: 'alignRight' }}>
-          <Button
-            variant="secondary"
-            icon={buttonStartIcon}
-            onClick={() =>
-              showModal(
-                <PlanStartMigrationModal
-                  resource={data.obj}
-                  model={PlanModel}
-                  title={buttonStartLabel}
-                />,
-              )
-            }
-          >
+          <Button variant="secondary" icon={buttonStartIcon} onClick={onClickPlanStartMigration}>
             {buttonStartLabel}
           </Button>
         </FlexItem>
@@ -57,7 +55,7 @@ export const ActionsCell = ({ data }: CellProps) => {
           <Button
             variant="secondary"
             icon={buttonCutoverIcon}
-            onClick={() => showModal(<PlanCutoverMigrationModal resource={data.obj} />)}
+            onClick={onClickPlanCutoverMigration}
           >
             {t('Cutover')}
           </Button>

@@ -93,6 +93,10 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
+  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -149,11 +153,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
             bodyContent={insecureSkipVerifyHelperTextPopover}
             alertSeverityVariant="info"
           >
-            <button
-              type="button"
-              onClick={(e) => e.preventDefault()}
-              className="pf-c-form__group-label-help"
-            >
+            <button type="button" onClick={onClick} className="pf-c-form__group-label-help">
               <HelpIcon />
             </button>
           </Popover>
@@ -181,11 +181,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
             bodyContent={cacertHelperTextPopover}
             alertSeverityVariant="info"
           >
-            <button
-              type="button"
-              onClick={(e) => e.preventDefault()}
-              className="pf-c-form__group-label-help"
-            >
+            <button type="button" onClick={onClick} className="pf-c-form__group-label-help">
               <HelpIcon />
             </button>
           </Popover>

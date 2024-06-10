@@ -19,12 +19,12 @@ export const ProvidersAddButton: React.FC<{ namespace: string; dataTestId?: stri
     namespaced: namespace !== undefined,
   });
 
+  const onClick = () => {
+    history.push(`${providersListURL}/~new`);
+  };
+
   return (
-    <Button
-      data-testid={dataTestId}
-      variant="primary"
-      onClick={() => history.push(`${providersListURL}/~new`)}
-    >
+    <Button data-testid={dataTestId} variant="primary" onClick={onClick}>
       {t('Create Provider')}
     </Button>
   );

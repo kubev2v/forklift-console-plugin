@@ -20,6 +20,10 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
     namespace: provider?.metadata?.namespace,
   });
 
+  const onClick = () => {
+    showModal(<DeleteModal resource={provider} model={ProviderModel} />);
+  };
+
   return [
     <DropdownItemLink key="EditProvider" href={providerURL}>
       {t('Edit Provider')}
@@ -30,11 +34,7 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
     <DropdownItemLink key="MigratePlan" href={`${providerURL}/vms`}>
       {t('Migrate')}
     </DropdownItemLink>,
-    <DropdownItem
-      key="delete"
-      isDisabled={!data?.permissions?.canDelete}
-      onClick={() => showModal(<DeleteModal resource={provider} model={ProviderModel} />)}
-    >
+    <DropdownItem key="delete" isDisabled={!data?.permissions?.canDelete} onClick={onClick}>
       {t('Delete Provider')}
     </DropdownItem>,
   ];

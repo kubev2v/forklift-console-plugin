@@ -21,6 +21,12 @@ export const FetchCertificateModal: FC<{
   const success = !loading && !fetchError && !certError;
   const hasThumbprintChanged =
     existingCert && success && thumbprint !== calculateThumbprint(existingCert);
+
+  const onClick = () => {
+    handleSave(certificate);
+    toggleModal();
+  };
+
   return (
     <Modal
       title={t('Verify certificate')}
@@ -33,10 +39,7 @@ export const FetchCertificateModal: FC<{
         <Button
           key="confirm"
           variant="primary"
-          onClick={() => {
-            handleSave(certificate);
-            toggleModal();
-          }}
+          onClick={onClick}
           isDisabled={!success || !isTrusted}
         >
           {t('Confirm')}

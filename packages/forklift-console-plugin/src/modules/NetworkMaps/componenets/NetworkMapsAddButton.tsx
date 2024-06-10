@@ -19,12 +19,12 @@ export const NetworkMapsAddButton: React.FC<{ namespace: string; dataTestId?: st
     namespaced: namespace !== undefined,
   });
 
+  const onClick = () => {
+    history.push(`${NetworkMapsListURL}/~new`);
+  };
+
   return (
-    <Button
-      data-testid={dataTestId}
-      variant="primary"
-      onClick={() => history.push(`${NetworkMapsListURL}/~new`)}
-    >
+    <Button data-testid={dataTestId} variant="primary" onClick={onClick}>
       {t('Create NetworkMap')}
     </Button>
   );

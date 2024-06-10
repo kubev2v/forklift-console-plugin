@@ -160,6 +160,10 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     [secret],
   );
 
+  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -235,11 +239,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
             bodyContent={<div>{insecureSkipVerifyHelperTextPopover}</div>}
             alertSeverityVariant="info"
           >
-            <button
-              type="button"
-              onClick={(e) => e.preventDefault()}
-              className="pf-c-form__group-label-help"
-            >
+            <button type="button" onClick={onClick} className="pf-c-form__group-label-help">
               <HelpIcon />
             </button>
           </Popover>

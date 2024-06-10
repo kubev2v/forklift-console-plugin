@@ -93,6 +93,16 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   }
 
+  const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (
+    event,
+  ) => {
+    event.preventDefault();
+  };
+
+  const onClickTogglePassword = () => {
+    togglePasswordHidden();
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -114,7 +124,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         />
         <Button
           variant="control"
-          onClick={() => togglePasswordHidden()}
+          onClick={onClickTogglePassword}
           aria-label={state.passwordHidden ? 'Show token' : 'Hide token'}
         >
           {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
@@ -133,7 +143,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           >
             <button
               type="button"
-              onClick={(e) => e.preventDefault()}
+              onClick={onClickEventPreventDef}
               className="pf-c-form__group-label-help"
             >
               <HelpIcon />
@@ -165,7 +175,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           >
             <button
               type="button"
-              onClick={(e) => e.preventDefault()}
+              onClick={onClickEventPreventDef}
               className="pf-c-form__group-label-help"
             >
               <HelpIcon />

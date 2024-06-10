@@ -50,6 +50,10 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   const [isSrcOpen, setToggleSrcOpen] = useToggle(false);
   const [isTrgOpen, setToggleTrgOpen] = useToggle(false);
 
+  const onClick = () => {
+    deleteMapping({ source, destination });
+  };
+
   return (
     <DataListItem aria-labelledby="">
       <DataListItemRow>
@@ -111,7 +115,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
             aria-labelledby=""
           >
             <Button
-              onClick={() => deleteMapping({ source, destination })}
+              onClick={onClick}
               variant="plain"
               aria-label={t('Delete mapping')}
               key="delete-action"

@@ -14,13 +14,13 @@ export const PlanVMsDeleteButton: FC<{
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
+  const onClick = () => {
+    showModal(<PlanVMsDeleteModal plan={plan} selected={selectedIds} />);
+  };
+
   return (
     <ToolbarItem>
-      <Button
-        variant="secondary"
-        onClick={() => showModal(<PlanVMsDeleteModal plan={plan} selected={selectedIds} />)}
-        isDisabled={selectedIds?.length < 1}
-      >
+      <Button variant="secondary" onClick={onClick} isDisabled={selectedIds?.length < 1}>
         {t('Remove virtual machines')}
       </Button>
     </ToolbarItem>

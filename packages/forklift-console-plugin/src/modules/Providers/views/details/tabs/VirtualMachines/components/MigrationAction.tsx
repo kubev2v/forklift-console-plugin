@@ -23,16 +23,14 @@ export const MigrationAction: FC<{
     namespaced: namespace !== undefined,
   });
   const { setData } = useCreateVmMigrationData();
+  const onClick = () => {
+    setData({ selectedVms, provider });
+    history.push(`${planListURL}/~new`);
+  };
+
   return (
     <ToolbarItem className={className}>
-      <Button
-        variant="primary"
-        onClick={() => {
-          setData({ selectedVms, provider });
-          history.push(`${planListURL}/~new`);
-        }}
-        isDisabled={!selectedVms?.length}
-      >
+      <Button variant="primary" onClick={onClick} isDisabled={!selectedVms?.length}>
         {t('Create migration plan')}
       </Button>
     </ToolbarItem>

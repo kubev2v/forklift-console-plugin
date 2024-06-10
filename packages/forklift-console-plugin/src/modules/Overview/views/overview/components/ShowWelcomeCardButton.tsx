@@ -10,15 +10,16 @@ export const ShowWelcomeCardButton: React.FC = () => {
   // Set and use context data for the overview page state
   const { setData } = useCreateOverviewContext();
   const { data: { hideWelcomeCardByContext } = {} } = useCreateOverviewContext();
+  const onClick = () => {
+    setData({ hideWelcomeCardByContext: false });
+  };
 
   if (!hideWelcomeCardByContext) return null;
 
   return (
     <Label
       color="purple"
-      onClick={() => {
-        setData({ hideWelcomeCardByContext: false });
-      }}
+      onClick={onClick}
       onClose={() => null}
       style={{ cursor: 'pointer' }}
       data-testid="show-welcome-card"
