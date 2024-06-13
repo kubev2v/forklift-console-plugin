@@ -89,14 +89,10 @@ export const ProvidersCreatePage: React.FC<{
       }
       case 'SET_NEW_PROVIDER': {
         const value = action.payload as V1beta1Provider;
-        let validationError: ValidationMsg = { type: 'default' };
+        let validationError = providerAndSecretValidator(value, state.newSecret);
 
         if (providerNames.includes(value?.metadata?.name)) {
           validationError = { type: 'error', msg: 'Provider name is not unique' };
-        }
-
-        if (!value?.metadata?.name) {
-          validationError = { type: 'error', msg: 'Missing provider name' };
         }
 
         // Sync secret with new URL
@@ -104,11 +100,6 @@ export const ProvidersCreatePage: React.FC<{
           ...state.newSecret,
           data: { ...state.newSecret.data, url: Base64.encode(value?.spec?.url || '') },
         };
-
-        validationError =
-          validationError.type === 'error'
-            ? validationError
-            : providerAndSecretValidator(value, updatedSecret);
 
         return {
           ...state,

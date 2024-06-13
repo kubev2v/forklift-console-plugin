@@ -410,6 +410,7 @@
   "Show archived": "Show archived",
   "Show the welcome card": "Show the welcome card",
   "Skip certificate validation": "Skip certificate validation",
+  "Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration, migration may be slow.": "Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration, migration may be slow.",
   "Snapshot polling interval (seconds)": "Snapshot polling interval (seconds)",
   "Something is wrong, the data was not loaded due to an error, please try to reload the page.": "Something is wrong, the data was not loaded due to an error, please try to reload the page.",
   "Something is wrong, the secret was not loaded, please try to reload the page.": "Something is wrong, the secret was not loaded, please try to reload the page.",

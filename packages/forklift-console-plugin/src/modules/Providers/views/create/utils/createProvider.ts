@@ -41,6 +41,22 @@ export async function createProvider(provider: V1beta1Provider, secret: IoK8sApi
     newProvider = provider;
   }
 
+  // Remove empty settings
+  for (const key in newProvider?.spec?.settings) {
+    // if spec.settings.* is '' replace with undefined
+    if (newProvider.spec.settings[key] === '') {
+      newProvider.spec.settings[key] = undefined;
+    }
+  }
+
+  // Remove vddkInitImage when emptyVddkInitImage flag is on
+  const emptyVddkInitImage =
+    provider?.metadata?.annotations?.['forklift.konveyor.io/empty-vddk-init-image'];
+
+  if (emptyVddkInitImage === 'yes' && provider?.spec?.settings?.['vddkInitImage']) {
+    provider.spec.settings['vddkInitImage'] = undefined;
+  }
+
   const obj = await k8sCreate({
     model: ProviderModel,
     data: newProvider,
