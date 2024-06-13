@@ -1,49 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { Checkbox, Hint, HintBody, TextInput } from '@patternfly/react-core';
 
-import { VDDKHelperText } from '../../utils';
+import { VDDKHelperTextShort } from '../../utils';
 import { validateVDDKImage } from '../../utils/validators';
-import { EditModal, EditModalProps, OnConfirmHookType } from '../EditModal';
+import { EditModal, EditModalProps } from '../EditModal';
 
-/**
- * Handles the confirmation action for editing a resource annotations.
- * Adds or updates the vddkInitImage settings in the resource's spec.
- *
- * @param {Object} options - Options for the confirmation action.
- * @param {Object} options.resource - The resource to be modified.
- * @param {Object} options.model - The model associated with the resource.
- * @param {any} options.newValue - The new value for the 'vddkInitImage' spec settings.
- * @returns {Promise<Object>} - The modified resource.
- */
-const onConfirm: OnConfirmHookType = async ({ resource, model, newValue: value }) => {
-  const provider = resource as V1beta1Provider;
-  const currentSettings = provider?.spec?.settings as object;
-  const vddkInitImage: string = value as string;
-
-  const settings = {
-    ...currentSettings,
-    vddkInitImage: vddkInitImage?.trim() || undefined,
-  };
-
-  const op = provider?.spec?.settings ? 'replace' : 'add';
-
-  const obj = await k8sPatch({
-    model: model,
-    resource: resource,
-    data: [
-      {
-        op,
-        path: '/spec/settings',
-        value: settings,
-      },
-    ],
-  });
-
-  return obj;
-};
+import { onEmptyVddkConfirm } from './onEmptyVddkConfirm';
+import { onVddkConfirm } from './onVddkConfirm';
 
 export type EditProviderVDDKImageProps = Modify<
   EditModalProps,
@@ -56,8 +23,41 @@ export type EditProviderVDDKImageProps = Modify<
   }
 >;
 
-const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => {
+export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (props) => {
   const { t } = useForkliftTranslation();
+
+  const provider = props.resource;
+
+  const emptyVddkInitImage =
+    provider?.metadata?.annotations?.['forklift.konveyor.io/empty-vddk-init-image'];
+
+  const [emptyImage, setEmptyImage] = useState(emptyVddkInitImage);
+
+  const isEmptyImage = emptyImage === 'yes';
+
+  const body = (
+    <Hint>
+      <HintBody>
+        <VDDKHelperTextShort />
+        <Checkbox
+          className="forklift-section-provider-edit-vddk-checkbox"
+          label={t(
+            'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration, migration may be slow.',
+          )}
+          isChecked={isEmptyImage}
+          onChange={(checked) => {
+            if (checked) {
+              setEmptyImage('yes');
+            } else {
+              setEmptyImage(undefined);
+            }
+          }}
+          id="emptyVddkInitImage"
+          name="emptyVddkInitImage"
+        />
+      </HintBody>
+    </Hint>
+  );
 
   return (
     <EditModal
@@ -66,17 +66,26 @@ const EditProviderVDDKImage_: React.FC<EditProviderVDDKImageProps> = (props) => 
       title={props?.title || t('Edit VDDK init image')}
       label={props?.label || t('VDDK init image')}
       model={ProviderModel}
-      body={VDDKHelperText}
-      validationHook={validateVDDKImage}
-      onConfirmHook={onConfirm}
+      body={body}
+      validationHook={isEmptyImage ? validateEmptyVDDKImage : validateVDDKImage}
+      onConfirmHook={isEmptyImage ? onEmptyVddkConfirm : onVddkConfirm}
+      InputComponent={isEmptyImage ? EmptyVddkTextInput : VddkTextInput}
     />
   );
 };
 
-export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (props) => {
-  if (props.resource?.spec?.type !== 'vsphere') {
-    return <></>;
-  }
+// VddkTextInput is the default text input
+const VddkTextInput = undefined;
 
-  return <EditProviderVDDKImage_ {...props} />;
-};
+// EmptyVddkTextInput is a mock input item for the empty vddk image string
+const EmptyVddkTextInput: React.FC = () => (
+  <TextInput
+    id="modal-with-form-form-field"
+    name="modal-with-form-form-field"
+    isDisabled={true}
+    value={''}
+  />
+);
+
+// Validation of empty vddk image
+const validateEmptyVDDKImage = () => validateVDDKImage(undefined);

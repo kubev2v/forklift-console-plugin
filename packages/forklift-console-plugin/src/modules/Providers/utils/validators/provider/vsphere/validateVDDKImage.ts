@@ -19,7 +19,7 @@ export const validateVDDKImage = (vddkImage: string | number): ValidationMsg => 
   if (trimmedVddkImage === '')
     return {
       msg: 'The VDDK image is empty, it is recommended to provide an image, for example: quay.io/kubev2v/vddk:latest .',
-      type: 'warning',
+      type: 'error',
     };
 
   if (!isValidTrimmedVddkImage) {

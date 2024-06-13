@@ -41,3 +41,11 @@
   font-size: small;
   padding-top: var(--pf-c-form__helper-text--MarginTop);
 }
+
+.forklift-section-provider-edit-vddk-input {
+  padding-top: var(--pf-global--spacer--sm);
+}
+
+.forklift-section-provider-edit-vddk-checkbox {
+  padding-top: var(--pf-global--spacer--sm);
+}

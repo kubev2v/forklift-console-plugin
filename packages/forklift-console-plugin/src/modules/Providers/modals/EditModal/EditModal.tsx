@@ -77,7 +77,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       const validationResult = validationHook(value);
       setValidation(validationResult);
     }
-  }, []);
+  }, [validationHook]);
 
   /**
    * Handles value change.
@@ -112,7 +112,7 @@ export const EditModal: React.FC<EditModalProps> = ({
         <AlertMessageForModals title={t('Error')} message={err.message || err.toString()} />,
       );
     }
-  }, [resource, value]);
+  }, [resource, value, onConfirmHook]);
 
   /**
    * LabelIcon is a (?) icon that triggers a Popover component when clicked.

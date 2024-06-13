@@ -1,10 +1,15 @@
 import React, { useCallback, useReducer } from 'react';
-import { validateEsxiURL, validateVDDKImage, VDDKHelperText } from 'src/modules/Providers/utils';
+import {
+  validateEsxiURL,
+  validateVDDKImage,
+  VDDKHelperText,
+  VDDKHelperTextShort,
+} from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
-import { Form, Popover, Radio, TextInput } from '@patternfly/react-core';
+import { Checkbox, Form, Hint, HintBody, Popover, Radio, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 export interface EsxiProviderCreateFormProps {
   provider: V1beta1Provider;
@@ -18,6 +23,8 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
   const { t } = useForkliftTranslation();
 
   const url = provider?.spec?.url;
+  const emptyVddkInitImage =
+    provider?.metadata?.annotations?.['forklift.konveyor.io/empty-vddk-init-image'];
   const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'];
   const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'];
 
@@ -49,6 +56,29 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
     (id, value) => {
       const trimmedValue = value?.trim();
 
+      if (id == 'emptyVddkInitImage') {
+        const vddValidationState = validateVDDKImage(provider?.spec?.settings?.vddkInitImage);
+        const initVddkValidationState = validateVDDKImage(undefined);
+        const validationState =
+          trimmedValue === 'yes' ? initVddkValidationState : vddValidationState;
+
+        dispatch({
+          type: 'SET_FIELD_VALIDATED',
+          payload: { field: 'vddkInitImage', validationState },
+        });
+
+        onChange({
+          ...provider,
+          metadata: {
+            ...provider?.metadata,
+            annotations: {
+              ...(provider?.metadata?.annotations as object),
+              'forklift.konveyor.io/empty-vddk-init-image': trimmedValue || undefined,
+            },
+          },
+        });
+      }
+
       if (id == 'vddkInitImage') {
         const validationState = validateVDDKImage(trimmedValue);
 
@@ -63,7 +93,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
             ...provider?.spec,
             settings: {
               ...(provider?.spec?.settings as object),
-              vddkInitImage: trimmedValue || undefined,
+              vddkInitImage: trimmedValue,
             },
           },
         });
@@ -144,7 +174,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
         fieldId="vddkInitImage"
         helperText={state.validation.vddkInitImage.msg}
         helperTextInvalid={state.validation.vddkInitImage.msg}
-        validated={state.validation.vddkInitImage.type}
+        validated={emptyVddkInitImage === 'yes' ? 'default' : state.validation.vddkInitImage.type}
         labelIcon={
           <Popover
             headerContent={t('VDDK init image')}
@@ -161,14 +191,34 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
           </Popover>
         }
       >
-        <TextInput
-          type="text"
-          id="vddkInitImage"
-          name="vddkInitImage"
-          value={vddkInitImage}
-          validated={state.validation.vddkInitImage.type}
-          onChange={(value) => handleChange('vddkInitImage', value)}
-        />
+        <Hint>
+          <HintBody>
+            <VDDKHelperTextShort />
+            <Checkbox
+              className="forklift-section-provider-edit-vddk-checkbox"
+              label={t(
+                'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration, migration may be slow.',
+              )}
+              isChecked={emptyVddkInitImage === 'yes'}
+              onChange={(value) => handleChange('emptyVddkInitImage', value ? 'yes' : undefined)}
+              id="emptyVddkInitImage"
+              name="emptyVddkInitImage"
+            />
+          </HintBody>
+        </Hint>
+        <div className="forklift-section-provider-edit-vddk-input">
+          <TextInput
+            type="text"
+            id="vddkInitImage"
+            name="vddkInitImage"
+            isDisabled={emptyVddkInitImage === 'yes'}
+            value={emptyVddkInitImage === 'yes' ? '' : vddkInitImage}
+            validated={
+              emptyVddkInitImage === 'yes' ? 'default' : state.validation.vddkInitImage.type
+            }
+            onChange={(value) => handleChange('vddkInitImage', value)}
+          />
+        </div>
       </FormGroupWithHelpText>
     </Form>
   );

@@ -1,12 +1,16 @@
 import { V1beta1Provider } from '@kubev2v/types';
 
-import { validateContainerImage, validateK8sName, validateURL, ValidationMsg } from '../../common';
+import { validateK8sName, validateURL, ValidationMsg } from '../../common';
+
+import { validateVDDKImage } from './validateVDDKImage';
 
 export function vsphereProviderValidator(provider: V1beta1Provider): ValidationMsg {
   const name = provider?.metadata?.name;
   const url = provider?.spec?.url || '';
   const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'] || '';
   const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'] || '';
+  const emptyVddkInitImage =
+    provider?.metadata?.annotations?.['forklift.konveyor.io/empty-vddk-init-image'];
 
   if (!validateK8sName(name)) {
     return { type: 'error', msg: 'invalided kubernetes resource name' };
@@ -16,8 +20,16 @@ export function vsphereProviderValidator(provider: V1beta1Provider): ValidationM
     return { type: 'error', msg: 'invalided URL' };
   }
 
-  if (vddkInitImage !== '' && !validateContainerImage(vddkInitImage)) {
-    return { type: 'error', msg: 'invalided VDDK init image' };
+  if (emptyVddkInitImage === 'yes' && vddkInitImage === '') {
+    return {
+      msg: 'The VDDK image is empty, it is recommended to provide an image, for example: quay.io/kubev2v/vddk:latest .',
+      type: 'warning',
+    };
+  }
+
+  const validateVDDK = validateVDDKImage(vddkInitImage);
+  if (validateVDDK?.type === 'error') {
+    return validateVDDK;
   }
 
   if (sdkEndpoint !== '' && !['vcenter', 'esxi'].includes(sdkEndpoint)) {
