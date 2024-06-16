@@ -13,7 +13,11 @@ import { OnConfirmHookType } from '../EditModal';
  * @param {any} options.newValue - The new value for the 'vddkInitImage' spec settings.
  * @returns {Promise<Object>} - The modified resource.
  */
-export const onVddkConfirm: OnConfirmHookType = async ({ resource, model, newValue: value }) => {
+export const onNoneEmptyVddkConfirm: OnConfirmHookType = async ({
+  resource,
+  model,
+  newValue: value,
+}) => {
   const provider = resource as V1beta1Provider;
   const vddkInitImage: string = value as string;
   let op: string;
