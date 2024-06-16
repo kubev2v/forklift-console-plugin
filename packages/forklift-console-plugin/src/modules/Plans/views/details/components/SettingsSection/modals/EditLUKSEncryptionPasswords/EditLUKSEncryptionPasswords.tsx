@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
 import { InputList, LazyTextInput } from 'src/components';
-import {
-  AlertMessageForModals,
-  EditModal,
-  EditModalProps,
-  ModalInputComponentType,
-} from 'src/modules/Providers/modals';
+import { EditModal, EditModalProps, ModalInputComponentType } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -17,6 +12,8 @@ import {
 } from '@kubev2v/types';
 import { K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import { editLUKSModalAlert } from './editLUKSModalAlert';
+import { editLUKSModalBody } from './editLUKSModalBody';
 import { onLUKSEncryptionPasswordsConfirm } from './onLUKSEncryptionPasswordsConfirm';
 
 interface SecretRendererProps {
@@ -37,7 +34,7 @@ const EditPassphraseFactory: (initialValue: string) => ModalInputComponentType =
         items={items}
         onChange={(list) => onChange(JSON.stringify(list))}
         InputRow={LazyTextInput}
-        addButtonText={t('Add Passphrase')}
+        addButtonText={t('Add passphrase')}
       />
     );
   };
@@ -78,27 +75,14 @@ export const EditLUKSEncryptionPasswords: React.FC<EditLUKSEncryptionPasswordsPr
     <EditModal
       {...props}
       jsonPath={() => null} // we can't get the keys from the plan
-      title={props?.title || t('Disk decryption keys')}
+      title={props?.title || t('Disk decryption passphrases')}
       label={props?.label || t('Passphrases for LUKS encrypted devices')}
       model={PlanModel}
       onConfirmHook={onLUKSEncryptionPasswordsConfirm}
       body={
         <>
-          {t(`Specify a list of keys for LUKS encrypted devices in order to convert the VM.`)}
-          {!allVMsHasMatchingLuks && (
-            <AlertMessageForModals
-              variant="warning"
-              title={'The plan LUKS decryption keys were manually configured'}
-              message={
-                <>
-                  <p>
-                    Warning: not all virtual machines are configures using the same LUKS secret,
-                  </p>
-                  <p>updating the LUKS decryption keys will override the current configuration.</p>
-                </>
-              }
-            />
-          )}
+          {editLUKSModalBody}
+          {!allVMsHasMatchingLuks && editLUKSModalAlert}
         </>
       }
       InputComponent={EditPassphraseFactory(itemsJSONString)}
