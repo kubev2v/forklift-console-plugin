@@ -10,7 +10,7 @@ import { validateVDDKImage } from '../../utils/validators';
 import { EditModal, EditModalProps } from '../EditModal';
 
 import { onEmptyVddkConfirm } from './onEmptyVddkConfirm';
-import { onVddkConfirm } from './onVddkConfirm';
+import { onNoneEmptyVddkConfirm } from './onNoneEmptyVddkConfirm';
 
 export type EditProviderVDDKImageProps = Modify<
   EditModalProps,
@@ -67,8 +67,8 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
       label={props?.label || t('VDDK init image')}
       model={ProviderModel}
       body={body}
-      validationHook={isEmptyImage ? validateEmptyVDDKImage : validateVDDKImage}
-      onConfirmHook={isEmptyImage ? onEmptyVddkConfirm : onVddkConfirm}
+      validationHook={isEmptyImage ? validateEmptyVDDKImage : validateNoneEmptyVDDKImage}
+      onConfirmHook={isEmptyImage ? onEmptyVddkConfirm : onNoneEmptyVddkConfirm}
       InputComponent={isEmptyImage ? EmptyVddkTextInput : VddkTextInput}
     />
   );
@@ -89,3 +89,6 @@ const EmptyVddkTextInput: React.FC = () => (
 
 // Validation of empty vddk image
 const validateEmptyVDDKImage = () => validateVDDKImage(undefined);
+
+// Validation of none empty vddk image, make sure it's not undefined
+const validateNoneEmptyVDDKImage = (value) => validateVDDKImage(value || '');
