@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 import { PlanDetailsItemProps } from '../../DetailsSection';
-import { EditLUKSEncryptionPasswords } from '../modals';
+import { EditLUKSEncryptionPasswords, VIRT_V2V_HELP_LINK } from '../modals';
 
 export const SetLUKSEncryptionPasswordsDetailsItem: React.FC<PlanDetailsItemProps> = ({
   resource,
@@ -19,12 +19,12 @@ export const SetLUKSEncryptionPasswordsDetailsItem: React.FC<PlanDetailsItemProp
   const luks = resource?.spec?.vms?.[0].luks;
 
   const defaultHelpContent = t(
-    `Specify a list of keys for LUKS encrypted devices in order to convert the VM.`,
+    'Specify a list of passphrases for the Linux Unified Key Setup (LUKS)-encrypted devices for the VMs that you want to migrate.',
   );
 
   return (
     <DetailsItem
-      title={t('Disk decryption keys')}
+      title={t('Disk decryption passphrases')}
       content={
         luks ? (
           <span>
@@ -39,6 +39,7 @@ export const SetLUKSEncryptionPasswordsDetailsItem: React.FC<PlanDetailsItemProp
         )
       }
       helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={VIRT_V2V_HELP_LINK}
       crumbs={['spec', 'vms', 'luks']}
       onEdit={
         canPatch &&
