@@ -35,15 +35,15 @@ export const PipelineTasksModal: React.FC<PipelineTasksModalProps> = ({ name, ta
           </Tr>
         </Thead>
         <Tbody>
-          {(tasks || []).map((p) => (
-            <Tr key={p?.name}>
-              <Td>{p?.name}</Td>
-              <Td>{p?.phase}</Td>
-              <Td>{getTransferProgress(p)}</Td>
+          {(tasks || []).map((t) => (
+            <Tr key={t?.name}>
+              <Td>{t?.name}</Td>
+              <Td>{t?.phase}</Td>
+              <Td>{getTaskProgress(t)}</Td>
               <Td>
-                <Timestamp timestamp={p?.started} />
+                <Timestamp timestamp={t?.started} />
               </Td>
-              <Td>{p?.error?.reasons}</Td>
+              <Td>{t?.error?.reasons}</Td>
             </Tr>
           ))}
         </Tbody>
@@ -52,15 +52,15 @@ export const PipelineTasksModal: React.FC<PipelineTasksModalProps> = ({ name, ta
   );
 };
 
-const getTransferProgress = (diskTransfer) => {
-  if (!diskTransfer || !diskTransfer?.progress) {
+const getTaskProgress = (task) => {
+  if (!task || !task?.progress) {
     return { completed: '-', total: '-' };
   }
 
-  const { completed, total } = diskTransfer.progress;
+  const { completed, total } = task.progress;
 
   const completeString = completed !== undefined ? completed : '-';
   const totalString = total !== undefined ? total : '-';
 
-  return `${completeString} / ${totalString} ${diskTransfer.annotations?.unit || '-'}`;
+  return `${completeString} / ${totalString} ${task.annotations?.unit || '-'}`;
 };
