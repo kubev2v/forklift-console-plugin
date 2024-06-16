@@ -4,7 +4,7 @@ import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { RowProps, TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
-import { IoK8sApiBatchV1Job } from '@kubev2v/types';
+import { IoK8sApiBatchV1Job, V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
 import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import {
@@ -234,10 +234,10 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
               <Td>
                 {p?.tasks?.length > 0 && (
                   <Tooltip
-                    content={t('Total of {{length}} {{name}} tasks', {
-                      length: p.tasks.length,
-                      name: p?.name,
-                    })}
+                    content={t(
+                      'Completed {{completed}} of {{total}} {{name}} tasks',
+                      getPipelineTasks(p),
+                    )}
                   >
                     <Button
                       className="forklift-page-plan-details-vm-tasks"
@@ -246,7 +246,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                         showModal(<PipelineTasksModal name={p?.name} tasks={p.tasks} />)
                       }
                     >
-                      <TaskIcon /> {p.tasks.length}
+                      <TaskIcon /> {t('{{completed}} / {{total}}', getPipelineTasks(p))}
                     </Button>
                   </Tooltip>
                 )}
@@ -278,4 +278,11 @@ const getJobPhase = (job: IoK8sApiBatchV1Job) => {
   }
 
   return 'Pending';
+};
+
+const getPipelineTasks = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => {
+  const tasks = pipeline?.tasks || [];
+  const tasksCompleted = tasks.filter((c) => c.phase === 'Completed');
+
+  return { total: tasks.length, completed: tasksCompleted.length, name: pipeline.name };
 };

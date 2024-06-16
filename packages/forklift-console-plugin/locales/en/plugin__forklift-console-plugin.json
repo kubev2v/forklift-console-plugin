@@ -1,5 +1,6 @@
 {
   "{{Canceled}} canceled": "{{Canceled}} canceled",
+  "{{completed}} / {{total}}": "{{completed}} / {{total}}",
   "{{dateLabel}} Failed: {{value}}": "{{dateLabel}} Failed: {{value}}",
   "{{dateLabel}} Running: {{value}}": "{{dateLabel}} Running: {{value}}",
   "{{dateLabel}} Succeeded: {{value}}": "{{dateLabel}} Succeeded: {{value}}",
@@ -66,6 +67,7 @@
   "Click the update mappings button to save your changes, button is disabled until a change is detected.": "Click the update mappings button to save your changes, button is disabled until a change is detected.",
   "Cluster": "Cluster",
   "Clusters": "Clusters",
+  "Completed {{completed}} of {{total}} {{name}} tasks": "Completed {{completed}} of {{total}} {{name}} tasks",
   "Completed at": "Completed at",
   "Concern": "Concern",
   "Concerns": "Concerns",
@@ -475,7 +477,6 @@
   "Token": "Token",
   "Total CPU count:": "Total CPU count:",
   "Total memory:": "Total memory:",
-  "Total of {{length}} {{name}} tasks": "Total of {{length}} {{name}} tasks",
   "Total virtual machines": "Total virtual machines",
   "Total: {{length}}": "Total: {{length}}",
   "Transfer Network": "Transfer Network",
