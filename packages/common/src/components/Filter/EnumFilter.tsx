@@ -138,6 +138,28 @@ export const EnumFilter = ({
     }
   };
 
+  const onSelect: (
+    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
+    value: string | SelectOptionObject,
+    isPlaceholder?: boolean,
+  ) => void = (event, value, isPlaceholder) => {
+    if (isPlaceholder) {
+      return;
+    }
+    hasFilter(value) ? deleteFilter(value) : addFilter(value);
+  };
+
+  const onToggle: (
+    isExpanded: boolean,
+    event:
+      | Event
+      | React.KeyboardEvent<Element>
+      | React.MouseEvent<Element, MouseEvent>
+      | React.ChangeEvent<Element>,
+  ) => void = (isExpanded) => {
+    setExpanded(isExpanded);
+  };
+
   return (
     <ToolbarFilter
       key={filterId}
@@ -150,16 +172,11 @@ export const EnumFilter = ({
       <Select
         variant={SelectVariant.checkbox}
         aria-label={placeholderLabel}
-        onSelect={(event, option, isPlaceholder) => {
-          if (isPlaceholder) {
-            return;
-          }
-          hasFilter(option) ? deleteFilter(option) : addFilter(option);
-        }}
+        onSelect={onSelect}
         selections={selectedUniqueEnumLabels}
         placeholderText={placeholderLabel}
         isOpen={isExpanded}
-        onToggle={setExpanded}
+        onToggle={onToggle}
       >
         {uniqueEnumLabels.map((label) => (
           <SelectOption key={label} value={label} />

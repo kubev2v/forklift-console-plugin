@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { useToggle } from 'src/modules/Providers/hooks';
 
-import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
+import { Select, SelectOption, SelectOptionObject, SelectVariant } from '@patternfly/react-core';
 
 /**
  * @typedef Option
@@ -60,10 +60,14 @@ export const SettingsSelectInput: React.FC<SettingsSelectInputProps> = ({
   const valueLabel = keyToName?.[value] || value;
 
   // Callback function to handle selection in the dropdown menu
-  const onSelect = useCallback(
-    (event, selection) => {
+  const onSelect: (
+    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
+    value: string | SelectOptionObject,
+    isPlaceholder?: boolean,
+  ) => void = useCallback(
+    (_event, value: string | number) => {
       // Use the dictionary to find the key corresponding to the selected name
-      const key = nameToKey[selection] || selection;
+      const key = nameToKey[value] || value;
       onChange(key);
 
       // Toggle the dropdown menu open state

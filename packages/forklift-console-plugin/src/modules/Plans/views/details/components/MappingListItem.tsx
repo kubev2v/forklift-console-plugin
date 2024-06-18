@@ -12,6 +12,7 @@ import {
   Select,
   SelectGroup,
   SelectOption,
+  SelectOptionObject,
   SelectVariant,
 } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
@@ -50,6 +51,29 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   const [isSrcOpen, setToggleSrcOpen] = useToggle(false);
   const [isTrgOpen, setToggleTrgOpen] = useToggle(false);
 
+  const onSelectForSource: (
+    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
+    value: string | SelectOptionObject,
+    isPlaceholder?: boolean,
+  ) => void = (event, value: string, isPlaceholder) => {
+    !isPlaceholder &&
+      replaceMapping({
+        current: { source, destination },
+        next: { source: value, destination },
+      });
+  };
+
+  const onSelectForDestination: (
+    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
+    value: string | SelectOptionObject,
+    isPlaceholder?: boolean,
+  ) => void = (event, value: string) => {
+    replaceMapping({
+      current: { source, destination },
+      next: { source, destination: value },
+    });
+  };
+
   return (
     <DataListItem aria-labelledby="">
       <DataListItemRow>
@@ -60,13 +84,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 variant={SelectVariant.single}
                 aria-label=""
                 onToggle={setToggleSrcOpen}
-                onSelect={(event, value: string, isPlaceholder: boolean) =>
-                  !isPlaceholder &&
-                  replaceMapping({
-                    current: { source, destination },
-                    next: { source: value, destination },
-                  })
-                }
+                onSelect={onSelectForSource}
                 selections={source}
                 isOpen={isSrcOpen}
                 isDisabled={!isEditable}
@@ -85,12 +103,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 variant={SelectVariant.single}
                 aria-label=""
                 onToggle={setToggleTrgOpen}
-                onSelect={(event, value: string) =>
-                  replaceMapping({
-                    current: { source, destination },
-                    next: { source, destination: value },
-                  })
-                }
+                onSelect={onSelectForDestination}
                 selections={destination}
                 isOpen={isTrgOpen}
                 isDisabled={!isEditable}

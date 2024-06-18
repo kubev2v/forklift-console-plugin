@@ -67,12 +67,23 @@ const ActionsAsDropdown = ({
   const history = useHistory();
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const isPlain = variant === 'kebab';
+  const onToggle: (
+    isExpanded: boolean,
+    event:
+      | Event
+      | React.KeyboardEvent<Element>
+      | React.MouseEvent<Element, MouseEvent>
+      | React.ChangeEvent<Element>,
+  ) => void = (isExpanded) => {
+    setIsActionMenuOpen(isExpanded);
+  };
   const toggle =
     variant === 'kebab' ? (
-      <KebabToggle onToggle={setIsActionMenuOpen} />
+      <KebabToggle onToggle={onToggle} />
     ) : (
-      <DropdownToggle onToggle={setIsActionMenuOpen}>{dropdownToggleText}</DropdownToggle>
+      <DropdownToggle onToggle={onToggle}>{dropdownToggleText}</DropdownToggle>
     );
+
   return (
     <Dropdown
       position="right"

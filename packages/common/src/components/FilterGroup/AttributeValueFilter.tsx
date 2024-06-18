@@ -44,11 +44,26 @@ export const AttributeValueFilter = ({
   const selectOptionToFilter = (selectedId) =>
     fieldFilters.find(({ resourceFieldId }) => resourceFieldId === selectedId) ?? currentFilter;
 
-  const onFilterTypeSelect = (event, value, isPlaceholder) => {
+  const onFilterTypeSelect: (
+    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
+    value: string | SelectOptionObject,
+    isPlaceholder?: boolean,
+  ) => void = (_event, value: IdOption, isPlaceholder) => {
     if (!isPlaceholder) {
       setCurrentFilter(selectOptionToFilter(value?.id));
       setExpanded(!expanded);
     }
+  };
+
+  const onToggle: (
+    isExpanded: boolean,
+    event:
+      | Event
+      | React.KeyboardEvent<Element>
+      | React.MouseEvent<Element, MouseEvent>
+      | React.ChangeEvent<Element>,
+  ) => void = (isExpanded) => {
+    setExpanded(isExpanded);
   };
 
   return (
@@ -56,7 +71,7 @@ export const AttributeValueFilter = ({
       <ToolbarItem>
         <Select
           onSelect={onFilterTypeSelect}
-          onToggle={setExpanded}
+          onToggle={onToggle}
           isOpen={expanded}
           variant={SelectVariant.single}
           aria-label={'Select Filter'}
