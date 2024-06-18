@@ -4,7 +4,7 @@ import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { validateNoSpaces } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
+import { FormGroupWithHelpText, SelectEventType, SelectValueType } from '@kubev2v/common';
 import { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
 import {
   Button,
@@ -111,10 +111,14 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
 
   const onSelectToggle = () => dispatch({ type: 'TOGGLE_OPEN' });
 
-  const onSelect = (_event, selection) => {
+  const onSelect: (
+    event: SelectEventType,
+    value: SelectValueType,
+    isPlaceholder?: boolean,
+  ) => void = (_event, value: string) => {
     const selectedAdapter = getNetworkAdapterByLabel(
       firstInventoryHostPair.inventory.networkAdapters,
-      selection,
+      value,
     );
 
     dispatch({ type: 'SET_NETWORK', payload: selectedAdapter });

@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { SelectEventType, SelectValueType } from '@kubev2v/common';
 import {
   Button,
   DataListAction,
@@ -54,6 +55,29 @@ export const MappingListItem: FC<MappingListItemProps> = ({
     deleteMapping({ source, destination });
   };
 
+  const onSelectSource: (
+    event: SelectEventType,
+    value: SelectValueType,
+    isPlaceholder?: boolean,
+  ) => void = (event, value: string, isPlaceholder) => {
+    !isPlaceholder &&
+      replaceMapping({
+        current: { source, destination },
+        next: { source: value, destination },
+      });
+  };
+
+  const onSelectDestination: (
+    event: SelectEventType,
+    value: SelectValueType,
+    isPlaceholder?: boolean,
+  ) => void = (event, value: string) => {
+    replaceMapping({
+      current: { source, destination },
+      next: { source, destination: value },
+    });
+  };
+
   return (
     <DataListItem aria-labelledby="">
       <DataListItemRow>
@@ -64,13 +88,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 variant={SelectVariant.single}
                 aria-label=""
                 onToggle={setToggleSrcOpen}
-                onSelect={(event, value: string, isPlaceholder: boolean) =>
-                  !isPlaceholder &&
-                  replaceMapping({
-                    current: { source, destination },
-                    next: { source: value, destination },
-                  })
-                }
+                onSelect={onSelectSource}
                 selections={source}
                 isOpen={isSrcOpen}
                 isDisabled={!isEditable}
@@ -89,12 +107,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 variant={SelectVariant.single}
                 aria-label=""
                 onToggle={setToggleTrgOpen}
-                onSelect={(event, value: string) =>
-                  replaceMapping({
-                    current: { source, destination },
-                    next: { source, destination: value },
-                  })
-                }
+                onSelect={onSelectDestination}
                 selections={destination}
                 isOpen={isTrgOpen}
                 isDisabled={!isEditable}

@@ -9,7 +9,7 @@ import {
   ToolbarFilter,
 } from '@patternfly/react-core';
 
-import { localeCompare } from '../../utils';
+import { localeCompare, SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
 
 import { FilterTypeProps } from './types';
 
@@ -138,6 +138,21 @@ export const EnumFilter = ({
     }
   };
 
+  const onSelect: (
+    event: SelectEventType,
+    value: SelectValueType,
+    isPlaceholder?: boolean,
+  ) => void = (event, value, isPlaceholder) => {
+    if (isPlaceholder) {
+      return;
+    }
+    hasFilter(value) ? deleteFilter(value) : addFilter(value);
+  };
+
+  const onToggle: (isExpanded: boolean, event: ToggleEventType) => void = (isExpanded) => {
+    setExpanded(isExpanded);
+  };
+
   return (
     <ToolbarFilter
       key={filterId}
@@ -150,16 +165,11 @@ export const EnumFilter = ({
       <Select
         variant={SelectVariant.checkbox}
         aria-label={placeholderLabel}
-        onSelect={(event, option, isPlaceholder) => {
-          if (isPlaceholder) {
-            return;
-          }
-          hasFilter(option) ? deleteFilter(option) : addFilter(option);
-        }}
+        onSelect={onSelect}
         selections={selectedUniqueEnumLabels}
         placeholderText={placeholderLabel}
         isOpen={isExpanded}
-        onToggle={setExpanded}
+        onToggle={onToggle}
       >
         {uniqueEnumLabels.map((label) => (
           <SelectOption key={label} value={label} />

@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { SelectOptionObject } from '@patternfly/react-core';
 export interface EnumGroup {
   groupId: string;
   label: string;
@@ -53,3 +55,36 @@ export interface GlobalActionToolbarProps<T> {
   // data currently visible on the screen (i.e. adjusted by paging and filtering)
   dataOnScreen: T[];
 }
+
+/**
+ * @typedef {Object} ToggleEventType
+ * @description Represents the possible event types that can be used for toggling actions.
+ *
+ * @property {Event} Event - A standard DOM event.
+ * @property {React.KeyboardEvent<Element>} React.KeyboardEvent - A React-specific keyboard event.
+ * @property {React.MouseEvent<Element, MouseEvent>} React.MouseEvent - A React-specific mouse event.
+ * @property {React.ChangeEvent<Element>} React.ChangeEvent - A React-specific change event.
+ */
+export type ToggleEventType =
+  | Event
+  | React.KeyboardEvent<Element>
+  | React.MouseEvent<Element, MouseEvent>
+  | React.ChangeEvent<Element>;
+
+/**
+ * @typedef {Object} SelectEventType
+ * @description Represents the possible event types that can be used for select actions.
+ *
+ * @property {React.MouseEvent<Element, MouseEvent>} React.MouseEvent - A React-specific mouse event.
+ * @property {React.ChangeEvent<Element>} React.ChangeEvent - A React-specific change event.
+ */
+export type SelectEventType = React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>;
+
+/**
+ * @typedef {Object} SelectValueType
+ * @description Represents the possible value types that can be used for select actions.
+ *
+ * @property {string} string .
+ * @property {SelectOptionObject} SelectOptionObject
+ */
+export type SelectValueType = string | SelectOptionObject;
