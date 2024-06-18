@@ -168,7 +168,6 @@ const handlers: {
 
     validation.targetNamespace = validateTargetNamespace(
       plan.spec.targetNamespace,
-      availableTargetNamespaces,
       alreadyInUse(plan.spec.targetNamespace),
     );
     if (validation.targetNamespace === 'success') {

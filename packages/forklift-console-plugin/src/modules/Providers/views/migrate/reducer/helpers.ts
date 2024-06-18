@@ -4,7 +4,6 @@ import { Draft } from 'immer';
 import { DefaultRow, ResourceFieldFactory, RowProps, withTr } from '@kubev2v/common';
 import {
   IoK8sApimachineryPkgApisMetaV1ObjectMeta,
-  OpenShiftNamespace,
   OVirtNicProfile,
   ProviderType,
   V1beta1Plan,
@@ -55,16 +54,8 @@ export const validatePlanName = (name: string, existingPlans: V1beta1Plan[]) =>
     ? 'success'
     : 'error';
 
-export const validateTargetNamespace = (
-  namespace: string,
-  availableNamespaces: OpenShiftNamespace[],
-  alreadyInUseBySelectedVms: boolean,
-) =>
-  validateK8sName(namespace) &&
-  availableNamespaces?.find((n) => n.name === namespace) &&
-  !alreadyInUseBySelectedVms
-    ? 'success'
-    : 'error';
+export const validateTargetNamespace = (namespace: string, alreadyInUseBySelectedVms: boolean) =>
+  !!namespace && validateK8sName(namespace) && !alreadyInUseBySelectedVms ? 'success' : 'error';
 
 export const setTargetProvider = (
   draft: Draft<CreateVmMigrationPageState>,
@@ -114,7 +105,6 @@ export const setTargetNamespace = (
   plan.spec.targetNamespace = targetNamespace;
   draft.validation.targetNamespace = validateTargetNamespace(
     targetNamespace,
-    draft.existingResources.targetNamespaces,
     alreadyInUseBySelectedVms({
       namespace: targetNamespace,
       namespacesUsedBySelectedVms,

@@ -31,6 +31,12 @@ export interface FilterableSelectProps {
   noResultFoundLabel?: ReactNode;
   /** Label to display for the option to create a new item */
   createNewOptionLabel?: ReactNode;
+  /** Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable. */
+  isDisabled?: boolean;
+  /** Indicates if the menu should be without the outer box-shadow */
+  isPlain?: boolean;
+  /** Indicates if the menu should be scrollable */
+  isScrollable?: boolean;
 }
 
 /**
@@ -48,6 +54,9 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
   placeholder = 'Select item',
   noResultFoundLabel = 'No results found',
   createNewOptionLabel = 'Create new option:',
+  isDisabled = false,
+  isPlain = false,
+  isScrollable = false,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState<string>(value);
@@ -265,6 +274,9 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
         setInputValue(selectedItem);
       }}
       toggle={toggle}
+      aria-disabled={isDisabled}
+      isPlain={isPlain}
+      isScrollable={isScrollable}
     >
       <SelectList>
         {selectOptions.map((option, index) => (
