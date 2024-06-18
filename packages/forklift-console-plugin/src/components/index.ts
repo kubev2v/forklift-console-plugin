@@ -2,6 +2,7 @@
 export * from './actions';
 export * from './cells';
 export * from './empty-states';
+export * from './FilterableSelect';
 export * from './headers';
 export * from './images';
 export * from './InputList';
