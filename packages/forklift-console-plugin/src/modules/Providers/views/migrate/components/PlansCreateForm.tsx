@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from 'react';
+import { FilterableSelect } from 'src/components';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
-import { isProviderLocalOpenshift } from 'src/utils/resources';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
 import {
@@ -141,8 +141,6 @@ export const PlansCreateForm = ({
   } = state;
 
   const [isNameEdited, setIsNameEdited] = useState(true);
-  const [isTargetProviderEdited, setIsTargetProviderEdited] = useState(false);
-  const [isTargetNamespaceEdited, setIsTargetNamespaceEdited] = useState(false);
 
   const networkMessages = buildNetworkMessages(t);
   const storageMessages = buildStorageMessages(t);
@@ -215,124 +213,71 @@ export const PlansCreateForm = ({
           className="forklift--create-vm-migration-plan--section-header"
         />
 
-        {isTargetProviderEdited ||
-        validation.targetProvider === 'error' ||
-        !plan.spec.provider?.destination ? (
-          <Form isWidthLimited>
-            <FormGroupWithHelpText
-              label={t('Target provider')}
-              isRequired
-              fieldId="targetProvider"
-              validated={validation.targetProvider}
-              helperTextInvalid={
-                availableProviders.filter(getIsTarget).length === 0
-                  ? t('No provider is available')
-                  : t('The chosen provider is no longer available.')
-              }
-            >
-              <FormSelect
-                value={plan.spec.provider?.destination?.name}
-                onChange={(value) => dispatch(setPlanTargetProvider(value))}
-                validated={validation.targetProvider}
-                id="targetProvider"
-                isDisabled={flow.editingDone}
-              >
-                {[
-                  <FormSelectOption
-                    key="placeholder"
-                    value={''}
-                    label={t('Select a provider')}
-                    isPlaceholder
-                    isDisabled
-                  />,
-                  ...availableProviders
-                    .filter(getIsTarget)
-                    .map((provider, index) => (
-                      <FormSelectOption
-                        key={provider?.metadata?.name || index}
-                        value={provider?.metadata?.name}
-                        label={provider?.metadata?.name ?? provider?.metadata?.uid ?? String(index)}
-                      />
-                    )),
-                ]}
-              </FormSelect>
-            </FormGroupWithHelpText>
-          </Form>
-        ) : (
-          <EditableDescriptionItem
-            title={t('Target provider')}
-            content={
-              <ResourceLink
-                name={plan.spec.provider?.destination?.name}
-                namespace={plan.spec.provider?.destination?.namespace}
-                groupVersionKind={ProviderModelGroupVersionKind}
-              />
+        <Form isWidthLimited>
+          <FormGroupWithHelpText
+            label={t('Target provider')}
+            isRequired
+            fieldId="targetProvider"
+            validated={validation.targetProvider}
+            helperTextInvalid={
+              availableProviders.filter(getIsTarget).length === 0
+                ? t('No provider is available')
+                : t('The chosen provider is no longer available.')
             }
-            ariaEditLabel={t('Edit target provider')}
-            onEdit={() => setIsTargetProviderEdited(true)}
-            isDisabled={flow.editingDone}
-          />
-        )}
-        {isTargetNamespaceEdited ||
-        validation.targetNamespace === 'error' ||
-        !plan.spec.targetNamespace ? (
-          <Form isWidthLimited>
-            <FormGroupWithHelpText
-              label={t('Target namespace')}
-              isRequired
-              id="targetNamespace"
-              validated={validation.targetNamespace}
+          >
+            <FormSelect
+              value={plan.spec.provider?.destination?.name}
+              onChange={(value) => dispatch(setPlanTargetProvider(value))}
+              id="targetProvider"
+              isDisabled={flow.editingDone}
             >
-              <FormSelect
-                value={plan.spec.targetNamespace}
-                onChange={(value) => dispatch(setPlanTargetNamespace(value))}
-                validated={validation.targetNamespace}
-                id="targetNamespace"
-                isDisabled={flow.editingDone}
-              >
-                {[
-                  <FormSelectOption
-                    key="placeholder"
-                    value={''}
-                    label={t('Select a namespace')}
-                    isPlaceholder
-                    isDisabled
-                  />,
-                  ...availableTargetNamespaces.map((ns, index) => (
+              {[
+                <FormSelectOption
+                  key="placeholder"
+                  value={''}
+                  label={t('Select a provider')}
+                  isPlaceholder
+                  isDisabled
+                />,
+                ...availableProviders
+                  .filter(getIsTarget)
+                  .map((provider, index) => (
                     <FormSelectOption
-                      key={ns?.name || index}
-                      value={ns?.name}
-                      label={ns?.name ?? String(index)}
-                      isDisabled={
-                        namespacesUsedBySelectedVms.includes(ns?.name) &&
-                        plan.spec.provider?.destination?.name === plan.spec.provider.source.name
-                      }
+                      key={provider?.metadata?.name || index}
+                      value={provider?.metadata?.name}
+                      label={provider?.metadata?.name ?? provider?.metadata?.uid ?? String(index)}
                     />
                   )),
-                ]}
-              </FormSelect>
-            </FormGroupWithHelpText>
-          </Form>
-        ) : (
-          <EditableDescriptionItem
-            title={t('Target namespace')}
-            content={
-              <ResourceLink
-                name={plan.spec.targetNamespace}
-                namespace=""
-                groupVersionKind={{ kind: 'Namespace', version: 'v1', group: '' }}
-                linkTo={isProviderLocalOpenshift(
-                  availableProviders.find(
-                    (p) => p?.metadata?.name === plan.spec.provider?.destination?.name,
-                  ),
-                )}
-              />
-            }
-            ariaEditLabel={t('Edit target namespace')}
-            onEdit={() => setIsTargetNamespaceEdited(true)}
-            isDisabled={flow.editingDone}
-          />
-        )}
+              ]}
+            </FormSelect>
+          </FormGroupWithHelpText>
+        </Form>
+
+        <Form isWidthLimited>
+          <FormGroupWithHelpText
+            label={t('Target namespace')}
+            isRequired
+            id="targetNamespace"
+            validated={validation.targetNamespace}
+            placeholder={t('Select a namespace')}
+          >
+            <FilterableSelect
+              selectOptions={availableTargetNamespaces.map((ns) => ({
+                itemId: ns?.name,
+                isDisabled:
+                  namespacesUsedBySelectedVms.includes(ns?.name) &&
+                  plan.spec.provider?.destination?.name === plan.spec.provider.source.name,
+                children: ns?.name,
+              }))}
+              value={plan.spec.targetNamespace}
+              onSelect={(value) => dispatch(setPlanTargetNamespace(value as string))}
+              isDisabled={flow.editingDone}
+              isScrollable
+              canCreate
+              createNewOptionLabel={t('Create new namespace:')}
+            />
+          </FormGroupWithHelpText>
+        </Form>
 
         <SectionHeading
           text={t('Storage and network mappings')}
