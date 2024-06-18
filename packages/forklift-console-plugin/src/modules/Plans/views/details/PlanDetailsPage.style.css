@@ -148,3 +148,7 @@
   text-align: left;
   display: inline-block;
 }
+
+.forklift-page-plan-settings-icon {
+  padding-right: var(--pf-global--spacer--sm);
+}
