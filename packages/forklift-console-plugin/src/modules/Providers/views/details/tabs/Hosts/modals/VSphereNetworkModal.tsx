@@ -1,4 +1,5 @@
 import React, { ReactNode, useCallback, useReducer, useState } from 'react';
+import { FilterableSelect } from 'src/components';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { validateNoSpaces } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -8,11 +9,11 @@ import { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
 import {
   Button,
   Form,
+  HelperText,
+  HelperTextItem,
   Modal,
   ModalVariant,
-  Select,
-  SelectOption,
-  SelectVariant,
+  Text,
   TextInput,
 } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
@@ -203,27 +204,26 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
 
       <Form id="modal-with-form-form">
         <FormGroupWithHelpText label="Network" isRequired fieldId="network">
-          <Select
-            variant={SelectVariant.single}
-            placeholderText="Select a network"
+          <FilterableSelect
+            placeholder="Select a network"
             aria-label="Select Network"
-            onToggle={onSelectToggle}
-            onSelect={onSelect}
-            selections={
-              state.network ? `${state.network.name} - ${state.network.ipAddress}` : undefined
-            }
-            isOpen={state.isSelectOpen}
-            menuAppendTo={() => document.body}
-          >
-            {networkOptions.map((option) => (
-              <SelectOption
-                isDisabled={option.disabled}
-                key={option.key}
-                value={option.label}
-                description={option.description}
-              />
-            ))}
-          </Select>
+            onSelect={(value) => onSelect(null, value)}
+            value={state.network ? `${state.network.name} - ${state.network.ipAddress}` : undefined}
+            selectOptions={networkOptions.map((option) => ({
+              itemId: option.label,
+              isDisabled: option.disabled,
+              children: (
+                <>
+                  <Text>{option.label}</Text>
+                  {option.description && (
+                    <HelperText>
+                      <HelperTextItem variant="indeterminate">{option.description}</HelperTextItem>
+                    </HelperText>
+                  )}
+                </>
+              ),
+            }))}
+          />
         </FormGroupWithHelpText>
 
         {endpointType !== 'esxi' && (
