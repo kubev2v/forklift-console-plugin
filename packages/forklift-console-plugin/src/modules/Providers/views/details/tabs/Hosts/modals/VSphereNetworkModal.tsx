@@ -13,6 +13,7 @@ import {
   HelperTextItem,
   Modal,
   ModalVariant,
+  SelectOptionObject,
   Text,
   TextInput,
 } from '@patternfly/react-core';
@@ -111,10 +112,14 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
 
   const onSelectToggle = () => dispatch({ type: 'TOGGLE_OPEN' });
 
-  const onSelect = (_event, selection) => {
+  const onSelect: (
+    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
+    value: string | SelectOptionObject,
+    isPlaceholder?: boolean,
+  ) => void = (_event, value: string) => {
     const selectedAdapter = getNetworkAdapterByLabel(
       firstInventoryHostPair.inventory.networkAdapters,
-      selection,
+      value,
     );
 
     dispatch({ type: 'SET_NETWORK', payload: selectedAdapter });

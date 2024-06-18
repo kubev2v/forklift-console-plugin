@@ -107,6 +107,29 @@ export const GroupedEnumFilter = ({
     return filteredGroups;
   };
 
+  const onSelect: (
+    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
+    value: string | SelectOptionObject,
+    isPlaceholder?: boolean,
+  ) => void = (event, value, isPlaceholder) => {
+    if (isPlaceholder) {
+      return;
+    }
+    const id = typeof value === 'string' ? value : (value as EnumValue).id;
+    hasFilter(id) ? deleteFilter(id) : addFilter(id);
+  };
+
+  const onToggle: (
+    isExpanded: boolean,
+    event:
+      | Event
+      | React.KeyboardEvent<Element>
+      | React.MouseEvent<Element, MouseEvent>
+      | React.ChangeEvent<Element>,
+  ) => void = (isExpanded) => {
+    setExpanded(isExpanded);
+  };
+
   return (
     <>
       {/**
@@ -141,19 +164,13 @@ export const GroupedEnumFilter = ({
           variant={SelectVariant.checkbox}
           isGrouped
           aria-label={placeholderLabel}
-          onSelect={(event, option, isPlaceholder) => {
-            if (isPlaceholder) {
-              return;
-            }
-            const id = typeof option === 'string' ? option : (option as EnumValue).id;
-            hasFilter(id) ? deleteFilter(id) : addFilter(id);
-          }}
+          onSelect={onSelect}
           selections={supportedEnumValues
             .filter(({ id }) => selectedEnumIds.includes(id))
             .map(toSelectOption)}
           placeholderText={placeholderLabel}
           isOpen={isExpanded}
-          onToggle={setExpanded}
+          onToggle={onToggle}
           hasInlineFilter={hasInlineFilter}
           onFilter={onFilter}
         >
