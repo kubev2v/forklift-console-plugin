@@ -34,6 +34,12 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
   const { showModal } = useModal();
   const { t } = useForkliftTranslation();
   const isText = !type || type === 'text';
+  const onClick = () => {
+    showModal(
+      <FetchCertificateModal url={url} handleSave={onTextChange} existingCert={String(value)} />,
+    );
+  };
+
   return (
     <>
       <FileUpload
@@ -55,15 +61,7 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
                 className="forklift-certificate-upload-margin"
                 isDisabled={isDisabled || !url?.trim().startsWith('https://')}
                 variant="secondary"
-                onClick={() =>
-                  showModal(
-                    <FetchCertificateModal
-                      url={url}
-                      handleSave={onTextChange}
-                      existingCert={String(value)}
-                    />,
-                  )
-                }
+                onClick={onClick}
               >
                 {t('Fetch certificate from URL')}
               </Button>

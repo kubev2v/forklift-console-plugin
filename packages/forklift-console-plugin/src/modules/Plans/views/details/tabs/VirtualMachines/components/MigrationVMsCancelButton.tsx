@@ -13,16 +13,13 @@ export const MigrationVMsCancelButton: FC<{
 }> = ({ selectedIds, migration }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
+  const onClick = () => {
+    showModal(<MigrationVMsCancelModal migration={migration} selected={selectedIds} />);
+  };
 
   return (
     <ToolbarItem>
-      <Button
-        variant="secondary"
-        onClick={() =>
-          showModal(<MigrationVMsCancelModal migration={migration} selected={selectedIds} />)
-        }
-        isDisabled={!selectedIds?.length}
-      >
+      <Button variant="secondary" onClick={onClick} isDisabled={!selectedIds?.length}>
         {t('Cancel virtual machines')}
       </Button>
     </ToolbarItem>

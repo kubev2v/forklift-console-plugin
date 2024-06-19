@@ -19,12 +19,12 @@ export const StorageMapsAddButton: React.FC<{ namespace: string; dataTestId?: st
     namespaced: namespace !== undefined,
   });
 
+  const onClick = () => {
+    history.push(`${StorageMapsListURL}/~new`);
+  };
+
   return (
-    <Button
-      data-testid={dataTestId}
-      variant="primary"
-      onClick={() => history.push(`${StorageMapsListURL}/~new`)}
-    >
+    <Button data-testid={dataTestId} variant="primary" onClick={onClick}>
       {t('Create StorageMap')}
     </Button>
   );

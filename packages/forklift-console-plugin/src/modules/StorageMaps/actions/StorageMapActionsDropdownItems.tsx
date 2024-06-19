@@ -21,15 +21,15 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
     namespace: StorageMap?.metadata?.namespace,
   });
 
+  const onClick = () => {
+    showModal(<DeleteModal resource={StorageMap} model={StorageMapModel} />);
+  };
+
   return [
     <DropdownItemLink key="EditStorageMapping" href={StorageMapURL}>
       {t('Edit StorageMap')}
     </DropdownItemLink>,
-    <DropdownItem
-      key="delete"
-      isDisabled={!data?.permissions?.canDelete}
-      onClick={() => showModal(<DeleteModal resource={StorageMap} model={StorageMapModel} />)}
-    >
+    <DropdownItem key="delete" isDisabled={!data?.permissions?.canDelete} onClick={onClick}>
       {t('Delete StorageMap')}
     </DropdownItem>,
   ];

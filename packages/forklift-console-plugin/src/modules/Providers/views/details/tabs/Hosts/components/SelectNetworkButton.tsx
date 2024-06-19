@@ -33,18 +33,13 @@ export const SelectNetworkButton: FC<{
 }> = ({ selectedIds, provider, hostsData }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
+  const onClick = () => {
+    showModal(<VSphereNetworkModal provider={provider} data={hostsData} selected={selectedIds} />);
+  };
 
   return (
     <ToolbarItem>
-      <Button
-        variant="secondary"
-        onClick={() =>
-          showModal(
-            <VSphereNetworkModal provider={provider} data={hostsData} selected={selectedIds} />,
-          )
-        }
-        isDisabled={!selectedIds?.length}
-      >
+      <Button variant="secondary" onClick={onClick} isDisabled={!selectedIds?.length}>
         {t('Select migration network')}
       </Button>
     </ToolbarItem>

@@ -156,6 +156,10 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     });
   };
 
+  const onClick = () => {
+    dispatch({ type: 'INIT', payload: obj });
+  };
+
   return (
     <Suspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
       <Flex className="forklift-network-map__details-tab--update-button">
@@ -173,7 +177,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
         <FlexItem>
           <Button
             variant="secondary"
-            onClick={() => dispatch({ type: 'INIT', payload: obj })}
+            onClick={onClick}
             isDisabled={!state.hasChanges || state.updating}
           >
             {t('Cancel')}

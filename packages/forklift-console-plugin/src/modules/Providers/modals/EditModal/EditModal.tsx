@@ -114,6 +114,10 @@ export const EditModal: React.FC<EditModalProps> = ({
     }
   }, [resource, value, onConfirmHook]);
 
+  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
+    event.preventDefault();
+  };
+
   /**
    * LabelIcon is a (?) icon that triggers a Popover component when clicked.
    */
@@ -122,7 +126,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       <button
         type="button"
         aria-label="More info for field"
-        onClick={(e) => e.preventDefault()}
+        onClick={onClick}
         aria-describedby="modal-with-form-form-field"
         className="pf-c-form__group-label-help"
       >

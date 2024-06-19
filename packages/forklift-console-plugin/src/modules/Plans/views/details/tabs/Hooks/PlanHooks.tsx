@@ -51,6 +51,13 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
     onUpdatePlanHooks({ plan, preHookResource, postHookResource, dispatch, state });
   }
 
+  const onClick = () => {
+    dispatch({
+      type: 'INIT',
+      payload: initialState(plan, preHookResource, postHookResource),
+    });
+  };
+
   const HooksTabAction = (
     <>
       <Flex>
@@ -66,16 +73,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
         </FlexItem>
 
         <FlexItem>
-          <Button
-            variant="secondary"
-            isDisabled={!state.hasChanges}
-            onClick={() =>
-              dispatch({
-                type: 'INIT',
-                payload: initialState(plan, preHookResource, postHookResource),
-              })
-            }
-          >
+          <Button variant="secondary" isDisabled={!state.hasChanges} onClick={onClick}>
             {t('Cancel')}
           </Button>
         </FlexItem>

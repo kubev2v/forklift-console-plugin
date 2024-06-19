@@ -94,6 +94,11 @@ export const VmMigrationsChartCard: React.FC<MigrationsCardProps> = () => {
     ...VmMigrationsDataPoints.succeeded.map((m) => m.value),
   );
 
+  const handleTimeRangeSelectedFactory = (timeRange: TimeRangeOptions) => () => {
+    onToggle();
+    setSelectedTimeRange(timeRange);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -107,28 +112,19 @@ export const VmMigrationsChartCard: React.FC<MigrationsCardProps> = () => {
             isPlain
             dropdownItems={[
               <DropdownItem
-                onClick={() => {
-                  onToggle();
-                  setSelectedTimeRange(TimeRangeOptions.Last7Days);
-                }}
+                onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last7Days)}
                 key="7days"
               >
                 {t('7 days')}
               </DropdownItem>,
               <DropdownItem
-                onClick={() => {
-                  onToggle();
-                  setSelectedTimeRange(TimeRangeOptions.Last31Days);
-                }}
+                onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last31Days)}
                 key="31days"
               >
                 {t('31 days')}
               </DropdownItem>,
               <DropdownItem
-                onClick={() => {
-                  onToggle();
-                  setSelectedTimeRange(TimeRangeOptions.Last24H);
-                }}
+                onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last24H)}
                 key="24hours"
               >
                 {t('24 hours')}

@@ -36,35 +36,45 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
 
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
 
+  const onClickPlanStart = () => {
+    showModal(
+      <PlanStartMigrationModal resource={plan} model={PlanModel} title={buttonStartLabel} />,
+    );
+  };
+
+  const onClickPlanCutover = () => {
+    showModal(<PlanCutoverMigrationModal resource={plan} />);
+  };
+
+  const onClickDuplicate = () => {
+    showModal(<DuplicateModal resource={plan} model={PlanModel} />);
+  };
+
+  const onClickArchive = () => {
+    showModal(<ArchiveModal resource={plan} model={PlanModel} />);
+  };
+
+  const onClickPlanDelete = () => {
+    showModal(<PlanDeleteModal resource={plan} model={PlanModel} />);
+  };
+
   return [
     <DropdownItemLink key="EditPlan" href={planURL}>
       {t('Edit Plan')}
     </DropdownItemLink>,
 
-    <DropdownItem
-      key="start"
-      isDisabled={!canStart}
-      onClick={() =>
-        showModal(
-          <PlanStartMigrationModal resource={plan} model={PlanModel} title={buttonStartLabel} />,
-        )
-      }
-    >
+    <DropdownItem key="start" isDisabled={!canStart} onClick={onClickPlanStart}>
       {buttonStartLabel}
     </DropdownItem>,
 
-    <DropdownItem
-      key="cutover"
-      isDisabled={!isWarmAndExecuting}
-      onClick={() => showModal(<PlanCutoverMigrationModal resource={plan} />)}
-    >
+    <DropdownItem key="cutover" isDisabled={!isWarmAndExecuting} onClick={onClickPlanCutover}>
       {t('Cutover')}
     </DropdownItem>,
 
     <DropdownItem
       key="duplicate"
       isDisabled={!data?.permissions?.canDelete}
-      onClick={() => showModal(<DuplicateModal resource={plan} model={PlanModel} />)}
+      onClick={onClickDuplicate}
     >
       {t('Duplicate Plan')}
     </DropdownItem>,
@@ -72,7 +82,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     <DropdownItem
       key="archive"
       isDisabled={!data?.permissions?.canDelete || ['Archived', 'Archiving'].includes(phase)}
-      onClick={() => showModal(<ArchiveModal resource={plan} model={PlanModel} />)}
+      onClick={onClickArchive}
     >
       {t('Archive Plan')}
     </DropdownItem>,
@@ -80,7 +90,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     <DropdownItem
       key="delete"
       isDisabled={!data?.permissions?.canDelete}
-      onClick={() => showModal(<PlanDeleteModal resource={plan} model={PlanModel} />)}
+      onClick={onClickPlanDelete}
     >
       {t('Delete Plan')}
     </DropdownItem>,

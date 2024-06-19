@@ -21,15 +21,15 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
     namespace: networkMap?.metadata?.namespace,
   });
 
+  const onClick = () => {
+    showModal(<DeleteModal resource={networkMap} model={NetworkMapModel} />);
+  };
+
   return [
     <DropdownItemLink key="EditNetworkMapping" href={networkMapURL}>
       {t('Edit NetworkMap')}
     </DropdownItemLink>,
-    <DropdownItem
-      key="delete"
-      isDisabled={!data?.permissions?.canDelete}
-      onClick={() => showModal(<DeleteModal resource={networkMap} model={NetworkMapModel} />)}
-    >
+    <DropdownItem key="delete" isDisabled={!data?.permissions?.canDelete} onClick={onClick}>
       {t('Delete NetworkMap')}
     </DropdownItem>,
   ];

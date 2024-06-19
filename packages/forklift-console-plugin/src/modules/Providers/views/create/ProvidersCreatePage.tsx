@@ -202,6 +202,10 @@ export const ProvidersCreatePage: React.FC<{
     namespace: namespace,
   });
 
+  const onClick = () => {
+    history.push(providersListURL);
+  };
+
   return (
     <div>
       <PageSection variant="light">
@@ -263,7 +267,7 @@ export const ProvidersCreatePage: React.FC<{
             </Button>
           </FlexItem>
           <FlexItem>
-            <Button onClick={() => history.push(providersListURL)} variant="secondary">
+            <Button onClick={onClick} variant="secondary">
               {t('Cancel')}
             </Button>
           </FlexItem>

@@ -108,50 +108,52 @@ export const DescriptionTitleWithHelp: React.FC<{
   crumbs,
   moreInfoLabel = 'More info:',
   moreInfoLink,
-}) => (
-  <DescriptionListTermHelpText>
-    {showHelpIconNextToTitle ? <label>{title} &nbsp;</label> : null}
-    <Popover
-      headerContent={<div>{title}</div>}
-      bodyContent={
-        <Flex direction={{ default: 'column' }}>
-          <FlexItem>{helpContent}</FlexItem>
+}) => {
+  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
+    event.preventDefault();
+  };
 
-          {moreInfoLink && (
-            <FlexItem>
-              {moreInfoLabel}{' '}
-              <ExternalLink href={moreInfoLink} isInline hideIcon>
-                <Truncate content={moreInfoLink} />
-              </ExternalLink>
-            </FlexItem>
-          )}
+  return (
+    <DescriptionListTermHelpText>
+      {showHelpIconNextToTitle ? <label>{title} &nbsp;</label> : null}
+      <Popover
+        headerContent={<div>{title}</div>}
+        bodyContent={
+          <Flex direction={{ default: 'column' }}>
+            <FlexItem>{helpContent}</FlexItem>
 
-          {crumbs && crumbs.length > 0 && (
-            <FlexItem>
-              <Breadcrumb>
-                {crumbs.map((c) => (
-                  <BreadcrumbItem key={c}>{c}</BreadcrumbItem>
-                ))}
-              </Breadcrumb>
-            </FlexItem>
-          )}
-        </Flex>
-      }
-    >
-      {showHelpIconNextToTitle ? (
-        <button
-          type="button"
-          onClick={(e) => e.preventDefault()}
-          className="pf-c-form__group-label-help"
-        >
-          <HelpIcon />
-        </button>
-      ) : (
-        <DescriptionListTermHelpTextButton> {title} </DescriptionListTermHelpTextButton>
-      )}
-    </Popover>
-  </DescriptionListTermHelpText>
-);
+            {moreInfoLink && (
+              <FlexItem>
+                {moreInfoLabel}{' '}
+                <ExternalLink href={moreInfoLink} isInline hideIcon>
+                  <Truncate content={moreInfoLink} />
+                </ExternalLink>
+              </FlexItem>
+            )}
+
+            {crumbs && crumbs.length > 0 && (
+              <FlexItem>
+                <Breadcrumb>
+                  {crumbs.map((c) => (
+                    <BreadcrumbItem key={c}>{c}</BreadcrumbItem>
+                  ))}
+                </Breadcrumb>
+              </FlexItem>
+            )}
+          </Flex>
+        }
+      >
+        {showHelpIconNextToTitle ? (
+          <button type="button" onClick={onClick} className="pf-c-form__group-label-help">
+            <HelpIcon />
+          </button>
+        ) : (
+          <DescriptionListTermHelpTextButton> {title} </DescriptionListTermHelpTextButton>
+        )}
+      </Popover>
+    </DescriptionListTermHelpText>
+  );
+};
 
 /**
  * Component for displaying title without a popover.

@@ -49,6 +49,9 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
     isDefault: `${net.namespace}/${net.name}` === defaultNetwork,
     config: JSON.parse(net?.object?.spec?.config || '{}') as CnoConfig,
   }));
+  const onClick = () => {
+    showModal(<EditProviderDefaultTransferNetwork resource={provider} />);
+  };
 
   return (
     <div>
@@ -57,11 +60,7 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
 
         {permissions.canPatch && (
           <div className="forklift-page-provider-networks-button">
-            <Button
-              key="editTransferNetwork"
-              variant="secondary"
-              onClick={() => showModal(<EditProviderDefaultTransferNetwork resource={provider} />)}
-            >
+            <Button key="editTransferNetwork" variant="secondary" onClick={onClick}>
               {t('Set default transfer network')}
             </Button>
           </div>

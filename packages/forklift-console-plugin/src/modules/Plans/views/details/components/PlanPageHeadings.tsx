@@ -58,21 +58,16 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     );
   }
 
+  const onClick = () => {
+    showModal(
+      <PlanStartMigrationModal resource={plan} model={PlanModel} title={buttonStartLabel} />,
+    );
+  };
+
   const actions = (
     <Level hasGutter>
       {canStart && (
-        <Button
-          variant="primary"
-          onClick={() =>
-            showModal(
-              <PlanStartMigrationModal
-                resource={plan}
-                model={PlanModel}
-                title={buttonStartLabel}
-              />,
-            )
-          }
-        >
+        <Button variant="primary" onClick={onClick}>
           <Level hasGutter>
             <>
               <LevelItem>{buttonStartIcon}</LevelItem>
