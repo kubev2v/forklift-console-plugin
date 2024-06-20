@@ -2,10 +2,10 @@ import React from 'react';
 import { TFunction } from 'react-i18next';
 
 import {
-  BlueInfoCircleIcon,
-  RedExclamationCircleIcon,
-  YellowExclamationTriangleIcon,
-} from '@openshift-console/dynamic-plugin-sdk';
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  InfoCircleIcon,
+} from '@patternfly/react-icons';
 
 /**
  * Retrieves the title for a given concern category.
@@ -32,9 +32,9 @@ export const getCategoryTitle = (category: string, t: TFunction): string => {
  */
 export const getCategoryIcon = (category: string) => {
   const icons = {
-    Critical: <RedExclamationCircleIcon />,
-    Information: <BlueInfoCircleIcon />,
-    Warning: <YellowExclamationTriangleIcon />,
+    Critical: <ExclamationCircleIcon color="#C9190B" />,
+    Information: <InfoCircleIcon color="#2B9AF3" />,
+    Warning: <ExclamationTriangleIcon color="#F0AB00" />,
   };
 
   return icons[category] || <></>;

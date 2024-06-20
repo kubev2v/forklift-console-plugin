@@ -1,11 +1,12 @@
 import React from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { RowProps, TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { IoK8sApiBatchV1Job, V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
-import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import {
   Button,
@@ -190,7 +191,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                   <Td>{condition.type}</Td>
                   <Td>{getStatusLabel(condition.status)}</Td>
                   <Td>
-                    <Timestamp timestamp={condition.lastTransitionTime} />
+                    <ConsoleTimestamp timestamp={condition.lastTransitionTime} />
                   </Td>
                   <Td>{condition.reason}</Td>
                   <Td modifier="truncate">{condition?.message || '-'}</Td>
@@ -252,7 +253,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 )}
               </Td>
               <Td>
-                <Timestamp timestamp={p?.started} />
+                <ConsoleTimestamp timestamp={p?.started} />
               </Td>
               <Td>{p?.error?.reasons}</Td>
             </Tr>

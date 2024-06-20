@@ -1,27 +1,27 @@
 import React from 'react';
 import { PlanPhase } from 'src/modules/Plans/utils';
 
-import {
-  GreenCheckCircleIcon,
-  RedExclamationCircleIcon,
-  YellowExclamationTriangleIcon,
-} from '@openshift-console/dynamic-plugin-sdk';
 import { Spinner } from '@patternfly/react-core';
-import ArchiveIcon from '@patternfly/react-icons/dist/esm/icons/archive-icon';
-import SyncAltIcon from '@patternfly/react-icons/dist/esm/icons/sync-alt-icon';
+import {
+  ArchiveIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  SyncAltIcon,
+} from '@patternfly/react-icons';
 
 export const PlanStatusIcon: React.FC<{ phase: PlanPhase }> = ({ phase }) =>
-  statusIcons[phase] || <YellowExclamationTriangleIcon />;
+  statusIcons[phase] || <ExclamationTriangleIcon color="#F0AB00" />;
 
 const statusIcons = {
-  Ready: <GreenCheckCircleIcon />,
+  Ready: <CheckCircleIcon color="#3E8635" />,
   NotReady: <Spinner size="sm" />,
   Running: <SyncAltIcon />,
-  Succeeded: <GreenCheckCircleIcon />,
-  Canceled: <YellowExclamationTriangleIcon />,
-  Failed: <RedExclamationCircleIcon />,
-  vmError: <RedExclamationCircleIcon />,
+  Succeeded: <CheckCircleIcon color="#3E8635" />,
+  Canceled: <ExclamationTriangleIcon color="#F0AB00" />,
+  Failed: <ExclamationCircleIcon color="#C9190B" />,
+  vmError: <ExclamationCircleIcon color="#C9190B" />,
   Archived: <ArchiveIcon />,
   Archiving: <Spinner size="sm" />,
-  Error: <RedExclamationCircleIcon />,
+  Error: <ExclamationCircleIcon color="#C9190B" />,
 };

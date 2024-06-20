@@ -70,7 +70,7 @@ const getDiskLabel = (diskKey: string) => {
     >
       <Label isCompact color={'orange'}>
         <span className="forklift-page-plan-settings-icon">
-          <ExclamationTriangleIcon color="orange" />
+          <ExclamationTriangleIcon color="#F0AB00" />
         </span>
         {diskLabel}
       </Label>

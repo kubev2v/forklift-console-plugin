@@ -1,12 +1,12 @@
 import React from 'react';
 
-import {
-  BlueInfoCircleIcon,
-  GreenCheckCircleIcon,
-  RedExclamationCircleIcon,
-  YellowExclamationTriangleIcon,
-} from '@openshift-console/dynamic-plugin-sdk';
 import { Spinner } from '@patternfly/react-core';
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  InfoCircleIcon,
+} from '@patternfly/react-icons';
 import { BanIcon } from '@patternfly/react-icons/dist/esm/icons/ban-icon';
 import { ClipboardListIcon } from '@patternfly/react-icons/dist/esm/icons/clipboard-list-icon';
 import { HourglassHalfIcon } from '@patternfly/react-icons/dist/esm/icons/hourglass-half-icon';
@@ -54,7 +54,7 @@ export const StatusIcon: React.FC<{ phase: string }> = ({ phase }) => {
 
     case 'Warning':
     case 'RequiresApproval':
-      return <YellowExclamationTriangleIcon />;
+      return <ExclamationTriangleIcon color="#F0AB00" />;
 
     case 'ContainerCannotRun':
     case 'CrashLoopBackOff':
@@ -68,7 +68,7 @@ export const StatusIcon: React.FC<{ phase: string }> = ({ phase }) => {
     case 'Lost':
     case 'Rejected':
     case 'UpgradeFailed':
-      return <RedExclamationCircleIcon />;
+      return <ExclamationCircleIcon color="#C9190B" />;
 
     case 'Accepted':
     case 'Active':
@@ -85,10 +85,10 @@ export const StatusIcon: React.FC<{ phase: string }> = ({ phase }) => {
     case 'Preferred':
     case 'Connected':
     case 'Deployed':
-      return <GreenCheckCircleIcon />;
+      return <CheckCircleIcon color="#3E8635" />;
 
     case 'Info':
-      return <BlueInfoCircleIcon />;
+      return <InfoCircleIcon color="#2B9AF3" />;
 
     case 'Unknown':
       return <UnknownIcon />;

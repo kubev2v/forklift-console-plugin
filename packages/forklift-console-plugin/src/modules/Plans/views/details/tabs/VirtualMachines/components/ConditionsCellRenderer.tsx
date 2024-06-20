@@ -1,8 +1,8 @@
 import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { YellowExclamationTriangleIcon } from '@openshift-console/dynamic-plugin-sdk';
 import { Label, Level, LevelItem } from '@patternfly/react-core';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 import { PlanVMsCellProps } from './PlanVMsCellProps';
 
@@ -16,7 +16,7 @@ export const ConditionsCellRenderer: React.FC<PlanVMsCellProps> = ({ data }) => 
     <TableCell>
       <Level hasGutter>
         <LevelItem>
-          <Label isCompact color="orange" icon={<YellowExclamationTriangleIcon />}>
+          <Label isCompact color="orange" icon={<ExclamationTriangleIcon color="#F0AB00" />}>
             {condition.category}
           </Label>
         </LevelItem>

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { BlueInfoCircleIcon } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Popover } from '@patternfly/react-core';
+import { InfoCircleIcon } from '@patternfly/react-icons';
 
 import { TextWithIcon } from './TextWithIcon';
 import { categoryIcons } from './utils';
@@ -22,7 +22,7 @@ export const StatusCell: React.FC<StatusCellProps> = ({ label, conditions, icon 
       className="forklift-table__flex-cell-popover"
       key={type}
       label={message || type}
-      icon={categoryIcons[category]?.[status] || <BlueInfoCircleIcon />}
+      icon={categoryIcons[category]?.[status] || <InfoCircleIcon color="#2B9AF3" />}
     />
   ));
 

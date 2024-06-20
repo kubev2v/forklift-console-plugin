@@ -2,8 +2,8 @@ import React from 'react';
 import { EditProviderVDDKImage, useModal } from 'src/modules/Providers/modals';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { YellowExclamationTriangleIcon } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 import { DetailsItem } from '../../../../../utils';
 
@@ -38,7 +38,7 @@ export const VDDKDetailsItem: React.FC<ProviderDetailsItemProps> = ({
       content={
         provider?.spec?.settings?.['vddkInitImage'] || (
           <Label isCompact color={'orange'}>
-            <YellowExclamationTriangleIcon />
+            <ExclamationTriangleIcon color="#F0AB00" />
             <span className="forklift-section-provider-empty-vddk-label-text">{t('Empty')}</span>
           </Label>
         )

@@ -1,9 +1,9 @@
 import React from 'react';
+import { ConsoleTimestamp } from 'src/components';
 import { TableCell } from 'src/modules/Providers/utils';
 
 import { getResourceFieldValue, ResourceField, RowProps } from '@kubev2v/common';
 import { Td, Tr } from '@kubev2v/common';
-import { Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 
 import { PlanData } from '../../utils';
 
@@ -43,7 +43,7 @@ const cellRenderers: Record<string, React.FC<CellProps>> = {
   ['namespace']: NamespaceCell,
   ['migration-started']: (props: CellProps) => {
     const value = getResourceFieldValue(props.data, props.fieldId, props.fields);
-    return <Timestamp timestamp={value} />;
+    return <ConsoleTimestamp timestamp={value} />;
   },
   ['destination']: ProviderLinkCell,
   ['source']: ProviderLinkCell,

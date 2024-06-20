@@ -7,11 +7,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getResourceFieldValue } from '@kubev2v/common';
 import { ProviderModelRef } from '@kubev2v/types';
-import {
-  GreenCheckCircleIcon,
-  RedExclamationCircleIcon,
-} from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
 import { CellProps } from './CellProps';
 
@@ -92,9 +89,9 @@ export const ErrorStatusCell: React.FC<CellProps & { t: TFunction }> = ({ t, dat
 };
 
 const statusIcons = {
-  ValidationFailed: <RedExclamationCircleIcon />,
-  ConnectionFailed: <RedExclamationCircleIcon />,
-  Ready: <GreenCheckCircleIcon />,
+  ValidationFailed: <ExclamationCircleIcon color="#C9190B" />,
+  ConnectionFailed: <ExclamationCircleIcon color="#C9190B" />,
+  Ready: <CheckCircleIcon color="#3E8635" />,
   Staging: <Spinner size="sm" />,
 };
 
