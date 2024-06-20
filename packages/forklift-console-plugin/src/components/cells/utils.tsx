@@ -1,15 +1,15 @@
 import React from 'react';
 
 import {
-  GreenCheckCircleIcon,
-  RedExclamationCircleIcon,
-  YellowExclamationTriangleIcon,
-} from '@openshift-console/dynamic-plugin-sdk';
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+} from '@patternfly/react-icons';
 
 export const categoryIcons = {
-  Critical: { True: <RedExclamationCircleIcon />, False: undefined },
-  Error: { True: <RedExclamationCircleIcon />, False: undefined },
-  Required: { True: <GreenCheckCircleIcon />, False: undefined },
-  Warn: { True: <YellowExclamationTriangleIcon />, False: undefined },
-  Advisory: { True: <GreenCheckCircleIcon />, False: undefined },
+  Critical: { True: <ExclamationCircleIcon color="#C9190B" />, False: undefined },
+  Error: { True: <ExclamationCircleIcon color="#C9190B" />, False: undefined },
+  Required: { True: <CheckCircleIcon color="#3E8635" />, False: undefined },
+  Warn: { True: <ExclamationTriangleIcon color="#F0AB00" />, False: undefined },
+  Advisory: { True: <CheckCircleIcon color="#3E8635" />, False: undefined },
 };

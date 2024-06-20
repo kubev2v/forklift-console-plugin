@@ -1,12 +1,12 @@
 import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import {
-  GreenCheckCircleIcon,
-  RedExclamationCircleIcon,
-  YellowExclamationTriangleIcon,
-} from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Popover } from '@patternfly/react-core';
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+} from '@patternfly/react-icons';
 
 import { calculateCidrNotation } from '../utils';
 import { determineHostStatus } from '../utils/helpers/determineHostStatus';
@@ -14,9 +14,9 @@ import { determineHostStatus } from '../utils/helpers/determineHostStatus';
 import { HostCellProps } from './HostCellProps';
 
 const statusIcons = {
-  error: <RedExclamationCircleIcon />,
-  ready: <GreenCheckCircleIcon />,
-  running: <YellowExclamationTriangleIcon />,
+  error: <ExclamationCircleIcon color="#C9190B" />,
+  ready: <CheckCircleIcon color="#3E8635" />,
+  running: <ExclamationTriangleIcon color="#F0AB00" />,
 };
 
 // Define cell renderer for 'network'

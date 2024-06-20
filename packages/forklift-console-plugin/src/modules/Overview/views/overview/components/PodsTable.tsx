@@ -1,10 +1,11 @@
 import React from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import StatusIcon from 'src/components/status/StatusIcon';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { IoK8sApiCoreV1Pod } from '@kubev2v/types';
-import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Split, SplitItem } from '@patternfly/react-core';
 
 export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
@@ -53,7 +54,7 @@ export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
             )}
             <Td>{getStatusLabel(pod?.status?.phase)}</Td>
             <Td>
-              <Timestamp timestamp={pod?.metadata?.creationTimestamp} />
+              <ConsoleTimestamp timestamp={pod?.metadata?.creationTimestamp} />
             </Td>
           </Tr>
         ))}

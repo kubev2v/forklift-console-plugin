@@ -1,10 +1,10 @@
 import React from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
-import { Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 import { Modal, ModalVariant } from '@patternfly/react-core';
 
 export interface PipelineTasksModalProps {
@@ -41,7 +41,7 @@ export const PipelineTasksModal: React.FC<PipelineTasksModalProps> = ({ name, ta
               <Td>{t?.phase}</Td>
               <Td>{getTaskProgress(t)}</Td>
               <Td>
-                <Timestamp timestamp={t?.started} />
+                <ConsoleTimestamp timestamp={t?.started} />
               </Td>
               <Td>{t?.error?.reasons}</Td>
             </Tr>

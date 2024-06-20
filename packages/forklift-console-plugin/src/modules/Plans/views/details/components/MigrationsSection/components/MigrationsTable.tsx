@@ -1,4 +1,5 @@
 import React from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import {
   getMigrationVmsCounts,
   getPhaseLabel,
@@ -13,7 +14,7 @@ import {
   PlanModelGroupVersionKind,
   V1beta1Migration,
 } from '@kubev2v/types';
-import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {
   HelperText,
   HelperTextItem,
@@ -73,10 +74,10 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
               <VMsLabel migration={migration} />
             </Td>
             <Td>
-              <Timestamp timestamp={migration?.status?.started} />
+              <ConsoleTimestamp timestamp={migration?.status?.started} />
             </Td>
             <Td>
-              <Timestamp timestamp={migration?.status?.completed} />
+              <ConsoleTimestamp timestamp={migration?.status?.completed} />
             </Td>
           </Tr>
         ))}

@@ -1,9 +1,9 @@
 import React from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 
 import { getResourceFieldValue, ResourceField, RowProps } from '@kubev2v/common';
 import { Td } from '@kubev2v/common';
 import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
-import { Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 import { FlexItem, Popover, ProgressStep, ProgressStepper } from '@patternfly/react-core';
 import { ResourcesAlmostFullIcon, ResourcesFullIcon } from '@patternfly/react-icons';
 import { Table, Tr } from '@patternfly/react-table';
@@ -40,11 +40,11 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
   name: NameCellRenderer,
   migrationStarted: (props: PlanVMsCellProps) => {
     const value = getResourceFieldValue(props.data, props.fieldId, props.fields);
-    return <Timestamp timestamp={value} />;
+    return <ConsoleTimestamp timestamp={value} />;
   },
   migrationCompleted: (props: PlanVMsCellProps) => {
     const value = getResourceFieldValue(props.data, props.fieldId, props.fields);
-    return <Timestamp timestamp={value} />;
+    return <ConsoleTimestamp timestamp={value} />;
   },
   transfer: (props: PlanVMsCellProps) => {
     const diskTransfer = props.data.statusVM?.pipeline.find((p) =>
@@ -105,14 +105,14 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
             <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
               <Td>Started:</Td>
               <Td>
-                <Timestamp timestamp={lastRunningItem?.started} />
+                <ConsoleTimestamp timestamp={lastRunningItem?.started} />
               </Td>
             </Tr>
             <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
               <Td>Completed:</Td>
               <Td>
                 {lastRunningItem?.completed ? (
-                  <Timestamp timestamp={lastRunningItem?.completed} />
+                  <ConsoleTimestamp timestamp={lastRunningItem?.completed} />
                 ) : (
                   '-'
                 )}

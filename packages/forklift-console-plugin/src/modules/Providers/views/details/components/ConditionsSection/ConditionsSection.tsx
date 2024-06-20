@@ -1,9 +1,9 @@
 import React from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { K8sResourceCondition } from '@kubev2v/types';
-import { Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
 /**
@@ -54,7 +54,7 @@ export const ConditionsSection: React.FC<ConditionsProps> = ({ conditions }) => 
               <Td>{condition.type}</Td>
               <Td>{getStatusLabel(condition.status)}</Td>
               <Td>
-                <Timestamp timestamp={condition.lastTransitionTime} />
+                <ConsoleTimestamp timestamp={condition.lastTransitionTime} />
               </Td>
               <Td>{condition.reason}</Td>
               <Td modifier="truncate">{condition?.message || '-'}</Td>

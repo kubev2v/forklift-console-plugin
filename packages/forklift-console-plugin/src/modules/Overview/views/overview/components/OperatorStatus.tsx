@@ -1,20 +1,20 @@
 import React from 'react';
 
-import {
-  GreenCheckCircleIcon,
-  RedExclamationCircleIcon,
-  YellowExclamationTriangleIcon,
-} from '@openshift-console/dynamic-plugin-sdk';
 import { Flex, FlexItem } from '@patternfly/react-core';
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+} from '@patternfly/react-icons';
 
 interface OperatorStatusProps {
   status: string;
 }
 
 export const statusIcons = {
-  Failure: <RedExclamationCircleIcon />,
-  Successful: <GreenCheckCircleIcon />,
-  Running: <YellowExclamationTriangleIcon />,
+  Failure: <ExclamationCircleIcon color="#C9190B" />,
+  Successful: <CheckCircleIcon color="#3E8635" />,
+  Running: <ExclamationTriangleIcon color="#F0AB00" />,
 };
 
 const statusLabels = {

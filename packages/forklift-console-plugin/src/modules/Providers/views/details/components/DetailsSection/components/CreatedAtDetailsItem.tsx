@@ -1,7 +1,6 @@
 import React from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { useForkliftTranslation } from 'src/utils/i18n';
-
-import { Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 
 import { DetailsItem } from '../../../../../utils';
 
@@ -24,7 +23,7 @@ export const CreatedAtDetailsItem: React.FC<ProviderDetailsItemProps> = ({
   return (
     <DetailsItem
       title={t('Created at')}
-      content={<Timestamp timestamp={provider?.metadata?.creationTimestamp} />}
+      content={<ConsoleTimestamp timestamp={provider?.metadata?.creationTimestamp} />}
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'metadata', 'creationTimestamp']}

@@ -1,8 +1,7 @@
 import React from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
-
-import { Timestamp } from '@openshift-console/dynamic-plugin-sdk';
 
 import { NetworkDetailsItemProps } from './NetworkDetailsItemProps';
 
@@ -23,7 +22,7 @@ export const CreatedAtDetailsItem: React.FC<NetworkDetailsItemProps> = ({
   return (
     <DetailsItem
       title={t('Created at')}
-      content={<Timestamp timestamp={resource?.metadata?.creationTimestamp} />}
+      content={<ConsoleTimestamp timestamp={resource?.metadata?.creationTimestamp} />}
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['metadata', 'creationTimestamp']}

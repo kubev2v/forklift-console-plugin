@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { getOperatorPhase } from 'src/modules/Overview/utils/helpers/getOperatorPhase';
 import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
-import { ResourceLink, Timestamp } from '@openshift-console/dynamic-plugin-sdk';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Card,
   CardBody,
@@ -57,7 +58,7 @@ export const OperatorCard: FC<OperatorCardProps> = ({ obj }) => {
 
           <DetailsItem
             title={t('Created at')}
-            content={<Timestamp timestamp={obj?.metadata?.creationTimestamp} />}
+            content={<ConsoleTimestamp timestamp={obj?.metadata?.creationTimestamp} />}
             helpContent={
               <Text>
                 {t(
