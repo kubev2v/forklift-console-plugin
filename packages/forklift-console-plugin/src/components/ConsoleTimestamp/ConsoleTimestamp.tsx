@@ -41,9 +41,8 @@ export const ConsoleTimestamp = (props: TimestampProps) => {
         className="forklift-table__console-timestamp"
         date={currentDate}
         customFormat={{
-          year: '2-digit',
+          year: 'numeric',
           month: 'short',
-          weekday: 'short',
           day: 'numeric',
           hour: 'numeric',
           minute: 'numeric',
