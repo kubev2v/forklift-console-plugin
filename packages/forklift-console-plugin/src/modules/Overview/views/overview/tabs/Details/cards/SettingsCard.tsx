@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import {
-  EditCleanupMaxAgeModal,
   EditControllerCPULimitModal,
   EditControllerMemoryLimitModal,
   EditMaxVMInFlightModal,
@@ -23,11 +22,6 @@ type SettingsCardProps = {
 const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
-
-  const mustGatherAPICleanupMaxAge =
-    obj?.spec?.['must_gather_api_cleanup_max_age'] === -1
-      ? 'Disabled'
-      : obj?.spec?.['must_gather_api_cleanup_max_age'];
 
   return (
     <Card>
@@ -58,30 +52,6 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
             }
             crumbs={['spec', 'controller_max_vm_inflight']}
             onEdit={() => showModal(<EditMaxVMInFlightModal resource={obj} />)}
-          />
-
-          <DetailsItem
-            title={'Must gather cleanup after (hours)'}
-            showHelpIconNextToTitle={true}
-            content={
-              mustGatherAPICleanupMaxAge && mustGatherAPICleanupMaxAge !== '-1' ? (
-                mustGatherAPICleanupMaxAge
-              ) : (
-                <span className="text-muted">{'Disabled'}</span>
-              )
-            }
-            moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
-            }
-            helpContent={
-              <Text>
-                {t(
-                  "Specifies the duration for retaining 'must gather' reports before they are automatically deleted. The default value is -1, which implies automatic cleanup is disabled.",
-                )}
-              </Text>
-            }
-            crumbs={['spec', 'must_gather_api_cleanup_max_age']}
-            onEdit={() => showModal(<EditCleanupMaxAgeModal resource={obj} />)}
           />
 
           <DetailsItem
