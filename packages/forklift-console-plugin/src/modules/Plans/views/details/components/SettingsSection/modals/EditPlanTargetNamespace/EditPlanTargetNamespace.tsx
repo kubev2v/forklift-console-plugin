@@ -1,5 +1,6 @@
 import React from 'react';
-import { useProviderInventory, useToggle } from 'src/modules/Providers/hooks';
+import { FilterableSelect } from 'src/components';
+import { useProviderInventory } from 'src/modules/Providers/hooks';
 import {
   EditModal,
   EditModalProps,
@@ -16,7 +17,7 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import { Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core';
+import { Text } from '@patternfly/react-core';
 
 const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
   const plan = resource as V1beta1Plan;
@@ -50,7 +51,7 @@ const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType 
   const provider = resource as V1beta1Provider;
 
   const DropdownRenderer: React.FC<DropdownRendererProps> = ({ value, onChange }) => {
-    const [isOpen, onToggle] = useToggle(false);
+    const { t } = useForkliftTranslation();
 
     const { inventory: namespaces } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
       provider,
@@ -58,31 +59,21 @@ const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType 
       subPath: 'namespaces?detail=4',
     });
 
-    const transferNetworks: string[] = (namespaces || []).map((n) => n?.object?.metadata?.name);
+    const options: string[] = (namespaces || []).map((n) => n?.object?.metadata?.name);
 
-    const dropdownItems = [
-      <DropdownItem key={''} description={'Undefined'} onClick={() => onChange('')}>
-        {'No namespace selected'}
-      </DropdownItem>,
-      ...(transferNetworks || []).map((n) => (
-        <DropdownItem key={n} description={`Namespace ${n}`} onClick={() => onChange(n)}>
-          {n}
-        </DropdownItem>
-      )),
-    ];
+    const dropdownItems = (options || []).map((n) => ({
+      itemId: n,
+      children: <Text>{n}</Text>,
+    }));
 
     return (
-      <Dropdown
-        onSelect={onToggle}
-        toggle={
-          <DropdownToggle id="select namespace" onToggle={onToggle}>
-            {value}
-          </DropdownToggle>
-        }
-        isOpen={isOpen}
-        dropdownItems={dropdownItems}
-        menuAppendTo="parent"
-      />
+      <FilterableSelect
+        selectOptions={dropdownItems}
+        value={value as string}
+        onSelect={onChange}
+        canCreate
+        placeholder={t('No namespace selected')}
+      ></FilterableSelect>
     );
   };
 
