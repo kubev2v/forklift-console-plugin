@@ -25,7 +25,7 @@ export const ProviderVirtualMachinesList: React.FC<{
   });
 
   const [vmData, vmDataLoading] = useInventoryVms({ provider }, providerLoaded, providerLoadError);
-  const obj = { provider, vmData, vmDataLoading: vmDataLoading || vmData?.length === 0 };
+  const obj = { provider, vmData, vmDataLoading: vmDataLoading };
 
   return (
     <ProviderVirtualMachinesListWrapper
