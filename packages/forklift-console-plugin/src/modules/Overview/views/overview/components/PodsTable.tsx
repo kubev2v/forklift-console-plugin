@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import StatusIcon from 'src/components/status/StatusIcon';
+import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
@@ -10,6 +12,13 @@ import { HelperText, HelperTextItem, Split, SplitItem } from '@patternfly/react-
 
 export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
   const { t } = useForkliftTranslation();
+
+  const getPodLogsLink = (pod: IoK8sApiCoreV1Pod) =>
+    getResourceUrl({
+      reference: 'pods',
+      namespace: pod.metadata.namespace,
+      name: pod.metadata.name,
+    });
 
   if (!pods) {
     return (
@@ -26,6 +35,7 @@ export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
           <Th width={20}>{t('Pod')}</Th>
           {showOwner && <Th width={20}>{t('Owner')}</Th>}
           <Th width={10}>{t('Status')}</Th>
+          <Th width={10}>{t('Pod logs')}</Th>
           <Th width={10}>{t('Created at')}</Th>
         </Tr>
       </Thead>
@@ -53,6 +63,9 @@ export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
               </Td>
             )}
             <Td>{getStatusLabel(pod?.status?.phase)}</Td>
+            <Td>
+              <Link to={`${getPodLogsLink(pod)}/logs`}>{t('Logs')}</Link>
+            </Td>
             <Td>
               <ConsoleTimestamp timestamp={pod?.metadata?.creationTimestamp} />
             </Td>
