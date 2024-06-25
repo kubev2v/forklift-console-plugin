@@ -1,11 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import StatusIcon from 'src/components/status/StatusIcon';
 import { useModal } from 'src/modules/Providers/modals';
+import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { RowProps, TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
-import { IoK8sApiBatchV1Job, V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
+import {
+  IoK8sApiBatchV1Job,
+  IoK8sApiCoreV1Pod,
+  V1beta1PlanStatusMigrationVmsPipeline,
+} from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import {
@@ -15,6 +22,8 @@ import {
   PageSection,
   ProgressStep,
   ProgressStepper,
+  Split,
+  SplitItem,
   Tooltip,
 } from '@patternfly/react-core';
 import { TaskIcon } from '@patternfly/react-icons';
@@ -37,15 +46,22 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
     (p) => p?.name === 'VirtualMachineCreation' && p?.phase === 'Completed',
   );
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'True':
-        return t('True');
-      case 'False':
-        return t('False');
-      default:
-        return status;
-    }
+  const getPodLogsLink = (pod: IoK8sApiCoreV1Pod) =>
+    getResourceUrl({
+      reference: 'pods',
+      namespace: pod.metadata.namespace,
+      name: pod.metadata.name,
+    });
+
+  const getStatusLabel = (phase: string) => {
+    return (
+      <Split>
+        <SplitItem className="forklift-overview__controller-card__status-icon">
+          <StatusIcon phase={phase} />
+        </SplitItem>
+        <SplitItem>{phase}</SplitItem>
+      </Split>
+    );
   };
 
   return (
@@ -57,6 +73,11 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             className="forklift-page-plan-details-vm-status__section-header"
           />
           <TableComposable aria-label="Expandable table" variant="compact">
+            <Thead>
+              <Tr>
+                <Th width={20}>{t('Name')}</Th>
+              </Tr>
+            </Thead>
             <Tbody>
               <Tr key="vm">
                 <Td>
@@ -83,22 +104,30 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             className="forklift-page-plan-details-vm-status__section-header"
           />
           <TableComposable aria-label="Expandable table" variant="compact">
+            <Thead>
+              <Tr>
+                <Th width={20}>{t('Pod')}</Th>
+                <Th width={10}>{t('Status')}</Th>
+                <Th width={10}>{t('Pod logs')}</Th>
+                <Th width={10}>{t('Created at')}</Th>
+              </Tr>
+            </Thead>
             <Tbody>
               {(pods || []).map((pod) => (
                 <Tr key={pod.metadata.uid}>
                   <Td>
-                    <Flex>
-                      <FlexItem>
-                        <ResourceLink
-                          groupVersionKind={{ version: 'v1', kind: 'Pod' }}
-                          name={pod?.metadata?.name}
-                          namespace={pod?.metadata?.namespace}
-                        />
-                      </FlexItem>
-                      <FlexItem>
-                        <Status status={pod?.status?.phase}></Status>
-                      </FlexItem>
-                    </Flex>
+                    <ResourceLink
+                      kind={pod?.kind}
+                      name={pod?.metadata?.name}
+                      namespace={pod?.metadata?.namespace}
+                    />
+                  </Td>
+                  <Td>{getStatusLabel(pod?.status?.phase)}</Td>
+                  <Td>
+                    <Link to={`${getPodLogsLink(pod)}/logs`}>{t('Logs')}</Link>
+                  </Td>
+                  <Td>
+                    <ConsoleTimestamp timestamp={pod?.metadata?.creationTimestamp} />
                   </Td>
                 </Tr>
               ))}
@@ -114,6 +143,11 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             className="forklift-page-plan-details-vm-status__section-header"
           />
           <TableComposable aria-label="Expandable table" variant="compact">
+            <Thead>
+              <Tr>
+                <Th width={20}>{t('Name')}</Th>
+              </Tr>
+            </Thead>
             <Tbody>
               {(jobs || []).map((job) => (
                 <Tr key={job.metadata.uid}>
@@ -145,6 +179,11 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             className="forklift-page-plan-details-vm-status__section-header"
           />
           <TableComposable aria-label="Expandable table" variant="compact">
+            <Thead>
+              <Tr>
+                <Th width={20}>{t('Name')}</Th>
+              </Tr>
+            </Thead>
             <Tbody>
               {(pvcs || []).map((pvc) => (
                 <Tr key={pvc.metadata.uid}>
