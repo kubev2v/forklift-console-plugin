@@ -77,6 +77,8 @@ export const useProviderInventory = <T>({
 
   // Fetch data from API
   useEffect(() => {
+    setLoading(true);
+
     const fetchData = async () => {
       if (disabled) {
         return;
