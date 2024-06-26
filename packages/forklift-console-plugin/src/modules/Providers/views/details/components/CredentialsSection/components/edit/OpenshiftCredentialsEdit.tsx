@@ -114,6 +114,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
         validated={state.validation.token.type}
       >
         <TextInput
+          spellCheck="false"
           className="pf-u-w-75"
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}

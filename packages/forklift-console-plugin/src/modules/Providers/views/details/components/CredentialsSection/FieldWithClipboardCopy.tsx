@@ -31,7 +31,7 @@ export const FieldWithClipboardCopy: React.FC<ShowFieldWithClipboardCopyProps> =
           <div>{t('{{label}} field is missing from the secret data.', { label: field.label })}</div>
         }
       >
-        <TextInput value="No value" type="text" isDisabled />
+        <TextInput spellCheck="false" value="No value" type="text" isDisabled />
       </Tooltip>
     );
   }

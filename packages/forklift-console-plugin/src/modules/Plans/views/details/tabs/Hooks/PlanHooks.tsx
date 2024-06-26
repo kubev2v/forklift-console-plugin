@@ -138,6 +138,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
             <>
               <FormGroupWithHelpText label="Hook runner image" isRequired fieldId="pre-hook-image">
                 <TextInput
+                  spellCheck="false"
                   value={state.preHook?.spec?.image}
                   type="url"
                   onChange={(value) => dispatch({ type: 'PRE_HOOK_IMAGE', payload: value })}
@@ -187,6 +188,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
             <>
               <FormGroupWithHelpText label="Hook runner image" isRequired fieldId="post-hook-image">
                 <TextInput
+                  spellCheck="false"
                   value={state.postHook?.spec?.image}
                   type="url"
                   onChange={(value) => dispatch({ type: 'POST_HOOK_IMAGE', payload: value })}

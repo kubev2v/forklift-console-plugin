@@ -232,6 +232,7 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
                 )}
               >
                 <TextInput
+                  spellCheck="false"
                   validated={newNameValidation}
                   value={newName}
                   id="name"

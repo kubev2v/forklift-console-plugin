@@ -25,7 +25,16 @@ export const DefaultValidatedHelpText: Story = {
   args: {
     label: 'Username',
     isRequired: true,
-    children: <TextInput isRequired type="text" name="user" value="myName" validated="default" />,
+    children: (
+      <TextInput
+        spellCheck="false"
+        isRequired
+        type="text"
+        name="user"
+        value="myName"
+        validated="default"
+      />
+    ),
     helperText: 'This is a help text',
     helperTextInvalid: 'This is a help text for an invalid case',
     validated: 'default',
@@ -39,7 +48,16 @@ export const SuccessValidatedHelpText: Story = {
   args: {
     label: 'Username',
     isRequired: true,
-    children: <TextInput isRequired type="text" name="user" value="myName" validated="success" />,
+    children: (
+      <TextInput
+        spellCheck="false"
+        isRequired
+        type="text"
+        name="user"
+        value="myName"
+        validated="success"
+      />
+    ),
     helperText: 'This is a help text',
     helperTextInvalid: 'This is a help text for an invalid case',
     validated: 'success',
@@ -53,7 +71,16 @@ export const WarningValidatedHelpText: Story = {
   args: {
     label: 'Username',
     isRequired: true,
-    children: <TextInput isRequired type="text" name="user" value="my%Name" validated="warning" />,
+    children: (
+      <TextInput
+        spellCheck="false"
+        isRequired
+        type="text"
+        name="user"
+        value="my%Name"
+        validated="warning"
+      />
+    ),
     helperText: 'This is a warning help text indicating that a % char is not recommended',
     helperTextInvalid: 'This is a help text for an invalid case',
     validated: 'warning',
@@ -67,7 +94,16 @@ export const ErrorValidatedHelpText: Story = {
   args: {
     label: 'Username',
     isRequired: true,
-    children: <TextInput isRequired type="text" name="user" value="my Name" validated="error" />,
+    children: (
+      <TextInput
+        spellCheck="false"
+        isRequired
+        type="text"
+        name="user"
+        value="my Name"
+        validated="error"
+      />
+    ),
     helperText: 'This is a help text',
     helperTextInvalid:
       'This is an error help text indicating that an invalid space char is not allowed',
@@ -82,7 +118,16 @@ export const ErrorValidatedUndefinedHelpText: Story = {
   args: {
     label: 'Username',
     isRequired: true,
-    children: <TextInput isRequired type="text" name="user" value="my Name" validated="error" />,
+    children: (
+      <TextInput
+        spellCheck="false"
+        isRequired
+        type="text"
+        name="user"
+        value="my Name"
+        validated="error"
+      />
+    ),
     helperText: 'This is a help text',
     helperTextInvalid: undefined,
     validated: 'error',

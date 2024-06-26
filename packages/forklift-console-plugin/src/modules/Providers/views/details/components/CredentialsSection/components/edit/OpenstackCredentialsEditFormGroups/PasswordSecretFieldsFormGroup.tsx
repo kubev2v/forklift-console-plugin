@@ -79,6 +79,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         validated={state.validation.username.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="username"
@@ -98,6 +99,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         validated={state.validation.password.type}
       >
         <TextInput
+          spellCheck="false"
           className="pf-u-w-75"
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}
@@ -124,6 +126,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         validated={state.validation.regionName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="regionName"
@@ -143,6 +146,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         validated={state.validation.projectName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="projectName"
@@ -162,6 +166,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         validated={state.validation.domainName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="domainName"

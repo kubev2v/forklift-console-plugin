@@ -232,6 +232,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
     >
       <TextInputGroup isPlain>
         <TextInputGroupMain
+          spellCheck="false"
           value={inputValue}
           onClick={onToggleClick}
           onChange={onTextInputChange}

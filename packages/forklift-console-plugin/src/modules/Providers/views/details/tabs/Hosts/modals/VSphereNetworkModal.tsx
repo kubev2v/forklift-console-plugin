@@ -237,6 +237,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
               validated={state.validation.username}
             >
               <TextInput
+                spellCheck="false"
                 isRequired
                 type="text"
                 id="username"
@@ -254,6 +255,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
               validated={state.validation.password}
             >
               <TextInput
+                spellCheck="false"
                 className="forklift-host-modal-input-secret"
                 isRequired
                 type={state.passwordHidden ? 'password' : 'text'}

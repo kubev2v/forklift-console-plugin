@@ -166,6 +166,7 @@ export const PlansCreateForm = ({
               )}
             >
               <TextInput
+                spellCheck="false"
                 isRequired
                 type="text"
                 id="planName"

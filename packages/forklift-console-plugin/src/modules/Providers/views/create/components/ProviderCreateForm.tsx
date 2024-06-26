@@ -125,6 +125,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
               validated={state.validation.name.type}
             >
               <TextInput
+                spellCheck="false"
                 isRequired
                 type="text"
                 id="k8sName"
