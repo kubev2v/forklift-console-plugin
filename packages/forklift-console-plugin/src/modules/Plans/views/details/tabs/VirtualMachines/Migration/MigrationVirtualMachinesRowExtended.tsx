@@ -17,8 +17,6 @@ import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import {
   Button,
-  Flex,
-  FlexItem,
   PageSection,
   ProgressStep,
   ProgressStepper,
@@ -107,9 +105,9 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             <Thead>
               <Tr>
                 <Th width={20}>{t('Pod')}</Th>
-                <Th width={10}>{t('Status')}</Th>
-                <Th width={10}>{t('Pod logs')}</Th>
-                <Th width={10}>{t('Created at')}</Th>
+                <Th>{t('Status')}</Th>
+                <Th>{t('Pod logs')}</Th>
+                <Th>{t('Created at')}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -146,24 +144,21 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             <Thead>
               <Tr>
                 <Th width={20}>{t('Name')}</Th>
+                <Th>{t('Status')}</Th>
               </Tr>
             </Thead>
             <Tbody>
               {(jobs || []).map((job) => (
                 <Tr key={job.metadata.uid}>
                   <Td>
-                    <Flex>
-                      <FlexItem>
-                        <ResourceLink
-                          groupVersionKind={{ group: 'batch', version: 'v1', kind: 'Job' }}
-                          name={job?.metadata?.name}
-                          namespace={job?.metadata?.namespace}
-                        />
-                      </FlexItem>
-                      <FlexItem>
-                        <Status status={getJobPhase(job)}></Status>
-                      </FlexItem>
-                    </Flex>
+                    <ResourceLink
+                      groupVersionKind={{ group: 'batch', version: 'v1', kind: 'Job' }}
+                      name={job?.metadata?.name}
+                      namespace={job?.metadata?.namespace}
+                    />
+                  </Td>
+                  <Td>
+                    <Status status={getJobPhase(job)}></Status>
                   </Td>
                 </Tr>
               ))}
@@ -182,24 +177,21 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             <Thead>
               <Tr>
                 <Th width={20}>{t('Name')}</Th>
+                <Th>{t('Status')}</Th>
               </Tr>
             </Thead>
             <Tbody>
               {(pvcs || []).map((pvc) => (
                 <Tr key={pvc.metadata.uid}>
                   <Td>
-                    <Flex>
-                      <FlexItem>
-                        <ResourceLink
-                          groupVersionKind={{ version: 'v1', kind: 'PersistentVolumeClaim' }}
-                          name={pvc?.metadata?.name}
-                          namespace={pvc?.metadata?.namespace}
-                        />
-                      </FlexItem>
-                      <FlexItem>
-                        <Status status={pvc.status.phase}></Status>
-                      </FlexItem>
-                    </Flex>
+                    <ResourceLink
+                      groupVersionKind={{ version: 'v1', kind: 'PersistentVolumeClaim' }}
+                      name={pvc?.metadata?.name}
+                      namespace={pvc?.metadata?.namespace}
+                    />
+                  </Td>
+                  <Td>
+                    <Status status={pvc.status.phase}></Status>
                   </Td>
                 </Tr>
               ))}
@@ -217,10 +209,10 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
           <TableComposable aria-label="Expandable table" variant="compact">
             <Thead>
               <Tr>
-                <Th width={10}>{t('Type')}</Th>
-                <Th width={10}>{t('Status')}</Th>
-                <Th width={20}>{t('Updated')}</Th>
-                <Th width={10}>{t('Reason')}</Th>
+                <Th width={20}>{t('Type')}</Th>
+                <Th>{t('Status')}</Th>
+                <Th>{t('Updated')}</Th>
+                <Th>{t('Reason')}</Th>
                 <Th> {t('Message')}</Th>
               </Tr>
             </Thead>
@@ -248,7 +240,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
       <TableComposable variant="compact">
         <Thead>
           <Tr>
-            <Th>{t('Name')}</Th>
+            <Th width={20}>{t('Name')}</Th>
             <Th>{t('Description')}</Th>
             <Th>{t('Tasks')}</Th>
             <Th>{t('Started at')}</Th>
