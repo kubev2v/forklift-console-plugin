@@ -161,7 +161,7 @@ export const EditModal: React.FC<EditModalProps> = ({
     >
       {t('Save')}
     </Button>,
-    <Button key="cancel" variant="secondary" onClick={toggleModal}>
+    <Button key="cancel" variant="secondary" onClick={toggleModal} autoFocus>
       {t('Cancel')}
     </Button>,
   ];
