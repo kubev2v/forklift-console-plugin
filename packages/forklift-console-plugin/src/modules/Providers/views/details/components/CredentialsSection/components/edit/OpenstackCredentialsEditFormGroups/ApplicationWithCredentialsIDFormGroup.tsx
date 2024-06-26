@@ -83,6 +83,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         validated={state.validation.applicationCredentialID.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="applicationCredentialID"
@@ -102,6 +103,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         validated={state.validation.applicationCredentialSecret.type}
       >
         <TextInput
+          spellCheck="false"
           className="pf-u-w-75"
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}
@@ -129,6 +131,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         validated={state.validation.regionName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="regionName"
@@ -148,6 +151,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
         validated={state.validation.projectName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="projectName"

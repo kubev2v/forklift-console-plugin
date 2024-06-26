@@ -70,6 +70,7 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
         helperTextInvalid={state.validation.url.msg}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="url"

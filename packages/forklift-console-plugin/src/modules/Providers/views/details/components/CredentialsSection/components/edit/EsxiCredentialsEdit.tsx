@@ -114,6 +114,7 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
         validated={state.validation.user.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="username"
@@ -132,6 +133,7 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
         validated={state.validation.password.type}
       >
         <TextInput
+          spellCheck="false"
           className="pf-u-w-75"
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}

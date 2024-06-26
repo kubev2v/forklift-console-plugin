@@ -69,6 +69,7 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
         helperTextInvalid={state.validation.url.msg}
       >
         <TextInput
+          spellCheck="false"
           type="text"
           id="url"
           name="url"

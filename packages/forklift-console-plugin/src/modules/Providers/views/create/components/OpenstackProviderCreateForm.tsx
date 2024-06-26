@@ -70,6 +70,7 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
         validated={state.validation.url.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="url"

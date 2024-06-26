@@ -80,6 +80,7 @@ const VddkTextInput = undefined;
 // EmptyVddkTextInput is a mock input item for the empty vddk image string
 const EmptyVddkTextInput: React.FC = () => (
   <TextInput
+    spellCheck="false"
     id="modal-with-form-form-field"
     name="modal-with-form-form-field"
     isDisabled={true}

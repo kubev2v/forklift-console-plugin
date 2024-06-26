@@ -68,6 +68,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
         helperTextInvalid={state.validation.url.msg}
       >
         <TextInput
+          spellCheck="false"
           type="text"
           id="url"
           name="url"

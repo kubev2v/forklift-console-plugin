@@ -142,6 +142,7 @@ export const EditModal: React.FC<EditModalProps> = ({
     <InputComponent value={value} onChange={(value) => handleValueChange(value)} />
   ) : (
     <TextInput
+      spellCheck="false"
       id="modal-with-form-form-field"
       name="modal-with-form-form-field"
       value={value}

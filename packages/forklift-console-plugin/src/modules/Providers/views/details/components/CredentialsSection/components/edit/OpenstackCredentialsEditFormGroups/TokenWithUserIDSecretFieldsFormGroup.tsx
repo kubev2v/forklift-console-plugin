@@ -76,6 +76,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         validated={state.validation.token.type}
       >
         <TextInput
+          spellCheck="false"
           className="pf-u-w-75"
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}
@@ -103,6 +104,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         validated={state.validation.userID.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="userID"
@@ -122,6 +124,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         validated={state.validation.projectID.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="projectID"
@@ -141,6 +144,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         validated={state.validation.regionName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="regionName"

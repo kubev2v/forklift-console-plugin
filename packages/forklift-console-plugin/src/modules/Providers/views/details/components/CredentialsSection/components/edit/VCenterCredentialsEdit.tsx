@@ -108,6 +108,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
         validated={state.validation.user.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="username"
@@ -126,6 +127,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
         validated={state.validation.password.type}
       >
         <TextInput
+          spellCheck="false"
           className="pf-u-w-75"
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}

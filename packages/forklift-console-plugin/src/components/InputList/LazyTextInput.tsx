@@ -53,6 +53,7 @@ export const LazyTextInput: React.FunctionComponent<LazyTextInputProps> = ({
 
   return (
     <TextInput
+      spellCheck="false"
       value={value}
       type={type}
       onChange={(value) => setValue(value)}

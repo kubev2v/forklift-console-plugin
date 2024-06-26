@@ -163,6 +163,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
         validated={state.validation.url.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="url"
@@ -208,6 +209,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
         </Hint>
         <div className="forklift-section-provider-edit-vddk-input">
           <TextInput
+            spellCheck="false"
             type="text"
             id="vddkInitImage"
             name="vddkInitImage"

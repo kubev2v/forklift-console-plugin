@@ -120,6 +120,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
         validated={state.validation.user.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="user"
@@ -138,6 +139,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
         validated={state.validation.password.type}
       >
         <TextInput
+          spellCheck="false"
           className="pf-u-w-75"
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}

@@ -87,6 +87,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         validated={state.validation.applicationCredentialName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="applicationCredentialName"
@@ -106,6 +107,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         validated={state.validation.applicationCredentialSecret.type}
       >
         <TextInput
+          spellCheck="false"
           className="pf-u-w-75"
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}
@@ -133,6 +135,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         validated={state.validation.username.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="username"
@@ -152,6 +155,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         validated={state.validation.regionName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="regionName"
@@ -171,6 +175,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         validated={state.validation.projectName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="projectName"
@@ -190,6 +195,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
         validated={state.validation.domainName.type}
       >
         <TextInput
+          spellCheck="false"
           isRequired
           type="text"
           id="domainName"
