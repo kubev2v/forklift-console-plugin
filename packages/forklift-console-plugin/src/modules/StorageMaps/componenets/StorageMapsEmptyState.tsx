@@ -13,7 +13,7 @@ import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { StorageMapsAddButton } from './StorageMapsAddButton';
 
 const HELP_LINK_HREF =
-  'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/';
+  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
 
 const AutomationIcon = () => <img src={automationIcon} className="forklift-empty-state__icon" />;
 

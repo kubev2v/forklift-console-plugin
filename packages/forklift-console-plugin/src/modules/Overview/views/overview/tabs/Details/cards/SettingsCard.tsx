@@ -41,7 +41,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>
@@ -63,7 +63,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>
@@ -85,7 +85,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>
@@ -107,7 +107,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>
@@ -129,7 +129,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>

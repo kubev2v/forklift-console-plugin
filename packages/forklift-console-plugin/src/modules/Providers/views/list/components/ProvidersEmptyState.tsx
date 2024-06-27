@@ -17,7 +17,7 @@ import {
 } from '@patternfly/react-core';
 
 const HELP_LINK_HREF =
-  'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/';
+  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
 
 interface ProvidersEmptyStateProps {
   AddButton: ReactNode;
