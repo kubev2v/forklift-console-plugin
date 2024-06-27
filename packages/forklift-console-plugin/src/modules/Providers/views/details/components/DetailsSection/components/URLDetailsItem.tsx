@@ -16,7 +16,7 @@ export const URLDetailsItem: React.FC<ProviderDetailsItemProps> = ({
   const { showModal } = useModal();
 
   const defaultMoreInfoLink =
-    'https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-source-provider_cnv2';
+    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-source-providers';
   const defaultHelpContent =
     t(`URL of the providers API endpoint. The URL must be a valid endpoint for the provider type, see
       the documentation for each provider type to learn more about the URL format.`);
