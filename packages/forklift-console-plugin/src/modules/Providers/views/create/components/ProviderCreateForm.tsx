@@ -8,7 +8,15 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
 import { IoK8sApiCoreV1Secret, ProviderType, V1beta1Provider } from '@kubev2v/types';
-import { Flex, FlexItem, Form, TextInput } from '@patternfly/react-core';
+import {
+  Flex,
+  FlexItem,
+  Form,
+  HelperText,
+  HelperTextItem,
+  TextInput,
+  Tooltip,
+} from '@patternfly/react-core';
 
 import { EditProvider } from './EditProvider';
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
@@ -101,6 +109,19 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
                     onChange={() => handleTypeChange(null)}
                     isSelected
                     isCompact
+                    content={
+                      <Tooltip
+                        content={
+                          <div>{t('Click to select a different provider from the list.')}</div>
+                        }
+                      >
+                        <HelperText>
+                          <HelperTextItem variant="indeterminate">
+                            {t('Click to unselect.')}
+                          </HelperTextItem>
+                        </HelperText>
+                      </Tooltip>
+                    }
                   />
                 </FlexItem>
               </Flex>
