@@ -73,6 +73,8 @@
   "Click the update credentials button to save your changes, button is disabled until a change is detected.": "Click the update credentials button to save your changes, button is disabled until a change is detected.",
   "Click the update hooks button to save your changes, button is disabled until a change is detected.": "Click the update hooks button to save your changes, button is disabled until a change is detected.",
   "Click the update mappings button to save your changes, button is disabled until a change is detected.": "Click the update mappings button to save your changes, button is disabled until a change is detected.",
+  "Click to select a different provider from the list.": "Click to select a different provider from the list.",
+  "Click to unselect.": "Click to unselect.",
   "Cluster": "Cluster",
   "Clusters": "Clusters",
   "Completed {{completed}} of {{total}} {{name}} tasks": "Completed {{completed}} of {{total}} {{name}} tasks",
