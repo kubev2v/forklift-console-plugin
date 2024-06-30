@@ -113,6 +113,7 @@
   "Dates are compared in UTC. End of the interval is included.": "Dates are compared in UTC. End of the interval is included.",
   "Dedicated CPU": "Dedicated CPU",
   "Default": "Default",
+  "Default network": "Default network",
   "Default Transfer Network": "Default Transfer Network",
   "Defines the CPU limits allocated to the main container in the controller pod. The default value is 500 milliCPU.": "Defines the CPU limits allocated to the main container in the controller pod. The default value is 500 milliCPU.",
   "Delete": "Delete",
