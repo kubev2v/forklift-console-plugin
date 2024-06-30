@@ -1,7 +1,8 @@
 import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
+import { useForkliftTranslation } from 'src/utils';
 
-import { Button, Popover } from '@patternfly/react-core';
+import { Button, HelperText, HelperTextItem, Popover } from '@patternfly/react-core';
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -21,6 +22,8 @@ const statusIcons = {
 
 // Define cell renderer for 'network'
 export const NetworkCellRenderer: React.FC<HostCellProps> = (props) => {
+  const { t } = useForkliftTranslation();
+
   const host = props?.data?.host;
   const name = props?.data?.networkAdapter?.name;
   const ip = props?.data?.networkAdapter?.ipAddress;
@@ -30,9 +33,16 @@ export const NetworkCellRenderer: React.FC<HostCellProps> = (props) => {
 
   const hostStatus = determineHostStatus(host);
   const statusIcon = statusIcons[hostStatus.status.toLowerCase()];
+
+  const defaultNetworkLabel = (
+    <HelperText>
+      <HelperTextItem variant="indeterminate">{t('Default network')}</HelperTextItem>
+    </HelperText>
+  );
+
   let cellContent = (
     <>
-      {statusIcon} {name ? `${name} - ${cidr}` : '(default)'}
+      {statusIcon} {name ? `${name} - ${cidr}` : defaultNetworkLabel}
     </>
   );
 
