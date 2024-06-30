@@ -137,7 +137,6 @@ async function processHostSecretPair(
             apiVersion: 'forklift.konveyor.io/v1beta1',
             kind: 'Provider',
             name: provider.metadata.name,
-            namespace: provider.metadata.namespace,
             uid: provider.metadata.uid,
           },
         ],

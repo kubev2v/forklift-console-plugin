@@ -47,6 +47,11 @@ const createPlan = async (
 };
 
 const addOwnerRef = async (model: K8sModel, resource, ownerReferences) => {
+  const cleanOwnerReferences = ownerReferences.map((ref) => ({
+    ...ref,
+    namespace: undefined,
+  }));
+
   return await k8sPatch({
     model,
     resource,
@@ -54,7 +59,7 @@ const addOwnerRef = async (model: K8sModel, resource, ownerReferences) => {
       {
         op: 'add',
         path: '/metadata/ownerReferences',
-        value: ownerReferences,
+        value: cleanOwnerReferences,
       },
     ],
   });
