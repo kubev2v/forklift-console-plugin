@@ -52,7 +52,7 @@ export const createInitialState = ({
             source: getObjectRef(sourceProvider),
             destination: undefined,
           },
-          targetNamespace: undefined,
+          targetNamespace: namespace,
           vms: selectedVms.map((data) => ({
             name: data.name,
             namespace: data.namespace,
