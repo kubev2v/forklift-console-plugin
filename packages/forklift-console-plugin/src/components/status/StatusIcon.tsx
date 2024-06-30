@@ -6,6 +6,8 @@ import {
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InfoCircleIcon,
+  MinusCircleIcon,
+  PlusCircleIcon,
 } from '@patternfly/react-icons';
 import { BanIcon } from '@patternfly/react-icons/dist/esm/icons/ban-icon';
 import { ClipboardListIcon } from '@patternfly/react-icons/dist/esm/icons/clipboard-list-icon';
@@ -95,6 +97,12 @@ export const StatusIcon: React.FC<{ phase: string }> = ({ phase }) => {
 
     case 'PipelineNotStarted':
       return <NotStartedIcon />;
+
+    case 'True':
+      return <PlusCircleIcon />;
+
+    case 'False':
+      return <MinusCircleIcon />;
 
     default:
       return <>-</>;
