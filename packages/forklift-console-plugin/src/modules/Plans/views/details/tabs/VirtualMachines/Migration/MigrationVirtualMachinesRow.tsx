@@ -70,7 +70,7 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
 
     return totalTasks ? (
       <>
-        {completedTasks || '-'} / {totalTasks || '-'} Discs
+        {completedTasks || '-'} / {totalTasks || '-'} Disks
       </>
     ) : (
       <>-</>
