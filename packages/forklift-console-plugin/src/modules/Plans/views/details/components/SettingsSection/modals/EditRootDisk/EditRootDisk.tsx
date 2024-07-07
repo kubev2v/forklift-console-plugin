@@ -72,6 +72,7 @@ const RootDiskInputFactory: () => ModalInputComponentType = () => {
         onSelect={onChange}
         canCreate
         placeholder={t('First root device')}
+        createNewOptionLabel={t('Custom path:')}
       ></FilterableSelect>
     );
   };
