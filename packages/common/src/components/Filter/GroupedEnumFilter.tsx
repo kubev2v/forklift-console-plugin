@@ -9,7 +9,7 @@ import {
   ToolbarFilter,
 } from '@patternfly/react-core';
 
-import { EnumValue } from '../../utils';
+import { EnumValue, SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
 
 import { FilterTypeProps, InlineFilter } from './types';
 
@@ -107,6 +107,22 @@ export const GroupedEnumFilter = ({
     return filteredGroups;
   };
 
+  const onSelect: (
+    event: SelectEventType,
+    value: SelectValueType,
+    isPlaceholder?: boolean,
+  ) => void = (event, value, isPlaceholder) => {
+    if (isPlaceholder) {
+      return;
+    }
+    const id = typeof value === 'string' ? value : (value as EnumValue).id;
+    hasFilter(id) ? deleteFilter(id) : addFilter(id);
+  };
+
+  const onToggle: (isExpanded: boolean, event: ToggleEventType) => void = (isExpanded) => {
+    setExpanded(isExpanded);
+  };
+
   return (
     <>
       {/**
@@ -141,19 +157,13 @@ export const GroupedEnumFilter = ({
           variant={SelectVariant.checkbox}
           isGrouped
           aria-label={placeholderLabel}
-          onSelect={(event, option, isPlaceholder) => {
-            if (isPlaceholder) {
-              return;
-            }
-            const id = typeof option === 'string' ? option : (option as EnumValue).id;
-            hasFilter(id) ? deleteFilter(id) : addFilter(id);
-          }}
+          onSelect={onSelect}
           selections={supportedEnumValues
             .filter(({ id }) => selectedEnumIds.includes(id))
             .map(toSelectOption)}
           placeholderText={placeholderLabel}
           isOpen={isExpanded}
-          onToggle={setExpanded}
+          onToggle={onToggle}
           hasInlineFilter={hasInlineFilter}
           onFilter={onFilter}
         >

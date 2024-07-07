@@ -9,6 +9,8 @@ import {
   ToolbarFilter,
 } from '@patternfly/react-core';
 
+import { SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
+
 import { FilterTypeProps } from './types';
 
 /**
@@ -65,6 +67,25 @@ export const AutocompleteFilter = ({
     );
   };
 
+  const onSelect: (
+    event: SelectEventType,
+    value: SelectValueType,
+    isPlaceholder?: boolean,
+  ) => void = (event, value, isPlaceholder) => {
+    if (isPlaceholder) {
+      return;
+    }
+    // behave as Console's AutocompleteInput used i.e. to filter pods by label
+    if (!hasFilter(value)) {
+      addFilter(value);
+    }
+    setExpanded(false);
+  };
+
+  const onToggle: (isExpanded: boolean, event: ToggleEventType) => void = (isExpanded) => {
+    setExpanded(isExpanded);
+  };
+
   return (
     <ToolbarFilter
       key={filterId}
@@ -77,23 +98,14 @@ export const AutocompleteFilter = ({
       <Select
         variant={SelectVariant.typeahead}
         aria-label={placeholderLabel}
-        onSelect={(event, option, isPlaceholder) => {
-          if (isPlaceholder) {
-            return;
-          }
-          // behave as Console's AutocompleteInput used i.e. to filter pods by label
-          if (!hasFilter(option)) {
-            addFilter(option);
-          }
-          setExpanded(false);
-        }}
+        onSelect={onSelect}
         // intentionally keep the selections list empty
         // the select should pretend to be stateless
         // the selection is stored outside in a new chip
         selections={[]}
         placeholderText={placeholderLabel}
         isOpen={isExpanded}
-        onToggle={setExpanded}
+        onToggle={onToggle}
         onFilter={onFilter}
         shouldResetOnSelect={true}
       >

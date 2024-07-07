@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { SelectEventType, SelectValueType } from '@kubev2v/common';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 
@@ -28,11 +29,15 @@ export const SelectProvider: React.FunctionComponent<SelectProviderProps> = ({
 
   const providerTypesArray = Object.keys(providerTypes);
 
-  const onSelect = (_, selection: string) => {
+  const onSelect: (
+    event: SelectEventType,
+    value: SelectValueType,
+    isPlaceholder?: boolean,
+  ) => void = (_, value: string) => {
     const prevTypeFilters = filterState.typeFilters;
-    const typeFilters = prevTypeFilters.includes(selection)
-      ? prevTypeFilters.filter((item: string) => item !== selection)
-      : [...prevTypeFilters, selection];
+    const typeFilters = prevTypeFilters.includes(value)
+      ? prevTypeFilters.filter((item: string) => item !== value)
+      : [...prevTypeFilters, value];
     filterDispatch({ type: 'UPDATE_TYPE_FILTERS', payload: typeFilters });
   };
 

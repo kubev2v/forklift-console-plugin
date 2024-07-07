@@ -4,6 +4,8 @@ import { useHistory } from 'react-router';
 import { ActionService, ActionServiceProvider } from '@openshift-console/dynamic-plugin-sdk';
 import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly/react-core';
 
+import { ToggleEventType } from '../../utils';
+
 export interface ActionServiceDropdownProps<T> {
   /** The contextId of the `console.action/provider` extension to use */
   contextId: string;
@@ -67,12 +69,18 @@ const ActionsAsDropdown = ({
   const history = useHistory();
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const isPlain = variant === 'kebab';
+
+  const onToggle: (isExpanded: boolean, event: ToggleEventType) => void = (isExpanded) => {
+    setIsActionMenuOpen(isExpanded);
+  };
+
   const toggle =
     variant === 'kebab' ? (
-      <KebabToggle onToggle={setIsActionMenuOpen} />
+      <KebabToggle onToggle={onToggle} />
     ) : (
-      <DropdownToggle onToggle={setIsActionMenuOpen}>{dropdownToggleText}</DropdownToggle>
+      <DropdownToggle onToggle={onToggle}>{dropdownToggleText}</DropdownToggle>
     );
+
   return (
     <Dropdown
       position="right"
