@@ -16,7 +16,7 @@ export const SetLUKSEncryptionPasswordsDetailsItem: React.FC<PlanDetailsItemProp
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
-  const luks = resource?.spec?.vms?.[0].luks;
+  const luksSecretName = resource?.spec?.vms?.[0].luks?.name;
 
   const defaultHelpContent = t(
     'Specify a list of passphrases for the Linux Unified Key Setup (LUKS)-encrypted devices for the VMs that you want to migrate.',
@@ -26,11 +26,11 @@ export const SetLUKSEncryptionPasswordsDetailsItem: React.FC<PlanDetailsItemProp
     <DetailsItem
       title={t('Disk decryption passphrases')}
       content={
-        luks ? (
+        luksSecretName ? (
           <span>
             <ResourceLink
               groupVersionKind={{ kind: 'Secret', version: 'v1' }}
-              name={luks?.name}
+              name={luksSecretName}
               namespace={resource.metadata.namespace}
             />
           </span>
