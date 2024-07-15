@@ -59,10 +59,14 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     setCutoverDate(migrationCutoverDate);
   }, [lastMigration]);
 
-  const onDateChange = (inputDate, newDate: string) => {
+  const onDateChange: (
+    event: React.FormEvent<HTMLInputElement>,
+    value: string,
+    date?: Date,
+  ) => void = (_event, value) => {
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
 
-    const [year, month, day] = newDate.split('-').map((num: string) => parseInt(num, 10));
+    const [year, month, day] = value.split('-').map((num: string) => parseInt(num, 10));
 
     updatedFromDate.setFullYear(year);
     updatedFromDate.setMonth(month - 1);
@@ -71,7 +75,14 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     setCutoverDate(updatedFromDate.toISOString());
   };
 
-  const onTimeChange = (_event, _time, hour: number, minute: number) => {
+  const onTimeChange: (
+    event: React.FormEvent<HTMLInputElement>,
+    time: string,
+    hour?: number,
+    minute?: number,
+    seconds?: number,
+    isValid?: boolean,
+  ) => void = (_event, _time, hour, minute) => {
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
 
     updatedFromDate.setHours(hour);

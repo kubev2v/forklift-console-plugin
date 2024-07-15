@@ -31,6 +31,14 @@ export const FreetextFilter = ({
     onFilterUpdate([...selectedFilters, inputValue]);
     setInputValue('');
   };
+
+  const onChange: (event: React.FormEvent<HTMLInputElement>, value: string) => void = (
+    _event,
+    value,
+  ) => {
+    setInputValue(value);
+  };
+
   return (
     <ToolbarFilter
       key={filterId}
@@ -46,9 +54,7 @@ export const FreetextFilter = ({
         <SearchInput
           placeholder={placeholderLabel}
           value={inputValue}
-          onChange={(event, value) => {
-            setInputValue(value);
-          }}
+          onChange={onChange}
           onSearch={onTextInput}
           onClear={() => setInputValue('')}
         />

@@ -62,7 +62,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
     event: SelectEventType,
     value: SelectValueType,
     isPlaceholder?: boolean,
-  ) => void = (event, value: string, isPlaceholder) => {
+  ) => void = (_event, value: string, isPlaceholder) => {
     !isPlaceholder &&
       replaceMapping({
         current: { source, destination },
@@ -74,7 +74,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
     event: SelectEventType,
     value: SelectValueType,
     isPlaceholder?: boolean,
-  ) => void = (event, value: string) => {
+  ) => void = (_event, value: string) => {
     replaceMapping({
       current: { source, destination },
       next: { source, destination: value },

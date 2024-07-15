@@ -49,6 +49,20 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
     dispatch({ type: 'INIT', payload: obj });
   };
 
+  const onChangeSource: (value: string) => void = (value) => {
+    dispatch({
+      type: 'SET_SOURCE_PROVIDER',
+      payload: providers.find((p) => p?.metadata?.name === value),
+    });
+  };
+
+  const onChangeTarget: (value: string) => void = (value) => {
+    dispatch({
+      type: 'SET_TARGET_PROVIDER',
+      payload: providers.find((p) => p?.metadata?.name === value),
+    });
+  };
+
   return (
     <Suspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
       <Flex className="forklift-network-map__details-tab--update-button">
@@ -84,12 +98,7 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
           selectedProviderName={state.StorageMap?.spec?.provider?.source?.name}
           label={t('Source provider')}
           placeHolderLabel={t('Select a provider')}
-          onChange={(value) =>
-            dispatch({
-              type: 'SET_SOURCE_PROVIDER',
-              payload: providers.find((p) => p?.metadata?.name === value),
-            })
-          }
+          onChange={onChangeSource}
           invalidLabel={t('The chosen provider is no longer available.')}
           mode={state.sourceProviderMode}
           helpContent="source provider"
@@ -101,12 +110,7 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
           selectedProviderName={state.StorageMap?.spec?.provider?.destination?.name}
           label={t('Target provider')}
           placeHolderLabel={t('Select a provider')}
-          onChange={(value) =>
-            dispatch({
-              type: 'SET_TARGET_PROVIDER',
-              payload: providers.find((p) => p?.metadata?.name === value),
-            })
-          }
+          onChange={onChangeTarget}
           invalidLabel={t('The chosen provider is no longer available.')}
           mode={state.targetProviderMode}
           helpContent="Target provider"

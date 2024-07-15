@@ -59,6 +59,12 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
     [provider],
   );
 
+  const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    handleChange('url', value);
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
       <FormGroupWithHelpText
@@ -77,7 +83,7 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
           name="url"
           value={url || ''}
           validated={state.validation.url.type}
-          onChange={(value) => handleChange('url', value)}
+          onChange={onChangeUrl}
         />
       </FormGroupWithHelpText>
     </Form>

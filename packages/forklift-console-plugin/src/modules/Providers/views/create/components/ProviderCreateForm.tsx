@@ -93,6 +93,10 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
     onNewProviderChange({ ...newProvider, spec: { ...newProvider?.spec, type: type } });
   };
 
+  const onChange: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (value) => {
+    handleNameChange(value);
+  };
+
   return (
     <ModalHOC>
       <div className="forklift-create-provider-edit-section">
@@ -153,7 +157,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
                 name="name"
                 value={newProvider.metadata.name} // Use the appropriate prop value here
                 validated={state.validation.name.type}
-                onChange={(value) => handleNameChange(value)} // Call the custom handler method
+                onChange={onChange} // Call the custom handler method
               />
             </FormGroupWithHelpText>
           </Form>

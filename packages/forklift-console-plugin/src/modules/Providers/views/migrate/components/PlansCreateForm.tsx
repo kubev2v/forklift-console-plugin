@@ -145,6 +145,19 @@ export const PlansCreateForm = ({
   const networkMessages = buildNetworkMessages(t);
   const storageMessages = buildStorageMessages(t);
 
+  const onChangePlan: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    dispatch(setPlanName(value?.trim() ?? ''));
+  };
+
+  const onChangeTargetProvider: (
+    value: string,
+    event: React.FormEvent<HTMLSelectElement>,
+  ) => void = (value) => {
+    dispatch(setPlanTargetProvider(value));
+  };
+
   return (
     <>
       {children}
@@ -173,7 +186,7 @@ export const PlansCreateForm = ({
                 value={plan.metadata.name}
                 validated={validation.planName}
                 isDisabled={flow.editingDone}
-                onChange={(value) => dispatch(setPlanName(value?.trim() ?? ''))}
+                onChange={onChangePlan}
               />
             </FormGroupWithHelpText>
           </Form>
@@ -228,7 +241,7 @@ export const PlansCreateForm = ({
           >
             <FormSelect
               value={plan.spec.provider?.destination?.name}
-              onChange={(value) => dispatch(setPlanTargetProvider(value))}
+              onChange={onChangeTargetProvider}
               id="targetProvider"
               isDisabled={flow.editingDone}
             >

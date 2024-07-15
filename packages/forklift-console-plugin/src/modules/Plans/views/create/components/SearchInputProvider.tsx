@@ -23,12 +23,19 @@ export const SearchInputProvider: React.FunctionComponent<SearchInputProviderPro
     filterDispatch({ type: 'SET_NAME_FILTER', payload: value });
   };
 
+  const onChange: (event: React.FormEvent<HTMLInputElement>, value: string) => void = (
+    _event,
+    value,
+  ) => {
+    updateNameFilter(value);
+  };
+
   return (
     <div className="forklift--create-plan--search-input-provider">
       <SearchInput
         placeholder={t('Filter provider')}
         value={filterState.nameFilter}
-        onChange={(_, value) => updateNameFilter(value)}
+        onChange={onChange}
         onClear={() => updateNameFilter('')}
       />
     </div>

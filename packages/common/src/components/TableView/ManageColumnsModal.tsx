@@ -127,6 +127,12 @@ export const ManageColumnsModal = ({
     onClose();
   };
 
+  type onChangeFactoryType = (
+    id: string,
+  ) => (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void;
+
+  const onChangeFactory: onChangeFactoryType = (id) => (checked) => onSelect(id, checked);
+
   return (
     <Modal
       title={title}
@@ -177,7 +183,7 @@ export const ManageColumnsModal = ({
                             : isVisible
                         }
                         isDisabled={isIdentity}
-                        onChange={(value) => onSelect(id, value)}
+                        onChange={onChangeFactory(id)}
                         otherControls
                       />
                     </DataListControl>

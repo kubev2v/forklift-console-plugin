@@ -109,6 +109,24 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
     togglePasswordHidden();
   };
 
+  const onChangeUser: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    handleChange('user', value);
+  };
+
+  const onChangePassword: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    handleChange('password', value);
+  };
+
+  const onChangeInsecure: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
+    handleChange('insecureSkipVerify', checked ? 'true' : 'false');
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -127,7 +145,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           name="user"
           value={user}
           validated={state.validation.user.type}
-          onChange={(value) => handleChange('user', value)}
+          onChange={onChangeUser}
         />
       </FormGroupWithHelpText>
       <FormGroupWithHelpText
@@ -146,7 +164,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           aria-label="Password input"
           value={password}
           validated={state.validation.password.type}
-          onChange={(value) => handleChange('password', value)}
+          onChange={onChangePassword}
         />
         <Button
           variant="control"
@@ -187,7 +205,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
+          onChange={onChangeInsecure}
         />
       </FormGroupWithHelpText>
 

@@ -26,6 +26,12 @@ export const VerifyCertificate: FC<{
 }> = ({ thumbprint, issuer, validTo, isTrusted, setIsTrusted, hasThumbprintChanged }) => {
   const { t } = useForkliftTranslation();
 
+  const onChange: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
+    setIsTrusted(checked);
+  };
+
   return (
     <>
       {hasThumbprintChanged && (
@@ -60,7 +66,7 @@ export const VerifyCertificate: FC<{
             id="certificate-check"
             name="certificateCheck"
             isChecked={isTrusted}
-            onChange={setIsTrusted}
+            onChange={onChange}
           />
         </FlexItem>
       </Flex>

@@ -33,7 +33,10 @@ export const DateFilter = ({
     onFilterUpdate([...validFilters.filter((d) => d !== option)]);
   };
 
-  const onDateChange = (even: FormEvent<HTMLInputElement>, value: string) => {
+  const onDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
+    _event,
+    value,
+  ) => {
     // require full format "YYYY-MM-DD" although partial date is also accepted
     // i.e. YYYY-MM gets parsed as YYYY-MM-01 and results in auto completing the date
     // unfortunately due to auto-complete user cannot delete the date char after char

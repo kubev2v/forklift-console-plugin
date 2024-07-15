@@ -97,6 +97,24 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
     event.preventDefault();
   };
 
+  const onChangeUser: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    handleChange('user', value);
+  };
+
+  const onChangePassword: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    handleChange('password', value);
+  };
+
+  const onChangeInsecure: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
+    handleChange('insecureSkipVerify', checked ? 'true' : 'false');
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -113,7 +131,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           type="text"
           id="username"
           name="username"
-          onChange={(value) => handleChange('user', value)}
+          onChange={onChangeUser}
           value={user}
           validated={state.validation.user.type}
         />
@@ -132,7 +150,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}
           aria-label="Password input"
-          onChange={(value) => handleChange('password', value)}
+          onChange={onChangePassword}
           value={password}
           validated={state.validation.password.type}
         />
@@ -171,7 +189,7 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
+          onChange={onChangeInsecure}
         />
       </FormGroupWithHelpText>
 

@@ -72,6 +72,13 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
+  type onChangeFactoryType = (
+    changedField: string,
+  ) => (value: string, event: React.FormEvent<HTMLInputElement>) => void;
+
+  const onChangeFactory: onChangeFactoryType = (changedField) => (value) =>
+    handleChange(changedField, value);
+
   return (
     <>
       <FormGroupWithHelpText
@@ -89,7 +96,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           id="applicationCredentialID"
           name="applicationCredentialID"
           value={applicationCredentialID}
-          onChange={(value) => handleChange('applicationCredentialID', value)}
+          onChange={onChangeFactory('applicationCredentialID')}
           validated={state.validation.applicationCredentialID.type}
         />
       </FormGroupWithHelpText>
@@ -110,7 +117,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           id="applicationCredentialSecret"
           name="applicationCredentialSecret"
           value={applicationCredentialSecret}
-          onChange={(value) => handleChange('applicationCredentialSecret', value)}
+          onChange={onChangeFactory('applicationCredentialSecret')}
           validated={state.validation.applicationCredentialSecret.type}
         />
         <Button
@@ -137,7 +144,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={(value) => handleChange('regionName', value)}
+          onChange={onChangeFactory('regionName')}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -157,7 +164,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           id="projectName"
           name="projectName"
           value={projectName}
-          onChange={(value) => handleChange('projectName', value)}
+          onChange={onChangeFactory('projectName')}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>

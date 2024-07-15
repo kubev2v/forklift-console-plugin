@@ -131,6 +131,24 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
     event.preventDefault();
   };
 
+  const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    handleChange('url', value);
+  };
+
+  const onChangEmptyVddk: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
+    handleChange('emptyVddkInitImage', checked ? 'yes' : undefined);
+  };
+
+  const onChangeVddk: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    handleChange('vddkInitImage', value);
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
       <FormGroupWithHelpText
@@ -171,7 +189,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
           name="url"
           value={url}
           validated={state.validation.url.type}
-          onChange={(value) => handleChange('url', value)}
+          onChange={onChangeUrl}
         />
       </FormGroupWithHelpText>
 
@@ -202,7 +220,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
                 'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration, migration may be slow.',
               )}
               isChecked={emptyVddkInitImage === 'yes'}
-              onChange={(value) => handleChange('emptyVddkInitImage', value ? 'yes' : undefined)}
+              onChange={onChangEmptyVddk}
               id="emptyVddkInitImage"
               name="emptyVddkInitImage"
             />
@@ -219,7 +237,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
             validated={
               emptyVddkInitImage === 'yes' ? 'default' : state.validation.vddkInitImage.type
             }
-            onChange={(value) => handleChange('vddkInitImage', value)}
+            onChange={onChangeVddk}
           />
         </div>
       </FormGroupWithHelpText>
