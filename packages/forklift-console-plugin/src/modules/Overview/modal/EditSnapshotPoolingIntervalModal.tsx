@@ -1,5 +1,6 @@
 import React from 'react';
 import { EditModal, ModalInputComponentType } from 'src/modules/Providers/modals';
+import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel } from '@kubev2v/types';
@@ -43,6 +44,7 @@ export const EditSnapshotPoolingIntervalModal: React.FC<EditSettingsModalProps> 
         'Please enter the interval in seconds for snapshot pooling, if empty default value will be used.',
       )}
       InputComponent={SnapshotPoolingIntervalSelect}
+      onConfirmHook={defaultOnConfirmWithIntValue}
     />
   );
 };
