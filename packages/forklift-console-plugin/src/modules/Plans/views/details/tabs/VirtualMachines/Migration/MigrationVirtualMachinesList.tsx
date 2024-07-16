@@ -13,6 +13,7 @@ import {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1PersistentVolumeClaim,
   IoK8sApiCoreV1Pod,
+  V1beta1DataVolume,
   V1beta1PlanSpecVms,
   V1beta1PlanStatusMigrationVms,
 } from '@kubev2v/types';
@@ -201,6 +202,25 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
       : (pvcsDict[p.metadata.labels.vmID] = [p]),
   );
 
+  const [dvs, dvsLoaded, dvsLoadError] = useK8sWatchResource<V1beta1DataVolume[]>({
+    groupVersionKind: {
+      version: 'v1beta1',
+      kind: 'DataVolume',
+      group: 'cdi.kubevirt.io',
+    },
+    namespaced: true,
+    isList: true,
+    namespace: plan?.spec?.targetNamespace,
+    selector: { matchLabels: { plan: plan?.metadata?.uid } },
+  });
+
+  const dvsDict: Record<string, V1beta1DataVolume[]> = {};
+  (dvs && dvsLoaded && !dvsLoadError ? dvs : []).forEach((p) =>
+    dvsDict[p.metadata.labels.vmID]
+      ? dvsDict[p.metadata.labels.vmID].push(p)
+      : (dvsDict[p.metadata.labels.vmID] = [p]),
+  );
+
   const [selectedIds, setSelectedIds] = useState([]);
   const [expandedIds, setExpandedIds] = useState([]);
   const [userSettings] = useState(() => loadUserSettings({ pageId: 'PlanVirtualMachines' }));
@@ -218,6 +238,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     pods: podsDict[m.id],
     jobs: jobsDict[m.id],
     pvcs: pvcsDict[m.id],
+    dvs: dvsDict[m.id],
     targetNamespace: plan?.spec?.targetNamespace,
   }));
 
