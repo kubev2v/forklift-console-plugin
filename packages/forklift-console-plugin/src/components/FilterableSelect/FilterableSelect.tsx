@@ -143,7 +143,10 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
    * @param {React.FormEvent<HTMLInputElement>} _event The input event.
    * @param {string} value The new input value.
    */
-  const onTextInputChange = (_event: React.FormEvent<HTMLInputElement>, value: string) => {
+  const onTextInputChange: (_event: React.FormEvent<HTMLInputElement>, value: string) => void = (
+    _event,
+    value,
+  ) => {
     setInputValue(value);
     setFilterValue(value);
   };

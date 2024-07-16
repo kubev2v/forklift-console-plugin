@@ -35,6 +35,16 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
 
   const isEmptyImage = emptyImage === 'yes';
 
+  const onChange: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
+    if (checked) {
+      setEmptyImage('yes');
+    } else {
+      setEmptyImage(undefined);
+    }
+  };
+
   const body = (
     <Hint>
       <HintBody>
@@ -45,13 +55,7 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
             'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration, migration may be slow.',
           )}
           isChecked={isEmptyImage}
-          onChange={(checked) => {
-            if (checked) {
-              setEmptyImage('yes');
-            } else {
-              setEmptyImage(undefined);
-            }
-          }}
+          onChange={onChange}
           id="emptyVddkInitImage"
           name="emptyVddkInitImage"
         />

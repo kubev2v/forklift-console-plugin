@@ -57,6 +57,12 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
     [provider],
   );
 
+  const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    handleChange('url', value);
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-provider-edit">
       <FormGroupWithHelpText
@@ -75,7 +81,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
           isRequired
           value={url || ''}
           validated={state.validation.url.type}
-          onChange={(value) => handleChange('url', value)}
+          onChange={onChangeUrl}
         />
       </FormGroupWithHelpText>
     </Form>

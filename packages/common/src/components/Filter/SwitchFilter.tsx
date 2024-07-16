@@ -20,12 +20,18 @@ export const SwitchFilter = ({
   onFilterUpdate,
   placeholderLabel,
 }: FilterTypeProps) => {
+  const onChange: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
+    onFilterUpdate(checked ? [Boolean(checked).toString()] : []);
+  };
+
   return (
     <ToolbarItem>
       <Switch
         label={placeholderLabel}
         isChecked={selectedFilters.length === 1 && selectedFilters[0] === 'true'}
-        onChange={(checked) => onFilterUpdate(checked ? [Boolean(checked).toString()] : [])}
+        onChange={onChange}
       />
     </ToolbarItem>
   );

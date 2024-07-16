@@ -85,7 +85,7 @@ const ProviderOption = (provider, index) => (
 export type ProvidersEditProps = {
   providers: V1beta1Provider[];
   selectedProviderName: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, event: React.FormEvent<HTMLSelectElement>) => void;
   label: string;
   placeHolderLabel: string;
   invalidLabel: string;

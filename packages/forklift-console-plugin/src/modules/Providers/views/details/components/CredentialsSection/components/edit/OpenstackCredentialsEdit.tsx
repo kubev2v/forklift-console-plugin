@@ -164,6 +164,12 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     event.preventDefault();
   };
 
+  const onChangeInsecure: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
+    handleChange('insecureSkipVerify', checked ? 'true' : 'false');
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -257,7 +263,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           aria-label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
+          onChange={onChangeInsecure}
         />
       </FormGroupWithHelpText>
       <FormGroupWithHelpText

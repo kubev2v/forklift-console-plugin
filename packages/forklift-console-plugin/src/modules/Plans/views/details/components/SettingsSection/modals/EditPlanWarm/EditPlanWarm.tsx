@@ -39,8 +39,10 @@ interface SwitchRendererProps {
 
 const WarmInputFactory: () => ModalInputComponentType = () => {
   const SwitchRenderer: React.FC<SwitchRendererProps> = ({ value, onChange }) => {
-    const onChangeInternal = (v) => {
-      onChange(v ? 'true' : 'false');
+    const onChangeInternal: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+      checked,
+    ) => {
+      onChange(checked ? 'true' : 'false');
     };
 
     return (

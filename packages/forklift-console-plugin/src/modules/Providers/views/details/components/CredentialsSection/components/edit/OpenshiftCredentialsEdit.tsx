@@ -103,6 +103,18 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     togglePasswordHidden();
   };
 
+  const onChangeToken: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    handleChange('token', value);
+  };
+
+  const onChangeInsecure: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
+    handleChange('insecureSkipVerify', checked ? 'true' : 'false');
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -119,7 +131,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           isRequired
           type={state.passwordHidden ? 'password' : 'text'}
           aria-label="Token input"
-          onChange={(value) => handleChange('token', value)}
+          onChange={onChangeToken}
           value={token}
           validated={state.validation.token.type}
         />
@@ -162,7 +174,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(value) => handleChange('insecureSkipVerify', value ? 'true' : 'false')}
+          onChange={onChangeInsecure}
         />
       </FormGroupWithHelpText>
 

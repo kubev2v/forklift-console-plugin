@@ -111,7 +111,7 @@ export const GroupedEnumFilter = ({
     event: SelectEventType,
     value: SelectValueType,
     isPlaceholder?: boolean,
-  ) => void = (event, value, isPlaceholder) => {
+  ) => void = (_event, value, isPlaceholder) => {
     if (isPlaceholder) {
       return;
     }

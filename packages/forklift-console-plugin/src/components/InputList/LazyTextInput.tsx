@@ -51,12 +51,18 @@ export const LazyTextInput: React.FunctionComponent<LazyTextInputProps> = ({
     }
   };
 
+  const onChangeText: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    setValue(value);
+  };
+
   return (
     <TextInput
       spellCheck="false"
       value={value}
       type={type}
-      onChange={(value) => setValue(value)}
+      onChange={onChangeText}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       aria-label={ariaLabel}

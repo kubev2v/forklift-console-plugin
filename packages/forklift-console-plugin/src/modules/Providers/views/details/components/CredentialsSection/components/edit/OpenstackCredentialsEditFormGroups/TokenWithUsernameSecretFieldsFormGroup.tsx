@@ -67,6 +67,13 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
+  type onChangeFactoryType = (
+    changedField: string,
+  ) => (value: string, event: React.FormEvent<HTMLInputElement>) => void;
+
+  const onChangeFactory: onChangeFactoryType = (changedField) => (value) =>
+    handleChange(changedField, value);
+
   return (
     <>
       <FormGroupWithHelpText
@@ -85,7 +92,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="token"
           name="token"
           value={token}
-          onChange={(value) => handleChange('token', value)}
+          onChange={onChangeFactory('token')}
           validated={state.validation.token.type}
         />
         <Button
@@ -112,7 +119,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="username"
           name="username"
           value={username}
-          onChange={(value) => handleChange('username', value)}
+          onChange={onChangeFactory('Username')}
           validated={state.validation.username.type}
         />
       </FormGroupWithHelpText>
@@ -132,7 +139,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={(value) => handleChange('regionName', value)}
+          onChange={onChangeFactory('regionName')}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -152,7 +159,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="projectName"
           name="projectName"
           value={projectName}
-          onChange={(value) => handleChange('projectName', value)}
+          onChange={onChangeFactory('projectName')}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>
@@ -172,7 +179,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="domainName"
           name="domainName"
           value={domainName}
-          onChange={(value) => handleChange('domainName', value)}
+          onChange={onChangeFactory('domainName')}
           validated={state.validation.domainName.type}
         />
       </FormGroupWithHelpText>

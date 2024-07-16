@@ -96,9 +96,9 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
     setNewNameValidation('success');
   };
 
-  const onChange = (name: string) => {
-    validateName(name);
-    setNewName(name);
+  const onChange: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (value) => {
+    validateName(value);
+    setNewName(value);
   };
 
   const onDuplicate = useCallback(async () => {

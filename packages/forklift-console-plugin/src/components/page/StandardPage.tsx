@@ -460,8 +460,8 @@ export function StandardPage<T>({
             perPage={itemsPerPage}
             page={currentPage}
             itemCount={filteredData.length}
-            onSetPage={(event, page) => setPage(page)}
-            onPerPageSelect={(event, perPage, page) => {
+            onSetPage={(_event, page) => setPage(page)}
+            onPerPageSelect={(_event, perPage, page) => {
               setPerPage(perPage);
               setPage(page);
             }}

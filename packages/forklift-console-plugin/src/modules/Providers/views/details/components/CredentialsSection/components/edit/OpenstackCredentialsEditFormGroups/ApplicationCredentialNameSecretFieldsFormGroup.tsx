@@ -76,6 +76,13 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
+  type onChangeFactoryType = (
+    changedField: string,
+  ) => (value: string, event: React.FormEvent<HTMLInputElement>) => void;
+
+  const onChangeFactory: onChangeFactoryType = (changedField) => (value) =>
+    handleChange(changedField, value);
+
   return (
     <>
       <FormGroupWithHelpText
@@ -93,7 +100,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="applicationCredentialName"
           name="applicationCredentialName"
           value={applicationCredentialName}
-          onChange={(value) => handleChange('applicationCredentialName', value)}
+          onChange={onChangeFactory('applicationCredentialName')}
           validated={state.validation.applicationCredentialName.type}
         />
       </FormGroupWithHelpText>
@@ -114,7 +121,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="applicationCredentialSecret"
           name="applicationCredentialSecret"
           value={applicationCredentialSecret}
-          onChange={(value) => handleChange('applicationCredentialSecret', value)}
+          onChange={onChangeFactory('applicationCredentialSecret')}
           validated={state.validation.applicationCredentialSecret.type}
         />
         <Button
@@ -141,7 +148,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="username"
           name="username"
           value={username}
-          onChange={(value) => handleChange('username', value)}
+          onChange={onChangeFactory('username')}
           validated={state.validation.username.type}
         />
       </FormGroupWithHelpText>
@@ -161,7 +168,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={(value) => handleChange('regionName', value)}
+          onChange={onChangeFactory('regionName')}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -181,7 +188,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="projectName"
           name="projectName"
           value={projectName}
-          onChange={(value) => handleChange('projectName', value)}
+          onChange={onChangeFactory('projectName')}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>
@@ -201,7 +208,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="domainName"
           name="domainName"
           value={domainName}
-          onChange={(value) => handleChange('domainName', value)}
+          onChange={onChangeFactory('domainName')}
           validated={state.validation.domainName.type}
         />
       </FormGroupWithHelpText>

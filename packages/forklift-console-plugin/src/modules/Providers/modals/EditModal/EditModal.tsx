@@ -135,6 +135,10 @@ export const EditModal: React.FC<EditModalProps> = ({
     </Popover>
   );
 
+  const onChange: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (value) => {
+    handleValueChange(value);
+  };
+
   /**
    * InputComponent_ is a higher-order component that renders either the passed-in InputComponent, or a default TextInput,
    */
@@ -146,7 +150,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       id="modal-with-form-form-field"
       name="modal-with-form-form-field"
       value={value}
-      onChange={(value) => handleValueChange(value)}
+      onChange={onChange}
       validated={validation.type}
     />
   );

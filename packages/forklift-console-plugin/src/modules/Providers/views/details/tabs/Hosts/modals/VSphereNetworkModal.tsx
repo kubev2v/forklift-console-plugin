@@ -186,6 +186,18 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
     };
   });
 
+  const onChangUser: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    dispatch({ type: 'SET_USERNAME', payload: value });
+  };
+
+  const onChangePassword: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    dispatch({ type: 'SET_PASSWORD', payload: value });
+  };
+
   return (
     <Modal
       title={t('Select migration network')}
@@ -246,7 +258,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                 type="text"
                 id="username"
                 value={state.username}
-                onChange={(value) => dispatch({ type: 'SET_USERNAME', payload: value })}
+                onChange={onChangUser}
                 validated={state.validation.username}
               />
             </FormGroupWithHelpText>
@@ -265,7 +277,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                 type={state.passwordHidden ? 'password' : 'text'}
                 aria-label="Password input"
                 value={state.password}
-                onChange={(value) => dispatch({ type: 'SET_PASSWORD', payload: value })}
+                onChange={onChangePassword}
                 validated={state.validation.password}
               />
               <Button variant="control" onClick={togglePasswordHidden}>

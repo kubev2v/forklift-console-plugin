@@ -91,6 +91,45 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
     </>
   );
 
+  const onChangePreHookSet: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
+    dispatch({ type: 'PRE_HOOK_SET', payload: checked });
+  };
+
+  const onChangePostHookSet: (
+    checked: boolean,
+    event: React.FormEvent<HTMLInputElement>,
+  ) => void = (checked) => {
+    dispatch({ type: 'POST_HOOK_SET', payload: checked });
+  };
+
+  const onChangePreHookImage: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    dispatch({ type: 'PRE_HOOK_IMAGE', payload: value });
+  };
+
+  const onChangePreHookPlaybook: (
+    value: string,
+    event: React.FormEvent<HTMLInputElement>,
+  ) => void = (value) => {
+    dispatch({ type: 'PRE_HOOK_PLAYBOOK', payload: value });
+  };
+
+  const onChangePostHookImage: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
+    dispatch({ type: 'POST_HOOK_IMAGE', payload: value });
+  };
+
+  const onChangePostHookPlaybook: (
+    value: string,
+    event: React.FormEvent<HTMLInputElement>,
+  ) => void = (value) => {
+    dispatch({ type: 'POST_HOOK_PLAYBOOK', payload: value });
+  };
+
   return (
     <Suspend obj={plan} loaded={loaded} loadError={loadError}>
       {state.alertMessage && <PageSection variant="light">{state.alertMessage}</PageSection>}
@@ -130,7 +169,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               label="Enable pre migration hook"
               labelOff="Do not enable a pre migration hook"
               isChecked={state.preHookSet}
-              onChange={(value) => dispatch({ type: 'PRE_HOOK_SET', payload: value })}
+              onChange={onChangePreHookSet}
             />
           </FormGroupWithHelpText>
 
@@ -141,7 +180,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                   spellCheck="false"
                   value={state.preHook?.spec?.image}
                   type="url"
-                  onChange={(value) => dispatch({ type: 'PRE_HOOK_IMAGE', payload: value })}
+                  onChange={onChangePreHookImage}
                   aria-label="pre hook image"
                 />
                 <HelperText>
@@ -155,7 +194,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                 <CodeEditor
                   language="yaml"
                   value={Base64.decode(state.preHook?.spec?.playbook || '')}
-                  onChange={(value) => dispatch({ type: 'PRE_HOOK_PLAYBOOK', payload: value })}
+                  onChange={onChangePreHookPlaybook}
                   minHeight="400px"
                   showMiniMap={false}
                 />
@@ -180,7 +219,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               label="Enable post migration hook"
               labelOff="Do not enable a post migration hook"
               isChecked={state.postHookSet}
-              onChange={(value) => dispatch({ type: 'POST_HOOK_SET', payload: value })}
+              onChange={onChangePostHookSet}
             />
           </FormGroupWithHelpText>
 
@@ -191,7 +230,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                   spellCheck="false"
                   value={state.postHook?.spec?.image}
                   type="url"
-                  onChange={(value) => dispatch({ type: 'POST_HOOK_IMAGE', payload: value })}
+                  onChange={onChangePostHookImage}
                   aria-label="pre hook image"
                 />
                 <HelperText>
@@ -205,7 +244,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                 <CodeEditor
                   language="yaml"
                   value={Base64.decode(state.postHook?.spec?.playbook || '')}
-                  onChange={(value) => dispatch({ type: 'POST_HOOK_PLAYBOOK', payload: value })}
+                  onChange={onChangePostHookPlaybook}
                   minHeight="400px"
                   showMiniMap={false}
                 />

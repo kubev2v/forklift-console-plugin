@@ -65,6 +65,13 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
+  type onChangeFactoryType = (
+    changedField: string,
+  ) => (value: string, event: React.FormEvent<HTMLInputElement>) => void;
+
+  const onChangeFactory: onChangeFactoryType = (changedField) => (value) =>
+    handleChange(changedField, value);
+
   return (
     <>
       <FormGroupWithHelpText
@@ -83,7 +90,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="token"
           name="token"
           value={token}
-          onChange={(value) => handleChange('token', value)}
+          onChange={onChangeFactory('token')}
           validated={state.validation.token.type}
         />
         <Button
@@ -110,7 +117,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="userID"
           name="userID"
           value={userID}
-          onChange={(value) => handleChange('userID', value)}
+          onChange={onChangeFactory('userID')}
           validated={state.validation.userID.type}
         />
       </FormGroupWithHelpText>
@@ -130,7 +137,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="projectID"
           name="projectID"
           value={projectID}
-          onChange={(value) => handleChange('projectID', value)}
+          onChange={onChangeFactory('projectID')}
           validated={state.validation.projectID.type}
         />
       </FormGroupWithHelpText>
@@ -150,7 +157,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={(value) => handleChange('regionName', value)}
+          onChange={onChangeFactory('regionName')}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
