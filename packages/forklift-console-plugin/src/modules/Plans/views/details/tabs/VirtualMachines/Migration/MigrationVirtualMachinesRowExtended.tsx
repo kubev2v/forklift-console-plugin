@@ -40,6 +40,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
   const pods = props.resourceData.pods;
   const jobs = props.resourceData.jobs;
   const pvcs = props.resourceData.pvcs;
+  const dvs = props.resourceData.dvs;
   const vmCreated = pipeline.find(
     (p) => p?.name === 'VirtualMachineCreation' && p?.phase === 'Completed',
   );
@@ -192,6 +193,43 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                   </Td>
                   <Td>
                     <Status status={pvc.status.phase}></Status>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </>
+      )}
+
+      {(dvs || []).length > 0 && (
+        <>
+          <SectionHeading
+            text={'DataVolumes'}
+            className="forklift-page-plan-details-vm-status__section-header"
+          />
+          <TableComposable aria-label="Expandable table" variant="compact">
+            <Thead>
+              <Tr>
+                <Th width={20}>{t('Name')}</Th>
+                <Th>{t('Status')}</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {(dvs || []).map((dv) => (
+                <Tr key={dv.metadata.uid}>
+                  <Td>
+                    <ResourceLink
+                      groupVersionKind={{
+                        version: 'v1beta1',
+                        kind: 'DataVolume',
+                        group: 'cdi.kubevirt.io',
+                      }}
+                      name={dv?.metadata?.name}
+                      namespace={dv?.metadata?.namespace}
+                    />
+                  </Td>
+                  <Td>
+                    <Status status={dv?.status?.phase}></Status>
                   </Td>
                 </Tr>
               ))}
