@@ -87,7 +87,10 @@ export const GroupedEnumFilter = ({
     </SelectGroup>
   ));
 
-  const onFilter = (_, textInput) => {
+  const onFilter: (
+    event: React.ChangeEvent<HTMLInputElement> | null,
+    textInput: string,
+  ) => React.ReactElement[] | undefined = (_event, textInput) => {
     if (textInput === '') {
       return options;
     }

@@ -115,6 +115,14 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
     handleChange('insecureSkipVerify', checked ? 'true' : 'false');
   };
 
+  const onDataChange: (data: string) => void = (data) => {
+    handleChange('cacert', data);
+  };
+
+  const onTextChange: (text: string) => void = (text) => {
+    handleChange('cacert', text);
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -216,8 +224,8 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ secret, o
           url={url}
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(value) => handleChange('cacert', value)}
-          onTextChange={(value) => handleChange('cacert', value)}
+          onDataChange={onDataChange}
+          onTextChange={onTextChange}
           onClearClick={() => handleChange('cacert', '')}
           isDisabled={insecureSkipVerify === 'true'}
         />
