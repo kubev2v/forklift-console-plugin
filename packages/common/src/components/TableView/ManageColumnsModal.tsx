@@ -123,7 +123,7 @@ export const ManageColumnsModal = ({
   };
   const onSave = () => {
     // assume that action resourceFields are always at the end
-    onChange([...editedColumns, ...resourceFields.filter((col) => col.isAction)]);
+    onChange([...editedColumns, ...resourceFields.filter((col) => col.isAction || col.isHidden)]);
     onClose();
   };
 

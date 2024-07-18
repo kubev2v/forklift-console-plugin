@@ -53,7 +53,7 @@ export const useFields = (
     // used to detect duplicates
     const idsToBeVisited = new Set(savedIds);
 
-    return [
+    const stateFields = [
       // put fields saved via user settings (if any)
       ...fieldsFromSettings
         // ignore duplicates:ID is removed from the helper map on the first visit
@@ -70,7 +70,10 @@ export const useFields = (
         .filter(({ resourceFieldId }) => !savedIds.has(resourceFieldId))
         .map((it) => ({ ...it })),
     ];
+
+    return stateFields;
   });
+
   const namespaceAwareFields: ResourceField[] = useMemo(
     () =>
       fields.map(({ resourceFieldId, isVisible = false, ...rest }) => ({

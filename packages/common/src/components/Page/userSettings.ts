@@ -43,7 +43,7 @@ const sanitizeFields = (fields: unknown): { resourceFieldId: string; isVisible?:
  */
 export const loadUserSettings = ({ pageId }): UserSettings => {
   const key = `${process.env.PLUGIN_NAME}-${pageId}`;
-  const { fields, perPage } = parseOrClean(key);
+  const { fields, perPage, filters } = parseOrClean(key);
 
   return {
     fields: {
@@ -64,6 +64,14 @@ export const loadUserSettings = ({ pageId }): UserSettings => {
       clear: () => {
         const { perPage, ...rest } = parseOrClean(key);
         saveRestOrRemoveKey(key, { perPage, rest });
+      },
+    },
+    filters: {
+      data: filters,
+      save: (filters) => saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), filters })),
+      clear: () => {
+        const { filters, ...rest } = parseOrClean(key);
+        saveRestOrRemoveKey(key, { filters, rest });
       },
     },
   };

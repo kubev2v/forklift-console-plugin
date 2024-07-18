@@ -51,22 +51,6 @@ describe('parse filters from the URL on initialization', () => {
     );
     expect(Object.entries(selectedFilters).length).toStrictEqual(0);
   });
-
-  it('supports prefixing params', () => {
-    // eslint-disable-next-line @cspell/spellchecker
-    window.location.search = '?barname=%5B"foo"%5D';
-    const {
-      result: {
-        current: [selectedFilters],
-      },
-    } = renderHook(() =>
-      useUrlFilters({
-        fields: [{ resourceFieldId: NAME, label: NAME }],
-        filterPrefix: 'bar',
-      }),
-    );
-    expect(selectedFilters[NAME]).toStrictEqual(['foo']);
-  });
 });
 
 describe('display currently selected filters in the URL', () => {

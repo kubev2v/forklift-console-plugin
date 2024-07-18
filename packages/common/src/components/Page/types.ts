@@ -1,6 +1,7 @@
 export interface UserSettings {
   fields?: FieldSettings;
   pagination?: PaginationSettings;
+  filters?: FiltersSettings;
 }
 
 export interface FieldSettings {
@@ -12,5 +13,11 @@ export interface FieldSettings {
 export interface PaginationSettings {
   perPage: number;
   save: (perPage: number) => void;
+  clear: () => void;
+}
+
+export interface FiltersSettings {
+  data: { [k: string]: undefined };
+  save: (filters: { [k: string]: undefined }) => void;
   clear: () => void;
 }
