@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import StandardPage from 'src/components/page/StandardPage';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -103,7 +103,8 @@ const NetworkMapsListPage: React.FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
-  const [userSettings] = useState(() => loadUserSettings({ pageId: 'NetworkMaps' }));
+
+  const userSettings = loadUserSettings({ pageId: 'NetworkMaps' });
 
   const [networkMaps, networkMapsLoaded, networkMapsLoadError] = useK8sWatchResource<
     V1beta1NetworkMap[]

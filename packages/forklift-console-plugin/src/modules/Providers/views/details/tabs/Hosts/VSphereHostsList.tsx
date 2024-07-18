@@ -67,7 +67,7 @@ export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
   const { namespace } = provider?.metadata || {};
 
   const [selectedIds, setSelectedIds] = useState([]);
-  const [userSettings] = useState(() => loadUserSettings({ pageId: 'ProviderHosts' }));
+  const userSettings = loadUserSettings({ pageId: 'ProviderHosts' });
 
   const {
     inventory: hostsInventory,

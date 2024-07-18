@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import StandardPage from 'src/components/page/StandardPage';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
@@ -133,7 +133,8 @@ const PlansListPage: React.FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
-  const [userSettings] = useState(() => loadUserSettings({ pageId: 'Plans' }));
+
+  const userSettings = loadUserSettings({ pageId: 'Plans' });
 
   const [plans, plansLoaded, plansLoadError] = useK8sWatchResource<V1beta1Plan[]>({
     groupVersionKind: PlanModelGroupVersionKind,

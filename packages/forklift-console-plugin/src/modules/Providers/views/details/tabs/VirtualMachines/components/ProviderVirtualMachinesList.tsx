@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import {
   GlobalActionWithSelection,
@@ -49,7 +49,8 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   className,
 }) => {
   const { t } = useForkliftTranslation();
-  const [userSettings] = useState(() => loadUserSettings({ pageId }));
+
+  const userSettings = loadUserSettings({ pageId });
 
   const initialSelectedIds_ = initialSelectedIds || [];
   const initialExpandedIds_ = [];

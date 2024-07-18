@@ -1,8 +1,7 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
-  StandardPageWithSelectionProps,
 } from 'src/components/page/StandardPageWithSelection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -43,7 +42,6 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 const PageWithSelection = StandardPageWithSelection<VMData>;
-type PageWithSelectionProps = StandardPageWithSelectionProps<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
 export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
@@ -51,8 +49,7 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
 
   const { plan } = obj;
 
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [userSettings] = useState(() => loadUserSettings({ pageId: 'PlanVirtualMachines' }));
+  const userSettings = loadUserSettings({ pageId: 'PlanVirtualMachines' });
 
   const virtualMachines: V1beta1PlanSpecVms[] = plan?.spec?.vms || [];
   const migrationVirtualMachines: V1beta1PlanStatusMigrationVms[] =
@@ -80,32 +77,33 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
     conditions: conditionsDict[m.id],
     targetNamespace: plan?.spec?.targetNamespace,
   }));
+  const vmDataSource: [VMData[], boolean, unknown] = [vmData || [], true, undefined];
+  const vmDataToId = (item: VMData) => item?.specVM?.id;
+  const canSelect = (item: VMData) =>
+    item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined;
+  const onSelect = () => undefined;
+  const initialSelectedIds = [];
 
   const actions: PageGlobalActions = [
     ({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />,
   ];
 
-  const props: PageWithSelectionProps = {
-    dataSource: [vmData || [], true, undefined],
-    CellMapper: PlanVirtualMachinesRow,
-    fieldsMetadata: fieldsMetadataFactory(t),
-    title: t('Virtual Machines'),
-    userSettings: userSettings,
-    namespace: '',
-    page: 1,
-  };
-
-  const extendedProps = {
-    ...props,
-    toId: (item: VMData) => item?.specVM?.id,
-    canSelect: (item: VMData) =>
-      item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined,
-    onSelect: setSelectedIds,
-    selectedIds: selectedIds,
-    GlobalActionToolbarItems: actions,
-  };
-
-  return <PageWithSelection {...extendedProps} />;
+  return (
+    <PageWithSelection
+      title={t('Virtual Machines')}
+      dataSource={vmDataSource}
+      CellMapper={PlanVirtualMachinesRow}
+      fieldsMetadata={fieldsMetadataFactory(t)}
+      userSettings={userSettings}
+      namespace={''}
+      page={1}
+      toId={vmDataToId}
+      canSelect={canSelect}
+      onSelect={onSelect}
+      selectedIds={initialSelectedIds}
+      GlobalActionToolbarItems={actions}
+    />
+  );
 };
 
 /**
