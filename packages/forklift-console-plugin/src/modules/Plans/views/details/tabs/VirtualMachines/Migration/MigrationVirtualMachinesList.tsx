@@ -223,7 +223,8 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const [selectedIds, setSelectedIds] = useState([]);
   const [expandedIds, setExpandedIds] = useState([]);
-  const [userSettings] = useState(() => loadUserSettings({ pageId: 'PlanVirtualMachines' }));
+
+  const userSettings = loadUserSettings({ pageId: 'PlanVirtualMachines' });
 
   const virtualMachines: V1beta1PlanSpecVms[] = plan?.spec?.vms || [];
   const migrationVirtualMachines: V1beta1PlanStatusMigrationVms[] =

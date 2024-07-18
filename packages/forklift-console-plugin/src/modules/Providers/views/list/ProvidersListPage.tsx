@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import StandardPage from 'src/components/page/StandardPage';
 import modernizeMigration from 'src/modules/Providers/images/modernizeMigration.svg';
 import { ProviderData, SOURCE_ONLY_PROVIDER_TYPES } from 'src/modules/Providers/utils';
@@ -169,7 +169,8 @@ const ProvidersListPage: React.FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
-  const [userSettings] = useState(() => loadUserSettings({ pageId: 'Providers' }));
+
+  const userSettings = loadUserSettings({ pageId: 'Providers' });
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
