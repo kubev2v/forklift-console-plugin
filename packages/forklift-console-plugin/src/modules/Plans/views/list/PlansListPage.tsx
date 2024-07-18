@@ -120,6 +120,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     jsonPath: '$.obj.spec.archived',
     label: t('Archived'),
     isHidden: true,
+    isPersistent: true,
     filter: {
       type: 'slider',
       standalone: true,

@@ -41,6 +41,8 @@ export interface ResourceField {
   isHidden?: boolean;
   sortable?: boolean;
   filter?: FilterDef;
+  // if true then the field filters state should persist between sessions
+  isPersistent?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   compareFn?: (a: any, b: any, locale: string) => number;
 }

@@ -88,7 +88,6 @@ const reduceValueFilters = (
  * @property {JSX.Element} [customNoResultsFound] - Optional custom message to display when no results are found.
  * @property {JSX.Element} [customNoResultsMatchFilter] - Optional custom message to display when no results match the filter.
  * @property {number | 'on' | 'off'} [pagination=DEFAULT_PER_PAGE] - Controls the display of pagination controls.
- * @property {string} [filterPrefix=''] - Prefix for filters stored in the query params part of the URL.
  * @property {UserSettings} [userSettings] - User settings store to initialize the page according to user preferences.
  * @property {ReactNode} [alerts] - Optional alerts section below the page title.
  * @property {FC<GlobalActionToolbarProps<T>>[]} [GlobalActionToolbarItems=[]] - Optional toolbar items with global actions.
@@ -177,12 +176,6 @@ export interface StandardPageProps<T> {
   page: number;
 
   /**
-   * Prefix for filters stored in the query params part of the URL.
-   * By default no prefix is used - the field ID is used directly.
-   */
-  filterPrefix?: string;
-
-  /**
    * User settings store to initialize the page according to user preferences.
    */
   userSettings?: UserSettings;
@@ -250,7 +243,6 @@ export interface StandardPageProps<T> {
  * @param {JSX.Element} [props.customNoResultsFound] - Optional custom message to display when no results are found.
  * @param {JSX.Element} [props.customNoResultsMatchFilter] - Optional custom message to display when no results match the filter.
  * @param {number | 'on' | 'off'} [props.pagination=DEFAULT_PER_PAGE] - Controls the display of pagination controls.
- * @param {string} [props.filterPrefix=''] - Prefix for filters stored in the query params part of the URL.
  * @param {UserSettings} [props.userSettings] - User settings store to initialize the page according to user preferences.
  * @param {ReactNode} [props.alerts] - Optional alerts section below the page title.
  * @param {FC<GlobalActionToolbarProps<T>>[]} [props.GlobalActionToolbarItems=[]] - Optional toolbar items with global actions.
@@ -281,7 +273,6 @@ export function StandardPage<T>({
   pagination = DEFAULT_PER_PAGE,
   page: initialPage,
   userSettings,
-  filterPrefix = '',
   extraSupportedMatchers,
   HeaderMapper = DefaultHeader<T>,
   GlobalActionToolbarItems = [],
@@ -300,7 +291,7 @@ export function StandardPage<T>({
 
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
     fields: fieldsMetadata,
-    filterPrefix,
+    userSettings,
   });
   const clearAllFilters = () => setSelectedFilters({});
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
