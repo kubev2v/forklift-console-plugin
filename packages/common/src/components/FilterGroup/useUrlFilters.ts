@@ -63,9 +63,15 @@ function convertFiltersToSearchParams(fields, filters) {
  * @returns {Function} - The function to set state and update URL.
  */
 function createSetStateAndUrl(setSelectedFilters, updateSearchParams, updateUserSettings, fields) {
+  const persistentFieldIds = fields.filter((f) => f?.isPersistent).map((f) => f.resourceFieldId);
+
   return (filters) => {
     if (updateUserSettings) {
-      updateUserSettings(filters);
+      const persistentFilters = Object.fromEntries(
+        Object.entries(filters || {}).filter(([key]) => persistentFieldIds.includes(key)),
+      );
+
+      updateUserSettings(persistentFilters);
     }
     setSelectedFilters(filters);
     updateSearchParams(convertFiltersToSearchParams(fields, filters));

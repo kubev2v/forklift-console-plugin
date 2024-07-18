@@ -42,7 +42,7 @@ const sanitizeFields = (fields: unknown): { resourceFieldId: string; isVisible?:
  * @param pageId key suffix - together with PLUGIN_NAME used to load/save data.
  */
 export const loadUserSettings = ({ pageId }): UserSettings => {
-  const key = `${process.env.PLUGIN_NAME}-${pageId}`;
+  const key = `${process.env.PLUGIN_NAME}/${pageId}`;
   const { fields, perPage, filters } = parseOrClean(key);
 
   return {
