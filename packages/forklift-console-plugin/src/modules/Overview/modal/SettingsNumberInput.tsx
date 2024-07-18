@@ -15,12 +15,12 @@ export const SettingsNumberInput: React.FC<SettingsSelectInputProps> = ({
     onChange(newValue.toString());
   };
 
-  const onUserMinus = () => {
+  const onUserMinus: (event: React.MouseEvent, name?: string) => void = () => {
     const newValue = (value || 0) - 1;
     setNewValue(newValue);
   };
 
-  const onUserPlus = () => {
+  const onUserPlus: (event: React.MouseEvent, name?: string) => void = () => {
     const newValue = (value || 0) + 1;
     setNewValue(newValue);
   };

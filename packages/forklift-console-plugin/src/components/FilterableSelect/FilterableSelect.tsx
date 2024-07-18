@@ -143,7 +143,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
    * @param {React.FormEvent<HTMLInputElement>} _event The input event.
    * @param {string} value The new input value.
    */
-  const onTextInputChange: (_event: React.FormEvent<HTMLInputElement>, value: string) => void = (
+  const onTextInputChange: (event: React.FormEvent<HTMLInputElement>, value: string) => void = (
     _event,
     value,
   ) => {
@@ -187,7 +187,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
    *
    * @param {React.KeyboardEvent<HTMLInputElement>} event The keyboard event.
    */
-  const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const onInputKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
     const enabledMenuItems = selectOptions.filter((menuItem) => !menuItem.isDisabled);
     const [firstMenuItem] = enabledMenuItems;
     const focusedItem = focusedItemIndex ? enabledMenuItems[focusedItemIndex] : firstMenuItem;

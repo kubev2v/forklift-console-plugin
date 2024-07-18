@@ -12,6 +12,7 @@ import {
   DataListItemRow,
   DragDrop,
   Draggable,
+  DraggableItemPosition,
   Droppable,
   Modal,
   Text,
@@ -96,7 +97,10 @@ export const ManageColumnsModal = ({
 }: ManagedColumnsProps) => {
   const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(resourceFields));
   const restoreDefaults = () => setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
-  const onDrop = (source: { index: number }, dest: { index: number }) => {
+  const onDrop: (source: DraggableItemPosition, dest?: DraggableItemPosition) => boolean = (
+    source: { index: number },
+    dest: { index: number },
+  ) => {
     const draggedItem = editedColumns[source?.index];
     const itemCurrentlyAtDestination = editedColumns[dest?.index];
     if (!draggedItem || !itemCurrentlyAtDestination) {

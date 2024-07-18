@@ -350,6 +350,27 @@ export function StandardPage<T>({
     .filter((field) => field.filter?.primary)
     .map(toFieldFilter(sortedData));
 
+  const onSetPage: (
+    event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    newPage: number,
+    perPage?: number,
+    startIdx?: number,
+    endIdx?: number,
+  ) => void = (_event, newPage) => {
+    setPage(newPage);
+  };
+
+  const onPerPageSelect: (
+    event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    newPerPage: number,
+    newPage: number,
+    startIdx?: number,
+    endIdx?: number,
+  ) => void = (_event, perPage, page) => {
+    setPerPage(perPage);
+    setPage(page);
+  };
+
   return (
     <span className={className}>
       {title && (
@@ -413,11 +434,8 @@ export function StandardPage<T>({
                   perPage={itemsPerPage}
                   page={currentPage}
                   itemCount={filteredData.length}
-                  onSetPage={(even, page) => setPage(page)}
-                  onPerPageSelect={(even, perPage, page) => {
-                    setPerPage(perPage);
-                    setPage(page);
-                  }}
+                  onSetPage={onSetPage}
+                  onPerPageSelect={onPerPageSelect}
                 />
               </ToolbarItem>
             )}
@@ -460,11 +478,8 @@ export function StandardPage<T>({
             perPage={itemsPerPage}
             page={currentPage}
             itemCount={filteredData.length}
-            onSetPage={(_event, page) => setPage(page)}
-            onPerPageSelect={(_event, perPage, page) => {
-              setPerPage(perPage);
-              setPage(page);
-            }}
+            onSetPage={onSetPage}
+            onPerPageSelect={onPerPageSelect}
           />
         )}
       </PageSection>

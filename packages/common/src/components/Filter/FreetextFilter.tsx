@@ -24,7 +24,14 @@ export const FreetextFilter = ({
   placeholderLabel,
 }: FilterTypeProps) => {
   const [inputValue, setInputValue] = useState('');
-  const onTextInput = (): void => {
+
+  const onTextInput: (
+    event: React.SyntheticEvent<HTMLButtonElement>,
+    value: string,
+    attrValueMap: {
+      [key: string]: string;
+    },
+  ) => void = () => {
     if (!inputValue || selectedFilters.includes(inputValue)) {
       return;
     }
@@ -37,6 +44,10 @@ export const FreetextFilter = ({
     value,
   ) => {
     setInputValue(value);
+  };
+
+  const onClear: (event: React.SyntheticEvent<HTMLButtonElement>) => void = () => {
+    setInputValue('');
   };
 
   return (
@@ -56,7 +67,7 @@ export const FreetextFilter = ({
           value={inputValue}
           onChange={onChange}
           onSearch={onTextInput}
-          onClear={() => setInputValue('')}
+          onClear={onClear}
         />
       </InputGroup>
     </ToolbarFilter>

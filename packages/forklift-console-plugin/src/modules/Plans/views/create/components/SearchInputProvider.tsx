@@ -30,13 +30,17 @@ export const SearchInputProvider: React.FunctionComponent<SearchInputProviderPro
     updateNameFilter(value);
   };
 
+  const onClear: (event: React.SyntheticEvent<HTMLButtonElement>) => void = () => {
+    updateNameFilter('');
+  };
+
   return (
     <div className="forklift--create-plan--search-input-provider">
       <SearchInput
         placeholder={t('Filter provider')}
         value={filterState.nameFilter}
         onChange={onChange}
-        onClear={() => updateNameFilter('')}
+        onClear={onClear}
       />
     </div>
   );

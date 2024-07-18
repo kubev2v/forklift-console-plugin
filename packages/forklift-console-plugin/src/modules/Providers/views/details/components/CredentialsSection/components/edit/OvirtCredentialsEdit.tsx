@@ -127,6 +127,14 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
     handleChange('insecureSkipVerify', checked ? 'true' : 'false');
   };
 
+  const onDataChange: (data: string) => void = (data) => {
+    handleChange('cacert', data);
+  };
+
+  const onTextChange: (text: string) => void = (text) => {
+    handleChange('cacert', text);
+  };
+
   return (
     <Form isWidthLimited className="forklift-section-secret-edit">
       <FormGroupWithHelpText
@@ -237,8 +245,8 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           filenamePlaceholder="Drag and drop a file or upload one"
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(value) => handleChange('cacert', value)}
-          onTextChange={(value) => handleChange('cacert', value)}
+          onDataChange={onDataChange}
+          onTextChange={onTextChange}
           onClearClick={() => handleChange('cacert', '')}
           browseButtonText="Upload"
           url={url}
