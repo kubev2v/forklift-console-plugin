@@ -37,7 +37,7 @@ const saveRestOrRemoveKey = (key: string, { rest }: { [k: string]: { [n: string]
  * @param userSettingsKeySuffix - The key name together with PLUGIN_NAME used to load/save data.
  */
 export const loadUserSettings = ({ userSettingsKeySuffix }): OverviewUserSettings => {
-  const key = `${process.env.PLUGIN_NAME}-${userSettingsKeySuffix}`;
+  const key = `${process.env.PLUGIN_NAME}/${userSettingsKeySuffix}`;
   const { hideWelcome } = parseOrClean(key);
 
   return {
