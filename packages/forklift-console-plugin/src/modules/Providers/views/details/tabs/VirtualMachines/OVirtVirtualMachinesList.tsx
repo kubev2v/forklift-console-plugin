@@ -2,7 +2,7 @@ import React from 'react';
 
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 
-import { concernFilter } from './utils/filters/concernFilter';
+import { concernFilter, OvirtHostFiler } from './utils/filters';
 import { ProviderVirtualMachinesList, VmData } from './components';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
@@ -47,11 +47,8 @@ export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     label: t('Host'),
     isVisible: true,
     isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by host'),
-    },
     sortable: true,
+    filter: OvirtHostFiler(t),
   },
   {
     resourceFieldId: 'path',
