@@ -12,6 +12,7 @@ import {
   loadUserSettings,
   ResourceFieldFactory,
   RowProps,
+  SearchableEnumFilter,
   SearchableGroupedEnumFilter,
   ValueMatcher,
 } from '@kubev2v/common';
@@ -86,9 +87,10 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       userSettings={userSettings}
       extraSupportedFilters={{
         concerns: SearchableGroupedEnumFilter,
+        host: SearchableEnumFilter,
         features: EnumFilter,
       }}
-      extraSupportedMatchers={[concernsMatcher, featuresMatcher]}
+      extraSupportedMatchers={[concernsMatcher, hostMatcher, featuresMatcher]}
       GlobalActionToolbarItems={showActions ? actions : undefined}
       toId={toId}
       onSelect={onSelectedIds}
@@ -110,4 +112,9 @@ export const concernsMatcher: ValueMatcher = {
 export const featuresMatcher: ValueMatcher = {
   filterType: 'features',
   matchValue: (features: { [key: string]: boolean }) => (filter: string) => !!features?.[filter],
+};
+
+export const hostMatcher: ValueMatcher = {
+  filterType: 'host',
+  matchValue: (value: string) => (filter: string) => value == filter,
 };
