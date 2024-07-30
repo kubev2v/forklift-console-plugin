@@ -5,6 +5,7 @@ export * from './DateRangeFilter';
 export * from './EnumFilter';
 export * from './FreetextFilter';
 export * from './GroupedEnumFilter';
+export * from './SearchableEnumFilter';
 export * from './SearchableGroupedEnumFilter';
 export * from './SwitchFilter';
 export * from './types';
