@@ -3,7 +3,7 @@ import React from 'react';
 import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
 import { VSphereVM } from '@kubev2v/types';
 
-import { concernFilter } from './utils/filters/concernFilter';
+import { concernFilter, hostFilter } from './utils/filters';
 import { ProviderVirtualMachinesList, VmData } from './components';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { getVmPowerState, useVSphereInventoryVms } from './utils';
@@ -44,11 +44,8 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     label: t('Host'),
     isVisible: true,
     isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by host'),
-    },
     sortable: true,
+    filter: hostFilter(t),
   },
   {
     resourceFieldId: 'folder',
