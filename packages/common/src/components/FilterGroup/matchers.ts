@@ -8,6 +8,7 @@ import {
   EnumFilter,
   FreetextFilter,
   GroupedEnumFilter,
+  SearchableEnumFilter,
   SearchableGroupedEnumFilter,
   SwitchFilter,
 } from '../Filter';
@@ -100,6 +101,11 @@ const enumMatcher = {
   matchValue: (value: string) => (filter: string) => value === filter,
 };
 
+const searchableEnumMatcher = {
+  filterType: 'searchableEnum',
+  matchValue: enumMatcher.matchValue,
+};
+
 const groupedEnumMatcher = {
   filterType: 'groupedEnum',
   matchValue: enumMatcher.matchValue,
@@ -134,6 +140,7 @@ export const defaultValueMatchers: ValueMatcher[] = [
   autocompleteFilterMatcher,
   freetextMatcher,
   enumMatcher,
+  searchableEnumMatcher,
   groupedEnumMatcher,
   searchableGroupedEnumMatcher,
   sliderMatcher,
@@ -145,10 +152,11 @@ export const defaultSupportedFilters: Record<string, FilterRenderer> = {
   date: DateFilter,
   dateRange: DateRangeFilter,
   enum: EnumFilter,
-  freetext: FreetextFilter,
+  searchableEnum: SearchableEnumFilter,
   groupedEnum: GroupedEnumFilter,
-  slider: SwitchFilter,
   searchableGroupedEnum: SearchableGroupedEnumFilter,
+  freetext: FreetextFilter,
+  slider: SwitchFilter,
   autocomplete: AutocompleteFilter,
 };
 

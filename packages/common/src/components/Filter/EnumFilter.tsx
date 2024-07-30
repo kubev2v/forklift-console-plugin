@@ -11,7 +11,7 @@ import {
 
 import { localeCompare, SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
 
-import { FilterTypeProps } from './types';
+import { FilterTypeProps, InlineFilter } from './types';
 
 /**
  * One label may map to multiple enum ids due to translation or by design (i.e. "Unknown")
@@ -117,7 +117,8 @@ export const EnumFilter = ({
   filterId,
   showFilter = true,
   resolvedLanguage,
-}: FilterTypeProps) => {
+  hasInlineFilter = false,
+}: FilterTypeProps & InlineFilter) => {
   const [isExpanded, setExpanded] = useState(false);
   const { uniqueEnumLabels, onUniqueFilterUpdate, selectedUniqueEnumLabels } = useUnique({
     supportedEnumValues,
@@ -136,6 +137,21 @@ export const EnumFilter = ({
     if (typeof label === 'string') {
       onUniqueFilterUpdate([...selectedUniqueEnumLabels, label]);
     }
+  };
+
+  const options = uniqueEnumLabels.map((label) => <SelectOption key={label} value={label} />);
+
+  const onFilter: (
+    event: React.ChangeEvent<HTMLInputElement> | null,
+    textInput: string,
+  ) => React.ReactElement[] | undefined = (_event, textInput) => {
+    if (textInput === '') {
+      return options;
+    }
+    const filtered = options.filter((item) => {
+      return item.key.toString().toLowerCase().includes(textInput.toLowerCase());
+    });
+    return filtered;
   };
 
   const onSelect: (
@@ -170,10 +186,10 @@ export const EnumFilter = ({
         placeholderText={placeholderLabel}
         isOpen={isExpanded}
         onToggle={onToggle}
+        hasInlineFilter={hasInlineFilter}
+        onFilter={onFilter}
       >
-        {uniqueEnumLabels.map((label) => (
-          <SelectOption key={label} value={label} />
-        ))}
+        {options}
       </Select>
     </ToolbarFilter>
   );
