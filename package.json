@@ -49,6 +49,7 @@
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-typescript": "^11.0.0",
+    "@rollup/plugin-url": "^8.0.2",
     "@rollup/pluginutils": "^5.0.2",
     "@testing-library/cypress": "^9.0.0",
     "@testing-library/jest-dom": "^5.16.5",

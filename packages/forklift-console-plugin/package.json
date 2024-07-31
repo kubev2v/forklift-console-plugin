@@ -9,12 +9,18 @@
     "url": "https://github.com/kubev2v/forklift-console-plugin.git",
     "directory": "packages/forklift-console-plugin"
   },
+  "files": [
+    "./distlib/*"
+  ],
+  "main": "./distlib/index.js",
+  "types": "./distlib/index.d.ts",
   "scripts": {
-    "clean": "rm -rf ./dist ./coverage tsconfig.tsbuildinfo",
+    "clean": "rm -rf ./dist ./distlib ./coverage tsconfig.tsbuildinfo",
     "clean:all": "npm run clean -- ./node_modules ./.rollup.cache",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.mjs",
     "build": "NODE_ENV=production webpack",
     "start": "NODE_ENV=development webpack serve",
+    "buildlib": "rollup -c --bundleConfigAsCjs",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "test": "TZ=UTC jest",
@@ -23,7 +29,9 @@
   },
   "dependencies": {
     "@kubev2v/common": "*",
+    "@kubev2v/types": "0.0.19",
     "@types/jsrsasign": "10.5.12",
+    "js-base64": "^3.7.7",
     "immer": "^10.0.3",
     "jsonpath": "^1.1.1",
     "jsrsasign": "11.1.0",
@@ -37,14 +45,15 @@
     "@patternfly/react-core": "4.276.6",
     "@patternfly/react-table": "4.112.39",
     "@patternfly/react-icons": "5.2.1",
+    "@patternfly/react-tokens": "^5.3.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-i18next": "^11.7.3",
+    "react-linkify": "^1.0.0-alpha",
     "react-router": "5.3.x",
     "react-router-dom": "5.3.x"
   },
   "devDependencies": {
-    "@kubev2v/types": "0.0.19",
     "@kubev2v/webpack": "*",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.11",
     "@types/react": "^17.0.1",
@@ -55,7 +64,6 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "mini-svg-data-uri": "^1.4.4",
-    "react-linkify": "^1.0.0-alpha",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.6",
     "ts-loader": "^9.3.1",

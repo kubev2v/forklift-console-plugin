@@ -11,7 +11,7 @@ import {
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 
 import { useToggle } from '../../hooks';
-import { getResourceUrl } from '../../utils';
+import { getResourceUrl } from '../../utils/helpers';
 import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
 import { useModal } from '../ModalHOC';
 

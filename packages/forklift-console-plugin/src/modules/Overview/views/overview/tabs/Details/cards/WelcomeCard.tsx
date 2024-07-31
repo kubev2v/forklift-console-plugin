@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import automationIcon from 'src/modules/Overview/images/automation.svg';
+import automationIcon from '../../../../../images/automation.svg';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';

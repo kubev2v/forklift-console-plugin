@@ -5,7 +5,7 @@ import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
 import { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { Checkbox, Hint, HintBody, TextInput } from '@patternfly/react-core';
 
-import { VDDKHelperTextShort } from '../../utils';
+import { VDDKHelperTextShort } from '../../utils/components/VDDKHelperText';
 import { validateVDDKImage } from '../../utils/validators';
 import { EditModal, EditModalProps } from '../EditModal';
 

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { TFunction } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
