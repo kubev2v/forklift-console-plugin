@@ -9,8 +9,8 @@ import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/type
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
-import { PlansAddButton } from '../../componenets';
-import PlansEmptyState from '../../componenets/PlansEmptyState';
+import { PlansAddButton } from '../../components';
+import PlansEmptyState from '../../components/PlansEmptyState';
 import { getPlanPhase, PlanData, planPhases } from '../../utils';
 
 import PlanRow from './PlanRow';

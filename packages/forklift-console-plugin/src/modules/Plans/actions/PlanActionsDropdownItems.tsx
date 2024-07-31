@@ -1,7 +1,7 @@
 import React from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { useModal } from 'src/modules/Providers/modals';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelRef } from '@kubev2v/types';

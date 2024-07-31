@@ -1,4 +1,4 @@
-import { getValueByJsonPath, jsonPathToPatch } from 'src/modules/Providers/utils';
+import { getValueByJsonPath, jsonPathToPatch } from 'src/modules/Providers/utils/helpers';
 
 import { k8sPatch, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 

@@ -4,7 +4,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { validateOvirtURL } from '../../utils';
+import { validateOvirtURL } from '../../utils/validators';
 import { EditModal } from '../EditModal';
 
 import { patchProviderURL } from './utils/patchProviderURL';

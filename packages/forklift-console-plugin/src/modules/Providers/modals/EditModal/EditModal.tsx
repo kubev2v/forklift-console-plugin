@@ -7,7 +7,8 @@ import { Button, Form, Modal, ModalVariant, Popover, TextInput } from '@patternf
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { useToggle } from '../../hooks';
-import { getValueByJsonPath, ValidationMsg } from '../../utils';
+import { getValueByJsonPath } from '../../utils/helpers';
+import { ValidationMsg } from '../../utils/validators';
 import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
 import { useModal } from '../ModalHOC';
 

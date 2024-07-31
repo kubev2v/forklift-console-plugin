@@ -2,7 +2,8 @@ import React, { ReactNode, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
-import { validateK8sName, Validation } from 'src/modules/Providers/utils';
+import { Validation } from 'src/modules/Providers/utils/types';
+import { validateK8sName } from 'src/modules/Providers/utils/validators';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
@@ -22,7 +23,7 @@ import { k8sCreate, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Form, Modal, ModalVariant, TextInput } from '@patternfly/react-core';
 
-import { Suspend } from '../views/details/components';
+import { Suspend } from '../views/details/components/Suspend';
 
 /**
  * Props for the DeleteModal component

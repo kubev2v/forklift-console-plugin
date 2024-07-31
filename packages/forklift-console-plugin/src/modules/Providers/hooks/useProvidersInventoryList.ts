@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils';
+import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils/helpers';
 
 import { DEFAULT_FIELDS_TO_COMPARE } from './utils';
 
