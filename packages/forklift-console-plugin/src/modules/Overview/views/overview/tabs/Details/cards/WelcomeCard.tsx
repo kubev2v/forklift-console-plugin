@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import automationIcon from '../../../../../images/automation.svg';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
@@ -16,6 +15,8 @@ import {
   SplitItem,
   Text,
 } from '@patternfly/react-core';
+
+import automationIcon from '../../../../../images/automation.svg';
 
 type OverviewCardProps = {
   obj?: V1beta1ForkliftController;

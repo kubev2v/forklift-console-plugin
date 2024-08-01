@@ -1,6 +1,5 @@
 import React from 'react';
 import StandardPage from 'src/components/page/StandardPage';
-import modernizeMigration from '../../images/modernizeMigration.svg';
 import { ProviderData, SOURCE_ONLY_PROVIDER_TYPES } from 'src/modules/Providers/utils';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
@@ -20,6 +19,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { useGetDeleteAndEditAccessReview, useProvidersInventoryList } from '../../hooks';
+import modernizeMigration from '../../images/modernizeMigration.svg';
 import { findInventoryByID } from '../../utils';
 
 import { InventoryNotReachable } from './components/InventoryNotReachable';
