@@ -11,8 +11,8 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { NetworkMapsAddButton } from '../../componenets';
-import NetworkMapsEmptyState from '../../componenets/NetworkMapsEmptyState';
+import { NetworkMapsAddButton } from '../../components';
+import NetworkMapsEmptyState from '../../components/NetworkMapsEmptyState';
 import { getNetworkMapPhase, NETWORK_MAP_STATUS, NetworkMapData } from '../../utils';
 
 import NetworkMapRow from './NetworkMapRow';

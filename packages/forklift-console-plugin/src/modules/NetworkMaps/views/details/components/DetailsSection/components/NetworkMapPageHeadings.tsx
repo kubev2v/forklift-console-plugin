@@ -1,6 +1,6 @@
 import React from 'react';
 import { NetworkMapActionsDropdown } from 'src/modules/NetworkMaps/actions';
-import { NetworkMapCriticalConditions } from 'src/modules/NetworkMaps/componenets';
+import { NetworkMapCriticalConditions } from 'src/modules/NetworkMaps/components';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { PageHeadings } from 'src/modules/Providers/utils';
 

@@ -4,7 +4,7 @@ set -euo pipefail
 
 K8S_TIMEOUT=${K8S_TIMEOUT:="360s"}
 
-# When updating the componenets versions folow HCO recomendations:
+# When updating the components versions folow HCO recomendations:
 # HCO:
 #   https://github.com/kubevirt/hyperconverged-cluster-operator
 # HCO configuration file:
