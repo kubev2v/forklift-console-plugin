@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
-import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  ProviderInventory,
+  ProviderModel,
+  ProvidersInventoryList,
+  V1beta1Provider,
+} from '@kubev2v/types';
+import { consoleFetchJSON, k8sGet, useFlag } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils/helpers';
 
@@ -12,9 +17,11 @@ const INVENTORY_TYPES: string[] = ['openshift', 'openstack', 'ovirt', 'vsphere',
 /**
  * Configuration parameters for useProvidersInventoryList hook.
  * @interface
+ * @property {string} namespace - namespace for fetching inventory's providers data for. Used only for users with limited namespaces privileges.
  * @property {number} interval - Polling interval in milliseconds.
  */
 interface UseInventoryParams {
+  namespace?: string;
   interval?: number; // Polling interval in milliseconds
 }
 
@@ -32,15 +39,19 @@ interface UseInventoryResult {
 }
 
 /**
- * A React hook to fetch and maintain an up-to-date list of providers' inventory data.
+ * A React hook to fetch and maintain an up-to-date list of providers' inventory data, belongs to a given namespace or to all namespaces
+ * (based on the namespace parameter).
+ * For users with limited namespaces privileges, only the given namespace's providers inventory data are fetched.
  * It fetches data on mount and then at the specified interval.
  *
  * @param {UseInventoryParams} params - Configuration parameters for the hook.
+ * @param {string} namespace - namespace to fetch providers' inventory data for. if set to null, then fetch for all namespaces.
  * @param {number} [params.interval=10000] - Interval (in milliseconds) to fetch new data at.
  *
  * @returns {UseInventoryResult} result - Contains the inventory data, the loading state, and the error state.
  */
 export const useProvidersInventoryList = ({
+  namespace = null,
   interval = 20000,
 }: UseInventoryParams): UseInventoryResult => {
   const [inventory, setInventory] = useState<ProvidersInventoryList | null>(null);
@@ -48,13 +59,14 @@ export const useProvidersInventoryList = ({
   const [error, setError] = useState<Error | null>(null);
   const oldDataRef = useRef(null);
   const oldErrorRef = useRef(null);
+  const canList: boolean = useFlag('CAN_LIST_NS');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const newInventory: ProvidersInventoryList = await consoleFetchJSON(
-          getInventoryApiUrl(`providers?detail=1`),
-        );
+        const newInventory: ProvidersInventoryList = canList
+          ? await consoleFetchJSON(getInventoryApiUrl(`providers?detail=1`)) // Fetch all providers
+          : await getInventoryByNamespace(namespace); // Fetch single namespace's providers
 
         updateInventoryIfChanged(newInventory, DEFAULT_FIELDS_TO_COMPARE);
         handleError(null);
@@ -67,7 +79,66 @@ export const useProvidersInventoryList = ({
 
     const intervalId = setInterval(fetchData, interval);
     return () => clearInterval(intervalId);
-  }, [interval]);
+  }, [interval, namespace]);
+
+  /**
+   * Fetching providers list by namespace.
+   *
+   * @param {string} namespace to fetch providers by.
+   * @returns {Promise<V1beta1Provider[]>} providers list by namespace.
+   */
+  const k8sGetProviders = async (namespace: string): Promise<V1beta1Provider[]> => {
+    type K8sListResponse<T> = {
+      items: T[];
+    };
+    const providersList = await k8sGet({ model: ProviderModel, ns: namespace });
+
+    return (providersList as K8sListResponse<V1beta1Provider>)?.items;
+  };
+
+  /**
+   * For users with limited namespaces privileges, fetch only the given namespace's providers.
+   *
+   * @param {string} namespace namespace to fetch providers' inventory data for.
+   * @returns {void}
+   */
+  const getInventoryByNamespace = async (namespace: string): Promise<ProvidersInventoryList> => {
+    const newInventory: ProvidersInventoryList = {
+      openshift: [],
+      openstack: [],
+      ovirt: [],
+      vsphere: [],
+      ova: [],
+    };
+
+    const providers = await k8sGetProviders(namespace);
+
+    const readyProviders = providers?.filter(
+      (provider: V1beta1Provider) => provider.status.phase === 'Ready',
+    );
+
+    const inventoryProviderURL = (provider: V1beta1Provider) =>
+      `providers/${provider.spec.type}/${provider.metadata.uid}`;
+
+    const allPromises = Promise.all(
+      readyProviders.map(async (provider) => {
+        return await consoleFetchJSON(getInventoryApiUrl(inventoryProviderURL(provider)));
+      }),
+    )
+      .then((newInventoryProviders) => {
+        newInventoryProviders.map((newInventoryProvider) =>
+          newInventory[newInventoryProvider.type].push(newInventoryProvider),
+        );
+
+        return newInventory;
+      })
+      .catch(() => {
+        //   throw error;
+        return null;
+      });
+
+    return allPromises;
+  };
 
   /**
    * Handles any errors thrown when trying to fetch the inventory.

@@ -183,7 +183,7 @@ const ProvidersListPage: React.FC<{
     inventory,
     loading: inventoryLoading,
     error: inventoryError,
-  } = useProvidersInventoryList({});
+  } = useProvidersInventoryList({ namespace });
 
   const permissions = useGetDeleteAndEditAccessReview({
     model: ProviderModel,
