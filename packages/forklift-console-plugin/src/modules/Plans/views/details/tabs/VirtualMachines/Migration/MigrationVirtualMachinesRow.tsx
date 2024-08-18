@@ -77,7 +77,7 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
     );
   },
   status: (props: PlanVMsCellProps) => {
-    const pipeline = props.data.statusVM?.pipeline;
+    const pipeline = props.data.statusVM?.pipeline || [];
     let lastRunningItem: V1beta1PlanStatusMigrationVmsPipeline;
 
     if (pipeline[0]?.phase === 'Pending') {

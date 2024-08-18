@@ -35,8 +35,8 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const pipeline = props.resourceData.statusVM?.pipeline;
-  const conditions = props.resourceData.statusVM?.conditions;
+  const pipeline = props.resourceData.statusVM?.pipeline || [];
+  const conditions = props.resourceData.statusVM?.conditions || [];
   const pods = props.resourceData.pods;
   const jobs = props.resourceData.jobs;
   const pvcs = props.resourceData.pvcs;
@@ -238,7 +238,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
         </>
       )}
 
-      {(conditions || []).length > 0 && (
+      {conditions.length > 0 && (
         <>
           <SectionHeading
             text={'Conditions'}
@@ -255,7 +255,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
               </Tr>
             </Thead>
             <Tbody>
-              {(conditions || []).map((condition) => (
+              {conditions.map((condition) => (
                 <Tr key={condition.type}>
                   <Td>{condition.type}</Td>
                   <Td>{getStatusLabel(condition.status)}</Td>
