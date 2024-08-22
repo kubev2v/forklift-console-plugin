@@ -333,7 +333,7 @@ export function StandardPage<T>({
     [filteredData, currentPage, itemsPerPage],
   );
 
-  const errorFetchingData = loaded && error;
+  const errorFetchingData = error;
   const noResults = loaded && !error && sortedData.length == 0;
   const noMatchingResults = loaded && !error && filteredData.length === 0 && sortedData.length > 0;
 
@@ -444,7 +444,7 @@ export function StandardPage<T>({
           toId={toId}
           expandedIds={expandedIds}
         >
-          {!loaded && <Loading key="loading" title={t('Loading')} />}
+          {!loaded && !error && <Loading key="loading" title={t('Loading')} />}
           {errorFetchingData && <ErrorState key="error" title={t('Unable to retrieve data')} />}
           {noResults &&
             (customNoResultsFound ?? (
