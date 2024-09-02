@@ -7,6 +7,37 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
 
   if (!plan) return 'Unknown';
 
+  // Check condition type
+  const conditions = getConditions(plan);
+
+  if (!conditions || conditions?.length < 1) {
+    return 'Unknown';
+  }
+
+  // Check for Archived
+  if (plan?.spec?.archived && !conditions.includes('Archived')) {
+    return 'Archiving';
+  }
+
+  if (conditions.includes('Archived')) {
+    return 'Archived';
+  }
+
+  // Check for Succeeded
+  if (conditions.includes('Succeeded')) {
+    return 'Succeeded';
+  }
+
+  // Check for Canceled
+  if (conditions.includes('Canceled')) {
+    return 'Canceled';
+  }
+
+  // CHeck for Running
+  if (conditions.includes('Executing')) {
+    return 'Running';
+  }
+
   // Check condition category
   const isCritical = plan?.status?.conditions?.find(
     (c) => c.category === 'Critical' && c.status === 'True',
@@ -16,32 +47,8 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
     return 'Error';
   }
 
-  // Check condition category
-  const isWarn = plan?.status?.conditions?.find(
-    (c) => c.category === 'Warn' && c.status === 'True',
-  );
-
   // Check for vm errors
   const vmError = plan?.status?.migration?.vms?.find((vm) => vm?.error);
-
-  // Check condition type
-  const conditions = getConditions(plan);
-
-  if (!conditions || conditions?.length < 1) {
-    return 'Unknown';
-  }
-
-  if (plan?.spec?.archived && !conditions.includes('Archived')) {
-    return 'Archiving';
-  }
-
-  if (conditions.includes('Archived')) {
-    return 'Archived';
-  }
-
-  if (conditions.includes('Succeeded')) {
-    return 'Succeeded';
-  }
 
   if (conditions.includes('Failed')) {
     return 'Failed';
@@ -51,16 +58,13 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
     return 'vmError';
   }
 
+  // Check condition category
+  const isWarn = plan?.status?.conditions?.find(
+    (c) => c.category === 'Warn' && c.status === 'True',
+  );
+
   if (isWarn) {
     return 'Warning';
-  }
-
-  if (conditions.includes('Canceled')) {
-    return 'Canceled';
-  }
-
-  if (conditions.includes('Executing')) {
-    return 'Running';
   }
 
   if (conditions.includes('Ready')) {
