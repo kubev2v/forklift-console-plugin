@@ -83,7 +83,7 @@ spec:
       serviceAccountName: console
       containers:
       - name: console
-        image: quay.io/openshift/origin-console:latest
+        image: quay.io/openshift/origin-console:4.15
         env:
         - name: BRIDGE_USER_AUTH
           value: disabled
