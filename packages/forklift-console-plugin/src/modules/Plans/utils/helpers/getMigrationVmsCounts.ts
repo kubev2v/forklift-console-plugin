@@ -18,13 +18,14 @@ export const getMigrationVmsCounts = (vms: V1beta1PlanStatusMigrationVms[]): Mig
   );
   const vmsCompleted = vms.filter((vm) => vm?.completed);
   const vmsError = vms.filter((vm) => vm?.error);
+  const success = vmsCompleted.length - vmsError.length - vmsCanceled.length;
 
   return {
     completed: vmsCompleted.length,
     total: vms.length,
     canceled: vmsCanceled.length,
     error: vmsError.length,
-    success: vmsCompleted.length - vmsError.length - vmsCanceled.length,
+    success: success >= 0 ? success : 0,
   };
 };
 
