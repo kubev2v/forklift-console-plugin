@@ -23,8 +23,8 @@ const phaseLabels: Record<PlanPhase, string> = {
   Error: 'Error',
   // t('Warning')
   Warning: 'Warning',
-  // t('VM Failed')
-  vmError: 'VM Failed',
+  // t('Some VMs Failed')
+  vmError: 'Some VMs Failed',
   // t('Unknown')
   Unknown: 'Unknown',
 };
