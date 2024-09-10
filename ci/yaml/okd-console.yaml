@@ -83,10 +83,12 @@ spec:
       serviceAccountName: console
       containers:
       - name: console
-        image: quay.io/openshift/origin-console:4.15
+        image: quay.io/openshift/origin-console:4.18
         env:
         - name: BRIDGE_USER_AUTH
           value: disabled
+        - name: BRIDGE_K8S_AUTH_BEARER_TOKEN
+          value: abcdef.0123456789abcdef
         - name: BRIDGE_PLUGINS
           value: forklift-console-plugin=http://forklift-console-plugin.konveyor-forklift.svc.cluster.local:8080
         - name: BRIDGE_PLUGIN_PROXY
