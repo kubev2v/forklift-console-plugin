@@ -81,6 +81,8 @@ spec:
         env:
         - name: BRIDGE_USER_AUTH
           value: disabled
+        - name: BRIDGE_K8S_AUTH_BEARER_TOKEN
+          value: abcdef.0123456789abcdef
         - name: BRIDGE_LISTEN
           value: "https://0.0.0.0:9000"
         - name: BRIDGE_TLS_CERT_FILE
