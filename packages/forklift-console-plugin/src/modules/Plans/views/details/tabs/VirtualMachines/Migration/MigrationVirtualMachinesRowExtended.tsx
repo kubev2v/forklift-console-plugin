@@ -26,6 +26,7 @@ import {
 } from '@patternfly/react-core';
 import { TaskIcon } from '@patternfly/react-icons';
 
+import { hasTaskCompleted } from '../../../utils';
 import { PipelineTasksModal } from '../modals';
 import { VMData } from '../types';
 
@@ -352,7 +353,9 @@ const getJobPhase = (job: IoK8sApiBatchV1Job) => {
 
 const getPipelineTasks = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => {
   const tasks = pipeline?.tasks || [];
-  const tasksCompleted = tasks.filter((c) => c.phase === 'Completed');
+
+  // search for all completed tasks (either tasks that completed successfully or ones that aren't finished but their pipeline step is).
+  const tasksCompleted = tasks.filter((c) => hasTaskCompleted(c.phase, pipeline));
 
   return { total: tasks.length, completed: tasksCompleted.length, name: pipeline.name };
 };

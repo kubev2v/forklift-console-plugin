@@ -8,6 +8,7 @@ import { FlexItem, Popover, ProgressStep, ProgressStepper } from '@patternfly/re
 import { ResourcesAlmostFullIcon, ResourcesFullIcon } from '@patternfly/react-icons';
 import { Table, Tr } from '@patternfly/react-table';
 
+import { hasTaskCompleted } from '../../../utils';
 import { PlanVMsCellProps } from '../components';
 import { NameCellRenderer } from '../components/NameCellRenderer';
 import { VMData } from '../types';
@@ -222,7 +223,11 @@ const countTasks = (diskTransfer: V1beta1PlanStatusMigrationVmsPipeline) => {
   }
 
   const totalTasks = diskTransfer.tasks.length;
-  const completedTasks = diskTransfer.tasks.filter((task) => task.phase === 'Completed').length;
+
+  // search num of completed tasks (either tasks that completed successfully or ones that aren't finished but their pipeline step is).
+  const completedTasks = diskTransfer.tasks.filter((task) =>
+    hasTaskCompleted(task.phase, diskTransfer),
+  ).length;
 
   return { totalTasks, completedTasks };
 };
