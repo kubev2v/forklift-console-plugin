@@ -108,6 +108,7 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
 
       <PageSection variant="light">
         <Wizard
+          className="forklift--create-plan--wizard-appearance-order"
           navAriaLabel={`${title} steps`}
           mainAriaLabel={`${title} content`}
           steps={steps}

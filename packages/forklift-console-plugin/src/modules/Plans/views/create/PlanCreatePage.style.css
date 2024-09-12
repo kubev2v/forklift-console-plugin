@@ -79,3 +79,7 @@
 .forklift--create-plan--progress-current-step-clickable:hover {
   cursor: pointer;
 }
+
+.forklift--create-plan--wizard-appearance-order {
+  z-index: 1;
+}
