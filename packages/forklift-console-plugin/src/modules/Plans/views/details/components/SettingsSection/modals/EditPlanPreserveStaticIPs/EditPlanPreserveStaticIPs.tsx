@@ -50,11 +50,9 @@ const PreserveStaticIPsInputFactory: () => ModalInputComponentType = () => {
     return (
       <Switch
         id="simple-switch"
-        label={t(
-          'Preserve the static IPs of VMs with Windows guest operating system from vSphere.',
-        )}
+        label={t('Preserve the static IPs of virtual machines migrated from vSphere.')}
         labelOff={t(
-          'Do not try to preserve the static IPs of VMs with Windows guest operating system from vSphere.',
+          'Do not try to preserve the static IPs of virtual machines migrated from vSphere.',
         )}
         isChecked={value === 'true'}
         onChange={onChangeInternal}
@@ -76,7 +74,7 @@ const EditPlanPreserveStaticIPs_: React.FC<EditPlanPreserveStaticIPsProps> = (pr
       label={props?.label || t('Whether to preserve the static IPs')}
       model={PlanModel}
       onConfirmHook={onConfirm}
-      body={t(`Preserve the static IPs of VMs with Windows guest operating system from vSphere.`)}
+      body={t(`Preserve the static IPs of virtual machines migrated from vSphere.`)}
       InputComponent={PreserveStaticIPsInputFactory()}
     />
   );

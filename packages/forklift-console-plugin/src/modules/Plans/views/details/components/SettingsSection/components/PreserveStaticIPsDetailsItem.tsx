@@ -18,7 +18,7 @@ export const PreserveStaticIPsDetailsItem: React.FC<PlanDetailsItemProps> = ({
   const { showModal } = useModal();
 
   const defaultHelpContent = t(
-    `Preserve the static IPs of VMs with Windows guest operating system from vSphere.`,
+    `Preserve the static IPs of virtual machines migrated from vSphere.`,
   );
 
   const trueLabel = (
