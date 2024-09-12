@@ -288,7 +288,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
         <Tbody>
           {(pipeline || []).map((p) => (
             <Tr key={p?.name}>
-              <Td>
+              <Td modifier="nowrap">
                 <ProgressStepper isCompact isVertical={true} isCenterAligned={false}>
                   <ProgressStep
                     key={p?.name}
