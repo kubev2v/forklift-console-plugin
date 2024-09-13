@@ -35,3 +35,16 @@ COPY --from=build /opt/app-root/src/app/packages/forklift-console-plugin/dist /o
 
 # Run the server
 CMD nginx -g "daemon off;"
+
+
+LABEL \
+        com.redhat.component="forklift-console-plugin-container" \
+        name="forklift/forklift-console-plugin" \
+        license="Apache License 2.0" \
+        io.k8s.display-name="Forklift" \
+        io.k8s.description="Forklift - User Console Plugin Interface" \
+        io.openshift.tags="migration,mtv,forklift" \
+        name="Forklift" \
+        summary="Forklift - User Console Plugin Interface" \
+        description="Forklift - User Console Plugin Interface" \
+        maintainer="Migration Toolkit for Virtualization Team <migtoolkit-virt@redhat.com>"
