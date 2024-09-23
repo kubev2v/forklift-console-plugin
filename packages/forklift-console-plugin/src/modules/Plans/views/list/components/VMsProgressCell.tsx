@@ -5,21 +5,45 @@ import {
   getPhaseLabel,
   getPlanPhase,
   getPlanProgressVariant,
+  MigrationVmsCounts,
 } from 'src/modules/Plans/utils';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef } from '@kubev2v/types';
 import {
+  Button,
+  Popover,
   Progress,
   ProgressMeasureLocation,
   ProgressSize,
   Split,
   SplitItem,
 } from '@patternfly/react-core';
-import { VirtualMachineIcon } from '@patternfly/react-icons';
+import { HelpIcon, VirtualMachineIcon } from '@patternfly/react-icons';
 
 import { CellProps } from './CellProps';
+
+type PlanStatusDetailsProps = {
+  counters: MigrationVmsCounts;
+};
+
+const PlanStatusDetails: React.FC<PlanStatusDetailsProps> = (props) => {
+  const { t } = useForkliftTranslation();
+
+  return (
+    <div>
+      {t('Total of {{total}} VMs are planned for migration:', props.counters)}
+      <br />
+      {t('{{success}} VMs succeeded', props.counters)}
+      <br />
+      {t('{{error}} VMs failed', props.counters)}
+      <br />
+      {t('{{canceled}} VMs canceled', props.counters)}
+      <br />
+    </div>
+  );
+};
 
 export const VMsProgressCell: React.FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
@@ -53,19 +77,28 @@ export const VMsProgressCell: React.FC<CellProps> = ({ data }) => {
   const progressVariant = getPlanProgressVariant(phase);
 
   return (
-    <Link to={`${planURL}/vms`}>
-      <div className="forklift-table__status-cell-progress">
-        <Progress
-          width={100}
-          label={t('{{success}} of {{total}} VMs migrated', counters)}
-          valueText={t('{{success}} of {{total}} VMs migrated', counters)}
-          value={counters?.total > 0 ? (100 * counters?.success) / counters?.total : 0}
-          title={t(phaseLabel)}
-          size={ProgressSize.sm}
-          measureLocation={ProgressMeasureLocation.top}
-          variant={progressVariant}
-        />
-      </div>
-    </Link>
+    <div className="forklift-table__status-cell-progress">
+      <Progress
+        width={100}
+        label={
+          <Link to={`${planURL}/vms`}>{t('{{success}} of {{total}} VMs migrated', counters)}</Link>
+        }
+        valueText={t('{{success}} of {{total}} VMs migrated', counters)}
+        value={counters?.total > 0 ? (100 * counters?.success) / counters?.total : 0}
+        title={
+          <Popover
+            headerContent={<div>{t('Status details')}</div>}
+            bodyContent={<PlanStatusDetails counters={counters} />}
+          >
+            <Button variant="link" isInline>
+              {t(phaseLabel)} <HelpIcon />
+            </Button>
+          </Popover>
+        }
+        size={ProgressSize.sm}
+        measureLocation={ProgressMeasureLocation.top}
+        variant={progressVariant}
+      />
+    </div>
   );
 };
