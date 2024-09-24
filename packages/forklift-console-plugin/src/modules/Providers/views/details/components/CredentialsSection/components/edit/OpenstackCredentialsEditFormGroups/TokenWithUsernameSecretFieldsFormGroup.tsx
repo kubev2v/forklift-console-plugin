@@ -92,7 +92,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="token"
           name="token"
           value={token}
-          onChange={onChangeFactory('token')}
+          onChange={(e, v) => onChangeFactory('token')(v, e)}
           validated={state.validation.token.type}
         />
         <Button
@@ -119,7 +119,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="username"
           name="username"
           value={username}
-          onChange={onChangeFactory('Username')}
+          onChange={(e, v) => onChangeFactory('Username')(v, e)}
           validated={state.validation.username.type}
         />
       </FormGroupWithHelpText>
@@ -139,7 +139,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={onChangeFactory('regionName')}
+          onChange={(e, v) => onChangeFactory('regionName')(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -159,7 +159,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="projectName"
           name="projectName"
           value={projectName}
-          onChange={onChangeFactory('projectName')}
+          onChange={(e, v) => onChangeFactory('projectName')(v, e)}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>
@@ -179,7 +179,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           id="domainName"
           name="domainName"
           value={domainName}
-          onChange={onChangeFactory('domainName')}
+          onChange={(e, v) => onChangeFactory('domainName')(v, e)}
           validated={state.validation.domainName.type}
         />
       </FormGroupWithHelpText>

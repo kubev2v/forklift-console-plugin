@@ -24,19 +24,19 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
       - name: Lint, eslint and stylelint
-        run: npm run lint
+        run: yarn lint
 
       - name: Lint, test i18n files
-        run: npm run test:i18n
+        run: yarn test:i18n
 
       - name: Test build
-        run: npm run build
+        run: yarn build
 
       - name: Test
-        run: npm run test:coverage
+        run: yarn test:coverage
 
       - name: Test coverage
         uses: codecov/codecov-action@v4
@@ -55,7 +55,7 @@ jobs:
         uses: actions/checkout@v4
     
       - name: Run pre e2e test tasks
-        run: npm run e2e:pre-test
+        run: yarn e2e:pre-test
 
       - name: Run cypress
         uses: cypress-io/github-action@v6

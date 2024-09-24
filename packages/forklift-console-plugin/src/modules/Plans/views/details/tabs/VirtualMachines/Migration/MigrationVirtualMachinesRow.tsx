@@ -2,11 +2,10 @@ import React from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 
 import { getResourceFieldValue, ResourceField, RowProps } from '@kubev2v/common';
-import { Td } from '@kubev2v/common';
 import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
 import { FlexItem, Popover, ProgressStep, ProgressStepper } from '@patternfly/react-core';
 import { ResourcesAlmostFullIcon, ResourcesFullIcon } from '@patternfly/react-icons';
-import { Table, Tr } from '@patternfly/react-table';
+import { Table, Td, Tr } from '@patternfly/react-table';
 
 import { hasTaskCompleted } from '../../../utils';
 import { PlanVMsCellProps } from '../components';
@@ -100,16 +99,16 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
         headerContent={lastRunningItem?.name}
         bodyContent={
           <Table variant="compact">
-            <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <Tr>
               <Td colSpan={2}>{lastRunningItem?.description}</Td>
             </Tr>
-            <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <Tr>
               <Td>Started:</Td>
               <Td>
                 <ConsoleTimestamp timestamp={lastRunningItem?.started} />
               </Td>
             </Tr>
-            <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <Tr>
               <Td>Completed:</Td>
               <Td>
                 {lastRunningItem?.completed ? (
@@ -120,7 +119,7 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
               </Td>
             </Tr>
             {lastRunningItem?.error && (
-              <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+              <Tr>
                 <Td>Error:</Td>
                 <Td>
                   <FlexItem>{lastRunningItem?.error?.reasons}</FlexItem>
@@ -160,7 +159,7 @@ interface RenderTdProps {
 }
 
 type ProgressStepperVariant = 'default' | 'success' | 'info' | 'pending' | 'warning' | 'danger';
-type PopoverVariant = 'default' | 'success' | 'info' | 'warning' | 'danger';
+type PopoverVariant = 'success' | 'info' | 'warning' | 'danger' | 'custom';
 
 type GetVariantType = (p: V1beta1PlanStatusMigrationVmsPipeline) => ProgressStepperVariant;
 type GetPopoverVariantType = (p: V1beta1PlanStatusMigrationVmsPipeline) => PopoverVariant;
@@ -196,7 +195,7 @@ const gePopoverVariant: GetPopoverVariantType = (p) => {
     case 'Running':
       return 'info';
     default:
-      return 'default';
+      return 'custom';
   }
 };
 

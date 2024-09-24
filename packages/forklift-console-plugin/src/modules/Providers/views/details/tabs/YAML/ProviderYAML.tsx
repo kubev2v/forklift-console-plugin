@@ -1,5 +1,4 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -7,7 +6,7 @@ import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
-interface ProviderYAMLPageProps extends RouteComponentProps {
+interface ProviderYAMLPageProps {
   obj: ProviderData;
   ns?: string;
   name?: string;

@@ -5,6 +5,7 @@ export interface SectionHeadingProps {
   className?: string;
   id?: string;
   'data-testid'?: string;
+  children?: React.ReactNode;
 }
 
 /**

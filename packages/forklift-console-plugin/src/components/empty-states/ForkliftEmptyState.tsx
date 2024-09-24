@@ -24,8 +24,8 @@ export const ForkliftEmptyState: React.FC<EmptyStateProps> = ({
   callForActionButtons,
 }) => {
   return (
-    <EmptyState variant={EmptyStateVariant.large} isFullHeight>
-      <EmptyStateIcon icon={icon} />
+    <EmptyState variant={EmptyStateVariant.lg} isFullHeight>
+      {icon && <EmptyStateIcon icon={icon} />}
 
       <Title headingLevel="h4" size="lg">
         {title}

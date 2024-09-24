@@ -51,7 +51,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
         crumbs={crumbs}
       />
       <DescriptionListDescription>
-        {contents?.map((value, index) => (
+        {contents?.map((value: ReactNode, index) => (
           <ContentField
             key={'content-field-' + index}
             content={value}

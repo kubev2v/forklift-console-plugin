@@ -98,14 +98,12 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model
     >
       {namespace ? (
         <ForkliftTrans>
-          Are you sure you want to delete{' '}
-          <strong className="co-break-word">{{ resourceName: name }}</strong> in namespace{' '}
-          <strong>{{ namespace: namespace }}</strong>?
+          Are you sure you want to delete <strong className="co-break-word">{name}</strong> in
+          namespace <strong>{namespace}</strong>?
         </ForkliftTrans>
       ) : (
         <ForkliftTrans>
-          Are you sure you want to delete{' '}
-          <strong className="co-break-word">{{ resourceName: name }}</strong>?
+          Are you sure you want to delete <strong className="co-break-word">{name}</strong>?
         </ForkliftTrans>
       )}
       {typeof owner === 'object' && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}

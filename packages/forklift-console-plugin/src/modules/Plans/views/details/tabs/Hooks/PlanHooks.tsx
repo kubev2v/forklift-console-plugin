@@ -169,7 +169,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               label="Enable pre migration hook"
               labelOff="Do not enable a pre migration hook"
               isChecked={state.preHookSet}
-              onChange={onChangePreHookSet}
+              onChange={(e, v) => onChangePreHookSet(v, e)}
             />
           </FormGroupWithHelpText>
 
@@ -180,7 +180,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                   spellCheck="false"
                   value={state.preHook?.spec?.image}
                   type="url"
-                  onChange={onChangePreHookImage}
+                  onChange={(e, v) => onChangePreHookImage(v, e)}
                   aria-label="pre hook image"
                 />
                 <HelperText>
@@ -219,7 +219,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               label="Enable post migration hook"
               labelOff="Do not enable a post migration hook"
               isChecked={state.postHookSet}
-              onChange={onChangePostHookSet}
+              onChange={(e, v) => onChangePostHookSet(v, e)}
             />
           </FormGroupWithHelpText>
 
@@ -230,7 +230,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                   spellCheck="false"
                   value={state.postHook?.spec?.image}
                   type="url"
-                  onChange={onChangePostHookImage}
+                  onChange={(e, v) => onChangePostHookImage(v, e)}
                   aria-label="pre hook image"
                 />
                 <HelperText>

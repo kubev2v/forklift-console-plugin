@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Td } from '@kubev2v/common';
+import { Td } from '@patternfly/react-table';
 
 /**
  * A component that renders an empty cell with a dash symbol (-).

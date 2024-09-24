@@ -106,8 +106,7 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
       {
         <ForkliftTrans>
           <p>
-            Start the migration for plan{' '}
-            <strong className="co-break-word">{{ resourceName: name }}</strong>?
+            Start the migration for plan <strong className="co-break-word">{name}</strong>?
           </p>
           <br />
           <p>VMs included in the migration plan will be shut down.</p>

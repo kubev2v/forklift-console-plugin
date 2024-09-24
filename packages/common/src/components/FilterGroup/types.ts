@@ -50,7 +50,7 @@ export interface MetaFilterProps {
   /**
    * Language to be used for locale sensitive sorting/filtering. Defaults to 'en'.
    */
-  resolvedLanguage: string;
+  resolvedLanguage?: string;
 }
 
 export interface GlobalFilters {

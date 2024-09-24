@@ -3,13 +3,16 @@ import React, { ComponentType } from 'react';
 import {
   Button,
   EmptyState,
+  EmptyStateActions,
   EmptyStateBody,
+  EmptyStateFooter,
+  EmptyStateHeader,
   EmptyStateIcon,
-  EmptyStatePrimary,
   Spinner,
   Title,
 } from '@patternfly/react-core';
-import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 
 /**
  * The page basic states.
@@ -19,40 +22,32 @@ import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
  */
 export const BaseState = ({
   title,
-  Icon,
+  icon,
   color,
-  Component,
 }: {
   title?: string;
-  Icon?: ComponentType;
-  Component?: ComponentType;
+  icon?: ComponentType<unknown>;
   color?: string;
 }) => {
   return (
     <EmptyState>
-      <EmptyStateIcon
-        component={Component}
-        icon={Icon}
-        color={color}
-        variant={Component ? 'container' : 'icon'}
+      <EmptyStateHeader
+        titleText={title}
+        headingLevel="h4"
+        icon={icon && <EmptyStateIcon icon={icon} color={color} />}
       />
-      <Title headingLevel="h4" size="lg">
-        {title}
-      </Title>
     </EmptyState>
   );
 };
 
 export const ErrorState = ({ title }: { title: string }) => (
-  <BaseState Icon={ExclamationCircleIcon} color="#C9190B" title={title} />
+  <BaseState icon={ExclamationCircleIcon} color="#C9190B" title={title} />
 );
 
-export const Loading = ({ title }: { title: string }) => (
-  <BaseState Component={Spinner} title={title} />
-);
+export const Loading = ({ title }: { title: string }) => <BaseState icon={Spinner} title={title} />;
 
 export const NoResultsFound = ({ title }: { title: string }) => (
-  <BaseState Icon={SearchIcon} title={title} />
+  <BaseState icon={SearchIcon} title={title} />
 );
 
 /**
@@ -79,11 +74,13 @@ export const NoResultsMatchFilter = ({
         {title}
       </Title>
       <EmptyStateBody>{description}</EmptyStateBody>
-      <EmptyStatePrimary>
-        <Button variant="link" onClick={clearAllFilters}>
-          {clearAllLabel}
-        </Button>
-      </EmptyStatePrimary>
+      <EmptyStateFooter>
+        <EmptyStateActions>
+          <Button variant="link" onClick={clearAllFilters}>
+            {clearAllLabel}
+          </Button>
+        </EmptyStateActions>
+      </EmptyStateFooter>
     </EmptyState>
   );
 };

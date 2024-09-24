@@ -186,7 +186,7 @@ export const PlansCreateForm = ({
                 value={plan.metadata.name}
                 validated={validation.planName}
                 isDisabled={flow.editingDone}
-                onChange={onChangePlan}
+                onChange={(e, v) => onChangePlan(v, e)}
               />
             </FormGroupWithHelpText>
           </Form>
@@ -241,7 +241,7 @@ export const PlansCreateForm = ({
           >
             <FormSelect
               value={plan.spec.provider?.destination?.name}
-              onChange={onChangeTargetProvider}
+              onChange={(e, v) => onChangeTargetProvider(v, e)}
               id="targetProvider"
               isDisabled={flow.editingDone}
             >

@@ -18,12 +18,12 @@ Forklift console plugin is managed by Migration Toolkit for Virtualization opera
 
 ## Installation
 
-To get started, clone the repo to your development workstation and install the required dependencies locally with NPM.
+To get started, clone the repo to your development workstation and install the required dependencies locally with yarn.
 
 ``` bash
 git clone https://github.com/kubev2v/forklift-console-plugin.git
 cd forklift-console-plugin
-npm install
+yarn install
 ```
 
 ## Quick start
@@ -38,7 +38,7 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 #   for example:
 #     export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.example.com
 # - To close the console server run:
-#   npm run console:stop
+#   yarn console:stop
 
 # Setting the console image and forklift setvice URLs as enviorment variables:
 #
@@ -49,13 +49,13 @@ export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your calust
 export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.15
 
 # Run the web console locally (uses the enviorment variables we defined above)
-npm run console
+yarn console
 
-# If this is the first time running, npm run build will build the required dependencies
-npm run build
+# If this is the first time running, yarn build will build the required dependencies
+yarn build
 
 # Start the plugin in development mode
-npm run start
+yarn start
 ```
 
 ## Setup a local cluster for development
@@ -64,7 +64,7 @@ Forklift console plugin requires the user to be logged into an openshift or kube
 
 ``` bash
 # Setup a kind cluster with Forklift operator and an OKD web console
-npm run cluster:up
+yarn cluster:up
 
 # Example: setup a local KinD cluster with ovirt mock provider
 #          [ options: --with-all-providers --with-ovirt-provider, --with-vmware-provider, --with-openstack-provider]
@@ -73,10 +73,10 @@ npm run cluster:up
 # Note II: mock providers requires NFS server running, look at forkliftci documentation for more details.
 #          See: forkliftci/cluster/providers/utils/install_nfs.sh
 git clone git@github.com:kubev2v/forkliftci.git ./ci/forkliftci
-npm run cluster:up -- --with-ovirt-provider
+yarn cluster:up -- --with-ovirt-provider
 
 # run cleanup to stop and delete the cluster.
-npm run cluster:delete
+yarn cluster:delete
 ```
 
 ## Learn more

@@ -9,7 +9,8 @@ import { ForkliftTrans } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Alert, PageSection, Title, Wizard } from '@patternfly/react-core';
+import { Alert, PageSection, Title } from '@patternfly/react-core';
+import { Wizard } from '@patternfly/react-core/deprecated';
 
 import { findProviderByID } from './components';
 import { planCreatePageInitialState, planCreatePageReducer } from './states';
@@ -113,7 +114,7 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
           mainAriaLabel={`${title} content`}
           steps={steps}
           onSave={() => dispatch(startCreate())}
-          onClose={history.goBack}
+          onClose={() => history.goBack()}
           startAtStep={startAtStep}
         />
       </PageSection>

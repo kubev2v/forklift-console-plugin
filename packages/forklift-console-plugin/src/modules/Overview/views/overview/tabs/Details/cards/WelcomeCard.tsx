@@ -4,17 +4,14 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import {
   Card,
-  CardActions,
   CardBody,
   CardHeader,
   CardTitle,
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
   Split,
   SplitItem,
   Text,
 } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core/deprecated';
 
 import automationIcon from '../../../../../images/automation.svg';
 
@@ -53,6 +50,16 @@ export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
   const actionDropdownItems = [hideFromViewDropdownOption(onHide, t)];
   const onToggle = () => setMenuIsOpen((open) => !open);
 
+  const headerActions = (
+    <Dropdown
+      isOpen={menuIsOpen}
+      isPlain
+      toggle={<KebabToggle onToggle={onToggle} data-testid="actions" />}
+      position="right"
+      dropdownItems={actionDropdownItems}
+    />
+  );
+
   return (
     <Card>
       <Split>
@@ -60,16 +67,7 @@ export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
           <img src={automationIcon} className="forklift-welcome__icon" />
         </SplitItem>
         <SplitItem className="forklift-welcome__flex-text">
-          <CardHeader>
-            <CardActions>
-              <Dropdown
-                isOpen={menuIsOpen}
-                isPlain
-                toggle={<KebabToggle onToggle={onToggle} data-testid="actions" />}
-                position="right"
-                dropdownItems={actionDropdownItems}
-              />
-            </CardActions>
+          <CardHeader actions={{ actions: headerActions }}>
             <CardTitle className="forklift-title">{t('Welcome')}</CardTitle>
           </CardHeader>
           <CardBody>

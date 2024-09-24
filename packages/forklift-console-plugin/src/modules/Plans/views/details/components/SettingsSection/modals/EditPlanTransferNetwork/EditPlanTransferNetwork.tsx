@@ -17,7 +17,7 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import { Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core/deprecated';
 
 const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
   const plan = resource as V1beta1Plan;

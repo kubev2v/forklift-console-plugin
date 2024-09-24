@@ -83,7 +83,7 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
           name="url"
           value={url || ''}
           validated={state.validation.url.type}
-          onChange={onChangeUrl}
+          onChange={(e, v) => onChangeUrl(v, e)}
         />
       </FormGroupWithHelpText>
     </Form>

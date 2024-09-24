@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { RouteComponentProps } from 'react-router-dom';
 import { SectionHeading } from 'src/components/headers/SectionHeading';
 import { Loading } from 'src/modules/Plans/views/details';
 import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
@@ -25,7 +24,7 @@ import {
   SecretsSection,
 } from '../../components';
 
-interface ProviderDetailsProps extends RouteComponentProps {
+interface ProviderDetailsProps {
   obj: ProviderData;
   ns?: string;
   name?: string;

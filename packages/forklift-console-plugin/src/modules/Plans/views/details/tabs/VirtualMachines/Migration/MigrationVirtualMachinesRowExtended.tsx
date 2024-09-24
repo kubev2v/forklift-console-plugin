@@ -7,7 +7,7 @@ import { useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { RowProps, TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
+import { RowProps } from '@kubev2v/common';
 import {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1Pod,
@@ -25,6 +25,7 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 import { TaskIcon } from '@patternfly/react-icons';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { hasTaskCompleted } from '../../../utils';
 import { PipelineTasksModal } from '../modals';
@@ -72,7 +73,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             text={'Virtual machine'}
             className="forklift-page-plan-details-vm-status__section-header"
           />
-          <TableComposable aria-label="Expandable table" variant="compact">
+          <Table aria-label="Expandable table" variant="compact">
             <Thead>
               <Tr>
                 <Th width={20}>{t('Name')}</Th>
@@ -93,7 +94,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 </Td>
               </Tr>
             </Tbody>
-          </TableComposable>
+          </Table>
         </>
       )}
 
@@ -103,7 +104,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             text={'Pods'}
             className="forklift-page-plan-details-vm-status__section-header"
           />
-          <TableComposable aria-label="Expandable table" variant="compact">
+          <Table aria-label="Expandable table" variant="compact">
             <Thead>
               <Tr>
                 <Th width={20}>{t('Pod')}</Th>
@@ -132,7 +133,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 </Tr>
               ))}
             </Tbody>
-          </TableComposable>
+          </Table>
         </>
       )}
 
@@ -142,7 +143,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             text={'Jobs'}
             className="forklift-page-plan-details-vm-status__section-header"
           />
-          <TableComposable aria-label="Expandable table" variant="compact">
+          <Table aria-label="Expandable table" variant="compact">
             <Thead>
               <Tr>
                 <Th width={20}>{t('Name')}</Th>
@@ -165,7 +166,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 </Tr>
               ))}
             </Tbody>
-          </TableComposable>
+          </Table>
         </>
       )}
 
@@ -175,7 +176,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             text={'PersistentVolumeClaims'}
             className="forklift-page-plan-details-vm-status__section-header"
           />
-          <TableComposable aria-label="Expandable table" variant="compact">
+          <Table aria-label="Expandable table" variant="compact">
             <Thead>
               <Tr>
                 <Th width={20}>{t('Name')}</Th>
@@ -198,7 +199,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 </Tr>
               ))}
             </Tbody>
-          </TableComposable>
+          </Table>
         </>
       )}
 
@@ -208,7 +209,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             text={'DataVolumes'}
             className="forklift-page-plan-details-vm-status__section-header"
           />
-          <TableComposable aria-label="Expandable table" variant="compact">
+          <Table aria-label="Expandable table" variant="compact">
             <Thead>
               <Tr>
                 <Th width={20}>{t('Name')}</Th>
@@ -235,7 +236,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 </Tr>
               ))}
             </Tbody>
-          </TableComposable>
+          </Table>
         </>
       )}
 
@@ -245,7 +246,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             text={'Conditions'}
             className="forklift-page-plan-details-vm-status__section-header"
           />
-          <TableComposable aria-label="Expandable table" variant="compact">
+          <Table aria-label="Expandable table" variant="compact">
             <Thead>
               <Tr>
                 <Th width={20}>{t('Type')}</Th>
@@ -268,7 +269,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 </Tr>
               ))}
             </Tbody>
-          </TableComposable>
+          </Table>
         </>
       )}
 
@@ -276,7 +277,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
         text={'Pipeline'}
         className="forklift-page-plan-details-vm-status__section-header"
       />
-      <TableComposable variant="compact">
+      <Table variant="compact">
         <Thead>
           <Tr>
             <Th width={20}>{t('Name')}</Th>
@@ -329,7 +330,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
             </Tr>
           ))}
         </Tbody>
-      </TableComposable>
+      </Table>
     </PageSection>
   );
 };

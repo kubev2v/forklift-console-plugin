@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
+import { ToolbarFilter } from '@patternfly/react-core';
 import {
   Select,
   SelectGroup,
   SelectOption,
   SelectOptionObject,
   SelectVariant,
-  ToolbarFilter,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 
 import { EnumValue, SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
 
@@ -166,7 +166,7 @@ export const GroupedEnumFilter = ({
             .map(toSelectOption)}
           placeholderText={placeholderLabel}
           isOpen={isExpanded}
-          onToggle={onToggle}
+          onToggle={(e, v) => onToggle(v, e)}
           hasInlineFilter={hasInlineFilter}
           onFilter={onFilter}
         >

@@ -3,7 +3,12 @@ import { useToggle } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Dropdown, DropdownPosition, DropdownToggle, KebabToggle } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownPosition,
+  DropdownToggle,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 
 import { CellProps } from '../views/list/components';
 

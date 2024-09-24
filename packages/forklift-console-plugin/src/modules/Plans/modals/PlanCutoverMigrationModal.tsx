@@ -144,8 +144,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
       <>
         <ForkliftTrans>
           <p>
-            Schedule the cutover for migration{' '}
-            <strong className="co-break-word">{{ resourceName: name }}</strong>?
+            Schedule the cutover for migration <strong className="co-break-word">{name}</strong>?
           </p>
           <br />
           <p>

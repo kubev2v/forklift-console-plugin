@@ -189,7 +189,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
           name="url"
           value={url}
           validated={state.validation.url.type}
-          onChange={onChangeUrl}
+          onChange={(e, v) => onChangeUrl(v, e)}
         />
       </FormGroupWithHelpText>
 
@@ -220,7 +220,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
                 'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration, migration may be slow.',
               )}
               isChecked={emptyVddkInitImage === 'yes'}
-              onChange={onChangEmptyVddk}
+              onChange={(e, v) => onChangEmptyVddk(v, e)}
               id="emptyVddkInitImage"
               name="emptyVddkInitImage"
             />
@@ -237,7 +237,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
             validated={
               emptyVddkInitImage === 'yes' ? 'default' : state.validation.vddkInitImage.type
             }
-            onChange={onChangeVddk}
+            onChange={(e, v) => onChangeVddk(v, e)}
           />
         </div>
       </FormGroupWithHelpText>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { SelectEventType, SelectValueType } from '@kubev2v/common';
-import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
+import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 
 import providerTypes from '../constanats/providerTypes';

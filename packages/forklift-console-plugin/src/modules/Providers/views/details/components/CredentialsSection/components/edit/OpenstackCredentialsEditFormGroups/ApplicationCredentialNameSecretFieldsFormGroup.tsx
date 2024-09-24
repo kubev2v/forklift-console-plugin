@@ -100,7 +100,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="applicationCredentialName"
           name="applicationCredentialName"
           value={applicationCredentialName}
-          onChange={onChangeFactory('applicationCredentialName')}
+          onChange={(e, v) => onChangeFactory('applicationCredentialName')(v, e)}
           validated={state.validation.applicationCredentialName.type}
         />
       </FormGroupWithHelpText>
@@ -121,7 +121,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="applicationCredentialSecret"
           name="applicationCredentialSecret"
           value={applicationCredentialSecret}
-          onChange={onChangeFactory('applicationCredentialSecret')}
+          onChange={(e, v) => onChangeFactory('applicationCredentialSecret')(v, e)}
           validated={state.validation.applicationCredentialSecret.type}
         />
         <Button
@@ -148,7 +148,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="username"
           name="username"
           value={username}
-          onChange={onChangeFactory('username')}
+          onChange={(e, v) => onChangeFactory('username')(v, e)}
           validated={state.validation.username.type}
         />
       </FormGroupWithHelpText>
@@ -168,7 +168,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={onChangeFactory('regionName')}
+          onChange={(e, v) => onChangeFactory('regionName')(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -188,7 +188,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="projectName"
           name="projectName"
           value={projectName}
-          onChange={onChangeFactory('projectName')}
+          onChange={(e, v) => onChangeFactory('projectName')(v, e)}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>
@@ -208,7 +208,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           id="domainName"
           name="domainName"
           value={domainName}
-          onChange={onChangeFactory('domainName')}
+          onChange={(e, v) => onChangeFactory('domainName')(v, e)}
           validated={state.validation.domainName.type}
         />
       </FormGroupWithHelpText>

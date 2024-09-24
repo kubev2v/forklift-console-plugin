@@ -1,5 +1,4 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -10,7 +9,7 @@ import { PageSection } from '@patternfly/react-core';
 
 import { CredentialsSection } from '../../components';
 
-interface ProviderCredentialsProps extends RouteComponentProps {
+interface ProviderCredentialsProps {
   obj: ProviderData;
   ns?: string;
   name?: string;

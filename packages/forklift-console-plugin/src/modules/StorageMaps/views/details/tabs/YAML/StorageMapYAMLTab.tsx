@@ -1,12 +1,11 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { Suspend } from 'src/modules/Plans/views/details/components';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModelGroupVersionKind, V1beta1StorageMap } from '@kubev2v/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-interface StorageMapYAMLTabProps extends RouteComponentProps {
+interface StorageMapYAMLTabProps {
   name: string;
   namespace: string;
 }

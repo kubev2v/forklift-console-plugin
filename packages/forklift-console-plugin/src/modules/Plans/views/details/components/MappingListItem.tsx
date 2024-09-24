@@ -10,11 +10,13 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
+} from '@patternfly/react-core';
+import {
   Select,
   SelectGroup,
   SelectOption,
   SelectVariant,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 
 export interface Mapping {

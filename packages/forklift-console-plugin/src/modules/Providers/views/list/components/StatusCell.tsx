@@ -1,5 +1,4 @@
 import React from 'react';
-import { TFunction } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom';
 import { getResourceUrl, TableIconCell } from 'src/modules/Providers/utils';
@@ -44,7 +43,7 @@ export const StatusCell: React.FC<CellProps> = ({ data, fields, fieldId }) => {
  * @param {Object} props.fields - The fields object for the cell.
  * @returns {JSX.Element} The JSX element representing the error status cell.
  */
-export const ErrorStatusCell: React.FC<CellProps & { t: TFunction }> = ({ t, data, fields }) => {
+export const ErrorStatusCell: React.FC<CellProps & { t }> = ({ t, data, fields }) => {
   const { provider } = data;
   const phase = getResourceFieldValue(data, 'phase', fields);
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');

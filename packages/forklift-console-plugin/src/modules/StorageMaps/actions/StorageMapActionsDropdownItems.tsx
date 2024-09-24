@@ -5,7 +5,7 @@ import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModel, StorageMapModelRef } from '@kubev2v/types';
-import { DropdownItem } from '@patternfly/react-core';
+import { DropdownItem } from '@patternfly/react-core/deprecated';
 
 import { StorageMapData } from '../utils';
 

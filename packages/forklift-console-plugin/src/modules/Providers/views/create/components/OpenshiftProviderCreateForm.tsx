@@ -81,7 +81,7 @@ export const OpenshiftProviderFormCreate: React.FC<OpenshiftProviderCreateFormPr
           name="url"
           value={url}
           validated={state.validation.url.type}
-          onChange={onChangeUrl}
+          onChange={(e, v) => onChangeUrl(v, e)}
         />
       </FormGroupWithHelpText>
     </Form>

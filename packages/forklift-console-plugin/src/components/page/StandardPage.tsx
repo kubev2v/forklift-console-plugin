@@ -281,10 +281,7 @@ export function StandardPage<T>({
   expandedIds,
   className,
 }: StandardPageProps<T>) {
-  const {
-    t,
-    i18n: { resolvedLanguage },
-  } = useForkliftTranslation();
+  const { t } = useForkliftTranslation();
   const [sortedData, setSortedData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [page, setPage] = useState(initialPage);
@@ -385,7 +382,6 @@ export function StandardPage<T>({
                   onFilterUpdate={setSelectedFilters}
                   selectedFilters={selectedFilters}
                   supportedFilterTypes={supportedFilters}
-                  resolvedLanguage={resolvedLanguage}
                 />
               )}
               <AttributeValueFilter
@@ -395,7 +391,6 @@ export function StandardPage<T>({
                 onFilterUpdate={setSelectedFilters}
                 selectedFilters={selectedFilters}
                 supportedFilterTypes={supportedFilters}
-                resolvedLanguage={resolvedLanguage}
               />
               {!!fields.find((field) => field.filter?.standalone) && (
                 <FilterGroup
@@ -405,7 +400,6 @@ export function StandardPage<T>({
                   onFilterUpdate={setSelectedFilters}
                   selectedFilters={selectedFilters}
                   supportedFilterTypes={supportedFilters}
-                  resolvedLanguage={resolvedLanguage}
                 />
               )}
               <ManageColumnsToolbar

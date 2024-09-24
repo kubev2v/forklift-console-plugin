@@ -1,5 +1,4 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { canPlanReStart, isPlanExecuting, isPlanSucceeded } from 'src/modules/Plans/utils';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
@@ -13,7 +12,7 @@ import { MigrationVirtualMachinesList } from './Migration';
 import { PlanVirtualMachinesList } from './Plan';
 import { PlanData } from './types';
 
-export interface PlanVirtualMachinesProps extends RouteComponentProps {
+export interface PlanVirtualMachinesProps {
   obj: PlanData;
   ns?: string;
   name?: string;

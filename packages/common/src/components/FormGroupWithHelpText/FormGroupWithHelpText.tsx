@@ -68,7 +68,7 @@ export const FormGroupWithHelpText: React.FC<FormGroupWithHelpTextProps> = ({
       role={role}
     >
       {children}
-      <FormHelperText isHidden={false}>
+      <FormHelperText hidden={false}>
         <HelperText>
           <HelperTextItem variant={variant}>{helperTextMsg}</HelperTextItem>
         </HelperText>

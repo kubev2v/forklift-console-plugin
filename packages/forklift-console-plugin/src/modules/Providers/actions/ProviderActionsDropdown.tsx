@@ -1,14 +1,13 @@
 import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { Flex, FlexItem } from '@patternfly/react-core';
 import {
   Dropdown,
   DropdownPosition,
   DropdownToggle,
-  Flex,
-  FlexItem,
   KebabToggle,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 
 import { useToggle } from '../hooks';
 import { ModalHOC } from '../modals';

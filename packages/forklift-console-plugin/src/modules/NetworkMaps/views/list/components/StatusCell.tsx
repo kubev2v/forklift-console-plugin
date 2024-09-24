@@ -1,5 +1,4 @@
 import React from 'react';
-import { TFunction } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom';
 import { getResourceUrl, TableIconCell } from 'src/modules/Providers/utils';
@@ -31,7 +30,7 @@ export const StatusCell: React.FC<CellProps> = ({ data, fields, fieldId }) => {
   }
 };
 
-export const ErrorStatusCell: React.FC<CellProps & { t: TFunction }> = ({ t, data, fields }) => {
+export const ErrorStatusCell: React.FC<CellProps & { t }> = ({ t, data, fields }) => {
   const { obj: networkMap } = data;
   const phase = getResourceFieldValue(data, 'phase', fields);
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');

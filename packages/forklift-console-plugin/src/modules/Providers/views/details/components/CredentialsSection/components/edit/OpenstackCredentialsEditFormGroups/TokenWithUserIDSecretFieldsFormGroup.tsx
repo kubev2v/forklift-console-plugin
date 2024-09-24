@@ -90,7 +90,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="token"
           name="token"
           value={token}
-          onChange={onChangeFactory('token')}
+          onChange={(e, v) => onChangeFactory('token')(v, e)}
           validated={state.validation.token.type}
         />
         <Button
@@ -117,7 +117,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="userID"
           name="userID"
           value={userID}
-          onChange={onChangeFactory('userID')}
+          onChange={(e, v) => onChangeFactory('userID')(v, e)}
           validated={state.validation.userID.type}
         />
       </FormGroupWithHelpText>
@@ -137,7 +137,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="projectID"
           name="projectID"
           value={projectID}
-          onChange={onChangeFactory('projectID')}
+          onChange={(e, v) => onChangeFactory('projectID')(v, e)}
           validated={state.validation.projectID.type}
         />
       </FormGroupWithHelpText>
@@ -157,7 +157,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={onChangeFactory('regionName')}
+          onChange={(e, v) => onChangeFactory('regionName')(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>

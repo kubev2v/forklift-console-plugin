@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import { TFunction } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -64,6 +63,7 @@ export interface PageHeadingsProps {
   title?: ReactNode;
   actions?: ReactNode;
   status?: string;
+  children?: React.ReactNode;
 }
 
 const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ model, namespace }) => {
@@ -101,7 +101,7 @@ type BreadCrumbsProps = {
   namespace?: string;
 };
 
-const breadcrumbsForModel = (t: TFunction, model: K8sModel, namespace: string) => {
+const breadcrumbsForModel = (t, model: K8sModel, namespace: string) => {
   const groupVersionKind: K8sGroupVersionKind = {
     group: model.apiGroup,
     version: model.apiVersion,
