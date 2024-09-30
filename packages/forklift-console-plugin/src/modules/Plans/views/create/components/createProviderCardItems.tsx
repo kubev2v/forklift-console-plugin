@@ -19,7 +19,7 @@ export const createProviderCardItems = (
 ): Record<string, SelectableGalleryItem> => {
   const providerCardItems = {};
 
-  (providers || []).map((provider) => {
+  (providers || []).forEach((provider) => {
     const typeObj = providerTypes[provider.spec.type];
 
     providerCardItems[provider.metadata.uid] = {
