@@ -7,7 +7,7 @@ import {
   TableViewHeaderProps,
   withTr,
 } from '@kubev2v/common';
-import { Td, Th } from '@kubev2v/common';
+import { Td, Th } from '@patternfly/react-table';
 
 import StandardPage, { StandardPageProps } from './StandardPage';
 
@@ -36,7 +36,7 @@ export function withRowSelection<T>({
             rowIndex: props.resourceIndex,
             onSelect: () => toggleSelectFor([props.resourceData]),
             isSelected: isSelected(props.resourceData),
-            disable: !canSelect(props.resourceData),
+            isDisabled: !canSelect(props.resourceData),
           }}
         />
       )}

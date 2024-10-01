@@ -51,7 +51,7 @@ const PreserveClusterCpuModelInputFactory: () => ModalInputComponentType = () =>
         label="Preserve the CPU model and flags the VM runs with in its oVirt cluster."
         labelOff="Do not try to preserve the CPU model and flags the VM runs with in its oVirt cluster."
         isChecked={value === 'true'}
-        onChange={onChangeInternal}
+        onChange={(e, v) => onChangeInternal(v, e)}
       />
     );
   };

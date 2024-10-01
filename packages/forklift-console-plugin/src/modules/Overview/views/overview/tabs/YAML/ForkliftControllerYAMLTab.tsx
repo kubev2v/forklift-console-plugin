@@ -1,12 +1,11 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
-interface ForkliftControllerYAMLTabProps extends RouteComponentProps {
+interface ForkliftControllerYAMLTabProps {
   obj: V1beta1ForkliftController;
   ns?: string;
   name?: string;

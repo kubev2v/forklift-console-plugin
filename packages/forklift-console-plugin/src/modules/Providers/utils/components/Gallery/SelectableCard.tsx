@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import { Card, CardBody, CardTitle, Split, SplitItem } from '@patternfly/react-core';
+import { Card, CardBody, CardHeader, CardTitle, Split, SplitItem } from '@patternfly/react-core';
 
 interface SelectableCardProps {
   /** The title of the card. It can be any element - a string, a React component, etc. */
@@ -44,22 +44,30 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
       id="selectable-card"
       onKeyDown={handleClick}
       onClick={handleClick}
-      onSelectableInputChange={handleClick}
       isSelectable
       isCompact={isCompact}
       isSelected={isSelected}
     >
-      {titleLogo ? (
-        <CardTitle>
-          <Split className="forklift--create-provider-edit-card-title">
-            <SplitItem>{titleLogo}</SplitItem>
-            <SplitItem isFilled>{title}</SplitItem>
-          </Split>
-        </CardTitle>
-      ) : (
-        <CardTitle>{title}</CardTitle>
-      )}
-
+      <CardHeader
+        selectableActions={{
+          selectableActionId: 'selectable-card-header',
+          selectableActionAriaLabelledby: 'selectable-card-header',
+          name: 'selectable-card-header',
+          variant: 'single',
+          onChange: handleClick,
+        }}
+      >
+        {titleLogo ? (
+          <CardTitle>
+            <Split className="forklift--create-provider-edit-card-title">
+              <SplitItem>{titleLogo}</SplitItem>
+              <SplitItem isFilled>{title}</SplitItem>
+            </Split>
+          </CardTitle>
+        ) : (
+          <CardTitle>{title}</CardTitle>
+        )}
+      </CardHeader>
       {content && <CardBody>{content}</CardBody>}
     </Card>
   );

@@ -1,4 +1,4 @@
-import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
+import { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
 import type { NavSection } from '@openshift-console/dynamic-plugin-sdk';
 
 import { extensions as networkMapExtensions } from './src/modules/NetworkMaps/dynamic-plugin';

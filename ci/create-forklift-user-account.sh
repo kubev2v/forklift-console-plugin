@@ -134,4 +134,4 @@ echo   export TOKEN_ADMIN=...
 echo   export BRIDGE_K8S_AUTH_BEARER_TOKEN=$\{TOKEN_ADMIN \| TOKEN_USER \| TOKEN_READER\}
 echo
 echo before starting the bridge
-echo   npm run console
+echo   yarn console

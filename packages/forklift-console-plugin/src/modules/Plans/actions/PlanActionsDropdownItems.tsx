@@ -5,7 +5,7 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
-import { DropdownItem } from '@patternfly/react-core';
+import { DropdownItem } from '@patternfly/react-core/deprecated';
 
 import {
   ArchiveModal,

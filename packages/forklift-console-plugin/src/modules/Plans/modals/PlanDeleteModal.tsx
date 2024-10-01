@@ -123,14 +123,12 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
     >
       {namespace ? (
         <ForkliftTrans>
-          Are you sure you want to delete{' '}
-          <strong className="co-break-word">{{ resourceName: name }}</strong> in namespace{' '}
-          <strong>{{ namespace: namespace }}</strong>?
+          Are you sure you want to delete <strong className="co-break-word">{name}</strong> in
+          namespace <strong>{namespace}</strong>?
         </ForkliftTrans>
       ) : (
         <ForkliftTrans>
-          Are you sure you want to delete{' '}
-          <strong className="co-break-word">{{ resourceName: name }}</strong>?
+          Are you sure you want to delete <strong className="co-break-word">{name}</strong>?
         </ForkliftTrans>
       )}
       {phase === 'Running' && <IsExecutingAlert />}

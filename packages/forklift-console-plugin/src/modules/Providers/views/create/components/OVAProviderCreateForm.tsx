@@ -81,7 +81,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
           isRequired
           value={url || ''}
           validated={state.validation.url.type}
-          onChange={onChangeUrl}
+          onChange={(e, v) => onChangeUrl(v, e)}
         />
       </FormGroupWithHelpText>
     </Form>

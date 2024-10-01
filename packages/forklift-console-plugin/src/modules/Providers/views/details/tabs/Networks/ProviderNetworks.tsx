@@ -1,5 +1,4 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
 import {
@@ -10,7 +9,6 @@ import {
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import {
   CnoConfig,
   OpenShiftNetworkAttachmentDefinition,
@@ -20,8 +18,9 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Label, PageSection } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-interface ProviderNetworksProps extends RouteComponentProps {
+interface ProviderNetworksProps {
   obj: ProviderData;
   ns?: string;
   name?: string;
@@ -66,7 +65,7 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
           </div>
         )}
 
-        <TableComposable aria-label="Expandable table" variant="compact">
+        <Table aria-label="Expandable table" variant="compact">
           <Thead>
             <Tr>
               <Th>{t('Name')}</Th>
@@ -102,7 +101,7 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
               </Tr>
             ))}
           </Tbody>
-        </TableComposable>
+        </Table>
       </PageSection>
     </div>
   );

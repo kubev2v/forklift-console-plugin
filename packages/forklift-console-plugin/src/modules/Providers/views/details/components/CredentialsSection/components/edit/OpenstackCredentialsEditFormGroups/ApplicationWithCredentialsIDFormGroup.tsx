@@ -96,7 +96,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           id="applicationCredentialID"
           name="applicationCredentialID"
           value={applicationCredentialID}
-          onChange={onChangeFactory('applicationCredentialID')}
+          onChange={(e, v) => onChangeFactory('applicationCredentialID')(v, e)}
           validated={state.validation.applicationCredentialID.type}
         />
       </FormGroupWithHelpText>
@@ -117,7 +117,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           id="applicationCredentialSecret"
           name="applicationCredentialSecret"
           value={applicationCredentialSecret}
-          onChange={onChangeFactory('applicationCredentialSecret')}
+          onChange={(e, v) => onChangeFactory('applicationCredentialSecret')(v, e)}
           validated={state.validation.applicationCredentialSecret.type}
         />
         <Button
@@ -144,7 +144,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={onChangeFactory('regionName')}
+          onChange={(e, v) => onChangeFactory('regionName')(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -164,7 +164,7 @@ export const ApplicationWithCredentialsIDFormGroup: React.FC<EditComponentProps>
           id="projectName"
           name="projectName"
           value={projectName}
-          onChange={onChangeFactory('projectName')}
+          onChange={(e, v) => onChangeFactory('projectName')(v, e)}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>

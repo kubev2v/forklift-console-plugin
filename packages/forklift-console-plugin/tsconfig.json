@@ -20,6 +20,7 @@
     "lib": ["dom", "es2020"],
     "esModuleInterop": true,
 
+    "baseUrl": ".",
     "outDir": "./dist",
 
     "paths": {

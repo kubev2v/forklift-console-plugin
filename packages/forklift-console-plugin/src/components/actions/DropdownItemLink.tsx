@@ -1,7 +1,7 @@
-import React, { ReactChildren } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { DropdownItem } from '@patternfly/react-core';
+import { DropdownItem } from '@patternfly/react-core/deprecated';
 
 /**
  * `DropdownItemLink` is a functional component that renders a dropdown item with a link.
@@ -31,5 +31,5 @@ export type DropdownItemLinkProps = {
   key: string;
   href: string;
   description?: string;
-  children: ReactChildren;
+  children?: React.ReactNode;
 };

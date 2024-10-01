@@ -1,5 +1,5 @@
 import { ProviderModel, ProviderModelGroupVersionKind } from '@kubev2v/types';
-import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
+import { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
 import {
   ContextProvider,
   CreateResource,
@@ -8,9 +8,9 @@ import {
   ResourceListPage,
   ResourceNSNavItem,
 } from '@openshift-console/dynamic-plugin-sdk';
-import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
+import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
-export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
+export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   ProvidersListPage: './modules/Providers/views/list/ProvidersListPage',
   ProviderDetailsPage: './modules/Providers/views/details/ProviderDetailsPage',
   ProvidersCreatePage: './modules/Providers/views/create/ProvidersCreatePage',

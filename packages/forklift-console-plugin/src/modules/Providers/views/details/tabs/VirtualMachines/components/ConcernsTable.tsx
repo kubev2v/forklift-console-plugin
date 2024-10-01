@@ -1,8 +1,9 @@
 import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { RowProps, TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
+import { RowProps } from '@kubev2v/common';
 import { HelperText, HelperTextItem, Label, PageSection } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import {
   getCategoryColor,
@@ -35,7 +36,7 @@ export const ConcernsTable: React.FC<RowProps<VmData>> = ({ resourceData }) => {
 
   return (
     <PageSection>
-      <TableComposable aria-label="Expandable table" variant="compact">
+      <Table aria-label="Expandable table" variant="compact">
         <Thead>
           <Tr>
             <Th width={10}>{t('Label')}</Th>
@@ -61,7 +62,7 @@ export const ConcernsTable: React.FC<RowProps<VmData>> = ({ resourceData }) => {
             )),
           )}
         </Tbody>
-      </TableComposable>
+      </Table>
     </PageSection>
   );
 };

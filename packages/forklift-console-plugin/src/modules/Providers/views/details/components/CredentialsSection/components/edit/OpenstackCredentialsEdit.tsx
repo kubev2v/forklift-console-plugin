@@ -271,7 +271,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           aria-label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={onChangeInsecure}
+          onChange={(e, v) => onChangeInsecure(v, e)}
         />
       </FormGroupWithHelpText>
       <FormGroupWithHelpText
@@ -291,8 +291,8 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           filenamePlaceholder="Drag and drop a file or upload one"
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={onDataChange}
-          onTextChange={onTextChange}
+          onDataChange={(_e, v) => onDataChange(v)}
+          onTextChange={(_e, v) => onTextChange(v)}
           onClearClick={() => handleChange('cacert', '')}
           browseButtonText="Upload"
           url={url}

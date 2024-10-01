@@ -1,5 +1,5 @@
 import { MigrationModel, MigrationModelGroupVersionKind } from '@kubev2v/types';
-import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
+import { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
 import { ModelMetadata, ResourceNSNavItem } from '@openshift-console/dynamic-plugin-sdk';
 
 export const extensions: EncodedExtension[] = [

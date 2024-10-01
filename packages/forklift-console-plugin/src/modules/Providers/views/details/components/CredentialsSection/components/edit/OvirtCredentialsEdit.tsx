@@ -153,7 +153,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           name="user"
           value={user}
           validated={state.validation.user.type}
-          onChange={onChangeUser}
+          onChange={(e, v) => onChangeUser(v, e)}
         />
       </FormGroupWithHelpText>
       <FormGroupWithHelpText
@@ -172,7 +172,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           aria-label="Password input"
           value={password}
           validated={state.validation.password.type}
-          onChange={onChangePassword}
+          onChange={(e, v) => onChangePassword(v, e)}
         />
         <Button
           variant="control"
@@ -213,7 +213,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={onChangeInsecure}
+          onChange={(e, v) => onChangeInsecure(v, e)}
         />
       </FormGroupWithHelpText>
 
@@ -245,8 +245,8 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           filenamePlaceholder="Drag and drop a file or upload one"
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={onDataChange}
-          onTextChange={onTextChange}
+          onDataChange={(_e, v) => onDataChange(v)}
+          onTextChange={(_e, v) => onTextChange(v)}
           onClearClick={() => handleChange('cacert', '')}
           browseButtonText="Upload"
           url={url}

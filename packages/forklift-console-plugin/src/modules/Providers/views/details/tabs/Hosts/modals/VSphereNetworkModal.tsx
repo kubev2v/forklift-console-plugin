@@ -258,7 +258,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                 type="text"
                 id="username"
                 value={state.username}
-                onChange={onChangUser}
+                onChange={(e, v) => onChangUser(v, e)}
                 validated={state.validation.username}
               />
             </FormGroupWithHelpText>
@@ -277,7 +277,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                 type={state.passwordHidden ? 'password' : 'text'}
                 aria-label="Password input"
                 value={state.password}
-                onChange={onChangePassword}
+                onChange={(e, v) => onChangePassword(v, e)}
                 validated={state.validation.password}
               />
               <Button variant="control" onClick={togglePasswordHidden}>

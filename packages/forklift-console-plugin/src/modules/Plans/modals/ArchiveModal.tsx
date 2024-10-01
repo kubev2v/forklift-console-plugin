@@ -103,7 +103,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
       {
         <ForkliftTrans>
           <p>
-            Archive plan <strong className="co-break-word">{{ resourceName: name }}</strong>?
+            Archive plan <strong className="co-break-word">{name}</strong>?
           </p>
           <br />
           <p>

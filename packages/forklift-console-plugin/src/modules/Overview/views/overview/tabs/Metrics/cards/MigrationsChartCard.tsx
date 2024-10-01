@@ -4,17 +4,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { MigrationModelGroupVersionKind, V1beta1Migration } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Chart, ChartAxis, ChartBar, ChartGroup, ChartTooltip } from '@patternfly/react-charts';
-import {
-  Card,
-  CardActions,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  Dropdown,
-  DropdownItem,
-  Flex,
-  KebabToggle,
-} from '@patternfly/react-core';
+import { Card, CardBody, CardHeader, CardTitle, Flex } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core/deprecated';
 import chart_color_blue_200 from '@patternfly/react-tokens/dist/esm/chart_color_blue_200';
 import chart_color_green_400 from '@patternfly/react-tokens/dist/esm/chart_color_green_400';
 import chart_color_red_100 from '@patternfly/react-tokens/dist/esm/chart_color_red_100';
@@ -77,39 +68,40 @@ export const MigrationsChartCard: React.FC<MigrationsCardProps> = () => {
     setSelectedTimeRange(timeRange);
   };
 
+  const headerActions = (
+    <Dropdown
+      toggle={<KebabToggle onToggle={onToggle} />}
+      isOpen={isDropdownOpened}
+      isPlain
+      dropdownItems={[
+        <DropdownItem
+          onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last7Days)}
+          key="7days"
+        >
+          {t('7 days')}
+        </DropdownItem>,
+        <DropdownItem
+          onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last31Days)}
+          key="31days"
+        >
+          {t('31 days')}
+        </DropdownItem>,
+        <DropdownItem
+          onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last24H)}
+          key="24hours"
+        >
+          {t('24 hours')}
+        </DropdownItem>,
+      ]}
+    />
+  );
+
   return (
     <Card>
-      <CardHeader>
+      <CardHeader actions={{ actions: headerActions }}>
         <CardTitle className="forklift-title">
           {t(TimeRangeOptionsDictionary[selectedTimeRange].migrationsLabelKey)}
         </CardTitle>
-        <CardActions>
-          <Dropdown
-            toggle={<KebabToggle onToggle={onToggle} />}
-            isOpen={isDropdownOpened}
-            isPlain
-            dropdownItems={[
-              <DropdownItem
-                onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last7Days)}
-                key="7days"
-              >
-                {t('7 days')}
-              </DropdownItem>,
-              <DropdownItem
-                onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last31Days)}
-                key="31days"
-              >
-                {t('31 days')}
-              </DropdownItem>,
-              <DropdownItem
-                onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last24H)}
-                key="24hours"
-              >
-                {t('24 hours')}
-              </DropdownItem>,
-            ]}
-          />
-        </CardActions>
       </CardHeader>
       <CardBody className="forklift-status-migration-chart">
         <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useToggle } from 'src/modules/Providers/hooks';
 
 import { SelectEventType, SelectValueType } from '@kubev2v/common';
-import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
+import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 
 /**
  * @typedef Option

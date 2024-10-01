@@ -2,7 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 
 import { ActionService, ActionServiceProvider } from '@openshift-console/dynamic-plugin-sdk';
-import { Dropdown, DropdownItem, DropdownToggle, KebabToggle } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 
 import { ToggleEventType } from '../../utils';
 
@@ -76,9 +81,9 @@ const ActionsAsDropdown = ({
 
   const toggle =
     variant === 'kebab' ? (
-      <KebabToggle onToggle={onToggle} />
+      <KebabToggle onToggle={(e, v) => onToggle(v, e)} />
     ) : (
-      <DropdownToggle onToggle={onToggle}>{dropdownToggleText}</DropdownToggle>
+      <DropdownToggle onToggle={(e, v) => onToggle(v, e)}>{dropdownToggleText}</DropdownToggle>
     );
 
   return (

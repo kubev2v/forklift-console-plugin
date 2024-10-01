@@ -5,10 +5,10 @@ import StatusIcon from 'src/components/status/StatusIcon';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { IoK8sApiCoreV1Pod } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Split, SplitItem } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
   const { t } = useForkliftTranslation();
@@ -29,7 +29,7 @@ export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
   }
 
   return (
-    <TableComposable aria-label="Expandable table" variant="compact">
+    <Table aria-label="Expandable table" variant="compact">
       <Thead>
         <Tr>
           <Th width={20}>{t('Pod')}</Th>
@@ -72,7 +72,7 @@ export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
           </Tr>
         ))}
       </Tbody>
-    </TableComposable>
+    </Table>
   );
 };
 

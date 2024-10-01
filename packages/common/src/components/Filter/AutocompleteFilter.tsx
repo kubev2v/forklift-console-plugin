@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 
+import { ToolbarChip, ToolbarFilter } from '@patternfly/react-core';
 import {
   Select,
   SelectOption,
   SelectOptionObject,
   SelectVariant,
-  ToolbarChip,
-  ToolbarFilter,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 
 import { SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
 
@@ -108,7 +107,7 @@ export const AutocompleteFilter = ({
         selections={[]}
         placeholderText={placeholderLabel}
         isOpen={isExpanded}
-        onToggle={onToggle}
+        onToggle={(e, v) => onToggle(v, e)}
         onFilter={onFilter}
         shouldResetOnSelect={true}
       >

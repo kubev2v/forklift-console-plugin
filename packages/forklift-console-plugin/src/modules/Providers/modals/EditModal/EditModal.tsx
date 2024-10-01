@@ -151,7 +151,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       id="modal-with-form-form-field"
       name="modal-with-form-form-field"
       value={value}
-      onChange={onChange}
+      onChange={(e, v) => onChange(v, e)}
       validated={validation.type}
     />
   );

@@ -1,5 +1,4 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { SectionHeading } from 'src/components/headers/SectionHeading';
 import { Suspend } from 'src/modules/Plans/views/details/components';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -10,7 +9,7 @@ import { PageSection } from '@patternfly/react-core';
 
 import { ConditionsSection, DetailsSection, MapsSection, ProvidersSection } from '../../components';
 
-interface StorageMapDetailsTabProps extends RouteComponentProps {
+interface StorageMapDetailsTabProps {
   name: string;
   namespace: string;
 }

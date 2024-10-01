@@ -36,9 +36,7 @@ export const ProvidersEmptyState: React.FC<ProvidersEmptyStateProps> = ({
     <EmptyState>
       <EmptyStateBody style={{ textAlign: 'left' }}>
         <Level hasGutter>
-          <LevelItem>
-            <EmptyStateIcon icon={Icon} />
-          </LevelItem>
+          <LevelItem>{Icon && <EmptyStateIcon icon={Icon} />}</LevelItem>
           <LevelItem>
             <Bullseye>
               <TextContent>

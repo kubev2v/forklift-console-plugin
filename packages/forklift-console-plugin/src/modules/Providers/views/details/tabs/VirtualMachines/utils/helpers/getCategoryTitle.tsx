@@ -1,5 +1,4 @@
 import React from 'react';
-import { TFunction } from 'react-i18next';
 
 import {
   ExclamationCircleIcon,
@@ -14,7 +13,7 @@ import {
  * @param {TFunction} t - The translation function.
  * @returns {string} The title for the given category.
  */
-export const getCategoryTitle = (category: string, t: TFunction): string => {
+export const getCategoryTitle = (category: string, t): string => {
   const titles = {
     Critical: t('Critical concerns'),
     Information: t('Information concerns'),

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { K8sResourceCondition } from '@kubev2v/types';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 /**
  * React Component to display a table of conditions.
@@ -14,7 +14,7 @@ import { HelperText, HelperTextItem } from '@patternfly/react-core';
  * @param {K8sResourceCondition[]} props.conditions - Array of conditions to be displayed.
  * @returns {ReactElement} A table displaying the provided conditions.
  */
-export const ConditionsSection: React.FC<ConditionsProps> = ({ conditions }) => {
+export const ConditionsSection: React.FC<ConditionsProps> = ({ conditions }): ReactElement => {
   const { t } = useForkliftTranslation();
 
   if (!conditions) {
@@ -38,7 +38,7 @@ export const ConditionsSection: React.FC<ConditionsProps> = ({ conditions }) => 
 
   return (
     <>
-      <TableComposable aria-label="Expandable table" variant="compact">
+      <Table aria-label="Expandable table" variant="compact">
         <Thead>
           <Tr>
             <Th width={10}>{t('Type')}</Th>
@@ -61,7 +61,7 @@ export const ConditionsSection: React.FC<ConditionsProps> = ({ conditions }) => 
             </Tr>
           ))}
         </Tbody>
-      </TableComposable>
+      </Table>
     </>
   );
 };

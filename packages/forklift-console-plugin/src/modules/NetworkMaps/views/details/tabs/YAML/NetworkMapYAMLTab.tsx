@@ -1,12 +1,11 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { Suspend } from 'src/modules/Plans/views/details/components';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModelGroupVersionKind, V1beta1NetworkMap } from '@kubev2v/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-interface NetworkMapYAMLTabProps extends RouteComponentProps {
+interface NetworkMapYAMLTabProps {
   name: string;
   namespace: string;
 }

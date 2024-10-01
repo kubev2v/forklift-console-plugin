@@ -5,12 +5,15 @@ import {
   Divider,
   MenuToggle,
   MenuToggleElement,
+  Select,
+  SelectList,
+  SelectOption,
+  SelectOptionProps,
   Text,
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
 } from '@patternfly/react-core';
-import { Select, SelectList, SelectOption, SelectOptionProps } from '@patternfly/react-core/next';
 import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
 
 /**
