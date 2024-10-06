@@ -303,6 +303,8 @@ const handlers: {
         sourceNetworkLabelToId[source] === 'pod'
           ? { type: 'pod' }
           : {
+              type: sourceProvider?.spec?.type === 'openshift' ? 'multus' : undefined,
+              name: sourceProvider?.spec?.type === 'openshift' ? source : undefined,
               id: sourceNetworkLabelToId[source],
             },
       destination:
