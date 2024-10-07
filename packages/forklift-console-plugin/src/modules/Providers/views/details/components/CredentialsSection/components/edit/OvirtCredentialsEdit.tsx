@@ -5,7 +5,15 @@ import { CertificateUpload } from 'src/modules/Providers/utils/components/Certif
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
-import { Button, Divider, Form, Popover, Switch, TextInput } from '@patternfly/react-core';
+import {
+  Button,
+  Divider,
+  Form,
+  InputGroup,
+  Popover,
+  Switch,
+  TextInput,
+} from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
@@ -164,23 +172,25 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
         helperTextInvalid={state.validation.password.msg}
         validated={state.validation.password.type}
       >
-        <TextInput
-          spellCheck="false"
-          className="pf-u-w-75"
-          isRequired
-          type={state.passwordHidden ? 'password' : 'text'}
-          aria-label="Password input"
-          value={password}
-          validated={state.validation.password.type}
-          onChange={(e, v) => onChangePassword(v, e)}
-        />
-        <Button
-          variant="control"
-          onClick={onClickTogglePassword}
-          aria-label={state.passwordHidden ? 'Show password' : 'Hide password'}
-        >
-          {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
-        </Button>
+        <InputGroup>
+          <TextInput
+            spellCheck="false"
+            className="pf-u-w-75"
+            isRequired
+            type={state.passwordHidden ? 'password' : 'text'}
+            aria-label="Password input"
+            value={password}
+            validated={state.validation.password.type}
+            onChange={(e, v) => onChangePassword(v, e)}
+          />
+          <Button
+            variant="control"
+            onClick={onClickTogglePassword}
+            aria-label={state.passwordHidden ? 'Show password' : 'Hide password'}
+          >
+            {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
+          </Button>
+        </InputGroup>
       </FormGroupWithHelpText>
 
       <Divider />
