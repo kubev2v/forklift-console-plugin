@@ -47,7 +47,7 @@ export const useVSphereInventoryVms = (
  * @returns {{ [key: string]: T }} - A dictionary with resource IDs as keys and Resource objects as values.
  */
 function convertArrayToDictionary<T>(resources: T[]): { [key: string]: T } {
-  if (!resources) {
+  if (!resources || !Array.isArray(resources)) {
     return undefined;
   }
 
