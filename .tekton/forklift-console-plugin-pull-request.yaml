@@ -21,7 +21,7 @@ spec:
   - name: build-source-image
     value: "true"
   - name: prefetch-input
-    value: '{"type": "npm", "path": "."}'
+    value: '{"type": "yarn", "path": "."}'
   - name: git-url
     value: '{{source_url}}'
   - name: revision
