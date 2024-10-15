@@ -84,7 +84,7 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
       actions={actions}
     >
       <div className="forklift-edit-modal-body">
-        {t('Are you sure you want to delete this virtual machines from the migration plan.')}
+        {t('Are you sure you want to delete this virtual machines from the migration plan?')}
       </div>
 
       {alertMessage}
