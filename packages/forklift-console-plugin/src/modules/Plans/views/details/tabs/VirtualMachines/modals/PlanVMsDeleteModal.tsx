@@ -28,7 +28,7 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
         <AlertMessageForModals
           title={t('Error')}
           message={t(
-            'All virtual machines planed for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
+            'All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
           )}
         />,
       );
