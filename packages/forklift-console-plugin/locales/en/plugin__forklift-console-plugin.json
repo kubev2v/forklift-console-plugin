@@ -37,7 +37,7 @@
   "All discovered storages have been mapped to the default storage.": "All discovered storages have been mapped to the default storage.",
   "All networks detected on the selected VMs require a mapping.": "All networks detected on the selected VMs require a mapping.",
   "All storages detected on the selected VMs require a mapping.": "All storages detected on the selected VMs require a mapping.",
-  "All virtual machines planed for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.": "All virtual machines planed for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.",
+  "All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.": "All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.",
   "Application credential ID": "Application credential ID",
   "Application credential name": "Application credential name",
   "Application credential secret": "Application credential secret",
