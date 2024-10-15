@@ -5,14 +5,14 @@ import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils/helpers';
 
-import { DEFAULT_FIELDS_TO_COMPARE } from './utils';
+import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils';
 
 /**
  * @typedef {Object} UseProviderInventoryParams
  *
  * @property {V1beta1Provider} provider - The provider from which the inventory is fetched.
  * @property {string} [subPath] - The sub path to be used in the inventory fetch API URL.
- * @property {string[]} [fieldsToCompare] - The fields to compare to check if the inventory has changed.
+ * @property {string[]} [fieldsToAvoidComparing] - The fields to ignore comparing when checking if the inventory has changed.
  * @property {number} [interval] - The polling interval in milliseconds.
  * @property {number} [fetchTimeout] - The fetch timeout in milliseconds.
  * @property {number} [cacheExpiryDuration] - Duration in milliseconds till the cache remains valid.
@@ -21,7 +21,7 @@ import { DEFAULT_FIELDS_TO_COMPARE } from './utils';
 export interface UseProviderInventoryParams {
   provider: V1beta1Provider;
   subPath?: string;
-  fieldsToCompare?: string[];
+  fieldsToAvoidComparing?: string[];
   interval?: number;
   fetchTimeout?: number;
   disabled?: boolean;
@@ -43,13 +43,13 @@ interface UseProviderInventoryResult<T> {
 /**
  * A React hook to fetch and cache inventory data from a provider.
  * It fetches new data on mount and then at the specified interval.
- * If the new data is the same as the old data (compared using the specified fields),
+ * If the new data is the same as the old data (compared ignoring specified fields, if exist),
  * it does not update the state to prevent unnecessary re-renders.
  *
  * @param {Object} useProviderInventoryParams Configuration parameters for the hook
  * @param {Object} useProviderInventoryParams.provider Provider object to get inventory data from
  * @param {string} [useProviderInventoryParams.subPath=''] Sub-path to append to the provider API URL
- * @param {Array} [useProviderInventoryParams.fieldsToCompare=DEFAULT_FIELDS_TO_COMPARE] Fields to use for comparing new data with old data
+ * @param {Array} [useProviderInventoryParams.fieldsToAvoidComparing=DEFAULT_FIELDS_TO_AVOID_COMPARING] Fields to ignore when comparing new data with old data
  * @param {number} [useProviderInventoryParams.interval=10000] Interval (in milliseconds) to fetch new data at
  * @param {boolean} [useProviderInventoryParams.disabled=false] Prevent query execution.
  *
@@ -61,7 +61,7 @@ interface UseProviderInventoryResult<T> {
 export const useProviderInventory = <T>({
   provider,
   subPath = '',
-  fieldsToCompare = DEFAULT_FIELDS_TO_COMPARE,
+  fieldsToAvoidComparing = DEFAULT_FIELDS_TO_AVOID_COMPARING,
   interval = 20000,
   fetchTimeout,
   disabled = false,
@@ -102,7 +102,7 @@ export const useProviderInventory = <T>({
           fetchTimeout,
         );
 
-        updateInventoryIfChanged(newInventory, fieldsToCompare);
+        updateInventoryIfChanged(newInventory, fieldsToAvoidComparing);
         handleError(null);
       } catch (e) {
         handleError(e);
@@ -145,13 +145,13 @@ export const useProviderInventory = <T>({
    * Checks if the inventory data has changed and updates the inventory state if it has.
    * Also updates the loading state.
    * @param {T} newInventory - The new inventory data.
-   * @param {string[]} fieldsToCompare - The fields to compare to check if the inventory data has changed.
+   * @param {string[]} fieldsToAvoidComparing - The fields to ignore comparing when checking if the inventory data has changed.
    */
-  function updateInventoryIfChanged(newInventory: T, fieldsToCompare: string[]): void {
+  function updateInventoryIfChanged(newInventory: T, fieldsToAvoidComparing: string[]): void {
     const needReRender = hasObjectChangedInGivenFields({
       oldObject: oldDataRef.current?.inventory,
       newObject: newInventory,
-      fieldsToCompare: fieldsToCompare,
+      fieldsToAvoidComparing: fieldsToAvoidComparing,
     });
 
     if (needReRender) {
