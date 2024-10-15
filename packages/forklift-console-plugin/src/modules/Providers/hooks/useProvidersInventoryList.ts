@@ -10,7 +10,7 @@ import { consoleFetchJSON, k8sGet, useFlag } from '@openshift-console/dynamic-pl
 
 import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils/helpers';
 
-import { DEFAULT_FIELDS_TO_COMPARE } from './utils';
+import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils';
 
 const INVENTORY_TYPES: string[] = ['openshift', 'openstack', 'ovirt', 'vsphere', 'ova'];
 
@@ -68,7 +68,7 @@ export const useProvidersInventoryList = ({
           ? await consoleFetchJSON(getInventoryApiUrl(`providers?detail=1`)) // Fetch all providers
           : await getInventoryByNamespace(namespace); // Fetch single namespace's providers
 
-        updateInventoryIfChanged(newInventory, DEFAULT_FIELDS_TO_COMPARE);
+        updateInventoryIfChanged(newInventory, DEFAULT_FIELDS_TO_AVOID_COMPARING);
         handleError(null);
       } catch (e) {
         handleError(e);
@@ -163,14 +163,13 @@ export const useProvidersInventoryList = ({
    * and updates the reference to the old data.
    *
    * @param newInventoryList - The new inventory list.
-   * @param fieldsToCompare - The fields to compare in order to determine
-   *                          if an inventory item has changed.
+   * @param fieldsToAvoidComparing - The fields to ignore comparing in order to determine if an inventory item has changed.
    *
    * @returns {void}
    */
   function updateInventoryIfChanged(
     newInventoryList: ProvidersInventoryList,
-    fieldsToCompare: string[],
+    fieldsToAvoidComparing: string[],
   ): void {
     // Calculate total lengths of old and new inventories.
     const oldTotalLength = INVENTORY_TYPES.reduce(
@@ -204,7 +203,11 @@ export const useProvidersInventoryList = ({
         // If a matching item is not found in the new list, or the item has changed, we need to re-render.
         if (
           !newItem ||
-          hasObjectChangedInGivenFields({ oldObject: oldItem, newObject: newItem, fieldsToCompare })
+          hasObjectChangedInGivenFields({
+            oldObject: oldItem,
+            newObject: newItem,
+            fieldsToAvoidComparing,
+          })
         ) {
           needReRender = true;
           break;
