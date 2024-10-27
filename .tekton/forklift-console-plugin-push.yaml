@@ -19,8 +19,9 @@ spec:
   params:
   - name: build-source-image
     value: "true"
-  - name: prefetch-input
-    value: '{"type": "npm", "path": "."}'
+  # Add again when KFLUXBUGS-1508 is fixed
+  # - name: prefetch-input
+  #   value: '{"type": "npm", "path": "."}'
   - name: git-url
     value: '{{source_url}}'
   - name: revision
