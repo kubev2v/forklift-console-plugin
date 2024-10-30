@@ -1,20 +1,24 @@
 type FieldsComparisonArgs<T> = {
   oldObject?: T;
   newObject?: T;
-  fieldsToCompare: string[];
+  fieldsToAvoidComparing: string[];
 };
 
 /**
  * Checks whether the specified fields have changed in two objects.
  *
- * @param params - An object containing the old object, new object, and fields to be compared.
+ * @param params - An object containing the old object, new object, and fields to avoid comparing.
  * @returns A boolean indicating whether any of the specified fields have changed.
  */
 export function hasObjectChangedInGivenFields<T>(params: FieldsComparisonArgs<T>): boolean {
-  return !isEqual(params.newObject, params.oldObject);
+  return !isEqual(params.newObject, params.oldObject, params.fieldsToAvoidComparing);
 }
 
-function isEqual(obj1: unknown, obj2: unknown): boolean {
+function isEqual(obj1: unknown, obj2: unknown, fieldsToAvoidComparing: string[]): boolean {
+  const isFieldToCompare = (key: string) => !fieldsToAvoidComparing.includes(key);
+  const isFieldChanged = (key: string, keys2: string[], fieldsToAvoidComparing: string[]) =>
+    !keys2.includes(key) || !isEqual(obj1[key], obj2[key], fieldsToAvoidComparing);
+
   // Check the object types
   if (typeof obj1 !== 'object' || typeof obj2 !== 'object' || !obj1 || !obj2) {
     return obj1 === obj2;
@@ -39,7 +43,7 @@ function isEqual(obj1: unknown, obj2: unknown): boolean {
       return false;
     }
     for (let i = 0; i < obj1.length; i++) {
-      if (!isEqual(obj1[i], obj2[i])) {
+      if (!isEqual(obj1[i], obj2[i], fieldsToAvoidComparing)) {
         return false;
       }
     }
@@ -55,7 +59,7 @@ function isEqual(obj1: unknown, obj2: unknown): boolean {
 
   // Check each key in obj1 to see if they are equal
   for (const key of keys1) {
-    if (!keys2.includes(key) || !isEqual(obj1[key], obj2[key])) {
+    if (isFieldToCompare(key) && isFieldChanged(key, keys2, fieldsToAvoidComparing)) {
       return false;
     }
   }
