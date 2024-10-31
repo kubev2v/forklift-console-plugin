@@ -40,12 +40,12 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 # - To close the console server run:
 #   yarn console:stop
 
-# Setting the console image and forklift setvice URLs as enviorment variables:
+# Setting the console image and forklift service URLs as environment variables:
 #
 # Note: default values works with the local development cluster, you can create using the CI.
 #       set this variables if you use a different cluster.
-export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your caluster address>
-export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your caluster address>
+export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster address>
+export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster address>
 export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.15
 
 # Run the web console locally (uses the enviorment variables we defined above)
@@ -88,6 +88,6 @@ More documentation is available in the [docs](./docs) directory.
 | [Forklift](https://github.com/kubev2v/forklift/) | Migration toolkit for virtualization |
 | [Openshift web console](https://github.com/openshift/console) | Openshift web console is a web based user interface for Openshift. |
 | [OpenShift Dynamic Plugin SDK](https://github.com/openshift/dynamic-plugin-sdk) | Dynamic plugin SDK for Openshift user interfaces. |
-| [Forklift documentation](https://github.com/kubev2v/forklift-documentation) | Usage documentation for the migration toolkit for viertualization. |
-| [Forklict CI](https://github.com/kubev2v/forkliftci) | Collection of scripts and tools used in forklict development. |
+| [Forklift documentation](https://github.com/kubev2v/forklift-documentation) | Usage documentation for the migration toolkit for virtualization. |
+| [Forklift CI](https://github.com/kubev2v/forkliftci) | Collection of scripts and tools used in forklift development. |
 | [Patternfly](https://www.patternfly.org/) | Open source design system used for Openshift user interfaces development. |
