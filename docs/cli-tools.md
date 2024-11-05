@@ -87,3 +87,21 @@ sudo install crc-linux-2.10.1-amd64/crc /usr/local/bin/crc
 crc setup
 crc start
 ```
+
+## How to increase the inotify.max_user_watches and inotify.max_user_instances sysctls
+
+When running the forklift development on local workstation machine, you may hit inotify limits.
+
+To edit the `inotify` limits edit the file `/etc/sysctl.conf` and add the limits you need, for example:
+
+```
+# Add this lines to /etc/sysctl.conf
+fs.inotify.max_user_watches=524288
+fs.inotify.max_user_instances=8192
+```
+
+And then restart the service:
+
+```bash
+sudo sysctl -p
+```

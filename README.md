@@ -46,7 +46,7 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 #       set this variables if you use a different cluster.
 export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster address>
 export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster address>
-export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.15
+export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.18
 
 # Run the web console locally (uses the enviorment variables we defined above)
 yarn console
@@ -57,6 +57,19 @@ yarn build
 # Start the plugin in development mode
 yarn start
 ```
+
+#### How to find the cluster address
+
+The cluster address will be the part of the address after the `apps.` or `api.` in the cluster services or API service address.
+
+For example, if your cluter API address is `api.example.com:6443`, the cluster address will be `example.com`, and
+the inventory service address will be:
+
+``` bash
+export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.example.com
+```
+
+Note: use this method to find the inventory and services address when using an Openshift cluster, when using K8s use the inventory service address.
 
 ## Setup a local cluster for development
 
