@@ -1158,10 +1158,10 @@
   resolved "https://registry.yarnpkg.com/@jsonjoy.com/util/-/util-1.3.0.tgz#e5623885bb5e0c48c1151e4dae422fb03a5887a1"
   integrity sha512-Cebt4Vk7k1xHy87kHY7KSPLT77A7Ev7IfOblyLZhtYEhrdQ6fX4EoLq3xOQ3O/DRMEh2ok5nyC180E+ABS8Wmw==
 
-"@kubev2v/types@0.0.19":
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/@kubev2v/types/-/types-0.0.19.tgz#11082b83800237d4b5d11bebf23451d1e43f26d1"
-  integrity sha512-V2qRDrRE8ZWx0Ab9wBjlExPPFDXY0jZrDh8yZAeRGwkYXVL2qgcnhA+iWjOjvywfMomTgwYmjIw9I7ZtwxihAA==
+"@kubev2v/types@0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@kubev2v/types/-/types-0.0.20.tgz#7f85b464be58f652e1558b068825227b18527786"
+  integrity sha512-B1l2cPQnm4tJUpULgvAhqaszNlLmGeTFRalk40FGHpKILldfwOf12OgAaD84cQ6QA4oMo7lQu8LH0KHB6JcxWw==
 
 "@leichtgewicht/ip-codec@^2.0.1":
   version "2.0.5"
