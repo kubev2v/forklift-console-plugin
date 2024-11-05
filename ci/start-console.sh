@@ -99,4 +99,5 @@ podman run \
     --publish=${CONSOLE_PORT}:${CONSOLE_PORT} \
     --name=${CONSOLE_CONTAINER_NAME} \
     --env "BRIDGE_*" \
+    --arch=amd64 \
     ${CONSOLE_IMAGE}
