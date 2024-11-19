@@ -26,8 +26,6 @@ export const VDDKDetailsItem: React.FC<ProviderDetailsItemProps> = ({
       valid container image path in the format of{' '}
       <strong>registry_route_or_server_path/vddk:&#8249;tag&#8250;</strong>.<br />
       <br />
-      For example: <strong>quay.io/kubev2v/example:latest</strong>.<br />
-      <br />
       It is strongly recommended to specify a VDDK init image to accelerate migrations.
     </ForkliftTrans>
   );
