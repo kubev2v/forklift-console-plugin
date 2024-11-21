@@ -53,7 +53,7 @@ export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data })
         resource={provider}
         canPatch={permissions.canPatch}
         helpContent={t(
-          'URL of the Openshift Virtualization API endpoint. Empty may be used for the host provider.',
+          'URL of the Openshift Virtualization API endpoint. Empty might be used for the host provider.',
         )}
       />
 

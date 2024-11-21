@@ -18,10 +18,9 @@ export const VDDKHelperText: React.FC = () => (
     <br />
 
     <p>
-      It is strongly recommended to create a VDDK init image to accelerate migrations. For more
-      information, see{' '}
+      To accelerate migrations, we recommend to create a VDDK init image. Learn more about{' '}
       <ExternalLink isInline href={CREATE_VDDK_HELP_LINK}>
-        Creating VDDK image
+        Creating a VDDK image
       </ExternalLink>
       .
     </p>
@@ -31,10 +30,9 @@ export const VDDKHelperText: React.FC = () => (
 export const VDDKHelperTextShort: React.FC = () => (
   <ForkliftTrans>
     <p>
-      It is strongly recommended to create a VDDK init image to accelerate migrations. For more
-      information, see{' '}
+      To accelerate migrations, we recommend to create a VDDK init image. Learn more about{' '}
       <ExternalLink isInline href={CREATE_VDDK_HELP_LINK}>
-        Creating VDDK image
+        Creating a VDDK image
       </ExternalLink>
       .
     </p>

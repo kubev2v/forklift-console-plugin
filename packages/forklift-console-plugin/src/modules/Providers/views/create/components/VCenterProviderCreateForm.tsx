@@ -217,7 +217,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
             <Checkbox
               className="forklift-section-provider-edit-vddk-checkbox"
               label={t(
-                'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration, migration may be slow.',
+                'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (migration might be slow).',
               )}
               isChecked={emptyVddkInitImage === 'yes'}
               onChange={(e, v) => onChangEmptyVddk(v, e)}
