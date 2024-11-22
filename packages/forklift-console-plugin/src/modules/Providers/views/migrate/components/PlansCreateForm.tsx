@@ -40,6 +40,7 @@ import { CreateVmMigrationPageState, NetworkAlerts, StorageAlerts } from '../typ
 
 import { EditableDescriptionItem } from './EditableDescriptionItem';
 import { MappingList } from './MappingList';
+import { MappingListHeader } from './MappingListHeader';
 import { StateAlerts } from './StateAlerts';
 
 const buildNetworkMessages = (
@@ -294,23 +295,23 @@ export const PlansCreateForm = ({
         </Form>
 
         <SectionHeading
-          text={t('Storage and network mappings')}
+          text={t('Network mappings')}
           className="forklift--create-vm-migration-plan--section-header"
-        />
+        >
+          <ResourceLink
+            groupVersionKind={NetworkMapModelGroupVersionKind}
+            namespace={netMap.metadata?.namespace}
+            name={netMap.metadata?.name}
+            className="forklift-page-resource-link-in-description-item"
+            linkTo={false}
+          />
+        </SectionHeading>
 
         <DescriptionListGroup>
-          <DescriptionListTerm>
-            <span className="forklift-page-editable-description-item">
-              {t('Network map:')}
-              <ResourceLink
-                groupVersionKind={NetworkMapModelGroupVersionKind}
-                namespace={netMap.metadata?.namespace}
-                name={netMap.metadata?.name}
-                className="forklift-page-resource-link-in-description-item"
-                linkTo={false}
-              />
-            </span>
-          </DescriptionListTerm>
+          <MappingListHeader
+            sourceHeading={t('Source network')}
+            destinationHeading={t('Target network')}
+          />
           <DescriptionListDescription className="forklift-page-mapping-list">
             <StateAlerts
               variant={AlertVariant.danger}
@@ -344,19 +345,25 @@ export const PlansCreateForm = ({
             />
           </DescriptionListDescription>
         </DescriptionListGroup>
+
+        <SectionHeading
+          text={t('Storage mappings')}
+          className="forklift--create-vm-migration-plan--section-header"
+        >
+          <ResourceLink
+            groupVersionKind={StorageMapModelGroupVersionKind}
+            namespace={storageMap.metadata?.namespace}
+            name={storageMap.metadata?.name}
+            className="forklift-page-resource-link-in-description-item"
+            linkTo={false}
+          />
+        </SectionHeading>
+
         <DescriptionListGroup>
-          <DescriptionListTerm>
-            <span className="forklift-page-editable-description-item">
-              {t('Storage map:')}
-              <ResourceLink
-                groupVersionKind={StorageMapModelGroupVersionKind}
-                namespace={storageMap.metadata?.namespace}
-                name={storageMap.metadata?.name}
-                className="forklift-page-resource-link-in-description-item"
-                linkTo={false}
-              />
-            </span>
-          </DescriptionListTerm>
+          <MappingListHeader
+            sourceHeading={t('Source storage')}
+            destinationHeading={t('Target storage')}
+          />
           <DescriptionListDescription className="forklift-page-mapping-list">
             <StateAlerts
               variant={AlertVariant.danger}
