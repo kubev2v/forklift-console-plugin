@@ -9,6 +9,8 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
+  Form,
+  FormGroup,
 } from '@patternfly/react-core';
 import {
   Select,
@@ -89,42 +91,50 @@ export const MappingListItem: FC<MappingListItemProps> = ({
         <DataListItemCells
           dataListCells={[
             <DataListCell key="source">
-              <Select
-                variant={SelectVariant.single}
-                aria-label=""
-                onToggle={setToggleSrcOpen}
-                onSelect={onSelectSource}
-                selections={source}
-                isOpen={isSrcOpen}
-                isDisabled={isDisabled}
-                aria-labelledby=""
-                isGrouped
-                menuAppendTo={() => document.body}
-              >
-                <SelectGroup label={usedSourcesLabel} key="usedSources">
-                  {toGroup(usedSources, noSourcesLabel, source)}
-                </SelectGroup>
-                <SelectGroup label={generalSourcesLabel} key="generalSources">
-                  {toGroup(generalSources, noSourcesLabel, source)}
-                </SelectGroup>
-              </Select>
+              <Form>
+                <FormGroup label={t('Source')}>
+                  <Select
+                    variant={SelectVariant.single}
+                    aria-label=""
+                    onToggle={setToggleSrcOpen}
+                    onSelect={onSelectSource}
+                    selections={source}
+                    isOpen={isSrcOpen}
+                    isDisabled={isDisabled}
+                    aria-labelledby=""
+                    isGrouped
+                    menuAppendTo={() => document.body}
+                  >
+                    <SelectGroup label={usedSourcesLabel} key="usedSources">
+                      {toGroup(usedSources, noSourcesLabel, source)}
+                    </SelectGroup>
+                    <SelectGroup label={generalSourcesLabel} key="generalSources">
+                      {toGroup(generalSources, noSourcesLabel, source)}
+                    </SelectGroup>
+                  </Select>
+                </FormGroup>
+              </Form>
             </DataListCell>,
             <DataListCell key="destination">
-              <Select
-                variant={SelectVariant.single}
-                aria-label=""
-                onToggle={setToggleTrgOpen}
-                onSelect={onSelectDestination}
-                selections={destination}
-                isOpen={isTrgOpen}
-                isDisabled={isDisabled}
-                aria-labelledby=""
-                menuAppendTo={() => document.body}
-              >
-                {destinations.map((label) => (
-                  <SelectOption value={label} key={label} />
-                ))}
-              </Select>
+              <Form>
+                <FormGroup label={t('Target')}>
+                  <Select
+                    variant={SelectVariant.single}
+                    aria-label=""
+                    onToggle={setToggleTrgOpen}
+                    onSelect={onSelectDestination}
+                    selections={destination}
+                    isOpen={isTrgOpen}
+                    isDisabled={isDisabled}
+                    aria-labelledby=""
+                    menuAppendTo={() => document.body}
+                  >
+                    {destinations.map((label) => (
+                      <SelectOption value={label} key={label} />
+                    ))}
+                  </Select>
+                </FormGroup>
+              </Form>
             </DataListCell>,
           ]}
         />
@@ -132,6 +142,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
           id={`mapping_list_item_${index}`}
           aria-label={t('Actions')}
           aria-labelledby=""
+          className="pf-v5-u-align-items-center"
         >
           <Button
             onClick={onClick}
