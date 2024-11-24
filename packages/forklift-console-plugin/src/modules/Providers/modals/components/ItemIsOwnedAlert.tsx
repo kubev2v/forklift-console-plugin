@@ -36,7 +36,7 @@ export const ItemIsOwnedAlert: React.FC<ItemIsOwnedAlertProps> = ({ owner, names
           // https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/
           namespace={namespace}
         />{' '}
-        and any modifications may be overwritten. Edit the managing resource to preserve changes.
+        and any modifications might be overwritten. Edit the managing resource to preserve changes.
       </ForkliftTrans>
     </Alert>
   );
