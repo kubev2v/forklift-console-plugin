@@ -1,4 +1,5 @@
 import React from 'react';
+import { isPlanEditable } from 'src/modules/Plans/utils';
 import { useModal } from 'src/modules/Providers/modals';
 import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -30,7 +31,11 @@ export const RootDiskDetailsItem: React.FC<PlanDetailsItemProps> = ({
       helpContent={helpContent ?? defaultHelpContent}
       moreInfoLink={VIRT_V2V_HELP_LINK}
       crumbs={['spec', 'vms', 'rootDisk']}
-      onEdit={canPatch && (() => showModal(<EditRootDisk resource={resource} />))}
+      onEdit={
+        canPatch &&
+        isPlanEditable(resource) &&
+        (() => showModal(<EditRootDisk resource={resource} />))
+      }
     />
   );
 };
