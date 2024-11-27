@@ -117,5 +117,11 @@ export const isPlanEditable = (plan: V1beta1Plan) => {
   );
 };
 
+export const isPlanArchived = (plan: V1beta1Plan) => {
+  const planStatus = getPlanPhase({ obj: plan });
+
+  return planStatus === 'Archiving' || planStatus === 'Archived';
+};
+
 const getConditions = (obj: V1beta1Plan) =>
   obj?.status?.conditions?.filter((c) => c.status === 'True').map((c) => c.type);

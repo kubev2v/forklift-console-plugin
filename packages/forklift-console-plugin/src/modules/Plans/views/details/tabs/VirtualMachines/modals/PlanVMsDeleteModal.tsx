@@ -1,4 +1,5 @@
 import React, { ReactNode, useCallback, useState } from 'react';
+import { isPlanArchived } from 'src/modules/Plans/utils';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -23,17 +24,20 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
   const vms = (plan?.spec?.vms || []).filter((vm) => !selected.includes(vm.id)) || [];
 
   React.useEffect(() => {
+    if (isPlanArchived(plan)) {
+      setAlertMessage(
+        t('Deleting virtual machines from an archived migration plan is not allowed.'),
+      );
+      return;
+    }
     if (vms.length < 1) {
       setAlertMessage(
-        <AlertMessageForModals
-          title={t('Error')}
-          message={t(
-            'All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
-          )}
-        />,
+        t(
+          'All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
+        ),
       );
     }
-  }, [vms]);
+  }, [vms, plan]);
 
   const handleSave = useCallback(async () => {
     toggleIsLoading();
@@ -51,10 +55,7 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
       toggleModal();
     } catch (err) {
       toggleIsLoading();
-
-      setAlertMessage(
-        <AlertMessageForModals title={t('Error')} message={err.message || err.toString()} />,
-      );
+      setAlertMessage(err.message || err.toString());
     }
   }, [selected]);
 
@@ -63,7 +64,7 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
       key="confirm"
       onClick={handleSave}
       variant="danger"
-      isDisabled={vms.length < 1}
+      isDisabled={vms.length < 1 || isPlanArchived(plan)}
       isLoading={isLoading}
     >
       {t('Delete')}
@@ -86,8 +87,7 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
       <div className="forklift-edit-modal-body">
         {t('Are you sure you want to delete this virtual machines from the migration plan?')}
       </div>
-
-      {alertMessage}
+      {alertMessage && <AlertMessageForModals title={t('Error')} message={alertMessage} />}
     </Modal>
   );
 };

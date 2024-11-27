@@ -5,7 +5,7 @@ import {
   StandardPageWithSelectionProps,
 } from 'src/components/page/StandardPageWithSelection';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
-import { isPlanExecuting } from 'src/modules/Plans/utils';
+import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
@@ -244,10 +244,11 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   }));
 
   const isExecuting = isPlanExecuting(plan);
+  const isArchived = isPlanArchived(plan);
 
-  // If plan executing allow to cancel vms, o/w remove from plan
+  // If plan executing and not archived (happens when archiving a running plan), allow to cancel vms, o/w remove from plan
   let actions: PageGlobalActions;
-  if (isExecuting) {
+  if (isExecuting && !isArchived) {
     actions = [
       ({ selectedIds }) => (
         <MigrationVMsCancelButton selectedIds={selectedIds || []} migration={lastMigration} />
