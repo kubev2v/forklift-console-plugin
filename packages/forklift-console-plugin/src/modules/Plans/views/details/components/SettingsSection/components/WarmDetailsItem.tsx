@@ -1,4 +1,5 @@
 import React from 'react';
+import { isPlanEditable } from 'src/modules/Plans/utils';
 import { useModal } from 'src/modules/Providers/modals';
 import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -38,6 +39,7 @@ export const WarmDetailsItem: React.FC<PlanDetailsItemProps> = ({
       crumbs={['spec', 'warm ']}
       onEdit={
         canPatch &&
+        isPlanEditable(resource) &&
         (() =>
           showModal(<EditPlanWarm resource={resource} destinationProvider={destinationProvider} />))
       }

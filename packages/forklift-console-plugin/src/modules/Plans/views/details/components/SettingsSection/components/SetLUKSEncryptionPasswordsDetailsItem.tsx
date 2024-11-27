@@ -1,4 +1,5 @@
 import React from 'react';
+import { isPlanEditable } from 'src/modules/Plans/utils';
 import { useModal } from 'src/modules/Providers/modals';
 import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -43,6 +44,7 @@ export const SetLUKSEncryptionPasswordsDetailsItem: React.FC<PlanDetailsItemProp
       crumbs={['spec', 'vms', 'luks']}
       onEdit={
         canPatch &&
+        isPlanEditable(resource) &&
         (() =>
           showModal(
             <EditLUKSEncryptionPasswords
