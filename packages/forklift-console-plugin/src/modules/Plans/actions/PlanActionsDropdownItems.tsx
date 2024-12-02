@@ -14,7 +14,14 @@ import {
   PlanDeleteModal,
   PlanStartMigrationModal,
 } from '../modals';
-import { canPlanReStart, canPlanStart, getPlanPhase, isPlanExecuting, PlanData } from '../utils';
+import {
+  canPlanReStart,
+  canPlanStart,
+  getPlanPhase,
+  isPlanArchived,
+  isPlanExecuting,
+  PlanData,
+} from '../utils';
 
 export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
@@ -33,6 +40,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
   const canStart = canPlanStart(plan);
   const canReStart = canPlanReStart(plan);
   const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
+  const isArchived = isPlanArchived(plan);
 
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
 
@@ -67,7 +75,11 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
       {buttonStartLabel}
     </DropdownItem>,
 
-    <DropdownItem key="cutover" isDisabled={!isWarmAndExecuting} onClick={onClickPlanCutover}>
+    <DropdownItem
+      key="cutover"
+      isDisabled={!isWarmAndExecuting || isArchived}
+      onClick={onClickPlanCutover}
+    >
       {t('Cutover')}
     </DropdownItem>,
 
