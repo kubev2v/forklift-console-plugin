@@ -1,55 +1,24 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @cspell/spellchecker */
 /* eslint-env node */
 
 import * as path from 'path';
 
-import CopyWebpackPlugin from 'copy-webpack-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import { Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
-import { DynamicConsoleRemotePlugin } from '@kubev2v/webpack';
+import { ConsoleRemotePlugin } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
+import { ENVIRONMENT_DEFAULTS } from './enviorment-defaultss';
 import extensions from './plugin-extensions';
 import pluginMetadata from './plugin-metadata';
 
+const CopyPlugin = require('copy-webpack-plugin');
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
 }
-
-export const ENVIRONMENT_DEFAULTS = {
-  /**
-   * Used for testing when no api servers are available.  If set to `mock`, network api
-   * calls will use mock data.
-   */
-  DATA_SOURCE: 'remote' as 'mock' | 'remote',
-
-  /**
-   * UI branding name.
-   *
-   * Note: downstream builds are set to: 'RedHat'
-   */
-  BRAND_TYPE: 'Forklift' as 'RedHat' | 'Forklift',
-
-  /**
-   * Namespaces used by UI forms and modals if no namespace is given by the user.
-   *
-   * Note: downstream build are set to: 'openshift-mtv'
-   */
-  DEFAULT_NAMESPACE: 'konveyor-forklift',
-
-  /**
-   * Name of the console plugin.  It should be set to the plugin name used in the
-   * installation scripts.  Defaults to the name in `package.json`: 'forklift-console-plugin'.
-   */
-  PLUGIN_NAME: pluginMetadata.name,
-
-  /**
-   * Version of the plugin.  Defaults to the version in `package.json`.
-   */
-  VERSION: pluginMetadata.version,
-};
 
 const config: Configuration = {
   mode: 'development',
@@ -109,11 +78,11 @@ const config: Configuration = {
     ],
   },
   plugins: [
-    new DynamicConsoleRemotePlugin({
+    new ConsoleRemotePlugin({
       pluginMetadata,
       extensions,
     }),
-    new CopyWebpackPlugin({
+    new CopyPlugin({
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),
     new EnvironmentPlugin(ENVIRONMENT_DEFAULTS),
@@ -146,10 +115,15 @@ const config: Configuration = {
 
 if (process.env.NODE_ENV === 'production') {
   config.mode = 'production';
+
+  // Ensure `output` is initialized if undefined
+  config.output = config.output || {};
   config.output.filename = '[name]-bundle-[hash].min.js';
   config.output.chunkFilename = '[name]-chunk-[chunkhash].min.js';
+
+  // Ensure `optimization` is initialized if undefined
+  config.optimization = config.optimization || {};
   config.optimization.chunkIds = 'deterministic';
   config.optimization.minimize = true;
 }
-
 export default config;

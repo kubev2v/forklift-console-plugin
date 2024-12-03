@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
+import { Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
 
 import { ResourceField, UID } from '../../utils';
 
@@ -38,26 +38,16 @@ export function TableView<T>({
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
 
   return (
-    <TableComposable
-      aria-label={ariaLabel}
-      variant="compact"
-      isStickyHeader
-      onPointerEnterCapture={undefined}
-      onPointerLeaveCapture={undefined}
-    >
-      <Thead onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-        <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+    <Table aria-label={ariaLabel} variant="compact" isStickyHeader>
+      <Thead>
+        <Tr>
           <Header {...{ activeSort, setActiveSort, visibleColumns, dataOnScreen: entities }} />
         </Tr>
       </Thead>
-      <Tbody onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+      <Tbody>
         {hasChildren && (
-          <Tr onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-            <Td
-              colSpan={visibleColumns.length || 1}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            >
+          <Tr>
+            <Td colSpan={visibleColumns.length || 1}>
               <Bullseye>{children}</Bullseye>
             </Td>
           </Tr>
@@ -75,7 +65,7 @@ export function TableView<T>({
             />
           ))}
       </Tbody>
-    </TableComposable>
+    </Table>
   );
 }
 
@@ -96,7 +86,7 @@ interface TableViewProps<T> {
   /**
    * Maps entities to table rows.
    */
-  Row(props: RowProps<T>): JSX.Element;
+  Row: React.FC<RowProps<T>>;
   /**
    * Nodes to be displayed instead of the entities.
    * Extension point to handle empty state and related cases.
@@ -119,7 +109,7 @@ interface TableViewProps<T> {
   /**
    * Maps resourceFields to header rows.
    */
-  Header(props: TableViewHeaderProps<T>): JSX.Element;
+  Header: React.FC<TableViewHeaderProps<T>>;
 
   /**
    * @returns string that can be used as an unique identifier

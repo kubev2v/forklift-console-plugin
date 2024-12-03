@@ -36,7 +36,11 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
   const isText = !type || type === 'text';
   const onClick = () => {
     showModal(
-      <FetchCertificateModal url={url} handleSave={onTextChange} existingCert={String(value)} />,
+      <FetchCertificateModal
+        url={url}
+        handleSave={(v) => onTextChange(null, v)}
+        existingCert={String(value)}
+      />,
     );
   };
 

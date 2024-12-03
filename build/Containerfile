@@ -16,7 +16,8 @@ WORKDIR /opt/app-root/src/app
 
 # Run install as supper tux
 USER 0
-RUN npm ci && npm run build
+RUN command -v yarn || npm i -g yarn
+RUN yarn install --frozen-lockfile --ignore-engines && yarn build
 
 # Web server container
 FROM registry.access.redhat.com/ubi9/nginx-122

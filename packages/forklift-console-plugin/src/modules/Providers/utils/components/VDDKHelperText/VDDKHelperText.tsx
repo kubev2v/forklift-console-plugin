@@ -4,7 +4,7 @@ import { ForkliftTrans } from 'src/utils';
 import { ExternalLink } from '@kubev2v/common';
 
 export const CREATE_VDDK_HELP_LINK =
-  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
+  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
 
 export const VDDKHelperText: React.FC = () => (
   <ForkliftTrans>
@@ -18,10 +18,9 @@ export const VDDKHelperText: React.FC = () => (
     <br />
 
     <p>
-      It is strongly recommended to create a VDDK init image to accelerate migrations. For more
-      information, see{' '}
+      To accelerate migrations, we recommend to create a VDDK init image. Learn more about{' '}
       <ExternalLink isInline href={CREATE_VDDK_HELP_LINK}>
-        Creating VDDK image
+        Creating a VDDK image
       </ExternalLink>
       .
     </p>
@@ -31,10 +30,9 @@ export const VDDKHelperText: React.FC = () => (
 export const VDDKHelperTextShort: React.FC = () => (
   <ForkliftTrans>
     <p>
-      It is strongly recommended to create a VDDK init image to accelerate migrations. For more
-      information, see{' '}
+      To accelerate migrations, we recommend to create a VDDK init image. Learn more about{' '}
       <ExternalLink isInline href={CREATE_VDDK_HELP_LINK}>
-        Creating VDDK image
+        Creating a VDDK image
       </ExternalLink>
       .
     </p>

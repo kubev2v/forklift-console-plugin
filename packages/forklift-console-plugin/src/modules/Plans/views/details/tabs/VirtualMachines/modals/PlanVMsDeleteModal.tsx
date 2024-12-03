@@ -28,7 +28,7 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
         <AlertMessageForModals
           title={t('Error')}
           message={t(
-            'All virtual machines planed for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
+            'All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
           )}
         />,
       );
@@ -84,7 +84,7 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
       actions={actions}
     >
       <div className="forklift-edit-modal-body">
-        {t('Are you sure you want to delete this virtual machines from the migration plan.')}
+        {t('Are you sure you want to delete this virtual machines from the migration plan?')}
       </div>
 
       {alertMessage}

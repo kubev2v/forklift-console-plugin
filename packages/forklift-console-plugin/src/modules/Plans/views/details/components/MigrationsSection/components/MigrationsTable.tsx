@@ -8,7 +8,6 @@ import {
 import { getMigrationPhase } from 'src/modules/Plans/utils/helpers/getMigrationPhase';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import {
   MigrationModelGroupVersionKind,
   PlanModelGroupVersionKind,
@@ -22,6 +21,7 @@ import {
   ProgressMeasureLocation,
   ProgressSize,
 } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, showOwner }) => {
   const { t } = useForkliftTranslation();
@@ -37,7 +37,7 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
   sortMigrationsByStartedAtDate(migrations);
 
   return (
-    <TableComposable aria-label="Expandable table" variant="compact">
+    <Table aria-label="Expandable table" variant="compact">
       <Thead>
         <Tr>
           <Th width={20}>{t('Migration')}</Th>
@@ -82,7 +82,7 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
           </Tr>
         ))}
       </Tbody>
-    </TableComposable>
+    </Table>
   );
 };
 

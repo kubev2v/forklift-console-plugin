@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
 import { Modal, ModalVariant } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 export interface PipelineTasksModalProps {
   name: string;
@@ -24,7 +24,7 @@ export const PipelineTasksModal: React.FC<PipelineTasksModalProps> = ({ name, ta
       isOpen={true}
       onClose={toggleModal}
     >
-      <TableComposable variant="compact">
+      <Table variant="compact">
         <Thead>
           <Tr>
             <Th>{t('Name')}</Th>
@@ -47,14 +47,14 @@ export const PipelineTasksModal: React.FC<PipelineTasksModalProps> = ({ name, ta
             </Tr>
           ))}
         </Tbody>
-      </TableComposable>
+      </Table>
     </Modal>
   );
 };
 
-const getTaskProgress = (task) => {
+const getTaskProgress = (task): ReactNode => {
   if (!task || !task?.progress) {
-    return { completed: '-', total: '-' };
+    return '- / -';
   }
 
   const { completed, total } = task.progress;

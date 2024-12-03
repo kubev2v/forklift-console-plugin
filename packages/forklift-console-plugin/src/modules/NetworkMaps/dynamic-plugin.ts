@@ -1,14 +1,14 @@
 import { NetworkMapModel, NetworkMapModelGroupVersionKind } from '@kubev2v/types';
-import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
+import { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
 import {
   ModelMetadata,
   ResourceDetailsPage,
   ResourceListPage,
   ResourceNSNavItem,
 } from '@openshift-console/dynamic-plugin-sdk';
-import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
+import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
-export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
+export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   NetworkMapsListPage: './modules/NetworkMaps/views/list/NetworkMapsListPage',
   NetworkMapDetailsPage: './modules/NetworkMaps/views/details/NetworkMapDetailsPage',
   yamlTemplates: './modules/NetworkMaps/yamlTemplates',

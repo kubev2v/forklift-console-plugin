@@ -2,9 +2,9 @@ import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { OVirtVM } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { AlignedDecimal } from './AlignedDecimal';
 
@@ -36,7 +36,7 @@ export const OvirtPlanResources: React.FC<{ planInventory: OVirtVM[] }> = ({ pla
   return (
     <PageSection variant="light">
       <SectionHeading text={t('Calculated resources')} />
-      <TableComposable variant="compact">
+      <Table variant="compact">
         <Thead>
           <Th></Th>
           <Th>{t('Total virtual machines')}</Th>
@@ -77,7 +77,7 @@ export const OvirtPlanResources: React.FC<{ planInventory: OVirtVM[] }> = ({ pla
             </Td>
           </Tr>
         </Tbody>
-      </TableComposable>
+      </Table>
     </PageSection>
   );
 };

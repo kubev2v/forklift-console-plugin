@@ -55,7 +55,7 @@ const PreserveStaticIPsInputFactory: () => ModalInputComponentType = () => {
           'Do not try to preserve the static IPs of virtual machines migrated from vSphere.',
         )}
         isChecked={value === 'true'}
-        onChange={onChangeInternal}
+        onChange={(e, v) => onChangeInternal(v, e)}
       />
     );
   };

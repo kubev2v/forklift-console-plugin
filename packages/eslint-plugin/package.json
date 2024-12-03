@@ -12,7 +12,10 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "test": "echo no tests yet",
+    "test:coverage": "echo no tests yet",
+    "test:updateSnapshot": "echo no tests yet"
   },
   "devDependencies": {
     "eslint": "^8.0"

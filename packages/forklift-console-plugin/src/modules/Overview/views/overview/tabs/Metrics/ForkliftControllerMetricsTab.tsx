@@ -1,12 +1,11 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { Flex, FlexItem } from '@patternfly/react-core';
 
 import { MigrationsCard, MigrationsChartCard, VmMigrationsChartCard } from './cards';
 
-interface ForkliftControllerMetricsTabProps extends RouteComponentProps {
+interface ForkliftControllerMetricsTabProps {
   obj: V1beta1ForkliftController;
   ns?: string;
   name?: string;

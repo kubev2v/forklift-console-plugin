@@ -7,6 +7,7 @@ export * from './MappingListItem';
 export * from './MigrationsSection';
 export * from './PlanCriticalCondition';
 export * from './PlanPageHeadings';
+export * from './PlanWarningCondition';
 export * from './ProvidersSection';
 export * from './SettingsSection';
 export * from './Suspend';

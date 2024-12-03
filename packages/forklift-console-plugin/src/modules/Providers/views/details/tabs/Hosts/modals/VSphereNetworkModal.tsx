@@ -11,6 +11,7 @@ import {
   Form,
   HelperText,
   HelperTextItem,
+  InputGroup,
   Modal,
   ModalVariant,
   Text,
@@ -258,7 +259,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                 type="text"
                 id="username"
                 value={state.username}
-                onChange={onChangUser}
+                onChange={(e, v) => onChangUser(v, e)}
                 validated={state.validation.username}
               />
             </FormGroupWithHelpText>
@@ -270,19 +271,21 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
               helperTextInvalid={t('Invalid password')}
               validated={state.validation.password}
             >
-              <TextInput
-                spellCheck="false"
-                className="forklift-host-modal-input-secret"
-                isRequired
-                type={state.passwordHidden ? 'password' : 'text'}
-                aria-label="Password input"
-                value={state.password}
-                onChange={onChangePassword}
-                validated={state.validation.password}
-              />
-              <Button variant="control" onClick={togglePasswordHidden}>
-                {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
-              </Button>
+              <InputGroup>
+                <TextInput
+                  spellCheck="false"
+                  className="forklift-host-modal-input-secret"
+                  isRequired
+                  type={state.passwordHidden ? 'password' : 'text'}
+                  aria-label="Password input"
+                  value={state.password}
+                  onChange={(e, v) => onChangePassword(v, e)}
+                  validated={state.validation.password}
+                />
+                <Button variant="control" onClick={togglePasswordHidden}>
+                  {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
+                </Button>
+              </InputGroup>
             </FormGroupWithHelpText>
           </>
         )}

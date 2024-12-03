@@ -218,7 +218,7 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
         >
           <ForkliftTrans>
             <p>
-              Duplicate plan <strong className="co-break-word">{{ resourceName: name }}</strong>?
+              Duplicate plan <strong className="co-break-word">{name}</strong>?
             </p>
             <br />
 
@@ -238,7 +238,7 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
                   value={newName}
                   id="name"
                   aria-describedby="name-helper"
-                  onChange={onChange}
+                  onChange={(e, v) => onChange(v, e)}
                 />
               </FormGroupWithHelpText>
             </Form>
@@ -248,16 +248,10 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
             <br />
 
             <p>
-              Storage map:{' '}
-              <strong className="co-break-word">
-                {{ storageMap: storageMap?.metadata?.name }}
-              </strong>
+              Storage map: <strong className="co-break-word">{storageMap?.metadata?.name}</strong>
             </p>
             <p>
-              Network map:{' '}
-              <strong className="co-break-word">
-                {{ networkMap: networkMap?.metadata?.name }}
-              </strong>
+              Network map: <strong className="co-break-word">{networkMap?.metadata?.name}</strong>
             </p>
           </ForkliftTrans>
         </Suspend>

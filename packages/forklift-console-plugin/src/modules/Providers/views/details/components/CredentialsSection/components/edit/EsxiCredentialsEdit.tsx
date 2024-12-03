@@ -5,7 +5,15 @@ import { CertificateUpload } from 'src/modules/Providers/utils/components/Certif
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
-import { Button, Divider, Form, Popover, Switch, TextInput } from '@patternfly/react-core';
+import {
+  Button,
+  Divider,
+  Form,
+  InputGroup,
+  Popover,
+  Switch,
+  TextInput,
+} from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
@@ -145,7 +153,7 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
           type="text"
           id="username"
           name="username"
-          onChange={onChangeUser}
+          onChange={(e, v) => onChangeUser(v, e)}
           value={user}
           validated={state.validation.user.type}
         />
@@ -158,23 +166,25 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
         helperTextInvalid={state.validation.password.msg}
         validated={state.validation.password.type}
       >
-        <TextInput
-          spellCheck="false"
-          className="pf-u-w-75"
-          isRequired
-          type={state.passwordHidden ? 'password' : 'text'}
-          aria-label="Password input"
-          onChange={onChangePassword}
-          value={password}
-          validated={state.validation.password.type}
-        />
-        <Button
-          variant="control"
-          onClick={onClickTogglePassword}
-          aria-label={state.passwordHidden ? 'Show password' : 'Hide password'}
-        >
-          {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
-        </Button>
+        <InputGroup>
+          <TextInput
+            spellCheck="false"
+            className="pf-u-w-75"
+            isRequired
+            type={state.passwordHidden ? 'password' : 'text'}
+            aria-label="Password input"
+            onChange={(e, v) => onChangePassword(v, e)}
+            value={password}
+            validated={state.validation.password.type}
+          />
+          <Button
+            variant="control"
+            onClick={onClickTogglePassword}
+            aria-label={state.passwordHidden ? 'Show password' : 'Hide password'}
+          >
+            {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
+          </Button>
+        </InputGroup>
       </FormGroupWithHelpText>
 
       <Divider />
@@ -207,7 +217,7 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={onChangeInsecure}
+          onChange={(e, v) => onChangeInsecure(v, e)}
         />
       </FormGroupWithHelpText>
 
@@ -238,8 +248,8 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
           url={url}
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={onDataChange}
-          onTextChange={onTextChange}
+          onDataChange={(_e, v) => onDataChange(v)}
+          onTextChange={(_e, v) => onTextChange(v)}
           onClearClick={() => handleChange('cacert', '')}
           isDisabled={insecureSkipVerify === 'true'}
         />

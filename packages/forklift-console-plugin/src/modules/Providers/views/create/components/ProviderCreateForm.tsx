@@ -157,7 +157,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
                 name="name"
                 value={newProvider.metadata.name} // Use the appropriate prop value here
                 validated={state.validation.name.type}
-                onChange={onChange} // Call the custom handler method
+                onChange={(e, v) => onChange(v, e)} // Call the custom handler method
               />
             </FormGroupWithHelpText>
           </Form>

@@ -52,10 +52,10 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
         <Checkbox
           className="forklift-section-provider-edit-vddk-checkbox"
           label={t(
-            'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration, migration may be slow.',
+            'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (migration might be slow).',
           )}
           isChecked={isEmptyImage}
-          onChange={onChange}
+          onChange={(e, v) => onChange(v, e)}
           id="emptyVddkInitImage"
           name="emptyVddkInitImage"
         />

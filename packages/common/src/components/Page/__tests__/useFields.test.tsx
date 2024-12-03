@@ -1,4 +1,5 @@
-import { act, cleanup, renderHook } from '@testing-library/react-hooks';
+import { cleanup } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react-hooks';
 
 import { NAME, NAMESPACE } from '../../../utils';
 import { useFields } from '../useFields';

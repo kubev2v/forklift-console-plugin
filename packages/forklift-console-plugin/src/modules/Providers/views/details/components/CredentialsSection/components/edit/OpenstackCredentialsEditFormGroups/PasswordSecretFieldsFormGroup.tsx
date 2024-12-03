@@ -4,7 +4,7 @@ import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Pro
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
-import { Button, TextInput } from '@patternfly/react-core';
+import { Button, InputGroup, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 
@@ -92,7 +92,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id="username"
           name="username"
           value={username}
-          onChange={onChangeFactory('username')}
+          onChange={(e, v) => onChangeFactory('username')(v, e)}
           validated={state.validation.username.type}
         />
       </FormGroupWithHelpText>
@@ -105,23 +105,25 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
         helperTextInvalid={state.validation.password.msg}
         validated={state.validation.password.type}
       >
-        <TextInput
-          spellCheck="false"
-          className="pf-u-w-75"
-          isRequired
-          type={state.passwordHidden ? 'password' : 'text'}
-          aria-label="Password input"
-          value={password}
-          onChange={onChangeFactory('password')}
-          validated={state.validation.password.type}
-        />
-        <Button
-          variant="control"
-          onClick={togglePasswordHidden}
-          aria-label={state.passwordHidden ? 'Show password' : 'Hide password'}
-        >
-          {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
-        </Button>
+        <InputGroup>
+          <TextInput
+            spellCheck="false"
+            className="pf-u-w-75"
+            isRequired
+            type={state.passwordHidden ? 'password' : 'text'}
+            aria-label="Password input"
+            value={password}
+            onChange={(e, v) => onChangeFactory('password')(v, e)}
+            validated={state.validation.password.type}
+          />
+          <Button
+            variant="control"
+            onClick={togglePasswordHidden}
+            aria-label={state.passwordHidden ? 'Show password' : 'Hide password'}
+          >
+            {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
+          </Button>
+        </InputGroup>
       </FormGroupWithHelpText>
 
       <FormGroupWithHelpText
@@ -139,7 +141,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={onChangeFactory('regionName')}
+          onChange={(e, v) => onChangeFactory('regionName')(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -159,7 +161,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id="projectName"
           name="projectName"
           value={projectName}
-          onChange={onChangeFactory('projectName')}
+          onChange={(e, v) => onChangeFactory('projectName')(v, e)}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>
@@ -179,7 +181,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id="domainName"
           name="domainName"
           value={domainName}
-          onChange={onChangeFactory('domainName')}
+          onChange={(e, v) => onChangeFactory('domainName')(v, e)}
           validated={state.validation.domainName.type}
         />
       </FormGroupWithHelpText>

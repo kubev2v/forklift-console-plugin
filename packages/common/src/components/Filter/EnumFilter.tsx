@@ -1,13 +1,12 @@
 import React, { useMemo, useState } from 'react';
 
+import { ToolbarChip, ToolbarFilter } from '@patternfly/react-core';
 import {
   Select,
   SelectOption,
   SelectOptionObject,
   SelectVariant,
-  ToolbarChip,
-  ToolbarFilter,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 
 import { localeCompare, SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
 
@@ -185,7 +184,7 @@ export const EnumFilter = ({
         selections={selectedUniqueEnumLabels}
         placeholderText={placeholderLabel}
         isOpen={isExpanded}
-        onToggle={onToggle}
+        onToggle={(e, v) => onToggle(v, e)}
         hasInlineFilter={hasInlineFilter}
         onFilter={onFilter}
       >

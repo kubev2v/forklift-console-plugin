@@ -1,8 +1,8 @@
-import { EncodedExtension } from '@openshift/dynamic-plugin-sdk';
+import { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
 import { ContextProvider, HrefNavItem, RoutePage } from '@openshift-console/dynamic-plugin-sdk';
-import type { ConsolePluginMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack/lib/schema/plugin-package';
+import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
-export const exposedModules: ConsolePluginMetadata['exposedModules'] = {
+export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   OverviewPage: './modules/Overview/views/overview/OverviewPage',
   OverviewContextProvider: './modules/Overview/hooks/OverviewContextProvider',
 };

@@ -3,7 +3,7 @@
  * `EnvironmentPlugin` definitions
  */
 
-import { ENVIRONMENT_DEFAULTS } from '../../webpack.config';
+import { ENVIRONMENT_DEFAULTS } from '../../enviorment-defaultss';
 
 const environmentDefaults = {
   ...ENVIRONMENT_DEFAULTS,

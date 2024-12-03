@@ -4,7 +4,7 @@ import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Pro
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
-import { Button, TextInput } from '@patternfly/react-core';
+import { Button, InputGroup, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 
@@ -82,24 +82,26 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
         helperTextInvalid={state.validation.token.msg}
         validated={state.validation.token.type}
       >
-        <TextInput
-          spellCheck="false"
-          className="pf-u-w-75"
-          isRequired
-          type={state.passwordHidden ? 'password' : 'text'}
-          id="token"
-          name="token"
-          value={token}
-          onChange={onChangeFactory('token')}
-          validated={state.validation.token.type}
-        />
-        <Button
-          variant="control"
-          onClick={togglePasswordHidden}
-          aria-label={state.passwordHidden ? 'Show password' : 'Hide password'}
-        >
-          {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
-        </Button>
+        <InputGroup>
+          <TextInput
+            spellCheck="false"
+            className="pf-u-w-75"
+            isRequired
+            type={state.passwordHidden ? 'password' : 'text'}
+            id="token"
+            name="token"
+            value={token}
+            onChange={(e, v) => onChangeFactory('token')(v, e)}
+            validated={state.validation.token.type}
+          />
+          <Button
+            variant="control"
+            onClick={togglePasswordHidden}
+            aria-label={state.passwordHidden ? 'Show password' : 'Hide password'}
+          >
+            {state.passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
+          </Button>
+        </InputGroup>
       </FormGroupWithHelpText>
 
       <FormGroupWithHelpText
@@ -117,7 +119,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="userID"
           name="userID"
           value={userID}
-          onChange={onChangeFactory('userID')}
+          onChange={(e, v) => onChangeFactory('userID')(v, e)}
           validated={state.validation.userID.type}
         />
       </FormGroupWithHelpText>
@@ -137,7 +139,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="projectID"
           name="projectID"
           value={projectID}
-          onChange={onChangeFactory('projectID')}
+          onChange={(e, v) => onChangeFactory('projectID')(v, e)}
           validated={state.validation.projectID.type}
         />
       </FormGroupWithHelpText>
@@ -157,7 +159,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id="regionName"
           name="regionName"
           value={regionName}
-          onChange={onChangeFactory('regionName')}
+          onChange={(e, v) => onChangeFactory('regionName')(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>

@@ -16,8 +16,8 @@ CONSOLE_PORT=${CONSOLE_PORT:-9000}
 # Look for forklift routes
 if oc_available_loggedin; then
     routes=$(oc get routes -A -o template --template='{{range .items}}{{.spec.host}}{{"\n"}}{{end}}' 2>/dev/null || true)
-    INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:-$(echo "$routes" | grep forklift-inventory)}
-    SERVICES_API_SERVER_HOST=${SERVICES_API_SERVER_HOST:-$(echo "$routes" | grep forklift-services)}
+    INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:-$(echo "$routes" | grep forklift-inventory || true)}
+    SERVICES_API_SERVER_HOST=${SERVICES_API_SERVER_HOST:-$(echo "$routes" | grep forklift-services || true)}
 fi
 
 # Default to localhost if no route found
@@ -99,4 +99,5 @@ podman run \
     --publish=${CONSOLE_PORT}:${CONSOLE_PORT} \
     --name=${CONSOLE_CONTAINER_NAME} \
     --env "BRIDGE_*" \
+    --arch=amd64 \
     ${CONSOLE_IMAGE}

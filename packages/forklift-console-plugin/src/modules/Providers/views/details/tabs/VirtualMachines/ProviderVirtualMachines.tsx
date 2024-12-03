@@ -1,5 +1,4 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { ProviderData } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -16,7 +15,7 @@ import { OvaVirtualMachinesList } from './OvaVirtualMachinesList';
 import { OVirtVirtualMachinesList } from './OVirtVirtualMachinesList';
 import { VSphereVirtualMachinesList } from './VSphereVirtualMachinesList';
 
-export interface ProviderVirtualMachinesProps extends RouteComponentProps {
+export interface ProviderVirtualMachinesProps {
   title?: string;
   obj: ProviderData;
   loaded?: boolean;

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 
+import { ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import {
   Select,
   SelectOption,
   SelectOptionObject,
   SelectVariant,
-  ToolbarGroup,
-  ToolbarItem,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 
 import { SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
 
@@ -66,7 +65,7 @@ export const AttributeValueFilter = ({
       <ToolbarItem>
         <Select
           onSelect={onFilterTypeSelect}
-          onToggle={onToggle}
+          onToggle={(e, v) => onToggle(v, e)}
           isOpen={expanded}
           variant={SelectVariant.single}
           aria-label={'Select Filter'}

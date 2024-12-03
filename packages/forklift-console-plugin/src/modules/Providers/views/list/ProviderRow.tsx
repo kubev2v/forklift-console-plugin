@@ -2,8 +2,8 @@ import React from 'react';
 import { ProviderData } from 'src/modules/Providers/utils';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
-import { Td, Tr } from '@kubev2v/common';
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
+import { Td, Tr } from '@patternfly/react-table';
 
 import { ProviderActionsDropdown } from '../../actions';
 import { TableEmptyCell } from '../../utils';

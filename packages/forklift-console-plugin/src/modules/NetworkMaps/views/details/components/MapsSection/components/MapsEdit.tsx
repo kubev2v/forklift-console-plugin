@@ -43,7 +43,7 @@ export const MapsEdit: React.FC<MapsEditProps> = ({
         >
           <FormSelect
             value={selectedProviderName}
-            onChange={onChange}
+            onChange={(e, v) => onChange(v, e)}
             id="targetProvider"
             isDisabled={!hasProviders}
             validated={validated}

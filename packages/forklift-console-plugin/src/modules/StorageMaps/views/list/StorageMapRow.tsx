@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ResourceField, RowProps } from '@kubev2v/common';
-import { Td, Tr } from '@kubev2v/common';
+import { Td, Tr } from '@patternfly/react-table';
 
 import { StorageMapActionsDropdown } from '../../actions';
 import { StorageMapData } from '../../utils';

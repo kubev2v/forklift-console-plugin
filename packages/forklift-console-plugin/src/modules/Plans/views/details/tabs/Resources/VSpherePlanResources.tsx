@@ -2,9 +2,9 @@ import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@kubev2v/common';
 import { VSphereVM } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { AlignedDecimal } from './AlignedDecimal';
 
@@ -38,7 +38,7 @@ export const VSpherePlanResources: React.FC<{ planInventory: VSphereVM[] }> = ({
   return (
     <PageSection variant="light">
       <SectionHeading text={t('Calculated resources')} />
-      <TableComposable variant="compact">
+      <Table variant="compact">
         <Thead>
           <Th></Th>
           <Th>{t('Total virtual machines')}</Th>
@@ -79,7 +79,7 @@ export const VSpherePlanResources: React.FC<{ planInventory: VSphereVM[] }> = ({
             </Td>
           </Tr>
         </Tbody>
-      </TableComposable>
+      </Table>
     </PageSection>
   );
 };

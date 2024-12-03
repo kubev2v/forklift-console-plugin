@@ -3,7 +3,7 @@ import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel, ProviderModelRef } from '@kubev2v/types';
-import { DropdownItem } from '@patternfly/react-core';
+import { DropdownItem } from '@patternfly/react-core/deprecated';
 
 import { DeleteModal, useModal } from '../modals';
 import { getResourceUrl, ProviderData } from '../utils';

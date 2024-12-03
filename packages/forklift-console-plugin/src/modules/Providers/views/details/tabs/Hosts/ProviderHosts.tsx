@@ -1,5 +1,4 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { ProviderData } from 'src/modules/Providers/utils';
@@ -9,7 +8,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { VSphereHostsList } from './VSphereHostsList';
 
-export interface ProviderHostsProps extends RouteComponentProps {
+export interface ProviderHostsProps {
   obj: ProviderData;
   ns?: string;
   name?: string;

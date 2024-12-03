@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
@@ -21,7 +20,7 @@ import { Concern } from '@kubev2v/types';
 import { ConcernsTable } from './ConcernsTable';
 import { MigrationAction } from './MigrationAction';
 import { VmData } from './VMCellProps';
-export interface ProviderVirtualMachinesListProps extends RouteComponentProps {
+export interface ProviderVirtualMachinesListProps {
   title?: string;
   obj: ProviderData;
   ns?: string;

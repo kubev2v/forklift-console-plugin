@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import {
   EditControllerCPULimitModal,
   EditControllerMemoryLimitModal,
+  EditInventoryMemoryLimitModal,
   EditMaxVMInFlightModal,
   EditPreCopyIntervalModal,
   EditSnapshotPoolingIntervalModal,
@@ -41,7 +42,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>
@@ -63,7 +64,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>
@@ -85,7 +86,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>
@@ -99,6 +100,28 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
           />
 
           <DetailsItem
+            title={'Controller inventory container memory limit'}
+            showHelpIconNextToTitle={true}
+            content={
+              obj?.spec?.['inventory_container_limits_memory'] || (
+                <span className="text-muted">{'1000Mi'}</span>
+              )
+            }
+            moreInfoLink={
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+            }
+            helpContent={
+              <Text>
+                {t(
+                  'Sets the memory limits allocated to the inventory container in the controller pod. The default value is 1000Mi.',
+                )}
+              </Text>
+            }
+            crumbs={['spec', 'inventory_container_limits_memory']}
+            onEdit={() => showModal(<EditInventoryMemoryLimitModal resource={obj} />)}
+          />
+
+          <DetailsItem
             title={'Precopy interval (minutes)'}
             showHelpIconNextToTitle={true}
             content={
@@ -107,7 +130,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>
@@ -129,7 +152,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
             }
             helpContent={
               <Text>

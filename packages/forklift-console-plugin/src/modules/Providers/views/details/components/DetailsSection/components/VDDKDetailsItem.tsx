@@ -19,16 +19,14 @@ export const VDDKDetailsItem: React.FC<ProviderDetailsItemProps> = ({
   const { showModal } = useModal();
 
   const defaultMoreInfoLink =
-    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
+    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
   const defaultHelpContent = (
     <ForkliftTrans>
       Virtual Disk Development Kit (VDDK) container init image path. The path must be empty or a
       valid container image path in the format of{' '}
       <strong>registry_route_or_server_path/vddk:&#8249;tag&#8250;</strong>.<br />
       <br />
-      For example: <strong>quay.io/kubev2v/example:latest</strong>.<br />
-      <br />
-      It is strongly recommended to specify a VDDK init image to accelerate migrations.
+      To accelerate migrations, we recommend to specify a VDDK init image.
     </ForkliftTrans>
   );
 

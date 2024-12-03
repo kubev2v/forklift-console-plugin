@@ -103,5 +103,25 @@ export const isPlanSucceeded = (plan: V1beta1Plan) => {
   return conditions?.includes('Succeeded');
 };
 
+export const isPlanEditable = (plan: V1beta1Plan) => {
+  const planStatus = getPlanPhase({ obj: plan });
+
+  return (
+    planStatus === 'Unknown' ||
+    planStatus === 'Canceled' ||
+    planStatus === 'Error' ||
+    planStatus === 'Failed' ||
+    planStatus === 'vmError' ||
+    planStatus === 'Warning' ||
+    planStatus === 'Ready'
+  );
+};
+
+export const isPlanArchived = (plan: V1beta1Plan) => {
+  const planStatus = getPlanPhase({ obj: plan });
+
+  return planStatus === 'Archiving' || planStatus === 'Archived';
+};
+
 const getConditions = (obj: V1beta1Plan) =>
   obj?.status?.conditions?.filter((c) => c.status === 'True').map((c) => c.type);

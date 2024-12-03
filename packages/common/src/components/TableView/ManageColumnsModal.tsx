@@ -187,7 +187,7 @@ export const ManageColumnsModal = ({
                             : isVisible
                         }
                         isDisabled={isIdentity}
-                        onChange={onChangeFactory(id)}
+                        onChange={(e, v) => onChangeFactory(id)(v, e)}
                         otherControls
                       />
                     </DataListControl>
