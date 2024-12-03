@@ -128,6 +128,7 @@
   "Delete Provider": "Delete Provider",
   "Delete StorageMap": "Delete StorageMap",
   "Delete virtual machines from migration plan": "Delete virtual machines from migration plan",
+  "Deleting virtual machines from an archived migration plan is not allowed.": "Deleting virtual machines from an archived migration plan is not allowed.",
   "Description": "Description",
   "Details": "Details",
   "Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.": "Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.",
