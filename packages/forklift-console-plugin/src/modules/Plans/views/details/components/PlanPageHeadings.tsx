@@ -79,27 +79,35 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     return isPreserveStaticIPs && isMapToPod;
   };
 
-  if (criticalCondition) {
-    alerts.push(
-      <PlanCriticalCondition
-        type={criticalCondition?.type}
-        message={criticalCondition?.message}
-        key={'providerCriticalCondition'}
-      />,
-    );
-  } else if (preserveIpsWithPodMapCondition()) {
-    alerts.push(
-      <PlanWarningCondition
-        type={t('Preserving static IPs of VMs might fail')}
-        message={t(
-          'The plan is set to preserve the static IPs of VMs mapped to a Pod network type. This is not supported and therefore VM IPs can be changed during the migration process.',
-        )}
-        suggestion={t(
-          "For fixing, update the destination network mappings to avoid using the 'Pod Networking' type.",
-        )}
-      />,
-    );
-  }
+  const handleAlerts = () => {
+    // alerts are not relevant to display if plan was completed successfully
+    if (planStatus === 'Succeeded') return;
+
+    if (criticalCondition) {
+      alerts.push(
+        <PlanCriticalCondition
+          type={criticalCondition?.type}
+          message={criticalCondition?.message}
+          key={'providerCriticalCondition'}
+        />,
+      );
+      return;
+    }
+
+    if (preserveIpsWithPodMapCondition()) {
+      alerts.push(
+        <PlanWarningCondition
+          type={t('Preserving static IPs of VMs might fail')}
+          message={t(
+            'The plan is set to preserve the static IPs of VMs mapped to a Pod network type. This is not supported and therefore VM IPs can be changed during the migration process.',
+          )}
+          suggestion={t(
+            "For fixing, update the destination network mappings to avoid using the 'Pod Networking' type.",
+          )}
+        />,
+      );
+    }
+  };
 
   const onClick = () => {
     showModal(
@@ -122,6 +130,8 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
       <PlanActionsDropdown data={{ obj: plan, permissions }} fieldId={''} fields={[]} />
     </Level>
   );
+
+  handleAlerts();
 
   return (
     <>
