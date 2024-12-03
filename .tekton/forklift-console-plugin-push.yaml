@@ -9,22 +9,24 @@ metadata:
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/max-keep-runs: "3"
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
-      == "main"
+      == "release-2.7"
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: forklift-operator
-    appstudio.openshift.io/component: forklift-console-plugin
+    appstudio.openshift.io/application: forklift-operator-2-7
+    appstudio.openshift.io/component: forklift-console-plugin-2-7
     pipelines.appstudio.openshift.io/type: build
   name: forklift-console-plugin-on-push
   namespace: rh-mtv-1-tenant
 spec:
   params:
+  - name: build-source-image
+    value: "true"
   - name: git-url
     value: '{{source_url}}'
   - name: revision
     value: '{{revision}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/rh-mtv-1-tenant/forklift-operator/forklift-console-plugin:{{revision}}
+    value: quay.io/redhat-user-workloads/rh-mtv-1-tenant/forklift-operator-2-7/forklift-console-plugin-2-7:{{revision}}
   - name: dockerfile
     value: build/Containerfile
   - name: path-context
@@ -453,7 +455,7 @@ spec:
         - name: name
           value: rpms-signature-scan
         - name: bundle
-          value: quay.io/konflux-ci/tekton-catalog/task-rpms-signature-scan:0.2@sha256:8f3b23bf1b0ef55cc79d28604d2397a0101ac9c0c42ae26e26532eb2778c801b
+          value: quay.io/konflux-ci/tekton-catalog/task-rpms-signature-scan:0.2@sha256:0c9667fba291af05997397a32e5e938ccaa46e93a2e14bad228e64a6427c5545
         - name: kind
           value: task
         resolver: bundles
