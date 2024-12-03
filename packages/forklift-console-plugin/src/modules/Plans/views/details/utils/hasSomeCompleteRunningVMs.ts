@@ -1,6 +1,6 @@
 import { V1beta1Plan } from '@kubev2v/types';
 
-export const hasPlanEditable = (plan: V1beta1Plan) => {
+export const hasSomeCompleteRunningVMs = (plan: V1beta1Plan) => {
   const planHasNeverStarted = !plan.status?.migration?.started ? true : false;
 
   const migrationHasSomeCompleteRunningVMs =
@@ -10,5 +10,5 @@ export const hasPlanEditable = (plan: V1beta1Plan) => {
         vm.phase !== 'Completed',
     ).length > 0 || false;
 
-  return planHasNeverStarted || !migrationHasSomeCompleteRunningVMs;
+  return !planHasNeverStarted && migrationHasSomeCompleteRunningVMs;
 };

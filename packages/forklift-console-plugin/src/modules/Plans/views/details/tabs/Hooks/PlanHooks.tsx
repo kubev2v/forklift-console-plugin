@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import { isPlanEditable } from 'src/modules/Plans/utils';
 import { AlertMessageForModals } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -58,6 +59,19 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
     });
   };
 
+  const buttonHelperMsg = () => {
+    let updateButtonDisabledMsg = '';
+
+    if (!isPlanEditable(plan))
+      updateButtonDisabledMsg = t(
+        'Button is disabled since the plan status does not enable editing.',
+      );
+    else if (!state.hasChanges)
+      updateButtonDisabledMsg = t('Button is disabled until a change is detected.');
+
+    return t('Click the update hooks button to save your changes.') + ' ' + updateButtonDisabledMsg;
+  };
+
   const HooksTabAction = (
     <>
       <Flex>
@@ -65,7 +79,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
           <Button
             variant="primary"
             onClick={onUpdate}
-            isDisabled={!state.hasChanges}
+            isDisabled={!state.hasChanges || !isPlanEditable(plan)}
             isLoading={state.isLoading}
           >
             {t('Update hooks')}
@@ -78,13 +92,8 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
           </Button>
         </FlexItem>
       </Flex>
-
       <HelperText className="forklift-section-plan-helper-text">
-        <HelperTextItem variant="indeterminate">
-          {t(
-            'Click the update hooks button to save your changes, button is disabled until a change is detected.',
-          )}
-        </HelperTextItem>
+        <HelperTextItem variant="indeterminate">{buttonHelperMsg()}</HelperTextItem>
       </HelperText>
 
       <Divider />
@@ -231,7 +240,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                   value={state.postHook?.spec?.image}
                   type="url"
                   onChange={(e, v) => onChangePostHookImage(v, e)}
-                  aria-label="pre hook image"
+                  aria-label="post hook image"
                 />
                 <HelperText>
                   <HelperTextItem>

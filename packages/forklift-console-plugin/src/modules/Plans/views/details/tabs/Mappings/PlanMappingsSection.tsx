@@ -1,4 +1,5 @@
 import React, { ReactNode, useReducer, useState } from 'react';
+import { isPlanEditable } from 'src/modules/Plans/utils';
 import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -35,8 +36,8 @@ import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 import { Mapping, MappingList } from '../../components';
 import {
   canDeleteAndPatchPlanHooks,
-  hasPlanEditable,
   hasPlanMappingsChanged,
+  hasSomeCompleteRunningVMs,
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
   mapTargetNetworksIdsToLabels,
@@ -564,7 +565,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
   const PlanMappingsSectionViewMode: React.FC = () => {
     const { t } = useForkliftTranslation();
-    const DisableEditMappings = !hasPlanEditable(plan);
+    const DisableEditMappings = hasSomeCompleteRunningVMs(plan) || !isPlanEditable(plan);
 
     return (
       <>
@@ -583,7 +584,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                 <HelperText className="forklift-section-plan-helper-text">
                   <HelperTextItem variant="indeterminate">
                     {t(
-                      'The edit mappings button is disabled if the plan started running and at least one virtual machine was migrated successfully.',
+                      'The edit mappings button is disabled if the plan started running and at least one virtual machine was migrated successfully or when the plan status does not enable editing.',
                     )}
                   </HelperTextItem>
                 </HelperText>
