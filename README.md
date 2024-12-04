@@ -62,7 +62,7 @@ yarn start
 
 The cluster address will be the part of the address after the `apps.` or `api.` in the cluster services or API service address.
 
-For example, if your cluter API address is `api.example.com:6443`, the cluster address will be `example.com`, and
+For example, if your cluster API address is `api.example.com:6443`, the cluster address will be `example.com`, and
 the inventory service address will be:
 
 ``` bash
