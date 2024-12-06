@@ -286,6 +286,10 @@ export const PlansCreateForm = ({
   //   );
   // }
 
+  if (availableProviders.filter(getIsTarget).length === 0) {
+    debugger;
+  }
+
   return (
     <>
       {children}

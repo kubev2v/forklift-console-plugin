@@ -1,8 +1,10 @@
 import {
   ProviderModelGroupVersionKind as ProviderGVK,
   ProviderType,
+  V1beta1NetworkMap,
   V1beta1Plan,
   V1beta1Provider,
+  V1beta1StorageMap,
 } from '@kubev2v/types';
 
 import { networkMapTemplate, planTemplate, storageMapTemplate } from '../../create/templates';
@@ -26,6 +28,8 @@ export type InitialStateParameters = {
   sourceProvider: V1beta1Provider;
   selectedVms: VmData[];
   plan?: V1beta1Plan;
+  netMap?: V1beta1NetworkMap;
+  storageMap?: V1beta1StorageMap;
   editAction?: 'PLAN' | 'VMS';
 };
 
@@ -38,12 +42,17 @@ export const createInitialState = ({
   },
   selectedVms = [],
   plan = planTemplate,
+  netMap = networkMapTemplate,
+  storageMap = storageMapTemplate,
   editAction,
 }: InitialStateParameters): CreateVmMigrationPageState => {
   const hasVmNicWithEmptyProfile = hasNicWithEmptyProfile(sourceProvider, selectedVms);
 
   return {
     underConstruction: {
+      // plan,
+      // netMap,
+      // storageMap,
       plan: {
         ...plan,
         metadata: {
@@ -66,14 +75,14 @@ export const createInitialState = ({
         },
       },
       netMap: {
-        ...networkMapTemplate,
+        ...netMap,
         metadata: {
-          ...networkMapTemplate?.metadata,
+          ...netMap?.metadata,
           generateName: `${sourceProvider?.metadata?.name}-`,
           namespace,
         },
         spec: {
-          ...networkMapTemplate?.spec,
+          ...netMap?.spec,
           provider: {
             source: getObjectRef(sourceProvider),
             destination: undefined,

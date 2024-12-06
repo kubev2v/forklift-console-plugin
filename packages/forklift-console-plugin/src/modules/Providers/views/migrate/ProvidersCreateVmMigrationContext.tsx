@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { produce } from 'immer';
 
-import { V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
+import { V1beta1NetworkMap, V1beta1Plan, V1beta1Provider, V1beta1StorageMap } from '@kubev2v/types';
 
 import { VmData } from '../details';
 
@@ -17,6 +17,8 @@ export interface CreateVmMigrationContextData {
   selectedVms: VmData[];
   provider?: V1beta1Provider;
   plan?: V1beta1Plan;
+  netMap?: V1beta1NetworkMap;
+  storageMap?: V1beta1StorageMap;
   editAction?: 'PLAN' | 'VMS';
 }
 

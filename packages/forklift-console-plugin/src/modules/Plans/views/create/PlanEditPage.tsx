@@ -5,9 +5,12 @@ import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines
 import ProvidersCreateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationPage';
 import { startCreate } from 'src/modules/Providers/views/migrate/reducer/actions';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
-import { useSaveEffect } from 'src/modules/Providers/views/migrate/useSaveEffect';
+// import { createInitialState } from 'src/modules/Providers/views/migrate/reducer/createInitialState';
+// import { reducer } from 'src/modules/Providers/views/migrate/reducer/reducer';
+import { useUpdateEffect } from 'src/modules/Providers/views/migrate/useUpdateEffect';
 import { ForkliftTrans } from 'src/utils/i18n';
 
+// import { useImmerReducer } from 'use-immer';
 import { ProviderModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection, Title } from '@patternfly/react-core';
@@ -27,9 +30,31 @@ export const PlanEditPage: React.FC<{
   selectedVMs?: VmData[];
   editAction?: 'PLAN' | 'VMS';
 }> = ({ plan, sourceProvider, namespace, onClose, selectedVMs, editAction }) => {
+  const mutableConditions = {
+    ...plan.status.conditions,
+  };
   const mutablePlan: V1beta1Plan = {
     ...plan,
+    status: {
+      ...plan.status,
+      conditions: {
+        ...plan.status.conditions,
+      },
+    },
   };
+  Object.keys(mutableConditions).forEach((key) => {
+    const item = mutableConditions[key];
+    const mutableItem = {
+      ...item,
+    };
+    if (mutableItem.type === 'Succeeded') {
+      // Update the status to "False"
+      mutableItem.status = 'False';
+    }
+    mutableConditions[key] = mutableItem;
+  });
+  mutablePlan.status.conditions = mutableConditions;
+  debugger;
   // delete mutablePlan.metadata.resourceVersion;
   const history = useHistory();
   const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
@@ -56,11 +81,20 @@ export const PlanEditPage: React.FC<{
       selectedVms: filterState.selectedVMs,
       provider: sourceProvider,
       plan: mutablePlan,
+      // netMap: mutablePlan.spec.map.network,
+      // storageMap: mutablePlan.spec.map.storage,
       editAction,
     },
   });
-  console.log(state);
-  useSaveEffect(state, dispatch);
+
+  // const [state, dispatch] = useImmerReducer(
+  //   reducer,
+  //   { namespace, sourceProvider, selectedVms, plan, editAction },
+  //   createInitialState,
+  // );
+
+  console.log('state', state);
+  useUpdateEffect(state, dispatch, editAction);
 
   const steps = [
     {
@@ -80,7 +114,7 @@ export const PlanEditPage: React.FC<{
     },
     {
       id: 'step-2',
-      name: 'Create migration plan',
+      name: 'Update migration plan',
       component: (
         <ProvidersCreateVmMigrationPage
           state={state}
@@ -96,7 +130,7 @@ export const PlanEditPage: React.FC<{
           Object.values(state?.validation || []).some((validation) => validation === 'error')
         ),
       canJumpTo: filterState?.selectedVMs?.length > 0,
-      nextButtonText: 'Create migration plan',
+      nextButtonText: 'Update migration plan',
     },
   ];
 

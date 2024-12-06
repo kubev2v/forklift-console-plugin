@@ -12,7 +12,7 @@ import {
   V1beta1Plan,
   V1beta1StorageMap,
 } from '@kubev2v/types';
-import { k8sCreate, K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { k8sCreate, K8sModel, k8sPatch, k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getResourceUrl } from '../../utils';
 
@@ -38,7 +38,12 @@ const createPlan = async (
   netMap: V1beta1NetworkMap,
   storageMap: V1beta1StorageMap,
 ) => {
-  const createdPlan = await k8sCreate({
+  // const createdPlan = await k8sCreate({
+  //   model: PlanModel,
+  //   data: plan,
+  // });
+  debugger;
+  const createdPlan = await k8sUpdate({
     model: PlanModel,
     data: plan,
   });
@@ -65,7 +70,12 @@ const addOwnerRef = async (model: K8sModel, resource, ownerReferences) => {
   });
 };
 
-export const useSaveEffect = (state: CreateVmMigrationPageState, dispatch) => {
+export const useUpdateEffect = (
+  state: CreateVmMigrationPageState,
+  dispatch,
+  editAction?: 'PLAN' | 'VMS',
+) => {
+  const createOrUpdate = editAction ? k8sUpdate : k8sCreate;
   const history = useHistory();
   const mounted = useRef(true);
   useEffect(
