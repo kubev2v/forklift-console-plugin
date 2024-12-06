@@ -110,6 +110,7 @@ export type PlansCreateFormProps = {
   formActions?: ReactNode;
   state: CreateVmMigrationPageState;
   dispatch: (action: PageAction<unknown, unknown>) => void;
+  editAction?: 'PLAN' | 'VMS';
 };
 
 export const PlansCreateForm = ({
@@ -118,6 +119,7 @@ export const PlansCreateForm = ({
   dispatch,
   formAlerts,
   formActions,
+  editAction,
 }: PlansCreateFormProps) => {
   const { t } = useForkliftTranslation();
 
@@ -149,6 +151,7 @@ export const PlansCreateForm = ({
   const onChangePlan: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
     value,
   ) => {
+    debugger;
     dispatch(setPlanName(value?.trim() ?? ''));
   };
 
@@ -159,6 +162,130 @@ export const PlansCreateForm = ({
     dispatch(setPlanTargetProvider(value));
   };
 
+  const mappingsSection = (
+    <>
+      <SectionHeading
+        text={t('Network mappings')}
+        className="forklift--create-vm-migration-plan--section-header"
+      >
+        <ResourceLink
+          groupVersionKind={NetworkMapModelGroupVersionKind}
+          namespace={netMap.metadata?.namespace}
+          name={netMap.metadata?.name}
+          className="forklift-page-resource-link-in-description-item"
+          linkTo={false}
+        />
+      </SectionHeading>
+
+      <DescriptionListGroup>
+        <MappingListHeader
+          sourceHeading={t('Source network')}
+          destinationHeading={t('Target network')}
+        />
+        <DescriptionListDescription className="forklift-page-mapping-list">
+          <StateAlerts
+            variant={AlertVariant.danger}
+            messages={Array.from(alerts.networkMappings.errors).map((key) => ({
+              key,
+              ...networkMessages[key],
+            }))}
+            onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
+          />
+          <StateAlerts
+            variant={AlertVariant.warning}
+            messages={Array.from(alerts.networkMappings.warnings).map((key) => ({
+              key,
+              ...networkMessages[key],
+            }))}
+            onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
+          />
+          <MappingList
+            addMapping={() => dispatch(addNetworkMapping())}
+            replaceMapping={({ current, next }) =>
+              dispatch(replaceNetworkMapping({ current, next }))
+            }
+            deleteMapping={(current) => dispatch(deleteNetworkMapping({ ...current }))}
+            availableDestinations={targetNetworks}
+            sources={sourceNetworks}
+            mappings={networkMappings}
+            generalSourcesLabel={t('Other networks present on the source provider ')}
+            usedSourcesLabel={t('Networks used by the selected VMs')}
+            noSourcesLabel={t('No networks in this category')}
+            isDisabled={flow.editingDone}
+          />
+        </DescriptionListDescription>
+      </DescriptionListGroup>
+
+      <SectionHeading
+        text={t('Storage mappings')}
+        className="forklift--create-vm-migration-plan--section-header"
+      >
+        <ResourceLink
+          groupVersionKind={StorageMapModelGroupVersionKind}
+          namespace={storageMap.metadata?.namespace}
+          name={storageMap.metadata?.name}
+          className="forklift-page-resource-link-in-description-item"
+          linkTo={false}
+        />
+      </SectionHeading>
+
+      <DescriptionListGroup>
+        <MappingListHeader
+          sourceHeading={t('Source storage')}
+          destinationHeading={t('Target storage')}
+        />
+        <DescriptionListDescription className="forklift-page-mapping-list">
+          <StateAlerts
+            variant={AlertVariant.danger}
+            messages={Array.from(alerts.storageMappings.errors).map((key) => ({
+              key,
+              ...storageMessages[key],
+            }))}
+            onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
+          />
+          <StateAlerts
+            variant={AlertVariant.warning}
+            messages={Array.from(alerts.storageMappings.warnings).map((key) => ({
+              key,
+              ...storageMessages[key],
+            }))}
+            onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
+          />
+          <MappingList
+            addMapping={() => dispatch(addStorageMapping())}
+            replaceMapping={({ current, next }) =>
+              dispatch(replaceStorageMapping({ current, next }))
+            }
+            deleteMapping={(current) => dispatch(deleteStorageMapping({ ...current }))}
+            availableDestinations={targetStorages}
+            sources={sourceStorages}
+            mappings={storageMappings}
+            generalSourcesLabel={t('Other storages present on the source provider ')}
+            usedSourcesLabel={t('Storages used by the selected VMs')}
+            noSourcesLabel={t('No storages in this category')}
+            isDisabled={flow.editingDone}
+          />
+        </DescriptionListDescription>
+      </DescriptionListGroup>
+    </>
+  );
+
+  // if (editAction === 'VMS') {
+  //   return (
+  //     <>
+  //       {children}
+  //       <DescriptionList
+  //         className="forklift-create-provider-edit-section"
+  //         columnModifier={{
+  //           default: '1Col',
+  //         }}
+  //       >
+  //         {mappingsSection}
+  //       </DescriptionList>
+  //     </>
+  //   );
+  // }
+
   return (
     <>
       {children}
@@ -168,7 +295,7 @@ export const PlansCreateForm = ({
           default: '1Col',
         }}
       >
-        {isNameEdited || validation.planName === 'error' ? (
+        {editAction !== 'VMS' && (isNameEdited || validation.planName === 'error') ? (
           <Form isWidthLimited>
             <FormGroupWithHelpText
               label={t('Plan name')}
@@ -197,7 +324,7 @@ export const PlansCreateForm = ({
             content={plan.metadata.name}
             ariaEditLabel={t('Edit plan name')}
             onEdit={() => setIsNameEdited(true)}
-            isDisabled={flow.editingDone}
+            isDisabled={flow.editingDone || editAction === 'VMS'}
           />
         )}
 
@@ -294,109 +421,7 @@ export const PlansCreateForm = ({
           </FormGroupWithHelpText>
         </Form>
 
-        <SectionHeading
-          text={t('Network mappings')}
-          className="forklift--create-vm-migration-plan--section-header"
-        >
-          <ResourceLink
-            groupVersionKind={NetworkMapModelGroupVersionKind}
-            namespace={netMap.metadata?.namespace}
-            name={netMap.metadata?.name}
-            className="forklift-page-resource-link-in-description-item"
-            linkTo={false}
-          />
-        </SectionHeading>
-
-        <DescriptionListGroup>
-          <MappingListHeader
-            sourceHeading={t('Source network')}
-            destinationHeading={t('Target network')}
-          />
-          <DescriptionListDescription className="forklift-page-mapping-list">
-            <StateAlerts
-              variant={AlertVariant.danger}
-              messages={Array.from(alerts.networkMappings.errors).map((key) => ({
-                key,
-                ...networkMessages[key],
-              }))}
-              onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
-            />
-            <StateAlerts
-              variant={AlertVariant.warning}
-              messages={Array.from(alerts.networkMappings.warnings).map((key) => ({
-                key,
-                ...networkMessages[key],
-              }))}
-              onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
-            />
-            <MappingList
-              addMapping={() => dispatch(addNetworkMapping())}
-              replaceMapping={({ current, next }) =>
-                dispatch(replaceNetworkMapping({ current, next }))
-              }
-              deleteMapping={(current) => dispatch(deleteNetworkMapping({ ...current }))}
-              availableDestinations={targetNetworks}
-              sources={sourceNetworks}
-              mappings={networkMappings}
-              generalSourcesLabel={t('Other networks present on the source provider ')}
-              usedSourcesLabel={t('Networks used by the selected VMs')}
-              noSourcesLabel={t('No networks in this category')}
-              isDisabled={flow.editingDone}
-            />
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-
-        <SectionHeading
-          text={t('Storage mappings')}
-          className="forklift--create-vm-migration-plan--section-header"
-        >
-          <ResourceLink
-            groupVersionKind={StorageMapModelGroupVersionKind}
-            namespace={storageMap.metadata?.namespace}
-            name={storageMap.metadata?.name}
-            className="forklift-page-resource-link-in-description-item"
-            linkTo={false}
-          />
-        </SectionHeading>
-
-        <DescriptionListGroup>
-          <MappingListHeader
-            sourceHeading={t('Source storage')}
-            destinationHeading={t('Target storage')}
-          />
-          <DescriptionListDescription className="forklift-page-mapping-list">
-            <StateAlerts
-              variant={AlertVariant.danger}
-              messages={Array.from(alerts.storageMappings.errors).map((key) => ({
-                key,
-                ...storageMessages[key],
-              }))}
-              onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
-            />
-            <StateAlerts
-              variant={AlertVariant.warning}
-              messages={Array.from(alerts.storageMappings.warnings).map((key) => ({
-                key,
-                ...storageMessages[key],
-              }))}
-              onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
-            />
-            <MappingList
-              addMapping={() => dispatch(addStorageMapping())}
-              replaceMapping={({ current, next }) =>
-                dispatch(replaceStorageMapping({ current, next }))
-              }
-              deleteMapping={(current) => dispatch(deleteStorageMapping({ ...current }))}
-              availableDestinations={targetStorages}
-              sources={sourceStorages}
-              mappings={storageMappings}
-              generalSourcesLabel={t('Other storages present on the source provider ')}
-              usedSourcesLabel={t('Storages used by the selected VMs')}
-              noSourcesLabel={t('No storages in this category')}
-              isDisabled={flow.editingDone}
-            />
-          </DescriptionListDescription>
-        </DescriptionListGroup>
+        {mappingsSection}
       </DescriptionList>
       {formAlerts}
       <div className="forklift--create-vm-migration-plan--form-actions">{formActions}</div>

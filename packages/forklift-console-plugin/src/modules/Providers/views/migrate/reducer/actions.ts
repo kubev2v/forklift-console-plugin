@@ -211,27 +211,31 @@ export const setAvailableProviders = (
   availableProviders: V1beta1Provider[],
   loaded?: boolean,
   error?: Error,
-): PageAction<CreateVmMigration, PlanAvailableProviders> => ({
-  type: 'SET_AVAILABLE_PROVIDERS',
-  payload: {
-    availableProviders: Array.isArray(availableProviders) ? availableProviders : [],
-    loading: !loaded,
-    error,
-  },
-});
+): PageAction<CreateVmMigration, PlanAvailableProviders> => {
+  return {
+    type: 'SET_AVAILABLE_PROVIDERS',
+    payload: {
+      availableProviders: Array.isArray(availableProviders) ? availableProviders : [],
+      loading: !loaded,
+      error,
+    },
+  };
+};
 
 export const setExistingPlans = (
   existingPlans: V1beta1Plan[],
   loaded?: boolean,
   error?: Error,
-): PageAction<CreateVmMigration, PlanExistingPlans> => ({
-  type: 'SET_EXISTING_PLANS',
-  payload: {
-    existingPlans: Array.isArray(existingPlans) ? existingPlans : [],
-    loading: !loaded,
-    error,
-  },
-});
+): PageAction<CreateVmMigration, PlanExistingPlans> => {
+  return {
+    type: 'SET_EXISTING_PLANS',
+    payload: {
+      existingPlans: Array.isArray(existingPlans) ? existingPlans : [],
+      loading: !loaded,
+      error,
+    },
+  }
+};
 
 export const setExistingNetMaps = (
   existingNetMaps: V1beta1NetworkMap[],
@@ -389,11 +393,13 @@ export const initState = (
   namespace: string,
   sourceProvider: V1beta1Provider,
   selectedVms: VmData[],
+  plan?: V1beta1Plan,
 ): PageAction<CreateVmMigration, InitialStateParameters> => ({
   type: 'INIT',
   payload: {
     namespace,
     sourceProvider,
     selectedVms,
+    plan,
   },
 });

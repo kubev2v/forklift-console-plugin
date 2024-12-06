@@ -9,13 +9,15 @@ import {
 } from 'react';
 import { produce } from 'immer';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 
 import { VmData } from '../details';
 
 export interface CreateVmMigrationContextData {
   selectedVms: VmData[];
   provider?: V1beta1Provider;
+  plan?: V1beta1Plan;
+  editAction?: 'PLAN' | 'VMS';
 }
 
 export interface CreateVmMigrationContextType {

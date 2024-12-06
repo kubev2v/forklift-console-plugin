@@ -87,6 +87,7 @@ export interface CreateVmMigrationPageState {
     selectedVms: VmData[];
     sourceProvider: V1beta1Provider;
     namespace: string;
+    plan?: V1beta1Plan;
   };
   // placeholder for helper data
   workArea: {
@@ -96,6 +97,7 @@ export interface CreateVmMigrationPageState {
     editingDone: boolean;
     apiError?: Error;
     initialLoading: { [keys in CreateVmMigration]?: boolean };
+    editAction?: 'PLAN' | 'VMS';
   };
 }
 export interface MappingSource {

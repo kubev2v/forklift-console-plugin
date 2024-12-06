@@ -45,14 +45,16 @@ import { hasMultiplePodNetworkMappings } from './hasMultiplePodNetworkMappings';
 export const validateUniqueName = (name: string, existingNames: string[]) =>
   existingNames.every((existingName) => existingName !== name);
 
-export const validatePlanName = (name: string, existingPlans: V1beta1Plan[]) =>
-  validateK8sName(name) &&
-  validateUniqueName(
-    name,
-    existingPlans.map((plan) => plan?.metadata?.name ?? ''),
-  )
+export const validatePlanName = (name: string, existingPlans: V1beta1Plan[]) => {
+  debugger;
+  return validateK8sName(name) &&
+    validateUniqueName(
+      name,
+      existingPlans.map((plan) => plan?.metadata?.name ?? ''),
+    )
     ? 'success'
     : 'error';
+};
 
 export const validateTargetNamespace = (namespace: string, alreadyInUseBySelectedVms: boolean) =>
   !!namespace && validateK8sName(namespace) && !alreadyInUseBySelectedVms ? 'success' : 'error';

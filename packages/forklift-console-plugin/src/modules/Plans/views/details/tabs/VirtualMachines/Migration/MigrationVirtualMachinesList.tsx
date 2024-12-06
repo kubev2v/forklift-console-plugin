@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { StandardPage } from 'src/components/page/StandardPage';
 import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
@@ -20,7 +21,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
-import { MigrationVMsCancelButton, PlanVMsDeleteButton } from '../components';
+import { MigrationVMsCancelButton, PlanVMsEditButton } from '../components';
 import { PlanData, VMData } from '../types';
 
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
@@ -146,6 +147,7 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 const PageWithSelection = StandardPageWithSelection<VMData>;
+const PageWithNoSelection = StandardPage<VMData>;
 type PageWithSelectionProps = StandardPageWithSelectionProps<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
@@ -254,9 +256,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
       ),
     ];
   } else {
-    actions = [
-      ({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />,
-    ];
+    actions = [() => <PlanVMsEditButton plan={plan} />];
   }
 
   const canSelectWhenExecuting = (item: VMData) =>
@@ -287,5 +287,9 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     GlobalActionToolbarItems: actions,
   };
 
-  return <PageWithSelection {...extendedProps} />;
+  return isExecuting ? (
+    <PageWithSelection {...extendedProps} />
+  ) : (
+    <PageWithNoSelection {...extendedProps} />
+  );
 };

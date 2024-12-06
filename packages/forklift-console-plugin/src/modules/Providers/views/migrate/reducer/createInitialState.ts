@@ -1,6 +1,7 @@
 import {
   ProviderModelGroupVersionKind as ProviderGVK,
   ProviderType,
+  V1beta1Plan,
   V1beta1Provider,
 } from '@kubev2v/types';
 
@@ -24,6 +25,8 @@ export type InitialStateParameters = {
   namespace: string;
   sourceProvider: V1beta1Provider;
   selectedVms: VmData[];
+  plan?: V1beta1Plan;
+  editAction?: 'PLAN' | 'VMS';
 };
 
 export const createInitialState = ({
@@ -34,20 +37,22 @@ export const createInitialState = ({
     kind: ProviderGVK.kind,
   },
   selectedVms = [],
+  plan = planTemplate,
+  editAction,
 }: InitialStateParameters): CreateVmMigrationPageState => {
   const hasVmNicWithEmptyProfile = hasNicWithEmptyProfile(sourceProvider, selectedVms);
 
   return {
     underConstruction: {
       plan: {
-        ...planTemplate,
+        ...plan,
         metadata: {
-          ...planTemplate?.metadata,
-          name: '',
+          ...plan.metadata,
+          name: plan.metadata.name || '',
           namespace,
         },
         spec: {
-          ...planTemplate?.spec,
+          ...plan?.spec,
           provider: {
             source: getObjectRef(sourceProvider),
             destination: undefined,
@@ -64,7 +69,7 @@ export const createInitialState = ({
         ...networkMapTemplate,
         metadata: {
           ...networkMapTemplate?.metadata,
-          generateName: `${sourceProvider.metadata.name}-`,
+          generateName: `${sourceProvider?.metadata?.name}-`,
           namespace,
         },
         spec: {
@@ -79,7 +84,7 @@ export const createInitialState = ({
         ...storageMapTemplate,
         metadata: {
           ...storageMapTemplate?.metadata,
-          generateName: `${sourceProvider.metadata.name}-`,
+          generateName: `${sourceProvider?.metadata?.name}-`,
           namespace,
         },
         spec: {
@@ -109,6 +114,7 @@ export const createInitialState = ({
       selectedVms,
       sourceProvider,
       namespace,
+      plan,
     },
     validation: {
       planName: 'default',
@@ -161,6 +167,7 @@ export const createInitialState = ({
         [SET_DISKS]: !['ovirt', 'openstack'].includes(sourceProvider.spec?.type),
         [SET_NICK_PROFILES]: sourceProvider.spec?.type !== 'ovirt',
       },
+      editAction,
     },
   };
 };

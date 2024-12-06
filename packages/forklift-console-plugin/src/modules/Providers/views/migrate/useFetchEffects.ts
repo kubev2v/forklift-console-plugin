@@ -44,7 +44,12 @@ import { CreateVmMigrationPageState } from './types';
 export const useFetchEffects = (
   createVmMigrationContext: CreateVmMigrationContextType,
 ): [CreateVmMigrationPageState, Dispatch<PageAction<CreateVmMigration, unknown>>, boolean] => {
-  const { selectedVms, provider: sourceProvider } = createVmMigrationContext?.data || {};
+  const {
+    selectedVms,
+    provider: sourceProvider,
+    plan,
+    editAction,
+  } = createVmMigrationContext?.data || {};
 
   // error state - the page was entered directly without choosing the VMs
   const emptyContext = !selectedVms?.length || !sourceProvider;
@@ -52,7 +57,7 @@ export const useFetchEffects = (
 
   const [state, dispatch] = useImmerReducer(
     reducer,
-    { namespace, sourceProvider, selectedVms },
+    { namespace, sourceProvider, selectedVms, plan, editAction },
     createInitialState,
   );
 
@@ -73,22 +78,29 @@ export const useFetchEffects = (
   };
 
   useEffect(
-    () => !editingDone && dispatch(initState(namespace, sourceProvider, selectedVms)),
+    () => !editingDone && dispatch(initState(namespace, sourceProvider, selectedVms, plan)),
     [selectedVms],
   );
 
+  // debugger;
   const [providers, providersLoaded, providerError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,
     isList: true,
     namespace,
   });
-  useEffect(
-    () =>
+  useEffect(() => {
+    // Check if the response is wrapped or has the providers in the second element
+    const actualProviders =
+      Array.isArray(providers) && Array.isArray(providers[1])
+        ? providers[1] // Extract providers from the second element
+        : providers; // Or just return the original providers if it's already in the correct format
+
+    return (
       !editingDone &&
-      dispatchWithFallback(setAvailableProviders(providers), !providersLoaded, providerError),
-    [providers, providersLoaded, providerError, selectedVms],
-  );
+      dispatchWithFallback(setAvailableProviders(actualProviders), !providersLoaded, providerError)
+    );
+  }, [providers, providersLoaded, providerError, selectedVms]);
 
   const [plans, plansLoaded, plansError] = useK8sWatchResource<V1beta1Plan[]>({
     groupVersionKind: PlanModelGroupVersionKind,
@@ -97,7 +109,10 @@ export const useFetchEffects = (
     namespace,
   });
   useEffect(
-    () => !editingDone && dispatchWithFallback(setExistingPlans(plans), !plansLoaded, plansError),
+    () =>
+      !editingDone &&
+      editAction !== 'VMS' &&
+      dispatchWithFallback(setExistingPlans(plans), !plansLoaded, plansError),
     [plans, plansLoaded, plansError, selectedVms],
   );
 

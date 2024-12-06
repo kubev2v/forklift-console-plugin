@@ -80,6 +80,7 @@ const handlers: {
 } = {
   [SET_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
     draft.underConstruction.plan.metadata.name = name;
+    debugger;
     draft.validation.planName = validatePlanName(name, draft.existingResources.plans);
   },
   [SET_TARGET_NAMESPACE](
@@ -132,6 +133,7 @@ const handlers: {
   ) {
     // triggered from useEffect on any data change
     draft.existingResources.plans = existingPlans;
+    debugger;
     draft.validation.planName = validatePlanName(
       draft.underConstruction.plan.metadata.name,
       existingPlans,
@@ -472,10 +474,10 @@ const handlers: {
   [INIT](
     draft,
     {
-      payload: { namespace, sourceProvider, selectedVms },
+      payload: { namespace, sourceProvider, selectedVms, plan },
     }: PageAction<CreateVmMigration, InitialStateParameters>,
   ) {
-    const newDraft = createInitialState({ namespace, sourceProvider, selectedVms });
+    const newDraft = createInitialState({ namespace, sourceProvider, selectedVms, plan });
 
     draft.underConstruction = newDraft.underConstruction;
     draft.calculatedOnce = newDraft.calculatedOnce;

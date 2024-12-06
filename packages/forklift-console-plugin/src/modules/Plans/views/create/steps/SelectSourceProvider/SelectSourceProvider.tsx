@@ -15,7 +15,16 @@ export const SelectSourceProvider: React.FC<{
   filterDispatch: React.Dispatch<PlanCreatePageActionTypes>;
   providers: V1beta1Provider[];
   selectedProvider: V1beta1Provider;
-}> = ({ filterState, filterDispatch, providers, selectedProvider }) => {
+  editAction?: 'PLAN' | 'VMS';
+  initialSelectedIds?: string[];
+}> = ({
+  filterState,
+  filterDispatch,
+  providers,
+  selectedProvider,
+  editAction,
+  initialSelectedIds,
+}) => {
   const { t } = useForkliftTranslation();
 
   // Get the ready providers (note: currently forklift does not allow filter be status.phase)
@@ -33,13 +42,17 @@ export const SelectSourceProvider: React.FC<{
 
   return (
     <>
-      <Title headingLevel="h2">{t('Select source provider')}</Title>
+      {editAction !== 'VMS' && (
+        <>
+          <Title headingLevel="h2">{t('Select source provider')}</Title>
 
-      <PlanCreateForm
-        providers={filteredProviders}
-        filterState={filterState}
-        filterDispatch={filterDispatch}
-      />
+          <PlanCreateForm
+            providers={filteredProviders}
+            filterState={filterState}
+            filterDispatch={filterDispatch}
+          />
+        </>
+      )}
 
       {filterState.selectedProviderUID && (
         <>
@@ -51,10 +64,10 @@ export const SelectSourceProvider: React.FC<{
             title=""
             name={selectedProviderName}
             namespace={selectedProviderNamespace}
-            onSelect={(selectedVms) =>
-              filterDispatch({ type: 'UPDATE_SELECTED_VMS', payload: selectedVms })
-            }
-            initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
+            onSelect={(selectedVms) => {
+              filterDispatch({ type: 'UPDATE_SELECTED_VMS', payload: selectedVms });
+            }}
+            initialSelectedIds={initialSelectedIds || filterState.selectedVMs.map((vm) => vm.vm.id)}
             showActions={false}
           />
         </>

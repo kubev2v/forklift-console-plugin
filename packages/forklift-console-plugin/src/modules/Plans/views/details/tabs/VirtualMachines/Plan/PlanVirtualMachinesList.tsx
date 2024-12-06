@@ -12,7 +12,7 @@ import {
   V1beta1PlanStatusMigrationVms,
 } from '@kubev2v/types';
 
-import { PlanVMsDeleteButton } from '../components';
+import { PlanVMsEditButton } from '../components';
 import { PlanData, VMData } from '../types';
 
 import { PlanVirtualMachinesRow } from './PlanVirtualMachinesRow';
@@ -84,9 +84,7 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
   const onSelect = () => undefined;
   const initialSelectedIds = [];
 
-  const actions: PageGlobalActions = [
-    ({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />,
-  ];
+  const actions: PageGlobalActions = [() => <PlanVMsEditButton plan={plan} />];
 
   return (
     <PageWithSelection
