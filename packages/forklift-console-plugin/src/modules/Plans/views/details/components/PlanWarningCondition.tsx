@@ -8,7 +8,7 @@ import { Alert, AlertVariant, Text, TextContent, TextVariants } from '@patternfl
 const PlanWarningCondition: React.FC<{
   type: string;
   message: string;
-  suggestion: string;
+  suggestion: React.ReactNode;
 }> = ({ type, message, suggestion }) => {
   const { t } = useTranslation();
   return (
