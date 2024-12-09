@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { EMPTY_MSG } from 'src/utils/constants';
@@ -8,7 +8,7 @@ import { Alert, AlertVariant, Text, TextContent, TextVariants } from '@patternfl
 const PlanWarningCondition: React.FC<{
   type: string;
   message: string;
-  suggestion: string;
+  suggestion: ReactNode;
 }> = ({ type, message, suggestion }) => {
   const { t } = useTranslation();
   return (

@@ -5,7 +5,7 @@ import { canPlanReStart, canPlanStart, getPlanPhase } from 'src/modules/Plans/ut
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { useModal } from 'src/modules/Providers/modals';
 import { PageHeadings } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
 
 import {
   NetworkMapModelGroupVersionKind,
@@ -97,13 +97,18 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     if (preserveIpsWithPodMapCondition()) {
       alerts.push(
         <PlanWarningCondition
-          type={t('Preserving static IPs of VMs might fail')}
+          type={t('choose a different mapping for your migration plan')}
           message={t(
-            'The plan is set to preserve the static IPs of VMs mapped to a Pod network type. This is not supported and therefore VM IPs can be changed during the migration process.',
+            "Your migration plan preserves the static IPs of VMs and uses Pod Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Pod Networking migrations.",
           )}
-          suggestion={t(
-            "For fixing, update the destination network mappings to avoid using the 'Pod Networking' type.",
-          )}
+          suggestion={
+            <ForkliftTrans>
+              If your VMs use static IPs, click the Mappings tab of your plan, and choose a
+              different target network mapping.
+              <br />
+              If your VMs don&apos;t use static IPs, you can ignore this message.
+            </ForkliftTrans>
+          }
         />,
       );
     }
