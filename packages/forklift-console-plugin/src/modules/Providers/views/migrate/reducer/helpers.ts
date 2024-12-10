@@ -92,7 +92,6 @@ export const setTargetProvider = (
 
   // there might be no target provider in the namespace
   const resolvedTarget = resolveTargetProvider(targetProviderName, availableProviders);
-
   validation.targetProvider = resolvedTarget ? 'success' : 'error';
   plan.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
   netMap.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);

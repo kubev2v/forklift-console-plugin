@@ -7,7 +7,6 @@ import { ProviderType, V1beta1Provider } from '@kubev2v/types';
  * @returns {boolean} - Returns true if the provider is a target provider, false otherwise.
  */
 export function getIsTarget(provider: V1beta1Provider): boolean {
-  console.log(`${JSON.stringify(TARGET_PROVIDER_TYPES)} includes ${provider?.spec.type}?`)
   return TARGET_PROVIDER_TYPES.includes(provider?.spec.type as ProviderType);
 }
 
