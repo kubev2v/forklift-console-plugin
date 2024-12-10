@@ -47,9 +47,9 @@ export type PlanCreatePageActionTypes =
   | UpdateSelectedVMsAction;
 
 export function planCreatePageReducer(
-  state: PlanCreatePageState,
+  state: typeof planCreatePageInitialState,
   action: PlanCreatePageActionTypes,
-): PlanCreatePageState {
+): typeof planCreatePageInitialState {
   switch (action.type) {
     case SET_NAME_FILTER:
       return { ...state, nameFilter: action.payload, selectedProviderUID: '', selectedVMs: [] };

@@ -5,13 +5,9 @@ import {
   PlanMappingsSectionState,
 } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
 import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
-// import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
 import ProvidersUpdateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersUpdateVmMigrationPage';
 import { startUpdate } from 'src/modules/Providers/views/migrate/reducer/actions';
-// import { useEditVmsFetchEffects } from 'src/modules/Providers/views/migrate/useEditVmsFetchEffects';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
-// import { createInitialState } from 'src/modules/Providers/views/migrate/reducer/createInitialState';
-// import { reducer } from 'src/modules/Providers/views/migrate/reducer/reducer';
 import { useUpdateEffect } from 'src/modules/Providers/views/migrate/useUpdateEffect';
 import { ForkliftTrans } from 'src/utils/i18n';
 
@@ -55,9 +51,7 @@ export const PlanEditPage: React.FC<{
     selectedProviderUID: sourceProvider.metadata.uid,
     selectedVMs: selectedVMs,
   });
-  console.log('filterState', filterState);
 
-  debugger;
   const initialPlanMappingsState: PlanMappingsSectionState = {
     edit: true,
     dataChanged: false,
@@ -82,15 +76,6 @@ export const PlanEditPage: React.FC<{
     }
   }, [planNetworkMaps, planStorageMaps]);
 
-  // Init Create migration plan form state
-  // const [state, dispatch, emptyContext] = useEditVmsFetchEffects({
-  //   data: {
-  //     selectedVms: filterState.selectedVMs,
-  //     provider: sourceProvider,
-  //     plan,
-  //     editAction,
-  //   },
-  // });
   const [state, dispatch, emptyContext] = useFetchEffects({
     data: {
       selectedVms: filterState.selectedVMs,
@@ -100,12 +85,7 @@ export const PlanEditPage: React.FC<{
     },
   });
 
-  console.log('state', state);
   useUpdateEffect(state, dispatch, planMappingsState);
-
-  const errs = Object.values(state?.validation || []).some((validation) => validation === 'error');
-  console.log('errs', errs);
-  // debugger;
 
   const steps = [
     {
@@ -117,7 +97,7 @@ export const PlanEditPage: React.FC<{
           filterState={filterState}
           filterDispatch={filterDispatch}
           selectedProvider={sourceProvider}
-          editAction={editAction}
+          hideProviderSection={editAction === 'VMS'}
         />
       ),
       enableNext: filterState?.selectedVMs?.length > 0,
