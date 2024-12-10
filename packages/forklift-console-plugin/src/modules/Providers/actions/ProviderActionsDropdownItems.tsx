@@ -24,7 +24,7 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
     showModal(<DeleteModal resource={provider} model={ProviderModel} />);
   };
 
-  return [
+  const dropdownItems = [
     <DropdownItemLink key="EditProvider" href={providerURL}>
       {t('Edit Provider')}
     </DropdownItemLink>,
@@ -38,6 +38,11 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
       {t('Delete Provider')}
     </DropdownItem>,
   ];
+
+  // excluding the EditCredentials options since not supported for OVA
+  const ovaDropdownItems = dropdownItems.filter((item) => item.key !== 'EditCredentials');
+
+  return provider?.spec?.type === 'ova' ? ovaDropdownItems : dropdownItems;
 };
 
 interface ProviderActionsDropdownItemsProps {
