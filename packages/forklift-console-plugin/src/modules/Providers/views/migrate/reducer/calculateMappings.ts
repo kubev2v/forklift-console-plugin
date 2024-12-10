@@ -82,7 +82,7 @@ export const calculateStorages = (
     calculatedPerNamespace: { storageMappings, targetStorages, sourceStorages },
     flow: { initialLoading },
   } = draft;
-
+  debugger;
   if (
     !initialLoading[SET_AVAILABLE_SOURCE_STORAGES] ||
     !initialLoading[SET_AVAILABLE_TARGET_STORAGES] ||

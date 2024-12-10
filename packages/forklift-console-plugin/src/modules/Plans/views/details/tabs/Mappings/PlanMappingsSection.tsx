@@ -1,4 +1,4 @@
-import React, { ReactNode, useReducer, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -55,12 +55,14 @@ import {
  * @property {V1beta1NetworkMapSpecMap[]} updatedNetwork - The new version of the Plan Network Maps being edited.
  * @property {V1beta1StorageMapSpecMap[]} updatedStorage - The new version of the Plan Storage Maps being edited.
  */
-interface PlanMappingsSectionState {
+export interface PlanMappingsSectionState {
   edit: boolean;
   dataChanged: boolean;
   alertMessage: ReactNode;
   updatedNetwork: V1beta1NetworkMapSpecMap[];
   updatedStorage: V1beta1StorageMapSpecMap[];
+  originalNetwork: V1beta1NetworkMapSpecMap[];
+  originalStorage: V1beta1StorageMapSpecMap[];
 }
 
 export type PlanMappingsSectionProps = {
@@ -71,7 +73,86 @@ export type PlanMappingsSectionProps = {
   targetNetworks: OpenShiftNetworkAttachmentDefinition[];
   sourceStorages: InventoryStorage[];
   targetStorages: OpenShiftStorageClass[];
+  editAction?: 'PLAN' | 'VMS';
+  planMappingsState?: PlanMappingsSectionState;
+  planMappingsDispatch?: React.Dispatch<{
+    type: string;
+    payload?;
+  }>;
 };
+
+export function planMappingsSectionReducer(
+  state: PlanMappingsSectionState,
+  action: { type: string; payload? },
+): PlanMappingsSectionState {
+  switch (action.type) {
+    case 'SET_PLAN_MAPS': {
+      const { planNetworkMaps, planStorageMaps } = action.payload;
+      return {
+        ...state,
+        updatedNetwork: planNetworkMaps?.spec?.map,
+        updatedStorage: planStorageMaps?.spec?.map,
+        originalNetwork: planNetworkMaps?.spec?.map,
+        originalStorage: planStorageMaps?.spec?.map,
+      };
+    }
+    case 'TOGGLE_EDIT': {
+      return { ...state, edit: !state.edit };
+    }
+    case 'SET_CANCEL': {
+      const dataChanged = false;
+
+      return {
+        ...state,
+        dataChanged,
+        alertMessage: null,
+        updatedNetwork: state.originalNetwork,
+        updatedStorage: state.originalStorage,
+      };
+    }
+    case 'SET_ALERT_MESSAGE': {
+      return { ...state, alertMessage: action.payload };
+    }
+    case 'ADD_NETWORK_MAPPING':
+    case 'DELETE_NETWORK_MAPPING':
+    case 'REPLACE_NETWORK_MAPPING': {
+      const updatedNetwork = action.payload.newState;
+      const dataChanged = hasPlanMappingsChanged(
+        state.originalNetwork,
+        state.originalStorage,
+        updatedNetwork,
+        state?.updatedStorage,
+      );
+
+      return {
+        ...state,
+        dataChanged,
+        alertMessage: null,
+        updatedNetwork,
+      };
+    }
+    case 'ADD_STORAGE_MAPPING':
+    case 'DELETE_STORAGE_MAPPING':
+    case 'REPLACE_STORAGE_MAPPING': {
+      const updatedStorage = action.payload.newState;
+      const dataChanged = hasPlanMappingsChanged(
+        state.originalNetwork,
+        state.originalStorage,
+        state?.updatedNetwork,
+        updatedStorage,
+      );
+
+      return {
+        ...state,
+        dataChanged,
+        alertMessage: null,
+        updatedStorage,
+      };
+    }
+    default:
+      return state;
+  }
+}
 
 export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   plan,
@@ -81,84 +162,15 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   targetNetworks,
   sourceStorages,
   targetStorages,
+  editAction,
+  planMappingsState: state,
+  planMappingsDispatch: dispatch,
 }) => {
   const { t } = useForkliftTranslation();
-
-  const initialState: PlanMappingsSectionState = {
-    edit: false,
-    dataChanged: false,
-    alertMessage: null,
-    updatedNetwork: planNetworkMaps?.spec?.map,
-    updatedStorage: planStorageMaps?.spec?.map,
-  };
 
   const [isLoading, setIsLoading] = useState(false);
   const [isAddNetworkMapAvailable, setIsAddNetworkMapAvailable] = useState(true);
   const [isAddStorageMapAvailable, setIsAddStorageMapAvailable] = useState(true);
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  function reducer(
-    state: PlanMappingsSectionState,
-    action: { type: string; payload? },
-  ): PlanMappingsSectionState {
-    switch (action.type) {
-      case 'TOGGLE_EDIT': {
-        return { ...state, edit: !state.edit };
-      }
-      case 'SET_CANCEL': {
-        const dataChanged = false;
-
-        return {
-          ...state,
-          dataChanged,
-          alertMessage: null,
-          updatedNetwork: planNetworkMaps?.spec?.map,
-          updatedStorage: planStorageMaps?.spec?.map,
-        };
-      }
-      case 'SET_ALERT_MESSAGE': {
-        return { ...state, alertMessage: action.payload };
-      }
-      case 'ADD_NETWORK_MAPPING':
-      case 'DELETE_NETWORK_MAPPING':
-      case 'REPLACE_NETWORK_MAPPING': {
-        const updatedNetwork = action.payload.newState;
-        const dataChanged = hasPlanMappingsChanged(
-          planNetworkMaps?.spec?.map,
-          planStorageMaps?.spec?.map,
-          updatedNetwork,
-          state?.updatedStorage,
-        );
-
-        return {
-          ...state,
-          dataChanged,
-          alertMessage: null,
-          updatedNetwork,
-        };
-      }
-      case 'ADD_STORAGE_MAPPING':
-      case 'DELETE_STORAGE_MAPPING':
-      case 'REPLACE_STORAGE_MAPPING': {
-        const updatedStorage = action.payload.newState;
-        const dataChanged = hasPlanMappingsChanged(
-          planNetworkMaps?.spec?.map,
-          planStorageMaps?.spec?.map,
-          state?.updatedNetwork,
-          updatedStorage,
-        );
-
-        return {
-          ...state,
-          dataChanged,
-          alertMessage: null,
-          updatedStorage,
-        };
-      }
-      default:
-        return state;
-    }
-  }
 
   // Toggles between view and edit modes
   function onToggleEdit() {
@@ -647,31 +659,35 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   return state.edit ? (
     // Edit mode
     <>
-      <Flex>
-        <FlexItem>
-          <Button
-            variant="primary"
-            onClick={onUpdate}
-            isDisabled={!state.dataChanged}
-            isLoading={isLoading}
-          >
-            {t('Update mappings')}
-          </Button>
-        </FlexItem>
-        <FlexItem>
-          <Button variant="secondary" onClick={onCancel}>
-            {t('Cancel')}
-          </Button>
-        </FlexItem>
-      </Flex>
-      <HelperText className="forklift-section-plan-helper-text">
-        <HelperTextItem variant="indeterminate">
-          {t(
-            'Click the update mappings button to save your changes, button is disabled until a change is detected.',
-          )}
-        </HelperTextItem>
-      </HelperText>
-      <Divider />
+      {!editAction && (
+        <>
+          <Flex>
+            <FlexItem>
+              <Button
+                variant="primary"
+                onClick={onUpdate}
+                isDisabled={!state.dataChanged}
+                isLoading={isLoading}
+              >
+                {t('Update mappings')}
+              </Button>
+            </FlexItem>
+            <FlexItem>
+              <Button variant="secondary" onClick={onCancel}>
+                {t('Cancel')}
+              </Button>
+            </FlexItem>
+          </Flex>
+          <HelperText className="forklift-section-plan-helper-text">
+            <HelperTextItem variant="indeterminate">
+              {t(
+                'Click the update mappings button to save your changes, button is disabled until a change is detected.',
+              )}
+            </HelperTextItem>
+          </HelperText>
+          <Divider />
+        </>
+      )}
       {state.alertMessage ? (
         <>
           <Alert

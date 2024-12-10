@@ -46,7 +46,7 @@ export const validateUniqueName = (name: string, existingNames: string[]) =>
   existingNames.every((existingName) => existingName !== name);
 
 export const validatePlanName = (name: string, existingPlans: V1beta1Plan[]) => {
-  debugger;
+  // debugger;
   return validateK8sName(name) &&
     validateUniqueName(
       name,
@@ -85,6 +85,8 @@ export const setTargetProvider = (
 
   // there might be no target provider in the namespace
   const resolvedTarget = resolveTargetProvider(targetProviderName, availableProviders);
+  console.log(`resolvedTarget?: ${resolvedTarget}`);
+  // debugger;
   validation.targetProvider = resolvedTarget ? 'success' : 'error';
   plan.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
   netMap.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
@@ -129,6 +131,7 @@ export const areMappingsEqual = (a: Mapping[], b: Mapping[]) => {
 };
 
 export const recalculateStorages = (draft) => {
+  // debugger;
   draft.calculatedPerNamespace = {
     ...draft.calculatedPerNamespace,
     ...calculateStorages(draft),
@@ -154,6 +157,7 @@ export const reTestStorages = (draft) => {
 };
 
 export const recalculateNetworks = (draft) => {
+  // debugger;
   draft.calculatedPerNamespace = {
     ...draft.calculatedPerNamespace,
     ...calculateNetworks(draft),

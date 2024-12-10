@@ -42,7 +42,7 @@ const createPlan = async (
   //   model: PlanModel,
   //   data: plan,
   // });
-  debugger;
+  // debugger;
   const createdPlan = await k8sUpdate({
     model: PlanModel,
     data: plan,
@@ -70,12 +70,7 @@ const addOwnerRef = async (model: K8sModel, resource, ownerReferences) => {
   });
 };
 
-export const useUpdateEffect = (
-  state: CreateVmMigrationPageState,
-  dispatch,
-  editAction?: 'PLAN' | 'VMS',
-) => {
-  const createOrUpdate = editAction ? k8sUpdate : k8sCreate;
+export const useUpdateEffect = (state: CreateVmMigrationPageState, dispatch) => {
   const history = useHistory();
   const mounted = useRef(true);
   useEffect(

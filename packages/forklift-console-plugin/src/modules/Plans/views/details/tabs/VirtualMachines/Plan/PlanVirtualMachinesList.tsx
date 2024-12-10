@@ -1,7 +1,9 @@
 import React, { FC } from 'react';
+import { StandardPage } from 'src/components/page/StandardPage';
 import {
   GlobalActionWithSelection,
-  StandardPageWithSelection,
+  // StandardPageWithSelection,
+  // StandardPageWithSelectionProps,
 } from 'src/components/page/StandardPageWithSelection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -41,7 +43,9 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-const PageWithSelection = StandardPageWithSelection<VMData>;
+// const PageWithSelection = StandardPageWithSelection<VMData>;
+const PageWithNoSelection = StandardPage<VMData>;
+// type PageWithSelectionProps = StandardPageWithSelectionProps<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
 export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
@@ -87,7 +91,7 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
   const actions: PageGlobalActions = [() => <PlanVMsEditButton plan={plan} />];
 
   return (
-    <PageWithSelection
+    <PageWithNoSelection
       title={t('Virtual Machines')}
       dataSource={vmDataSource}
       CellMapper={PlanVirtualMachinesRow}

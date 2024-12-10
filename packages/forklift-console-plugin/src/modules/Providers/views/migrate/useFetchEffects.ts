@@ -48,8 +48,6 @@ export const useFetchEffects = (
     selectedVms,
     provider: sourceProvider,
     plan,
-    netMap,
-    storageMap,
     editAction,
   } = createVmMigrationContext?.data || {};
 
@@ -111,7 +109,7 @@ export const useFetchEffects = (
     namespace,
   });
   useEffect(() => {
-    debugger;
+    // debugger;
     const existingPlans =
       editAction === 'VMS' ? plans.filter((p) => p.metadata.uid !== plan.metadata.uid) : plans;
     return (
@@ -127,10 +125,14 @@ export const useFetchEffects = (
     namespace,
   });
   useEffect(() => {
+    const existingNetMaps =
+      editAction === 'VMS'
+        ? netMaps.filter((n) => n.metadata.uid === plan.spec.map.network.uid)
+        : netMaps;
     debugger;
     return (
       !editingDone &&
-      dispatchWithFallback(setExistingNetMaps(netMaps), !netMapsLoaded, netMapsError)
+      dispatchWithFallback(setExistingNetMaps(existingNetMaps), !netMapsLoaded, netMapsError)
     );
   }, [netMaps, netMapsLoaded, netMapsError, selectedVms]);
 
@@ -140,12 +142,16 @@ export const useFetchEffects = (
     isList: true,
     namespace,
   });
-  useEffect(
-    () =>
+  useEffect(() => {
+    const existingStMaps =
+      editAction === 'VMS'
+        ? stMaps.filter((s) => s.metadata.uid === plan.spec.map.storage.uid)
+        : stMaps;
+    return (
       !editingDone &&
-      dispatchWithFallback(setExistingStorageMaps(stMaps), !stMapsLoaded, stMapsError),
-    [stMaps, stMapsLoaded, stMapsError, selectedVms],
-  );
+      dispatchWithFallback(setExistingStorageMaps(existingStMaps), !stMapsLoaded, stMapsError)
+    );
+  }, [stMaps, stMapsLoaded, stMapsError, selectedVms]);
 
   const [namespaces, nsLoading, nsError] = useNamespaces(targetProvider);
   useEffect(

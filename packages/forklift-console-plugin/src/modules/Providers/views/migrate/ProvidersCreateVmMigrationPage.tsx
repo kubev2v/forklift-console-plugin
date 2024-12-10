@@ -12,8 +12,7 @@ const ProvidersCreateVmMigrationPage: React.FC<{
   state: CreateVmMigrationPageState;
   dispatch: React.Dispatch<PageAction<CreateVmMigration, unknown>>;
   emptyContext: boolean;
-  editAction?: 'PLAN' | 'VMS';
-}> = ({ state, dispatch, emptyContext, editAction }) => {
+}> = ({ state, dispatch, emptyContext }) => {
   if (emptyContext) {
     // display empty node and wait for redirect triggered from useEffect
     // the redirect should be triggered right after the first render()
@@ -31,14 +30,7 @@ const ProvidersCreateVmMigrationPage: React.FC<{
     </Alert>
   );
 
-  return (
-    <PlansCreateForm
-      state={state}
-      dispatch={dispatch}
-      formAlerts={FormAlerts}
-      editAction={editAction}
-    />
-  );
+  return <PlansCreateForm state={state} dispatch={dispatch} formAlerts={FormAlerts} />;
 };
 
 export default ProvidersCreateVmMigrationPage;

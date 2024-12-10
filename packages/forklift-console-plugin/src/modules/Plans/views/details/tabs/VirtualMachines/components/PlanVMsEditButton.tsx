@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { hasPlanEditable } from 'src/modules/Plans/views/details/utils/hasPlanEditable';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -19,7 +20,7 @@ export const PlanVMsEditButton: FC<{
 
   return (
     <ToolbarItem>
-      <Button variant="secondary" onClick={onClick}>
+      <Button variant="secondary" onClick={onClick} isDisabled={!hasPlanEditable(plan)}>
         {t('Edit virtual machines')}
       </Button>
     </ToolbarItem>
