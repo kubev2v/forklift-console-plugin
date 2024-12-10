@@ -4,6 +4,7 @@ import {
   planMappingsSectionReducer,
   PlanMappingsSectionState,
 } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
+import { EditAction } from 'src/modules/Plans/views/details/tabs/VirtualMachines/modals/PlanEditModal';
 import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import ProvidersUpdateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersUpdateVmMigrationPage';
 import { startUpdate } from 'src/modules/Providers/views/migrate/reducer/actions';
@@ -26,7 +27,7 @@ export const PlanEditPage: React.FC<{
   namespace: string;
   onClose?: () => void;
   selectedVMs?: VmData[];
-  editAction?: 'PLAN' | 'VMS';
+  editAction?: EditAction;
   planNetworkMaps: V1beta1NetworkMap;
   planStorageMaps: V1beta1StorageMap;
 }> = ({

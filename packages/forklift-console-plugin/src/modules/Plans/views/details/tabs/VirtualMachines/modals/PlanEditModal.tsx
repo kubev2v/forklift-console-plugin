@@ -19,7 +19,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Modal, ModalVariant } from '@patternfly/react-core';
 
 import './PlanVMsDeleteModal.style.css';
-import './PlanEditModal.style.css';
+import './PlanVMsEditModal.style.css';
 
 export type EditAction = 'PLAN' | 'VMS';
 export interface PlanVMsEditModalProps {
@@ -27,7 +27,7 @@ export interface PlanVMsEditModalProps {
   editAction: EditAction;
 }
 
-export const PlanEditModal: React.FC<PlanVMsEditModalProps> = ({ plan }) => {
+export const PlanEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editAction }) => {
   const { toggleModal } = useModal();
   const [activeNamespace] = useActiveNamespace();
   const { t } = useForkliftTranslation();
@@ -105,7 +105,7 @@ export const PlanEditModal: React.FC<PlanVMsEditModalProps> = ({ plan }) => {
           plan={plan}
           namespace={activeNamespace}
           sourceProvider={sourceProvider}
-          editAction="VMS"
+          editAction={editAction}
           onClose={toggleModal}
           selectedVMs={selectedVMs}
           planNetworkMaps={planNetworkMaps}
