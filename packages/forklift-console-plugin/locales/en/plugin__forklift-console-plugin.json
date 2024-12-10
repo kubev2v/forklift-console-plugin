@@ -72,6 +72,7 @@
   "Cannot retrieve certificate": "Cannot retrieve certificate",
   "Category": "Category",
   "Certificate change detected": "Certificate change detected",
+  "choose a different mapping for your migration plan": "choose a different mapping for your migration plan",
   "Choose the root filesystem to be converted.": "Choose the root filesystem to be converted.",
   "Clear all filters": "Clear all filters",
   "Click the pencil for setting provider web UI link": "Click the pencil for setting provider web UI link",
@@ -200,7 +201,6 @@
   "First root device": "First root device",
   "Flavor": "Flavor",
   "Folder": "Folder",
-  "For fixing, update the destination network mappings to avoid using the 'Pod Networking' type.": "For fixing, update the destination network mappings to avoid using the 'Pod Networking' type.",
   "GPUs/Host Devices": "GPUs/Host Devices",
   "Hide from view": "Hide from view",
   "Hide values": "Hide values",
@@ -378,7 +378,6 @@
   "Preserve static IPs": "Preserve static IPs",
   "Preserve the CPU model and flags the VM runs with in its oVirt cluster.": "Preserve the CPU model and flags the VM runs with in its oVirt cluster.",
   "Preserve the static IPs of virtual machines migrated from vSphere.": "Preserve the static IPs of virtual machines migrated from vSphere.",
-  "Preserving static IPs of VMs might fail": "Preserving static IPs of VMs might fail",
   "Product": "Product",
   "Progress": "Progress",
   "Project": "Project",
@@ -495,7 +494,6 @@
   "The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.": "The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.",
   "The password for the ESXi host admin": "The password for the ESXi host admin",
   "The plan is not ready": "The plan is not ready",
-  "The plan is set to preserve the static IPs of VMs mapped to a Pod network type. This is not supported and therefore VM IPs can be changed during the migration process.": "The plan is set to preserve the static IPs of VMs mapped to a Pod network type. This is not supported and therefore VM IPs can be changed during the migration process.",
   "The plan migration might not work as expected": "The plan migration might not work as expected",
   "The provider is not ready": "The provider is not ready",
   "The provider is not ready.": "The provider is not ready.",
@@ -579,5 +577,6 @@
   "You can select a migration network for a source provider to reduce risk to the source environment and to improve performance.": "You can select a migration network for a source provider to reduce risk to the source environment and to improve performance.",
   "You can select a migration network. If you do not select a migration network,\n        the default migration network is set to the providers default transfer network.": "You can select a migration network. If you do not select a migration network,\n        the default migration network is set to the providers default transfer network.",
   "You can select a migration target namespace for the migration virtual machines.": "You can select a migration target namespace for the migration virtual machines.",
-  "You don't have access to this section due to cluster policy.": "You don't have access to this section due to cluster policy."
+  "You don't have access to this section due to cluster policy.": "You don't have access to this section due to cluster policy.",
+  "Your migration plan preserves the static IPs of VMs and uses Pod Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Pod Networking migrations.": "Your migration plan preserves the static IPs of VMs and uses Pod Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Pod Networking migrations."
 }
