@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { V1beta1Plan } from '@kubev2v/types';
 import { Button, ToolbarItem } from '@patternfly/react-core';
 
-import { PlanVMsEditModal } from '../modals';
+import { PlanEditModal } from '../modals';
 
 export const PlanVMsEditButton: FC<{
   plan: V1beta1Plan;
@@ -15,7 +15,7 @@ export const PlanVMsEditButton: FC<{
   const { showModal } = useModal();
 
   const onClick = () => {
-    showModal(<PlanVMsEditModal plan={plan} />);
+    showModal(<PlanEditModal plan={plan} editAction="VMS" />);
   };
 
   return (

@@ -1,10 +1,10 @@
 import React from 'react';
-import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
+import { PlanEditModal } from 'src/modules/Plans/views/details/tabs/VirtualMachines/modals';
 import { useModal } from 'src/modules/Providers/modals';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
+// import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, PlanModelRef } from '@kubev2v/types';
+import { PlanModel /*PlanModelRef*/ } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core/deprecated';
 
 import {
@@ -29,11 +29,11 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
 
   const { obj: plan } = data;
 
-  const planURL = getResourceUrl({
-    reference: PlanModelRef,
-    name: plan?.metadata?.name,
-    namespace: plan?.metadata?.namespace,
-  });
+  // const planURL = getResourceUrl({
+  //   reference: PlanModelRef,
+  //   name: plan?.metadata?.name,
+  //   namespace: plan?.metadata?.namespace,
+  // });
 
   const phase = getPlanPhase(data);
 
@@ -67,9 +67,12 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
   };
 
   return [
-    <DropdownItemLink key="EditPlan" href={planURL}>
+    <DropdownItem
+      key="EditPlan"
+      onClick={() => showModal(<PlanEditModal plan={plan} editAction="PLAN" />)}
+    >
       {t('Edit Plan')}
-    </DropdownItemLink>,
+    </DropdownItem>,
 
     <DropdownItem key="start" isDisabled={!canStart} onClick={onClickPlanStart}>
       {buttonStartLabel}
