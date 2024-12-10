@@ -166,7 +166,6 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   planMappingsState: state,
   planMappingsDispatch: dispatch,
 }) => {
-  // debugger;
   const { t } = useForkliftTranslation();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -458,7 +457,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
       obj.destination?.name ??
       'Not available',
   }));
-  debugger;
+
   const labeledSelectedStorageMaps: Mapping[] = state.updatedStorage?.map((obj) => ({
     source: mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] || obj.source?.name,
     destination: mapTargetStoragesLabelsToIds(targetStorages, plan)[obj.destination.storageClass]

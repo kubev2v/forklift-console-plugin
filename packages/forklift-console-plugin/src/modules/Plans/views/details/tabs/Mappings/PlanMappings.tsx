@@ -87,10 +87,9 @@ export const PlanMappings: React.FC<{ name: string; namespace: string }> = ({
   };
 
   const [state, dispatch] = useReducer(planMappingsSectionReducer, initialState);
-  debugger;
+
   useEffect(() => {
     if (planNetworkMaps && planStorageMaps) {
-      debugger;
       dispatch({
         type: 'SET_PLAN_MAPS',
         payload: { planNetworkMaps, planStorageMaps },

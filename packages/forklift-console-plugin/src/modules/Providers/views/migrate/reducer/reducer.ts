@@ -81,7 +81,6 @@ const handlers: {
 } = {
   [SET_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
     draft.underConstruction.plan.metadata.name = name;
-    debugger;
     draft.validation.planName = validatePlanName(
       name,
       draft.existingResources.plans,
@@ -104,7 +103,6 @@ const handlers: {
     } = draft;
     // avoid side effects if no real change
     if (plan.spec.provider?.destination?.name !== targetProviderName) {
-      // debugger;
       setTargetProvider(draft, targetProviderName, existingResources.providers);
     }
   },
@@ -119,7 +117,6 @@ const handlers: {
     } = draft;
     existingResources.providers = availableProviders;
     const oldTarget = workArea.targetProvider;
-    // debugger;
     const resolvedDestination = availableProviders
       .filter(getIsTarget)
       .find((p) => p?.metadata?.name === plan.spec.provider.destination?.name);
@@ -299,7 +296,6 @@ const handlers: {
     existingResources.storageMaps = existingStorageMaps;
   },
   [START_UPDATE]({ flow }) {
-    debugger;
     flow.editingDone = true;
   },
   [START_CREATE]({

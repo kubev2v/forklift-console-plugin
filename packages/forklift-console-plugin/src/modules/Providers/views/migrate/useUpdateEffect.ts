@@ -151,6 +151,5 @@ async function updateMappings(
     updatedNetwork,
     updatedStorage,
   );
-  debugger;
   return { updatedNetworkMap, updatedStorageMap };
 }

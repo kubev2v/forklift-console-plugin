@@ -92,8 +92,7 @@ export const setTargetProvider = (
 
   // there might be no target provider in the namespace
   const resolvedTarget = resolveTargetProvider(targetProviderName, availableProviders);
-  console.log(`resolvedTarget?: ${resolvedTarget}`);
-  // debugger;
+
   validation.targetProvider = resolvedTarget ? 'success' : 'error';
   plan.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
   netMap.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
@@ -138,7 +137,6 @@ export const areMappingsEqual = (a: Mapping[], b: Mapping[]) => {
 };
 
 export const recalculateStorages = (draft) => {
-  // debugger;
   draft.calculatedPerNamespace = {
     ...draft.calculatedPerNamespace,
     ...calculateStorages(draft),
@@ -164,7 +162,6 @@ export const reTestStorages = (draft) => {
 };
 
 export const recalculateNetworks = (draft) => {
-  // debugger;
   draft.calculatedPerNamespace = {
     ...draft.calculatedPerNamespace,
     ...calculateNetworks(draft),

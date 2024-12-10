@@ -71,7 +71,6 @@ export const PlansUpdateForm = ({
     value: string,
     event: React.FormEvent<HTMLSelectElement>,
   ) => void = (value) => {
-    // debugger;
     dispatch(setPlanTargetProvider(value));
   };
 

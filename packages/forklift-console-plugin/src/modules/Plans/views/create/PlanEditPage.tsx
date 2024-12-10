@@ -11,12 +11,10 @@ import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEff
 import { useUpdateEffect } from 'src/modules/Providers/views/migrate/useUpdateEffect';
 import { ForkliftTrans } from 'src/utils/i18n';
 
-// import { useImmerReducer } from 'use-immer';
 import { V1beta1NetworkMap, V1beta1Plan, V1beta1Provider, V1beta1StorageMap } from '@kubev2v/types';
 import { Alert, PageSection, Title } from '@patternfly/react-core';
 import { Wizard } from '@patternfly/react-core/deprecated';
 
-// import { findProviderByID } from './components';
 import { planCreatePageInitialState, planCreatePageReducer } from './states';
 import { SelectSourceProvider } from './steps';
 

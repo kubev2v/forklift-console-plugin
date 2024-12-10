@@ -66,9 +66,6 @@ export const useProviderInventory = <T>({
   fetchTimeout,
   disabled = false,
 }: UseProviderInventoryParams): UseProviderInventoryResult<T> => {
-  // if (!isValidProvider(provider)) {
-  //   debugger;
-  // }
   const [inventory, setInventory] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -87,7 +84,6 @@ export const useProviderInventory = <T>({
         return;
       }
       if (!isValidProvider(provider)) {
-        // debugger;
         const e = new Error('Invalid provider data');
         handleError(e);
 
@@ -95,10 +91,6 @@ export const useProviderInventory = <T>({
       }
 
       try {
-        // const asd = `providers/${provider.spec.type}/${provider.metadata.uid}${
-        //   subPath ? `/${subPath}` : ''
-        // }`;
-        // debugger;
         const newInventory = await consoleFetchJSON(
           getInventoryApiUrl(
             `providers/${provider.spec.type}/${provider.metadata.uid}${
@@ -109,7 +101,6 @@ export const useProviderInventory = <T>({
           {},
           fetchTimeout,
         );
-        // debugger;
         updateInventoryIfChanged(newInventory, fieldsToAvoidComparing);
         handleError(null);
       } catch (e) {
@@ -134,7 +125,6 @@ export const useProviderInventory = <T>({
   function handleError(e: Error): void {
     if (e?.toString() !== oldErrorRef.current?.error) {
       setError(e);
-      // debugger;
       setLoading(false);
 
       oldErrorRef.current = { error: e?.toString() };
@@ -165,7 +155,6 @@ export const useProviderInventory = <T>({
 
     if (needReRender) {
       setInventory(newInventory);
-      // debugger;
       setLoading(false);
 
       oldDataRef.current = { inventory: newInventory };

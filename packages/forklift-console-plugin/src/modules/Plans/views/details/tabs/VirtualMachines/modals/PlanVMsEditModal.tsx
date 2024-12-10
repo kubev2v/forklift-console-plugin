@@ -40,13 +40,13 @@ export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan }) => {
     });
 
   // Retrieve k8s target provider
-  const [targetProvider, targetProviderLoaded, targetProviderLoadError] =
-    useK8sWatchResource<V1beta1Provider>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      namespaced: true,
-      name: plan?.spec?.provider?.destination?.name,
-      namespace: plan?.spec?.provider?.destination?.namespace,
-    });
+  // const [targetProvider, targetProviderLoaded, targetProviderLoadError] =
+  //   useK8sWatchResource<V1beta1Provider>({
+  //     groupVersionKind: ProviderModelGroupVersionKind,
+  //     namespaced: true,
+  //     name: plan?.spec?.provider?.destination?.name,
+  //     namespace: plan?.spec?.provider?.destination?.namespace,
+  //   });
 
   // Retrieve all k8s Network Mappings
   const [networkMaps, networkMapsLoaded, networkMapsError] = useK8sWatchResource<

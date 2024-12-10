@@ -34,10 +34,6 @@ export const useInventoryVms = (
     error,
   } = useProviderInventory<ProviderVirtualMachine[]>(inventoryOptions);
 
-  // if (!loading) {
-  //   debugger;
-  // }
-
   const vmData: VmData[] =
     !loading && !error && Array.isArray(vms)
       ? vms.map((vm) => ({
