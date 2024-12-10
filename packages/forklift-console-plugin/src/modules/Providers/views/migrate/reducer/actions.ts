@@ -212,6 +212,7 @@ export const setAvailableProviders = (
   loaded?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableProviders> => {
+  debugger;
   return {
     type: 'SET_AVAILABLE_PROVIDERS',
     payload: {

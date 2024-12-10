@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { produce } from 'immer';
+import { PlanMappingsSectionState } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
+import { patchPlanMappingsData } from 'src/modules/Plans/views/details/utils/patchPlanMappingsData';
 import { deepCopy } from 'src/utils';
 
 import {
@@ -9,10 +11,12 @@ import {
   PlanModelRef,
   StorageMapModel,
   V1beta1NetworkMap,
+  V1beta1NetworkMapSpecMap,
   V1beta1Plan,
   V1beta1StorageMap,
+  V1beta1StorageMapSpecMap,
 } from '@kubev2v/types';
-import { k8sCreate, K8sModel, k8sPatch, k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
+import { K8sModel, k8sPatch, k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getResourceUrl } from '../../utils';
 
@@ -20,34 +24,29 @@ import { setAPiError } from './reducer/actions';
 import { getObjectRef } from './reducer/helpers';
 import { CreateVmMigrationPageState } from './types';
 
-const createStorage = (storageMap: V1beta1StorageMap) =>
-  k8sCreate({
-    model: StorageMapModel,
-    data: storageMap,
-  });
+// const createStorage = (storageMap: V1beta1StorageMap) =>
+//   k8sCreate({
+//     model: StorageMapModel,
+//     data: storageMap,
+//   });
 
-const createNetwork = (netMap: V1beta1NetworkMap) => {
-  return k8sCreate({
-    model: NetworkMapModel,
-    data: updateNetworkMapDestination(netMap),
-  });
-};
+// const createNetwork = (netMap: V1beta1NetworkMap) => {
+//   return k8sCreate({
+//     model: NetworkMapModel,
+//     data: updateNetworkMapDestination(netMap),
+//   });
+// };
 
-const createPlan = async (
+const updatePlan = async (
   plan: V1beta1Plan,
   netMap: V1beta1NetworkMap,
   storageMap: V1beta1StorageMap,
 ) => {
-  // const createdPlan = await k8sCreate({
-  //   model: PlanModel,
-  //   data: plan,
-  // });
-  // debugger;
-  const createdPlan = await k8sUpdate({
+  const updatedPlan = await k8sUpdate({
     model: PlanModel,
     data: plan,
   });
-  const ownerReferences = [getObjectRef(createdPlan)];
+  const ownerReferences = [getObjectRef(updatedPlan)];
   return [ownerReferences, netMap, storageMap];
 };
 
@@ -70,7 +69,11 @@ const addOwnerRef = async (model: K8sModel, resource, ownerReferences) => {
   });
 };
 
-export const useUpdateEffect = (state: CreateVmMigrationPageState, dispatch) => {
+export const useUpdateEffect = (
+  state: CreateVmMigrationPageState,
+  dispatch,
+  planMappingsState: PlanMappingsSectionState,
+) => {
   const history = useHistory();
   const mounted = useRef(true);
   useEffect(
@@ -83,40 +86,49 @@ export const useUpdateEffect = (state: CreateVmMigrationPageState, dispatch) => 
   useEffect(() => {
     const {
       flow,
-      underConstruction: { plan, netMap, storageMap },
+      underConstruction: { plan },
     } = state;
     if (!flow.editingDone || !mounted.current) {
       return;
     }
 
-    Promise.all([createStorage(storageMap), createNetwork(netMap)])
-      .then(([storageMap, netMap]) =>
-        createPlan(
-          produce(plan, (draft) => {
-            draft.spec.map.network = getObjectRef(netMap);
-            draft.spec.map.storage = getObjectRef(storageMap);
-          }),
-          netMap,
-          storageMap,
-        ),
-      )
-      .then(([ownerReferences, netMap, storageMap]) =>
-        Promise.all([
-          addOwnerRef(StorageMapModel, storageMap, ownerReferences),
-          addOwnerRef(NetworkMapModel, netMap, ownerReferences),
-        ]),
-      )
-      .then(
-        () =>
-          mounted.current &&
-          history.push(
-            getResourceUrl({
-              reference: PlanModelRef,
-              namespace: plan.metadata.namespace,
-              name: plan.metadata.name,
-            }),
-          ),
-      )
+    // Promise.all([createStorage(storageMap), createNetwork(netMap)])
+    Promise.all([
+      updateMappings(
+        planMappingsState.planNetworkMaps,
+        planMappingsState.planStorageMaps,
+        planMappingsState.updatedNetwork,
+        planMappingsState.updatedStorage,
+      ),
+    ])
+      .then(([networkMap, storageMap]) => {
+        debugger;
+        // return updatePlan(
+        //   produce(plan, (draft) => {
+        //     draft.spec.map.network = getObjectRef(networkMap);
+        //     draft.spec.map.storage = getObjectRef(storageMap);
+        //   }),
+        //   networkMap,
+        //   storageMap,
+        // );
+      })
+      // .then(([ownerReferences, networkMap, storageMap]) =>
+      //   Promise.all([
+      //     addOwnerRef(StorageMapModel, storageMap, ownerReferences),
+      //     addOwnerRef(NetworkMapModel, networkMap, ownerReferences),
+      //   ]),
+      // )
+      // .then(
+      //   () =>
+      //     mounted.current &&
+      //     history.push(
+      //       getResourceUrl({
+      //         reference: PlanModelRef,
+      //         namespace: plan.metadata.namespace,
+      //         name: plan.metadata.name,
+      //       }),
+      //     ),
+      // )
       .catch((error) => mounted.current && dispatch(setAPiError(error)));
   }, [state.flow.editingDone, state.underConstruction.storageMap]);
 };
@@ -140,4 +152,19 @@ export function updateNetworkMapDestination(networkMap: V1beta1NetworkMap): V1be
     }
   });
   return networkMapCopy;
+}
+
+async function updateMappings(
+  planNetworkMaps: V1beta1NetworkMap,
+  planStorageMaps: V1beta1StorageMap,
+  updatedNetwork: V1beta1NetworkMapSpecMap[],
+  updatedStorage: V1beta1StorageMapSpecMap[],
+) {
+  const { updatedNetworkMap, updatedStorageMap } = await patchPlanMappingsData(
+    planNetworkMaps,
+    planStorageMaps,
+    updatedNetwork,
+    updatedStorage,
+  );
+  return [updatedNetworkMap, updatedStorageMap];
 }

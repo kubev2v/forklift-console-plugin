@@ -8,21 +8,14 @@ import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines
 // import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
 import ProvidersUpdateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersUpdateVmMigrationPage';
 import { startCreate } from 'src/modules/Providers/views/migrate/reducer/actions';
-import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
+import { useEditVmsFetchEffects } from 'src/modules/Providers/views/migrate/useEditVmsFetchEffects';
 // import { createInitialState } from 'src/modules/Providers/views/migrate/reducer/createInitialState';
 // import { reducer } from 'src/modules/Providers/views/migrate/reducer/reducer';
 import { useUpdateEffect } from 'src/modules/Providers/views/migrate/useUpdateEffect';
 import { ForkliftTrans } from 'src/utils/i18n';
 
 // import { useImmerReducer } from 'use-immer';
-import {
-  ProviderModelGroupVersionKind,
-  V1beta1NetworkMap,
-  V1beta1Plan,
-  V1beta1Provider,
-  V1beta1StorageMap,
-} from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { V1beta1NetworkMap, V1beta1Plan, V1beta1Provider, V1beta1StorageMap } from '@kubev2v/types';
 import { Alert, PageSection, Title } from '@patternfly/react-core';
 import { Wizard } from '@patternfly/react-core/deprecated';
 
@@ -51,32 +44,6 @@ export const PlanEditPage: React.FC<{
   planNetworkMaps,
   planStorageMaps,
 }) => {
-  const mutableConditions = {
-    ...plan.status.conditions,
-  };
-  const mutablePlan: V1beta1Plan = {
-    ...plan,
-    status: {
-      ...plan.status,
-      conditions: {
-        ...plan.status.conditions,
-      },
-    },
-  };
-  Object.keys(mutableConditions).forEach((key) => {
-    const item = mutableConditions[key];
-    const mutableItem = {
-      ...item,
-    };
-    if (mutableItem.type === 'Succeeded') {
-      // Update the status to "False"
-      mutableItem.status = 'False';
-    }
-    mutableConditions[key] = mutableItem;
-  });
-  mutablePlan.status.conditions = mutableConditions;
-  // debugger;
-  // delete mutablePlan.metadata.resourceVersion;
   const history = useHistory();
   const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
   const startAtStep = 1;
@@ -89,19 +56,19 @@ export const PlanEditPage: React.FC<{
   });
   console.log('filterState', filterState);
 
-  const initialState: PlanMappingsSectionState = {
+  const initialPlanMappingsState: PlanMappingsSectionState = {
     edit: true,
     dataChanged: false,
     alertMessage: null,
     updatedNetwork: planNetworkMaps?.spec?.map,
     updatedStorage: planStorageMaps?.spec?.map,
-    originalNetwork: planNetworkMaps?.spec?.map,
-    originalStorage: planStorageMaps?.spec?.map,
+    planNetworkMaps: planNetworkMaps,
+    planStorageMaps: planStorageMaps,
   };
 
   const [planMappingsState, planMappingsDispatch] = useReducer(
     planMappingsSectionReducer,
-    initialState,
+    initialPlanMappingsState,
   );
 
   useEffect(() => {
@@ -113,27 +80,22 @@ export const PlanEditPage: React.FC<{
     }
   }, [planNetworkMaps, planStorageMaps]);
 
-  const [providers] = useK8sWatchResource<V1beta1Provider[]>({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
-    isList: true,
-    namespace,
-  });
-
   // Init Create migration plan form state
-  const [state, dispatch, emptyContext] = useFetchEffects({
+  const [state, dispatch, emptyContext] = useEditVmsFetchEffects({
     data: {
       selectedVms: filterState.selectedVMs,
       provider: sourceProvider,
-      plan: mutablePlan,
-      // netMap: mutablePlan.spec.map.network,
-      // storageMap: mutablePlan.spec.map.storage,
+      plan,
       editAction,
     },
   });
 
   console.log('state', state);
-  useUpdateEffect(state, dispatch);
+  useUpdateEffect(state, dispatch, planMappingsState);
+
+  const errs = Object.values(state?.validation || []).some((validation) => validation === 'error');
+  console.log('errs', errs);
+  debugger;
 
   const steps = [
     {
@@ -144,7 +106,6 @@ export const PlanEditPage: React.FC<{
           namespace={namespace}
           filterState={filterState}
           filterDispatch={filterDispatch}
-          providers={providers}
           selectedProvider={sourceProvider}
           editAction={editAction}
         />
@@ -173,7 +134,7 @@ export const PlanEditPage: React.FC<{
           Object.values(state?.validation || []).some((validation) => validation === 'error')
         ),
       canJumpTo: filterState?.selectedVMs?.length > 0,
-      nextButtonText: editAction === 'VMS' ? 'Update virtual machines' : 'Create migration plan',
+      nextButtonText: editAction === 'VMS' ? 'Update virtual machines' : 'Update migration plan',
     },
   ];
 

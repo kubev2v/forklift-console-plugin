@@ -26,24 +26,27 @@ export interface PlanVMsEditModalProps {
 }
 
 export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan }) => {
-  // const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [activeNamespace] = useActiveNamespace();
   const { t } = useForkliftTranslation();
 
-  const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
-    name: plan?.spec?.provider?.source?.name,
-    namespace: plan?.spec?.provider?.source?.namespace,
-  });
-  const [vmData] = useInventoryVms({ provider }, providerLoaded, providerLoadError);
-  const initialSelectedIds = plan.spec.vms.map((specVm) => specVm.id);
-  const selectedVMs = vmData.filter((vm) => initialSelectedIds.includes(vm.vm.id));
+  // Retrieve k8s source provider
+  const [sourceProvider, sourceProviderLoaded, sourceProviderLoadError] =
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      namespaced: true,
+      name: plan?.spec?.provider?.source?.name,
+      namespace: plan?.spec?.provider?.source?.namespace,
+    });
 
-  console.log('plan', plan);
-  console.log('provider', provider);
-  // console.log('vmData', vmData);
+  // Retrieve k8s target provider
+  const [targetProvider, targetProviderLoaded, targetProviderLoadError] =
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      namespaced: true,
+      name: plan?.spec?.provider?.destination?.name,
+      namespace: plan?.spec?.provider?.destination?.namespace,
+    });
 
   // Retrieve all k8s Network Mappings
   const [networkMaps, networkMapsLoaded, networkMapsError] = useK8sWatchResource<
@@ -65,6 +68,14 @@ export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan }) => {
     namespace: plan?.metadata?.namespace,
   });
 
+  const [vmData] = useInventoryVms(
+    { provider: sourceProvider },
+    sourceProviderLoaded,
+    sourceProviderLoadError,
+  );
+  const initialSelectedIds = plan.spec.vms.map((specVm) => specVm.id);
+  const selectedVMs = vmData.filter((vm) => initialSelectedIds.includes(vm.vm.id));
+
   const planNetworkMaps = networkMaps
     ? networkMaps.find((net) => net?.metadata?.name === plan?.spec?.map?.network?.name)
     : null;
@@ -73,8 +84,8 @@ export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan }) => {
     : null;
 
   const finishedLoading =
-    providerLoaded && networkMapsLoaded && storageMapsLoaded && vmData.length > 0;
-  const hasErrors = providerLoadError || networkMapsError || storageMapsError;
+    sourceProviderLoaded && networkMapsLoaded && storageMapsLoaded && vmData.length > 0;
+  const hasErrors = sourceProviderLoadError || networkMapsError || storageMapsError;
   console.log(`hasErrors: ${hasErrors}`);
 
   return (
@@ -91,7 +102,7 @@ export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan }) => {
         <PlanEditPage
           plan={plan}
           namespace={activeNamespace}
-          sourceProvider={provider}
+          sourceProvider={sourceProvider}
           editAction="VMS"
           onClose={toggleModal}
           selectedVMs={selectedVMs}

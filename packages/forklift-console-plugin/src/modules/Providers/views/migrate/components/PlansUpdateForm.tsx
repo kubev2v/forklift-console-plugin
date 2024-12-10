@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { FilterableSelect } from 'src/components';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { PlanMappingsInitSection } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappings';
@@ -20,19 +20,11 @@ import {
   Form,
   FormSelect,
   FormSelectOption,
-  TextInput,
 } from '@patternfly/react-core';
 
 import { DetailsItem, getIsTarget } from '../../../utils';
-import {
-  PageAction,
-  setPlanName,
-  setPlanTargetNamespace,
-  setPlanTargetProvider,
-} from '../reducer/actions';
+import { PageAction, setPlanTargetNamespace, setPlanTargetProvider } from '../reducer/actions';
 import { CreateVmMigrationPageState } from '../types';
-
-import { EditableDescriptionItem } from './EditableDescriptionItem';
 
 export type PlansUpdateFormProps = {
   children?: ReactNode;
@@ -75,19 +67,11 @@ export const PlansUpdateForm = ({
     flow,
   } = state;
 
-  const [isNameEdited, setIsNameEdited] = useState(true);
-
-  const onChangePlan: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
-    // debugger;
-    dispatch(setPlanName(value?.trim() ?? ''));
-  };
-
   const onChangeTargetProvider: (
     value: string,
     event: React.FormEvent<HTMLSelectElement>,
   ) => void = (value) => {
+    debugger;
     dispatch(setPlanTargetProvider(value));
   };
 
@@ -111,38 +95,12 @@ export const PlansUpdateForm = ({
           default: '1Col',
         }}
       >
-        {editAction !== 'VMS' && (isNameEdited || validation.planName === 'error') ? (
-          <Form isWidthLimited>
-            <FormGroupWithHelpText
-              label={t('Plan name')}
-              isRequired
-              fieldId="planName"
-              validated={validation.planName}
-              helperTextInvalid={t(
-                'Name is required and must be a unique within a namespace and valid Kubernetes name.',
-              )}
-            >
-              <TextInput
-                spellCheck="false"
-                isRequired
-                type="text"
-                id="planName"
-                value={plan.metadata.name}
-                validated={validation.planName}
-                isDisabled={flow.editingDone}
-                onChange={(e, v) => onChangePlan(v, e)}
-              />
-            </FormGroupWithHelpText>
-          </Form>
-        ) : (
-          <EditableDescriptionItem
-            title={t('Plan name')}
-            content={plan.metadata.name}
-            ariaEditLabel={t('Edit plan name')}
-            onEdit={() => setIsNameEdited(true)}
-            isDisabled={flow.editingDone || editAction === 'VMS'}
-          />
-        )}
+        <DescriptionListGroup>
+          <DescriptionListTerm>{t('Plan name')}</DescriptionListTerm>
+          <DescriptionListDescription>
+            <div className="forklift-page-editable-description-item">{plan.metadata.name}</div>
+          </DescriptionListDescription>
+        </DescriptionListGroup>
 
         <SectionHeading
           text={t('Source provider')}

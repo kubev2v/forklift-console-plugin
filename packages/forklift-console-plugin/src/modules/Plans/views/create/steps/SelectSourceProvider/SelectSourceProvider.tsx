@@ -13,7 +13,7 @@ export const SelectSourceProvider: React.FC<{
   namespace: string;
   filterState: PlanCreatePageState;
   filterDispatch: React.Dispatch<PlanCreatePageActionTypes>;
-  providers: V1beta1Provider[];
+  providers?: V1beta1Provider[];
   selectedProvider: V1beta1Provider;
   editAction?: 'PLAN' | 'VMS';
   initialSelectedIds?: string[];
@@ -28,9 +28,9 @@ export const SelectSourceProvider: React.FC<{
   const { t } = useForkliftTranslation();
 
   // Get the ready providers (note: currently forklift does not allow filter be status.phase)
-  const readyProviders = providers.filter((p) => p?.status?.phase === 'Ready');
+  const readyProviders = providers?.filter((p) => p?.status?.phase === 'Ready');
 
-  const filteredProviders = readyProviders.filter(
+  const filteredProviders = readyProviders?.filter(
     (provider) =>
       provider.metadata.name.toLowerCase().includes(filterState.nameFilter.toLowerCase()) &&
       (filterState.typeFilters.length === 0 ||

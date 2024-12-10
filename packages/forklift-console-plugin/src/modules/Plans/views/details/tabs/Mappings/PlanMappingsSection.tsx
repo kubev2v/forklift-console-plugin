@@ -61,8 +61,8 @@ export interface PlanMappingsSectionState {
   alertMessage: ReactNode;
   updatedNetwork: V1beta1NetworkMapSpecMap[];
   updatedStorage: V1beta1StorageMapSpecMap[];
-  originalNetwork: V1beta1NetworkMapSpecMap[];
-  originalStorage: V1beta1StorageMapSpecMap[];
+  planNetworkMaps: V1beta1NetworkMap;
+  planStorageMaps: V1beta1StorageMap;
 }
 
 export type PlanMappingsSectionProps = {
@@ -92,8 +92,8 @@ export function planMappingsSectionReducer(
         ...state,
         updatedNetwork: planNetworkMaps?.spec?.map,
         updatedStorage: planStorageMaps?.spec?.map,
-        originalNetwork: planNetworkMaps?.spec?.map,
-        originalStorage: planStorageMaps?.spec?.map,
+        planNetworkMaps: planNetworkMaps?.spec?.map,
+        planStorageMaps: planStorageMaps?.spec?.map,
       };
     }
     case 'TOGGLE_EDIT': {
@@ -106,8 +106,8 @@ export function planMappingsSectionReducer(
         ...state,
         dataChanged,
         alertMessage: null,
-        updatedNetwork: state.originalNetwork,
-        updatedStorage: state.originalStorage,
+        updatedNetwork: state.planNetworkMaps,
+        updatedStorage: state.planStorageMaps,
       };
     }
     case 'SET_ALERT_MESSAGE': {
@@ -118,8 +118,8 @@ export function planMappingsSectionReducer(
     case 'REPLACE_NETWORK_MAPPING': {
       const updatedNetwork = action.payload.newState;
       const dataChanged = hasPlanMappingsChanged(
-        state.originalNetwork,
-        state.originalStorage,
+        state.planNetworkMaps,
+        state.planStorageMaps,
         updatedNetwork,
         state?.updatedStorage,
       );
@@ -136,8 +136,8 @@ export function planMappingsSectionReducer(
     case 'REPLACE_STORAGE_MAPPING': {
       const updatedStorage = action.payload.newState;
       const dataChanged = hasPlanMappingsChanged(
-        state.originalNetwork,
-        state.originalStorage,
+        state.planNetworkMaps,
+        state.planStorageMaps,
         state?.updatedNetwork,
         updatedStorage,
       );
@@ -166,6 +166,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   planMappingsState: state,
   planMappingsDispatch: dispatch,
 }) => {
+  debugger;
   const { t } = useForkliftTranslation();
 
   const [isLoading, setIsLoading] = useState(false);

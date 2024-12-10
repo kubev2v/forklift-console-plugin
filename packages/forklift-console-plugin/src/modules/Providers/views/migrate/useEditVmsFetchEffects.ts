@@ -41,10 +41,15 @@ import { reducer } from './reducer/reducer';
 import { CreateVmMigrationContextType } from './ProvidersCreateVmMigrationContext';
 import { CreateVmMigrationPageState } from './types';
 
-export const useFetchEffects = (
+export const useEditVmsFetchEffects = (
   createVmMigrationContext: CreateVmMigrationContextType,
 ): [CreateVmMigrationPageState, Dispatch<PageAction<CreateVmMigration, unknown>>, boolean] => {
-  const { selectedVms, provider: sourceProvider } = createVmMigrationContext?.data || {};
+  const {
+    selectedVms,
+    provider: sourceProvider,
+    plan,
+    editAction,
+  } = createVmMigrationContext?.data || {};
 
   // error state - the page was entered directly without choosing the VMs
   const emptyContext = !selectedVms?.length || !sourceProvider;
@@ -52,7 +57,7 @@ export const useFetchEffects = (
 
   const [state, dispatch] = useImmerReducer(
     reducer,
-    { namespace, sourceProvider, selectedVms },
+    { namespace, sourceProvider, selectedVms, plan, editAction },
     createInitialState,
   );
 
@@ -73,7 +78,7 @@ export const useFetchEffects = (
   };
 
   useEffect(
-    () => !editingDone && dispatch(initState(namespace, sourceProvider, selectedVms)),
+    () => !editingDone && dispatch(initState(namespace, sourceProvider, selectedVms, plan)),
     [selectedVms],
   );
 
@@ -89,6 +94,9 @@ export const useFetchEffects = (
       dispatchWithFallback(setAvailableProviders(providers), !providersLoaded, providerError),
     [providers, providersLoaded, providerError, selectedVms],
   );
+  // useEffect(() => {
+  //   return !editingDone && dispatch(setAvailableProviders([sourceProvider]));
+  // }, [sourceProvider]);
 
   const [plans, plansLoaded, plansError] = useK8sWatchResource<V1beta1Plan[]>({
     groupVersionKind: PlanModelGroupVersionKind,
@@ -100,6 +108,9 @@ export const useFetchEffects = (
     () => !editingDone && dispatchWithFallback(setExistingPlans(plans), !plansLoaded, plansError),
     [plans, plansLoaded, plansError, selectedVms],
   );
+  // useEffect(() => {
+  //   return !editingDone && dispatch(setExistingPlans([plan]));
+  // }, [plan]);
 
   const [netMaps, netMapsLoaded, netMapsError] = useK8sWatchResource<V1beta1NetworkMap[]>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
@@ -107,12 +118,17 @@ export const useFetchEffects = (
     isList: true,
     namespace,
   });
-  useEffect(
-    () =>
+  useEffect(() => {
+    const existingNetMaps =
+      editAction === 'VMS'
+        ? netMaps.filter((n) => n.metadata.uid === plan.spec.map.network.uid)
+        : netMaps;
+    debugger;
+    return (
       !editingDone &&
-      dispatchWithFallback(setExistingNetMaps(netMaps), !netMapsLoaded, netMapsError),
-    [netMaps, netMapsLoaded, netMapsError, selectedVms],
-  );
+      dispatchWithFallback(setExistingNetMaps(existingNetMaps), !netMapsLoaded, netMapsError)
+    );
+  }, [netMaps, netMapsLoaded, netMapsError, selectedVms]);
 
   const [stMaps, stMapsLoaded, stMapsError] = useK8sWatchResource<V1beta1StorageMap[]>({
     groupVersionKind: StorageMapModelGroupVersionKind,
@@ -120,12 +136,16 @@ export const useFetchEffects = (
     isList: true,
     namespace,
   });
-  useEffect(
-    () =>
+  useEffect(() => {
+    const existingStMaps =
+      editAction === 'VMS'
+        ? stMaps.filter((s) => s.metadata.uid === plan.spec.map.storage.uid)
+        : stMaps;
+    return (
       !editingDone &&
-      dispatchWithFallback(setExistingStorageMaps(stMaps), !stMapsLoaded, stMapsError),
-    [stMaps, stMapsLoaded, stMapsError, selectedVms],
-  );
+      dispatchWithFallback(setExistingStorageMaps(existingStMaps), !stMapsLoaded, stMapsError)
+    );
+  }, [stMaps, stMapsLoaded, stMapsError, selectedVms]);
 
   const [namespaces, nsLoading, nsError] = useNamespaces(targetProvider);
   useEffect(
