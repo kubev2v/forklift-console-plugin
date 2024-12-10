@@ -80,16 +80,17 @@ export const PlanMappings: React.FC<{ name: string; namespace: string }> = ({
     edit: false,
     dataChanged: false,
     alertMessage: null,
-    updatedNetwork: planNetworkMaps?.spec?.map,
-    updatedStorage: planStorageMaps?.spec?.map,
-    planNetworkMaps: planNetworkMaps?.spec?.map,
-    planStorageMaps: planStorageMaps?.spec?.map,
+    updatedNetwork: planNetworkMaps?.spec?.map || [],
+    updatedStorage: planStorageMaps?.spec?.map || [],
+    planNetworkMaps: planNetworkMaps,
+    planStorageMaps: planStorageMaps,
   };
 
   const [state, dispatch] = useReducer(planMappingsSectionReducer, initialState);
-
+  debugger;
   useEffect(() => {
     if (planNetworkMaps && planStorageMaps) {
+      debugger;
       dispatch({
         type: 'SET_PLAN_MAPS',
         payload: { planNetworkMaps, planStorageMaps },

@@ -50,6 +50,7 @@ import {
   SET_TARGET_NAMESPACE,
   SET_TARGET_PROVIDER,
   START_CREATE,
+  START_UPDATE,
 } from './actions';
 import { addMapping, deleteMapping, replaceMapping } from './changeMapping';
 import { createInitialState, InitialStateParameters } from './createInitialState';
@@ -80,8 +81,12 @@ const handlers: {
 } = {
   [SET_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
     draft.underConstruction.plan.metadata.name = name;
-    // debugger;
-    draft.validation.planName = validatePlanName(name, draft.existingResources.plans);
+    debugger;
+    draft.validation.planName = validatePlanName(
+      name,
+      draft.existingResources.plans,
+      Boolean(draft.flow.editAction),
+    );
   },
   [SET_TARGET_NAMESPACE](
     draft,
@@ -135,10 +140,10 @@ const handlers: {
   ) {
     // triggered from useEffect on any data change
     draft.existingResources.plans = existingPlans;
-    // debugger;
     draft.validation.planName = validatePlanName(
       draft.underConstruction.plan.metadata.name,
       existingPlans,
+      Boolean(draft.flow.editAction),
     );
   },
   [SET_AVAILABLE_TARGET_NAMESPACES](
@@ -292,6 +297,10 @@ const handlers: {
   ) {
     // triggered from useEffect on any data change
     existingResources.storageMaps = existingStorageMaps;
+  },
+  [START_UPDATE]({ flow }) {
+    debugger;
+    flow.editingDone = true;
   },
   [START_CREATE]({
     flow,

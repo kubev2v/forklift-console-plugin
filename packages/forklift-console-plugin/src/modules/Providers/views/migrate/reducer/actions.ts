@@ -43,6 +43,7 @@ export const SET_NICK_PROFILES = 'SET_NICK_PROFILES';
 export const SET_DISKS = 'SET_DISKS';
 export const SET_EXISTING_NET_MAPS = 'SET_EXISTING_NET_MAPS';
 export const SET_EXISTING_STORAGE_MAPS = 'SET_EXISTING_STORAGE_MAPS';
+export const START_UPDATE = 'START_UPDATE';
 export const START_CREATE = 'START_CREATE';
 export const SET_API_ERROR = 'SET_API_ERROR';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
@@ -67,6 +68,7 @@ export type CreateVmMigration =
   | typeof SET_NICK_PROFILES
   | typeof SET_DISKS
   | typeof SET_EXISTING_NET_MAPS
+  | typeof START_UPDATE
   | typeof START_CREATE
   | typeof SET_API_ERROR
   | typeof SET_EXISTING_STORAGE_MAPS
@@ -212,7 +214,7 @@ export const setAvailableProviders = (
   loaded?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableProviders> => {
-  debugger;
+  // debugger;
   return {
     type: 'SET_AVAILABLE_PROVIDERS',
     payload: {
@@ -371,6 +373,11 @@ export const setDisks = (
 ): PageAction<CreateVmMigration, PlanDisks> => ({
   type: 'SET_DISKS',
   payload: { disks, loading, error },
+});
+
+export const startUpdate = (): PageAction<CreateVmMigration, unknown> => ({
+  type: 'START_UPDATE',
+  payload: {},
 });
 
 export const startCreate = (): PageAction<CreateVmMigration, unknown> => ({

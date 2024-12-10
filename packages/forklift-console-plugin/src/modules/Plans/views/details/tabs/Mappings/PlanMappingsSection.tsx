@@ -90,10 +90,10 @@ export function planMappingsSectionReducer(
       const { planNetworkMaps, planStorageMaps } = action.payload;
       return {
         ...state,
+        planNetworkMaps,
+        planStorageMaps,
         updatedNetwork: planNetworkMaps?.spec?.map,
         updatedStorage: planStorageMaps?.spec?.map,
-        planNetworkMaps: planNetworkMaps?.spec?.map,
-        planStorageMaps: planStorageMaps?.spec?.map,
       };
     }
     case 'TOGGLE_EDIT': {
@@ -106,8 +106,8 @@ export function planMappingsSectionReducer(
         ...state,
         dataChanged,
         alertMessage: null,
-        updatedNetwork: state.planNetworkMaps,
-        updatedStorage: state.planStorageMaps,
+        updatedNetwork: state.planNetworkMaps.spec.map,
+        updatedStorage: state.planStorageMaps.spec.map,
       };
     }
     case 'SET_ALERT_MESSAGE': {
@@ -118,8 +118,8 @@ export function planMappingsSectionReducer(
     case 'REPLACE_NETWORK_MAPPING': {
       const updatedNetwork = action.payload.newState;
       const dataChanged = hasPlanMappingsChanged(
-        state.planNetworkMaps,
-        state.planStorageMaps,
+        state.planNetworkMaps.spec.map,
+        state.planStorageMaps.spec.map,
         updatedNetwork,
         state?.updatedStorage,
       );
@@ -136,8 +136,8 @@ export function planMappingsSectionReducer(
     case 'REPLACE_STORAGE_MAPPING': {
       const updatedStorage = action.payload.newState;
       const dataChanged = hasPlanMappingsChanged(
-        state.planNetworkMaps,
-        state.planStorageMaps,
+        state.planNetworkMaps.spec.map,
+        state.planStorageMaps.spec.map,
         state?.updatedNetwork,
         updatedStorage,
       );
@@ -166,7 +166,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   planMappingsState: state,
   planMappingsDispatch: dispatch,
 }) => {
-  debugger;
+  // debugger;
   const { t } = useForkliftTranslation();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -458,7 +458,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
       obj.destination?.name ??
       'Not available',
   }));
-
+  debugger;
   const labeledSelectedStorageMaps: Mapping[] = state.updatedStorage?.map((obj) => ({
     source: mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] || obj.source?.name,
     destination: mapTargetStoragesLabelsToIds(targetStorages, plan)[obj.destination.storageClass]

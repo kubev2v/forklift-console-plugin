@@ -45,8 +45,15 @@ import { hasMultiplePodNetworkMappings } from './hasMultiplePodNetworkMappings';
 export const validateUniqueName = (name: string, existingNames: string[]) =>
   existingNames.every((existingName) => existingName !== name);
 
-export const validatePlanName = (name: string, existingPlans: V1beta1Plan[]) => {
-  // debugger;
+export const validatePlanName = (
+  name: string,
+  existingPlans: V1beta1Plan[],
+  editingPlan?: boolean,
+) => {
+  if (editingPlan) {
+    return validateK8sName(name) ? 'success' : 'error';
+  }
+
   return validateK8sName(name) &&
     validateUniqueName(
       name,
@@ -86,7 +93,7 @@ export const setTargetProvider = (
   // there might be no target provider in the namespace
   const resolvedTarget = resolveTargetProvider(targetProviderName, availableProviders);
   console.log(`resolvedTarget?: ${resolvedTarget}`);
-  debugger;
+  // debugger;
   validation.targetProvider = resolvedTarget ? 'success' : 'error';
   plan.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
   netMap.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);

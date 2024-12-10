@@ -7,8 +7,9 @@ import {
 import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 // import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
 import ProvidersUpdateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersUpdateVmMigrationPage';
-import { startCreate } from 'src/modules/Providers/views/migrate/reducer/actions';
-import { useEditVmsFetchEffects } from 'src/modules/Providers/views/migrate/useEditVmsFetchEffects';
+import { startUpdate } from 'src/modules/Providers/views/migrate/reducer/actions';
+// import { useEditVmsFetchEffects } from 'src/modules/Providers/views/migrate/useEditVmsFetchEffects';
+import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
 // import { createInitialState } from 'src/modules/Providers/views/migrate/reducer/createInitialState';
 // import { reducer } from 'src/modules/Providers/views/migrate/reducer/reducer';
 import { useUpdateEffect } from 'src/modules/Providers/views/migrate/useUpdateEffect';
@@ -56,12 +57,13 @@ export const PlanEditPage: React.FC<{
   });
   console.log('filterState', filterState);
 
+  debugger;
   const initialPlanMappingsState: PlanMappingsSectionState = {
     edit: true,
     dataChanged: false,
     alertMessage: null,
-    updatedNetwork: planNetworkMaps?.spec?.map,
-    updatedStorage: planStorageMaps?.spec?.map,
+    updatedNetwork: planNetworkMaps?.spec?.map || [],
+    updatedStorage: planStorageMaps?.spec?.map || [],
     planNetworkMaps: planNetworkMaps,
     planStorageMaps: planStorageMaps,
   };
@@ -81,7 +83,15 @@ export const PlanEditPage: React.FC<{
   }, [planNetworkMaps, planStorageMaps]);
 
   // Init Create migration plan form state
-  const [state, dispatch, emptyContext] = useEditVmsFetchEffects({
+  // const [state, dispatch, emptyContext] = useEditVmsFetchEffects({
+  //   data: {
+  //     selectedVms: filterState.selectedVMs,
+  //     provider: sourceProvider,
+  //     plan,
+  //     editAction,
+  //   },
+  // });
+  const [state, dispatch, emptyContext] = useFetchEffects({
     data: {
       selectedVms: filterState.selectedVMs,
       provider: sourceProvider,
@@ -95,7 +105,7 @@ export const PlanEditPage: React.FC<{
 
   const errs = Object.values(state?.validation || []).some((validation) => validation === 'error');
   console.log('errs', errs);
-  debugger;
+  // debugger;
 
   const steps = [
     {
@@ -167,7 +177,7 @@ export const PlanEditPage: React.FC<{
           navAriaLabel={`${title} steps`}
           mainAriaLabel={`${title} content`}
           steps={steps}
-          onSave={() => dispatch(startCreate())}
+          onSave={() => dispatch(startUpdate())}
           onClose={onClose || goBack}
           startAtStep={startAtStep}
         />

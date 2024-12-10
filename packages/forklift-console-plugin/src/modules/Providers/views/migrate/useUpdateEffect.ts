@@ -24,19 +24,6 @@ import { setAPiError } from './reducer/actions';
 import { getObjectRef } from './reducer/helpers';
 import { CreateVmMigrationPageState } from './types';
 
-// const createStorage = (storageMap: V1beta1StorageMap) =>
-//   k8sCreate({
-//     model: StorageMapModel,
-//     data: storageMap,
-//   });
-
-// const createNetwork = (netMap: V1beta1NetworkMap) => {
-//   return k8sCreate({
-//     model: NetworkMapModel,
-//     data: updateNetworkMapDestination(netMap),
-//   });
-// };
-
 const updatePlan = async (
   plan: V1beta1Plan,
   netMap: V1beta1NetworkMap,
@@ -92,7 +79,6 @@ export const useUpdateEffect = (
       return;
     }
 
-    // Promise.all([createStorage(storageMap), createNetwork(netMap)])
     Promise.all([
       updateMappings(
         planMappingsState.planNetworkMaps,
@@ -101,36 +87,35 @@ export const useUpdateEffect = (
         planMappingsState.updatedStorage,
       ),
     ])
-      .then(([networkMap, storageMap]) => {
-        debugger;
-        // return updatePlan(
-        //   produce(plan, (draft) => {
-        //     draft.spec.map.network = getObjectRef(networkMap);
-        //     draft.spec.map.storage = getObjectRef(storageMap);
-        //   }),
-        //   networkMap,
-        //   storageMap,
-        // );
+      .then(([{ updatedNetworkMap, updatedStorageMap }]) => {
+        return updatePlan(
+          produce(plan, (draft) => {
+            draft.spec.map.network = getObjectRef(updatedNetworkMap);
+            draft.spec.map.storage = getObjectRef(updatedStorageMap);
+          }),
+          updatedNetworkMap,
+          updatedStorageMap,
+        );
       })
-      // .then(([ownerReferences, networkMap, storageMap]) =>
-      //   Promise.all([
-      //     addOwnerRef(StorageMapModel, storageMap, ownerReferences),
-      //     addOwnerRef(NetworkMapModel, networkMap, ownerReferences),
-      //   ]),
-      // )
-      // .then(
-      //   () =>
-      //     mounted.current &&
-      //     history.push(
-      //       getResourceUrl({
-      //         reference: PlanModelRef,
-      //         namespace: plan.metadata.namespace,
-      //         name: plan.metadata.name,
-      //       }),
-      //     ),
-      // )
+      .then(([ownerReferences, networkMap, storageMap]) =>
+        Promise.all([
+          addOwnerRef(StorageMapModel, storageMap, ownerReferences),
+          addOwnerRef(NetworkMapModel, networkMap, ownerReferences),
+        ]),
+      )
+      .then(
+        () =>
+          mounted.current &&
+          history.push(
+            getResourceUrl({
+              reference: PlanModelRef,
+              namespace: plan.metadata.namespace,
+              name: plan.metadata.name,
+            }),
+          ),
+      )
       .catch((error) => mounted.current && dispatch(setAPiError(error)));
-  }, [state.flow.editingDone, state.underConstruction.storageMap]);
+  }, [state.flow.editingDone]);
 };
 
 /**
@@ -166,5 +151,6 @@ async function updateMappings(
     updatedNetwork,
     updatedStorage,
   );
-  return [updatedNetworkMap, updatedStorageMap];
+  debugger;
+  return { updatedNetworkMap, updatedStorageMap };
 }
