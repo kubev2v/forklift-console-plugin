@@ -47,6 +47,7 @@ export const useFetchEffects = (
   const {
     selectedVms,
     provider: sourceProvider,
+    targetProvider: tProvider,
     plan,
     editAction,
   } = createVmMigrationContext?.data || {};
@@ -57,7 +58,7 @@ export const useFetchEffects = (
 
   const [state, dispatch] = useImmerReducer(
     reducer,
-    { namespace, sourceProvider, selectedVms, plan, editAction },
+    { namespace, sourceProvider, targetProvider: tProvider, selectedVms, plan, editAction },
     createInitialState,
   );
 
@@ -78,7 +79,8 @@ export const useFetchEffects = (
   };
 
   useEffect(
-    () => !editingDone && dispatch(initState(namespace, sourceProvider, selectedVms, plan)),
+    () =>
+      !editingDone && dispatch(initState(namespace, sourceProvider, selectedVms, plan, tProvider)),
     [selectedVms],
   );
 

@@ -42,13 +42,13 @@ export const PlanEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editActio
     });
 
   // Retrieve k8s target provider
-  // const [targetProvider, targetProviderLoaded, targetProviderLoadError] =
-  //   useK8sWatchResource<V1beta1Provider>({
-  //     groupVersionKind: ProviderModelGroupVersionKind,
-  //     namespaced: true,
-  //     name: plan?.spec?.provider?.destination?.name,
-  //     namespace: plan?.spec?.provider?.destination?.namespace,
-  //   });
+  const [targetProvider, targetProviderLoaded, targetProviderLoadError] =
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      namespaced: true,
+      name: plan?.spec?.provider?.destination?.name,
+      namespace: plan?.spec?.provider?.destination?.namespace,
+    });
 
   // Retrieve all k8s Network Mappings
   const [networkMaps, networkMapsLoaded, networkMapsError] = useK8sWatchResource<
@@ -86,9 +86,13 @@ export const PlanEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editActio
     : null;
 
   const finishedLoading =
-    sourceProviderLoaded && networkMapsLoaded && storageMapsLoaded && vmData.length > 0;
-  const hasErrors = sourceProviderLoadError || networkMapsError || storageMapsError;
-  console.log(`hasErrors: ${hasErrors}`);
+    sourceProviderLoaded &&
+    targetProviderLoaded &&
+    networkMapsLoaded &&
+    storageMapsLoaded &&
+    vmData.length > 0;
+  const hasErrors =
+    sourceProviderLoadError || targetProviderLoadError || networkMapsError || storageMapsError;
 
   return (
     <Modal
@@ -100,11 +104,21 @@ export const PlanEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editActio
       className="forklift-edit-modal"
       disableFocusTrap
     >
-      {finishedLoading ? (
+      {hasErrors && (
+        <div>
+          <span className="text-muted">
+            {t(
+              'Something is wrong, the data was not loaded due to an error, please try to reload the page.',
+            )}
+          </span>
+        </div>
+      )}
+      {!hasErrors && finishedLoading ? (
         <PlanEditPage
           plan={plan}
           namespace={activeNamespace}
           sourceProvider={sourceProvider}
+          targetProvider={targetProvider}
           editAction={editAction}
           onClose={toggleModal}
           selectedVMs={selectedVMs}

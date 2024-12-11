@@ -397,11 +397,13 @@ export const initState = (
   sourceProvider: V1beta1Provider,
   selectedVms: VmData[],
   plan?: V1beta1Plan,
+  targetProvider?: V1beta1Provider,
 ): PageAction<CreateVmMigration, InitialStateParameters> => ({
   type: 'INIT',
   payload: {
     namespace,
     sourceProvider,
+    targetProvider,
     selectedVms,
     plan,
   },

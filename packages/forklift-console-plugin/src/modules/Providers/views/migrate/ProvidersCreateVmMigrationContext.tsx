@@ -16,6 +16,7 @@ import { VmData } from '../details';
 export interface CreateVmMigrationContextData {
   selectedVms: VmData[];
   provider?: V1beta1Provider;
+  targetProvider?: V1beta1Provider;
   plan?: V1beta1Plan;
   editAction?: 'PLAN' | 'VMS';
 }

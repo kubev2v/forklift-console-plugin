@@ -481,10 +481,16 @@ const handlers: {
   [INIT](
     draft,
     {
-      payload: { namespace, sourceProvider, selectedVms, plan },
+      payload: { namespace, sourceProvider, targetProvider, selectedVms, plan },
     }: PageAction<CreateVmMigration, InitialStateParameters>,
   ) {
-    const newDraft = createInitialState({ namespace, sourceProvider, selectedVms, plan });
+    const newDraft = createInitialState({
+      namespace,
+      sourceProvider,
+      targetProvider,
+      selectedVms,
+      plan,
+    });
 
     draft.underConstruction = newDraft.underConstruction;
     draft.calculatedOnce = newDraft.calculatedOnce;

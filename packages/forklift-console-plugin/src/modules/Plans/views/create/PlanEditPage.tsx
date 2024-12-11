@@ -24,6 +24,7 @@ import './PlanCreatePage.style.css';
 export const PlanEditPage: React.FC<{
   plan: V1beta1Plan;
   sourceProvider: V1beta1Provider;
+  targetProvider: V1beta1Provider;
   namespace: string;
   onClose?: () => void;
   selectedVMs?: VmData[];
@@ -33,6 +34,7 @@ export const PlanEditPage: React.FC<{
 }> = ({
   plan,
   sourceProvider,
+  targetProvider,
   namespace,
   onClose,
   selectedVMs,
@@ -79,6 +81,7 @@ export const PlanEditPage: React.FC<{
     data: {
       selectedVms: filterState.selectedVMs,
       provider: sourceProvider,
+      targetProvider,
       plan,
       editAction,
     },
@@ -147,7 +150,9 @@ export const PlanEditPage: React.FC<{
           </Alert>
         )}
 
-        <Title headingLevel="h2">{'Create migration plan'}</Title>
+        <Title headingLevel="h2">
+          {editAction === 'VMS' ? 'Update virtual machines' : 'Update migration plan'}
+        </Title>
       </PageSection>
 
       <PageSection variant="light">

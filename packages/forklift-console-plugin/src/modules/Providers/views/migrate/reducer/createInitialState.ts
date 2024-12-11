@@ -24,6 +24,7 @@ import { getObjectRef, resourceFieldsForType } from './helpers';
 export type InitialStateParameters = {
   namespace: string;
   sourceProvider: V1beta1Provider;
+  targetProvider?: V1beta1Provider;
   selectedVms: VmData[];
   plan?: V1beta1Plan;
   editAction?: 'PLAN' | 'VMS';
@@ -36,12 +37,12 @@ export const createInitialState = ({
     apiVersion: `${ProviderGVK.group}/${ProviderGVK.version}`,
     kind: ProviderGVK.kind,
   },
+  targetProvider,
   selectedVms = [],
   plan = planTemplate,
   editAction,
 }: InitialStateParameters): CreateVmMigrationPageState => {
   const hasVmNicWithEmptyProfile = hasNicWithEmptyProfile(sourceProvider, selectedVms);
-
   return {
     underConstruction: {
       plan: {
@@ -55,7 +56,7 @@ export const createInitialState = ({
           ...plan?.spec,
           provider: {
             source: getObjectRef(sourceProvider),
-            destination: undefined,
+            destination: targetProvider ? getObjectRef(targetProvider) : undefined,
           },
           targetNamespace: namespace,
           vms: selectedVms.map((data) => ({
@@ -76,7 +77,7 @@ export const createInitialState = ({
           ...networkMapTemplate?.spec,
           provider: {
             source: getObjectRef(sourceProvider),
-            destination: undefined,
+            destination: targetProvider ? getObjectRef(targetProvider) : undefined,
           },
         },
       },
@@ -91,7 +92,7 @@ export const createInitialState = ({
           ...storageMapTemplate?.spec,
           provider: {
             source: getObjectRef(sourceProvider),
-            destination: undefined,
+            destination: targetProvider ? getObjectRef(targetProvider) : undefined,
           },
         },
       },
