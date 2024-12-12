@@ -9,7 +9,7 @@ import { V1beta1Plan } from '@kubev2v/types';
 import { k8sDelete, K8sGroupVersionKind, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { getPlanPhase } from '../utils';
+import { getPlanPhase, PlanPhase } from '../utils';
 
 /**
  * Props for the DeleteModal component
@@ -131,8 +131,8 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
           Are you sure you want to delete <strong className="co-break-word">{name}</strong>?
         </ForkliftTrans>
       )}
-      {phase === 'Running' && <IsExecutingAlert />}
-      {phase !== 'Archived' && <IsNotArchivedAlert />}
+      {phase === PlanPhase.Running && <IsExecutingAlert />}
+      {phase !== PlanPhase.Archived && <IsNotArchivedAlert />}
       {typeof owner === 'object' && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}
       {alertMessage}
     </Modal>

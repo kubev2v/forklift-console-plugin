@@ -6,17 +6,17 @@ export const getPlanProgressVariant = (phase: PlanPhase): ProgressVariant => {
   let progressVariant;
 
   switch (phase) {
-    case 'Error':
-    case 'Failed':
+    case PlanPhase.Error:
+    case PlanPhase.Failed:
       progressVariant = ProgressVariant.danger;
       break;
-    case 'Unknown':
-    case 'Archived':
-    case 'Canceled':
-    case 'vmError':
+    case PlanPhase.Unknown:
+    case PlanPhase.Archived:
+    case PlanPhase.Canceled:
+    case PlanPhase.vmError:
       progressVariant = ProgressVariant.warning;
       break;
-    case 'Succeeded':
+    case PlanPhase.Succeeded:
       progressVariant = ProgressVariant.success;
       break;
   }

@@ -21,6 +21,7 @@ import {
   isPlanArchived,
   isPlanExecuting,
   PlanData,
+  PlanPhase,
 } from '../utils';
 
 export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps) => {
@@ -93,7 +94,9 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
 
     <DropdownItem
       key="archive"
-      isDisabled={!data?.permissions?.canDelete || ['Archived', 'Archiving'].includes(phase)}
+      isDisabled={
+        !data?.permissions?.canDelete || [PlanPhase.Archived, PlanPhase.Archiving].includes(phase)
+      }
       onClick={onClickArchive}
     >
       {t('Archive Plan')}
