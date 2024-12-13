@@ -1,9 +1,9 @@
 import React, { ReactNode, useState } from 'react';
 import { FilterableSelect } from 'src/components';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
+import { FormGroupWithHelpText, HelpIconPopover } from '@kubev2v/common';
 import {
   NetworkMapModelGroupVersionKind,
   ProviderModelGroupVersionKind,
@@ -19,6 +19,8 @@ import {
   Form,
   FormSelect,
   FormSelectOption,
+  Stack,
+  StackItem,
   TextInput,
 } from '@patternfly/react-core';
 
@@ -275,6 +277,26 @@ export const PlansCreateForm = ({
             id="targetNamespace"
             validated={validation.targetNamespace}
             placeholder={t('Select a namespace')}
+            labelIcon={
+              <HelpIconPopover header={t('Target namespace')}>
+                <Stack hasGutter>
+                  <StackItem>
+                    <ForkliftTrans>
+                      Namespaces, also known as projects, separate resources within clusters.
+                    </ForkliftTrans>
+                  </StackItem>
+
+                  <StackItem>
+                    <ForkliftTrans>
+                      The target namespace is the namespace within your selected target provider
+                      that your virtual machines will be migrated to. This is different from the
+                      namespace that your migration plan will be created in and where your provider
+                      was created.
+                    </ForkliftTrans>
+                  </StackItem>
+                </Stack>
+              </HelpIconPopover>
+            }
           >
             <FilterableSelect
               selectOptions={availableTargetNamespaces.map((ns) => ({
