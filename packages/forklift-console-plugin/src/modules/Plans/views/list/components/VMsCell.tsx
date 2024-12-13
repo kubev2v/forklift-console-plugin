@@ -11,13 +11,13 @@ import { CellProps } from './CellProps';
 
 export const VMsCell: React.FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
-
-  const specVms = data?.obj?.spec?.vms;
+  const plan = data?.obj;
+  const specVms = plan?.spec?.vms;
 
   const planURL = getResourceUrl({
     reference: PlanModelRef,
-    name: data?.obj?.metadata?.name,
-    namespace: data?.obj?.metadata?.namespace,
+    name: plan?.metadata?.name,
+    namespace: plan?.metadata?.namespace,
   });
 
   return (
@@ -26,7 +26,9 @@ export const VMsCell: React.FC<CellProps> = ({ data }) => {
         <SplitItem className="forklift-overview__controller-card__status-icon">
           <VirtualMachineIcon />
         </SplitItem>
-        <SplitItem>{t('{{total}} VMs', { total: specVms?.length })}</SplitItem>
+        <SplitItem>
+          {t('{{total}} VM', { count: specVms?.length, total: specVms?.length })}
+        </SplitItem>
       </Split>
     </Link>
   );
