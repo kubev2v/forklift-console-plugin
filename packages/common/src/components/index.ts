@@ -4,6 +4,7 @@ export * from './ExternalLink';
 export * from './Filter';
 export * from './FilterGroup';
 export * from './FormGroupWithHelpText';
+export * from './HelpIconPopover';
 export * from './Icons';
 export * from './LoadingDots';
 export * from './Page';
