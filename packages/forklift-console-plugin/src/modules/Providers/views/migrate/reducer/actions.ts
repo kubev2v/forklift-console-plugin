@@ -23,6 +23,7 @@ export const DEFAULT_NAMESPACE = 'default';
 
 // action type names
 export const SET_NAME = 'SET_NAME';
+export const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
 export const SET_DESCRIPTION = 'SET_DESCRIPTION';
 export const SET_TARGET_PROVIDER = 'SET_TARGET_PROVIDER';
 export const SET_TARGET_NAMESPACE = 'SET_TARGET_NAMESPACE';
@@ -43,6 +44,7 @@ export const SET_NICK_PROFILES = 'SET_NICK_PROFILES';
 export const SET_DISKS = 'SET_DISKS';
 export const SET_EXISTING_NET_MAPS = 'SET_EXISTING_NET_MAPS';
 export const SET_EXISTING_STORAGE_MAPS = 'SET_EXISTING_STORAGE_MAPS';
+export const START_UPDATE = 'START_UPDATE';
 export const START_CREATE = 'START_CREATE';
 export const SET_API_ERROR = 'SET_API_ERROR';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
@@ -50,6 +52,7 @@ export const INIT = 'INIT';
 
 export type CreateVmMigration =
   | typeof SET_NAME
+  | typeof SET_PROJECT_NAME
   | typeof SET_DESCRIPTION
   | typeof SET_TARGET_PROVIDER
   | typeof SET_TARGET_NAMESPACE
@@ -67,6 +70,7 @@ export type CreateVmMigration =
   | typeof SET_NICK_PROFILES
   | typeof SET_DISKS
   | typeof SET_EXISTING_NET_MAPS
+  | typeof START_UPDATE
   | typeof START_CREATE
   | typeof SET_API_ERROR
   | typeof SET_EXISTING_STORAGE_MAPS
@@ -83,6 +87,10 @@ export interface PageAction<S, T> {
 // action payload types
 
 export interface PlanName {
+  name: string;
+}
+
+export interface ProjectName {
   name: string;
 }
 
@@ -202,6 +210,13 @@ export const setPlanDescription = (
 
 export const setPlanName = (name: string): PageAction<CreateVmMigration, PlanName> => ({
   type: 'SET_NAME',
+  payload: {
+    name,
+  },
+});
+
+export const setProjectName = (name: string): PageAction<CreateVmMigration, ProjectName> => ({
+  type: 'SET_PROJECT_NAME',
   payload: {
     name,
   },
@@ -368,6 +383,11 @@ export const setDisks = (
   payload: { disks, loading, error },
 });
 
+export const startUpdate = (): PageAction<CreateVmMigration, unknown> => ({
+  type: 'START_UPDATE',
+  payload: {},
+});
+
 export const startCreate = (): PageAction<CreateVmMigration, unknown> => ({
   type: 'START_CREATE',
   payload: {},
@@ -387,13 +407,21 @@ export const removeAlert = (
 
 export const initState = (
   namespace: string,
+  planName,
+  projectName,
   sourceProvider: V1beta1Provider,
   selectedVms: VmData[],
+  plan?: V1beta1Plan,
+  targetProvider?: V1beta1Provider,
 ): PageAction<CreateVmMigration, InitialStateParameters> => ({
   type: 'INIT',
   payload: {
     namespace,
+    planName,
+    projectName,
     sourceProvider,
+    targetProvider,
     selectedVms,
+    plan,
   },
 });

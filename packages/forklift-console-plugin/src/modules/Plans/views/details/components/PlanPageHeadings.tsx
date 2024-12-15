@@ -1,7 +1,7 @@
 import React from 'react';
 import { PlanActionsDropdown } from 'src/modules/Plans/actions';
 import { PlanStartMigrationModal } from 'src/modules/Plans/modals';
-import { canPlanReStart, canPlanStart, getPlanPhase } from 'src/modules/Plans/utils';
+import { canPlanReStart, canPlanStart, getPlanPhase, PlanPhase } from 'src/modules/Plans/utils';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { useModal } from 'src/modules/Providers/modals';
 import { PageHeadings } from 'src/modules/Providers/utils';
@@ -81,7 +81,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
   const handleAlerts = () => {
     // alerts are not relevant to display if plan was completed successfully
-    if (planStatus === 'Succeeded') return;
+    if (planStatus === PlanPhase.Succeeded) return;
 
     if (criticalCondition) {
       alerts.push(

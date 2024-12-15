@@ -1,18 +1,16 @@
 import React, { FC } from 'react';
-import {
-  GlobalActionWithSelection,
-  StandardPageWithSelection,
-} from 'src/components/page/StandardPageWithSelection';
+import { StandardPage } from 'src/components/page/StandardPage';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { GlobalActionToolbarProps } from '@kubev2v/common';
 import {
   V1beta1PlanSpecVms,
   V1beta1PlanStatusConditions,
   V1beta1PlanStatusMigrationVms,
 } from '@kubev2v/types';
 
-import { PlanVMsDeleteButton } from '../components';
+import { PlanVMsEditButton } from '../components';
 import { PlanData, VMData } from '../types';
 
 import { PlanVirtualMachinesRow } from './PlanVirtualMachinesRow';
@@ -41,8 +39,8 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-const PageWithSelection = StandardPageWithSelection<VMData>;
-type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
+const PageWithNoSelection = StandardPage<VMData>;
+type PageGlobalActions = FC<GlobalActionToolbarProps<VMData>>[];
 
 export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
   const { t } = useForkliftTranslation();
@@ -79,17 +77,11 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
   }));
   const vmDataSource: [VMData[], boolean, unknown] = [vmData || [], true, undefined];
   const vmDataToId = (item: VMData) => item?.specVM?.id;
-  const canSelect = (item: VMData) =>
-    item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined;
-  const onSelect = () => undefined;
-  const initialSelectedIds = [];
 
-  const actions: PageGlobalActions = [
-    ({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />,
-  ];
+  const actions: PageGlobalActions = [() => <PlanVMsEditButton plan={plan} />];
 
   return (
-    <PageWithSelection
+    <PageWithNoSelection
       title={t('Virtual Machines')}
       dataSource={vmDataSource}
       CellMapper={PlanVirtualMachinesRow}
@@ -98,9 +90,6 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
       namespace={''}
       page={1}
       toId={vmDataToId}
-      canSelect={canSelect}
-      onSelect={onSelect}
-      selectedIds={initialSelectedIds}
       GlobalActionToolbarItems={actions}
     />
   );

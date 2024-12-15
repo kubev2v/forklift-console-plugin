@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusCell } from 'src/modules/Plans/views/list';
+import { PlanStatusCell } from 'src/modules/Plans/views/list';
 import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -12,7 +12,7 @@ export const StatusDetailsItem: React.FC<PlanDetailsItemProps> = ({ resource }) 
     <DetailsItem
       title={t('Status')}
       helpContent={t('Migration plan state information and progress')}
-      content={<StatusCell data={{ obj: resource }} fieldId={''} fields={[]} />}
+      content={<PlanStatusCell data={{ obj: resource }} fieldId={''} fields={[]} />}
     />
   );
 };

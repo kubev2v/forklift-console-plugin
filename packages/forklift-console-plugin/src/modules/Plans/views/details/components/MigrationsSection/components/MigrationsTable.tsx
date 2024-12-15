@@ -1,10 +1,6 @@
 import React from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
-import {
-  getMigrationVmsCounts,
-  getPhaseLabel,
-  getPlanProgressVariant,
-} from 'src/modules/Plans/utils';
+import { getMigrationVmsCounts, getPlanProgressVariant, PlanPhase } from 'src/modules/Plans/utils';
 import { getMigrationPhase } from 'src/modules/Plans/utils/helpers/getMigrationPhase';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -90,8 +86,9 @@ const VMsLabel: React.FC<{ migration: V1beta1Migration }> = ({ migration }) => {
   const { t } = useForkliftTranslation();
 
   const phase = getMigrationPhase(migration);
-  const phaseLabel = t(getPhaseLabel(phase));
-  const progressVariant = getPlanProgressVariant(phase);
+  const phaseLabel = PlanPhase[phase] ? t(PlanPhase[phase]) : PlanPhase.Unknown;
+
+  const progressVariant = getPlanProgressVariant(PlanPhase[phase]);
   const counters = getMigrationVmsCounts(migration?.status?.vms);
 
   if (!counters?.total || counters.total === 0) {

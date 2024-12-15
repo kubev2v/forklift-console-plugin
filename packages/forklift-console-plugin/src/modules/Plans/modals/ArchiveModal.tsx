@@ -8,7 +8,7 @@ import { PlanModel, V1beta1Plan } from '@kubev2v/types';
 import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { getPlanPhase } from '../utils';
+import { getPlanPhase, PlanPhase } from '../utils';
 
 /**
  * Props for the DeleteModal component
@@ -70,7 +70,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
   const actions = [
     <Button
       key="confirm"
-      variant={phase === 'Running' ? 'danger' : 'primary'}
+      variant={phase === PlanPhase.Running ? 'danger' : 'primary'}
       onClick={onArchive}
       isLoading={isLoading}
     >
@@ -112,7 +112,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
           </p>
         </ForkliftTrans>
       }
-      {phase === 'Running' && <IsExecutingAlert />}
+      {phase === PlanPhase.Running && <IsExecutingAlert />}
       {alertMessage}
     </Modal>
   );

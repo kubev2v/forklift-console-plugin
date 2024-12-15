@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 
 import { ResourceFieldFactory, RowProps } from '@kubev2v/common';
 import {
@@ -24,12 +25,14 @@ import { CreateVmMigration } from './reducer/actions';
 export interface CreateVmMigrationPageState {
   underConstruction: {
     plan: V1beta1Plan;
+    projectName: string;
     netMap: V1beta1NetworkMap;
     storageMap: V1beta1StorageMap;
   };
 
   validation: {
     planName: Validation;
+    projectName: Validation;
     targetNamespace: Validation;
     targetProvider: Validation;
     networkMappings: Validation;
@@ -87,6 +90,7 @@ export interface CreateVmMigrationPageState {
     selectedVms: VmData[];
     sourceProvider: V1beta1Provider;
     namespace: string;
+    plan?: V1beta1Plan;
   };
   // placeholder for helper data
   workArea: {
@@ -96,6 +100,7 @@ export interface CreateVmMigrationPageState {
     editingDone: boolean;
     apiError?: Error;
     initialLoading: { [keys in CreateVmMigration]?: boolean };
+    editAction?: PlanEditAction;
   };
 }
 export interface MappingSource {

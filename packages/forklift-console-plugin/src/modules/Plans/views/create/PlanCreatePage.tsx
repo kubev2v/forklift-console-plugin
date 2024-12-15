@@ -5,11 +5,10 @@ import ProvidersCreateVmMigrationPage from 'src/modules/Providers/views/migrate/
 import { startCreate } from 'src/modules/Providers/views/migrate/reducer/actions';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
 import { useSaveEffect } from 'src/modules/Providers/views/migrate/useSaveEffect';
-import { ForkliftTrans } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Alert, PageSection, Title } from '@patternfly/react-core';
+import { useActiveNamespace, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { PageSection, Title } from '@patternfly/react-core';
 import { Wizard } from '@patternfly/react-core/deprecated';
 
 import { findProviderByID } from './components';
@@ -22,8 +21,13 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
   // Get optional initial state context
   const { data } = useCreateVmMigrationData();
   const history = useHistory();
-  const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
   const startAtStep = data?.provider !== undefined ? 2 : 1;
+  const [activeNamespace, setActiveNamespace] = useActiveNamespace();
+  const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
+  const projectName =
+    data?.projectName ||
+    (activeNamespace === '#ALL_NS#' ? 'openshift-mtv' : activeNamespace) ||
+    defaultNamespace;
 
   // Init Select source provider form state
   const [filterState, filterDispatch] = useReducer(planCreatePageReducer, {
@@ -38,6 +42,7 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
     isList: true,
     namespace,
   });
+
   const selectedProvider =
     filterState.selectedProviderUID !== ''
       ? findProviderByID(filterState.selectedProviderUID, providers)
@@ -45,7 +50,12 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
 
   // Init Create migration plan form state
   const [state, dispatch, emptyContext] = useFetchEffects({
-    data: { selectedVms: filterState.selectedVMs, provider: selectedProvider || data?.provider },
+    data: {
+      projectName,
+      selectedVms: filterState.selectedVMs,
+      provider: selectedProvider || data?.provider,
+      planName: data?.planName,
+    },
   });
   useSaveEffect(state, dispatch);
 
@@ -55,9 +65,11 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
       name: 'Select source provider',
       component: (
         <SelectSourceProvider
-          namespace={namespace}
+          projectName={projectName}
           filterState={filterState}
           filterDispatch={filterDispatch}
+          dispatch={dispatch}
+          state={state}
           providers={providers}
           selectedProvider={selectedProvider}
         />
@@ -89,21 +101,6 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
   return (
     <>
       <PageSection variant="light">
-        {!namespace && (
-          <Alert
-            className="co-alert forklift--create-plan--alert"
-            isInline
-            variant="warning"
-            title={'Namespace is not defined'}
-          >
-            <ForkliftTrans>
-              This plan will be created in <strong>{defaultNamespace}</strong> namespace, if you
-              wish to choose another namespace please cancel, and choose a namespace from the top
-              bar.
-            </ForkliftTrans>
-          </Alert>
-        )}
-
         <Title headingLevel="h2">{'Create migration plan'}</Title>
       </PageSection>
 
@@ -113,7 +110,10 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
           navAriaLabel={`${title} steps`}
           mainAriaLabel={`${title} content`}
           steps={steps}
-          onSave={() => dispatch(startCreate())}
+          onSave={() => {
+            setActiveNamespace(state.underConstruction.projectName);
+            dispatch(startCreate());
+          }}
           onClose={() => history.goBack()}
           startAtStep={startAtStep}
         />

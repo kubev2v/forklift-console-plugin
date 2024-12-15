@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPhaseLabel, getPlanPhase } from 'src/modules/Plans/utils';
+import { getPlanPhase, PlanPhase } from 'src/modules/Plans/utils';
 import { TableIconCell } from 'src/modules/Providers/utils';
 
 import { CellProps } from './CellProps';
@@ -11,17 +11,17 @@ export const StatusCell: React.FC<CellProps> = (props) => {
   const { data } = props;
 
   const phase = getPlanPhase(data);
-  const phaseLabel = getPhaseLabel(phase);
+  const phaseLabel: string = phase;
 
   switch (phase) {
-    case 'Error':
-    case 'Warning':
+    case PlanPhase.Error:
+    case PlanPhase.Warning:
       return ErrorStatusCell(props);
-    case 'Failed':
-    case 'Canceled':
-    case 'Running':
-    case 'Succeeded':
-    case 'vmError':
+    case PlanPhase.Failed:
+    case PlanPhase.Canceled:
+    case PlanPhase.Running:
+    case PlanPhase.Succeeded:
+    case PlanPhase.vmError:
       return VMsProgressCell(props);
   }
 

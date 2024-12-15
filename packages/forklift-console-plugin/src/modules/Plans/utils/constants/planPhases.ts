@@ -9,16 +9,16 @@ import { PlanPhase } from '../types';
  * This array is intended to be used for creating filter dropdowns, where users can select a plan phase to filter the results shown.
  */
 export const planPhases: { id: PlanPhase; label: string }[] = [
-  { id: 'Error', label: 'Error' },
-  { id: 'vmError', label: 'VM Error' },
-  { id: 'Unknown', label: 'Unknown' },
-  { id: 'Archiving', label: 'Archiving' },
-  { id: 'Archived', label: 'Archived' },
-  { id: 'Failed', label: 'Failed' },
-  { id: 'Canceled', label: 'Canceled' },
-  { id: 'Succeeded', label: 'Succeeded' },
-  { id: 'Running', label: 'Running' },
-  { id: 'Ready', label: 'Ready' },
-  { id: 'Warning', label: 'Warning' },
-  { id: 'NotReady', label: 'Not Ready' },
+  { id: PlanPhase.Error, label: PlanPhase.Error },
+  { id: PlanPhase.vmError, label: PlanPhase.vmError },
+  { id: PlanPhase.Unknown, label: PlanPhase.Unknown },
+  { id: PlanPhase.Archiving, label: PlanPhase.Archiving },
+  { id: PlanPhase.Archived, label: PlanPhase.Archived },
+  { id: PlanPhase.Failed, label: PlanPhase.Failed },
+  { id: PlanPhase.Canceled, label: PlanPhase.Canceled },
+  { id: PlanPhase.Succeeded, label: PlanPhase.Succeeded },
+  { id: PlanPhase.Running, label: PlanPhase.Running },
+  { id: PlanPhase.Ready, label: PlanPhase.Ready },
+  { id: PlanPhase.Warning, label: PlanPhase.Warning },
+  { id: PlanPhase.NotReady, label: PlanPhase.NotReady },
 ];

@@ -5,9 +5,8 @@ export * from './ErrorStatusCell';
 export * from './NamespaceCell';
 export * from './NetworkMapLinkCell';
 export * from './PlanCell';
+export * from './PlanStatusCell';
 export * from './PlanStatusIcon';
 export * from './ProviderLinkCell';
-export * from './StatusCell';
 export * from './VMsCell';
-export * from './VMsProgressCell';
 // @endindex

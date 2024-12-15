@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   getMigrationVmsCounts,
-  getPhaseLabel,
   getPlanPhase,
   getPlanProgressVariant,
   MigrationVmsCounts,
@@ -52,7 +51,7 @@ export const VMsProgressCell: React.FC<CellProps> = ({ data }) => {
   const vms = data?.obj?.status?.migration?.vms;
 
   const phase = getPlanPhase(data);
-  const phaseLabel = t(getPhaseLabel(phase));
+  const phaseLabel: string = phase;
 
   const planURL = getResourceUrl({
     reference: PlanModelRef,
