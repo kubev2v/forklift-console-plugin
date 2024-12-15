@@ -74,12 +74,12 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: 'phase',
     jsonPath: getPlanPhase,
-    label: t('Status'),
+    label: t('Migration status'),
     isVisible: true,
     filter: {
       type: 'enum',
       primary: true,
-      placeholderLabel: t('Status'),
+      placeholderLabel: t('Migration status'),
       values: planPhases,
     },
     sortable: true,

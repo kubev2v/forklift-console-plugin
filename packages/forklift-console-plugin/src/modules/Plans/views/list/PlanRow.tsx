@@ -12,8 +12,8 @@ import {
   CellProps,
   NamespaceCell,
   PlanCell,
+  PlanStatusCell,
   ProviderLinkCell,
-  StatusCell,
   VMsCell,
 } from './components';
 
@@ -47,7 +47,7 @@ const cellRenderers: Record<string, React.FC<CellProps>> = {
   },
   ['destination']: ProviderLinkCell,
   ['source']: ProviderLinkCell,
-  ['phase']: StatusCell,
+  ['phase']: PlanStatusCell,
   ['vms']: VMsCell,
   ['description']: ({ data }: CellProps) => <TableCell>{data?.obj?.spec?.description}</TableCell>,
   ['actions']: ActionsCell,
