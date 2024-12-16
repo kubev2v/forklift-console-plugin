@@ -2,9 +2,10 @@ import React, { useReducer } from 'react';
 import { useHistory } from 'react-router';
 import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Secret, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
+import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Alert,
   Button,
@@ -29,6 +30,7 @@ import './ProvidersCreatePage.style.css';
 interface ProvidersCreatePageState {
   newSecret: IoK8sApiCoreV1Secret;
   newProvider: V1beta1Provider;
+  projectName: string;
   validationError: ValidationMsg;
   apiError: Error | null;
 }
@@ -39,24 +41,26 @@ export const ProvidersCreatePage: React.FC<{
   const { t } = useForkliftTranslation();
   const history = useHistory();
   const [isLoading, toggleIsLoading] = useToggle();
-
+  const [activeNamespace, setActiveNamespace] = useActiveNamespace();
   const [providerNames] = useK8sWatchProviderNames({ namespace });
-
   const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
+  const projectName = activeNamespace === '#ALL_NS#' ? 'openshift-mtv' : activeNamespace;
+  const initialNamespace = namespace || projectName || defaultNamespace;
 
   const initialState: ProvidersCreatePageState = {
+    projectName,
     newSecret: {
       ...secretTemplate,
       metadata: {
         ...secretTemplate.metadata,
-        namespace: namespace || defaultNamespace,
+        namespace: initialNamespace,
       },
     },
     newProvider: {
       ...providerTemplate,
       metadata: {
         ...providerTemplate.metadata,
-        namespace: namespace || defaultNamespace,
+        namespace: initialNamespace,
       },
     },
     validationError: { type: 'error', msg: 'Missing provider name' },
@@ -106,6 +110,21 @@ export const ProvidersCreatePage: React.FC<{
           validationError: validationError,
           newProvider: value,
           newSecret: updatedSecret,
+          apiError: null,
+        };
+      }
+      case 'SET_PROJECT_NAME': {
+        const value = action.payload;
+        let validationError: ValidationMsg = { type: 'default' };
+
+        if (!value) {
+          validationError = { type: 'error', msg: 'Missing project name' };
+        }
+
+        return {
+          ...state,
+          validationError,
+          projectName: String(value),
           apiError: null,
         };
       }
@@ -230,26 +249,13 @@ export const ProvidersCreatePage: React.FC<{
           </Alert>
         )}
 
-        {!namespace && (
-          <Alert
-            className="co-alert co-alert--margin-top"
-            isInline
-            variant="warning"
-            title={t('Namespace is not defined')}
-          >
-            <ForkliftTrans>
-              This provider will be created in <strong>{defaultNamespace}</strong> namespace, if you
-              wish to choose another namespace please cancel, and choose a namespace from the top
-              bar.
-            </ForkliftTrans>
-          </Alert>
-        )}
-
         <ProvidersCreateForm
           newProvider={state.newProvider}
           newSecret={state.newSecret}
+          projectName={state.projectName}
           onNewProviderChange={onNewProviderChange}
           onNewSecretChange={onNewSecretChange}
+          onProjectNameChange={(value) => dispatch({ type: 'SET_PROJECT_NAME', payload: value })}
           providerNames={providerNames}
         />
 
@@ -259,7 +265,10 @@ export const ProvidersCreatePage: React.FC<{
           <FlexItem>
             <Button
               variant="primary"
-              onClick={onUpdate}
+              onClick={() => {
+                setActiveNamespace(state.projectName);
+                onUpdate();
+              }}
               isDisabled={state.validationError.type === 'error'}
               isLoading={isLoading}
             >

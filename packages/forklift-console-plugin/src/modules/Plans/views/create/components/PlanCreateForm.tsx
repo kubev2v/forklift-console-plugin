@@ -2,7 +2,14 @@ import React from 'react';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 import { VmData } from 'src/modules/Providers/views';
-import { useForkliftTranslation } from 'src/utils';
+import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
+import {
+  PageAction,
+  setPlanName,
+  setProjectName as setProjectNameAction,
+} from 'src/modules/Providers/views/migrate/reducer/actions';
+import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
@@ -13,14 +20,19 @@ import { PlanCreatePageState } from '../states';
 import { ChipsToolbarProviders } from './ChipsToolbarProviders';
 import { createProviderCardItems } from './createProviderCardItems';
 import { FiltersToolbarProviders } from './FiltersToolbarProviders';
+import { PlanNameTextField } from './PlanNameTextField';
+import { ProjectNameSelect } from './ProjectNameSelect';
 
 export type PlanCreateFormProps = {
   providers: V1beta1Provider[];
   filterState: PlanCreatePageState;
+  state: CreateVmMigrationPageState;
+  projectName: string;
   filterDispatch: React.Dispatch<{
     type: string;
     payload?: string | string[] | VmData[];
   }>;
+  dispatch: (action: PageAction<unknown, unknown>) => void;
 };
 
 /**
@@ -30,11 +42,17 @@ export type PlanCreateFormProps = {
 export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
   providers,
   filterState,
+  state,
+  projectName,
   filterDispatch,
+  dispatch,
 }) => {
   const { t } = useForkliftTranslation();
-
+  const { data, setData } = useCreateVmMigrationData();
   const providerCardItems = createProviderCardItems(providers);
+  const providerNamespaces = [
+    ...new Set(providers.map((provider) => provider.metadata?.namespace)),
+  ];
 
   const onChange = (id: string) => {
     filterDispatch({ type: 'SELECT_PROVIDER', payload: id || '' });
@@ -43,6 +61,36 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
   return (
     <div className="forklift-create-provider-edit-section">
       <Form isWidthLimited className="forklift-section-secret-edit">
+        <PlanNameTextField
+          isRequired
+          value={state.underConstruction.plan.metadata.name}
+          validated={state.validation.planName}
+          isDisabled={state.flow.editingDone}
+          onChange={(_, value) => {
+            dispatch(setPlanName(value?.trim() ?? ''));
+            setData({ ...data, planName: value });
+          }}
+        />
+
+        <ProjectNameSelect
+          value={projectName}
+          options={providerNamespaces.map((namespace) => ({
+            value: namespace,
+            content: namespace,
+          }))}
+          onSelect={(value) => {
+            dispatch(setProjectNameAction(value));
+            setData({ ...data, projectName: value });
+          }}
+          isDisabled={!providers.length}
+          popoverHelpContent={
+            <ForkliftTrans>
+              The project that your migration plan will be created in. Only projects with providers
+              in them can be selected.
+            </ForkliftTrans>
+          }
+        />
+
         <FormGroupWithHelpText fieldId="type">
           <FiltersToolbarProviders
             className="forklift--create-plan--filters-toolbar"

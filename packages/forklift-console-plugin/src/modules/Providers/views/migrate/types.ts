@@ -24,12 +24,14 @@ import { CreateVmMigration } from './reducer/actions';
 export interface CreateVmMigrationPageState {
   underConstruction: {
     plan: V1beta1Plan;
+    projectName: string;
     netMap: V1beta1NetworkMap;
     storageMap: V1beta1StorageMap;
   };
 
   validation: {
     planName: Validation;
+    projectName: Validation;
     targetNamespace: Validation;
     targetProvider: Validation;
     networkMappings: Validation;

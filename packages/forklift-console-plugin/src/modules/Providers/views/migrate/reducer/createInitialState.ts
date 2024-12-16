@@ -24,10 +24,14 @@ export type InitialStateParameters = {
   namespace: string;
   sourceProvider: V1beta1Provider;
   selectedVms: VmData[];
+  planName: string;
+  projectName: string;
 };
 
 export const createInitialState = ({
   namespace,
+  planName = '',
+  projectName,
   sourceProvider = {
     metadata: { name: 'unknown', namespace: 'unknown' },
     apiVersion: `${ProviderGVK.group}/${ProviderGVK.version}`,
@@ -39,11 +43,12 @@ export const createInitialState = ({
 
   return {
     underConstruction: {
+      projectName,
       plan: {
         ...planTemplate,
         metadata: {
           ...planTemplate?.metadata,
-          name: '',
+          name: planName,
           namespace,
         },
         spec: {
@@ -112,6 +117,7 @@ export const createInitialState = ({
     },
     validation: {
       planName: 'default',
+      projectName: 'default',
       targetNamespace: 'default',
       targetProvider: 'default',
       networkMappings: hasVmNicWithEmptyProfile ? 'error' : 'default',

@@ -1,4 +1,6 @@
 import React from 'react';
+import { CreateVmMigration, PageAction } from 'src/modules/Providers/views/migrate/reducer/actions';
+import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Provider } from '@kubev2v/types';
@@ -10,12 +12,22 @@ import { PlanCreateForm } from './../../components';
 import { MemoizedProviderVirtualMachinesList } from './MemoizedProviderVirtualMachinesList';
 
 export const SelectSourceProvider: React.FC<{
-  namespace: string;
+  projectName: string;
   filterState: PlanCreatePageState;
-  filterDispatch: React.Dispatch<PlanCreatePageActionTypes>;
   providers: V1beta1Provider[];
   selectedProvider: V1beta1Provider;
-}> = ({ filterState, filterDispatch, providers, selectedProvider }) => {
+  state: CreateVmMigrationPageState;
+  dispatch: React.Dispatch<PageAction<CreateVmMigration, unknown>>;
+  filterDispatch: React.Dispatch<PlanCreatePageActionTypes>;
+}> = ({
+  filterState,
+  providers,
+  selectedProvider,
+  state,
+  projectName,
+  dispatch,
+  filterDispatch,
+}) => {
   const { t } = useForkliftTranslation();
 
   // Get the ready providers (note: currently forklift does not allow filter be status.phase)
@@ -39,6 +51,9 @@ export const SelectSourceProvider: React.FC<{
         providers={filteredProviders}
         filterState={filterState}
         filterDispatch={filterDispatch}
+        dispatch={dispatch}
+        state={state}
+        projectName={projectName}
       />
 
       {filterState.selectedProviderUID && (

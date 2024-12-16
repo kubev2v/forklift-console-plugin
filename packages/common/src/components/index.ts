@@ -10,4 +10,5 @@ export * from './LoadingDots';
 export * from './Page';
 export * from './QueryClientHoc';
 export * from './TableView';
+export * from './TypeaheadSelect';
 // @endindex

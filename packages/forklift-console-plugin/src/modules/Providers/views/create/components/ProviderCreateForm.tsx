@@ -1,13 +1,20 @@
 import React, { useReducer } from 'react';
 import { Base64 } from 'js-base64';
+import { ProjectNameSelect } from 'src/modules/Plans/views/create/components/ProjectNameSelect';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { validateK8sName, ValidationMsg } from 'src/modules/Providers/utils';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
-import { IoK8sApiCoreV1Secret, ProviderType, V1beta1Provider } from '@kubev2v/types';
+import {
+  IoK8sApiCoreV1Secret,
+  K8sResourceCommon,
+  ProviderType,
+  V1beta1Provider,
+} from '@kubev2v/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Flex,
   FlexItem,
@@ -21,22 +28,36 @@ import {
 import { EditProvider } from './EditProvider';
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
 import { providerCardItems } from './providerCardItems';
+
 export interface ProvidersCreateFormProps {
   newProvider: V1beta1Provider;
   newSecret: IoK8sApiCoreV1Secret;
   onNewProviderChange: (V1beta1Provider) => void;
   onNewSecretChange: (IoK8sApiCoreV1Secret) => void;
   providerNames?: string[];
+  projectName?: string;
+  onProjectNameChange?: (value: string) => void;
 }
 
 export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
   newProvider,
   newSecret,
+  projectName,
   onNewProviderChange,
   onNewSecretChange,
+  onProjectNameChange,
   providerNames = [],
 }) => {
   const { t } = useForkliftTranslation();
+
+  const [projects, projectsLoaded] = useK8sWatchResource<K8sResourceCommon[]>({
+    groupVersionKind: {
+      version: 'v1',
+      group: 'project.openshift.io',
+      kind: 'Project',
+    },
+    isList: true,
+  });
 
   const initialState = {
     validation: {
@@ -103,7 +124,20 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
         <EditProviderSectionHeading text={t('Provider details')} />
 
         <Form isWidthLimited className="forklift-section-secret-edit">
-          <FormGroupWithHelpText label={t('Select provider type')} isRequired fieldId="type">
+          <ProjectNameSelect
+            value={projectName}
+            options={projects.map((project) => ({
+              value: project.metadata?.name,
+              content: project.metadata?.name,
+            }))}
+            isDisabled={!projectsLoaded || !projects.length}
+            onSelect={onProjectNameChange}
+            popoverHelpContent={
+              <ForkliftTrans>The project that your provider will be created in.</ForkliftTrans>
+            }
+          />
+
+          <FormGroupWithHelpText label={t('Provider type')} isRequired fieldId="type">
             {newProvider?.spec?.type ? (
               <Flex>
                 <FlexItem className="forklift--create-provider-edit-card-selected">

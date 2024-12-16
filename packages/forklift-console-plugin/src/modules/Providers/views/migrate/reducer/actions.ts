@@ -23,6 +23,7 @@ export const DEFAULT_NAMESPACE = 'default';
 
 // action type names
 export const SET_NAME = 'SET_NAME';
+export const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
 export const SET_DESCRIPTION = 'SET_DESCRIPTION';
 export const SET_TARGET_PROVIDER = 'SET_TARGET_PROVIDER';
 export const SET_TARGET_NAMESPACE = 'SET_TARGET_NAMESPACE';
@@ -50,6 +51,7 @@ export const INIT = 'INIT';
 
 export type CreateVmMigration =
   | typeof SET_NAME
+  | typeof SET_PROJECT_NAME
   | typeof SET_DESCRIPTION
   | typeof SET_TARGET_PROVIDER
   | typeof SET_TARGET_NAMESPACE
@@ -83,6 +85,10 @@ export interface PageAction<S, T> {
 // action payload types
 
 export interface PlanName {
+  name: string;
+}
+
+export interface ProjectName {
   name: string;
 }
 
@@ -202,6 +208,13 @@ export const setPlanDescription = (
 
 export const setPlanName = (name: string): PageAction<CreateVmMigration, PlanName> => ({
   type: 'SET_NAME',
+  payload: {
+    name,
+  },
+});
+
+export const setProjectName = (name: string): PageAction<CreateVmMigration, ProjectName> => ({
+  type: 'SET_PROJECT_NAME',
   payload: {
     name,
   },
@@ -387,12 +400,16 @@ export const removeAlert = (
 
 export const initState = (
   namespace: string,
+  planName,
+  projectName,
   sourceProvider: V1beta1Provider,
   selectedVms: VmData[],
 ): PageAction<CreateVmMigration, InitialStateParameters> => ({
   type: 'INIT',
   payload: {
     namespace,
+    planName,
+    projectName,
     sourceProvider,
     selectedVms,
   },
