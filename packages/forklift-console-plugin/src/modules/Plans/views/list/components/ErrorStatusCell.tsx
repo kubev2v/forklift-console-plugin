@@ -1,7 +1,7 @@
 import React from 'react';
 import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom';
-import { getPhaseLabel, getPlanPhase } from 'src/modules/Plans/utils';
+import { getPlanPhase } from 'src/modules/Plans/utils';
 import { getResourceUrl, TableIconCell } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -16,7 +16,7 @@ export const ErrorStatusCell: React.FC<CellProps> = ({ data }) => {
 
   const { obj: plan } = data;
   const phase = getPlanPhase(data);
-  const phaseLabel = getPhaseLabel(phase);
+  const phaseLabel: string = phase;
 
   const planURL = getResourceUrl({
     reference: PlanModelRef,

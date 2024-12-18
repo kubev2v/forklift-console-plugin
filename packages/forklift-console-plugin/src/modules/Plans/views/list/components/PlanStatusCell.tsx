@@ -6,6 +6,7 @@ import {
   getPlanPhase,
   isPlanArchived,
   isPlanExecuting,
+  PlanPhase,
 } from 'src/modules/Plans/utils';
 import { useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils';
@@ -48,7 +49,8 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   );
 
   const phase = getPlanPhase(data);
-  const isPlanLoading = !isWaitingForCutover && (phase === 'Running' || phase === 'Archiving');
+  const isPlanLoading =
+    !isWaitingForCutover && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
   const planURL = getResourceUrl({
     reference: PlanModelRef,
     name: plan?.metadata?.name,
@@ -60,7 +62,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   // Could possibly use a querystring to dictate a table filter for the list of VMs.
   const vmCountLinkPath = `${planURL}/vms`;
 
-  if (phase === 'Ready') {
+  if (phase === PlanPhase.Ready) {
     return (
       <Button
         variant="secondary"
@@ -88,7 +90,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
     <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
       {isPlanLoading ? (
         <Spinner size="md" />
-      ) : phase === 'NotReady' ? (
+      ) : phase === PlanPhase.NotReady ? (
         t('Validating...')
       ) : (
         <Label isCompact>{phase}</Label>
@@ -109,8 +111,8 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
           </SplitItem>
         )}
 
-        {phase !== 'Running' &&
-          phase !== 'NotReady' &&
+        {phase !== PlanPhase.Running &&
+          phase !== PlanPhase.NotReady &&
           vms?.length &&
           !vmCount?.error &&
           !vmCount.success && (
