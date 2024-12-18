@@ -92,6 +92,10 @@ const handlers: {
     draft.underConstruction.projectName = name;
     draft.validation.projectName = name ? 'success' : 'error';
   },
+  [SET_PROJECT_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
+    draft.underConstruction.projectName = name;
+    draft.validation.projectName = name ? 'success' : 'error';
+  },
   [SET_TARGET_NAMESPACE](
     draft,
     { payload: { targetNamespace } }: PageAction<CreateVmMigration, PlanTargetNamespace>,
