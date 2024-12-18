@@ -47,6 +47,7 @@ import {
   SET_EXISTING_STORAGE_MAPS,
   SET_NAME,
   SET_NICK_PROFILES,
+  SET_PROJECT_NAME,
   SET_TARGET_NAMESPACE,
   SET_TARGET_PROVIDER,
   START_CREATE,
@@ -81,6 +82,10 @@ const handlers: {
   [SET_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
     draft.underConstruction.plan.metadata.name = name;
     draft.validation.planName = validatePlanName(name, draft.existingResources.plans);
+  },
+  [SET_PROJECT_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
+    draft.underConstruction.projectName = name;
+    draft.validation.projectName = name ? 'success' : 'error';
   },
   [SET_TARGET_NAMESPACE](
     draft,
@@ -472,10 +477,16 @@ const handlers: {
   [INIT](
     draft,
     {
-      payload: { namespace, sourceProvider, selectedVms },
+      payload: { namespace, sourceProvider, selectedVms, planName, projectName },
     }: PageAction<CreateVmMigration, InitialStateParameters>,
   ) {
-    const newDraft = createInitialState({ namespace, sourceProvider, selectedVms });
+    const newDraft = createInitialState({
+      namespace,
+      sourceProvider,
+      selectedVms,
+      planName,
+      projectName,
+    });
 
     draft.underConstruction = newDraft.underConstruction;
     draft.calculatedOnce = newDraft.calculatedOnce;
