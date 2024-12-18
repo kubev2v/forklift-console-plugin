@@ -19,6 +19,7 @@ export const SelectSourceProvider: React.FC<{
   state: CreateVmMigrationPageState;
   dispatch: React.Dispatch<PageAction<CreateVmMigration, unknown>>;
   filterDispatch: React.Dispatch<PlanCreatePageActionTypes>;
+  hideProviderSection?: boolean;
 }> = ({
   filterState,
   providers,
@@ -27,6 +28,7 @@ export const SelectSourceProvider: React.FC<{
   projectName,
   dispatch,
   filterDispatch,
+  hideProviderSection,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -45,16 +47,20 @@ export const SelectSourceProvider: React.FC<{
 
   return (
     <>
-      <Title headingLevel="h2">{t('Select source provider')}</Title>
+      {!hideProviderSection && (
+        <>
+          <Title headingLevel="h2">{t('Select source provider')}</Title>
 
-      <PlanCreateForm
-        providers={filteredProviders}
-        filterState={filterState}
-        filterDispatch={filterDispatch}
-        dispatch={dispatch}
-        state={state}
-        projectName={projectName}
-      />
+          <PlanCreateForm
+            providers={filteredProviders}
+            filterState={filterState}
+            filterDispatch={filterDispatch}
+            dispatch={dispatch}
+            state={state}
+            projectName={projectName}
+          />
+        </>
+      )}
 
       {filterState.selectedProviderUID && (
         <>

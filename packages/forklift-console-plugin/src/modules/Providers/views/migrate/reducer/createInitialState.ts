@@ -1,6 +1,9 @@
+import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
+
 import {
   ProviderModelGroupVersionKind as ProviderGVK,
   ProviderType,
+  V1beta1Plan,
   V1beta1Provider,
 } from '@kubev2v/types';
 
@@ -23,9 +26,12 @@ import { getObjectRef, resourceFieldsForType } from './helpers';
 export type InitialStateParameters = {
   namespace: string;
   sourceProvider: V1beta1Provider;
+  targetProvider?: V1beta1Provider;
   selectedVms: VmData[];
   planName: string;
   projectName: string;
+  plan?: V1beta1Plan;
+  editAction?: PlanEditAction;
 };
 
 export const createInitialState = ({
@@ -37,25 +43,27 @@ export const createInitialState = ({
     apiVersion: `${ProviderGVK.group}/${ProviderGVK.version}`,
     kind: ProviderGVK.kind,
   },
+  targetProvider,
   selectedVms = [],
+  plan = planTemplate,
+  editAction,
 }: InitialStateParameters): CreateVmMigrationPageState => {
   const hasVmNicWithEmptyProfile = hasNicWithEmptyProfile(sourceProvider, selectedVms);
-
   return {
     underConstruction: {
       projectName,
       plan: {
-        ...planTemplate,
+        ...plan,
         metadata: {
-          ...planTemplate?.metadata,
-          name: planName,
+          ...plan?.metadata,
+          name: planName || plan?.metadata?.name || '',
           namespace,
         },
         spec: {
-          ...planTemplate?.spec,
+          ...plan?.spec,
           provider: {
             source: getObjectRef(sourceProvider),
-            destination: undefined,
+            destination: targetProvider ? getObjectRef(targetProvider) : undefined,
           },
           targetNamespace: namespace,
           vms: selectedVms.map((data) => ({
@@ -76,7 +84,7 @@ export const createInitialState = ({
           ...networkMapTemplate?.spec,
           provider: {
             source: getObjectRef(sourceProvider),
-            destination: undefined,
+            destination: targetProvider ? getObjectRef(targetProvider) : undefined,
           },
         },
       },
@@ -91,7 +99,7 @@ export const createInitialState = ({
           ...storageMapTemplate?.spec,
           provider: {
             source: getObjectRef(sourceProvider),
-            destination: undefined,
+            destination: targetProvider ? getObjectRef(targetProvider) : undefined,
           },
         },
       },
@@ -114,6 +122,7 @@ export const createInitialState = ({
       selectedVms,
       sourceProvider,
       namespace,
+      plan,
     },
     validation: {
       planName: 'default',
@@ -167,6 +176,7 @@ export const createInitialState = ({
         [SET_DISKS]: !['ovirt', 'openstack'].includes(sourceProvider.spec?.type),
         [SET_NICK_PROFILES]: sourceProvider.spec?.type !== 'ovirt',
       },
+      editAction,
     },
   };
 };
