@@ -1,6 +1,9 @@
 import React, { useReducer } from 'react';
 import { Base64 } from 'js-base64';
-import { ProjectNameSelect } from 'src/modules/Plans/views/create/components/ProjectNameSelect';
+import {
+  ProjectNameSelect,
+  useProjectNameSelectOptions,
+} from 'src/modules/Plans/views/create/components/ProjectNameSelect';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { validateK8sName, ValidationMsg } from 'src/modules/Providers/utils';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
@@ -8,13 +11,7 @@ import { SelectableGallery } from 'src/modules/Providers/utils/components/Galler
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
-import {
-  IoK8sApiCoreV1Secret,
-  K8sResourceCommon,
-  ProviderType,
-  V1beta1Provider,
-} from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { IoK8sApiCoreV1Secret, ProviderType, V1beta1Provider } from '@kubev2v/types';
 import {
   Flex,
   FlexItem,
@@ -50,14 +47,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const [projects, projectsLoaded] = useK8sWatchResource<K8sResourceCommon[]>({
-    groupVersionKind: {
-      version: 'v1',
-      group: 'project.openshift.io',
-      kind: 'Project',
-    },
-    isList: true,
-  });
+  const projects = useProjectNameSelectOptions(projectName);
 
   const initialState = {
     validation: {
@@ -126,11 +116,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
         <Form isWidthLimited className="forklift-section-secret-edit">
           <ProjectNameSelect
             value={projectName}
-            options={projects.map((project) => ({
-              value: project.metadata?.name,
-              content: project.metadata?.name,
-            }))}
-            isDisabled={!projectsLoaded || !projects.length}
+            options={projects}
             onSelect={onProjectNameChange}
             popoverHelpContent={
               <ForkliftTrans>The project that your provider will be created in.</ForkliftTrans>
