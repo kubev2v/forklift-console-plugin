@@ -2,6 +2,11 @@ import React from 'react';
 import { useForkliftTranslation } from 'src/utils';
 
 import { FormGroupWithHelpText, TypeaheadSelect, TypeaheadSelectOption } from '@kubev2v/common';
+import {
+  K8sResourceKind,
+  useFlag,
+  useK8sWatchResource,
+} from '@openshift-console/dynamic-plugin-sdk';
 import { Popover } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
@@ -45,4 +50,21 @@ export const ProjectNameSelect: React.FC<ProjectNameSelectProps> = ({
       />
     </FormGroupWithHelpText>
   );
+};
+
+export const useProjectNameSelectOptions = (defaultProject: string): TypeaheadSelectOption[] => {
+  const isUseProjects = useFlag('OPENSHIFT'); // OCP or Kind installations
+
+  const [projects, projectsLoaded, projectsLoadError] = useK8sWatchResource<K8sResourceKind[]>({
+    kind: isUseProjects ? 'Project' : 'Namespace',
+    isList: true,
+  });
+
+  return projects.length === 0 || !projectsLoaded || projectsLoadError
+    ? // In case of an error or an empty list, returns the active namespace
+      [{ value: defaultProject, content: defaultProject }]
+    : projects.map((project) => ({
+        value: project.metadata?.name,
+        content: project.metadata?.name,
+      }));
 };
