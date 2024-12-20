@@ -2,4 +2,5 @@
 export * from './MigrationVMsCancelModal';
 export * from './PipelineTasksModal';
 export * from './PlanVMsDeleteModal';
+export * from './PlanVMsEditModal';
 // @endindex

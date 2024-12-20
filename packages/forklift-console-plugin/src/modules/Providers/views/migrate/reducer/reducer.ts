@@ -51,6 +51,7 @@ import {
   SET_TARGET_NAMESPACE,
   SET_TARGET_PROVIDER,
   START_CREATE,
+  START_UPDATE,
 } from './actions';
 import { addMapping, deleteMapping, replaceMapping } from './changeMapping';
 import { createInitialState, InitialStateParameters } from './createInitialState';
@@ -81,7 +82,15 @@ const handlers: {
 } = {
   [SET_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
     draft.underConstruction.plan.metadata.name = name;
-    draft.validation.planName = validatePlanName(name, draft.existingResources.plans);
+    draft.validation.planName = validatePlanName(
+      name,
+      draft.existingResources.plans,
+      Boolean(draft.flow.editAction),
+    );
+  },
+  [SET_PROJECT_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
+    draft.underConstruction.projectName = name;
+    draft.validation.projectName = name ? 'success' : 'error';
   },
   [SET_PROJECT_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
     draft.underConstruction.projectName = name;
@@ -140,6 +149,7 @@ const handlers: {
     draft.validation.planName = validatePlanName(
       draft.underConstruction.plan.metadata.name,
       existingPlans,
+      Boolean(draft.flow.editAction),
     );
   },
   [SET_AVAILABLE_TARGET_NAMESPACES](
@@ -293,6 +303,9 @@ const handlers: {
   ) {
     // triggered from useEffect on any data change
     existingResources.storageMaps = existingStorageMaps;
+  },
+  [START_UPDATE]({ flow }) {
+    flow.editingDone = true;
   },
   [START_CREATE]({
     flow,
@@ -477,13 +490,23 @@ const handlers: {
   [INIT](
     draft,
     {
-      payload: { namespace, sourceProvider, selectedVms, planName, projectName },
+      payload: {
+        namespace,
+        sourceProvider,
+        targetProvider,
+        selectedVms,
+        plan,
+        planName,
+        projectName,
+      },
     }: PageAction<CreateVmMigration, InitialStateParameters>,
   ) {
     const newDraft = createInitialState({
       namespace,
       sourceProvider,
+      targetProvider,
       selectedVms,
+      plan,
       planName,
       projectName,
     });
