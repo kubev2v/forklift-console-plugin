@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { StandardPageWithExpansion } from 'src/components/page/StandardPageWithExpansion';
 import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
@@ -6,6 +7,7 @@ import {
 } from 'src/components/page/StandardPageWithSelection';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
+import { hasSomeCompleteRunningVMs } from 'src/modules/Plans/views/details/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
@@ -20,7 +22,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
-import { MigrationVMsCancelButton, PlanVMsDeleteButton } from '../components';
+import { MigrationVMsCancelButton, PlanVMsDeleteButton, PlanVMsEditButton } from '../components';
 import { PlanData, VMData } from '../types';
 
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
@@ -146,6 +148,7 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
 ];
 
 const PageWithSelection = StandardPageWithSelection<VMData>;
+const PageWithExpansion = StandardPageWithExpansion<VMData>;
 type PageWithSelectionProps = StandardPageWithSelectionProps<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
@@ -245,6 +248,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const isExecuting = isPlanExecuting(plan);
   const isArchived = isPlanArchived(plan);
+  const someVMsMigrated = hasSomeCompleteRunningVMs(plan);
 
   // If plan executing and not archived (happens when archiving a running plan), allow to cancel vms, o/w remove from plan
   let actions: PageGlobalActions;
@@ -255,9 +259,9 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
       ),
     ];
   } else {
-    actions = [
-      ({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />,
-    ];
+    actions = someVMsMigrated
+      ? [({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />]
+      : [() => <PlanVMsEditButton plan={plan} />];
   }
 
   const canSelectWhenExecuting = (item: VMData) =>
@@ -288,5 +292,9 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     GlobalActionToolbarItems: actions,
   };
 
-  return <PageWithSelection {...extendedProps} />;
+  return isExecuting || someVMsMigrated ? (
+    <PageWithSelection {...extendedProps} />
+  ) : (
+    <PageWithExpansion {...extendedProps} />
+  );
 };
