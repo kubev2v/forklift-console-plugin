@@ -39,7 +39,7 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
       <FetchCertificateModal
         url={url}
         handleSave={(v) => onTextChange(null, v)}
-        existingCert={String(value)}
+        existingCert={value ? String(value) : undefined}
       />,
     );
   };
