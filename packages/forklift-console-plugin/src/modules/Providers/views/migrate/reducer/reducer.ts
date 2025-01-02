@@ -137,10 +137,6 @@ const handlers: {
   ) {
     // triggered from useEffect on any data change
     draft.existingResources.plans = existingPlans;
-    draft.validation.planName = validatePlanName(
-      draft.underConstruction.plan.metadata.name,
-      existingPlans,
-    );
   },
   [SET_AVAILABLE_TARGET_NAMESPACES](
     draft,
