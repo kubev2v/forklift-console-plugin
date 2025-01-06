@@ -1,15 +1,19 @@
 import React, { useReducer } from 'react';
-import { useHistory } from 'react-router';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
 import ProvidersCreateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationPage';
 import { startCreate } from 'src/modules/Providers/views/migrate/reducer/actions';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
 import { useSaveEffect } from 'src/modules/Providers/views/migrate/useSaveEffect';
 
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import {
+  PlanModelRef,
+  ProviderModelGroupVersionKind,
+  ProviderModelRef,
+  V1beta1Provider,
+} from '@kubev2v/types';
 import { useActiveNamespace, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { PageSection, Title } from '@patternfly/react-core';
-import { Wizard } from '@patternfly/react-core/deprecated';
+import { PageSection, Title, Wizard, WizardStep } from '@patternfly/react-core';
 
 import { findProviderByID } from './components';
 import { planCreatePageInitialState, planCreatePageReducer } from './states';
@@ -20,14 +24,26 @@ import './PlanCreatePage.style.css';
 export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) => {
   // Get optional initial state context
   const { data } = useCreateVmMigrationData();
-  const history = useHistory();
-  const startAtStep = data?.provider !== undefined ? 2 : 1;
+  const createPlanFromPlansList = data?.provider !== undefined ? false : true;
+  const startAtStep = createPlanFromPlansList ? 1 : 2;
   const [activeNamespace, setActiveNamespace] = useActiveNamespace();
   const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
   const projectName =
     data?.projectName ||
     (activeNamespace === '#ALL_NS#' ? 'openshift-mtv' : activeNamespace) ||
     defaultNamespace;
+
+  const plansListURL = getResourceUrl({
+    reference: PlanModelRef,
+    namespace: namespace,
+    namespaced: namespace !== undefined,
+  });
+
+  const providerURL = getResourceUrl({
+    reference: ProviderModelRef,
+    name: data?.provider?.metadata?.name,
+    namespace: data?.provider?.metadata?.namespace,
+  });
 
   // Init Select source provider form state
   const [filterState, filterDispatch] = useReducer(planCreatePageReducer, {
@@ -59,65 +75,68 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
   });
   useSaveEffect(state, dispatch);
 
-  const steps = [
-    {
-      id: 'step-1',
-      name: 'Select source provider',
-      component: (
-        <SelectSourceProvider
-          projectName={projectName}
-          filterState={filterState}
-          filterDispatch={filterDispatch}
-          dispatch={dispatch}
-          state={state}
-          providers={providers}
-          selectedProvider={selectedProvider}
-        />
-      ),
-      enableNext: filterState?.selectedVMs?.length > 0,
-    },
-    {
-      id: 'step-2',
-      name: 'Create migration plan',
-      component: (
-        <ProvidersCreateVmMigrationPage
-          state={state}
-          dispatch={dispatch}
-          emptyContext={emptyContext}
-        />
-      ),
-      enableNext:
-        !emptyContext &&
-        !(
-          !!state?.flow?.apiError ||
-          Object.values(state?.validation || []).some((validation) => validation === 'error') ||
-          state?.validation?.planName === 'default'
-        ),
-      canJumpTo: filterState?.selectedVMs?.length > 0,
-      nextButtonText: 'Create migration plan',
-    },
-  ];
+  const anyValidationError = Object.values(state?.validation || []).some(
+    (validation) => validation === 'error',
+  );
+
+  const planNameValidationDefault = state?.validation?.planName === 'default';
 
   const title = 'Plans wizard';
+
   return (
     <>
       <PageSection variant="light">
         <Title headingLevel="h2">{'Create migration plan'}</Title>
       </PageSection>
-
-      <PageSection variant="light">
+      <PageSection variant="light" className="forklift--create-plan--wizard-container">
         <Wizard
-          className="forklift--create-plan--wizard-appearance-order"
-          navAriaLabel={`${title} steps`}
-          mainAriaLabel={`${title} content`}
-          steps={steps}
+          className="forklift--create-plan--wizard-content"
+          shouldFocusContent
+          title={title}
+          startIndex={startAtStep}
+          onClose={() =>
+            window.location.replace(createPlanFromPlansList ? plansListURL : `${providerURL}/vms`)
+          }
           onSave={() => {
             setActiveNamespace(state.underConstruction.projectName);
             dispatch(startCreate());
           }}
-          onClose={() => history.goBack()}
-          startAtStep={startAtStep}
-        />
+        >
+          <WizardStep
+            name="Select source provider"
+            id="step-1"
+            footer={{ isNextDisabled: !filterState?.selectedVMs?.length }}
+          >
+            <SelectSourceProvider
+              projectName={projectName}
+              filterState={filterState}
+              filterDispatch={filterDispatch}
+              dispatch={dispatch}
+              state={state}
+              providers={providers}
+              selectedProvider={selectedProvider}
+            />
+          </WizardStep>
+          <WizardStep
+            name="Create migration plan"
+            id="step-2"
+            isDisabled={!filterState?.selectedVMs?.length}
+            footer={{
+              nextButtonText: 'Create migration plan',
+              isNextDisabled:
+                emptyContext ||
+                !!state?.flow?.apiError ||
+                anyValidationError ||
+                planNameValidationDefault,
+            }}
+          >
+            <ProvidersCreateVmMigrationPage
+              state={state}
+              dispatch={dispatch}
+              emptyContext={emptyContext}
+            />
+          </WizardStep>
+        </Wizard>
       </PageSection>
     </>
   );
