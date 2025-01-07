@@ -489,6 +489,7 @@ const handlers: {
     draft.calculatedPerNamespace = newDraft.calculatedPerNamespace;
     draft.receivedAsParams = newDraft.receivedAsParams;
     draft.alerts = newDraft.alerts;
+    draft.validation = newDraft.validation;
   },
 };
 
