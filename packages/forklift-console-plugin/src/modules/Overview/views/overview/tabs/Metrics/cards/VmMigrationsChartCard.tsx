@@ -8,8 +8,19 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Chart, ChartAxis, ChartBar, ChartGroup, ChartTooltip } from '@patternfly/react-charts';
-import { Card, CardBody, CardHeader, CardTitle, Flex } from '@patternfly/react-core';
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core/deprecated';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Dropdown,
+  DropdownItem,
+  DropdownList,
+  Flex,
+  MenuToggle,
+  MenuToggleElement,
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
 import chart_color_blue_200 from '@patternfly/react-tokens/dist/esm/chart_color_blue_200';
 import chart_color_green_400 from '@patternfly/react-tokens/dist/esm/chart_color_green_400';
 import chart_color_red_100 from '@patternfly/react-tokens/dist/esm/chart_color_red_100';
@@ -30,7 +41,18 @@ const toDataPointsForVmMigrations = (
 export const VmMigrationsChartCard: React.FC<MigrationsCardProps> = () => {
   const { t } = useForkliftTranslation();
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
-  const onToggle = () => setIsDropdownOpened(!isDropdownOpened);
+  const onToggleClick = () => {
+    setIsDropdownOpened(!isDropdownOpened);
+  };
+  const onSelect = (
+    _event: React.MouseEvent<Element, MouseEvent> | undefined,
+    value: string | number | undefined,
+  ) => {
+    // eslint-disable-next-line no-console
+    console.log('selected', value);
+    setIsDropdownOpened(false);
+  };
+
   const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRangeOptions>(
     TimeRangeOptions.Last7Days,
   );
@@ -86,36 +108,54 @@ export const VmMigrationsChartCard: React.FC<MigrationsCardProps> = () => {
   );
 
   const handleTimeRangeSelectedFactory = (timeRange: TimeRangeOptions) => () => {
-    onToggle();
+    onToggleClick();
     setSelectedTimeRange(timeRange);
   };
 
   const headerActions = (
     <Dropdown
-      toggle={<KebabToggle onToggle={onToggle} />}
       isOpen={isDropdownOpened}
-      isPlain
-      dropdownItems={[
+      onOpenChange={(isOpen: boolean) => setIsDropdownOpened(isOpen)}
+      onSelect={onSelect}
+      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
+          onClick={onToggleClick}
+          isExpanded={isDropdownOpened}
+          variant={'plain'}
+        >
+          <EllipsisVIcon />
+        </MenuToggle>
+      )}
+      shouldFocusFirstItemOnOpen={false}
+      popperProps={{
+        direction: 'down',
+      }}
+    >
+      <DropdownList>
         <DropdownItem
+          value={0}
           onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last7Days)}
           key="7days"
         >
           {t('7 days')}
-        </DropdownItem>,
+        </DropdownItem>
         <DropdownItem
+          value={1}
           onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last31Days)}
           key="31days"
         >
           {t('31 days')}
-        </DropdownItem>,
+        </DropdownItem>
         <DropdownItem
+          value={2}
           onClick={handleTimeRangeSelectedFactory(TimeRangeOptions.Last24H)}
           key="24hours"
         >
           {t('24 hours')}
-        </DropdownItem>,
-      ]}
-    />
+        </DropdownItem>
+      </DropdownList>
+    </Dropdown>
   );
 
   return (
