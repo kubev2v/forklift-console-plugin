@@ -19,7 +19,7 @@
     "clean:all": "yarn clean ./node_modules ./.rollup.cache",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.js",
     "build": "NODE_ENV=production webpack",
-    "start": "NODE_ENV=development webpack serve",
+    "start": "NODE_ENV=development webpack serve --progress",
     "buildlib": "rollup -c --bundleConfigAsCjs",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
