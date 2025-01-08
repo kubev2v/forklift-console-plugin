@@ -5,7 +5,7 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
-import { DropdownItem } from '@patternfly/react-core/deprecated';
+import { DropdownItem } from '@patternfly/react-core';
 
 import {
   ArchiveModal,
@@ -68,15 +68,14 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
   };
 
   return [
-    <DropdownItemLink key="EditPlan" href={planURL}>
-      {t('Edit Plan')}
-    </DropdownItemLink>,
+    <DropdownItemLink value={0} key="EditPlan" href={planURL} description={t('Edit Plan')} />,
 
-    <DropdownItem key="start" isDisabled={!canStart} onClick={onClickPlanStart}>
+    <DropdownItem value={1} key="start" isDisabled={!canStart} onClick={onClickPlanStart}>
       {buttonStartLabel}
     </DropdownItem>,
 
     <DropdownItem
+      value={2}
       key="cutover"
       isDisabled={!isWarmAndExecuting || isArchived}
       onClick={onClickPlanCutover}
@@ -85,6 +84,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     </DropdownItem>,
 
     <DropdownItem
+      value={3}
       key="duplicate"
       isDisabled={!data?.permissions?.canDelete}
       onClick={onClickDuplicate}
@@ -93,6 +93,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     </DropdownItem>,
 
     <DropdownItem
+      value={4}
       key="archive"
       isDisabled={
         !data?.permissions?.canDelete || [PlanPhase.Archived, PlanPhase.Archiving].includes(phase)
@@ -103,6 +104,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     </DropdownItem>,
 
     <DropdownItem
+      value={5}
       key="delete"
       isDisabled={!data?.permissions?.canDelete}
       onClick={onClickPlanDelete}

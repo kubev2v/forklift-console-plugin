@@ -1,5 +1,5 @@
 import React from 'react';
-import { useProviderInventory, useToggle } from 'src/modules/Providers/hooks';
+import { useProviderInventory } from 'src/modules/Providers/hooks';
 import {
   EditModal,
   EditModalProps,
@@ -17,7 +17,13 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import { Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core/deprecated';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
+} from '@patternfly/react-core';
 
 const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
   const plan = resource as V1beta1Plan;
@@ -49,7 +55,21 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
   const provider = resource as V1beta1Provider;
 
   const DropdownRenderer: React.FC<DropdownRendererProps> = ({ value, onChange }) => {
-    const [isOpen, onToggle] = useToggle(false);
+    // Hook for managing the open/close state of the dropdown
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    const onToggleClick = () => {
+      setIsOpen(!isOpen);
+    };
+
+    const onSelect = (
+      _event: React.MouseEvent<Element, MouseEvent> | undefined,
+      value: string | number | undefined,
+    ) => {
+      // eslint-disable-next-line no-console
+      console.log('selected', value);
+      setIsOpen(false);
+    };
 
     const { inventory: networks } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
       provider,
@@ -67,6 +87,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
 
     const dropdownItems = [
       <DropdownItem
+        value={0}
         key={''}
         description={'Use the providers default transfer network'}
         onClick={() => onChange('')}
@@ -74,7 +95,12 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
         {'Providers default'}
       </DropdownItem>,
       ...(transferNetworks || []).map((n) => (
-        <DropdownItem key={getNetworkName(n)} description={n.namespace} onClick={() => onChange(n)}>
+        <DropdownItem
+          value={1}
+          key={getNetworkName(n)}
+          description={n.namespace}
+          onClick={() => onChange(n)}
+        >
           {n.name}
         </DropdownItem>
       )),
@@ -82,16 +108,27 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
 
     return (
       <Dropdown
-        onSelect={onToggle}
-        toggle={
-          <DropdownToggle id="select network" onToggle={onToggle}>
-            {getNetworkName(value)}
-          </DropdownToggle>
-        }
         isOpen={isOpen}
-        dropdownItems={dropdownItems}
-        menuAppendTo="parent"
-      />
+        onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+        onSelect={onSelect}
+        toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={onToggleClick}
+            isExpanded={isOpen}
+            variant={'default'}
+          >
+            {getNetworkName(value)}
+          </MenuToggle>
+        )}
+        shouldFocusToggleOnSelect
+        popperProps={{
+          position: 'right',
+        }}
+        isScrollable={true}
+      >
+        <DropdownList>{dropdownItems}</DropdownList>
+      </Dropdown>
     );
   };
 
