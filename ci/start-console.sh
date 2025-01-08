@@ -7,9 +7,19 @@ source ${script_dir}/configure/openshift.sh
 CONSOLE_CONTAINER_NAME=okd-console
 FORKLIFT_NAMESPACE=konveyor-forklift
 
-PLUGIN_NAME="forklift-console-plugin"
-PLUGIN_URL=${PLUGIN_URL:-"http://localhost:9001"}
+BASE_HOST_URL=${BASE_HOST_URL:-"https://localhost"}
 CONTAINER_NETWORK_TYPE=${CONTAINER_NETWORK_TYPE:-"host"}
+CONTAINER_NETWORK=${CONTAINER_NETWORK:-"--network=${CONTAINER_NETWORK_TYPE}"}
+
+if [[ $(uname) = "Darwin" ]]; then
+    # On macOS
+    BASE_HOST_URL="http://host.containers.internal"
+    CONTAINER_NETWORK=""
+
+fi
+
+PLUGIN_NAME="forklift-console-plugin"
+PLUGIN_URL=${PLUGIN_URL:-"$BASE_HOST_URL:9001"}
 CONSOLE_IMAGE=${CONSOLE_IMAGE:-"quay.io/openshift/origin-console:latest"}
 CONSOLE_PORT=${CONSOLE_PORT:-9000}
 
@@ -21,8 +31,8 @@ if oc_available_loggedin; then
 fi
 
 # Default to localhost if no route found
-INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:-"https://localhost:30444"}
-SERVICES_API_SERVER_HOST=${SERVICES_API_SERVER_HOST:-"https://localhost:30446"}
+INVENTORY_SERVER_HOST=${INVENTORY_SERVER_HOST:-"$BASE_HOST_URL:30444"}
+SERVICES_API_SERVER_HOST=${SERVICES_API_SERVER_HOST:-"$BASE_HOST_URL:30446"}
 
 if [[ ${CONSOLE_IMAGE} =~ ^localhost/ ]]; then
     PULL_POLICY="never"
@@ -32,8 +42,8 @@ fi
 
 # Test if console is already running
 if podman container exists ${CONSOLE_CONTAINER_NAME}; then
-  echo "container named ${CONSOLE_CONTAINER_NAME} is running, exit."
-  exit 1
+    echo "container named ${CONSOLE_CONTAINER_NAME} is running, exit."
+    exit 1
 fi
 
 # Base setup for the bridge
@@ -49,7 +59,8 @@ fi
 #
 # NOTE: When running KinD we should use host network type because KinD only listen on localhost.
 BRIDGE_PLUGINS="${PLUGIN_NAME}=${PLUGIN_URL}"
-BRIDGE_PLUGIN_PROXY=$(cat << END | jq -c .
+BRIDGE_PLUGIN_PROXY=$(
+    cat <<END | jq -c .
 {"services":[
     {
         "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/forklift-inventory/",
@@ -95,7 +106,7 @@ podman run \
     --pull=${PULL_POLICY} \
     --rm \
     ${mount_tmp_dir_flag} \
-    --network=${CONTAINER_NETWORK_TYPE} \
+    ${CONTAINER_NETWORK} \
     --publish=${CONSOLE_PORT}:${CONSOLE_PORT} \
     --name=${CONSOLE_CONTAINER_NAME} \
     --env "BRIDGE_*" \
