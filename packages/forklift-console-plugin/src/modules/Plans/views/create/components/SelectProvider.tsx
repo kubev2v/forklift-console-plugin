@@ -24,7 +24,7 @@ export const SelectProvider: React.FunctionComponent<SelectProviderProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggle = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((isOpen) => !isOpen);
   };
 
   const providerTypesArray = Object.keys(providerTypes);

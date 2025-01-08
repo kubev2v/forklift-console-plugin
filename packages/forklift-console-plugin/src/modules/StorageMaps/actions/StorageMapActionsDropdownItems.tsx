@@ -5,7 +5,7 @@ import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModel, StorageMapModelRef } from '@kubev2v/types';
-import { DropdownItem } from '@patternfly/react-core/deprecated';
+import { DropdownItem } from '@patternfly/react-core';
 
 import { StorageMapData } from '../utils';
 
@@ -26,10 +26,19 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   };
 
   return [
-    <DropdownItemLink key="EditStorageMapping" href={StorageMapURL}>
-      {t('Edit StorageMap')}
-    </DropdownItemLink>,
-    <DropdownItem key="delete" isDisabled={!data?.permissions?.canDelete} onClick={onClick}>
+    <DropdownItemLink
+      value={0}
+      key="EditStorageMapping"
+      href={StorageMapURL}
+      description={t('Edit StorageMap')}
+    />,
+
+    <DropdownItem
+      value={1}
+      key="delete"
+      isDisabled={!data?.permissions?.canDelete}
+      onClick={onClick}
+    >
       {t('Delete StorageMap')}
     </DropdownItem>,
   ];

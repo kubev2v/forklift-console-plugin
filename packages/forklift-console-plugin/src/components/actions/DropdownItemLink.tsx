@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
-import { DropdownItem } from '@patternfly/react-core/deprecated';
+import { DropdownItem } from '@patternfly/react-core';
 
 /**
  * `DropdownItemLink` is a functional component that renders a dropdown item with a link.
@@ -13,23 +13,27 @@ import { DropdownItem } from '@patternfly/react-core/deprecated';
  *
  * @returns {React.ReactElement} The rendered JSX element.
  */
-export const DropdownItemLink = ({ key, href, description, children }: DropdownItemLinkProps) => {
+export const DropdownItemLink = ({
+  key,
+  value,
+  href,
+  description,
+  children,
+}: DropdownItemLinkProps) => {
   return (
-    <DropdownItem
-      key={key}
-      component={
-        <Link to={href} className="pf-c-dropdown__menu-item pf-m-description">
-          <div className="pf-c-dropdown__menu-item-main">{children}</div>
-          {description && <div className="pf-c-dropdown__menu-item-description">{description}</div>}
-        </Link>
-      }
-    />
+    <DropdownItem key={key} value={value}>
+      <Link to={href} className="pf-c-dropdown__menu-item pf-m-description">
+        <div className="pf-c-menu__list-item--Displays">{children}</div>
+        {description && <div className="pf-c-dropdown__menu-item-description">{description}</div>}
+      </Link>
+    </DropdownItem>
   );
 };
 
 export type DropdownItemLinkProps = {
   key: string;
+  value: number;
   href: string;
   description?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
