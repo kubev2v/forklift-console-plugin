@@ -44,7 +44,7 @@ export const ProvidersCreatePage: React.FC<{
   const [activeNamespace, setActiveNamespace] = useActiveNamespace();
   const [providerNames] = useK8sWatchProviderNames({ namespace });
   const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
-  const projectName = activeNamespace === '#ALL_NS#' ? 'openshift-mtv' : activeNamespace;
+  const projectName = activeNamespace === '#ALL_NS#' ? defaultNamespace : activeNamespace;
   const initialNamespace = namespace || projectName || defaultNamespace;
 
   const initialState: ProvidersCreatePageState = {

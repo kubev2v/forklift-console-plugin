@@ -90,7 +90,8 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
         !emptyContext &&
         !(
           !!state?.flow?.apiError ||
-          Object.values(state?.validation || []).some((validation) => validation === 'error')
+          Object.values(state?.validation || []).some((validation) => validation === 'error') ||
+          state?.validation?.planName === 'default'
         ),
       canJumpTo: filterState?.selectedVMs?.length > 0,
       nextButtonText: 'Create migration plan',

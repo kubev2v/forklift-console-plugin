@@ -1,5 +1,4 @@
 import React, { useEffect, useReducer } from 'react';
-import { useHistory } from 'react-router';
 import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 import {
   planMappingsSectionReducer,
@@ -28,7 +27,7 @@ export const PlanEditPage: React.FC<{
   sourceProvider: V1beta1Provider;
   targetProvider: V1beta1Provider;
   projectName: string;
-  onClose?: () => void;
+  onClose: () => void;
   selectedVMs?: VmData[];
   editAction: PlanEditAction;
   planNetworkMaps: V1beta1NetworkMap;
@@ -46,7 +45,6 @@ export const PlanEditPage: React.FC<{
   planStorageMaps,
 }) => {
   const { t } = useForkliftTranslation();
-  const history = useHistory();
   const startAtStep = 1;
 
   // Init Select source provider form state
@@ -96,7 +94,7 @@ export const PlanEditPage: React.FC<{
     }
   }, [planNetworkMaps, planStorageMaps]);
 
-  useUpdateEffect(state, dispatch, planMappingsState);
+  useUpdateEffect(state, dispatch, planMappingsState, onClose);
 
   const steps = [
     {
@@ -142,7 +140,6 @@ export const PlanEditPage: React.FC<{
     },
   ];
 
-  const goBack = () => history.goBack();
   const title = 'Plans wizard';
   return (
     <>
@@ -159,7 +156,7 @@ export const PlanEditPage: React.FC<{
           mainAriaLabel={`${title} content`}
           steps={steps}
           onSave={() => dispatch(startUpdate())}
-          onClose={onClose || goBack}
+          onClose={onClose}
           startAtStep={startAtStep}
         />
       </PageSection>

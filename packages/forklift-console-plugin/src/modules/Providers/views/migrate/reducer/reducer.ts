@@ -146,11 +146,6 @@ const handlers: {
   ) {
     // triggered from useEffect on any data change
     draft.existingResources.plans = existingPlans;
-    draft.validation.planName = validatePlanName(
-      draft.underConstruction.plan.metadata.name,
-      existingPlans,
-      Boolean(draft.flow.editAction),
-    );
   },
   [SET_AVAILABLE_TARGET_NAMESPACES](
     draft,
@@ -516,6 +511,7 @@ const handlers: {
     draft.calculatedPerNamespace = newDraft.calculatedPerNamespace;
     draft.receivedAsParams = newDraft.receivedAsParams;
     draft.alerts = newDraft.alerts;
+    draft.validation = newDraft.validation;
   },
 };
 
