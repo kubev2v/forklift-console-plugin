@@ -82,15 +82,7 @@ const handlers: {
 } = {
   [SET_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
     draft.underConstruction.plan.metadata.name = name;
-    draft.validation.planName = validatePlanName(
-      name,
-      draft.existingResources.plans,
-      Boolean(draft.flow.editAction),
-    );
-  },
-  [SET_PROJECT_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
-    draft.underConstruction.projectName = name;
-    draft.validation.projectName = name ? 'success' : 'error';
+    draft.validation.planName = validatePlanName(name, draft.existingResources.plans);
   },
   [SET_PROJECT_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
     draft.underConstruction.projectName = name;

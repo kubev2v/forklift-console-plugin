@@ -23,7 +23,7 @@ export async function patchPlanMappingsData(
   updatedNetwork: V1beta1NetworkMapSpecMap[],
   updatedStorage: V1beta1StorageMapSpecMap[],
 ) {
-  const updatedNetworkMap = await k8sPatch({
+  await k8sPatch({
     model: NetworkMapModel,
     resource: planNetworkMaps,
     data: [
@@ -35,7 +35,7 @@ export async function patchPlanMappingsData(
     ],
   });
 
-  const updatedStorageMap = await k8sPatch({
+  await k8sPatch({
     model: StorageMapModel,
     resource: planStorageMaps,
     data: [
@@ -46,11 +46,6 @@ export async function patchPlanMappingsData(
       },
     ],
   });
-
-  return {
-    updatedNetworkMap,
-    updatedStorageMap,
-  };
 }
 
 /**
