@@ -51,6 +51,7 @@ import {
   SET_TARGET_NAMESPACE,
   SET_TARGET_PROVIDER,
   START_CREATE,
+  START_UPDATE,
 } from './actions';
 import { addMapping, deleteMapping, replaceMapping } from './changeMapping';
 import { createInitialState, InitialStateParameters } from './createInitialState';
@@ -290,6 +291,9 @@ const handlers: {
     // triggered from useEffect on any data change
     existingResources.storageMaps = existingStorageMaps;
   },
+  [START_UPDATE]({ flow }) {
+    flow.editingDone = true;
+  },
   [START_CREATE]({
     flow,
     receivedAsParams: { sourceProvider },
@@ -473,13 +477,23 @@ const handlers: {
   [INIT](
     draft,
     {
-      payload: { namespace, sourceProvider, selectedVms, planName, projectName },
+      payload: {
+        namespace,
+        sourceProvider,
+        targetProvider,
+        selectedVms,
+        plan,
+        planName,
+        projectName,
+      },
     }: PageAction<CreateVmMigration, InitialStateParameters>,
   ) {
     const newDraft = createInitialState({
       namespace,
       sourceProvider,
+      targetProvider,
       selectedVms,
+      plan,
       planName,
       projectName,
     });

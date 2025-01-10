@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 
 import { ResourceFieldFactory, RowProps } from '@kubev2v/common';
 import {
@@ -89,6 +90,7 @@ export interface CreateVmMigrationPageState {
     selectedVms: VmData[];
     sourceProvider: V1beta1Provider;
     namespace: string;
+    plan?: V1beta1Plan;
   };
   // placeholder for helper data
   workArea: {
@@ -98,6 +100,7 @@ export interface CreateVmMigrationPageState {
     editingDone: boolean;
     apiError?: Error;
     initialLoading: { [keys in CreateVmMigration]?: boolean };
+    editAction?: PlanEditAction;
   };
 }
 export interface MappingSource {

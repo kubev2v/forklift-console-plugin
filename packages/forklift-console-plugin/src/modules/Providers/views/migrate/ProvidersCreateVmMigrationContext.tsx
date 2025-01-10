@@ -8,8 +8,9 @@ import {
   useState,
 } from 'react';
 import { produce } from 'immer';
+import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 
 import { VmData } from '../details';
 
@@ -18,6 +19,9 @@ export interface CreateVmMigrationContextData {
   provider?: V1beta1Provider;
   planName?: string;
   projectName?: string;
+  targetProvider?: V1beta1Provider;
+  plan?: V1beta1Plan;
+  editAction?: PlanEditAction;
 }
 
 export interface CreateVmMigrationContextType {
