@@ -38,7 +38,6 @@ import { Mapping, MappingList } from '../../components';
 import {
   canDeleteAndPatchPlanHooks,
   hasPlanMappingsChanged,
-  hasSomeCompleteRunningVMs,
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
   mapTargetNetworksIdsToLabels,
@@ -81,6 +80,8 @@ export type PlanMappingsSectionProps = {
     type: string;
     payload?;
   }>;
+  networkIdsUsedByMigratedVms?: string[];
+  storageIdsUsedByMigratedVms?: string[];
 };
 
 export function planMappingsSectionReducer(
@@ -166,6 +167,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   targetStorages,
   planMappingsState: state,
   planMappingsDispatch: dispatch,
+  networkIdsUsedByMigratedVms,
+  storageIdsUsedByMigratedVms,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -502,6 +505,24 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     ),
   ];
 
+  const canEditNetworkMapping = (source) => {
+    if (!networkIdsUsedByMigratedVms) {
+      return true;
+    }
+    const idLabelObj = mapSourceNetworksIdsToLabels(sourceNetworks);
+    const id = Object.keys(idLabelObj).find((key) => idLabelObj[key] === source);
+    return !networkIdsUsedByMigratedVms.includes(id);
+  };
+
+  const canEditStorageMapping = (source) => {
+    if (!storageIdsUsedByMigratedVms) {
+      return true;
+    }
+    const idLabelObj = mapSourceStoragesIdsToLabels(sourceStorages);
+    const id = Object.keys(idLabelObj).find((key) => idLabelObj[key] === source);
+    return !storageIdsUsedByMigratedVms.includes(id);
+  };
+
   const PlanMappingsSectionEditMode: React.FC = () => {
     const { t } = useForkliftTranslation();
     return (
@@ -538,6 +559,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                   generalSourcesLabel={t('Other networks present on the source provider ')}
                   noSourcesLabel={t('No networks in this category')}
                   isDisabled={!isAddNetworkMapAvailable}
+                  canEditItem={canEditNetworkMapping}
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
@@ -566,6 +588,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                   generalSourcesLabel={t('Other storages present on the source provider ')}
                   noSourcesLabel={t('No storages in this category')}
                   isDisabled={!isAddStorageMapAvailable}
+                  canEditItem={canEditStorageMapping}
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
@@ -577,7 +600,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
   const PlanMappingsSectionViewMode: React.FC = () => {
     const { t } = useForkliftTranslation();
-    const DisableEditMappings = hasSomeCompleteRunningVMs(plan) || !isPlanEditable(plan);
+    const DisableEditMappings = !isPlanEditable(plan);
 
     return (
       <>
@@ -596,7 +619,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                 <HelperText className="forklift-section-plan-helper-text">
                   <HelperTextItem variant="indeterminate">
                     {t(
-                      'The edit mappings button is disabled if the plan started running and at least one virtual machine was migrated successfully or when the plan status does not enable editing.',
+                      'The edit mappings button is disabled when the plan status does not enable editing.',
                     )}
                   </HelperTextItem>
                 </HelperText>

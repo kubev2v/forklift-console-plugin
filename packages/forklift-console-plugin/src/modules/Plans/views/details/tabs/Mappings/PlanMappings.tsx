@@ -2,6 +2,9 @@ import React, { useEffect, useReducer } from 'react';
 import { SectionHeading } from 'src/components/headers/SectionHeading';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
+import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
+import { getNetworksUsedBySelectedVms } from 'src/modules/Providers/views/migrate/reducer/getNetworksUsedBySelectedVMs';
+import { getStoragesUsedBySelectedVms } from 'src/modules/Providers/views/migrate/reducer/getStoragesUsedBySelectedVMs';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -16,6 +19,8 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
+
+import { getVMMigrationStatus } from '../VirtualMachines/Migration/MigrationVirtualMachinesList';
 
 import {
   PlanMappingsSection,
@@ -178,6 +183,24 @@ export const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (
   const [targetStorages, targetStoragesLoading, targetStoragesError] =
     useOpenShiftStorages(targetProvider);
 
+  const [vmData] = useInventoryVms(
+    { provider: sourceProvider },
+    providersLoaded,
+    providersLoadError,
+  );
+  const migratedVmIds = plan?.status?.migration?.vms?.reduce((migrated, vm) => {
+    if (getVMMigrationStatus(vm) === 'Succeeded') {
+      migrated.push(vm.id);
+    }
+    return migrated;
+  }, []);
+  const migratedVms = vmData.filter((vm) => migratedVmIds?.includes(vm.vm.id));
+  const networkIdsUsedByMigratedVms =
+    sourceProvider?.spec?.type !== 'ovirt' ? getNetworksUsedBySelectedVms(migratedVms, []) : [];
+  const storageIdsUsedByMigratedVms = ['ovirt', 'openstack'].includes(sourceProvider?.spec?.type)
+    ? []
+    : getStoragesUsedBySelectedVms({}, migratedVms, []);
+
   if (
     !providersLoaded ||
     sourceNetworksLoading ||
@@ -240,6 +263,8 @@ export const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (
         targetStorages={targetStorages}
         planMappingsState={planMappingsState}
         planMappingsDispatch={planMappingsDispatch}
+        networkIdsUsedByMigratedVms={networkIdsUsedByMigratedVms}
+        storageIdsUsedByMigratedVms={storageIdsUsedByMigratedVms}
       />
     </>
   );

@@ -22,6 +22,7 @@ export interface ProviderVirtualMachinesProps {
   loadError?: unknown;
   onSelect?: (selectedVMs: VmData[]) => void;
   initialSelectedIds?: string[];
+  disabledVmIds?: string[];
   showActions: boolean;
   className?: string;
 }
@@ -77,6 +78,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
   loadError,
   onSelect,
   initialSelectedIds,
+  disabledVmIds,
   showActions,
   className,
 }) => {
@@ -90,6 +92,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          disabledVmIds={disabledVmIds}
           showActions={showActions}
           className={className}
         />
@@ -103,6 +106,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          disabledVmIds={disabledVmIds}
           showActions={showActions}
           className={className}
         />
@@ -116,6 +120,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          disabledVmIds={disabledVmIds}
           showActions={showActions}
           className={className}
         />
@@ -129,6 +134,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          disabledVmIds={disabledVmIds}
           showActions={showActions}
           className={className}
         />
@@ -142,6 +148,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
           loadError={loadError}
           onSelect={onSelect}
           initialSelectedIds={initialSelectedIds}
+          disabledVmIds={disabledVmIds}
           showActions={showActions}
           className={className}
         />

@@ -4,6 +4,7 @@ import {
   planMappingsSectionReducer,
   PlanMappingsSectionState,
 } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
+import { getVMMigrationStatus } from 'src/modules/Plans/views/details/tabs/VirtualMachines/Migration/MigrationVirtualMachinesList';
 import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import ProvidersUpdateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersUpdateVmMigrationPage';
 import { startUpdate } from 'src/modules/Providers/views/migrate/reducer/actions';
@@ -46,6 +47,14 @@ export const PlanEditPage: React.FC<{
 }) => {
   const { t } = useForkliftTranslation();
   const startAtStep = 1;
+
+  const migrationVms = plan?.status?.migration?.vms;
+  const migratedVmIds = migrationVms?.reduce((migrated, vm) => {
+    if (getVMMigrationStatus(vm) === 'Succeeded') {
+      migrated.push(vm.id);
+    }
+    return migrated;
+  }, []);
 
   // Init Select source provider form state
   const [filterState, filterDispatch] = useReducer(planCreatePageReducer, {
@@ -110,6 +119,7 @@ export const PlanEditPage: React.FC<{
           providers={providers}
           selectedProvider={selectedProvider}
           hideProviderSection={editAction === 'VMS'}
+          disabledVmIds={migratedVmIds}
         />
       ),
       enableNext: filterState?.selectedVMs?.length > 0,

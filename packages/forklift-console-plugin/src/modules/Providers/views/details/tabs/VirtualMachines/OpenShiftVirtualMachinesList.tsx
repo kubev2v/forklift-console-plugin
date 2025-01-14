@@ -80,6 +80,7 @@ export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps
   loadError,
   onSelect,
   initialSelectedIds,
+  disabledVmIds,
   showActions,
   className,
 }) => (
@@ -93,6 +94,7 @@ export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps
     pageId="OpenShiftVirtualMachinesList"
     onSelect={onSelect}
     initialSelectedIds={initialSelectedIds}
+    disabledVmIds={disabledVmIds}
     showActions={showActions}
     className={className}
   />

@@ -31,6 +31,7 @@ export interface ProviderVirtualMachinesListProps {
   pageId: string;
   onSelect?: (selectedVMs: VmData[]) => void;
   initialSelectedIds?: string[];
+  disabledVmIds?: string[];
   showActions: boolean;
   className?: string;
 }
@@ -45,6 +46,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   pageId,
   onSelect,
   initialSelectedIds,
+  disabledVmIds,
   showActions,
   className,
 }) => {
@@ -97,6 +99,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       page={1}
       expandedIds={initialExpandedIds_}
       ExpandedComponent={ConcernsTable}
+      canSelect={(item) => !disabledVmIds?.includes(item.vm.id)}
     />
   );
 };

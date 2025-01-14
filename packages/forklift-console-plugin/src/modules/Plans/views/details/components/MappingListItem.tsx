@@ -10,6 +10,7 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
+  Tooltip,
 } from '@patternfly/react-core';
 import {
   Select,
@@ -35,6 +36,7 @@ interface MappingListItemProps {
   replaceMapping: (val: { current: Mapping; next: Mapping }) => void;
   deleteMapping: (mapping: Mapping) => void;
   isEditable: boolean;
+  canEditItem?: (source: string) => boolean;
 }
 
 export const MappingListItem: FC<MappingListItemProps> = ({
@@ -48,10 +50,13 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   replaceMapping,
   deleteMapping,
   isEditable,
+  canEditItem,
 }) => {
   const { t } = useForkliftTranslation();
   const [isSrcOpen, setToggleSrcOpen] = useToggle(false);
   const [isTrgOpen, setToggleTrgOpen] = useToggle(false);
+
+  const canEditMapping = canEditItem?.(source);
 
   const onClick = () => {
     deleteMapping({ source, destination });
@@ -93,7 +98,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 onSelect={onSelectSource}
                 selections={source}
                 isOpen={isSrcOpen}
-                isDisabled={!isEditable}
+                isDisabled={!isEditable || !canEditMapping}
                 aria-labelledby=""
                 isGrouped
                 menuAppendTo={() => document.body}
@@ -112,7 +117,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 onSelect={onSelectDestination}
                 selections={destination}
                 isOpen={isTrgOpen}
-                isDisabled={!isEditable}
+                isDisabled={!isEditable || !canEditMapping}
                 aria-labelledby=""
                 menuAppendTo={() => document.body}
               >
@@ -129,13 +134,30 @@ export const MappingListItem: FC<MappingListItemProps> = ({
             aria-label={t('Actions')}
             aria-labelledby=""
           >
-            <Button
-              onClick={onClick}
-              variant="plain"
-              aria-label={t('Delete mapping')}
-              key="delete-action"
-              icon={<MinusCircleIcon />}
-            />
+            {!canEditMapping ? (
+              <Tooltip
+                content={t(
+                  `This mapping's associated VM has been migrated and can no longer be modified.`,
+                )}
+              >
+                <Button
+                  onClick={onClick}
+                  variant="plain"
+                  aria-label={t('Delete mapping')}
+                  key="delete-action"
+                  icon={<MinusCircleIcon />}
+                  isAriaDisabled
+                />
+              </Tooltip>
+            ) : (
+              <Button
+                onClick={onClick}
+                variant="plain"
+                aria-label={t('Delete mapping')}
+                key="delete-action"
+                icon={<MinusCircleIcon />}
+              />
+            )}
           </DataListAction>
         ) : null}
       </DataListItemRow>

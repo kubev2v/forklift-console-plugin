@@ -7,7 +7,6 @@ import {
 } from 'src/components/page/StandardPageWithSelection';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
-import { hasSomeCompleteRunningVMs } from 'src/modules/Plans/views/details/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
@@ -22,7 +21,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
-import { MigrationVMsCancelButton, PlanVMsDeleteButton, PlanVMsEditButton } from '../components';
+import { MigrationVMsCancelButton, PlanVMsEditButton } from '../components';
 import { PlanData, VMData } from '../types';
 
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
@@ -35,12 +34,12 @@ const vmStatuses = [
   { id: 'Unknown', label: 'Unknown' },
 ];
 
-const getVMMigrationStatus = (obj: VMData) => {
-  const isError = obj.statusVM?.conditions?.find((c) => c.type === 'Failed' && c.status === 'True');
-  const isSuccess = obj.statusVM?.conditions?.find(
+export const getVMMigrationStatus = (statusVM: V1beta1PlanStatusMigrationVms) => {
+  const isError = statusVM?.conditions?.find((c) => c.type === 'Failed' && c.status === 'True');
+  const isSuccess = statusVM?.conditions?.find(
     (c) => c.type === 'Succeeded' && c.status === 'True',
   );
-  const isRunning = obj.statusVM?.completed === undefined;
+  const isRunning = statusVM?.completed === undefined;
 
   if (isError) {
     return 'Failed';
@@ -248,7 +247,6 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const isExecuting = isPlanExecuting(plan);
   const isArchived = isPlanArchived(plan);
-  const someVMsMigrated = hasSomeCompleteRunningVMs(plan);
 
   // If plan executing and not archived (happens when archiving a running plan), allow to cancel vms, o/w remove from plan
   let actions: PageGlobalActions;
@@ -259,9 +257,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
       ),
     ];
   } else {
-    actions = someVMsMigrated
-      ? [({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />]
-      : [() => <PlanVMsEditButton plan={plan} />];
+    actions = [() => <PlanVMsEditButton plan={plan} />];
   }
 
   const canSelectWhenExecuting = (item: VMData) =>
@@ -292,7 +288,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     GlobalActionToolbarItems: actions,
   };
 
-  return isExecuting || someVMsMigrated ? (
+  return isExecuting ? (
     <PageWithSelection {...extendedProps} />
   ) : (
     <PageWithExpansion {...extendedProps} />
