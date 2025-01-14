@@ -1,0 +1,25 @@
+PR Template:
+<!---
+Thanks for creating a Pull Request 💖!
+
+Please read the following before submitting:
+- PRs that adds new external dependencies might take a while to review.
+- Keep your PR as small as possible.
+- Limit your PR to one type (feature, refactoring, ci, or bugfix)
+-->
+
+## 📝 Description
+
+> Add a brief description
+
+## 📝 Links
+
+> Add JIRA, Docs, and other PR/Issue links
+
+## 📝 CC://
+
+> @tag as needed
+
+## 🎥 Demo
+
+> Please add a video or an image of the behavior/changes
