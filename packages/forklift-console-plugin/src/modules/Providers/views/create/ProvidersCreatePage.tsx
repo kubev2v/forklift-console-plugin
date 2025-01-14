@@ -182,7 +182,15 @@ export const ProvidersCreatePage: React.FC<{
     // try to create a provider with secret
     // add spec.secret
     try {
-      provider = await createProvider(state.newProvider, secret);
+      provider = await createProvider(
+        {
+          ...state.newProvider,
+          ...(state.projectName && {
+            metadata: { ...state.newProvider.metadata, namespace: state.projectName },
+          }),
+        },
+        secret,
+      );
     } catch (err) {
       dispatch({
         type: 'SET_API_ERROR',

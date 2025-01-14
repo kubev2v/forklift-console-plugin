@@ -40,7 +40,7 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,
     isList: true,
-    namespace,
+    namespace: namespace || projectName,
   });
 
   const selectedProvider =

@@ -198,9 +198,7 @@ const ProvidersListPage: React.FC<{
 
   const EmptyState = (
     <EmptyState_
-      AddButton={
-        <ProvidersAddButton namespace={namespace} dataTestId="add-provider-button-empty-state" />
-      }
+      AddButton={<ProvidersAddButton dataTestId="add-provider-button-empty-state" />}
       namespace={namespace}
     />
   );
@@ -208,11 +206,7 @@ const ProvidersListPage: React.FC<{
   return (
     <StandardPage<ProviderData>
       data-testid="providers-list"
-      addButton={
-        permissions.canCreate && (
-          <ProvidersAddButton namespace={namespace} dataTestId="add-provider-button" />
-        )
-      }
+      addButton={permissions.canCreate && <ProvidersAddButton dataTestId="add-provider-button" />}
       dataSource={[data || [], providersLoaded, providersLoadError]}
       RowMapper={ProviderRow}
       fieldsMetadata={fieldsMetadataFactory(t)}
