@@ -1,4 +1,3 @@
-PR Template:
 <!---
 Thanks for creating a Pull Request 💖!
 
