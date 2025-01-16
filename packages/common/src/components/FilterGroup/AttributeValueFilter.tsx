@@ -1,27 +1,17 @@
-import React, { useState } from 'react';
+import React, { MouseEvent as ReactMouseEvent, Ref, useState } from 'react';
 
-import { ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import {
+  MenuToggle,
+  MenuToggleElement,
   Select,
+  SelectList,
   SelectOption,
-  SelectOptionObject,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
-
-import { SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
+  ToolbarGroup,
+  ToolbarItem,
+} from '@patternfly/react-core';
 
 import { FilterFromDef } from './FilterFromDef';
 import { MetaFilterProps } from './types';
-
-interface IdOption extends SelectOptionObject {
-  id: string;
-}
-
-const toSelectOption = (id: string, label: string): IdOption => ({
-  id,
-  toString: () => label,
-  compareTo: (other: IdOption): boolean => id === other?.id,
-});
 
 /**
  * This is an implementation of [<font>``PatternFly 4`` attribute-value filter</font>](https://www.patternfly.org/v4/demos/filters/design-guidelines/#attribute-value-filter) pattern,
@@ -40,42 +30,57 @@ export const AttributeValueFilter = ({
   resolvedLanguage = 'en',
 }: MetaFilterProps) => {
   const [currentFilter, setCurrentFilter] = useState(fieldFilters?.[0]);
-  const [expanded, setExpanded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const selectOptionToFilter = (selectedId) =>
-    fieldFilters.find(({ resourceFieldId }) => resourceFieldId === selectedId) ?? currentFilter;
+  const selectOptionToFilter = (selectedValue: string) =>
+    fieldFilters.find(({ label }) => label === selectedValue) ?? currentFilter;
 
-  const onFilterTypeSelect: (
-    event: SelectEventType,
-    value: SelectValueType,
-    isPlaceholder?: boolean,
-  ) => void = (_event, value: IdOption, isPlaceholder) => {
-    if (!isPlaceholder) {
-      setCurrentFilter(selectOptionToFilter(value?.id));
-      setExpanded(!expanded);
-    }
+  const onToggleClick = () => {
+    setIsOpen((isOpen) => !isOpen);
   };
 
-  const onToggle: (isExpanded: boolean, event: ToggleEventType) => void = (isExpanded) => {
-    setExpanded(isExpanded);
+  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
+      {currentFilter.label}
+    </MenuToggle>
+  );
+
+  const onSelect: (
+    event?: ReactMouseEvent<Element, MouseEvent>,
+    value?: string | number,
+  ) => void = (_event, value: string) => {
+    setCurrentFilter(selectOptionToFilter(value));
+    setIsOpen((isOpen) => !isOpen);
+  };
+
+  const renderOptions = () => {
+    return fieldFilters.map(({ resourceFieldId, label }) => (
+      <SelectOption key={resourceFieldId} value={label}>
+        {label}
+      </SelectOption>
+    ));
   };
 
   return (
     <ToolbarGroup variant="filter-group">
       <ToolbarItem>
         <Select
-          onSelect={onFilterTypeSelect}
-          onToggle={(e, v) => onToggle(v, e)}
-          isOpen={expanded}
-          variant={SelectVariant.single}
+          role="menu"
           aria-label={'Select Filter'}
-          selections={
-            currentFilter && toSelectOption(currentFilter.resourceFieldId, currentFilter.label)
-          }
+          isOpen={isOpen}
+          selected={currentFilter && currentFilter.label}
+          onSelect={onSelect}
+          onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
+          toggle={toggle}
+          shouldFocusToggleOnSelect
+          shouldFocusFirstItemOnOpen={false}
+          isScrollable
+          popperProps={{
+            direction: 'down',
+            enableFlip: true,
+          }}
         >
-          {fieldFilters.map(({ resourceFieldId, label }) => (
-            <SelectOption key={resourceFieldId} value={toSelectOption(resourceFieldId, label)} />
-          ))}
+          <SelectList>{renderOptions()}</SelectList>
         </Select>
       </ToolbarItem>
 
