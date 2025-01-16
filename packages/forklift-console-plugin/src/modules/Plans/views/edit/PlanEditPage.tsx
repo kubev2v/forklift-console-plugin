@@ -12,8 +12,14 @@ import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEff
 import { useUpdateEffect } from 'src/modules/Providers/views/migrate/useUpdateEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1NetworkMap, V1beta1Plan, V1beta1Provider, V1beta1StorageMap } from '@kubev2v/types';
-import { PageSection, Title } from '@patternfly/react-core';
+import {
+  V1beta1NetworkMap,
+  V1beta1Plan,
+  V1beta1PlanSpecVms,
+  V1beta1Provider,
+  V1beta1StorageMap,
+} from '@kubev2v/types';
+import { Alert, PageSection, Text, TextContent, Title } from '@patternfly/react-core';
 import { Wizard } from '@patternfly/react-core/deprecated';
 
 import { findProviderByID } from '../create/components';
@@ -29,7 +35,8 @@ export const PlanEditPage: React.FC<{
   targetProvider: V1beta1Provider;
   projectName: string;
   onClose: () => void;
-  selectedVMs?: VmData[];
+  selectedVMs: VmData[];
+  notFoundPlanVMs: V1beta1PlanSpecVms[];
   editAction: PlanEditAction;
   planNetworkMaps: V1beta1NetworkMap;
   planStorageMaps: V1beta1StorageMap;
@@ -41,6 +48,7 @@ export const PlanEditPage: React.FC<{
   projectName,
   onClose,
   selectedVMs,
+  notFoundPlanVMs,
   editAction,
   planNetworkMaps,
   planStorageMaps,
@@ -110,17 +118,29 @@ export const PlanEditPage: React.FC<{
       id: 'step-1',
       name: editAction === 'VMS' ? t('Select virtual machines') : t('Select source provider'),
       component: (
-        <SelectSourceProvider
-          projectName={projectName}
-          filterState={filterState}
-          filterDispatch={filterDispatch}
-          state={state}
-          dispatch={dispatch}
-          providers={providers}
-          selectedProvider={selectedProvider}
-          hideProviderSection={editAction === 'VMS'}
-          disabledVmIds={migratedVmIds}
-        />
+        <>
+          {notFoundPlanVMs.length > 0 && (
+            <Alert
+              title="The following VMs do not exist on the source provider and will be removed from the plan"
+              variant="danger"
+            >
+              <TextContent className="forklift-providers-list-header__alert">
+                <Text component="p">{notFoundPlanVMs.map((vm) => `${vm.name} `)}</Text>
+              </TextContent>
+            </Alert>
+          )}
+          <SelectSourceProvider
+            projectName={projectName}
+            filterState={filterState}
+            filterDispatch={filterDispatch}
+            state={state}
+            dispatch={dispatch}
+            providers={providers}
+            selectedProvider={selectedProvider}
+            hideProviderSection={editAction === 'VMS'}
+            disabledVmIds={migratedVmIds}
+          />
+        </>
       ),
       enableNext: filterState?.selectedVMs?.length > 0,
     },

@@ -2,7 +2,7 @@ import React from 'react';
 import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 import { PlanEditPage } from 'src/modules/Plans/views/edit/PlanEditPage';
 import { useModal } from 'src/modules/Providers/modals';
-import { useInventoryVms } from 'src/modules/Providers/views';
+import { useInventoryVms, VmData } from 'src/modules/Providers/views';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -11,6 +11,7 @@ import {
   StorageMapModelGroupVersionKind,
   V1beta1NetworkMap,
   V1beta1Plan,
+  V1beta1PlanSpecVms,
   V1beta1Provider,
   V1beta1StorageMap,
 } from '@kubev2v/types';
@@ -80,8 +81,17 @@ export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editAc
     sourceProviderLoaded,
     sourceProviderLoadError,
   );
-  const initialSelectedIds = plan.spec.vms.map((specVm) => specVm.id);
-  const selectedVMs = vmData.filter((vm) => initialSelectedIds.includes(vm.vm.id));
+  const selectedVMs: VmData[] = [];
+  const notFoundPlanVMs: V1beta1PlanSpecVms[] = [];
+  plan.spec.vms.forEach((planVm) => {
+    const providerVm = vmData.find((vm) => vm.vm.id === planVm.id);
+    if (providerVm) {
+      selectedVMs.push(providerVm);
+    } else {
+      // Edge case: plan VM not found in list of provider VMs
+      notFoundPlanVMs.push(planVm);
+    }
+  });
 
   const planNetworkMaps = networkMaps
     ? networkMaps.find((net) => net?.metadata?.name === plan?.spec?.map?.network?.name)
@@ -133,6 +143,7 @@ export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editAc
           editAction={editAction}
           onClose={toggleModal}
           selectedVMs={selectedVMs}
+          notFoundPlanVMs={notFoundPlanVMs}
           planNetworkMaps={planNetworkMaps}
           planStorageMaps={planStorageMaps}
         />

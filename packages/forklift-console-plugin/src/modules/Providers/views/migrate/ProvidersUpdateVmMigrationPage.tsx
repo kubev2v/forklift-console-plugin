@@ -1,9 +1,10 @@
 import React from 'react';
 import { PlanMappingsSectionState } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { LoadingDots } from '@kubev2v/common';
 import { V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
-import { Alert } from '@patternfly/react-core';
+import { Alert, Title } from '@patternfly/react-core';
 
 import { PlansUpdateForm } from './components/PlansUpdateForm';
 import { CreateVmMigration, PageAction } from './reducer/actions';
@@ -30,6 +31,7 @@ const ProvidersUpdateVmMigrationPage: React.FC<{
   planNetworkMaps,
   planStorageMaps,
 }) => {
+  const { t } = useForkliftTranslation();
   if (emptyContext) {
     // display empty node and wait for redirect triggered from useEffect
     // the redirect should be triggered right after the first render()
@@ -56,7 +58,11 @@ const ProvidersUpdateVmMigrationPage: React.FC<{
       planMappingsDispatch={planMappingsDispatch}
       planNetworkMaps={planNetworkMaps}
       planStorageMaps={planStorageMaps}
-    />
+    >
+      <Title headingLevel="h2" className="forklift--create-plan--title">
+        {t('Update mappings')}
+      </Title>
+    </PlansUpdateForm>
   );
 };
 
