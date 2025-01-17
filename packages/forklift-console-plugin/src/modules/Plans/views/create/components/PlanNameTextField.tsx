@@ -1,6 +1,6 @@
 import React from 'react';
 import { Validation } from 'src/modules/Providers';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
+import { useForkliftTranslation } from 'src/utils';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
 import { TextInput } from '@patternfly/react-core';
@@ -30,10 +30,8 @@ export const PlanNameTextField: React.FC<PlanNameTextFieldProps> = ({
       fieldId="planName"
       {...(isUpdated && {
         validated: validated,
-        helperTextInvalid: (
-          <ForkliftTrans>
-            Name is required and must be a unique within a namespace and valid Kubernetes name.
-          </ForkliftTrans>
+        helperTextInvalid: t(
+          'Name is required and must be a unique within a namespace and valid Kubernetes name.',
         ),
       })}
     >

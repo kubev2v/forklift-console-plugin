@@ -5,6 +5,7 @@ import { VmData } from 'src/modules/Providers/views';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
 import {
   PageAction,
+  setPlanName,
   setProjectName as setProjectNameAction,
 } from 'src/modules/Providers/views/migrate/reducer/actions';
 import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
@@ -19,6 +20,7 @@ import { PlanCreatePageState } from '../states';
 import { ChipsToolbarProviders } from './ChipsToolbarProviders';
 import { createProviderCardItems } from './createProviderCardItems';
 import { FiltersToolbarProviders } from './FiltersToolbarProviders';
+import { PlanNameTextField } from './PlanNameTextField';
 import { ProjectNameSelect } from './ProjectNameSelect';
 
 export type PlanCreateFormProps = {
@@ -40,6 +42,7 @@ export type PlanCreateFormProps = {
 export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
   providers,
   filterState,
+  state,
   projectName,
   filterDispatch,
   dispatch,
@@ -58,6 +61,17 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
   return (
     <div className="forklift-create-provider-edit-section">
       <Form isWidthLimited className="forklift-section-secret-edit">
+        <PlanNameTextField
+          isRequired
+          value={state.underConstruction.plan.metadata.name}
+          validated={state.validation.planName}
+          isDisabled={state.flow.editingDone}
+          onChange={(_, value) => {
+            dispatch(setPlanName(value?.trim() ?? ''));
+            setData({ ...data, planName: value });
+          }}
+        />
+
         <ProjectNameSelect
           value={projectName}
           options={providerNamespaces.map((namespace) => ({
