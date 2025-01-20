@@ -224,6 +224,11 @@ export interface StandardPageProps<T> {
    * Expanded ids
    */
   expandedIds?: string[];
+
+  /**
+   * Label to show count of selected items
+   */
+  selectedCountLabel?: (selectedIdCount: number) => string;
 }
 
 /**
@@ -280,6 +285,8 @@ export function StandardPage<T>({
   toId,
   expandedIds,
   className,
+  selectedIds,
+  selectedCountLabel,
 }: StandardPageProps<T>) {
   const { t } = useForkliftTranslation();
   const [sortedData, setSortedData] = useState([]);
@@ -412,6 +419,17 @@ export function StandardPage<T>({
                   <Action key={index} dataOnScreen={showPagination ? pageData : filteredData} />
                 ))}
             </ToolbarToggleGroup>
+
+            {selectedCountLabel && (
+              <ToolbarItem
+                className="pf-v5-u-color-200"
+                align={{ default: 'alignRight' }}
+                alignSelf="center"
+              >
+                {selectedCountLabel(selectedIds.length ?? 0)}
+              </ToolbarItem>
+            )}
+
             {showPagination && (
               <ToolbarItem variant="pagination">
                 <Pagination

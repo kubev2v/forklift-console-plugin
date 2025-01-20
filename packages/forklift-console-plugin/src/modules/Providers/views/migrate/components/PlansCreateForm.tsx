@@ -15,7 +15,6 @@ import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
-  DescriptionListTerm,
   Form,
   FormSelect,
   FormSelectOption,
@@ -174,12 +173,6 @@ export const PlansCreateForm = ({
             />
           }
         />
-        <DescriptionListGroup>
-          <DescriptionListTerm>{t('Selected VMs')}</DescriptionListTerm>
-          <DescriptionListDescription>
-            {t('{{vmCount}} VMs selected ', { vmCount: plan.spec.vms?.length ?? 0 })}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
 
         <SectionHeading
           text={t('Target provider')}

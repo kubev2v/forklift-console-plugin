@@ -14,6 +14,7 @@ import { Wizard } from '@patternfly/react-core/deprecated';
 import { findProviderByID } from './components';
 import { planCreatePageInitialState, planCreatePageReducer } from './states';
 import { SelectSourceProvider } from './steps';
+import { validateSourceProviderStep } from './utils';
 
 import './PlanCreatePage.style.css';
 
@@ -58,10 +59,7 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
   });
   useSaveEffect(state, dispatch);
 
-  const isFirstStepValid =
-    state.underConstruction.plan.metadata.name &&
-    state.validation.planName !== 'error' &&
-    filterState?.selectedVMs?.length > 0;
+  const isFirstStepValid = validateSourceProviderStep(state, filterState);
 
   const steps = [
     {

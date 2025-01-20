@@ -71,6 +71,9 @@ export const SelectSourceProvider: React.FC<{
             }
             initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
             showActions={false}
+            selectedCountLabel={(selectedIdCount) =>
+              t('{{vmCount}} VMs selected', { vmCount: selectedIdCount })
+            }
           />
         </>
       )}
