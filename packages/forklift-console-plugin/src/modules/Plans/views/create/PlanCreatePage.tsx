@@ -59,7 +59,10 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
   });
   useSaveEffect(state, dispatch);
 
-  const isFirstStepValid = validateSourceProviderStep(state, filterState);
+  const isFirstStepValid = React.useMemo(
+    () => validateSourceProviderStep(state, filterState),
+    [state, filterState],
+  );
 
   const steps = [
     {
