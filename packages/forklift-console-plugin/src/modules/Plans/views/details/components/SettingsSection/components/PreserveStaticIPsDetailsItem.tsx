@@ -24,12 +24,12 @@ export const PreserveStaticIPsDetailsItem: React.FC<PlanDetailsItemProps> = ({
 
   const trueLabel = (
     <Label isCompact color={'green'}>
-      Preserve static IPs
+      {t('Preserve static IPs')}
     </Label>
   );
   const falseLabel = (
     <Label isCompact color={'blue'}>
-      Use system default
+      {t('Do not preserve static IPs')}
     </Label>
   );
 
