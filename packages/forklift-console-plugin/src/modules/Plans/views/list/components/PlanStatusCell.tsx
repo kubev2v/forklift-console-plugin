@@ -30,7 +30,6 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   const { showModal } = useModal();
   const plan = data?.obj;
 
-  const vms = plan?.spec?.vms;
   const vmStatuses = plan?.status?.migration?.vms;
   const [lastMigration] = usePlanMigration(plan);
 
@@ -101,7 +100,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
       )}
 
       <Split hasGutter>
-        {vmCount?.success > 0 && (
+        {vmCount.success > 0 && (
           <SplitItem>
             <PlanStatusVmCount
               count={vmCount.success}
@@ -111,19 +110,19 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
           </SplitItem>
         )}
 
-        {phase !== PlanPhase.Running &&
-          phase !== PlanPhase.NotReady &&
-          vms?.length &&
-          !vmCount?.error &&
-          !vmCount.success && (
-            <SplitItem>
-              <PlanStatusVmCount count={vms.length} status="warning" linkPath={vmCountLinkPath} />
-            </SplitItem>
-          )}
-
-        {vmCount?.error > 0 && (
+        {vmCount.canceled > 0 && (
           <SplitItem>
-            <PlanStatusVmCount count={vmCount?.error} status="danger" linkPath={vmCountLinkPath} />
+            <PlanStatusVmCount
+              count={vmCount.canceled}
+              status="warning"
+              linkPath={vmCountLinkPath}
+            />
+          </SplitItem>
+        )}
+
+        {vmCount.error > 0 && (
+          <SplitItem>
+            <PlanStatusVmCount count={vmCount.error} status="danger" linkPath={vmCountLinkPath} />
           </SplitItem>
         )}
       </Split>
