@@ -2,11 +2,20 @@ import React from 'react';
 
 /**
  * Mock translation utility
- *
- * @returns {{ t: (k: string) => string; }}
  */
 export const useTranslation = () => ({
-  t: (k: string) => k,
+  t: (key, options) => {
+    // Resolve interpolated strings
+    if (options?.interpolation || options?.total || options?.count) {
+      const interpolatedString = key.replace(/{{(\w+)}}/g, (match, variable) => {
+        return options[variable] || options.interpolation?.[variable] || match;
+      });
+
+      return interpolatedString;
+    } else {
+      return key;
+    }
+  },
   i18n: {
     resolvedLanguage: 'en',
   },
