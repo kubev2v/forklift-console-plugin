@@ -7,21 +7,13 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
-import {
-  ArchiveModal,
-  DuplicateModal,
-  PlanCutoverMigrationModal,
-  PlanDeleteModal,
-  PlanStartMigrationModal,
-} from '../modals';
+import { ArchiveModal, DuplicateModal, PlanDeleteModal, PlanStartMigrationModal } from '../modals';
 import {
   canPlanReStart,
   canPlanStart,
-  getPlanPhase,
-  isPlanArchived,
-  isPlanExecuting,
+  getPlanSummaryStatus,
   PlanData,
-  PlanPhase,
+  PlanSummaryStatus,
 } from '../utils';
 
 export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps) => {
@@ -36,12 +28,10 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     namespace: plan?.metadata?.namespace,
   });
 
-  const phase = getPlanPhase(data);
-
+  const status = getPlanSummaryStatus(data);
   const canStart = canPlanStart(plan);
   const canReStart = canPlanReStart(plan);
-  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
-  const isArchived = isPlanArchived(plan);
+  const isPlanValidating = !status;
 
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
 
@@ -49,10 +39,6 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     showModal(
       <PlanStartMigrationModal resource={plan} model={PlanModel} title={buttonStartLabel} />,
     );
-  };
-
-  const onClickPlanCutover = () => {
-    showModal(<PlanCutoverMigrationModal resource={plan} />);
   };
 
   const onClickDuplicate = () => {
@@ -67,44 +53,79 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     showModal(<PlanDeleteModal resource={plan} model={PlanModel} />);
   };
 
-  return [
-    <DropdownItemLink value={0} key="EditPlan" href={planURL} description={t('Edit Plan')} />,
+  const startActionDescription = React.useMemo(() => {
+    if (isPlanValidating) {
+      return t('The plan is being validated');
+    }
 
-    <DropdownItem value={1} key="start" isDisabled={!canStart} onClick={onClickPlanStart}>
+    switch (status) {
+      case PlanSummaryStatus.Archived:
+        return t('Archived plans cannot be started');
+      case PlanSummaryStatus.Complete:
+        return t('All VMs were migrated');
+      case PlanSummaryStatus.Running:
+        return t('The plan is currently in progress');
+      case PlanSummaryStatus.CannotStart:
+        return t('The plan cannot be started');
+    }
+  }, [status, isPlanValidating]);
+
+  const duplicateActionDescription = React.useMemo(() => {
+    if (isPlanValidating) {
+      return t('The plan is being validated');
+    }
+
+    if (status === PlanSummaryStatus.CannotStart) {
+      return t('The plan cannot be duplicated');
+    }
+  }, [status, isPlanValidating]);
+
+  return [
+    <DropdownItem
+      value={0}
+      key="start"
+      isDisabled={!canStart}
+      onClick={onClickPlanStart}
+      description={startActionDescription}
+    >
       {buttonStartLabel}
     </DropdownItem>,
 
-    <DropdownItem
-      value={2}
-      key="cutover"
-      isDisabled={!isWarmAndExecuting || isArchived}
-      onClick={onClickPlanCutover}
+    <DropdownItemLink
+      value={1}
+      key="EditPlan"
+      href={planURL}
+      description={status === PlanSummaryStatus.Archived && t('Archived plans cannot be edited')}
     >
-      {t('Cutover')}
-    </DropdownItem>,
+      {t('Edit Plan')}
+    </DropdownItemLink>,
 
     <DropdownItem
-      value={3}
+      value={2}
       key="duplicate"
-      isDisabled={!data?.permissions?.canDelete}
+      isDisabled={
+        !data?.permissions?.canDelete ||
+        status === PlanSummaryStatus.CannotStart ||
+        isPlanValidating
+      }
       onClick={onClickDuplicate}
+      description={duplicateActionDescription}
     >
       {t('Duplicate Plan')}
     </DropdownItem>,
 
     <DropdownItem
-      value={4}
+      value={3}
       key="archive"
-      isDisabled={
-        !data?.permissions?.canDelete || [PlanPhase.Archived, PlanPhase.Archiving].includes(phase)
-      }
+      isDisabled={!data?.permissions?.canDelete || status === PlanSummaryStatus.Archived}
       onClick={onClickArchive}
+      description={status === PlanSummaryStatus.Archived && t('The plan is already archived')}
     >
       {t('Archive Plan')}
     </DropdownItem>,
 
     <DropdownItem
-      value={5}
+      value={4}
       key="delete"
       isDisabled={!data?.permissions?.canDelete}
       onClick={onClickPlanDelete}
