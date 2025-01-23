@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, Ref, useState } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
@@ -11,7 +11,14 @@ import {
   SplitItem,
   Text,
 } from '@patternfly/react-core';
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core/deprecated';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
 
 import automationIcon from '../../../../../images/automation.svg';
 
@@ -27,6 +34,7 @@ const hideFromViewDropdownOption = (onHide: () => void, t) => {
 
   return hasHideAction ? (
     <DropdownItem
+      value={0}
       key="action"
       component="button"
       description={t(
@@ -45,19 +53,26 @@ const hideFromViewDropdownOption = (onHide: () => void, t) => {
 
 export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
   const { t } = useForkliftTranslation();
-  const [menuIsOpen, setMenuIsOpen] = React.useState(false);
-
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
   const actionDropdownItems = [hideFromViewDropdownOption(onHide, t)];
   const onToggle = () => setMenuIsOpen((open) => !open);
 
   const headerActions = (
     <Dropdown
       isOpen={menuIsOpen}
-      isPlain
-      toggle={<KebabToggle onToggle={onToggle} data-testid="actions" />}
-      position="right"
-      dropdownItems={actionDropdownItems}
-    />
+      onOpenChange={(menuIsOpen: boolean) => setMenuIsOpen(menuIsOpen)}
+      toggle={(toggleRef: Ref<MenuToggleElement>) => (
+        <MenuToggle ref={toggleRef} onClick={onToggle} isExpanded={menuIsOpen} variant={'plain'}>
+          {<EllipsisVIcon />}
+        </MenuToggle>
+      )}
+      shouldFocusFirstItemOnOpen={false}
+      popperProps={{
+        position: 'right',
+      }}
+    >
+      <DropdownList>{actionDropdownItems}</DropdownList>
+    </Dropdown>
   );
 
   return (

@@ -1,14 +1,9 @@
-import React from 'react';
-import { useToggle } from 'src/modules/Providers/hooks';
+import React, { Ref } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  Dropdown,
-  DropdownPosition,
-  DropdownToggle,
-  KebabToggle,
-} from '@patternfly/react-core/deprecated';
+import { Dropdown, DropdownList, MenuToggle, MenuToggleElement } from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
 
 import { CellProps } from '../views/list/components';
 
@@ -20,27 +15,43 @@ const PlanActionsKebabDropdown_: React.FC<PlanActionsDropdownProps> = ({ data, i
   const { t } = useForkliftTranslation();
 
   // Hook for managing the open/close state of the dropdown
-  const [isDropdownOpen, toggle] = useToggle();
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const onToggleClick = () => {
+    setIsOpen((isOpen) => !isOpen);
+  };
+
+  const onSelect = (
+    _event: React.MouseEvent<Element, MouseEvent> | undefined,
+    _value: string | number | undefined,
+  ) => {
+    setIsOpen(false);
+  };
 
   // Returning the Dropdown component from PatternFly library
   return (
     <Dropdown
-      onSelect={toggle}
-      isOpen={isDropdownOpen}
-      isPlain
-      position={DropdownPosition.right}
-      className={isKebab ? undefined : 'forklift-dropdown pf-c-menu-toggle'}
-      toggle={
-        isKebab ? (
-          <KebabToggle id="toggle-kebab" onToggle={toggle} />
-        ) : (
-          <DropdownToggle id="toggle-basic" onToggle={toggle}>
-            {t('Actions')}
-          </DropdownToggle>
-        )
-      }
-      dropdownItems={PlanActionsDropdownItems({ data })}
-    />
+      className={isKebab ? undefined : 'forklift-dropdown'}
+      isOpen={isOpen}
+      onOpenChange={setIsOpen}
+      onSelect={onSelect}
+      toggle={(toggleRef: Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
+          onClick={onToggleClick}
+          isExpanded={isOpen}
+          variant={isKebab ? 'plain' : 'default'}
+        >
+          {isKebab ? <EllipsisVIcon /> : t('Actions')}
+        </MenuToggle>
+      )}
+      shouldFocusToggleOnSelect
+      popperProps={{
+        position: 'right',
+      }}
+    >
+      <DropdownList>{PlanActionsDropdownItems({ data })}</DropdownList>
+    </Dropdown>
   );
 };
 
