@@ -421,11 +421,7 @@ export function StandardPage<T>({
             </ToolbarToggleGroup>
 
             {selectedCountLabel && (
-              <ToolbarItem
-                className="pf-v5-u-color-200"
-                align={{ default: 'alignRight' }}
-                alignSelf="center"
-              >
+              <ToolbarItem className="forklift-page__toolbar-item__selected-count">
                 {selectedCountLabel(selectedIds.length ?? 0)}
               </ToolbarItem>
             )}

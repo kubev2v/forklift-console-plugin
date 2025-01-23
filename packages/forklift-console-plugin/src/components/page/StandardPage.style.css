@@ -1,3 +1,9 @@
 .forklift-page__main-title {
   padding-bottom: 0;
 }
+
+.forklift-page__toolbar-item__selected-count {
+  color: var(--pf-v5-global--Color--200);
+  margin-inline-start: auto;
+  align-self: center;
+}
