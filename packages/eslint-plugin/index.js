@@ -25,6 +25,7 @@ const base = {
     'simple-import-sort',
     'unused-imports',
     '@cspell',
+    '@typescript-eslint',
   ],
 
   rules: {
@@ -52,6 +53,12 @@ const base = {
       {
         customWordListFile: CSPELL_WORD_LIST,
         autoFix: false,
+      },
+    ],
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        argsIgnorePattern: '^_',
       },
     ],
   },
