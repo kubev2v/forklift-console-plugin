@@ -42,27 +42,11 @@ export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
-  title,
-  obj,
-  loaded,
-  loadError,
-  onSelect,
-  initialSelectedIds,
-  showActions,
-  className,
-}) => (
+export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = (props) => (
   <ProviderVirtualMachinesList
-    title={title}
-    obj={obj}
-    loaded={loaded}
-    loadError={loadError}
+    {...props}
     cellMapper={OvaVirtualMachinesCells}
     fieldsMetadataFactory={ovaVmFieldsMetadataFactory}
     pageId="OvaVirtualMachinesList"
-    onSelect={onSelect}
-    initialSelectedIds={initialSelectedIds}
-    showActions={showActions}
-    className={className}
   />
 );
