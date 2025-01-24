@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef } from '@kubev2v/types';
-import { Button, ButtonProps } from '@patternfly/react-core';
+import { Button, ButtonProps, ButtonVariant } from '@patternfly/react-core';
 
-interface ProvidersAddButtonProps {
+type ProvidersAddButtonProps = {
   namespace?: string;
   dataTestId?: string;
   buttonProps?: ButtonProps;
-}
+};
 
-export const ProvidersAddButton: React.FC<ProvidersAddButtonProps> = ({
+export const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({
   namespace,
   dataTestId,
   buttonProps,
@@ -31,7 +31,12 @@ export const ProvidersAddButton: React.FC<ProvidersAddButtonProps> = ({
   };
 
   return (
-    <Button data-testid={dataTestId} variant="primary" onClick={onClick} {...buttonProps}>
+    <Button
+      data-testid={dataTestId}
+      variant={ButtonVariant.primary}
+      onClick={onClick}
+      {...buttonProps}
+    >
       {t('Create Provider')}
     </Button>
   );

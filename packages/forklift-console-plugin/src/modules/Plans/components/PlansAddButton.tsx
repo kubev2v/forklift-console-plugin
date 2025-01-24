@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
@@ -8,12 +8,12 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModelRef } from '@kubev2v/types';
 import { Button } from '@patternfly/react-core';
 
-interface PlansAddButtonProps {
+type PlansAddButtonProps = {
   namespace?: string;
   dataTestId?: string;
-}
+};
 
-export const PlansAddButton: React.FC<PlansAddButtonProps> = ({ namespace, dataTestId }) => {
+export const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
   const { setData } = useCreateVmMigrationData();

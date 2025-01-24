@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { ProvidersAddButton } from 'src/modules/Providers';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
 
@@ -12,11 +12,11 @@ import {
 } from '@patternfly/react-core';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 
-interface ProviderCardEmptyStateProps {
+type ProviderCardEmptyStateProps = {
   projectName: string;
-}
+};
 
-export const ProviderCardEmptyState: React.FC<ProviderCardEmptyStateProps> = ({ projectName }) => {
+export const ProviderCardEmptyState: FC<ProviderCardEmptyStateProps> = ({ projectName }) => {
   const { t } = useForkliftTranslation();
 
   return (

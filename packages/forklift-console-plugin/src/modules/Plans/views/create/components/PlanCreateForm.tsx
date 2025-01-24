@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { ProjectNameSelect, useProjectNameSelectOptions } from 'src/components/common';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
@@ -60,11 +60,17 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
   const { t } = useForkliftTranslation();
   const { data, setData } = useCreateVmMigrationData();
   const projectNameOptions = useProjectNameSelectOptions(projectName);
-  const providerCardItems = createProviderCardItems(
-    providers.filter((provider) => provider.metadata.namespace === projectName),
+  const providerCardItems = useMemo(
+    () =>
+      createProviderCardItems(
+        providers.filter((provider) => provider.metadata.namespace === projectName),
+      ),
+    [projectName, providers],
   );
+  const { selectedProviderUID: selectedProviderId } = filterState;
+  const selectedProviderCardItem = providerCardItems[selectedProviderId];
 
-  const onProviderChange = React.useCallback((id: string) => {
+  const onProviderChange = useCallback((id: string) => {
     filterDispatch({ type: 'SELECT_PROVIDER', payload: id || '' });
   }, []);
 
@@ -121,12 +127,12 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
             />
             <ChipsToolbarProviders filterState={filterState} filterDispatch={filterDispatch} />
 
-            {filterState.selectedProviderUID ? (
+            {selectedProviderId ? (
               <Flex>
                 <FlexItem className="forklift--create-provider-edit-card-selected">
                   <SelectableCard
-                    title={providerCardItems[filterState.selectedProviderUID]?.title}
-                    titleLogo={providerCardItems[filterState.selectedProviderUID]?.logo}
+                    title={selectedProviderCardItem.title}
+                    titleLogo={selectedProviderCardItem.logo}
                     onChange={() => onProviderChange('')}
                     isSelected
                     isCompact
@@ -148,7 +154,7 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
               </Flex>
             ) : (
               <SelectableGallery
-                selectedID={filterState.selectedProviderUID}
+                selectedID={selectedProviderId}
                 items={providerCardItems}
                 onChange={onProviderChange}
               />
