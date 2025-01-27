@@ -14,6 +14,7 @@ import { Wizard } from '@patternfly/react-core/deprecated';
 import { findProviderByID } from './components';
 import { planCreatePageInitialState, planCreatePageReducer } from './states';
 import { SelectSourceProvider } from './steps';
+import { validateSourceProviderStep } from './utils';
 
 import './PlanCreatePage.style.css';
 
@@ -21,7 +22,6 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
   // Get optional initial state context
   const { data } = useCreateVmMigrationData();
   const history = useHistory();
-  const startAtStep = data?.provider !== undefined ? 2 : 1;
   const [activeNamespace, setActiveNamespace] = useActiveNamespace();
   const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
   const projectName =
@@ -59,6 +59,11 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
   });
   useSaveEffect(state, dispatch);
 
+  const isFirstStepValid = React.useMemo(
+    () => validateSourceProviderStep(state, filterState),
+    [state, filterState],
+  );
+
   const steps = [
     {
       id: 'step-1',
@@ -74,7 +79,7 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
           selectedProvider={selectedProvider}
         />
       ),
-      enableNext: filterState?.selectedVMs?.length > 0,
+      enableNext: isFirstStepValid,
     },
     {
       id: 'step-2',
@@ -90,10 +95,9 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
         !emptyContext &&
         !(
           !!state?.flow?.apiError ||
-          Object.values(state?.validation || []).some((validation) => validation === 'error') ||
-          state?.validation?.planName === 'default'
+          Object.values(state?.validation || []).some((validation) => validation === 'error')
         ),
-      canJumpTo: filterState?.selectedVMs?.length > 0,
+      canJumpTo: isFirstStepValid,
       nextButtonText: 'Create migration plan',
     },
   ];
@@ -116,7 +120,6 @@ export const PlanCreatePage: React.FC<{ namespace: string }> = ({ namespace }) =
             dispatch(startCreate());
           }}
           onClose={() => history.goBack()}
-          startAtStep={startAtStep}
         />
       </PageSection>
     </>

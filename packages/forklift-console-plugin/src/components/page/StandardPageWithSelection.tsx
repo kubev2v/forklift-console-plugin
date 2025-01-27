@@ -191,6 +191,7 @@ export function withIdBasedSelection<T>({
       <StandardPage
         {...rest}
         expandedIds={expandedIds}
+        selectedIds={selectedIds}
         toId={toId}
         RowMapper={RowMapper}
         HeaderMapper={HeaderMapper}

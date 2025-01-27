@@ -25,6 +25,7 @@ export interface ProviderVirtualMachinesProps {
   disabledVmIds?: string[];
   showActions: boolean;
   className?: string;
+  selectedCountLabel?: (selectedIdCount: number) => string;
 }
 
 export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
@@ -71,88 +72,20 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
   );
 };
 
-export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachinesProps> = ({
-  title,
-  obj,
-  loaded,
-  loadError,
-  onSelect,
-  initialSelectedIds,
-  disabledVmIds,
-  showActions,
-  className,
-}) => {
-  switch (obj?.provider?.spec?.type) {
+export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachinesProps> = (
+  props,
+) => {
+  switch (props.obj?.provider?.spec?.type) {
     case 'openshift':
-      return (
-        <OpenShiftVirtualMachinesList
-          title={title}
-          obj={obj}
-          loaded={loaded}
-          loadError={loadError}
-          onSelect={onSelect}
-          initialSelectedIds={initialSelectedIds}
-          disabledVmIds={disabledVmIds}
-          showActions={showActions}
-          className={className}
-        />
-      );
+      return <OpenShiftVirtualMachinesList {...props} />;
     case 'openstack':
-      return (
-        <OpenStackVirtualMachinesList
-          title={title}
-          obj={obj}
-          loaded={loaded}
-          loadError={loadError}
-          onSelect={onSelect}
-          initialSelectedIds={initialSelectedIds}
-          disabledVmIds={disabledVmIds}
-          showActions={showActions}
-          className={className}
-        />
-      );
+      return <OpenStackVirtualMachinesList {...props} />;
     case 'ovirt':
-      return (
-        <OVirtVirtualMachinesList
-          title={title}
-          obj={obj}
-          loaded={loaded}
-          loadError={loadError}
-          onSelect={onSelect}
-          initialSelectedIds={initialSelectedIds}
-          disabledVmIds={disabledVmIds}
-          showActions={showActions}
-          className={className}
-        />
-      );
+      return <OVirtVirtualMachinesList {...props} />;
     case 'vsphere':
-      return (
-        <VSphereVirtualMachinesList
-          title={title}
-          obj={obj}
-          loaded={loaded}
-          loadError={loadError}
-          onSelect={onSelect}
-          initialSelectedIds={initialSelectedIds}
-          disabledVmIds={disabledVmIds}
-          showActions={showActions}
-          className={className}
-        />
-      );
+      return <VSphereVirtualMachinesList {...props} />;
     case 'ova':
-      return (
-        <OvaVirtualMachinesList
-          title={title}
-          obj={obj}
-          loaded={loaded}
-          loadError={loadError}
-          onSelect={onSelect}
-          initialSelectedIds={initialSelectedIds}
-          disabledVmIds={disabledVmIds}
-          showActions={showActions}
-          className={className}
-        />
-      );
+      return <OvaVirtualMachinesList {...props} />;
     default:
       // unsupported provider or loading errors will be handled by parent page
       return <></>;

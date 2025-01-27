@@ -86,17 +86,8 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
-  title,
-  obj,
-  loaded,
-  loadError,
-  onSelect,
-  initialSelectedIds,
-  disabledVmIds,
-  showActions,
-  className,
-}) => {
+export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = (props) => {
+  const { obj } = props;
   const [hostsDict, foldersDict] = useVSphereInventoryVms({ provider: obj.provider }, true, null);
   const { vmData } = obj;
 
@@ -120,18 +111,11 @@ export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> 
 
   return (
     <ProviderVirtualMachinesList
-      title={title}
+      {...props}
       obj={{ ...obj, vmData: newVMData }}
-      loaded={loaded}
-      loadError={loadError}
       cellMapper={VSphereVirtualMachinesCells}
       fieldsMetadataFactory={vSphereVmFieldsMetadataFactory}
       pageId="VSphereVirtualMachinesList"
-      onSelect={onSelect}
-      initialSelectedIds={initialSelectedIds}
-      disabledVmIds={disabledVmIds}
-      showActions={showActions}
-      className={className}
     />
   );
 };

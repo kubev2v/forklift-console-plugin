@@ -11,6 +11,7 @@ export interface ProviderVirtualMachinesListProps {
   initialSelectedIds: string[];
   disabledVmIds?: string[];
   showActions: boolean;
+  selectedCountLabel?: (selectedIdCount: number) => string;
 }
 
 export const MemoizedProviderVirtualMachinesList = memo(
@@ -22,6 +23,7 @@ export const MemoizedProviderVirtualMachinesList = memo(
     initialSelectedIds,
     disabledVmIds,
     showActions,
+    selectedCountLabel,
   }: ProviderVirtualMachinesListProps) => {
     return (
       <ProviderVirtualMachinesList
@@ -32,6 +34,7 @@ export const MemoizedProviderVirtualMachinesList = memo(
         initialSelectedIds={initialSelectedIds}
         disabledVmIds={disabledVmIds}
         showActions={showActions}
+        selectedCountLabel={selectedCountLabel}
       />
     );
   },

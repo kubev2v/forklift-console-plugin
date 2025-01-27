@@ -85,29 +85,11 @@ export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const OVirtVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = ({
-  title,
-  obj,
-  loaded,
-  loadError,
-  onSelect,
-  initialSelectedIds,
-  disabledVmIds,
-  showActions,
-  className,
-}) => (
+export const OVirtVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = (props) => (
   <ProviderVirtualMachinesList
-    title={title}
-    obj={obj}
-    loaded={loaded}
-    loadError={loadError}
+    {...props}
     cellMapper={OVirtVirtualMachinesCells}
     fieldsMetadataFactory={oVirtVmFieldsMetadataFactory}
     pageId="OVirtVirtualMachinesList"
-    onSelect={onSelect}
-    initialSelectedIds={initialSelectedIds}
-    disabledVmIds={disabledVmIds}
-    showActions={showActions}
-    className={className}
   />
 );

@@ -3,7 +3,7 @@ import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel, ProviderModelRef } from '@kubev2v/types';
-import { DropdownItem } from '@patternfly/react-core/deprecated';
+import { DropdownItem } from '@patternfly/react-core';
 
 import { DeleteModal, useModal } from '../modals';
 import { getResourceUrl, ProviderData } from '../utils';
@@ -25,16 +25,33 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
   };
 
   const dropdownItems = [
-    <DropdownItemLink key="EditProvider" href={providerURL}>
-      {t('Edit Provider')}
-    </DropdownItemLink>,
-    <DropdownItemLink key="EditCredentials" href={`${providerURL}/credentials`}>
-      {t('Edit Provider Credentials')}
-    </DropdownItemLink>,
-    <DropdownItemLink key="MigratePlan" href={`${providerURL}/vms`}>
-      {t('Migrate')}
-    </DropdownItemLink>,
-    <DropdownItem key="delete" isDisabled={!data?.permissions?.canDelete} onClick={onClick}>
+    <DropdownItemLink
+      value={0}
+      key="EditProvider"
+      href={providerURL}
+      description={t('Edit Provider')}
+    />,
+
+    <DropdownItemLink
+      value={1}
+      key="EditCredentials"
+      href={`${providerURL}/credentials`}
+      description={t('Edit Provider Credentials')}
+    />,
+
+    <DropdownItemLink
+      value={2}
+      key="MigratePlan"
+      href={`${providerURL}/vms`}
+      description={t('Migrate')}
+    />,
+
+    <DropdownItem
+      value={3}
+      key="delete"
+      isDisabled={!data?.permissions?.canDelete}
+      onClick={onClick}
+    >
       {t('Delete Provider')}
     </DropdownItem>,
   ];

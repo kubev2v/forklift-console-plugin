@@ -13,7 +13,6 @@ import { Switch } from '@patternfly/react-core';
 
 const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
   const plan = resource as V1beta1Plan;
-
   const resourceValue = plan?.spec?.preserveStaticIPs;
   const op = resourceValue ? 'replace' : 'add';
 
@@ -49,12 +48,10 @@ const PreserveStaticIPsInputFactory: () => ModalInputComponentType = () => {
 
     return (
       <Switch
-        id="simple-switch"
-        label={t('Preserve the static IPs of virtual machines migrated from vSphere.')}
-        labelOff={t(
-          'Do not try to preserve the static IPs of virtual machines migrated from vSphere.',
-        )}
+        id="preserve-static-ip-switch"
+        label={t('Preserve the static IPs of the virtual machines migrated')}
         isChecked={value === 'true'}
+        hasCheckIcon
         onChange={(e, v) => onChangeInternal(v, e)}
       />
     );
@@ -71,10 +68,9 @@ const EditPlanPreserveStaticIPs_: React.FC<EditPlanPreserveStaticIPsProps> = (pr
       {...props}
       jsonPath={(obj: V1beta1Plan) => (obj.spec.preserveStaticIPs ? 'true' : 'false')}
       title={props?.title || t('Set to preserve the static IPs')}
-      label={props?.label || t('Whether to preserve the static IPs')}
+      label={props?.label ?? ''}
       model={PlanModel}
       onConfirmHook={onConfirm}
-      body={t(`Preserve the static IPs of virtual machines migrated from vSphere.`)}
       InputComponent={PreserveStaticIPsInputFactory()}
     />
   );

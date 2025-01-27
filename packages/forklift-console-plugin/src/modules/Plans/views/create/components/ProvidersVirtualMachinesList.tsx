@@ -17,6 +17,7 @@ export const ProviderVirtualMachinesList: React.FC<{
   disabledVmIds?: string[];
   showActions: boolean;
   className?: string;
+  selectedCountLabel?: (selectedIdCount: number) => string;
 }> = ({
   title,
   name,
@@ -26,6 +27,7 @@ export const ProviderVirtualMachinesList: React.FC<{
   disabledVmIds,
   showActions,
   className,
+  selectedCountLabel,
 }) => {
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
@@ -48,6 +50,7 @@ export const ProviderVirtualMachinesList: React.FC<{
       disabledVmIds={disabledVmIds}
       showActions={showActions}
       className={className}
+      selectedCountLabel={selectedCountLabel}
     />
   );
 };

@@ -118,7 +118,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
    * Toggles the open state of the select dropdown.
    */
   const onToggleClick = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((isOpen) => !isOpen);
   };
 
   /**
