@@ -1,19 +1,26 @@
 import React, { Dispatch, FormEvent, ReactNode } from 'react';
-import { PlanMappingsInitSection } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappings';
-import { PlanMappingsSectionState } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
+import { FormAlerts } from 'src/modules/Providers/views/migrate/components/FormAlerts';
+import { PlansProvidersFields } from 'src/modules/Providers/views/migrate/components/PlansProvidersFields';
+import { PlansTargetNamespaceField } from 'src/modules/Providers/views/migrate/components/PlansTargetNamespaceField';
+import {
+  PageAction,
+  setPlanTargetNamespace,
+  setPlanTargetProvider,
+} from 'src/modules/Providers/views/migrate/reducer/actions';
+import { isDone } from 'src/modules/Providers/views/migrate/reducer/helpers';
+import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
 
+import { LoadingDots } from '@kubev2v/common';
 import { V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 
-import { PageAction, setPlanTargetNamespace, setPlanTargetProvider } from '../reducer/actions';
-import { CreateVmMigrationPageState } from '../types';
+import {
+  PlanMappingsInitSection,
+  PlanMappingsSectionState,
+} from '../../details/components/UpdateMappings';
 
-import { PlansProvidersFields } from './PlansProvidersFields';
-import { PlansTargetNamespaceField } from './PlansTargetNamespaceField';
-
-type PlansUpdateFormProps = {
+type PlanUpdateFormProps = {
   children?: ReactNode;
-  formAlerts?: ReactNode;
   formActions?: ReactNode;
   state: CreateVmMigrationPageState;
   dispatch: (action: PageAction<unknown, unknown>) => void;
@@ -26,17 +33,20 @@ type PlansUpdateFormProps = {
   planStorageMaps: V1beta1StorageMap;
 };
 
-export const PlansUpdateForm = ({
+export const PlanUpdateForm = ({
   children,
   state,
   dispatch,
-  formAlerts,
   formActions,
   planMappingsState,
   planMappingsDispatch,
   planNetworkMaps,
   planStorageMaps,
-}: PlansUpdateFormProps) => {
+}: PlanUpdateFormProps) => {
+  if (!isDone(state.flow.initialLoading) && !state.flow.apiError) {
+    return <LoadingDots />;
+  }
+
   const {
     underConstruction: { plan },
     flow,
@@ -78,7 +88,7 @@ export const PlansUpdateForm = ({
           planStorageMaps={planStorageMaps}
         />
       </DescriptionList>
-      {formAlerts}
+      {state.flow.apiError && <FormAlerts state={state} />}
       <div className="forklift--create-vm-migration-plan--form-actions">{formActions}</div>
     </>
   );

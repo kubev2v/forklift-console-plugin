@@ -1,9 +1,7 @@
 import React, { useEffect, useReducer, useRef } from 'react';
 import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
-import { planMappingsSectionReducer } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
 import { getVMMigrationStatus } from 'src/modules/Plans/views/details/tabs/VirtualMachines/Migration/MigrationVirtualMachinesList';
 import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
-import ProvidersUpdateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersUpdateVmMigrationPage';
 import { setAPiError, startUpdate } from 'src/modules/Providers/views/migrate/reducer/actions';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -22,8 +20,12 @@ import { patchPlanMappingsData, patchPlanSpecVms } from '../../utils';
 import { findProviderByID } from '../create/components';
 import { planCreatePageInitialState, planCreatePageReducer } from '../create/states';
 import { SelectSourceProvider } from '../create/steps';
+import {
+  initialPlanMappingsState,
+  planMappingsSectionReducer,
+} from '../details/components/UpdateMappings';
 
-import { initialPlanMappingsState } from './initialPlanMappingsState';
+import { PlanUpdateForm } from './steps/PlanUpdateForm';
 
 import '../create/PlanCreatePage.style.css';
 
@@ -91,6 +93,7 @@ export const PlanEditPage: React.FC<{
       planNetworkMaps,
       planStorageMaps,
       editAction,
+      edit: true,
     }),
   );
 
@@ -170,15 +173,18 @@ export const PlanEditPage: React.FC<{
       id: 'step-2',
       name: editAction === 'VMS' ? t('Update mappings') : t('Update migration plan'),
       component: (
-        <ProvidersUpdateVmMigrationPage
+        <PlanUpdateForm
           state={state}
           dispatch={dispatch}
-          emptyContext={emptyContext}
           planMappingsState={planMappingsState}
           planMappingsDispatch={planMappingsDispatch}
           planNetworkMaps={planNetworkMaps}
           planStorageMaps={planStorageMaps}
-        />
+        >
+          <Title headingLevel="h2" className="forklift--create-plan--title">
+            {t('Update mappings')}
+          </Title>
+        </PlanUpdateForm>
       ),
       enableNext:
         !emptyContext &&
