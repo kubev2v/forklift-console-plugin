@@ -4,7 +4,7 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
-    baseUrl: process.env.BRIDGE_BASE_ADDRESS || "http://localhost:30080",
+    baseUrl: process.env.BRIDGE_BASE_ADDRESS||process.env.BASE_ADDRESS || "http://host.docker.internal:9000",
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
