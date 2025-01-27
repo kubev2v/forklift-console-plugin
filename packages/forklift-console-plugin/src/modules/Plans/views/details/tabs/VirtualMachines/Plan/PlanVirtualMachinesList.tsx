@@ -37,9 +37,16 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     isVisible: true,
     sortable: true,
   },
+  {
+    resourceFieldId: 'actions',
+    label: '',
+    isAction: true,
+    isVisible: true,
+    sortable: false,
+  },
 ];
 
-const PageWithNoSelection = StandardPage<VMData>;
+const Page = StandardPage<VMData>;
 type PageGlobalActions = FC<GlobalActionToolbarProps<VMData>>[];
 
 export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
@@ -81,10 +88,10 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
   const actions: PageGlobalActions = [() => <PlanVMsEditButton plan={plan} />];
 
   return (
-    <PageWithNoSelection
+    <Page
       title={t('Virtual Machines')}
       dataSource={vmDataSource}
-      CellMapper={PlanVirtualMachinesRow}
+      CellMapper={(props) => <PlanVirtualMachinesRow {...props} planData={obj} />}
       fieldsMetadata={fieldsMetadataFactory(t)}
       userSettings={userSettings}
       namespace={''}

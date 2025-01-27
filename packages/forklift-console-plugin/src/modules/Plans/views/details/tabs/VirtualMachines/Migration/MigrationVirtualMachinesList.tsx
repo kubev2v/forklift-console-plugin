@@ -144,6 +144,13 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       values: vmStatuses,
     },
   },
+  {
+    resourceFieldId: 'actions',
+    label: '',
+    isAction: true,
+    isVisible: true,
+    sortable: false,
+  },
 ];
 
 const PageWithSelection = StandardPageWithSelection<VMData>;
@@ -268,7 +275,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const props: PageWithSelectionProps = {
     dataSource: [vmData || [], true, undefined],
-    CellMapper: MigrationVirtualMachinesRow,
+    CellMapper: (props) => <MigrationVirtualMachinesRow {...props} planData={obj} />,
     ExpandedComponent: MigrationVirtualMachinesRowExtended,
     fieldsMetadata: fieldsMetadataFactory(t),
     title: t('Virtual Machines'),
