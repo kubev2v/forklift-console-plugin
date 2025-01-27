@@ -1,28 +1,16 @@
 import React, { ReactNode } from 'react';
-import { FilterableSelect } from 'src/components';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText, HelpIconPopover } from '@kubev2v/common';
-import {
-  NetworkMapModelGroupVersionKind,
-  ProviderModelGroupVersionKind,
-  StorageMapModelGroupVersionKind,
-} from '@kubev2v/types';
+import { NetworkMapModelGroupVersionKind, StorageMapModelGroupVersionKind } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {
   AlertVariant,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
-  Form,
-  FormSelect,
-  FormSelectOption,
-  Stack,
-  StackItem,
 } from '@patternfly/react-core';
 
-import { DetailsItem, getIsTarget } from '../../../utils';
 import {
   addNetworkMapping,
   addStorageMapping,
@@ -39,6 +27,8 @@ import { CreateVmMigrationPageState, NetworkAlerts, StorageAlerts } from '../typ
 
 import { MappingList } from './MappingList';
 import { MappingListHeader } from './MappingListHeader';
+import { PlansProvidersFields } from './PlansProvidersFields';
+import { PlansTargetNamespaceField } from './PlansTargetNamespaceField';
 import { StateAlerts } from './StateAlerts';
 
 const buildNetworkMessages = (
@@ -120,13 +110,7 @@ export const PlansCreateForm = ({
   const { t } = useForkliftTranslation();
 
   const {
-    underConstruction: { plan, netMap, storageMap },
-    validation,
-    calculatedOnce: { namespacesUsedBySelectedVms },
-    existingResources: {
-      providers: availableProviders,
-      targetNamespaces: availableTargetNamespaces,
-    },
+    underConstruction: { netMap, storageMap },
     calculatedPerNamespace: {
       targetNetworks,
       targetStorages,
@@ -149,6 +133,10 @@ export const PlansCreateForm = ({
     dispatch(setPlanTargetProvider(value));
   };
 
+  const onChangeTargetNamespace: (value: string) => void = (value) => {
+    dispatch(setPlanTargetNamespace(value));
+  };
+
   return (
     <>
       {children}
@@ -158,112 +146,12 @@ export const PlansCreateForm = ({
           default: '1Col',
         }}
       >
-        <SectionHeading
-          text={t('Source provider')}
-          className="forklift--create-vm-migration-plan--section-header"
+        <PlansProvidersFields onChangeTargetProvider={onChangeTargetProvider} state={state} />
+
+        <PlansTargetNamespaceField
+          onChangeTargetNamespace={onChangeTargetNamespace}
+          state={state}
         />
-
-        <DetailsItem
-          title={t('Source provider')}
-          content={
-            <ResourceLink
-              name={plan.spec.provider?.source?.name}
-              namespace={plan.spec.provider?.source?.namespace}
-              groupVersionKind={ProviderModelGroupVersionKind}
-            />
-          }
-        />
-
-        <SectionHeading
-          text={t('Target provider')}
-          className="forklift--create-vm-migration-plan--section-header"
-        />
-
-        <Form isWidthLimited>
-          <FormGroupWithHelpText
-            label={t('Target provider')}
-            isRequired
-            fieldId="targetProvider"
-            validated={validation.targetProvider}
-            helperTextInvalid={
-              availableProviders.filter(getIsTarget).length === 0
-                ? t('No provider is available')
-                : t('The chosen provider is no longer available.')
-            }
-          >
-            <FormSelect
-              value={plan.spec.provider?.destination?.name}
-              onChange={(e, v) => onChangeTargetProvider(v, e)}
-              id="targetProvider"
-              isDisabled={flow.editingDone}
-            >
-              {[
-                <FormSelectOption
-                  key="placeholder"
-                  value={''}
-                  label={t('Select a provider')}
-                  isPlaceholder
-                  isDisabled
-                />,
-                ...availableProviders
-                  .filter(getIsTarget)
-                  .map((provider, index) => (
-                    <FormSelectOption
-                      key={provider?.metadata?.name || index}
-                      value={provider?.metadata?.name}
-                      label={provider?.metadata?.name ?? provider?.metadata?.uid ?? String(index)}
-                    />
-                  )),
-              ]}
-            </FormSelect>
-          </FormGroupWithHelpText>
-        </Form>
-
-        <Form isWidthLimited>
-          <FormGroupWithHelpText
-            label={t('Target namespace')}
-            isRequired
-            id="targetNamespace"
-            validated={validation.targetNamespace}
-            placeholder={t('Select a namespace')}
-            labelIcon={
-              <HelpIconPopover header={t('Target namespace')}>
-                <Stack hasGutter>
-                  <StackItem>
-                    <ForkliftTrans>
-                      Namespaces, also known as projects, separate resources within clusters.
-                    </ForkliftTrans>
-                  </StackItem>
-
-                  <StackItem>
-                    <ForkliftTrans>
-                      The target namespace is the namespace within your selected target provider
-                      that your virtual machines will be migrated to. This is different from the
-                      namespace that your migration plan will be created in and where your provider
-                      was created.
-                    </ForkliftTrans>
-                  </StackItem>
-                </Stack>
-              </HelpIconPopover>
-            }
-          >
-            <FilterableSelect
-              selectOptions={availableTargetNamespaces.map((ns) => ({
-                itemId: ns?.name,
-                isDisabled:
-                  namespacesUsedBySelectedVms.includes(ns?.name) &&
-                  plan.spec.provider?.destination?.name === plan.spec.provider.source.name,
-                children: ns?.name,
-              }))}
-              value={plan.spec.targetNamespace}
-              onSelect={(value) => dispatch(setPlanTargetNamespace(value as string))}
-              isDisabled={flow.editingDone}
-              isScrollable
-              canCreate
-              createNewOptionLabel={t('Create new namespace:')}
-            />
-          </FormGroupWithHelpText>
-        </Form>
 
         <SectionHeading
           text={t('Network mappings')}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { PlanMappingsSectionState } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -11,7 +11,7 @@ import { CreateVmMigration, PageAction } from './reducer/actions';
 import { isDone } from './reducer/helpers';
 import { CreateVmMigrationPageState } from './types';
 
-const ProvidersUpdateVmMigrationPage: React.FC<{
+const ProvidersUpdateVmMigrationPage: FC<{
   state: CreateVmMigrationPageState;
   dispatch: React.Dispatch<PageAction<CreateVmMigration, unknown>>;
   emptyContext: boolean;

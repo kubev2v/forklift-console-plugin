@@ -8,5 +8,4 @@ export * from './hasPlanMappingsChanged';
 export * from './hasSomeCompleteRunningVMs';
 export * from './hasTaskCompleted';
 export * from './mapMappingsIdsToLabels';
-export * from './patchPlanMappingsData';
 // @endindex

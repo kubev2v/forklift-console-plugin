@@ -56,7 +56,7 @@ export async function patchPlanMappingsData(
  * @param {NetworkMap} networkMap - The network map object to update.
  * @returns {NetworkMap} The updated network map object.
  */
-export function updateNetworkMapSpecMapDestination(
+function updateNetworkMapSpecMapDestination(
   networkMaps: V1beta1NetworkMapSpecMap[],
 ): V1beta1NetworkMapSpecMap[] {
   networkMaps?.forEach((entry) => {

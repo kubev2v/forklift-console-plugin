@@ -21,7 +21,7 @@ import { Modal, ModalVariant } from '@patternfly/react-core';
 import './PlanVMsDeleteModal.style.css';
 import './PlanVMsEditModal.style.css';
 
-export interface PlanVMsEditModalProps {
+interface PlanVMsEditModalProps {
   plan: V1beta1Plan;
   editAction: PlanEditAction;
 }

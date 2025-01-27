@@ -1,5 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { isPlanEditable } from 'src/modules/Plans/utils';
+import { patchPlanMappingsData } from 'src/modules/Plans/utils';
 import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
@@ -42,7 +43,6 @@ import {
   mapSourceStoragesIdsToLabels,
   mapTargetNetworksIdsToLabels,
   mapTargetStoragesLabelsToIds,
-  patchPlanMappingsData,
   POD_NETWORK,
 } from '../../utils';
 

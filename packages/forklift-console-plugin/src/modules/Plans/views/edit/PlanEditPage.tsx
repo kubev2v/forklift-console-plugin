@@ -1,15 +1,11 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
-import {
-  planMappingsSectionReducer,
-  PlanMappingsSectionState,
-} from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
+import { planMappingsSectionReducer } from 'src/modules/Plans/views/details/tabs/Mappings/PlanMappingsSection';
 import { getVMMigrationStatus } from 'src/modules/Plans/views/details/tabs/VirtualMachines/Migration/MigrationVirtualMachinesList';
 import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import ProvidersUpdateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersUpdateVmMigrationPage';
-import { startUpdate } from 'src/modules/Providers/views/migrate/reducer/actions';
+import { setAPiError, startUpdate } from 'src/modules/Providers/views/migrate/reducer/actions';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
-import { useUpdateEffect } from 'src/modules/Providers/views/migrate/useUpdateEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -22,9 +18,12 @@ import {
 import { Alert, PageSection, Text, TextContent, Title } from '@patternfly/react-core';
 import { Wizard } from '@patternfly/react-core/deprecated';
 
+import { patchPlanMappingsData, patchPlanSpecVms } from '../../utils';
 import { findProviderByID } from '../create/components';
 import { planCreatePageInitialState, planCreatePageReducer } from '../create/states';
 import { SelectSourceProvider } from '../create/steps';
+
+import { initialPlanMappingsState } from './initialPlanMappingsState';
 
 import '../create/PlanCreatePage.style.css';
 
@@ -86,20 +85,13 @@ export const PlanEditPage: React.FC<{
     },
   });
 
-  const initialPlanMappingsState: PlanMappingsSectionState = {
-    edit: true,
-    dataChanged: false,
-    alertMessage: null,
-    updatedNetwork: planNetworkMaps?.spec?.map || [],
-    updatedStorage: planStorageMaps?.spec?.map || [],
-    planNetworkMaps: planNetworkMaps,
-    planStorageMaps: planStorageMaps,
-    editAction,
-  };
-
   const [planMappingsState, planMappingsDispatch] = useReducer(
     planMappingsSectionReducer,
-    initialPlanMappingsState,
+    initialPlanMappingsState({
+      planNetworkMaps,
+      planStorageMaps,
+      editAction,
+    }),
   );
 
   useEffect(() => {
@@ -111,7 +103,35 @@ export const PlanEditPage: React.FC<{
     }
   }, [planNetworkMaps, planStorageMaps]);
 
-  useUpdateEffect(state, dispatch, planMappingsState, onClose);
+  const mounted = useRef(true);
+  useEffect(
+    () => () => {
+      mounted.current = false;
+    },
+    [],
+  );
+
+  useEffect(() => {
+    const {
+      flow,
+      underConstruction: { plan },
+    } = state;
+    if (!flow.editingDone || !mounted.current) {
+      return;
+    }
+
+    Promise.all([
+      patchPlanSpecVms(plan),
+      patchPlanMappingsData(
+        planMappingsState.planNetworkMaps,
+        planMappingsState.planStorageMaps,
+        planMappingsState.updatedNetwork,
+        planMappingsState.updatedStorage,
+      ),
+    ])
+      .then(() => onClose())
+      .catch((error) => mounted.current && dispatch(setAPiError(error)));
+  }, [state.flow.editingDone]);
 
   const steps = [
     {
@@ -121,7 +141,9 @@ export const PlanEditPage: React.FC<{
         <>
           {notFoundPlanVMs.length > 0 && (
             <Alert
-              title="The following VMs do not exist on the source provider and will be removed from the plan"
+              title={t(
+                'The following VMs do not exist on the source provider and will be removed from the plan',
+              )}
               variant="danger"
             >
               <TextContent className="forklift-providers-list-header__alert">
@@ -170,12 +192,12 @@ export const PlanEditPage: React.FC<{
     },
   ];
 
-  const title = 'Plans wizard';
+  const title = t('Plans wizard');
   return (
     <>
       <PageSection variant="light">
         <Title headingLevel="h2">
-          {editAction === 'VMS' ? 'Update virtual machines' : 'Update migration plan'}
+          {editAction === 'VMS' ? t('Update virtual machines') : t('Update migration plan')}
         </Title>
       </PageSection>
 
