@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { StandardPageWithExpansion } from 'src/components/page/StandardPageWithExpansion';
 import {
   GlobalActionWithSelection,
@@ -153,11 +153,6 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-const PageWithSelection = StandardPageWithSelection<VMData>;
-const PageWithExpansion = StandardPageWithExpansion<VMData>;
-type PageWithSelectionProps = StandardPageWithSelectionProps<VMData>;
-type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
-
 export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const { plan } = obj;
@@ -256,16 +251,17 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   const isArchived = isPlanArchived(plan);
 
   // If plan executing and not archived (happens when archiving a running plan), allow to cancel vms, o/w remove from plan
-  let actions: PageGlobalActions;
-  if (isExecuting && !isArchived) {
-    actions = [
-      ({ selectedIds }) => (
-        <MigrationVMsCancelButton selectedIds={selectedIds || []} migration={lastMigration} />
-      ),
-    ];
-  } else {
-    actions = [() => <PlanVMsEditButton plan={plan} />];
-  }
+  const actions: FC<GlobalActionWithSelection<VMData>>[] = useMemo(() => {
+    if (isExecuting && !isArchived) {
+      return [
+        ({ selectedIds }) => (
+          <MigrationVMsCancelButton selectedIds={selectedIds || []} migration={lastMigration} />
+        ),
+      ];
+    } else {
+      return [() => <PlanVMsEditButton plan={plan} />];
+    }
+  }, [isExecuting, isArchived, lastMigration, plan]);
 
   const canSelectWhenExecuting = (item: VMData) =>
     item?.statusVM?.completed === undefined && isExecuting;
@@ -273,7 +269,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   const canSelectWhenNotExecuting = (item: VMData) =>
     (item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined) && !isExecuting;
 
-  const props: PageWithSelectionProps = {
+  const props: StandardPageWithSelectionProps<VMData> = {
     dataSource: [vmData || [], true, undefined],
     CellMapper: (props) => <MigrationVirtualMachinesRow {...props} planData={obj} />,
     ExpandedComponent: MigrationVirtualMachinesRowExtended,
@@ -296,8 +292,8 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   };
 
   return isExecuting ? (
-    <PageWithSelection {...extendedProps} />
+    <StandardPageWithSelection<VMData> {...extendedProps} />
   ) : (
-    <PageWithExpansion {...extendedProps} />
+    <StandardPageWithExpansion<VMData> {...extendedProps} />
   );
 };

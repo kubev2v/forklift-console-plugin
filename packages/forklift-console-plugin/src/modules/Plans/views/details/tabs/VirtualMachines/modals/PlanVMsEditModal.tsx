@@ -3,19 +3,10 @@ import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 import { PlanEditPage } from 'src/modules/Plans/views/edit/PlanEditPage';
 import { useModal } from 'src/modules/Providers/modals';
 import { useInventoryVms, VmData } from 'src/modules/Providers/views';
+import { useNetworkMaps, useProviders, useStorageMaps } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  NetworkMapModelGroupVersionKind,
-  ProviderModelGroupVersionKind,
-  StorageMapModelGroupVersionKind,
-  V1beta1NetworkMap,
-  V1beta1Plan,
-  V1beta1PlanSpecVms,
-  V1beta1Provider,
-  V1beta1StorageMap,
-} from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { V1beta1Plan, V1beta1PlanSpecVms } from '@kubev2v/types';
 import { Modal, ModalVariant } from '@patternfly/react-core';
 
 import './PlanVMsDeleteModal.style.css';
@@ -31,55 +22,32 @@ export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editAc
   const { t } = useForkliftTranslation();
   const projectName = plan?.metadata?.namespace;
 
-  // Retrieve k8s source provider
-  const [sourceProvider, sourceProviderLoaded, sourceProviderLoadError] =
-    useK8sWatchResource<V1beta1Provider>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      namespaced: true,
-      name: plan?.spec?.provider?.source?.name,
-      namespace: plan?.spec?.provider?.source?.namespace,
-    });
-
-  // Retrieve k8s target provider
-  const [targetProvider, targetProviderLoaded, targetProviderLoadError] =
-    useK8sWatchResource<V1beta1Provider>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      namespaced: true,
-      name: plan?.spec?.provider?.destination?.name,
-      namespace: plan?.spec?.provider?.destination?.namespace,
-    });
-
-  const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
-    isList: true,
-    namespace: plan?.metadata?.namespace,
+  // Retrieve all k8s Providers
+  const [providers, providersLoaded, providersLoadError] = useProviders({
+    namespace: projectName,
   });
 
+  const sourceProvider = providers
+    ? providers.find((p) => p?.metadata?.name === plan?.spec?.provider?.source?.name)
+    : null;
+  const targetProvider = providers
+    ? providers.find((p) => p?.metadata?.name === plan?.spec?.provider?.destination?.name)
+    : null;
+
   // Retrieve all k8s Network Mappings
-  const [networkMaps, networkMapsLoaded, networkMapsError] = useK8sWatchResource<
-    V1beta1NetworkMap[]
-  >({
-    groupVersionKind: NetworkMapModelGroupVersionKind,
-    namespaced: true,
-    isList: true,
-    namespace: plan?.metadata?.namespace,
+  const [networkMaps, networkMapsLoaded, networkMapsError] = useNetworkMaps({
+    namespace: projectName,
   });
 
   // Retrieve all k8s Storage Mappings
-  const [storageMaps, storageMapsLoaded, storageMapsError] = useK8sWatchResource<
-    V1beta1StorageMap[]
-  >({
-    groupVersionKind: StorageMapModelGroupVersionKind,
-    namespaced: true,
-    isList: true,
-    namespace: plan?.metadata?.namespace,
+  const [storageMaps, storageMapsLoaded, storageMapsError] = useStorageMaps({
+    namespace: projectName,
   });
 
   const [vmData] = useInventoryVms(
     { provider: sourceProvider },
-    sourceProviderLoaded,
-    sourceProviderLoadError,
+    providersLoaded,
+    providersLoadError,
   );
   const selectedVMs: VmData[] = [];
   const notFoundPlanVMs: V1beta1PlanSpecVms[] = [];
@@ -101,18 +69,8 @@ export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editAc
     : null;
 
   const finishedLoading =
-    providersLoaded &&
-    sourceProviderLoaded &&
-    targetProviderLoaded &&
-    networkMapsLoaded &&
-    storageMapsLoaded &&
-    vmData.length > 0;
-  const hasErrors =
-    providersLoadError ||
-    sourceProviderLoadError ||
-    targetProviderLoadError ||
-    networkMapsError ||
-    storageMapsError;
+    providersLoaded && networkMapsLoaded && storageMapsLoaded && vmData.length > 0;
+  const hasErrors = providersLoadError || networkMapsError || storageMapsError;
 
   return (
     <Modal

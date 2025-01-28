@@ -4,16 +4,10 @@ import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/h
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 import { getNetworksUsedBySelectedVms } from 'src/modules/Providers/views/migrate/reducer/getNetworksUsedBySelectedVMs';
 import { getStoragesUsedBySelectedVms } from 'src/modules/Providers/views/migrate/reducer/getStoragesUsedBySelectedVMs';
+import { useProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  ProviderModelGroupVersionKind,
-  V1beta1NetworkMap,
-  V1beta1Plan,
-  V1beta1Provider,
-  V1beta1StorageMap,
-} from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { V1beta1NetworkMap, V1beta1Plan, V1beta1StorageMap } from '@kubev2v/types';
 import { Alert } from '@patternfly/react-core';
 
 import { getVMMigrationStatus } from '../../tabs/VirtualMachines/Migration/MigrationVirtualMachinesList';
@@ -38,14 +32,11 @@ export const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (
   const { plan, planMappingsState, planMappingsDispatch, planNetworkMaps, planStorageMaps } = props;
 
   // Retrieve all k8s Providers
-  const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
-    isList: true,
+  const [providers, providersLoaded, providersLoadError] = useProviders({
     namespace: plan?.metadata?.namespace,
   });
 
-  const sourceProvider: V1beta1Provider = providers
+  const sourceProvider = providers
     ? providers.find((p) => p?.metadata?.name === plan?.spec?.provider?.source?.name)
     : null;
   const targetProvider = providers
