@@ -18,11 +18,7 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
   }
 
   // Check for Archived
-  if (plan?.spec?.archived && !conditionTypes[PlanConditionType.Archived]) {
-    return PlanPhase.Archiving;
-  }
-
-  if (conditionTypes[PlanConditionType.Archived]) {
+  if (plan?.spec?.archived || conditionTypes[PlanConditionType.Archived]) {
     return PlanPhase.Archived;
   }
 
@@ -123,5 +119,5 @@ export const isPlanEditable = (plan: V1beta1Plan) => {
 export const isPlanArchived = (plan: V1beta1Plan) => {
   const planStatus = getPlanPhase({ obj: plan });
 
-  return planStatus === PlanPhase.Archiving || planStatus === PlanPhase.Archived;
+  return planStatus === PlanPhase.Archived;
 };

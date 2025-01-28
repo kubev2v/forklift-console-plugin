@@ -26,7 +26,7 @@ export const getPlanSummaryStatus = (data: PlanData): PlanSummaryStatus => {
   } = conditionTypes;
 
   // Archived
-  if ((plan?.spec?.archived && !isArchived) || isArchived) {
+  if (plan?.spec?.archived || isArchived) {
     return PlanSummaryStatus.Archived;
   }
 
