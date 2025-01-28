@@ -4,4 +4,5 @@ export * from './getMigrationPhase';
 export * from './getMigrationVmsCounts';
 export * from './getPlanPhase';
 export * from './getPlanProgressVariant';
+export * from './getPlanSummaryStatus';
 // @endindex
