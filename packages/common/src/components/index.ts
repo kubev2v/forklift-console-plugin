@@ -6,6 +6,7 @@ export * from './FormGroupWithHelpText';
 export * from './HelpIconPopover';
 export * from './Icons';
 export * from './LoadingDots';
+export * from './LoadingSpinner';
 export * from './Page';
 export * from './QueryClientHoc';
 export * from './TableView';

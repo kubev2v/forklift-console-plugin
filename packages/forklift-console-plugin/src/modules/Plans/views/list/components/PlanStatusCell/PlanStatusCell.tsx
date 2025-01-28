@@ -12,8 +12,9 @@ import { useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { LoadingSpinner } from '@kubev2v/common';
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
-import { Button, Flex, FlexItem, Split, SplitItem } from '@patternfly/react-core';
+import { Button, Flex, FlexItem, spinnerSize, Split, SplitItem } from '@patternfly/react-core';
 import StartIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
 import { CellProps } from '../CellProps';
@@ -95,7 +96,9 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
         className="plan-status-cell-label-section"
       >
         <FlexItem>
-          <PlanStatusCellLabel status={planStatus} isLoading={isPlanLoading} />
+          <LoadingSpinner isLoading={isPlanLoading} size={spinnerSize.md}>
+            <PlanStatusCellLabel status={planStatus} />
+          </LoadingSpinner>
         </FlexItem>
 
         {progressValue !== 0 && isPlanLoading && (

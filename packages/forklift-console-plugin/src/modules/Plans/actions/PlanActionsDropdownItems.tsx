@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
@@ -53,7 +53,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     showModal(<PlanDeleteModal resource={plan} model={PlanModel} />);
   };
 
-  const startActionDescription = React.useMemo(() => {
+  const startActionDescription = useMemo(() => {
     if (isPlanValidating) {
       return t('The plan is being validated');
     }

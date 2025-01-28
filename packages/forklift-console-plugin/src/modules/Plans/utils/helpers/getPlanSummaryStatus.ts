@@ -5,44 +5,45 @@ import {
   PlanConditionType,
 } from '../types/PlanCondition';
 
+import { getConditionTypes } from './getConditionTypes';
+
 export const getPlanSummaryStatus = (data: PlanData): PlanSummaryStatus => {
   const plan = data?.obj;
-  const conditionTypes = plan?.status?.conditions?.reduce((acc, condition) => {
-    if (condition.status === PlanConditionStatus.True) {
-      acc.push(condition.type);
-    }
+  const conditionTypes = getConditionTypes(plan);
 
-    return acc;
-  }, []);
-
-  if (!conditionTypes?.length) {
+  if (!Object.keys(conditionTypes)?.length) {
     return;
   }
 
-  const isArchiving = plan?.spec?.archived && !conditionTypes.includes(PlanConditionType.Archived);
+  const {
+    [PlanConditionType.Archived]: isArchived,
+    [PlanConditionType.Canceled]: isCanceled,
+    [PlanConditionType.Executing]: isExecuting,
+    [PlanConditionType.Running]: isRunning,
+    [PlanConditionType.Failed]: isFailed,
+    [PlanConditionType.Succeeded]: isSucceeded,
+    [PlanConditionType.Ready]: isReady,
+  } = conditionTypes;
 
   // Archived
-  if (isArchiving || conditionTypes.includes(PlanConditionType.Archived)) {
+  if ((plan?.spec?.archived && !isArchived) || isArchived) {
     return PlanSummaryStatus.Archived;
   }
 
   // Canceled
-  if (conditionTypes.includes(PlanConditionType.Canceled)) {
+  if (isCanceled) {
     return PlanSummaryStatus.Canceled;
   }
 
   // Running
-  if (
-    conditionTypes.includes(PlanConditionType.Executing) ||
-    conditionTypes.includes(PlanConditionType.Running)
-  ) {
+  if (isExecuting || isRunning) {
     return PlanSummaryStatus.Running;
   }
 
   // Incomplete
-  const vmError = plan?.status?.migration?.vms?.find((vm) => vm?.error);
+  const hasVmError = !!plan?.status?.migration?.vms?.find((vm) => vm?.error);
 
-  if (conditionTypes.includes(PlanConditionType.Failed) || vmError) {
+  if (isFailed || hasVmError) {
     return PlanSummaryStatus.Incomplete;
   }
 
@@ -63,12 +64,12 @@ export const getPlanSummaryStatus = (data: PlanData): PlanSummaryStatus => {
   }
 
   // Complete
-  if (conditionTypes.includes(PlanConditionType.Succeeded)) {
+  if (isSucceeded) {
     return PlanSummaryStatus.Complete;
   }
 
   // Ready to start
-  if (conditionTypes.includes(PlanConditionType.Ready)) {
+  if (isReady) {
     return PlanSummaryStatus.ReadyToStart;
   }
 };
