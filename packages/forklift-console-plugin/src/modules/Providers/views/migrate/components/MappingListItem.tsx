@@ -1,7 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { SelectEventType, SelectValueType } from '@kubev2v/common';
 import {
   Button,
   DataListAction,
@@ -11,16 +10,15 @@ import {
   DataListItemRow,
   Form,
   FormGroup,
-} from '@patternfly/react-core';
-import {
+  MenuToggle,
+  MenuToggleElement,
   Select,
   SelectGroup,
+  SelectList,
   SelectOption,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
+} from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 
-import { useToggle } from '../../../hooks';
 import { Mapping, MappingSource } from '../types';
 
 import '../ProvidersCreateVmMigration.style.css';
@@ -55,34 +53,62 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   isDisabled,
 }) => {
   const { t } = useForkliftTranslation();
-  const [isSrcOpen, setToggleSrcOpen] = useToggle(false);
-  const [isTrgOpen, setToggleTrgOpen] = useToggle(false);
+  const [isSrcOpen, setIsSrcOpen] = useState(false);
+  const [isTrgOpen, setIsTrgOpen] = useState(false);
+  const [srcSelected, setSrcSelected] = useState<string>(source);
+  const [trgSelected, setTrgSelected] = useState<string>(destination);
 
   const onClick = () => {
     deleteMapping({ source, destination });
   };
 
-  const onSelectSource: (
-    event: SelectEventType,
-    value: SelectValueType,
-    isPlaceholder?: boolean,
-  ) => void = (_event, value: string, isPlaceholder) => {
-    !isPlaceholder &&
-      replaceMapping({
-        current: { source, destination },
-        next: { source: value, destination },
-      });
+  const onSrcToggleClick = () => {
+    setIsSrcOpen(!isSrcOpen);
   };
 
-  const onSelectDestination: (
-    event: SelectEventType,
-    value: SelectValueType,
-    isPlaceholder?: boolean,
-  ) => void = (_event, value: string) => {
+  const onTrgToggleClick = () => {
+    setIsTrgOpen(!isTrgOpen);
+  };
+
+  const srcToggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle ref={toggleRef} onClick={onSrcToggleClick} isExpanded={isSrcOpen} isFullWidth>
+      {srcSelected}
+    </MenuToggle>
+  );
+
+  const trgToggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle ref={toggleRef} onClick={onTrgToggleClick} isExpanded={isTrgOpen} isFullWidth>
+      {trgSelected}
+    </MenuToggle>
+  );
+
+  // Callback functions to handle selection in the dropdown menus
+  const onSelectSource = (
+    _event: React.MouseEvent<Element, MouseEvent> | undefined,
+    value: string | number | undefined,
+  ) => {
     replaceMapping({
       current: { source, destination },
-      next: { source, destination: value },
+      next: { source: value as string, destination },
     });
+
+    // Toggle the dropdown menu open state
+    setSrcSelected(value as string);
+    setIsSrcOpen(false);
+  };
+
+  const onSelectDestination = (
+    _event: React.MouseEvent<Element, MouseEvent> | undefined,
+    value: string | number | undefined,
+  ) => {
+    replaceMapping({
+      current: { source, destination },
+      next: { source, destination: value as string },
+    });
+
+    // Toggle the dropdown menu open state
+    setTrgSelected(value as string);
+    setIsTrgOpen(false);
   };
 
   return (
@@ -94,23 +120,30 @@ export const MappingListItem: FC<MappingListItemProps> = ({
               <Form>
                 <FormGroup label={t('Source')}>
                   <Select
-                    variant={SelectVariant.single}
+                    role="menu"
                     aria-label=""
-                    onToggle={setToggleSrcOpen}
-                    onSelect={onSelectSource}
-                    selections={source}
-                    isOpen={isSrcOpen}
-                    isDisabled={isDisabled}
                     aria-labelledby=""
-                    isGrouped
-                    menuAppendTo={() => document.body}
+                    isOpen={isSrcOpen}
+                    selected={srcSelected}
+                    onSelect={onSelectSource}
+                    onOpenChange={(nextOpen: boolean) => setIsSrcOpen(nextOpen)}
+                    toggle={srcToggle}
+                    shouldFocusToggleOnSelect
+                    shouldFocusFirstItemOnOpen={false}
+                    isScrollable
+                    popperProps={{
+                      direction: 'down',
+                      enableFlip: true,
+                    }}
                   >
-                    <SelectGroup label={usedSourcesLabel} key="usedSources">
-                      {toGroup(usedSources, noSourcesLabel, source)}
-                    </SelectGroup>
-                    <SelectGroup label={generalSourcesLabel} key="generalSources">
-                      {toGroup(generalSources, noSourcesLabel, source)}
-                    </SelectGroup>
+                    <SelectList>
+                      <SelectGroup label={usedSourcesLabel} key="usedSources">
+                        {toGroup(usedSources, noSourcesLabel, source)}
+                      </SelectGroup>
+                      <SelectGroup label={generalSourcesLabel} key="generalSources">
+                        {toGroup(generalSources, noSourcesLabel, source)}
+                      </SelectGroup>
+                    </SelectList>
                   </Select>
                 </FormGroup>
               </Form>
@@ -119,19 +152,29 @@ export const MappingListItem: FC<MappingListItemProps> = ({
               <Form>
                 <FormGroup label={t('Target')}>
                   <Select
-                    variant={SelectVariant.single}
+                    role="menu"
                     aria-label=""
-                    onToggle={setToggleTrgOpen}
-                    onSelect={onSelectDestination}
-                    selections={destination}
-                    isOpen={isTrgOpen}
-                    isDisabled={isDisabled}
                     aria-labelledby=""
-                    menuAppendTo={() => document.body}
+                    isOpen={isTrgOpen}
+                    selected={trgSelected}
+                    onSelect={onSelectDestination}
+                    onOpenChange={(nextOpen: boolean) => setIsTrgOpen(nextOpen)}
+                    toggle={trgToggle}
+                    shouldFocusToggleOnSelect
+                    shouldFocusFirstItemOnOpen={false}
+                    isScrollable
+                    popperProps={{
+                      direction: 'down',
+                      enableFlip: true,
+                    }}
                   >
-                    {destinations.map((label) => (
-                      <SelectOption value={label} key={label} />
-                    ))}
+                    <SelectList>
+                      {destinations.map((label) => (
+                        <SelectOption value={label} key={label}>
+                          {label}
+                        </SelectOption>
+                      ))}
+                    </SelectList>
                   </Select>
                 </FormGroup>
               </Form>
@@ -161,8 +204,12 @@ export const MappingListItem: FC<MappingListItemProps> = ({
 const toGroup = (sources: MappingSource[], noSourcesLabel: string, selectedSource: string) =>
   sources.length !== 0 ? (
     sources.map(({ label, isMapped }) => (
-      <SelectOption value={label} key={label} isDisabled={isMapped && label !== selectedSource} />
+      <SelectOption value={label} key={label} isDisabled={isMapped && label !== selectedSource}>
+        {label}
+      </SelectOption>
     ))
   ) : (
-    <SelectOption value={noSourcesLabel} isNoResultsOption />
+    <SelectOption value={noSourcesLabel} isDisabled={true}>
+      {noSourcesLabel}
+    </SelectOption>
   );

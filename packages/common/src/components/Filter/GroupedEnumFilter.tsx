@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { MouseEvent as ReactMouseEvent, Ref, useState } from 'react';
 
-import { ToolbarFilter } from '@patternfly/react-core';
 import {
+  Badge,
+  MenuToggle,
+  MenuToggleElement,
   Select,
   SelectGroup,
+  SelectList,
   SelectOption,
-  SelectOptionObject,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
+  ToolbarFilter,
+} from '@patternfly/react-core';
 
-import { EnumValue, SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
-
-import { FilterTypeProps, InlineFilter } from './types';
+import { FilterTypeProps } from './types';
 
 /**
  * This Filter type enables selecting one or many enum values that are separated by groups.
@@ -40,13 +40,16 @@ export const GroupedEnumFilter = ({
   supportedGroups = [],
   placeholderLabel,
   showFilter = true,
-  hasInlineFilter = false,
-}: FilterTypeProps & InlineFilter) => {
-  const [isExpanded, setExpanded] = useState(false);
+}: FilterTypeProps) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   // simplify lookup
   const id2enum = Object.fromEntries(
     supportedEnumValues.map(({ id, ...rest }) => [id, { id, ...rest }]),
+  );
+
+  const label2enum = Object.fromEntries(
+    supportedEnumValues.map(({ label, ...rest }) => [label, { label, ...rest }]),
   );
 
   const deleteGroup = (groupId: string): void =>
@@ -68,63 +71,45 @@ export const GroupedEnumFilter = ({
     onSelectedEnumIdsChange([...selectedEnumIds.filter((id) => id2enum[id]), id]);
   };
 
-  // put the IDs needed for compareTo (although not part of the interface)
-  const toSelectOption = ({ id, groupId, label }): SelectOptionObject =>
-    ({
-      toString: () => label,
-      id,
-      groupId,
-      compareTo: (option) => option.id === id && option.groupId === groupId,
-    } as SelectOptionObject);
-
-  const options = supportedGroups.map(({ label, groupId }) => (
-    <SelectGroup key={groupId} label={label}>
-      {supportedEnumValues
-        .filter((item) => item.groupId === groupId)
-        .map(({ id, label }) => (
-          <SelectOption key={id} value={toSelectOption({ id, label, groupId })} />
-        ))}
-    </SelectGroup>
-  ));
-
-  const onFilter: (
-    event: React.ChangeEvent<HTMLInputElement> | null,
-    textInput: string,
-  ) => React.ReactElement[] | undefined = (_event, textInput) => {
-    if (textInput === '') {
-      return options;
-    }
-
-    const filteredGroups = options
-      .map((group) => {
-        const filteredGroup = React.cloneElement(group, {
-          children: group.props.children.filter((item) => {
-            // options are not plain strings but the our toString() method
-            // converts them in a meaningful way
-            return item.props.value.toString().toLowerCase().includes(textInput.toLowerCase());
-          }),
-        });
-        if (filteredGroup.props.children.length > 0) return filteredGroup;
-      })
-      .filter((newGroup) => newGroup);
-    return filteredGroups;
-  };
-
-  const onSelect: (
-    event: SelectEventType,
-    value: SelectValueType,
-    isPlaceholder?: boolean,
-  ) => void = (_event, value, isPlaceholder) => {
-    if (isPlaceholder) {
-      return;
-    }
-    const id = typeof value === 'string' ? value : (value as EnumValue).id;
+  const onSelect = (
+    _event: ReactMouseEvent<Element, MouseEvent> | undefined,
+    value: string | number | undefined,
+  ) => {
+    const label = value?.toString();
+    const id = label2enum?.[label] ? label2enum[label]?.id : label;
     hasFilter(id) ? deleteFilter(id) : addFilter(id);
   };
 
-  const onToggle: (isExpanded: boolean, event: ToggleEventType) => void = (isExpanded) => {
-    setExpanded(isExpanded);
+  const onToggleClick = () => {
+    setIsOpen((isOpen) => !isOpen);
   };
+
+  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
+      {placeholderLabel}
+      {selectedEnumIds.length > 0 && <Badge isRead>{selectedEnumIds.length}</Badge>}
+    </MenuToggle>
+  );
+
+  const renderOptions = () =>
+    supportedGroups.map(({ label, groupId }) => (
+      <SelectGroup key={groupId} label={label}>
+        <SelectList>
+          {supportedEnumValues
+            .filter((item) => item.groupId === groupId)
+            .map(({ id, label }) => (
+              <SelectOption
+                hasCheckbox
+                key={id}
+                value={label}
+                isSelected={selectedEnumIds.includes(id)}
+              >
+                {label}
+              </SelectOption>
+            ))}
+        </SelectList>
+      </SelectGroup>
+    ));
 
   return (
     <>
@@ -157,20 +142,21 @@ export const GroupedEnumFilter = ({
           </ToolbarFilter>
         ),
         <Select
-          variant={SelectVariant.checkbox}
-          isGrouped
+          role="menu"
           aria-label={placeholderLabel}
+          isOpen={isOpen}
+          selected={supportedEnumValues.filter(({ id }) => selectedEnumIds.includes(id))}
           onSelect={onSelect}
-          selections={supportedEnumValues
-            .filter(({ id }) => selectedEnumIds.includes(id))
-            .map(toSelectOption)}
-          placeholderText={placeholderLabel}
-          isOpen={isExpanded}
-          onToggle={(e, v) => onToggle(v, e)}
-          hasInlineFilter={hasInlineFilter}
-          onFilter={onFilter}
+          onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
+          toggle={toggle}
+          shouldFocusToggleOnSelect
+          shouldFocusFirstItemOnOpen={false}
+          popperProps={{
+            direction: 'down',
+            enableFlip: true,
+          }}
         >
-          {options}
+          <SelectList>{renderOptions()}</SelectList>
         </Select>,
       )}
     </>
