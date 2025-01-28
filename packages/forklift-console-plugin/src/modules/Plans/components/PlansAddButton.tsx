@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
@@ -8,18 +8,20 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModelRef } from '@kubev2v/types';
 import { Button } from '@patternfly/react-core';
 
-export const PlansAddButton: React.FC<{ namespace: string; dataTestId?: string }> = ({
-  namespace,
-  dataTestId,
-}) => {
+type PlansAddButtonProps = {
+  namespace?: string;
+  dataTestId?: string;
+};
+
+export const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
   const { setData } = useCreateVmMigrationData();
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
-  const PlansListURL = getResourceUrl({
+  const plansListURL = getResourceUrl({
     reference: PlanModelRef,
-    namespace: namespace,
+    namespace,
     namespaced: namespace !== undefined,
   });
 
@@ -27,7 +29,7 @@ export const PlansAddButton: React.FC<{ namespace: string; dataTestId?: string }
     setData({
       selectedVms: [],
     });
-    history.push(`${PlansListURL}/~new`);
+    history.push(`${plansListURL}/~new`);
   };
 
   return (
