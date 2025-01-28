@@ -355,6 +355,7 @@
   "Plan name": "Plan name",
   "Plans": "Plans",
   "Plans for virtualization": "Plans for virtualization",
+  "Plans wizard": "Plans wizard",
   "Please choose a NetworkAttachmentDefinition for data transfer.": "Please choose a NetworkAttachmentDefinition for data transfer.",
   "Please choose a NetworkAttachmentDefinition for default data transfer.": "Please choose a NetworkAttachmentDefinition for default data transfer.",
   "Please choose a target namespace for the migrated virtual machines.": "Please choose a target namespace for the migrated virtual machines.",
