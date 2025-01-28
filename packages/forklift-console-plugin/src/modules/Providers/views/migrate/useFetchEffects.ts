@@ -47,8 +47,11 @@ export const useFetchEffects = (
   const {
     selectedVms,
     provider: sourceProvider,
+    targetProvider: tProvider,
+    plan,
     planName,
     projectName,
+    editAction,
   } = createVmMigrationContext?.data || {};
 
   // error state - the page was entered directly without choosing the VMs
@@ -57,7 +60,16 @@ export const useFetchEffects = (
 
   const [state, dispatch] = useImmerReducer(
     reducer,
-    { namespace, sourceProvider, selectedVms, planName, projectName },
+    {
+      namespace,
+      sourceProvider,
+      targetProvider: tProvider,
+      selectedVms,
+      plan,
+      planName,
+      projectName,
+      editAction,
+    },
     createInitialState,
   );
 
@@ -80,7 +92,9 @@ export const useFetchEffects = (
   useEffect(
     () =>
       !editingDone &&
-      dispatch(initState(namespace, planName, projectName, sourceProvider, selectedVms)),
+      dispatch(
+        initState(namespace, planName, projectName, sourceProvider, selectedVms, plan, tProvider),
+      ),
     [selectedVms],
   );
 
@@ -186,6 +200,7 @@ export const useFetchEffects = (
 
   const [sourceNetworks, sourceNetworksLoading, sourceNetworksError] =
     useSourceNetworks(sourceProvider);
+
   useEffect(
     () =>
       !editingDone &&

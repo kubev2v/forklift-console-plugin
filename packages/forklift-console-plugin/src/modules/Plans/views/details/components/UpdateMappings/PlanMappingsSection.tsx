@@ -1,5 +1,7 @@
-import React, { ReactNode, useReducer, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { isPlanEditable } from 'src/modules/Plans/utils';
+import { patchPlanMappingsData } from 'src/modules/Plans/utils';
+import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -33,18 +35,15 @@ import {
 } from '@patternfly/react-core';
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
-import { Mapping, MappingList } from '../../components';
 import {
   canDeleteAndPatchPlanHooks,
-  hasPlanMappingsChanged,
-  hasSomeCompleteRunningVMs,
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
   mapTargetNetworksIdsToLabels,
   mapTargetStoragesLabelsToIds,
-  patchPlanMappingsData,
   POD_NETWORK,
 } from '../../utils';
+import { Mapping, MappingList } from '..';
 
 /**
  * Represents the state (edit/view) of the Plan mappings section.
@@ -56,12 +55,15 @@ import {
  * @property {V1beta1NetworkMapSpecMap[]} updatedNetwork - The new version of the Plan Network Maps being edited.
  * @property {V1beta1StorageMapSpecMap[]} updatedStorage - The new version of the Plan Storage Maps being edited.
  */
-interface PlanMappingsSectionState {
+export interface PlanMappingsSectionState {
   edit: boolean;
   dataChanged: boolean;
   alertMessage: ReactNode;
   updatedNetwork: V1beta1NetworkMapSpecMap[];
   updatedStorage: V1beta1StorageMapSpecMap[];
+  planNetworkMaps: V1beta1NetworkMap;
+  planStorageMaps: V1beta1StorageMap;
+  editAction?: PlanEditAction;
 }
 
 export type PlanMappingsSectionProps = {
@@ -72,6 +74,13 @@ export type PlanMappingsSectionProps = {
   targetNetworks: OpenShiftNetworkAttachmentDefinition[];
   sourceStorages: InventoryStorage[];
   targetStorages: OpenShiftStorageClass[];
+  planMappingsState?: PlanMappingsSectionState;
+  planMappingsDispatch?: React.Dispatch<{
+    type: string;
+    payload?;
+  }>;
+  networkIdsUsedByMigratedVms?: string[];
+  storageIdsUsedByMigratedVms?: string[];
 };
 
 export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
@@ -82,84 +91,16 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   targetNetworks,
   sourceStorages,
   targetStorages,
+  planMappingsState: state,
+  planMappingsDispatch: dispatch,
+  networkIdsUsedByMigratedVms,
+  storageIdsUsedByMigratedVms,
 }) => {
   const { t } = useForkliftTranslation();
-
-  const initialState: PlanMappingsSectionState = {
-    edit: false,
-    dataChanged: false,
-    alertMessage: null,
-    updatedNetwork: planNetworkMaps?.spec?.map,
-    updatedStorage: planStorageMaps?.spec?.map,
-  };
 
   const [isLoading, setIsLoading] = useState(false);
   const [isAddNetworkMapAvailable, setIsAddNetworkMapAvailable] = useState(true);
   const [isAddStorageMapAvailable, setIsAddStorageMapAvailable] = useState(true);
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  function reducer(
-    state: PlanMappingsSectionState,
-    action: { type: string; payload? },
-  ): PlanMappingsSectionState {
-    switch (action.type) {
-      case 'TOGGLE_EDIT': {
-        return { ...state, edit: !state.edit };
-      }
-      case 'SET_CANCEL': {
-        const dataChanged = false;
-
-        return {
-          ...state,
-          dataChanged,
-          alertMessage: null,
-          updatedNetwork: planNetworkMaps?.spec?.map,
-          updatedStorage: planStorageMaps?.spec?.map,
-        };
-      }
-      case 'SET_ALERT_MESSAGE': {
-        return { ...state, alertMessage: action.payload };
-      }
-      case 'ADD_NETWORK_MAPPING':
-      case 'DELETE_NETWORK_MAPPING':
-      case 'REPLACE_NETWORK_MAPPING': {
-        const updatedNetwork = action.payload.newState;
-        const dataChanged = hasPlanMappingsChanged(
-          planNetworkMaps?.spec?.map,
-          planStorageMaps?.spec?.map,
-          updatedNetwork,
-          state?.updatedStorage,
-        );
-
-        return {
-          ...state,
-          dataChanged,
-          alertMessage: null,
-          updatedNetwork,
-        };
-      }
-      case 'ADD_STORAGE_MAPPING':
-      case 'DELETE_STORAGE_MAPPING':
-      case 'REPLACE_STORAGE_MAPPING': {
-        const updatedStorage = action.payload.newState;
-        const dataChanged = hasPlanMappingsChanged(
-          planNetworkMaps?.spec?.map,
-          planStorageMaps?.spec?.map,
-          state?.updatedNetwork,
-          updatedStorage,
-        );
-
-        return {
-          ...state,
-          dataChanged,
-          alertMessage: null,
-          updatedStorage,
-        };
-      }
-      default:
-        return state;
-    }
-  }
 
   // Toggles between view and edit modes
   function onToggleEdit() {
@@ -490,6 +431,24 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     ),
   ];
 
+  const canEditNetworkMapping = (source) => {
+    if (!networkIdsUsedByMigratedVms) {
+      return true;
+    }
+    const idLabelObj = mapSourceNetworksIdsToLabels(sourceNetworks);
+    const id = Object.keys(idLabelObj).find((key) => idLabelObj[key] === source);
+    return !networkIdsUsedByMigratedVms.includes(id);
+  };
+
+  const canEditStorageMapping = (source) => {
+    if (!storageIdsUsedByMigratedVms) {
+      return true;
+    }
+    const idLabelObj = mapSourceStoragesIdsToLabels(sourceStorages);
+    const id = Object.keys(idLabelObj).find((key) => idLabelObj[key] === source);
+    return !storageIdsUsedByMigratedVms.includes(id);
+  };
+
   const PlanMappingsSectionEditMode: React.FC = () => {
     const { t } = useForkliftTranslation();
     return (
@@ -526,6 +485,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                   generalSourcesLabel={t('Other networks present on the source provider ')}
                   noSourcesLabel={t('No networks in this category')}
                   isDisabled={!isAddNetworkMapAvailable}
+                  canEditItem={canEditNetworkMapping}
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
@@ -554,6 +514,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                   generalSourcesLabel={t('Other storages present on the source provider ')}
                   noSourcesLabel={t('No storages in this category')}
                   isDisabled={!isAddStorageMapAvailable}
+                  canEditItem={canEditStorageMapping}
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
@@ -565,7 +526,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
   const PlanMappingsSectionViewMode: React.FC = () => {
     const { t } = useForkliftTranslation();
-    const DisableEditMappings = hasSomeCompleteRunningVMs(plan) || !isPlanEditable(plan);
+    const DisableEditMappings = !isPlanEditable(plan);
 
     return (
       <>
@@ -584,7 +545,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                 <HelperText className="forklift-section-plan-helper-text">
                   <HelperTextItem variant="indeterminate">
                     {t(
-                      'The edit mappings button is disabled if the plan started running and at least one virtual machine was migrated successfully or when the plan status does not enable editing.',
+                      'The edit mappings button is disabled when the plan status does not enable editing.',
                     )}
                   </HelperTextItem>
                 </HelperText>
@@ -648,31 +609,35 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   return state.edit ? (
     // Edit mode
     <>
-      <Flex>
-        <FlexItem>
-          <Button
-            variant="primary"
-            onClick={onUpdate}
-            isDisabled={!state.dataChanged}
-            isLoading={isLoading}
-          >
-            {t('Update mappings')}
-          </Button>
-        </FlexItem>
-        <FlexItem>
-          <Button variant="secondary" onClick={onCancel}>
-            {t('Cancel')}
-          </Button>
-        </FlexItem>
-      </Flex>
-      <HelperText className="forklift-section-plan-helper-text">
-        <HelperTextItem variant="indeterminate">
-          {t(
-            'Click the update mappings button to save your changes, button is disabled until a change is detected.',
-          )}
-        </HelperTextItem>
-      </HelperText>
-      <Divider />
+      {!state.editAction && (
+        <>
+          <Flex>
+            <FlexItem>
+              <Button
+                variant="primary"
+                onClick={onUpdate}
+                isDisabled={!state.dataChanged}
+                isLoading={isLoading}
+              >
+                {t('Update mappings')}
+              </Button>
+            </FlexItem>
+            <FlexItem>
+              <Button variant="secondary" onClick={onCancel}>
+                {t('Cancel')}
+              </Button>
+            </FlexItem>
+          </Flex>
+          <HelperText className="forklift-section-plan-helper-text">
+            <HelperTextItem variant="indeterminate">
+              {t(
+                'Click the update mappings button to save your changes, button is disabled until a change is detected.',
+              )}
+            </HelperTextItem>
+          </HelperText>
+          <Divider />
+        </>
+      )}
       {state.alertMessage ? (
         <>
           <Alert

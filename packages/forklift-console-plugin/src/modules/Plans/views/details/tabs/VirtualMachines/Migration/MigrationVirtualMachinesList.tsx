@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { StandardPageWithExpansion } from 'src/components/page/StandardPageWithExpansion';
 import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
@@ -20,7 +21,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
-import { MigrationVMsCancelButton, PlanVMsDeleteButton } from '../components';
+import { MigrationVMsCancelButton, PlanVMsEditButton } from '../components';
 import { PlanData, VMData } from '../types';
 
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
@@ -33,12 +34,12 @@ const vmStatuses = [
   { id: 'Unknown', label: 'Unknown' },
 ];
 
-const getVMMigrationStatus = (obj: VMData) => {
-  const isError = obj.statusVM?.conditions?.find((c) => c.type === 'Failed' && c.status === 'True');
-  const isSuccess = obj.statusVM?.conditions?.find(
+export const getVMMigrationStatus = (statusVM: V1beta1PlanStatusMigrationVms) => {
+  const isError = statusVM?.conditions?.find((c) => c.type === 'Failed' && c.status === 'True');
+  const isSuccess = statusVM?.conditions?.find(
     (c) => c.type === 'Succeeded' && c.status === 'True',
   );
-  const isRunning = obj.statusVM?.completed === undefined;
+  const isRunning = statusVM?.completed === undefined;
 
   if (isError) {
     return 'Failed';
@@ -143,9 +144,17 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       values: vmStatuses,
     },
   },
+  {
+    resourceFieldId: 'actions',
+    label: '',
+    isAction: true,
+    isVisible: true,
+    sortable: false,
+  },
 ];
 
 const PageWithSelection = StandardPageWithSelection<VMData>;
+const PageWithExpansion = StandardPageWithExpansion<VMData>;
 type PageWithSelectionProps = StandardPageWithSelectionProps<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
@@ -255,9 +264,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
       ),
     ];
   } else {
-    actions = [
-      ({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />,
-    ];
+    actions = [() => <PlanVMsEditButton plan={plan} />];
   }
 
   const canSelectWhenExecuting = (item: VMData) =>
@@ -268,7 +275,7 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const props: PageWithSelectionProps = {
     dataSource: [vmData || [], true, undefined],
-    CellMapper: MigrationVirtualMachinesRow,
+    CellMapper: (props) => <MigrationVirtualMachinesRow {...props} planData={obj} />,
     ExpandedComponent: MigrationVirtualMachinesRowExtended,
     fieldsMetadata: fieldsMetadataFactory(t),
     title: t('Virtual Machines'),
@@ -288,5 +295,9 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     GlobalActionToolbarItems: actions,
   };
 
-  return <PageWithSelection {...extendedProps} />;
+  return isExecuting ? (
+    <PageWithSelection {...extendedProps} />
+  ) : (
+    <PageWithExpansion {...extendedProps} />
+  );
 };

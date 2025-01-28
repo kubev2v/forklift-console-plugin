@@ -9,6 +9,7 @@ export interface ProviderVirtualMachinesListProps {
   namespace: string;
   onSelect: (selectedVms: VmData[]) => void;
   initialSelectedIds: string[];
+  disabledVmIds?: string[];
   showActions: boolean;
   selectedCountLabel?: (selectedIdCount: number) => string;
 }
@@ -20,6 +21,7 @@ export const MemoizedProviderVirtualMachinesList = memo(
     namespace,
     onSelect,
     initialSelectedIds,
+    disabledVmIds,
     showActions,
     selectedCountLabel,
   }: ProviderVirtualMachinesListProps) => {
@@ -30,6 +32,7 @@ export const MemoizedProviderVirtualMachinesList = memo(
         namespace={namespace}
         onSelect={onSelect}
         initialSelectedIds={initialSelectedIds}
+        disabledVmIds={disabledVmIds}
         showActions={showActions}
         selectedCountLabel={selectedCountLabel}
       />

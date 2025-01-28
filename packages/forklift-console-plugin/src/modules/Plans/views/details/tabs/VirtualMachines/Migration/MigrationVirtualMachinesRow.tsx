@@ -8,30 +8,41 @@ import { ResourcesAlmostFullIcon, ResourcesFullIcon } from '@patternfly/react-ic
 import { Table, Td, Tr } from '@patternfly/react-table';
 
 import { hasTaskCompleted } from '../../../utils';
+import { VirtualMachinesActionsDropdownMemo } from '../actions/VirtualMachinesActionsDropdown';
 import { PlanVMsCellProps } from '../components';
 import { NameCellRenderer } from '../components/NameCellRenderer';
-import { VMData } from '../types';
+import { PlanData, VMData } from '../types';
 
-export const MigrationVirtualMachinesRow: React.FC<RowProps<VMData>> = ({
+interface MigrationVirtualMachinesRowProps<T> extends RowProps<T> {
+  planData: PlanData;
+}
+
+export const MigrationVirtualMachinesRow: React.FC<MigrationVirtualMachinesRowProps<VMData>> = ({
   resourceFields,
   resourceData,
+  planData,
 }) => {
   return (
     <>
       {resourceFields?.map(({ resourceFieldId }) =>
-        renderTd({ resourceData, resourceFieldId, resourceFields }),
+        renderTd({ resourceData, resourceFieldId, resourceFields, planData }),
       )}
     </>
   );
 };
 
-const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
+const renderTd = ({ resourceData, resourceFieldId, resourceFields, planData }: RenderTdProps) => {
   const fieldId = resourceFieldId;
 
   const CellRenderer = cellRenderers?.[fieldId] ?? (() => <></>);
   return (
     <Td key={fieldId} dataLabel={fieldId}>
-      <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />
+      <CellRenderer
+        data={resourceData}
+        fieldId={fieldId}
+        fields={resourceFields}
+        planData={planData}
+      />
     </Td>
   );
 };
@@ -150,12 +161,14 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
       </Popover>
     );
   },
+  actions: VirtualMachinesActionsDropdownMemo,
 };
 
 interface RenderTdProps {
   resourceData: VMData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
+  planData: PlanData;
 }
 
 type ProgressStepperVariant = 'default' | 'success' | 'info' | 'pending' | 'warning' | 'danger';

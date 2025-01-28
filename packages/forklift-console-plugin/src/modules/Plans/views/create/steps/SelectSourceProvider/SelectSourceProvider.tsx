@@ -19,6 +19,8 @@ export const SelectSourceProvider: React.FC<{
   state: CreateVmMigrationPageState;
   dispatch: React.Dispatch<PageAction<CreateVmMigration, unknown>>;
   filterDispatch: React.Dispatch<PlanCreatePageActionTypes>;
+  hideProviderSection?: boolean;
+  disabledVmIds?: string[];
 }> = ({
   filterState,
   providers,
@@ -27,6 +29,8 @@ export const SelectSourceProvider: React.FC<{
   projectName,
   dispatch,
   filterDispatch,
+  hideProviderSection,
+  disabledVmIds,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -45,16 +49,20 @@ export const SelectSourceProvider: React.FC<{
 
   return (
     <>
-      <Title headingLevel="h2">{t('Select source provider')}</Title>
+      {!hideProviderSection && (
+        <>
+          <Title headingLevel="h2">{t('Select source provider')}</Title>
 
-      <PlanCreateForm
-        providers={filteredProviders}
-        filterState={filterState}
-        filterDispatch={filterDispatch}
-        dispatch={dispatch}
-        state={state}
-        projectName={projectName}
-      />
+          <PlanCreateForm
+            providers={filteredProviders}
+            filterState={filterState}
+            filterDispatch={filterDispatch}
+            dispatch={dispatch}
+            state={state}
+            projectName={projectName}
+          />
+        </>
+      )}
 
       {filterState.selectedProviderUID && (
         <>
@@ -70,6 +78,7 @@ export const SelectSourceProvider: React.FC<{
               filterDispatch({ type: 'UPDATE_SELECTED_VMS', payload: selectedVms })
             }
             initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
+            disabledVmIds={disabledVmIds}
             showActions={false}
             selectedCountLabel={(selectedIdCount) =>
               t('{{vmCount}} VMs selected', { vmCount: selectedIdCount })
