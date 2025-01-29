@@ -1,16 +1,19 @@
-import React, { useMemo, useState } from 'react';
+import React, { MouseEvent as ReactMouseEvent, Ref, useMemo, useState } from 'react';
 
-import { ToolbarChip, ToolbarFilter } from '@patternfly/react-core';
 import {
+  Badge,
+  MenuToggle,
+  MenuToggleElement,
   Select,
+  SelectList,
   SelectOption,
-  SelectOptionObject,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
+  ToolbarChip,
+  ToolbarFilter,
+} from '@patternfly/react-core';
 
-import { localeCompare, SelectEventType, SelectValueType, ToggleEventType } from '../../utils';
+import { localeCompare } from '../../utils';
 
-import { FilterTypeProps, InlineFilter } from './types';
+import { FilterTypeProps } from './types';
 
 /**
  * One label may map to multiple enum ids due to translation or by design (i.e. "Unknown")
@@ -116,9 +119,8 @@ export const EnumFilter = ({
   filterId,
   showFilter = true,
   resolvedLanguage,
-  hasInlineFilter = false,
-}: FilterTypeProps & InlineFilter) => {
-  const [isExpanded, setExpanded] = useState(false);
+}: FilterTypeProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { uniqueEnumLabels, onUniqueFilterUpdate, selectedUniqueEnumLabels } = useUnique({
     supportedEnumValues,
     onSelectedEnumIdsChange,
@@ -126,46 +128,49 @@ export const EnumFilter = ({
     resolvedLanguage,
   });
 
-  const deleteFilter = (label: string | ToolbarChip | SelectOptionObject): void =>
+  const deleteFilter = (label: string | ToolbarChip): void =>
     onUniqueFilterUpdate(selectedUniqueEnumLabels.filter((filterLabel) => filterLabel !== label));
 
-  const hasFilter = (label: string | SelectOptionObject): boolean =>
+  const hasFilter = (label: string): boolean =>
     !!selectedUniqueEnumLabels.find((filterLabel) => filterLabel === label);
 
-  const addFilter = (label: string | SelectOptionObject): void => {
+  const addFilter = (label: string): void => {
     if (typeof label === 'string') {
       onUniqueFilterUpdate([...selectedUniqueEnumLabels, label]);
     }
   };
 
-  const options = uniqueEnumLabels.map((label) => <SelectOption key={label} value={label} />);
-
-  const onFilter: (
-    event: React.ChangeEvent<HTMLInputElement> | null,
-    textInput: string,
-  ) => React.ReactElement[] | undefined = (_event, textInput) => {
-    if (textInput === '') {
-      return options;
-    }
-    const filtered = options.filter((item) => {
-      return item.key.toString().toLowerCase().includes(textInput.toLowerCase());
-    });
-    return filtered;
+  const onToggleClick = () => {
+    setIsOpen((isOpen) => !isOpen);
   };
 
-  const onSelect: (
-    event: SelectEventType,
-    value: SelectValueType,
-    isPlaceholder?: boolean,
-  ) => void = (_event, value, isPlaceholder) => {
-    if (isPlaceholder) {
-      return;
-    }
-    hasFilter(value) ? deleteFilter(value) : addFilter(value);
+  const onSelect = (
+    _event: ReactMouseEvent<Element, MouseEvent> | undefined,
+    value: string | number | undefined,
+  ) => {
+    hasFilter(value as string) ? deleteFilter(value as string) : addFilter(value as string);
   };
 
-  const onToggle: (isExpanded: boolean, event: ToggleEventType) => void = (isExpanded) => {
-    setExpanded(isExpanded);
+  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
+      <>{placeholderLabel}</>
+      {selectedUniqueEnumLabels.length > 0 && (
+        <Badge isRead>{selectedUniqueEnumLabels.length}</Badge>
+      )}
+    </MenuToggle>
+  );
+
+  const renderOptions = () => {
+    return uniqueEnumLabels.map((label) => (
+      <SelectOption
+        hasCheckbox
+        key={label}
+        value={label}
+        isSelected={selectedUniqueEnumLabels.includes(label)}
+      >
+        {label}
+      </SelectOption>
+    ));
   };
 
   return (
@@ -178,17 +183,22 @@ export const EnumFilter = ({
       showToolbarItem={showFilter}
     >
       <Select
-        variant={SelectVariant.checkbox}
+        role="menu"
         aria-label={placeholderLabel}
+        isOpen={isOpen}
+        selected={selectedUniqueEnumLabels}
         onSelect={onSelect}
-        selections={selectedUniqueEnumLabels}
-        placeholderText={placeholderLabel}
-        isOpen={isExpanded}
-        onToggle={(e, v) => onToggle(v, e)}
-        hasInlineFilter={hasInlineFilter}
-        onFilter={onFilter}
+        onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
+        toggle={toggle}
+        shouldFocusToggleOnSelect
+        shouldFocusFirstItemOnOpen={false}
+        isScrollable
+        popperProps={{
+          direction: 'down',
+          enableFlip: true,
+        }}
       >
-        {options}
+        <SelectList>{renderOptions()}</SelectList>
       </Select>
     </ToolbarFilter>
   );

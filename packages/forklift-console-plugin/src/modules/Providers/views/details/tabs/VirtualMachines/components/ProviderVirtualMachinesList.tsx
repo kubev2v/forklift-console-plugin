@@ -8,11 +8,10 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   EnumFilter,
+  GroupedEnumFilter,
   loadUserSettings,
   ResourceFieldFactory,
   RowProps,
-  SearchableEnumFilter,
-  SearchableGroupedEnumFilter,
   ValueMatcher,
 } from '@kubev2v/common';
 import { Concern } from '@kubev2v/types';
@@ -89,8 +88,8 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       title={title ?? t('Virtual Machines')}
       userSettings={userSettings}
       extraSupportedFilters={{
-        concerns: SearchableGroupedEnumFilter,
-        host: SearchableEnumFilter,
+        concerns: GroupedEnumFilter,
+        host: EnumFilter,
         features: EnumFilter,
       }}
       extraSupportedMatchers={[concernsMatcher, hostMatcher, featuresMatcher]}

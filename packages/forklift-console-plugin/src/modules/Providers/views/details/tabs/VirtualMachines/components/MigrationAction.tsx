@@ -16,15 +16,14 @@ export const MigrationAction: FC<{
 }> = ({ selectedVms, provider, className }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
-  const namespace = provider?.metadata?.namespace;
   const planListURL = getResourceUrl({
     reference: PlanModelRef,
-    namespace,
-    namespaced: namespace !== undefined,
+    namespaced: false,
   });
   const { setData } = useCreateVmMigrationData();
+
   const onClick = () => {
-    setData({ selectedVms, provider });
+    setData({ selectedVms, provider, projectName: provider?.metadata?.namespace });
     history.push(`${planListURL}/~new`);
   };
 

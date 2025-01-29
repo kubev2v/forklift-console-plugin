@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef } from '@kubev2v/types';
-import { Button } from '@patternfly/react-core';
+import { Button, ButtonProps, ButtonVariant } from '@patternfly/react-core';
 
-export const ProvidersAddButton: React.FC<{ namespace: string; dataTestId?: string }> = ({
+type ProvidersAddButtonProps = {
+  namespace?: string;
+  dataTestId?: string;
+  buttonProps?: ButtonProps;
+};
+
+export const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({
   namespace,
   dataTestId,
+  buttonProps,
 }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
@@ -24,7 +31,12 @@ export const ProvidersAddButton: React.FC<{ namespace: string; dataTestId?: stri
   };
 
   return (
-    <Button data-testid={dataTestId} variant="primary" onClick={onClick}>
+    <Button
+      data-testid={dataTestId}
+      variant={ButtonVariant.primary}
+      onClick={onClick}
+      {...buttonProps}
+    >
       {t('Create Provider')}
     </Button>
   );

@@ -1,9 +1,6 @@
 import React, { useReducer } from 'react';
 import { Base64 } from 'js-base64';
-import {
-  ProjectNameSelect,
-  useProjectNameSelectOptions,
-} from 'src/modules/Plans/views/create/components/ProjectNameSelect';
+import { ProjectNameSelect, useProjectNameSelectOptions } from 'src/components/common';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { validateK8sName, ValidationMsg } from 'src/modules/Providers/utils';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
@@ -46,8 +43,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
   providerNames = [],
 }) => {
   const { t } = useForkliftTranslation();
-
-  const projects = useProjectNameSelectOptions(projectName);
+  const projectNameOptions = useProjectNameSelectOptions(projectName);
 
   const initialState = {
     validation: {
@@ -116,7 +112,7 @@ export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
         <Form isWidthLimited className="forklift-section-secret-edit">
           <ProjectNameSelect
             value={projectName}
-            options={projects}
+            options={projectNameOptions}
             onSelect={onProjectNameChange}
             popoverHelpContent={
               <ForkliftTrans>The project that your provider will be created in.</ForkliftTrans>

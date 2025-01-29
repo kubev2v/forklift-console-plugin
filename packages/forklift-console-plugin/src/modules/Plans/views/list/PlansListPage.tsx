@@ -156,9 +156,7 @@ const PlansListPage: React.FC<{
 
   const EmptyState = (
     <EmptyState_
-      AddButton={
-        <PlansAddButton namespace={namespace} dataTestId="add-network-map-button-empty-state" />
-      }
+      AddButton={<PlansAddButton dataTestId="add-network-map-button-empty-state" />}
       namespace={namespace}
     />
   );
@@ -167,11 +165,7 @@ const PlansListPage: React.FC<{
     <ModalHOC>
       <StandardPage
         data-testid="network-maps-list"
-        addButton={
-          permissions.canCreate && (
-            <PlansAddButton namespace={namespace} dataTestId="add-network-map-button" />
-          )
-        }
+        addButton={permissions.canCreate && <PlansAddButton dataTestId="add-network-map-button" />}
         dataSource={[data || [], plansLoaded, plansLoadError]}
         RowMapper={PlanRow}
         fieldsMetadata={fieldsMetadataFactory(t)}

@@ -1,8 +1,19 @@
-import React, { useCallback, useMemo } from 'react';
-import { useToggle } from 'src/modules/Providers/hooks';
+import React, {
+  FC,
+  MouseEvent as ReactMouseEvent,
+  Ref,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 
-import { SelectEventType, SelectValueType } from '@kubev2v/common';
-import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
+import {
+  MenuToggle,
+  MenuToggleElement,
+  Select,
+  SelectList,
+  SelectOption,
+} from '@patternfly/react-core';
 
 /**
  * @typedef Option
@@ -34,13 +45,9 @@ export interface SettingsSelectInputProps {
  * @param {ModalInputComponentProps} props - Properties passed to the component
  * @returns {JSX.Element}
  */
-export const SettingsSelectInput: React.FC<SettingsSelectInputProps> = ({
-  value,
-  onChange,
-  options,
-}) => {
+export const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ value, onChange, options }) => {
   // State to keep track of the dropdown menu open/closed state
-  const [isOpen, toggleIsOpen] = useToggle();
+  const [isOpen, setIsOpen] = useState(false);
 
   // Build a dictionary mapping option names to keys for efficient lookup
   // This dictionary is re-calculated every time the options prop changes
@@ -59,42 +66,60 @@ export const SettingsSelectInput: React.FC<SettingsSelectInputProps> = ({
   }, [options]);
 
   const valueLabel = keyToName?.[value] || value;
+  const [selected, setSelected] = useState<string | number>(valueLabel);
+
+  const onToggleClick = () => {
+    setIsOpen((isOpen) => !isOpen);
+  };
+
+  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
+      {selected || 'Select an option'}
+    </MenuToggle>
+  );
+
+  const renderOptions = () => {
+    return options.map((option) => (
+      <SelectOption key={option.key} value={option.name} description={option.description}>
+        {option.name}
+      </SelectOption>
+    ));
+  };
 
   // Callback function to handle selection in the dropdown menu
-  const onSelect: (
-    event: SelectEventType,
-    value: SelectValueType,
-    isPlaceholder?: boolean,
-  ) => void = useCallback(
-    (_event, value: string | number) => {
-      // Use the dictionary to find the key corresponding to the selected name
-      const key = nameToKey[value] || value;
-      onChange(key);
+  const onSelect: (event?: ReactMouseEvent<Element, MouseEvent>, value?: string | number) => void =
+    useCallback(
+      (_event, value: string | number) => {
+        // Use the dictionary to find the key corresponding to the selected name
+        const key = nameToKey[value] || value;
+        onChange(key);
 
-      // Toggle the dropdown menu open state
-      toggleIsOpen();
-    },
-    [isOpen, nameToKey, onChange], // Dependencies for useCallback
-  );
+        // Toggle the dropdown menu open state
+        setSelected(value as string);
+        setIsOpen(false);
+      },
+      [isOpen, nameToKey, onChange], // Dependencies for useCallback
+    );
 
   // Render the Select component with dynamically created SelectOption children
   return (
     <Select
-      variant={SelectVariant.single}
-      placeholderText="Select an option"
+      role="menu"
       aria-label="Select Input with descriptions"
-      value={valueLabel}
-      onToggle={toggleIsOpen}
-      onSelect={onSelect}
-      selections={valueLabel}
-      isOpen={isOpen}
       aria-labelledby="exampleSelect"
-      menuAppendTo={() => document.body}
+      isOpen={isOpen}
+      selected={selected}
+      onSelect={onSelect}
+      onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
+      toggle={toggle}
+      shouldFocusToggleOnSelect
+      shouldFocusFirstItemOnOpen={false}
+      popperProps={{
+        direction: 'down',
+        enableFlip: true,
+      }}
     >
-      {options.map((option) => (
-        // Create a SelectOption for each option
-        <SelectOption key={option.key} value={option.name} description={option.description} />
-      ))}
+      <SelectList>{renderOptions()}</SelectList>
     </Select>
   );
 };

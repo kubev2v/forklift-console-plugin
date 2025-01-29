@@ -1,8 +1,6 @@
-import React, { FC } from 'react';
-import { useToggle } from 'src/modules/Providers/hooks';
+import React, { FC, MouseEvent as ReactMouseEvent, Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { SelectEventType, SelectValueType } from '@kubev2v/common';
 import {
   Button,
   DataListAction,
@@ -10,14 +8,14 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  Tooltip,
-} from '@patternfly/react-core';
-import {
+  MenuToggle,
+  MenuToggleElement,
   Select,
   SelectGroup,
+  SelectList,
   SelectOption,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
+  Tooltip,
+} from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 
 export interface Mapping {
@@ -53,8 +51,10 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   canEditItem,
 }) => {
   const { t } = useForkliftTranslation();
-  const [isSrcOpen, setToggleSrcOpen] = useToggle(false);
-  const [isTrgOpen, setToggleTrgOpen] = useToggle(false);
+  const [isSrcOpen, setIsSrcOpen] = useState(false);
+  const [isTrgOpen, setIsTrgOpen] = useState(false);
+  const [srcSelected, setSrcSelected] = useState<string>(source);
+  const [trgSelected, setTrgSelected] = useState<string>(destination);
 
   const canEditMapping = canEditItem?.(source);
 
@@ -62,27 +62,64 @@ export const MappingListItem: FC<MappingListItemProps> = ({
     deleteMapping({ source, destination });
   };
 
-  const onSelectSource: (
-    event: SelectEventType,
-    value: SelectValueType,
-    isPlaceholder?: boolean,
-  ) => void = (_event, value: string, isPlaceholder) => {
-    !isPlaceholder &&
-      replaceMapping({
-        current: { source, destination },
-        next: { source: value, destination },
-      });
+  const onSrcToggleClick = () => {
+    setIsSrcOpen(!isSrcOpen);
   };
 
-  const onSelectDestination: (
-    event: SelectEventType,
-    value: SelectValueType,
-    isPlaceholder?: boolean,
-  ) => void = (_event, value: string) => {
+  const onTrgToggleClick = () => {
+    setIsTrgOpen(!isTrgOpen);
+  };
+
+  const srcToggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={onSrcToggleClick}
+      isExpanded={isSrcOpen}
+      isDisabled={!isEditable || !canEditMapping}
+      isFullWidth
+    >
+      {srcSelected}
+    </MenuToggle>
+  );
+
+  const trgToggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={onTrgToggleClick}
+      isExpanded={isTrgOpen}
+      isDisabled={!isEditable || !canEditMapping}
+      isFullWidth
+    >
+      {trgSelected}
+    </MenuToggle>
+  );
+
+  const onSelectSource = (
+    _event: ReactMouseEvent<Element, MouseEvent> | undefined,
+    value: string | number | undefined,
+  ) => {
     replaceMapping({
       current: { source, destination },
-      next: { source, destination: value },
+      next: { source: value as string, destination },
     });
+
+    // Toggle the dropdown menu open state
+    setSrcSelected(value as string);
+    setIsSrcOpen(false);
+  };
+
+  const onSelectDestination = (
+    _event: ReactMouseEvent<Element, MouseEvent> | undefined,
+    value: string | number | undefined,
+  ) => {
+    replaceMapping({
+      current: { source, destination },
+      next: { source, destination: value as string },
+    });
+
+    // Toggle the dropdown menu open state
+    setTrgSelected(value as string);
+    setIsTrgOpen(false);
   };
 
   return (
@@ -92,38 +129,54 @@ export const MappingListItem: FC<MappingListItemProps> = ({
           dataListCells={[
             <DataListCell key="source">
               <Select
-                variant={SelectVariant.single}
+                role="menu"
                 aria-label=""
-                onToggle={setToggleSrcOpen}
-                onSelect={onSelectSource}
-                selections={source}
-                isOpen={isSrcOpen}
-                isDisabled={!isEditable || !canEditMapping}
                 aria-labelledby=""
-                isGrouped
-                menuAppendTo={() => document.body}
+                isOpen={isSrcOpen}
+                selected={srcSelected}
+                onSelect={onSelectSource}
+                onOpenChange={(nextOpen: boolean) => setIsSrcOpen(nextOpen)}
+                toggle={srcToggle}
+                isScrollable
+                shouldFocusFirstItemOnOpen={false}
+                popperProps={{
+                  direction: 'down',
+                  enableFlip: true,
+                }}
               >
-                <SelectGroup label={generalSourcesLabel} key="generalSources">
-                  {isEditable ? toSelectedOptions(sources, noSourcesLabel) : null}
-                </SelectGroup>
+                <SelectList>
+                  <SelectGroup label={generalSourcesLabel} key="generalSources">
+                    {isEditable ? toSelectedOptions(sources, noSourcesLabel) : null}
+                  </SelectGroup>
+                </SelectList>
                 <></>
               </Select>
             </DataListCell>,
             <DataListCell key="destination">
               <Select
-                variant={SelectVariant.single}
+                role="menu"
                 aria-label=""
-                onToggle={setToggleTrgOpen}
-                onSelect={onSelectDestination}
-                selections={destination}
-                isOpen={isTrgOpen}
-                isDisabled={!isEditable || !canEditMapping}
                 aria-labelledby=""
-                menuAppendTo={() => document.body}
+                isOpen={isTrgOpen}
+                selected={trgSelected}
+                onSelect={onSelectDestination}
+                onOpenChange={(nextOpen: boolean) => setIsTrgOpen(nextOpen)}
+                toggle={trgToggle}
+                shouldFocusToggleOnSelect
+                shouldFocusFirstItemOnOpen={false}
+                isScrollable
+                popperProps={{
+                  direction: 'down',
+                  enableFlip: true,
+                }}
               >
-                {destinations?.map((label) => (
-                  <SelectOption value={label} key={label} />
-                ))}
+                <SelectList>
+                  {destinations?.map((label) => (
+                    <SelectOption value={label} key={label}>
+                      {label}
+                    </SelectOption>
+                  ))}
+                </SelectList>
               </Select>
             </DataListCell>,
           ]}
@@ -167,7 +220,11 @@ export const MappingListItem: FC<MappingListItemProps> = ({
 
 const toSelectedOptions = (sources: string[], noSourcesLabel: string) =>
   sources && sources.length !== 0 ? (
-    sources.map((source) => <SelectOption value={source} key={source} />)
+    sources.map((source) => (
+      <SelectOption value={source} key={source}>
+        {source}
+      </SelectOption>
+    ))
   ) : (
-    <SelectOption value={noSourcesLabel} isNoResultsOption />
+    <SelectOption value={noSourcesLabel} isDisabled={true} />
   );

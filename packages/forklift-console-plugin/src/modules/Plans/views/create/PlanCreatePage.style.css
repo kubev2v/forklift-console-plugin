@@ -80,6 +80,12 @@
   cursor: pointer;
 }
 
-.forklift--create-plan--wizard-appearance-order {
-  z-index: 1;
+.forklift--create-plan--wizard-content {
+  flex-flow: initial;
+}
+
+.forklift--create-plan--wizard-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
