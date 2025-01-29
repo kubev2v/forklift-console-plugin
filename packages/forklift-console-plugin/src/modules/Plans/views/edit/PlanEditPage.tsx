@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer, useRef } from 'react';
 import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
-import { getVMMigrationStatus } from 'src/modules/Plans/views/details/tabs/VirtualMachines/Migration/MigrationVirtualMachinesList';
 import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import { setAPiError, startUpdate } from 'src/modules/Providers/views/migrate/reducer/actions';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
@@ -16,7 +15,7 @@ import {
 import { Alert, PageSection, Text, TextContent, Title } from '@patternfly/react-core';
 import { Wizard } from '@patternfly/react-core/deprecated';
 
-import { patchPlanMappingsData, patchPlanSpecVms } from '../../utils';
+import { getMigratedVmsIds, patchPlanMappingsData, patchPlanSpecVms } from '../../utils';
 import { findProviderByID } from '../create/components';
 import { planCreatePageInitialState, planCreatePageReducer } from '../create/states';
 import { SelectSourceProvider } from '../create/steps';
@@ -57,13 +56,7 @@ export const PlanEditPage: React.FC<{
   const { t } = useForkliftTranslation();
   const startAtStep = 1;
 
-  const migrationVms = plan?.status?.migration?.vms;
-  const migratedVmIds = migrationVms?.reduce((migrated, vm) => {
-    if (getVMMigrationStatus(vm) === 'Succeeded') {
-      migrated.push(vm.id);
-    }
-    return migrated;
-  }, []);
+  const migratedVmIds = getMigratedVmsIds(plan);
 
   // Init Select source provider form state
   const [filterState, filterDispatch] = useReducer(planCreatePageReducer, {
@@ -72,10 +65,7 @@ export const PlanEditPage: React.FC<{
     selectedVMs: selectedVMs,
   });
 
-  const selectedProvider =
-    filterState.selectedProviderUID !== ''
-      ? findProviderByID(filterState.selectedProviderUID, providers)
-      : undefined;
+  const selectedProvider = findProviderByID(filterState.selectedProviderUID, providers);
 
   const [state, dispatch, emptyContext] = useFetchEffects({
     data: {

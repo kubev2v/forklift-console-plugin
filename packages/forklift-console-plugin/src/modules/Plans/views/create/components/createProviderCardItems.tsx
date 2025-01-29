@@ -42,5 +42,8 @@ export const findProviderByID = (
   id: string,
   providers: V1beta1Provider[],
 ): V1beta1Provider | undefined => {
+  if (id === '') {
+    return undefined;
+  }
   return providers.find((provider) => provider.metadata.uid === id);
 };

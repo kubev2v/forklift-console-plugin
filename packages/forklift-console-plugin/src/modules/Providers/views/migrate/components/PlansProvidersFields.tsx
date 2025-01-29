@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useForkliftTranslation } from 'src/utils';
+import { isEmpty, useForkliftTranslation } from 'src/utils';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
@@ -56,7 +56,7 @@ export const PlansProvidersFields: FC<PlansProvidersFieldsProps> = ({
           fieldId="targetProvider"
           validated={validation.targetProvider}
           helperTextInvalid={
-            availableProviders.filter(getIsTarget).length === 0
+            isEmpty(availableProviders.filter(getIsTarget))
               ? t('No provider is available')
               : t('The chosen provider is no longer available.')
           }

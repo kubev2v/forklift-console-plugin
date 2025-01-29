@@ -1,6 +1,6 @@
 import { hasPlanMappingsChanged } from '../../utils';
 
-import { PlanMappingsSectionState } from './PlanMappingsSection';
+import { PlanMappingsSectionState } from './types';
 
 export function planMappingsSectionReducer(
   state: PlanMappingsSectionState,

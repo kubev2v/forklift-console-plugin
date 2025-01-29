@@ -1,7 +1,6 @@
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 import { isPlanEditable } from 'src/modules/Plans/utils';
 import { patchPlanMappingsData } from 'src/modules/Plans/utils';
-import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -45,6 +44,8 @@ import {
 } from '../../utils';
 import { Mapping, MappingList } from '..';
 
+import { PlanMappingsSectionState } from './types';
+
 /**
  * Represents the state (edit/view) of the Plan mappings section.
  *
@@ -55,18 +56,8 @@ import { Mapping, MappingList } from '..';
  * @property {V1beta1NetworkMapSpecMap[]} updatedNetwork - The new version of the Plan Network Maps being edited.
  * @property {V1beta1StorageMapSpecMap[]} updatedStorage - The new version of the Plan Storage Maps being edited.
  */
-export interface PlanMappingsSectionState {
-  edit: boolean;
-  dataChanged: boolean;
-  alertMessage: ReactNode;
-  updatedNetwork: V1beta1NetworkMapSpecMap[];
-  updatedStorage: V1beta1StorageMapSpecMap[];
-  planNetworkMaps: V1beta1NetworkMap;
-  planStorageMaps: V1beta1StorageMap;
-  editAction?: PlanEditAction;
-}
 
-export type PlanMappingsSectionProps = {
+type PlanMappingsSectionProps = {
   plan: V1beta1Plan;
   planNetworkMaps: V1beta1NetworkMap;
   planStorageMaps: V1beta1StorageMap;

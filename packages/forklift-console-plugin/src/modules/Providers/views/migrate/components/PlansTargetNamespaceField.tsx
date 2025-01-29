@@ -54,12 +54,12 @@ export const PlansTargetNamespaceField: FC<PlansTargetNamespaceFieldProps> = ({
         }
       >
         <FilterableSelect
-          selectOptions={availableTargetNamespaces.map((ns) => ({
-            itemId: ns?.name,
+          selectOptions={availableTargetNamespaces.map((targetNamespace) => ({
+            itemId: targetNamespace?.name,
             isDisabled:
-              namespacesUsedBySelectedVms.includes(ns?.name) &&
+              namespacesUsedBySelectedVms.includes(targetNamespace?.name) &&
               plan.spec.provider?.destination?.name === plan.spec.provider.source.name,
-            children: ns?.name,
+            children: targetNamespace?.name,
           }))}
           value={plan.spec.targetNamespace}
           onSelect={(value) => onChangeTargetNamespace(value as string)}

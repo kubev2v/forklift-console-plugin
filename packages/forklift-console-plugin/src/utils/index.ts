@@ -4,6 +4,7 @@ export * from './deepCopy';
 export * from './enums';
 export * from './fetch';
 export * from './i18n';
+export * from './isEmpty';
 export * from './resources';
 export * from './types';
 // @endindex

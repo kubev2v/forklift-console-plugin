@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
@@ -12,7 +12,8 @@ import { Alert } from '@patternfly/react-core';
 
 import { getVMMigrationStatus } from '../../tabs/VirtualMachines/Migration/MigrationVirtualMachinesList';
 
-import { PlanMappingsSection, PlanMappingsSectionState } from './PlanMappingsSection';
+import { PlanMappingsSection } from './PlanMappingsSection';
+import { PlanMappingsSectionState } from './types';
 
 type PlanMappingsInitSectionProps = {
   plan: V1beta1Plan;
@@ -65,11 +66,16 @@ export const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (
     return migrated;
   }, []);
   const migratedVms = vmData.filter((vm) => migratedVmIds?.includes(vm.vm.id));
-  const networkIdsUsedByMigratedVms =
-    sourceProvider?.spec?.type !== 'ovirt' ? getNetworksUsedBySelectedVms(migratedVms, []) : [];
-  const storageIdsUsedByMigratedVms = ['ovirt', 'openstack'].includes(sourceProvider?.spec?.type)
-    ? []
-    : getStoragesUsedBySelectedVms({}, migratedVms, []);
+  const networkIdsUsedByMigratedVms = useMemo(() => {
+    return sourceProvider?.spec?.type !== 'ovirt'
+      ? getNetworksUsedBySelectedVms(migratedVms, [])
+      : [];
+  }, [sourceProvider, migratedVms]);
+  const storageIdsUsedByMigratedVms = useMemo(() => {
+    return ['ovirt', 'openstack'].includes(sourceProvider?.spec?.type)
+      ? []
+      : getStoragesUsedBySelectedVms({}, migratedVms, []);
+  }, [sourceProvider, migratedVms]);
 
   if (
     !providersLoaded ||

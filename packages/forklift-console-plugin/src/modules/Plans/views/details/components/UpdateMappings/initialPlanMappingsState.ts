@@ -2,7 +2,7 @@ import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 
 import { V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
 
-import { PlanMappingsSectionState } from './PlanMappingsSection';
+import { PlanMappingsSectionState } from './types';
 
 export type InitialPlanMappingsStateProps = {
   planNetworkMaps: V1beta1NetworkMap;

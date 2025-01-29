@@ -93,3 +93,5 @@ export const PlanUpdateForm = ({
     </>
   );
 };
+
+export default PlanUpdateForm;

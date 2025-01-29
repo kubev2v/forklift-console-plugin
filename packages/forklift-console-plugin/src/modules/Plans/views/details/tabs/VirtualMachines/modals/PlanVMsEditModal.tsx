@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 import { PlanEditPage } from 'src/modules/Plans/views/edit/PlanEditPage';
 import { useModal } from 'src/modules/Providers/modals';
 import { useInventoryVms, VmData } from 'src/modules/Providers/views';
+import { isEmpty } from 'src/utils';
 import { useNetworkMaps, useProviders, useStorageMaps } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -61,15 +62,19 @@ export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editAc
     }
   });
 
-  const planNetworkMaps = networkMaps
-    ? networkMaps.find((net) => net?.metadata?.name === plan?.spec?.map?.network?.name)
-    : null;
-  const planStorageMaps = storageMaps
-    ? storageMaps.find((storage) => storage?.metadata?.name === plan.spec.map?.storage?.name)
-    : null;
+  const planNetworkMaps = useMemo(() => {
+    return networkMaps
+      ? networkMaps.find((net) => net?.metadata?.name === plan?.spec?.map?.network?.name)
+      : null;
+  }, [networkMaps, plan]);
+  const planStorageMaps = useMemo(() => {
+    return storageMaps
+      ? storageMaps.find((storage) => storage?.metadata?.name === plan.spec.map?.storage?.name)
+      : null;
+  }, [storageMaps, plan]);
 
   const finishedLoading =
-    providersLoaded && networkMapsLoaded && storageMapsLoaded && vmData.length > 0;
+    providersLoaded && networkMapsLoaded && storageMapsLoaded && !isEmpty(vmData.length);
   const hasErrors = providersLoadError || networkMapsError || storageMapsError;
 
   return (
