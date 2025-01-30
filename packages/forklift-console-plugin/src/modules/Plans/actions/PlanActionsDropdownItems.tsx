@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
@@ -15,6 +15,8 @@ import {
   PlanData,
   PlanSummaryStatus,
 } from '../utils';
+
+import { getDuplicateActionDescription, getStartActionDescription } from './utils';
 
 export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
@@ -53,40 +55,13 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     showModal(<PlanDeleteModal resource={plan} model={PlanModel} />);
   };
 
-  const startActionDescription = useMemo(() => {
-    if (isPlanValidating) {
-      return t('The plan is being validated');
-    }
-
-    switch (status) {
-      case PlanSummaryStatus.Archived:
-        return t('Archived plans cannot be started');
-      case PlanSummaryStatus.Complete:
-        return t('All VMs were migrated');
-      case PlanSummaryStatus.Running:
-        return t('The plan is currently in progress');
-      case PlanSummaryStatus.CannotStart:
-        return t('The plan cannot be started');
-    }
-  }, [status, isPlanValidating]);
-
-  const duplicateActionDescription = React.useMemo(() => {
-    if (isPlanValidating) {
-      return t('The plan is being validated');
-    }
-
-    if (status === PlanSummaryStatus.CannotStart) {
-      return t('The plan cannot be duplicated');
-    }
-  }, [status, isPlanValidating]);
-
   return [
     <DropdownItem
       value={0}
       key="start"
       isDisabled={!canStart}
       onClick={onClickPlanStart}
-      description={startActionDescription}
+      description={getStartActionDescription(status, isPlanValidating, t)}
     >
       {buttonStartLabel}
     </DropdownItem>,
@@ -109,7 +84,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
         isPlanValidating
       }
       onClick={onClickDuplicate}
-      description={duplicateActionDescription}
+      description={getDuplicateActionDescription(status, isPlanValidating, t)}
     >
       {t('Duplicate Plan')}
     </DropdownItem>,
