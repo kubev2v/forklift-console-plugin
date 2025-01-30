@@ -14,7 +14,6 @@ import {
   SelectGroup,
   SelectList,
   SelectOption,
-  Tooltip,
 } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 
@@ -34,7 +33,6 @@ interface MappingListItemProps {
   replaceMapping: (val: { current: Mapping; next: Mapping }) => void;
   deleteMapping: (mapping: Mapping) => void;
   isEditable: boolean;
-  canEditItem?: (source: string) => boolean;
 }
 
 export const MappingListItem: FC<MappingListItemProps> = ({
@@ -48,15 +46,12 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   replaceMapping,
   deleteMapping,
   isEditable,
-  canEditItem,
 }) => {
   const { t } = useForkliftTranslation();
   const [isSrcOpen, setIsSrcOpen] = useState(false);
   const [isTrgOpen, setIsTrgOpen] = useState(false);
   const [srcSelected, setSrcSelected] = useState<string>(source);
   const [trgSelected, setTrgSelected] = useState<string>(destination);
-
-  const canEditMapping = canEditItem?.(source);
 
   const onClick = () => {
     deleteMapping({ source, destination });
@@ -75,7 +70,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
       ref={toggleRef}
       onClick={onSrcToggleClick}
       isExpanded={isSrcOpen}
-      isDisabled={!isEditable || !canEditMapping}
+      isDisabled={!isEditable}
       isFullWidth
     >
       {srcSelected}
@@ -87,7 +82,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
       ref={toggleRef}
       onClick={onTrgToggleClick}
       isExpanded={isTrgOpen}
-      isDisabled={!isEditable || !canEditMapping}
+      isDisabled={!isEditable}
       isFullWidth
     >
       {trgSelected}
@@ -187,30 +182,13 @@ export const MappingListItem: FC<MappingListItemProps> = ({
             aria-label={t('Actions')}
             aria-labelledby=""
           >
-            {!canEditMapping ? (
-              <Tooltip
-                content={t(
-                  `This mapping's associated VM has been migrated and can no longer be modified.`,
-                )}
-              >
-                <Button
-                  onClick={onClick}
-                  variant="plain"
-                  aria-label={t('Delete mapping')}
-                  key="delete-action"
-                  icon={<MinusCircleIcon />}
-                  isAriaDisabled
-                />
-              </Tooltip>
-            ) : (
-              <Button
-                onClick={onClick}
-                variant="plain"
-                aria-label={t('Delete mapping')}
-                key="delete-action"
-                icon={<MinusCircleIcon />}
-              />
-            )}
+            <Button
+              onClick={onClick}
+              variant="plain"
+              aria-label={t('Delete mapping')}
+              key="delete-action"
+              icon={<MinusCircleIcon />}
+            />
           </DataListAction>
         ) : null}
       </DataListItemRow>

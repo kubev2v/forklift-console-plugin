@@ -14,7 +14,6 @@ export const ProviderVirtualMachinesList: React.FC<{
   namespace: string;
   onSelect?: (selectedIds: VmData[]) => void;
   initialSelectedIds?: string[];
-  disabledVmIds?: string[];
   showActions: boolean;
   className?: string;
   selectedCountLabel?: (selectedIdCount: number) => string;
@@ -24,7 +23,6 @@ export const ProviderVirtualMachinesList: React.FC<{
   namespace,
   onSelect,
   initialSelectedIds,
-  disabledVmIds,
   showActions,
   className,
   selectedCountLabel,
@@ -47,7 +45,6 @@ export const ProviderVirtualMachinesList: React.FC<{
       loadError={providerLoadError}
       onSelect={onSelect}
       initialSelectedIds={initialSelectedIds}
-      disabledVmIds={disabledVmIds}
       showActions={showActions}
       className={className}
       selectedCountLabel={selectedCountLabel}

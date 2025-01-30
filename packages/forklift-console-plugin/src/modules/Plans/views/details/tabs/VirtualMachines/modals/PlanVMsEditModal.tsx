@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 import { PlanEditPage } from 'src/modules/Plans/views/edit/PlanEditPage';
 import { useModal } from 'src/modules/Providers/modals';
@@ -18,7 +18,7 @@ interface PlanVMsEditModalProps {
   editAction: PlanEditAction;
 }
 
-export const PlanVMsEditModal: React.FC<PlanVMsEditModalProps> = ({ plan, editAction }) => {
+export const PlanVMsEditModal: FC<PlanVMsEditModalProps> = ({ plan, editAction }) => {
   const { toggleModal } = useModal();
   const { t } = useForkliftTranslation();
   const projectName = plan?.metadata?.namespace;

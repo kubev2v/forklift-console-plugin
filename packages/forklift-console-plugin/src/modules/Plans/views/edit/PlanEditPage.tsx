@@ -3,6 +3,7 @@ import { PlanEditAction } from 'src/modules/Plans/utils/types/PlanEditAction';
 import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import { setAPiError, startUpdate } from 'src/modules/Providers/views/migrate/reducer/actions';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
+import { isEmpty } from 'src/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -15,7 +16,7 @@ import {
 import { Alert, PageSection, Text, TextContent, Title } from '@patternfly/react-core';
 import { Wizard } from '@patternfly/react-core/deprecated';
 
-import { getMigratedVmsIds, patchPlanMappingsData, patchPlanSpecVms } from '../../utils';
+import { patchPlanMappingsData, patchPlanSpecVms } from '../../utils';
 import { findProviderByID } from '../create/components';
 import { planCreatePageInitialState, planCreatePageReducer } from '../create/states';
 import { SelectSourceProvider } from '../create/steps';
@@ -55,8 +56,6 @@ export const PlanEditPage: React.FC<{
 }) => {
   const { t } = useForkliftTranslation();
   const startAtStep = 1;
-
-  const migratedVmIds = getMigratedVmsIds(plan);
 
   // Init Select source provider form state
   const [filterState, filterDispatch] = useReducer(planCreatePageReducer, {
@@ -132,12 +131,12 @@ export const PlanEditPage: React.FC<{
       name: editAction === 'VMS' ? t('Select virtual machines') : t('Select source provider'),
       component: (
         <>
-          {notFoundPlanVMs.length > 0 && (
+          {!isEmpty(notFoundPlanVMs) && (
             <Alert
               title={t(
                 'The following VMs do not exist on the source provider and will be removed from the plan',
               )}
-              variant="danger"
+              variant="warning"
             >
               <TextContent className="forklift-providers-list-header__alert">
                 <Text component="p">{notFoundPlanVMs.map((vm) => `${vm.name} `)}</Text>
@@ -153,7 +152,6 @@ export const PlanEditPage: React.FC<{
             providers={providers}
             selectedProvider={selectedProvider}
             hideProviderSection={editAction === 'VMS'}
-            disabledVmIds={migratedVmIds}
           />
         </>
       ),

@@ -22,7 +22,6 @@ export interface ProviderVirtualMachinesProps {
   loadError?: unknown;
   onSelect?: (selectedVMs: VmData[]) => void;
   initialSelectedIds?: string[];
-  disabledVmIds?: string[];
   showActions: boolean;
   className?: string;
   selectedCountLabel?: (selectedIdCount: number) => string;

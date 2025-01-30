@@ -1,16 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
-import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
-import { getNetworksUsedBySelectedVms } from 'src/modules/Providers/views/migrate/reducer/getNetworksUsedBySelectedVMs';
-import { getStoragesUsedBySelectedVms } from 'src/modules/Providers/views/migrate/reducer/getStoragesUsedBySelectedVMs';
 import { useProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1NetworkMap, V1beta1Plan, V1beta1StorageMap } from '@kubev2v/types';
 import { Alert } from '@patternfly/react-core';
-
-import { getVMMigrationStatus } from '../../tabs/VirtualMachines/Migration/MigrationVirtualMachinesList';
 
 import { PlanMappingsSection } from './PlanMappingsSection';
 import { PlanMappingsSectionState } from './types';
@@ -53,29 +48,6 @@ export const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (
     useSourceStorages(sourceProvider);
   const [targetStorages, targetStoragesLoading, targetStoragesError] =
     useOpenShiftStorages(targetProvider);
-
-  const [vmData] = useInventoryVms(
-    { provider: sourceProvider },
-    providersLoaded,
-    providersLoadError,
-  );
-  const migratedVmIds = plan?.status?.migration?.vms?.reduce((migrated, vm) => {
-    if (getVMMigrationStatus(vm) === 'Succeeded') {
-      migrated.push(vm.id);
-    }
-    return migrated;
-  }, []);
-  const migratedVms = vmData.filter((vm) => migratedVmIds?.includes(vm.vm.id));
-  const networkIdsUsedByMigratedVms = useMemo(() => {
-    return sourceProvider?.spec?.type !== 'ovirt'
-      ? getNetworksUsedBySelectedVms(migratedVms, [])
-      : [];
-  }, [sourceProvider, migratedVms]);
-  const storageIdsUsedByMigratedVms = useMemo(() => {
-    return ['ovirt', 'openstack'].includes(sourceProvider?.spec?.type)
-      ? []
-      : getStoragesUsedBySelectedVms({}, migratedVms, []);
-  }, [sourceProvider, migratedVms]);
 
   if (
     !providersLoaded ||
@@ -139,8 +111,6 @@ export const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (
         targetStorages={targetStorages}
         planMappingsState={planMappingsState}
         planMappingsDispatch={planMappingsDispatch}
-        networkIdsUsedByMigratedVms={networkIdsUsedByMigratedVms}
-        storageIdsUsedByMigratedVms={storageIdsUsedByMigratedVms}
       />
     </>
   );

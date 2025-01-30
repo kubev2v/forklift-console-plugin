@@ -36,6 +36,7 @@ import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
 import {
   canDeleteAndPatchPlanHooks,
+  hasSomeCompleteRunningVMs,
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
   mapTargetNetworksIdsToLabels,
@@ -70,8 +71,6 @@ type PlanMappingsSectionProps = {
     type: string;
     payload?;
   }>;
-  networkIdsUsedByMigratedVms?: string[];
-  storageIdsUsedByMigratedVms?: string[];
 };
 
 export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
@@ -84,8 +83,6 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   targetStorages,
   planMappingsState: state,
   planMappingsDispatch: dispatch,
-  networkIdsUsedByMigratedVms,
-  storageIdsUsedByMigratedVms,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -422,24 +419,6 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     ),
   ];
 
-  const canEditNetworkMapping = (source) => {
-    if (!networkIdsUsedByMigratedVms) {
-      return true;
-    }
-    const idLabelObj = mapSourceNetworksIdsToLabels(sourceNetworks);
-    const id = Object.keys(idLabelObj).find((key) => idLabelObj[key] === source);
-    return !networkIdsUsedByMigratedVms.includes(id);
-  };
-
-  const canEditStorageMapping = (source) => {
-    if (!storageIdsUsedByMigratedVms) {
-      return true;
-    }
-    const idLabelObj = mapSourceStoragesIdsToLabels(sourceStorages);
-    const id = Object.keys(idLabelObj).find((key) => idLabelObj[key] === source);
-    return !storageIdsUsedByMigratedVms.includes(id);
-  };
-
   const PlanMappingsSectionEditMode: React.FC = () => {
     const { t } = useForkliftTranslation();
     return (
@@ -476,7 +455,6 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                   generalSourcesLabel={t('Other networks present on the source provider ')}
                   noSourcesLabel={t('No networks in this category')}
                   isDisabled={!isAddNetworkMapAvailable}
-                  canEditItem={canEditNetworkMapping}
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
@@ -505,7 +483,6 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                   generalSourcesLabel={t('Other storages present on the source provider ')}
                   noSourcesLabel={t('No storages in this category')}
                   isDisabled={!isAddStorageMapAvailable}
-                  canEditItem={canEditStorageMapping}
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
@@ -517,7 +494,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
   const PlanMappingsSectionViewMode: React.FC = () => {
     const { t } = useForkliftTranslation();
-    const DisableEditMappings = !isPlanEditable(plan);
+    const DisableEditMappings = hasSomeCompleteRunningVMs(plan) || !isPlanEditable(plan);
 
     return (
       <>
@@ -600,35 +577,33 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   return state.edit ? (
     // Edit mode
     <>
-      {!state.editAction && (
-        <>
-          <Flex>
-            <FlexItem>
-              <Button
-                variant="primary"
-                onClick={onUpdate}
-                isDisabled={!state.dataChanged}
-                isLoading={isLoading}
-              >
-                {t('Update mappings')}
-              </Button>
-            </FlexItem>
-            <FlexItem>
-              <Button variant="secondary" onClick={onCancel}>
-                {t('Cancel')}
-              </Button>
-            </FlexItem>
-          </Flex>
-          <HelperText className="forklift-section-plan-helper-text">
-            <HelperTextItem variant="indeterminate">
-              {t(
-                'Click the update mappings button to save your changes, button is disabled until a change is detected.',
-              )}
-            </HelperTextItem>
-          </HelperText>
-          <Divider />
-        </>
-      )}
+      <>
+        <Flex>
+          <FlexItem>
+            <Button
+              variant="primary"
+              onClick={onUpdate}
+              isDisabled={!state.dataChanged}
+              isLoading={isLoading}
+            >
+              {t('Update mappings')}
+            </Button>
+          </FlexItem>
+          <FlexItem>
+            <Button variant="secondary" onClick={onCancel}>
+              {t('Cancel')}
+            </Button>
+          </FlexItem>
+        </Flex>
+        <HelperText className="forklift-section-plan-helper-text">
+          <HelperTextItem variant="indeterminate">
+            {t(
+              'Click the update mappings button to save your changes, button is disabled until a change is detected.',
+            )}
+          </HelperTextItem>
+        </HelperText>
+        <Divider />
+      </>
       {state.alertMessage ? (
         <>
           <Alert

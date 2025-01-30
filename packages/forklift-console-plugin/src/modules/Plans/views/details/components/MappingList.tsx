@@ -32,13 +32,6 @@ interface MappingListProps {
    * Is in edit/view mode? In case of view mode, the DataListCells are disabled and buttons are hidden
    */
   isEditable?: boolean;
-  /**
-   * A function that determines whether a mapping list item is editable
-   *
-   * @param source The mapping source
-   * @returns boolean
-   */
-  canEditItem?: (source: string) => boolean;
 }
 
 export const MappingList: FC<MappingListProps> = ({
@@ -52,7 +45,6 @@ export const MappingList: FC<MappingListProps> = ({
   noSourcesLabel,
   isDisabled = false,
   isEditable = true,
-  canEditItem,
 }) => {
   const { t } = useForkliftTranslation();
   return (
@@ -71,7 +63,6 @@ export const MappingList: FC<MappingListProps> = ({
             generalSourcesLabel={generalSourcesLabel}
             noSourcesLabel={noSourcesLabel}
             isEditable={isEditable}
-            canEditItem={(source) => canEditItem?.(source)}
           />
         ))}
       </DataList>
