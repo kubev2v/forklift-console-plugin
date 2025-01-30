@@ -47,6 +47,7 @@ export const MappingList: FC<MappingListProps> = ({
   isEditable = true,
 }) => {
   const { t } = useForkliftTranslation();
+
   return (
     <>
       <DataList isCompact aria-label="">

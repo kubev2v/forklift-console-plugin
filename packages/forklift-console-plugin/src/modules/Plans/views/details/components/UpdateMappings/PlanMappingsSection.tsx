@@ -513,7 +513,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                 <HelperText className="forklift-section-plan-helper-text">
                   <HelperTextItem variant="indeterminate">
                     {t(
-                      'The edit mappings button is disabled when the plan status does not enable editing.',
+                      'The edit mappings button is disabled if the plan started running and at least one virtual machine was migrated successfully or when the plan status does not enable editing.',
                     )}
                   </HelperTextItem>
                 </HelperText>
@@ -577,33 +577,31 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   return state.edit ? (
     // Edit mode
     <>
-      <>
-        <Flex>
-          <FlexItem>
-            <Button
-              variant="primary"
-              onClick={onUpdate}
-              isDisabled={!state.dataChanged}
-              isLoading={isLoading}
-            >
-              {t('Update mappings')}
-            </Button>
-          </FlexItem>
-          <FlexItem>
-            <Button variant="secondary" onClick={onCancel}>
-              {t('Cancel')}
-            </Button>
-          </FlexItem>
-        </Flex>
-        <HelperText className="forklift-section-plan-helper-text">
-          <HelperTextItem variant="indeterminate">
-            {t(
-              'Click the update mappings button to save your changes, button is disabled until a change is detected.',
-            )}
-          </HelperTextItem>
-        </HelperText>
-        <Divider />
-      </>
+      <Flex>
+        <FlexItem>
+          <Button
+            variant="primary"
+            onClick={onUpdate}
+            isDisabled={!state.dataChanged}
+            isLoading={isLoading}
+          >
+            {t('Update mappings')}
+          </Button>
+        </FlexItem>
+        <FlexItem>
+          <Button variant="secondary" onClick={onCancel}>
+            {t('Cancel')}
+          </Button>
+        </FlexItem>
+      </Flex>
+      <HelperText className="forklift-section-plan-helper-text">
+        <HelperTextItem variant="indeterminate">
+          {t(
+            'Click the update mappings button to save your changes, button is disabled until a change is detected.',
+          )}
+        </HelperTextItem>
+      </HelperText>
+      <Divider />
       {state.alertMessage ? (
         <>
           <Alert
