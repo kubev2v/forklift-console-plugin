@@ -32,6 +32,7 @@
     "@kubev2v/types": "0.0.20",
     "@openshift-console/dynamic-plugin-sdk": "1.6.0",
     "@patternfly/react-charts": "7.4.1",
+    "@patternfly/react-component-groups": "^5.5.8",
     "@patternfly/react-core": "^5.1.1",
     "@patternfly/react-icons": "^5.1.1",
     "@patternfly/react-table": "^5.1.1",
