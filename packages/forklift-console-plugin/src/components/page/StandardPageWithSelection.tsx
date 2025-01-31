@@ -47,29 +47,11 @@ export function withRowSelection<T>({
   return Enhanced;
 }
 
-export function withHeaderSelection<T>({
-  HeaderMapper,
-  isSelected,
-  isExpanded,
-  toggleSelectFor,
-  canSelect,
-}) {
+export function withHeaderSelection<T>({ HeaderMapper, isExpanded }) {
   const Enhanced = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
-    const selectableItems = dataOnScreen.filter(canSelect);
-    const allSelected = selectableItems.length > 0 && selectableItems.every(isSelected);
-
     return (
       <>
         {isExpanded && <Th />}
-        {isSelected && (
-          <Th
-            select={{
-              onSelect: () => toggleSelectFor(selectableItems),
-              isSelected: allSelected,
-              isHeaderSelectDisabled: !selectableItems?.length, // Disable if no selectable items
-            }}
-          />
-        )}
         <HeaderMapper {...{ ...other, dataOnScreen }} />
       </>
     );
@@ -182,10 +164,7 @@ export function withIdBasedSelection<T>({
 
     const HeaderMapper = withHeaderSelection({
       HeaderMapper: props.HeaderMapper ?? DefaultHeader,
-      canSelect,
-      isSelected,
       isExpanded,
-      toggleSelectFor,
     });
 
     return (
@@ -193,6 +172,7 @@ export function withIdBasedSelection<T>({
         {...rest}
         expandedIds={expandedIds}
         selectedIds={selectedIds}
+        onSelect={setSelectedIds}
         toId={toId}
         RowMapper={RowMapper}
         HeaderMapper={HeaderMapper}
