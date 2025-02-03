@@ -1,11 +1,10 @@
-
 name: Test
 on:
   pull_request:
 env:
   CONTAINER_CMD: docker
   FORKLIFT_PLUGIN_IMAGE: localhost:5001/forklift-console-plugin:latest
-  OKD_CONSOLE_YAML: ./ci/yaml/okd-console.yaml 
+  OKD_CONSOLE_YAML: ./ci/yaml/okd-console.yaml
 
 jobs:
   tests:
@@ -47,10 +46,6 @@ jobs:
   e2e:
     name: Run e2e tests
     runs-on: ubuntu-latest
-    container:
-          image: docker.io/vmware/vcsim:v0.48.0
-          ports:
-          - 8989:8989
     env:
       BASE_ADDRESS: http://localhost:30080
     steps:
@@ -59,9 +54,12 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-    
+
       - name: Run pre e2e test tasks
         run: yarn e2e:pre-test
+
+      - name: Start vSphare emulator
+        run: docker run -d --name vcsim -p 8989:8989 docker.io/vmware/vcsim:v0.48.0
 
       - name: Run cypress
         uses: cypress-io/github-action@v6
@@ -70,7 +68,7 @@ jobs:
           browser: chrome
           headed: false
           config-file: cypress/cypress.config.cjs
-      
+
       - name: Upload videos
         uses: actions/upload-artifact@v4
         if: always()
