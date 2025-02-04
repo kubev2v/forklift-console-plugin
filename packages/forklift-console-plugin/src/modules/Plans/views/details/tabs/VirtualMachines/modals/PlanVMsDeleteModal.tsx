@@ -1,5 +1,4 @@
 import React, { ReactNode, useCallback, useState } from 'react';
-import { isPlanArchived } from 'src/modules/Plans/utils';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -23,22 +22,6 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
 
   const vms = (plan?.spec?.vms || []).filter((vm) => !selected.includes(vm.id)) || [];
 
-  React.useEffect(() => {
-    if (isPlanArchived(plan)) {
-      setAlertMessage(
-        t('Deleting virtual machines from an archived migration plan is not allowed.'),
-      );
-      return;
-    }
-    if (vms.length < 1) {
-      setAlertMessage(
-        t(
-          'All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
-        ),
-      );
-    }
-  }, [vms, plan]);
-
   const handleSave = useCallback(async () => {
     toggleIsLoading();
 
@@ -60,13 +43,7 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
   }, [selected]);
 
   const actions = [
-    <Button
-      key="confirm"
-      onClick={handleSave}
-      variant="danger"
-      isDisabled={vms.length < 1 || isPlanArchived(plan)}
-      isLoading={isLoading}
-    >
+    <Button key="confirm" onClick={handleSave} variant="danger" isLoading={isLoading}>
       {t('Delete')}
     </Button>,
     <Button key="cancel" variant="secondary" onClick={toggleModal}>

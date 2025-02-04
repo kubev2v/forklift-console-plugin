@@ -420,6 +420,7 @@
   "Secrets": "Secrets",
   "Select a namespace": "Select a namespace",
   "Select a provider": "Select a provider",
+  "Select at least one virtual machine.": "Select at least one virtual machine.",
   "Select migration network": "Select migration network",
   "Select source provider": "Select source provider",
   "Select virtual machines": "Select virtual machines",
