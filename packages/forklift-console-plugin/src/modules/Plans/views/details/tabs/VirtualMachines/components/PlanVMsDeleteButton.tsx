@@ -24,19 +24,17 @@ export const PlanVMsDeleteButton: FC<{
   }, [plan, selectedIds]);
 
   const reason = useMemo(() => {
-    let reason =
-      isPlanArchived(plan) &&
-      t('Deleting virtual machines from an archived migration plan is not allowed.');
-
-    reason = reason || (selectedIds?.length < 1 && t('Select at least one virtual machine.'));
-
-    reason =
-      reason ||
-      (remainingVms.length < 1 &&
-        t(
-          'All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
-        ));
-
+    if (isPlanArchived(plan)) {
+      return t('Deleting virtual machines from an archived migration plan is not allowed.');
+    }
+    if (!!selectedIds?.length) {
+      return t('Select at least one virtual machine.');
+    }
+    if (!!remainingVms.length) {
+      return t(
+        'All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
+      );
+    }
     return reason;
   }, [plan, selectedIds, remainingVms]);
 
