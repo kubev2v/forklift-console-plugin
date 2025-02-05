@@ -86,8 +86,8 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     if (criticalCondition) {
       alerts.push(
         <PlanCriticalCondition
-          type={criticalCondition?.type}
-          message={criticalCondition?.message}
+          plan={plan}
+          condition={criticalCondition}
           key={'providerCriticalCondition'}
         />,
       );
