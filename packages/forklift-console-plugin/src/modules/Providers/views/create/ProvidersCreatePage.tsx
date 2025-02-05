@@ -241,7 +241,7 @@ export const ProvidersCreatePage: React.FC<{
         <HelperText className="forklift-create-subtitle">
           <HelperTextItem variant="default">
             {t(
-              'Create Providers by using the form or manually entering YAML or JSON definitions. Provider CRs store attributes that enable MTV to connect to and interact with the source and target providers.',
+              'Create Providers by using the form below. Provider CRs store attributes that enable MTV to connect to and interact with the source and target providers.',
             )}
           </HelperTextItem>
         </HelperText>
