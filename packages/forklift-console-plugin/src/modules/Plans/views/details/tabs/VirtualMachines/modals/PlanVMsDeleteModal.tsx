@@ -5,7 +5,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, V1beta1Plan } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, Modal, ModalVariant } from '@patternfly/react-core';
+import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
 
 import './PlanVMsDeleteModal.style.css';
 
@@ -43,10 +43,10 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
   }, [selected]);
 
   const actions = [
-    <Button key="confirm" onClick={handleSave} variant="danger" isLoading={isLoading}>
+    <Button key="confirm" onClick={handleSave} variant={ButtonVariant.danger} isLoading={isLoading}>
       {t('Delete')}
     </Button>,
-    <Button key="cancel" variant="secondary" onClick={toggleModal}>
+    <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal}>
       {t('Cancel')}
     </Button>,
   ];

@@ -5,7 +5,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { MigrationModel, V1beta1Migration } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, Modal, ModalVariant } from '@patternfly/react-core';
+import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
 
 import './PlanVMsDeleteModal.style.css';
 
@@ -53,13 +53,12 @@ export const MigrationVMsCancelModal: React.FC<MigrationVMsCancelModalProps> = (
     <Button
       key="confirm"
       onClick={handleSave}
-      variant="primary"
-      isDisabled={vms.length < 1}
+      variant={ButtonVariant.primary}
       isLoading={isLoading}
     >
       {t('Cancel migration')}
     </Button>,
-    <Button key="cancel" variant="secondary" onClick={toggleModal}>
+    <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal}>
       {t('Cancel')}
     </Button>,
   ];
