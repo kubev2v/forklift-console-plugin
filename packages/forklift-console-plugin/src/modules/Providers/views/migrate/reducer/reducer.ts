@@ -317,6 +317,7 @@ const handlers: {
       if (sourceProvider?.spec?.type === 'openshift') {
         return {
           source: {
+            id: sourceStorageLabelToId[source],
             name: source.replace(/^\//g, ''),
           },
           destination: { storageClass: destination },
