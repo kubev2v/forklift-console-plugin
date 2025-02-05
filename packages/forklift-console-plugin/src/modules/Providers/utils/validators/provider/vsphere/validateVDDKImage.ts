@@ -4,7 +4,7 @@ export const validateVDDKImage = (vddkImage: string | number): ValidationMsg => 
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (vddkImage === undefined)
     return {
-      msg: 'The VDDK image is empty. It is recommended to provide an image in the format of <registry_route_or_server_path>/vddk:<tag> .',
+      msg: 'The VDDK image is empty. It is strongly recommended to provide an image using the following format: <registry_route_or_server_path>/vddk:<tag> .',
       type: 'default',
     };
 
@@ -18,7 +18,7 @@ export const validateVDDKImage = (vddkImage: string | number): ValidationMsg => 
 
   if (trimmedVddkImage === '')
     return {
-      msg: 'The VDDK image is empty. It is recommended to provide an image in the format of <registry_route_or_server_path>/vddk:<tag> .',
+      msg: 'The VDDK image is empty. It is strongly recommended to provide an image using the following format: <registry_route_or_server_path>/vddk:<tag> .',
       type: 'error',
     };
 

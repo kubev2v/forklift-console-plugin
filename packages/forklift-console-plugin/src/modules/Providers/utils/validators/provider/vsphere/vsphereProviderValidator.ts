@@ -22,7 +22,7 @@ export function vsphereProviderValidator(provider: V1beta1Provider): ValidationM
 
   if (emptyVddkInitImage === 'yes' && vddkInitImage === '') {
     return {
-      msg: 'The VDDK image is empty. It is recommended to provide an image in the format of <registry_route_or_server_path>/vddk:<tag> .',
+      msg: 'The VDDK image is empty. It is strongly recommended to provide an image using the following format: <registry_route_or_server_path>/vddk:<tag> .',
       type: 'warning',
     };
   }
