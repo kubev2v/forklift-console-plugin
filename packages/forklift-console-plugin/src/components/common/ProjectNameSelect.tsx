@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForkliftTranslation } from 'src/utils';
+import { Namespace, useForkliftTranslation } from 'src/utils';
 
 import { FormGroupWithHelpText, TypeaheadSelect, TypeaheadSelectOption } from '@kubev2v/common';
 import {
@@ -26,6 +26,15 @@ export const ProjectNameSelect: React.FC<ProjectNameSelectProps> = ({
   onSelect,
 }) => {
   const { t } = useForkliftTranslation();
+
+  // Fallback to "default" when the initial value does not exist within options
+  React.useEffect(() => {
+    const hasOptionValue = options.find((option) => option.name === value);
+
+    if (!hasOptionValue) {
+      onSelect(Namespace.Default);
+    }
+  }, []);
 
   return (
     <FormGroupWithHelpText
