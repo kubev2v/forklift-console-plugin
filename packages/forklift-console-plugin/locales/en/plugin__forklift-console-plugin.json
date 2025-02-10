@@ -106,7 +106,7 @@
   "Create Plan": "Create Plan",
   "Create provider": "Create provider",
   "Create Provider": "Create Provider",
-  "Create Providers by using the form or manually entering YAML or JSON definitions. Provider CRs store attributes that enable MTV to connect to and interact with the source and target providers.": "Create Providers by using the form or manually entering YAML or JSON definitions. Provider CRs store attributes that enable MTV to connect to and interact with the source and target providers.",
+  "Create Providers by using the form below. Provider CRs store attributes that enable MTV to connect to and interact with the source and target providers.": "Create Providers by using the form below. Provider CRs store attributes that enable MTV to connect to and interact with the source and target providers.",
   "Create StorageMap": "Create StorageMap",
   "Created at": "Created at",
   "CreationTimestamp is a timestamp representing the server time when this object was created.\n                   It is not guaranteed to be set in happens-before order across separate operations.\n                  Clients may not set this value. It is represented in RFC3339 form and is in UTC.": "CreationTimestamp is a timestamp representing the server time when this object was created.\n                   It is not guaranteed to be set in happens-before order across separate operations.\n                  Clients may not set this value. It is represented in RFC3339 form and is in UTC.",
