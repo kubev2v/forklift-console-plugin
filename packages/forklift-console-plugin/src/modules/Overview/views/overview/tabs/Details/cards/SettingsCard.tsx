@@ -9,7 +9,7 @@ import {
 } from 'src/modules/Overview/modal';
 import { ModalHOC, useModal } from 'src/modules/Providers/modals';
 import { DetailsItem } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { Card, CardBody, CardTitle, DescriptionList, Text } from '@patternfly/react-core';
@@ -42,14 +42,17 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#max-concurrent-vms_mtv'
             }
             helpContent={
-              <Text>
-                {t(
-                  'Sets the maximum number of VMs that can be migrated simultaneously. The default value is 20 virtual machines.',
-                )}
-              </Text>
+              <ForkliftTrans>
+                Sets the maximum number of virtual machines or disks that can be migrated
+                simultaneously, varies by the source provider type and by the settings of the
+                migration.
+                <br />
+                <br />
+                The default value is 20 virtual machines or disks.
+              </ForkliftTrans>
             }
             crumbs={['spec', 'controller_max_vm_inflight']}
             onEdit={() => showModal(<EditMaxVMInFlightModal resource={obj} />)}
@@ -64,7 +67,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -86,7 +89,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -108,7 +111,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -130,7 +133,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -152,7 +155,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#advanced-migration-options_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
