@@ -34,6 +34,7 @@ import {
   LevelItem,
   PageSection,
   Pagination,
+  Split,
   Title,
   Toolbar,
   ToolbarContent,
@@ -41,6 +42,8 @@ import {
   ToolbarToggleGroup,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
+
+import TableBulkSelect from '../TableBulkSelect';
 
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
@@ -224,11 +227,6 @@ export interface StandardPageProps<T> {
    * Expanded ids
    */
   expandedIds?: string[];
-
-  /**
-   * Label to show count of selected items
-   */
-  selectedCountLabel?: (selectedIdCount: number) => string;
 }
 
 /**
@@ -286,11 +284,11 @@ export function StandardPage<T>({
   expandedIds,
   className,
   selectedIds,
-  selectedCountLabel,
+  onSelect,
 }: StandardPageProps<T>) {
   const { t } = useForkliftTranslation();
-  const [sortedData, setSortedData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+  const [sortedData, setSortedData] = useState<T[]>([]);
+  const [filteredData, setFilteredData] = useState<T[]>([]);
   const [page, setPage] = useState(initialPage);
 
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
@@ -382,49 +380,54 @@ export function StandardPage<T>({
       <PageSection variant="light">
         <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
           <ToolbarContent>
-            <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
-              {primaryFilters.length > 0 && (
-                <FilterGroup
-                  fieldFilters={primaryFilters}
-                  onFilterUpdate={setSelectedFilters}
-                  selectedFilters={selectedFilters}
-                  supportedFilterTypes={supportedFilters}
+            <Split hasGutter>
+              {selectedIds && onSelect && (
+                <TableBulkSelect
+                  selectedIds={selectedIds}
+                  dataIds={filteredData?.map(toId)}
+                  pageDataIds={pageData?.map(toId)}
+                  onSelect={onSelect}
                 />
               )}
-              <AttributeValueFilter
-                fieldFilters={fields
-                  .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
-                  .map(toFieldFilter(flatData))}
-                onFilterUpdate={setSelectedFilters}
-                selectedFilters={selectedFilters}
-                supportedFilterTypes={supportedFilters}
-              />
-              {!!fields.find((field) => field.filter?.standalone) && (
-                <FilterGroup
+
+              <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
+                {primaryFilters.length > 0 && (
+                  <FilterGroup
+                    fieldFilters={primaryFilters}
+                    onFilterUpdate={setSelectedFilters}
+                    selectedFilters={selectedFilters}
+                    supportedFilterTypes={supportedFilters}
+                  />
+                )}
+                <AttributeValueFilter
                   fieldFilters={fields
-                    .filter((field) => field.filter?.standalone)
+                    .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
                     .map(toFieldFilter(flatData))}
                   onFilterUpdate={setSelectedFilters}
                   selectedFilters={selectedFilters}
                   supportedFilterTypes={supportedFilters}
                 />
-              )}
-              <ManageColumnsToolbar
-                resourceFields={fields}
-                defaultColumns={fieldsMetadata}
-                setColumns={setFields}
-              />
-              {GlobalActionToolbarItems?.length > 0 &&
-                GlobalActionToolbarItems.map((Action, index) => (
-                  <Action key={index} dataOnScreen={showPagination ? pageData : filteredData} />
-                ))}
-            </ToolbarToggleGroup>
-
-            {selectedCountLabel && (
-              <ToolbarItem className="forklift-page__toolbar-item__selected-count">
-                {selectedCountLabel(selectedIds.length ?? 0)}
-              </ToolbarItem>
-            )}
+                {!!fields.find((field) => field.filter?.standalone) && (
+                  <FilterGroup
+                    fieldFilters={fields
+                      .filter((field) => field.filter?.standalone)
+                      .map(toFieldFilter(flatData))}
+                    onFilterUpdate={setSelectedFilters}
+                    selectedFilters={selectedFilters}
+                    supportedFilterTypes={supportedFilters}
+                  />
+                )}
+                <ManageColumnsToolbar
+                  resourceFields={fields}
+                  defaultColumns={fieldsMetadata}
+                  setColumns={setFields}
+                />
+                {GlobalActionToolbarItems?.length > 0 &&
+                  GlobalActionToolbarItems.map((Action, index) => (
+                    <Action key={index} dataOnScreen={showPagination ? pageData : filteredData} />
+                  ))}
+              </ToolbarToggleGroup>
+            </Split>
 
             {showPagination && (
               <ToolbarItem variant="pagination">
