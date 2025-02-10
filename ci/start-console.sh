@@ -4,8 +4,8 @@ set -euo pipefail
 script_dir=$(dirname "$0")
 source ${script_dir}/configure/openshift.sh
 
-CONSOLE_CONTAINER_NAME=okd-console
-FORKLIFT_NAMESPACE=konveyor-forklift
+CONSOLE_CONTAINER_NAME="okd-console"
+FORKLIFT_NAMESPACE="konveyor-forklift"
 
 BASE_HOST_URL="https://localhost"
 
@@ -16,6 +16,8 @@ CONTAINER_NETWORK="--network=host"
 
 CONSOLE_IMAGE="quay.io/openshift/origin-console:latest"
 CONSOLE_PORT="9000"
+CONSOLE_PORT_PUBLISH="--publish=$CONSOLE_PORT:$CONSOLE_PORT"
+CONSOLE_CONTAINER_NAME_RUN="--name=$CONSOLE_CONTAINER_NAME"
 
 # On macOS
 if [[ $(uname) = "Darwin" ]]; then
@@ -59,7 +61,7 @@ fi
 #      When the container network is default, host.containers.internal == container host
 #
 # NOTE: When running KinD we should use host network type because KinD only listen on localhost.
-BRIDGE_PLUGINS="${PLUGIN_NAME}=${PLUGIN_URL}"
+BRIDGE_PLUGINS="$PLUGIN_NAME=$PLUGIN_URL"
 BRIDGE_PLUGIN_PROXY=$(
     cat <<END | jq -c .
 {"services":[
@@ -106,10 +108,10 @@ $(echo ${BRIDGE_PLUGIN_PROXY} | jq .)
 podman run \
     --pull=${PULL_POLICY} \
     --rm \
-    ${mount_tmp_dir_flag} \
-    ${CONTAINER_NETWORK} \
-    --publish=${CONSOLE_PORT}:${CONSOLE_PORT} \
-    --name=${CONSOLE_CONTAINER_NAME} \
     --env "BRIDGE_*" \
     --arch=amd64 \
+    ${mount_tmp_dir_flag} \
+    ${CONTAINER_NETWORK} \
+    ${CONSOLE_PORT_PUBLISH} \
+    ${CONSOLE_CONTAINER_NAME_RUN} \
     ${CONSOLE_IMAGE}
