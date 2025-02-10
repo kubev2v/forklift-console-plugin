@@ -1,5 +1,5 @@
-import React from 'react';
-import { Namespace, useForkliftTranslation } from 'src/utils';
+import React, { FC, ReactNode } from 'react';
+import { useForkliftTranslation } from 'src/utils';
 
 import { FormGroupWithHelpText, TypeaheadSelect, TypeaheadSelectOption } from '@kubev2v/common';
 import {
@@ -15,10 +15,10 @@ interface ProjectNameSelectProps {
   options: TypeaheadSelectOption[];
   onSelect: (value: string) => void;
   isDisabled?: boolean;
-  popoverHelpContent?: React.ReactNode;
+  popoverHelpContent?: ReactNode;
 }
 
-export const ProjectNameSelect: React.FC<ProjectNameSelectProps> = ({
+export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
   value,
   options,
   isDisabled,
@@ -26,15 +26,6 @@ export const ProjectNameSelect: React.FC<ProjectNameSelectProps> = ({
   onSelect,
 }) => {
   const { t } = useForkliftTranslation();
-
-  // Fallback to "default" when the initial value does not exist within options
-  React.useEffect(() => {
-    const hasOptionValue = options.find((option) => option.name === value);
-
-    if (!hasOptionValue) {
-      onSelect(Namespace.Default);
-    }
-  }, []);
 
   return (
     <FormGroupWithHelpText
