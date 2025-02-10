@@ -1,11 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
+import { isPlanArchived } from 'src/modules/Plans/utils';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Plan } from '@kubev2v/types';
-import { Button, ToolbarItem } from '@patternfly/react-core';
+import { ToolbarItem } from '@patternfly/react-core';
 
 import { PlanVMsDeleteModal } from '../modals';
+
+import { VMsActionButton } from './VMsActionButton';
 
 export const PlanVMsDeleteButton: FC<{
   selectedIds: string[];
@@ -18,11 +21,30 @@ export const PlanVMsDeleteButton: FC<{
     showModal(<PlanVMsDeleteModal plan={plan} selected={selectedIds} />);
   };
 
+  const remainingVms = useMemo(() => {
+    return (plan?.spec?.vms || []).filter((vm) => !selectedIds.includes(vm.id)) || [];
+  }, [plan, selectedIds]);
+
+  const reason = useMemo(() => {
+    if (isPlanArchived(plan)) {
+      return t('Deleting virtual machines from an archived migration plan is not allowed.');
+    }
+    if (!selectedIds?.length) {
+      return t('Select at least one virtual machine.');
+    }
+    if (!remainingVms?.length) {
+      return t(
+        'All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',
+      );
+    }
+    return '';
+  }, [plan, selectedIds, remainingVms]);
+
   return (
     <ToolbarItem>
-      <Button variant="secondary" onClick={onClick} isDisabled={selectedIds?.length < 1}>
+      <VMsActionButton onClick={onClick} disabledReason={reason}>
         {t('Remove virtual machines')}
-      </Button>
+      </VMsActionButton>
     </ToolbarItem>
   );
 };
