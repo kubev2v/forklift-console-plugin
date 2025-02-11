@@ -64,7 +64,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   if (phase === PlanPhase.Ready) {
     return (
       <Button
-        variant="secondary"
+        variant="primary"
         icon={<StartIcon />}
         onClick={() =>
           showModal(
