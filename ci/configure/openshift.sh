@@ -35,13 +35,13 @@ function setup_bridge_for_bearer_token () {
 
         BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$(kubectl config current-context)\")].cluster.server}")
     elif oc_available_loggedin; then
-        echo "Setup for Openshift enviorment"
+        echo "Setup for Openshift environment"
 
         # If we have oc tool and an Openshift token, assume we are connected to openshift
         BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=${BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT:=$(oc whoami --show-server)}
         BRIDGE_K8S_AUTH_BEARER_TOKEN=$(oc whoami --show-token 2>/dev/null)
     else
-        echo "Setup for K8s enviorment"
+        echo "Setup for K8s environment"
 
         BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$(kubectl config current-context)\")].cluster.server}")
         BRIDGE_K8S_AUTH_BEARER_TOKEN="abcdef.0123456789abcdef"

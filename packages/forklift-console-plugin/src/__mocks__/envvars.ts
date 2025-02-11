@@ -3,7 +3,7 @@
  * `EnvironmentPlugin` definitions
  */
 
-import { ENVIRONMENT_DEFAULTS } from '../../enviorment-defaultss';
+import { ENVIRONMENT_DEFAULTS } from '../../environment-defaults';
 
 const environmentDefaults = {
   ...ENVIRONMENT_DEFAULTS,

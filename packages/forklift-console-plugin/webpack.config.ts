@@ -11,7 +11,7 @@ import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-serv
 
 import { ConsoleRemotePlugin } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
-import { ENVIRONMENT_DEFAULTS } from './enviorment-defaultss';
+import { ENVIRONMENT_DEFAULTS } from './environment-defaults';
 import extensions from './plugin-extensions';
 import pluginMetadata from './plugin-metadata';
 

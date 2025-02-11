@@ -33,7 +33,7 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 ``` bash
 # Start a local Openshift console server on the background.
 # - The console will be available in http://localhost:9000
-# - The inventory URL can be set using an enviorment variable,
+# - The inventory URL can be set using an environment variable,
 #   ( default value for INVENTORY_SERVER_HOST is https://localhost:30444 )
 #   for example:
 #     export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.example.com
@@ -48,7 +48,7 @@ export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster a
 export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster address>
 export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.18
 
-# Run the web console locally (uses the enviorment variables we defined above)
+# Run the web console locally (uses the environment variables we defined above)
 yarn console
 
 # If this is the first time running, yarn build will build the required dependencies

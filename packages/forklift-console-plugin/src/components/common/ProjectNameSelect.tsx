@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import { useForkliftTranslation } from 'src/utils';
 
 import { FormGroupWithHelpText, TypeaheadSelect, TypeaheadSelectOption } from '@kubev2v/common';
@@ -15,10 +15,10 @@ interface ProjectNameSelectProps {
   options: TypeaheadSelectOption[];
   onSelect: (value: string) => void;
   isDisabled?: boolean;
-  popoverHelpContent?: React.ReactNode;
+  popoverHelpContent?: ReactNode;
 }
 
-export const ProjectNameSelect: React.FC<ProjectNameSelectProps> = ({
+export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
   value,
   options,
   isDisabled,
