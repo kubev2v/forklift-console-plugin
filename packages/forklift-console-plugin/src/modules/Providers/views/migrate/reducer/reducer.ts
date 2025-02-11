@@ -1,8 +1,16 @@
 import { Draft } from 'immer';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
 
+import { ProviderType } from '@kubev2v/types';
+
 import { getIsTarget } from '../../../utils';
-import { CreateVmMigrationPageState, Mapping, MULTIPLE_NICS_ON_THE_SAME_NETWORK } from '../types';
+import { toId } from '../../details';
+import {
+  CreateVmMigrationPageState,
+  Mapping,
+  MULTIPLE_NICS_ON_THE_SAME_NETWORK,
+  OVIRT_NICS_WITH_EMPTY_PROFILE,
+} from '../types';
 
 import {
   ADD_NETWORK_MAPPING,
@@ -31,9 +39,11 @@ import {
   PlanTargetNamespace,
   PlanTargetProvider,
   POD_NETWORK,
+  ProjectName,
   REMOVE_ALERT,
   REPLACE_NETWORK_MAPPING,
   REPLACE_STORAGE_MAPPING,
+  SelectedVms,
   SET_API_ERROR,
   SET_AVAILABLE_PROVIDERS,
   SET_AVAILABLE_SOURCE_NETWORKS,
@@ -48,22 +58,29 @@ import {
   SET_NAME,
   SET_NICK_PROFILES,
   SET_PROJECT_NAME,
+  SET_SELECTED_VMS,
+  SET_SOURCE_PROVIDER,
   SET_TARGET_NAMESPACE,
   SET_TARGET_PROVIDER,
+  SourceProvider,
   START_CREATE,
 } from './actions';
 import { addMapping, deleteMapping, replaceMapping } from './changeMapping';
 import { createInitialState, InitialStateParameters } from './createInitialState';
+import { getNamespacesUsedBySelectedVms } from './getNamespacesUsedBySelectedVms';
 import { getNetworksUsedBySelectedVms } from './getNetworksUsedBySelectedVMs';
 import { getStoragesUsedBySelectedVms } from './getStoragesUsedBySelectedVMs';
 import { hasMultipleNicsOnTheSameNetwork } from './hasMultipleNicsOnTheSameNetwork';
+import { hasNicWithEmptyProfile } from './hasNicWithEmptyProfile';
 import {
   addIfMissing,
   alreadyInUseBySelectedVms,
   executeNetworkMappingValidation,
   executeStorageMappingValidation,
+  getObjectRef,
   recalculateNetworks,
   recalculateStorages,
+  resourceFieldsForType,
   reTestNetworks,
   reTestStorages,
   setTargetNamespace,
@@ -83,7 +100,7 @@ const handlers: {
     draft.underConstruction.plan.metadata.name = name;
     draft.validation.planName = validatePlanName(name, draft.existingResources.plans);
   },
-  [SET_PROJECT_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, PlanName>) {
+  [SET_PROJECT_NAME](draft, { payload: { name } }: PageAction<CreateVmMigration, ProjectName>) {
     draft.underConstruction.projectName = name;
     draft.validation.projectName = name ? 'success' : 'error';
   },
@@ -470,6 +487,59 @@ const handlers: {
         alerts.splice(index, 1);
       }
     });
+  },
+  [SET_SOURCE_PROVIDER](
+    draft,
+    { payload: { sourceProvider } }: PageAction<CreateVmMigration, SourceProvider>,
+  ) {
+    const sourceProviderRef = getObjectRef(sourceProvider);
+    const sourceProviderGenName = `${sourceProvider.metadata.name}-`;
+
+    draft.underConstruction.plan.spec.provider.source = sourceProviderRef;
+    draft.underConstruction.netMap.spec.provider.source = sourceProviderRef;
+    draft.underConstruction.storageMap.spec.provider.source = sourceProviderRef;
+
+    draft.underConstruction.netMap.metadata.generateName = sourceProviderGenName;
+    draft.underConstruction.storageMap.metadata.generateName = sourceProviderGenName;
+
+    draft.receivedAsParams.sourceProvider = sourceProvider;
+    draft.calculatedOnce.vmFieldsFactory = resourceFieldsForType(
+      sourceProvider?.spec?.type as ProviderType,
+    );
+    draft.flow.initialLoading = {
+      [SET_DISKS]: !['ovirt', 'openstack'].includes(sourceProvider.spec?.type),
+      [SET_NICK_PROFILES]: sourceProvider.spec?.type !== 'ovirt',
+    };
+  },
+  [SET_SELECTED_VMS](
+    draft,
+    { payload: { vms, sourceProvider } }: PageAction<CreateVmMigration, SelectedVms>,
+  ) {
+    const hasVmNicWithEmptyProfile = hasNicWithEmptyProfile(sourceProvider, vms);
+
+    draft.underConstruction.plan.spec.vms = vms.map((data) => ({
+      name: data.name,
+      namespace: data.namespace,
+      id: toId(data),
+    }));
+
+    draft.receivedAsParams.selectedVms = vms;
+    draft.validation.networkMappings = hasVmNicWithEmptyProfile ? 'error' : 'default';
+    draft.alerts.networkMappings = {
+      errors: hasVmNicWithEmptyProfile ? [OVIRT_NICS_WITH_EMPTY_PROFILE] : [],
+      warnings: hasMultipleNicsOnTheSameNetwork(vms) ? [MULTIPLE_NICS_ON_THE_SAME_NETWORK] : [],
+    };
+
+    draft.calculatedOnce = {
+      ...draft.calculatedOnce,
+      networkIdsUsedBySelectedVms:
+        sourceProvider.spec?.type !== 'ovirt' ? getNetworksUsedBySelectedVms(vms, []) : [],
+      storageIdsUsedBySelectedVms: ['ovirt', 'openstack'].includes(sourceProvider.spec?.type)
+        ? []
+        : getStoragesUsedBySelectedVms({}, vms, []),
+      namespacesUsedBySelectedVms:
+        sourceProvider.spec?.type === 'openshift' ? getNamespacesUsedBySelectedVms(vms) : [],
+    };
   },
   [INIT](
     draft,
