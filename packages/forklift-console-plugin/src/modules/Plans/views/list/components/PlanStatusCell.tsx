@@ -13,7 +13,16 @@ import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
-import { Button, Flex, FlexItem, Label, Spinner, Split, SplitItem } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  Flex,
+  FlexItem,
+  Label,
+  Spinner,
+  Split,
+  SplitItem,
+} from '@patternfly/react-core';
 import StartIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
 import { CellProps } from './CellProps';
@@ -64,7 +73,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   if (phase === PlanPhase.Ready) {
     return (
       <Button
-        variant="secondary"
+        variant={ButtonVariant.primary}
         icon={<StartIcon />}
         onClick={() =>
           showModal(
