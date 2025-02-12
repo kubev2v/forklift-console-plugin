@@ -76,7 +76,7 @@ export const CredentialsSection_: React.FC<{
   const doesProviderDataMatchSecret =
     secret?.metadata?.name === name && secret?.metadata?.namespace === namespace;
 
-  if (!loaded) {
+  if (!loaded && !loadError) {
     return (
       <div>
         <span className="text-muted">{t('Secret is loading, please wait.')}</span>

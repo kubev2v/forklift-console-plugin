@@ -37,7 +37,7 @@ echo "============================"
 if ! [ -x "$(command -v ${CONTAINER_CMD})" ]; then
   echo "Error: can't find '${CONTAINER_CMD}' command line utility, exit"
   echo ""
-  echo "you can changed the command line urility using a CONTAINER_CMD enviorment variable"
+  echo "you can changed the command line urility using a CONTAINER_CMD environment variable"
   echo "and try again."
   echo "for example: export CONTAINER_CMD=docker"
   exit 1

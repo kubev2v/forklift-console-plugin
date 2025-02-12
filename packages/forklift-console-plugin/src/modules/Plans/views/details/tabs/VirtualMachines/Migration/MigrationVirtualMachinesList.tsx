@@ -4,6 +4,7 @@ import {
   StandardPageWithSelection,
   StandardPageWithSelectionProps,
 } from 'src/components/page/StandardPageWithSelection';
+import { TableSortContextProvider } from 'src/components/TableSortContext';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -266,11 +267,12 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   const canSelectWhenNotExecuting = (item: VMData) =>
     (item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined) && !isExecuting;
 
+  const fieldsMetadata = fieldsMetadataFactory(t);
   const props: PageWithSelectionProps = {
+    fieldsMetadata,
     dataSource: [vmData || [], true, undefined],
     CellMapper: MigrationVirtualMachinesRow,
     ExpandedComponent: MigrationVirtualMachinesRowExtended,
-    fieldsMetadata: fieldsMetadataFactory(t),
     title: t('Virtual Machines'),
     userSettings: userSettings,
     namespace: '',
@@ -288,5 +290,9 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     GlobalActionToolbarItems: actions,
   };
 
-  return <PageWithSelection {...extendedProps} />;
+  return (
+    <TableSortContextProvider fields={fieldsMetadata}>
+      <PageWithSelection {...extendedProps} />
+    </TableSortContextProvider>
+  );
 };

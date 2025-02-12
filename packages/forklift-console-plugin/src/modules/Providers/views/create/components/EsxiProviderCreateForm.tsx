@@ -9,7 +9,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
-import { Checkbox, Form, Hint, HintBody, Popover, Radio, TextInput } from '@patternfly/react-core';
+import { Alert, Checkbox, Form, Popover, Radio, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 export interface EsxiProviderCreateFormProps {
   provider: V1beta1Provider;
@@ -210,21 +210,18 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
           </Popover>
         }
       >
-        <Hint>
-          <HintBody>
-            <VDDKHelperTextShort />
-            <Checkbox
-              className="forklift-section-provider-edit-vddk-checkbox"
-              label={t(
-                'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (migration might be slow).',
-              )}
-              isChecked={emptyVddkInitImage === 'yes'}
-              onChange={(e, v) => onChangEmptyVddk(v, e)}
-              id="emptyVddkInitImage"
-              name="emptyVddkInitImage"
-            />
-          </HintBody>
-        </Hint>
+        <Alert variant="warning" isInline title={<VDDKHelperTextShort />}>
+          <Checkbox
+            className="forklift-section-provider-edit-vddk-checkbox"
+            label={t(
+              'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
+            )}
+            isChecked={emptyVddkInitImage === 'yes'}
+            onChange={(e, v) => onChangEmptyVddk(v, e)}
+            id="emptyVddkInitImage"
+            name="emptyVddkInitImage"
+          />
+        </Alert>
         <div className="forklift-section-provider-edit-vddk-input">
           <TextInput
             spellCheck="false"

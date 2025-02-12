@@ -33,7 +33,7 @@ export const WarmDetailsItem: React.FC<PlanDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Warm migration')}
+      title={t('Migration type')}
       content={resource?.spec?.warm ? WarmLabel : ColdLabel}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['spec', 'warm ']}

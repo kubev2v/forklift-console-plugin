@@ -2,7 +2,9 @@ import React, { useReducer } from 'react';
 import { useHistory } from 'react-router';
 import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import { Namespace } from 'src/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
+import { getDefaultNamespace } from 'src/utils/namespaces';
 
 import { IoK8sApiCoreV1Secret, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
@@ -43,8 +45,9 @@ export const ProvidersCreatePage: React.FC<{
   const [isLoading, toggleIsLoading] = useToggle();
   const [activeNamespace, setActiveNamespace] = useActiveNamespace();
   const [providerNames] = useK8sWatchProviderNames({ namespace });
-  const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
-  const projectName = activeNamespace === '#ALL_NS#' ? defaultNamespace : activeNamespace;
+  const defaultNamespace = getDefaultNamespace();
+  const projectName =
+    activeNamespace === Namespace.AllProjects ? defaultNamespace : activeNamespace;
   const initialNamespace = namespace || projectName || defaultNamespace;
 
   const initialState: ProvidersCreatePageState = {
@@ -241,7 +244,7 @@ export const ProvidersCreatePage: React.FC<{
         <HelperText className="forklift-create-subtitle">
           <HelperTextItem variant="default">
             {t(
-              'Create Providers by using the form or manually entering YAML or JSON definitions. Provider CRs store attributes that enable MTV to connect to and interact with the source and target providers.',
+              'Create Providers by using the form below. Provider CRs store attributes that enable MTV to connect to and interact with the source and target providers.',
             )}
           </HelperTextItem>
         </HelperText>

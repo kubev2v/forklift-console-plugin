@@ -24,6 +24,8 @@ export const DEFAULT_NAMESPACE = 'default';
 // action type names
 export const SET_NAME = 'SET_NAME';
 export const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
+export const SET_SOURCE_PROVIDER = 'SET_SOURCE_PROVIDER';
+export const SET_SELECTED_VMS = 'SET_SELECTED_VMS';
 export const SET_DESCRIPTION = 'SET_DESCRIPTION';
 export const SET_TARGET_PROVIDER = 'SET_TARGET_PROVIDER';
 export const SET_TARGET_NAMESPACE = 'SET_TARGET_NAMESPACE';
@@ -52,6 +54,8 @@ export const INIT = 'INIT';
 export type CreateVmMigration =
   | typeof SET_NAME
   | typeof SET_PROJECT_NAME
+  | typeof SET_SOURCE_PROVIDER
+  | typeof SET_SELECTED_VMS
   | typeof SET_DESCRIPTION
   | typeof SET_TARGET_PROVIDER
   | typeof SET_TARGET_NAMESPACE
@@ -91,6 +95,15 @@ export interface PlanName {
 export interface ProjectName {
   name: string;
 }
+
+export type SourceProvider = {
+  sourceProvider: V1beta1Provider;
+};
+
+export type SelectedVms = {
+  vms: VmData[];
+  sourceProvider: V1beta1Provider;
+};
 
 export interface PlanDescription {
   description: string;
@@ -217,6 +230,26 @@ export const setProjectName = (name: string): PageAction<CreateVmMigration, Proj
   type: 'SET_PROJECT_NAME',
   payload: {
     name,
+  },
+});
+
+export const setSourceProvider = (
+  sourceProvider: V1beta1Provider,
+): PageAction<CreateVmMigration, SourceProvider> => ({
+  type: 'SET_SOURCE_PROVIDER',
+  payload: {
+    sourceProvider,
+  },
+});
+
+export const setSelectedVms = (
+  vms: VmData[],
+  sourceProvider: V1beta1Provider,
+): PageAction<CreateVmMigration, SelectedVms> => ({
+  type: 'SET_SELECTED_VMS',
+  payload: {
+    vms,
+    sourceProvider,
   },
 });
 

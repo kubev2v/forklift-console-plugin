@@ -49,6 +49,7 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
     lastMigration !== undefined && lastMigration?.status?.completed === undefined;
   const title_ = title || t('Start migration');
   const { name, namespace, uid } = resource?.metadata || {};
+  const { warm } = resource?.spec || {};
 
   const onStart = useCallback(async () => {
     toggleIsLoading();
@@ -129,7 +130,11 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
             Start the migration for plan <strong className="co-break-word">{name}</strong>?
           </p>
           <br />
-          <p>VMs included in the migration plan will be shut down.</p>
+          <p>
+            {warm
+              ? 'VMs included in this warm migration plan will move with minimal downtime.'
+              : 'VMs included in this cold migration plan will be shut down during the move between hosts.'}
+          </p>
         </ForkliftTrans>
       }
       {alertMessage}

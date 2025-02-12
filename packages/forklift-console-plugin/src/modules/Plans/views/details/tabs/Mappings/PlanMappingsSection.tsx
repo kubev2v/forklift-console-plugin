@@ -35,7 +35,7 @@ import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
 import { Mapping, MappingList } from '../../components';
 import {
-  canDeleteAndPatchPlanHooks,
+  canDeleteAndPatchPlanMaps,
   hasPlanMappingsChanged,
   hasSomeCompleteRunningVMs,
   mapSourceNetworksIdsToLabels,
@@ -570,7 +570,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     return (
       <>
         <Drawer>
-          {canDeleteAndPatchPlanHooks(plan) && (
+          {canDeleteAndPatchPlanMaps(plan) && (
             <FlexItem>
               <Button
                 variant="secondary"

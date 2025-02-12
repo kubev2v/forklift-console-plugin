@@ -6,7 +6,9 @@ import ProvidersCreateVmMigrationPage from 'src/modules/Providers/views/migrate/
 import { startCreate } from 'src/modules/Providers/views/migrate/reducer/actions';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
 import { useSaveEffect } from 'src/modules/Providers/views/migrate/useSaveEffect';
+import { Namespace } from 'src/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
+import { getDefaultNamespace } from 'src/utils/namespaces';
 
 import {
   PlanModelRef,
@@ -34,11 +36,10 @@ export const PlanCreatePage: FC<{ namespace: string }> = ({ namespace }) => {
   const history = useHistory();
   const createPlanFromPlansList = !(data?.provider !== undefined);
   const [activeNamespace, setActiveNamespace] = useActiveNamespace();
-  const defaultNamespace = process?.env?.DEFAULT_NAMESPACE || 'default';
+  const defaultNamespace = getDefaultNamespace();
   const projectName =
     data?.projectName ||
-    (activeNamespace === '#ALL_NS#' ? 'openshift-mtv' : activeNamespace) ||
-    defaultNamespace;
+    (activeNamespace === Namespace.AllProjects ? defaultNamespace : activeNamespace);
 
   const plansListURL = useMemo(() => {
     return getResourceUrl({

@@ -24,7 +24,6 @@ import {
   useFields,
   usePagination,
   UserSettings,
-  useSort,
   useUrlFilters,
   ValueMatcher,
   withTr,
@@ -41,6 +40,8 @@ import {
   ToolbarToggleGroup,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
+
+import { useTableSortContext } from '../TableSortContext';
 
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
@@ -299,7 +300,7 @@ export function StandardPage<T>({
   });
   const clearAllFilters = () => setSelectedFilters({});
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
-  const [activeSort, setActiveSort, compareFn] = useSort(fields);
+  const { activeSort, setActiveSort, compareFn } = useTableSortContext();
 
   const supportedMatchers = extraSupportedMatchers
     ? reduceValueFilters(extraSupportedMatchers, defaultValueMatchers)

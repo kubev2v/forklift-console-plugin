@@ -106,6 +106,8 @@ export const useProviderInventory = <T>({
         handleError(null);
       } catch (e) {
         handleError(e);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -126,8 +128,6 @@ export const useProviderInventory = <T>({
   function handleError(e: Error): void {
     if (e?.toString() !== oldErrorRef.current?.error) {
       setError(e);
-      setLoading(false);
-
       oldErrorRef.current = { error: e?.toString() };
     }
   }
@@ -156,8 +156,6 @@ export const useProviderInventory = <T>({
 
     if (needReRender) {
       setInventory(newInventory);
-      setLoading(false);
-
       oldDataRef.current = { inventory: newInventory };
     }
   }

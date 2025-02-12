@@ -3,7 +3,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
 import { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
-import { Checkbox, Hint, HintBody, TextInput } from '@patternfly/react-core';
+import { Alert, Checkbox, TextInput } from '@patternfly/react-core';
 
 import { VDDKHelperTextShort } from '../../utils/components/VDDKHelperText';
 import { validateVDDKImage } from '../../utils/validators';
@@ -46,21 +46,18 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
   };
 
   const body = (
-    <Hint>
-      <HintBody>
-        <VDDKHelperTextShort />
-        <Checkbox
-          className="forklift-section-provider-edit-vddk-checkbox"
-          label={t(
-            'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (migration might be slow).',
-          )}
-          isChecked={isEmptyImage}
-          onChange={(e, v) => onChange(v, e)}
-          id="emptyVddkInitImage"
-          name="emptyVddkInitImage"
-        />
-      </HintBody>
-    </Hint>
+    <Alert variant="warning" isInline title={<VDDKHelperTextShort />}>
+      <Checkbox
+        className="forklift-section-provider-edit-vddk-checkbox"
+        label={t(
+          'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
+        )}
+        isChecked={isEmptyImage}
+        onChange={(e, v) => onChange(v, e)}
+        id="emptyVddkInitImage"
+        name="emptyVddkInitImage"
+      />
+    </Alert>
   );
 
   return (
