@@ -12,9 +12,10 @@ export function providerAndSecretValidator(
   const type = provider?.spec?.type || '';
   const subTypeString = provider?.spec?.settings?.['sdkEndpoint'] || '';
   const subType = subTypeString === 'esxi' ? 'esxi' : 'vcenter';
+  const caCert = subType ? secret?.data?.cacert : undefined;
 
   const secretValidation = secretValidator(type, subType, secret);
-  const providerValidation = providerValidator(provider);
+  const providerValidation = providerValidator(provider, caCert);
 
   // Test for validation errors
   if (providerValidation?.type === 'error') {
