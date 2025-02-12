@@ -13,12 +13,14 @@ export const VDDKHelperText: React.FC = () => (
     <p>
       The Migration Toolkit for Virtualization (MTV) uses the VMware Virtual Disk Development Kit
       (VDDK) SDK to accelerate transferring virtual disks from VMware vSphere. Therefore, creating a
-      VDDK image, although optional, is highly recommended.
+      VDDK image, although optional, is highly recommended. Using MTV without VDDK is not
+      recommended and could result in significantly lower migration speeds
     </p>
     <br />
 
     <p>
-      To accelerate migrations, we recommend to create a VDDK init image. Learn more about{' '}
+      To accelerate migration and reduce the risk of a plan failing, it is strongly recommended to
+      create a VDDK init image. Learn more about{' '}
       <ExternalLink isInline href={CREATE_VDDK_HELP_LINK}>
         Creating a VDDK image
       </ExternalLink>
@@ -30,7 +32,8 @@ export const VDDKHelperText: React.FC = () => (
 export const VDDKHelperTextShort: React.FC = () => (
   <ForkliftTrans>
     <p>
-      To accelerate migrations, we recommend to create a VDDK init image. Learn more about{' '}
+      It is strongly recommended to use a VDDK image. Not using a VDDK image could result in
+      significantly lower migration speeds or a plan failing. For more information, see{' '}
       <ExternalLink isInline href={CREATE_VDDK_HELP_LINK}>
         Creating a VDDK image
       </ExternalLink>
