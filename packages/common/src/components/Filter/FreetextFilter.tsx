@@ -5,7 +5,7 @@ import { InputGroup, SearchInput, ToolbarFilter } from '@patternfly/react-core';
 import { FilterTypeProps } from './types';
 
 /**
- * This Filter type uses text provided by the user.
+ * This Filter type uses an unsensitive-case text provided by the user.
  * Text needs to be submitted/confirmed by clicking search button or by pressing Enter key.
  *
  * **FilterTypeProps are interpreted as follows** :<br>
@@ -32,10 +32,11 @@ export const FreetextFilter = ({
       [key: string]: string;
     },
   ) => void = () => {
-    if (!inputValue || selectedFilters.includes(inputValue)) {
+    const lowerCaseInputValue = inputValue?.toLowerCase();
+    if (!lowerCaseInputValue || selectedFilters.includes(lowerCaseInputValue)) {
       return;
     }
-    onFilterUpdate([...selectedFilters, inputValue]);
+    onFilterUpdate([...selectedFilters, lowerCaseInputValue]);
     setInputValue('');
   };
 
