@@ -11,7 +11,7 @@ export const providerCardItems: Record<string, SelectableGalleryItem> = {
   vsphere: {
     title: 'vSphere',
     logo: vmLogo,
-    content: "vSphere is VMware's cloud computing virtualization platform.",
+    content: "VMware vSphere is VMware's cloud computing virtualization platform.",
   },
   ovirt: {
     title: 'Red Hat Virtualization',
@@ -26,11 +26,12 @@ export const providerCardItems: Record<string, SelectableGalleryItem> = {
   ova: {
     title: 'Open Virtual Appliance (OVA)',
     logo: ovaLogo,
-    content: 'OVA file is a virtual appliance used by virtualization applications.',
+    content: 'An OVA file is a virtual appliance used by virtualization applications.',
   },
   openshift: {
     title: 'OpenShift Virtualization',
     logo: openshiftLogo,
-    content: 'OpenShift Virtualization run and manage virtual machine in OpenShift.',
+    content:
+      'Red Hat OpenShift Virtualization runs and manages virtual machines in Red Hat OpenShift.',
   },
 };
