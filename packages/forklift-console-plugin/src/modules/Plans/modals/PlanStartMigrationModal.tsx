@@ -8,6 +8,8 @@ import { MigrationModel, V1beta1Migration, V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 
+import { usePlanMigration } from '../hooks';
+
 /**
  * Props for the DeleteModal component
  * @typedef PlanStartMigrationModalProps
@@ -21,6 +23,7 @@ interface PlanStartMigrationModalProps {
   model: K8sModel;
   title?: string;
   redirectTo?: string;
+  setButtonEnabledOnChange: (enableStartButton: boolean) => void;
 }
 
 /**
@@ -33,21 +36,31 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
   title,
   resource,
   redirectTo,
+  setButtonEnabledOnChange,
 }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
   const history = useHistory();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
+  const [lastMigration] = usePlanMigration(resource);
 
+  const isRunningMigrationExist =
+    lastMigration !== undefined && lastMigration?.status?.completed === undefined;
   const title_ = title || t('Start migration');
   const { name, namespace, uid } = resource?.metadata || {};
   const { warm } = resource?.spec || {};
 
   const onStart = useCallback(async () => {
     toggleIsLoading();
+    setButtonEnabledOnChange(false);
 
     try {
+      if (isRunningMigrationExist) {
+        toggleModal();
+        return;
+      }
+
       const migration: V1beta1Migration = {
         apiVersion: 'forklift.konveyor.io/v1beta1',
         kind: 'Migration',
@@ -83,13 +96,20 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
 
       setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
     }
-  }, [resource]);
+  }, [resource, lastMigration]);
+
+  const onClickToggleModal: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (
+    _event,
+  ) => {
+    toggleModal();
+    setButtonEnabledOnChange(true);
+  };
 
   const actions = [
     <Button key="confirm" onClick={onStart} isLoading={isLoading}>
       {t('Start')}
     </Button>,
-    <Button key="cancel" variant="secondary" onClick={toggleModal}>
+    <Button key="cancel" variant="secondary" onClick={onClickToggleModal}>
       {t('Cancel')}
     </Button>,
   ];

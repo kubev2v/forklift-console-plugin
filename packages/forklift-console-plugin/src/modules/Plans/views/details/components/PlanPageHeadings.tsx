@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlanActionsDropdown } from 'src/modules/Plans/actions';
 import { PlanStartMigrationModal } from 'src/modules/Plans/modals';
 import { canPlanReStart, canPlanStart, getPlanPhase, PlanPhase } from 'src/modules/Plans/utils';
@@ -49,13 +49,17 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
   });
 
   const alerts = [];
-
   const canStart = canPlanStart(plan);
   const canReStart = canPlanReStart(plan);
   const planStatus = getPlanPhase({ obj: plan });
-
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
   const buttonStartIcon = canReStart ? <ReStartIcon /> : <StartIcon />;
+
+  const [isButtonEnabled, setIsButtonEnabled] = useState(canStart);
+
+  useEffect(() => {
+    if (canStart) setIsButtonEnabled(true);
+  }, [canStart]);
 
   const criticalCondition =
     planLoaded &&
@@ -116,13 +120,18 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
   const onClick = () => {
     showModal(
-      <PlanStartMigrationModal resource={plan} model={PlanModel} title={buttonStartLabel} />,
+      <PlanStartMigrationModal
+        resource={plan}
+        model={PlanModel}
+        title={buttonStartLabel}
+        setButtonEnabledOnChange={setIsButtonEnabled}
+      />,
     );
   };
 
   const actions = (
     <Level hasGutter>
-      {canStart && (
+      {canStart && isButtonEnabled && (
         <Button variant="primary" onClick={onClick}>
           <Level hasGutter>
             <>
