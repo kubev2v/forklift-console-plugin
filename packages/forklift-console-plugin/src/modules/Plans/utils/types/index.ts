@@ -2,4 +2,5 @@
 export * from './MigrationPhase';
 export * from './PlanData';
 export * from './PlanPhase';
+export * from './PlanSummaryStatus';
 // @endindex

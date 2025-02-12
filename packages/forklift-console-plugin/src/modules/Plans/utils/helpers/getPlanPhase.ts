@@ -1,6 +1,9 @@
 import { V1beta1Plan } from '@kubev2v/types';
 
 import { PlanData, PlanPhase } from '../types';
+import { PlanConditionType } from '../types/PlanCondition';
+
+import { getConditionTypes } from './getConditionTypes';
 
 export const getPlanPhase = (data: PlanData): PlanPhase => {
   const plan = data?.obj;
@@ -8,33 +11,29 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
   if (!plan) return PlanPhase.Unknown;
 
   // Check condition type
-  const conditions = getConditions(plan);
+  const conditionTypes = getConditionTypes(plan);
 
-  if (!conditions || conditions?.length < 1) {
+  if (!Object.keys(conditionTypes).length) {
     return PlanPhase.Unknown;
   }
 
   // Check for Archived
-  if (plan?.spec?.archived && !conditions.includes('Archived')) {
-    return PlanPhase.Archiving;
-  }
-
-  if (conditions.includes('Archived')) {
+  if (plan?.spec?.archived || conditionTypes[PlanConditionType.Archived]) {
     return PlanPhase.Archived;
   }
 
   // Check for Succeeded
-  if (conditions.includes('Succeeded')) {
+  if (conditionTypes[PlanConditionType.Succeeded]) {
     return PlanPhase.Succeeded;
   }
 
   // Check for Canceled
-  if (conditions.includes('Canceled')) {
+  if (conditionTypes[PlanConditionType.Canceled]) {
     return PlanPhase.Canceled;
   }
 
   // CHeck for Running
-  if (conditions.includes('Executing')) {
+  if (conditionTypes[PlanConditionType.Executing]) {
     return PlanPhase.Running;
   }
 
@@ -50,7 +49,7 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
   // Check for vm errors
   const vmError = plan?.status?.migration?.vms?.find((vm) => vm?.error);
 
-  if (conditions.includes('Failed')) {
+  if (conditionTypes[PlanConditionType.Failed]) {
     return PlanPhase.Failed;
   }
 
@@ -67,7 +66,7 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
     return PlanPhase.Warning;
   }
 
-  if (conditions.includes('Ready')) {
+  if (conditionTypes[PlanConditionType.Ready]) {
     return PlanPhase.Ready;
   }
 
@@ -75,32 +74,32 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
 };
 
 export const canPlanStart = (plan: V1beta1Plan) => {
-  const conditions = getConditions(plan);
+  const conditionTypes = getConditionTypes(plan);
 
   return (
-    conditions?.includes('Ready') &&
-    !conditions?.includes('Executing') &&
-    !conditions?.includes('Succeeded') &&
+    conditionTypes[PlanConditionType.Ready] &&
+    !conditionTypes[PlanConditionType.Executing] &&
+    !conditionTypes[PlanConditionType.Succeeded] &&
     !plan?.spec?.archived
   );
 };
 
 export const canPlanReStart = (plan: V1beta1Plan) => {
-  const conditions = getConditions(plan);
+  const conditionTypes = getConditionTypes(plan);
 
-  return conditions?.includes('Failed') || conditions?.includes('Canceled');
+  return conditionTypes[PlanConditionType.Failed] || conditionTypes[PlanConditionType.Canceled];
 };
 
 export const isPlanExecuting = (plan: V1beta1Plan) => {
-  const conditions = getConditions(plan);
+  const conditionTypes = getConditionTypes(plan);
 
-  return conditions?.includes('Executing');
+  return conditionTypes[PlanConditionType.Executing];
 };
 
 export const isPlanSucceeded = (plan: V1beta1Plan) => {
-  const conditions = getConditions(plan);
+  const conditionTypes = getConditionTypes(plan);
 
-  return conditions?.includes('Succeeded');
+  return conditionTypes[PlanConditionType.Succeeded];
 };
 
 export const isPlanEditable = (plan: V1beta1Plan) => {
@@ -120,8 +119,5 @@ export const isPlanEditable = (plan: V1beta1Plan) => {
 export const isPlanArchived = (plan: V1beta1Plan) => {
   const planStatus = getPlanPhase({ obj: plan });
 
-  return planStatus === PlanPhase.Archiving || planStatus === PlanPhase.Archived;
+  return planStatus === PlanPhase.Archived;
 };
-
-const getConditions = (obj: V1beta1Plan) =>
-  obj?.status?.conditions?.filter((c) => c.status === 'True').map((c) => c.type);
