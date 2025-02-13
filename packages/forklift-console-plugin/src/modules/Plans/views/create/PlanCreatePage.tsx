@@ -104,7 +104,11 @@ export const PlanCreatePage: FC<{ namespace: string }> = ({ namespace }) => {
       <PageSection variant="light">
         <Title headingLevel="h2">{'Create migration plan'}</Title>
       </PageSection>
-      <PageSection variant="light" className="forklift--create-plan--wizard-container">
+      <PageSection
+        hasOverflowScroll={true}
+        variant="light"
+        className="forklift--create-plan--wizard-container"
+      >
         <Wizard
           className="forklift--create-plan--wizard-content"
           shouldFocusContent
