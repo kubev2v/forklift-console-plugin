@@ -310,12 +310,17 @@ const handlers: {
   [START_CREATE]({
     flow,
     receivedAsParams: { sourceProvider },
-    underConstruction: { plan, netMap, storageMap },
+    underConstruction: { plan, netMap, storageMap, projectName },
     calculatedOnce: { sourceNetworkLabelToId, sourceStorageLabelToId },
     calculatedPerNamespace: { networkMappings, storageMappings },
   }) {
     // triggered by the user
     flow.editingDone = true;
+
+    netMap.metadata.namespace = projectName;
+    storageMap.metadata.namespace = projectName;
+    plan.metadata.namespace = projectName;
+
     netMap.spec.map = networkMappings.map(({ source, destination }) => ({
       source:
         sourceNetworkLabelToId[source] === 'pod'
@@ -330,6 +335,7 @@ const handlers: {
           ? { type: 'pod' }
           : { name: destination, namespace: plan.spec.targetNamespace, type: 'multus' },
     }));
+
     storageMap.spec.map = storageMappings.map(({ source, destination }) => {
       if (sourceProvider?.spec?.type === 'openshift') {
         return {
