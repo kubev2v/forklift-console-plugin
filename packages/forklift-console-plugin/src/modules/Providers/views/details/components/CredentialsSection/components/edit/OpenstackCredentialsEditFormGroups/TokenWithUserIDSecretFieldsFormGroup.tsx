@@ -10,6 +10,8 @@ import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon'
 
 import { EditComponentProps } from '../../BaseCredentialsSection';
 
+import { OpenstackSecretFieldId } from './constants';
+
 export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
   secret,
   onChange,
@@ -24,10 +26,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
   const initialState = {
     passwordHidden: true,
     validation: {
-      token: openstackSecretFieldValidator('token', token),
-      userID: openstackSecretFieldValidator('userID', userID),
-      projectID: openstackSecretFieldValidator('projectID', projectID),
-      regionName: openstackSecretFieldValidator('regionName', regionName),
+      token: openstackSecretFieldValidator(OpenstackSecretFieldId.Token, token),
+      userID: openstackSecretFieldValidator(OpenstackSecretFieldId.UserId, userID),
+      projectID: openstackSecretFieldValidator(OpenstackSecretFieldId.ProjectId, projectID),
+      regionName: openstackSecretFieldValidator(OpenstackSecretFieldId.RegionName, regionName),
     },
   };
 
@@ -77,7 +79,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
       <FormGroupWithHelpText
         label={t('Token')}
         isRequired
-        fieldId="token"
+        fieldId={OpenstackSecretFieldId.Token}
         helperText={state.validation.token.msg}
         helperTextInvalid={state.validation.token.msg}
         validated={state.validation.token.type}
@@ -88,10 +90,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
             className="pf-u-w-75"
             isRequired
             type={state.passwordHidden ? 'password' : 'text'}
-            id="token"
-            name="token"
+            id={OpenstackSecretFieldId.Token}
+            name={OpenstackSecretFieldId.Token}
             value={token}
-            onChange={(e, v) => onChangeFactory('token')(v, e)}
+            onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.Token)(v, e)}
             validated={state.validation.token.type}
           />
           <Button
@@ -107,7 +109,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
       <FormGroupWithHelpText
         label={t('User ID')}
         isRequired
-        fieldId="userID"
+        fieldId={OpenstackSecretFieldId.UserId}
         helperText={state.validation.userID.msg}
         helperTextInvalid={state.validation.userID.msg}
         validated={state.validation.userID.type}
@@ -116,10 +118,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           spellCheck="false"
           isRequired
           type="text"
-          id="userID"
-          name="userID"
+          id={OpenstackSecretFieldId.UserId}
+          name={OpenstackSecretFieldId.UserId}
           value={userID}
-          onChange={(e, v) => onChangeFactory('userID')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.UserId)(v, e)}
           validated={state.validation.userID.type}
         />
       </FormGroupWithHelpText>
@@ -127,7 +129,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
       <FormGroupWithHelpText
         label={t('Project ID')}
         isRequired
-        fieldId="projectID"
+        fieldId={OpenstackSecretFieldId.ProjectId}
         helperText={state.validation.projectID.msg}
         helperTextInvalid={state.validation.projectID.msg}
         validated={state.validation.projectID.type}
@@ -136,10 +138,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           spellCheck="false"
           isRequired
           type="text"
-          id="projectID"
-          name="projectID"
+          id={OpenstackSecretFieldId.ProjectId}
+          name={OpenstackSecretFieldId.ProjectId}
           value={projectID}
-          onChange={(e, v) => onChangeFactory('projectID')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.ProjectId)(v, e)}
           validated={state.validation.projectID.type}
         />
       </FormGroupWithHelpText>
@@ -147,7 +149,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
       <FormGroupWithHelpText
         label={t('Region')}
         isRequired
-        fieldId="regionName"
+        fieldId={OpenstackSecretFieldId.RegionName}
         helperText={state.validation.regionName.msg}
         helperTextInvalid={state.validation.regionName.msg}
         validated={state.validation.regionName.type}
@@ -156,10 +158,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           spellCheck="false"
           isRequired
           type="text"
-          id="regionName"
-          name="regionName"
+          id={OpenstackSecretFieldId.RegionName}
+          name={OpenstackSecretFieldId.RegionName}
           value={regionName}
-          onChange={(e, v) => onChangeFactory('regionName')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.RegionName)(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
