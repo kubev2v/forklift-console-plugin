@@ -3,21 +3,26 @@ import { usePlanMigration } from 'src/modules/Plans/hooks';
 import { PlanStartMigrationModal } from 'src/modules/Plans/modals';
 import {
   getMigrationVmsCounts,
-  getPlanPhase,
+  getPlanSummaryStatus,
   isPlanArchived,
   isPlanExecuting,
-  PlanPhase,
+  PlanSummaryStatus,
 } from 'src/modules/Plans/utils';
 import { useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { LoadingSpinner } from '@kubev2v/common';
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
-import { Button, Flex, FlexItem, Label, Spinner, Split, SplitItem } from '@patternfly/react-core';
+import { Button, Flex, FlexItem, spinnerSize, Split, SplitItem } from '@patternfly/react-core';
 import StartIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
-import { CellProps } from './CellProps';
-import { PlanStatusVmCount } from './PlanStatusVmCount';
+import { CellProps } from '../CellProps';
+import { PlanStatusVmCount } from '../PlanStatusVmCount';
+
+import { PlanStatusCellLabel } from './PlanStatusCellLabel';
+
+import './PlanStatusCell.style.scss';
 
 type VmPipelineTask = {
   vmName: string;
@@ -28,13 +33,9 @@ type VmPipelineTask = {
 export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
+
   const plan = data?.obj;
-
-  const vmStatuses = plan?.status?.migration?.vms;
   const [lastMigration] = usePlanMigration(plan);
-
-  const isWarmAndExecuting = plan.spec?.warm && isPlanExecuting(plan);
-  const isWaitingForCutover = isWarmAndExecuting && !isPlanArchived(plan);
 
   const vmPipelineTasks = lastMigration?.status.vms?.reduce(
     (acc: VmPipelineTask[], migrationVm) => {
@@ -47,9 +48,11 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
     [],
   );
 
-  const phase = getPlanPhase(data);
-  const isPlanLoading =
-    !isWaitingForCutover && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
+  const vmStatuses = lastMigration?.status.vms;
+  const planStatus = getPlanSummaryStatus(data);
+  const isWarmAndExecuting = plan.spec?.warm && isPlanExecuting(plan);
+  const isWaitingForCutover = isWarmAndExecuting && !isPlanArchived(plan);
+  const isPlanLoading = !isWaitingForCutover && planStatus === PlanSummaryStatus.Running;
   const planURL = getResourceUrl({
     reference: PlanModelRef,
     name: plan?.metadata?.name,
@@ -61,7 +64,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   // Could possibly use a querystring to dictate a table filter for the list of VMs.
   const vmCountLinkPath = `${planURL}/vms`;
 
-  if (phase === PlanPhase.Ready) {
+  if (planStatus === PlanSummaryStatus.ReadyToStart) {
     return (
       <Button
         variant="secondary"
@@ -87,45 +90,51 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
 
   return (
     <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
-      {isPlanLoading ? (
-        <Spinner size="md" />
-      ) : phase === PlanPhase.NotReady ? (
-        t('Validating...')
-      ) : (
-        <Label isCompact>{phase}</Label>
-      )}
+      <Flex
+        alignItems={{ default: 'alignItemsCenter' }}
+        spaceItems={{ default: 'spaceItemsSm' }}
+        className="plan-status-cell-label-section"
+      >
+        <FlexItem>
+          <LoadingSpinner isLoading={isPlanLoading} size={spinnerSize.md}>
+            <PlanStatusCellLabel status={planStatus} />
+          </LoadingSpinner>
+        </FlexItem>
 
-      {progressValue !== 0 && isPlanLoading && (
-        <FlexItem className="pf-v5-u-font-size-sm">{Math.trunc(progressValue)}%</FlexItem>
-      )}
-
-      <Split hasGutter>
-        {vmCount.success > 0 && (
-          <SplitItem>
-            <PlanStatusVmCount
-              count={vmCount.success}
-              status="success"
-              linkPath={vmCountLinkPath}
-            />
-          </SplitItem>
+        {progressValue !== 0 && isPlanLoading && (
+          <FlexItem className="pf-v5-u-font-size-sm">{Math.trunc(progressValue)}%</FlexItem>
         )}
+      </Flex>
 
-        {vmCount.canceled > 0 && (
-          <SplitItem>
-            <PlanStatusVmCount
-              count={vmCount.canceled}
-              status="warning"
-              linkPath={vmCountLinkPath}
-            />
-          </SplitItem>
-        )}
+      <FlexItem>
+        <Split hasGutter>
+          {vmCount.success > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount
+                count={vmCount.success}
+                status="success"
+                linkPath={vmCountLinkPath}
+              />
+            </SplitItem>
+          )}
 
-        {vmCount.error > 0 && (
-          <SplitItem>
-            <PlanStatusVmCount count={vmCount.error} status="danger" linkPath={vmCountLinkPath} />
-          </SplitItem>
-        )}
-      </Split>
+          {vmCount.canceled > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount
+                count={vmCount.canceled}
+                status="warning"
+                linkPath={vmCountLinkPath}
+              />
+            </SplitItem>
+          )}
+
+          {vmCount.error > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount count={vmCount.error} status="danger" linkPath={vmCountLinkPath} />
+            </SplitItem>
+          )}
+        </Split>
+      </FlexItem>
     </Flex>
   );
 };
