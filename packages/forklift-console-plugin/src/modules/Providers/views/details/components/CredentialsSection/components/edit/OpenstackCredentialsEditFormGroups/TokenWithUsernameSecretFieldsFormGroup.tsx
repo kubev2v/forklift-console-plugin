@@ -10,6 +10,8 @@ import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon'
 
 import { EditComponentProps } from '../../BaseCredentialsSection';
 
+import { OpenstackSecretFieldId } from './constants';
+
 export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
   secret,
   onChange,
@@ -25,11 +27,11 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
   const initialState = {
     passwordHidden: true,
     validation: {
-      token: openstackSecretFieldValidator('token', token),
-      username: openstackSecretFieldValidator('username', username),
-      regionName: openstackSecretFieldValidator('regionName', regionName),
-      projectName: openstackSecretFieldValidator('projectName', projectName),
-      domainName: openstackSecretFieldValidator('domainName', domainName),
+      token: openstackSecretFieldValidator(OpenstackSecretFieldId.Token, token),
+      username: openstackSecretFieldValidator(OpenstackSecretFieldId.Username, username),
+      regionName: openstackSecretFieldValidator(OpenstackSecretFieldId.RegionName, regionName),
+      projectName: openstackSecretFieldValidator(OpenstackSecretFieldId.ProjectName, projectName),
+      domainName: openstackSecretFieldValidator(OpenstackSecretFieldId.DomainName, domainName),
     },
   };
 
@@ -79,7 +81,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
       <FormGroupWithHelpText
         label={t('Token')}
         isRequired
-        fieldId="token"
+        fieldId={OpenstackSecretFieldId.Token}
         helperText={state.validation.token.msg}
         helperTextInvalid={state.validation.token.msg}
         validated={state.validation.token.type}
@@ -90,10 +92,10 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
             className="pf-u-w-75"
             isRequired
             type={state.passwordHidden ? 'password' : 'text'}
-            id="token"
-            name="token"
+            id={OpenstackSecretFieldId.Token}
+            name={OpenstackSecretFieldId.Token}
             value={token}
-            onChange={(e, v) => onChangeFactory('token')(v, e)}
+            onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.Token)(v, e)}
             validated={state.validation.token.type}
           />
           <Button
@@ -109,7 +111,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
       <FormGroupWithHelpText
         label={t('Username')}
         isRequired
-        fieldId="username"
+        fieldId={OpenstackSecretFieldId.Username}
         helperText={state.validation.username.msg}
         helperTextInvalid={state.validation.username.msg}
         validated={state.validation.username.type}
@@ -118,10 +120,10 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           spellCheck="false"
           isRequired
           type="text"
-          id="username"
-          name="username"
+          id={OpenstackSecretFieldId.Username}
+          name={OpenstackSecretFieldId.Username}
           value={username}
-          onChange={(e, v) => onChangeFactory('Username')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.Username)(v, e)}
           validated={state.validation.username.type}
         />
       </FormGroupWithHelpText>
@@ -129,7 +131,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
       <FormGroupWithHelpText
         label={t('Region')}
         isRequired
-        fieldId="regionName"
+        fieldId={OpenstackSecretFieldId.RegionName}
         helperText={state.validation.regionName.msg}
         helperTextInvalid={state.validation.regionName.msg}
         validated={state.validation.regionName.type}
@@ -138,10 +140,10 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           spellCheck="false"
           isRequired
           type="text"
-          id="regionName"
-          name="regionName"
+          id={OpenstackSecretFieldId.RegionName}
+          name={OpenstackSecretFieldId.RegionName}
           value={regionName}
-          onChange={(e, v) => onChangeFactory('regionName')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.RegionName)(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -149,7 +151,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
       <FormGroupWithHelpText
         label={t('Project')}
         isRequired
-        fieldId="projectName"
+        fieldId={OpenstackSecretFieldId.ProjectName}
         helperText={state.validation.projectName.msg}
         helperTextInvalid={state.validation.projectName.msg}
         validated={state.validation.projectName.type}
@@ -158,10 +160,10 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           spellCheck="false"
           isRequired
           type="text"
-          id="projectName"
-          name="projectName"
+          id={OpenstackSecretFieldId.ProjectName}
+          name={OpenstackSecretFieldId.ProjectName}
           value={projectName}
-          onChange={(e, v) => onChangeFactory('projectName')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.ProjectName)(v, e)}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>
@@ -169,7 +171,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
       <FormGroupWithHelpText
         label={t('Domain name')}
         isRequired
-        fieldId="domainName"
+        fieldId={OpenstackSecretFieldId.DomainName}
         helperText={state.validation.domainName.msg}
         helperTextInvalid={state.validation.domainName.msg}
         validated={state.validation.domainName.type}
@@ -178,10 +180,10 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
           spellCheck="false"
           isRequired
           type="text"
-          id="domainName"
-          name="domainName"
+          id={OpenstackSecretFieldId.DomainName}
+          name={OpenstackSecretFieldId.DomainName}
           value={domainName}
-          onChange={(e, v) => onChangeFactory('domainName')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.DomainName)(v, e)}
           validated={state.validation.domainName.type}
         />
       </FormGroupWithHelpText>

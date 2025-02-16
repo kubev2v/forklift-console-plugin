@@ -10,6 +10,8 @@ import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon'
 
 import { EditComponentProps } from '../../BaseCredentialsSection';
 
+import { OpenstackSecretFieldId } from './constants';
+
 export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
   secret,
   onChange,
@@ -27,17 +29,17 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
     passwordHidden: true,
     validation: {
       applicationCredentialName: openstackSecretFieldValidator(
-        'applicationCredentialName',
+        OpenstackSecretFieldId.ApplicationCredentialName,
         applicationCredentialName,
       ),
       applicationCredentialSecret: openstackSecretFieldValidator(
-        'applicationCredentialSecret',
+        OpenstackSecretFieldId.ApplicationCredentialSecret,
         applicationCredentialSecret,
       ),
-      username: openstackSecretFieldValidator('username', username),
-      regionName: openstackSecretFieldValidator('regionName', regionName),
-      projectName: openstackSecretFieldValidator('projectName', projectName),
-      domainName: openstackSecretFieldValidator('domainName', domainName),
+      username: openstackSecretFieldValidator(OpenstackSecretFieldId.Username, username),
+      regionName: openstackSecretFieldValidator(OpenstackSecretFieldId.RegionName, regionName),
+      projectName: openstackSecretFieldValidator(OpenstackSecretFieldId.ProjectName, projectName),
+      domainName: openstackSecretFieldValidator(OpenstackSecretFieldId.DomainName, domainName),
     },
   };
 
@@ -88,7 +90,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
       <FormGroupWithHelpText
         label={t('Application credential name')}
         isRequired
-        fieldId="applicationCredentialName"
+        fieldId={OpenstackSecretFieldId.ApplicationCredentialName}
         helperText={state.validation.applicationCredentialName.msg}
         helperTextInvalid={state.validation.applicationCredentialName.msg}
         validated={state.validation.applicationCredentialName.type}
@@ -97,10 +99,12 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           spellCheck="false"
           isRequired
           type="text"
-          id="applicationCredentialName"
-          name="applicationCredentialName"
+          id={OpenstackSecretFieldId.ApplicationCredentialName}
+          name={OpenstackSecretFieldId.ApplicationCredentialName}
           value={applicationCredentialName}
-          onChange={(e, v) => onChangeFactory('applicationCredentialName')(v, e)}
+          onChange={(e, v) =>
+            onChangeFactory(OpenstackSecretFieldId.ApplicationCredentialName)(v, e)
+          }
           validated={state.validation.applicationCredentialName.type}
         />
       </FormGroupWithHelpText>
@@ -108,7 +112,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
       <FormGroupWithHelpText
         label={t('Application credential secret')}
         isRequired
-        fieldId="applicationCredentialSecret"
+        fieldId={OpenstackSecretFieldId.ApplicationCredentialSecret}
         helperText={state.validation.applicationCredentialSecret.msg}
         helperTextInvalid={state.validation.applicationCredentialSecret.msg}
         validated={state.validation.applicationCredentialSecret.type}
@@ -119,10 +123,12 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
             className="pf-u-w-75"
             isRequired
             type={state.passwordHidden ? 'password' : 'text'}
-            id="applicationCredentialSecret"
-            name="applicationCredentialSecret"
+            id={OpenstackSecretFieldId.ApplicationCredentialSecret}
+            name={OpenstackSecretFieldId.ApplicationCredentialSecret}
             value={applicationCredentialSecret}
-            onChange={(e, v) => onChangeFactory('applicationCredentialSecret')(v, e)}
+            onChange={(e, v) =>
+              onChangeFactory(OpenstackSecretFieldId.ApplicationCredentialSecret)(v, e)
+            }
             validated={state.validation.applicationCredentialSecret.type}
           />
           <Button
@@ -138,7 +144,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
       <FormGroupWithHelpText
         label={t('Username')}
         isRequired
-        fieldId="username"
+        fieldId={OpenstackSecretFieldId.Username}
         helperText={state.validation.username.msg}
         helperTextInvalid={state.validation.username.msg}
         validated={state.validation.username.type}
@@ -147,10 +153,10 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           spellCheck="false"
           isRequired
           type="text"
-          id="username"
-          name="username"
+          id={OpenstackSecretFieldId.Username}
+          name={OpenstackSecretFieldId.Username}
           value={username}
-          onChange={(e, v) => onChangeFactory('username')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.Username)(v, e)}
           validated={state.validation.username.type}
         />
       </FormGroupWithHelpText>
@@ -158,7 +164,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
       <FormGroupWithHelpText
         label={t('Region')}
         isRequired
-        fieldId="regionName"
+        fieldId={OpenstackSecretFieldId.RegionName}
         helperText={state.validation.regionName.msg}
         helperTextInvalid={state.validation.regionName.msg}
         validated={state.validation.regionName.type}
@@ -167,10 +173,10 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           spellCheck="false"
           isRequired
           type="text"
-          id="regionName"
-          name="regionName"
+          id={OpenstackSecretFieldId.RegionName}
+          name={OpenstackSecretFieldId.RegionName}
           value={regionName}
-          onChange={(e, v) => onChangeFactory('regionName')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.RegionName)(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -178,7 +184,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
       <FormGroupWithHelpText
         label={t('Project')}
         isRequired
-        fieldId="projectName"
+        fieldId={OpenstackSecretFieldId.ProjectName}
         helperText={state.validation.projectName.msg}
         helperTextInvalid={state.validation.projectName.msg}
         validated={state.validation.projectName.type}
@@ -187,10 +193,10 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           spellCheck="false"
           isRequired
           type="text"
-          id="projectName"
-          name="projectName"
+          id={OpenstackSecretFieldId.ProjectName}
+          name={OpenstackSecretFieldId.ProjectName}
           value={projectName}
-          onChange={(e, v) => onChangeFactory('projectName')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.ProjectName)(v, e)}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>
@@ -198,7 +204,7 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
       <FormGroupWithHelpText
         label={t('Domain')}
         isRequired
-        fieldId="domainName"
+        fieldId={OpenstackSecretFieldId.DomainName}
         helperText={state.validation.domainName.msg}
         helperTextInvalid={state.validation.domainName.msg}
         validated={state.validation.domainName.type}
@@ -207,10 +213,10 @@ export const ApplicationCredentialNameSecretFieldsFormGroup: React.FC<EditCompon
           spellCheck="false"
           isRequired
           type="text"
-          id="domainName"
-          name="domainName"
+          id={OpenstackSecretFieldId.DomainName}
+          name={OpenstackSecretFieldId.DomainName}
           value={domainName}
-          onChange={(e, v) => onChangeFactory('domainName')(v, e)}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.DomainName)(v, e)}
           validated={state.validation.domainName.type}
         />
       </FormGroupWithHelpText>
