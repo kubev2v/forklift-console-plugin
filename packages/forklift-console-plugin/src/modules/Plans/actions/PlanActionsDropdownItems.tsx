@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
@@ -42,12 +42,22 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
   const canReStart = canPlanReStart(plan);
   const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
   const isArchived = isPlanArchived(plan);
-
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
+
+  const [isStartItemEnabled, setIsStartItemEnabled] = useState(canStart);
+
+  useEffect(() => {
+    if (canStart) setIsStartItemEnabled(true);
+  }, [canStart]);
 
   const onClickPlanStart = () => {
     showModal(
-      <PlanStartMigrationModal resource={plan} model={PlanModel} title={buttonStartLabel} />,
+      <PlanStartMigrationModal
+        resource={plan}
+        model={PlanModel}
+        title={buttonStartLabel}
+        setButtonEnabledOnChange={setIsStartItemEnabled}
+      />,
     );
   };
 
@@ -70,7 +80,12 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
   return [
     <DropdownItemLink value={0} key="EditPlan" href={planURL} description={t('Edit Plan')} />,
 
-    <DropdownItem value={1} key="start" isDisabled={!canStart} onClick={onClickPlanStart}>
+    <DropdownItem
+      value={1}
+      key="start"
+      isDisabled={!canStart || !isStartItemEnabled}
+      onClick={onClickPlanStart}
+    >
       {buttonStartLabel}
     </DropdownItem>,
 
