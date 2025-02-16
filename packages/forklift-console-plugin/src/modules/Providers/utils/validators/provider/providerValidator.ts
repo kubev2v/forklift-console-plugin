@@ -8,7 +8,7 @@ import { ovaProviderValidator } from './ova/ovaProviderValidator';
 import { ovirtProviderValidator } from './ovirt/ovirtProviderValidator';
 import { vsphereProviderValidator } from './vsphere/vsphereProviderValidator';
 
-export function providerValidator(provider: V1beta1Provider): ValidationMsg {
+export function providerValidator(provider: V1beta1Provider, caCert?: string): ValidationMsg {
   let validationError: ValidationMsg;
 
   switch (provider.spec.type) {
@@ -22,7 +22,7 @@ export function providerValidator(provider: V1beta1Provider): ValidationMsg {
       validationError = ovirtProviderValidator(provider);
       break;
     case 'vsphere':
-      validationError = vsphereProviderValidator(provider);
+      validationError = vsphereProviderValidator(provider, caCert);
       break;
     case 'ova':
       validationError = ovaProviderValidator(provider);

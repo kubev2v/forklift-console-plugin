@@ -71,7 +71,11 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
         default:
           return (
             <>
-              <VCenterProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
+              <VCenterProviderCreateForm
+                provider={newProvider}
+                caCert={newSecret.data.cacert}
+                onChange={onNewProviderChange}
+              />
 
               <EditProviderSectionHeading text={t('Provider credentials')} />
               <VCenterCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
