@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { usePlanMigration } from 'src/modules/Plans/hooks';
 import { PlanStartMigrationModal } from 'src/modules/Plans/modals';
 import {
@@ -41,11 +41,12 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
 
   const vmStatuses = plan?.status?.migration?.vms;
   const [lastMigration] = usePlanMigration(plan);
+  const [isButtonEnabled, setIsButtonEnabled] = useState(true);
 
   const isWarmAndExecuting = plan.spec?.warm && isPlanExecuting(plan);
   const isWaitingForCutover = isWarmAndExecuting && !isPlanArchived(plan);
 
-  const vmPipelineTasks = lastMigration?.status.vms?.reduce(
+  const vmPipelineTasks = lastMigration?.status?.vms?.reduce(
     (acc: VmPipelineTask[], migrationVm) => {
       migrationVm.pipeline.forEach((pipelineStep) => {
         acc.push({ vmName: migrationVm.name, task: pipelineStep.name, status: pipelineStep.phase });
@@ -75,9 +76,15 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
       <Button
         variant={ButtonVariant.primary}
         icon={<StartIcon />}
+        isDisabled={!isButtonEnabled}
         onClick={() =>
           showModal(
-            <PlanStartMigrationModal resource={plan} model={PlanModel} title={t('Start')} />,
+            <PlanStartMigrationModal
+              resource={plan}
+              model={PlanModel}
+              title={t('Start')}
+              setButtonEnabledOnChange={setIsButtonEnabled}
+            />,
           )
         }
       >
