@@ -225,7 +225,7 @@ const countTasks = (diskTransfer: V1beta1PlanStatusMigrationVmsPipeline) => {
 
   // search num of completed tasks (either tasks that completed successfully or ones that aren't finished but their pipeline step is).
   const completedTasks = diskTransfer.tasks.filter((task) =>
-    hasTaskCompleted(task.phase, diskTransfer),
+    hasTaskCompleted(task.phase, task.progress, diskTransfer),
   ).length;
 
   return { totalTasks, completedTasks };
