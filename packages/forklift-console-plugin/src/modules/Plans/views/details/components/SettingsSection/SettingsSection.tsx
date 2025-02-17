@@ -6,6 +6,7 @@ import { ProviderModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@ku
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 
+import SharedDisksDetailsItem from './components/SharedDisksDetailsItem/SharedDisksDetailsItem';
 import {
   PreserveClusterCpuModelDetailsItem,
   PreserveStaticIPsDetailsItem,
@@ -79,6 +80,10 @@ export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, p
 
         {['vsphere'].includes(sourceProvider?.spec?.type) && (
           <RootDiskDetailsItem resource={obj} canPatch={permissions.canPatch} />
+        )}
+
+        {['vsphere'].includes(sourceProvider?.spec?.type) && (
+          <SharedDisksDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
       </DescriptionList>
     </>

@@ -21,7 +21,7 @@ export interface EditModalProps {
   title: string;
 
   /** The label of the form input field. */
-  label: string;
+  label?: string;
 
   /** Optional. The content to be displayed in the modal's body. */
   body?: ReactNode;
