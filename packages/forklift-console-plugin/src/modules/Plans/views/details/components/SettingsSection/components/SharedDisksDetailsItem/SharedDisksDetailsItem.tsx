@@ -17,14 +17,19 @@ const SharedDisksDetailsItem: FC<PlanDetailsItemProps> = ({ resource, canPatch }
     ? t('Migrate shared disks again')
     : t('Migrate shared disks only once');
 
+  const title = t('Shared disks');
+  const pathArray = ['spec', 'migrateSharedDisks'];
+
   return (
     <DetailsItem
-      title={t('Shared disks')}
+      title={title}
       content={content}
-      crumbs={['spec', 'migrateSharedDisks']}
+      crumbs={pathArray}
       onEdit={() => {
         if (canPatch && isPlanEditable(resource)) {
-          showModal(<MigrateSharedDisksModal resource={resource} />);
+          showModal(
+            <MigrateSharedDisksModal resource={resource} jsonPath={pathArray} title={title} />,
+          );
         }
       }}
     />
