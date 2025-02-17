@@ -255,6 +255,7 @@
   "Migration": "Migration",
   "Migration hook": "Migration hook",
   "Migration networks maps are used to map network interfaces between source and target workloads.": "Migration networks maps are used to map network interfaces between source and target workloads.",
+  "Migration storage maps are used to map source data stores to OpenShift Virtualization storage classes.": "Migration storage maps are used to map source data stores to OpenShift Virtualization storage classes.",
   "Migration plan state information and progress": "Migration plan state information and progress",
   "Migration plans are used to plan migration or virtualization workloads from source providers to target providers.": "Migration plans are used to plan migration or virtualization workloads from source providers to target providers.",
   "Migration started": "Migration started",
