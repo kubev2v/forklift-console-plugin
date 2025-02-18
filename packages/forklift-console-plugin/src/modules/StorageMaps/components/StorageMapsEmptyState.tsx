@@ -62,7 +62,7 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
           </Flex>
         ) : (
           t(
-            'Migration storage maps are used to map storage of the source and target providers.',
+            'Migration storage maps are used to map storages between source and target providers.',
           )
         )
       }
