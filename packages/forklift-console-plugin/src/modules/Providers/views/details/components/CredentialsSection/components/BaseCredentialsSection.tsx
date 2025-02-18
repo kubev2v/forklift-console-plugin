@@ -3,7 +3,7 @@ import { AlertMessageForModals } from 'src/modules/Providers/modals';
 import { ValidationMsg } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -34,7 +34,7 @@ export interface EditComponentProps {
 
 export type BaseCredentialsSectionProps = {
   secret: IoK8sApiCoreV1Secret;
-  validator: (secret: IoK8sApiCoreV1Secret) => ValidationMsg;
+  validator: (provider: V1beta1Provider, secret: IoK8sApiCoreV1Secret) => ValidationMsg;
   ListComponent: React.FC<ListComponentProps>;
   EditComponent: React.FC<EditComponentProps>;
 };
