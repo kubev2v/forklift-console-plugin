@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react';
+import React, { useCallback, useEffect, useReducer } from 'react';
 import {
   validateVCenterURL,
   validateVDDKImage,
@@ -14,11 +14,13 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 export interface VCenterProviderCreateFormProps {
   provider: V1beta1Provider;
+  caCert: string;
   onChange: (newValue: V1beta1Provider) => void;
 }
 
 export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps> = ({
   provider,
+  caCert,
   onChange,
 }) => {
   const { t } = useForkliftTranslation();
@@ -31,10 +33,18 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
 
   const initialState = {
     validation: {
-      url: validateVCenterURL(url),
+      url: validateVCenterURL(url, caCert),
       vddkInitImage: validateVDDKImage(vddkInitImage),
     },
   };
+
+  // When certificate changes, re-validate the URL
+  useEffect(() => {
+    dispatch({
+      type: 'SET_FIELD_VALIDATED',
+      payload: { field: 'url', validationState: validateVCenterURL(url, caCert) },
+    });
+  }, [caCert]);
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -93,7 +103,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
           spec: {
             ...provider?.spec,
             settings: {
-              ...(provider?.spec?.settings as object),
+              ...provider?.spec?.settings,
               vddkInitImage: trimmedValue,
             },
           },
@@ -108,7 +118,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
           spec: {
             ...provider?.spec,
             settings: {
-              ...(provider?.spec?.settings as object),
+              ...provider?.spec?.settings,
               sdkEndpoint: sdkEndpoint,
             },
           },
@@ -117,14 +127,14 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
 
       if (id === 'url') {
         // Validate URL - VCenter of ESXi
-        const validationState = validateVCenterURL(trimmedValue);
+        const validationState = validateVCenterURL(trimmedValue, caCert);
 
         dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
 
         onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
       }
     },
-    [provider],
+    [provider, caCert],
   );
 
   const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
