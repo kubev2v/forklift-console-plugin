@@ -1,4 +1,4 @@
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
 import { ValidationMsg } from '../common';
 
@@ -10,6 +10,7 @@ import { esxiSecretValidator, vcenterSecretValidator } from './vsphere';
 export type SecretSubType = 'esxi' | 'vcenter';
 
 export function secretValidator(
+  provider: V1beta1Provider,
   type: string,
   subType: SecretSubType,
   secret: IoK8sApiCoreV1Secret,
@@ -18,7 +19,7 @@ export function secretValidator(
 
   switch (type) {
     case 'openshift':
-      validationError = openshiftSecretValidator(secret);
+      validationError = openshiftSecretValidator(provider, secret);
       break;
     case 'openstack':
       validationError = openstackSecretValidator(secret);

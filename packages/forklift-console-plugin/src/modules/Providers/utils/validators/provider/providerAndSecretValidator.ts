@@ -13,8 +13,8 @@ export function providerAndSecretValidator(
   const subTypeString = provider?.spec?.settings?.['sdkEndpoint'] || '';
   const subType = subTypeString === 'esxi' ? 'esxi' : 'vcenter';
 
-  const secretValidation = secretValidator(type, subType, secret);
-  const providerValidation = providerValidator(provider);
+  const secretValidation = secretValidator(provider, type, subType, secret);
+  const providerValidation = providerValidator(provider, secret);
 
   // Test for validation errors
   if (providerValidation?.type === 'error') {
