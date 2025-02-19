@@ -32,6 +32,7 @@ const vmStatuses = [
   { id: 'Running', label: 'Running' },
   { id: 'Succeeded', label: 'Succeeded' },
   { id: 'Unknown', label: 'Unknown' },
+  { id: 'Waiting', label: 'Waiting for cutover' },
 ];
 
 const getVMMigrationStatus = (obj: VMData) => {
@@ -39,6 +40,7 @@ const getVMMigrationStatus = (obj: VMData) => {
   const isSuccess = obj.statusVM?.conditions?.find(
     (c) => c.type === 'Succeeded' && c.status === 'True',
   );
+  const isWaiting = obj.statusVM?.phase === 'CopyingPaused';
   const isRunning = obj.statusVM?.completed === undefined;
 
   if (isError) {
@@ -47,6 +49,10 @@ const getVMMigrationStatus = (obj: VMData) => {
 
   if (isSuccess) {
     return 'Succeeded';
+  }
+
+  if (isWaiting) {
+    return 'Waiting';
   }
 
   if (isRunning) {

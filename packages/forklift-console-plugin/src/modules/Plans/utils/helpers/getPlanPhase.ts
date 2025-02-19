@@ -4,7 +4,6 @@ import { PlanData, PlanPhase } from '../types';
 
 export const getPlanPhase = (data: PlanData): PlanPhase => {
   const plan = data?.obj;
-
   if (!plan) return PlanPhase.Unknown;
 
   // Check condition type
@@ -31,6 +30,10 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
   // Check for Canceled
   if (conditions.includes('Canceled')) {
     return PlanPhase.Canceled;
+  }
+
+  if (plan.status?.migration?.vms?.every((vm) => vm.phase === 'CopyingPaused')) {
+    return PlanPhase.Waiting;
   }
 
   // CHeck for Running
