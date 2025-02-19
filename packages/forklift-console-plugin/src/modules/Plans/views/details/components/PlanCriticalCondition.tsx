@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { PropsWithChildren, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { useHistory } from 'react-router';
@@ -12,17 +12,23 @@ import {
   Alert,
   AlertVariant,
   Button,
+  Stack,
+  StackItem,
   Text,
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
 
-type PlanCriticalConditionProps = {
+type PlanCriticalConditionProps = PropsWithChildren & {
   plan: V1beta1Plan;
   condition: V1beta1PlanStatusConditions;
 };
 
-const PlanCriticalCondition: React.FC<PlanCriticalConditionProps> = ({ plan, condition }) => {
+const PlanCriticalCondition: React.FC<PlanCriticalConditionProps> = ({
+  plan,
+  condition,
+  children,
+}) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -54,14 +60,25 @@ const PlanCriticalCondition: React.FC<PlanCriticalConditionProps> = ({ plan, con
   }
 
   return (
-    <Alert title={t('The plan is not ready') + ' - ' + type} variant={AlertVariant.danger}>
-      <TextContent className="forklift-providers-list-header__alert">
-        <Text component={TextVariants.p}>
-          <Linkify>{conditionMessage || EMPTY_MSG}</Linkify>
-          {`${!conditionMessage.endsWith('.') ? '.' : ''} `}
-          {troubleshootMessage}
-        </Text>
-      </TextContent>
+    <Alert
+      title={t('The plan is not ready') + ' - ' + type}
+      variant={AlertVariant.danger}
+      isExpandable={
+        type === PlanConditionType.VMNetworksNotMapped ||
+        type === PlanConditionType.VMStorageNotMapped
+      }
+    >
+      <Stack hasGutter>
+        <TextContent className="forklift-providers-list-header__alert">
+          <Text component={TextVariants.p}>
+            <Linkify>{conditionMessage || EMPTY_MSG}</Linkify>
+            {`${!conditionMessage.endsWith('.') ? '.' : ''} `}
+            {troubleshootMessage}
+          </Text>
+        </TextContent>
+
+        <StackItem>{children}</StackItem>
+      </Stack>
     </Alert>
   );
 };
