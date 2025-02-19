@@ -45,9 +45,9 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
           <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
             <FlexItem>
               <ForkliftTrans>
-                Migration network maps are used to map network interfaces between source and target
-                virtualization providers, at least one source and one target provider must be
-                available in order to create a migration storage map,{' '}
+                Migration storage maps are used to map source storages to OpenShift Virtualization
+                storage classes, at least one source and one target provider must be available in
+                order to create a migration storage map,{' '}
                 <ExternalLink href={HELP_LINK_HREF} isInline>
                   Learn more
                 </ExternalLink>
@@ -61,9 +61,7 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
             </FlexItem>
           </Flex>
         ) : (
-          t(
-            'Migration networks maps are used to map network interfaces between source and target workloads.',
-          )
+          t('Migration storage maps are used to map storages between source and target providers.')
         )
       }
       callForActionButtons={

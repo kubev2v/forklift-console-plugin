@@ -259,6 +259,7 @@
   "Migration plans are used to plan migration or virtualization workloads from source providers to target providers.": "Migration plans are used to plan migration or virtualization workloads from source providers to target providers.",
   "Migration started": "Migration started",
   "Migration status": "Migration status",
+  "Migration storage maps are used to map storages between source and target providers.": "Migration storage maps are used to map storages between source and target providers.",
   "Migration Toolkit for Virtualization": "Migration Toolkit for Virtualization",
   "Migration type": "Migration type",
   "Migrations": "Migrations",
