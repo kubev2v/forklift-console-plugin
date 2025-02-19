@@ -32,7 +32,11 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
     return PlanPhase.Canceled;
   }
 
-  if (plan.status?.migration?.vms?.every((vm) => vm.phase === 'CopyingPaused')) {
+  if (
+    plan.status?.migration?.vms
+      ?.filter((vm) => vm.phase !== 'Completed')
+      .every((vm) => vm.phase === 'CopyingPaused')
+  ) {
     return PlanPhase.Waiting;
   }
 
