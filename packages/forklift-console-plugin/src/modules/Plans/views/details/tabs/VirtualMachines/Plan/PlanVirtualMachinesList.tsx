@@ -39,6 +39,13 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     isVisible: true,
     sortable: true,
   },
+  {
+    resourceFieldId: 'actions',
+    label: '',
+    isAction: true,
+    isVisible: true,
+    sortable: false,
+  },
 ];
 
 const PageWithSelection = StandardPageWithSelection<VMData>;
@@ -67,15 +74,17 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
     });
   });
 
-  const vmData: VMData[] = virtualMachines.map((m) => ({
-    specVM: m,
-    statusVM: vmDict[m.id],
+  const vmData: VMData[] = virtualMachines.map((vm, index) => ({
+    specVM: vm,
+    statusVM: vmDict[vm.id],
     pods: [],
     jobs: [],
     pvcs: [],
     dvs: [],
-    conditions: conditionsDict[m.id],
+    conditions: conditionsDict[vm.id],
     targetNamespace: plan?.spec?.targetNamespace,
+    planData: obj,
+    vmIndex: index,
   }));
   const vmDataSource: [VMData[], boolean, unknown] = [vmData || [], true, undefined];
   const vmDataToId = (item: VMData) => item?.specVM?.id;

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { ModalInputComponentType } from 'src/modules/Providers/modals';
-import { safeBoolean } from 'src/utils/helpers';
 import { useForkliftTranslation } from 'src/utils/i18n';
+import { safeBoolean } from 'src/utils/utils';
 
 import { Switch } from '@patternfly/react-core';
 
