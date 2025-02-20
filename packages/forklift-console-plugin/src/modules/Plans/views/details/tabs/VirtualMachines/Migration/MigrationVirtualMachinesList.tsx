@@ -33,7 +33,7 @@ const vmStatuses = [
   { id: 'Succeeded', label: 'Succeeded' },
   { id: 'Unknown', label: 'Unknown' },
   { id: 'Waiting', label: 'Waiting for cutover' },
-  { id: 'NotStarted', label: 'Not Started' },
+  { id: 'NotStarted', label: 'Not started' },
 ];
 
 const getVMMigrationStatus = (obj: VMData) => {
