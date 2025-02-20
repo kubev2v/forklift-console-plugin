@@ -54,12 +54,16 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
   });
 
   const sourceProvider = providers.find(
-    (p) => p?.metadata?.uid === obj?.spec?.provider?.source?.uid,
+    (p) =>
+      p?.metadata?.uid === obj?.spec?.provider?.source?.uid ||
+      p?.metadata?.name === obj?.spec?.provider?.source?.name,
   );
   const [sourceNetworks] = useSourceNetworks(sourceProvider);
 
   const destinationProvider = providers.find(
-    (p) => p?.metadata?.uid === obj?.spec?.provider?.destination?.uid,
+    (p) =>
+      p?.metadata?.uid === obj?.spec?.provider?.destination?.uid ||
+      p?.metadata?.name === obj?.spec?.provider?.destination?.name,
   );
   const [destinationNetworks] = useOpenShiftNetworks(destinationProvider);
 

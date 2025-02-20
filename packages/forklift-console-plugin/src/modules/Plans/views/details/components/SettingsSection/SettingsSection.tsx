@@ -6,7 +6,10 @@ import { ProviderModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@ku
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 
+import NetworkNameTemplateDetailsItem from './components/NetworkNameTemplate/NetworkNameTemplateDetailsItem';
+import PVCNameTemplateDetailsItem from './components/PVCNameTemplate/PVCNameTemplateDetailsItem';
 import SharedDisksDetailsItem from './components/SharedDisksDetailsItem/SharedDisksDetailsItem';
+import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
 import {
   PreserveClusterCpuModelDetailsItem,
   PreserveStaticIPsDetailsItem,
@@ -85,6 +88,12 @@ export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, p
         {['vsphere'].includes(sourceProvider?.spec?.type) && (
           <SharedDisksDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
+
+        <PVCNameTemplateDetailsItem resource={obj} canPatch={permissions.canPatch} />
+
+        <VolumeNameTemplateDetailsItem resource={obj} canPatch={permissions.canPatch} />
+
+        <NetworkNameTemplateDetailsItem resource={obj} canPatch={permissions.canPatch} />
       </DescriptionList>
     </>
   );

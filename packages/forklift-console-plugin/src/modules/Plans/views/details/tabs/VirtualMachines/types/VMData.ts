@@ -8,6 +8,8 @@ import {
   V1beta1PlanStatusMigrationVms,
 } from '@kubev2v/types';
 
+import { PlanData } from './PlanData';
+
 export type VMData = {
   specVM: V1beta1PlanSpecVms;
   statusVM?: V1beta1PlanStatusMigrationVms;
@@ -17,4 +19,6 @@ export type VMData = {
   dvs: V1beta1DataVolume[];
   conditions?: V1beta1PlanStatusConditions[];
   targetNamespace: string;
+  planData?: PlanData;
+  vmIndex?: number;
 };
