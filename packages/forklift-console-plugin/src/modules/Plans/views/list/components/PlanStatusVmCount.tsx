@@ -32,11 +32,17 @@ export const PlanStatusVmCount: React.FC<PlanStatusVmCountProps> = ({
   }, [status]);
 
   return (
-    <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
+    <Flex
+      alignItems={{ default: 'alignItemsCenter' }}
+      spaceItems={{ default: 'spaceItemsSm' }}
+      data-testid={`plan-status-vm-count-${status}`}
+    >
       <Icon status={status}>{statusIcon}</Icon>
 
       <FlexItem>
-        <Link to={linkPath}>{t('{{total}} VM', { count, total: count })}</Link>
+        <Link to={linkPath}>
+          {count > 99 ? t('99+ VMs') : t('{{total}} VM', { count, total: count })}
+        </Link>
       </FlexItem>
     </Flex>
   );

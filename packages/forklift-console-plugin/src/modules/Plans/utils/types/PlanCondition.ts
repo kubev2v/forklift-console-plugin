@@ -41,3 +41,30 @@ export enum PlanConditionType {
   VDDKInitImageNotReady = 'VDDKInitImageNotReady',
   VDDKInitImageUnavailable = 'VDDKInitImageUnavailable',
 }
+
+export enum PlanConditionCategory {
+  Required = 'Required',
+  Advisory = 'Advisory',
+  Critical = 'Critical',
+  Error = 'Error',
+  Warn = 'Warn',
+}
+
+export enum PlanConditionReason {
+  NotSet = 'NotSet',
+  NotFound = 'NotFound',
+  NotUnique = 'NotUnique',
+  NotSupported = 'NotSupported',
+  Ambiguous = 'Ambiguous',
+  NotValid = 'NotValid',
+  Modified = 'Modified',
+  UserRequested = 'UserRequested',
+  InMaintenanceMode = 'InMaintenanceMode',
+  MissingGuestInfo = 'MissingGuestInformation',
+  MissingChangedBlockTracking = 'MissingChangedBlockTracking',
+}
+
+export enum PlanConditionStatus {
+  True = 'True',
+  False = 'False',
+}

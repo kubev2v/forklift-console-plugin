@@ -19,16 +19,10 @@ export const PlanCell: React.FC<CellProps> = ({ data }) => {
 
   const { name, namespace } = obj?.metadata || {};
   const warm = obj?.spec?.warm;
-  const archived = obj?.status?.conditions?.find((c) => c.type === 'Archived') !== undefined;
 
   if (warm) {
     labelColors.push('orange');
     labels.push(t('Warm'));
-  }
-
-  if (archived) {
-    labelColors.push('grey');
-    labels.push(t('Archived'));
   }
 
   return (
@@ -36,7 +30,7 @@ export const PlanCell: React.FC<CellProps> = ({ data }) => {
       groupVersionKind={PlanModelGroupVersionKind}
       name={name}
       namespace={namespace}
-      hasLabel={archived || warm}
+      hasLabel={warm}
       labelColor={labelColors}
       label={labels}
     />

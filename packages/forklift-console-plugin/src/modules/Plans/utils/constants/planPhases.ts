@@ -12,7 +12,6 @@ export const planPhases: { id: PlanPhase; label: string }[] = [
   { id: PlanPhase.Error, label: PlanPhase.Error },
   { id: PlanPhase.vmError, label: PlanPhase.vmError },
   { id: PlanPhase.Unknown, label: PlanPhase.Unknown },
-  { id: PlanPhase.Archiving, label: PlanPhase.Archiving },
   { id: PlanPhase.Archived, label: PlanPhase.Archived },
   { id: PlanPhase.Failed, label: PlanPhase.Failed },
   { id: PlanPhase.Canceled, label: PlanPhase.Canceled },
