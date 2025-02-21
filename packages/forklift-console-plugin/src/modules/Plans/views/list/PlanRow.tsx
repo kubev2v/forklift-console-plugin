@@ -10,6 +10,7 @@ import { PlanData } from '../../utils';
 import {
   ActionsCell,
   CellProps,
+  MigrationTypeCell,
   NamespaceCell,
   PlanCell,
   PlanStatusCell,
@@ -48,6 +49,7 @@ const cellRenderers: Record<string, React.FC<CellProps>> = {
   ['destination']: ProviderLinkCell,
   ['source']: ProviderLinkCell,
   ['phase']: PlanStatusCell,
+  ['migration-type']: MigrationTypeCell,
   ['vms']: VMsCell,
   ['description']: ({ data }: CellProps) => <TableCell>{data?.obj?.spec?.description}</TableCell>,
   ['actions']: ActionsCell,
