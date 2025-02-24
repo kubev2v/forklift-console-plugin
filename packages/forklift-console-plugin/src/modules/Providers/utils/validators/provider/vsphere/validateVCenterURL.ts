@@ -1,6 +1,26 @@
-import { validateURL, ValidationMsg } from '../../common';
+import { pki } from 'node-forge';
 
-export const validateVCenterURL = (url: string | number): ValidationMsg => {
+import { safeBase64Decode } from '../../../helpers';
+import { validateIpv4, validateURL, ValidationMsg } from '../../common';
+
+export const urlMatchesCertFqdn = (urlHostname: string, caCert: string): boolean => {
+  try {
+    const decodedCaCert = safeBase64Decode(caCert);
+    const cert = pki.certificateFromPem(decodedCaCert);
+    const dnsAltName = cert.extensions
+      .find((ext) => ext.name === 'subjectAltName')
+      ?.altNames.find((altName) => altName.type === 2)?.value;
+    const commonName = cert.subject.attributes.find((attr) => attr.name === 'commonName')?.value;
+
+    return urlHostname === (dnsAltName || commonName);
+  } catch (e) {
+    console.error('Unable to parse certificate object from PEM.');
+  }
+
+  return false;
+};
+
+export const validateVCenterURL = (url: string, caCert?: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (url === undefined) {
     return {
@@ -16,6 +36,7 @@ export const validateVCenterURL = (url: string | number): ValidationMsg => {
 
   const trimmedUrl: string = url.trim();
   const isValidURL = validateURL(trimmedUrl);
+  const urlHostname = getUrlHostname(url);
 
   if (trimmedUrl === '') {
     return {
@@ -37,8 +58,32 @@ export const validateVCenterURL = (url: string | number): ValidationMsg => {
       type: 'warning',
     };
 
+  if (validateIpv4(urlHostname)) {
+    return {
+      type: 'error',
+      msg: 'Invalid URL. The URL must be a fully qualified domain name (FQDN).',
+    };
+  }
+
+  if (caCert && !urlMatchesCertFqdn(urlHostname, caCert)) {
+    return {
+      type: 'error',
+      msg: 'Invalid URL. The URL must be a fully qualified domain name (FQDN) and match the FQDN in the certificate you uploaded.',
+    };
+  }
+
   return {
     type: 'success',
     msg: 'The URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
   };
+};
+
+const getUrlHostname = (url: string) => {
+  try {
+    return new URL(url)?.hostname;
+  } catch {
+    console.error('Unable to parse URL.');
+  }
+
+  return '';
 };
