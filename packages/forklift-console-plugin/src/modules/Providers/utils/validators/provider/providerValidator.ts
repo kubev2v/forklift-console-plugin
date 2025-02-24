@@ -25,7 +25,7 @@ export function providerValidator(
       validationError = ovirtProviderValidator(provider);
       break;
     case 'vsphere':
-      validationError = vsphereProviderValidator(provider);
+      validationError = vsphereProviderValidator(provider, secret?.data?.cacert);
       break;
     case 'ova':
       validationError = ovaProviderValidator(provider);
