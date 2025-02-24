@@ -1,0 +1,7 @@
+{
+    "workspaces": {
+      "packages/forklift-console-plugin": {
+        "entry": "index.ts"
+      }
+    }
+  }

@@ -1,25 +1,7 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.json",
 
   "compilerOptions": {
-    "allowJs": true,
-    "strict": false,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "noUnusedLocals": true,
-
-    "target": "es2020",
-    "module": "es2020",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "jsx": "react",
-
-    "lib": ["dom", "es2020"],
-    "esModuleInterop": true,
-
     "baseUrl": ".",
     "outDir": "./dist",
 
@@ -29,13 +11,5 @@
     }
   },
 
-  "include": ["./src/**/*", "./plugin-metadata.ts", "./plugin-extensions.ts"],
-
-  "ts-node": {
-    "files": true,
-    "transpileOnly": true,
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
+  "include": ["./src/**/*", "./plugin-metadata.ts", "./plugin-extensions.ts"]
 }
