@@ -35,9 +35,6 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   concerns: VMConcernsCellRenderer,
   host: ({ data }) => <TableCell>{data?.hostName}</TableCell>,
   folder: ({ data }) => <TableCell>{data?.folderName}</TableCell>,
-  isTemplate: ({ data }) => (
-    <TableCell>{Boolean((data?.vm as VSphereVM)?.isTemplate).toString()}</TableCell>
-  ),
   path: ({ data }) => <TableCell>{(data?.vm as VSphereVM)?.path}</TableCell>,
   powerState: PowerStateCellRenderer,
 };
