@@ -1,6 +1,6 @@
 import React from 'react';
 import Linkify from 'react-linkify';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom-v5-compat';
 import { getResourceUrl, TableIconCell } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
