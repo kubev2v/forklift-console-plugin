@@ -2,7 +2,7 @@ import React, { createContext, FC, PropsWithChildren, useContext } from 'react';
 
 import { ResourceField, SortType, useSort } from '@kubev2v/common';
 
-type TableSortContextProps = {
+export type TableSortContextProps = {
   activeSort: SortType;
   setActiveSort: (activeSort: SortType) => void;
   compareFn: (a: unknown, b: unknown) => number;
@@ -14,7 +14,7 @@ const defaultTableSortContext = {
   compareFn: () => undefined,
 };
 
-const TableSortContext = createContext<TableSortContextProps>(defaultTableSortContext);
+export const TableSortContext = createContext<TableSortContextProps>(defaultTableSortContext);
 
 type TableSortContextProviderProps = PropsWithChildren & {
   fields: ResourceField[];
