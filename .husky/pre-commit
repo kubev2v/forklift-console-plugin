@@ -1,0 +1,13 @@
+
+echo "Running pre-commit hook"
+
+yarn i18n
+
+translation_file_diff=$(git diff --name-only packages/forklift-console-plugin/locales/en/plugin__forklift-console-plugin.json)
+
+if [ -n "$translation_file_diff" ]; then
+    git add $translation_file_diff
+fi
+
+echo "Pre-commit hook finished"
+echo $(git status)
