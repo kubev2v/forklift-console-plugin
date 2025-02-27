@@ -10,7 +10,7 @@ const moduleNameMapper = {
   '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
   '@console/*': '<rootDir>/src/__mocks__/dummy.ts',
   '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
-  'react-i18next': '<rootDir>/src/__mocks__/react-i18next.ts',
+  'react-i18next': '<rootDir>/src/__mocks__/react-i18next.tsx',
 
   ...pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',

@@ -300,12 +300,18 @@ const handlers: {
     // triggered from useEffect on any data change
     existingResources.netMaps = existingNetMaps;
   },
-  [SET_EXISTING_STORAGE_MAPS](
-    { existingResources },
-    { payload: { existingStorageMaps } }: PageAction<CreateVmMigration, PlanExistingStorageMaps>,
-  ) {
-    // triggered from useEffect on any data change
-    existingResources.storageMaps = existingStorageMaps;
+  // [SET_EXISTING_STORAGE_MAPS](
+  //   { existingResources },
+  //   { payload: { existingStorageMaps } }: PageAction<CreateVmMigration, PlanExistingStorageMaps>,
+  // ) {
+  //   // triggered from useEffect on any data change
+  //   existingResources.storageMaps = existingStorageMaps;
+  // },
+  [SET_EXISTING_STORAGE_MAPS](draft, action) {
+    const { existingStorageMaps } = (
+      action as PageAction<CreateVmMigration, PlanExistingStorageMaps>
+    ).payload;
+    draft.existingResources.storageMaps = existingStorageMaps;
   },
   [START_CREATE]({
     flow,
