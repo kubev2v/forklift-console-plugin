@@ -2,9 +2,13 @@ import { V1beta1Provider } from '@kubev2v/types';
 
 import { validateK8sName, validateURL, ValidationMsg } from '../../common';
 
+import { validateVCenterURL } from './validateVCenterURL';
 import { validateVDDKImage } from './validateVDDKImage';
 
-export function vsphereProviderValidator(provider: V1beta1Provider): ValidationMsg {
+export function vsphereProviderValidator(
+  provider: V1beta1Provider,
+  caCert?: string,
+): ValidationMsg {
   const name = provider?.metadata?.name;
   const url = provider?.spec?.url || '';
   const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'] || '';
@@ -16,7 +20,7 @@ export function vsphereProviderValidator(provider: V1beta1Provider): ValidationM
     return { type: 'error', msg: 'invalid kubernetes resource name' };
   }
 
-  if (!validateURL(url)) {
+  if (caCert ? validateVCenterURL(url, caCert).type === 'error' : !validateURL(url)) {
     return { type: 'error', msg: 'invalid URL' };
   }
 

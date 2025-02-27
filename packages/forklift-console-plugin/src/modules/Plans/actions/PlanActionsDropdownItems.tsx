@@ -111,7 +111,9 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
       value={4}
       key="archive"
       isDisabled={
-        !data?.permissions?.canDelete || [PlanPhase.Archived, PlanPhase.Archiving].includes(phase)
+        !data?.permissions?.canDelete ||
+        [PlanPhase.Archived, PlanPhase.Archiving].includes(phase) ||
+        isPlanExecuting(plan)
       }
       onClick={onClickArchive}
     >

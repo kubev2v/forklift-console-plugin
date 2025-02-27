@@ -356,7 +356,7 @@ const getPipelineTasks = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => {
   const tasks = pipeline?.tasks || [];
 
   // search for all completed tasks (either tasks that completed successfully or ones that aren't finished but their pipeline step is).
-  const tasksCompleted = tasks.filter((c) => hasTaskCompleted(c.phase, pipeline));
+  const tasksCompleted = tasks.filter((c) => hasTaskCompleted(c.phase, c.progress, pipeline));
 
   return { total: tasks.length, completed: tasksCompleted.length, name: pipeline.name };
 };

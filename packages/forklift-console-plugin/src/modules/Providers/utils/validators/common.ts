@@ -25,6 +25,7 @@ const QUERY_PARAMS = '(\\?[a-zA-Z0-9=&_]*)?';
 const URL_REGEX = new RegExp(
   `^${PROTOCOL}((${IPV4})|(${HOSTNAME}))((${PORT})(${PATH})(${QUERY_PARAMS})?)?$`,
 );
+const IPV4_REGEX = new RegExp(IPV4);
 
 // validate NFS mount NFS_SERVER:EXPORTED_DIRECTORY
 // example: 10.10.0.10:/backups
@@ -76,6 +77,10 @@ export function validateContainerImage(image: string) {
 
 export function validateURL(url: string) {
   return URL_REGEX.test(url);
+}
+
+export function validateIpv4(value: string) {
+  return IPV4_REGEX.test(value);
 }
 
 export function validateNFSMount(nfsPath: string) {

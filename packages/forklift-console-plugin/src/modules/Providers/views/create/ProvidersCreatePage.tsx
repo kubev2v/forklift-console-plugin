@@ -79,12 +79,12 @@ export const ProvidersCreatePage: React.FC<{
         const value = action.payload as V1beta1Provider;
         let validationError = providerAndSecretValidator(state.newProvider, value);
 
-        if (providerNames.includes(state.newProvider?.metadata?.name)) {
-          validationError = { type: 'error', msg: 'Provider name is not unique' };
-        }
-
         if (!state.newProvider?.metadata?.name) {
           validationError = { type: 'error', msg: 'Missing provider name' };
+        }
+
+        if (providerNames.includes(state.newProvider?.metadata?.name)) {
+          validationError = { type: 'error', msg: 'Provider name is not unique' };
         }
 
         return {
@@ -97,6 +97,10 @@ export const ProvidersCreatePage: React.FC<{
       case 'SET_NEW_PROVIDER': {
         const value = action.payload as V1beta1Provider;
         let validationError = providerAndSecretValidator(value, state.newSecret);
+
+        if (!value?.metadata?.name) {
+          validationError = { type: 'error', msg: 'Missing provider name' };
+        }
 
         if (providerNames.includes(value?.metadata?.name)) {
           validationError = { type: 'error', msg: 'Provider name is not unique' };

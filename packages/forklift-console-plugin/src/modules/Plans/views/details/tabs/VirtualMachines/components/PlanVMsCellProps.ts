@@ -2,8 +2,8 @@ import { ResourceField } from '@kubev2v/common';
 
 import { VMData } from '../types';
 
-export interface PlanVMsCellProps {
+export type PlanVMsCellProps = {
   data: VMData;
-  fieldId: string;
-  fields: ResourceField[];
-}
+  fieldId?: string;
+  fields?: ResourceField[];
+};

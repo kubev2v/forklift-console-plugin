@@ -32,6 +32,8 @@ const vmStatuses = [
   { id: 'Running', label: 'Running' },
   { id: 'Succeeded', label: 'Succeeded' },
   { id: 'Unknown', label: 'Unknown' },
+  { id: 'Waiting', label: 'Waiting for cutover' },
+  { id: 'NotStarted', label: 'Not started' },
 ];
 
 const getVMMigrationStatus = (obj: VMData) => {
@@ -39,7 +41,9 @@ const getVMMigrationStatus = (obj: VMData) => {
   const isSuccess = obj.statusVM?.conditions?.find(
     (c) => c.type === 'Succeeded' && c.status === 'True',
   );
+  const isWaiting = obj.statusVM?.phase === 'CopyingPaused';
   const isRunning = obj.statusVM?.completed === undefined;
+  const notStarted = obj.statusVM?.pipeline[0].phase === 'Pending';
 
   if (isError) {
     return 'Failed';
@@ -47,6 +51,14 @@ const getVMMigrationStatus = (obj: VMData) => {
 
   if (isSuccess) {
     return 'Succeeded';
+  }
+
+  if (isWaiting) {
+    return 'Waiting';
+  }
+
+  if (notStarted) {
+    return 'NotStarted';
   }
 
   if (isRunning) {
@@ -116,7 +128,6 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     },
     label: t('Disk transfer'),
     isVisible: true,
-    sortable: true,
   },
   {
     resourceFieldId: 'diskCounter',
@@ -129,7 +140,6 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     },
     label: t('Disk counter'),
     isVisible: true,
-    sortable: true,
   },
   {
     resourceFieldId: 'status',

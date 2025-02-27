@@ -1,29 +1,21 @@
 import { Base64 } from 'js-base64';
 
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
+import { validateUrlAndTokenExistence } from '../../../helpers/validateUrlAndTokenExistence';
 import { ValidationMsg } from '../../common';
 
 import { openshiftSecretFieldValidator } from './openshiftSecretFieldValidator';
 
-export function openshiftSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
-  const url = secret?.data?.url || '';
+export function openshiftSecretValidator(
+  provider: V1beta1Provider,
+  secret: IoK8sApiCoreV1Secret,
+): ValidationMsg {
+  const url = provider?.spec?.url || '';
   const token = secret?.data?.token || '';
 
-  // Empty URL + token is valid as host providers
-  if (url === '' && token === '') {
-    return { type: 'default' };
-  }
-
-  // If we have url, token is required
-  if (url !== '' && token === '') {
-    return { type: 'error', msg: `Missing required fields [token]` };
-  }
-
-  // If we have token, url is required
-  if (url === '' && token !== '') {
-    return { type: 'error', msg: `Missing required fields [url]` };
-  }
+  const validation: ValidationMsg = validateUrlAndTokenExistence(url, token);
+  if (validation) return validation;
 
   // Validate fields
   const validateFields = ['user', 'token', 'insecureSkipVerify'];

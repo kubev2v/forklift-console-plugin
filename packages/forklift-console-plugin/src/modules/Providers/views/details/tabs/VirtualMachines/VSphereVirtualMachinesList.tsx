@@ -31,14 +31,6 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     filter: concernFilter(t),
   },
   {
-    resourceFieldId: 'isTemplate',
-    jsonPath: '$.vm.isTemplate',
-    label: t('Template'),
-    isVisible: true,
-    isIdentity: false,
-    sortable: true,
-  },
-  {
     resourceFieldId: 'host',
     jsonPath: '$.hostName',
     label: t('Host'),
@@ -92,22 +84,25 @@ export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> 
   const { vmData } = obj;
 
   /**
-   * Processes the vmData to include folderName and hostName for each VM.
+   * Processes the vmData to filter out templates,
+   * and include folderName and hostName for each VM.
    *
    * @param {Array} vmData - The array of VM data objects.
    * @returns {Array} An array with updated VM data objects.
    */
-  const newVMData = vmData.map((data) => {
-    const vm = data.vm as VSphereVM;
-    const folder = foldersDict?.[vm.parent.id];
-    const host = hostsDict?.[vm.host];
+  const newVMData = vmData
+    .filter((data) => !(data.vm as VSphereVM).isTemplate)
+    .map((data) => {
+      const vm = data.vm as VSphereVM;
+      const folder = foldersDict?.[vm.parent.id];
+      const host = hostsDict?.[vm.host];
 
-    return {
-      ...data,
-      folderName: folder?.name,
-      hostName: host?.name,
-    };
-  });
+      return {
+        ...data,
+        folderName: folder?.name,
+        hostName: host?.name,
+      };
+    });
 
   return (
     <ProviderVirtualMachinesList

@@ -124,19 +124,23 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
       onClose={toggleModal}
       actions={actions}
     >
-      {
+      {warm ? (
         <ForkliftTrans>
           <p>
-            Start the migration for plan <strong className="co-break-word">{name}</strong>?
+            Start the warm migration for plan <strong className="co-break-word">{name}</strong>?
           </p>
           <br />
-          <p>
-            {warm
-              ? 'VMs included in this warm migration plan will move with minimal downtime.'
-              : 'VMs included in this cold migration plan will be shut down during the move between hosts.'}
-          </p>
+          <p>VMs included in warm migrations migrate with minimal downtime.</p>
         </ForkliftTrans>
-      }
+      ) : (
+        <ForkliftTrans>
+          <p>
+            Start the cold migration for plan <strong className="co-break-word">{name}</strong>?
+          </p>
+          <br />
+          <p>VMs included in cold migrations are shut down during migration.</p>
+        </ForkliftTrans>
+      )}
       {alertMessage}
     </Modal>
   );

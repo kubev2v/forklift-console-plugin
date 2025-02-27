@@ -14,4 +14,12 @@ module.exports = {
     return key;
   },
   defaultNamespace: 'plugin__forklift-console-plugin',
+  lexers: {
+    tsx: [
+      {
+        lexer: 'JsxLexer',
+        componentFunctions: ['Trans', 'ForkliftTrans'],
+      },
+    ],
+  },
 };
