@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { AlertMessageForModals, ItemIsOwnedAlert, useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils';
@@ -41,7 +41,7 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
   const title_ = title || t('Delete {{model.label}}', { model });
@@ -64,9 +64,9 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
     try {
       await k8sDelete({ model, resource });
       if (redirectTo) {
-        history.push(redirectTo);
+        navigate(redirectTo);
       } else if (isOnResourcePage()) {
-        history.push(getResourceUrl({ groupVersionKind, namespace }));
+        navigate(getResourceUrl({ groupVersionKind, namespace }));
       }
 
       toggleModal();

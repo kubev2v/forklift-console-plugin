@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom-v5-compat';
 import { getResourceUrl, TableEmptyCell, TableLabelCell } from 'src/modules/Providers/utils';
 
 import { getResourceFieldValue } from '@kubev2v/common';
