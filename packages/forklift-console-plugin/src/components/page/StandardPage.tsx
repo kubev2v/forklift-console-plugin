@@ -41,7 +41,12 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
-import { useTableSortContext } from '../TableSortContext';
+import {
+  TableSortContext,
+  TableSortContextProps,
+  TableSortContextProvider,
+  useTableSortContext,
+} from '../TableSortContext';
 
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
@@ -265,7 +270,7 @@ export interface StandardPageProps<T> {
  *   // ...other props
  * />
  */
-export function StandardPage<T>({
+export const StandardPageInner = <T,>({
   namespace,
   dataSource: [flatData, loaded, error],
   RowMapper = DefaultRow<T>,
@@ -288,7 +293,10 @@ export function StandardPage<T>({
   className,
   selectedIds,
   selectedCountLabel,
-}: StandardPageProps<T>) {
+  activeSort,
+  setActiveSort,
+  compareFn,
+}: StandardPageProps<T> & TableSortContextProps) => {
   const { t } = useForkliftTranslation();
   const [sortedData, setSortedData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -300,7 +308,6 @@ export function StandardPage<T>({
   });
   const clearAllFilters = () => setSelectedFilters({});
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
-  const { activeSort, setActiveSort, compareFn } = useTableSortContext();
 
   const supportedMatchers = extraSupportedMatchers
     ? reduceValueFilters(extraSupportedMatchers, defaultValueMatchers)
@@ -485,6 +492,29 @@ export function StandardPage<T>({
       </PageSection>
     </span>
   );
-}
+};
+
+const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
+  const { activeSort, setActiveSort, compareFn } = useTableSortContext();
+
+  if (activeSort.resourceFieldId) {
+    return (
+      <StandardPageInner
+        {...pageProps}
+        activeSort={activeSort}
+        setActiveSort={setActiveSort}
+        compareFn={compareFn}
+      />
+    );
+  }
+
+  return (
+    <TableSortContextProvider fields={pageProps.fieldsMetadata}>
+      <TableSortContext.Consumer>
+        {(sortProps) => <StandardPageInner {...pageProps} {...sortProps} />}
+      </TableSortContext.Consumer>
+    </TableSortContextProvider>
+  );
+};
 
 export default StandardPage;

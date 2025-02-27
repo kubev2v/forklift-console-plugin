@@ -128,7 +128,6 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     },
     label: t('Disk transfer'),
     isVisible: true,
-    sortable: true,
   },
   {
     resourceFieldId: 'diskCounter',
@@ -141,7 +140,6 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     },
     label: t('Disk counter'),
     isVisible: true,
-    sortable: true,
   },
   {
     resourceFieldId: 'status',
