@@ -42,7 +42,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#max-concurrent-vms_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#max-concurrent-vms_mtv'
             }
             helpContent={
               <ForkliftTrans>
@@ -67,7 +67,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -89,7 +89,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -111,7 +111,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -133,7 +133,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -155,7 +155,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
