@@ -45,7 +45,6 @@ import {
   TableSortContextProvider,
   useTableSortContext,
 } from '../TableSortContext';
-
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
 import './StandardPage.style.css';

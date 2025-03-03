@@ -17,7 +17,6 @@ import {
   toISODate,
   toISODateInterval,
 } from '../utils';
-
 import { FilterTypeProps } from './types';
 
 /**

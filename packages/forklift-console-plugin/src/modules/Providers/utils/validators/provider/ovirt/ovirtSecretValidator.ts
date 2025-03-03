@@ -4,7 +4,6 @@ import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 import { missingKeysInSecretData } from '../../../helpers';
 import { ValidationMsg } from '../../common';
-
 import { ovirtSecretFieldValidator } from './ovirtSecretFieldValidator';
 
 export function ovirtSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {

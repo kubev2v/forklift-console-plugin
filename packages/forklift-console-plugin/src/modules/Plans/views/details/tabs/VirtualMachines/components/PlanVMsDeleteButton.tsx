@@ -7,7 +7,6 @@ import { V1beta1Plan } from '@kubev2v/types';
 import { ToolbarItem } from '@patternfly/react-core';
 
 import { PlanVMsDeleteModal } from '../modals';
-
 import { VMsActionButton } from './VMsActionButton';
 
 export const PlanVMsDeleteButton: FC<{

@@ -1,5 +1,4 @@
 import { ResourceField } from '../utils';
-
 import { FieldFilter } from './types';
 
 export const toFieldFilter =

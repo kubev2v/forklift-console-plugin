@@ -6,10 +6,9 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 
-import { PlanDetailsItemProps } from '../../../DetailsSection';
-
 import MigrateSharedDisksModal from './components/MigrateSharedDisksModal/MigrateSharedDisksModal';
 import { getMigrateSharedDisks } from './utils/helpers';
+import { PlanDetailsItemProps } from '../../../DetailsSection';
 
 const SharedDisksDetailsItem: FC<PlanDetailsItemProps> = ({ resource, canPatch }) => {
   const { t } = useForkliftTranslation();

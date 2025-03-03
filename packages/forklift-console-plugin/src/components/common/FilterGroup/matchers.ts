@@ -9,7 +9,6 @@ import {
   GroupedEnumFilter,
   SwitchFilter,
 } from '../Filter';
-
 import { FilterRenderer, ValueMatcher } from './types';
 
 /**

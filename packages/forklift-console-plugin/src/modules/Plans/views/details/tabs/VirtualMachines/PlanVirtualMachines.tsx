@@ -8,7 +8,6 @@ import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan, V1beta1Provider } fr
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { Suspend } from '../../components';
-
 import { MigrationVirtualMachinesList } from './Migration';
 import { PlanVirtualMachinesList } from './Plan';
 import { PlanData } from './types';

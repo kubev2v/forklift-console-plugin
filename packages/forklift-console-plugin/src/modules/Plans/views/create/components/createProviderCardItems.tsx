@@ -4,7 +4,6 @@ import { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Ga
 import { V1beta1Provider } from '@kubev2v/types';
 
 import providerTypes from '../constanats/providerTypes';
-
 import { ProviderCardContent } from './ProviderCardContent';
 import { ProviderCardTitle } from './providerCardTitle';
 

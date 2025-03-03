@@ -6,7 +6,6 @@
   "private": true,
   "repository": "https://github.com/kubev2v/forklift-console-plugin.git",
   "workspaces": [
-    "packages/eslint-plugin",
     "packages/forklift-console-plugin"
   ],
   "scripts": {
