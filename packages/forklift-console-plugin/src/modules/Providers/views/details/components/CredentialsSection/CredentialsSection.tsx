@@ -88,7 +88,7 @@ export const CredentialsSection_: React.FC<{
     return (
       <div>
         <span className="text-muted">
-          {t('Something is wrong, the secret was not loaded, please try to reload the page.')}
+          {t('The Secret was not loaded. Try reloading the page.')}
         </span>
       </div>
     );
