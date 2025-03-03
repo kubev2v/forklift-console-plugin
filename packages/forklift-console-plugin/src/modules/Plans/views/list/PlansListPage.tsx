@@ -11,7 +11,8 @@ import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
 import { PlansAddButton } from '../../components';
 import PlansEmptyState from '../../components/PlansEmptyState';
-import { getPlanPhase, PlanData, planPhases } from '../../utils';
+import { getMigrationType, getPlanPhase, PlanData, planPhases } from '../../utils';
+import { migrationTypes } from '../../utils/constants/migrationTypes';
 
 import PlanRow from './PlanRow';
 
@@ -72,15 +73,52 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
+    resourceFieldId: null,
+    label: null,
+    filter: {
+      primary: true,
+      type: 'groupedEnum',
+      placeholderLabel: 'Filter',
+      showFilterIcon: true,
+      values: [
+        ...migrationTypes.map((migrationType) => ({
+          ...migrationType,
+          groupId: 'migration-type',
+          resourceFieldId: 'migration-type',
+        })),
+        ...planPhases.map((planPhase) => ({
+          ...planPhase,
+          groupId: 'phase',
+          resourceFieldId: 'phase',
+        })),
+      ],
+      groups: [
+        { groupId: 'migration-type', label: 'Migration type' },
+        { groupId: 'phase', label: 'Migration status' },
+      ],
+    },
+  },
+  {
     resourceFieldId: 'phase',
     jsonPath: getPlanPhase,
     label: t('Migration status'),
     isVisible: true,
     filter: {
       type: 'enum',
-      primary: true,
-      placeholderLabel: t('Migration status'),
+      isHidden: true,
       values: planPhases,
+    },
+    sortable: true,
+  },
+  {
+    resourceFieldId: 'migration-type',
+    jsonPath: getMigrationType,
+    label: t('Migration type'),
+    isVisible: true,
+    filter: {
+      type: 'enum',
+      isHidden: true,
+      values: migrationTypes,
     },
     sortable: true,
   },

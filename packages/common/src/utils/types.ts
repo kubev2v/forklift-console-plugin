@@ -10,11 +10,12 @@ export interface EnumValue {
   id: string;
   groupId?: string;
   label: string;
+  resourceFieldId?: string;
 }
 
 export interface FilterDef {
   type: string;
-  placeholderLabel: string;
+  placeholderLabel?: string;
   values?: EnumValue[];
   fieldLabel?: string;
   primary?: boolean;
@@ -25,14 +26,16 @@ export interface FilterDef {
   defaultValues?: string[];
   helperText?: string | React.ReactNode;
   dynamicFilter?: (items: unknown[]) => Partial<FilterDef>;
+  isHidden?: boolean;
+  showFilterIcon?: boolean;
 }
 
 type OpenApiJsonPath = string | ((resourceData: unknown) => unknown);
 
 export interface ResourceField {
-  resourceFieldId: string;
+  resourceFieldId: string | null;
   jsonPath?: OpenApiJsonPath;
-  label: string;
+  label: string | null;
   // visibility status, can change in time
   isVisible?: boolean;
   isIdentity?: boolean;
