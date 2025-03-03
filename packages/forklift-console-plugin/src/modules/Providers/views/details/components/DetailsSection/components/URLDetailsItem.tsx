@@ -3,7 +3,6 @@ import { EditProviderURLModal, useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DetailsItem } from '../../../../../utils';
-
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const URLDetailsItem: React.FC<ProviderDetailsItemProps> = ({

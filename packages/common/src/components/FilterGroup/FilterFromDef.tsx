@@ -2,7 +2,6 @@ import React from 'react';
 
 import { FilterDef } from '../../utils';
 import { FilterTypeProps } from '../Filter';
-
 import { GlobalFilters } from './types';
 
 interface FilterFromDefProps {

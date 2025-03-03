@@ -12,7 +12,6 @@ import { HelperText, HelperTextItem } from '@patternfly/react-core';
 import { PlansAddButton } from '../../components';
 import PlansEmptyState from '../../components/PlansEmptyState';
 import { getPlanPhase, PlanData, planPhases } from '../../utils';
-
 import PlanRow from './PlanRow';
 
 import './PlansListPage.style.css';

@@ -37,7 +37,6 @@ import {
   UNMAPPED_NETWORKS,
   UNMAPPED_STORAGES,
 } from '../types';
-
 import { CreateVmMigration } from './actions';
 import { calculateNetworks, calculateStorages } from './calculateMappings';
 import { hasMultiplePodNetworkMappings } from './hasMultiplePodNetworkMappings';

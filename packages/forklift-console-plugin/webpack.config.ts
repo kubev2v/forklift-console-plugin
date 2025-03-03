@@ -2,9 +2,8 @@
 /* eslint-disable @cspell/spellchecker */
 /* eslint-env node */
 
-import * as path from 'path';
-
 import svgToMiniDataURI from 'mini-svg-data-uri';
+import * as path from 'path';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import { Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';

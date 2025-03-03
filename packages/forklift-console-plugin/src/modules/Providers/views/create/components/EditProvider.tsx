@@ -8,7 +8,6 @@ import {
   OvirtCredentialsEdit,
   VCenterCredentialsEdit,
 } from '../../details';
-
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
 import { EsxiProviderCreateForm } from './EsxiProviderCreateForm';
 import { OpenshiftProviderFormCreate } from './OpenshiftProviderCreateForm';

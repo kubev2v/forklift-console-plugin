@@ -17,7 +17,6 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
 import { Loading, Suspend } from '../../components';
-
 import { OpenshiftPlanResources } from './OpenshiftPlanResources';
 import { OpenstackPlanResources } from './OpenstackPlanResources';
 import { OVAPlanResources } from './OVAPlanResources';
