@@ -4,7 +4,6 @@ import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/ba
 
 import { localeCompare, ResourceField } from '../utils';
 import { getResourceFieldValue } from '../FilterGroup';
-
 import { SortType } from './types';
 
 /**
@@ -77,7 +76,7 @@ export const useSort = (
       compareWith(
         activeSort,
         resolvedLanguage,
-        fields.find((field) => field.resourceFieldId === activeSort.resourceFieldId)?.compareFn,
+        fields.find(field => field.resourceFieldId === activeSort.resourceFieldId)?.compareFn,
         fields,
       ),
     [fields, activeSort],
