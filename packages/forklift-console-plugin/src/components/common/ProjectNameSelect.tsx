@@ -65,7 +65,7 @@ export const useProjectNameSelectOptions = (defaultProject: string): TypeaheadSe
   return projects.length === 0 || !projectsLoaded || projectsLoadError
     ? // In case of an error or an empty list, returns the active namespace
       [{ value: defaultProject, content: defaultProject }]
-    : projects.map((project) => ({
+    : projects.map(project => ({
         value: project.metadata?.name,
         content: project.metadata?.name,
       }));
