@@ -76,7 +76,7 @@ export const useSort = (
       compareWith(
         activeSort,
         resolvedLanguage,
-        fields.find(field => field.resourceFieldId === activeSort.resourceFieldId)?.compareFn,
+        fields.find((field) => field.resourceFieldId === activeSort.resourceFieldId)?.compareFn,
         fields,
       ),
     [fields, activeSort],

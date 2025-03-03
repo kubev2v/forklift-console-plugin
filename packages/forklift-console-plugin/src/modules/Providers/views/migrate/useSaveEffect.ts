@@ -14,10 +14,9 @@ import {
 } from '@kubev2v/types';
 import { k8sCreate, K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-import { getResourceUrl } from '../../utils';
-
 import { setAPiError } from './reducer/actions';
 import { getObjectRef } from './reducer/helpers';
+import { getResourceUrl } from '../../utils';
 import { CreateVmMigrationPageState } from './types';
 
 const createStorage = (storageMap: V1beta1StorageMap) =>

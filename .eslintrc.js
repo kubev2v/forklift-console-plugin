@@ -64,5 +64,5 @@ module.exports = {
       version: 'detect',
     },
   },
-  ignorePatterns: ['dist/', 'generated/', 'node_modules/', 'storybook-static/'],
+  ignorePatterns: ['dist/', 'distlib/', 'generated/', 'node_modules/', 'storybook-static/'],
 };

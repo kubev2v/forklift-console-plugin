@@ -14,7 +14,6 @@ import {
 
 import { PlanVMsDeleteButton } from '../components';
 import { PlanData, VMData } from '../types';
-
 import { PlanVirtualMachinesRow } from './PlanVirtualMachinesRow';
 
 const fieldsMetadataFactory: ResourceFieldFactory = (t) => [

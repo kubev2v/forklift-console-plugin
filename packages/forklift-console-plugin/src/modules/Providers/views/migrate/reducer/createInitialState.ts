@@ -11,7 +11,6 @@ import {
   MULTIPLE_NICS_ON_THE_SAME_NETWORK,
   OVIRT_NICS_WITH_EMPTY_PROFILE,
 } from '../types';
-
 import { SET_DISKS, SET_NICK_PROFILES } from './actions';
 import { getNamespacesUsedBySelectedVms } from './getNamespacesUsedBySelectedVms';
 import { getNetworksUsedBySelectedVms } from './getNetworksUsedBySelectedVMs';

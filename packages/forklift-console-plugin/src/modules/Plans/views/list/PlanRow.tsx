@@ -6,7 +6,6 @@ import { getResourceFieldValue, ResourceField, RowProps } from '@kubev2v/common'
 import { Td, Tr } from '@patternfly/react-table';
 
 import { PlanData } from '../../utils';
-
 import {
   ActionsCell,
   CellProps,

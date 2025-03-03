@@ -4,7 +4,6 @@ import { Dropdown, MenuToggle, MenuToggleElement } from '@patternfly/react-core'
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
 import { PlanVMsCellProps } from '../components';
-
 import { PlanVMActionsDropdownItems } from './PlanVMActionsDropdownItems';
 
 const PlanVMActionsDropdown: FC<PlanVMsCellProps> = ({ data }) => {

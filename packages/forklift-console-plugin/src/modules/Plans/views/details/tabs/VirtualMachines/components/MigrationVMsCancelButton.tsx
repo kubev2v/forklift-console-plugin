@@ -6,7 +6,6 @@ import { V1beta1Migration } from '@kubev2v/types';
 import { ToolbarItem } from '@patternfly/react-core';
 
 import { MigrationVMsCancelModal } from '../modals';
-
 import { VMsActionButton } from './VMsActionButton';
 
 export const MigrationVMsCancelButton: FC<{

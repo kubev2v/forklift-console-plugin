@@ -30,7 +30,6 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { hasTaskCompleted } from '../../../utils';
 import { PipelineTasksModal } from '../modals';
 import { VMData } from '../types';
-
 import { getIcon, getVariant } from './MigrationVirtualMachinesRow';
 
 export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (props) => {

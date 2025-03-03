@@ -2,7 +2,6 @@ import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DetailsItem, OwnerReferencesItem } from '../../../../../utils';
-
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const OwnerDetailsItem: React.FC<ProviderDetailsItemProps> = ({

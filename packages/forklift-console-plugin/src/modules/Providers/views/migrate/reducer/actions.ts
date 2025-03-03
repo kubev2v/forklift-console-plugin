@@ -15,7 +15,6 @@ import { InventoryNetwork } from '../../../hooks/useNetworks';
 import { InventoryStorage } from '../../../hooks/useStorages';
 import { VmData } from '../../details';
 import { Mapping, NetworkAlerts, StorageAlerts } from '../types';
-
 import { InitialStateParameters } from './createInitialState';
 
 export const POD_NETWORK = 'Pod Networking';

@@ -11,7 +11,6 @@ import {
   getCategoryTitle,
   groupConcernsByCategory,
 } from '../utils';
-
 import { VMCellProps } from './VMCellProps';
 
 /**

@@ -6,7 +6,6 @@ import { ExternalLink } from '@kubev2v/common';
 import { DescriptionListDescription } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../../utils';
-
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 /**
