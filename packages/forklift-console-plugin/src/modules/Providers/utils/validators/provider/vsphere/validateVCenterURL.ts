@@ -36,7 +36,8 @@ export const validateVCenterURL = (url: string, caCert?: string): ValidationMsg 
 
   const trimmedUrl: string = url.trim();
   const isValidURL = validateURL(trimmedUrl);
-  const urlHostname = getUrlHostname(url);
+  const urlObject = getUrlObject(url);
+  const urlHostname = urlObject?.hostname;
 
   if (trimmedUrl === '') {
     return {
@@ -52,25 +53,27 @@ export const validateVCenterURL = (url: string, caCert?: string): ValidationMsg 
     };
   }
 
+  if (urlObject?.protocol === 'https:') {
+    if (validateIpv4(urlHostname)) {
+      return {
+        type: 'error',
+        msg: 'Invalid URL. The URL must be a fully qualified domain name (FQDN).',
+      };
+    }
+
+    if (caCert && !urlMatchesCertFqdn(urlHostname, caCert)) {
+      return {
+        type: 'error',
+        msg: 'Invalid URL. The URL must be a fully qualified domain name (FQDN) and match the FQDN in the certificate you uploaded.',
+      };
+    }
+  }
+
   if (!trimmedUrl.endsWith('sdk'))
     return {
       msg: 'The URL does not end with a /sdk path, for example a URL with sdk path: https://host-example.com/sdk .',
       type: 'warning',
     };
-
-  if (validateIpv4(urlHostname)) {
-    return {
-      type: 'error',
-      msg: 'Invalid URL. The URL must be a fully qualified domain name (FQDN).',
-    };
-  }
-
-  if (caCert && !urlMatchesCertFqdn(urlHostname, caCert)) {
-    return {
-      type: 'error',
-      msg: 'Invalid URL. The URL must be a fully qualified domain name (FQDN) and match the FQDN in the certificate you uploaded.',
-    };
-  }
 
   return {
     type: 'success',
@@ -78,12 +81,10 @@ export const validateVCenterURL = (url: string, caCert?: string): ValidationMsg 
   };
 };
 
-const getUrlHostname = (url: string) => {
+const getUrlObject = (url: string) => {
   try {
-    return new URL(url)?.hostname;
+    return new URL(url);
   } catch {
     console.error('Unable to parse URL.');
   }
-
-  return '';
 };

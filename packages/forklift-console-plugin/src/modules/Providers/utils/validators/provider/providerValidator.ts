@@ -7,9 +7,11 @@ import { openstackProviderValidator } from './openstack/openstackProviderValidat
 import { ovaProviderValidator } from './ova/ovaProviderValidator';
 import { ovirtProviderValidator } from './ovirt/ovirtProviderValidator';
 import { vsphereProviderValidator } from './vsphere/vsphereProviderValidator';
+import { SecretSubType } from './secretValidator';
 
 export function providerValidator(
   provider: V1beta1Provider,
+  subType: SecretSubType,
   secret: IoK8sApiCoreV1Secret,
 ): ValidationMsg {
   let validationError: ValidationMsg;
@@ -25,7 +27,7 @@ export function providerValidator(
       validationError = ovirtProviderValidator(provider);
       break;
     case 'vsphere':
-      validationError = vsphereProviderValidator(provider, secret?.data?.cacert);
+      validationError = vsphereProviderValidator(provider, subType, secret?.data?.cacert);
       break;
     case 'ova':
       validationError = ovaProviderValidator(provider);

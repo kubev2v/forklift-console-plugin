@@ -1,12 +1,14 @@
 import { V1beta1Provider } from '@kubev2v/types';
 
 import { validateK8sName, validateURL, ValidationMsg } from '../../common';
+import { SecretSubType } from '../secretValidator';
 
 import { validateVCenterURL } from './validateVCenterURL';
 import { validateVDDKImage } from './validateVDDKImage';
 
 export function vsphereProviderValidator(
   provider: V1beta1Provider,
+  subType?: SecretSubType,
   caCert?: string,
 ): ValidationMsg {
   const name = provider?.metadata?.name;
@@ -20,7 +22,11 @@ export function vsphereProviderValidator(
     return { type: 'error', msg: 'invalid kubernetes resource name' };
   }
 
-  if (caCert ? validateVCenterURL(url, caCert).type === 'error' : !validateURL(url)) {
+  if (
+    subType === 'vcenter' && caCert
+      ? validateVCenterURL(url, caCert).type === 'error'
+      : !validateURL(url)
+  ) {
     return { type: 'error', msg: 'invalid URL' };
   }
 
