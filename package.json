@@ -22,7 +22,7 @@
     "test": "yarn workspace @kubev2v/common run build && yarn workspaces run test",
     "test:coverage": "yarn workspace @kubev2v/common run build && yarn workspaces run test:coverage",
     "test:updateSnapshot": "yarn workspace @kubev2v/common run build && yarn workspaces run test:updateSnapshot",
-    "test:e2e": "cypress run --config-file testing/cypress.config.cjs --browser chrome --headed",
+    "test:e2e": "cd testing && cypress run --browser chrome --headed",
     "console": "bash ./ci/start-console.sh",
     "console:stop": "bash ./ci/stop-console.sh",
     "cluster:up": "bash ./ci/deploy-all.sh",
