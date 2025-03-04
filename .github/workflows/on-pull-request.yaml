@@ -64,7 +64,7 @@ jobs:
           wait-on: "http://localhost:30080"
           browser: chrome
           headed: false
-          config-file: testing/cypress.config.cjs
+          working-directory: testing
 
       - name: Upload videos
         uses: actions/upload-artifact@v4
