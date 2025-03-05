@@ -29,6 +29,9 @@ export const PlanVMsDeleteButton: FC<{
     if (isPlanArchived(plan)) {
       return t('Deleting virtual machines from an archived migration plan is not allowed.');
     }
+    if (plan?.spec?.vms.length === 1) {
+      return t('Deleting all virtual machines from a migration plan is not allowed.');
+    }
     if (!selectedIds?.length) {
       return t('Select at least one virtual machine.');
     }
@@ -43,7 +46,7 @@ export const PlanVMsDeleteButton: FC<{
   return (
     <ToolbarItem>
       <VMsActionButton onClick={onClick} disabledReason={reason}>
-        {t('Remove virtual machines')}
+        {t('Delete VMs from plan')}
       </VMsActionButton>
     </ToolbarItem>
   );
