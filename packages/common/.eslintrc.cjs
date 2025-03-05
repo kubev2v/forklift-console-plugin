@@ -2,5 +2,5 @@
 
 module.exports = {
   root: true,
-  extends: ['plugin:@kubev2v/eslint-plugin/typescript', 'plugin:storybook/recommended'],
+  extends: ['plugin:@kubev2v/eslint-plugin/typescript'],
 };
