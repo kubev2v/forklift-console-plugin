@@ -9,6 +9,12 @@ export type PlanNameTemplates = {
   networkNameTemplate?: string;
 };
 
+export enum DiskBusType {
+  SCSI = 'scsi',
+  SATA = 'sata',
+  VIRTIO = 'virtio',
+}
+
 export type EnhancedPlanSpecVms = V1beta1PlanSpecVms & PlanNameTemplates;
 
 export type EnhancedPlan = V1beta1Plan & {
@@ -16,6 +22,7 @@ export type EnhancedPlan = V1beta1Plan & {
     PlanNameTemplates & {
       migrateSharedDisks?: boolean;
       vms: EnhancedPlanSpecVms[];
+      diskBus?: DiskBusType;
     };
 };
 
