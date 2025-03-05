@@ -94,8 +94,8 @@ const config: Configuration = {
   },
   devServer: {
     static: ['./dist'],
-    host: 'localhost',
-    hot: false,
+    allowedHosts: 'all',
+    hot: true,
     port: 9001,
     headers: {
       'Access-Control-Allow-Origin': '*',
