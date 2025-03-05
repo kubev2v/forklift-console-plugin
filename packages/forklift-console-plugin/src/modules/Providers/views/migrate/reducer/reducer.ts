@@ -193,11 +193,8 @@ const handlers: {
     }
 
     const targetNamespace =
-      // use the current namespace (inherited from source provider)
-      (isProviderLocalOpenshift(targetProvider) &&
-        !alreadyInUse(plan.metadata.namespace) &&
-        plan.metadata.namespace) ||
-      // use 'default' if exists
+      // use the selected project name
+      draft.underConstruction?.projectName ||
       (availableTargetNamespaces.find(
         (n) => n.name === DEFAULT_NAMESPACE && !alreadyInUse(DEFAULT_NAMESPACE),
       ) &&
