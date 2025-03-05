@@ -89,8 +89,8 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
   };
 
   const handleAlerts = () => {
-    // alerts are not relevant to display if plan was completed successfully
-    if (planStatus === PlanPhase.Succeeded) {
+    // alerts are not relevant to display if plan was completed successfully or archived
+    if (planStatus === PlanPhase.Succeeded || planStatus === PlanPhase.Archived) {
       return;
     }
 
