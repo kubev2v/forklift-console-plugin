@@ -24,16 +24,16 @@ if [[ $(uname) = "Darwin" ]]; then
     PLUGIN_URL="$BASE_HOST_URL:9001"
 fi
 
+# Look for forklift routes
+if oc_available_loggedin && { [ -z "${INVENTORY_SERVER_HOST+x}" ] && [ -z "${SERVICES_API_SERVER_HOST+x}" ]; }; then
+    routes=$(oc get routes -A -o template --template='{{range .items}}{{.spec.host}}{{"\n"}}{{end}}' 2>/dev/null || true)
+    INVENTORY_SERVER_HOST="https://$(echo "$routes" | grep forklift-inventory)"
+    SERVICES_API_SERVER_HOST="https://$(echo "$routes" | grep forklift-services)"
+fi
+
 # Default API server hosts
 INVENTORY_SERVER_HOST="${INVENTORY_SERVER_HOST:-${BASE_HOST_URL}:30444}"
 SERVICES_API_SERVER_HOST="${SERVICES_API_SERVER_HOST:-${BASE_HOST_URL}:30446}"
-
-# Look for forklift routes
-if oc_available_loggedin; then
-    routes=$(oc get routes -A -o template --template='{{range .items}}{{.spec.host}}{{"\n"}}{{end}}' 2>/dev/null || true)
-    INVENTORY_SERVER_HOST="https://$(echo "$routes" | grep forklift-inventory || echo "${INVENTORY_SERVER_HOST}")"
-    SERVICES_API_SERVER_HOST="https://$(echo "$routes" | grep forklift-services || echo "${SERVICES_API_SERVER_HOST}")"
-fi
 
 if [[ ${CONSOLE_IMAGE} =~ ^localhost/ ]]; then
     PULL_POLICY="never"
