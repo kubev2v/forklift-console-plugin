@@ -1,0 +1,15 @@
+# .husky/pre-commit
+
+yarn lint-staged
+
+echo "run yarn i18n"
+yarn i18n
+
+translation_file_diff=$(git diff --name-only packages/forklift-console-plugin/locales/en/plugin__forklift-console-plugin.json)
+
+if [ -n "$translation_file_diff" ]; then
+    git add $translation_file_diff
+fi
+
+# see what's going to be committed
+git status
