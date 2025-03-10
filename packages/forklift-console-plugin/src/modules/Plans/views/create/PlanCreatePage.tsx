@@ -3,7 +3,11 @@ import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
 import ProvidersCreateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationPage';
-import { startCreate } from 'src/modules/Providers/views/migrate/reducer/actions';
+import {
+  SET_AVAILABLE_SOURCE_NETWORKS,
+  SET_AVAILABLE_SOURCE_STORAGES,
+  startCreate,
+} from 'src/modules/Providers/views/migrate/reducer/actions';
 import { useFetchEffects } from 'src/modules/Providers/views/migrate/useFetchEffects';
 import { useSaveEffect } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { Namespace } from 'src/utils/constants';
@@ -98,6 +102,7 @@ export const PlanCreatePage: FC<{ namespace: string }> = ({ namespace }) => {
   }, [state]);
 
   const title = t('Plans wizard');
+  const initialLoading = state.flow.initialLoading;
 
   return (
     <>
@@ -142,7 +147,12 @@ export const PlanCreatePage: FC<{ namespace: string }> = ({ namespace }) => {
             isDisabled={!isFirstStepValid}
             footer={{
               nextButtonText: t('Create migration plan'),
-              isNextDisabled: emptyContext || !!state?.flow?.apiError || anyValidationError,
+              isNextDisabled:
+                emptyContext ||
+                !!state?.flow?.apiError ||
+                anyValidationError ||
+                !initialLoading[SET_AVAILABLE_SOURCE_NETWORKS] ||
+                !initialLoading[SET_AVAILABLE_SOURCE_STORAGES],
             }}
           >
             <ProvidersCreateVmMigrationPage
