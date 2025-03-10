@@ -28,10 +28,9 @@ const NetworkNameTemplateDetailsItem: FC<PlanDetailsItemProps> = ({ resource, ca
       content={content}
       crumbs={pathArray}
       onEdit={() => {
-        if (canPatch && isPlanEditable(resource)) {
-          showModal(<NetworkNameTemplateModal resource={resource} jsonPath={pathArray} />);
-        }
+        showModal(<NetworkNameTemplateModal resource={resource} jsonPath={pathArray} />);
       }}
+      canEdit={canPatch && isPlanEditable(resource)}
     />
   );
 };
