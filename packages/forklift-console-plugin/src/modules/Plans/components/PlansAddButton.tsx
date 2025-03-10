@@ -48,7 +48,7 @@ export const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId 
       content={
         namespace
           ? t(
-              'At least 1 source and 1 target provider in the {{name}} project must be available.',
+              'At least one source and one target provider in the {{name}} project must be available.',
               { name: namespace },
             )
           : t('At least one source and one target provider must be available.')
