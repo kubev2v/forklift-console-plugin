@@ -56,7 +56,7 @@ export const MigrationVMsCancelModal: React.FC<MigrationVMsCancelModalProps> = (
       variant={ButtonVariant.primary}
       isLoading={isLoading}
     >
-      {t('Cancel migration')}
+      {t('Cancel')}
     </Button>,
     <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal}>
       {t('Cancel')}
