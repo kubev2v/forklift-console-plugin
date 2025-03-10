@@ -19,7 +19,7 @@
 
     "lib": ["dom", "es2020"],
     "esModuleInterop": true,
-
+    "baseUrl": ".",
     "types": ["cypress", "@testing-library/cypress"]
   },
 
