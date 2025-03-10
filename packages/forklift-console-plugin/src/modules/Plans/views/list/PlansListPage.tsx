@@ -154,14 +154,7 @@ const PlansListPage: React.FC<{
     permissions,
   }));
 
-  const EmptyState = (
-    <EmptyState_
-      AddButton={
-        <PlansAddButton dataTestId="add-network-map-button-empty-state" namespace={namespace} />
-      }
-      namespace={namespace}
-    />
-  );
+  const EmptyState = <EmptyState_ namespace={namespace} />;
 
   return (
     <ModalHOC>
@@ -186,8 +179,7 @@ const PlansListPage: React.FC<{
 };
 
 interface EmptyStateProps {
-  AddButton: JSX.Element;
-  namespace?: string;
+  namespace: string;
 }
 
 const EmptyState_: React.FC<EmptyStateProps> = ({ namespace }) => {
