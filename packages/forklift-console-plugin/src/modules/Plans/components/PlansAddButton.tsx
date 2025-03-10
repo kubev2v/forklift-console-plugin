@@ -6,7 +6,7 @@ import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef } from '@kubev2v/types';
-import { Button } from '@patternfly/react-core';
+import { Button, Tooltip } from '@patternfly/react-core';
 
 type PlansAddButtonProps = {
   namespace?: string;
@@ -32,7 +32,7 @@ export const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId 
     history.push(`${plansListURL}/~new`);
   };
 
-  return (
+  const button = (
     <Button
       data-testid={dataTestId}
       variant="primary"
@@ -41,6 +41,23 @@ export const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId 
     >
       {t('Create Plan')}
     </Button>
+  );
+
+  return !hasSufficientProviders ? (
+    <Tooltip
+      content={
+        namespace
+          ? t(
+              'At least one source and one target provider in the {{name}} project must be available.',
+              { name: namespace },
+            )
+          : t('At least one source and one target provider must be available.')
+      }
+    >
+      {button}
+    </Tooltip>
+  ) : (
+    button
   );
 };
 

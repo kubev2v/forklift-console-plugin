@@ -7,18 +7,13 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ExternalLink } from '@kubev2v/common';
 import { ProviderModelRef } from '@kubev2v/types';
-import { Button, Flex, FlexItem } from '@patternfly/react-core';
-
-import digitalTransformation from '../..//Overview/images/digitalTransormation.svg';
+import { Button, ButtonProps, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 
 import PlansAddButton from './PlansAddButton';
 
 const HELP_LINK_HREF =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
-
-const AutomationIcon = () => (
-  <img alt="automation icon" src={digitalTransformation} className="forklift-empty-state__icon" />
-);
 
 const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
@@ -33,14 +28,14 @@ const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
 
   return (
     <ForkliftEmptyState
-      icon={AutomationIcon}
+      icon={PlusCircleIcon}
       title={
         namespace ? (
           <ForkliftTrans>
-            No Plans found in namespace <strong>{namespace}</strong>.
+            No plans found in the project <strong>{namespace}</strong>
           </ForkliftTrans>
         ) : (
-          t('No Plans found.')
+          t('No plans found')
         )
       }
       textContent={
@@ -48,24 +43,28 @@ const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
           <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
             <FlexItem>
               <ForkliftTrans>
-                Migration plans are used to plan migration or virtualization workloads from source
-                providers to target providers. At least one source and one target provider must be
-                available in order to create a migration plan,{' '}
-                <ExternalLink href={HELP_LINK_HREF} isInline>
-                  Learn more
-                </ExternalLink>
-                .
+                Migration plans are used to document the moving of virtualization workloads from
+                source providers to target providers. At least 1 source and 1 target provider is
+                required to create a migration plan.
               </ForkliftTrans>
             </FlexItem>
             <FlexItem>
-              <Button variant="secondary">
-                <Link to={ProvidersListURL}>{t('Return to the providers list page')}</Link>
+              <ExternalLink href={HELP_LINK_HREF}>
+                {t('Learn more about migration plans.')}
+              </ExternalLink>
+            </FlexItem>
+            <FlexItem>
+              <Button
+                variant={ButtonVariant.primary}
+                component={(props: ButtonProps) => <Link {...props} to={ProvidersListURL} />}
+              >
+                {t('Go to providers list')}
               </Button>
             </FlexItem>
           </Flex>
         ) : (
           t(
-            'Migration plans are used to plan migration or virtualization workloads from source providers to target providers.',
+            'Migration plans are used to document the moving of virtualization workloads from source providers to target providers.',
           )
         )
       }
