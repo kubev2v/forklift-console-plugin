@@ -56,7 +56,8 @@ export function withHeaderSelection<T>({
 }) {
   const Enhanced = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
     const selectableItems = dataOnScreen.filter(canSelect);
-    const allSelected = selectableItems.every((it) => isSelected(it));
+    const allSelected = selectableItems.length > 0 && selectableItems.every(isSelected);
+
     return (
       <>
         {isExpanded && <Th />}

@@ -232,7 +232,6 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
       : (dvsDict[p.metadata.labels.vmID] = [p]),
   );
 
-  const [selectedIds, setSelectedIds] = useState([]);
   const [expandedIds, setExpandedIds] = useState([]);
 
   const userSettings = loadUserSettings({ pageId: 'PlanVirtualMachines' });
@@ -293,8 +292,8 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     ...props,
     toId: (item: VMData) => item?.specVM?.id,
     canSelect: (item: VMData) => canSelectWhenExecuting(item) || canSelectWhenNotExecuting(item),
-    onSelect: setSelectedIds,
-    selectedIds: selectedIds,
+    onSelect: () => undefined,
+    selectedIds: [],
     onExpand: setExpandedIds,
     expandedIds: expandedIds,
     GlobalActionToolbarItems: actions,
