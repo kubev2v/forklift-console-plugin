@@ -3,7 +3,6 @@ import { Draft } from 'immer';
 import { universalComparator } from '@kubev2v/common';
 
 import { CreateVmMigrationPageState } from '../types';
-
 import {
   POD_NETWORK,
   SET_AVAILABLE_SOURCE_NETWORKS,

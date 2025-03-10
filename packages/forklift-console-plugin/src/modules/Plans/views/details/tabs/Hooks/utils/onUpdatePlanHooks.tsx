@@ -5,7 +5,6 @@ import { deepCopy } from 'src/utils';
 import { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
 
 import { FormAction, FormState } from '../state';
-
 import { createHook } from './createHook';
 import { deleteHook } from './deleteHook';
 import { updateHook } from './updateHook';
