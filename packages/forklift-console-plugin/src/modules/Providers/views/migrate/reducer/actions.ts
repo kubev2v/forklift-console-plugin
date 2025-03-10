@@ -1,3 +1,5 @@
+import { getDefaultNamespace } from 'src/utils/namespaces';
+
 import {
   OpenShiftNamespace,
   OpenShiftNetworkAttachmentDefinition,
@@ -19,7 +21,7 @@ import { Mapping, NetworkAlerts, StorageAlerts } from '../types';
 import { InitialStateParameters } from './createInitialState';
 
 export const POD_NETWORK = 'Pod Networking';
-export const DEFAULT_NAMESPACE = 'default';
+export const DEFAULT_NAMESPACE = getDefaultNamespace();
 
 // action type names
 export const SET_NAME = 'SET_NAME';

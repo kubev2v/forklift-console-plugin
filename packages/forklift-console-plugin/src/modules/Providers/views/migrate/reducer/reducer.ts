@@ -193,11 +193,8 @@ const handlers: {
     }
 
     const targetNamespace =
-      // use the current namespace (inherited from source provider)
-      (isProviderLocalOpenshift(targetProvider) &&
-        !alreadyInUse(plan.metadata.namespace) &&
-        plan.metadata.namespace) ||
-      // use 'default' if exists
+      // use the selected project name
+      draft.underConstruction?.projectName ||
       (availableTargetNamespaces.find(
         (n) => n.name === DEFAULT_NAMESPACE && !alreadyInUse(DEFAULT_NAMESPACE),
       ) &&
@@ -367,6 +364,7 @@ const handlers: {
   [SET_API_ERROR]({ flow }, { payload: { error } }: PageAction<CreateVmMigration, PlanError>) {
     // triggered by the API callback (on failure)
     flow.apiError = error;
+    flow.editingDone = false;
   },
   [ADD_NETWORK_MAPPING](draft) {
     const { calculatedPerNamespace: cpn } = draft;
@@ -596,7 +594,7 @@ export const reducer = (
   ) {
     draft.flow.initialLoading[action.type] = true;
   }
-  return draft.flow.editingDone && !actionsAllowedAfterEditingIsDone.includes[action?.type]
+  return draft.flow.editingDone && !actionsAllowedAfterEditingIsDone.includes(action?.type)
     ? draft
     : handlers?.[action?.type]?.(draft, action) ?? draft;
 };

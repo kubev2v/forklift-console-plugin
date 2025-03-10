@@ -16,6 +16,7 @@ import {
 } from '@patternfly/react-core';
 
 import { usePlanMigration } from '../hooks/usePlanMigration';
+import { formatToAmPm } from '../utils/helpers/AMPMFormatter';
 
 import './PlanCutoverMigrationModal.style.css';
 
@@ -46,6 +47,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
   const [cutoverDate, setCutoverDate] = useState<string>();
+  const [time, setTime] = useState<string>();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
   const title_ = title || t('Cutover');
@@ -57,13 +59,16 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     const migrationCutoverDate = lastMigration?.spec?.cutover || new Date().toISOString();
 
     setCutoverDate(migrationCutoverDate);
+    setTime(formatToAmPm(new Date(migrationCutoverDate)));
   }, [lastMigration]);
 
   const onDateChange: (
     event: React.FormEvent<HTMLInputElement>,
     value: string,
     date?: Date,
-  ) => void = (_event, value) => {
+  ) => void = (_event, value, date) => {
+    if (!date) return;
+
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
 
     const [year, month, day] = value.split('-').map((num: string) => parseInt(num, 10));
@@ -77,12 +82,16 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
 
   const onTimeChange: (
     event: React.FormEvent<HTMLInputElement>,
-    time: string,
+    timeInput: string,
     hour?: number,
     minute?: number,
     seconds?: number,
     isValid?: boolean,
-  ) => void = (_event, _time, hour, minute) => {
+  ) => void = (_event, timeInput, hour, minute, _seconds, isValid) => {
+    setTime(timeInput);
+
+    if (!isValid) return;
+
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
 
     updatedFromDate.setHours(hour);
@@ -166,7 +175,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
             style={{ width: '150px' }}
             onChange={onTimeChange}
             menuAppendTo={document.body}
-            time={cutoverDate ? new Date(cutoverDate) : new Date()}
+            time={time}
           />
         </InputGroup>
       </>

@@ -14,7 +14,7 @@ export function providerAndSecretValidator(
   const subType = subTypeString === 'esxi' ? 'esxi' : 'vcenter';
 
   const secretValidation = secretValidator(provider, type, subType, secret);
-  const providerValidation = providerValidator(provider, secret);
+  const providerValidation = providerValidator(provider, subType, secret);
 
   // Test for validation errors
   if (providerValidation?.type === 'error') {
