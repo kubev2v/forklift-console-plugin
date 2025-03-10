@@ -46,7 +46,7 @@ export const PlanVMsDeleteButton: FC<{
   return (
     <ToolbarItem>
       <VMsActionButton onClick={onClick} disabledReason={reason}>
-        {t('Delete VMs from plan')}
+        {t('Delete virtual machines')}
       </VMsActionButton>
     </ToolbarItem>
   );
