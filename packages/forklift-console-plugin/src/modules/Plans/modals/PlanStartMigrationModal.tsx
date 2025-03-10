@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
@@ -41,7 +41,7 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
   const [lastMigration] = usePlanMigration(resource);
 
@@ -87,7 +87,7 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
 
       await k8sCreate({ model: MigrationModel, data: migration });
       if (redirectTo) {
-        history.push(redirectTo);
+        navigate(redirectTo);
       }
 
       toggleModal();
