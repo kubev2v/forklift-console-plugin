@@ -48,10 +48,10 @@ export const PlanCreatePage: FC<{ namespace: string }> = ({ namespace }) => {
   const plansListURL = useMemo(() => {
     return getResourceUrl({
       reference: PlanModelRef,
-      namespace: namespace,
-      namespaced: namespace !== undefined,
+      namespace: activeNamespace,
+      namespaced: true,
     });
-  }, [namespace]);
+  }, [activeNamespace]);
 
   const providerURL = useMemo(() => {
     return getResourceUrl({
