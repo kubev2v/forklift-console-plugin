@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { getResourceFieldValue } from '@kubev2v/common';
+import { getResourceFieldValue } from '@forklift/common/components/FilterGroup/matchers';
 import { Truncate } from '@patternfly/react-core';
 
 import { CellProps } from './CellProps';

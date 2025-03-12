@@ -4,10 +4,8 @@ export * from './Filter';
 export * from './FilterGroup';
 export * from './FormGroupWithHelpText';
 export * from './HelpIconPopover';
-export * from './Icons';
 export * from './LoadingDots';
 export * from './Page';
-export * from './QueryClientHoc';
 export * from './TableView';
 export * from './TypeaheadSelect';
 // @endindex

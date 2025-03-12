@@ -1,4 +1,4 @@
-import { ResourceField } from '@kubev2v/common';
+import { ResourceField } from '@forklift/common/utils/types';
 
 import { VMData } from '../types';
 

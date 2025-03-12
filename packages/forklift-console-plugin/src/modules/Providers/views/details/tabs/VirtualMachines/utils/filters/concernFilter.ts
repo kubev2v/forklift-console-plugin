@@ -1,4 +1,5 @@
-import { EnumToTuple, EnumValue } from '@kubev2v/common';
+import { EnumToTuple } from '@forklift/common/components/FilterGroup/helpers';
+import { EnumValue } from '@forklift/common/utils/types';
 
 export const concernFilter = (t: (string) => string) => ({
   type: 'concerns',

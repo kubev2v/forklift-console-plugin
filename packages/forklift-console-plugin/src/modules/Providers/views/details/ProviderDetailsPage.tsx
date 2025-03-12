@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ErrorState, LoadingDots } from '@kubev2v/common';
+import { LoadingDots } from '@forklift/common/components/LoadingDots/LoadingDots';
+import { ErrorState } from '@forklift/common/components/Page/PageStates';
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 

@@ -7,7 +7,7 @@ import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/S
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
+import { FormGroupWithHelpText } from '@forklift/common/components/FormGroupWithHelpText/FormGroupWithHelpText';
 import { IoK8sApiCoreV1Secret, ProviderType, V1beta1Provider } from '@kubev2v/types';
 import {
   Flex,

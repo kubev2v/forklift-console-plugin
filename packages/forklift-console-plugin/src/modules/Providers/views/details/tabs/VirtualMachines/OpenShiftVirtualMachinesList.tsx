@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
+import { EnumToTuple } from '@forklift/common/components/FilterGroup/helpers';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
 import { ProviderVirtualMachinesList, VmData } from './components';

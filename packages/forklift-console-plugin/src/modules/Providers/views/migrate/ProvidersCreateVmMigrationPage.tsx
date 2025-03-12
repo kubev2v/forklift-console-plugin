@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { LoadingDots } from '@kubev2v/common';
+import { LoadingDots } from '@forklift/common/components/LoadingDots/LoadingDots';
 import { Alert } from '@patternfly/react-core';
 
 import { PlansCreateForm } from './components/PlansCreateForm';

@@ -1,6 +1,6 @@
 import { Draft } from 'immer';
 
-import { universalComparator } from '@kubev2v/common';
+import { universalComparator } from '@forklift/common/components/TableView/sort';
 
 import { CreateVmMigrationPageState } from '../types';
 
