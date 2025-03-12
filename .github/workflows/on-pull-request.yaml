@@ -1,11 +1,10 @@
-
 name: Test
 on:
   pull_request:
 env:
   CONTAINER_CMD: docker
   FORKLIFT_PLUGIN_IMAGE: localhost:5001/forklift-console-plugin:latest
-  OKD_CONSOLE_YAML: ./ci/yaml/okd-console.yaml 
+  OKD_CONSOLE_YAML: ./ci/yaml/okd-console.yaml
 
 jobs:
   tests:
@@ -47,13 +46,15 @@ jobs:
   e2e:
     name: Run e2e tests
     runs-on: ubuntu-latest
+    env:
+      BASE_ADDRESS: http://localhost:30080
     steps:
       - name: Increase File Descriptors Limit
         run: ulimit -n 4096
 
       - name: Checkout
         uses: actions/checkout@v4
-    
+
       - name: Run pre e2e test tasks
         run: yarn e2e:pre-test
 
@@ -63,7 +64,7 @@ jobs:
           wait-on: "http://localhost:30080"
           browser: chrome
           headed: false
-          config-file: cypress/cypress.config.cjs
+          working-directory: testing
 
       - name: Upload videos
         uses: actions/upload-artifact@v4
