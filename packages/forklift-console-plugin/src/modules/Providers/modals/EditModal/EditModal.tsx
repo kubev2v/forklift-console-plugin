@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
@@ -59,7 +59,7 @@ export const EditModal: React.FC<EditModalProps> = ({
   const { toggleModal } = useModal();
 
   const [isLoading, toggleIsLoading] = useToggle();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
   const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath) as string);
   const [validation, setValidation] = useState<ValidationMsg>({
@@ -102,7 +102,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       await onConfirmHook({ resource, jsonPath, model, newValue: value });
 
       if (redirectTo) {
-        history.push(redirectTo);
+        navigate(redirectTo);
       }
 
       toggleModal();
