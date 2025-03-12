@@ -16,7 +16,7 @@ import {
 } from '@patternfly/react-core';
 
 import { usePlanMigration } from '../hooks/usePlanMigration';
-import { formatToAmPm } from '../utils/helpers/AMPMFormatter';
+import { formatDateTo12Hours } from '../utils/helpers/AMPMFormatter';
 
 import './PlanCutoverMigrationModal.style.css';
 
@@ -48,6 +48,8 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
   const [isLoading, toggleIsLoading] = useToggle();
   const [cutoverDate, setCutoverDate] = useState<string>();
   const [time, setTime] = useState<string>();
+  const [isDateValid, setIsDateValid] = useState<boolean>(true);
+  const [isTimeValid, setIsTimeValid] = useState<boolean>(true);
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
   const title_ = title || t('Cutover');
@@ -59,7 +61,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     const migrationCutoverDate = lastMigration?.spec?.cutover || new Date().toISOString();
 
     setCutoverDate(migrationCutoverDate);
-    setTime(formatToAmPm(new Date(migrationCutoverDate)));
+    setTime(formatDateTo12Hours(new Date(migrationCutoverDate)));
   }, [lastMigration]);
 
   const onDateChange: (
@@ -67,6 +69,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     value: string,
     date?: Date,
   ) => void = (_event, value, date) => {
+    setIsDateValid(!!date);
     if (!date) return;
 
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
@@ -86,11 +89,12 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     hour?: number,
     minute?: number,
     seconds?: number,
-    isValid?: boolean,
-  ) => void = (_event, timeInput, hour, minute, _seconds, isValid) => {
+    isTimeValid?: boolean,
+  ) => void = (_event, timeInput, hour, minute, _seconds, isTimeValid) => {
     setTime(timeInput);
+    setIsTimeValid(isTimeValid && !!timeInput);
 
-    if (!isValid) return;
+    if (!isTimeValid) return;
 
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
 
@@ -129,7 +133,12 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
   }, [lastMigration]);
 
   const actions = [
-    <Button key="confirm" onClick={onCutover} isLoading={isLoading}>
+    <Button
+      key="confirm"
+      onClick={onCutover}
+      isLoading={isLoading}
+      isDisabled={!isDateValid || !isTimeValid}
+    >
       {t('Set cutover')}
     </Button>,
     <Button key="delete" variant="secondary" onClick={onDeleteCutover} isLoading={isLoading}>
