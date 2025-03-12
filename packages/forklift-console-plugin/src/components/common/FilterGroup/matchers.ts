@@ -1,6 +1,6 @@
 import jsonpath from 'jsonpath';
 
-import { areSameDayInUTCZero, isInClosedRange, ResourceField } from '../../utils';
+import { areSameDayInUTCZero, isInClosedRange, ResourceField } from '../utils';
 import {
   DateFilter,
   DateRangeFilter,

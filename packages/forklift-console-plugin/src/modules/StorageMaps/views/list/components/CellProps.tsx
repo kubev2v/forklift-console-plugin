@@ -1,6 +1,6 @@
 import { StorageMapData } from 'src/modules/StorageMaps/utils';
 
-import { ResourceField } from '@kubev2v/common';
+import { ResourceField } from '@forklift/common/utils/types';
 
 export type CellProps = {
   data: StorageMapData;

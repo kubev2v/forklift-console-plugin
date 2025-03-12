@@ -6,7 +6,7 @@ import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from '@kubev2v/common';
+import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 

@@ -1,10 +1,11 @@
 import React from 'react';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
+import { FilterDefType, ResourceFieldFactory } from 'src/components/common/utils/types';
 import StandardPage from 'src/components/page/StandardPage';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FilterDefType, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';

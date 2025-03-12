@@ -1,4 +1,8 @@
-import { loadFromLocalStorage, removeFromLocalStorage, saveToLocalStorage } from '@kubev2v/common';
+import {
+  loadFromLocalStorage,
+  removeFromLocalStorage,
+  saveToLocalStorage,
+} from '@forklift/common/utils/localStorage';
 
 export interface OverviewUserSettings {
   welcome?: WelcomeSettings;

@@ -5,7 +5,7 @@ import { isPlanEditable } from 'src/modules/Plans/utils';
 import { AlertMessageForModals } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,

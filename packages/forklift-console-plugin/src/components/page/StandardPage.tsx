@@ -2,33 +2,6 @@ import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  AttributeValueFilter,
-  createMetaMatcher,
-  DEFAULT_PER_PAGE,
-  DefaultHeader,
-  DefaultRow,
-  defaultSupportedFilters,
-  defaultValueMatchers,
-  ErrorState,
-  FilterGroup,
-  FilterRenderer,
-  GlobalActionToolbarProps,
-  Loading,
-  NoResultsFound,
-  NoResultsMatchFilter,
-  ResourceField,
-  RowProps,
-  TableView,
-  TableViewHeaderProps,
-  toFieldFilter,
-  useFields,
-  usePagination,
-  UserSettings,
-  useUrlFilters,
-  ValueMatcher,
-  withTr,
-} from '@kubev2v/common';
-import {
   Level,
   LevelItem,
   PageSection,
@@ -41,6 +14,31 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
+import { AttributeValueFilter } from '../common/FilterGroup/AttributeValueFilter';
+import { FilterGroup } from '../common/FilterGroup/FilterGroup';
+import { toFieldFilter } from '../common/FilterGroup/helpers';
+import {
+  createMetaMatcher,
+  defaultSupportedFilters,
+  defaultValueMatchers,
+} from '../common/FilterGroup/matchers';
+import { FilterRenderer, ValueMatcher } from '../common/FilterGroup/types';
+import { useUrlFilters } from '../common/FilterGroup/useUrlFilters';
+import {
+  ErrorState,
+  Loading,
+  NoResultsFound,
+  NoResultsMatchFilter,
+} from '../common/Page/PageStates';
+import { UserSettings } from '../common/Page/types';
+import { useFields } from '../common/Page/useFields';
+import { DEFAULT_PER_PAGE, usePagination } from '../common/Page/usePagination';
+import { DefaultHeader } from '../common/TableView/DefaultHeader';
+import { DefaultRow } from '../common/TableView/DefaultRow';
+import { TableView } from '../common/TableView/TableView';
+import { RowProps, TableViewHeaderProps } from '../common/TableView/types';
+import { withTr } from '../common/TableView/withTr';
+import { GlobalActionToolbarProps, ResourceField } from '../common/utils/types';
 import {
   TableSortContext,
   TableSortContextProps,

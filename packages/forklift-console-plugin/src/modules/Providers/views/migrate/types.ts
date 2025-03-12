@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
-import { ResourceFieldFactory, RowProps } from '@kubev2v/common';
+import { RowProps } from 'src/components/common/TableView/types';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 import {
   OpenShiftNamespace,
   OpenshiftResource,

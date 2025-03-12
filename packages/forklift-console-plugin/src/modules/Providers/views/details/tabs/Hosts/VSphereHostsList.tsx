@@ -7,7 +7,8 @@ import {
 import { useProviderInventory } from 'src/modules/Providers/hooks';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 import { HostModelGroupVersionKind, V1beta1Host, VSphereHost } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 

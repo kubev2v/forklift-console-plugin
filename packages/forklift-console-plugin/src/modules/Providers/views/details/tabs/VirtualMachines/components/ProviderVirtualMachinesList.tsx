@@ -6,19 +6,18 @@ import {
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  EnumFilter,
-  GroupedEnumFilter,
-  loadUserSettings,
-  ResourceFieldFactory,
-  RowProps,
-  ValueMatcher,
-} from '@kubev2v/common';
+import { EnumFilter } from 'src/components/common/Filter/EnumFilter';
+import { GroupedEnumFilter } from 'src/components/common/Filter/GroupedEnumFilter';
+import { ValueMatcher } from 'src/components/common/FilterGroup/types';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
+import { RowProps } from 'src/components/common/TableView/types';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 import { Concern } from '@kubev2v/types';
 
 import { ConcernsTable } from './ConcernsTable';
 import { MigrationAction } from './MigrationAction';
 import { VmData } from './VMCellProps';
+
 export interface ProviderVirtualMachinesListProps {
   title?: string;
   obj: ProviderData;

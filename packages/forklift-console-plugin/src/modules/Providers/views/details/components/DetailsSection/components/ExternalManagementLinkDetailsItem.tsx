@@ -2,7 +2,7 @@ import React from 'react';
 import { EditProviderUIModal, useModal } from 'src/modules/Providers/modals';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from '@kubev2v/common';
+import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { DescriptionListDescription } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../../utils';

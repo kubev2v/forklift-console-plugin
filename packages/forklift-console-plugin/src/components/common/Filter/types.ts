@@ -1,4 +1,4 @@
-import { EnumGroup, EnumValue } from '../../utils';
+import { EnumGroup, EnumValue } from '../utils';
 
 /**
  * Components implementing this interface may be added to complex filters.

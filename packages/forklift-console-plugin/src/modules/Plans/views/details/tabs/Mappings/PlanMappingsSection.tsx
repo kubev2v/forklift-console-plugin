@@ -4,7 +4,7 @@ import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { universalComparator } from '@kubev2v/common';
+import { universalComparator } from 'src/components/common/TableView/sort';
 import {
   NetworkMapModelGroupVersionKind,
   OpenShiftNetworkAttachmentDefinition,

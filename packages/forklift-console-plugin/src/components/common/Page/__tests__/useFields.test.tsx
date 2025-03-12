@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { NAME, NAMESPACE } from '../../../utils';
+import { NAME, NAMESPACE } from '../../utils';
 import { useFields } from '../useFields';
 
 afterEach(cleanup);

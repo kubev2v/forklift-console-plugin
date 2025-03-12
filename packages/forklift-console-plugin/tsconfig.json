@@ -27,7 +27,7 @@
       "@utils/*": ["./src/utils/*"],
       "@components/*": ["./src/components/*"],
       "src/*": ["./src/*"],
-      "common/src/*": ["../common/src/*"]
+      "@forklift/common/*": ["./src/components/common/*"]
     }
   },
 

@@ -28,7 +28,6 @@
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot"
   },
   "dependencies": {
-    "@kubev2v/common": "*",
     "@kubev2v/types": "0.0.20",
     "@openshift-console/dynamic-plugin-sdk": "1.8.0",
     "@patternfly/react-charts": "7.4.1",

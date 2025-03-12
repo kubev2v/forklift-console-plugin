@@ -4,7 +4,8 @@ import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { validateNoSpaces } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText, SelectEventType, SelectValueType } from '@kubev2v/common';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import { SelectEventType, SelectValueType } from '@forklift/common/utils/types';
 import { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
 import {
   Button,

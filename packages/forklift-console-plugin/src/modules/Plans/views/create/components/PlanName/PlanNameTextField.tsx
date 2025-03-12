@@ -2,7 +2,7 @@ import React from 'react';
 import { Validation } from 'src/modules/Providers';
 import { useForkliftTranslation } from 'src/utils';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { TextInput } from '@patternfly/react-core';
 
 import { getInvalidHelperText } from './utils/utils';

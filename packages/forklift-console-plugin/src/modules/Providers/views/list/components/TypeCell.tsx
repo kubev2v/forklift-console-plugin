@@ -3,7 +3,7 @@ import { getIsOnlySource, TableLabelCell } from 'src/modules/Providers/utils';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { getResourceFieldValue } from '@kubev2v/common';
+import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 
 import { CellProps } from './CellProps';
 

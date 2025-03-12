@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { Draft } from 'immer';
 
-import { DefaultRow, ResourceFieldFactory, RowProps, withTr } from '@kubev2v/common';
+import { DefaultRow } from 'src/components/common/TableView/DefaultRow';
+import { RowProps } from 'src/components/common/TableView/types';
+import { withTr } from 'src/components/common/TableView/withTr';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 import {
   IoK8sApimachineryPkgApisMetaV1ObjectMeta,
   OVirtNicProfile,

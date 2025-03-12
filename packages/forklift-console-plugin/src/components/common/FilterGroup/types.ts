@@ -1,4 +1,4 @@
-import { FilterDef } from '../../utils';
+import { FilterDef } from '../utils';
 import { FilterTypeProps } from '../Filter';
 
 /**

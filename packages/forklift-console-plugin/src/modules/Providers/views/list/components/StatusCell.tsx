@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { getResourceUrl, TableIconCell } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { getResourceFieldValue } from '@kubev2v/common';
+import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';

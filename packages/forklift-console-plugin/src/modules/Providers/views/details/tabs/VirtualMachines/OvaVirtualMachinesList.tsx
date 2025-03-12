@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ResourceFieldFactory } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 
 import { concernFilter } from './utils/filters/concernFilter';
 import { ProviderVirtualMachinesList } from './components';
