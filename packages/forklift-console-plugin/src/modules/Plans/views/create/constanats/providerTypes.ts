@@ -1,10 +1,4 @@
-import {
-  openshiftLogo,
-  openstackLogo,
-  ovaLogo,
-  redhatLogo,
-  vmLogo,
-} from 'src/components/images/logos';
+import { openshiftLogo, openstackLogo, redhatLogo, vmLogo } from 'src/components/images/logos';
 
 const providerTypes = {
   vsphere: {
@@ -21,7 +15,6 @@ const providerTypes = {
   },
   ova: {
     title: 'Open Virtual Appliance (OVA)',
-    logo: ovaLogo,
   },
   openshift: {
     title: 'OpenShift Virtualization',
