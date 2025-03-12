@@ -50,7 +50,7 @@ const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
             <FlexItem>
               <ForkliftTrans>
                 Migration plans are used to document the moving of virtualization workloads from
-                source providers to target providers. At least 1 source and 1 target provider is
+                source providers to target providers. At least one source and one target provider is
                 required to create a migration plan.
               </ForkliftTrans>
             </FlexItem>
