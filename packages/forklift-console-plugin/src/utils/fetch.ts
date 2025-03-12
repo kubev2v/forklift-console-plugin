@@ -5,16 +5,12 @@ import {
   WatchK8sResult,
 } from '@openshift-console/dynamic-plugin-sdk';
 
-export const useProviders = ({
-  namespace,
-  name,
-}: WatchK8sResource): WatchK8sResult<V1beta1Provider[]> =>
+export const useProviders = ({ namespace }: WatchK8sResource): WatchK8sResult<V1beta1Provider[]> =>
   useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    isList: true,
     namespaced: true,
+    isList: true,
     namespace,
-    name,
   });
 
 export const useHasSourceAndTargetProviders = (

@@ -188,7 +188,7 @@ export const useFetchEffects = (
         sourceStoragesLoading,
         sourceStoragesError,
       ),
-    [editingDone, sourceStoragesLoading, sourceStoragesError?.message, selectedVms],
+    [editingDone, sourceStoragesLoading, sourceStoragesError?.message, selectedVms, sourceProvider],
   );
 
   const [targetStorages, targetStoragesLoading, targetStoragesError] =
@@ -215,7 +215,7 @@ export const useFetchEffects = (
         sourceNetworksLoading,
         sourceNetworksError,
       ),
-    [editingDone, sourceNetworksLoading, sourceNetworksError?.message, selectedVms],
+    [editingDone, sourceNetworksLoading, sourceNetworksError?.message, selectedVms, sourceProvider],
   );
 
   const [nicProfiles, nicProfilesLoading, nicProfilesError] = useNicProfiles(sourceProvider);

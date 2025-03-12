@@ -26,12 +26,11 @@ const SharedDisksDetailsItem: FC<PlanDetailsItemProps> = ({ resource, canPatch }
       content={content}
       crumbs={pathArray}
       onEdit={() => {
-        if (canPatch && isPlanEditable(resource)) {
-          showModal(
-            <MigrateSharedDisksModal resource={resource} jsonPath={pathArray} title={title} />,
-          );
-        }
+        showModal(
+          <MigrateSharedDisksModal resource={resource} jsonPath={pathArray} title={title} />,
+        );
       }}
+      canEdit={canPatch && isPlanEditable(resource)}
     />
   );
 };

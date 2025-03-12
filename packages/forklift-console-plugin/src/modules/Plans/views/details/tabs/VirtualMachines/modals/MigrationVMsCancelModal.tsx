@@ -65,7 +65,7 @@ export const MigrationVMsCancelModal: React.FC<MigrationVMsCancelModalProps> = (
 
   return (
     <Modal
-      title={t('Cancel virtual machines from migration plan')}
+      title={t('Cancel virtual machines migration?')}
       position="top"
       showClose={false}
       variant={ModalVariant.small}
@@ -74,7 +74,7 @@ export const MigrationVMsCancelModal: React.FC<MigrationVMsCancelModalProps> = (
       actions={actions}
     >
       <div className="forklift-edit-modal-body">
-        {t('You can cancel virtual machines from a running migration plan.')}
+        {t('You can cancel the migration of virtual machines in a running migration plan.')}
       </div>
 
       {alertMessage}
