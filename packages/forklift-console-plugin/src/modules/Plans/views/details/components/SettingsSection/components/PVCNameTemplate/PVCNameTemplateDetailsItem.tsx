@@ -28,10 +28,9 @@ const PVCNameTemplateDetailsItem: FC<PlanDetailsItemProps> = ({ resource, canPat
       content={content}
       crumbs={pathArray}
       onEdit={() => {
-        if (canPatch && isPlanEditable(resource)) {
-          showModal(<PVCNameTemplateModal resource={plan} jsonPath={pathArray} />);
-        }
+        showModal(<PVCNameTemplateModal resource={plan} jsonPath={pathArray} />);
       }}
+      canEdit={canPatch && isPlanEditable(resource)}
     />
   );
 };

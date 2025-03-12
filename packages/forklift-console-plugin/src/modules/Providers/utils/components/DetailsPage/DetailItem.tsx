@@ -36,6 +36,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
   crumbs,
   content,
   onEdit,
+  canEdit,
 }) => {
   const contents = ensureArray(content);
   const onEdits = ensureArray(onEdit);
@@ -56,6 +57,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
             key={'content-field-' + index}
             content={value}
             onEdit={onEdits ? (onEdits[index] as () => void) : null}
+            canEdit={canEdit}
           />
         ))}
       </DescriptionListDescription>
@@ -177,8 +179,9 @@ export const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
 export const ContentField: React.FC<{
   content: ReactNode;
   onEdit: () => void;
-}> = ({ content, onEdit }) =>
-  onEdit ? (
+  canEdit?: boolean;
+}> = ({ content, onEdit, canEdit = true }) =>
+  canEdit && onEdit ? (
     <DescriptionListDescription>
       <Flex alignItems={{ default: 'alignItemsCenter' }}>
         <FlexItem spacer={{ default: 'spacerNone' }}>{content}</FlexItem>
@@ -204,6 +207,7 @@ export const ContentField: React.FC<{
  * @property {string[]} [crumbs] - Breadcrumbs for the details item.
  * @property {ReactNode | ReactNode[]} content - Array of content fields to be displayed for the details item.
  * @property {Function | Function[]} onEdit - Array of functions per content field to be called when the edit button is clicked or null if the field is non editable.
+ * @property {boolean} [showEditButton] - If true, show the edit button next to the content field, when missing falling back to onEdit existence.
  */
 export type DetailsItemProps = {
   title: string;
@@ -214,4 +218,5 @@ export type DetailsItemProps = {
   crumbs?: string[];
   content: ReactNode | ReactNode[];
   onEdit?: (() => void) | (() => void)[];
+  canEdit?: boolean;
 };
