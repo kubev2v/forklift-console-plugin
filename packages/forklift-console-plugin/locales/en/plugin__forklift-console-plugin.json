@@ -24,7 +24,6 @@
   "{{total}} VM_one": "{{total}} VM",
   "{{total}} VM_other": "{{total}} VM",
   "{{total}} VMs": "{{total}} VMs",
-  "{{vmCount}} VMs selected": "{{vmCount}} VMs selected",
   "{children}": "{children}",
   "{projectName} project does not contain any providers. To select a source provider, create a provider in this project or select a different project.": "{projectName} project does not contain any providers. To select a source provider, create a provider in this project or select a different project.",
   "<0>`URL of the Red Hat Virtualization Manager (RHVM) API endpoint.</0><1></1><2>The format of the provided URL of the Red Hat Virtualization Manager (RHVM) API endpoint should include a scheme, a domain name, path, and optionally a port. Usually the path will end with /api, for example: <1>https://rhv-host-example.com/ovirt-engine/api</1>.</2>": "<0>`URL of the Red Hat Virtualization Manager (RHVM) API endpoint.</0><1></1><2>The format of the provided URL of the Red Hat Virtualization Manager (RHVM) API endpoint should include a scheme, a domain name, path, and optionally a port. Usually the path will end with /api, for example: <1>https://rhv-host-example.com/ovirt-engine/api</1>.</2>",
