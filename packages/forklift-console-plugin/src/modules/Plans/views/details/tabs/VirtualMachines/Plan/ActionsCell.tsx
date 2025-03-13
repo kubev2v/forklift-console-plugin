@@ -10,7 +10,7 @@ import PlanVMActionsDropdown from './PlanVMActionsDropdown';
 const ActionsCell: FC<PlanVMsCellProps> = ({ data: vm }) => {
   return (
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
-      <FlexItem grow={{ default: 'grow' }}></FlexItem>
+      <FlexItem grow={{ default: 'grow' }} />
 
       <FlexItem align={{ default: 'alignRight' }}>
         <ModalHOC>

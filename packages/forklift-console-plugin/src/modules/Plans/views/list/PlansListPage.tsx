@@ -4,93 +4,132 @@ import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { FilterDefType, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
 import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
 import { PlansAddButton } from '../../components';
 import PlansEmptyState from '../../components/PlansEmptyState';
-import { getPlanPhase, PlanData, planPhases } from '../../utils';
+import { getMigrationType, getPlanPhase, PlanData, planPhases } from '../../utils';
+import { migrationTypes } from '../../utils/constants/migrationTypes';
 
+import { planResourceApiJsonPaths, PlanTableResourceId } from './constants';
 import PlanRow from './PlanRow';
 
 import './PlansListPage.style.css';
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    resourceFieldId: 'name',
-    jsonPath: '$.obj.metadata.name',
+    resourceFieldId: PlanTableResourceId.Name,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Name],
     label: t('Name'),
     isVisible: true,
     isIdentity: true,
     filter: {
-      type: 'freetext',
+      type: FilterDefType.FreeText,
       placeholderLabel: t('Filter by name'),
     },
     sortable: true,
   },
   {
-    resourceFieldId: 'namespace',
-    jsonPath: '$.obj.metadata.namespace',
+    resourceFieldId: PlanTableResourceId.Namespace,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Namespace],
     label: t('Namespace'),
     isVisible: true,
     isIdentity: true,
     filter: {
-      type: 'freetext',
+      type: FilterDefType.FreeText,
       placeholderLabel: t('Filter by namespace'),
     },
     sortable: true,
   },
   {
-    resourceFieldId: 'source',
-    jsonPath: '$.obj.spec.provider.source.name',
+    resourceFieldId: PlanTableResourceId.Source,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Source],
     label: t('Source provider'),
     isVisible: true,
     filter: {
-      type: 'freetext',
+      type: FilterDefType.FreeText,
       placeholderLabel: t('Filter by source'),
     },
     sortable: true,
   },
   {
-    resourceFieldId: 'destination',
-    jsonPath: '$.obj.spec.provider.destination.name',
+    resourceFieldId: PlanTableResourceId.Destination,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Destination],
     label: t('Target provider'),
     isVisible: false,
     filter: {
-      type: 'freetext',
+      type: FilterDefType.FreeText,
       placeholderLabel: t('Filter by target'),
     },
     sortable: true,
   },
   {
-    resourceFieldId: 'vms',
+    resourceFieldId: PlanTableResourceId.Vms,
     jsonPath: (data: PlanData) => data?.obj?.spec?.vms?.length ?? 0,
     label: t('Virtual machines'),
     isVisible: true,
     sortable: true,
   },
   {
-    resourceFieldId: 'phase',
+    resourceFieldId: null,
+    label: null,
+    filter: {
+      primary: true,
+      type: FilterDefType.GroupedEnum,
+      placeholderLabel: t('Filter'),
+      showFilterIcon: true,
+      values: [
+        ...migrationTypes.map((migrationType) => ({
+          ...migrationType,
+          groupId: PlanTableResourceId.MigrationType,
+          resourceFieldId: PlanTableResourceId.MigrationType,
+        })),
+        ...planPhases.map((planPhase) => ({
+          ...planPhase,
+          groupId: PlanTableResourceId.Phase,
+          resourceFieldId: PlanTableResourceId.Phase,
+        })),
+      ],
+      groups: [
+        { groupId: PlanTableResourceId.MigrationType, label: t('Migration type') },
+        { groupId: PlanTableResourceId.Phase, label: t('Migration status') },
+      ],
+    },
+  },
+  {
+    resourceFieldId: PlanTableResourceId.Phase,
     jsonPath: getPlanPhase,
     label: t('Migration status'),
     isVisible: true,
     filter: {
-      type: 'enum',
-      primary: true,
-      placeholderLabel: t('Migration status'),
+      type: FilterDefType.Enum,
+      isHidden: true,
       values: planPhases,
     },
     sortable: true,
   },
   {
-    resourceFieldId: 'migration-started',
-    jsonPath: '$.obj.status.migration.started',
+    resourceFieldId: PlanTableResourceId.MigrationType,
+    jsonPath: getMigrationType,
+    label: t('Migration type'),
+    isVisible: true,
+    filter: {
+      type: FilterDefType.Enum,
+      isHidden: true,
+      values: migrationTypes,
+    },
+    sortable: true,
+  },
+  {
+    resourceFieldId: PlanTableResourceId.MigrationStarted,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.MigrationStarted],
     label: t('Migration started'),
     isVisible: true,
     filter: {
-      type: 'dateRange',
+      type: FilterDefType.DateRange,
       placeholderLabel: 'YYYY-MM-DD',
       helperText: (
         <HelperText className="forklift-date-range-helper-text">
@@ -103,26 +142,26 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    resourceFieldId: 'description',
-    jsonPath: '$.obj.spec.description',
+    resourceFieldId: PlanTableResourceId.Description,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Description],
     label: t('Description'),
     isVisible: false,
   },
   {
-    resourceFieldId: 'actions',
+    resourceFieldId: PlanTableResourceId.Actions,
     label: '',
     isAction: true,
     isVisible: true,
     sortable: false,
   },
   {
-    resourceFieldId: 'archived',
-    jsonPath: '$.obj.spec.archived',
+    resourceFieldId: PlanTableResourceId.Archived,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Archived],
     label: t('Archived'),
     isHidden: true,
     isPersistent: true,
     filter: {
-      type: 'slider',
+      type: FilterDefType.Slider,
       standalone: true,
       placeholderLabel: t('Show archived'),
       defaultValues: ['false'],

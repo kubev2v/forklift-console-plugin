@@ -2,6 +2,7 @@
 export * from './ActionsCell';
 export * from './CellProps';
 export * from './ErrorStatusCell';
+export * from './MigrationTypeCell';
 export * from './NamespaceCell';
 export * from './NetworkMapLinkCell';
 export * from './PlanCell';

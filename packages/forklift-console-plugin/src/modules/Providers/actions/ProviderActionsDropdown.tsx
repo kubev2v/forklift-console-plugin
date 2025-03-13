@@ -80,7 +80,7 @@ const ProviderActionsKebabDropdown_: React.FC<ProviderActionsDropdownProps> = ({
 export const ProviderActionsDropdown: React.FC<ProviderActionsDropdownProps> = (props) => (
   <ModalHOC>
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
-      <FlexItem grow={{ default: 'grow' }}></FlexItem>
+      <FlexItem grow={{ default: 'grow' }} />
       <FlexItem align={{ default: 'alignRight' }}>
         <ProviderActionsKebabDropdown_ {...props} />
       </FlexItem>

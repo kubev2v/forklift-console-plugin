@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components';
 import { TableCell } from 'src/modules/Providers/utils';
 
@@ -10,12 +10,14 @@ import { PlanData } from '../../utils';
 import {
   ActionsCell,
   CellProps,
+  MigrationTypeCell,
   NamespaceCell,
   PlanCell,
   PlanStatusCell,
   ProviderLinkCell,
   VMsCell,
 } from './components';
+import { PlanTableResourceId } from './constants';
 
 export const PlanRow: React.FC<RowProps<PlanData>> = ({ resourceFields, resourceData }) => {
   return (
@@ -38,19 +40,22 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const cellRenderers: Record<string, React.FC<CellProps>> = {
-  ['name']: PlanCell,
-  ['namespace']: NamespaceCell,
-  ['migration-started']: (props: CellProps) => {
+const cellRenderers: Partial<Record<PlanTableResourceId, FC<CellProps>>> = {
+  [PlanTableResourceId.Name]: PlanCell,
+  [PlanTableResourceId.Namespace]: NamespaceCell,
+  [PlanTableResourceId.MigrationStarted]: (props: CellProps) => {
     const value = getResourceFieldValue(props.data, props.fieldId, props.fields);
     return <ConsoleTimestamp timestamp={value} />;
   },
-  ['destination']: ProviderLinkCell,
-  ['source']: ProviderLinkCell,
-  ['phase']: PlanStatusCell,
-  ['vms']: VMsCell,
-  ['description']: ({ data }: CellProps) => <TableCell>{data?.obj?.spec?.description}</TableCell>,
-  ['actions']: ActionsCell,
+  [PlanTableResourceId.Destination]: ProviderLinkCell,
+  [PlanTableResourceId.Source]: ProviderLinkCell,
+  [PlanTableResourceId.Phase]: PlanStatusCell,
+  [PlanTableResourceId.MigrationType]: MigrationTypeCell,
+  [PlanTableResourceId.Vms]: VMsCell,
+  [PlanTableResourceId.Description]: ({ data }: CellProps) => (
+    <TableCell>{data?.obj?.spec?.description}</TableCell>
+  ),
+  [PlanTableResourceId.Actions]: ActionsCell,
 };
 
 interface RenderTdProps {
