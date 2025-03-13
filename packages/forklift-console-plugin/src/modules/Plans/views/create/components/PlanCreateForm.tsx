@@ -26,7 +26,6 @@ import {
 } from '@patternfly/react-core';
 
 import { PlanCreatePageState } from '../states';
-
 import { ChipsToolbarProviders } from './ChipsToolbarProviders';
 import { createProviderCardItems } from './createProviderCardItems';
 import { FiltersToolbarProviders } from './FiltersToolbarProviders';

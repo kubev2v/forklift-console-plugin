@@ -10,7 +10,6 @@ import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
 import digitalTransformation from '../..//Overview/images/digitalTransormation.svg';
-
 import PlansAddButton from './PlansAddButton';
 
 const HELP_LINK_HREF =
