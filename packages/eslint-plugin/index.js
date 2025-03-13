@@ -77,6 +77,7 @@ const base = {
 
     // take the place of `.eslintignore`
     'dist/',
+    'distlib/',
     'generated/',
     'node_modules/',
     'storybook-static/',
