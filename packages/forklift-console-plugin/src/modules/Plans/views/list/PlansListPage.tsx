@@ -154,18 +154,17 @@ const PlansListPage: React.FC<{
     permissions,
   }));
 
-  const EmptyState = (
-    <EmptyState_
-      AddButton={<PlansAddButton dataTestId="add-network-map-button-empty-state" />}
-      namespace={namespace}
-    />
-  );
+  const EmptyState = <EmptyState_ namespace={namespace} />;
 
   return (
     <ModalHOC>
       <StandardPage
         data-testid="network-maps-list"
-        addButton={permissions.canCreate && <PlansAddButton dataTestId="add-network-map-button" />}
+        addButton={
+          permissions.canCreate && (
+            <PlansAddButton dataTestId="add-network-map-button" namespace={namespace} />
+          )
+        }
         dataSource={[data || [], plansLoaded, plansLoadError]}
         RowMapper={PlanRow}
         fieldsMetadata={fieldsMetadataFactory(t)}
@@ -180,8 +179,7 @@ const PlansListPage: React.FC<{
 };
 
 interface EmptyStateProps {
-  AddButton: JSX.Element;
-  namespace?: string;
+  namespace: string;
 }
 
 const EmptyState_: React.FC<EmptyStateProps> = ({ namespace }) => {
