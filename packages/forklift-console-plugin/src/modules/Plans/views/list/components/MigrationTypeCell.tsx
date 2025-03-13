@@ -4,7 +4,7 @@ import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils';
 
-import { Button, Flex, Label } from '@patternfly/react-core';
+import { Button, ButtonVariant, Flex, Label } from '@patternfly/react-core';
 
 import { CellProps } from './CellProps';
 
@@ -28,7 +28,7 @@ export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
         </Label>
 
         {isWarmAndExecuting && !isArchived && (
-          <Button isInline variant="link" onClick={onClickPlanCutoverMigration}>
+          <Button isInline variant={ButtonVariant.link} onClick={onClickPlanCutoverMigration}>
             {t('Cutover')}
           </Button>
         )}

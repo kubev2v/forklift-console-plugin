@@ -7,7 +7,7 @@ import { CellProps } from './CellProps';
 
 export const ActionsCell = ({ data }: CellProps) => (
   <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
-    <FlexItem grow={{ default: 'grow' }}></FlexItem>
+    <FlexItem grow={{ default: 'grow' }} />
 
     <FlexItem align={{ default: 'alignRight' }}>
       <PlanActionsDropdown isKebab data={data} fieldId={'actions'} fields={[]} />

@@ -13,6 +13,14 @@ export interface EnumValue {
   resourceFieldId?: string;
 }
 
+export enum FilterDefType {
+  FreeText = 'freetext',
+  Enum = 'enum',
+  GroupedEnum = 'groupedEnum',
+  DateRange = 'dateRange',
+  Slider = 'slider',
+}
+
 export interface FilterDef {
   type: string;
   placeholderLabel?: string;

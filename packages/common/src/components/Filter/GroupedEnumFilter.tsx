@@ -10,7 +10,7 @@ import {
   SelectOption,
   ToolbarFilter,
 } from '@patternfly/react-core';
-import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
+import { FilterIcon } from '@patternfly/react-icons';
 
 import { FilterTypeProps } from './types';
 
@@ -56,49 +56,53 @@ export const GroupedEnumFilter = ({
   );
 
   const deleteGroup = (groupId: string): void => {
-    let newSelectedValues = selectedEnumIds.filter(
-      (id) => id2enum[id] && id2enum[id].groupId !== groupId,
-    );
-    let selectedResourceId;
-
     if (hasMultipleResources) {
-      newSelectedValues = [];
-      selectedResourceId = groupId;
+      return onSelectedEnumIdsChange([], groupId);
     }
 
-    onSelectedEnumIdsChange(newSelectedValues, selectedResourceId);
+    onSelectedEnumIdsChange(
+      selectedEnumIds.filter((id) => id2enum[id] && id2enum[id].groupId !== groupId),
+    );
   };
 
   const deleteFilter = (id: string): void => {
-    let newSelectedValues = selectedEnumIds.filter((id) => id2enum[id] && id !== id);
-
     if (hasMultipleResources) {
-      newSelectedValues = selectedEnumIds.filter(
-        (selectedId) =>
-          id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId &&
-          selectedId !== id,
+      onSelectedEnumIdsChange(
+        selectedEnumIds.filter(
+          (selectedId) =>
+            id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId &&
+            selectedId !== id,
+        ),
+        id2enum[id].resourceFieldId,
       );
     }
 
-    onSelectedEnumIdsChange(newSelectedValues, id2enum[id].resourceFieldId);
+    onSelectedEnumIdsChange(
+      selectedEnumIds.filter((id) => id2enum[id] && id !== id),
+      id2enum[id].resourceFieldId,
+    );
   };
 
   const hasFilter = (id: string): boolean =>
     !!id2enum[id] && !!selectedEnumIds.find((enumId) => enumId === id);
 
   const addFilter = (id: string): void => {
-    let newSelectedValues = [...selectedEnumIds.filter((id) => id2enum[id]), id];
-
     if (hasMultipleResources) {
-      newSelectedValues = [
-        ...selectedEnumIds.filter(
-          (selectedId) => id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId,
-        ),
-        id,
-      ];
+      onSelectedEnumIdsChange(
+        [
+          ...selectedEnumIds.filter(
+            (selectedId) => id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId,
+          ),
+          id,
+        ],
+        id2enum[id].resourceFieldId,
+      );
     }
 
-    onSelectedEnumIdsChange(newSelectedValues, id2enum[id].resourceFieldId);
+    onSelectedEnumIdsChange(
+      [...selectedEnumIds.filter((id) => id2enum[id]), id],
+      id2enum[id].resourceFieldId,
+    );
   };
 
   const onSelect = (
