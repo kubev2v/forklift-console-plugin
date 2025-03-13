@@ -11,7 +11,7 @@ import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
 import { PlansAddButton } from '../../components';
 import PlansEmptyState from '../../components/PlansEmptyState';
-import { getPlanPhase, PlanData, planPhases } from '../../utils';
+import { getPlanSummaryStatus, PlanData, planSummaryStatuses } from '../../utils';
 
 import PlanRow from './PlanRow';
 
@@ -73,14 +73,14 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     resourceFieldId: 'phase',
-    jsonPath: getPlanPhase,
+    jsonPath: getPlanSummaryStatus,
     label: t('Migration status'),
     isVisible: true,
     filter: {
       type: 'enum',
       primary: true,
       placeholderLabel: t('Migration status'),
-      values: planPhases,
+      values: planSummaryStatuses,
     },
     sortable: true,
   },

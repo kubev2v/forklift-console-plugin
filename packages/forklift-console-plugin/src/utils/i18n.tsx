@@ -1,6 +1,8 @@
 import React, { ReactNode } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+export type ForkliftTFunction = ReturnType<typeof useForkliftTranslation>['t'];
+
 export function useForkliftTranslation() {
   return useTranslation('plugin__forklift-console-plugin');
 }

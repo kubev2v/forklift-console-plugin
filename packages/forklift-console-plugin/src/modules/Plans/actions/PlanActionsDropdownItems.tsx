@@ -7,22 +7,20 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
-import {
-  ArchiveModal,
-  DuplicateModal,
-  PlanCutoverMigrationModal,
-  PlanDeleteModal,
-  PlanStartMigrationModal,
-} from '../modals';
+import { ArchiveModal, DuplicateModal, PlanDeleteModal, PlanStartMigrationModal } from '../modals';
 import {
   canPlanReStart,
   canPlanStart,
-  getPlanPhase,
-  isPlanArchived,
-  isPlanExecuting,
+  getPlanSummaryStatus,
   PlanData,
-  PlanPhase,
+  PlanSummaryStatus,
 } from '../utils';
+
+import { getDuplicateActionDescription, getStartActionDescription } from './utils';
+
+type PlanActionsDropdownItemsProps = {
+  data: PlanData;
+};
 
 export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
@@ -36,12 +34,11 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     namespace: plan?.metadata?.namespace,
   });
 
-  const phase = getPlanPhase(data);
-
+  const status = getPlanSummaryStatus(data);
   const canStart = canPlanStart(plan);
   const canReStart = canPlanReStart(plan);
-  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
-  const isArchived = isPlanArchived(plan);
+  const isPlanValidating = !status;
+
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
 
   const [isStartItemEnabled, setIsStartItemEnabled] = useState(canStart);
@@ -61,10 +58,6 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     );
   };
 
-  const onClickPlanCutover = () => {
-    showModal(<PlanCutoverMigrationModal resource={plan} />);
-  };
-
   const onClickDuplicate = () => {
     showModal(<DuplicateModal resource={plan} model={PlanModel} />);
   };
@@ -78,48 +71,51 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
   };
 
   return [
-    <DropdownItemLink value={0} key="EditPlan" href={planURL} description={t('Edit Plan')} />,
-
     <DropdownItem
-      value={1}
+      value={0}
       key="start"
       isDisabled={!canStart || !isStartItemEnabled}
       onClick={onClickPlanStart}
+      description={getStartActionDescription(status, isPlanValidating, t)}
     >
       {buttonStartLabel}
     </DropdownItem>,
 
-    <DropdownItem
-      value={2}
-      key="cutover"
-      isDisabled={!isWarmAndExecuting || isArchived}
-      onClick={onClickPlanCutover}
+    <DropdownItemLink
+      value={1}
+      key="EditPlan"
+      href={planURL}
+      description={status === PlanSummaryStatus.Archived && t('Archived plans cannot be edited')}
     >
-      {t('Cutover')}
-    </DropdownItem>,
+      {t('Edit Plan')}
+    </DropdownItemLink>,
 
     <DropdownItem
-      value={3}
+      value={2}
       key="duplicate"
-      isDisabled={!data?.permissions?.canDelete}
+      isDisabled={
+        !data?.permissions?.canDelete ||
+        status === PlanSummaryStatus.CannotStart ||
+        isPlanValidating
+      }
       onClick={onClickDuplicate}
+      description={getDuplicateActionDescription(status, isPlanValidating, t)}
     >
       {t('Duplicate Plan')}
     </DropdownItem>,
 
     <DropdownItem
-      value={4}
+      value={3}
       key="archive"
-      isDisabled={
-        !data?.permissions?.canDelete || [PlanPhase.Archived, PlanPhase.Archiving].includes(phase)
-      }
+      isDisabled={!data?.permissions?.canDelete || status === PlanSummaryStatus.Archived}
       onClick={onClickArchive}
+      description={status === PlanSummaryStatus.Archived && t('The plan is already archived')}
     >
       {t('Archive Plan')}
     </DropdownItem>,
 
     <DropdownItem
-      value={5}
+      value={4}
       key="delete"
       isDisabled={!data?.permissions?.canDelete}
       onClick={onClickPlanDelete}
@@ -128,7 +124,3 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     </DropdownItem>,
   ];
 };
-
-interface PlanActionsDropdownItemsProps {
-  data: PlanData;
-}

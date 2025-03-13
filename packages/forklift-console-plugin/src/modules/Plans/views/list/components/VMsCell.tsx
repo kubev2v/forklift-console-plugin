@@ -27,7 +27,9 @@ export const VMsCell: React.FC<CellProps> = ({ data }) => {
           <VirtualMachineIcon />
         </SplitItem>
         <SplitItem>
-          {t('{{total}} VM', { count: specVms?.length, total: specVms?.length })}
+          {specVms?.length > 99
+            ? t('99+ VMs')
+            : t('{{total}} VM', { count: specVms?.length, total: specVms?.length })}
         </SplitItem>
       </Split>
     </Link>
