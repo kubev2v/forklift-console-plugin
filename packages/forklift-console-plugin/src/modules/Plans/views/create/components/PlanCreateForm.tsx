@@ -12,7 +12,7 @@ import {
 import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
+import { FormGroupWithHelpText } from '@forklift/common/components/FormGroupWithHelpText/FormGroupWithHelpText';
 import { V1beta1Provider } from '@kubev2v/types';
 import {
   Flex,

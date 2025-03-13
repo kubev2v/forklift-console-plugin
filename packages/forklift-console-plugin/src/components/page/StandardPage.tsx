@@ -2,33 +2,6 @@ import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  AttributeValueFilter,
-  createMetaMatcher,
-  DEFAULT_PER_PAGE,
-  DefaultHeader,
-  DefaultRow,
-  defaultSupportedFilters,
-  defaultValueMatchers,
-  ErrorState,
-  FilterGroup,
-  FilterRenderer,
-  GlobalActionToolbarProps,
-  Loading,
-  NoResultsFound,
-  NoResultsMatchFilter,
-  ResourceField,
-  RowProps,
-  TableView,
-  TableViewHeaderProps,
-  toFieldFilter,
-  useFields,
-  usePagination,
-  UserSettings,
-  useUrlFilters,
-  ValueMatcher,
-  withTr,
-} from '@kubev2v/common';
-import {
   Level,
   LevelItem,
   PageSection,
@@ -41,6 +14,31 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
+import { AttributeValueFilter } from '../common/components/FilterGroup/AttributeValueFilter';
+import { FilterGroup } from '../common/components/FilterGroup/FilterGroup';
+import { toFieldFilter } from '../common/components/FilterGroup/helpers';
+import {
+  createMetaMatcher,
+  defaultSupportedFilters,
+  defaultValueMatchers,
+} from '../common/components/FilterGroup/matchers';
+import { FilterRenderer, ValueMatcher } from '../common/components/FilterGroup/types';
+import { useUrlFilters } from '../common/components/FilterGroup/useUrlFilters';
+import {
+  ErrorState,
+  Loading,
+  NoResultsFound,
+  NoResultsMatchFilter,
+} from '../common/components/Page/PageStates';
+import { UserSettings } from '../common/components/Page/types';
+import { useFields } from '../common/components/Page/useFields';
+import { DEFAULT_PER_PAGE, usePagination } from '../common/components/Page/usePagination';
+import { DefaultHeader } from '../common/components/TableView/DefaultHeader';
+import { DefaultRow } from '../common/components/TableView/DefaultRow';
+import { TableView } from '../common/components/TableView/TableView';
+import { RowProps, TableViewHeaderProps } from '../common/components/TableView/types';
+import { withTr } from '../common/components/TableView/withTr';
+import { GlobalActionToolbarProps, ResourceField } from '../common/utils/types';
 import {
   TableSortContext,
   TableSortContextProps,

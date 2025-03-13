@@ -2,7 +2,9 @@ import React from 'react';
 import { ConsoleTimestamp } from 'src/components';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { getResourceFieldValue, ResourceField, RowProps } from '@kubev2v/common';
+import { getResourceFieldValue } from '@forklift/common/components/FilterGroup/matchers';
+import { RowProps } from '@forklift/common/components/TableView/types';
+import { ResourceField } from '@forklift/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { PlanData } from '../../utils';

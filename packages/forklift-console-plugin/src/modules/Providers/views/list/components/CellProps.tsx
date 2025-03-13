@@ -1,6 +1,6 @@
 import { ProviderData } from 'src/modules/Providers/utils';
 
-import { ResourceField } from '@kubev2v/common';
+import { ResourceField } from '@forklift/common/utils/types';
 
 export type CellProps = {
   data: ProviderData;
