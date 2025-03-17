@@ -10,6 +10,7 @@ import {
   SelectOption,
   ToolbarFilter,
 } from '@patternfly/react-core';
+import { FilterIcon } from '@patternfly/react-icons';
 
 import { FilterTypeProps } from './types';
 
@@ -40,6 +41,8 @@ export const GroupedEnumFilter = ({
   supportedGroups = [],
   placeholderLabel,
   showFilter = true,
+  showFilterIcon,
+  hasMultipleResources,
 }: FilterTypeProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -52,23 +55,54 @@ export const GroupedEnumFilter = ({
     supportedEnumValues.map(({ label, ...rest }) => [label, { label, ...rest }]),
   );
 
-  const deleteGroup = (groupId: string): void =>
-    onSelectedEnumIdsChange(
-      selectedEnumIds
-        .filter((id) => id2enum[id])
-        .filter((enumId) => id2enum[enumId].groupId !== groupId),
-    );
+  const deleteGroup = (groupId: string): void => {
+    if (hasMultipleResources) {
+      return onSelectedEnumIdsChange([], groupId);
+    }
 
-  const deleteFilter = (id: string): void =>
     onSelectedEnumIdsChange(
-      selectedEnumIds.filter((id) => id2enum[id]).filter((enumId) => enumId !== id),
+      selectedEnumIds.filter((id) => id2enum[id] && id2enum[id].groupId !== groupId),
     );
+  };
+
+  const deleteFilter = (id: string): void => {
+    if (hasMultipleResources) {
+      onSelectedEnumIdsChange(
+        selectedEnumIds.filter(
+          (selectedId) =>
+            id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId &&
+            selectedId !== id,
+        ),
+        id2enum[id].resourceFieldId,
+      );
+    }
+
+    onSelectedEnumIdsChange(
+      selectedEnumIds.filter((id) => id2enum[id] && id !== id),
+      id2enum[id].resourceFieldId,
+    );
+  };
 
   const hasFilter = (id: string): boolean =>
     !!id2enum[id] && !!selectedEnumIds.find((enumId) => enumId === id);
 
   const addFilter = (id: string): void => {
-    onSelectedEnumIdsChange([...selectedEnumIds.filter((id) => id2enum[id]), id]);
+    if (hasMultipleResources) {
+      onSelectedEnumIdsChange(
+        [
+          ...selectedEnumIds.filter(
+            (selectedId) => id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId,
+          ),
+          id,
+        ],
+        id2enum[id].resourceFieldId,
+      );
+    }
+
+    onSelectedEnumIdsChange(
+      [...selectedEnumIds.filter((id) => id2enum[id]), id],
+      id2enum[id].resourceFieldId,
+    );
   };
 
   const onSelect = (
@@ -85,7 +119,13 @@ export const GroupedEnumFilter = ({
   };
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
-    <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
+    <MenuToggle
+      ref={toggleRef}
+      onClick={onToggleClick}
+      isExpanded={isOpen}
+      isFullWidth
+      {...(showFilterIcon && { icon: <FilterIcon /> })}
+    >
       {placeholderLabel}
       {selectedEnumIds.length > 0 && <Badge isRead>{selectedEnumIds.length}</Badge>}
     </MenuToggle>
