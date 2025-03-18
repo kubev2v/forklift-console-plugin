@@ -15,7 +15,7 @@ const PVCNameTemplateDetailsItem: FC<PlanDetailsItemProps> = ({ resource, canPat
 
   const plan = resource as EnhancedPlan;
 
-  const content = plan?.spec?.volumeNameTemplate
+  const content = plan?.spec?.pvcNameTemplate
     ? t('Use custom PVC name template')
     : t('Use default PVC name template');
 
