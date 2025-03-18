@@ -4,6 +4,8 @@ import { useModal } from 'src/modules/Providers/modals';
 import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { Label } from '@patternfly/react-core';
+
 import { PlanDetailsItemProps } from '../../../DetailsSection';
 
 import MigrateSharedDisksModal from './components/MigrateSharedDisksModal/MigrateSharedDisksModal';
@@ -13,9 +15,18 @@ const SharedDisksDetailsItem: FC<PlanDetailsItemProps> = ({ resource, canPatch }
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const content = getMigrateSharedDisks(resource)
-    ? t('Migrate shared disks again')
-    : t('Migrate shared disks only once');
+  const trueLabel = (
+    <Label isCompact color={'green'}>
+      {t('Migrate shared disks')}
+    </Label>
+  );
+  const falseLabel = (
+    <Label isCompact color={'blue'}>
+      {t('Do not migrate shared disks')}
+    </Label>
+  );
+
+  const content = getMigrateSharedDisks(resource) ? trueLabel : falseLabel;
 
   const title = t('Shared disks');
   const pathArray = ['spec', 'migrateSharedDisks'];
