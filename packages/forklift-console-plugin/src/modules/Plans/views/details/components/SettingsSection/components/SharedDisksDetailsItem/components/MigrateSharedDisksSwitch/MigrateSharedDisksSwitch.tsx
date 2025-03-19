@@ -16,8 +16,9 @@ const MigrateSharedDisksSwitchFactory: () => ModalInputComponentType = () => {
   const SwitchRenderer: FC<SwitchRendererProps> = ({ value, onChange }) => (
     <Switch
       id="migrate-shared-disks-switch"
-      label={t('Migrate shared disks again. This may slow down the migration process')}
+      label={t('Migrate shared disks. This may slow down the migration process')}
       isChecked={safeBoolean(value)}
+      hasCheckIcon
       onChange={(_event, checked) => {
         onChange(checked.toString());
       }}
