@@ -1,5 +1,6 @@
 import React from 'react';
 import { TableLinkCell } from 'src/modules/Providers/utils';
+import { isProviderLocalOpenshift } from 'src/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
@@ -16,8 +17,7 @@ export const ProviderLinkCell: React.FC<CellProps> = ({ data }) => {
 
   const { provider } = data;
   const { name, namespace } = provider?.metadata || {};
-  const localCluster =
-    provider?.spec?.type === 'openshift' && (!provider?.spec?.url || provider?.spec?.url === '');
+  const localCluster = isProviderLocalOpenshift(provider);
 
   return (
     <TableLinkCell
