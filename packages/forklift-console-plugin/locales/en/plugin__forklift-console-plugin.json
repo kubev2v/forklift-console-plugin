@@ -588,7 +588,7 @@
   "The target namespace is the namespace within your selected target provider that your virtual machines will be migrated to. This is different from the namespace that your migration plan will be created in and where your provider was created.": "The target namespace is the namespace within your selected target provider that your virtual machines will be migrated to. This is different from the namespace that your migration plan will be created in and where your provider was created.",
   "The URL of the OpenStack Identity (Keystone) endpoint, for example: https://identity_service.com:5000/v3": "The URL of the OpenStack Identity (Keystone) endpoint, for example: https://identity_service.com:5000/v3",
   "The URL of the Red Hat Virtualization Manager (RHVM) API endpoint, for example: https://rhv-host-example.com/ovirt-engine/api .": "The URL of the Red Hat Virtualization Manager (RHVM) API endpoint, for example: https://rhv-host-example.com/ovirt-engine/api .",
-  "The URL of the vCenter API endpoint, for example: https://vCenter-host-example.com/sdk .": "The URL of the vCenter API endpoint, for example: https://vCenter-host-example.com/sdk .",
+  "The URL of the vCenter API endpoint, for example: https://vCenter-host-example.com/sdk.": "The URL of the vCenter API endpoint, for example: https://vCenter-host-example.com/sdk.",
   "The username for the ESXi host admin": "The username for the ESXi host admin",
   "The virtual machines will be permanently deleted from your migration plan.": "The virtual machines will be permanently deleted from your migration plan.",
   "The VM specific template will override the template set in the plan.": "The VM specific template will override the template set in the plan.",
