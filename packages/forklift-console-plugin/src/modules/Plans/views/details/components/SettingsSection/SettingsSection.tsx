@@ -46,6 +46,7 @@ export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, p
     namespace: obj?.spec?.provider?.destination?.namespace,
   });
 
+  const isVsphere = sourceProvider?.spec?.type === 'vsphere';
   return (
     <>
       <DescriptionList
@@ -73,27 +74,27 @@ export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, p
           <PreserveClusterCpuModelDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
 
-        {['vsphere'].includes(sourceProvider?.spec?.type) && (
+        {isVsphere && (
           <PreserveStaticIPsDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
 
-        {['vsphere'].includes(sourceProvider?.spec?.type) && (
+        {isVsphere && (
           <SetLUKSEncryptionPasswordsDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
 
-        {['vsphere'].includes(sourceProvider?.spec?.type) && (
-          <RootDiskDetailsItem resource={obj} canPatch={permissions.canPatch} />
+        {isVsphere && <RootDiskDetailsItem resource={obj} canPatch={permissions.canPatch} />}
+
+        {isVsphere && <SharedDisksDetailsItem resource={obj} canPatch={permissions.canPatch} />}
+
+        {isVsphere && <PVCNameTemplateDetailsItem resource={obj} canPatch={permissions.canPatch} />}
+
+        {isVsphere && (
+          <VolumeNameTemplateDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
 
-        {['vsphere'].includes(sourceProvider?.spec?.type) && (
-          <SharedDisksDetailsItem resource={obj} canPatch={permissions.canPatch} />
+        {isVsphere && (
+          <NetworkNameTemplateDetailsItem resource={obj} canPatch={permissions.canPatch} />
         )}
-
-        <PVCNameTemplateDetailsItem resource={obj} canPatch={permissions.canPatch} />
-
-        <VolumeNameTemplateDetailsItem resource={obj} canPatch={permissions.canPatch} />
-
-        <NetworkNameTemplateDetailsItem resource={obj} canPatch={permissions.canPatch} />
       </DescriptionList>
     </>
   );
