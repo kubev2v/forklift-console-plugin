@@ -2,21 +2,26 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useForkliftTranslation } from 'src/utils';
 
-import { Flex, FlexItem, Icon, IconComponentProps } from '@patternfly/react-core';
-import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
-import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
+import { Flex, FlexItem, Icon, IconComponentProps, Tooltip } from '@patternfly/react-core';
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  MinusCircleIcon,
+} from '@patternfly/react-icons';
 
 interface PlanStatusVmCountProps {
   count: number;
-  status: IconComponentProps['status'];
   linkPath: string;
+  status: IconComponentProps['status'] | 'canceled';
+  tooltipLabel?: string;
 }
 
 export const PlanStatusVmCount: React.FC<PlanStatusVmCountProps> = ({
   count,
   status,
   linkPath,
+  tooltipLabel,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -28,12 +33,18 @@ export const PlanStatusVmCount: React.FC<PlanStatusVmCountProps> = ({
         return <ExclamationTriangleIcon />;
       case 'danger':
         return <ExclamationCircleIcon />;
+      case 'canceled':
+        return <MinusCircleIcon color="grey" />;
     }
   }, [status]);
 
   return (
     <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
-      <Icon status={status}>{statusIcon}</Icon>
+      <FlexItem>
+        <Tooltip content={tooltipLabel}>
+          <Icon {...(status !== 'canceled' && { status })}>{statusIcon}</Icon>
+        </Tooltip>
+      </FlexItem>
 
       <FlexItem>
         <Link to={linkPath}>{t('{{total}} VM', { count, total: count })}</Link>
