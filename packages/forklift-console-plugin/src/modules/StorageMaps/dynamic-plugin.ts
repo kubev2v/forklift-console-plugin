@@ -26,8 +26,8 @@ export const extensions: EncodedExtension[] = [
       name: '%plugin__forklift-console-plugin~StorageMaps for virtualization%',
       model: StorageMapModelGroupVersionKind,
       dataAttributes: {
-        'data-quickstart-id': 'qs-nav-network-mappings',
-        'data-testid': 'network-mappings-nav-item',
+        'data-quickstart-id': 'qs-nav-storage-mappings',
+        'data-testid': 'storage-mappings-nav-item',
       },
     },
   } as EncodedExtension<ResourceNSNavItem>,
