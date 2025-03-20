@@ -45,8 +45,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   const [lastMigration] = usePlanMigration(plan);
   const [isButtonEnabled, setIsButtonEnabled] = useState(true);
 
-  const isWarmAndExecuting = plan.spec?.warm && isPlanExecuting(plan);
-  const isWaitingForCutover = isWarmAndExecuting && !isPlanArchived(plan);
+  const isWarmAndExecuting = plan.spec?.warm && isPlanExecuting(plan) && !isPlanArchived(plan);
 
   const vmPipelineTasks = lastMigration?.status?.vms?.reduce(
     (acc: VmPipelineTask[], migrationVm) => {
@@ -61,7 +60,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
 
   const phase = getPlanPhase(data);
   const isPlanLoading =
-    !isWaitingForCutover && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
+    !isWarmAndExecuting && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
   const planURL = getResourceUrl({
     reference: PlanModelRef,
     name: plan?.metadata?.name,
