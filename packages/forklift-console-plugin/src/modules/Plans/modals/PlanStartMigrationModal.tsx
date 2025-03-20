@@ -44,6 +44,7 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
   const history = useHistory();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
   const [lastMigration] = usePlanMigration(resource);
+  const [startButtonEnabled, setStartButtonEnabled] = useState(true);
 
   const isRunningMigrationExist =
     lastMigration !== undefined && lastMigration?.status?.completed === undefined;
@@ -54,6 +55,7 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
   const onStart = useCallback(async () => {
     toggleIsLoading();
     setButtonEnabledOnChange(false);
+    setStartButtonEnabled(false);
 
     try {
       if (isRunningMigrationExist) {
@@ -106,7 +108,7 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
   };
 
   const actions = [
-    <Button key="confirm" onClick={onStart} isLoading={isLoading}>
+    <Button key="confirm" onClick={onStart} isLoading={isLoading} isDisabled={!startButtonEnabled}>
       {t('Start')}
     </Button>,
     <Button key="cancel" variant="secondary" onClick={onClickToggleModal}>
