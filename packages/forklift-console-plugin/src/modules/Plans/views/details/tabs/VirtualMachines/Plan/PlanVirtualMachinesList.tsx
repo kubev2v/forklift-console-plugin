@@ -10,6 +10,7 @@ import {
   V1beta1PlanSpecVms,
   V1beta1PlanStatusConditions,
   V1beta1PlanStatusMigrationVms,
+  V1beta1Provider,
 } from '@kubev2v/types';
 
 import { PlanVMsDeleteButton } from '../components';
@@ -17,41 +18,46 @@ import { PlanData, VMData } from '../types';
 
 import { PlanVirtualMachinesRow } from './PlanVirtualMachinesRow';
 
-const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
-  {
-    resourceFieldId: 'name',
-    jsonPath: '$.specVM.name',
-    label: t('Name'),
-    isVisible: true,
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by name'),
+const fieldsMetadataFactory: (isVsphere: boolean) => ResourceFieldFactory = (isVsphere) => (t) =>
+  [
+    {
+      resourceFieldId: 'name',
+      jsonPath: '$.specVM.name',
+      label: t('Name'),
+      isVisible: true,
+      isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+      filter: {
+        type: 'freetext',
+        placeholderLabel: t('Filter by name'),
+      },
+      sortable: true,
     },
-    sortable: true,
-  },
-  {
-    resourceFieldId: 'conditions',
-    jsonPath: (obj: VMData) => {
-      return obj?.conditions?.[0]?.category;
+    {
+      resourceFieldId: 'conditions',
+      jsonPath: (obj: VMData) => {
+        return obj?.conditions?.[0]?.category;
+      },
+      label: t('Conditions'),
+      isVisible: true,
+      sortable: true,
     },
-    label: t('Conditions'),
-    isVisible: true,
-    sortable: true,
-  },
-  {
-    resourceFieldId: 'actions',
-    label: '',
-    isAction: true,
-    isVisible: true,
-    sortable: false,
-  },
-];
+    {
+      resourceFieldId: 'actions',
+      label: '',
+      isAction: true,
+      isVisible: true,
+      sortable: false,
+      isHidden: !isVsphere,
+    },
+  ];
 
 const PageWithSelection = StandardPageWithSelection<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
-export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
+export const PlanVirtualMachinesList: FC<{
+  obj: PlanData;
+  sourceProvider?: V1beta1Provider;
+}> = ({ obj, sourceProvider }) => {
   const { t } = useForkliftTranslation();
 
   const { plan } = obj;
@@ -97,12 +103,14 @@ export const PlanVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
     ({ selectedIds }) => <PlanVMsDeleteButton selectedIds={selectedIds || []} plan={plan} />,
   ];
 
+  const isVsphere = sourceProvider?.spec?.type === 'vsphere';
+
   return (
     <PageWithSelection
       title={t('Virtual Machines')}
       dataSource={vmDataSource}
       CellMapper={PlanVirtualMachinesRow}
-      fieldsMetadata={fieldsMetadataFactory(t)}
+      fieldsMetadata={fieldsMetadataFactory(isVsphere)(t)}
       userSettings={userSettings}
       namespace={''}
       page={1}
