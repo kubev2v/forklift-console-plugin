@@ -32,7 +32,7 @@ const vmStatuses = [
   { id: 'Running', label: 'Running' },
   { id: 'Succeeded', label: 'Succeeded' },
   { id: 'Unknown', label: 'Unknown' },
-  { id: 'Waiting', label: 'Waiting for cutover' },
+  { id: 'Waiting', label: 'Paused' },
   { id: 'NotStarted', label: 'Not started' },
 ];
 

@@ -12,7 +12,7 @@ import {
   ResourceStatus,
 } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
-import { Breadcrumb, BreadcrumbItem, Split, SplitItem } from '@patternfly/react-core';
+import { Breadcrumb, BreadcrumbItem, Split, SplitItem, Tooltip } from '@patternfly/react-core';
 
 import './PageHeadings.style.css';
 
@@ -23,6 +23,7 @@ export const PageHeadings: React.FC<PageHeadingsProps> = ({
   children,
   actions,
   status: status_,
+  statusTooltip,
 }) => {
   const status = status_ ?? data?.['status']?.phase;
   const groupVersionKind = data?.kind && getGroupVersionKindForResource(data);
@@ -39,7 +40,13 @@ export const PageHeadings: React.FC<PageHeadingsProps> = ({
                 className="co-m-resource-icon--lg"
               />{' '}
               {data?.metadata?.name}
-              {status && (
+              {status && statusTooltip ? (
+                <Tooltip content={statusTooltip}>
+                  <ResourceStatus additionalClassNames="hidden-xs">
+                    <Status status={status} />
+                  </ResourceStatus>
+                </Tooltip>
+              ) : (
                 <ResourceStatus additionalClassNames="hidden-xs">
                   <Status status={status} />
                 </ResourceStatus>
@@ -63,6 +70,7 @@ export interface PageHeadingsProps {
   title?: ReactNode;
   actions?: ReactNode;
   status?: string;
+  statusTooltip?: React.ReactNode;
   children?: React.ReactNode;
 }
 

@@ -1,11 +1,15 @@
 import React from 'react';
+import { DateTime } from 'luxon';
 import { PlanActionsDropdown } from 'src/modules/Plans/actions';
-import { getPlanPhase, PlanPhase } from 'src/modules/Plans/utils';
+import { usePlanMigration } from 'src/modules/Plans/hooks';
+import { PlanCutoverMigrationModal } from 'src/modules/Plans/modals';
+import { getPlanPhase, isPlanArchived, isPlanExecuting, PlanPhase } from 'src/modules/Plans/utils';
 import { PlanConditionType } from 'src/modules/Plans/utils/types/PlanCondition';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
+import { useModal } from 'src/modules/Providers/modals';
 import { PageHeadings } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
 
@@ -19,7 +23,8 @@ import {
   V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Level, List, ListItem, PageSection } from '@patternfly/react-core';
+import { Button, Level, List, ListItem, PageSection, Tooltip } from '@patternfly/react-core';
+import CalendarIcon from '@patternfly/react-icons/dist/esm/icons/calendar-alt-icon';
 
 import PlanCriticalCondition from './PlanCriticalCondition';
 import PlanWarningCondition from './PlanWarningCondition';
@@ -29,6 +34,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
   namespace,
 }) => {
   const { t } = useForkliftTranslation();
+  const { showModal } = useModal();
 
   const [plan, planLoaded, planError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
@@ -63,6 +69,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
   const alerts = [];
 
   const planStatus = getPlanPhase({ obj: plan });
+  const [lastMigration] = usePlanMigration(plan);
 
   const criticalCondition =
     planLoaded &&
@@ -158,8 +165,37 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     }
   };
 
+  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan) && !isPlanArchived(plan);
+
+  const onClickPlanCutoverMigration = () => {
+    showModal(<PlanCutoverMigrationModal resource={plan} />);
+  };
+  const cutoverTime = DateTime.fromISO(lastMigration?.spec?.cutover).toLocaleString(
+    DateTime.DATETIME_FULL,
+  );
+  const cutoverSet = Boolean(lastMigration?.spec?.cutover);
+
   const actions = (
     <Level hasGutter>
+      {isWarmAndExecuting && (
+        <>
+          {cutoverSet ? (
+            <Tooltip content={cutoverTime}>
+              <Button
+                variant="secondary"
+                icon={<CalendarIcon />}
+                onClick={onClickPlanCutoverMigration}
+              >
+                {t('Edit cutover time')}
+              </Button>
+            </Tooltip>
+          ) : (
+            <Button variant="primary" icon={<CalendarIcon />} onClick={onClickPlanCutoverMigration}>
+              {t('Schedule cutover')}
+            </Button>
+          )}
+        </>
+      )}
       <PlanActionsDropdown data={{ obj: plan, permissions }} fieldId={''} fields={[]} />
     </Level>
   );
@@ -174,6 +210,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
         namespace={namespace}
         actions={actions}
         status={planStatus}
+        statusTooltip={cutoverTime}
       >
         {alerts && alerts.length > 0 && (
           <PageSection variant="light" className="forklift-page-headings-alerts">

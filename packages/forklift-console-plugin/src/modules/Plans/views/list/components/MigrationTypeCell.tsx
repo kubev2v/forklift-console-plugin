@@ -1,10 +1,12 @@
 import React, { FC } from 'react';
+import { DateTime } from 'luxon';
+import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import { PlanCutoverMigrationModal } from 'src/modules/Plans/modals';
 import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils';
 
-import { Button, ButtonVariant, Flex, Label } from '@patternfly/react-core';
+import { Button, ButtonVariant, Flex, Label, Tooltip } from '@patternfly/react-core';
 
 import { CellProps } from './CellProps';
 
@@ -12,13 +14,18 @@ export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
   const plan = data?.obj;
+  const [lastMigration] = usePlanMigration(plan);
 
-  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
-  const isArchived = isPlanArchived(plan);
+  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan) && !isPlanArchived(plan);
 
   const onClickPlanCutoverMigration = () => {
     showModal(<PlanCutoverMigrationModal resource={plan} />);
   };
+
+  const cutoverSet = Boolean(lastMigration?.spec?.cutover);
+  const cutoverTime = DateTime.fromISO(lastMigration?.spec?.cutover).toLocaleString(
+    DateTime.DATETIME_FULL,
+  );
 
   if (plan.spec.warm) {
     return (
@@ -27,10 +34,20 @@ export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
           {t('Warm')}
         </Label>
 
-        {isWarmAndExecuting && !isArchived && (
-          <Button isInline variant={ButtonVariant.link} onClick={onClickPlanCutoverMigration}>
-            {t('Cutover')}
-          </Button>
+        {isWarmAndExecuting && (
+          <>
+            {cutoverSet ? (
+              <Tooltip content={cutoverTime}>
+                <Button isInline variant={ButtonVariant.link} onClick={onClickPlanCutoverMigration}>
+                  {t('Edit cutover')}
+                </Button>
+              </Tooltip>
+            ) : (
+              <Button isInline variant={ButtonVariant.link} onClick={onClickPlanCutoverMigration}>
+                {t('Schedule cutover')}
+              </Button>
+            )}
+          </>
         )}
       </Flex>
     );
