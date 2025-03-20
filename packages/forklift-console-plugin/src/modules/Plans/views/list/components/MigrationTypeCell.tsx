@@ -26,6 +26,7 @@ export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
   const cutoverTime = DateTime.fromISO(lastMigration?.spec?.cutover).toLocaleString(
     DateTime.DATETIME_FULL,
   );
+  debugger;
 
   if (plan.spec.warm) {
     return (

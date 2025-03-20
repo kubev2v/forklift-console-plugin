@@ -186,7 +186,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
                 icon={<CalendarIcon />}
                 onClick={onClickPlanCutoverMigration}
               >
-                {t('Edit cutover time')}
+                {t('Edit cutover')}
               </Button>
             </Tooltip>
           ) : (

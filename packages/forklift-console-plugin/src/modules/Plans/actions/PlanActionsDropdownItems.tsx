@@ -7,6 +7,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
+import { usePlanMigration } from '../hooks/usePlanMigration';
 import {
   ArchiveModal,
   DuplicateModal,
@@ -40,9 +41,10 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
 
   const canStart = canPlanStart(plan);
   const canReStart = canPlanReStart(plan);
-  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
-  const isArchived = isPlanArchived(plan);
+  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan) && !isPlanArchived(plan);
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
+  const [lastMigration] = usePlanMigration(plan);
+  const cutoverSet = isWarmAndExecuting && Boolean(lastMigration?.spec?.cutover);
 
   const [isStartItemEnabled, setIsStartItemEnabled] = useState(canStart);
 
@@ -92,10 +94,10 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     <DropdownItem
       value={2}
       key="cutover"
-      isDisabled={!isWarmAndExecuting || isArchived}
+      isDisabled={!isWarmAndExecuting}
       onClick={onClickPlanCutover}
     >
-      {t('Cutover')}
+      {cutoverSet ? t('Edit cutover') : t('Schedule cutover')}
     </DropdownItem>,
 
     <DropdownItem
