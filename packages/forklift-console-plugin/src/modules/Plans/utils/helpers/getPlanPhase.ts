@@ -2,7 +2,7 @@ import { V1beta1Plan } from '@kubev2v/types';
 
 import { PlanData, PlanPhase } from '../types';
 
-export const getPlanPhase = (data: PlanData, cutoverSet?: boolean): PlanPhase => {
+export const getPlanPhase = (data: PlanData): PlanPhase => {
   const plan = data?.obj;
   if (!plan) return PlanPhase.Unknown;
 
@@ -30,14 +30,6 @@ export const getPlanPhase = (data: PlanData, cutoverSet?: boolean): PlanPhase =>
   // Check for Canceled
   if (conditions.includes('Canceled')) {
     return PlanPhase.Canceled;
-  }
-
-  const filteredVms = plan.status?.migration?.vms?.filter((vm) => vm.phase !== 'Completed');
-  if (filteredVms?.length > 0 && filteredVms?.every((vm) => vm.phase === 'CopyingPaused')) {
-    if (cutoverSet) {
-      return PlanPhase.WaitingSystem;
-    }
-    return PlanPhase.WaitingUser;
   }
 
   // CHeck for Running

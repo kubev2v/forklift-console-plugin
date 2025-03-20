@@ -59,7 +59,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
     [],
   );
 
-  const phase = getPlanPhase(data, Boolean(lastMigration?.spec?.cutover));
+  const phase = getPlanPhase(data);
   const isPlanLoading =
     !isWaitingForCutover && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
   const planURL = getResourceUrl({

@@ -23,8 +23,4 @@ export enum PlanPhase {
   Warning = 'Warning',
   // t('Not Ready')
   NotReady = 'Not Ready',
-  // t('Cutover scheduled')
-  WaitingSystem = 'Cutover scheduled',
-  // t('Needs cutover date')
-  WaitingUser = 'Needs cutover date',
 }
