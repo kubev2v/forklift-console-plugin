@@ -71,10 +71,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
       const trimmedValue = value?.trim();
 
       if (id == 'emptyVddkInitImage') {
-        const vddValidationState = validateVDDKImage(provider?.spec?.settings?.vddkInitImage);
-        const initVddkValidationState = validateVDDKImage(undefined);
-        const validationState =
-          trimmedValue === 'yes' ? initVddkValidationState : vddValidationState;
+        const validationState = validateVDDKImage(undefined);
 
         dispatch({
           type: 'SET_FIELD_VALIDATED',
@@ -88,6 +85,13 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
             annotations: {
               ...(provider?.metadata?.annotations as object),
               'forklift.konveyor.io/empty-vddk-init-image': trimmedValue || undefined,
+            },
+          },
+          spec: {
+            ...provider?.spec,
+            settings: {
+              ...provider?.spec?.settings,
+              vddkInitImage: '',
             },
           },
         });
