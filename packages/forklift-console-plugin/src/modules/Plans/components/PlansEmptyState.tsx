@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom-v5-compat';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { getResourceUrl } from 'src/modules/Providers/utils';
