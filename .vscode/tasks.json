@@ -1,0 +1,55 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run client",
+      "type": "shell",
+      "command": "echo Hello client",
+      "osx": {
+        "command": "source ~/.zshrc && nvm use 20 && yarn && yarn start"
+      },
+      "linux": {
+        "command": "source ~/.bashrc && nvm use 20 && yarn && yarn start"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "shared",
+        "group": "run",
+        "showReuseMessage": false,
+        "clear": false,
+        "focus": true
+      },
+    },
+    {
+      "label": "Run bridge",
+      "type": "shell",
+      "command": "echo hello bridge",
+      "osx": {
+        "command": "source ~/.zshrc && export BRDIGE_BRANDING=openshift && cd ci && ./start-console.sh"
+      },
+      "linux": {
+        "command": "source ~/.bashrc && BRDIGE_BRANDING=openshift && cd ci && ./start-console.sh"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "shared",
+        "group": "run",
+        "showReuseMessage": false,
+        "clear": false,
+        "focus": false
+      }
+    },
+    {
+      "label": "Run client and bridge in parallel (with split terminal)",
+      "dependsOn": ["Run client", "Run bridge"],
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "shared",
+        "group": "run",
+        "showReuseMessage": false,
+        "clear": false,
+        "focus": true
+      },
+    }
+  ]
+}
