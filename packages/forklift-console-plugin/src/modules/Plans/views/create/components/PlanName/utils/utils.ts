@@ -8,11 +8,13 @@ export const getInvalidHelperText = (validated: Validation, nameInput: string) =
   if (validated !== ValidatedOptions.error) return null;
 
   if (!nameInput) {
-    return t('Plan name must not be empty');
+    return t('Plan name must not be empty.');
   }
   if (!validateK8sName(nameInput)) {
-    return t("Plan name must contain only lowercase alphanumeric characters or '-'");
+    return t(
+      "Plan name must contain only lowercase alphanumeric characters or '-', and must start or end with lowercase alphanumeric character.",
+    );
   }
 
-  return t('Plan name must be a unique within a namespace.');
+  return t('Plan name must be unique within a namespace.');
 };
