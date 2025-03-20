@@ -1,6 +1,5 @@
 import React from 'react';
 import { PlanActionsDropdown } from 'src/modules/Plans/actions';
-import { usePlanMigration } from 'src/modules/Plans/hooks';
 import { getPlanPhase, PlanPhase } from 'src/modules/Plans/utils';
 import { PlanConditionType } from 'src/modules/Plans/utils/types/PlanCondition';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
@@ -63,8 +62,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
   const alerts = [];
 
-  const [lastMigration] = usePlanMigration(plan);
-  const planStatus = getPlanPhase({ obj: plan }, Boolean(lastMigration?.spec?.cutover));
+  const planStatus = getPlanPhase({ obj: plan });
 
   const criticalCondition =
     planLoaded &&
