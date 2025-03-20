@@ -14,7 +14,7 @@ export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
   const plan = data?.obj;
-  const [lastMigration] = usePlanMigration(plan);
+  const [lastMigration, migrationLoaded] = usePlanMigration(plan);
 
   const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan) && !isPlanArchived(plan);
 
@@ -26,7 +26,6 @@ export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
   const cutoverTime = DateTime.fromISO(lastMigration?.spec?.cutover).toLocaleString(
     DateTime.DATETIME_FULL,
   );
-  debugger;
 
   if (plan.spec.warm) {
     return (
@@ -35,7 +34,7 @@ export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
           {t('Warm')}
         </Label>
 
-        {isWarmAndExecuting && (
+        {isWarmAndExecuting && migrationLoaded && (
           <>
             {cutoverSet ? (
               <Tooltip content={cutoverTime}>

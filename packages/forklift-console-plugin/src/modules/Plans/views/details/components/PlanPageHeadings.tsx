@@ -69,7 +69,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
   const alerts = [];
 
   const planStatus = getPlanPhase({ obj: plan });
-  const [lastMigration] = usePlanMigration(plan);
+  const [lastMigration, migrationLoaded] = usePlanMigration(plan);
 
   const criticalCondition =
     planLoaded &&
@@ -177,7 +177,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
   const actions = (
     <Level hasGutter>
-      {isWarmAndExecuting && (
+      {isWarmAndExecuting && migrationLoaded && (
         <>
           {cutoverSet ? (
             <Tooltip content={cutoverTime}>

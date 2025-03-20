@@ -43,7 +43,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
   const canReStart = canPlanReStart(plan);
   const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan) && !isPlanArchived(plan);
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
-  const [lastMigration] = usePlanMigration(plan);
+  const [lastMigration, migrationLoaded] = usePlanMigration(plan);
   const cutoverSet = isWarmAndExecuting && Boolean(lastMigration?.spec?.cutover);
 
   const [isStartItemEnabled, setIsStartItemEnabled] = useState(canStart);
@@ -94,7 +94,7 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     <DropdownItem
       value={2}
       key="cutover"
-      isDisabled={!isWarmAndExecuting}
+      isDisabled={!isWarmAndExecuting || !migrationLoaded}
       onClick={onClickPlanCutover}
     >
       {cutoverSet ? t('Edit cutover') : t('Schedule cutover')}
