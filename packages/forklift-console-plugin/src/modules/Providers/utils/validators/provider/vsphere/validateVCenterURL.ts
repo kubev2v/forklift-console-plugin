@@ -1,26 +1,10 @@
-import { pki } from 'node-forge';
-
 import { safeBase64Decode } from '../../../helpers';
 import { validateIpv4, validateURL, ValidationMsg } from '../../common';
 
-export const urlMatchesCertFqdn = (urlHostname: string, caCert: string): boolean => {
-  try {
-    const decodedCaCert = safeBase64Decode(caCert);
-    const cert = pki.certificateFromPem(decodedCaCert);
-    const dnsAltName = cert.extensions
-      .find((ext) => ext.name === 'subjectAltName')
-      ?.altNames.find((altName) => altName.type === 2)?.value;
-    const commonName = cert.subject.attributes.find((attr) => attr.name === 'commonName')?.value;
-
-    return urlHostname === (dnsAltName || commonName);
-  } catch (e) {
-    console.error('Unable to parse certificate object from PEM.');
-  }
-
-  return false;
-};
-
-export const validateVCenterURL = (url: string, caCert?: string): ValidationMsg => {
+export const validateVCenterURL = (
+  url: string | number,
+  insecureSkipVerify?: string,
+): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (url === undefined) {
     return {
@@ -38,6 +22,7 @@ export const validateVCenterURL = (url: string, caCert?: string): ValidationMsg 
   const isValidURL = validateURL(trimmedUrl);
   const urlObject = getUrlObject(url);
   const urlHostname = urlObject?.hostname;
+  const isSecure = !insecureSkipVerify || safeBase64Decode(insecureSkipVerify) === 'false';
 
   if (trimmedUrl === '') {
     return {
@@ -53,18 +38,13 @@ export const validateVCenterURL = (url: string, caCert?: string): ValidationMsg 
     };
   }
 
-  if (urlObject?.protocol === 'https:') {
-    if (validateIpv4(urlHostname)) {
-      return {
-        type: 'error',
-        msg: 'Invalid URL. The URL must be a fully qualified domain name (FQDN).',
-      };
-    }
+  if (isSecure) {
+    const isValidIpAddress = validateIpv4(urlHostname);
 
-    if (caCert && !urlMatchesCertFqdn(urlHostname, caCert)) {
+    if (isValidIpAddress) {
       return {
-        type: 'error',
-        msg: 'Invalid URL. The URL must be a fully qualified domain name (FQDN) and match the FQDN in the certificate you uploaded.',
+        type: 'warning',
+        msg: 'The URL is not a fully qualified domain name (FQDN). If the certificate is not skipped and does not match the URL, the connection might fail.',
       };
     }
   }
