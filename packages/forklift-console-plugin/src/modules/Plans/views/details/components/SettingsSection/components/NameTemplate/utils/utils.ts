@@ -1,8 +1,8 @@
 import { produce } from 'immer';
 import { OnConfirmHookType } from 'src/modules/Providers';
-import { setObjectValueByPath, unsetObjectValueByPath } from 'src/utils/utils';
 
 import { k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
+import { setObjectValueByPath, unsetObjectValueByPath } from '@utils/helpers';
 
 import { EnhancedPlan } from '../../../utils/types';
 

@@ -46,3 +46,6 @@ export const unsetObjectValueByPath = (obj: object, path: OpenApiJsonPath) => {
     delete parent[lastKey];
   }
 };
+
+export const isEmpty = (value: object | Array<unknown> | undefined): boolean =>
+  Array.isArray(value) ? value.length === 0 : Object.keys(value || {}).length === 0;
