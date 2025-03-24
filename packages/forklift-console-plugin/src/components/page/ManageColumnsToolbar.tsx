@@ -33,9 +33,9 @@ export const ManageColumnsToolbar = ({
         showModal={isOpen}
         onClose={() => setIsOpen(false)}
         description={t('Selected columns will be displayed in the table.')}
-        resourceFields={resourceFields}
+        resourceFields={resourceFields.filter((field) => !!field.resourceFieldId)}
         onChange={setColumns}
-        defaultColumns={defaultColumns}
+        defaultColumns={defaultColumns.filter((column) => !!column.resourceFieldId)}
         saveLabel={t('Save')}
         cancelLabel={t('Cancel')}
         reorderLabel={t('Reorder')}
