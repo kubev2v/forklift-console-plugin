@@ -10,10 +10,14 @@ import { EditModal, ValidationHookType } from '../EditModal';
 import { patchProviderURL } from './utils/patchProviderURL';
 import { EditProviderURLModalProps } from './EditProviderURLModal';
 
-export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = (props) => {
+export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = ({
+  title,
+  label,
+  resource: provider,
+  insecureSkipVerify,
+  ...props
+}) => {
   const { t } = useForkliftTranslation();
-  const provider = props.resource;
-
   let validationHook: ValidationHookType;
 
   // VCenter of ESXi
@@ -21,7 +25,7 @@ export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = (props) 
   if (sdkEndpoint === 'esxi') {
     validationHook = validateEsxiURL;
   } else {
-    validationHook = validateVCenterURL;
+    validationHook = (url) => validateVCenterURL(url, insecureSkipVerify);
   }
 
   const ModalBody = (
@@ -39,14 +43,15 @@ export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = (props) 
   return (
     <EditModal
       {...props}
+      resource={provider}
       jsonPath={'spec.url'}
-      title={props?.title || t('Edit URL')}
-      label={props?.label || t('URL')}
+      title={title || t('Edit URL')}
+      label={label || t('URL')}
       model={ProviderModel}
       variant={ModalVariant.large}
       body={ModalBody}
       helperText={t(
-        'The URL of the vCenter API endpoint, for example: https://vCenter-host-example.com/sdk .',
+        'The URL of the vCenter API endpoint, for example: https://vCenter-host-example.com/sdk.',
       )}
       onConfirmHook={patchProviderURL}
       validationHook={validationHook}

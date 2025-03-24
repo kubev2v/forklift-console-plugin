@@ -8,19 +8,19 @@ import {
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@kubev2v/common';
-import { V1beta1Provider } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import { Alert, Checkbox, Form, Popover, Radio, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 export interface VCenterProviderCreateFormProps {
   provider: V1beta1Provider;
-  caCert: string;
+  secret: IoK8sApiCoreV1Secret;
   onChange: (newValue: V1beta1Provider) => void;
 }
 
 export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps> = ({
   provider,
-  caCert,
+  secret,
   onChange,
 }) => {
   const { t } = useForkliftTranslation();
@@ -33,7 +33,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
 
   const initialState = {
     validation: {
-      url: validateVCenterURL(url, caCert),
+      url: validateVCenterURL(url, secret?.data?.insecureSkipVerify),
       vddkInitImage: validateVDDKImage(vddkInitImage),
     },
   };
@@ -42,9 +42,12 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
   useEffect(() => {
     dispatch({
       type: 'SET_FIELD_VALIDATED',
-      payload: { field: 'url', validationState: validateVCenterURL(url, caCert) },
+      payload: {
+        field: 'url',
+        validationState: validateVCenterURL(url, secret?.data?.insecureSkipVerify),
+      },
     });
-  }, [caCert]);
+  }, [secret]);
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -68,10 +71,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
       const trimmedValue = value?.trim();
 
       if (id == 'emptyVddkInitImage') {
-        const vddValidationState = validateVDDKImage(provider?.spec?.settings?.vddkInitImage);
-        const initVddkValidationState = validateVDDKImage(undefined);
-        const validationState =
-          trimmedValue === 'yes' ? initVddkValidationState : vddValidationState;
+        const validationState = validateVDDKImage(undefined);
 
         dispatch({
           type: 'SET_FIELD_VALIDATED',
@@ -85,6 +85,13 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
             annotations: {
               ...(provider?.metadata?.annotations as object),
               'forklift.konveyor.io/empty-vddk-init-image': trimmedValue || undefined,
+            },
+          },
+          spec: {
+            ...provider?.spec,
+            settings: {
+              ...provider?.spec?.settings,
+              vddkInitImage: '',
             },
           },
         });
@@ -127,14 +134,14 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
 
       if (id === 'url') {
         // Validate URL - VCenter of ESXi
-        const validationState = validateVCenterURL(trimmedValue, caCert);
+        const validationState = validateVCenterURL(trimmedValue, secret?.data?.insecureSkipVerify);
 
         dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
 
         onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
       }
     },
-    [provider, caCert],
+    [provider, secret],
   );
 
   const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {

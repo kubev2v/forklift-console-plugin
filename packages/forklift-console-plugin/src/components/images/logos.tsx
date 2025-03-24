@@ -2,7 +2,6 @@ import React from 'react';
 
 import openshiftImg from './resources/openshift.svg';
 import openstackImg from './resources/openstack.svg';
-import ovaImg from './resources/ova.svg';
 import redhatImg from './resources/redhat.svg';
 import vmImg from './resources/vm.svg';
 
@@ -37,15 +36,6 @@ export const redhatLogo = (
   <img
     className="forklift--create-provider-edit-card-title-logo"
     src={redhatImg}
-    alt="PatternFly logo"
-    width="27px"
-  />
-);
-
-export const ovaLogo = (
-  <img
-    className="forklift--create-provider-edit-card-title-logo"
-    src={ovaImg}
     alt="PatternFly logo"
     width="27px"
   />

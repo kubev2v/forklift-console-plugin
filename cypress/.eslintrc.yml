@@ -1,5 +1,0 @@
-plugins:
-  - "cypress"
-extends:
-  - "plugin:cypress/recommended"
-  - "../packages/config/eslintrc.yml"

@@ -1,13 +1,16 @@
 import { V1beta1Provider } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 import { validateK8sName, validateURL, ValidationMsg } from '../../common';
+import { SecretSubType } from '../secretValidator';
 
 import { validateVCenterURL } from './validateVCenterURL';
 import { validateVDDKImage } from './validateVDDKImage';
 
 export function vsphereProviderValidator(
   provider: V1beta1Provider,
-  caCert?: string,
+  subType?: SecretSubType,
+  secret?: IoK8sApiCoreV1Secret,
 ): ValidationMsg {
   const name = provider?.metadata?.name;
   const url = provider?.spec?.url || '';
@@ -20,7 +23,11 @@ export function vsphereProviderValidator(
     return { type: 'error', msg: 'invalid kubernetes resource name' };
   }
 
-  if (caCert ? validateVCenterURL(url, caCert).type === 'error' : !validateURL(url)) {
+  if (
+    subType === 'vcenter'
+      ? validateVCenterURL(url, secret?.data?.insecureSkipVerify).type === 'error'
+      : !validateURL(url)
+  ) {
     return { type: 'error', msg: 'invalid URL' };
   }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { isProviderLocalOpenshift } from 'src/utils';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -31,7 +32,7 @@ export const TypeDetailsItem: React.FC<ProviderDetailsItemProps> = ({
       content={
         <>
           {type}{' '}
-          {!provider?.spec?.url && (
+          {isProviderLocalOpenshift(provider) && (
             <Label isCompact color={'grey'} className="forklift-table__flex-cell-label">
               {t('Host cluster')}
             </Label>

@@ -28,6 +28,8 @@ import StartIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 import { CellProps } from './CellProps';
 import { PlanStatusVmCount } from './PlanStatusVmCount';
 
+import './PlanStatusCell.style.scss';
+
 type VmPipelineTask = {
   vmName: string;
   task: string;
@@ -57,7 +59,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
     [],
   );
 
-  const phase = getPlanPhase(data, Boolean(lastMigration?.spec?.cutover));
+  const phase = getPlanPhase(data);
   const isPlanLoading =
     !isWaitingForCutover && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
   const planURL = getResourceUrl({
@@ -74,7 +76,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   if (phase === PlanPhase.Ready) {
     return (
       <Button
-        variant={ButtonVariant.primary}
+        variant={ButtonVariant.secondary}
         icon={<StartIcon />}
         isDisabled={!isButtonEnabled}
         onClick={() =>
@@ -103,45 +105,62 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
 
   return (
     <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
-      {isPlanLoading ? (
-        <Spinner size="md" />
-      ) : phase === PlanPhase.NotReady ? (
-        t('Validating...')
-      ) : (
-        <Label isCompact>{phase}</Label>
-      )}
+      <Flex
+        alignItems={{ default: 'alignItemsCenter' }}
+        spaceItems={{ default: 'spaceItemsSm' }}
+        className="plan-status-cell-label-section"
+      >
+        <FlexItem>
+          {isPlanLoading ? (
+            <Spinner size="md" />
+          ) : phase === PlanPhase.NotReady ? (
+            t('Validating...')
+          ) : (
+            <Label isCompact>{phase}</Label>
+          )}
+        </FlexItem>
 
-      {progressValue !== 0 && isPlanLoading && (
-        <FlexItem className="pf-v5-u-font-size-sm">{Math.trunc(progressValue)}%</FlexItem>
-      )}
-
-      <Split hasGutter>
-        {vmCount.success > 0 && (
-          <SplitItem>
-            <PlanStatusVmCount
-              count={vmCount.success}
-              status="success"
-              linkPath={vmCountLinkPath}
-            />
-          </SplitItem>
+        {progressValue !== 0 && isPlanLoading && (
+          <FlexItem className="pf-v5-u-font-size-sm">{Math.trunc(progressValue)}%</FlexItem>
         )}
+      </Flex>
 
-        {vmCount.canceled > 0 && (
-          <SplitItem>
-            <PlanStatusVmCount
-              count={vmCount.canceled}
-              status="warning"
-              linkPath={vmCountLinkPath}
-            />
-          </SplitItem>
-        )}
+      <FlexItem>
+        <Split hasGutter>
+          {vmCount.success > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount
+                count={vmCount.success}
+                status="success"
+                linkPath={vmCountLinkPath}
+                tooltipLabel={t('Succeeded')}
+              />
+            </SplitItem>
+          )}
 
-        {vmCount.error > 0 && (
-          <SplitItem>
-            <PlanStatusVmCount count={vmCount.error} status="danger" linkPath={vmCountLinkPath} />
-          </SplitItem>
-        )}
-      </Split>
+          {vmCount.canceled > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount
+                count={vmCount.canceled}
+                status="canceled"
+                linkPath={vmCountLinkPath}
+                tooltipLabel={t('Canceled')}
+              />
+            </SplitItem>
+          )}
+
+          {vmCount.error > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount
+                count={vmCount.error}
+                status="danger"
+                linkPath={vmCountLinkPath}
+                tooltipLabel={t('Failed')}
+              />
+            </SplitItem>
+          )}
+        </Split>
+      </FlexItem>
     </Flex>
   );
 };

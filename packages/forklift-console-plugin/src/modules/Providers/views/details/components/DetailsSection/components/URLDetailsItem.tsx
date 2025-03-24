@@ -2,6 +2,9 @@ import React from 'react';
 import { EditProviderURLModal, useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+
 import { DetailsItem } from '../../../../../utils';
 
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
@@ -14,6 +17,13 @@ export const URLDetailsItem: React.FC<ProviderDetailsItemProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
+
+  const [secret] = useK8sWatchResource<IoK8sApiCoreV1Secret>({
+    groupVersionKind: { version: 'v1', kind: 'Secret' },
+    namespaced: true,
+    namespace: provider?.spec?.secret?.namespace,
+    name: provider?.spec?.secret?.name,
+  });
 
   const defaultMoreInfoLink =
     'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-source-providers';
@@ -31,7 +41,13 @@ export const URLDetailsItem: React.FC<ProviderDetailsItemProps> = ({
       onEdit={
         canPatch &&
         provider?.spec?.url &&
-        (() => showModal(<EditProviderURLModal resource={provider} />))
+        (() =>
+          showModal(
+            <EditProviderURLModal
+              resource={provider}
+              insecureSkipVerify={secret?.data?.insecureSkipVerify}
+            />,
+          ))
       }
     />
   );

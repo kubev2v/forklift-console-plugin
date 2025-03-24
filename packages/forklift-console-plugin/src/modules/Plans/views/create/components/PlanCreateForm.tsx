@@ -27,10 +27,10 @@ import {
 
 import { PlanCreatePageState } from '../states';
 
+import { PlanNameTextField } from './PlanName/PlanNameTextField';
 import { ChipsToolbarProviders } from './ChipsToolbarProviders';
 import { createProviderCardItems } from './createProviderCardItems';
 import { FiltersToolbarProviders } from './FiltersToolbarProviders';
-import { PlanNameTextField } from './PlanNameTextField';
 import { ProviderCardEmptyState } from './ProvidersEmptyState';
 
 export type PlanCreateFormProps = {

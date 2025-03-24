@@ -18,6 +18,7 @@ export type EditProviderURLModalProps = Modify<
     label?: string;
     model?: K8sModel;
     jsonPath?: string | string[];
+    insecureSkipVerify?: string;
   }
 >;
 

@@ -32,6 +32,10 @@ export const extensions: EncodedExtension[] = [
       namespaced: true,
       // t('plugin__forklift-console-plugin~Overview')
       name: '%plugin__forklift-console-plugin~Overview%',
+      dataAttributes: {
+        'data-quickstart-id': 'qs-nav-forklift-overview',
+        'data-testid': 'forklift-overview-nav-item',
+      },
     },
     flags: {
       required: ['CAN_LIST_NS'],
