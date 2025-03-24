@@ -158,6 +158,37 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
               />
             </SplitItem>
           )}
+
+          {vmCount.paused > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount
+                count={vmCount.paused}
+                status="paused"
+                linkPath={vmCountLinkPath}
+                popoverProps={{
+                  headerContent: <div>{vmCount.paused} VM migrations paused</div>,
+                  bodyContent: (
+                    <div>
+                      To resume, the cutover must be scheduled. When the cutover starts, VMs
+                      included in this plan will be shut down.
+                    </div>
+                  ),
+                  triggerAction: 'hover',
+                }}
+              />
+            </SplitItem>
+          )}
+
+          {vmCount.running > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount
+                count={vmCount.running}
+                status="running"
+                linkPath={vmCountLinkPath}
+                tooltipLabel={t('Running')}
+              />
+            </SplitItem>
+          )}
         </Split>
       </FlexItem>
     </Flex>
