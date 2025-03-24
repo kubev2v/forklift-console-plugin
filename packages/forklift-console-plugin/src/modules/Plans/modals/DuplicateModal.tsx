@@ -6,7 +6,7 @@ import { Validation } from 'src/modules/Providers/utils/types';
 import { validateK8sName } from 'src/modules/Providers/utils/validators';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import {
   K8sResourceCommon,
   NetworkMapModel,

@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { Bullseye } from '@patternfly/react-core';
 import { Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
 
-import { ResourceField, UID } from '../../utils';
+import { ResourceField, UID } from '../utils';
 
 import { RowProps, SortType, TableViewHeaderProps } from './types';
 

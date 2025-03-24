@@ -1,4 +1,4 @@
-import { NAME, NAMESPACE } from '../../../utils';
+import { NAME, NAMESPACE } from '../../utils';
 import { createMatcher, createMetaMatcher, freetextMatcher } from '../matchers';
 
 const matchFreetext = (

@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { ResourceField, RowProps } from '@kubev2v/common';
+import { RowProps } from 'src/components/common/TableView/types';
+import { ResourceField } from '@forklift/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { StorageMapActionsDropdown } from '../../actions';

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import { ExternalLink } from '@kubev2v/common';
+import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import {
   Breadcrumb,
   BreadcrumbItem,

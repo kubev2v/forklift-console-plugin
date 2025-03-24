@@ -3,7 +3,9 @@ import StandardPage from 'src/components/page/StandardPage';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { EnumToTuple, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 import {
   NetworkMapModel,
   NetworkMapModelGroupVersionKind,

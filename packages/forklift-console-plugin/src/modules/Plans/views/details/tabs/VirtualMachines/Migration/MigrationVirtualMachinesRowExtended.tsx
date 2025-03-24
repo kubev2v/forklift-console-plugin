@@ -7,7 +7,7 @@ import { useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { RowProps } from '@kubev2v/common';
+import { RowProps } from 'src/components/common/TableView/types';
 import {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1Pod,

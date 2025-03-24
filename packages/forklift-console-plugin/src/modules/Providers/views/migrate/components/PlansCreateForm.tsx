@@ -3,7 +3,8 @@ import { FilterableSelect } from 'src/components';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText, HelpIconPopover } from '@kubev2v/common';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import {
   NetworkMapModelGroupVersionKind,
   ProviderModelGroupVersionKind,

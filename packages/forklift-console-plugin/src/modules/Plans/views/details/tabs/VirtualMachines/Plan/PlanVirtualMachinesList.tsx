@@ -5,7 +5,8 @@ import {
 } from 'src/components/page/StandardPageWithSelection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 import {
   V1beta1PlanSpecVms,
   V1beta1PlanStatusConditions,

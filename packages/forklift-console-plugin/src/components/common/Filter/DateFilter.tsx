@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from 'react';
 
 import { DatePicker, InputGroup, ToolbarFilter } from '@patternfly/react-core';
 
-import { changeFormatToISODate, isValidDate, parseISOtoJSDate, toISODate } from '../../utils';
+import { changeFormatToISODate, isValidDate, parseISOtoJSDate, toISODate } from '../utils';
 
 import { FilterTypeProps } from './types';
 

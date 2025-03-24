@@ -3,7 +3,7 @@ import { calculateThumbprint, useTlsCertificate } from 'src/modules/Providers/ho
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Loading } from '@kubev2v/common';
+import { Loading } from 'src/components/common/Page/PageStates';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
 import { VerifyCertificate } from './VerifyCertificate';

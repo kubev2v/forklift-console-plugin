@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from '@kubev2v/common';
 import { PlanModel, ProviderModelRef } from '@kubev2v/types';
 import { Button, ButtonProps, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
-import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
+import { PlusCircleIcon } from '@patternfly/react-icons';
 
 import PlansAddButton from './PlansAddButton';
 

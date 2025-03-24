@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getResourceUrl, TableEmptyCell, TableLabelCell } from 'src/modules/Providers/utils';
 
-import { getResourceFieldValue } from '@kubev2v/common';
+import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { ProviderModelRef } from '@kubev2v/types';
 import { OutlinedHddIcon } from '@patternfly/react-icons';
 

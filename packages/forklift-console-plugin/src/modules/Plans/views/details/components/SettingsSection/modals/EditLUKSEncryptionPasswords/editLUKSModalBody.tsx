@@ -1,7 +1,7 @@
 import React from 'react';
 import { ForkliftTrans } from 'src/utils';
 
-import { ExternalLink } from '@kubev2v/common';
+import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 
 export const VIRT_V2V_HELP_LINK =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-vms-web-console_mtv#creating-migration-plans-ui';

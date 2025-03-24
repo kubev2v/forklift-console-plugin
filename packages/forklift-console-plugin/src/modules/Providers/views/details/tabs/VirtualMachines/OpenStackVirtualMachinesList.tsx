@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
+import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 
 import { concernFilter } from './utils/filters/concernFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';

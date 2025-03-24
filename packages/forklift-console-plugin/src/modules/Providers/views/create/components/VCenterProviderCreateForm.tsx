@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useReducer } from 'react';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import {
   validateVCenterURL,
   validateVDDKImage,
@@ -7,7 +8,6 @@ import {
 } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
 import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import { Alert, Checkbox, Form, Popover, Radio, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';

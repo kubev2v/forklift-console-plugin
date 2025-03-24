@@ -4,7 +4,9 @@ import { ProviderData, SOURCE_ONLY_PROVIDER_TYPES } from 'src/modules/Providers/
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { EnumToTuple, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
+import { ResourceFieldFactory } from '@forklift/common/utils/types';
 import {
   OpenshiftProvider,
   OpenstackProvider,

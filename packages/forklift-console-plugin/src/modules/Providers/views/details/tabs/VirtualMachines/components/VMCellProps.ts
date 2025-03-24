@@ -1,4 +1,4 @@
-import { ResourceField } from '@kubev2v/common';
+import { ResourceField } from '@forklift/common/utils/types';
 import { ProviderVirtualMachine } from '@kubev2v/types';
 
 export interface VmData {

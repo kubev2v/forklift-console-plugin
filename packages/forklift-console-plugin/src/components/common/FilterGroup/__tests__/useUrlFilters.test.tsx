@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { NAME } from '../../../utils';
+import { NAME } from '../../utils';
 import { useUrlFilters } from '../useUrlFilters';
 
 afterEach(cleanup);

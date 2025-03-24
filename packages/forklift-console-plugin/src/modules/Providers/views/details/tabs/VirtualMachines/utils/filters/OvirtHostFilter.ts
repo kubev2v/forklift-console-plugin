@@ -1,4 +1,4 @@
-import { EnumValue } from '@kubev2v/common';
+import { EnumValue } from '@forklift/common/utils/types';
 
 const labelToFilterItem = (label: string): EnumValue =>
   label !== '' ? { id: label, label } : { id: label, label: 'Undefined' };

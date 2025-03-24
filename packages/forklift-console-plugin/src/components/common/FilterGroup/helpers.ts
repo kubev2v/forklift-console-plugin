@@ -1,4 +1,4 @@
-import { ResourceField } from '../../utils';
+import { ResourceField } from '../utils';
 
 import { FieldFilter } from './types';
 
