@@ -12,6 +12,7 @@ import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plug
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   PlansListPage: './modules/Plans/views/list/PlansListPage',
   PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
+  PlanCreatePageV2: './plans/create/PlanCreatePage',
   PlanDetailsPage: './modules/Plans/views/details/PlanDetailsPage',
 };
 
@@ -63,6 +64,17 @@ export const extensions: EncodedExtension[] = [
       ...PlanModel,
     },
   } as EncodedExtension<CreateResource>,
+
+  {
+    type: 'console.page/route',
+    properties: {
+      exact: false,
+      path: ['/mtv/create/plan'],
+      component: {
+        $codeRef: 'PlanCreatePageV2',
+      },
+    },
+  },
 
   {
     type: 'console.model-metadata',

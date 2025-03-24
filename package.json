@@ -31,9 +31,7 @@
     "e2e:build": "bash ./ci/build-and-push-images.sh",
     "e2e:deployCrds": "kubectl apply -f ./ci/yaml/crds/forklift",
     "e2e:console": "bash ./ci/deploy-console.sh",
-    "e2e:pre-test": "yarn run e2e:cluster && yarn run e2e:build && yarn run e2e:deployCrds && yarn run e2e:console",
-    "storybook": "yarn workspace @kubev2v/common run storybook dev -p 6006",
-    "storybook:build": "yarn workspace @kubev2v/common run storybook build"
+    "e2e:pre-test": "yarn run e2e:cluster && yarn run e2e:build && yarn run e2e:deployCrds && yarn run e2e:console"
   },
   "devDependencies": {
     "@cspell/eslint-plugin": "^6.31.1",
