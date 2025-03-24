@@ -1,6 +1,6 @@
 import { StorageMapData } from 'src/modules/StorageMaps/utils';
 
-import { ResourceField } from '@forklift/common/utils/types';
+import { ResourceField } from '@components/common/utils/types';
 
 export type CellProps = {
   data: StorageMapData;

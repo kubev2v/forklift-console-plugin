@@ -26,8 +26,7 @@
     "paths": {
       "@utils/*": ["./src/utils/*"],
       "@components/*": ["./src/components/*"],
-      "src/*": ["./src/*"],
-      "@forklift/common/*": ["./src/components/common/*"]
+      "src/*": ["./src/*"]
     }
   },
 

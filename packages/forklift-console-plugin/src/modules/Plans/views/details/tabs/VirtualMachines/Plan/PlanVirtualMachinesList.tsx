@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
 } from 'src/components/page/StandardPageWithSelection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { loadUserSettings } from 'src/components/common/Page/userSettings';
-import { ResourceFieldFactory } from '@forklift/common/utils/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   V1beta1PlanSpecVms,
   V1beta1PlanStatusConditions,

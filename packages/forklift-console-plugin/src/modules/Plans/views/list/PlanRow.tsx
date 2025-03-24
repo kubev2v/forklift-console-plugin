@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components';
-import { TableCell } from 'src/modules/Providers/utils';
-
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { RowProps } from 'src/components/common/TableView/types';
-import { ResourceField } from '@forklift/common/utils/types';
+import { TableCell } from 'src/modules/Providers/utils';
+
+import { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { PlanData } from '../../utils';

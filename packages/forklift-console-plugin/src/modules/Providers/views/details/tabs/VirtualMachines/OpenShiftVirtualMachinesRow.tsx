@@ -1,8 +1,8 @@
 import React from 'react';
+import { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { RowProps } from 'src/components/common/TableView/types';
-import { ResourceField } from '@forklift/common/utils/types';
+import { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
