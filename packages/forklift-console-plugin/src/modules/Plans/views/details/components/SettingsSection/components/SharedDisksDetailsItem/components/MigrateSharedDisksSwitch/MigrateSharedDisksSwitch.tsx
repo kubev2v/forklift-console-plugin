@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { ModalInputComponentType } from 'src/modules/Providers/modals';
-import { useForkliftTranslation } from 'src/utils/i18n';
-import { safeBoolean } from 'src/utils/utils';
 
 import { Switch } from '@patternfly/react-core';
+import { safeBoolean } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
 
 type SwitchRendererProps = {
   value: string;
