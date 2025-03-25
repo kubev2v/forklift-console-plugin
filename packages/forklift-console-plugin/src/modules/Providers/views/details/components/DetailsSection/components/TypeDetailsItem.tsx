@@ -6,7 +6,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { Label } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../../utils';
-
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const TypeDetailsItem: React.FC<ProviderDetailsItemProps> = ({

@@ -16,7 +16,6 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { StorageMapsAddButton } from '../../components';
 import StorageMapsEmptyState from '../../components/StorageMapsEmptyState';
 import { getStorageMapPhase, STORAGE_MAP_STATUS, StorageMapData } from '../../utils';
-
 import StorageMapRow from './StorageMapRow';
 
 import './StorageMapsListPage.style.css';

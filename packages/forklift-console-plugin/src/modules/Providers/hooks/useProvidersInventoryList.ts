@@ -9,7 +9,6 @@ import {
 import { consoleFetchJSON, k8sGet, useFlag } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils/helpers';
-
 import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils';
 
 const INVENTORY_TYPES: string[] = ['openshift', 'openstack', 'ovirt', 'vsphere', 'ova'];

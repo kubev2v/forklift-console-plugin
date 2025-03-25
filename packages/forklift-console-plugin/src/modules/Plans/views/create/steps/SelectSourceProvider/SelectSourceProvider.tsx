@@ -6,9 +6,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { V1beta1Provider } from '@kubev2v/types';
 import { Title } from '@patternfly/react-core';
 
-import { PlanCreatePageActionTypes, PlanCreatePageState } from '../../states';
-
 import { PlanCreateForm } from './../../components';
+import { PlanCreatePageActionTypes, PlanCreatePageState } from '../../states';
 import { MemoizedProviderVirtualMachinesList } from './MemoizedProviderVirtualMachinesList';
 
 export const SelectSourceProvider: React.FC<{

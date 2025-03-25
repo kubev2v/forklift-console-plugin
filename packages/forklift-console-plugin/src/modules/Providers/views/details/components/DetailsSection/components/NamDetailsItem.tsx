@@ -4,7 +4,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { DescriptionListDescription } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../../utils';
-
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 /**

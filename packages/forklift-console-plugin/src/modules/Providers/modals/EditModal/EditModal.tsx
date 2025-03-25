@@ -6,13 +6,12 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import { Button, Form, Modal, ModalVariant, Popover, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
+import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import { useToggle } from '../../hooks';
 import { getValueByJsonPath } from '../../utils/helpers';
 import { ValidationMsg } from '../../utils/validators';
 import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
 import { useModal } from '../ModalHOC';
-
-import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import { EditModalProps } from './types';
 
 import './EditModal.style.css';

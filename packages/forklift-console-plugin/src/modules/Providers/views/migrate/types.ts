@@ -15,12 +15,11 @@ import {
   V1beta1StorageMap,
 } from '@kubev2v/types';
 
+import { CreateVmMigration } from './reducer/actions';
 import { InventoryNetwork } from '../../hooks/useNetworks';
 import { InventoryStorage } from '../../hooks/useStorages';
 import { Validation } from '../../utils';
 import { VmData } from '../details';
-
-import { CreateVmMigration } from './reducer/actions';
 
 export interface CreateVmMigrationPageState {
   underConstruction: {

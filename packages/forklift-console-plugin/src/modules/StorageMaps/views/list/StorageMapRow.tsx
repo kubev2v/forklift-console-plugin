@@ -6,7 +6,6 @@ import { Td, Tr } from '@patternfly/react-table';
 
 import { StorageMapActionsDropdown } from '../../actions';
 import { StorageMapData } from '../../utils';
-
 import {
   CellProps,
   NamespaceCell,

@@ -6,7 +6,6 @@ import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { DescriptionListDescription } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../../utils';
-
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 /**

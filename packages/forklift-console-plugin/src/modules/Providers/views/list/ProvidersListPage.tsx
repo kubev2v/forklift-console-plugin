@@ -20,11 +20,10 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import { InventoryNotReachable } from './components/InventoryNotReachable';
 import { useGetDeleteAndEditAccessReview, useProvidersInventoryList } from '../../hooks';
 import modernizeMigration from '../../images/modernizeMigration.svg';
 import { findInventoryByID } from '../../utils';
-
-import { InventoryNotReachable } from './components/InventoryNotReachable';
 import { ProvidersAddButton, ProvidersEmptyState } from './components';
 import ProviderRow from './ProviderRow';
 

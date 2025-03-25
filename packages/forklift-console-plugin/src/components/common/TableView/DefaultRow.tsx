@@ -3,7 +3,6 @@ import React from 'react';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { getResourceFieldValue } from '../FilterGroup';
-
 import { RowProps } from './types';
 
 /**

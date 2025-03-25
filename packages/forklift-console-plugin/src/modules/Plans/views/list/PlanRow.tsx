@@ -8,7 +8,6 @@ import { ResourceField } from '@forklift/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { PlanData } from '../../utils';
-
 import {
   ActionsCell,
   CellProps,

@@ -1,15 +1,14 @@
 import React, { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils';
 
-import { SettingsEditModalProps } from '../../utils/types';
-import NameTemplateModalBody from '../NameTemplate/NameTemplateModal/components/NameTemplateModalBody/NameTemplateModalBody';
-import NameTemplateModalHelper from '../NameTemplate/NameTemplateModal/components/NameTemplateModalHelper/NameTemplateModalHelper';
-import NameTemplateModal from '../NameTemplate/NameTemplateModal/NameTemplateModal';
-
 import {
   getNetworkNameTemplateAllowedVariables,
   networkNameTemplateHelperExamples,
 } from './utils/constants';
+import { SettingsEditModalProps } from '../../utils/types';
+import NameTemplateModalBody from '../NameTemplate/NameTemplateModal/components/NameTemplateModalBody/NameTemplateModalBody';
+import NameTemplateModalHelper from '../NameTemplate/NameTemplateModal/components/NameTemplateModalHelper/NameTemplateModalHelper';
+import NameTemplateModal from '../NameTemplate/NameTemplateModal/NameTemplateModal';
 
 const NetworkNameTemplateModal: FC<SettingsEditModalProps> = ({ title, jsonPath, resource }) => {
   const { t } = useForkliftTranslation();

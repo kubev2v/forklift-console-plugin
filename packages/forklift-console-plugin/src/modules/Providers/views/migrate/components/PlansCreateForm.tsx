@@ -37,7 +37,6 @@ import {
   setPlanTargetProvider,
 } from '../reducer/actions';
 import { CreateVmMigrationPageState, NetworkAlerts, StorageAlerts } from '../types';
-
 import { MappingList } from './MappingList';
 import { MappingListHeader } from './MappingListHeader';
 import { StateAlerts } from './StateAlerts';

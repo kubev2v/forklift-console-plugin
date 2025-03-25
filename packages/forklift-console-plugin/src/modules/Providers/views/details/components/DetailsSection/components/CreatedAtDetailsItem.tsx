@@ -3,7 +3,6 @@ import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DetailsItem } from '../../../../../utils';
-
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const CreatedAtDetailsItem: React.FC<ProviderDetailsItemProps> = ({

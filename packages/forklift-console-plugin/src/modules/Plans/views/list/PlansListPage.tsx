@@ -14,7 +14,6 @@ import { PlansAddButton } from '../../components';
 import PlansEmptyState from '../../components/PlansEmptyState';
 import { getMigrationType, getPlanPhase, PlanData, planPhases } from '../../utils';
 import { migrationTypes } from '../../utils/constants/migrationTypes';
-
 import { planResourceApiJsonPaths, PlanTableResourceId } from './constants';
 import PlanRow from './PlanRow';
 
