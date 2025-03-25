@@ -18,7 +18,7 @@ export const TypeDetailsItem: React.FC<ProviderDetailsItemProps> = ({
   const type = PROVIDERS[provider?.spec?.type] || provider?.spec?.type;
 
   const defaultMoreInfoLink =
-    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers';
+    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#adding-providers';
   const defaultHelpContent = t(
     `Specify the type of source provider. Allowed values are ova, ovirt, vsphere,
       openshift, and openstack. This label is needed to verify the credentials are correct when the remote system is accessible and, for RHV, to retrieve the Manager CA certificate when
