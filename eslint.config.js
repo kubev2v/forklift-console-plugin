@@ -1,5 +1,3 @@
-/* eslint-env node */
-
 import importPlugin from 'eslint-plugin-import';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier';
@@ -9,8 +7,15 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import cspellConfigs from '@cspell/eslint-plugin/configs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 import eslint from '@eslint/js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const CSPELL_WORD_LIST = join(__dirname, 'cspell.wordlist.txt');
 
 export default [
   {
@@ -32,6 +37,7 @@ export default [
   ...tseslint.configs.all,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   importPlugin.flatConfigs.recommended,
+  cspellConfigs.recommended,
   {
     files: ['**/**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
     languageOptions: {
@@ -57,9 +63,16 @@ export default [
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      'simple-import-sort': simpleImportSort,
+      'simple-import-sort': simpleImportSort
     },
     rules: {
+      '@cspell/spellchecker': [
+      'warn',
+      {
+        customWordListFile: CSPELL_WORD_LIST,
+        autoFix: false,
+      },
+    ],
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
@@ -71,7 +84,7 @@ export default [
       '@typescript-eslint/naming-convention': 'off',
       '@typescript-eslint/no-deprecated': 'off',
       '@typescript-eslint/no-dynamic-delete': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
+      // '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
       '@typescript-eslint/no-magic-numbers': 'off',
       '@typescript-eslint/no-misused-promises': [
@@ -182,7 +195,7 @@ export default [
     },
     settings: {
       react: {
-        version: '17.3.1',
+        version: 'detect',
       },
     },
   },

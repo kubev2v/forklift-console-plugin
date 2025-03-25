@@ -83,7 +83,6 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
 
     const { inventory: networks } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
       provider,
-      // eslint-disable-next-line @cspell/spellchecker
       subPath: 'networkattachmentdefinitions?detail=4',
     });
 

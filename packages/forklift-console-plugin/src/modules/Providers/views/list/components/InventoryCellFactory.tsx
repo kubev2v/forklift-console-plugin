@@ -17,7 +17,6 @@ export const InventoryCellFactory: CellFactory = ({ icon }) => {
    * @param {CellProps} param1 - The props for the component.
    * @returns {JSX.Element} - The rendered component.
    */
-  // eslint-disable-next-line react/display-name
   return ({ data, fieldId, fields }: CellProps) => {
     const { provider, inventory } = data;
     const type = provider?.spec.type;

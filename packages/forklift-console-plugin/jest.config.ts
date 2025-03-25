@@ -1,9 +1,8 @@
-/* eslint-disable @cspell/spellchecker */
 import { pathsToModuleNameMapper } from 'ts-jest';
 
 import type { Config } from '@jest/types';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { compilerOptions } = require('./tsconfig.json');
 
 const moduleNameMapper = {
