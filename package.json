@@ -10,8 +10,8 @@
   ],
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --config packages/eslint-plugin/.eslintrc.cjs --fix",
-      "prettier --config packages/eslint-plugin/.prettierrc.cjs --write"
+      "eslint . --fix",
+      "prettier --write ."
     ]
   },
   "scripts": {
