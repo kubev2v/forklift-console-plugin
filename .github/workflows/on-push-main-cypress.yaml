@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./build/CypressContainerFile
+          file: ./testing/CypressContainerFile
           push: true
           tags: quay.io/kubev2v/forklift-ui-tests:latest
 
