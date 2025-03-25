@@ -9,7 +9,7 @@
     "packages/forklift-console-plugin"
   ],
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "*.{js,jsx,ts,tsx, json}": [
       "eslint . --fix",
       "prettier --write ."
     ]
