@@ -1,8 +1,8 @@
 import React from 'react';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { Validation } from 'src/modules/Providers';
 import { useForkliftTranslation } from 'src/utils';
 
-import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { TextInput } from '@patternfly/react-core';
 
 import { getInvalidHelperText } from './utils/utils';

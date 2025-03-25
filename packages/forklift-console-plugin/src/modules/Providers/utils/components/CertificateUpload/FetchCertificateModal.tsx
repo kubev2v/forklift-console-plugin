@@ -1,9 +1,9 @@
 import React, { FC, useState } from 'react';
+import { Loading } from 'src/components/common/Page/PageStates';
 import { calculateThumbprint, useTlsCertificate } from 'src/modules/Providers/hooks';
 import { useModal } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Loading } from 'src/components/common/Page/PageStates';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
 import { VerifyCertificate } from './VerifyCertificate';

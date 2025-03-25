@@ -61,7 +61,7 @@ jobs:
       - name: Run cypress
         uses: cypress-io/github-action@v6
         with:
-          wait-on: "http://localhost:30080"
+          wait-on: 'http://localhost:30080'
           browser: chrome
           headed: false
           working-directory: testing

@@ -63,47 +63,47 @@ spec:
     spec:
       serviceAccountName: console
       volumes:
-      - name: forklift-cert
-        secret:
-          secretName: forklift-cert
-      - name: console-serving-cert
-        secret:
-          secretName: console-serving-cert
-      containers:
-      - name: console
-        image: quay.io/openshift/origin-console:latest
-        volumeMounts:
-        - name: console-serving-cert
-          mountPath: /var/run/secrets/console-serving-cert
         - name: forklift-cert
-          mountPath: /etc/ssl/certs/forklift-ca.crt
-          subPath: ca.crt
-        env:
-        - name: BRIDGE_USER_AUTH
-          value: disabled
-        - name: BRIDGE_K8S_AUTH_BEARER_TOKEN
-          value: abcdef.0123456789abcdef
-        - name: BRIDGE_LISTEN
-          value: "https://0.0.0.0:9000"
-        - name: BRIDGE_TLS_CERT_FILE
-          value: /var/run/secrets/console-serving-cert/tls.crt
-        - name: BRIDGE_TLS_KEY_FILE
-          value: /var/run/secrets/console-serving-cert/tls.key
-        - name: BRIDGE_PLUGINS
-          value: forklift-console-plugin=http://forklift-console-plugin.konveyor-forklift.svc.cluster.local:8080
-        - name: BRIDGE_PLUGIN_PROXY
-          value: |
-            {"services":[
-              {
-                  "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/forklift-inventory/",
-                  "endpoint":"https://forklift-inventory.konveyor-forklift.svc.cluster.local:8443",
-                  "authorize":true
-              },
-              {
-                  "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/must-gather-api/",
-                  "endpoint":"https://must-gather-api.konveyor-forklift.svc.cluster.local:8443",
-                  "authorize":true
-              }]}
+          secret:
+            secretName: forklift-cert
+        - name: console-serving-cert
+          secret:
+            secretName: console-serving-cert
+      containers:
+        - name: console
+          image: quay.io/openshift/origin-console:latest
+          volumeMounts:
+            - name: console-serving-cert
+              mountPath: /var/run/secrets/console-serving-cert
+            - name: forklift-cert
+              mountPath: /etc/ssl/certs/forklift-ca.crt
+              subPath: ca.crt
+          env:
+            - name: BRIDGE_USER_AUTH
+              value: disabled
+            - name: BRIDGE_K8S_AUTH_BEARER_TOKEN
+              value: abcdef.0123456789abcdef
+            - name: BRIDGE_LISTEN
+              value: 'https://0.0.0.0:9000'
+            - name: BRIDGE_TLS_CERT_FILE
+              value: /var/run/secrets/console-serving-cert/tls.crt
+            - name: BRIDGE_TLS_KEY_FILE
+              value: /var/run/secrets/console-serving-cert/tls.key
+            - name: BRIDGE_PLUGINS
+              value: forklift-console-plugin=http://forklift-console-plugin.konveyor-forklift.svc.cluster.local:8080
+            - name: BRIDGE_PLUGIN_PROXY
+              value: |
+                {"services":[
+                  {
+                      "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/forklift-inventory/",
+                      "endpoint":"https://forklift-inventory.konveyor-forklift.svc.cluster.local:8443",
+                      "authorize":true
+                  },
+                  {
+                      "consoleAPIPath":"/api/proxy/plugin/forklift-console-plugin/must-gather-api/",
+                      "endpoint":"https://must-gather-api.konveyor-forklift.svc.cluster.local:8443",
+                      "authorize":true
+                  }]}
 ---
 apiVersion: v1
 kind: Service
@@ -112,11 +112,11 @@ metadata:
   namespace: konveyor-forklift
 spec:
   ports:
-  - name: api-https
-    nodePort: 30443
-    port: 9000
-    protocol: TCP
-    targetPort: 9000
+    - name: api-https
+      nodePort: 30443
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
   selector:
     name: console
   sessionAffinity: None

@@ -14,7 +14,7 @@
 .forklift-table__status-cell-progress {
   width: 100%;
   text-align: left;
-  padding-right: var(--pf-global--spacer--xl);;
+  padding-right: var(--pf-global--spacer--xl);
 }
 
 .forklift-table__status-cell-progress div {

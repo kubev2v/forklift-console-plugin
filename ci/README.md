@@ -14,7 +14,7 @@ See instructions about how to [install forklift on kind](https://github.com/kube
 
 https://github.com/kubev2v/forkliftci
 
-``` bash
+```bash
 # Deploying mock providers requires forkliftci:
 git clone git@github.com:kubev2v/forkliftci.git ./ci/forkliftci
 ```

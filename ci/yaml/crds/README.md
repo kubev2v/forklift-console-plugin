@@ -7,16 +7,16 @@ k8s inviorment mocking Openshift + MTV deployment.
 
 Mimic an installed Openshift operator API
 
-| API version | 4.12.z  |
-| ------------| --------|
-| Source | https://github.com/openshift/api/tree/master/console/v1 |
-| PR ref | https://github.com/openshift/api/pull/1291 |
+| API version | 4.12.z                                                  |
+| ----------- | ------------------------------------------------------- |
+| Source      | https://github.com/openshift/api/tree/master/console/v1 |
+| PR ref      | https://github.com/openshift/api/pull/1291              |
 
 ## Forklift CRDs
 
 Mimic an installed Forklift operator API
 
-| API version | 2.4.z |
-| ------------| --------|
-| Source | https://github.com/kubev2v/forklift/tree/main/operator/config/crd/bases |
-| PR ref | https://github.com/kubev2v/forklift/pull/121 |
+| API version | 2.4.z                                                                   |
+| ----------- | ----------------------------------------------------------------------- |
+| Source      | https://github.com/kubev2v/forklift/tree/main/operator/config/crd/bases |
+| PR ref      | https://github.com/kubev2v/forklift/pull/121                            |

@@ -3,7 +3,6 @@ import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 import { validateK8sName, validateURL, ValidationMsg } from '../../common';
 import { SecretSubType } from '../secretValidator';
-
 import { validateVCenterURL } from './validateVCenterURL';
 import { validateVDDKImage } from './validateVDDKImage';
 

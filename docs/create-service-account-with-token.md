@@ -5,8 +5,8 @@ service accounts with different roles and use bearer tokens to access them.
 
 Example:
 
-``` bash
-# get pods using a bearer token 
+```bash
+# get pods using a bearer token
 curl -k -H "Authorization: Bearer very-secret-token" 'https://api.k8s.server.org:6443/api/v1/namespaces/default/pods'
 ```
 
@@ -17,7 +17,7 @@ add permissions to that service account and token.
 
 ### Create an account with a token
 
-``` bash
+```bash
 export SERVICE_ACCOUNT=forklift-user
 export NAMESPACE=default
 
@@ -49,7 +49,7 @@ also create some custom roles, each role is a set of permissions a cluster admin
 
 See kubernetes [documentation](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
-``` bash
+```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -75,7 +75,7 @@ EOF
 
 ### Bind a role to our account
 
-``` bash
+```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -102,7 +102,7 @@ kubectl delete clusterrolebindings ${SERVICE_ACCOUNT}-forklift-reader
 
 Now we can use the token to authenticate when calling kubernetes API:
 
-``` bash
+```bash
 # using admin account get the token assigned to our account
 export TOKEN=$(kubectl get secret ${SERVICE_ACCOUNT} -n ${NAMESPACE} -o=jsonpath={.data.token} | base64 -d)
 
@@ -126,9 +126,9 @@ a cluster admin account to sign it. Once the request is approved, a user get a s
 that can be used to authenticate the user.
 
 The key and signed certificate should be added into the kubeconfig file as a user, and then in the context
-section, connect the user to the cluster. 
+section, connect the user to the cluster.
 
-``` bash
+```bash
 export USER=test
 
 # create a csr file for our user
