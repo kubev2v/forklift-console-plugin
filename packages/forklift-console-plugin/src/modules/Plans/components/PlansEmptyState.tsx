@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom-v5-compat';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
@@ -8,7 +8,7 @@ import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, ProviderModelRef } from '@kubev2v/types';
-import { Button, ButtonProps, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
+import { Button, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 
 import PlansAddButton from './PlansAddButton';
@@ -62,7 +62,7 @@ const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
             <FlexItem>
               <Button
                 variant={ButtonVariant.primary}
-                component={(props: ButtonProps) => <Link {...props} to={ProvidersListURL} />}
+                component={(props) => <Link {...props} to={ProvidersListURL} />}
               >
                 {t('Go to providers list')}
               </Button>

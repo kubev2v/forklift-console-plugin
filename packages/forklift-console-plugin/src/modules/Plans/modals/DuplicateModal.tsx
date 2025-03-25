@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { Validation } from 'src/modules/Providers/utils/types';
@@ -50,7 +50,7 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [newName, setNewName] = useState<string>(`copy-of-${resource.metadata.name}`);
   const [newNameValidation, setNewNameValidation] = useState<Validation>('default');
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
@@ -175,7 +175,7 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
       });
 
       if (redirectTo) {
-        history.push(redirectTo);
+        navigate(redirectTo);
       }
 
       toggleModal();
@@ -184,7 +184,7 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ title, resource,
 
       setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
     }
-  }, [resource, networkMap, storageMap, newName]);
+  }, [resource, networkMap, storageMap, navigate, newName]);
 
   const actions = [
     <Button
