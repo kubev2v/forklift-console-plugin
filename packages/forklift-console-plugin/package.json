@@ -17,6 +17,7 @@
     "start": "NODE_ENV=development webpack serve --progress",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
+    "lint:ia": "npx eslint-interactive .",
     "test": "TZ=UTC jest",
     "test:coverage": "TZ=UTC jest --coverage",
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot"
