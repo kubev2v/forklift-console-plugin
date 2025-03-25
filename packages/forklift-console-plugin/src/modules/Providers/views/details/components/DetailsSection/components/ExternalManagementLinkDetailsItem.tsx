@@ -1,8 +1,8 @@
 import React from 'react';
+import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { EditProviderUIModal, useModal } from 'src/modules/Providers/modals';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { DescriptionListDescription } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../../utils';

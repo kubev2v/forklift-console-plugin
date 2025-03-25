@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
+import { RowProps } from 'src/components/common/TableView/types';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import StatusIcon from 'src/components/status/StatusIcon';
@@ -7,7 +8,6 @@ import { useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { RowProps } from 'src/components/common/TableView/types';
 import {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1Pod,

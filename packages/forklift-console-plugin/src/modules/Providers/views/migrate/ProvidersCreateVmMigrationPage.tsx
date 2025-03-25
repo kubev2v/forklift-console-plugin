@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { LoadingDots } from 'src/components/common/LoadingDots/LoadingDots';
+
 import { Alert } from '@patternfly/react-core';
 
 import { PlansCreateForm } from './components/PlansCreateForm';

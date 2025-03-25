@@ -25,7 +25,7 @@
 .forklift-welcome__icon {
   max-width: 18rem;
   max-height: 18rem;
-  padding-right:  var(--pf-global--spacer--lg);
+  padding-right: var(--pf-global--spacer--lg);
 }
 
 .forklift-welcome-header-badge {

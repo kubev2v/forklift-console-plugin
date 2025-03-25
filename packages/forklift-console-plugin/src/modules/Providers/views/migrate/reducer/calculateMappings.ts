@@ -1,5 +1,4 @@
 import { Draft } from 'immer';
-
 import { universalComparator } from 'src/components/common/TableView/sort';
 
 import { CreateVmMigrationPageState } from '../types';

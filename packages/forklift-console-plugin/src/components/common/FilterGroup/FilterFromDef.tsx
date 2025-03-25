@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 
-import { FilterDef } from '../utils';
 import { FilterTypeProps } from '../Filter';
+import { FilterDef } from '../utils';
 import { GlobalFilters } from './types';
 
 interface FilterFromDefProps {

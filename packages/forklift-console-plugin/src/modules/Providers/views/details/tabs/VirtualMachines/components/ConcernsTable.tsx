@@ -1,7 +1,7 @@
 import React from 'react';
+import { RowProps } from 'src/components/common/TableView/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { RowProps } from 'src/components/common/TableView/types';
 import { HelperText, HelperTextItem, Label, PageSection } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 

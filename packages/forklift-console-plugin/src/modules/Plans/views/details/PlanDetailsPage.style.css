@@ -60,7 +60,7 @@
 }
 
 .forklift-table__status-cell-progress {
-  padding-right: var(--pf-global--spacer--xl);;
+  padding-right: var(--pf-global--spacer--xl);
 }
 
 .forklift-table__status-cell-progress div {
@@ -70,7 +70,6 @@
 .forklift-page-section--details-status {
   width: 50%;
 }
-
 
 .forklift-page-section--details-start-button {
   padding-bottom: var(--pf-global--spacer--lg);
@@ -94,7 +93,7 @@
   margin-top: var(--pf-global--spacer--md);
 }
 
-.forklift-page-details-edit-pencil{
+.forklift-page-details-edit-pencil {
   color: var(--pf-c-button--m-plain--Color);
   margin-left: var(--pf-global--spacer--sm);
 }
@@ -123,7 +122,6 @@
 .forklift-page-plan-details-vm-status:hover {
   cursor: pointer;
 }
-
 
 .forklift-page-plan-details-vm-tasks {
   padding: 0;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
+import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import automationIcon from 'src/components/empty-states/images/automation.svg';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 

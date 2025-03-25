@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
-import { TableEmptyCell, TableIconCell } from 'src/modules/Providers/utils';
-
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
+import { TableEmptyCell, TableIconCell } from 'src/modules/Providers/utils';
 
 import { CellProps } from './CellProps';
 import { OpenshiftNetworkCell } from './OpenshiftNetworkCell';

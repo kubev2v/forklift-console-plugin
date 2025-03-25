@@ -31,7 +31,7 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
 
   return (
     <FormGroupWithHelpText
-      label={t('Project')}
+      label={t('Project new')}
       isRequired
       fieldId="project"
       labelIcon={

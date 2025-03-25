@@ -1,6 +1,5 @@
 import jsonpath from 'jsonpath';
 
-import { areSameDayInUTCZero, isInClosedRange, ResourceField } from '../utils';
 import {
   DateFilter,
   DateRangeFilter,
@@ -9,6 +8,7 @@ import {
   GroupedEnumFilter,
   SwitchFilter,
 } from '../Filter';
+import { areSameDayInUTCZero, isInClosedRange, ResourceField } from '../utils';
 import { FilterRenderer, ValueMatcher } from './types';
 
 /**

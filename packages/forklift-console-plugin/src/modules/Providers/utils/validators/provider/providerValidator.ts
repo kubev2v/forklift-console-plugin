@@ -5,8 +5,8 @@ import { openstackProviderValidator } from './openstack/openstackProviderValidat
 import { ovaProviderValidator } from './ova/ovaProviderValidator';
 import { ovirtProviderValidator } from './ovirt/ovirtProviderValidator';
 import { vsphereProviderValidator } from './vsphere/vsphereProviderValidator';
-import { SecretSubType } from './secretValidator';
 import { ValidationMsg } from '../common';
+import { SecretSubType } from './secretValidator';
 
 export function providerValidator(
   provider: V1beta1Provider,

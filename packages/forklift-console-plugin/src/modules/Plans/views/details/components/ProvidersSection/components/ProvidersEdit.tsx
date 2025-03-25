@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { DetailsItem } from 'src/modules/Providers/utils';
 
-import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Form, FormSelect, FormSelectOption } from '@patternfly/react-core';
