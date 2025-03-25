@@ -9,10 +9,9 @@
     "packages/forklift-console-plugin"
   ],
   "lint-staged": {
-    "*.{js,jsx,ts,tsx, json}": [
-      "eslint . --fix",
-      "prettier --write .",
-      "yarn i18n"
+    "*.{js,jsx,ts,tsx,json}": [
+      "eslint --fix",
+      "prettier --write"
     ]
   },
   "scripts": {
