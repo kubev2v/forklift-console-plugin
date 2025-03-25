@@ -1,7 +1,6 @@
 import React, { FC, ReactNode } from 'react';
 import { useForkliftTranslation } from 'src/utils';
 
-import { FormGroupWithHelpText, TypeaheadSelect, TypeaheadSelectOption } from '@kubev2v/common';
 import {
   K8sResourceKind,
   useFlag,
@@ -9,6 +8,9 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Popover } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+
+import { FormGroupWithHelpText } from './FormGroupWithHelpText/FormGroupWithHelpText';
+import { TypeaheadSelect, TypeaheadSelectOption } from './TypeaheadSelect/TypeaheadSelect';
 
 interface ProjectNameSelectProps {
   value: string | undefined;
@@ -29,7 +31,7 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
 
   return (
     <FormGroupWithHelpText
-      label={t('Project')}
+      label={t('Project new')}
       isRequired
       fieldId="project"
       labelIcon={

@@ -1,6 +1,7 @@
 import React from 'react';
+import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import { EnumToTuple, ResourceFieldFactory } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import { VSphereVM } from '@kubev2v/types';
 
 import { concernFilter, VsphereHostFilter } from './utils/filters';

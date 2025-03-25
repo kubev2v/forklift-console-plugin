@@ -1,9 +1,10 @@
 import React, { ReactNode } from 'react';
 import { FilterableSelect } from 'src/components';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText, HelpIconPopover } from '@kubev2v/common';
 import {
   NetworkMapModelGroupVersionKind,
   ProviderModelGroupVersionKind,
@@ -36,7 +37,6 @@ import {
   setPlanTargetProvider,
 } from '../reducer/actions';
 import { CreateVmMigrationPageState, NetworkAlerts, StorageAlerts } from '../types';
-
 import { MappingList } from './MappingList';
 import { MappingListHeader } from './MappingListHeader';
 import { StateAlerts } from './StateAlerts';

@@ -1,10 +1,12 @@
 import React from 'react';
+import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import { ProviderData, SOURCE_ONLY_PROVIDER_TYPES } from 'src/modules/Providers/utils';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { EnumToTuple, loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   OpenshiftProvider,
   OpenstackProvider,
@@ -18,11 +20,10 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import { InventoryNotReachable } from './components/InventoryNotReachable';
 import { useGetDeleteAndEditAccessReview, useProvidersInventoryList } from '../../hooks';
 import modernizeMigration from '../../images/modernizeMigration.svg';
 import { findInventoryByID } from '../../utils';
-
-import { InventoryNotReachable } from './components/InventoryNotReachable';
 import { ProvidersAddButton, ProvidersEmptyState } from './components';
 import ProviderRow from './ProviderRow';
 

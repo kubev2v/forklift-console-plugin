@@ -1,7 +1,7 @@
 import React, { ComponentType, ReactNode } from 'react';
+import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from '@kubev2v/common';
 import {
   Bullseye,
   EmptyState,

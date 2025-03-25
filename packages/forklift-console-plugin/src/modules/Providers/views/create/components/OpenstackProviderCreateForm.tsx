@@ -1,8 +1,8 @@
 import React, { useCallback, useReducer } from 'react';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { validateOpenstackURL } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
 import { Form, TextInput } from '@patternfly/react-core';
 

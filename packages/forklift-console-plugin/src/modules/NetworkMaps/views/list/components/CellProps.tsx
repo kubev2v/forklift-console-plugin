@@ -1,6 +1,6 @@
 import { NetworkMapData } from 'src/modules/NetworkMaps/utils';
 
-import { ResourceField } from '@kubev2v/common';
+import { ResourceField } from '@components/common/utils/types';
 
 export type CellProps = {
   data: NetworkMapData;

@@ -1,15 +1,14 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
 import { Divider, Form, Popover, Radio, Switch } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { EditComponentProps } from '../BaseCredentialsSection';
-
 import {
   ApplicationCredentialNameSecretFieldsFormGroup,
   ApplicationWithCredentialsIDFormGroup,

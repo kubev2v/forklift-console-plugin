@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom-v5-compat';
+import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { getResourceUrl, TableEmptyCell, TableLabelCell } from 'src/modules/Providers/utils';
 
-import { getResourceFieldValue } from '@kubev2v/common';
 import { ProviderModelRef } from '@kubev2v/types';
 import { NetworkIcon } from '@patternfly/react-icons';
 

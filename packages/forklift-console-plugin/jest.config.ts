@@ -15,9 +15,6 @@ const moduleNameMapper = {
   ...pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',
   }),
-
-  // Mappings for monorepo packages
-  '@kubev2v/common/(.*)$': '<rootDir>/../common/dist/$1',
 };
 
 // Sync object

@@ -9,18 +9,12 @@
     "url": "https://github.com/kubev2v/forklift-console-plugin.git",
     "directory": "packages/forklift-console-plugin"
   },
-  "files": [
-    "./distlib/*"
-  ],
-  "main": "./distlib/index.js",
-  "types": "./distlib/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./dist ./distlib ./coverage tsconfig.tsbuildinfo",
     "clean:all": "yarn clean ./node_modules ./.rollup.cache",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.js",
     "build": "NODE_ENV=production webpack",
     "start": "NODE_ENV=development webpack serve --progress",
-    "buildlib": "rollup -c --bundleConfigAsCjs",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "test": "TZ=UTC jest",
@@ -28,7 +22,6 @@
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot"
   },
   "dependencies": {
-    "@kubev2v/common": "*",
     "@kubev2v/types": "0.0.20",
     "@openshift-console/dynamic-plugin-sdk": "1.8.0",
     "@patternfly/react-charts": "7.4.1",
@@ -48,6 +41,7 @@
     "react-linkify": "^1.0.0-alpha",
     "react-router": "5.3.x",
     "react-router-dom": "5.3.x",
+    "react-router-dom-v5-compat": "^6.22.0",
     "use-immer": "^0.10.0"
   },
   "devDependencies": {

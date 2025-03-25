@@ -1,9 +1,9 @@
 # Local NFS server for forklift CI tasks
 
-Some forklift CI tasks require an NFS server running on the localhost exporting the directory /home/nfsshare, 
+Some forklift CI tasks require an NFS server running on the localhost exporting the directory /home/nfsshare,
 to set up this NFS server on fedora, see the bash example below:
 
-``` bash
+```bash
 sudo dnf install nfs-utils -y
 
 sudo mkdir -p /home/nfsshare

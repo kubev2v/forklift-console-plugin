@@ -1,15 +1,14 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
 import { Button, InputGroup, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 
 import { EditComponentProps } from '../../BaseCredentialsSection';
-
 import { OpenstackSecretFieldId } from './constants';
 
 export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> = ({

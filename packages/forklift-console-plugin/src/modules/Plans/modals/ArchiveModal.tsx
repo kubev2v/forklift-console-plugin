@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
@@ -35,7 +35,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
   const title_ = title || t('Archive migration plan');
@@ -54,7 +54,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
       });
 
       if (redirectTo) {
-        history.push(redirectTo);
+        navigate(redirectTo);
       }
 
       toggleModal();
@@ -63,7 +63,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
 
       setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
     }
-  }, [resource]);
+  }, [resource, navigate]);
 
   const phase = getPlanPhase({ obj: resource });
 

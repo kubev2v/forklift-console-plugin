@@ -1,13 +1,13 @@
 import React from 'react';
+import { RowProps } from 'src/components/common/TableView/types';
 import { ProviderData } from 'src/modules/Providers/utils';
 
-import { ResourceField, RowProps } from '@kubev2v/common';
+import { ResourceField } from '@components/common/utils/types';
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { ProviderActionsDropdown } from '../../actions';
 import { TableEmptyCell } from '../../utils';
-
 import {
   CellProps,
   InventoryCellFactory,

@@ -8,8 +8,7 @@
     "paths": {
       "@utils/*": ["./src/utils/*"],
       "@components/*": ["./src/components/*"],
-      "src/*": ["./src/*"],
-      "common/src/*": ["../common/src/*"]
+      "src/*": ["./src/*"]
     }
   },
 

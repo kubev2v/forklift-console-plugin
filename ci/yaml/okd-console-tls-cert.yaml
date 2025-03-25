@@ -47,4 +47,3 @@ spec:
     algorithm: ECDSA
     size: 256
   secretName: console-serving-cert
-  

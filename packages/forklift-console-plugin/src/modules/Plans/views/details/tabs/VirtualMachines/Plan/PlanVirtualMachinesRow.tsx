@@ -1,12 +1,12 @@
 import React from 'react';
+import { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceField, RowProps } from '@kubev2v/common';
+import { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
 import { ConditionsCellRenderer, PlanVMsCellProps } from '../components';
 import { NameCellRenderer } from '../components/NameCellRenderer';
 import { VMData } from '../types';
-
 import ActionsCell from './ActionsCell';
 
 export const PlanVirtualMachinesRow: React.FC<RowProps<VMData>> = ({

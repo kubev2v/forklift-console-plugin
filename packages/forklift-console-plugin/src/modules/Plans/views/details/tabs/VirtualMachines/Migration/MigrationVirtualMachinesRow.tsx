@@ -1,7 +1,9 @@
 import React from 'react';
+import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
+import { RowProps } from 'src/components/common/TableView/types';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 
-import { getResourceFieldValue, ResourceField, RowProps } from '@kubev2v/common';
+import { ResourceField } from '@components/common/utils/types';
 import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
 import { FlexItem, Popover, ProgressStep, ProgressStepper } from '@patternfly/react-core';
 import { ResourcesAlmostFullIcon, ResourcesFullIcon } from '@patternfly/react-icons';

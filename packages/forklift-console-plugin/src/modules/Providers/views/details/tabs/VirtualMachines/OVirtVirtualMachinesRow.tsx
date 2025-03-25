@@ -1,7 +1,8 @@
 import React from 'react';
+import { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { ResourceField, RowProps } from '@kubev2v/common';
+import { ResourceField } from '@components/common/utils/types';
 import { OVirtVM } from '@kubev2v/types';
 import { Td } from '@patternfly/react-table';
 

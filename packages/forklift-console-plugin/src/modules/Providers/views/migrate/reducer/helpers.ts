@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { Draft } from 'immer';
+import { DefaultRow } from 'src/components/common/TableView/DefaultRow';
+import { RowProps } from 'src/components/common/TableView/types';
+import { withTr } from 'src/components/common/TableView/withTr';
 
-import { DefaultRow, ResourceFieldFactory, RowProps, withTr } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   IoK8sApimachineryPkgApisMetaV1ObjectMeta,
   OVirtNicProfile,
@@ -37,7 +40,6 @@ import {
   UNMAPPED_NETWORKS,
   UNMAPPED_STORAGES,
 } from '../types';
-
 import { CreateVmMigration } from './actions';
 import { calculateNetworks, calculateStorages } from './calculateMappings';
 import { hasMultiplePodNetworkMappings } from './hasMultiplePodNetworkMappings';

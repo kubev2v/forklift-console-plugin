@@ -1,11 +1,11 @@
 import React, { useEffect, useReducer } from 'react';
 import { Base64 } from 'js-base64';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { isPlanEditable } from 'src/modules/Plans/utils';
 import { AlertMessageForModals } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
 import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -21,7 +21,6 @@ import {
 } from '@patternfly/react-core';
 
 import { Suspend } from '../../components';
-
 import { usePlanHooks } from './hooks';
 import { formReducer, initialState } from './state';
 import { onUpdatePlanHooks } from './utils';

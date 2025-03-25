@@ -6,7 +6,6 @@ import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { DetailsItem } from '../../../../../utils';
-
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const URLDetailsItem: React.FC<ProviderDetailsItemProps> = ({

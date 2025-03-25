@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { ProjectNameSelect, useProjectNameSelectOptions } from 'src/components/common';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 import { VmData } from 'src/modules/Providers/views';
@@ -12,7 +13,6 @@ import {
 import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
 import { V1beta1Provider } from '@kubev2v/types';
 import {
   Flex,
@@ -25,9 +25,8 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 
-import { PlanCreatePageState } from '../states';
-
 import { PlanNameTextField } from './PlanName/PlanNameTextField';
+import { PlanCreatePageState } from '../states';
 import { ChipsToolbarProviders } from './ChipsToolbarProviders';
 import { createProviderCardItems } from './createProviderCardItems';
 import { FiltersToolbarProviders } from './FiltersToolbarProviders';

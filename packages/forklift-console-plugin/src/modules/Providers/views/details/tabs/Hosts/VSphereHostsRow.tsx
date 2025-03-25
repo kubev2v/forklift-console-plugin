@@ -1,6 +1,7 @@
 import React from 'react';
+import { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceField, RowProps } from '@kubev2v/common';
+import { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
 import { NameCellRenderer } from './components/NameCellRenderer';

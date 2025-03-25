@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
@@ -9,7 +10,7 @@ import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1PersistentVolumeClaim,
@@ -23,7 +24,6 @@ import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
 import { MigrationVMsCancelButton, PlanVMsDeleteButton } from '../components';
 import { PlanData, VMData } from '../types';
-
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
 import { MigrationVirtualMachinesRowExtended } from './MigrationVirtualMachinesRowExtended';
 

@@ -1,4 +1,4 @@
-import { ResourceField } from '@kubev2v/common';
+import { ResourceField } from '@components/common/utils/types';
 
 import { InventoryHostPair } from '../utils';
 

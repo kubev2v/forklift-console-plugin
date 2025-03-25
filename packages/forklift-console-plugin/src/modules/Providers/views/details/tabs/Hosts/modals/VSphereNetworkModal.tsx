@@ -1,10 +1,11 @@
 import React, { ReactNode, useCallback, useReducer, useState } from 'react';
 import { FilterableSelect } from 'src/components';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { validateNoSpaces } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText, SelectEventType, SelectValueType } from '@kubev2v/common';
+import { SelectEventType, SelectValueType } from '@components/common/utils/types';
 import { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
 import {
   Button,

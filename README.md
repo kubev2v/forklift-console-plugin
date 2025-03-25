@@ -13,14 +13,14 @@ Forklift console plugin is managed by Migration Toolkit for Virtualization opera
 
 ### Prerequisites
 
-* [__Forklift Operator__](https://github.com/kubev2v/forklift/)
-* [__OpenShift Console__](https://github.com/openshift/console/)
+- [**Forklift Operator**](https://github.com/kubev2v/forklift/)
+- [**OpenShift Console**](https://github.com/openshift/console/)
 
 ## Installation
 
 To get started, clone the repo to your development workstation and install the required dependencies locally with yarn.
 
-``` bash
+```bash
 git clone https://github.com/kubev2v/forklift-console-plugin.git
 cd forklift-console-plugin
 yarn install
@@ -30,7 +30,7 @@ yarn install
 
 With a user logged in to existing Kubernetes or Openshift environment with Forklift operator available, one can start a locally served forklift-console-plugin instance ( running on http://localhost:9000 ) with:
 
-``` bash
+```bash
 # Start a local Openshift console server on the background.
 # - The console will be available in http://localhost:9000
 # - The inventory URL can be set using an environment variable,
@@ -65,7 +65,7 @@ The cluster address will be the part of the address after the `apps.` or `api.` 
 For example, if your cluster API address is `api.example.com:6443`, the cluster address will be `example.com`, and
 the inventory service address will be:
 
-``` bash
+```bash
 export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.example.com
 ```
 
@@ -73,9 +73,9 @@ Note: use this method to find the inventory and services address when using an O
 
 ## Setup a local cluster for development
 
-Forklift console plugin requires the user to be logged into an openshift or kubernetes cluster, if you do not have access to one, you can setup your own using [Openshift local]( https://developers.redhat.com/products/openshift-local/overview) or use the CI script to build a local [KinD](https://sigs.k8s.io/kind) cluster.
+Forklift console plugin requires the user to be logged into an openshift or kubernetes cluster, if you do not have access to one, you can setup your own using [Openshift local](https://developers.redhat.com/products/openshift-local/overview) or use the CI script to build a local [KinD](https://sigs.k8s.io/kind) cluster.
 
-``` bash
+```bash
 # Setup a kind cluster with Forklift operator and an OKD web console
 yarn cluster:up
 
@@ -96,11 +96,11 @@ yarn cluster:delete
 
 More documentation is available in the [docs](./docs) directory.
 
-| Reference |  |
-|---|----|
-| [Forklift](https://github.com/kubev2v/forklift/) | Migration toolkit for virtualization |
-| [Openshift web console](https://github.com/openshift/console) | Openshift web console is a web based user interface for Openshift. |
-| [OpenShift Dynamic Plugin SDK](https://github.com/openshift/dynamic-plugin-sdk) | Dynamic plugin SDK for Openshift user interfaces. |
-| [Forklift documentation](https://github.com/kubev2v/forklift-documentation) | Usage documentation for the migration toolkit for virtualization. |
-| [Forklift CI](https://github.com/kubev2v/forkliftci) | Collection of scripts and tools used in forklift development. |
-| [Patternfly](https://www.patternfly.org/) | Open source design system used for Openshift user interfaces development. |
+| Reference                                                                       |                                                                           |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| [Forklift](https://github.com/kubev2v/forklift/)                                | Migration toolkit for virtualization                                      |
+| [Openshift web console](https://github.com/openshift/console)                   | Openshift web console is a web based user interface for Openshift.        |
+| [OpenShift Dynamic Plugin SDK](https://github.com/openshift/dynamic-plugin-sdk) | Dynamic plugin SDK for Openshift user interfaces.                         |
+| [Forklift documentation](https://github.com/kubev2v/forklift-documentation)     | Usage documentation for the migration toolkit for virtualization.         |
+| [Forklift CI](https://github.com/kubev2v/forkliftci)                            | Collection of scripts and tools used in forklift development.             |
+| [Patternfly](https://www.patternfly.org/)                                       | Open source design system used for Openshift user interfaces development. |

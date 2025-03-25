@@ -8,7 +8,6 @@ import { DescriptionList, Text, TextVariants } from '@patternfly/react-core';
 import { FieldWithClipboardCopy } from '../../FieldWithClipboardCopy';
 import { MaskedField } from '../../MaskedField';
 import { ListComponentProps } from '../BaseCredentialsSection';
-
 import { Fields } from './Fields';
 
 export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {

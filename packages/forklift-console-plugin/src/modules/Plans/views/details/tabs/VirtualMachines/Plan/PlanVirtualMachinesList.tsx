@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
 } from 'src/components/page/StandardPageWithSelection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { loadUserSettings, ResourceFieldFactory } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   V1beta1PlanSpecVms,
   V1beta1PlanStatusConditions,
@@ -15,7 +16,6 @@ import {
 
 import { PlanVMsDeleteButton } from '../components';
 import { PlanData, VMData } from '../types';
-
 import { PlanVirtualMachinesRow } from './PlanVirtualMachinesRow';
 
 const fieldsMetadataFactory: (isVsphere: boolean) => ResourceFieldFactory = (isVsphere) => (t) =>

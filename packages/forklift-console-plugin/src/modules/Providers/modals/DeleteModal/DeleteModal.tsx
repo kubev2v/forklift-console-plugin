@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -40,7 +40,7 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
   const title_ = title || t('Delete {{model.label}}', { model });
@@ -63,9 +63,9 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model
     try {
       await k8sDelete({ model, resource });
       if (redirectTo) {
-        history.push(redirectTo);
+        navigate(redirectTo);
       } else if (isOnResourcePage()) {
-        history.push(getResourceUrl({ groupVersionKind, namespace }));
+        navigate(getResourceUrl({ groupVersionKind, namespace }));
       }
 
       toggleModal();
@@ -74,7 +74,7 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model
 
       setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
     }
-  }, [resource]);
+  }, [resource, navigate]);
 
   const actions = [
     <Button key="confirm" variant="danger" onClick={onDelete} isLoading={isLoading}>

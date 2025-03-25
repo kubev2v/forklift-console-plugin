@@ -1,4 +1,6 @@
-import { EnumToTuple, EnumValue } from '@kubev2v/common';
+import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+
+import { EnumValue } from '@components/common/utils/types';
 
 export const concernFilter = (t: (string) => string) => ({
   type: 'concerns',

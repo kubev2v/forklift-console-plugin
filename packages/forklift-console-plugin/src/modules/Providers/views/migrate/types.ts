@@ -1,6 +1,7 @@
 import { FC } from 'react';
+import { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceFieldFactory, RowProps } from '@kubev2v/common';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   OpenShiftNamespace,
   OpenshiftResource,
@@ -14,12 +15,11 @@ import {
   V1beta1StorageMap,
 } from '@kubev2v/types';
 
+import { CreateVmMigration } from './reducer/actions';
 import { InventoryNetwork } from '../../hooks/useNetworks';
 import { InventoryStorage } from '../../hooks/useStorages';
 import { Validation } from '../../utils';
 import { VmData } from '../details';
-
-import { CreateVmMigration } from './reducer/actions';
 
 export interface CreateVmMigrationPageState {
   underConstruction: {

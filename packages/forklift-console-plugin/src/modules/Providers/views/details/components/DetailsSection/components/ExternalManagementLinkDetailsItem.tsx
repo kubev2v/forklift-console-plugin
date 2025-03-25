@@ -1,12 +1,11 @@
 import React from 'react';
+import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { EditProviderUIModal, useModal } from 'src/modules/Providers/modals';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ExternalLink } from '@kubev2v/common';
 import { DescriptionListDescription } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../../utils';
-
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 /**

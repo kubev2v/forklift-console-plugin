@@ -1,10 +1,10 @@
 import React, { ReactNode, useReducer, useState } from 'react';
+import { universalComparator } from 'src/components/common/TableView/sort';
 import { isPlanEditable } from 'src/modules/Plans/utils';
 import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { universalComparator } from '@kubev2v/common';
 import {
   NetworkMapModelGroupVersionKind,
   OpenShiftNetworkAttachmentDefinition,

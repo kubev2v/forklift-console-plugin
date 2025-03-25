@@ -1,18 +1,17 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
+import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FormGroupWithHelpText } from '@kubev2v/common';
 import { Button, Form, Modal, ModalVariant, Popover, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
+import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import { useToggle } from '../../hooks';
 import { getValueByJsonPath } from '../../utils/helpers';
 import { ValidationMsg } from '../../utils/validators';
 import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
 import { useModal } from '../ModalHOC';
-
-import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import { EditModalProps } from './types';
 
 import './EditModal.style.css';
@@ -59,7 +58,7 @@ export const EditModal: React.FC<EditModalProps> = ({
   const { toggleModal } = useModal();
 
   const [isLoading, toggleIsLoading] = useToggle();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
   const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath) as string);
   const [validation, setValidation] = useState<ValidationMsg>({
@@ -102,7 +101,7 @@ export const EditModal: React.FC<EditModalProps> = ({
       await onConfirmHook({ resource, jsonPath, model, newValue: value });
 
       if (redirectTo) {
-        history.push(redirectTo);
+        navigate(redirectTo);
       }
 
       toggleModal();

@@ -1,15 +1,15 @@
 /* eslint-env node */
 
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress';
 
 export default defineConfig({
   e2e: {
-    baseUrl: process.env.BRIDGE_BASE_ADDRESS||process.env.BASE_ADDRESS,
+    baseUrl: process.env.BRIDGE_BASE_ADDRESS || process.env.BASE_ADDRESS,
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
   },
-    screenshotOnRunFailure: true,
+  screenshotOnRunFailure: true,
   screenshotsFolder: '/tmp/gui-test-screenshots/screenshots/',
   trashAssetsBeforeRuns: true,
   video: true,
