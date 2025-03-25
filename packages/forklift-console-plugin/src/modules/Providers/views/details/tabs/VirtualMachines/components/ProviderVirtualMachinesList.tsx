@@ -1,4 +1,9 @@
 import React, { FC } from 'react';
+import { EnumFilter } from 'src/components/common/Filter/EnumFilter';
+import { GroupedEnumFilter } from 'src/components/common/Filter/GroupedEnumFilter';
+import { ValueMatcher } from 'src/components/common/FilterGroup/types';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
+import { RowProps } from 'src/components/common/TableView/types';
 import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
@@ -6,12 +11,7 @@ import {
 import { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { EnumFilter } from 'src/components/common/Filter/EnumFilter';
-import { GroupedEnumFilter } from 'src/components/common/Filter/GroupedEnumFilter';
-import { ValueMatcher } from 'src/components/common/FilterGroup/types';
-import { loadUserSettings } from 'src/components/common/Page/userSettings';
-import { RowProps } from 'src/components/common/TableView/types';
-import { ResourceFieldFactory } from '@forklift/common/utils/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import { Concern } from '@kubev2v/types';
 
 import { ConcernsTable } from './ConcernsTable';

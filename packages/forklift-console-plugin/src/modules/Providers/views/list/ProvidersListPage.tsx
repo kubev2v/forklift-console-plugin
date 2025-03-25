@@ -1,12 +1,12 @@
 import React from 'react';
+import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import { ProviderData, SOURCE_ONLY_PROVIDER_TYPES } from 'src/modules/Providers/utils';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
-import { loadUserSettings } from 'src/components/common/Page/userSettings';
-import { ResourceFieldFactory } from '@forklift/common/utils/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   OpenshiftProvider,
   OpenstackProvider,

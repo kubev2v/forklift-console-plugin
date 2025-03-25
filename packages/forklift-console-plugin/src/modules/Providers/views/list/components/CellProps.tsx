@@ -1,6 +1,6 @@
 import { ProviderData } from 'src/modules/Providers/utils';
 
-import { ResourceField } from '@forklift/common/utils/types';
+import { ResourceField } from '@components/common/utils/types';
 
 export type CellProps = {
   data: ProviderData;

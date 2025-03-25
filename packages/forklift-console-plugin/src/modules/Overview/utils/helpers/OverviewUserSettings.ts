@@ -2,7 +2,7 @@ import {
   loadFromLocalStorage,
   removeFromLocalStorage,
   saveToLocalStorage,
-} from '@forklift/common/utils/localStorage';
+} from '@components/common/utils/localStorage';
 
 export interface OverviewUserSettings {
   welcome?: WelcomeSettings;

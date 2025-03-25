@@ -1,5 +1,6 @@
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
-import { EnumValue } from '@forklift/common/utils/types';
+
+import { EnumValue } from '@components/common/utils/types';
 
 export const concernFilter = (t: (string) => string) => ({
   type: 'concerns',
