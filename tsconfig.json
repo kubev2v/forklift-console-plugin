@@ -15,8 +15,16 @@
     "jsx": "react",
     "lib": ["dom", "es2020"],
     "esModuleInterop": true,
-  },
+    "baseUrl": ".",
+    "outDir": "./dist",
 
+    "paths": {
+      "@utils/*": ["./src/utils/*"],
+      "@components/*": ["./src/components/*"],
+      "src/*": ["./src/*"]
+    }
+  },
+  "include": ["./src/**/*", "./plugin-metadata.ts", "./plugin-extensions.ts"],
   "ts-node": {
     "files": true,
     "transpileOnly": true,

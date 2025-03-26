@@ -5,7 +5,7 @@ yarn lint-staged
 echo "run yarn i18n"
 yarn i18n
 
-translation_file_diff=$(git diff --name-only packages/forklift-console-plugin/locales/en/plugin__forklift-console-plugin.json)
+translation_file_diff=$(git diff --name-only locales/en/plugin__forklift-console-plugin.json)
 
 if [ -n "$translation_file_diff" ]; then
     git add $translation_file_diff

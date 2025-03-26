@@ -32,7 +32,7 @@ USER 1001
 #  listen       8080 default_server;
 #  root         /opt/app-root/src;
 
-COPY --from=build /opt/app-root/src/app/packages/forklift-console-plugin/dist /opt/app-root/src
+COPY --from=build /opt/app-root/src/app/dist /opt/app-root/src
 
 # Run the server
 CMD nginx -g "daemon off;"
