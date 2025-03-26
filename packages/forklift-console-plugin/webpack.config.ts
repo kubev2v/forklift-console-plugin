@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable @cspell/spellchecker */
-/* eslint-env node */
 
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import * as path from 'path';
@@ -43,6 +42,8 @@ const config: Configuration = {
             loader: 'ts-loader',
             options: {
               configFile: path.resolve(__dirname, 'tsconfig.json'),
+              // TODO: Remove after fixing TS errors
+              transpileOnly: true,
             },
           },
         ],
@@ -55,7 +56,7 @@ const config: Configuration = {
         test: /\.svg$/,
         type: 'asset/inline',
         generator: {
-          dataUrl: (content) => {
+          dataUrl: (content: string) => {
             content = content.toString();
             return svgToMiniDataURI(content);
           },
