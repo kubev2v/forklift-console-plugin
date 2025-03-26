@@ -6,4 +6,4 @@ COPY . .
 
 ENV BASE_ADDRESS="http://host.docker.internal:9000"
 
-RUN npm install
+RUN yarn

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2020", "DOM"],
     "module": "ESNext",
     "skipLibCheck": true,
     "types": ["node"],
@@ -17,9 +17,35 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": true,
-    "noUnusedLocals": false,
+    // TODO: was false before, set to true?
+    "strict": false,
+    "noUnusedLocals": true,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    // from package tsconfig
+    "allowJs": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "paths": {
+      "@utils/*": ["./src/utils/*"],
+      "@components/*": ["./src/components/*"],
+      "src/*": ["./src/*"]
+    }
+  },
+  "include": ["./src/**/*", "./plugin-metadata.ts", "./plugin-extensions.ts"],
+  "ts-node": {
+    "esm": true,
+    "files": true,
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "NodeNext",
+      "moduleResolution": "nodenext"
+    }
   }
 }

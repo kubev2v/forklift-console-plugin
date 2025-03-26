@@ -9,18 +9,26 @@ Please read the following before submitting:
 
 ## 📝 Links
 
+<!---
 > References: <Jira ticket urls>
 
 > Add more JIRA, Docs, and other PR/Issue links
+-->
 
 ## 📝 Description
 
+<!---
 > Add a brief description
+-->
 
 ## 🎥 Demo
 
+<!---
 > Please add a video or an image of the behavior/changes
+-->
 
 ## 📝 CC://
 
+<!---
 > @tag as needed
+-->
