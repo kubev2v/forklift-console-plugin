@@ -45,8 +45,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   const [lastMigration] = usePlanMigration(plan);
   const [isButtonEnabled, setIsButtonEnabled] = useState(true);
 
-  const isWarmAndExecuting = plan.spec?.warm && isPlanExecuting(plan);
-  const isWaitingForCutover = isWarmAndExecuting && !isPlanArchived(plan);
+  const isWarmAndExecuting = plan.spec?.warm && isPlanExecuting(plan) && !isPlanArchived(plan);
 
   const vmPipelineTasks = lastMigration?.status?.vms?.reduce(
     (acc: VmPipelineTask[], migrationVm) => {
@@ -61,7 +60,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
 
   const phase = getPlanPhase(data);
   const isPlanLoading =
-    !isWaitingForCutover && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
+    !isWarmAndExecuting && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
   const planURL = getResourceUrl({
     reference: PlanModelRef,
     name: plan?.metadata?.name,
@@ -156,6 +155,37 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
                 status="danger"
                 linkPath={vmCountLinkPath}
                 tooltipLabel={t('Failed')}
+              />
+            </SplitItem>
+          )}
+
+          {vmCount.paused > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount
+                count={vmCount.paused}
+                status="paused"
+                linkPath={vmCountLinkPath}
+                popoverProps={{
+                  headerContent: <div>{vmCount.paused} VM migrations paused</div>,
+                  bodyContent: (
+                    <div>
+                      To resume, the cutover must be scheduled. When the cutover starts, VMs
+                      included in this plan will be shut down.
+                    </div>
+                  ),
+                  triggerAction: 'hover',
+                }}
+              />
+            </SplitItem>
+          )}
+
+          {vmCount.running > 0 && (
+            <SplitItem>
+              <PlanStatusVmCount
+                count={vmCount.running}
+                status="running"
+                linkPath={vmCountLinkPath}
+                tooltipLabel={t('Running')}
               />
             </SplitItem>
           )}

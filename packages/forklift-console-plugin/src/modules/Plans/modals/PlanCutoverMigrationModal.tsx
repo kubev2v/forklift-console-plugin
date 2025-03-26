@@ -30,7 +30,6 @@ import './PlanCutoverMigrationModal.style.css';
  */
 interface PlanCutoverMigrationModalProps {
   resource: V1beta1Plan;
-  title?: string;
 }
 
 /**
@@ -40,7 +39,6 @@ interface PlanCutoverMigrationModalProps {
  * @returns {React.Element} The DeleteModal component
  */
 export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps> = ({
-  title,
   resource,
 }) => {
   const { t } = useForkliftTranslation();
@@ -52,10 +50,10 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
   const [isTimeValid, setIsTimeValid] = useState<boolean>(true);
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
-  const title_ = title || t('Cutover');
   const { name } = resource?.metadata || {};
 
   const [lastMigration] = usePlanMigration(resource);
+  const cutoverSet = Boolean(lastMigration?.spec?.cutover);
 
   useEffect(() => {
     const migrationCutoverDate = lastMigration?.spec?.cutover || new Date().toISOString();
@@ -139,7 +137,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
       isLoading={isLoading}
       isDisabled={!isDateValid || !isTimeValid}
     >
-      {t('Set cutover')}
+      {cutoverSet ? t('Edit cutover') : t('Schedule cutover')}
     </Button>,
     <Button key="delete" variant="secondary" onClick={onDeleteCutover} isLoading={isLoading}>
       {t('Remove cutover')}
@@ -151,7 +149,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
 
   return (
     <Modal
-      title={title_}
+      title={cutoverSet ? t('Edit cutover?') : t('Schedule cutover?')}
       position="top"
       showClose={false}
       variant={ModalVariant.small}
@@ -160,16 +158,25 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
       actions={actions}
     >
       <>
-        <ForkliftTrans>
-          <p>
-            Schedule the cutover for migration <strong className="co-break-word">{name}</strong>?
-          </p>
-          <br />
-          <p>
-            You can schedule cutover for now or a future date and time. VMs included in the
-            migration plan will be shut down when cutover starts.
-          </p>
-        </ForkliftTrans>
+        {cutoverSet ? (
+          <ForkliftTrans>
+            <p>
+              Edit the cutover for migration <strong className="co-break-word">{name}</strong>?
+            </p>
+          </ForkliftTrans>
+        ) : (
+          <ForkliftTrans>
+            <p>
+              Schedule the cutover for migration <strong className="co-break-word">{name}</strong>?
+            </p>
+          </ForkliftTrans>
+        )}
+        <br />
+        <p>
+          {t(
+            'You can schedule the cutover for now or for a future date and time. VMs included in the migration plan will be shut down when the cutover starts.',
+          )}
+        </p>
 
         <InputGroup className="forklift-plan-cutover-migration-inputgroup">
           <DatePicker
