@@ -5,7 +5,6 @@
   "license": "Apache-2.0",
   "private": true,
   "repository": "https://github.com/kubev2v/forklift-console-plugin.git",
-  "type": "module",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
       "eslint --fix",
