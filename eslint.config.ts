@@ -31,7 +31,7 @@ export default [
       '**/public/**',
       'yarn.lock',
       'package-lock.json',
-      '**/i18next-parser.config.js',
+      '**/generated/**',
     ],
   },
   eslint.configs.all,
