@@ -31,7 +31,6 @@ export interface ProviderVirtualMachinesListProps {
   initialSelectedIds?: string[];
   showActions: boolean;
   className?: string;
-  selectedCountLabel?: (selectedIdCount: number) => string;
 }
 
 export const toId = (item: VmData) => item.vm.id;
@@ -46,7 +45,6 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   initialSelectedIds,
   showActions,
   className,
-  selectedCountLabel,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -97,7 +95,6 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       page={1}
       expandedIds={initialExpandedIds_}
       ExpandedComponent={ConcernsTable}
-      selectedCountLabel={selectedCountLabel}
     />
   );
 };
