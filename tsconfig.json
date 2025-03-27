@@ -38,11 +38,9 @@
       "src/*": ["./src/*"]
     }
   },
-  "include": ["./src/**/*", "./plugin-metadata.ts", "./plugin-extensions.ts"],
+  "include": ["./src/**/*", "*.js", "*.ts", ".prettierrc.js", "./testing/cypress.config.cjs"],
   "ts-node": {
-    "esm": true,
     "files": true,
-    "transpileOnly": true,
     "compilerOptions": {
       "module": "NodeNext",
       "moduleResolution": "nodenext"

@@ -1,3 +1,6 @@
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
 import importPlugin from 'eslint-plugin-import';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier';
@@ -7,15 +10,13 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import cspellConfigs from '@cspell/eslint-plugin/configs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 
+import cspellConfigs from '@cspell/eslint-plugin/configs';
 import eslint from '@eslint/js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const CSPELL_WORD_LIST = join(__dirname, 'cspell.wordlist.txt');
+const fileName = fileURLToPath(import.meta.url);
+const dirName = dirname(fileName);
+const CSPELL_WORD_LIST = join(dirName, 'cspell.wordlist.txt');
 
 export default [
   {
@@ -30,7 +31,7 @@ export default [
       '**/public/**',
       'yarn.lock',
       'package-lock.json',
-      '**/i18next-parser.config.js'
+      '**/i18next-parser.config.js',
     ],
   },
   eslint.configs.all,
@@ -50,7 +51,9 @@ export default [
           jsx: true,
         },
         ecmaVersion: 'latest',
-        projectService: { allowDefaultProject: ['*.js'], defaultProject: 'tsconfig.json' },
+        projectService: {
+          defaultProject: 'tsconfig.json',
+        },
         sourceType: 'module',
         tsconfigRootDir: import.meta.dirname,
       },
@@ -63,16 +66,16 @@ export default [
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      'simple-import-sort': simpleImportSort
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
       '@cspell/spellchecker': [
-      'warn',
-      {
-        customWordListFile: CSPELL_WORD_LIST,
-        autoFix: false,
-      },
-    ],
+        'warn',
+        {
+          autoFix: false,
+          customWordListFile: CSPELL_WORD_LIST,
+        },
+      ],
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
