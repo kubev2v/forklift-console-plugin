@@ -15,20 +15,17 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-
-    /* Linting */
-    // TODO: was false before, set to true?
-    "strict": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true,
-
-    // from package tsconfig
     "allowJs": true,
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
 
     "baseUrl": ".",
     "outDir": "./dist",
