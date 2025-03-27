@@ -1,9 +1,6 @@
 extends:
   - stylelint-config-standard
-  - stylelint-config-prettier
 rules:
-  indentation:
-    - 2
   color-named: never
   color-no-hex: true
   custom-property-pattern: null

@@ -27,7 +27,7 @@
   width: 46px;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (width >= 768px) {
   .forklift-page-mapping-list--header {
     display: block !important;
   }
@@ -51,7 +51,7 @@
   margin-top: var(--pf-global--spacer--md);
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (width >= 768px) {
   /* stylelint-disable-next-line selector-disallowed-list */
   .forklift-page-mapping-list .pf-v5-c-form__group-label {
     display: none !important;
