@@ -5,11 +5,9 @@ import { Form, Title, Wizard, WizardStep, WizardStepType } from '@patternfly/rea
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { GeneralInformationForm } from './steps/GeneralInformationForm';
+import { GeneralInformationStep } from './steps/GeneralInformationStep';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import { CreatePlanWizardFooter } from './CreatePlanWizardFooter';
-
-import './CreatePlanWizard.style.scss';
 
 export const CreatePlanWizard: FC = () => {
   const { t } = useForkliftTranslation();
@@ -35,10 +33,10 @@ export const CreatePlanWizard: FC = () => {
         onStepChange={(_event, currentStep) => setCurrentStep(currentStep)}
       >
         <WizardStep
-          {...getStepProps(PlanWizardStepId.BasicSetUp)}
+          {...getStepProps(PlanWizardStepId.BasicSetup)}
           steps={[
             <WizardStep key={PlanWizardStepId.General} {...getStepProps(PlanWizardStepId.General)}>
-              <GeneralInformationForm />
+              <GeneralInformationStep />
             </WizardStep>,
             <WizardStep
               key={PlanWizardStepId.VirtualMachines}
@@ -76,7 +74,7 @@ export const CreatePlanWizard: FC = () => {
         />
 
         <WizardStep
-          {...getStepProps(PlanWizardStepId.AdditionalSetUp)}
+          {...getStepProps(PlanWizardStepId.AdditionalSetup)}
           steps={[
             <WizardStep
               key={PlanWizardStepId.OtherSettings}

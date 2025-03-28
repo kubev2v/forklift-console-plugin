@@ -7,9 +7,10 @@ import { isEmpty } from '@utils/helpers';
 
 type FormErrorHelperTextProps = {
   error: Partial<FieldError>;
+  hasIcon?: boolean;
 };
 
-export const FormErrorHelperText: FC<FormErrorHelperTextProps> = ({ error }) => {
+export const FormErrorHelperText: FC<FormErrorHelperTextProps> = ({ error, hasIcon }) => {
   if (isEmpty(error)) {
     return null;
   }
@@ -17,7 +18,7 @@ export const FormErrorHelperText: FC<FormErrorHelperTextProps> = ({ error }) => 
   return (
     <FormHelperText>
       <HelperText>
-        <HelperTextItem icon={<ExclamationCircleIcon />} variant="error">
+        <HelperTextItem {...(hasIcon && { icon: <ExclamationCircleIcon /> })} variant="error">
           {error?.message?.toString()}
         </HelperTextItem>
       </HelperText>

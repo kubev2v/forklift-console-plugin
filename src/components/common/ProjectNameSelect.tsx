@@ -54,7 +54,7 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
   );
 };
 
-export const useProjectNameSelectOptions = (defaultProject: string): TypeaheadSelectOption[] => {
+export const useProjectNameSelectOptions = (defaultProject?: string): TypeaheadSelectOption[] => {
   const isUseProjects = useFlag('OPENSHIFT'); // OCP or Kind installations
 
   const [projects, projectsLoaded, projectsLoadError] = useK8sWatchResource<K8sResourceKind[]>({
@@ -64,7 +64,9 @@ export const useProjectNameSelectOptions = (defaultProject: string): TypeaheadSe
 
   return projects.length === 0 || !projectsLoaded || projectsLoadError
     ? // In case of an error or an empty list, returns the active namespace
-      [{ value: defaultProject, content: defaultProject }]
+      defaultProject
+      ? [{ value: defaultProject, content: defaultProject }]
+      : []
     : projects.map((project) => ({
         value: project.metadata?.name,
         content: project.metadata?.name,
