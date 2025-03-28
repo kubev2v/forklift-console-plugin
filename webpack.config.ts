@@ -2,6 +2,7 @@
 /* eslint-disable @cspell/spellchecker */
 /* eslint-env node */
 
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import * as path from 'path';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
@@ -41,9 +42,6 @@ const config: Configuration = {
         use: [
           {
             loader: 'ts-loader',
-            options: {
-              configFile: path.resolve(__dirname, 'tsconfig.json'),
-            },
           },
         ],
       },
@@ -77,6 +75,11 @@ const config: Configuration = {
     ],
   },
   plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        configFile: path.resolve(__dirname, 'tsconfig.json'),
+      },
+    }),
     new ConsoleRemotePlugin({
       pluginMetadata,
       extensions,
