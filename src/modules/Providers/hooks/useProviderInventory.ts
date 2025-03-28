@@ -104,6 +104,7 @@ export const useProviderInventory = <T>({
         updateInventoryIfChanged(newInventory, fieldsToAvoidComparing);
         handleError(null);
       } catch (e) {
+        updateInventoryIfChanged(undefined, []);
         handleError(e);
       } finally {
         setLoading(false);
