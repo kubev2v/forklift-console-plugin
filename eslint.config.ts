@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 
 import importPlugin from 'eslint-plugin-import';
 import perfectionist from 'eslint-plugin-perfectionist';
-import prettier from 'eslint-plugin-prettier';
+import prettier from 'eslint-plugin-prettier/recommended';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
@@ -62,7 +62,6 @@ export default [
       '@typescript-eslint': tseslint.plugin,
       'import/parsers': tseslint.parser,
       perfectionist,
-      prettier,
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
@@ -121,6 +120,7 @@ export default [
       '@typescript-eslint/prefer-readonly-parameter-types': 'off',
       '@typescript-eslint/strict-boolean-expressions': 'off',
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
+      'arrow-body-style': 'off',
       camelcase: ['error', { allow: ['required_'] }],
       complexity: 'off',
       'id-length': ['error', { exceptions: ['t'] }],
@@ -165,6 +165,7 @@ export default [
           type: 'alphabetical',
         },
       ],
+      'prefer-arrow-callback': 'off',
       'prettier/prettier': [
         'error',
         {
@@ -203,4 +204,5 @@ export default [
       },
     },
   },
+  prettier,
 ];
