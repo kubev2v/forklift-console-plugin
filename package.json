@@ -18,7 +18,7 @@
     "start": "NODE_ENV=development webpack serve --progress",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.js",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
-    "lint:fix": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
+    "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "lint:ia": "npx eslint-interactive .",
     "test:i18n": "bash ./ci/test-i18n.sh",
     "test": "TZ=UTC jest",
