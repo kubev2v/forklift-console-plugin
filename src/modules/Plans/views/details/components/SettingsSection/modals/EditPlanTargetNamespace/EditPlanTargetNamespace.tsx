@@ -55,7 +55,6 @@ const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType 
 
     const { inventory: namespaces } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
       provider,
-      // eslint-disable-next-line @cspell/spellchecker
       subPath: 'namespaces?detail=4',
     });
 
