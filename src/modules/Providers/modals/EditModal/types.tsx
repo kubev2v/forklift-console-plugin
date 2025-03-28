@@ -1,13 +1,13 @@
-import React, { ReactNode } from 'react';
+import type { FC, JSX, ReactNode } from 'react';
 
-import { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
-import { ValidationMsg } from '../../utils';
+import type { ValidationMsg } from '../../utils';
 
 import './EditModal.style.css';
 
 export type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => unknown);
-export interface EditModalProps {
+export type EditModalProps = {
   /** The Kubernetes resource being edited. This object contains all the information about the Kubernetes resource including its metadata, status, and spec. */
   resource: K8sResourceCommon;
 
@@ -39,7 +39,7 @@ export interface EditModalProps {
   InputComponent?: ModalInputComponentType;
 
   /** Optional. Helper text that provides additional hints to the user, printed in grayed text under the input field. */
-  helperText?: string | React.JSX.Element;
+  helperText?: string | JSX.Element;
 
   /** Optional. The URL to which the user will be redirected after the confirmation action. */
   redirectTo?: string;
@@ -49,7 +49,7 @@ export interface EditModalProps {
 
   /** Optional. The validation hook function that checks the new input value and returns a helper text and validation status. */
   validationHook?: ValidationHookType;
-}
+};
 
 /**
  * ModalInputComponentType defines the functional component type for the input fields used in the modal.
@@ -57,7 +57,7 @@ export interface EditModalProps {
  * 'value' which can be a string or a number,
  * and 'onChange' a callback function which is triggered when the value of the input changes.
  */
-export type ModalInputComponentType = React.FC<{
+export type ModalInputComponentType = FC<{
   value: string | number;
   onChange: (value: string) => void;
 }>;
@@ -80,10 +80,10 @@ export type ValidationHookType = (value: string | number) => ValidationMsg;
  * The function returns a promise that resolves to the updated Kubernetes resource.
  */
 export type OnConfirmHookType = ({
-  resource,
-  newValue,
   jsonPath,
   model,
+  newValue,
+  resource,
 }: {
   resource: K8sResourceCommon;
   newValue: unknown;

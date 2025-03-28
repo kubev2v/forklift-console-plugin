@@ -133,6 +133,7 @@ export default [
       'max-statements': 'off',
       'no-alert': 'off',
       'no-console': 'error',
+      'no-duplicate-imports': 'off',
       'no-inline-comments': 'off',
       'no-magic-numbers': 'off',
       'no-ternary': 'off',
