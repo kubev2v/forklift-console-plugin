@@ -1,6 +1,6 @@
 import { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
 
-import { VmData } from '../../details';
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 import { POD_NETWORK } from './actions';
 
 // based on packages legacy/src/Plans/components/Wizard/helpers.tsx

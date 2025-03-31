@@ -1,13 +1,14 @@
 import React from 'react';
-import { PlanActionsDropdown } from 'src/modules/Plans/actions';
-import { getPlanPhase, PlanPhase } from 'src/modules/Plans/utils';
+import { PlanActionsDropdown } from 'src/modules/Plans/actions/PlanActionsDropdown';
+import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { PlanConditionType } from 'src/modules/Plans/utils/types/PlanCondition';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
+import { PlanPhase } from 'src/modules/Plans/utils/types/PlanPhase';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
-import { PageHeadings } from 'src/modules/Providers/utils';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
+import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   NetworkMapModelGroupVersionKind,
@@ -62,7 +63,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
   const alerts = [];
 
-  const planStatus = getPlanPhase({ obj: plan });
+  const planStatus = getPlanPhase({ plan });
 
   const criticalCondition =
     planLoaded &&
@@ -160,7 +161,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
   const actions = (
     <Level hasGutter>
-      <PlanActionsDropdown data={{ obj: plan, permissions }} fieldId={''} fields={[]} />
+      <PlanActionsDropdown data={{ plan, permissions }} fieldId={''} fields={[]} />
     </Level>
   );
 

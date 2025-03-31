@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { getOperatorPhase } from 'src/modules/Overview/utils/helpers/getOperatorPhase';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';

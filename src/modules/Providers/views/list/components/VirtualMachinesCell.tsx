@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
-import { getResourceUrl, TableEmptyCell, TableLabelCell } from 'src/modules/Providers/utils';
+import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
+import { TableLabelCell } from 'src/modules/Providers/utils/components/TableCell/TableLabelCell';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { ProviderModelRef } from '@kubev2v/types';
 import { VirtualMachineIcon } from '@patternfly/react-icons';

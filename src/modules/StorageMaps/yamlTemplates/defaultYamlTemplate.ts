@@ -2,7 +2,7 @@ import { Map as ImmutableMap } from 'immutable';
 
 import { StorageMapModel } from '@kubev2v/types';
 
-export const StorageMapModelYAMLTemplates = ImmutableMap().setIn(
+const StorageMapModelYAMLTemplates = ImmutableMap().setIn(
   ['default'],
   `
 apiVersion: ${StorageMapModel.apiGroup}/${StorageMapModel.apiVersion}
@@ -17,4 +17,6 @@ spec:
 `,
 );
 
-export const defaultYamlTemplate = StorageMapModelYAMLTemplates.getIn(['default']);
+const defaultYamlTemplate = StorageMapModelYAMLTemplates.getIn(['default']);
+
+export default defaultYamlTemplate;

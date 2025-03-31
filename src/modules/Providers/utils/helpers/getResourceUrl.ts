@@ -1,4 +1,4 @@
-import { Namespace } from 'src/utils';
+import { Namespace } from 'src/utils/constants';
 
 import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 

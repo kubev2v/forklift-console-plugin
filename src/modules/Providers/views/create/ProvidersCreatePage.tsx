@@ -19,12 +19,17 @@ import {
   PageSection,
 } from '@patternfly/react-core';
 
-import { useK8sWatchProviderNames, useToggle } from '../../hooks';
-import { getResourceUrl, ValidationMsg } from '../../utils';
+import ProvidersCreateForm from './components/ProviderCreateForm';
+import { providerTemplate } from './templates/providerTemplate';
+import { secretTemplate } from './templates/secretTemplate';
+import { createProvider } from './utils/createProvider';
+import { createProviderSecret } from './utils/createProviderSecret';
+import { patchProviderSecretOwner } from './utils/patchProviderSecretOwner';
+import { useK8sWatchProviderNames } from '../../hooks/useK8sWatchProviderNames';
+import useToggle from '../../hooks/useToggle';
+import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
+import { ValidationMsg } from '../../utils/validators/common';
 import { providerAndSecretValidator } from '../../utils/validators/provider/providerAndSecretValidator';
-import { ProvidersCreateForm } from './components';
-import { providerTemplate, secretTemplate } from './templates';
-import { createProvider, createProviderSecret, patchProviderSecretOwner } from './utils';
 
 import './ProvidersCreatePage.style.css';
 

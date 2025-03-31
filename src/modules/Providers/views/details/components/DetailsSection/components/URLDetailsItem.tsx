@@ -1,11 +1,12 @@
 import React from 'react';
-import { EditProviderURLModal, useModal } from 'src/modules/Providers/modals';
+import { EditProviderURLModal } from 'src/modules/Providers/modals/EditProviderURL/EditProviderURLModal';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { DetailsItem } from '../../../../../utils';
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const URLDetailsItem: React.FC<ProviderDetailsItemProps> = ({

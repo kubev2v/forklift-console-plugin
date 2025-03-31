@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { K8sResourceCondition } from '@kubev2v/types';

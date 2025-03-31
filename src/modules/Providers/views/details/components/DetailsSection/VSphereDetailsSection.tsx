@@ -1,22 +1,20 @@
 import React from 'react';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
-import { DetailsItem } from '../../../../utils';
-import {
-  CreatedAtDetailsItem,
-  CredentialsDetailsItem,
-  ExternalManagementLinkDetailsItem,
-  NameDetailsItem,
-  NamespaceDetailsItem,
-  OwnerDetailsItem,
-  TypeDetailsItem,
-  URLDetailsItem,
-  VDDKDetailsItem,
-} from './components';
+import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';
+import { CredentialsDetailsItem } from './components/CredentialsDetailsItem';
+import { ExternalManagementLinkDetailsItem } from './components/ExternalManagementLinkDetailsItem';
+import { NameDetailsItem } from './components/NamDetailsItem';
+import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
+import { OwnerDetailsItem } from './components/OwnerDetailsItem';
+import { TypeDetailsItem } from './components/TypeDetailsItem';
+import { URLDetailsItem } from './components/URLDetailsItem';
+import { VDDKDetailsItem } from './components/VDDKDetailsItem';
+import { getVSphereProviderWebUILink } from './utils/getVSphereProviderWebUILink';
 import { DetailsSectionProps } from './DetailsSection';
-import { getVSphereProviderWebUILink } from './utils';
 
 export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();

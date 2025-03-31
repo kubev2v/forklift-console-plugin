@@ -1,7 +1,9 @@
 import React from 'react';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
-import { getMigrationVmsCounts, getPlanProgressVariant, PlanPhase } from 'src/modules/Plans/utils';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { getMigrationPhase } from 'src/modules/Plans/utils/helpers/getMigrationPhase';
+import { getMigrationVmsCounts } from 'src/modules/Plans/utils/helpers/getMigrationVmsCounts';
+import { getPlanProgressVariant } from 'src/modules/Plans/utils/helpers/getPlanProgressVariant';
+import { PlanPhase } from 'src/modules/Plans/utils/types/PlanPhase';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {

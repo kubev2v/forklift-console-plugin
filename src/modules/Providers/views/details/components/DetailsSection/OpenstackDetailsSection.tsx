@@ -1,21 +1,19 @@
 import React from 'react';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
-import { DetailsItem } from '../../../../utils';
-import {
-  CreatedAtDetailsItem,
-  CredentialsDetailsItem,
-  ExternalManagementLinkDetailsItem,
-  NameDetailsItem,
-  NamespaceDetailsItem,
-  OwnerDetailsItem,
-  TypeDetailsItem,
-  URLDetailsItem,
-} from './components';
+import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';
+import { CredentialsDetailsItem } from './components/CredentialsDetailsItem';
+import { ExternalManagementLinkDetailsItem } from './components/ExternalManagementLinkDetailsItem';
+import { NameDetailsItem } from './components/NamDetailsItem';
+import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
+import { OwnerDetailsItem } from './components/OwnerDetailsItem';
+import { TypeDetailsItem } from './components/TypeDetailsItem';
+import { URLDetailsItem } from './components/URLDetailsItem';
+import { getOpenstackProviderWebUILink } from './utils/getOpenstackProviderWebUILink';
 import { DetailsSectionProps } from './DetailsSection';
-import { getOpenstackProviderWebUILink } from './utils';
 
 export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();

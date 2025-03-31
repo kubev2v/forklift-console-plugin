@@ -1,6 +1,6 @@
 import React from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
-import { TableCell } from 'src/modules/Providers/utils';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
 import { Truncate } from '@patternfly/react-core';
 

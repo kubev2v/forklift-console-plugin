@@ -1,5 +1,6 @@
 import React from 'react';
-import { TableCell, TableEmptyCell } from 'src/modules/Providers/utils';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Concern } from '@kubev2v/types';
@@ -9,8 +10,8 @@ import {
   getCategoryColor,
   getCategoryIcon,
   getCategoryTitle,
-  groupConcernsByCategory,
-} from '../utils';
+} from '../utils/helpers/getCategoryTitle';
+import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategory';
 import { VMCellProps } from './VMCellProps';
 
 /**

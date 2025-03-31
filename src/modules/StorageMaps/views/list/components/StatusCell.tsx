@@ -2,7 +2,8 @@ import React from 'react';
 import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
-import { getResourceUrl, TableIconCell } from 'src/modules/Providers/utils';
+import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModelRef } from '@kubev2v/types';

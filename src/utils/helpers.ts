@@ -1,4 +1,4 @@
-import { OpenApiJsonPath } from 'src/modules';
+import { OpenApiJsonPath } from 'src/modules/Providers/modals/EditModal/types';
 
 export const safeBoolean = (value): boolean => {
   if (typeof value === 'boolean') return value;

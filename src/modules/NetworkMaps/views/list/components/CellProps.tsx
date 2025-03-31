@@ -1,4 +1,4 @@
-import { NetworkMapData } from 'src/modules/NetworkMaps/utils';
+import { NetworkMapData } from 'src/modules/NetworkMaps/utils/types/NetworkMapData';
 
 import { ResourceField } from '@components/common/utils/types';
 

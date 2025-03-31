@@ -1,13 +1,13 @@
 import React from 'react';
-import { isPlanEditable } from 'src/modules/Plans/utils';
-import { useModal } from 'src/modules/Providers/modals';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 
-import { PlanDetailsItemProps } from '../../DetailsSection';
-import { EditPlanPreserveStaticIPs } from '../modals/EditPlanPreserveStaticIPs';
+import { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import { EditPlanPreserveStaticIPs } from '../modals/EditPlanPreserveStaticIPs/EditPlanPreserveStaticIPs';
 
 export const PreserveStaticIPsDetailsItem: React.FC<PlanDetailsItemProps> = ({
   resource,

@@ -1,4 +1,4 @@
-import { VmData } from '../../details';
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 
 export const getNamespacesUsedBySelectedVms = (selectedVMs: VmData[]) =>
   Array.from(

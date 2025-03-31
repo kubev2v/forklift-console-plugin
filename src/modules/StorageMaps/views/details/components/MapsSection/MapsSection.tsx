@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
 import { Mapping } from 'src/modules/Providers/views/migrate/types';

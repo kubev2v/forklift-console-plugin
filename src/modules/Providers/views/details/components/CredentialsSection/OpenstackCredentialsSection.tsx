@@ -1,5 +1,5 @@
 import React from 'react';
-import { openstackSecretValidator } from 'src/modules/Providers/utils';
+import { openstackSecretValidator } from 'src/modules/Providers/utils/validators/provider/openstack/openstackSecretValidator';
 
 import {
   BaseCredentialsSection,

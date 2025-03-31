@@ -2,8 +2,8 @@ import React, { useEffect, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { isPlanEditable } from 'src/modules/Plans/utils';
-import { AlertMessageForModals } from 'src/modules/Providers/modals';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
@@ -20,10 +20,11 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 
-import { Suspend } from '../../components';
-import { usePlanHooks } from './hooks';
-import { formReducer, initialState } from './state';
-import { onUpdatePlanHooks } from './utils';
+import { usePlanHooks } from './hooks/usePlanHooks';
+import { initialState } from './state/initialState';
+import { formReducer } from './state/reducer';
+import { onUpdatePlanHooks } from './utils/onUpdatePlanHooks';
+import { Suspend } from '../../components/Suspend';
 
 export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();

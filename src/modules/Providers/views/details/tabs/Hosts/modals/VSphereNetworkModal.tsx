@@ -1,11 +1,12 @@
 import React, { ReactNode, useCallback, useReducer, useState } from 'react';
-import { FilterableSelect } from 'src/components';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
-import { validateNoSpaces } from 'src/modules/Providers/utils';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { SelectEventType, SelectValueType } from '@components/common/utils/types';
+import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
 import { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
 import {
   Button,
@@ -21,7 +22,9 @@ import {
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 import { DEFAULT } from '@utils/constants';
 
-import { calculateCidrNotation, InventoryHostPair, onSaveHost } from '../utils';
+import { calculateCidrNotation } from '../utils/helpers/calculateCidrNotation';
+import { InventoryHostPair } from '../utils/helpers/matchHostsToInventory';
+import { onSaveHost } from '../utils/helpers/onSaveHost';
 
 import './VSphereNetworkModal.style.css';
 

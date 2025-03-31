@@ -8,7 +8,7 @@ import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
 } from 'src/components/page/StandardPageWithSelection';
-import { ProviderData } from 'src/modules/Providers/utils';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';

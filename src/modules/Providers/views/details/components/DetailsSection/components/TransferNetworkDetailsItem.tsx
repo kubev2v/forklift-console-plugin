@@ -1,8 +1,9 @@
 import React from 'react';
-import { EditProviderDefaultTransferNetwork, useModal } from 'src/modules/Providers/modals';
+import { EditProviderDefaultTransferNetwork } from 'src/modules/Providers/modals/EditProviderDefaultTransferNetwork/EditProviderDefaultTransferNetwork';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { DetailsItem } from '../../../../../utils';
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const TransferNetworkDetailsItem: React.FC<ProviderDetailsItemProps> = ({

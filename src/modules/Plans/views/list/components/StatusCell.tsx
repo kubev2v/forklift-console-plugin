@@ -1,6 +1,7 @@
 import React from 'react';
-import { getPlanPhase, PlanPhase } from 'src/modules/Plans/utils';
-import { TableIconCell } from 'src/modules/Providers/utils';
+import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { PlanPhase } from 'src/modules/Plans/utils/types/PlanPhase';
+import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
 
 import { CellProps } from './CellProps';
 import { ErrorStatusCell } from './ErrorStatusCell';

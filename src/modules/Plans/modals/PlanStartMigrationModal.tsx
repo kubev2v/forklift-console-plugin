@@ -1,14 +1,15 @@
 import React, { ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useToggle } from 'src/modules/Providers/hooks';
-import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
+import { useToggle } from 'src/modules/Providers/hooks/useToggle';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { MigrationModel, V1beta1Migration, V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { usePlanMigration } from '../hooks';
+import { usePlanMigration } from '../hooks/usePlanMigration';
 
 /**
  * Props for the DeleteModal component

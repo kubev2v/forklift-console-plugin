@@ -1,7 +1,8 @@
 import React from 'react';
-import { ProviderActionsDropdown } from 'src/modules/Providers/actions';
-import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
-import { PageHeadings } from 'src/modules/Providers/utils';
+import { ProviderActionsDropdown } from 'src/modules/Providers/actions/ProviderActionsDropdown';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
+import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
 
 import {
   ProviderInventory,
@@ -12,7 +13,8 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-import { InventoryNotReachable, ProviderCriticalCondition } from '../../list';
+import InventoryNotReachable from '../../list/components/InventoryNotReachable';
+import ProviderCriticalCondition from '../../list/components/ProviderCriticalCondition';
 
 export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }> = ({
   name,

@@ -1,13 +1,13 @@
 import React, { useReducer } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
-import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 
-import { providersSectionReducer, ProvidersSectionState } from './state';
+import { providersSectionReducer, ProvidersSectionState } from './state/reducer';
 
 const initialState: ProvidersSectionState = {
   plan: null,

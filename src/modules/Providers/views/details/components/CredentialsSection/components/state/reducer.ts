@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
-import { isSecretDataChanged, ValidationMsg } from 'src/modules/Providers/utils';
+import { isSecretDataChanged } from 'src/modules/Providers/utils/helpers/isSecretDataChanged';
+import { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
 
 import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 

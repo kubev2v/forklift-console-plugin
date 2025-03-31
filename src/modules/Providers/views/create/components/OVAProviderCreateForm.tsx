@@ -1,6 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { validateOvaNfsPath } from 'src/modules/Providers/utils';
+import { validateOvaNfsPath } from 'src/modules/Providers/utils/validators/provider/ova/validateOvaNfsPath';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Provider } from '@kubev2v/types';

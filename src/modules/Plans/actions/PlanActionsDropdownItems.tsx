@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
-import { useModal } from 'src/modules/Providers/modals';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
-import {
-  ArchiveModal,
-  DuplicateModal,
-  PlanCutoverMigrationModal,
-  PlanDeleteModal,
-  PlanStartMigrationModal,
-} from '../modals';
+import { ArchiveModal } from '../modals/ArchiveModal';
+import { DuplicateModal } from '../modals/DuplicateModal';
+import { PlanCutoverMigrationModal } from '../modals/PlanCutoverMigrationModal';
+import { PlanDeleteModal } from '../modals/PlanDeleteModal';
+import { PlanStartMigrationModal } from '../modals/PlanStartMigrationModal';
 import {
   canPlanReStart,
   canPlanStart,
   getPlanPhase,
   isPlanArchived,
   isPlanExecuting,
-  PlanData,
-  PlanPhase,
-} from '../utils';
+} from '../utils/helpers/getPlanPhase';
+import { PlanData } from '../utils/types/PlanData';
+import { PlanPhase } from '../utils/types/PlanPhase';
 
 export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const { obj: plan } = data;
+  const { plan } = data;
 
   const planURL = getResourceUrl({
     reference: PlanModelRef,

@@ -1,14 +1,14 @@
 import React from 'react';
-import { FilterableSelect } from 'src/components';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
+import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import {
-  EditModal,
   EditModalProps,
   ModalInputComponentType,
   OnConfirmHookType,
-} from 'src/modules/Providers/modals';
+} from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
 import {
   Modify,
   OpenShiftNetworkAttachmentDefinition,

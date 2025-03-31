@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useModal } from 'src/modules/Providers/modals';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, FileUpload, FileUploadProps, Flex, FlexItem } from '@patternfly/react-core';

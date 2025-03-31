@@ -2,8 +2,8 @@ import React from 'react';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
 
+import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import { concernFilter } from './utils/filters/concernFilter';
-import { ProviderVirtualMachinesList } from './components';
 import { OvaVirtualMachinesCells } from './OvaVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 

@@ -1,4 +1,4 @@
-import { deepCopy } from 'src/utils';
+import { deepCopy } from 'src/utils/deepCopy';
 
 import { V1beta1Provider, V1beta1StorageMap } from '@kubev2v/types';
 

@@ -5,8 +5,10 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModel, ProviderModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
-import { DeleteModal, useModal } from '../modals';
-import { getResourceUrl, ProviderData } from '../utils';
+import { DeleteModal } from '../modals/DeleteModal/DeleteModal';
+import { useModal } from '../modals/ModalHOC/ModalHOC';
+import { getResourceUrl } from '../utils/helpers/getResourceUrl';
+import { ProviderData } from '../utils/types/ProviderData';
 
 export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();

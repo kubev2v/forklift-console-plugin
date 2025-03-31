@@ -1,5 +1,4 @@
 import React, { FC, ReactNode } from 'react';
-import { useForkliftTranslation } from 'src/utils';
 
 import {
   K8sResourceKind,
@@ -8,6 +7,7 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Popover } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { FormGroupWithHelpText } from './FormGroupWithHelpText/FormGroupWithHelpText';
 import { TypeaheadSelect, TypeaheadSelectOption } from './TypeaheadSelect/TypeaheadSelect';
@@ -31,7 +31,7 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
 
   return (
     <FormGroupWithHelpText
-      label={t('Project new')}
+      label={t('Project')}
       isRequired
       fieldId="project"
       labelIcon={

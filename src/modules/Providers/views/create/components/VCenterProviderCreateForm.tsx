@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import {
-  validateVCenterURL,
-  validateVDDKImage,
   VDDKHelperText,
   VDDKHelperTextShort,
-} from 'src/modules/Providers/utils';
+} from 'src/modules/Providers/utils/components/VDDKHelperText/VDDKHelperText';
+import { validateVCenterURL } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVCenterURL';
+import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';

@@ -1,7 +1,7 @@
 import React from 'react';
-import { TableLinkCell } from 'src/modules/Providers/utils';
-import { isProviderLocalOpenshift } from 'src/utils';
+import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
+import { isProviderLocalOpenshift } from 'src/utils/resources';
 
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
 

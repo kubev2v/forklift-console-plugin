@@ -4,7 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { Suspend } from '../../components';
+import { Suspend } from '../../components/Suspend';
 
 export const PlanYAML: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();

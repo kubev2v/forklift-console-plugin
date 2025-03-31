@@ -3,14 +3,12 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
 
-import { ProviderPageHeadings } from './components';
-import {
-  ProviderCredentialsWrapper,
-  ProviderDetailsWrapper,
-  ProviderNetworksWrapper,
-  ProviderVirtualMachines,
-  ProviderYAMLPageWrapper,
-} from './tabs';
+import { ProviderPageHeadings } from './components/ProviderPageHeadings';
+import { ProviderCredentialsWrapper } from './tabs/Credentials/ProviderCredentials';
+import { ProviderDetailsWrapper } from './tabs/Details/ProviderDetails';
+import { ProviderNetworksWrapper } from './tabs/Networks/ProviderNetworks';
+import { ProviderVirtualMachines } from './tabs/VirtualMachines/ProviderVirtualMachines';
+import { ProviderYAMLPageWrapper } from './tabs/YAML/ProviderYAML';
 
 // OpenshiftProviderDetailsPage
 export const OpenshiftProviderDetailsPage: React.FC<{ name: string; namespace: string }> = ({

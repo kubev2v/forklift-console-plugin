@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { ProvidersAddButton } from 'src/modules/Providers';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
+import { ProvidersAddButton } from 'src/modules/Providers/views/list/components/ProvidersAddButton';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   EmptyState,

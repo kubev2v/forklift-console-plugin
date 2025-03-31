@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { getResourceUrl, TableCell } from 'src/modules/Providers/utils';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { HostModelRef } from '@kubev2v/types';
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';

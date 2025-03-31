@@ -1,14 +1,12 @@
 import React, { FC } from 'react';
-import {
-  EditControllerCPULimitModal,
-  EditControllerMemoryLimitModal,
-  EditInventoryMemoryLimitModal,
-  EditMaxVMInFlightModal,
-  EditPreCopyIntervalModal,
-  EditSnapshotPoolingIntervalModal,
-} from 'src/modules/Overview/modal';
-import { ModalHOC, useModal } from 'src/modules/Providers/modals';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import { EditControllerCPULimitModal } from 'src/modules/Overview/modal/EditControllerCPULimitModal';
+import { EditControllerMemoryLimitModal } from 'src/modules/Overview/modal/EditControllerMemoryLimitModal';
+import { EditInventoryMemoryLimitModal } from 'src/modules/Overview/modal/EditInventoryMemoryLimitModal';
+import { EditMaxVMInFlightModal } from 'src/modules/Overview/modal/EditMaxVMInFlightModal';
+import { EditPreCopyIntervalModal } from 'src/modules/Overview/modal/EditPreCopyIntervalModal';
+import { EditSnapshotPoolingIntervalModal } from 'src/modules/Overview/modal/EditSnapshotPoolingIntervalModal';
+import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';

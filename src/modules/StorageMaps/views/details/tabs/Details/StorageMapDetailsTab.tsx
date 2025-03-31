@@ -1,13 +1,16 @@
 import React from 'react';
 import { SectionHeading } from 'src/components/headers/SectionHeading';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModelGroupVersionKind, V1beta1StorageMap } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-import { ConditionsSection, DetailsSection, MapsSection, ProvidersSection } from '../../components';
+import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
+import { DetailsSection } from '../../components/DetailsSection/DetailsSection';
+import { MapsSection } from '../../components/MapsSection/MapsSection';
+import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSection';
 
 interface StorageMapDetailsTabProps {
   name: string;

@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import {
   InventoryNetwork,
   useOpenShiftNetworks,

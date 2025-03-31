@@ -1,4 +1,4 @@
-import { ValidationMsg } from '../validators';
+import { ValidationMsg } from '../validators/common';
 
 /**
  * Function to ensure that the input url, token fields are both set or both empty.

@@ -1,7 +1,7 @@
 import React, { FC, MouseEvent } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useHistory } from 'react-router';
-import { getResourceUrl } from 'src/modules';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { PlanModelRef } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';

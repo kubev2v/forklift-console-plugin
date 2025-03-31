@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProviderData } from 'src/modules/Providers/utils';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
@@ -7,8 +7,8 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
+import { VmData } from './components/VMCellProps';
 import { useInventoryVms } from './utils/hooks/useInventoryVms';
-import { VmData } from './components';
 import { OpenShiftVirtualMachinesList } from './OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from './OpenStackVirtualMachinesList';
 import { OvaVirtualMachinesList } from './OvaVirtualMachinesList';

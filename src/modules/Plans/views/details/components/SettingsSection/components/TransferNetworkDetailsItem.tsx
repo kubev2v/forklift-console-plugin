@@ -1,13 +1,13 @@
 import React from 'react';
-import { isPlanEditable } from 'src/modules/Plans/utils';
-import { useModal } from 'src/modules/Providers/modals';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1PlanSpecTransferNetwork } from '@kubev2v/types';
 
-import { PlanDetailsItemProps } from '../../DetailsSection';
-import { EditPlanTransferNetwork } from '../modals/EditPlanTransferNetwork';
+import { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import { EditPlanTransferNetwork } from '../modals/EditPlanTransferNetwork/EditPlanTransferNetwork';
 
 export const TransferNetworkDetailsItem: React.FC<PlanDetailsItemProps> = ({
   resource,

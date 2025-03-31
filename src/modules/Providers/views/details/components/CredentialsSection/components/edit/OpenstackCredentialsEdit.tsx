@@ -1,21 +1,20 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
-import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
+import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload/CertificateUpload';
+import { safeBase64Decode } from 'src/modules/Providers/utils/helpers/safeBase64Decode';
+import { openstackSecretFieldValidator } from 'src/modules/Providers/utils/validators/provider/openstack/openstackSecretFieldValidator';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Divider, Form, Popover, Radio, Switch } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
+import { ApplicationCredentialNameSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/ApplicationCredentialNameSecretFieldsFormGroup';
+import { ApplicationWithCredentialsIDFormGroup } from './OpenstackCredentialsEditFormGroups/ApplicationWithCredentialsIDFormGroup';
+import { PasswordSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/PasswordSecretFieldsFormGroup';
+import { TokenWithUserIDSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/TokenWithUserIDSecretFieldsFormGroup';
+import { TokenWithUsernameSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/TokenWithUsernameSecretFieldsFormGroup';
 import { EditComponentProps } from '../BaseCredentialsSection';
-import {
-  ApplicationCredentialNameSecretFieldsFormGroup,
-  ApplicationWithCredentialsIDFormGroup,
-  PasswordSecretFieldsFormGroup,
-  TokenWithUserIDSecretFieldsFormGroup,
-  TokenWithUsernameSecretFieldsFormGroup,
-} from './OpenstackCredentialsEditFormGroups';
 
 export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
   const { t } = useForkliftTranslation();

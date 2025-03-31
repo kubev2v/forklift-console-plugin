@@ -1,10 +1,10 @@
 import { Draft } from 'immer';
+import { getIsTarget } from 'src/modules/Providers/utils/helpers/getIsTarget';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
 
 import { ProviderType } from '@kubev2v/types';
 
-import { getIsTarget } from '../../../utils';
-import { toId } from '../../details';
+import { toId } from '../../details/tabs/VirtualMachines/components/ProviderVirtualMachinesList';
 import {
   CreateVmMigrationPageState,
   Mapping,

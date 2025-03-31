@@ -7,7 +7,8 @@ import {
 } from 'src/components/page/StandardPageWithSelection';
 import { TableSortContextProvider } from 'src/components/TableSortContext';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
-import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
+import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
@@ -22,8 +23,9 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
-import { MigrationVMsCancelButton, PlanVMsDeleteButton } from '../components';
-import { PlanData, VMData } from '../types';
+import { MigrationVMsCancelButton } from '../components/MigrationVMsCancelButton';
+import { PlanVMsDeleteButton } from '../components/PlanVMsDeleteButton';
+import { VMData } from '../types/VMData';
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
 import { MigrationVirtualMachinesRowExtended } from './MigrationVirtualMachinesRowExtended';
 
@@ -160,9 +162,9 @@ const PageWithSelection = StandardPageWithSelection<VMData>;
 type PageWithSelectionProps = StandardPageWithSelectionProps<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
-export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
+export const MigrationVirtualMachinesList: FC<{ planData: PlanData }> = ({ planData }) => {
   const { t } = useForkliftTranslation();
-  const { plan } = obj;
+  const { plan } = planData;
 
   const [lastMigration] = usePlanMigration(plan);
 

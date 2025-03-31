@@ -1,13 +1,15 @@
 import React from 'react';
 import { RowProps } from 'src/components/common/TableView/types';
-import { TableCell } from 'src/modules/Providers/utils';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
 import { ResourceField } from '@components/common/utils/types';
 import { OVirtVM } from '@kubev2v/types';
 import { Td } from '@patternfly/react-table';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
-import { VMCellProps, VMConcernsCellRenderer, VmData, VMNameCellRenderer } from './components';
+import { VMCellProps, VmData } from './components/VMCellProps';
+import { VMConcernsCellRenderer } from './components/VMConcernsCellRenderer';
+import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
   const fieldId = resourceFieldId;

@@ -2,7 +2,7 @@ import { Base64 } from 'js-base64';
 
 import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
-import { missingKeysInSecretData } from '../../../helpers';
+import { missingKeysInSecretData } from '../../../helpers/missingKeysInSecretData';
 import { ValidationMsg } from '../../common';
 import { ovirtSecretFieldValidator } from './ovirtSecretFieldValidator';
 

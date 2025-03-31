@@ -1,6 +1,6 @@
+import { NAME, NAMESPACE } from '@components/common/utils/constants';
 import { SortByDirection } from '@patternfly/react-table';
 
-import { NAME, NAMESPACE } from '../../utils';
 import { buildSort, compareWith, universalComparator } from '../sort';
 
 describe('universal compareFn', () => {

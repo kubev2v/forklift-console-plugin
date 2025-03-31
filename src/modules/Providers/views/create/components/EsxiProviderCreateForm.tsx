@@ -1,11 +1,11 @@
 import React, { useCallback, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import {
-  validateEsxiURL,
-  validateVDDKImage,
   VDDKHelperText,
   VDDKHelperTextShort,
-} from 'src/modules/Providers/utils';
+} from 'src/modules/Providers/utils/components/VDDKHelperText/VDDKHelperText';
+import { validateEsxiURL } from 'src/modules/Providers/utils/validators/provider/vsphere/validateEsxiURL';
+import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Provider } from '@kubev2v/types';

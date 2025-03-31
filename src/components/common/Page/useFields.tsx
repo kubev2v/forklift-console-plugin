@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 
-import { NAMESPACE, ResourceField } from '../utils';
+import { NAMESPACE } from '../utils/constants';
+import { ResourceField } from '../utils/types';
 import { FieldSettings } from './types';
 
 const sameOrderAndVisibility = (a: ResourceField[], b: ResourceField[]): boolean => {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
-import { PageHeadings } from 'src/modules/Providers/utils';
-import { StorageMapActionsDropdown } from 'src/modules/StorageMaps/actions';
-import { StorageMapCriticalConditions } from 'src/modules/StorageMaps/components';
+import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import { StorageMapActionsDropdown } from 'src/modules/StorageMaps/actions/StorageMapActionsDropdown';
+import StorageMapCriticalConditions from 'src/modules/StorageMaps/components/StorageMapCriticalConditions';
 
 import {
   StorageMapModel,

@@ -1,14 +1,15 @@
 import React from 'react';
 import { RowProps } from 'src/components/common/TableView/types';
-import { TableCell } from 'src/modules/Providers/utils';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
 import { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
+import { VMCellProps, VmData } from './components/VMCellProps';
+import { VmFeaturesCell } from './components/VmFeaturesCell';
 import { withResourceLink } from './components/VmResourceLinkRenderer';
-import { VMCellProps, VmData, VmFeaturesCell } from './components';
-import { getVmTemplate } from './utils';
+import { getVmTemplate } from './utils/helpers/vmProps';
 
 const toNamespace = ({ data }: VMCellProps) =>
   (data.vm.providerType === 'openshift' && data.vm.object?.metadata?.namespace) || '';

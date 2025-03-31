@@ -18,7 +18,7 @@ import {
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
-import { ensureArray } from '../../helpers';
+import { ensureArray } from '../../helpers/ensureArray';
 
 /**
  * Component for displaying a details item.

@@ -1,5 +1,6 @@
 import React from 'react';
-import { EditModal, ModalInputComponentType } from 'src/modules/Providers/modals';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
+import { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel } from '@kubev2v/types';

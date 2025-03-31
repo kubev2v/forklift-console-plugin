@@ -1,20 +1,19 @@
 import React from 'react';
-import { InventoryNotReachable } from 'src/modules/Providers/views/list/components';
+import InventoryNotReachable from 'src/modules/Providers/views/list/components/InventoryNotReachable';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
+import HeaderTitle from './components/HeaderTitle';
 import OperatorStatus from './components/OperatorStatus';
 import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
-import { useK8sWatchForkliftController, useProvidersInventoryIsLive } from '../../hooks';
+import ForkliftControllerDetailsTab from './tabs/Details/ForkliftControllerDetailsTab';
+import ForkliftControllerMetricsTab from './tabs/Metrics/ForkliftControllerMetricsTab';
+import ForkliftControllerYAMLTab from './tabs/YAML/ForkliftControllerYAMLTab';
+import { useK8sWatchForkliftController } from '../../hooks/useK8sWatchProviderNames';
+import { useProvidersInventoryIsLive } from '../../hooks/useProvidersInventoryIsLive';
 import { getOperatorPhase } from '../../utils/helpers/getOperatorPhase';
-import { HeaderTitle } from './components';
-import {
-  ForkliftControllerDetailsTab,
-  ForkliftControllerMetricsTab,
-  ForkliftControllerYAMLTab,
-} from './tabs';
 
 import './OverviewPage.style.css';
 

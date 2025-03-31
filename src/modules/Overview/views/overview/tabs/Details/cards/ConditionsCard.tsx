@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { ConditionsSection } from 'src/modules/Providers/views';
+import { ConditionsSection } from 'src/modules/Providers/views/details/components/ConditionsSection/ConditionsSection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';

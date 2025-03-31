@@ -1,7 +1,7 @@
 import React, { FC, useMemo, useReducer } from 'react';
 import { useHistory } from 'react-router';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
-import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext';
 import ProvidersCreateVmMigrationPage from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationPage';
 import {
   SET_AVAILABLE_SOURCE_NETWORKS,
@@ -23,10 +23,10 @@ import {
 import { useActiveNamespace, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection, Title, Wizard, WizardStep } from '@patternfly/react-core';
 
-import { anyValidationErrorExists } from '../../utils';
-import { findProviderByID } from './components';
-import { planCreatePageInitialState, planCreatePageReducer } from './states';
-import { SelectSourceProvider } from './steps';
+import { findProviderByID } from './components/createProviderCardItems';
+import { planCreatePageInitialState, planCreatePageReducer } from './states/PlanCreatePageStore';
+import { SelectSourceProvider } from './steps/SelectSourceProvider/SelectSourceProvider';
+import { anyValidationErrorExists } from '../../utils/helpers/anyValidationErrorExists';
 import { validateSourceProviderStep } from './utils';
 
 import './PlanCreatePage.style.css';

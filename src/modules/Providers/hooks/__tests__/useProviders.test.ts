@@ -1,6 +1,7 @@
 import { V1beta1Provider } from '@kubev2v/types';
 
-import { getIsManaged, getIsOnlySource, getIsTarget } from '../../utils';
+import { getIsManaged } from '../../utils/helpers/getIsManaged';
+import { getIsOnlySource, getIsTarget } from '../../utils/helpers/getIsTarget';
 
 describe('Provider Utils', () => {
   describe('getIsManaged', () => {

@@ -4,7 +4,11 @@ import { useCreateOverviewContext } from 'src/modules/Overview/hooks/OverviewCon
 import { V1beta1ForkliftController } from '@kubev2v/types';
 import { Flex, FlexItem, Stack, StackItem } from '@patternfly/react-core';
 
-import { ConditionsCard, ControllerCard, OperatorCard, OverviewCard, SettingsCard } from './cards';
+import ConditionsCard from './cards/ConditionsCard';
+import ControllerCard from './cards/ControllerCard';
+import OperatorCard from './cards/OperatorCard';
+import SettingsCard from './cards/SettingsCard';
+import OverviewCard from './cards/WelcomeCard';
 
 interface ForkliftControllerDetailsTabProps {
   obj: V1beta1ForkliftController;
