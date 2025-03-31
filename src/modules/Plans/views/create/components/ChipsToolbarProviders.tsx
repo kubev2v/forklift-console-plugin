@@ -16,7 +16,6 @@ export const ChipsToolbarProviders: React.FunctionComponent<ChipsToolbarProvider
   filterState,
   filterDispatch,
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const deleteNameFilter = (_) => {
     filterDispatch({ type: 'SET_NAME_FILTER', payload: '' });
   };

@@ -1,5 +1,3 @@
-/* eslint-disable no-dupe-args */
-/* eslint-disable no-redeclare */
 // eslint-disable-next-line no-undef
 module.exports = {
   createOldCatalogs: false,

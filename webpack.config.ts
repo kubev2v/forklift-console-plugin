@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable @cspell/spellchecker */
-/* eslint-env node */
+
+import * as path from 'path';
 
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
-import * as path from 'path';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
-import { Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
-import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
+import { type Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
+import type { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
 import { ConsoleRemotePlugin } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
@@ -16,29 +16,39 @@ import extensions from './plugin-extensions';
 import pluginMetadata from './plugin-metadata';
 
 const CopyPlugin = require('copy-webpack-plugin');
-interface Configuration extends WebpackConfiguration {
+type Configuration = {
   devServer?: WebpackDevServerConfiguration;
-}
+} & WebpackConfiguration;
 
 const config: Configuration = {
-  mode: 'development',
   context: path.resolve(__dirname, 'src'),
+  devServer: {
+    allowedHosts: 'all',
+    client: {
+      progress: true,
+    },
+    devMiddleware: {
+      writeToDisk: true,
+    },
+    headers: {
+      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Origin': '*',
+      'Cache-Control': 'no-store', // Jan-4-2024, workaround for a caching bug in bridge
+      'Service-Worker-Allowed': '/', // Needed to support MockServiceWorker
+    },
+    hot: true,
+    port: 9001,
+    static: ['./dist'],
+  },
+  devtool: 'source-map',
   entry: {},
-  output: {
-    publicPath: `/api/plugins/${pluginMetadata.name}/`,
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name]-bundle.js',
-    chunkFilename: '[name]-chunk.js',
-  },
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    plugins: [new TsconfigPathsPlugin({ baseUrl: '.' })],
-  },
+  mode: 'development',
   module: {
     rules: [
       {
-        test: /\.(jsx?|tsx?)$/,
         exclude: /node_modules/,
+        test: /\.(jsx?|tsx?)$/,
         use: [
           {
             loader: 'ts-loader',
@@ -50,29 +60,39 @@ const config: Configuration = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.svg$/,
-        type: 'asset/inline',
         generator: {
-          dataUrl: (content) => {
+          dataUrl: (content: string) => {
             content = content.toString();
             return svgToMiniDataURI(content);
           },
         },
+        test: /\.svg$/,
+        type: 'asset/inline',
       },
       {
-        test: /\.(png|jpg|jpeg|gif|woff2?|ttf|eot|otf)(\?.*$|$)/,
-        type: 'asset/resource',
         generator: {
           filename: 'assets/[name].[ext]',
         },
+        test: /\.(png|jpg|jpeg|gif|woff2?|ttf|eot|otf)(\?.*$|$)/,
+        type: 'asset/resource',
       },
       {
-        test: /\.m?js/,
         resolve: {
           fullySpecified: false,
         },
+        test: /\.m?js/,
       },
     ],
+  },
+  optimization: {
+    chunkIds: 'named',
+    minimize: false,
+  },
+  output: {
+    chunkFilename: '[name]-chunk.js',
+    filename: '[name]-bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: `/api/plugins/${pluginMetadata.name}/`,
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin({
@@ -81,37 +101,17 @@ const config: Configuration = {
       },
     }),
     new ConsoleRemotePlugin({
-      pluginMetadata,
       extensions,
+      pluginMetadata,
     }),
     new CopyPlugin({
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),
     new EnvironmentPlugin(ENVIRONMENT_DEFAULTS),
   ],
-  devtool: 'source-map',
-  optimization: {
-    chunkIds: 'named',
-    minimize: false,
-  },
-  devServer: {
-    static: ['./dist'],
-    allowedHosts: 'all',
-    hot: true,
-    port: 9001,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization',
-      'Service-Worker-Allowed': '/', // needed to support MockServiceWorker
-      'Cache-Control': 'no-store', // Jan-4-2024, workaround for a caching bug in bridge
-    },
-    devMiddleware: {
-      writeToDisk: true,
-    },
-    client: {
-      progress: true,
-    },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    plugins: [new TsconfigPathsPlugin({ baseUrl: '.' })],
   },
 };
 

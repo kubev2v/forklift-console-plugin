@@ -14,5 +14,7 @@ ci/yaml/openapi.yaml
 
 storybook-static
 .rollup.cache
+kubectl
+kubectl.sha256
 
 forkliftci

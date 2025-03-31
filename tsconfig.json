@@ -1,35 +1,46 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "strict": false,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM"],
+    "module": "ESNext",
     "skipLibCheck": true,
-    "noUnusedLocals": true,
-    "target": "es2020",
-    "module": "es2020",
-    "moduleResolution": "node",
+    "types": ["node"],
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "allowJs": true,
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "jsx": "react",
-    "lib": ["dom", "es2020"],
     "esModuleInterop": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+
     "baseUrl": ".",
     "outDir": "./dist",
-
     "paths": {
       "@utils/*": ["./src/utils/*"],
       "@components/*": ["./src/components/*"],
       "src/*": ["./src/*"]
     }
   },
-  "include": ["./src/**/*", "./plugin-metadata.ts", "./plugin-extensions.ts"],
+  "include": ["./src/**/*", "*.js", "*.ts", "./testing/cypress.config.cjs", ".prettierrc.mjs"],
   "ts-node": {
     "files": true,
-    "transpileOnly": true,
     "compilerOptions": {
-      "module": "commonjs"
+      "module": "NodeNext",
+      "moduleResolution": "nodenext"
     }
   }
 }
