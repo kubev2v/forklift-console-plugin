@@ -3,6 +3,7 @@
 
 import * as path from 'path';
 
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import { type Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
@@ -51,9 +52,6 @@ const config: Configuration = {
         use: [
           {
             loader: 'ts-loader',
-            options: {
-              transpileOnly: true,
-            },
           },
         ],
       },
@@ -97,6 +95,11 @@ const config: Configuration = {
     publicPath: `/api/plugins/${pluginMetadata.name}/`,
   },
   plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        configFile: path.resolve(__dirname, 'tsconfig.json'),
+      },
+    }),
     new ConsoleRemotePlugin({
       extensions,
       pluginMetadata,
