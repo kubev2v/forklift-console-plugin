@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { HostCellProps } from './HostCellProps';
+import type { HostCellProps } from './HostCellProps';
 
 // Define cell renderer for 'mtu'
 export const MTUCellRenderer: React.FC<HostCellProps> = (props) => {

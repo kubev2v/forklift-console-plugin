@@ -1,5 +1,5 @@
 // @index('./*.tsx', f => `export * from '${f.path}';`)
-export * from './CellProps';
+export type * from './CellProps';
 export * from './InventoryCellFactory';
 export * from './InventoryNotReachable';
 export * from './NamespaceCell';

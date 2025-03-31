@@ -1,20 +1,20 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { DetailsItem } from 'src/modules/Providers/utils';
 
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Form, FormSelect, FormSelectOption } from '@patternfly/react-core';
 
 export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
+  helpContent,
+  invalidLabel,
+  label,
+  mode,
+  onChange,
+  placeHolderLabel,
   providers,
   selectedProviderName,
-  onChange,
-  label,
-  placeHolderLabel,
-  invalidLabel,
-  helpContent,
-  mode,
   setMode,
 }) => {
   const ProviderOption = (provider, index) => (
@@ -25,7 +25,7 @@ export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
     />
   );
 
-  const targetProvider = fineProvider({ providers, name: selectedProviderName });
+  const targetProvider = fineProvider({ name: selectedProviderName, providers });
 
   const validated = targetProvider !== undefined ? 'success' : 'error';
   const hasProviders = providers?.length > 0;
@@ -42,7 +42,9 @@ export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
         >
           <FormSelect
             value={selectedProviderName}
-            onChange={(e, v) => onChange(v, e)}
+            onChange={(e, v) => {
+              onChange(v, e);
+            }}
             id="targetProvider"
             isDisabled={!hasProviders}
             validated={validated}
@@ -61,25 +63,30 @@ export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
         </FormGroupWithHelpText>
       </Form>
     );
-  } else {
-    return (
-      <DetailsItem
-        title={label}
-        content={
-          <ResourceLink
-            inline
-            name={selectedProviderName}
-            namespace={targetProvider?.metadata?.namespace}
-            groupVersionKind={ProviderModelGroupVersionKind}
-            linkTo={targetProvider !== undefined}
-          />
-        }
-        onEdit={hasProviders ? () => setMode('edit') : undefined}
-        helpContent={helpContent}
-        crumbs={['spec', 'providers']}
-      />
-    );
   }
+  return (
+    <DetailsItem
+      title={label}
+      content={
+        <ResourceLink
+          inline
+          name={selectedProviderName}
+          namespace={targetProvider?.metadata?.namespace}
+          groupVersionKind={ProviderModelGroupVersionKind}
+          linkTo={targetProvider !== undefined}
+        />
+      }
+      onEdit={
+        hasProviders
+          ? () => {
+              setMode('edit');
+            }
+          : undefined
+      }
+      helpContent={helpContent}
+      crumbs={['spec', 'providers']}
+    />
+  );
 };
 
 export type ProvidersEditProps = {
@@ -99,5 +106,5 @@ type FindProviderFunction = (args: {
   name: string;
 }) => V1beta1Provider;
 
-const fineProvider: FindProviderFunction = ({ providers, name }) =>
+const fineProvider: FindProviderFunction = ({ name, providers }) =>
   providers.find((p) => p.metadata.name === name);

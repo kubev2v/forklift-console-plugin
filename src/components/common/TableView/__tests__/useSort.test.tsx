@@ -7,18 +7,18 @@ import { useSort } from '../sort';
 afterEach(cleanup);
 
 describe('useSort hook', () => {
-  const NameColumn = { resourceFieldId: NAME, label: NAME, isIdentity: true };
+  const NameColumn = { isIdentity: true, label: NAME, resourceFieldId: NAME };
   it('uses first identity column as default sort', () => {
     const {
       result: {
         current: [activeSort],
       },
-    } = renderHook(() => useSort([{ resourceFieldId: 'Foo', label: '' }, NameColumn]));
+    } = renderHook(() => useSort([{ label: '', resourceFieldId: 'Foo' }, NameColumn]));
 
     expect(activeSort).toMatchObject({
-      resourceFieldId: NAME,
-      label: NameColumn.label,
       isAsc: true,
+      label: NameColumn.label,
+      resourceFieldId: NAME,
     });
   });
 
@@ -27,12 +27,12 @@ describe('useSort hook', () => {
       result: {
         current: [activeSort],
       },
-    } = renderHook(() => useSort([{ resourceFieldId: 'Foo', label: undefined }]));
+    } = renderHook(() => useSort([{ label: undefined, resourceFieldId: 'Foo' }]));
 
     expect(activeSort).toMatchObject({
-      resourceFieldId: 'Foo',
-      label: undefined,
       isAsc: true,
+      label: undefined,
+      resourceFieldId: 'Foo',
     });
   });
 
@@ -44,9 +44,9 @@ describe('useSort hook', () => {
     } = renderHook(() => useSort([]));
 
     expect(activeSort).toMatchObject({
-      resourceFieldId: undefined,
-      label: undefined,
       isAsc: true,
+      label: undefined,
+      resourceFieldId: undefined,
     });
 
     expect(setActiveSort).toBeDefined();

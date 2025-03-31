@@ -1,4 +1,4 @@
-import React, { FC, Ref, useState } from 'react';
+import React, { type FC, type Ref, useState } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -8,11 +8,12 @@ import {
   Flex,
   FlexItem,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
 } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
-import { CellProps } from '../views/list/components';
+import type { CellProps } from '../views/list/components';
+
 import { StorageMapActionsDropdownItems } from './StorageMapActionsDropdownItems';
 
 import './StorageMapActionsDropdown.style.css';
@@ -26,10 +27,7 @@ const StorageMapActionsKebabDropdown_: FC<StorageMapActionsDropdownProps> = ({ d
     setIsOpen((isOpen) => !isOpen);
   };
 
-  const onSelect = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    _value: string | number | undefined,
-  ) => {
+  const onSelect = (_event: React.MouseEvent | undefined, _value: string | number | undefined) => {
     setIsOpen(false);
   };
 
@@ -71,6 +69,6 @@ export const StorageMapActionsDropdown: React.FC<StorageMapActionsDropdownProps>
   </ModalHOC>
 );
 
-export interface StorageMapActionsDropdownProps extends CellProps {
+export type StorageMapActionsDropdownProps = {
   isKebab?: boolean;
-}
+} & CellProps;

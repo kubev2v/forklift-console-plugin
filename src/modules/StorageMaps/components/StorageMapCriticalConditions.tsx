@@ -6,8 +6,8 @@ import { EMPTY_MSG } from 'src/utils/constants';
 import { Alert, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 export const StorageMapCriticalConditions: React.FC<{ type: string; message: string }> = ({
-  type,
   message,
+  type,
 }) => {
   const { t } = useTranslation();
   return (

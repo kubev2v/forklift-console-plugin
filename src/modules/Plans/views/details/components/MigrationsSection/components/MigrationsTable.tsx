@@ -7,7 +7,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import {
   MigrationModelGroupVersionKind,
   PlanModelGroupVersionKind,
-  V1beta1Migration,
+  type V1beta1Migration,
 } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {

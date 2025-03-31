@@ -1,7 +1,7 @@
 import React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
 
-import { V1beta1StorageMap } from '@kubev2v/types';
+import type { V1beta1StorageMap } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 
 import {

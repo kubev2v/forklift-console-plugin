@@ -7,9 +7,9 @@ import {
 } from '@patternfly/react-icons';
 
 export const categoryIcons = {
-  Critical: { True: <ExclamationCircleIcon color="#C9190B" />, False: undefined },
-  Error: { True: <ExclamationCircleIcon color="#C9190B" />, False: undefined },
-  Required: { True: <CheckCircleIcon color="#3E8635" />, False: undefined },
-  Warn: { True: <ExclamationTriangleIcon color="#F0AB00" />, False: undefined },
-  Advisory: { True: <CheckCircleIcon color="#3E8635" />, False: undefined },
+  Advisory: { False: undefined, True: <CheckCircleIcon color="#3E8635" /> },
+  Critical: { False: undefined, True: <ExclamationCircleIcon color="#C9190B" /> },
+  Error: { False: undefined, True: <ExclamationCircleIcon color="#C9190B" /> },
+  Required: { False: undefined, True: <CheckCircleIcon color="#3E8635" /> },
+  Warn: { False: undefined, True: <ExclamationTriangleIcon color="#F0AB00" /> },
 };

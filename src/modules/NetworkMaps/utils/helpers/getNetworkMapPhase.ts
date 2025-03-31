@@ -1,4 +1,4 @@
-import { NetworkMapData } from '../types';
+import type { NetworkMapData } from '../types';
 
 export const getNetworkMapPhase = (data: NetworkMapData) => {
   const conditions = data?.obj?.status?.conditions;

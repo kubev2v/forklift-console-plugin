@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 export const useProviderType = (name: string, namespace: string): string | undefined => {
@@ -9,9 +9,9 @@ export const useProviderType = (name: string, namespace: string): string | undef
 
   const [provider, loaded, error] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   useEffect(() => {

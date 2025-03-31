@@ -1,39 +1,37 @@
-import React, { FC, Ref, useState } from 'react';
+import React, { type FC, type Ref, useState } from 'react';
 import { useProviderInventory } from 'src/modules/Providers/hooks';
 import {
   EditModal,
-  EditModalProps,
-  ModalInputComponentType,
-  OnConfirmHookType,
+  type EditModalProps,
+  type ModalInputComponentType,
+  type OnConfirmHookType,
 } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  Modify,
-  OpenShiftNetworkAttachmentDefinition,
+  type Modify,
+  type OpenShiftNetworkAttachmentDefinition,
   PlanModel,
-  V1beta1Plan,
-  V1beta1PlanSpecTransferNetwork,
-  V1beta1Provider,
+  type V1beta1Plan,
+  type V1beta1PlanSpecTransferNetwork,
+  type V1beta1Provider,
 } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Dropdown,
   DropdownItem,
   DropdownList,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
 } from '@patternfly/react-core';
 
-const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
+const onConfirm: OnConfirmHookType = async ({ model, newValue, resource }) => {
   const plan = resource as V1beta1Plan;
 
   const transferNetwork = plan?.spec?.transferNetwork;
   const op = transferNetwork ? 'replace' : 'add';
 
   const obj = await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
@@ -41,20 +39,22 @@ const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
         value: newValue || undefined,
       },
     ],
+    model,
+    resource,
   });
 
   return obj;
 };
 
-interface DropdownRendererProps {
+type DropdownRendererProps = {
   value: string | number;
   onChange: (V1beta1PlanSpecTransferNetwork) => void;
-}
+};
 
 const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType = ({ resource }) => {
   const provider = resource as V1beta1Provider;
 
-  const DropdownRenderer: FC<DropdownRendererProps> = ({ value, onChange }) => {
+  const DropdownRenderer: FC<DropdownRendererProps> = ({ onChange, value }) => {
     // Hook for managing the open/close state of the dropdown
     const [isOpen, setIsOpen] = useState(false);
 
@@ -63,7 +63,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
     };
 
     const onSelect = (
-      _event: React.MouseEvent<Element, MouseEvent> | undefined,
+      _event: React.MouseEvent | undefined,
       _value: string | number | undefined,
     ) => {
       setIsOpen(false);
@@ -87,7 +87,9 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
         value={0}
         key={''}
         description={'Use the providers default transfer network'}
-        onClick={() => onChange('')}
+        onClick={() => {
+          onChange('');
+        }}
       >
         {'Providers default'}
       </DropdownItem>,
@@ -96,7 +98,9 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
           value={1}
           key={getNetworkName(n)}
           description={n.namespace}
-          onClick={() => onChange(n)}
+          onClick={() => {
+            onChange(n);
+          }}
         >
           {n.name}
         </DropdownItem>
@@ -164,7 +168,7 @@ function getNetworkName(value: unknown): string {
     return 'Providers default';
   }
 
-  return `${value?.['namespace']}/${value?.['name']}`;
+  return `${value?.namespace}/${value?.name}`;
 }
 
 export type EditPlanTransferNetworkProps = Modify<

@@ -11,14 +11,14 @@ import { produce } from 'immer';
 
 import { loadUserSettings } from '../utils/helpers/OverviewUserSettings';
 
-export interface CreateOverviewContextData {
+export type CreateOverviewContextData = {
   hideWelcomeCardByContext: boolean;
-}
+};
 
-export interface CreateOverviewContextType {
+export type CreateOverviewContextType = {
   data?: CreateOverviewContextData;
   setData: (data: CreateOverviewContextData) => void;
-}
+};
 
 export const CreateOverviewContext = createContext<CreateOverviewContextType>({
   setData: () => undefined,
@@ -60,7 +60,7 @@ export const useOverviewContext = (): CreateOverviewContextType => {
         if (newState.hideWelcomeCardByContext) userSettings?.welcome?.save(true);
         else userSettings?.welcome?.clear();
 
-        return setValueSafe(produce(() => newState));
+        setValueSafe(produce(() => newState));
       },
     }),
     [data, setData],

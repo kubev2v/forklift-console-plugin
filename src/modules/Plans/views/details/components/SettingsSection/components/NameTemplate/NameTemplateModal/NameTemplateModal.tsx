@@ -1,20 +1,20 @@
-import React, { FC, useState } from 'react';
+import React, { type FC, useState } from 'react';
 import { getValueByJsonPath } from 'src/modules/Providers';
 import { EditModal } from 'src/modules/Providers/modals';
 
 import { PlanModel } from '@kubev2v/types';
 
-import { EnhancedPlan, SettingsEditModalProps } from '../../../utils/types';
+import type { EnhancedPlan, SettingsEditModalProps } from '../../../utils/types';
 import NameTemplateInputFactory from '../NameTemplateInput/NameTemplateInput';
 import { NameTemplateRadioOptions } from '../utils/constants';
 import { onConfirmNameTemplate } from '../utils/utils';
 
 const NameTemplateModal: FC<SettingsEditModalProps> = ({
-  resource,
-  jsonPath,
-  title,
   body,
   helperText,
+  jsonPath,
+  resource,
+  title,
 }) => {
   const plan = resource as EnhancedPlan;
   const nameTemplate = getValueByJsonPath(plan, jsonPath) as string;

@@ -3,7 +3,7 @@ import { openstackSecretValidator } from 'src/modules/Providers/utils';
 
 import {
   BaseCredentialsSection,
-  BaseCredentialsSectionProps,
+  type BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { OpenstackCredentialsEdit } from './components/edit/OpenstackCredentialsEdit';
 import { OpenstackCredentialsList } from './components/list/OpenstackCredentialsList';

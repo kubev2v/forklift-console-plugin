@@ -7,20 +7,20 @@ import {
   ExclamationTriangleIcon,
 } from '@patternfly/react-icons';
 
-interface OperatorStatusProps {
+type OperatorStatusProps = {
   status: string;
-}
+};
 
 export const statusIcons = {
   Failure: <ExclamationCircleIcon color="#C9190B" />,
-  Successful: <CheckCircleIcon color="#3E8635" />,
   Running: <ExclamationTriangleIcon color="#F0AB00" />,
+  Successful: <CheckCircleIcon color="#3E8635" />,
 };
 
 const statusLabels = {
   Failure: 'Failure',
-  Successful: 'Successful',
   Running: 'Running',
+  Successful: 'Successful',
 };
 
 const OperatorStatus: React.FC<OperatorStatusProps> = ({ status }) => {

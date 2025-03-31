@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { ProvidersAddButton } from 'src/modules/Providers';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
 

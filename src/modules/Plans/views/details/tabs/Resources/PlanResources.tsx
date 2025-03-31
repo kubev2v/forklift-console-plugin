@@ -1,22 +1,23 @@
 import React from 'react';
-import { useProviderInventory, UseProviderInventoryParams } from 'src/modules/Providers/hooks';
+import { useProviderInventory, type UseProviderInventoryParams } from 'src/modules/Providers/hooks';
 
 import {
-  OpenshiftVM,
-  OpenstackVM,
-  OvaVM,
-  OVirtVM,
+  type OpenshiftVM,
+  type OpenstackVM,
+  type OvaVM,
+  type OVirtVM,
   PlanModelGroupVersionKind,
   ProviderModelGroupVersionKind,
-  ProviderVirtualMachine,
-  V1beta1Plan,
-  V1beta1Provider,
-  VSphereVM,
+  type ProviderVirtualMachine,
+  type V1beta1Plan,
+  type V1beta1Provider,
+  type VSphereVM,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
 import { Loading, Suspend } from '../../components';
+
 import { OpenshiftPlanResources } from './OpenshiftPlanResources';
 import { OpenstackPlanResources } from './OpenstackPlanResources';
 import { OVAPlanResources } from './OVAPlanResources';
@@ -29,28 +30,28 @@ export const PlanResources: React.FC<{ name: string; namespace: string }> = ({
 }) => {
   const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const [provider, providerLoaded, providerLodeError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name: plan?.spec?.provider?.source?.name,
     namespace: plan?.spec?.provider?.source?.namespace,
+    namespaced: true,
   });
 
   const inventoryOptions: UseProviderInventoryParams = {
-    provider: provider,
-    subPath: 'vms?detail=4',
     disabled: !loaded || loadError || !providerLoaded || providerLodeError,
+    provider,
+    subPath: 'vms?detail=4',
   };
 
   const {
+    error: inventoryLoadError,
     inventory: inventoryVms,
     loading: inventoryLoading,
-    error: inventoryLoadError,
   } = useProviderInventory<ProviderVirtualMachine[]>(inventoryOptions);
 
   const planVmIds: string[] = [];

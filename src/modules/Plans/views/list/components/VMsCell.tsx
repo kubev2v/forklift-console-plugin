@@ -7,7 +7,7 @@ import { PlanModelRef } from '@kubev2v/types';
 import { Split, SplitItem } from '@patternfly/react-core';
 import { VirtualMachineIcon } from '@patternfly/react-icons';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 
 export const VMsCell: React.FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
@@ -15,9 +15,9 @@ export const VMsCell: React.FC<CellProps> = ({ data }) => {
   const specVms = plan?.spec?.vms;
 
   const planURL = getResourceUrl({
-    reference: PlanModelRef,
     name: plan?.metadata?.name,
     namespace: plan?.metadata?.namespace,
+    reference: PlanModelRef,
   });
 
   return (

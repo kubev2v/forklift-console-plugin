@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
-import { useK8sWatchResource, WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import { useK8sWatchResource, type WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Type for the return value of the useK8sWatchSecretData hook.

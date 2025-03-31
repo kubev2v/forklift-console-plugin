@@ -4,7 +4,7 @@ export * from './EditControllerMemoryLimitModal';
 export * from './EditInventoryMemoryLimitModal';
 export * from './EditMaxVMInFlightModal';
 export * from './EditPreCopyIntervalModal';
-export * from './EditSettingsModalProps';
+export type * from './EditSettingsModalProps';
 export * from './EditSnapshotPoolingIntervalModal';
 export * from './SettingsNumberInput';
 export * from './SettingsSelectInput';

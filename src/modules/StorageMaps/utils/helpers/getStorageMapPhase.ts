@@ -1,4 +1,4 @@
-import { StorageMapData } from '../types';
+import type { StorageMapData } from '../types';
 
 export const getStorageMapPhase = (data: StorageMapData) => {
   const conditions = data?.obj?.status?.conditions;

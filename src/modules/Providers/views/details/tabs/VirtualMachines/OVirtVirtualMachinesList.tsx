@@ -1,87 +1,87 @@
 import React from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
+import type { ResourceFieldFactory } from '@components/common/utils/types';
 
 import { concernFilter, OvirtHostFiler } from './utils/filters';
-import { ProviderVirtualMachinesList, VmData } from './components';
+import { ProviderVirtualMachinesList, type VmData } from './components';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
-import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
+import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { getVmPowerState } from './utils';
 
 export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    resourceFieldId: 'name',
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: 'freetext',
+    },
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
     jsonPath: '$.name',
     label: t('Name'),
-    isVisible: true,
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by name'),
-    },
+    resourceFieldId: 'name',
     sortable: true,
   },
   {
-    resourceFieldId: 'concerns',
+    filter: concernFilter(t),
+    isVisible: true,
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
-    isVisible: true,
+    resourceFieldId: 'concerns',
     sortable: true,
-    filter: concernFilter(t),
   },
   {
-    resourceFieldId: 'cluster',
+    filter: {
+      placeholderLabel: t('Filter by cluster'),
+      type: 'freetext',
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.vm.cluster',
     label: t('Cluster'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by cluster'),
-    },
+    resourceFieldId: 'cluster',
     sortable: true,
   },
   {
-    resourceFieldId: 'host',
+    filter: OvirtHostFiler(t),
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.vm.host',
     label: t('Host'),
-    isVisible: true,
-    isIdentity: false,
+    resourceFieldId: 'host',
     sortable: true,
-    filter: OvirtHostFiler(t),
   },
   {
-    resourceFieldId: 'path',
+    filter: {
+      placeholderLabel: t('Filter by path'),
+      type: 'freetext',
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.vm.path',
     label: t('Path'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by path'),
-    },
+    resourceFieldId: 'path',
     sortable: true,
   },
   {
-    resourceFieldId: 'status',
-    jsonPath: (data: VmData) => getVmPowerState(data?.vm),
-    label: t('Status'),
-    isVisible: true,
-    isIdentity: false,
     filter: {
-      type: 'enum',
       placeholderLabel: t('Filter by status'),
+      type: 'enum',
       values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
     },
+    isIdentity: false,
+    isVisible: true,
+    jsonPath: (data: VmData) => getVmPowerState(data?.vm),
+    label: t('Status'),
+    resourceFieldId: 'status',
     sortable: true,
   },
   {
-    resourceFieldId: 'description',
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.vm.description',
     label: t('Description'),
-    isVisible: true,
-    isIdentity: false,
+    resourceFieldId: 'description',
     sortable: false,
   },
 ];

@@ -1,5 +1,5 @@
 // @index('./*.ts', f => `export * from '${f.path}';`)
-export * from './ProviderData';
-export * from './ProvidersPermissionStatus';
-export * from './Validation';
+export type * from './ProviderData';
+export type * from './ProvidersPermissionStatus';
+export type * from './Validation';
 // @endindex

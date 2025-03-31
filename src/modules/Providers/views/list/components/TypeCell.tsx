@@ -4,7 +4,7 @@ import { getIsOnlySource, TableLabelCell } from 'src/modules/Providers/utils';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 
 /**
  * TypeCell component, used for displaying the type of a resource.

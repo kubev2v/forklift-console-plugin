@@ -4,5 +4,5 @@ export * from './Migration';
 export * from './modals';
 export * from './Plan';
 export * from './PlanVirtualMachines';
-export * from './types';
+export type * from './types';
 // @endindex

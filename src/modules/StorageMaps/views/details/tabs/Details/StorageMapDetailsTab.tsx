@@ -3,26 +3,26 @@ import { SectionHeading } from 'src/components/headers/SectionHeading';
 import { Suspend } from 'src/modules/Plans/views/details/components';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { StorageMapModelGroupVersionKind, V1beta1StorageMap } from '@kubev2v/types';
+import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
 import { ConditionsSection, DetailsSection, MapsSection, ProvidersSection } from '../../components';
 
-interface StorageMapDetailsTabProps {
+type StorageMapDetailsTabProps = {
   name: string;
   namespace: string;
-}
+};
 
 export const StorageMapDetailsTab: React.FC<StorageMapDetailsTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1StorageMap>({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    namespaced: true,
     isList: false,
-    namespace,
     name,
+    namespace,
+    namespaced: true,
   });
 
   return (

@@ -1,12 +1,16 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { AlertMessageForModals, ItemIsOwnedAlert, useModal } from 'src/modules/Providers/modals';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1Plan } from '@kubev2v/types';
-import { k8sDelete, K8sGroupVersionKind, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import type { V1beta1Plan } from '@kubev2v/types';
+import {
+  k8sDelete,
+  type K8sGroupVersionKind,
+  type K8sModel,
+} from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
 import { getPlanPhase, PlanPhase } from '../utils';
@@ -19,12 +23,12 @@ import { getPlanPhase, PlanPhase } from '../utils';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-interface PlanDeleteModalProps {
+type PlanDeleteModalProps = {
   resource: V1beta1Plan;
   model: K8sModel;
   title?: string;
   redirectTo?: string;
-}
+};
 
 /**
  * A generic delete modal component
@@ -33,10 +37,10 @@ interface PlanDeleteModalProps {
  * @returns {React.Element} The DeleteModal component
  */
 export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
-  title,
-  resource,
   model,
   redirectTo,
+  resource,
+  title,
 }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
@@ -49,8 +53,8 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
   const owner = resource?.metadata?.ownerReferences?.[0];
   const groupVersionKind: K8sGroupVersionKind = {
     group: model.apiGroup,
-    version: model.apiVersion,
     kind: model.kind,
+    version: model.apiVersion,
   };
 
   const onDelete = useCallback(async () => {

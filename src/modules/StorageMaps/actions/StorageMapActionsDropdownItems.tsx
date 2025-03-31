@@ -7,7 +7,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { StorageMapModel, StorageMapModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
-import { StorageMapData } from '../utils';
+import type { StorageMapData } from '../utils';
 
 export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
@@ -16,9 +16,9 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   const { obj: StorageMap } = data;
 
   const StorageMapURL = getResourceUrl({
-    reference: StorageMapModelRef,
     name: StorageMap?.metadata?.name,
     namespace: StorageMap?.metadata?.namespace,
+    reference: StorageMapModelRef,
   });
 
   const onClick = () => {
@@ -44,6 +44,6 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   ];
 };
 
-interface StorageMapActionsDropdownItemsProps {
+type StorageMapActionsDropdownItemsProps = {
   data: StorageMapData;
-}
+};

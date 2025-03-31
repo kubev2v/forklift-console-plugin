@@ -3,7 +3,7 @@ import { TableLinkCell } from 'src/modules/Providers/utils';
 
 import { PlanModelGroupVersionKind } from '@kubev2v/types';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 
 export const PlanCell: React.FC<CellProps> = ({ data }) => {
   const { obj } = data;

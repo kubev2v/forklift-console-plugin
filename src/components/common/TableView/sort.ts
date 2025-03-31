@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 
-import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base/types';
+import type { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base/types';
 
 import { getResourceFieldValue } from '../FilterGroup';
-import { localeCompare, ResourceField } from '../utils';
-import { SortType } from './types';
+import { localeCompare, type ResourceField } from '../utils';
+
+import type { SortType } from './types';
 
 /**
  * Compares all types by converting them to string.
@@ -67,8 +68,8 @@ export const useSort = (
   const [activeSort, setActiveSort] = useState<SortType>({
     // when no other order is define, default to ascending order
     isAsc: true,
-    resourceFieldId: firstField?.resourceFieldId,
     label: firstField?.label,
+    resourceFieldId: firstField?.resourceFieldId,
   });
 
   const compareFn = useMemo(
@@ -90,9 +91,9 @@ export const useSort = (
  * @see ThSortType
  */
 export const buildSort = ({
+  activeSort,
   columnIndex,
   resourceFields,
-  activeSort,
   setActiveSort,
 }: {
   columnIndex: number;
@@ -100,16 +101,7 @@ export const buildSort = ({
   activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
 }): ThSortType => ({
-  sortBy: {
-    index:
-      resourceFields.find(
-        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
-      ) &&
-      resourceFields.findIndex(
-        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
-      ),
-    direction: activeSort.isAsc ? 'asc' : 'desc',
-  },
+  columnIndex,
   onSort: (_event, index, direction) => {
     resourceFields[index]?.resourceFieldId &&
       setActiveSort({
@@ -117,5 +109,14 @@ export const buildSort = ({
         ...resourceFields[index],
       });
   },
-  columnIndex,
+  sortBy: {
+    direction: activeSort.isAsc ? 'asc' : 'desc',
+    index:
+      resourceFields.find(
+        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
+      ) &&
+      resourceFields.findIndex(
+        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
+      ),
+  },
 });

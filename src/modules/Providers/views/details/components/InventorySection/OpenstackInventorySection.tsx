@@ -4,40 +4,41 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { DescriptionList } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../utils';
-import { InventoryProps } from './InventorySection';
+
+import type { InventoryProps } from './InventorySection';
 
 export const OpenstackInventorySection: React.FC<InventoryProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
-  const { provider, inventory } = data;
+  const { inventory, provider } = data;
 
   if (!provider || !inventory) {
     return <span className="text-muted">{t('No inventory data available.')}</span>;
   }
 
   const inventoryItems = {
-    vmCount: {
-      title: t('Virtual machines'),
-      helpContent: t('Number of virtual machines in cluster'),
-    },
     networkCount: {
-      title: t('Network interfaces'),
       helpContent: t('Number of network interfaces in provider cluster'),
-    },
-    regionCount: {
-      title: t('Regions'),
-      helpContent: t('Number of regions in OpenStack cluster'),
+      title: t('Network interfaces'),
     },
     projectCount: {
-      title: t('Projects'),
       helpContent: t('Number of projects in OpenStack cluster'),
+      title: t('Projects'),
+    },
+    regionCount: {
+      helpContent: t('Number of regions in OpenStack cluster'),
+      title: t('Regions'),
+    },
+    vmCount: {
+      helpContent: t('Number of virtual machines in cluster'),
+      title: t('Virtual machines'),
     },
     volumeCount: {
-      title: t('Volumes'),
       helpContent: t('Number of storage volumes in cluster'),
+      title: t('Volumes'),
     },
     volumeTypeCount: {
-      title: t('Volume Types'),
       helpContent: t('Number of storage types in cluster'),
+      title: t('Volume Types'),
     },
   };
 
@@ -53,7 +54,7 @@ export const OpenstackInventorySection: React.FC<InventoryProps> = ({ data }) =>
           title={item.title}
           content={value}
           helpContent={item.helpContent}
-          crumbs={['Inventory', 'providers', `${provider.spec.type}`, '[UID]', key]}
+          crumbs={['Inventory', 'providers', provider.spec.type, '[UID]', key]}
         />,
       );
     }
@@ -64,8 +65,8 @@ export const OpenstackInventorySection: React.FC<InventoryProps> = ({ data }) =>
       isHorizontal
       horizontalTermWidthModifier={{
         default: '12ch',
-        sm: '15ch',
         md: '20ch',
+        sm: '15ch',
       }}
       columnModifier={{
         default: '2Col',

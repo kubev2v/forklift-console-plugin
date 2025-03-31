@@ -1,6 +1,6 @@
-import { OVirtVM, V1beta1Provider } from '@kubev2v/types';
+import type { OVirtVM, V1beta1Provider } from '@kubev2v/types';
 
-import { VmData } from '../../details';
+import type { VmData } from '../../details';
 
 /**
  * (oVirt only) Special case of unmapped networks. If the profile is missing then NIC cannot be linked with any oVirt network.

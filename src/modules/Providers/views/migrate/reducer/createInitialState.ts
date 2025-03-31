@@ -1,16 +1,17 @@
 import {
   ProviderModelGroupVersionKind as ProviderGVK,
-  ProviderType,
-  V1beta1Provider,
+  type ProviderType,
+  type V1beta1Provider,
 } from '@kubev2v/types';
 
 import { networkMapTemplate, planTemplate, storageMapTemplate } from '../../create/templates';
-import { toId, VmData } from '../../details';
+import { toId, type VmData } from '../../details';
 import {
-  CreateVmMigrationPageState,
+  type CreateVmMigrationPageState,
   MULTIPLE_NICS_ON_THE_SAME_NETWORK,
   OVIRT_NICS_WITH_EMPTY_PROFILE,
 } from '../types';
+
 import { SET_DISKS, SET_NICK_PROFILES } from './actions';
 import { getNamespacesUsedBySelectedVms } from './getNamespacesUsedBySelectedVms';
 import { getNetworksUsedBySelectedVms } from './getNetworksUsedBySelectedVMs';
@@ -31,97 +32,16 @@ export const createInitialState = ({
   namespace,
   planName = '',
   projectName,
+  selectedVms = [],
   sourceProvider = {
-    metadata: { name: 'unknown', namespace: 'unknown' },
     apiVersion: `${ProviderGVK.group}/${ProviderGVK.version}`,
     kind: ProviderGVK.kind,
+    metadata: { name: 'unknown', namespace: 'unknown' },
   },
-  selectedVms = [],
 }: InitialStateParameters): CreateVmMigrationPageState => {
   const hasVmNicWithEmptyProfile = hasNicWithEmptyProfile(sourceProvider, selectedVms);
 
   return {
-    underConstruction: {
-      projectName,
-      plan: {
-        ...planTemplate,
-        metadata: {
-          ...planTemplate?.metadata,
-          name: planName,
-          namespace,
-        },
-        spec: {
-          ...planTemplate?.spec,
-          provider: {
-            source: getObjectRef(sourceProvider),
-            destination: undefined,
-          },
-          targetNamespace: namespace,
-          vms: selectedVms.map((data) => ({
-            name: data.name,
-            namespace: data.namespace,
-            id: toId(data),
-          })),
-        },
-      },
-      netMap: {
-        ...networkMapTemplate,
-        metadata: {
-          ...networkMapTemplate?.metadata,
-          generateName: `${sourceProvider.metadata.name}-`,
-          namespace,
-        },
-        spec: {
-          ...networkMapTemplate?.spec,
-          provider: {
-            source: getObjectRef(sourceProvider),
-            destination: undefined,
-          },
-        },
-      },
-      storageMap: {
-        ...storageMapTemplate,
-        metadata: {
-          ...storageMapTemplate?.metadata,
-          generateName: `${sourceProvider.metadata.name}-`,
-          namespace,
-        },
-        spec: {
-          ...storageMapTemplate?.spec,
-          provider: {
-            source: getObjectRef(sourceProvider),
-            destination: undefined,
-          },
-        },
-      },
-    },
-
-    existingResources: {
-      plans: [],
-      providers: [],
-      targetNamespaces: [],
-      targetNetworks: [],
-      sourceNetworks: [],
-      targetStorages: [],
-      sourceStorages: [],
-      nicProfiles: [],
-      disks: [],
-      netMaps: [],
-      storageMaps: [],
-    },
-    receivedAsParams: {
-      selectedVms,
-      sourceProvider,
-      namespace,
-    },
-    validation: {
-      planName: 'default',
-      projectName: 'default',
-      targetNamespace: 'default',
-      targetProvider: 'default',
-      networkMappings: hasVmNicWithEmptyProfile ? 'error' : 'default',
-      storageMappings: 'default',
-    },
     alerts: {
       networkMappings: {
         errors: hasVmNicWithEmptyProfile ? [OVIRT_NICS_WITH_EMPTY_PROFILE] : [],
@@ -134,8 +54,12 @@ export const createInitialState = ({
         warnings: [],
       },
     },
+
     calculatedOnce: {
-      vmFieldsFactory: resourceFieldsForType(sourceProvider?.spec?.type as ProviderType),
+      namespacesUsedBySelectedVms:
+        sourceProvider.spec?.type === 'openshift'
+          ? getNamespacesUsedBySelectedVms(selectedVms)
+          : [],
       networkIdsUsedBySelectedVms:
         sourceProvider.spec?.type !== 'ovirt' ? getNetworksUsedBySelectedVms(selectedVms, []) : [],
       sourceNetworkLabelToId: {},
@@ -143,29 +67,106 @@ export const createInitialState = ({
       storageIdsUsedBySelectedVms: ['ovirt', 'openstack'].includes(sourceProvider.spec?.type)
         ? []
         : getStoragesUsedBySelectedVms({}, selectedVms, []),
-      namespacesUsedBySelectedVms:
-        sourceProvider.spec?.type === 'openshift'
-          ? getNamespacesUsedBySelectedVms(selectedVms)
-          : [],
+      vmFieldsFactory: resourceFieldsForType(sourceProvider?.spec?.type as ProviderType),
     },
     calculatedPerNamespace: {
-      targetNetworks: [],
-      targetStorages: [],
-      sourceNetworks: [],
       networkMappings: undefined,
+      sourceNetworks: [],
       sourceStorages: [],
       storageMappings: undefined,
+      targetNetworks: [],
+      targetStorages: [],
     },
-    workArea: {
-      targetProvider: undefined,
+    existingResources: {
+      disks: [],
+      netMaps: [],
+      nicProfiles: [],
+      plans: [],
+      providers: [],
+      sourceNetworks: [],
+      sourceStorages: [],
+      storageMaps: [],
+      targetNamespaces: [],
+      targetNetworks: [],
+      targetStorages: [],
     },
     flow: {
-      editingDone: false,
       apiError: undefined,
+      editingDone: false,
       initialLoading: {
         [SET_DISKS]: !['ovirt', 'openstack'].includes(sourceProvider.spec?.type),
         [SET_NICK_PROFILES]: sourceProvider.spec?.type !== 'ovirt',
       },
+    },
+    receivedAsParams: {
+      namespace,
+      selectedVms,
+      sourceProvider,
+    },
+    underConstruction: {
+      netMap: {
+        ...networkMapTemplate,
+        metadata: {
+          ...networkMapTemplate?.metadata,
+          generateName: `${sourceProvider.metadata.name}-`,
+          namespace,
+        },
+        spec: {
+          ...networkMapTemplate?.spec,
+          provider: {
+            destination: undefined,
+            source: getObjectRef(sourceProvider),
+          },
+        },
+      },
+      plan: {
+        ...planTemplate,
+        metadata: {
+          ...planTemplate?.metadata,
+          name: planName,
+          namespace,
+        },
+        spec: {
+          ...planTemplate?.spec,
+          provider: {
+            destination: undefined,
+            source: getObjectRef(sourceProvider),
+          },
+          targetNamespace: namespace,
+          vms: selectedVms.map((data) => ({
+            id: toId(data),
+            name: data.name,
+            namespace: data.namespace,
+          })),
+        },
+      },
+      projectName,
+      storageMap: {
+        ...storageMapTemplate,
+        metadata: {
+          ...storageMapTemplate?.metadata,
+          generateName: `${sourceProvider.metadata.name}-`,
+          namespace,
+        },
+        spec: {
+          ...storageMapTemplate?.spec,
+          provider: {
+            destination: undefined,
+            source: getObjectRef(sourceProvider),
+          },
+        },
+      },
+    },
+    validation: {
+      networkMappings: hasVmNicWithEmptyProfile ? 'error' : 'default',
+      planName: 'default',
+      projectName: 'default',
+      storageMappings: 'default',
+      targetNamespace: 'default',
+      targetProvider: 'default',
+    },
+    workArea: {
+      targetProvider: undefined,
     },
   };
 };

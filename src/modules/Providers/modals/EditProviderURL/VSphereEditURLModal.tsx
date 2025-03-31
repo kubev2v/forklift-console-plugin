@@ -4,23 +4,24 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { patchProviderURL } from './utils/patchProviderURL';
 import { validateEsxiURL, validateVCenterURL } from '../../utils/validators';
-import { EditModal, ValidationHookType } from '../EditModal';
-import { EditProviderURLModalProps } from './EditProviderURLModal';
+import { EditModal, type ValidationHookType } from '../EditModal';
+
+import { patchProviderURL } from './utils/patchProviderURL';
+import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
 export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = ({
-  title,
+  insecureSkipVerify,
   label,
   resource: provider,
-  insecureSkipVerify,
+  title,
   ...props
 }) => {
   const { t } = useForkliftTranslation();
   let validationHook: ValidationHookType;
 
   // VCenter of ESXi
-  const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'] || '';
+  const sdkEndpoint = provider?.spec?.settings?.sdkEndpoint || '';
   if (sdkEndpoint === 'esxi') {
     validationHook = validateEsxiURL;
   } else {

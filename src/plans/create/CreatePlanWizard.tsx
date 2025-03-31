@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react';
+import React, { type FC, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { Form, Title, Wizard, WizardStep, WizardStepType } from '@patternfly/react-core';
+import { Form, Title, Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -18,12 +18,14 @@ export const CreatePlanWizard: FC = () => {
   const { formState, watch } = form;
   const formValues = watch();
 
-  const onSubmit = () => console.log('SUBMITTED: ', formValues);
+  const onSubmit = () => {
+    console.log('SUBMITTED: ', formValues);
+  };
 
   const getStepProps = (id: PlanWizardStepId) => ({
     id,
-    name: planStepNames[id],
     isDisabled: currentStep?.index < planStepOrder[id] && !isEmpty(formState?.errors),
+    name: planStepNames[id],
   });
 
   return (
@@ -32,7 +34,9 @@ export const CreatePlanWizard: FC = () => {
         isVisitRequired
         title={t('Create migration plan')}
         footer={<CreatePlanWizardFooter />}
-        onStepChange={(_event, currentStep) => setCurrentStep(currentStep)}
+        onStepChange={(_event, currentStep) => {
+          setCurrentStep(currentStep);
+        }}
       >
         <WizardStep
           {...getStepProps(PlanWizardStepId.BasicSetUp)}

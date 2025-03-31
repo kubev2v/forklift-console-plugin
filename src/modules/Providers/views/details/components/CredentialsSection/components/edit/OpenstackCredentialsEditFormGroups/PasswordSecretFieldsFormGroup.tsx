@@ -8,12 +8,13 @@ import { Button, InputGroup, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 
-import { EditComponentProps } from '../../BaseCredentialsSection';
+import type { EditComponentProps } from '../../BaseCredentialsSection';
+
 import { OpenstackSecretFieldId } from './constants';
 
 export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
-  secret,
   onChange,
+  secret,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -26,11 +27,11 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
   const initialState = {
     passwordHidden: true,
     validation: {
-      username: openstackSecretFieldValidator(OpenstackSecretFieldId.Username, username),
-      password: openstackSecretFieldValidator(OpenstackSecretFieldId.Password, password),
-      regionName: openstackSecretFieldValidator(OpenstackSecretFieldId.RegionName, regionName),
-      projectName: openstackSecretFieldValidator(OpenstackSecretFieldId.ProjectName, projectName),
       domainName: openstackSecretFieldValidator(OpenstackSecretFieldId.DomainName, domainName),
+      password: openstackSecretFieldValidator(OpenstackSecretFieldId.Password, password),
+      projectName: openstackSecretFieldValidator(OpenstackSecretFieldId.ProjectName, projectName),
+      regionName: openstackSecretFieldValidator(OpenstackSecretFieldId.RegionName, regionName),
+      username: openstackSecretFieldValidator(OpenstackSecretFieldId.Username, username),
     },
   };
 
@@ -57,7 +58,7 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
   const handleChange = useCallback(
     (id, value) => {
       const validationState = openstackSecretFieldValidator(id, value);
-      dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
+      dispatch({ payload: { field: id, validationState }, type: 'SET_FIELD_VALIDATED' });
 
       const encodedValue = Base64.encode(value?.trim() || '');
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
@@ -73,8 +74,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
     changedField: string,
   ) => (value: string, event: React.FormEvent<HTMLInputElement>) => void;
 
-  const onChangeFactory: onChangeFactoryType = (changedField) => (value) =>
+  const onChangeFactory: onChangeFactoryType = (changedField) => (value) => {
     handleChange(changedField, value);
+  };
 
   return (
     <>
@@ -93,7 +95,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id={OpenstackSecretFieldId.Username}
           name={OpenstackSecretFieldId.Username}
           value={username}
-          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.Username)(v, e)}
+          onChange={(e, v) => {
+            onChangeFactory(OpenstackSecretFieldId.Username)(v, e);
+          }}
           validated={state.validation.username.type}
         />
       </FormGroupWithHelpText>
@@ -114,7 +118,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
             type={state.passwordHidden ? 'password' : 'text'}
             aria-label="Password input"
             value={password}
-            onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.Password)(v, e)}
+            onChange={(e, v) => {
+              onChangeFactory(OpenstackSecretFieldId.Password)(v, e);
+            }}
             validated={state.validation.password.type}
           />
           <Button
@@ -142,7 +148,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id={OpenstackSecretFieldId.RegionName}
           name={OpenstackSecretFieldId.RegionName}
           value={regionName}
-          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.RegionName)(v, e)}
+          onChange={(e, v) => {
+            onChangeFactory(OpenstackSecretFieldId.RegionName)(v, e);
+          }}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>
@@ -162,7 +170,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id={OpenstackSecretFieldId.ProjectName}
           name={OpenstackSecretFieldId.ProjectName}
           value={projectName}
-          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.ProjectName)(v, e)}
+          onChange={(e, v) => {
+            onChangeFactory(OpenstackSecretFieldId.ProjectName)(v, e);
+          }}
           validated={state.validation.projectName.type}
         />
       </FormGroupWithHelpText>
@@ -182,7 +192,9 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id={OpenstackSecretFieldId.DomainName}
           name={OpenstackSecretFieldId.DomainName}
           value={domainName}
-          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.DomainName)(v, e)}
+          onChange={(e, v) => {
+            onChangeFactory(OpenstackSecretFieldId.DomainName)(v, e);
+          }}
           validated={state.validation.domainName.type}
         />
       </FormGroupWithHelpText>

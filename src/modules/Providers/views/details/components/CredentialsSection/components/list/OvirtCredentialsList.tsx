@@ -7,10 +7,11 @@ import { DescriptionList, Text, TextVariants } from '@patternfly/react-core';
 
 import { FieldWithClipboardCopy } from '../../FieldWithClipboardCopy';
 import { MaskedField } from '../../MaskedField';
-import { ListComponentProps } from '../BaseCredentialsSection';
-import { Fields } from './Fields';
+import type { ListComponentProps } from '../BaseCredentialsSection';
 
-export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
+import type { Fields } from './Fields';
+
+export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ reveal, secret }) => {
   const { t } = useForkliftTranslation();
 
   const items = [];
@@ -42,31 +43,31 @@ export const OvirtCredentialsList: React.FC<ListComponentProps> = ({ secret, rev
   );
 
   const fields: Fields = {
-    user: {
-      label: t('Username'),
-      description: t(
-        'A username for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the username is in the format of username@user-domain. For example: admin@internal.',
-      ),
-    },
-    password: {
-      label: t('Password'),
-      description: t(
-        'A user password for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint.',
-      ),
-    },
-    insecureSkipVerify: {
-      label: t('Skip certificate validation'),
-      description: t("If true, the provider's CA certificate won't be validated."),
-      helperTextPopover: insecureSkipVerifyHelperTextPopover,
-      displayType: 'switch',
-    },
     cacert: {
-      label: t('CA certificate'),
       description: t(
         'A CA certificate to be trusted when connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
       ),
-      helperTextPopover: cacertHelperTextPopover,
       displayType: 'textArea',
+      helperTextPopover: cacertHelperTextPopover,
+      label: t('CA certificate'),
+    },
+    insecureSkipVerify: {
+      description: t("If true, the provider's CA certificate won't be validated."),
+      displayType: 'switch',
+      helperTextPopover: insecureSkipVerifyHelperTextPopover,
+      label: t('Skip certificate validation'),
+    },
+    password: {
+      description: t(
+        'A user password for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint.',
+      ),
+      label: t('Password'),
+    },
+    user: {
+      description: t(
+        'A username for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the username is in the format of username@user-domain. For example: admin@internal.',
+      ),
+      label: t('Username'),
     },
   };
 

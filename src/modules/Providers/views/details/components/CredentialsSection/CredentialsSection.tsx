@@ -1,9 +1,9 @@
 import React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
-import { ProviderData, SecretSubType } from 'src/modules/Providers/utils';
+import type { ProviderData, SecretSubType } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { EsxiCredentialsSection } from './EsxiCredentialsSection';
@@ -18,7 +18,7 @@ export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
   const { provider } = data;
 
   const type = provider?.spec?.type;
-  const subTypeString = provider?.spec?.settings?.['sdkEndpoint'] || '';
+  const subTypeString = provider?.spec?.settings?.sdkEndpoint || '';
   const subType = subTypeString === 'esxi' ? 'esxi' : 'vcenter';
 
   if (!provider?.spec?.secret?.name || !provider?.spec?.secret?.namespace) {
@@ -62,14 +62,14 @@ export const CredentialsSection_: React.FC<{
   namespace: string;
   type: string;
   subType: SecretSubType;
-}> = ({ name, namespace, type, subType }) => {
+}> = ({ name, namespace, subType, type }) => {
   const { t } = useForkliftTranslation();
 
   const [secret, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Secret>({
-    groupVersionKind: { version: 'v1', kind: 'Secret' },
+    groupVersionKind: { kind: 'Secret', version: 'v1' },
+    name,
+    namespace,
     namespaced: true,
-    namespace: namespace,
-    name: name,
   });
 
   // Checking if provider data matches secret data
@@ -112,9 +112,9 @@ export const CredentialsSection_: React.FC<{
     case 'vsphere':
       if (subType === 'esxi') {
         return <EsxiCredentialsSection secret={secret} />;
-      } else {
-        return <VCenterCredentialsSection secret={secret} />;
       }
+      return <VCenterCredentialsSection secret={secret} />;
+
     default:
       return <></>;
   }

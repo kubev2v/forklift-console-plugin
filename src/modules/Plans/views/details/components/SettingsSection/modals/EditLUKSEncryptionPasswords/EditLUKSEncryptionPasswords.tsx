@@ -1,25 +1,29 @@
 import React, { useEffect } from 'react';
 import { InputList, LazyTextInput } from 'src/components';
-import { EditModal, EditModalProps, ModalInputComponentType } from 'src/modules/Providers/modals';
+import {
+  EditModal,
+  type EditModalProps,
+  type ModalInputComponentType,
+} from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  IoK8sApiCoreV1Secret,
-  Modify,
+  type IoK8sApiCoreV1Secret,
+  type Modify,
   PlanModel,
-  V1beta1Plan,
-  V1beta1Provider,
+  type V1beta1Plan,
+  type V1beta1Provider,
 } from '@kubev2v/types';
-import { K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { editLUKSModalAlert } from './editLUKSModalAlert';
 import { editLUKSModalBody } from './editLUKSModalBody';
 import { onLUKSEncryptionPasswordsConfirm } from './onLUKSEncryptionPasswordsConfirm';
 
-interface SecretRendererProps {
+type SecretRendererProps = {
   value: string | number;
   onChange: (string) => void;
-}
+};
 
 const EditPassphraseFactory: (initialValue: string) => ModalInputComponentType = (initialValue) => {
   const SecretRenderer: React.FC<SecretRendererProps> = ({ onChange }) => {
@@ -27,12 +31,16 @@ const EditPassphraseFactory: (initialValue: string) => ModalInputComponentType =
     const items = initialValue && JSON.parse(initialValue);
 
     // Init component internal value
-    useEffect(() => onChange(initialValue), [initialValue]);
+    useEffect(() => {
+      onChange(initialValue);
+    }, [initialValue]);
 
     return (
       <InputList
         items={items}
-        onChange={(list) => onChange(JSON.stringify(list))}
+        onChange={(list) => {
+          onChange(JSON.stringify(list));
+        }}
         InputRow={LazyTextInput}
         addButtonText={t('Add passphrase')}
       />

@@ -21,29 +21,29 @@ export const VSphereProviderDetailsPage: React.FC<{ name: string; namespace: str
 
   const pages = [
     {
+      component: () => <ProviderDetailsWrapper name={name} namespace={namespace} />,
       href: '',
       name: t('Details'),
-      component: () => <ProviderDetailsWrapper name={name} namespace={namespace} />,
     },
     {
+      component: () => <ProviderYAMLPageWrapper name={name} namespace={namespace} />,
       href: 'yaml',
       name: t('YAML'),
-      component: () => <ProviderYAMLPageWrapper name={name} namespace={namespace} />,
     },
     {
+      component: () => <ProviderCredentialsWrapper name={name} namespace={namespace} />,
       href: 'credentials',
       name: t('Credentials'),
-      component: () => <ProviderCredentialsWrapper name={name} namespace={namespace} />,
     },
     {
+      component: () => <ProviderVirtualMachines name={name} namespace={namespace} />,
       href: 'vms',
       name: t('Virtual Machines'),
-      component: () => <ProviderVirtualMachines name={name} namespace={namespace} />,
     },
     {
+      component: () => <ProviderHostsWrapper name={name} namespace={namespace} />,
       href: 'hosts',
       name: t('Hosts'),
-      component: () => <ProviderHostsWrapper name={name} namespace={namespace} />,
     },
   ];
 

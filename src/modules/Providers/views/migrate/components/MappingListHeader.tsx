@@ -10,8 +10,8 @@ import {
 } from '@patternfly/react-core';
 
 export const MappingListHeader = ({
-  sourceHeading,
   destinationHeading,
+  sourceHeading,
 }: {
   sourceHeading: string;
   destinationHeading: string;

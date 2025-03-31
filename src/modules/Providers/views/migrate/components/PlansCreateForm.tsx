@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { FilterableSelect } from 'src/components';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
@@ -29,76 +29,77 @@ import {
   addStorageMapping,
   deleteNetworkMapping,
   deleteStorageMapping,
-  PageAction,
+  type PageAction,
   removeAlert,
   replaceNetworkMapping,
   replaceStorageMapping,
   setPlanTargetNamespace,
   setPlanTargetProvider,
 } from '../reducer/actions';
-import { CreateVmMigrationPageState, NetworkAlerts, StorageAlerts } from '../types';
+import type { CreateVmMigrationPageState, NetworkAlerts, StorageAlerts } from '../types';
+
 import { MappingList } from './MappingList';
 import { MappingListHeader } from './MappingListHeader';
 import { StateAlerts } from './StateAlerts';
 
 const buildNetworkMessages = (
   t: (key: string) => string,
-): { [key in NetworkAlerts]: { title: string; body: string; blocker?: boolean } } => ({
-  NET_MAP_NAME_REGENERATED: {
-    title: t('Network Map name re-generated'),
-    body: t('New name was generated for the Network Map due to naming conflict.'),
+): Record<NetworkAlerts, { title: string; body: string; blocker?: boolean }> => ({
+  MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING: {
+    blocker: true,
+    body: t('VM(s) with more than one interface mapped to Pod Networking were detected.'),
+    title: t('Multiple NICs mapped to Pod Networking '),
   },
-  NETWORK_MAPPING_REGENERATED: {
-    title: t('Network mappings have been re-generated'),
-    body: t('All discovered networks have been mapped to the default network.'),
+  MULTIPLE_NICS_ON_THE_SAME_NETWORK: {
+    body: t('VM(s) with multiple NICs on the same network were detected.'),
+    title: t('Multiple NICs on the same network'),
+  },
+  NET_MAP_NAME_REGENERATED: {
+    body: t('New name was generated for the Network Map due to naming conflict.'),
+    title: t('Network Map name re-generated'),
   },
   NETWORK_MAPPING_EMPTY: {
-    title: t('Network mappings is empty'),
     body: t(
       'Network mapping is empty, make sure no mappings are required for this migration plan.',
     ),
+    title: t('Network mappings is empty'),
   },
-  MULTIPLE_NICS_ON_THE_SAME_NETWORK: {
-    title: t('Multiple NICs on the same network'),
-    body: t('VM(s) with multiple NICs on the same network were detected.'),
+  NETWORK_MAPPING_REGENERATED: {
+    body: t('All discovered networks have been mapped to the default network.'),
+    title: t('Network mappings have been re-generated'),
   },
   OVIRT_NICS_WITH_EMPTY_PROFILE: {
-    title: t('NICs with empty NIC profile'),
-    body: t('VM(s) with NICs that are not linked with a NIC profile were detected.'),
     blocker: true,
+    body: t('VM(s) with NICs that are not linked with a NIC profile were detected.'),
+    title: t('NICs with empty NIC profile'),
   },
   UNMAPPED_NETWORKS: {
-    title: t('Incomplete mapping'),
+    blocker: true,
     body: t('All networks detected on the selected VMs require a mapping.'),
-    blocker: true,
-  },
-  MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING: {
-    title: t('Multiple NICs mapped to Pod Networking '),
-    body: t('VM(s) with more than one interface mapped to Pod Networking were detected.'),
-    blocker: true,
+    title: t('Incomplete mapping'),
   },
 });
 const buildStorageMessages = (
   t: (key: string) => string,
-): { [key in StorageAlerts]: { title: string; body: string; blocker?: boolean } } => ({
-  STORAGE_MAPPING_REGENERATED: {
-    title: t('Storage mappings have been re-generated'),
-    body: t('All discovered storages have been mapped to the default storage.'),
-  },
+): Record<StorageAlerts, { title: string; body: string; blocker?: boolean }> => ({
   STORAGE_MAP_NAME_REGENERATED: {
-    title: t('Storage Map name re-generated'),
     body: t('New name was generated for the Storage Map due to naming conflict.'),
-  },
-  UNMAPPED_STORAGES: {
-    title: t('Incomplete mapping'),
-    body: t('All storages detected on the selected VMs require a mapping.'),
-    blocker: true,
+    title: t('Storage Map name re-generated'),
   },
   STORAGE_MAPPING_EMPTY: {
-    title: t('Storage mappings is empty'),
     body: t(
       'Storage mapping is empty, make sure no mappings are required for this migration plan.',
     ),
+    title: t('Storage mappings is empty'),
+  },
+  STORAGE_MAPPING_REGENERATED: {
+    body: t('All discovered storages have been mapped to the default storage.'),
+    title: t('Storage mappings have been re-generated'),
+  },
+  UNMAPPED_STORAGES: {
+    blocker: true,
+    body: t('All storages detected on the selected VMs require a mapping.'),
+    title: t('Incomplete mapping'),
   },
 });
 
@@ -112,31 +113,31 @@ export type PlansCreateFormProps = {
 
 export const PlansCreateForm = ({
   children,
-  state,
   dispatch,
-  formAlerts,
   formActions,
+  formAlerts,
+  state,
 }: PlansCreateFormProps) => {
   const { t } = useForkliftTranslation();
 
   const {
-    underConstruction: { plan, netMap, storageMap },
-    validation,
+    alerts,
     calculatedOnce: { namespacesUsedBySelectedVms },
+    calculatedPerNamespace: {
+      networkMappings,
+      sourceNetworks,
+      sourceStorages,
+      storageMappings,
+      targetNetworks,
+      targetStorages,
+    },
     existingResources: {
       providers: availableProviders,
       targetNamespaces: availableTargetNamespaces,
     },
-    calculatedPerNamespace: {
-      targetNetworks,
-      targetStorages,
-      sourceNetworks,
-      sourceStorages,
-      networkMappings,
-      storageMappings,
-    },
     flow,
-    alerts,
+    underConstruction: { netMap, plan, storageMap },
+    validation,
   } = state;
 
   const networkMessages = buildNetworkMessages(t);
@@ -193,7 +194,9 @@ export const PlansCreateForm = ({
           >
             <FormSelect
               value={plan.spec.provider?.destination?.name}
-              onChange={(e, v) => onChangeTargetProvider(v, e)}
+              onChange={(e, v) => {
+                onChangeTargetProvider(v, e);
+              }}
               id="targetProvider"
               isDisabled={flow.editingDone}
             >
@@ -249,14 +252,16 @@ export const PlansCreateForm = ({
           >
             <FilterableSelect
               selectOptions={availableTargetNamespaces.map((ns) => ({
-                itemId: ns?.name,
+                children: ns?.name,
                 isDisabled:
                   namespacesUsedBySelectedVms.includes(ns?.name) &&
                   plan.spec.provider?.destination?.name === plan.spec.provider.source.name,
-                children: ns?.name,
+                itemId: ns?.name,
               }))}
               value={plan.spec.targetNamespace}
-              onSelect={(value) => dispatch(setPlanTargetNamespace(value as string))}
+              onSelect={(value) => {
+                dispatch(setPlanTargetNamespace(value as string));
+              }}
               isDisabled={flow.editingDone}
               isScrollable
               canCreate
@@ -290,7 +295,9 @@ export const PlansCreateForm = ({
                 key,
                 ...networkMessages[key],
               }))}
-              onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
+              onClose={(key) => {
+                dispatch(removeAlert(key as NetworkAlerts));
+              }}
             />
             <StateAlerts
               variant={AlertVariant.warning}
@@ -298,14 +305,20 @@ export const PlansCreateForm = ({
                 key,
                 ...networkMessages[key],
               }))}
-              onClose={(key) => dispatch(removeAlert(key as NetworkAlerts))}
+              onClose={(key) => {
+                dispatch(removeAlert(key as NetworkAlerts));
+              }}
             />
             <MappingList
-              addMapping={() => dispatch(addNetworkMapping())}
-              replaceMapping={({ current, next }) =>
-                dispatch(replaceNetworkMapping({ current, next }))
-              }
-              deleteMapping={(current) => dispatch(deleteNetworkMapping({ ...current }))}
+              addMapping={() => {
+                dispatch(addNetworkMapping());
+              }}
+              replaceMapping={({ current, next }) => {
+                dispatch(replaceNetworkMapping({ current, next }));
+              }}
+              deleteMapping={(current) => {
+                dispatch(deleteNetworkMapping({ ...current }));
+              }}
               availableDestinations={targetNetworks}
               sources={sourceNetworks}
               mappings={networkMappings}
@@ -342,7 +355,9 @@ export const PlansCreateForm = ({
                 key,
                 ...storageMessages[key],
               }))}
-              onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
+              onClose={(key) => {
+                dispatch(removeAlert(key as StorageAlerts));
+              }}
             />
             <StateAlerts
               variant={AlertVariant.warning}
@@ -350,14 +365,20 @@ export const PlansCreateForm = ({
                 key,
                 ...storageMessages[key],
               }))}
-              onClose={(key) => dispatch(removeAlert(key as StorageAlerts))}
+              onClose={(key) => {
+                dispatch(removeAlert(key as StorageAlerts));
+              }}
             />
             <MappingList
-              addMapping={() => dispatch(addStorageMapping())}
-              replaceMapping={({ current, next }) =>
-                dispatch(replaceStorageMapping({ current, next }))
-              }
-              deleteMapping={(current) => dispatch(deleteStorageMapping({ ...current }))}
+              addMapping={() => {
+                dispatch(addStorageMapping());
+              }}
+              replaceMapping={({ current, next }) => {
+                dispatch(replaceStorageMapping({ current, next }));
+              }}
+              deleteMapping={(current) => {
+                dispatch(deleteStorageMapping({ ...current }));
+              }}
               availableDestinations={targetStorages}
               sources={sourceStorages}
               mappings={storageMappings}

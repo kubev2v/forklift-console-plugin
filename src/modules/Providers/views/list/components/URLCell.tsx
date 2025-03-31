@@ -4,7 +4,7 @@ import { TableCell } from 'src/modules/Providers/utils';
 
 import { Truncate } from '@patternfly/react-core';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 
 /**
  * URLCell component, used for displaying a TableCell with a URL string.

@@ -1,33 +1,33 @@
 import { getValueByJsonPath, jsonPathToPatch } from 'src/modules/Providers/utils/helpers';
 
-import { k8sPatch, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import { k8sPatch, type K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Patches a Kubernetes resource with a new value.
  */
-export const defaultOnConfirm = async ({ resource, jsonPath, model, newValue: value }) => {
+export const defaultOnConfirm = async ({ jsonPath, model, newValue: value, resource }) => {
   const op = getValueByJsonPath(resource, jsonPath) ? 'replace' : 'add';
 
-  return await k8sPatch<K8sResourceCommon>({
-    model: model,
-    resource: resource,
+  return k8sPatch<K8sResourceCommon>({
     data: [
       {
         op,
         path: jsonPathToPatch(jsonPath),
-        value: value,
+        value,
       },
     ],
+    model,
+    resource,
   });
 };
 
 /**
  * Wraps the defaultOnConfirm method to convert the newValue from string to int before patching.
  */
-export const defaultOnConfirmWithIntValue = async ({ resource, jsonPath, model, newValue }) => {
+export const defaultOnConfirmWithIntValue = async ({ jsonPath, model, newValue, resource }) => {
   // Convert the newValue from string to int
   const intValue = parseInt(newValue.toString(), 10);
 
   // Call the original method with the converted value
-  return await defaultOnConfirm({ resource, jsonPath, model, newValue: intValue });
+  return defaultOnConfirm({ jsonPath, model, newValue: intValue, resource });
 };

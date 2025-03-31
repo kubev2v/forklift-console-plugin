@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { FieldError } from 'react-hook-form';
+import React, { type FC } from 'react';
+import type { FieldError } from 'react-hook-form';
 
 import { FormHelperText, HelperText, HelperTextItem } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';

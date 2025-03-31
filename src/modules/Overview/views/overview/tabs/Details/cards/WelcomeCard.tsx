@@ -1,22 +1,20 @@
-import React, { FC, Ref, useState } from 'react';
+import React, { type FC, type Ref, useState } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1ForkliftController } from '@kubev2v/types';
+import type { V1beta1ForkliftController } from '@kubev2v/types';
 import {
   Card,
   CardBody,
   CardHeader,
   CardTitle,
-  Split,
-  SplitItem,
-  Text,
-} from '@patternfly/react-core';
-import {
   Dropdown,
   DropdownItem,
   DropdownList,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
+  Split,
+  SplitItem,
+  Text,
 } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
@@ -30,7 +28,7 @@ type OverviewCardProps = {
 };
 
 const hideFromViewDropdownOption = (onHide: () => void, t) => {
-  const hasHideAction = !!onHide;
+  const hasHideAction = Boolean(onHide);
 
   return hasHideAction ? (
     <DropdownItem
@@ -42,7 +40,7 @@ const hideFromViewDropdownOption = (onHide: () => void, t) => {
       )}
       onClick={onHide}
       data-testid="hide"
-      style={{ whiteSpace: 'pre-wrap', width: 280, fontWeight: 'bold' }}
+      style={{ fontWeight: 'bold', whiteSpace: 'pre-wrap', width: 280 }}
     >
       {t('Hide from view')}
     </DropdownItem>
@@ -55,12 +53,16 @@ export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
   const { t } = useForkliftTranslation();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const actionDropdownItems = [hideFromViewDropdownOption(onHide, t)];
-  const onToggle = () => setMenuIsOpen((open) => !open);
+  const onToggle = () => {
+    setMenuIsOpen((open) => !open);
+  };
 
   const headerActions = (
     <Dropdown
       isOpen={menuIsOpen}
-      onOpenChange={(menuIsOpen: boolean) => setMenuIsOpen(menuIsOpen)}
+      onOpenChange={(menuIsOpen: boolean) => {
+        setMenuIsOpen(menuIsOpen);
+      }}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle ref={toggleRef} onClick={onToggle} isExpanded={menuIsOpen} variant={'plain'}>
           {<EllipsisVIcon />}

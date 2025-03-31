@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import { isSecretDataChanged, ValidationMsg } from 'src/modules/Providers/utils';
+import type { ReactNode } from 'react';
+import { isSecretDataChanged, type ValidationMsg } from 'src/modules/Providers/utils';
 
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 /**
  * Represents the state of the secret edit form.
@@ -14,14 +14,14 @@ import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
  * @property {boolean} dataIsValid - Determines whether the new secret's data is valid.
  * @property {ReactNode} alertMessage - The message to display when a validation error occurs.
  */
-export interface BaseCredentialsSectionState {
+export type BaseCredentialsSectionState = {
   reveal: boolean;
   edit: boolean;
   newSecret: IoK8sApiCoreV1Secret;
   dataChanged: boolean;
   dataError: ValidationMsg;
   alertMessage: ReactNode;
-}
+};
 
 export type BaseCredentialsAction =
   | { type: 'TOGGLE_REVEAL' }
@@ -49,10 +49,10 @@ export function baseCredentialsSectionReducerFactory(secret, validator) {
 
         return {
           ...state,
+          alertMessage: null,
           dataChanged,
           dataError: validationError,
           newSecret: action.payload,
-          alertMessage: null,
         };
       }
       case 'SET_ALERT_MESSAGE':

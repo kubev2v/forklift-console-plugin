@@ -3,12 +3,12 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ClipboardCopy, Switch, TextInput, Tooltip } from '@patternfly/react-core';
 
-import { Field } from './components/list/Fields';
+import type { Field } from './components/list/Fields';
 
-export interface ShowFieldWithClipboardCopyProps {
+export type ShowFieldWithClipboardCopyProps = {
   value: string;
   field?: Field;
-}
+};
 
 /**
  * Displays a field with its value. If the value is empty, shows a disabled text input with a tooltip indicating the field is missing.

@@ -2,13 +2,14 @@ import React from 'react';
 import { InventoryNotReachable } from 'src/modules/Providers/views/list/components';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
+
+import { useK8sWatchForkliftController, useProvidersInventoryIsLive } from '../../hooks';
+import { getOperatorPhase } from '../../utils/helpers/getOperatorPhase';
 
 import OperatorStatus from './components/OperatorStatus';
 import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
-import { useK8sWatchForkliftController, useProvidersInventoryIsLive } from '../../hooks';
-import { getOperatorPhase } from '../../utils/helpers/getOperatorPhase';
 import { HeaderTitle } from './components';
 import {
   ForkliftControllerDetailsTab,
@@ -23,19 +24,19 @@ export const OverviewPage: React.FC<OverviewPageProps> = () => {
 
   const pages = [
     {
+      component: ForkliftControllerDetailsTabWrapper,
       href: '',
       name: t('Overview'),
-      component: ForkliftControllerDetailsTabWrapper,
     },
     {
+      component: ForkliftControllerYAMLTabWrapper,
       href: 'yaml',
       name: t('YAML'),
-      component: ForkliftControllerYAMLTabWrapper,
     },
     {
+      component: ForkliftControllerMetricsTabWrapper,
       href: 'metrics',
       name: t('Metrics'),
-      component: ForkliftControllerMetricsTabWrapper,
     },
   ];
 

@@ -1,6 +1,6 @@
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 
-import { VMData } from '../types';
+import type { VMData } from '../types';
 
 export type PlanVMsCellProps = {
   data: VMData;

@@ -7,7 +7,7 @@ import { PageHeadings } from 'src/modules/Providers/utils';
 import {
   NetworkMapModel,
   NetworkMapModelGroupVersionKind,
-  V1beta1NetworkMap,
+  type V1beta1NetworkMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
@@ -18,9 +18,9 @@ export const NetworkMapPageHeadings: React.FC<{ name: string; namespace: string 
 }) => {
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1NetworkMap>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({

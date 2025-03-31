@@ -9,7 +9,7 @@ export type TextWithIconProps = {
   className?: string;
 };
 
-export const TextWithIcon: React.FC<TextWithIconProps> = ({ label, icon, className }) => {
+export const TextWithIcon: React.FC<TextWithIconProps> = ({ className, icon, label }) => {
   return (
     <Flex
       spaceItems={{ default: 'spaceItemsXs' }}

@@ -1,17 +1,17 @@
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 
-import { validateK8sName, validateURL, ValidationMsg } from '../../common';
+import { validateK8sName, validateURL, type ValidationMsg } from '../../common';
 
 export function openstackProviderValidator(provider: V1beta1Provider): ValidationMsg {
   const name = provider?.metadata?.name;
   const url = provider?.spec?.url || '';
 
   if (!validateK8sName(name)) {
-    return { type: 'error', msg: 'invalid kubernetes resource name' };
+    return { msg: 'invalid kubernetes resource name', type: 'error' };
   }
 
   if (!validateURL(url)) {
-    return { type: 'error', msg: 'invalid URL' };
+    return { msg: 'invalid URL', type: 'error' };
   }
 
   return { type: 'default' };

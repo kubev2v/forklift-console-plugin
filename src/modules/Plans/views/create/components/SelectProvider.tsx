@@ -1,8 +1,8 @@
 import React, {
-  Dispatch,
-  FunctionComponent,
-  MouseEvent as ReactMouseEvent,
-  Ref,
+  type Dispatch,
+  type FunctionComponent,
+  type MouseEvent as ReactMouseEvent,
+  type Ref,
   useState,
 } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -10,7 +10,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import {
   Badge,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
@@ -18,19 +18,19 @@ import {
 import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 
 import providerTypes from '../constanats/providerTypes';
-import { PlanCreatePageState } from '../states';
+import type { PlanCreatePageState } from '../states';
 
-export interface SelectProviderProps {
+export type SelectProviderProps = {
   filterState: PlanCreatePageState;
   filterDispatch: Dispatch<{
     type: string;
     payload?: string | string[];
   }>;
-}
+};
 
 export const SelectProvider: FunctionComponent<SelectProviderProps> = ({
-  filterState,
   filterDispatch,
+  filterState,
 }) => {
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -39,17 +39,14 @@ export const SelectProvider: FunctionComponent<SelectProviderProps> = ({
     setIsOpen((isOpen) => !isOpen);
   };
 
-  const onSelect = (
-    _event: ReactMouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined,
-  ) => {
+  const onSelect = (_event: ReactMouseEvent | undefined, value: string | number | undefined) => {
     const prevTypeFilters = filterState.typeFilters;
 
     const typeFilters = prevTypeFilters.includes(value as string)
       ? prevTypeFilters.filter((item: string) => item !== value)
       : [...prevTypeFilters, value as string];
 
-    filterDispatch({ type: 'UPDATE_TYPE_FILTERS', payload: typeFilters });
+    filterDispatch({ payload: typeFilters, type: 'UPDATE_TYPE_FILTERS' });
   };
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
@@ -92,7 +89,9 @@ export const SelectProvider: FunctionComponent<SelectProviderProps> = ({
         isOpen={isOpen}
         selected={filterState.typeFilters}
         onSelect={onSelect}
-        onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
+        onOpenChange={(nextOpen: boolean) => {
+          setIsOpen(nextOpen);
+        }}
         toggle={toggle}
         shouldFocusToggleOnSelect
         shouldFocusFirstItemOnOpen={false}

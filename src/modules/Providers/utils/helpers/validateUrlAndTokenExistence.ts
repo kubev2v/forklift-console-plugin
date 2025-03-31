@@ -1,4 +1,4 @@
-import { ValidationMsg } from '../validators';
+import type { ValidationMsg } from '../validators';
 
 /**
  * Function to ensure that the input url, token fields are both set or both empty.
@@ -11,12 +11,12 @@ export const validateUrlAndTokenExistence = (url: string, token: string): Valida
 
   // If we have url, token is required
   if (url !== '' && token === '') {
-    return { type: 'error', msg: `Missing required fields [token]` };
+    return { msg: `Missing required fields [token]`, type: 'error' };
   }
 
   // If we have token, url is required
   if (url === '' && token !== '') {
-    return { type: 'error', msg: `Missing required fields [url]` };
+    return { msg: `Missing required fields [url]`, type: 'error' };
   }
 
   return null;

@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 
 import {
   Button,
@@ -16,7 +16,7 @@ export const EditableDescriptionItem: FC<{
   ariaEditLabel: string;
   onEdit: () => void;
   isDisabled?: boolean;
-}> = ({ title, content, ariaEditLabel = 'Edit', onEdit, isDisabled = false }) => (
+}> = ({ ariaEditLabel = 'Edit', content, isDisabled = false, onEdit, title }) => (
   <DescriptionListGroup>
     <DescriptionListTerm>{title}</DescriptionListTerm>
     <DescriptionListDescription>
@@ -28,7 +28,7 @@ export const EditableDescriptionItem: FC<{
           variant="plain"
           {...(isDisabled
             ? {}
-            : { icon: <PencilAltIcon />, onClick: onEdit, 'aria-Label': ariaEditLabel })}
+            : { 'aria-Label': ariaEditLabel, icon: <PencilAltIcon />, onClick: onEdit })}
         />
       </div>
     </DescriptionListDescription>

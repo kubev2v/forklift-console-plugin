@@ -1,4 +1,4 @@
-import { MigrationType, PlanData } from '../types';
+import { MigrationType, type PlanData } from '../types';
 
 export const getMigrationType = (data: PlanData): MigrationType => {
   const plan = data?.obj;

@@ -18,9 +18,9 @@ import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
-import { EditComponentProps } from '../BaseCredentialsSection';
+import type { EditComponentProps } from '../BaseCredentialsSection';
 
-export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
+export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, secret }) => {
   const { t } = useForkliftTranslation();
 
   const user = safeBase64Decode(secret?.data?.user);
@@ -56,10 +56,10 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
   const initialState = {
     passwordHidden: true,
     validation: {
-      user: esxiSecretFieldValidator('user', user),
-      password: esxiSecretFieldValidator('password', password),
-      insecureSkipVerify: esxiSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
       cacert: esxiSecretFieldValidator('cacert', cacert),
+      insecureSkipVerify: esxiSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
+      password: esxiSecretFieldValidator('password', password),
+      user: esxiSecretFieldValidator('user', user),
     },
   };
 
@@ -85,7 +85,7 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
   const handleChange = useCallback(
     (id, value) => {
       const validationState = esxiSecretFieldValidator(id, value);
-      dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
+      dispatch({ payload: { field: id, validationState }, type: 'SET_FIELD_VALIDATED' });
 
       // don't trim fields that allow spaces
       const encodedValue = ['cacert'].includes(id)
@@ -101,9 +101,7 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
-  const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (
-    event,
-  ) => {
+  const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -153,7 +151,9 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
           type="text"
           id="username"
           name="username"
-          onChange={(e, v) => onChangeUser(v, e)}
+          onChange={(e, v) => {
+            onChangeUser(v, e);
+          }}
           value={user}
           validated={state.validation.user.type}
         />
@@ -173,7 +173,9 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
             isRequired
             type={state.passwordHidden ? 'password' : 'text'}
             aria-label="Password input"
-            onChange={(e, v) => onChangePassword(v, e)}
+            onChange={(e, v) => {
+              onChangePassword(v, e);
+            }}
             value={password}
             validated={state.validation.password.type}
           />
@@ -217,7 +219,9 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(e, v) => onChangeInsecure(v, e)}
+          onChange={(e, v) => {
+            onChangeInsecure(v, e);
+          }}
         />
       </FormGroupWithHelpText>
 
@@ -248,9 +252,15 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onCh
           url={url}
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(_e, v) => onDataChange(v)}
-          onTextChange={(_e, v) => onTextChange(v)}
-          onClearClick={() => handleChange('cacert', '')}
+          onDataChange={(_e, v) => {
+            onDataChange(v);
+          }}
+          onTextChange={(_e, v) => {
+            onTextChange(v);
+          }}
+          onClearClick={() => {
+            handleChange('cacert', '');
+          }}
           isDisabled={insecureSkipVerify === 'true'}
         />
       </FormGroupWithHelpText>

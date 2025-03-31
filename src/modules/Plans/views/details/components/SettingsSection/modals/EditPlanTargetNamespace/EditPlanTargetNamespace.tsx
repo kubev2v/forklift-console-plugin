@@ -3,31 +3,29 @@ import { FilterableSelect } from 'src/components';
 import { useProviderInventory } from 'src/modules/Providers/hooks';
 import {
   EditModal,
-  EditModalProps,
-  ModalInputComponentType,
-  OnConfirmHookType,
+  type EditModalProps,
+  type ModalInputComponentType,
+  type OnConfirmHookType,
 } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  Modify,
-  OpenShiftNetworkAttachmentDefinition,
+  type Modify,
+  type OpenShiftNetworkAttachmentDefinition,
   PlanModel,
-  V1beta1Plan,
-  V1beta1Provider,
+  type V1beta1Plan,
+  type V1beta1Provider,
 } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Text } from '@patternfly/react-core';
 
-const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
+const onConfirm: OnConfirmHookType = async ({ model, newValue, resource }) => {
   const plan = resource as V1beta1Plan;
 
   const targetNamespace = plan?.spec?.targetNamespace;
   const op = targetNamespace ? 'replace' : 'add';
 
   const obj = await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
@@ -35,22 +33,24 @@ const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
         value: newValue || undefined,
       },
     ],
+    model,
+    resource,
   });
 
   return obj;
 };
 
-interface DropdownRendererProps {
+type DropdownRendererProps = {
   value: string | number;
   onChange: (string) => void;
-}
+};
 
 const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType = ({
   resource,
 }) => {
   const provider = resource as V1beta1Provider;
 
-  const DropdownRenderer: React.FC<DropdownRendererProps> = ({ value, onChange }) => {
+  const DropdownRenderer: React.FC<DropdownRendererProps> = ({ onChange, value }) => {
     const { t } = useForkliftTranslation();
 
     const { inventory: namespaces } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
@@ -61,8 +61,8 @@ const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType 
     const options: string[] = (namespaces || []).map((n) => n?.object?.metadata?.name);
 
     const dropdownItems = (options || []).map((n) => ({
-      itemId: n,
       children: <Text>{n}</Text>,
+      itemId: n,
     }));
 
     return (

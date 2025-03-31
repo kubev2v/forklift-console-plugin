@@ -18,9 +18,9 @@ import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
-import { EditComponentProps } from '../BaseCredentialsSection';
+import type { EditComponentProps } from '../BaseCredentialsSection';
 
-export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
+export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, secret }) => {
   const { t } = useForkliftTranslation();
 
   const url = safeBase64Decode(secret?.data?.url);
@@ -58,10 +58,10 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
   const initialState = {
     passwordHidden: true,
     validation: {
-      user: ovirtSecretFieldValidator('user', user),
-      password: ovirtSecretFieldValidator('password', password),
-      insecureSkipVerify: ovirtSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
       cacert: ovirtSecretFieldValidator('cacert', cacert),
+      insecureSkipVerify: ovirtSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
+      password: ovirtSecretFieldValidator('password', password),
+      user: ovirtSecretFieldValidator('user', user),
     },
   };
 
@@ -89,8 +89,8 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
     (id, value) => {
       const validationState = ovirtSecretFieldValidator(id, value);
       dispatch({
-        type: 'SET_FIELD_VALIDATED',
         payload: { field: id, validationState },
+        type: 'SET_FIELD_VALIDATED',
       });
 
       // don't trim fields that allow spaces
@@ -107,9 +107,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
-  const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (
-    event,
-  ) => {
+  const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -161,7 +159,9 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           name="user"
           value={user}
           validated={state.validation.user.type}
-          onChange={(e, v) => onChangeUser(v, e)}
+          onChange={(e, v) => {
+            onChangeUser(v, e);
+          }}
         />
       </FormGroupWithHelpText>
       <FormGroupWithHelpText
@@ -181,7 +181,9 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
             aria-label="Password input"
             value={password}
             validated={state.validation.password.type}
-            onChange={(e, v) => onChangePassword(v, e)}
+            onChange={(e, v) => {
+              onChangePassword(v, e);
+            }}
           />
           <Button
             variant="control"
@@ -223,7 +225,9 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(e, v) => onChangeInsecure(v, e)}
+          onChange={(e, v) => {
+            onChangeInsecure(v, e);
+          }}
         />
       </FormGroupWithHelpText>
 
@@ -255,9 +259,15 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onC
           filenamePlaceholder="Drag and drop a file or upload one"
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(_e, v) => onDataChange(v)}
-          onTextChange={(_e, v) => onTextChange(v)}
-          onClearClick={() => handleChange('cacert', '')}
+          onDataChange={(_e, v) => {
+            onDataChange(v);
+          }}
+          onTextChange={(_e, v) => {
+            onTextChange(v);
+          }}
+          onClearClick={() => {
+            handleChange('cacert', '');
+          }}
           browseButtonText="Upload"
           url={url}
           isDisabled={insecureSkipVerify === 'true'}

@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components';
 
-import { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { PodsTable } from '../../../components';
@@ -12,10 +12,10 @@ type PodsCardProps = {
 
 export const PodsCard: FC<PodsCardProps> = ({ obj }) => {
   const [pods, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
-    kind: 'Pod',
-    namespaced: true,
     isList: true,
+    kind: 'Pod',
     namespace: obj?.metadata?.namespace,
+    namespaced: true,
     selector: { matchLabels: { app: 'forklift' } },
   });
 

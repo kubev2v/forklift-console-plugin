@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export type Field = {
   label: string;
@@ -9,6 +9,4 @@ export type Field = {
 };
 
 // Define the type for the object containing all fields
-export type Fields = {
-  [key: string]: Field;
-};
+export type Fields = Record<string, Field>;

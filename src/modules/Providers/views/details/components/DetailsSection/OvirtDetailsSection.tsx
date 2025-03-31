@@ -4,6 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { DescriptionList } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../utils';
+
 import {
   CreatedAtDetailsItem,
   CredentialsDetailsItem,
@@ -14,13 +15,13 @@ import {
   TypeDetailsItem,
   URLDetailsItem,
 } from './components';
-import { DetailsSectionProps } from './DetailsSection';
+import type { DetailsSectionProps } from './DetailsSection';
 import { getOvirtProviderWebUILink } from './utils';
 
 export const OvirtDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
-  const { provider, permissions } = data;
+  const { permissions, provider } = data;
   const webUILink = getOvirtProviderWebUILink(provider);
 
   return (

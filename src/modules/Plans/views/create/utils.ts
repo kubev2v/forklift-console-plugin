@@ -1,6 +1,6 @@
-import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
+import type { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
 
-import { PlanCreatePageState } from './states';
+import type { PlanCreatePageState } from './states';
 
 export const validateSourceProviderStep = (
   state: CreateVmMigrationPageState,

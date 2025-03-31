@@ -1,17 +1,17 @@
-import React, { FC, useState } from 'react';
+import React, { type FC, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
-  GlobalActionWithSelection,
+  type GlobalActionWithSelection,
   StandardPageWithSelection,
-  StandardPageWithSelectionProps,
+  type StandardPageWithSelectionProps,
 } from 'src/components/page/StandardPageWithSelection';
 import { TableSortContextProvider } from 'src/components/TableSortContext';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
-import {
+import type { ResourceFieldFactory } from '@components/common/utils/types';
+import type {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1PersistentVolumeClaim,
   IoK8sApiCoreV1Pod,
@@ -23,7 +23,8 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 
 import { MigrationVMsCancelButton, PlanVMsDeleteButton } from '../components';
-import { PlanData, VMData } from '../types';
+import type { PlanData, VMData } from '../types';
+
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
 import { MigrationVirtualMachinesRowExtended } from './MigrationVirtualMachinesRowExtended';
 
@@ -70,25 +71,37 @@ const getVMMigrationStatus = (obj: VMData) => {
 
 const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    resourceFieldId: 'name',
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: 'freetext',
+    },
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
     jsonPath: '$.specVM.name',
     label: t('Name'),
-    isVisible: true,
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by name'),
-    },
+    resourceFieldId: 'name',
     sortable: true,
   },
   {
-    resourceFieldId: 'migrationStarted',
+    filter: {
+      helperText: (
+        <HelperText className="forklift-date-range-helper-text">
+          <HelperTextItem variant="indeterminate">
+            {t('Dates are compared in UTC. End of the interval is included.')}
+          </HelperTextItem>
+        </HelperText>
+      ),
+      placeholderLabel: 'YYYY-MM-DD',
+      type: 'dateRange',
+    },
+    isVisible: true,
     jsonPath: '$.statusVM.started',
     label: t('Started at'),
-    isVisible: true,
+    resourceFieldId: 'migrationStarted',
+    sortable: true,
+  },
+  {
     filter: {
-      type: 'dateRange',
-      placeholderLabel: 'YYYY-MM-DD',
       helperText: (
         <HelperText className="forklift-date-range-helper-text">
           <HelperTextItem variant="indeterminate">
@@ -96,63 +109,51 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
           </HelperTextItem>
         </HelperText>
       ),
+      placeholderLabel: 'YYYY-MM-DD',
+      type: 'dateRange',
     },
-    sortable: true,
-  },
-  {
-    resourceFieldId: 'migrationCompleted',
+    isVisible: true,
     jsonPath: '$.statusVM.completed',
     label: t('Completed at'),
-    isVisible: true,
-    filter: {
-      type: 'dateRange',
-      placeholderLabel: 'YYYY-MM-DD',
-      helperText: (
-        <HelperText className="forklift-date-range-helper-text">
-          <HelperTextItem variant="indeterminate">
-            {t('Dates are compared in UTC. End of the interval is included.')}
-          </HelperTextItem>
-        </HelperText>
-      ),
-    },
+    resourceFieldId: 'migrationCompleted',
     sortable: true,
   },
   {
-    resourceFieldId: 'transfer',
+    isVisible: true,
     jsonPath: (obj: VMData) => {
       const diskTransfer = obj.statusVM?.pipeline.find((p) => p.name === 'DiskTransfer');
 
-      return diskTransfer && diskTransfer?.progress?.total
+      return diskTransfer?.progress?.total
         ? diskTransfer?.progress?.completed / diskTransfer?.progress?.total
         : 0;
     },
     label: t('Disk transfer'),
-    isVisible: true,
+    resourceFieldId: 'transfer',
   },
   {
-    resourceFieldId: 'diskCounter',
+    isVisible: true,
     jsonPath: (obj: VMData) => {
       const diskTransfer = obj.statusVM?.pipeline.find((p) => p.name === 'DiskTransfer');
 
-      return diskTransfer && diskTransfer?.progress?.total
+      return diskTransfer?.progress?.total
         ? diskTransfer?.progress?.completed / diskTransfer?.progress?.total
         : 0;
     },
     label: t('Disk counter'),
-    isVisible: true,
+    resourceFieldId: 'diskCounter',
   },
   {
-    resourceFieldId: 'status',
-    jsonPath: getVMMigrationStatus,
-    label: t('Pipeline status'),
-    isVisible: true,
-    sortable: true,
     filter: {
-      type: 'enum',
-      primary: true,
       placeholderLabel: t('Pipeline status'),
+      primary: true,
+      type: 'enum',
       values: vmStatuses,
     },
+    isVisible: true,
+    jsonPath: getVMMigrationStatus,
+    label: t('Pipeline status'),
+    resourceFieldId: 'status',
+    sortable: true,
   },
 ];
 
@@ -167,10 +168,10 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   const [lastMigration] = usePlanMigration(plan);
 
   const [pods, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
-    kind: 'Pod',
-    namespaced: true,
     isList: true,
+    kind: 'Pod',
     namespace: plan?.spec?.targetNamespace,
+    namespaced: true,
     selector: { matchLabels: { plan: plan?.metadata?.uid } },
   });
 
@@ -182,10 +183,10 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   );
 
   const [jobs, jobsLoaded, jobsLoadError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
-    groupVersionKind: { kind: 'Job', group: 'batch', version: 'v1' },
-    namespaced: true,
+    groupVersionKind: { group: 'batch', kind: 'Job', version: 'v1' },
     isList: true,
     namespace: plan?.spec?.targetNamespace,
+    namespaced: true,
     selector: { matchLabels: { plan: plan?.metadata?.uid } },
   });
 
@@ -200,9 +201,9 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     IoK8sApiCoreV1PersistentVolumeClaim[]
   >({
     groupVersionKind: { kind: 'PersistentVolumeClaim', version: 'v1' },
-    namespaced: true,
     isList: true,
     namespace: plan?.spec?.targetNamespace,
+    namespaced: true,
     selector: { matchLabels: { plan: plan?.metadata?.uid } },
   });
 
@@ -215,13 +216,13 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const [dvs, dvsLoaded, dvsLoadError] = useK8sWatchResource<V1beta1DataVolume[]>({
     groupVersionKind: {
-      version: 'v1beta1',
-      kind: 'DataVolume',
       group: 'cdi.kubevirt.io',
+      kind: 'DataVolume',
+      version: 'v1beta1',
     },
-    namespaced: true,
     isList: true,
     namespace: plan?.spec?.targetNamespace,
+    namespaced: true,
     selector: { matchLabels: { plan: plan?.metadata?.uid } },
   });
 
@@ -244,12 +245,12 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   migrationVirtualMachines.forEach((m) => (vmDict[m.id] = m));
 
   const vmData: VMData[] = virtualMachines.map((m) => ({
+    dvs: dvsDict[m.id],
+    jobs: jobsDict[m.id],
+    pods: podsDict[m.id],
+    pvcs: pvcsDict[m.id],
     specVM: m,
     statusVM: vmDict[m.id],
-    pods: podsDict[m.id],
-    jobs: jobsDict[m.id],
-    pvcs: pvcsDict[m.id],
-    dvs: dvsDict[m.id],
     targetNamespace: plan?.spec?.targetNamespace,
   }));
 
@@ -278,25 +279,25 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
 
   const fieldsMetadata = fieldsMetadataFactory(t);
   const props: PageWithSelectionProps = {
-    fieldsMetadata,
-    dataSource: [vmData || [], true, undefined],
     CellMapper: MigrationVirtualMachinesRow,
+    dataSource: [vmData || [], true, undefined],
     ExpandedComponent: MigrationVirtualMachinesRowExtended,
-    title: t('Virtual Machines'),
-    userSettings: userSettings,
+    fieldsMetadata,
     namespace: '',
     page: 1,
+    title: t('Virtual Machines'),
+    userSettings,
   };
 
   const extendedProps = {
     ...props,
-    toId: (item: VMData) => item?.specVM?.id,
     canSelect: (item: VMData) => canSelectWhenExecuting(item) || canSelectWhenNotExecuting(item),
+    expandedIds,
+    GlobalActionToolbarItems: actions,
+    onExpand: setExpandedIds,
     onSelect: () => undefined,
     selectedIds: [],
-    onExpand: setExpandedIds,
-    expandedIds: expandedIds,
-    GlobalActionToolbarItems: actions,
+    toId: (item: VMData) => item?.specVM?.id,
   };
 
   return (

@@ -2,11 +2,11 @@ import React from 'react';
 
 import { NumberInput } from '@patternfly/react-core';
 
-import { SettingsSelectInputProps } from './SettingsSelectInput';
+import type { SettingsSelectInputProps } from './SettingsSelectInput';
 
 export const SettingsNumberInput: React.FC<SettingsSelectInputProps> = ({
-  value: value_ = 0,
   onChange,
+  value: value_ = 0,
 }) => {
   const [value, setValue] = React.useState<number | ''>(parseInt(value_.toString()));
 
@@ -26,7 +26,7 @@ export const SettingsNumberInput: React.FC<SettingsSelectInputProps> = ({
   };
 
   const onUserChange: (event: React.FormEvent<HTMLInputElement>) => void = (event) => {
-    const value = (event.target as HTMLInputElement).value;
+    const { value } = event.target as HTMLInputElement;
     const newValue = value === '' ? value : +value;
     setNewValue(newValue || 0);
   };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { RowProps } from 'src/components/common/TableView/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelperText, HelperTextItem, Label, PageSection } from '@patternfly/react-core';
@@ -11,7 +11,8 @@ import {
   getCategoryTitle,
   groupConcernsByCategory,
 } from '../utils';
-import { VmData } from './VMCellProps';
+
+import type { VmData } from './VMCellProps';
 
 /**
  * React Component to display a table of concerns.
@@ -19,7 +20,7 @@ import { VmData } from './VMCellProps';
 export const ConcernsTable: React.FC<RowProps<VmData>> = ({ resourceData }) => {
   const { t } = useForkliftTranslation();
 
-  if (!resourceData?.vm?.['concerns'] || resourceData?.vm?.['concerns']?.length < 1) {
+  if (!resourceData?.vm?.concerns || resourceData?.vm?.concerns?.length < 1) {
     return (
       <PageSection>
         <HelperText>
@@ -31,7 +32,7 @@ export const ConcernsTable: React.FC<RowProps<VmData>> = ({ resourceData }) => {
     );
   }
 
-  const groupedConcerns = groupConcernsByCategory(resourceData?.vm?.['concerns']);
+  const groupedConcerns = groupConcernsByCategory(resourceData?.vm?.concerns);
 
   return (
     <PageSection>

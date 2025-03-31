@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Modify, V1beta1Provider } from '@kubev2v/types';
-import { K8sModel } from '@openshift-console/dynamic-plugin-sdk/lib/api/core-api';
+import type { Modify, V1beta1Provider } from '@kubev2v/types';
+import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk/lib/api/core-api';
 
-import { EditModalProps } from '../EditModal';
+import type { EditModalProps } from '../EditModal';
+
 import { OpenshiftEditURLModal } from './OpenshiftEditURLModal';
 import { OpenstackEditURLModal } from './OpenstackEditURLModal';
 import { OvirtEditURLModal } from './OvirtEditURLModal';

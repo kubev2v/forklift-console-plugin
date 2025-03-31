@@ -1,20 +1,20 @@
 import React from 'react';
-import { ProviderData } from 'src/modules/Providers/utils';
+import type { ProviderData } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
-interface ProviderYAMLPageProps {
+type ProviderYAMLPageProps = {
   obj: ProviderData;
   ns?: string;
   name?: string;
   loaded?: boolean;
   loadError?: unknown;
-}
+};
 
-export const ProviderYAMLPage: React.FC<ProviderYAMLPageProps> = ({ obj, loaded, loadError }) => {
+export const ProviderYAMLPage: React.FC<ProviderYAMLPageProps> = ({ loaded, loadError, obj }) => {
   const { t } = useForkliftTranslation();
   const { provider } = obj;
 
@@ -47,9 +47,9 @@ export const ProviderYAMLPageWrapper: React.FC<{ name: string; namespace: string
 }) => {
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const data = { provider };

@@ -1,7 +1,7 @@
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-import { OnConfirmHookType } from '../EditModal';
+import type { OnConfirmHookType } from '../EditModal';
 
 /**
  * Handles the confirmation action for editing a resource annotations.
@@ -12,7 +12,7 @@ import { OnConfirmHookType } from '../EditModal';
  * @param {Object} options.model - The model associated with the resource.
  * @returns {Promise<Object>} - The modified resource.
  */
-export const onEmptyVddkConfirm: OnConfirmHookType = async ({ resource, model }) => {
+export const onEmptyVddkConfirm: OnConfirmHookType = async ({ model, resource }) => {
   const provider = resource as V1beta1Provider;
   let op: string;
 
@@ -26,8 +26,6 @@ export const onEmptyVddkConfirm: OnConfirmHookType = async ({ resource, model })
   op = Object.keys(currentSettings).length ? 'replace' : 'add';
 
   await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
@@ -35,6 +33,8 @@ export const onEmptyVddkConfirm: OnConfirmHookType = async ({ resource, model })
         value: settings,
       },
     ],
+    model,
+    resource,
   });
 
   // Patch annotations
@@ -47,8 +47,6 @@ export const onEmptyVddkConfirm: OnConfirmHookType = async ({ resource, model })
   op = Object.keys(currentAnnotations).length ? 'replace' : 'add';
 
   const obj = await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
@@ -56,6 +54,8 @@ export const onEmptyVddkConfirm: OnConfirmHookType = async ({ resource, model })
         value: annotations,
       },
     ],
+    model,
+    resource,
   });
 
   return obj;

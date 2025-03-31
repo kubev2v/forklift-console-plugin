@@ -13,8 +13,8 @@ import { HelperText, HelperTextItem } from '@patternfly/react-core';
  * @returns {React.ReactElement} The rendered JSX element.
  */
 export const EditProviderSectionHeading: React.FC<EditProviderSectionHeadingProps> = ({
-  text,
   helpText,
+  text,
 }) => (
   <>
     <SectionHeading text={text} className="forklift-create-provider-edit-section-header" />

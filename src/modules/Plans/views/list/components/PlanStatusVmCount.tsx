@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { useForkliftTranslation } from 'src/utils';
 
-import { Flex, FlexItem, Icon, IconComponentProps, Tooltip } from '@patternfly/react-core';
+import { Flex, FlexItem, Icon, type IconComponentProps, Tooltip } from '@patternfly/react-core';
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -10,17 +10,17 @@ import {
   MinusCircleIcon,
 } from '@patternfly/react-icons';
 
-interface PlanStatusVmCountProps {
+type PlanStatusVmCountProps = {
   count: number;
   linkPath: string;
   status: IconComponentProps['status'] | 'canceled';
   tooltipLabel?: string;
-}
+};
 
 export const PlanStatusVmCount: React.FC<PlanStatusVmCountProps> = ({
   count,
-  status,
   linkPath,
+  status,
   tooltipLabel,
 }) => {
   const { t } = useForkliftTranslation();

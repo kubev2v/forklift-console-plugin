@@ -1,11 +1,11 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { useToggle } from 'src/modules/Providers/hooks';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, V1beta1Plan } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
 import { getPlanPhase, PlanPhase } from '../utils';
@@ -18,12 +18,12 @@ import { getPlanPhase, PlanPhase } from '../utils';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-interface ArchiveModalProps {
+type ArchiveModalProps = {
   resource: V1beta1Plan;
   model: K8sModel;
   title?: string;
   redirectTo?: string;
-}
+};
 
 /**
  * A generic delete modal component
@@ -31,7 +31,7 @@ interface ArchiveModalProps {
  * @param {ArchiveModalProps} props - Props for DeleteModal
  * @returns {React.Element} The DeleteModal component
  */
-export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, redirectTo }) => {
+export const ArchiveModal: React.FC<ArchiveModalProps> = ({ redirectTo, resource, title }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
@@ -47,10 +47,10 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
       const op = resource?.spec?.archived ? 'replace' : 'add';
 
       await k8sPatch({
-        model: PlanModel,
-        resource,
-        path: '',
         data: [{ op, path: '/spec/archived', value: true }],
+        model: PlanModel,
+        path: '',
+        resource,
       });
 
       if (redirectTo) {

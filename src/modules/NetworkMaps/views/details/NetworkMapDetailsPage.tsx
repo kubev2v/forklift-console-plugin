@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 import { NetworkMapPageHeadings } from './components/DetailsSection/components/NetworkMapPageHeadings';
 import { NetworkMapDetailsTab, NetworkMapYAMLTab } from './tabs';
@@ -16,14 +16,14 @@ const NetworkMapDetailsPageInternal: React.FC<{
 
   const pages = [
     {
+      component: () => <NetworkMapDetailsTab name={name} namespace={namespace} />,
       href: '',
       name: t('Details'),
-      component: () => <NetworkMapDetailsTab name={name} namespace={namespace} />,
     },
     {
+      component: () => <NetworkMapYAMLTab name={name} namespace={namespace} />,
       href: 'yaml',
       name: t('YAML'),
-      component: () => <NetworkMapYAMLTab name={name} namespace={namespace} />,
     },
   ];
 

@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom-v5-compat';
 import { SectionHeading } from 'src/components/headers/SectionHeading';
 import { Loading } from 'src/modules/Plans/views/details';
 import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
-import { getResourceUrl, ProviderData } from 'src/modules/Providers/utils';
+import { getResourceUrl, type ProviderData } from 'src/modules/Providers/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  ProviderInventory,
+  type ProviderInventory,
   ProviderModel,
   ProviderModelGroupVersionKind,
   ProviderModelRef,
-  V1beta1Provider,
+  type V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Bullseye, PageSection } from '@patternfly/react-core';
@@ -24,17 +24,17 @@ import {
   SecretsSection,
 } from '../../components';
 
-interface ProviderDetailsProps {
+type ProviderDetailsProps = {
   obj: ProviderData;
   ns?: string;
   name?: string;
   loaded?: boolean;
   loadError?: unknown;
-}
+};
 
-export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, loadError }) => {
+export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ loaded, loadError, obj }) => {
   const { t } = useForkliftTranslation();
-  const { provider, inventory } = obj;
+  const { inventory, provider } = obj;
 
   if (!loaded || loadError || !provider?.metadata?.name) {
     return (
@@ -45,9 +45,9 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
   }
 
   const providerURL = getResourceUrl({
-    reference: ProviderModelRef,
     name: provider?.metadata?.name,
     namespace: provider?.metadata?.namespace,
+    reference: ProviderModelRef,
   });
 
   return (
@@ -100,15 +100,15 @@ export const ProviderDetailsWrapper: React.FC<{ name: string; namespace: string 
 }) => {
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const { inventory } = useProviderInventory<ProviderInventory>({ provider });
   const permissions = useGetDeleteAndEditAccessReview({ model: ProviderModel, namespace });
 
-  const data = { provider, inventory, permissions };
+  const data = { inventory, permissions, provider };
 
   return <ProviderDetails obj={data} loaded={providerLoaded} loadError={providerLoadError} />;
 };

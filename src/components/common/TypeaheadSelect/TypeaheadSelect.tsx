@@ -3,37 +3,34 @@ import React from 'react';
 import {
   Button,
   MenuToggle,
-  MenuToggleElement,
-  MenuToggleProps,
+  type MenuToggleElement,
+  type MenuToggleProps,
   Select,
   SelectList,
   SelectOption,
-  SelectOptionProps,
-  SelectProps,
+  type SelectOptionProps,
+  type SelectProps,
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
 } from '@patternfly/react-core';
 import { TimesIcon } from '@patternfly/react-icons';
 
-export interface TypeaheadSelectOption extends Omit<SelectOptionProps, 'content' | 'isSelected'> {
+export type TypeaheadSelectOption = {
   /** Content of the select option. */
   content: string | number;
   /** Value of the select option. */
   value: string | number;
   /** Indicator for option being selected */
   isSelected?: boolean;
-}
+} & Omit<SelectOptionProps, 'content' | 'isSelected'>;
 
-export interface TypeaheadSelectProps extends Omit<SelectProps, 'toggle' | 'onSelect'> {
+export type TypeaheadSelectProps = {
   /** Options of the select */
   selectOptions: TypeaheadSelectOption[];
   /** Callback triggered on selection. */
   onSelect?: (
-    _event:
-      | React.MouseEvent<Element, MouseEvent>
-      | React.KeyboardEvent<HTMLInputElement>
-      | undefined,
+    _event: React.MouseEvent | React.KeyboardEvent<HTMLInputElement> | undefined,
     selection: string | number,
   ) => void;
   /** Callback triggered when the select opens or closes. */
@@ -67,7 +64,7 @@ export interface TypeaheadSelectProps extends Omit<SelectProps, 'toggle' | 'onSe
   toggleWidth?: string;
   /** Additional props passed to the toggle. */
   toggleProps?: MenuToggleProps;
-}
+} & Omit<SelectProps, 'toggle' | 'onSelect'>;
 
 const defaultNoOptionsFoundMessage = (filter: string) => `No results found for "${filter}"`;
 const defaultCreateOptionMessage = (newValue: string) => `Create "${newValue}"`;
@@ -75,23 +72,23 @@ const defaultFilterFunction = (filterValue: string, options: TypeaheadSelectOpti
   options.filter((o) => String(o.content).toLowerCase().includes(filterValue.toLowerCase()));
 
 export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
-  innerRef,
-  selectOptions,
-  onSelect,
-  onToggle,
-  onInputChange,
-  filterFunction = defaultFilterFunction,
-  onClearSelection,
   allowClear,
-  placeholder = 'Select an option',
-  noOptionsAvailableMessage = 'No options are available',
-  noOptionsFoundMessage = defaultNoOptionsFoundMessage,
+  createOptionMessage = defaultCreateOptionMessage,
+  filterFunction = defaultFilterFunction,
+  innerRef,
   isCreatable = false,
   isCreateOptionOnTop = false,
-  createOptionMessage = defaultCreateOptionMessage,
   isDisabled,
-  toggleWidth,
+  noOptionsAvailableMessage = 'No options are available',
+  noOptionsFoundMessage = defaultNoOptionsFoundMessage,
+  onClearSelection,
+  onInputChange,
+  onSelect,
+  onToggle,
+  placeholder = 'Select an option',
+  selectOptions,
   toggleProps,
+  toggleWidth,
   ...props
 }: TypeaheadSelectProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -136,11 +133,11 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
       if (!newSelectOptions.length) {
         newSelectOptions = [
           {
-            isAriaDisabled: true,
             content:
               typeof noOptionsFoundMessage === 'string'
                 ? noOptionsFoundMessage
                 : noOptionsFoundMessage(filterValue),
+            isAriaDisabled: true,
             value: NO_RESULTS,
           },
         ];
@@ -151,8 +148,8 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
     if (!newSelectOptions.length) {
       newSelectOptions = [
         {
-          isAriaDisabled: true,
           content: noOptionsAvailableMessage,
+          isAriaDisabled: true,
           value: NO_RESULTS,
         },
       ];
@@ -218,10 +215,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
   };
 
   const selectOption = (
-    _event:
-      | React.MouseEvent<Element, MouseEvent>
-      | React.KeyboardEvent<HTMLInputElement>
-      | undefined,
+    _event: React.MouseEvent | React.KeyboardEvent<HTMLInputElement> | undefined,
     option: TypeaheadSelectOption,
   ) => {
     if (onSelect) {
@@ -231,7 +225,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
   };
 
   const handleSelect = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
+    _event: React.MouseEvent | undefined,
     value: string | number | undefined,
   ) => {
     if (value && value !== NO_RESULTS) {
@@ -239,7 +233,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
       if (optionToSelect) {
         selectOption(_event, optionToSelect);
       } else if (isCreatable) {
-        selectOption(_event, { value, content: value });
+        selectOption(_event, { content: value, value });
       }
     }
   };
@@ -368,7 +362,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
     >
       <TextInputGroup isPlain>
         <TextInputGroupMain
-          value={isFiltering ? filterValue : selected?.content ?? ''}
+          value={isFiltering ? filterValue : (selected?.content ?? '')}
           onClick={onInputClick}
           onChange={onTextInputChange}
           onKeyDown={onInputKeyDown}

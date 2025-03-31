@@ -7,9 +7,9 @@ export const ProviderStatusValues = [
 ] as const;
 export type ProviderStatus = (typeof ProviderStatusValues)[number];
 
-export interface VmFeatures {
+export type VmFeatures = {
   numa?: boolean;
   gpusHostDevices?: boolean;
   persistentTpmEfi?: boolean;
   dedicatedCpu?: boolean;
-}
+};

@@ -9,21 +9,21 @@ import {
 } from 'react';
 import { produce } from 'immer';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 
-import { VmData } from '../details';
+import type { VmData } from '../details';
 
-export interface CreateVmMigrationContextData {
+export type CreateVmMigrationContextData = {
   selectedVms: VmData[];
   provider?: V1beta1Provider;
   planName?: string;
   projectName?: string;
-}
+};
 
-export interface CreateVmMigrationContextType {
+export type CreateVmMigrationContextType = {
   data?: CreateVmMigrationContextData;
   setData?: (data: CreateVmMigrationContextData) => void;
-}
+};
 
 export const CreateVmMigrationContext = createContext<CreateVmMigrationContextType>({
   setData: () => undefined,
@@ -55,7 +55,9 @@ export const useCreateVmMigrationContextValue = (): CreateVmMigrationContextType
   return useMemo(
     () => ({
       data,
-      setData: (newState: CreateVmMigrationContextData) => setValueSafe(produce(() => newState)),
+      setData: (newState: CreateVmMigrationContextData) => {
+        setValueSafe(produce(() => newState));
+      },
     }),
     [data, setData],
   );

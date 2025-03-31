@@ -3,7 +3,7 @@ export * from './ConcernsTable';
 export * from './MigrationAction';
 export * from './PowerStateCellRenderer';
 export * from './ProviderVirtualMachinesList';
-export * from './VMCellProps';
+export type * from './VMCellProps';
 export * from './VMConcernsCellRenderer';
 export * from './VmFeaturesCell';
 export * from './VMNameCellRenderer';

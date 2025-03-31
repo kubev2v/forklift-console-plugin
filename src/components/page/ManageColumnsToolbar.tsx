@@ -3,36 +3,40 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ManageColumnsModal } from '../common/TableView/ManageColumnsModal';
 import { ManageColumnsToolbarItem } from '../common/TableView/ManageColumnsToolbarItem';
-import { ResourceField } from '../common/utils/types';
+import type { ResourceField } from '../common/utils/types';
 
-export interface ManageColumnsToolbarProps {
+export type ManageColumnsToolbarProps = {
   /** Read only. State maintained by parent component. */
   resourceFields: ResourceField[];
   /** Read only. The defaults used for initialization.*/
   defaultColumns: ResourceField[];
   /** Setter to modify state in the parent.*/
-  setColumns(resourceFields: ResourceField[]): void;
-}
+  setColumns: (resourceFields: ResourceField[]) => void;
+};
 
 /**
  * Toggles a modal dialog for managing resourceFields visibility and order.
  */
 export const ManageColumnsToolbar = ({
+  defaultColumns,
   resourceFields,
   setColumns,
-  defaultColumns,
 }: ManageColumnsToolbarProps) => {
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
   return (
     <ManageColumnsToolbarItem
-      showDialog={() => setIsOpen(true)}
+      showDialog={() => {
+        setIsOpen(true);
+      }}
       ariaLabel={t('Manage Columns')}
       tooltip={t('Manage Columns')}
     >
       <ManageColumnsModal
         showModal={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={() => {
+          setIsOpen(false);
+        }}
         description={t('Selected columns will be displayed in the table.')}
         resourceFields={resourceFields}
         onChange={setColumns}

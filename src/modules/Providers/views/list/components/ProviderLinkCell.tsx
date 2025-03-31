@@ -5,7 +5,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 
 /**
  * ProviderLinkCell component, used for displaying a link cell with information about the provider.

@@ -4,7 +4,6 @@
 export const ensureArray = (node: unknown | unknown[]): unknown[] => {
   if (Array.isArray(node)) {
     return node;
-  } else {
-    return [node]; // Wrap the single ReactNode in an array
   }
+  return [node]; // Wrap the single ReactNode in an array
 };

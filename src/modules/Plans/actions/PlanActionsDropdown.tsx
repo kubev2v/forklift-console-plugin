@@ -1,11 +1,12 @@
-import React, { Ref } from 'react';
+import React, { type Ref } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Dropdown, DropdownList, MenuToggle, MenuToggleElement } from '@patternfly/react-core';
+import { Dropdown, DropdownList, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
-import { CellProps } from '../views/list/components';
+import type { CellProps } from '../views/list/components';
+
 import { PlanActionsDropdownItems } from './PlanActionsDropdownItems';
 
 import './PlanActionsDropdown.style.css';
@@ -20,10 +21,7 @@ const PlanActionsKebabDropdown_: React.FC<PlanActionsDropdownProps> = ({ data, i
     setIsOpen((isOpen) => !isOpen);
   };
 
-  const onSelect = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    _value: string | number | undefined,
-  ) => {
+  const onSelect = (_event: React.MouseEvent | undefined, _value: string | number | undefined) => {
     setIsOpen(false);
   };
 
@@ -60,6 +58,6 @@ export const PlanActionsDropdown: React.FC<PlanActionsDropdownProps> = (props) =
   </ModalHOC>
 );
 
-export interface PlanActionsDropdownProps extends CellProps {
+export type PlanActionsDropdownProps = {
   isKebab?: boolean;
-}
+} & CellProps;

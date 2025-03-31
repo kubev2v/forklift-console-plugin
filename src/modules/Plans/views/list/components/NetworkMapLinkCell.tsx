@@ -3,7 +3,7 @@ import { TableLinkCell } from 'src/modules/Providers/utils';
 
 import { NetworkMapModelGroupVersionKind } from '@kubev2v/types';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 
 export const NetworkMapLinkCell: React.FC<CellProps> = ({ data }) => {
   const { obj: networkMap } = data;

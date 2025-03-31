@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProviderData } from 'src/modules/Providers/utils';
+import type { ProviderData } from 'src/modules/Providers/utils';
 
 import { OpenshiftInventorySection } from './OpenshiftInventorySection';
 import { OpenstackInventorySection } from './OpenstackInventorySection';

@@ -5,6 +5,6 @@ export * from './ManageColumnsModal';
 export * from './ManageColumnsToolbarItem';
 export * from './sort';
 export * from './TableView';
-export * from './types';
+export type * from './types';
 export * from './withTr';
 // @endindex

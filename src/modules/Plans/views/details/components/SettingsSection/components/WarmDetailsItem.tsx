@@ -6,14 +6,14 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 
-import { PlanDetailsItemProps } from '../../DetailsSection';
+import type { PlanDetailsItemProps } from '../../DetailsSection';
 import { EditPlanWarm } from '../modals';
 
 export const WarmDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  resource,
   canPatch,
-  helpContent,
   destinationProvider,
+  helpContent,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -40,8 +40,9 @@ export const WarmDetailsItem: React.FC<PlanDetailsItemProps> = ({
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() =>
-          showModal(<EditPlanWarm resource={resource} destinationProvider={destinationProvider} />))
+        (() => {
+          showModal(<EditPlanWarm resource={resource} destinationProvider={destinationProvider} />);
+        })
       }
     />
   );

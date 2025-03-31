@@ -8,13 +8,14 @@ import {
   OvirtCredentialsEdit,
   VCenterCredentialsEdit,
 } from '../../details';
+
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
 import { EsxiProviderCreateForm } from './EsxiProviderCreateForm';
 import { OpenshiftProviderFormCreate } from './OpenshiftProviderCreateForm';
 import { OpenstackProviderCreateForm } from './OpenstackProviderCreateForm';
 import { OVAProviderCreateForm } from './OVAProviderCreateForm';
 import { OvirtProviderCreateForm } from './OvirtProviderCreateForm';
-import { ProvidersCreateFormProps } from './ProviderCreateForm';
+import type { ProvidersCreateFormProps } from './ProviderCreateForm';
 import { VCenterProviderCreateForm } from './VCenterProviderCreateForm';
 
 export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
@@ -26,7 +27,7 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
   const { t } = useForkliftTranslation();
 
   const type = newProvider?.spec?.type || '';
-  const subType = newProvider?.spec?.settings?.['sdkEndpoint'] || '';
+  const subType = newProvider?.spec?.settings?.sdkEndpoint || '';
 
   switch (type) {
     case 'openstack':

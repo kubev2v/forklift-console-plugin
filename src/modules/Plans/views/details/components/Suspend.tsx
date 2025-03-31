@@ -23,7 +23,7 @@ export type SuspendProps = {
  *
  * @returns {JSX.Element} The JSX element containing the children or a loading indicator.
  */
-export const Suspend: React.FC<SuspendProps> = ({ obj, loaded, loadError, children }) => {
+export const Suspend: React.FC<SuspendProps> = ({ children, loaded, loadError, obj }) => {
   if (obj && loaded && !loadError) {
     return <>{children}</>;
   }

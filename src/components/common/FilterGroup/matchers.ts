@@ -8,8 +8,9 @@ import {
   GroupedEnumFilter,
   SwitchFilter,
 } from '../Filter';
-import { areSameDayInUTCZero, isInClosedRange, ResourceField } from '../utils';
-import { FilterRenderer, ValueMatcher } from './types';
+import { areSameDayInUTCZero, isInClosedRange, type ResourceField } from '../utils';
+
+import type { FilterRenderer, ValueMatcher } from './types';
 
 /**
  * Get the field value of a given field id, using resourceData and resourceFields
@@ -54,12 +55,12 @@ export const getResourceFieldValue = (
  */
 export const createMatcher =
   ({
-    selectedFilters,
     filterType,
     matchValue,
     resourceFields,
+    selectedFilters,
   }: {
-    selectedFilters: { [id: string]: string[] };
+    selectedFilters: Record<string, string[]>;
     filterType: string;
     matchValue: (value: unknown) => (filterValue: string) => boolean;
     resourceFields: ResourceField[];
@@ -68,17 +69,16 @@ export const createMatcher =
     resourceFields
       .filter(({ filter }) => filter?.type === filterType)
       .filter(
-        ({ resourceFieldId, filter }) =>
-          (selectedFilters[resourceFieldId] && selectedFilters[resourceFieldId]?.length) ||
-          filter?.defaultValues,
+        ({ filter, resourceFieldId }) =>
+          selectedFilters[resourceFieldId]?.length || filter?.defaultValues,
       )
-      .map(({ resourceFieldId, filter }) => ({
-        value: getResourceFieldValue(resourceData, resourceFieldId, resourceFields),
+      .map(({ filter, resourceFieldId }) => ({
         filters: selectedFilters[resourceFieldId]?.length
           ? selectedFilters[resourceFieldId]
           : filter?.defaultValues,
+        value: getResourceFieldValue(resourceData, resourceFieldId, resourceFields),
       }))
-      .map(({ value, filters }) => filters.some(matchValue(value)))
+      .map(({ filters, value }) => filters.some(matchValue(value)))
       .every(Boolean);
 
 /**
@@ -142,8 +142,8 @@ export const defaultSupportedFilters: Record<string, FilterRenderer> = {
   date: DateFilter,
   dateRange: DateRangeFilter,
   enum: EnumFilter,
-  groupedEnum: GroupedEnumFilter,
   freetext: FreetextFilter,
+  groupedEnum: GroupedEnumFilter,
   slider: SwitchFilter,
 };
 
@@ -156,14 +156,14 @@ export const defaultSupportedFilters: Record<string, FilterRenderer> = {
  */
 export const createMetaMatcher =
   (
-    selectedFilters: { [id: string]: string[] },
+    selectedFilters: Record<string, string[]>,
     resourceFields: ResourceField[],
     valueMatchers: ValueMatcher[] = defaultValueMatchers,
   ) =>
   (resourceData): boolean =>
     valueMatchers
       .map(({ filterType, matchValue }) =>
-        createMatcher({ selectedFilters, filterType, matchValue, resourceFields }),
+        createMatcher({ filterType, matchValue, resourceFields, selectedFilters }),
       )
       .map((match) => match(resourceData))
       .every(Boolean);

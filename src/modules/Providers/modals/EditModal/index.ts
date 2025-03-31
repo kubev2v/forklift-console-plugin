@@ -1,4 +1,4 @@
 // @index('./*.tsx', f => `export * from '${f.path}';`)
 export * from './EditModal';
-export * from './types';
+export type * from './types';
 // @endindex

@@ -4,6 +4,6 @@ export * from './FilterFromDef';
 export * from './FilterGroup';
 export * from './helpers';
 export * from './matchers';
-export * from './types';
+export type * from './types';
 export * from './useUrlFilters';
 // @endindex

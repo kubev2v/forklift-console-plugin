@@ -1,4 +1,4 @@
-import React, { FC, Ref, useState } from 'react';
+import React, { type FC, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -11,7 +11,7 @@ import {
   Form,
   FormGroup,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectGroup,
   SelectList,
@@ -19,11 +19,11 @@ import {
 } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 
-import { Mapping, MappingSource } from '../types';
+import type { Mapping, MappingSource } from '../types';
 
 import '../ProvidersCreateVmMigration.style.css';
 
-export interface MappingListItemProps {
+export type MappingListItemProps = {
   source: string;
   destination: string;
   destinations: string[];
@@ -36,21 +36,21 @@ export interface MappingListItemProps {
   replaceMapping: (val: { current: Mapping; next: Mapping }) => void;
   deleteMapping: (mapping: Mapping) => void;
   isDisabled: boolean;
-}
+};
 
 export const MappingListItem: FC<MappingListItemProps> = ({
-  source,
+  deleteMapping,
   destination,
   destinations,
   generalSources,
+  generalSourcesLabel,
+  index,
+  isDisabled,
+  noSourcesLabel,
+  replaceMapping,
+  source,
   usedSources,
   usedSourcesLabel,
-  generalSourcesLabel,
-  noSourcesLabel,
-  index,
-  replaceMapping,
-  deleteMapping,
-  isDisabled,
 }) => {
   const { t } = useForkliftTranslation();
   const [isSrcOpen, setIsSrcOpen] = useState(false);
@@ -59,7 +59,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   const [trgSelected, setTrgSelected] = useState<string>(destination);
 
   const onClick = () => {
-    deleteMapping({ source, destination });
+    deleteMapping({ destination, source });
   };
 
   const onSrcToggleClick = () => {
@@ -84,12 +84,12 @@ export const MappingListItem: FC<MappingListItemProps> = ({
 
   // Callback functions to handle selection in the dropdown menus
   const onSelectSource = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
+    _event: React.MouseEvent | undefined,
     value: string | number | undefined,
   ) => {
     replaceMapping({
-      current: { source, destination },
-      next: { source: value as string, destination },
+      current: { destination, source },
+      next: { destination, source: value as string },
     });
 
     // Toggle the dropdown menu open state
@@ -98,12 +98,12 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   };
 
   const onSelectDestination = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
+    _event: React.MouseEvent | undefined,
     value: string | number | undefined,
   ) => {
     replaceMapping({
-      current: { source, destination },
-      next: { source, destination: value as string },
+      current: { destination, source },
+      next: { destination: value as string, source },
     });
 
     // Toggle the dropdown menu open state
@@ -126,7 +126,9 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                     isOpen={isSrcOpen}
                     selected={srcSelected}
                     onSelect={onSelectSource}
-                    onOpenChange={(nextOpen: boolean) => setIsSrcOpen(nextOpen)}
+                    onOpenChange={(nextOpen: boolean) => {
+                      setIsSrcOpen(nextOpen);
+                    }}
                     toggle={srcToggle}
                     shouldFocusToggleOnSelect
                     shouldFocusFirstItemOnOpen={false}
@@ -158,7 +160,9 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                     isOpen={isTrgOpen}
                     selected={trgSelected}
                     onSelect={onSelectDestination}
-                    onOpenChange={(nextOpen: boolean) => setIsTrgOpen(nextOpen)}
+                    onOpenChange={(nextOpen: boolean) => {
+                      setIsTrgOpen(nextOpen);
+                    }}
                     toggle={trgToggle}
                     shouldFocusToggleOnSelect
                     shouldFocusFirstItemOnOpen={false}
@@ -203,7 +207,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
 
 const toGroup = (sources: MappingSource[], noSourcesLabel: string, selectedSource: string) =>
   sources.length !== 0 ? (
-    sources.map(({ label, isMapped }) => (
+    sources.map(({ isMapped, label }) => (
       <SelectOption value={label} key={label} isDisabled={isMapped && label !== selectedSource}>
         {label}
       </SelectOption>

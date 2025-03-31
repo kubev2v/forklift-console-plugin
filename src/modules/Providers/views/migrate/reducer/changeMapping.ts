@@ -1,22 +1,22 @@
-import { Mapping, MappingSource } from '../types';
+import type { Mapping, MappingSource } from '../types';
 
 export const addMapping = (sources: MappingSource[], targets: string[], mappings: Mapping[]) => {
   const firstUsedByVms = sources.find(
-    ({ usedBySelectedVms, isMapped }) => usedBySelectedVms && !isMapped,
+    ({ isMapped, usedBySelectedVms }) => usedBySelectedVms && !isMapped,
   );
   const firstGeneral = sources.find(
-    ({ usedBySelectedVms, isMapped }) => !usedBySelectedVms && !isMapped,
+    ({ isMapped, usedBySelectedVms }) => !usedBySelectedVms && !isMapped,
   );
   const nextSource = firstUsedByVms || firstGeneral;
   const nextDest = targets[0];
 
   return nextDest && nextSource
     ? {
+        mappings: [...mappings, { destination: nextDest, source: nextSource.label }],
         sources: sources.map((m) => ({
           ...m,
           isMapped: m.label === nextSource.label ? true : m.isMapped,
         })),
-        mappings: [...mappings, { source: nextSource.label, destination: nextDest }],
       }
     : {};
 };
@@ -26,15 +26,15 @@ export const deleteMapping = (
   selectedSource: string,
   mappings: Mapping[],
 ) => {
-  const currentSource = sources.find(({ label, isMapped }) => label === selectedSource && isMapped);
+  const currentSource = sources.find(({ isMapped, label }) => label === selectedSource && isMapped);
 
   return currentSource
     ? {
+        mappings: mappings.filter(({ source }) => source !== currentSource.label),
         sources: sources.map((m) => ({
           ...m,
           isMapped: m.label === selectedSource ? false : m.isMapped,
         })),
-        mappings: mappings.filter(({ source }) => source !== currentSource.label),
       }
     : {};
 };
@@ -46,7 +46,7 @@ export const replaceMapping = (
   targets: string[],
   mappings: Mapping[],
 ) => {
-  const currentSource = sources.find(({ label, isMapped }) => label === current.source && isMapped);
+  const currentSource = sources.find(({ isMapped, label }) => label === current.source && isMapped);
   const nextSource = sources.find(({ label }) => label === next.source);
   const nextDest = targets.find((label) => label === next.destination);
   const sourceChanged = currentSource?.label !== nextSource?.label;
@@ -66,8 +66,8 @@ export const replaceMapping = (
     : undefined;
 
   return {
-    sources: updatedSources,
     mappings: updateMappingsIfNeeded(mappings, current.source, next),
+    sources: updatedSources,
   };
 };
 

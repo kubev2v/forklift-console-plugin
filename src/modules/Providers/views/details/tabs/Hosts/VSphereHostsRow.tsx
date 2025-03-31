@@ -1,13 +1,13 @@
 import React from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
 import { NameCellRenderer } from './components/NameCellRenderer';
-import { InventoryHostPair } from './utils/helpers';
+import type { InventoryHostPair } from './utils/helpers';
 import {
-  HostCellProps,
+  type HostCellProps,
   IDCellRenderer,
   LinkSpeedCellRenderer,
   MTUCellRenderer,
@@ -15,8 +15,8 @@ import {
 } from './components';
 
 export const VSphereHostsCells: React.FC<RowProps<InventoryHostPair>> = ({
-  resourceFields,
   resourceData,
+  resourceFields,
 }) => {
   return (
     <>
@@ -51,15 +51,15 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 };
 
 const cellRenderers: Record<string, React.FC<HostCellProps>> = {
-  name: NameCellRenderer,
   id: IDCellRenderer,
-  network: NetworkCellRenderer,
   linkSpeed: LinkSpeedCellRenderer,
   mtu: MTUCellRenderer,
+  name: NameCellRenderer,
+  network: NetworkCellRenderer,
 };
 
-interface RenderTdProps {
+type RenderTdProps = {
   resourceData: InventoryHostPair;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-}
+};

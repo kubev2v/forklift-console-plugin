@@ -17,14 +17,14 @@ export type AlignedDecimalProps = {
 };
 
 export const AlignedDecimal: React.FC<AlignedDecimalProps> = ({
-  value,
-  unit = '',
   fractionalPrecision = 2,
+  unit = '',
+  value,
 }) => {
   const { t } = useForkliftTranslation();
 
   const [integerPart, fractionalPart] = value.toFixed(fractionalPrecision).split('.');
-  const formattedFractionalPart = fractionalPrecision === 0 ? ' ' : '.' + fractionalPart;
+  const formattedFractionalPart = fractionalPrecision === 0 ? ' ' : `.${fractionalPart}`;
 
   return (
     <div>

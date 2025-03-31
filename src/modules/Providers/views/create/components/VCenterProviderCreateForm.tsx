@@ -8,28 +8,28 @@ import {
 } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import { Alert, Checkbox, Form, Popover, Radio, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
-export interface VCenterProviderCreateFormProps {
+export type VCenterProviderCreateFormProps = {
   provider: V1beta1Provider;
   secret: IoK8sApiCoreV1Secret;
   onChange: (newValue: V1beta1Provider) => void;
-}
+};
 
 export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps> = ({
+  onChange,
   provider,
   secret,
-  onChange,
 }) => {
   const { t } = useForkliftTranslation();
 
   const url = provider?.spec?.url;
   const emptyVddkInitImage =
     provider?.metadata?.annotations?.['forklift.konveyor.io/empty-vddk-init-image'];
-  const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'];
-  const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'];
+  const vddkInitImage = provider?.spec?.settings?.vddkInitImage;
+  const sdkEndpoint = provider?.spec?.settings?.sdkEndpoint;
 
   const initialState = {
     validation: {
@@ -41,11 +41,11 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
   // When certificate changes, re-validate the URL
   useEffect(() => {
     dispatch({
-      type: 'SET_FIELD_VALIDATED',
       payload: {
         field: 'url',
         validationState: validateVCenterURL(url, secret?.data?.insecureSkipVerify),
       },
+      type: 'SET_FIELD_VALIDATED',
     });
   }, [secret]);
 
@@ -74,8 +74,8 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
         const validationState = validateVDDKImage(undefined);
 
         dispatch({
-          type: 'SET_FIELD_VALIDATED',
           payload: { field: 'vddkInitImage', validationState },
+          type: 'SET_FIELD_VALIDATED',
         });
 
         onChange({
@@ -101,8 +101,8 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
         const validationState = validateVDDKImage(trimmedValue);
 
         dispatch({
-          type: 'SET_FIELD_VALIDATED',
           payload: { field: 'vddkInitImage', validationState },
+          type: 'SET_FIELD_VALIDATED',
         });
 
         onChange({
@@ -126,7 +126,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
             ...provider?.spec,
             settings: {
               ...provider?.spec?.settings,
-              sdkEndpoint: sdkEndpoint,
+              sdkEndpoint,
             },
           },
         });
@@ -136,7 +136,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
         // Validate URL - VCenter of ESXi
         const validationState = validateVCenterURL(trimmedValue, secret?.data?.insecureSkipVerify);
 
-        dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
+        dispatch({ payload: { field: 'url', validationState }, type: 'SET_FIELD_VALIDATED' });
 
         onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
       }
@@ -144,7 +144,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
     [provider, secret],
   );
 
-  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
+  const onClick: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -179,14 +179,18 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
           label="vCenter"
           id="sdkEndpoint-vcenter"
           isChecked={!sdkEndpoint || sdkEndpoint === 'vcenter'}
-          onChange={() => handleChange('sdkEndpoint', 'vcenter')}
+          onChange={() => {
+            handleChange('sdkEndpoint', 'vcenter');
+          }}
         />
         <Radio
           name="sdkEndpoint"
           label="ESXi"
           id="sdkEndpoint-esxi"
           isChecked={sdkEndpoint === 'esxi'}
-          onChange={() => handleChange('sdkEndpoint', 'esxi')}
+          onChange={() => {
+            handleChange('sdkEndpoint', 'esxi');
+          }}
         />
       </FormGroupWithHelpText>
 
@@ -206,7 +210,9 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
           name="url"
           value={url}
           validated={state.validation.url.type}
-          onChange={(e, v) => onChangeUrl(v, e)}
+          onChange={(e, v) => {
+            onChangeUrl(v, e);
+          }}
         />
       </FormGroupWithHelpText>
 
@@ -235,7 +241,9 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
               'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
             )}
             isChecked={emptyVddkInitImage === 'yes'}
-            onChange={(e, v) => onChangEmptyVddk(v, e)}
+            onChange={(e, v) => {
+              onChangEmptyVddk(v, e);
+            }}
             id="emptyVddkInitImage"
             name="emptyVddkInitImage"
           />
@@ -252,7 +260,9 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
             validated={
               emptyVddkInitImage === 'yes' ? 'default' : state.validation.vddkInitImage.type
             }
-            onChange={(e, v) => onChangeVddk(v, e)}
+            onChange={(e, v) => {
+              onChangeVddk(v, e);
+            }}
           />
         </div>
       </FormGroupWithHelpText>

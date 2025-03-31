@@ -5,7 +5,7 @@ import StatusIcon from 'src/components/status/StatusIcon';
 import { getResourceUrl } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { IoK8sApiCoreV1Pod } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Pod } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Split, SplitItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
@@ -15,9 +15,9 @@ export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
 
   const getPodLogsLink = (pod: IoK8sApiCoreV1Pod) =>
     getResourceUrl({
-      reference: 'pods',
-      namespace: pod.metadata.namespace,
       name: pod.metadata.name,
+      namespace: pod.metadata.namespace,
+      reference: 'pods',
     });
 
   if (!pods) {

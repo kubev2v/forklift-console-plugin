@@ -1,4 +1,4 @@
-import {
+import type {
   V1beta1PlanStatusMigrationVmsPipeline,
   V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
 } from '@kubev2v/types';

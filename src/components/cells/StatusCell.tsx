@@ -6,18 +6,18 @@ import { InfoCircleIcon } from '@patternfly/react-icons';
 import { TextWithIcon } from './TextWithIcon';
 import { categoryIcons } from './utils';
 
-export interface StatusCellProps {
+export type StatusCellProps = {
   label: string;
   conditions: { type?: string; message?: string; category?: string; status?: string }[];
   icon: React.ReactNode;
-}
+};
 
-export const StatusCell: React.FC<StatusCellProps> = ({ label, conditions, icon }) => {
+export const StatusCell: React.FC<StatusCellProps> = ({ conditions, icon, label }) => {
   if (!conditions?.length) {
     return <TextWithIcon label={label} icon={icon} />;
   }
 
-  const allConditions = conditions.map(({ type, message, category, status }) => (
+  const allConditions = conditions.map(({ category, message, status, type }) => (
     <TextWithIcon
       className="forklift-table__flex-cell-popover"
       key={type}

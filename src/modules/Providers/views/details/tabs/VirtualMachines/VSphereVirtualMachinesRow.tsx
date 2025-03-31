@@ -1,16 +1,16 @@
 import React from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { ResourceField } from '@components/common/utils/types';
-import { VSphereVM } from '@kubev2v/types';
+import type { ResourceField } from '@components/common/utils/types';
+import type { VSphereVM } from '@kubev2v/types';
 import { Td } from '@patternfly/react-table';
 
 import {
   PowerStateCellRenderer,
-  VMCellProps,
+  type VMCellProps,
   VMConcernsCellRenderer,
-  VmData,
+  type VmData,
   VMNameCellRenderer,
 } from './components';
 
@@ -25,24 +25,24 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-interface RenderTdProps {
+type RenderTdProps = {
   resourceData: VmData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-}
+};
 
 const cellRenderers: Record<string, React.FC<VMCellProps>> = {
-  name: VMNameCellRenderer,
   concerns: VMConcernsCellRenderer,
-  host: ({ data }) => <TableCell>{data?.hostName}</TableCell>,
   folder: ({ data }) => <TableCell>{data?.folderName}</TableCell>,
+  host: ({ data }) => <TableCell>{data?.hostName}</TableCell>,
+  name: VMNameCellRenderer,
   path: ({ data }) => <TableCell>{(data?.vm as VSphereVM)?.path}</TableCell>,
   powerState: PowerStateCellRenderer,
 };
 
 export const VSphereVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
-  resourceFields,
   resourceData,
+  resourceFields,
 }) => {
   return (
     <>

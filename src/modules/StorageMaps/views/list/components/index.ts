@@ -1,5 +1,5 @@
 // @index(['./*', /style/g], f => `export * from '${f.path}';`)
-export * from './CellProps';
+export type * from './CellProps';
 export * from './NamespaceCell';
 export * from './PlanCell';
 export * from './ProviderLinkCell';

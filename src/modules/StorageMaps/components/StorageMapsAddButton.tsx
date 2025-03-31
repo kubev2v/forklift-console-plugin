@@ -7,16 +7,16 @@ import { StorageMapModelRef } from '@kubev2v/types';
 import { Button } from '@patternfly/react-core';
 
 export const StorageMapsAddButton: React.FC<{ namespace: string; dataTestId?: string }> = ({
-  namespace,
   dataTestId,
+  namespace,
 }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
 
   const StorageMapsListURL = getResourceUrl({
-    reference: StorageMapModelRef,
-    namespace: namespace,
+    namespace,
     namespaced: namespace !== undefined,
+    reference: StorageMapModelRef,
   });
 
   const onClick = () => {

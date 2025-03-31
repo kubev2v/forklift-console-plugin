@@ -1,4 +1,4 @@
-import { VmData } from '../../details';
+import type { VmData } from '../../details';
 
 export const getNamespacesUsedBySelectedVms = (selectedVMs: VmData[]) =>
   Array.from(

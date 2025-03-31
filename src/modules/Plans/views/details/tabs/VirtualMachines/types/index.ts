@@ -1,4 +1,4 @@
 // @index(['./*', /style/g], f => `export * from '${f.path}';`)
-export * from './PlanData';
-export * from './VMData';
+export type * from './PlanData';
+export type * from './VMData';
 // @endindex

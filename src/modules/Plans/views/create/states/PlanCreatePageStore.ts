@@ -1,17 +1,17 @@
-import { VmData } from 'src/modules/Providers/views';
+import type { VmData } from 'src/modules/Providers/views';
 
-export interface PlanCreatePageState {
+export type PlanCreatePageState = {
   nameFilter: string;
   typeFilters: string[];
   selectedProviderUID: string;
   selectedVMs: VmData[];
-}
+};
 
 export const planCreatePageInitialState: PlanCreatePageState = {
   nameFilter: '',
-  typeFilters: [],
   selectedProviderUID: '',
   selectedVMs: [],
+  typeFilters: [],
 };
 
 export const SET_NAME_FILTER = 'SET_NAME_FILTER';
@@ -20,25 +20,25 @@ export const SELECT_PROVIDER = 'SELECT_PROVIDER';
 export const UPDATE_SELECTED_VMS = 'UPDATE_SELECTED_VMS';
 
 // Refine the action type to include specific payloads
-interface SetNameFilterAction {
+type SetNameFilterAction = {
   type: typeof SET_NAME_FILTER;
   payload: string;
-}
+};
 
-interface UpdateTypeFiltersAction {
+type UpdateTypeFiltersAction = {
   type: typeof UPDATE_TYPE_FILTERS;
   payload: string[];
-}
+};
 
-interface SelectProviderAction {
+type SelectProviderAction = {
   type: typeof SELECT_PROVIDER;
   payload: string;
-}
+};
 
-interface UpdateSelectedVMsAction {
+type UpdateSelectedVMsAction = {
   type: typeof UPDATE_SELECTED_VMS;
   payload: VmData[];
-}
+};
 
 export type PlanCreatePageActionTypes =
   | SetNameFilterAction
@@ -54,7 +54,7 @@ export function planCreatePageReducer(
     case SET_NAME_FILTER:
       return { ...state, nameFilter: action.payload, selectedProviderUID: '', selectedVMs: [] };
     case UPDATE_TYPE_FILTERS:
-      return { ...state, typeFilters: action.payload, selectedProviderUID: '', selectedVMs: [] };
+      return { ...state, selectedProviderUID: '', selectedVMs: [], typeFilters: action.payload };
     case SELECT_PROVIDER:
       return { ...state, selectedProviderUID: action.payload, selectedVMs: [] };
     case UPDATE_SELECTED_VMS:

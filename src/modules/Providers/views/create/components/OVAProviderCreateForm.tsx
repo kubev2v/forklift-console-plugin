@@ -3,17 +3,17 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import { validateOvaNfsPath } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 import { Form, TextInput } from '@patternfly/react-core';
 
-export interface OVAProviderCreateFormProps {
+export type OVAProviderCreateFormProps = {
   provider: V1beta1Provider;
   onChange: (newValue: V1beta1Provider) => void;
-}
+};
 
 export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
-  provider,
   onChange,
+  provider,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -49,7 +49,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
       if (id === 'url') {
         const validationState = validateOvaNfsPath(trimmedValue);
 
-        dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
+        dispatch({ payload: { field: id, validationState }, type: 'SET_FIELD_VALIDATED' });
 
         onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
       }
@@ -81,7 +81,9 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
           isRequired
           value={url || ''}
           validated={state.validation.url.type}
-          onChange={(e, v) => onChangeUrl(v, e)}
+          onChange={(e, v) => {
+            onChangeUrl(v, e);
+          }}
         />
       </FormGroupWithHelpText>
     </Form>

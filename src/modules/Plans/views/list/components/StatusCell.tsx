@@ -2,7 +2,7 @@ import React from 'react';
 import { getPlanPhase, PlanPhase } from 'src/modules/Plans/utils';
 import { TableIconCell } from 'src/modules/Providers/utils';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 import { ErrorStatusCell } from './ErrorStatusCell';
 import { PlanStatusIcon } from './PlanStatusIcon';
 import { VMsProgressCell } from './VMsProgressCell';

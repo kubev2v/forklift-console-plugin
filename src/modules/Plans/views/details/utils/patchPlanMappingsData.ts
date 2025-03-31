@@ -1,10 +1,10 @@
 import {
   NetworkMapModel,
   StorageMapModel,
-  V1beta1NetworkMap,
-  V1beta1NetworkMapSpecMap,
-  V1beta1StorageMap,
-  V1beta1StorageMapSpecMap,
+  type V1beta1NetworkMap,
+  type V1beta1NetworkMapSpecMap,
+  type V1beta1StorageMap,
+  type V1beta1StorageMapSpecMap,
 } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -24,8 +24,6 @@ export async function patchPlanMappingsData(
   updatedStorage: V1beta1StorageMapSpecMap[],
 ) {
   await k8sPatch({
-    model: NetworkMapModel,
-    resource: planNetworkMaps,
     data: [
       {
         op: 'replace',
@@ -33,11 +31,11 @@ export async function patchPlanMappingsData(
         value: updateNetworkMapSpecMapDestination(updatedNetwork),
       },
     ],
+    model: NetworkMapModel,
+    resource: planNetworkMaps,
   });
 
   await k8sPatch({
-    model: StorageMapModel,
-    resource: planStorageMaps,
     data: [
       {
         op: 'replace',
@@ -45,6 +43,8 @@ export async function patchPlanMappingsData(
         value: updatedStorage,
       },
     ],
+    model: StorageMapModel,
+    resource: planStorageMaps,
   });
 }
 

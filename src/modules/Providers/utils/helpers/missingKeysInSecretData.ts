@@ -1,6 +1,6 @@
 import { Base64 } from 'js-base64';
 
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 /**
  * Checks if a list of keys exist in a secret's data, and verifies they are not null or empty strings.

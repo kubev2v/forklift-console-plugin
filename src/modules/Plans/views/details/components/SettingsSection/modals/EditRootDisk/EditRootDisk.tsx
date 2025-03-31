@@ -2,21 +2,21 @@ import React from 'react';
 import { FilterableSelect } from 'src/components/FilterableSelect/FilterableSelect';
 import {
   EditModal,
-  EditModalProps,
-  ModalInputComponentType,
-  OnConfirmHookType,
+  type EditModalProps,
+  type ModalInputComponentType,
+  type OnConfirmHookType,
 } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Modify, PlanModel, V1beta1Plan } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { type Modify, PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Text } from '@patternfly/react-core';
 
 import { editRootDiskModalAlert } from './editRootDiskModalAlert';
 import { editRootDiskModalBody } from './editRootDiskModalBody';
 import { diskOptions, getRootDiskLabelByKey } from './getRootDiskLabelByKey';
 
-const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
+const onConfirm: OnConfirmHookType = async ({ model, newValue, resource }) => {
   const plan = resource as V1beta1Plan;
 
   const resourceValue = plan?.spec?.vms;
@@ -27,8 +27,6 @@ const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
   }));
 
   const obj = await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
@@ -36,23 +34,24 @@ const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
         value: newVMs || undefined,
       },
     ],
+    model,
+    resource,
   });
 
   return obj;
 };
 
-interface DropdownRendererProps {
+type DropdownRendererProps = {
   value: string | number;
   onChange: (string) => void;
-}
+};
 
 const RootDiskInputFactory: () => ModalInputComponentType = () => {
-  const DropdownRenderer: React.FC<DropdownRendererProps> = ({ value, onChange }) => {
+  const DropdownRenderer: React.FC<DropdownRendererProps> = ({ onChange, value }) => {
     const { t } = useForkliftTranslation();
     const options = diskOptions(t);
 
     const dropdownItems = options.map((option) => ({
-      itemId: option.key,
       children: (
         <>
           <Text>{getRootDiskLabelByKey(option.key)}</Text>
@@ -63,6 +62,7 @@ const RootDiskInputFactory: () => ModalInputComponentType = () => {
           )}
         </>
       ),
+      itemId: option.key,
     }));
 
     return (

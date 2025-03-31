@@ -1,15 +1,15 @@
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 
 import { ResourceStatus } from '@openshift-console/dynamic-plugin-sdk';
 import { Split, SplitItem } from '@patternfly/react-core';
 
-interface HeaderTitleProps {
+type HeaderTitleProps = {
   title: ReactNode;
   status?: ReactNode;
   badge?: React.ReactNode;
-}
+};
 
-export const HeaderTitle: FC<HeaderTitleProps> = ({ title, status, badge }) => {
+export const HeaderTitle: FC<HeaderTitleProps> = ({ badge, status, title }) => {
   return (
     <div className="co-m-nav-title co-m-nav-title--detail forklift-page-headings">
       <span className="                                                                                                                             ">

@@ -4,15 +4,15 @@ import {
   saveToLocalStorage,
 } from '@components/common/utils/localStorage';
 
-export interface OverviewUserSettings {
+export type OverviewUserSettings = {
   welcome?: WelcomeSettings;
-}
+};
 
-interface WelcomeSettings {
+type WelcomeSettings = {
   hideWelcome: boolean;
   save: (showWelcome: boolean) => void;
   clear: () => void;
-}
+};
 
 const parseOrClean = (key) => {
   try {
@@ -24,7 +24,7 @@ const parseOrClean = (key) => {
   return {};
 };
 
-const saveRestOrRemoveKey = (key: string, { rest }: { [k: string]: { [n: string]: unknown } }) => {
+const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string, unknown>>) => {
   if (!Object.keys(rest).length) {
     removeFromLocalStorage(key);
   } else {
@@ -46,12 +46,13 @@ export const loadUserSettings = ({ userSettingsKeySuffix }): OverviewUserSetting
 
   return {
     welcome: {
-      hideWelcome: typeof hideWelcome === 'boolean' ? hideWelcome : undefined,
-      save: (hideWelcome) =>
-        saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), hideWelcome })),
       clear: () => {
         const { hideWelcome, ...rest } = parseOrClean(key);
         saveRestOrRemoveKey(key, { hideWelcome, rest });
+      },
+      hideWelcome: typeof hideWelcome === 'boolean' ? hideWelcome : undefined,
+      save: (hideWelcome) => {
+        saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), hideWelcome }));
       },
     },
   };

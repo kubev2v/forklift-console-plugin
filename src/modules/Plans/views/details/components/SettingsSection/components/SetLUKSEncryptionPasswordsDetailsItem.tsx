@@ -6,14 +6,14 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
-import { PlanDetailsItemProps } from '../../DetailsSection';
+import type { PlanDetailsItemProps } from '../../DetailsSection';
 import { EditLUKSEncryptionPasswords, VIRT_V2V_HELP_LINK } from '../modals';
 
 export const SetLUKSEncryptionPasswordsDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  resource,
   canPatch,
-  helpContent,
   destinationProvider,
+  helpContent,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -45,13 +45,14 @@ export const SetLUKSEncryptionPasswordsDetailsItem: React.FC<PlanDetailsItemProp
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() =>
+        (() => {
           showModal(
             <EditLUKSEncryptionPasswords
               resource={resource}
               destinationProvider={destinationProvider}
             />,
-          ))
+          );
+        })
       }
     />
   );

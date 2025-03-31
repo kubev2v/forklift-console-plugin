@@ -6,20 +6,20 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import {
   NetworkMapModel,
   ProviderModelGroupVersionKind,
-  V1beta1NetworkMap,
-  V1beta1Provider,
+  type V1beta1NetworkMap,
+  type V1beta1Provider,
 } from '@kubev2v/types';
 import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, DescriptionList, Flex, FlexItem, Spinner } from '@patternfly/react-core';
 
 import { ProvidersEdit } from './components';
-import { providersSectionReducer, ProvidersSectionState } from './state';
+import { providersSectionReducer, type ProvidersSectionState } from './state';
 
 const initialState: ProvidersSectionState = {
+  hasChanges: false,
   networkMap: null,
   sourceProviderMode: 'view',
   targetProviderMode: 'view',
-  hasChanges: false,
   updating: false,
 };
 
@@ -29,36 +29,36 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
 
   // Initialize the state with the prop obj
   React.useEffect(() => {
-    dispatch({ type: 'INIT', payload: obj });
+    dispatch({ payload: obj, type: 'INIT' });
   }, [obj]);
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace: obj.metadata.namespace,
+    namespaced: true,
   });
 
   const targetProviders = providers.filter((p) => ['openshift'].includes(p?.spec?.type));
 
   const onUpdate = async () => {
-    dispatch({ type: 'SET_UPDATING', payload: true });
+    dispatch({ payload: true, type: 'SET_UPDATING' });
     await k8sUpdate({
-      model: NetworkMapModel,
       data: updateNetworkMapDestination(state.networkMap),
+      model: NetworkMapModel,
     });
   };
 
   const onClick = () => {
-    dispatch({ type: 'INIT', payload: obj });
+    dispatch({ payload: obj, type: 'INIT' });
   };
 
   const onChangeSource: (value: string, event: React.FormEvent<HTMLSelectElement>) => void = (
     value,
   ) => {
     dispatch({
-      type: 'SET_SOURCE_PROVIDER',
       payload: providers.find((p) => p?.metadata?.name === value),
+      type: 'SET_SOURCE_PROVIDER',
     });
   };
 
@@ -66,8 +66,8 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
     value,
   ) => {
     dispatch({
-      type: 'SET_TARGET_PROVIDER',
       payload: providers.find((p) => p?.metadata?.name === value),
+      type: 'SET_TARGET_PROVIDER',
     });
   };
 
@@ -110,7 +110,9 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
           invalidLabel={t('The chosen provider is no longer available.')}
           mode={state.sourceProviderMode}
           helpContent="source provider"
-          setMode={() => dispatch({ type: 'SET_SOURCE_PROVIDER_MODE', payload: 'edit' })}
+          setMode={() => {
+            dispatch({ payload: 'edit', type: 'SET_SOURCE_PROVIDER_MODE' });
+          }}
         />
 
         <ProvidersEdit
@@ -122,7 +124,9 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
           invalidLabel={t('The chosen provider is no longer available.')}
           mode={state.targetProviderMode}
           helpContent="Target provider"
-          setMode={() => dispatch({ type: 'SET_TARGET_PROVIDER_MODE', payload: 'edit' })}
+          setMode={() => {
+            dispatch({ payload: 'edit', type: 'SET_TARGET_PROVIDER_MODE' });
+          }}
         />
       </DescriptionList>
     </Suspend>

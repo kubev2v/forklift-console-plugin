@@ -6,10 +6,11 @@ import { Text, TextVariants } from '@patternfly/react-core';
 
 import { FieldWithClipboardCopy } from '../../FieldWithClipboardCopy';
 import { MaskedField } from '../../MaskedField';
-import { ListComponentProps } from '../BaseCredentialsSection';
-import { Fields } from './Fields';
+import type { ListComponentProps } from '../BaseCredentialsSection';
 
-export const OpenshiftCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
+import type { Fields } from './Fields';
+
+export const OpenshiftCredentialsList: React.FC<ListComponentProps> = ({ reveal, secret }) => {
   const { t } = useForkliftTranslation();
 
   const items = [];
@@ -39,8 +40,21 @@ export const OpenshiftCredentialsList: React.FC<ListComponentProps> = ({ secret,
   );
 
   const fields: Fields = {
+    cacert: {
+      description: t(
+        'A CA certificate to be trusted when connecting to Openshift API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
+      ),
+      displayType: 'textArea',
+      helperTextPopover: cacertHelperTextPopover,
+      label: t('CA certificate'),
+    },
+    insecureSkipVerify: {
+      description: t("If true, the provider's CA certificate won't be validated."),
+      displayType: 'switch',
+      helperTextPopover: insecureSkipVerifyHelperTextPopover,
+      label: t('Skip certificate validation'),
+    },
     token: {
-      label: t('Service account bearer token'),
       description: (
         <div className="forklift-page-provider-field-default-validation">
           <ForkliftTrans>
@@ -49,20 +63,7 @@ export const OpenshiftCredentialsList: React.FC<ListComponentProps> = ({ secret,
           </ForkliftTrans>
         </div>
       ),
-    },
-    insecureSkipVerify: {
-      label: t('Skip certificate validation'),
-      description: t("If true, the provider's CA certificate won't be validated."),
-      helperTextPopover: insecureSkipVerifyHelperTextPopover,
-      displayType: 'switch',
-    },
-    cacert: {
-      label: t('CA certificate'),
-      description: t(
-        'A CA certificate to be trusted when connecting to Openshift API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
-      ),
-      helperTextPopover: cacertHelperTextPopover,
-      displayType: 'textArea',
+      label: t('Service account bearer token'),
     },
   };
 

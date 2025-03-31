@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
-import { TableLabelCell, TableLabelCellProps } from './TableLabelCell';
+import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
 
 /**
  * A component that displays a resource link, with an optional label.
@@ -12,11 +12,11 @@ import { TableLabelCell, TableLabelCellProps } from './TableLabelCell';
  */
 export const TableLinkCell: React.FC<TableLinkCellProps> = ({
   groupVersionKind,
-  name,
-  namespace,
   hasLabel = false,
   label,
   labelColor = 'grey',
+  name,
+  namespace,
 }) => {
   return (
     <TableLabelCell hasLabel={hasLabel} label={label} labelColor={labelColor} isWrap={true}>
@@ -25,8 +25,8 @@ export const TableLinkCell: React.FC<TableLinkCellProps> = ({
   );
 };
 
-export interface TableLinkCellProps extends TableLabelCellProps {
+export type TableLinkCellProps = {
   groupVersionKind: K8sGroupVersionKind;
   name: string;
   namespace: string;
-}
+} & TableLabelCellProps;

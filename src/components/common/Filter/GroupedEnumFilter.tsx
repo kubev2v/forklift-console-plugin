@@ -1,9 +1,9 @@
-import React, { MouseEvent as ReactMouseEvent, Ref, useState } from 'react';
+import React, { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
 
 import {
   Badge,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectGroup,
   SelectList,
@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
-import { FilterTypeProps } from './types';
+import type { FilterTypeProps } from './types';
 
 /**
  * This Filter type enables selecting one or many enum values that are separated by groups.
@@ -35,14 +35,14 @@ import { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/GroupedEnumFilter.tsx)
  */
 export const GroupedEnumFilter = ({
-  selectedFilters: selectedEnumIds = [],
+  hasMultipleResources,
   onFilterUpdate: onSelectedEnumIdsChange,
-  supportedValues: supportedEnumValues = [],
-  supportedGroups = [],
   placeholderLabel,
+  selectedFilters: selectedEnumIds = [],
   showFilter = true,
   showFilterIcon,
-  hasMultipleResources,
+  supportedGroups = [],
+  supportedValues: supportedEnumValues = [],
 }: FilterTypeProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -84,7 +84,7 @@ export const GroupedEnumFilter = ({
   };
 
   const hasFilter = (id: string): boolean =>
-    !!id2enum[id] && !!selectedEnumIds.find((enumId) => enumId === id);
+    Boolean(id2enum[id]) && Boolean(selectedEnumIds.find((enumId) => enumId === id));
 
   const addFilter = (id: string): void => {
     if (hasMultipleResources) {
@@ -105,10 +105,7 @@ export const GroupedEnumFilter = ({
     );
   };
 
-  const onSelect = (
-    _event: ReactMouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined,
-  ) => {
+  const onSelect = (_event: ReactMouseEvent | undefined, value: string | number | undefined) => {
     const label = value?.toString();
     const id = label2enum?.[label] ? label2enum[label]?.id : label;
     hasFilter(id) ? deleteFilter(id) : addFilter(id);
@@ -132,7 +129,7 @@ export const GroupedEnumFilter = ({
   );
 
   const renderOptions = () =>
-    supportedGroups.map(({ label, groupId }) => (
+    supportedGroups.map(({ groupId, label }) => (
       <SelectGroup key={groupId} label={label}>
         <SelectList>
           {supportedEnumValues
@@ -159,7 +156,7 @@ export const GroupedEnumFilter = ({
        * 2. each ToolbarFilter provides a different chip category
        * 3. a chip category maps to group within the Select */}
       {supportedGroups.reduce(
-        (acc, { label, groupId }) => (
+        (acc, { groupId, label }) => (
           <ToolbarFilter
             chips={selectedEnumIds
               .filter((id) => id2enum[id])
@@ -187,7 +184,9 @@ export const GroupedEnumFilter = ({
           isOpen={isOpen}
           selected={supportedEnumValues.filter(({ id }) => selectedEnumIds.includes(id))}
           onSelect={onSelect}
-          onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
+          onOpenChange={(nextOpen: boolean) => {
+            setIsOpen(nextOpen);
+          }}
           toggle={toggle}
           shouldFocusToggleOnSelect
           shouldFocusFirstItemOnOpen={false}

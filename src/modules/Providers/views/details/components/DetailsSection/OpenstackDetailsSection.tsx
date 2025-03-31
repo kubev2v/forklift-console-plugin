@@ -4,6 +4,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { DescriptionList } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../utils';
+
 import {
   CreatedAtDetailsItem,
   CredentialsDetailsItem,
@@ -14,12 +15,12 @@ import {
   TypeDetailsItem,
   URLDetailsItem,
 } from './components';
-import { DetailsSectionProps } from './DetailsSection';
+import type { DetailsSectionProps } from './DetailsSection';
 import { getOpenstackProviderWebUILink } from './utils';
 
 export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
-  const { provider, permissions } = data;
+  const { permissions, provider } = data;
   const webUILink = getOpenstackProviderWebUILink(provider);
 
   return (

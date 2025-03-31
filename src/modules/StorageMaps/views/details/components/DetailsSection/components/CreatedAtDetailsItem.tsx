@@ -3,12 +3,12 @@ import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { DetailsItem } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { StorageDetailsItemProps } from './StorageDetailsItemProps';
+import type { StorageDetailsItemProps } from './StorageDetailsItemProps';
 
 export const CreatedAtDetailsItem: React.FC<StorageDetailsItemProps> = ({
-  resource,
-  moreInfoLink,
   helpContent,
+  moreInfoLink,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
 

@@ -44,19 +44,19 @@ type InputListProps<T> = {
  * @param {InputListProps<T>} props - Props for the component.
  */
 export const InputList = <T,>({
-  items,
+  addButtonText = 'Add',
   InputRow,
+  items,
   onChange,
   removeIconContent = 'Remove',
-  addButtonText = 'Add',
 }: InputListProps<T>) => {
   const initialStateItems = (items || []).length > 0 ? items : [null];
   const [localItems, setLocalItems] = useState(assignIdsToItems(initialStateItems));
 
   const handleItemChange = (id: string, newContent: T) => {
-    const updatedItems = localItems.map(({ id: itemId, content }) => ({
-      id: itemId,
+    const updatedItems = localItems.map(({ content, id: itemId }) => ({
       content: id === itemId ? newContent : content,
+      id: itemId,
     }));
 
     setLocalItems(updatedItems);
@@ -71,7 +71,7 @@ export const InputList = <T,>({
   };
 
   function handleAddItem() {
-    const newItem = { id: generateUniqueId(), content: null };
+    const newItem = { content: null, id: generateUniqueId() };
     const updatedItems = [...localItems, newItem];
 
     setLocalItems(updatedItems);
@@ -91,7 +91,9 @@ export const InputList = <T,>({
                   <DataListCell key="primary content">
                     <InputRow
                       value={content}
-                      onChange={(newValue) => handleItemChange(id, newValue)}
+                      onChange={(newValue) => {
+                        handleItemChange(id, newValue);
+                      }}
                     />
                   </DataListCell>,
                 ]}
@@ -103,7 +105,9 @@ export const InputList = <T,>({
               >
                 <Tooltip content={removeIconContent}>
                   <Button
-                    onClick={() => handleItemDelete(id)}
+                    onClick={() => {
+                      handleItemDelete(id);
+                    }}
                     variant="plain"
                     aria-label={removeIconContent}
                     key="delete-action"
@@ -154,5 +158,5 @@ const extractContent = (items) => items.map(({ content }) => content);
 const assignIdsToItems = (items) =>
   items.map((content) => {
     const id = generateUniqueId();
-    return { id, content };
+    return { content, id };
   });

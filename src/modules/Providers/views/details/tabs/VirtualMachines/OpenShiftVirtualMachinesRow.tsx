@@ -1,32 +1,32 @@
 import React from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import { withResourceLink } from './components/VmResourceLinkRenderer';
-import { VMCellProps, VmData, VmFeaturesCell } from './components';
+import { type VMCellProps, type VmData, VmFeaturesCell } from './components';
 import { getVmTemplate } from './utils';
 
 const toNamespace = ({ data }: VMCellProps) =>
   (data.vm.providerType === 'openshift' && data.vm.object?.metadata?.namespace) || '';
 
 const cellRenderers: Record<string, React.FC<VMCellProps>> = {
+  features: VmFeaturesCell,
   name: withResourceLink({
+    toGVK: () => ({ group: 'kubevirt.io', kind: 'VirtualMachine', version: 'v1' }),
     toName: ({ data }) => data.name,
     toNamespace,
-    toGVK: () => ({ kind: 'VirtualMachine', version: 'v1', group: 'kubevirt.io' }),
   }),
   possibly_remote_namespace: withResourceLink({
+    toGVK: () => ({ group: '', kind: 'Namespace', version: 'v1' }),
     toName: toNamespace,
-    toGVK: () => ({ kind: 'Namespace', version: 'v1', group: '' }),
     toNamespace: () => '',
   }),
   status: PowerStateCellRenderer,
   template: ({ data }) => <TableCell>{getVmTemplate(data?.vm)}</TableCell>,
-  features: VmFeaturesCell,
 };
 
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
@@ -40,15 +40,15 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-interface RenderTdProps {
+type RenderTdProps = {
   resourceData: VmData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-}
+};
 
 export const OpenShiftVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
-  resourceFields,
   resourceData,
+  resourceFields,
 }) => {
   return (
     <>

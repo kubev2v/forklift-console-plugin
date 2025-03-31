@@ -1,7 +1,7 @@
-import { EditModalProps } from 'src/modules/Providers';
+import type { EditModalProps } from 'src/modules/Providers';
 
-import { Modify, V1beta1Plan, V1beta1PlanSpec, V1beta1PlanSpecVms } from '@kubev2v/types';
-import { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import type { Modify, V1beta1Plan, V1beta1PlanSpec, V1beta1PlanSpecVms } from '@kubev2v/types';
+import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 export type PlanNameTemplates = {
   pvcNameTemplate?: string;

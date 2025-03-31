@@ -4,7 +4,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { DescriptionListDescription } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../../utils';
-import { ProviderDetailsItemProps } from './ProviderDetailsItem';
+
+import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 /**
  * Component for displaying the provider name details item.
@@ -13,9 +14,9 @@ import { ProviderDetailsItemProps } from './ProviderDetailsItem';
  * @param {DetailsItemProps} props - The props of the details item.
  */
 export const NameDetailsItem: React.FC<ProviderDetailsItemProps> = ({
-  resource: provider,
-  moreInfoLink,
   helpContent,
+  moreInfoLink,
+  resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
 

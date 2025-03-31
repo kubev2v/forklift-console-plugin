@@ -1,12 +1,12 @@
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 
-export interface SectionHeadingProps {
+export type SectionHeadingProps = {
   text: ReactNode;
   className?: string;
   id?: string;
   'data-testid'?: string;
   children?: React.ReactNode;
-}
+};
 
 /**
  * SectionHeading Component
@@ -16,10 +16,10 @@ export interface SectionHeadingProps {
  */
 export const SectionHeading: FC<SectionHeadingProps> = ({
   children,
-  text,
   className,
-  id,
   'data-testid': dataTestid,
+  id,
+  text,
 }) => (
   <h2 className={`co-section-heading ${className || ''}`} data-testid={dataTestid} id={id}>
     <span>{text}</span>

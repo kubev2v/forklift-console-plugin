@@ -6,7 +6,7 @@ import { Namespace } from 'src/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { getDefaultNamespace } from 'src/utils/namespaces';
 
-import { IoK8sApiCoreV1Secret, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, ProviderModelRef, type V1beta1Provider } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Alert,
@@ -20,21 +20,22 @@ import {
 } from '@patternfly/react-core';
 
 import { useK8sWatchProviderNames, useToggle } from '../../hooks';
-import { getResourceUrl, ValidationMsg } from '../../utils';
+import { getResourceUrl, type ValidationMsg } from '../../utils';
 import { providerAndSecretValidator } from '../../utils/validators/provider/providerAndSecretValidator';
+
 import { ProvidersCreateForm } from './components';
 import { providerTemplate, secretTemplate } from './templates';
 import { createProvider, createProviderSecret, patchProviderSecretOwner } from './utils';
 
 import './ProvidersCreatePage.style.css';
 
-interface ProvidersCreatePageState {
+type ProvidersCreatePageState = {
   newSecret: IoK8sApiCoreV1Secret;
   newProvider: V1beta1Provider;
   projectName: string;
   validationError: ValidationMsg;
   apiError: Error | null;
-}
+};
 
 export const ProvidersCreatePage: React.FC<{
   namespace: string;
@@ -50,14 +51,7 @@ export const ProvidersCreatePage: React.FC<{
   const initialNamespace = namespace || projectName || defaultNamespace;
 
   const initialState: ProvidersCreatePageState = {
-    projectName,
-    newSecret: {
-      ...secretTemplate,
-      metadata: {
-        ...secretTemplate.metadata,
-        namespace: initialNamespace,
-      },
-    },
+    apiError: null,
     newProvider: {
       ...providerTemplate,
       metadata: {
@@ -65,8 +59,15 @@ export const ProvidersCreatePage: React.FC<{
         namespace: initialNamespace,
       },
     },
-    validationError: { type: 'error', msg: 'Missing provider name' },
-    apiError: null,
+    newSecret: {
+      ...secretTemplate,
+      metadata: {
+        ...secretTemplate.metadata,
+        namespace: initialNamespace,
+      },
+    },
+    projectName,
+    validationError: { msg: 'Missing provider name', type: 'error' },
   };
 
   function reducer(
@@ -79,18 +80,18 @@ export const ProvidersCreatePage: React.FC<{
         let validationError = providerAndSecretValidator(state.newProvider, value);
 
         if (!state.newProvider?.metadata?.name) {
-          validationError = { type: 'error', msg: 'Missing provider name' };
+          validationError = { msg: 'Missing provider name', type: 'error' };
         }
 
         if (providerNames.includes(state.newProvider?.metadata?.name)) {
-          validationError = { type: 'error', msg: 'Provider name is not unique' };
+          validationError = { msg: 'Provider name is not unique', type: 'error' };
         }
 
         return {
           ...state,
-          validationError: validationError,
-          newSecret: value,
           apiError: null,
+          newSecret: value,
+          validationError,
         };
       }
       case 'SET_NEW_PROVIDER': {
@@ -98,11 +99,11 @@ export const ProvidersCreatePage: React.FC<{
         let validationError = providerAndSecretValidator(value, state.newSecret);
 
         if (!value?.metadata?.name) {
-          validationError = { type: 'error', msg: 'Missing provider name' };
+          validationError = { msg: 'Missing provider name', type: 'error' };
         }
 
         if (providerNames.includes(value?.metadata?.name)) {
-          validationError = { type: 'error', msg: 'Provider name is not unique' };
+          validationError = { msg: 'Provider name is not unique', type: 'error' };
         }
 
         // Sync secret with new URL
@@ -113,10 +114,10 @@ export const ProvidersCreatePage: React.FC<{
 
         return {
           ...state,
-          validationError: validationError,
+          apiError: null,
           newProvider: value,
           newSecret: updatedSecret,
-          apiError: null,
+          validationError,
         };
       }
       case 'SET_PROJECT_NAME': {
@@ -124,14 +125,14 @@ export const ProvidersCreatePage: React.FC<{
         let validationError: ValidationMsg = { type: 'default' };
 
         if (!value) {
-          validationError = { type: 'error', msg: 'Missing project name' };
+          validationError = { msg: 'Missing project name', type: 'error' };
         }
 
         return {
           ...state,
-          validationError,
-          projectName: String(value),
           apiError: null,
+          projectName: String(value),
+          validationError,
         };
       }
       case 'SET_API_ERROR': {
@@ -152,13 +153,13 @@ export const ProvidersCreatePage: React.FC<{
   // Handle user edits
   function onNewSecretChange(newValue: IoK8sApiCoreV1Secret) {
     // update staged secret with new value
-    dispatch({ type: 'SET_NEW_SECRET', payload: newValue });
+    dispatch({ payload: newValue, type: 'SET_NEW_SECRET' });
   }
 
   // Handle user edits
   function onNewProviderChange(newValue: V1beta1Provider) {
     // update staged provider with new value
-    dispatch({ type: 'SET_NEW_PROVIDER', payload: newValue });
+    dispatch({ payload: newValue, type: 'SET_NEW_PROVIDER' });
   }
 
   // Handle user clicking "save"
@@ -177,8 +178,8 @@ export const ProvidersCreatePage: React.FC<{
       secret = await createProviderSecret(state.newProvider, state.newSecret);
     } catch (err) {
       dispatch({
-        type: 'SET_API_ERROR',
         payload: err,
+        type: 'SET_API_ERROR',
       });
 
       toggleIsLoading();
@@ -199,8 +200,8 @@ export const ProvidersCreatePage: React.FC<{
       );
     } catch (err) {
       dispatch({
-        type: 'SET_API_ERROR',
         payload: err,
+        type: 'SET_API_ERROR',
       });
 
       toggleIsLoading();
@@ -212,8 +213,8 @@ export const ProvidersCreatePage: React.FC<{
       await patchProviderSecretOwner(provider, secret);
     } catch (err) {
       dispatch({
-        type: 'SET_API_ERROR',
         payload: err,
+        type: 'SET_API_ERROR',
       });
 
       toggleIsLoading();
@@ -222,17 +223,17 @@ export const ProvidersCreatePage: React.FC<{
 
     // go to providers derails page
     const providerURL = getResourceUrl({
-      reference: ProviderModelRef,
-      namespace: provider.metadata.namespace,
       name: provider.metadata.name,
+      namespace: provider.metadata.namespace,
+      reference: ProviderModelRef,
     });
 
     history.push(providerURL);
   }
 
   const providersListURL = getResourceUrl({
+    namespace,
     reference: ProviderModelRef,
-    namespace: namespace,
   });
 
   const onClick = () => {
@@ -269,7 +270,9 @@ export const ProvidersCreatePage: React.FC<{
           projectName={state.projectName}
           onNewProviderChange={onNewProviderChange}
           onNewSecretChange={onNewSecretChange}
-          onProjectNameChange={(value) => dispatch({ type: 'SET_PROJECT_NAME', payload: value })}
+          onProjectNameChange={(value) => {
+            dispatch({ payload: value, type: 'SET_PROJECT_NAME' });
+          }}
           providerNames={providerNames}
         />
 

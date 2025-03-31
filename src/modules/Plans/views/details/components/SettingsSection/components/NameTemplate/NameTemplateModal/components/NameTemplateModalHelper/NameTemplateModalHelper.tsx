@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { useForkliftTranslation } from 'src/utils';
 
 import { Stack, StackItem } from '@patternfly/react-core';

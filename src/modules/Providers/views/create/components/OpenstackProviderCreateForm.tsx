@@ -3,17 +3,17 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import { validateOpenstackURL } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 import { Form, TextInput } from '@patternfly/react-core';
 
-export interface OpenstackProviderCreateFormProps {
+export type OpenstackProviderCreateFormProps = {
   provider: V1beta1Provider;
   onChange: (newValue: V1beta1Provider) => void;
-}
+};
 
 export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormProps> = ({
-  provider,
   onChange,
+  provider,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -50,8 +50,8 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
       const validationState = validateOpenstackURL(trimmedURL);
 
       dispatch({
-        type: 'SET_FIELD_VALIDATED',
         payload: { field: 'url', validationState },
+        type: 'SET_FIELD_VALIDATED',
       });
 
       onChange({ ...provider, spec: { ...provider.spec, url: trimmedURL } });
@@ -83,7 +83,9 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
           name="url"
           value={url || ''}
           validated={state.validation.url.type}
-          onChange={(e, v) => onChangeUrl(v, e)}
+          onChange={(e, v) => {
+            onChangeUrl(v, e);
+          }}
         />
       </FormGroupWithHelpText>
     </Form>

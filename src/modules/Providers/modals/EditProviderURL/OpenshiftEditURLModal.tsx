@@ -4,10 +4,11 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { patchProviderURL } from './utils/patchProviderURL';
 import { validateOpenshiftURL } from '../../utils/validators';
 import { EditModal } from '../EditModal';
-import { EditProviderURLModalProps } from './EditProviderURLModal';
+
+import { patchProviderURL } from './utils/patchProviderURL';
+import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
 export const OpenshiftEditURLModal: React.FC<EditProviderURLModalProps> = (props) => {
   const { t } = useForkliftTranslation();

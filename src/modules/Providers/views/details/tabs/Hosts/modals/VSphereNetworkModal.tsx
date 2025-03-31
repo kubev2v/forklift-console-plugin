@@ -1,12 +1,12 @@
-import React, { ReactNode, useCallback, useReducer, useState } from 'react';
+import React, { type ReactNode, useCallback, useReducer, useState } from 'react';
 import { FilterableSelect } from 'src/components';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
 import { validateNoSpaces } from 'src/modules/Providers/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { SelectEventType, SelectValueType } from '@components/common/utils/types';
-import { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
+import type { SelectEventType, SelectValueType } from '@components/common/utils/types';
+import type { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
 import {
   Button,
   Form,
@@ -21,29 +21,29 @@ import {
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 import { DEFAULT } from '@utils/constants';
 
-import { calculateCidrNotation, InventoryHostPair, onSaveHost } from '../utils';
+import { calculateCidrNotation, type InventoryHostPair, onSaveHost } from '../utils';
 
 import './VSphereNetworkModal.style.css';
 
-export interface VSphereNetworkModalProps {
+export type VSphereNetworkModalProps = {
   provider: V1beta1Provider;
   data: InventoryHostPair[];
   selected: string[];
-}
+};
 
 const initialState = {
-  isLoading: false,
-  isSelectOpen: false,
-  passwordHidden: true,
-  isSaveDisabled: true,
-  network: '',
-  username: '',
-  password: '',
-  validation: {
-    username: DEFAULT,
-    password: DEFAULT,
-  },
   endpointType: 'vcenter',
+  isLoading: false,
+  isSaveDisabled: true,
+  isSelectOpen: false,
+  network: '',
+  password: '',
+  passwordHidden: true,
+  username: '',
+  validation: {
+    password: DEFAULT,
+    username: DEFAULT,
+  },
 };
 
 function reducer(state, action) {
@@ -51,8 +51,8 @@ function reducer(state, action) {
     case 'SET_NETWORK':
       return {
         ...state,
-        network: action.payload,
         isSaveDisabled: shouldDisableSave(state, { network: action.payload }),
+        network: action.payload,
       };
     case 'TOGGLE_OPEN':
       return { ...state, isSelectOpen: !state.isSelectOpen };
@@ -62,8 +62,8 @@ function reducer(state, action) {
       const isValidUsername = validateUsername(action.payload);
       return {
         ...state,
+        isSaveDisabled: shouldDisableSave(state, { isValidUsername, username: action.payload }),
         username: action.payload,
-        isSaveDisabled: shouldDisableSave(state, { username: action.payload, isValidUsername }),
         validation: { ...state.validation, username: isValidUsername ? 'success' : 'error' },
       };
     }
@@ -71,8 +71,8 @@ function reducer(state, action) {
       const isValidPassword = validatePassword(action.payload);
       return {
         ...state,
+        isSaveDisabled: shouldDisableSave(state, { isValidPassword, password: action.payload }),
         password: action.payload,
-        isSaveDisabled: shouldDisableSave(state, { password: action.payload, isValidPassword }),
         validation: { ...state.validation, password: isValidPassword ? 'success' : 'error' },
       };
     }
@@ -100,19 +100,21 @@ function shouldDisableSave(state, updatedFields) {
 }
 
 export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
-  provider,
   data,
+  provider,
   selected,
 }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
-  const endpointType = provider?.spec?.settings?.['sdkEndpoint'];
+  const endpointType = provider?.spec?.settings?.sdkEndpoint;
 
   const [state, dispatch] = useReducer(reducer, { ...initialState, endpointType });
 
-  const onSelectToggle = () => dispatch({ type: 'TOGGLE_OPEN' });
+  const onSelectToggle = () => {
+    dispatch({ type: 'TOGGLE_OPEN' });
+  };
 
   const onSelect: (
     event: SelectEventType,
@@ -124,12 +126,16 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
       value,
     );
 
-    dispatch({ type: 'SET_NETWORK', payload: selectedAdapter });
+    dispatch({ payload: selectedAdapter, type: 'SET_NETWORK' });
     onSelectToggle();
   };
 
-  const toggleIsLoading = () => dispatch({ type: 'TOGGLE_LOADING' });
-  const togglePasswordHidden = () => dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
+  const toggleIsLoading = () => {
+    dispatch({ type: 'TOGGLE_LOADING' });
+  };
+  const togglePasswordHidden = () => {
+    dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
+  };
 
   const selectedInventoryHostPairs = data
     .filter((pair) => selected.includes(pair.inventory.id))
@@ -146,11 +152,11 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
 
     try {
       await onSaveHost({
-        provider,
         hostPairs: selectedInventoryHostPairs,
         network: state.network,
-        user: endpointType === 'esxi' ? undefined : state.username,
         password: endpointType === 'esxi' ? undefined : state.password,
+        provider,
+        user: endpointType === 'esxi' ? undefined : state.username,
       });
 
       toggleModal();
@@ -182,23 +188,23 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
     const cidr = calculateCidrNotation(adapter.ipAddress, adapter.subnetMask);
 
     return {
-      key: adapter.name,
-      label: `${adapter.name} - ${cidr}`,
       description: `${adapter.linkSpeed} Mbps, MTU: ${adapter.mtu}`,
       disabled: false,
+      key: adapter.name,
+      label: `${adapter.name} - ${cidr}`,
     };
   });
 
   const onChangUser: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
     value,
   ) => {
-    dispatch({ type: 'SET_USERNAME', payload: value });
+    dispatch({ payload: value, type: 'SET_USERNAME' });
   };
 
   const onChangePassword: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
     value,
   ) => {
-    dispatch({ type: 'SET_PASSWORD', payload: value });
+    dispatch({ payload: value, type: 'SET_PASSWORD' });
   };
 
   return (
@@ -226,11 +232,11 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
           <FilterableSelect
             placeholder="Select a network"
             aria-label="Select Network"
-            onSelect={(value) => onSelect(null, value)}
+            onSelect={(value) => {
+              onSelect(null, value);
+            }}
             value={state.network ? `${state.network.name} - ${state.network.ipAddress}` : undefined}
             selectOptions={networkOptions.map((option) => ({
-              itemId: option.label,
-              isDisabled: option.disabled,
               children: (
                 <>
                   <Text>{option.label}</Text>
@@ -241,6 +247,8 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                   )}
                 </>
               ),
+              isDisabled: option.disabled,
+              itemId: option.label,
             }))}
           />
         </FormGroupWithHelpText>
@@ -261,7 +269,9 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                 type="text"
                 id="username"
                 value={state.username}
-                onChange={(e, v) => onChangUser(v, e)}
+                onChange={(e, v) => {
+                  onChangUser(v, e);
+                }}
                 validated={state.validation.username}
               />
             </FormGroupWithHelpText>
@@ -281,7 +291,9 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                   type={state.passwordHidden ? 'password' : 'text'}
                   aria-label="Password input"
                   value={state.password}
-                  onChange={(e, v) => onChangePassword(v, e)}
+                  onChange={(e, v) => {
+                    onChangePassword(v, e);
+                  }}
                   validated={state.validation.password}
                 />
                 <Button variant="control" onClick={togglePasswordHidden}>

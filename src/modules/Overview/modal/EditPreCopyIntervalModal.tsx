@@ -1,20 +1,20 @@
 import React from 'react';
-import { EditModal, ModalInputComponentType } from 'src/modules/Providers/modals';
+import { EditModal, type ModalInputComponentType } from 'src/modules/Providers/modals';
 import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { EditSettingsModalProps } from './EditSettingsModalProps';
+import type { EditSettingsModalProps } from './EditSettingsModalProps';
 import SettingsSelectInput from './SettingsSelectInput';
 
 // Define the options
 const options = [
-  { key: 5, name: '5min', description: 'Extra small precopy interval' },
-  { key: 30, name: '30min', description: 'Small precopy interval' },
-  { key: 60, name: '60min', description: 'Large precopy interval' },
-  { key: 120, name: '120min', description: 'Extra large precopy interval' },
+  { description: 'Extra small precopy interval', key: 5, name: '5min' },
+  { description: 'Small precopy interval', key: 30, name: '30min' },
+  { description: 'Large precopy interval', key: 60, name: '60min' },
+  { description: 'Extra large precopy interval', key: 120, name: '120min' },
 ];
 
 /**

@@ -2,7 +2,7 @@ import React from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { K8sResourceCondition } from '@kubev2v/types';
+import type { K8sResourceCondition } from '@kubev2v/types';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 

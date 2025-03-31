@@ -2,6 +2,6 @@
 export * from './CreatedAtDetailsItem';
 export * from './NameDetailsItem';
 export * from './NamespaceDetailsItem';
-export * from './NetworkDetailsItemProps';
+export type * from './NetworkDetailsItemProps';
 export * from './OwnerDetailsItem';
 // @endindex

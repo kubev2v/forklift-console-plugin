@@ -1,13 +1,14 @@
 import React from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
 import { StorageMapActionsDropdown } from '../../actions';
-import { StorageMapData } from '../../utils';
+import type { StorageMapData } from '../../utils';
+
 import {
-  CellProps,
+  type CellProps,
   NamespaceCell,
   PlanCell,
   ProviderLinkCell,
@@ -16,8 +17,8 @@ import {
 } from './components';
 
 export const ProviderRow: React.FC<RowProps<StorageMapData>> = ({
-  resourceFields,
   resourceData,
+  resourceFields,
 }) => {
   return (
     <Tr>
@@ -40,19 +41,19 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 };
 
 const cellRenderers: Record<string, React.FC<CellProps>> = {
-  ['name']: StorageMapLinkCell,
-  ['namespace']: NamespaceCell,
-  ['owner']: PlanCell,
-  ['phase']: StatusCell,
-  ['destination']: ProviderLinkCell,
-  ['source']: ProviderLinkCell,
-  ['actions']: (props) => StorageMapActionsDropdown({ isKebab: true, ...props }),
+  actions: (props) => StorageMapActionsDropdown({ isKebab: true, ...props }),
+  destination: ProviderLinkCell,
+  name: StorageMapLinkCell,
+  namespace: NamespaceCell,
+  owner: PlanCell,
+  phase: StatusCell,
+  source: ProviderLinkCell,
 };
 
-interface RenderTdProps {
+type RenderTdProps = {
   resourceData: StorageMapData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-}
+};
 
 export default ProviderRow;

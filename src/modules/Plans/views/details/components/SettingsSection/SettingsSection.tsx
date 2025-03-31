@@ -1,8 +1,12 @@
 import React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
-import { ProvidersPermissionStatus } from 'src/modules/Providers/utils';
+import type { ProvidersPermissionStatus } from 'src/modules/Providers/utils';
 
-import { ProviderModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
+import {
+  ProviderModelGroupVersionKind,
+  type V1beta1Plan,
+  type V1beta1Provider,
+} from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 
@@ -34,16 +38,16 @@ export type SettingsSectionProps = {
 export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, permissions }) => {
   const [sourceProvider] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name: obj?.spec?.provider?.source?.name,
     namespace: obj?.spec?.provider?.source?.namespace,
+    namespaced: true,
   });
 
   const [destinationProvider] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name: obj?.spec?.provider?.destination?.name,
     namespace: obj?.spec?.provider?.destination?.namespace,
+    namespaced: true,
   });
 
   const isVsphere = sourceProvider?.spec?.type === 'vsphere';

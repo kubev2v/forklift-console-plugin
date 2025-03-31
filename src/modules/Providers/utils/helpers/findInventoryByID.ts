@@ -1,4 +1,4 @@
-import { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
+import type { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
 
 /**
  * Finds an inventory by its unique identifier.
@@ -15,9 +15,9 @@ export function findInventoryByID(
     return undefined;
   }
 
-  const providers = Object.keys(inventory).reduce((flatInventory, key) => {
+  const providers = Object.keys(inventory).reduce<ProviderInventory[]>((flatInventory, key) => {
     return flatInventory.concat(inventory[key] || []);
-  }, [] as ProviderInventory[]);
+  }, []);
 
   return providers.find((provider) => provider.uid === uid);
 }

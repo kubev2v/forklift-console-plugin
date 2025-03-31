@@ -7,7 +7,7 @@ import { StorageMapCriticalConditions } from 'src/modules/StorageMaps/components
 import {
   StorageMapModel,
   StorageMapModelGroupVersionKind,
-  V1beta1StorageMap,
+  type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
@@ -18,9 +18,9 @@ export const StorageMapPageHeadings: React.FC<{ name: string; namespace: string 
 }) => {
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1StorageMap>({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({

@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 import { PlanPageHeadings } from './components';
 import {
@@ -29,34 +29,34 @@ const PlanDetailsPage_: React.FC<{ name: string; namespace: string }> = ({ name,
 
   const pages = [
     {
+      component: () => <PlanDetails name={name} namespace={namespace} />,
       href: '',
       name: t('Details'),
-      component: () => <PlanDetails name={name} namespace={namespace} />,
     },
     {
+      component: () => <PlanYAML name={name} namespace={namespace} />,
       href: 'yaml',
       name: t('YAML'),
-      component: () => <PlanYAML name={name} namespace={namespace} />,
     },
     {
+      component: () => <PlanVirtualMachines name={name} namespace={namespace} />,
       href: 'vms',
       name: t('Virtual Machines'),
-      component: () => <PlanVirtualMachines name={name} namespace={namespace} />,
     },
     {
+      component: () => <PlanResources name={name} namespace={namespace} />,
       href: 'resources',
       name: t('Resources'),
-      component: () => <PlanResources name={name} namespace={namespace} />,
     },
     {
+      component: () => <PlanMappings name={name} namespace={namespace} />,
       href: 'mappings',
       name: t('Mappings'),
-      component: () => <PlanMappings name={name} namespace={namespace} />,
     },
     {
+      component: () => <PlanHooks name={name} namespace={namespace} />,
       href: 'hooks',
       name: t('Hooks'),
-      component: () => <PlanHooks name={name} namespace={namespace} />,
     },
   ];
 

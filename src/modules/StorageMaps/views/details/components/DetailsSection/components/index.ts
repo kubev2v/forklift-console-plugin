@@ -3,5 +3,5 @@ export * from './CreatedAtDetailsItem';
 export * from './NameDetailsItem';
 export * from './NamespaceDetailsItem';
 export * from './OwnerDetailsItem';
-export * from './StorageDetailsItemProps';
+export type * from './StorageDetailsItemProps';
 // @endindex

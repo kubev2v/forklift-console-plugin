@@ -11,7 +11,8 @@ import {
 
 import { calculateCidrNotation } from '../utils';
 import { determineHostStatus } from '../utils/helpers/determineHostStatus';
-import { HostCellProps } from './HostCellProps';
+
+import type { HostCellProps } from './HostCellProps';
 
 const statusIcons = {
   error: <ExclamationCircleIcon color="#C9190B" />,

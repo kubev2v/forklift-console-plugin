@@ -1,14 +1,14 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { TableCell } from 'src/modules/Providers/utils';
 
-import { K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
-import { VMCellProps } from './VMCellProps';
+import type { VMCellProps } from './VMCellProps';
 
 export const withResourceLink = ({
+  toGVK,
   toName,
   toNamespace,
-  toGVK,
 }: {
   toName: (props: VMCellProps) => string;
   toNamespace: (props: VMCellProps) => string;

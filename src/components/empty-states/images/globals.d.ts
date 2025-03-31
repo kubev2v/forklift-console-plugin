@@ -20,7 +20,7 @@ declare module '*.json' {
 }
 
 // Reference: https://github.com/openshift/console/blob/c126b66e62655eec01683b7419a6fbe835bc9ee1/frontend/%40types/console/index.d.ts#L15
-declare interface Window {
+declare type Window = {
   SERVER_FLAGS: {
     copiedCSVsDisabled: boolean;
     alertManagerBaseURL: string;
@@ -64,4 +64,4 @@ declare interface Window {
     k8sMode: string;
     capabilities: Record<string, string>[];
   };
-}
+};

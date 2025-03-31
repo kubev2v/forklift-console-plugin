@@ -8,7 +8,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModelRef } from '@kubev2v/types';
 import { Button, Popover, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 import { PlanStatusIcon } from './PlanStatusIcon';
 
 export const ErrorStatusCell: React.FC<CellProps> = ({ data }) => {
@@ -19,9 +19,9 @@ export const ErrorStatusCell: React.FC<CellProps> = ({ data }) => {
   const phaseLabel: string = phase;
 
   const planURL = getResourceUrl({
-    reference: PlanModelRef,
     name: plan?.metadata?.name,
     namespace: plan?.metadata?.namespace,
+    reference: PlanModelRef,
   });
 
   // Find the error message from the status conditions

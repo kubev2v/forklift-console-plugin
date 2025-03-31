@@ -9,14 +9,14 @@ import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 
 /**
  * StatusCell component, used for displaying the status of a resource.
  * @param {CellProps} props - The props for the component.
  * @returns {JSX.Element} - The rendered component.
  */
-export const StatusCell: React.FC<CellProps> = ({ data, fields, fieldId }) => {
+export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
   const { t } = useForkliftTranslation();
 
   const phase = getResourceFieldValue(data, 'phase', fields);
@@ -26,10 +26,10 @@ export const StatusCell: React.FC<CellProps> = ({ data, fields, fieldId }) => {
     case 'ConnectionFailed':
     case 'ValidationFailed':
       return ErrorStatusCell({
-        t,
         data,
-        fields,
         fieldId,
+        fields,
+        t,
       });
     default:
       return <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>;
@@ -43,14 +43,14 @@ export const StatusCell: React.FC<CellProps> = ({ data, fields, fieldId }) => {
  * @param {Object} props.fields - The fields object for the cell.
  * @returns {JSX.Element} The JSX element representing the error status cell.
  */
-export const ErrorStatusCell: React.FC<CellProps & { t }> = ({ t, data, fields }) => {
+export const ErrorStatusCell: React.FC<CellProps & { t }> = ({ data, fields, t }) => {
   const { provider } = data;
   const phase = getResourceFieldValue(data, 'phase', fields);
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
   const providerURL = getResourceUrl({
-    reference: ProviderModelRef,
     name: provider?.metadata?.name,
     namespace: provider?.metadata?.namespace,
+    reference: ProviderModelRef,
   });
 
   // Find the error message from the status conditions
@@ -88,19 +88,19 @@ export const ErrorStatusCell: React.FC<CellProps & { t }> = ({ t, data, fields }
 };
 
 const statusIcons = {
-  ValidationFailed: <ExclamationCircleIcon color="#C9190B" />,
   ConnectionFailed: <ExclamationCircleIcon color="#C9190B" />,
   Ready: <CheckCircleIcon color="#3E8635" />,
   Staging: <Spinner size="sm" />,
+  ValidationFailed: <ExclamationCircleIcon color="#C9190B" />,
 };
 
 const phaseLabels = {
-  // t('Ready')
-  Ready: 'Ready',
   // t('Connection Failed')
   ConnectionFailed: 'Connection Failed',
-  // t('Validation Failed')
-  ValidationFailed: 'Validation Failed',
+  // t('Ready')
+  Ready: 'Ready',
   // t('Staging')
   Staging: 'Staging',
+  // t('Validation Failed')
+  ValidationFailed: 'Validation Failed',
 };

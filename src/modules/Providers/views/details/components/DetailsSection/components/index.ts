@@ -5,7 +5,7 @@ export * from './ExternalManagementLinkDetailsItem';
 export * from './NamDetailsItem';
 export * from './NamespaceDetailsItem';
 export * from './OwnerDetailsItem';
-export * from './ProviderDetailsItem';
+export type * from './ProviderDetailsItem';
 export * from './TransferNetworkDetailsItem';
 export * from './TypeDetailsItem';
 export * from './URLDetailsItem';

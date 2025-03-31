@@ -6,7 +6,8 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { DescriptionListDescription } from '@patternfly/react-core';
 
 import { DetailsItem } from '../../../../../utils';
-import { ProviderDetailsItemProps } from './ProviderDetailsItem';
+
+import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 /**
  * @typedef {Object} ExternalManagementLinkDetailsItemProps - extends ProviderDetailsItemProps
@@ -14,10 +15,10 @@ import { ProviderDetailsItemProps } from './ProviderDetailsItem';
  * @property {string} [webUILinkText - A label text to be displayed as a content.
  * @property {string} [webUILink] - provider's management system external link.
  */
-export interface ExternalManagementLinkDetailsItemProps extends ProviderDetailsItemProps {
+export type ExternalManagementLinkDetailsItemProps = {
   webUILinkText?: string;
   webUILink?: string;
-}
+} & ProviderDetailsItemProps;
 
 /**
  * Component for displaying the provider management system external link.
@@ -27,7 +28,7 @@ export interface ExternalManagementLinkDetailsItemProps extends ProviderDetailsI
  */
 export const ExternalManagementLinkDetailsItem: React.FC<
   ExternalManagementLinkDetailsItemProps
-> = ({ resource: provider, moreInfoLink, helpContent, canPatch, webUILinkText, webUILink }) => {
+> = ({ canPatch, helpContent, moreInfoLink, resource: provider, webUILink, webUILinkText }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
@@ -61,7 +62,9 @@ export const ExternalManagementLinkDetailsItem: React.FC<
         onEdit={
           canPatch &&
           provider?.metadata &&
-          (() => showModal(<EditProviderUIModal resource={provider} content={webUILink} />))
+          (() => {
+            showModal(<EditProviderUIModal resource={provider} content={webUILink} />);
+          })
         }
       />
     </DescriptionListDescription>

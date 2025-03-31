@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { ModalInputComponentType } from 'src/modules/Providers/modals';
+import React, { type FC } from 'react';
+import type { ModalInputComponentType } from 'src/modules/Providers/modals';
 
 import { Switch } from '@patternfly/react-core';
 import { safeBoolean } from '@utils/helpers';
@@ -13,7 +13,7 @@ type SwitchRendererProps = {
 const MigrateSharedDisksSwitchFactory: () => ModalInputComponentType = () => {
   const { t } = useForkliftTranslation();
 
-  const SwitchRenderer: FC<SwitchRendererProps> = ({ value, onChange }) => (
+  const SwitchRenderer: FC<SwitchRendererProps> = ({ onChange, value }) => (
     <Switch
       id="migrate-shared-disks-switch"
       label={t('Migrate shared disks. This may slow down the migration process')}

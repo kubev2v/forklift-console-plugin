@@ -4,7 +4,7 @@ import { vcenterSecretValidator } from 'src/modules/Providers/utils';
 
 import {
   BaseCredentialsSection,
-  BaseCredentialsSectionProps,
+  type BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { VCenterCredentialsEdit } from './components/edit/VCenterCredentialsEdit';
 import { VCenterCredentialsList } from './components/list/VCenterCredentialsList';
