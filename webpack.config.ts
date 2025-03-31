@@ -8,6 +8,7 @@ import svgToMiniDataURI from 'mini-svg-data-uri';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import { type Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
 import type { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 import { ConsoleRemotePlugin } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
@@ -19,6 +20,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 type Configuration = {
   devServer?: WebpackDevServerConfiguration;
 } & WebpackConfiguration;
+
+const isAnalyzeBundle = process.env.ANALYZE_BUNDLE === 'true';
 
 const config: Configuration = {
   context: path.resolve(__dirname, 'src'),
@@ -108,6 +111,13 @@ const config: Configuration = {
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),
     new EnvironmentPlugin(ENVIRONMENT_DEFAULTS),
+    ...(isAnalyzeBundle ? [
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        reportFilename: 'report.html',
+        openAnalyzer: true,
+      })
+    ] : []),
   ],
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
