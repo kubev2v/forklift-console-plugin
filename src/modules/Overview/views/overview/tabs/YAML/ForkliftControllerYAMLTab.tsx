@@ -13,7 +13,7 @@ interface ForkliftControllerYAMLTabProps {
   loadError?: unknown;
 }
 
-export const ForkliftControllerYAMLTab: React.FC<ForkliftControllerYAMLTabProps> = ({
+const ForkliftControllerYAMLTab: React.FC<ForkliftControllerYAMLTabProps> = ({
   obj,
   loaded,
   loadError,

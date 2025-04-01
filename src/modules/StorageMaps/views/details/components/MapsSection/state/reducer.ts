@@ -8,7 +8,7 @@ export interface MapsSectionState {
   updating: boolean;
 }
 
-export type MapsAction =
+type MapsAction =
   | { type: 'SET_MAP'; payload: V1beta1StorageMapSpecMap[] }
   | { type: 'SET_UPDATING'; payload: boolean }
   | { type: 'INIT'; payload: V1beta1StorageMap };

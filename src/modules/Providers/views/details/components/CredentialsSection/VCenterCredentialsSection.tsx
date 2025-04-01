@@ -9,7 +9,7 @@ import {
 import { VCenterCredentialsEdit } from './components/edit/VCenterCredentialsEdit';
 import { VCenterCredentialsList } from './components/list/VCenterCredentialsList';
 
-export type VCenterCredentialsSectionProps = Omit<
+type VCenterCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
   'ListComponent' | 'EditComponent' | 'validator'
 >;

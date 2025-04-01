@@ -71,6 +71,6 @@ export const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = (pr
   </ModalHOC>
 );
 
-export interface NetworkMapActionsDropdownProps extends CellProps {
+interface NetworkMapActionsDropdownProps extends CellProps {
   isKebab?: boolean;
 }

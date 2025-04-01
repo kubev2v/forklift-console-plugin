@@ -171,7 +171,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
   );
 };
 
-export const SettingsCard: React.FC<SettingsCardProps> = (props) => (
+const SettingsCard: React.FC<SettingsCardProps> = (props) => (
   <ModalHOC>
     <SettingsCard_ {...props} />
   </ModalHOC>

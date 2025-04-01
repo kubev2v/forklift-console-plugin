@@ -58,11 +58,11 @@ export interface ResourceField {
   compareFn?: (a: any, b: any, locale: string) => number;
 }
 
-export type ResourceFieldPartialFactory = { (t: (string) => string): Partial<ResourceField> };
+type ResourceFieldPartialFactory = { (t: (string) => string): Partial<ResourceField> };
 export type ResourceFieldFactory = { (t: (string) => string): ResourceField[] };
 
-export const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
-export type K8sConditionStatus = (typeof K8sConditionStatusValues)[number];
+const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
+type K8sConditionStatus = (typeof K8sConditionStatusValues)[number];
 
 export interface GlobalActionToolbarProps<T> {
   // data currently visible on the screen (i.e. adjusted by paging and filtering)
@@ -78,7 +78,7 @@ export interface GlobalActionToolbarProps<T> {
  * @property {React.MouseEvent<Element, MouseEvent>} React.MouseEvent - A React-specific mouse event.
  * @property {React.ChangeEvent<Element>} React.ChangeEvent - A React-specific change event.
  */
-export type ToggleEventType =
+type ToggleEventType =
   | Event
   | React.KeyboardEvent<Element>
   | React.MouseEvent<Element, MouseEvent>

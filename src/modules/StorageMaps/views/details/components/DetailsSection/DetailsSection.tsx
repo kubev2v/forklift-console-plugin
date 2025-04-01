@@ -15,11 +15,11 @@ export const DetailsSection: React.FC<DetailsSectionProps> = (props) => (
   </ModalHOC>
 );
 
-export type DetailsSectionProps = {
+type DetailsSectionProps = {
   obj: V1beta1StorageMap;
 };
 
-export const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) => {
+const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) => {
   return (
     <DescriptionList
       columnModifier={{

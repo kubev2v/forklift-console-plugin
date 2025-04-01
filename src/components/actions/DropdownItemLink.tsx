@@ -30,7 +30,7 @@ export const DropdownItemLink = ({
   );
 };
 
-export type DropdownItemLinkProps = {
+type DropdownItemLinkProps = {
   key: string;
   value: number;
   href: string;

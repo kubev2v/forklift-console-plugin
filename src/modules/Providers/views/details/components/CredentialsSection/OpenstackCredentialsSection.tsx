@@ -8,7 +8,7 @@ import {
 import { OpenstackCredentialsEdit } from './components/edit/OpenstackCredentialsEdit';
 import { OpenstackCredentialsList } from './components/list/OpenstackCredentialsList';
 
-export type OpenstackCredentialsSectionProps = Omit<
+type OpenstackCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
   'ListComponent' | 'EditComponent' | 'validator'
 >;

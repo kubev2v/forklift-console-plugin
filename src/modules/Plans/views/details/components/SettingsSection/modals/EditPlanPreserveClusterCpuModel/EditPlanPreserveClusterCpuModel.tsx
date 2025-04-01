@@ -78,7 +78,7 @@ const EditPlanPreserveClusterCpuModel_: React.FC<EditPlanPreserveClusterCpuModel
   );
 };
 
-export type EditPlanPreserveClusterCpuModelProps = Modify<
+type EditPlanPreserveClusterCpuModelProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;

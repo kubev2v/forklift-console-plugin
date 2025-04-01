@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { V1beta1Provider } from '@kubev2v/types';
 import { Form, TextInput } from '@patternfly/react-core';
 
-export interface OpenshiftProviderCreateFormProps {
+interface OpenshiftProviderCreateFormProps {
   provider: V1beta1Provider;
   onChange: (newValue: V1beta1Provider) => void;
 }

@@ -1,4 +1,4 @@
-export const ProviderStatusValues = [
+const ProviderStatusValues = [
   'ValidationFailed',
   'ConnectionFailed',
   'Ready',

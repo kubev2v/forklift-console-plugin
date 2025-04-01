@@ -120,7 +120,7 @@ const sortMigrationsByStartedAtDate = (migrations: V1beta1Migration[]) => {
   });
 };
 
-export type MigrationTableProps = {
+type MigrationTableProps = {
   migrations: V1beta1Migration[];
   showOwner?: boolean;
 };

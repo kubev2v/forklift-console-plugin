@@ -5,7 +5,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
-export interface SecretDetailsItemProps {
+interface SecretDetailsItemProps {
   resource: V1beta1Provider;
   moreInfoLink?: string;
   helpContent?: ReactNode;

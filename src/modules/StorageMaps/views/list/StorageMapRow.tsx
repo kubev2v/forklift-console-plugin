@@ -13,7 +13,7 @@ import { StorageMapLinkCell } from './components/StorageMapLinkCell';
 import { StorageMapActionsDropdown } from '../../actions/StorageMapActionsDropdown';
 import { StorageMapData } from '../../utils/types/StorageMapData';
 
-export const ProviderRow: React.FC<RowProps<StorageMapData>> = ({
+const ProviderRow: React.FC<RowProps<StorageMapData>> = ({
   resourceFields,
   resourceData,
 }) => {

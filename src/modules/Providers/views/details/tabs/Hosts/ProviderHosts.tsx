@@ -27,7 +27,7 @@ const ProviderHosts_: React.FC<ProviderHostsProps> = (props) => {
   }
 };
 
-export const ProviderHosts: React.FC<ProviderHostsProps> = (props) => (
+const ProviderHosts: React.FC<ProviderHostsProps> = (props) => (
   <ModalHOC>
     <ProviderHosts_ {...props} />
   </ModalHOC>

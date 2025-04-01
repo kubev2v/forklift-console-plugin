@@ -8,7 +8,7 @@ import {
 import { OvirtCredentialsEdit } from './components/edit/OvirtCredentialsEdit';
 import { OvirtCredentialsList } from './components/list/OvirtCredentialsList';
 
-export type OvirtCredentialsSectionProps = Omit<
+type OvirtCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
   'ListComponent' | 'EditComponent' | 'validator'
 >;

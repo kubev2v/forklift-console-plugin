@@ -4,7 +4,7 @@ import { Bullseye } from '@patternfly/react-core';
 
 import { Loading } from './Loading';
 
-export type SuspendProps = {
+type SuspendProps = {
   obj: object;
   loaded: boolean;
   loadError: unknown;

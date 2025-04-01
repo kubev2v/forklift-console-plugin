@@ -18,7 +18,7 @@ import { ConcernsTable } from './ConcernsTable';
 import { MigrationAction } from './MigrationAction';
 import { VmData } from './VMCellProps';
 
-export interface ProviderVirtualMachinesListProps {
+interface ProviderVirtualMachinesListProps {
   title?: string;
   obj: ProviderData;
   ns?: string;
@@ -102,19 +102,19 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   );
 };
 
-export const concernsMatcher: ValueMatcher = {
+const concernsMatcher: ValueMatcher = {
   filterType: 'concerns',
   matchValue: (concerns: Concern[]) => (filter: string) =>
     Array.isArray(concerns) &&
     concerns.some(({ category, label }) => category === filter || label === filter),
 };
 
-export const featuresMatcher: ValueMatcher = {
+const featuresMatcher: ValueMatcher = {
   filterType: 'features',
   matchValue: (features: { [key: string]: boolean }) => (filter: string) => !!features?.[filter],
 };
 
-export const hostMatcher: ValueMatcher = {
+const hostMatcher: ValueMatcher = {
   filterType: 'host',
   matchValue: (value: string) => (filter: string) => value == filter,
 };

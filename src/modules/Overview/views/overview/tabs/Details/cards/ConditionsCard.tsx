@@ -11,7 +11,7 @@ type ConditionsCardProps = {
   loadError?: unknown;
 };
 
-export const ConditionsCard: FC<ConditionsCardProps> = ({ obj }) => {
+const ConditionsCard: FC<ConditionsCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
 
   return (

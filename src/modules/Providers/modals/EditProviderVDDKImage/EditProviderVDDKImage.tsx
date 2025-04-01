@@ -12,7 +12,7 @@ import { EditModalProps } from '../EditModal/types';
 import { onEmptyVddkConfirm } from './onEmptyVddkConfirm';
 import { onNoneEmptyVddkConfirm } from './onNoneEmptyVddkConfirm';
 
-export type EditProviderVDDKImageProps = Modify<
+type EditProviderVDDKImageProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Provider;

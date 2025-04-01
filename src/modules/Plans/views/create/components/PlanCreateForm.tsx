@@ -35,7 +35,7 @@ import { createProviderCardItems } from './createProviderCardItems';
 import { FiltersToolbarProviders } from './FiltersToolbarProviders';
 import { ProviderCardEmptyState } from './ProvidersEmptyState';
 
-export type PlanCreateFormProps = {
+type PlanCreateFormProps = {
   providers: V1beta1Provider[];
   filterState: PlanCreatePageState;
   state: CreateVmMigrationPageState;
@@ -51,7 +51,7 @@ export type PlanCreateFormProps = {
  * PlanCreateForm component is responsible for rendering the form to create a migration plan.
  * It allows users to select a source provider from a gallery of available providers.
  */
-export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
+const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
   providers,
   filterState,
   state,

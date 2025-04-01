@@ -10,7 +10,7 @@ import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-co
 
 import './PlanVMsDeleteModal.style.css';
 
-export interface MigrationVMsCancelModalProps {
+interface MigrationVMsCancelModalProps {
   migration: V1beta1Migration;
   selected: string[];
 }

@@ -25,7 +25,7 @@ export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicPro
       : network,
   );
 
-export const toNetworksOrProfiles = (vm) => {
+const toNetworksOrProfiles = (vm) => {
   switch (vm.providerType) {
     case 'vsphere': {
       return vm?.networks?.map((network) => network?.id) ?? [];

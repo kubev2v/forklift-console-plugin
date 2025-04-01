@@ -27,7 +27,7 @@ import { TableEmptyCell } from '../../utils/components/TableCell/TableEmptyCell'
  *
  * @returns {ReactNode - A React table row (Tr) component.
  */
-export const ProviderRow: React.FC<RowProps<ProviderData>> = ({ resourceFields, resourceData }) => {
+const ProviderRow: React.FC<RowProps<ProviderData>> = ({ resourceFields, resourceData }) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>

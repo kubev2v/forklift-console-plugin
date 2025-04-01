@@ -51,7 +51,7 @@ const hideFromViewDropdownOption = (onHide: () => void, t) => {
   );
 };
 
-export const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
+const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
   const { t } = useForkliftTranslation();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const actionDropdownItems = [hideFromViewDropdownOption(onHide, t)];

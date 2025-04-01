@@ -32,7 +32,7 @@ interface ProviderDetailsProps {
   loadError?: unknown;
 }
 
-export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, loadError }) => {
+const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, loadError }) => {
   const { t } = useForkliftTranslation();
   const { provider, inventory } = obj;
 

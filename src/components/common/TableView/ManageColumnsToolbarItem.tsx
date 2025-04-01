@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, ToolbarItem, Tooltip } from '@patternfly/react-core';
 import { ColumnsIcon } from '@patternfly/react-icons';
 
-export interface ManageColumnsToolbarItemProps {
+interface ManageColumnsToolbarItemProps {
   children: React.ReactNode;
   /**
    * A handler for clicking the button.

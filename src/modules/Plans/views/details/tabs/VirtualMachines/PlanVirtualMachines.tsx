@@ -16,7 +16,7 @@ import { MigrationVirtualMachinesList } from './Migration/MigrationVirtualMachin
 import { PlanVirtualMachinesList } from './Plan/PlanVirtualMachinesList';
 import { Suspend } from '../../components/Suspend';
 
-export interface PlanVirtualMachinesProps {
+interface PlanVirtualMachinesProps {
   planData: PlanData;
   ns?: string;
   name?: string;

@@ -70,6 +70,6 @@ export const ConditionsSection: React.FC<ConditionsSectionProps> = ({ conditions
  * @typedef {Object} ConditionsProps
  * @property {K8sResourceCondition[]} conditions - The conditions to be displayed.
  */
-export type ConditionsSectionProps = {
+type ConditionsSectionProps = {
   conditions: K8sResourceCondition[];
 };

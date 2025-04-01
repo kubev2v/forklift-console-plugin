@@ -104,7 +104,7 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
   );
 };
 
-export const ProviderNetworks: React.FC<ProviderNetworksProps> = (props) => (
+const ProviderNetworks: React.FC<ProviderNetworksProps> = (props) => (
   <ModalHOC>
     <ProviderNetworks_ {...props} />
   </ModalHOC>

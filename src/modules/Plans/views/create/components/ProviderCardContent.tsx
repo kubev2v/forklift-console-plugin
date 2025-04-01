@@ -26,7 +26,7 @@ export const ProviderCardContent: React.FC<ProviderCardContentProps> = ({
   );
 };
 
-export type ProviderCardContentProps = {
+type ProviderCardContentProps = {
   provider: V1beta1Provider;
   typeLabel?: string;
 };

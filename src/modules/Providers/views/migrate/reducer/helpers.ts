@@ -45,7 +45,7 @@ import { CreateVmMigration } from './actions';
 import { calculateNetworks, calculateStorages } from './calculateMappings';
 import { hasMultiplePodNetworkMappings } from './hasMultiplePodNetworkMappings';
 
-export const validateUniqueName = (name: string, existingNames: string[]) =>
+const validateUniqueName = (name: string, existingNames: string[]) =>
   existingNames.every((existingName) => existingName !== name);
 
 export const validatePlanName = (name: string, existingPlans: V1beta1Plan[]) =>
@@ -120,7 +120,7 @@ export const setTargetNamespace = (
   recalculateStorages(draft);
 };
 
-export const areMappingsEqual = (a: Mapping[], b: Mapping[]) => {
+const areMappingsEqual = (a: Mapping[], b: Mapping[]) => {
   if (a?.length !== b.length) {
     return;
   }
@@ -179,7 +179,7 @@ export const reTestNetworks = (draft) => {
   }
 };
 
-export const initCalculatedPerNamespaceSlice =
+const initCalculatedPerNamespaceSlice =
   (): CreateVmMigrationPageState['calculatedPerNamespace'] => ({
     targetNetworks: [],
     targetStorages: [],
@@ -189,7 +189,7 @@ export const initCalculatedPerNamespaceSlice =
     sourceNetworks: [],
   });
 
-export const resolveTargetProvider = (name: string, availableProviders: V1beta1Provider[]) =>
+const resolveTargetProvider = (name: string, availableProviders: V1beta1Provider[]) =>
   availableProviders.filter(getIsTarget).find((p) => p?.metadata?.name === name);
 
 // based on the method used in legacy/src/common/helpers
@@ -242,7 +242,7 @@ export const addIfMissing = <T>(key: T, keys: T[]) => {
   keys.push(key);
 };
 
-export const removeIfPresent = <T>(key: T, keys: T[]) => {
+const removeIfPresent = <T>(key: T, keys: T[]) => {
   console.warn('removeIfPresent', key, keys);
   const index = keys?.findIndex((k) => k === key);
   if (index === undefined || index === -1) {
@@ -266,7 +266,7 @@ export const alreadyInUseBySelectedVms = ({
   sourceProvider.spec?.type === 'openshift' &&
   namespacesUsedBySelectedVms.some((name) => name === namespace);
 
-export const validateNetworkMapping = ({
+const validateNetworkMapping = ({
   sources,
   errors,
   mappings,
@@ -313,7 +313,7 @@ export const executeNetworkMappingValidation = (draft: Draft<CreateVmMigrationPa
   }, 'default');
 };
 
-export const validateStorageMapping = ({
+const validateStorageMapping = ({
   sources,
 }: {
   sources: MappingSource[];

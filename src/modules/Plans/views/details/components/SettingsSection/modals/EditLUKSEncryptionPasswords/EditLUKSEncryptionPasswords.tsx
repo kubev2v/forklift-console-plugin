@@ -47,7 +47,7 @@ const EditPassphraseFactory: (initialValue: string) => ModalInputComponentType =
   return SecretRenderer;
 };
 
-export type EditLUKSEncryptionPasswordsProps = Modify<
+type EditLUKSEncryptionPasswordsProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;

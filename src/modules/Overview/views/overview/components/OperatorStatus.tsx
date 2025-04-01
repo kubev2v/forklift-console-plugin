@@ -11,7 +11,7 @@ interface OperatorStatusProps {
   status: string;
 }
 
-export const statusIcons = {
+const statusIcons = {
   Failure: <ExclamationCircleIcon color="#C9190B" />,
   Successful: <CheckCircleIcon color="#3E8635" />,
   Running: <ExclamationTriangleIcon color="#F0AB00" />,

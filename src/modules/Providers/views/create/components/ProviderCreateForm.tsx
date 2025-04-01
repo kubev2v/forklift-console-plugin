@@ -36,7 +36,7 @@ export interface ProvidersCreateFormProps {
   onProjectNameChange?: (value: string) => void;
 }
 
-export const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
+const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
   newProvider,
   newSecret,
   projectName,

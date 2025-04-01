@@ -24,12 +24,12 @@ export const SettingsSection: React.FC<SettingsSectionProps> = (props) => (
   </ModalHOC>
 );
 
-export type SettingsSectionProps = {
+type SettingsSectionProps = {
   obj: V1beta1Plan;
   permissions: ProvidersPermissionStatus;
 };
 
-export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, permissions }) => {
+const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, permissions }) => {
   const [sourceProvider] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,

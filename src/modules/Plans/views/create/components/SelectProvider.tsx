@@ -20,7 +20,7 @@ import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import providerTypes from '../constanats/providerTypes';
 import { PlanCreatePageState } from '../states/PlanCreatePageStore';
 
-export interface SelectProviderProps {
+interface SelectProviderProps {
   filterState: PlanCreatePageState;
   filterDispatch: Dispatch<{
     type: string;
@@ -28,7 +28,7 @@ export interface SelectProviderProps {
   }>;
 }
 
-export const SelectProvider: FunctionComponent<SelectProviderProps> = ({
+const SelectProvider: FunctionComponent<SelectProviderProps> = ({
   filterState,
   filterDispatch,
 }) => {

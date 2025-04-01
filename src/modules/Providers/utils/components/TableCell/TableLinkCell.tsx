@@ -25,7 +25,7 @@ export const TableLinkCell: React.FC<TableLinkCellProps> = ({
   );
 };
 
-export interface TableLinkCellProps extends TableLabelCellProps {
+interface TableLinkCellProps extends TableLabelCellProps {
   groupVersionKind: K8sGroupVersionKind;
   name: string;
   namespace: string;

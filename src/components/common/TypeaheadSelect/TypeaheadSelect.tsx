@@ -25,7 +25,7 @@ export interface TypeaheadSelectOption extends Omit<SelectOptionProps, 'content'
   isSelected?: boolean;
 }
 
-export interface TypeaheadSelectProps extends Omit<SelectProps, 'toggle' | 'onSelect'> {
+interface TypeaheadSelectProps extends Omit<SelectProps, 'toggle' | 'onSelect'> {
   /** Options of the select */
   selectOptions: TypeaheadSelectOption[];
   /** Callback triggered on selection. */

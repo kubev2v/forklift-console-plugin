@@ -27,7 +27,7 @@ export const EditProviderSectionHeading: React.FC<EditProviderSectionHeadingProp
   </>
 );
 
-export type EditProviderSectionHeadingProps = {
+type EditProviderSectionHeadingProps = {
   text: string;
   helpText?: string;
 };

@@ -24,7 +24,7 @@ export interface BaseCredentialsSectionState {
   alertMessage: ReactNode;
 }
 
-export type BaseCredentialsAction =
+type BaseCredentialsAction =
   | { type: 'TOGGLE_REVEAL' }
   | { type: 'TOGGLE_EDIT' }
   | { type: 'RESET_DATA_CHANGED' }

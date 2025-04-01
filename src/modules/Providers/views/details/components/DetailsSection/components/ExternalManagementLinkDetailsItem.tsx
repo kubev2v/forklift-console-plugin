@@ -15,7 +15,7 @@ import { ProviderDetailsItemProps } from './ProviderDetailsItem';
  * @property {string} [webUILinkText - A label text to be displayed as a content.
  * @property {string} [webUILink] - provider's management system external link.
  */
-export interface ExternalManagementLinkDetailsItemProps extends ProviderDetailsItemProps {
+interface ExternalManagementLinkDetailsItemProps extends ProviderDetailsItemProps {
   webUILinkText?: string;
   webUILink?: string;
 }

@@ -8,7 +8,7 @@ import { FetchCertificateModal } from './FetchCertificateModal';
 
 import './CertificateUpload.style.css';
 
-export interface CertificateUploadProps extends FileUploadProps {
+interface CertificateUploadProps extends FileUploadProps {
   url?: string;
 }
 

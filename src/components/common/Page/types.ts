@@ -16,7 +16,7 @@ export interface PaginationSettings {
   clear: () => void;
 }
 
-export interface FiltersSettings {
+interface FiltersSettings {
   data: { [k: string]: undefined };
   save: (filters: { [k: string]: undefined }) => void;
   clear: () => void;

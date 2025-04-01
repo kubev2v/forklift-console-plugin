@@ -29,7 +29,7 @@ export const getMigrationVmsCounts = (vms: V1beta1PlanStatusMigrationVms[]): Mig
   };
 };
 
-export type MigrationVmsCounts = {
+type MigrationVmsCounts = {
   completed: number;
   total: number;
   canceled: number;

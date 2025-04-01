@@ -17,7 +17,7 @@ interface ProviderCredentialsProps {
   loadError?: unknown;
 }
 
-export const ProviderCredentials: React.FC<ProviderCredentialsProps> = ({
+const ProviderCredentials: React.FC<ProviderCredentialsProps> = ({
   obj,
   loaded,
   loadError,

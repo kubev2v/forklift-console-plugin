@@ -19,7 +19,7 @@ import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
 /**
  * Props for the FilterableSelect component.
  */
-export interface FilterableSelectProps {
+interface FilterableSelectProps {
   /** Array of options to display in the select dropdown */
   selectOptions: SelectOptionProps[];
   /** The currently selected value */

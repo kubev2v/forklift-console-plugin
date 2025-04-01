@@ -31,7 +31,7 @@ export const StatusCell: React.FC<CellProps> = ({ data, fields, fieldId }) => {
   }
 };
 
-export const ErrorStatusCell: React.FC<CellProps & { t }> = ({ t, data, fields }) => {
+const ErrorStatusCell: React.FC<CellProps & { t }> = ({ t, data, fields }) => {
   const { obj: networkMap } = data;
   const phase = getResourceFieldValue(data, 'phase', fields);
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');

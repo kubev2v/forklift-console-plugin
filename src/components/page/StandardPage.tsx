@@ -267,7 +267,7 @@ export interface StandardPageProps<T> {
  *   // ...other props
  * />
  */
-export const StandardPageInner = <T,>({
+const StandardPageInner = <T,>({
   namespace,
   dataSource: [flatData, loaded, error],
   RowMapper = DefaultRow<T>,

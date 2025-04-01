@@ -98,7 +98,7 @@ const EditPlanTargetNamespace_: React.FC<EditPlanTargetNamespaceProps> = (props)
   );
 };
 
-export type EditPlanTargetNamespaceProps = Modify<
+type EditPlanTargetNamespaceProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;

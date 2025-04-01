@@ -9,7 +9,7 @@ import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
 import { OwnerDetailsItem } from './components/OwnerDetailsItem';
 import { StatusDetailsItem } from './components/StatusDetailsItem';
 
-export type DetailsSectionProps = {
+type DetailsSectionProps = {
   obj: V1beta1Plan;
 };
 

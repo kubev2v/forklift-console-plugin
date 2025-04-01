@@ -80,7 +80,7 @@ const EditPlanWarm_: React.FC<EditPlanWarmProps> = (props) => {
   );
 };
 
-export type EditPlanWarmProps = Modify<
+type EditPlanWarmProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;

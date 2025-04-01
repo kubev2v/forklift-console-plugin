@@ -19,7 +19,7 @@ import { Alert, PageSection } from '@patternfly/react-core';
 
 import { PlanMappingsSection } from './PlanMappingsSection';
 
-export type PlanMappingsInitSectionProps = {
+type PlanMappingsInitSectionProps = {
   plan: V1beta1Plan;
   loaded: boolean;
   loadError: unknown;

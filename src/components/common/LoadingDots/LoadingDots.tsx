@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-export interface LoadingDotsProps {
+interface LoadingDotsProps {
   /**
    * Delay in Milliseconds
    */

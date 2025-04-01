@@ -6,9 +6,9 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getMigrationCounts } from '../utils/helpers/getMigrationCounts';
 import { getVmCounts } from '../utils/helpers/getVmCounts';
 
-export type MigrationCounts = { [key: string]: number };
+type MigrationCounts = { [key: string]: number };
 
-export interface MigrationCountsHookResponse {
+interface MigrationCountsHookResponse {
   count: MigrationCounts;
   vmCount: MigrationCounts;
   loaded: boolean;
@@ -26,7 +26,7 @@ type CountState = {
  * Only triggers a re-render if the counts change.
  * @return {MigrationCountsHookResponse} An object with 'count', 'vmCount', 'loaded', and 'loadError' keys.
  */
-export const useMigrationCounts = (): MigrationCountsHookResponse => {
+const useMigrationCounts = (): MigrationCountsHookResponse => {
   const [counts, setCounts] = useState<CountState>({
     migrationCounts: {
       Total: 0,

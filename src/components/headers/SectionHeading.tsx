@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react';
 
-export interface SectionHeadingProps {
+interface SectionHeadingProps {
   text: ReactNode;
   className?: string;
   id?: string;

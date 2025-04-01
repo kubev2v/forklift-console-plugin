@@ -4,7 +4,7 @@
  * @property {string} key - The key representing the disk option.
  * @property {string} description - The description of the disk option.
  */
-export type DiskOption = {
+type DiskOption = {
   key: string;
   description: string;
 };

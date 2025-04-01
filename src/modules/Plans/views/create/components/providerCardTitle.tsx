@@ -15,6 +15,6 @@ export const ProviderCardTitle: React.FC<ProviderCardTitleProps> = ({ provider }
   );
 };
 
-export type ProviderCardTitleProps = {
+type ProviderCardTitleProps = {
   provider: V1beta1Provider;
 };

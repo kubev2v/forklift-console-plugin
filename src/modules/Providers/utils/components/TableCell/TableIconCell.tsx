@@ -23,6 +23,6 @@ export const TableIconCell: React.FC<TableIconCellProps> = ({
   );
 };
 
-export interface TableIconCellProps extends TableLabelCellProps {
+interface TableIconCellProps extends TableLabelCellProps {
   icon?: ReactNode;
 }
