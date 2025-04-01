@@ -14,12 +14,12 @@ import { TypeDetailsItem } from './components/TypeDetailsItem';
 import { URLDetailsItem } from './components/URLDetailsItem';
 import { VDDKDetailsItem } from './components/VDDKDetailsItem';
 import { getVSphereProviderWebUILink } from './utils/getVSphereProviderWebUILink';
-import { DetailsSectionProps } from './DetailsSection';
+import type { DetailsSectionProps } from './DetailsSection';
 
 export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
-  const { provider, permissions } = data;
+  const { permissions, provider } = data;
   const webUILink = getVSphereProviderWebUILink(provider);
 
   return (
@@ -32,9 +32,9 @@ export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) =
 
       <DetailsItem
         title={t('Product')}
-        content={data.inventory?.['product'] || <span className="text-muted">{t('Empty')}</span>}
+        content={data.inventory?.product || <span className="text-muted">{t('Empty')}</span>}
         helpContent={t(`VMware only: vSphere product name.`)}
-        crumbs={['Inventory', 'providers', `${provider.spec.type}`, '[UID]']}
+        crumbs={['Inventory', 'providers', provider.spec.type, '[UID]']}
       />
 
       <NameDetailsItem resource={provider} />

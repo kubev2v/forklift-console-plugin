@@ -64,7 +64,7 @@ export const areSameDayInUTCZero = (dateTime: string, calendarDate: string): boo
  * @returns true if the provided date is in the time interval
  */
 export const isInClosedRange = (interval: string, date: string): boolean => {
-  const { start, end } = Interval.fromISO(interval);
+  const { end, start } = Interval.fromISO(interval);
   return Interval.fromDateTimes(start, end.plus({ days: 1 })).contains(
     DateTime.fromISO(date).toUTC().setZone('local', { keepCalendarTime: true }),
   );

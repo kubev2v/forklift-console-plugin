@@ -1,15 +1,16 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, DataList } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 
-import { Mapping, MappingSource } from '../types';
+import type { Mapping, MappingSource } from '../types';
+
 import { MappingListItem } from './MappingListItem';
 
 import '../ProvidersCreateVmMigration.style.css';
 
-interface MappingListProps {
+type MappingListProps = {
   mappings?: Mapping[];
   sources: MappingSource[];
   availableDestinations: string[];
@@ -20,19 +21,19 @@ interface MappingListProps {
   generalSourcesLabel: string;
   noSourcesLabel: string;
   isDisabled: boolean;
-}
+};
 
 export const MappingList: FC<MappingListProps> = ({
-  mappings,
-  sources,
-  availableDestinations,
-  replaceMapping,
-  deleteMapping,
   addMapping,
-  usedSourcesLabel,
+  availableDestinations,
+  deleteMapping,
   generalSourcesLabel,
-  noSourcesLabel,
   isDisabled,
+  mappings,
+  noSourcesLabel,
+  replaceMapping,
+  sources,
+  usedSourcesLabel,
 }) => {
   const { t } = useForkliftTranslation();
   const usedSources = sources.filter(({ usedBySelectedVms }) => usedBySelectedVms);
@@ -41,7 +42,7 @@ export const MappingList: FC<MappingListProps> = ({
   return (
     <>
       <DataList isCompact aria-label="">
-        {mappings?.map(({ source, destination }, index) => (
+        {mappings?.map(({ destination, source }, index) => (
           <MappingListItem
             source={source}
             destination={destination}

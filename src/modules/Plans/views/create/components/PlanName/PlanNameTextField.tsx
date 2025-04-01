@@ -1,26 +1,26 @@
 import React from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { Validation } from 'src/modules/Providers/utils/types/Validation';
+import type { Validation } from 'src/modules/Providers/utils/types/Validation';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { TextInput } from '@patternfly/react-core';
 
 import { getInvalidHelperText } from './utils/utils';
 
-interface PlanNameTextFieldProps {
+type PlanNameTextFieldProps = {
   value: string;
   validated: Validation;
   onChange: (event: React.FormEvent<HTMLInputElement>, value: string) => void;
   isRequired?: boolean;
   isDisabled?: boolean;
-}
+};
 
 export const PlanNameTextField: React.FC<PlanNameTextFieldProps> = ({
-  value,
-  validated,
   isDisabled,
   isRequired,
   onChange,
+  validated,
+  value,
 }) => {
   const { t } = useForkliftTranslation();
   const [isUpdated, setIsUpdated] = React.useState(false);
@@ -31,8 +31,8 @@ export const PlanNameTextField: React.FC<PlanNameTextFieldProps> = ({
       isRequired={isRequired}
       fieldId="planName"
       {...(isUpdated && {
-        validated: validated,
         helperTextInvalid: getInvalidHelperText(validated, value),
+        validated,
       })}
     >
       <TextInput

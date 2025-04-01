@@ -1,12 +1,12 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { MigrationModel, V1beta1Migration, V1beta1Plan } from '@kubev2v/types';
-import { k8sCreate, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { MigrationModel, type V1beta1Migration, type V1beta1Plan } from '@kubev2v/types';
+import { k8sCreate, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 
 import { usePlanMigration } from '../hooks/usePlanMigration';
@@ -19,13 +19,13 @@ import { usePlanMigration } from '../hooks/usePlanMigration';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-interface PlanStartMigrationModalProps {
+type PlanStartMigrationModalProps = {
   resource: V1beta1Plan;
   model: K8sModel;
   title?: string;
   redirectTo?: string;
   setButtonEnabledOnChange: (enableStartButton: boolean) => void;
-}
+};
 
 /**
  * A generic delete modal component
@@ -34,10 +34,10 @@ interface PlanStartMigrationModalProps {
  * @returns {React.Element} The DeleteModal component
  */
 export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = ({
-  title,
-  resource,
   redirectTo,
+  resource,
   setButtonEnabledOnChange,
+  title,
 }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
@@ -69,26 +69,26 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
         kind: 'Migration',
         metadata: {
           generateName: `${name}-`,
-          namespace: namespace,
+          namespace,
           ownerReferences: [
             {
               apiVersion: 'forklift.konveyor.io/v1beta1',
               kind: 'Plan',
-              name: name,
-              uid: uid,
+              name,
+              uid,
             },
           ],
         },
         spec: {
           plan: {
-            name: name,
-            namespace: namespace,
-            uid: uid,
+            name,
+            namespace,
+            uid,
           },
         },
       };
 
-      await k8sCreate({ model: MigrationModel, data: migration });
+      await k8sCreate({ data: migration, model: MigrationModel });
       if (redirectTo) {
         navigate(redirectTo);
       }
@@ -101,9 +101,7 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
     }
   }, [resource, lastMigration]);
 
-  const onClickToggleModal: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (
-    _event,
-  ) => {
+  const onClickToggleModal: (event: React.MouseEvent<HTMLButtonElement>) => void = (_event) => {
     toggleModal();
     setButtonEnabledOnChange(true);
   };

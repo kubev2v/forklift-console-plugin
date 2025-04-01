@@ -4,13 +4,13 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderDetailsItemProps } from './ProviderDetailsItem';
+import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const TransferNetworkDetailsItem: React.FC<ProviderDetailsItemProps> = ({
-  resource: provider,
   canPatch,
-  moreInfoLink,
   helpContent,
+  moreInfoLink,
+  resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -41,7 +41,10 @@ export const TransferNetworkDetailsItem: React.FC<ProviderDetailsItemProps> = ({
         'forklift.konveyor.io/defaultTransferNetwork',
       ]}
       onEdit={
-        canPatch && (() => showModal(<EditProviderDefaultTransferNetwork resource={provider} />))
+        canPatch &&
+        (() => {
+          showModal(<EditProviderDefaultTransferNetwork resource={provider} />);
+        })
       }
     />
   );

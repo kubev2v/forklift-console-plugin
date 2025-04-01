@@ -1,8 +1,8 @@
-import { FC } from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { FC } from 'react';
+import type { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
-import {
+import type { ResourceFieldFactory } from '@components/common/utils/types';
+import type {
   OpenShiftNamespace,
   OpenshiftResource,
   OpenShiftStorageClass,
@@ -15,13 +15,14 @@ import {
   V1beta1StorageMap,
 } from '@kubev2v/types';
 
-import { CreateVmMigration } from './reducer/actions';
-import { InventoryNetwork } from '../../hooks/useNetworks';
-import { InventoryStorage } from '../../hooks/useStorages';
-import { Validation } from '../../utils/types/Validation';
-import { VmData } from '../details/tabs/VirtualMachines/components/VMCellProps';
+import type { InventoryNetwork } from '../../hooks/useNetworks';
+import type { InventoryStorage } from '../../hooks/useStorages';
+import type { Validation } from '../../utils/types/Validation';
+import type { VmData } from '../details/tabs/VirtualMachines/components/VMCellProps';
 
-export interface CreateVmMigrationPageState {
+import type { CreateVmMigration } from './reducer/actions';
+
+export type CreateVmMigrationPageState = {
   underConstruction: {
     plan: V1beta1Plan;
     projectName: string;
@@ -64,10 +65,10 @@ export interface CreateVmMigrationPageState {
   calculatedOnce: {
     // calculated on start (exception:for ovirt/openstack we need to fetch disks)
     storageIdsUsedBySelectedVms: string[];
-    sourceStorageLabelToId: { [label: string]: string };
+    sourceStorageLabelToId: Record<string, string>;
     // calculated on start (exception:for ovirt we need to fetch nic profiles)
     networkIdsUsedBySelectedVms: string[];
-    sourceNetworkLabelToId: { [label: string]: string };
+    sourceNetworkLabelToId: Record<string, string>;
     // calculated on start
     vmFieldsFactory: [ResourceFieldFactory, FC<RowProps<VmData>>];
     // for OpenShift source providers
@@ -97,21 +98,21 @@ export interface CreateVmMigrationPageState {
   flow: {
     editingDone: boolean;
     apiError?: Error;
-    initialLoading: { [keys in CreateVmMigration]?: boolean };
+    initialLoading: Partial<Record<CreateVmMigration, boolean>>;
   };
-}
-export interface MappingSource {
+};
+export type MappingSource = {
   // read-only
   label: string;
   usedBySelectedVms: boolean;
   // mutated via UI
   isMapped: boolean;
-}
+};
 
-export interface Mapping {
+export type Mapping = {
   source: string;
   destination: string;
-}
+};
 
 const NET_MAP_NAME_REGENERATED = 'NET_MAP_NAME_REGENERATED';
 export const NETWORK_MAPPING_REGENERATED = 'NETWORK_MAPPING_REGENERATED';

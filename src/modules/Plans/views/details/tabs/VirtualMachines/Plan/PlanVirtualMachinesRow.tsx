@@ -1,18 +1,19 @@
 import React from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
 import { ConditionsCellRenderer } from '../components/ConditionsCellRenderer';
 import { NameCellRenderer } from '../components/NameCellRenderer';
-import { PlanVMsCellProps } from '../components/PlanVMsCellProps';
-import { VMData } from '../types/VMData';
+import type { PlanVMsCellProps } from '../components/PlanVMsCellProps';
+import type { VMData } from '../types/VMData';
+
 import ActionsCell from './ActionsCell';
 
 export const PlanVirtualMachinesRow: React.FC<RowProps<VMData>> = ({
-  resourceFields,
   resourceData,
+  resourceFields,
 }) => {
   return (
     <>
@@ -35,13 +36,13 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 };
 
 const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
-  name: NameCellRenderer,
-  conditions: ConditionsCellRenderer,
   actions: ActionsCell,
+  conditions: ConditionsCellRenderer,
+  name: NameCellRenderer,
 };
 
-interface RenderTdProps {
+type RenderTdProps = {
   resourceData: VMData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-}
+};

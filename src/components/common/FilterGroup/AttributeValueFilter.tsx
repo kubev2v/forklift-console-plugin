@@ -1,8 +1,8 @@
-import React, { MouseEvent as ReactMouseEvent, Ref, useState } from 'react';
+import React, { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
 
 import {
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 
 import { FilterFromDef } from './FilterFromDef';
-import { MetaFilterProps } from './types';
+import type { MetaFilterProps } from './types';
 
 /**
  * This is an implementation of [<font>``PatternFly 4`` attribute-value filter</font>](https://www.patternfly.org/v4/demos/filters/design-guidelines/#attribute-value-filter) pattern,
@@ -23,11 +23,11 @@ import { MetaFilterProps } from './types';
  * @see FilterTypeProps
  */
 export const AttributeValueFilter = ({
-  selectedFilters = {},
-  onFilterUpdate,
   fieldFilters,
-  supportedFilterTypes,
+  onFilterUpdate,
   resolvedLanguage = 'en',
+  selectedFilters = {},
+  supportedFilterTypes,
 }: MetaFilterProps) => {
   const [currentFilter, setCurrentFilter] = useState(fieldFilters?.[0]);
   const [isOpen, setIsOpen] = useState(false);
@@ -45,16 +45,16 @@ export const AttributeValueFilter = ({
     </MenuToggle>
   );
 
-  const onSelect: (
-    event?: ReactMouseEvent<Element, MouseEvent>,
-    value?: string | number,
-  ) => void = (_event, value: string) => {
+  const onSelect: (event?: ReactMouseEvent, value?: string | number) => void = (
+    _event,
+    value: string,
+  ) => {
     setCurrentFilter(selectOptionToFilter(value));
     setIsOpen((isOpen) => !isOpen);
   };
 
   const renderOptions = () => {
-    return fieldFilters.map(({ resourceFieldId, label }) => (
+    return fieldFilters.map(({ label, resourceFieldId }) => (
       <SelectOption key={resourceFieldId} value={label}>
         {label}
       </SelectOption>
@@ -70,7 +70,9 @@ export const AttributeValueFilter = ({
           isOpen={isOpen}
           selected={currentFilter && currentFilter.label}
           onSelect={onSelect}
-          onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
+          onOpenChange={(nextOpen: boolean) => {
+            setIsOpen(nextOpen);
+          }}
           toggle={toggle}
           shouldFocusToggleOnSelect
           shouldFocusFirstItemOnOpen={false}
@@ -84,18 +86,18 @@ export const AttributeValueFilter = ({
         </Select>
       </ToolbarItem>
 
-      {fieldFilters.map(({ resourceFieldId, label, filterDef }) => (
+      {fieldFilters.map(({ filterDef, label, resourceFieldId }) => (
         <FilterFromDef
           key={resourceFieldId}
           {...{
-            resourceFieldId,
-            label,
             filterDef,
-            onFilterUpdate,
-            selectedFilters,
             FilterType: supportedFilterTypes[filterDef.type],
-            showFilter: currentFilter?.resourceFieldId === resourceFieldId,
+            label,
+            onFilterUpdate,
             resolvedLanguage,
+            resourceFieldId,
+            selectedFilters,
+            showFilter: currentFilter?.resourceFieldId === resourceFieldId,
           }}
         />
       ))}

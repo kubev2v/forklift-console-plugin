@@ -1,17 +1,17 @@
-import { validateURL, ValidationMsg } from '../../common';
+import { validateURL, type ValidationMsg } from '../../common';
 
 export const validateOpenstackURL = (url: string | number): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (url === undefined) {
     return {
-      type: 'default',
       msg: 'The URL is required, URL of the OpenStack Identity (Keystone) API endpoint, for example: https://identity_service.com:5000/v3 .',
+      type: 'default',
     };
   }
 
   // Sanity check
   if (typeof url !== 'string') {
-    return { type: 'error', msg: 'URL is not a string' };
+    return { msg: 'URL is not a string', type: 'error' };
   }
 
   const trimmedUrl: string = url.trim();
@@ -19,15 +19,15 @@ export const validateOpenstackURL = (url: string | number): ValidationMsg => {
 
   if (trimmedUrl === '') {
     return {
-      type: 'error',
       msg: 'The URL is required, URL of the OpenStack Identity (Keystone) API endpoint, for example: https://identity_service.com:5000/v3 .',
+      type: 'error',
     };
   }
 
   if (!isValidURL) {
     return {
-      type: 'error',
       msg: 'The URL is invalid. URL should include the schema and path, for example: https://identity_service.com:5000/v3 .',
+      type: 'error',
     };
   }
 
@@ -38,7 +38,7 @@ export const validateOpenstackURL = (url: string | number): ValidationMsg => {
     };
 
   return {
-    type: 'success',
     msg: 'The URL of the OpenStack Identity (Keystone) API endpoint, for example: https://identity_service.com:5000/v3 .',
+    type: 'success',
   };
 };

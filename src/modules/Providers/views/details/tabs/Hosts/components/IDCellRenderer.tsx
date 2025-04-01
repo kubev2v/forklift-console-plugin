@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
-import { HostCellProps } from './HostCellProps';
+import type { HostCellProps } from './HostCellProps';
 
 // Define cell renderer for 'host id'
 export const IDCellRenderer: React.FC<HostCellProps> = (props) => {

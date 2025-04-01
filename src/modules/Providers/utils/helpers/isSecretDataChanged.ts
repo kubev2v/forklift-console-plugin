@@ -1,4 +1,4 @@
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 /**
  * Compares the data records between two versions of a secret.

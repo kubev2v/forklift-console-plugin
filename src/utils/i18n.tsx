@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { getI18n, Trans, useTranslation } from 'react-i18next';
-import { TranslationOptions } from 'i18next';
+import type { TranslationOptions } from 'i18next';
 
 export function useForkliftTranslation() {
   return useTranslation('plugin__forklift-console-plugin');

@@ -1,27 +1,23 @@
 import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
 import { CredentialsSection } from '../../components/CredentialsSection/CredentialsSection';
 
-interface ProviderCredentialsProps {
+type ProviderCredentialsProps = {
   obj: ProviderData;
   ns?: string;
   name?: string;
   loaded?: boolean;
   loadError?: unknown;
-}
+};
 
-const ProviderCredentials: React.FC<ProviderCredentialsProps> = ({
-  obj,
-  loaded,
-  loadError,
-}) => {
+const ProviderCredentials: React.FC<ProviderCredentialsProps> = ({ loaded, loadError, obj }) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -40,9 +36,9 @@ export const ProviderCredentialsWrapper: React.FC<{ name: string; namespace: str
 }) => {
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const data = { provider };

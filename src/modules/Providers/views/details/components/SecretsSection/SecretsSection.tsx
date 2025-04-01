@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
 import { DescriptionList } from '@patternfly/react-core';
 

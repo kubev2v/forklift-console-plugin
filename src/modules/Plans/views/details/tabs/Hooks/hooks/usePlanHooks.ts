@@ -1,18 +1,18 @@
 import {
   HookModelGroupVersionKind,
   PlanModelGroupVersionKind,
-  V1beta1Hook,
-  V1beta1Plan,
-  V1beta1PlanSpecVmsHooks,
+  type V1beta1Hook,
+  type V1beta1Plan,
+  type V1beta1PlanSpecVmsHooks,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 export const usePlanHooks = (name: string, namespace: string) => {
   const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
   const hooks: V1beta1PlanSpecVmsHooks[] = plan?.spec?.vms?.[0]?.hooks || [];
   const postHook = hooks.find((h) => h.step === 'PostHook');
@@ -20,9 +20,9 @@ export const usePlanHooks = (name: string, namespace: string) => {
 
   const [hookRecourses] = useK8sWatchResource<V1beta1Hook[]>({
     groupVersionKind: HookModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace: plan?.metadata?.namespace,
+    namespaced: true,
   });
 
   const postHookResource = hookRecourses.find((h) => h.metadata.name === postHook?.hook?.name);
@@ -65,6 +65,4 @@ function validateHooks(plan: V1beta1Plan): string {
   if (!sameHooks) {
     return 'the plan is configured with different hooks for different virtual machines';
   }
-
-  return;
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import { Th } from '@patternfly/react-table';
 
 import { buildSort } from './sort';
-import { TableViewHeaderProps } from './types';
+import type { TableViewHeaderProps } from './types';
 
 /**
  * A default table header with sortable columns.
@@ -12,13 +12,13 @@ import { TableViewHeaderProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/TableView/DefaultHeader.tsx)
  */
 export function DefaultHeader<T>({
-  visibleColumns,
-  setActiveSort,
   activeSort,
+  setActiveSort,
+  visibleColumns,
 }: TableViewHeaderProps<T>) {
   return (
     <>
-      {visibleColumns.map(({ resourceFieldId, label, sortable }, columnIndex) => (
+      {visibleColumns.map(({ label, resourceFieldId, sortable }, columnIndex) => (
         <Th
           key={resourceFieldId}
           sort={

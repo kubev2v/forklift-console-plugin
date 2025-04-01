@@ -3,7 +3,7 @@ import SectionHeading from 'src/components/headers/SectionHeading';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { NetworkMapModelGroupVersionKind, V1beta1NetworkMap } from '@kubev2v/types';
+import { NetworkMapModelGroupVersionKind, type V1beta1NetworkMap } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
@@ -12,20 +12,20 @@ import { DetailsSection } from '../../components/DetailsSection/DetailsSection';
 import { MapsSection } from '../../components/MapsSection/MapsSection';
 import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSection';
 
-interface NetworkMapDetailsTabProps {
+type NetworkMapDetailsTabProps = {
   name: string;
   namespace: string;
-}
+};
 
 export const NetworkMapDetailsTab: React.FC<NetworkMapDetailsTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1NetworkMap>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
-    namespaced: true,
     isList: false,
-    namespace,
     name,
+    namespace,
+    namespaced: true,
   });
 
   return (

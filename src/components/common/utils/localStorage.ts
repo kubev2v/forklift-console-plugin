@@ -7,5 +7,5 @@ export function loadFromLocalStorage(key) {
 }
 
 export function removeFromLocalStorage(key) {
-  return window?.localStorage?.removeItem(key);
+  window?.localStorage?.removeItem(key);
 }

@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 
 import {
-  ProviderInventory,
+  type ProviderInventory,
   ProviderModel,
-  ProvidersInventoryList,
-  V1beta1Provider,
+  type ProvidersInventoryList,
+  type V1beta1Provider,
 } from '@kubev2v/types';
 import { consoleFetchJSON, k8sGet, useFlag } from '@openshift-console/dynamic-plugin-sdk';
 
-import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils/constants';
 import { getInventoryApiUrl } from '../utils/helpers/getApiUrl';
 import { hasObjectChangedInGivenFields } from '../utils/helpers/hasObjectChangedInGivenFields';
+
+import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils/constants';
 
 const INVENTORY_TYPES: string[] = ['openshift', 'openstack', 'ovirt', 'vsphere', 'ova'];
 
@@ -20,10 +21,10 @@ const INVENTORY_TYPES: string[] = ['openshift', 'openstack', 'ovirt', 'vsphere',
  * @property {string} namespace - namespace for fetching inventory's providers data for. Used only for users with limited namespaces privileges.
  * @property {number} interval - Polling interval in milliseconds.
  */
-interface UseInventoryParams {
+type UseInventoryParams = {
   namespace?: string;
   interval?: number; // Polling interval in milliseconds
-}
+};
 
 /**
  * The result object from useProvidersInventoryList hook.
@@ -32,11 +33,11 @@ interface UseInventoryParams {
  * @property {boolean} loading - Indicates whether the inventory data is currently being fetched.
  * @property {Error | null} error - Any error that occurred when fetching the inventory data, or null if no errors.
  */
-interface UseInventoryResult {
+type UseInventoryResult = {
   inventory: ProvidersInventoryList | null;
   loading: boolean;
   error: Error | null;
-}
+};
 
 /**
  * A React hook to fetch and maintain an up-to-date list of providers' inventory data, belongs to a given namespace or to all namespaces
@@ -51,8 +52,8 @@ interface UseInventoryResult {
  * @returns {UseInventoryResult} result - Contains the inventory data, the loading state, and the error state.
  */
 const useProvidersInventoryList = ({
-  namespace = null,
   interval = 20000,
+  namespace = null,
 }: UseInventoryParams): UseInventoryResult => {
   const [inventory, setInventory] = useState<ProvidersInventoryList | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -78,7 +79,9 @@ const useProvidersInventoryList = ({
     fetchData();
 
     const intervalId = setInterval(fetchData, interval);
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [interval, namespace]);
 
   /**
@@ -106,9 +109,9 @@ const useProvidersInventoryList = ({
     const newInventory: ProvidersInventoryList = {
       openshift: [],
       openstack: [],
+      ova: [],
       ovirt: [],
       vsphere: [],
-      ova: [],
     };
 
     const providers = await k8sGetProviders(namespace);
@@ -122,7 +125,7 @@ const useProvidersInventoryList = ({
 
     const allPromises = Promise.all(
       readyProviders.map(async (provider) => {
-        return await consoleFetchJSON(getInventoryApiUrl(inventoryProviderURL(provider)));
+        return consoleFetchJSON(getInventoryApiUrl(inventoryProviderURL(provider)));
       }),
     )
       .then((newInventoryProviders) => {
@@ -204,9 +207,9 @@ const useProvidersInventoryList = ({
         if (
           !newItem ||
           hasObjectChangedInGivenFields({
-            oldObject: oldItem,
-            newObject: newItem,
             fieldsToAvoidComparing,
+            newObject: newItem,
+            oldObject: oldItem,
           })
         ) {
           needReRender = true;
@@ -222,7 +225,7 @@ const useProvidersInventoryList = ({
     }
   }
 
-  return { inventory, loading, error };
+  return { error, inventory, loading };
 };
 
 export default useProvidersInventoryList;

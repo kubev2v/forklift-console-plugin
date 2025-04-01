@@ -7,10 +7,10 @@ const toDateTime = (timestamp: string): DateTime => DateTime.fromISO(timestamp);
 const toDayLabel = (date: DateTime): string => date.toFormat('LLL dd');
 const toHourLabel = (date: DateTime): string => date.toFormat('HH:mm');
 
-export interface MigrationDataPoint {
+export type MigrationDataPoint = {
   dateLabel: string;
   value: number;
-}
+};
 
 const groupByBucket = (acc: { interval: Interval; points: DateTime[] }[], date: DateTime) =>
   acc.map(({ interval, points }) =>

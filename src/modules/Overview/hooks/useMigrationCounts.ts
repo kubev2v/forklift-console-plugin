@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import { MigrationModelGroupVersionKind, V1beta1Migration } from '@kubev2v/types';
+import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getMigrationCounts } from '../utils/helpers/getMigrationCounts';
 import { getVmCounts } from '../utils/helpers/getVmCounts';
 
-type MigrationCounts = { [key: string]: number };
+type MigrationCounts = Record<string, number>;
 
-interface MigrationCountsHookResponse {
+type MigrationCountsHookResponse = {
   count: MigrationCounts;
   vmCount: MigrationCounts;
   loaded: boolean;
   loadError: Error | null;
-}
+};
 
 type CountState = {
   migrationCounts: MigrationCounts;
@@ -29,23 +29,23 @@ type CountState = {
 const useMigrationCounts = (): MigrationCountsHookResponse => {
   const [counts, setCounts] = useState<CountState>({
     migrationCounts: {
-      Total: 0,
-      Running: 0,
       Failure: 0,
+      Running: 0,
       Successful: 0,
+      Total: 0,
     },
     vmCounts: {
-      Total: 0,
-      Running: 0,
       Failure: 0,
+      Running: 0,
       Successful: 0,
+      Total: 0,
     },
   });
 
   const [migrations, loaded, loadError] = useK8sWatchResource<V1beta1Migration[]>({
     groupVersionKind: MigrationModelGroupVersionKind,
-    namespaced: true,
     isList: true,
+    namespaced: true,
   });
 
   // Update 'counts' whenever 'migrations' changes and 'loaded' is true and 'loadError' is false.
@@ -60,9 +60,9 @@ const useMigrationCounts = (): MigrationCountsHookResponse => {
 
   return {
     count: counts.migrationCounts,
-    vmCount: counts.vmCounts,
     loaded,
     loadError,
+    vmCount: counts.vmCounts,
   };
 };
 

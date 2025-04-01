@@ -17,7 +17,8 @@ import {
   toISODate,
   toISODateInterval,
 } from '../utils/dates';
-import { FilterTypeProps } from './types';
+
+import type { FilterTypeProps } from './types';
 
 /**
  * This Filter type enables selecting an closed date range.
@@ -31,13 +32,13 @@ import { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/DateRangeFilter.tsx)
  */
 export const DateRangeFilter = ({
-  selectedFilters = [],
-  onFilterUpdate,
-  title,
   filterId,
-  placeholderLabel,
-  showFilter = true,
   helperText,
+  onFilterUpdate,
+  placeholderLabel,
+  selectedFilters = [],
+  showFilter = true,
+  title,
 }: FilterTypeProps) => {
   const validFilters = selectedFilters?.filter(isValidInterval) ?? [];
 
@@ -94,7 +95,9 @@ export const DateRangeFilter = ({
     <ToolbarFilter
       key={filterId}
       chips={validFilters.map(rangeToOption)}
-      deleteChip={(category, option) => clearSingleRange(option)}
+      deleteChip={(category, option) => {
+        clearSingleRange(option);
+      }}
       deleteChipGroup={() => onFilterUpdate([])}
       categoryName={title}
       showToolbarItem={showFilter}

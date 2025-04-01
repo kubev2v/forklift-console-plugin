@@ -1,12 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   getGroupVersionKindForResource,
-  K8sGroupVersionKind,
-  K8sModel,
-  K8sResourceCommon,
+  type K8sGroupVersionKind,
+  type K8sModel,
+  type K8sResourceCommon,
   ResourceIcon,
   ResourceStatus,
 } from '@openshift-console/dynamic-plugin-sdk';
@@ -18,14 +18,14 @@ import { getResourceUrl } from '../../helpers/getResourceUrl';
 import './PageHeadings.style.css';
 
 export const PageHeadings: React.FC<PageHeadingsProps> = ({
+  actions,
+  children,
   model,
   namespace,
   obj: data,
-  children,
-  actions,
   status: status_,
 }) => {
-  const status = status_ ?? data?.['status']?.phase;
+  const status = status_ ?? data?.status?.phase;
   const groupVersionKind = data?.kind && getGroupVersionKindForResource(data);
 
   return (
@@ -57,7 +57,7 @@ export const PageHeadings: React.FC<PageHeadingsProps> = ({
   );
 };
 
-interface PageHeadingsProps {
+type PageHeadingsProps = {
   model: K8sModel;
   namespace?: string;
   obj?: K8sResourceCommon;
@@ -65,7 +65,7 @@ interface PageHeadingsProps {
   actions?: ReactNode;
   status?: string;
   children?: React.ReactNode;
-}
+};
 
 const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ model, namespace }) => {
   const { t } = useForkliftTranslation();
@@ -105,14 +105,14 @@ type BreadCrumbsProps = {
 const breadcrumbsForModel = (t, model: K8sModel, namespace: string) => {
   const groupVersionKind: K8sGroupVersionKind = {
     group: model.apiGroup,
-    version: model.apiVersion,
     kind: model.kind,
+    version: model.apiVersion,
   };
 
   return [
     {
-      name: `${model.labelPlural}`,
-      path: `${getResourceUrl({ groupVersionKind, namespace })}`,
+      name: model.labelPlural,
+      path: getResourceUrl({ groupVersionKind, namespace }),
     },
     {
       name: t('{{name}} Details', { name: model.label }),

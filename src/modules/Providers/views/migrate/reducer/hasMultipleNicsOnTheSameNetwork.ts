@@ -1,6 +1,7 @@
-import { OVirtNicProfile } from '@kubev2v/types';
+import type { OVirtNicProfile } from '@kubev2v/types';
 
-import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+
 import { toNetworks } from './getNetworksUsedBySelectedVMs';
 
 /**
