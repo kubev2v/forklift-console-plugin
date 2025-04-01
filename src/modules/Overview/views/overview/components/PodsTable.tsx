@@ -87,7 +87,7 @@ const getStatusLabel = (phase: string) => {
   );
 };
 
-export type PodsTableProps = {
+type PodsTableProps = {
   pods: IoK8sApiCoreV1Pod[];
   showOwner?: boolean;
 };

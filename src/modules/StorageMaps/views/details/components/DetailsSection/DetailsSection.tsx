@@ -15,7 +15,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = (props) => (
   </ModalHOC>
 );
 
-export type DetailsSectionProps = {
+type DetailsSectionProps = {
   obj: V1beta1StorageMap;
 };
 

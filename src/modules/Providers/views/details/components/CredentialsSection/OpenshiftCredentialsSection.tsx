@@ -8,7 +8,7 @@ import {
 import { OpenshiftCredentialsEdit } from './components/edit/OpenshiftCredentialsEdit';
 import { OpenshiftCredentialsList } from './components/list/OpenshiftCredentialsList';
 
-export type OpenshiftCredentialsSectionProps = Omit<
+type OpenshiftCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
   'ListComponent' | 'EditComponent' | 'validator'
 >;

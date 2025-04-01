@@ -13,7 +13,7 @@ import { GlobeAmericasIcon } from '@patternfly/react-icons';
  */
 import './ConsoleTimestamp.style.css';
 
-export type TimestampProps = {
+type TimestampProps = {
   timestamp: string | number | Date;
   className?: string;
 };

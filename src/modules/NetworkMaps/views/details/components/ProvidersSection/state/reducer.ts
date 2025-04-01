@@ -10,7 +10,7 @@ export interface ProvidersSectionState {
   updating: boolean;
 }
 
-export type ProvidersAction =
+type ProvidersAction =
   | { type: 'SET_SOURCE_PROVIDER'; payload: V1beta1Provider }
   | { type: 'SET_TARGET_PROVIDER'; payload: V1beta1Provider }
   | { type: 'SET_SOURCE_PROVIDER_MODE'; payload: 'view' | 'edit' }

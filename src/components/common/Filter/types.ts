@@ -49,6 +49,6 @@ export interface FilterTypeProps {
   hasMultipleResources?: boolean;
 }
 
-export interface InlineFilter {
+interface InlineFilter {
   hasInlineFilter?: boolean;
 }

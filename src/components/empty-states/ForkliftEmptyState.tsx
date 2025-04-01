@@ -10,7 +10,7 @@ import {
   Title,
 } from '@patternfly/react-core';
 
-export type EmptyStateProps = {
+type EmptyStateProps = {
   icon: React.ComponentType;
   title: React.ReactNode;
   textContent: React.ReactNode;

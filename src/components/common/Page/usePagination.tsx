@@ -5,12 +5,12 @@ import { PaginationSettings } from './types';
 // first option in the default "per page" dropdown
 export const DEFAULT_PER_PAGE = 10;
 
-export interface PaginationHookProps {
+interface PaginationHookProps {
   filteredDataLength: number;
   userSettings?: PaginationSettings;
 }
 
-export interface PaginationHookResult {
+interface PaginationHookResult {
   itemsPerPage: number;
   lastPage: number;
   setPerPage: (perPage: number) => void;

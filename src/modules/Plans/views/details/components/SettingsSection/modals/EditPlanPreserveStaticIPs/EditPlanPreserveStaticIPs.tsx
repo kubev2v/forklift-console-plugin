@@ -76,7 +76,7 @@ const EditPlanPreserveStaticIPs_: React.FC<EditPlanPreserveStaticIPsProps> = (pr
   );
 };
 
-export type EditPlanPreserveStaticIPsProps = Modify<
+type EditPlanPreserveStaticIPsProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;

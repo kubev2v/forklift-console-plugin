@@ -203,7 +203,7 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
   );
 };
 
-export type MapsSectionProps = {
+type MapsSectionProps = {
   obj: V1beta1StorageMap;
 };
 

@@ -82,7 +82,7 @@ export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
   }
 };
 
-export type ProvidersEditProps = {
+type ProvidersEditProps = {
   providers: V1beta1Provider[];
   selectedProviderName: string;
   onChange: (value: string, event: React.FormEvent<HTMLSelectElement>) => void;

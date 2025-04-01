@@ -8,7 +8,7 @@ import {
   HelperTextItem,
 } from '@patternfly/react-core';
 
-export interface FormGroupWithHelpTextProps extends FormGroupProps {
+interface FormGroupWithHelpTextProps extends FormGroupProps {
   /**
    * Sets the FormGroup validated. If you set to success, text color of helper text will be modified to indicate valid state.
    * If set to error, text color of helper text will be modified to indicate error state.

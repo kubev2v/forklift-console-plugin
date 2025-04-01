@@ -167,7 +167,7 @@ function getNetworkName(value: unknown): string {
   return `${value?.['namespace']}/${value?.['name']}`;
 }
 
-export type EditPlanTransferNetworkProps = Modify<
+type EditPlanTransferNetworkProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;

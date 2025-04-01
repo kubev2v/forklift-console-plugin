@@ -20,6 +20,6 @@ export const SecretsSection: React.FC<SecretsSectionProps> = (props) => {
   );
 };
 
-export type SecretsSectionProps = {
+type SecretsSectionProps = {
   data: ProviderData;
 };

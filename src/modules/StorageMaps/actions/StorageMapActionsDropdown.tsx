@@ -71,6 +71,6 @@ export const StorageMapActionsDropdown: React.FC<StorageMapActionsDropdownProps>
   </ModalHOC>
 );
 
-export interface StorageMapActionsDropdownProps extends CellProps {
+interface StorageMapActionsDropdownProps extends CellProps {
   isKebab?: boolean;
 }

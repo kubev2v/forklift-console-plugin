@@ -38,6 +38,6 @@ export const OwnerReferencesItem: React.FC<OwnerReferencesProps> = ({ resource }
  * @typedef {Object} OwnerReferencesProps
  * @property {K8sResourceCommon} resource - The resource whose owner references will be displayed.
  */
-export type OwnerReferencesProps = {
+type OwnerReferencesProps = {
   resource: K8sResourceCommon;
 };

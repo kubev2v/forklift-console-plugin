@@ -121,6 +121,6 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
   );
 };
 
-export type ProvidersSectionProps = {
+type ProvidersSectionProps = {
   obj: V1beta1StorageMap;
 };

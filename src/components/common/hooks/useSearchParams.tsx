@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-export type MappedSearchParams = Record<string, string>;
+type MappedSearchParams = Record<string, string>;
 
-export type SetURLSearchParams = (params: MappedSearchParams) => void;
+type SetURLSearchParams = (params: MappedSearchParams) => void;
 
 /**
  * Take a url string and convert it to a search params map.  If a key occurs multiple

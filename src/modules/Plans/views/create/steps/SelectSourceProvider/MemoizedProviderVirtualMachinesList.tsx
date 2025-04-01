@@ -3,7 +3,7 @@ import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines
 
 import { ProviderVirtualMachinesList } from '../../components/ProvidersVirtualMachinesList';
 
-export interface ProviderVirtualMachinesListProps {
+interface ProviderVirtualMachinesListProps {
   title: string;
   name: string;
   namespace: string;

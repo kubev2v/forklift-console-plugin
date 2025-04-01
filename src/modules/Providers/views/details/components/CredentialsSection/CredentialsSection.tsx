@@ -121,7 +121,7 @@ const CredentialsSection_: React.FC<{
   }
 };
 
-export type CredentialsProps = {
+type CredentialsProps = {
   data: ProviderData;
   loaded: boolean;
   loadError: unknown;

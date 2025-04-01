@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-export type AlignedDecimalProps = {
+type AlignedDecimalProps = {
   /**
    * The number to align.
    */

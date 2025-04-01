@@ -4,7 +4,7 @@ import { Chip, ChipGroup, Toolbar, ToolbarContent, ToolbarItem } from '@patternf
 
 import { PlanCreatePageState } from '../states/PlanCreatePageStore';
 
-export interface ChipsToolbarProvidersProps {
+interface ChipsToolbarProvidersProps {
   filterState: PlanCreatePageState;
   filterDispatch: React.Dispatch<{
     type: string;

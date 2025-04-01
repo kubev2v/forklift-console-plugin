@@ -5,7 +5,7 @@ import { SearchInput } from '@patternfly/react-core';
 
 import { PlanCreatePageState } from '../states/PlanCreatePageStore';
 
-export interface SearchInputProviderProps {
+interface SearchInputProviderProps {
   filterState: PlanCreatePageState;
   filterDispatch: React.Dispatch<{
     type: string;

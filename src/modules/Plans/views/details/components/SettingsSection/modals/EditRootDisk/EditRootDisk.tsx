@@ -106,7 +106,7 @@ export const EditRootDisk: React.FC<EditRootDiskProps> = (props) => {
   );
 };
 
-export type EditRootDiskProps = Modify<
+type EditRootDiskProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;

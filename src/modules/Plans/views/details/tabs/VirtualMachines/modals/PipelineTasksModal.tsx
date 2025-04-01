@@ -7,7 +7,7 @@ import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
 import { Modal, ModalVariant } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-export interface PipelineTasksModalProps {
+interface PipelineTasksModalProps {
   name: string;
   tasks: V1beta1PlanStatusMigrationVmsPipeline[];
 }

@@ -24,7 +24,7 @@ export const SettingsSection: React.FC<SettingsSectionProps> = (props) => (
   </ModalHOC>
 );
 
-export type SettingsSectionProps = {
+type SettingsSectionProps = {
   obj: V1beta1Plan;
   permissions: ProvidersPermissionStatus;
 };

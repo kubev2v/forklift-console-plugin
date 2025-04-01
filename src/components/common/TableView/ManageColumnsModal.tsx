@@ -22,7 +22,7 @@ import {
 
 import { ResourceField } from '../utils/types';
 
-export interface ManagedColumnsProps {
+interface ManagedColumnsProps {
   /**
    * To flag an open or a closed modal.
    */

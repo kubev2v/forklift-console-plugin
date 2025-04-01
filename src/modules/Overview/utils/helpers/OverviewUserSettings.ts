@@ -4,7 +4,7 @@ import {
   saveToLocalStorage,
 } from '@components/common/utils/localStorage';
 
-export interface OverviewUserSettings {
+interface OverviewUserSettings {
   welcome?: WelcomeSettings;
 }
 

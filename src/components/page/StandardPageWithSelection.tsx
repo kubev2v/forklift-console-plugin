@@ -75,7 +75,7 @@ function withHeaderSelection<T>({
   return Enhanced;
 }
 
-export interface IdBasedSelectionProps<T> {
+interface IdBasedSelectionProps<T> {
   /**
    * @returns string that can be used as an unique identifier
    */
