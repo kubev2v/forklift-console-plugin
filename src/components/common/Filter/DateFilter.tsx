@@ -1,9 +1,10 @@
-import React, { FormEvent, useState } from 'react';
+import React, { type FormEvent, useState } from 'react';
 
 import { DatePicker, InputGroup, ToolbarFilter } from '@patternfly/react-core';
 
 import { changeFormatToISODate, isValidDate, parseISOtoJSDate, toISODate } from '../utils/dates';
-import { FilterTypeProps } from './types';
+
+import type { FilterTypeProps } from './types';
 
 /**
  * This Filter type enables selecting a single date (a day).
@@ -16,16 +17,16 @@ import { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/DateFilter.tsx)
  */
 export const DateFilter = ({
-  selectedFilters = [],
-  onFilterUpdate,
-  title,
   filterId,
+  onFilterUpdate,
   placeholderLabel,
+  selectedFilters = [],
   showFilter = true,
+  title,
 }: FilterTypeProps) => {
   const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(Boolean) ?? [];
 
-  // internal state - stored as ISO date string (no time)
+  // Internal state - stored as ISO date string (no time)
   const [date, setDate] = useState(toISODate(new Date()));
 
   const clearSingleDate = (option) => {
@@ -36,9 +37,9 @@ export const DateFilter = ({
     _event,
     value,
   ) => {
-    // require full format "YYYY-MM-DD" although partial date is also accepted
-    // i.e. YYYY-MM gets parsed as YYYY-MM-01 and results in auto completing the date
-    // unfortunately due to auto-complete user cannot delete the date char after char
+    // Require full format "YYYY-MM-DD" although partial date is also accepted
+    // I.e. YYYY-MM gets parsed as YYYY-MM-01 and results in auto completing the date
+    // Unfortunately due to auto-complete user cannot delete the date char after char
     if (value?.length === 10 && isValidDate(value)) {
       const targetDate = changeFormatToISODate(value);
       setDate(targetDate);
@@ -50,7 +51,9 @@ export const DateFilter = ({
     <ToolbarFilter
       key={filterId}
       chips={validFilters}
-      deleteChip={(category, option) => clearSingleDate(option)}
+      deleteChip={(category, option) => {
+        clearSingleDate(option);
+      }}
       deleteChipGroup={() => onFilterUpdate([])}
       categoryName={title}
       showToolbarItem={showFilter}
@@ -64,7 +67,7 @@ export const DateFilter = ({
           aria-label={title}
           placeholder={placeholderLabel}
           invalidFormatText={placeholderLabel}
-          // default value ("parent") creates collision with sticky table header
+          // Default value ("parent") creates collision with sticky table header
           appendTo={document.body}
         />
       </InputGroup>

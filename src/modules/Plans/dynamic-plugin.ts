@@ -1,6 +1,6 @@
 import { PlanModel, PlanModelGroupVersionKind } from '@kubev2v/types';
-import { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
-import {
+import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
+import type {
   CreateResource,
   ModelMetadata,
   ResourceDetailsPage,
@@ -10,52 +10,51 @@ import {
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
-  PlansListPage: './modules/Plans/views/list/PlansListPage',
   PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
   PlanCreatePageV2: './plans/create/PlanCreatePage',
   PlanDetailsPage: './modules/Plans/views/details/PlanDetailsPage',
+  PlansListPage: './modules/Plans/views/list/PlansListPage',
 };
 
 export const extensions: EncodedExtension[] = [
   {
-    type: 'console.navigation/resource-ns',
     properties: {
-      id: 'plans',
-      insertAfter: 'providers',
-      perspective: 'admin',
-      section: 'migration',
-      // t('plugin__forklift-console-plugin~Plans for virtualization')
-      name: '%plugin__forklift-console-plugin~Plans for virtualization%',
-      model: PlanModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-plans',
         'data-testid': 'plans-nav-item',
       },
+      id: 'plans',
+      insertAfter: 'providers',
+      model: PlanModelGroupVersionKind,
+      // T('plugin__forklift-console-plugin~Plans for virtualization')
+      name: '%plugin__forklift-console-plugin~Plans for virtualization%',
+      perspective: 'admin',
+      section: 'migration',
     },
+    type: 'console.navigation/resource-ns',
   } as EncodedExtension<ResourceNSNavItem>,
 
   {
-    type: 'console.page/resource/list',
     properties: {
       component: {
         $codeRef: 'PlansListPage',
       },
       model: PlanModelGroupVersionKind,
     },
+    type: 'console.page/resource/list',
   } as EncodedExtension<ResourceListPage>,
 
   {
-    type: 'console.page/resource/details',
     properties: {
       component: {
         $codeRef: 'PlanDetailsPage',
       },
       model: PlanModelGroupVersionKind,
     },
+    type: 'console.page/resource/details',
   } as EncodedExtension<ResourceDetailsPage>,
 
   {
-    type: 'console.resource/create',
     properties: {
       component: {
         $codeRef: 'PlanCreatePage',
@@ -63,24 +62,25 @@ export const extensions: EncodedExtension[] = [
       model: PlanModelGroupVersionKind,
       ...PlanModel,
     },
+    type: 'console.resource/create',
   } as EncodedExtension<CreateResource>,
 
   {
-    type: 'console.page/route',
     properties: {
-      exact: false,
-      path: ['/mtv/create/plan'],
       component: {
         $codeRef: 'PlanCreatePageV2',
       },
+      exact: false,
+      path: ['/mtv/create/plan'],
     },
+    type: 'console.page/route',
   },
 
   {
-    type: 'console.model-metadata',
     properties: {
       model: PlanModelGroupVersionKind,
       ...PlanModel,
     },
+    type: 'console.model-metadata',
   } as EncodedExtension<ModelMetadata>,
 ];

@@ -2,16 +2,16 @@ import pluginMetadata from './plugin-metadata';
 
 export const ENVIRONMENT_DEFAULTS = {
   /**
-   * Used for testing when no api servers are available.  If set to `mock`, network api
-   * calls will use mock data.
-   */
-  DATA_SOURCE: 'remote' as 'mock' | 'remote',
-  /**
    * UI branding name.
    *
    * Note: downstream builds are set to: 'RedHat'
    */
   BRAND_TYPE: 'Forklift' as 'RedHat' | 'Forklift',
+  /**
+   * Used for testing when no api servers are available.  If set to `mock`, network api
+   * calls will use mock data.
+   */
+  DATA_SOURCE: 'remote' as 'mock' | 'remote',
   /**
    * Namespaces used by UI forms and modals if no namespace is given by the user.
    *

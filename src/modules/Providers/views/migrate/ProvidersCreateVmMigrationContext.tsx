@@ -9,21 +9,21 @@ import {
 } from 'react';
 import { produce } from 'immer';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 
-import { VmData } from '../details/tabs/VirtualMachines/components/VMCellProps';
+import type { VmData } from '../details/tabs/VirtualMachines/components/VMCellProps';
 
-export interface CreateVmMigrationContextData {
+export type CreateVmMigrationContextData = {
   selectedVms: VmData[];
   provider?: V1beta1Provider;
   planName?: string;
   projectName?: string;
-}
+};
 
-export interface CreateVmMigrationContextType {
+export type CreateVmMigrationContextType = {
   data?: CreateVmMigrationContextData;
   setData?: (data: CreateVmMigrationContextData) => void;
-}
+};
 
 export const CreateVmMigrationContext = createContext<CreateVmMigrationContextType>({
   setData: () => undefined,
@@ -36,7 +36,7 @@ export const CreateVmMigrationProvider = CreateVmMigrationContext.Provider;
 export const useCreateVmMigrationContextValue = (): CreateVmMigrationContextType => {
   const [data, setData] = useState<CreateVmMigrationContextData>();
 
-  // use the same approach as useSafetyFirst() hook
+  // Use the same approach as useSafetyFirst() hook
   // https://github.com/openshift/console/blob/9d4a9b0a01b2de64b308f8423a325f1fae5f8726/frontend/packages/console-dynamic-plugin-sdk/src/app/components/safety-first.tsx#L10
   const mounted = useRef(true);
   useEffect(
@@ -55,7 +55,9 @@ export const useCreateVmMigrationContextValue = (): CreateVmMigrationContextType
   return useMemo(
     () => ({
       data,
-      setData: (newState: CreateVmMigrationContextData) => setValueSafe(produce(() => newState)),
+      setData: (newState: CreateVmMigrationContextData) => {
+        setValueSafe(produce(() => newState));
+      },
     }),
     [data, setData],
   );

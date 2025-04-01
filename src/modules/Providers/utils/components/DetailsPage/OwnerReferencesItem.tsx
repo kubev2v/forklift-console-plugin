@@ -2,8 +2,8 @@ import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  K8sResourceCommon,
-  OwnerReference,
+  type K8sResourceCommon,
+  type OwnerReference,
   ResourceLink,
 } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -22,8 +22,8 @@ export const OwnerReferencesItem: React.FC<OwnerReferencesProps> = ({ resource }
       key={o.uid}
       groupVersionKind={{
         group: o.apiVersion.split('/')[0],
-        version: o.apiVersion.split('/')[1],
         kind: o.kind,
+        version: o.apiVersion.split('/')[1],
       }}
       name={o.name}
       namespace={resource.metadata.namespace}

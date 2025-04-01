@@ -1,9 +1,9 @@
 import useProviderInventory, {
-  UseProviderInventoryParams,
+  type UseProviderInventoryParams,
 } from 'src/modules/Providers/hooks/useProviderInventory';
-import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
-import { ProviderHost, VSphereResource } from '@kubev2v/types';
+import type { ProviderHost, VSphereResource } from '@kubev2v/types';
 
 /**
  * A hook for retrieving hosts and folders from the inventory.
@@ -17,21 +17,21 @@ export const useVSphereInventoryVms = (
   { provider }: ProviderData,
   providerLoaded: boolean,
   providerLoadError: unknown,
-): [{ [key: string]: ProviderHost }, { [key: string]: VSphereResource }] => {
+): [Record<string, ProviderHost>, Record<string, VSphereResource>] => {
   const validProvider = providerLoaded && !providerLoadError && provider;
 
   const hostsInventoryOptions: UseProviderInventoryParams = {
+    interval: 180000,
     provider: validProvider,
     subPath: 'hosts?detail=4',
-    interval: 180000,
   };
 
   const { inventory: hosts } = useProviderInventory<ProviderHost[]>(hostsInventoryOptions);
 
   const foldersInventoryOptions: UseProviderInventoryParams = {
+    interval: 180000,
     provider: validProvider,
     subPath: 'folders?detail=4',
-    interval: 180000,
   };
 
   const { inventory: folders } = useProviderInventory<VSphereResource[]>(foldersInventoryOptions);
@@ -48,13 +48,13 @@ export const useVSphereInventoryVms = (
  * @param {T[]} resources - The array of Resource objects to convert.
  * @returns {{ [key: string]: T }} - A dictionary with resource IDs as keys and Resource objects as values.
  */
-function convertArrayToDictionary<T>(resources: T[]): { [key: string]: T } {
+function convertArrayToDictionary<T>(resources: T[]): Record<string, T> {
   if (!resources || !Array.isArray(resources)) {
     return undefined;
   }
 
-  return resources.reduce((dict, resource) => {
-    dict[resource['id']] = resource;
+  return resources.reduce<Record<string, T>>((dict, resource) => {
+    dict[resource.id] = resource;
     return dict;
-  }, {} as { [key: string]: T });
+  }, {});
 }

@@ -25,7 +25,7 @@ import {
 } from '@patternfly/react-core';
 import StartIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 import { PlanStatusVmCount } from './PlanStatusVmCount';
 
 import './PlanStatusCell.style.scss';
@@ -51,7 +51,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   const vmPipelineTasks = lastMigration?.status?.vms?.reduce(
     (acc: VmPipelineTask[], migrationVm) => {
       migrationVm.pipeline.forEach((pipelineStep) => {
-        acc.push({ vmName: migrationVm.name, task: pipelineStep.name, status: pipelineStep.phase });
+        acc.push({ status: pipelineStep.phase, task: pipelineStep.name, vmName: migrationVm.name });
       });
 
       return acc;
@@ -63,13 +63,13 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   const isPlanLoading =
     !isWaitingForCutover && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
   const planURL = getResourceUrl({
-    reference: PlanModelRef,
     name: plan?.metadata?.name,
     namespace: plan?.metadata?.namespace,
+    reference: PlanModelRef,
   });
 
   // All VM count links point to the same place for now,
-  // but will be updated to target only affected VMs in the future.
+  // But will be updated to target only affected VMs in the future.
   // Could possibly use a querystring to dictate a table filter for the list of VMs.
   const vmCountLinkPath = `${planURL}/vms`;
 
@@ -79,7 +79,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
         variant={ButtonVariant.secondary}
         icon={<StartIcon />}
         isDisabled={!isButtonEnabled}
-        onClick={() =>
+        onClick={() => {
           showModal(
             <PlanStartMigrationModal
               resource={plan}
@@ -87,8 +87,8 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
               title={t('Start')}
               setButtonEnabledOnChange={setIsButtonEnabled}
             />,
-          )
-        }
+          );
+        }}
       >
         {t('Start')}
       </Button>

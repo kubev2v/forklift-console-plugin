@@ -20,11 +20,12 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 
+import { Suspend } from '../../components/Suspend';
+
 import { usePlanHooks } from './hooks/usePlanHooks';
 import { initialState } from './state/initialState';
 import { formReducer } from './state/reducer';
 import { onUpdatePlanHooks } from './utils/onUpdatePlanHooks';
-import { Suspend } from '../../components/Suspend';
 
 export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
@@ -42,20 +43,20 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
   // Init state on outside changes
   useEffect(() => {
     dispatch({
-      type: 'INIT',
       payload: initialState(plan, preHookResource, postHookResource),
+      type: 'INIT',
     });
   }, [plan, preHookResource, postHookResource]);
 
   // Handle user clicking "save"
   async function onUpdate() {
-    onUpdatePlanHooks({ plan, preHookResource, postHookResource, dispatch, state });
+    onUpdatePlanHooks({ dispatch, plan, postHookResource, preHookResource, state });
   }
 
   const onClick = () => {
     dispatch({
-      type: 'INIT',
       payload: initialState(plan, preHookResource, postHookResource),
+      type: 'INIT',
     });
   };
 
@@ -69,7 +70,7 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
     else if (!state.hasChanges)
       updateButtonDisabledMsg = t('Button is disabled until a change is detected.');
 
-    return t('Click the update hooks button to save your changes.') + ' ' + updateButtonDisabledMsg;
+    return `${t('Click the update hooks button to save your changes.')} ${updateButtonDisabledMsg}`;
   };
 
   const HooksTabAction = (
@@ -103,40 +104,40 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
   const onChangePreHookSet: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
     checked,
   ) => {
-    dispatch({ type: 'PRE_HOOK_SET', payload: checked });
+    dispatch({ payload: checked, type: 'PRE_HOOK_SET' });
   };
 
   const onChangePostHookSet: (
     checked: boolean,
     event: React.FormEvent<HTMLInputElement>,
   ) => void = (checked) => {
-    dispatch({ type: 'POST_HOOK_SET', payload: checked });
+    dispatch({ payload: checked, type: 'POST_HOOK_SET' });
   };
 
   const onChangePreHookImage: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
     value,
   ) => {
-    dispatch({ type: 'PRE_HOOK_IMAGE', payload: value });
+    dispatch({ payload: value, type: 'PRE_HOOK_IMAGE' });
   };
 
   const onChangePreHookPlaybook: (
     value: string,
     event: React.FormEvent<HTMLInputElement>,
   ) => void = (value) => {
-    dispatch({ type: 'PRE_HOOK_PLAYBOOK', payload: value });
+    dispatch({ payload: value, type: 'PRE_HOOK_PLAYBOOK' });
   };
 
   const onChangePostHookImage: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
     value,
   ) => {
-    dispatch({ type: 'POST_HOOK_IMAGE', payload: value });
+    dispatch({ payload: value, type: 'POST_HOOK_IMAGE' });
   };
 
   const onChangePostHookPlaybook: (
     value: string,
     event: React.FormEvent<HTMLInputElement>,
   ) => void = (value) => {
-    dispatch({ type: 'POST_HOOK_PLAYBOOK', payload: value });
+    dispatch({ payload: value, type: 'POST_HOOK_PLAYBOOK' });
   };
 
   return (
@@ -179,7 +180,9 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               labelOff="Do not enable a pre migration hook"
               isChecked={state.preHookSet}
               isDisabled={!isPlanEditable(plan)}
-              onChange={(e, v) => onChangePreHookSet(v, e)}
+              onChange={(e, v) => {
+                onChangePreHookSet(v, e);
+              }}
             />
           </FormGroupWithHelpText>
 
@@ -190,7 +193,9 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                   spellCheck="false"
                   value={state.preHook?.spec?.image}
                   type="url"
-                  onChange={(e, v) => onChangePreHookImage(v, e)}
+                  onChange={(e, v) => {
+                    onChangePreHookImage(v, e);
+                  }}
                   isDisabled={!isPlanEditable(plan)}
                   aria-label="pre hook image"
                 />
@@ -231,7 +236,9 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               labelOff="Do not enable a post migration hook"
               isChecked={state.postHookSet}
               isDisabled={!isPlanEditable(plan)}
-              onChange={(e, v) => onChangePostHookSet(v, e)}
+              onChange={(e, v) => {
+                onChangePostHookSet(v, e);
+              }}
             />
           </FormGroupWithHelpText>
 
@@ -242,7 +249,9 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                   spellCheck="false"
                   value={state.postHook?.spec?.image}
                   type="url"
-                  onChange={(e, v) => onChangePostHookImage(v, e)}
+                  onChange={(e, v) => {
+                    onChangePostHookImage(v, e);
+                  }}
                   aria-label="post hook image"
                 />
                 <HelperText>

@@ -1,11 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
 import { Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
 
 import { UID } from '../utils/constants';
-import { ResourceField } from '../utils/types';
-import { RowProps, SortType, TableViewHeaderProps } from './types';
+import type { ResourceField } from '../utils/types';
+
+import type { RowProps, SortType, TableViewHeaderProps } from './types';
 
 /**
  * Displays provided list of entities as table.
@@ -21,18 +22,18 @@ import { RowProps, SortType, TableViewHeaderProps } from './types';
  * @see useSort
  */
 export function TableView<T>({
+  activeSort,
+  'aria-label': ariaLabel,
+  children,
+  currentNamespace,
+  entities,
+  expandedIds,
+  Header,
+  Row,
+  setActiveSort,
+  toId,
   uidFieldId = UID,
   visibleColumns,
-  entities,
-  'aria-label': ariaLabel,
-  Row,
-  children,
-  activeSort,
-  setActiveSort,
-  currentNamespace,
-  Header,
-  toId,
-  expandedIds,
 }: TableViewProps<T>) {
   const hasChildren = children.filter(Boolean).length > 0;
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
@@ -41,7 +42,7 @@ export function TableView<T>({
     <Table aria-label={ariaLabel} variant="compact" isStickyHeader>
       <Thead>
         <Tr>
-          <Header {...{ activeSort, setActiveSort, visibleColumns, dataOnScreen: entities }} />
+          <Header {...{ activeSort, dataOnScreen: entities, setActiveSort, visibleColumns }} />
         </Tr>
       </Thead>
       <Tbody>
@@ -69,7 +70,7 @@ export function TableView<T>({
   );
 }
 
-interface TableViewProps<T> {
+type TableViewProps<T> = {
   /**
    * List of visible columns and their properties
    */
@@ -80,7 +81,7 @@ interface TableViewProps<T> {
   entities: T[];
   'aria-label': string;
   /**
-   * resourceData[uidFieldId] is used to uniquely identify a row. Defaults to UID column.
+   * ResourceData[uidFieldId] is used to uniquely identify a row. Defaults to UID column.
    */
   uidFieldId?: string;
   /**
@@ -122,7 +123,7 @@ interface TableViewProps<T> {
   canSelect?: (item: T) => boolean;
 
   /**
-   * onSelect is called when selection changes
+   * OnSelect is called when selection changes
    */
   onSelect?: (selectedIds: string[]) => void;
 
@@ -132,7 +133,7 @@ interface TableViewProps<T> {
   selectedIds?: string[];
 
   /**
-   * onExpand is called when expand changes
+   * OnExpand is called when expand changes
    */
   onExpand?: (expandedIds: string[]) => void;
 
@@ -140,4 +141,4 @@ interface TableViewProps<T> {
    * Expanded ids
    */
   expandedIds?: string[];
-}
+};

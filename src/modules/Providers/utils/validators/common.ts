@@ -1,11 +1,11 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
-import { Validation } from '../types/Validation';
+import type { Validation } from '../types/Validation';
 
-// regex
+// Regex
 
-// validate container images
-// example: quay.io/image:latest
+// Validate container images
+// Example: quay.io/image:latest
 const REGISTRY = '(?:[a-z0-9]+([.:_-][a-z0-9]+)*\\/)?';
 const IMAGE_NAME = '[a-z0-9]+([._-][a-z0-9]+)*(\\/[a-z0-9]+([._-][a-z0-9]+)*)*';
 const TAG = '[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*';
@@ -13,8 +13,8 @@ const SHA256 = 'sha256:[A-Fa-f0-9]{64}';
 
 const IMAGE_REGEX = new RegExp(`^${REGISTRY}?${IMAGE_NAME}((@${SHA256}|:${TAG}))?$`);
 
-// validate URL
-// example: https://example.com/index
+// Validate URL
+// Example: https://example.com/index
 const PROTOCOL = '(https?:\\/\\/)';
 const IPV4 = '((?:[0-9]{1,3}\\.){3}[0-9]{1,3})';
 const HOSTNAME = '([a-zA-Z0-9-_]+\\.[a-zA-Z0-9-_\\.]+)';
@@ -27,12 +27,12 @@ const URL_REGEX = new RegExp(
 );
 const IPV4_REGEX = new RegExp(IPV4);
 
-// validate NFS mount NFS_SERVER:EXPORTED_DIRECTORY
-// example: 10.10.0.10:/backups
+// Validate NFS mount NFS_SERVER:EXPORTED_DIRECTORY
+// Example: 10.10.0.10:/backups
 const NFS_PATH = '(\\/[^ ]*)+';
 const NFS_REGEX = new RegExp(`^((${IPV4})|(${HOSTNAME})):(${NFS_PATH})$`);
 
-// validate CA certification.
+// Validate CA certification.
 const CERTIFICATE_HEADER = '-----BEGIN CERTIFICATE-----';
 const CERTIFICATE_FOOTER = '-----END CERTIFICATE-----';
 const BASE64_LINE = '([A-Za-z0-9+\\/=]{1,1256}\\r?\\n)';
@@ -45,7 +45,7 @@ const CERTIFICATE_REGEX = new RegExp(
   `^(${EMPTY_LINES}${CERTIFICATE_HEADER}\\r?\\n${BASE64_CONTENT}${CERTIFICATE_FOOTER}${EMPTY_LINES})+$`,
 );
 
-// validate CA certification fingerprint.
+// Validate CA certification fingerprint.
 const FINGERPRINT_REGEX = /^([a-fA-F0-9]{2}:){19}[a-fA-F0-9]{2}$/;
 
 /**
@@ -56,7 +56,7 @@ const FINGERPRINT_REGEX = /^([a-fA-F0-9]{2}:){19}[a-fA-F0-9]{2}$/;
 const DNS_SUBDOMAINS_NAME_REGEXP =
   /^(?=.{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
 
-// validate bearer tokens, used in K8s
+// Validate bearer tokens, used in K8s
 const JWT_TOKEN_REGEX = /^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-+/=]*)/gm;
 const K8S_TOKEN_REGEX = /^[a-z0-9]{6}.[a-z0-9]{16}$/;
 const TMP_TOKEN_REGEX = /^sha256~[A-Za-z0-9+/=_-]{43}$/;
@@ -69,7 +69,7 @@ export type ValidationMsg = {
   description?: string | ReactNode;
 };
 
-// helper methods
+// Helper methods
 
 export function validateContainerImage(image: string) {
   return IMAGE_REGEX.test(image);
@@ -104,12 +104,12 @@ export function validateK8sToken(token: string) {
 }
 
 export function validateNoSpaces(value: string) {
-  // any string without spaces
+  // Any string without spaces
   return /^[^\s]+$/.test(value);
 }
 
 export function validateUsernameAndDomain(value: string) {
   // Must contain exactly one @, and no whitespace
-  // example: user@domain valid, user@ domain OR user@@domain invalid
+  // Example: user@domain valid, user@ domain OR user@@domain invalid
   return /^[^\s@]+@[^\s@]+$/.test(value);
 }

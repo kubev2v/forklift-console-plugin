@@ -3,7 +3,7 @@ import { TableCell } from 'src/modules/Providers/utils/components/TableCell/Tabl
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Concern } from '@kubev2v/types';
+import type { Concern } from '@kubev2v/types';
 import { Button, Flex, FlexItem, Label, Popover, Stack, StackItem } from '@patternfly/react-core';
 
 import {
@@ -12,7 +12,8 @@ import {
   getCategoryTitle,
 } from '../utils/helpers/getCategoryTitle';
 import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategory';
-import { VMCellProps } from './VMCellProps';
+
+import type { VMCellProps } from './VMCellProps';
 
 /**
  * Renders a table cell containing concerns grouped by category.

@@ -1,21 +1,21 @@
 import React from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
-import { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
+import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { EditSettingsModalProps } from './EditSettingsModalProps';
+import type { EditSettingsModalProps } from './EditSettingsModalProps';
 import SettingsSelectInput from './SettingsSelectInput';
 
 // Define the options
 const options = [
-  { key: 1, name: '1s', description: 'Extra short snapshot polling interval' },
-  { key: 5, name: '5s', description: 'Short snapshot polling interval' },
-  { key: 10, name: '10s', description: 'Long snapshot polling interval' },
-  { key: 60, name: '60s', description: 'Extra long snapshot polling interval' },
+  { description: 'Extra short snapshot polling interval', key: 1, name: '1s' },
+  { description: 'Short snapshot polling interval', key: 5, name: '5s' },
+  { description: 'Long snapshot polling interval', key: 10, name: '10s' },
+  { description: 'Extra long snapshot polling interval', key: 60, name: '60s' },
 ];
 
 /**

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { InputGroup, SearchInput, ToolbarFilter } from '@patternfly/react-core';
 
-import { FilterTypeProps } from './types';
+import type { FilterTypeProps } from './types';
 
 /**
  * This Filter type uses an unsensitive-case text provided by the user.
@@ -17,20 +17,18 @@ import { FilterTypeProps } from './types';
  */
 export const FreetextFilter = ({
   filterId,
-  selectedFilters,
   onFilterUpdate,
-  title,
-  showFilter = true,
   placeholderLabel,
+  selectedFilters,
+  showFilter = true,
+  title,
 }: FilterTypeProps) => {
   const [inputValue, setInputValue] = useState('');
 
   const onTextInput: (
     event: React.SyntheticEvent<HTMLButtonElement>,
     value: string,
-    attrValueMap: {
-      [key: string]: string;
-    },
+    attrValueMap: Record<string, string>,
   ) => void = () => {
     const lowerCaseInputValue = inputValue?.toLowerCase();
     if (!lowerCaseInputValue || selectedFilters.includes(lowerCaseInputValue)) {

@@ -17,7 +17,8 @@ import {
   toISODate,
   toISODateInterval,
 } from '../utils/dates';
-import { FilterTypeProps } from './types';
+
+import type { FilterTypeProps } from './types';
 
 /**
  * This Filter type enables selecting an closed date range.
@@ -31,13 +32,13 @@ import { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/DateRangeFilter.tsx)
  */
 export const DateRangeFilter = ({
-  selectedFilters = [],
-  onFilterUpdate,
-  title,
   filterId,
-  placeholderLabel,
-  showFilter = true,
   helperText,
+  onFilterUpdate,
+  placeholderLabel,
+  selectedFilters = [],
+  showFilter = true,
+  title,
 }: FilterTypeProps) => {
   const validFilters = selectedFilters?.filter(isValidInterval) ?? [];
 
@@ -67,7 +68,7 @@ export const DateRangeFilter = ({
     value: string,
     date?: Date,
   ) => void = (_event, value) => {
-    //see DateFilter onDateChange
+    //See DateFilter onDateChange
     if (value?.length === 10 && isValidDate(value)) {
       setFrom(parseISOtoJSDate(value));
       setTo(undefined);
@@ -79,7 +80,7 @@ export const DateRangeFilter = ({
     value: string,
     date?: Date,
   ) => void = (_event, value) => {
-    //see DateFilter onDateChange
+    //See DateFilter onDateChange
     if (value?.length === 10 && isValidDate(value)) {
       const newTo = parseISOtoJSDate(value);
       setTo(newTo);
@@ -94,7 +95,9 @@ export const DateRangeFilter = ({
     <ToolbarFilter
       key={filterId}
       chips={validFilters.map(rangeToOption)}
-      deleteChip={(category, option) => clearSingleRange(option)}
+      deleteChip={(category, option) => {
+        clearSingleRange(option);
+      }}
       deleteChipGroup={() => onFilterUpdate([])}
       categoryName={title}
       showToolbarItem={showFilter}
@@ -107,9 +110,9 @@ export const DateRangeFilter = ({
           onChange={onFromDateChange}
           aria-label="Interval start"
           placeholder={placeholderLabel}
-          // disable error text (no space in toolbar scenario)
+          // Disable error text (no space in toolbar scenario)
           invalidFormatText={''}
-          // default value ("parent") creates collision with sticky table header
+          // Default value ("parent") creates collision with sticky table header
           appendTo={document.body}
           popoverProps={{
             footerContent: helperText,
@@ -119,7 +122,7 @@ export const DateRangeFilter = ({
           value={toISODate(to)}
           onChange={onToDateChange}
           isDisabled={!isValidJSDate(from)}
-          // disable error text (no space in toolbar scenario)
+          // Disable error text (no space in toolbar scenario)
           invalidFormatText={''}
           rangeStart={from}
           aria-label="Interval end"

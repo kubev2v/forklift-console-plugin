@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, DataList } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 
-import { Mapping, MappingListItem } from './MappingListItem';
+import { type Mapping, MappingListItem } from './MappingListItem';
 
-interface MappingListProps {
+type MappingListProps = {
   /**
    * List of existed mappings
    */
@@ -32,26 +32,26 @@ interface MappingListProps {
    * Is in edit/view mode? In case of view mode, the DataListCells are disabled and buttons are hidden
    */
   isEditable?: boolean;
-}
+};
 
 export const MappingList: FC<MappingListProps> = ({
-  mappings,
-  availableSources,
-  availableDestinations,
-  replaceMapping,
-  deleteMapping,
   addMapping,
+  availableDestinations,
+  availableSources,
+  deleteMapping,
   generalSourcesLabel,
-  noSourcesLabel,
   isDisabled = false,
   isEditable = true,
+  mappings,
+  noSourcesLabel,
+  replaceMapping,
 }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <>
       <DataList isCompact aria-label="">
-        {mappings?.map(({ source, destination }, index) => (
+        {mappings?.map(({ destination, source }, index) => (
           <MappingListItem
             source={source}
             destination={destination}

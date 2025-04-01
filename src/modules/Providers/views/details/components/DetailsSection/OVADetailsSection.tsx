@@ -10,7 +10,7 @@ import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
 import { OwnerDetailsItem } from './components/OwnerDetailsItem';
 import { TypeDetailsItem } from './components/TypeDetailsItem';
 import { URLDetailsItem } from './components/URLDetailsItem';
-import { DetailsSectionProps } from './DetailsSection';
+import type { DetailsSectionProps } from './DetailsSection';
 
 export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();

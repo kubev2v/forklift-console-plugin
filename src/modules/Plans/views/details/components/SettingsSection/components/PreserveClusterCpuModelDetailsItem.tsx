@@ -6,14 +6,14 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 
-import { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
 import { EditPlanPreserveClusterCpuModel } from '../modals/EditPlanPreserveClusterCpuModel/EditPlanPreserveClusterCpuModel';
 
 export const PreserveClusterCpuModelDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  resource,
   canPatch,
-  helpContent,
   destinationProvider,
+  helpContent,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -42,13 +42,14 @@ export const PreserveClusterCpuModelDetailsItem: React.FC<PlanDetailsItemProps> 
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() =>
+        (() => {
           showModal(
             <EditPlanPreserveClusterCpuModel
               resource={resource}
               destinationProvider={destinationProvider}
             />,
-          ))
+          );
+        })
       }
     />
   );

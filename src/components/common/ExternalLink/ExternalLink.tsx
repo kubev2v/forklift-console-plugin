@@ -13,10 +13,10 @@ import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external
  */
 export const ExternalLink: React.FC<ExternalLinkProps> = ({
   children,
-  href,
-  text = null,
-  isInline = false,
   hideIcon = false,
+  href,
+  isInline = false,
+  text = null,
 }) => (
   <Button
     variant="link"
@@ -38,7 +38,7 @@ type ExternalLinkProps = {
   href: string;
 
   /**
-   * text to be displayed.
+   * Text to be displayed.
    */
   text?: string;
 
@@ -53,7 +53,7 @@ type ExternalLinkProps = {
   isInline?: boolean;
 
   /**
-   * hide or display the external link icon
+   * Hide or display the external link icon
    */
   hideIcon?: boolean;
 };

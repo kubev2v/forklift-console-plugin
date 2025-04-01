@@ -1,24 +1,25 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import { Td, Tr } from '@patternfly/react-table';
 
+import type { PlanData } from '../../utils/types/PlanData';
+
 import { ActionsCell } from './components/ActionsCell';
-import { CellProps } from './components/CellProps';
+import type { CellProps } from './components/CellProps';
 import { MigrationTypeCell } from './components/MigrationTypeCell';
 import { NamespaceCell } from './components/NamespaceCell';
 import { PlanCell } from './components/PlanCell';
 import { PlanStatusCell } from './components/PlanStatusCell';
 import { ProviderLinkCell } from './components/ProviderLinkCell';
 import { VMsCell } from './components/VMsCell';
-import { PlanData } from '../../utils/types/PlanData';
 import { PlanTableResourceId } from './constants';
 
-const PlanRow: React.FC<RowProps<PlanData>> = ({ resourceFields, resourceData }) => {
+const PlanRow: React.FC<RowProps<PlanData>> = ({ resourceData, resourceFields }) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>
@@ -40,27 +41,27 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 };
 
 const cellRenderers: Partial<Record<PlanTableResourceId, FC<CellProps>>> = {
-  [PlanTableResourceId.Name]: PlanCell,
-  [PlanTableResourceId.Namespace]: NamespaceCell,
+  [PlanTableResourceId.Actions]: ActionsCell,
+  [PlanTableResourceId.Description]: ({ data }: CellProps) => (
+    <TableCell>{data?.plan?.spec?.description}</TableCell>
+  ),
+  [PlanTableResourceId.Destination]: ProviderLinkCell,
   [PlanTableResourceId.MigrationStarted]: (props: CellProps) => {
     const value = getResourceFieldValue(props.data, props.fieldId, props.fields);
     return <ConsoleTimestamp timestamp={value} />;
   },
-  [PlanTableResourceId.Destination]: ProviderLinkCell,
-  [PlanTableResourceId.Source]: ProviderLinkCell,
-  [PlanTableResourceId.Phase]: PlanStatusCell,
   [PlanTableResourceId.MigrationType]: MigrationTypeCell,
+  [PlanTableResourceId.Name]: PlanCell,
+  [PlanTableResourceId.Namespace]: NamespaceCell,
+  [PlanTableResourceId.Phase]: PlanStatusCell,
+  [PlanTableResourceId.Source]: ProviderLinkCell,
   [PlanTableResourceId.Vms]: VMsCell,
-  [PlanTableResourceId.Description]: ({ data }: CellProps) => (
-    <TableCell>{data?.plan?.spec?.description}</TableCell>
-  ),
-  [PlanTableResourceId.Actions]: ActionsCell,
 };
 
-interface RenderTdProps {
+type RenderTdProps = {
   resourceData: PlanData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-}
+};
 
 export default PlanRow;

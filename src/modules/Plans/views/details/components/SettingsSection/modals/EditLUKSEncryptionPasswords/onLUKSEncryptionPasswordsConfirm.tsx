@@ -1,14 +1,14 @@
-import { OnConfirmHookType } from 'src/modules/Providers/modals/EditModal/types';
+import type { OnConfirmHookType } from 'src/modules/Providers/modals/EditModal/types';
 
-import { IoK8sApiCoreV1Secret, SecretModel, V1beta1Plan } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate, k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 import { createIndexedBase64Object } from './createIndexedBase64Object';
 
 export const onLUKSEncryptionPasswordsConfirm: OnConfirmHookType = async ({
-  resource,
   model,
   newValue,
+  resource,
 }) => {
   const plan = resource as V1beta1Plan;
 
@@ -20,23 +20,21 @@ export const onLUKSEncryptionPasswordsConfirm: OnConfirmHookType = async ({
   const newData = createIndexedBase64Object(newValue as string);
 
   // Init an empty secret
-  let secret: IoK8sApiCoreV1Secret = undefined;
+  let secret: IoK8sApiCoreV1Secret;
 
-  // if secret exist and we have no new data
+  // If secret exist and we have no new data
   if (secretName && !newData) {
-    // delete secret
+    // Delete secret
     await k8sDelete({
       model: SecretModel,
       resource: { metadata: { name: secretName, namespace: secretNamespace } },
     });
   }
 
-  // if secret exist and we have new data
+  // If secret exist and we have new data
   if (secretName && newData) {
-    // edit secret
+    // Edit secret
     secret = await k8sPatch({
-      model: SecretModel,
-      resource: { metadata: { name: secretName, namespace: secretNamespace } },
       data: [
         {
           op: 'replace',
@@ -44,13 +42,16 @@ export const onLUKSEncryptionPasswordsConfirm: OnConfirmHookType = async ({
           value: newData,
         },
       ],
+      model: SecretModel,
+      resource: { metadata: { name: secretName, namespace: secretNamespace } },
     });
   }
 
-  // if no secret
+  // If no secret
   if (!secretName && newData) {
-    // create secret
+    // Create secret
     const newSecret: IoK8sApiCoreV1Secret = {
+      data: newData,
       metadata: {
         generateName: `${plan.metadata.name}-`,
         namespace: secretNamespace,
@@ -63,17 +64,16 @@ export const onLUKSEncryptionPasswordsConfirm: OnConfirmHookType = async ({
           },
         ],
       },
-      data: newData,
       type: 'Opaque',
     };
 
     secret = await k8sCreate({
-      model: SecretModel,
       data: newSecret,
+      model: SecretModel,
     });
   }
 
-  // update plan vms
+  // Update plan vms
   const resourceValue = plan?.spec?.vms;
   const op = resourceValue ? 'replace' : 'add';
   const newVMs = resourceValue.map((vm) => ({
@@ -82,8 +82,6 @@ export const onLUKSEncryptionPasswordsConfirm: OnConfirmHookType = async ({
   }));
 
   const obj = await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
@@ -91,6 +89,8 @@ export const onLUKSEncryptionPasswordsConfirm: OnConfirmHookType = async ({
         value: newVMs || undefined,
       },
     ],
+    model,
+    resource,
   });
 
   return obj;

@@ -1,18 +1,19 @@
-import React, { MouseEvent as ReactMouseEvent, Ref, useMemo, useState } from 'react';
+import React, { type MouseEvent as ReactMouseEvent, type Ref, useMemo, useState } from 'react';
 
 import {
   Badge,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
-  ToolbarChip,
+  type ToolbarChip,
   ToolbarFilter,
 } from '@patternfly/react-core';
 
 import { localeCompare } from '../utils/localCompare';
-import { FilterTypeProps } from './types';
+
+import type { FilterTypeProps } from './types';
 
 /**
  * One label may map to multiple enum ids due to translation or by design (i.e. "Unknown")
@@ -21,10 +22,10 @@ import { FilterTypeProps } from './types';
  * @returns { uniqueEnumLabels, onUniqueFilterUpdate, selectedUniqueEnumLabels };
  */
 export const useUnique = ({
-  supportedEnumValues,
   onSelectedEnumIdsChange,
-  selectedEnumIds,
   resolvedLanguage = 'en',
+  selectedEnumIds,
+  supportedEnumValues,
 }: {
   supportedEnumValues: {
     id: string;
@@ -41,28 +42,28 @@ export const useUnique = ({
   const translatedEnums = useMemo(
     () =>
       supportedEnumValues.map((it) => ({
-        // fallback to ID
-        label: it.label ?? it.id,
         id: it.id,
+        // Fallback to ID
+        label: it.label ?? it.id,
       })),
 
     [supportedEnumValues],
   );
 
-  // group filters with the same label
+  // Group filters with the same label
   const labelToIds = useMemo(
     () =>
-      translatedEnums.reduce((acc, { label, id }) => {
+      translatedEnums.reduce((acc, { id, label }) => {
         acc[label] = [...(acc?.[label] ?? []), id];
         return acc;
       }, {}),
     [translatedEnums],
   );
 
-  // for easy reverse lookup
+  // For easy reverse lookup
   const idToLabel = useMemo(
     () =>
-      translatedEnums.reduce((acc, { label, id }) => {
+      translatedEnums.reduce((acc, { id, label }) => {
         acc[id] = label;
         return acc;
       }, {}),
@@ -79,8 +80,9 @@ export const useUnique = ({
 
   const onUniqueFilterUpdate = useMemo(
     () =>
-      (labels: string[]): void =>
-        onSelectedEnumIdsChange(labels.flatMap((label) => labelToIds[label] ?? [])),
+      (labels: string[]): void => {
+        onSelectedEnumIdsChange(labels.flatMap((label) => labelToIds[label] ?? []));
+      },
     [onSelectedEnumIdsChange, labelToIds],
   );
 
@@ -89,7 +91,7 @@ export const useUnique = ({
     [selectedEnumIds, idToLabel],
   );
 
-  return { uniqueEnumLabels, onUniqueFilterUpdate, selectedUniqueEnumLabels };
+  return { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels };
 };
 
 /**
@@ -110,28 +112,29 @@ export const useUnique = ({
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/EnumFilter.tsx)
  */
 export const EnumFilter = ({
-  selectedFilters: selectedEnumIds = [],
+  filterId,
   onFilterUpdate: onSelectedEnumIdsChange,
+  placeholderLabel,
+  resolvedLanguage,
+  selectedFilters: selectedEnumIds = [],
+  showFilter = true,
   supportedValues: supportedEnumValues = [],
   title,
-  placeholderLabel,
-  filterId,
-  showFilter = true,
-  resolvedLanguage,
 }: FilterTypeProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { uniqueEnumLabels, onUniqueFilterUpdate, selectedUniqueEnumLabels } = useUnique({
-    supportedEnumValues,
+  const { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels } = useUnique({
     onSelectedEnumIdsChange,
-    selectedEnumIds,
     resolvedLanguage,
+    selectedEnumIds,
+    supportedEnumValues,
   });
 
-  const deleteFilter = (label: string | ToolbarChip): void =>
+  const deleteFilter = (label: string | ToolbarChip): void => {
     onUniqueFilterUpdate(selectedUniqueEnumLabels.filter((filterLabel) => filterLabel !== label));
+  };
 
   const hasFilter = (label: string): boolean =>
-    !!selectedUniqueEnumLabels.find((filterLabel) => filterLabel === label);
+    Boolean(selectedUniqueEnumLabels.find((filterLabel) => filterLabel === label));
 
   const addFilter = (label: string): void => {
     if (typeof label === 'string') {
@@ -143,10 +146,7 @@ export const EnumFilter = ({
     setIsOpen((isOpen) => !isOpen);
   };
 
-  const onSelect = (
-    _event: ReactMouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined,
-  ) => {
+  const onSelect = (_event: ReactMouseEvent | undefined, value: string | number | undefined) => {
     hasFilter(value as string) ? deleteFilter(value as string) : addFilter(value as string);
   };
 
@@ -176,8 +176,12 @@ export const EnumFilter = ({
     <ToolbarFilter
       key={filterId}
       chips={selectedUniqueEnumLabels}
-      deleteChip={(category, option) => deleteFilter(option)}
-      deleteChipGroup={() => onUniqueFilterUpdate([])}
+      deleteChip={(category, option) => {
+        deleteFilter(option);
+      }}
+      deleteChipGroup={() => {
+        onUniqueFilterUpdate([]);
+      }}
       categoryName={title}
       showToolbarItem={showFilter}
     >
@@ -187,7 +191,9 @@ export const EnumFilter = ({
         isOpen={isOpen}
         selected={selectedUniqueEnumLabels}
         onSelect={onSelect}
-        onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
+        onOpenChange={(nextOpen: boolean) => {
+          setIsOpen(nextOpen);
+        }}
         toggle={toggle}
         shouldFocusToggleOnSelect
         shouldFocusFirstItemOnOpen={false}

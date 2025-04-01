@@ -1,14 +1,13 @@
-import { V1beta1Host, V1beta1Provider, VSphereHost } from '@kubev2v/types';
-import { NetworkAdapters } from '@kubev2v/types';
+import type { NetworkAdapters, V1beta1Host, V1beta1Provider, VSphereHost } from '@kubev2v/types';
 
 /**
  * Type to represent a pair of ProviderHost, V1beta1Host and NetworkAdapters.
  */
-export interface InventoryHostPair {
+export type InventoryHostPair = {
   inventory: VSphereHost;
   host?: V1beta1Host;
   networkAdapter?: NetworkAdapters;
-}
+};
 
 /**
  * Function that matches ProviderHost items to V1beta1Host and NetworkAdapters items based on the id and ipAddress properties respectively.
@@ -51,6 +50,6 @@ export function matchHostsToInventory(
         (adapter) => adapter.ipAddress === host.spec.ipAddress,
       );
     }
-    return { inventory, host, networkAdapter };
+    return { host, inventory, networkAdapter };
   });
 }

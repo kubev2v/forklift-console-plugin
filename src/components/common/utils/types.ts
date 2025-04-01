@@ -1,17 +1,17 @@
-import React from 'react';
+import type React from 'react';
 
-import { SelectOptionObject } from '@patternfly/react-core/deprecated';
-export interface EnumGroup {
+import type { SelectOptionObject } from '@patternfly/react-core/deprecated';
+export type EnumGroup = {
   groupId: string;
   label: string;
-}
+};
 
-export interface EnumValue {
+export type EnumValue = {
   id: string;
   groupId?: string;
   label: string;
   resourceFieldId?: string;
-}
+};
 
 export enum FilterDefType {
   FreeText = 'freetext',
@@ -21,7 +21,7 @@ export enum FilterDefType {
   Slider = 'slider',
 }
 
-export interface FilterDef {
+export type FilterDef = {
   type: string;
   placeholderLabel?: string;
   values?: EnumValue[];
@@ -29,45 +29,45 @@ export interface FilterDef {
   primary?: boolean;
   standalone?: boolean;
   groups?: EnumGroup[];
-  // override default behavior if there are no filters provided by the user
-  // by default missing/empty filters result in positive match (vacuous truth)
+  // Override default behavior if there are no filters provided by the user
+  // By default missing/empty filters result in positive match (vacuous truth)
   defaultValues?: string[];
   helperText?: string | React.ReactNode;
   dynamicFilter?: (items: unknown[]) => Partial<FilterDef>;
   isHidden?: boolean;
   showFilterIcon?: boolean;
-}
+};
 
 type OpenApiJsonPath = string | ((resourceData: unknown) => unknown);
 
-export interface ResourceField {
+export type ResourceField = {
   resourceFieldId: string | null;
   jsonPath?: OpenApiJsonPath;
   label: string | null;
-  // visibility status, can change in time
+  // Visibility status, can change in time
   isVisible?: boolean;
   isIdentity?: boolean;
   isAction?: boolean;
-  // if true then the field should be never visible in the UI
+  // If true then the field should be never visible in the UI
   isHidden?: boolean;
   sortable?: boolean;
   filter?: FilterDef;
-  // if true then the field filters state should persist between sessions
+  // If true then the field filters state should persist between sessions
   isPersistent?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   compareFn?: (a: any, b: any, locale: string) => number;
-}
+};
 
-type ResourceFieldPartialFactory = { (t: (string) => string): Partial<ResourceField> };
-export type ResourceFieldFactory = { (t: (string) => string): ResourceField[] };
+type ResourceFieldPartialFactory = (t: (string) => string) => Partial<ResourceField>;
+export type ResourceFieldFactory = (t: (string) => string) => ResourceField[];
 
 const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
 type K8sConditionStatus = (typeof K8sConditionStatusValues)[number];
 
-export interface GlobalActionToolbarProps<T> {
-  // data currently visible on the screen (i.e. adjusted by paging and filtering)
+export type GlobalActionToolbarProps<T> = {
+  // Data currently visible on the screen (i.e. adjusted by paging and filtering)
   dataOnScreen: T[];
-}
+};
 
 /**
  * @typedef {Object} ToggleEventType
@@ -78,11 +78,7 @@ export interface GlobalActionToolbarProps<T> {
  * @property {React.MouseEvent<Element, MouseEvent>} React.MouseEvent - A React-specific mouse event.
  * @property {React.ChangeEvent<Element>} React.ChangeEvent - A React-specific change event.
  */
-type ToggleEventType =
-  | Event
-  | React.KeyboardEvent<Element>
-  | React.MouseEvent<Element, MouseEvent>
-  | React.ChangeEvent<Element>;
+type ToggleEventType = Event | React.KeyboardEvent | React.MouseEvent | React.ChangeEvent;
 
 /**
  * @typedef {Object} SelectEventType
@@ -91,7 +87,7 @@ type ToggleEventType =
  * @property {React.MouseEvent<Element, MouseEvent>} React.MouseEvent - A React-specific mouse event.
  * @property {React.ChangeEvent<Element>} React.ChangeEvent - A React-specific change event.
  */
-export type SelectEventType = React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>;
+export type SelectEventType = React.MouseEvent | React.ChangeEvent;
 
 /**
  * @typedef {Object} SelectValueType

@@ -1,9 +1,7 @@
-import { InventoryNetwork } from '../../../hooks/useNetworks';
-import { InventoryStorage } from '../../../hooks/useStorages';
+import type { InventoryNetwork } from '../../../hooks/useNetworks';
+import type { InventoryStorage } from '../../../hooks/useStorages';
 
-export const mapSourceNetworksToLabels = (
-  sources: InventoryNetwork[],
-): { [label: string]: string } => {
+export const mapSourceNetworksToLabels = (sources: InventoryNetwork[]): Record<string, string> => {
   const tuples: [string, string][] = sources
     .map((net): [string, string] => {
       switch (net.providerType) {
@@ -32,9 +30,7 @@ export const mapSourceNetworksToLabels = (
   return labelToId;
 };
 
-export const mapSourceStoragesToLabels = (
-  sources: InventoryStorage[],
-): { [label: string]: string } => {
+export const mapSourceStoragesToLabels = (sources: InventoryStorage[]): Record<string, string> => {
   const tuples: [string, string][] = sources
     .map((storage): [string, string] => {
       switch (storage.providerType) {
@@ -63,31 +59,30 @@ export const mapSourceStoragesToLabels = (
   return labelToId;
 };
 
-const resolveCollisions = (tuples: [string, string][]): { [key: string]: string } =>
+const resolveCollisions = (tuples: [string, string][]): Record<string, string> =>
   tuples.reduce((acc, [label, id]) => {
     if (acc[label] === id) {
-      //already included - no collisions
+      //Already included - no collisions
       return acc;
     } else if (acc[withSuffix(label, id)] === id) {
-      //already included with suffix - there was a collision before
+      //Already included with suffix - there was a collision before
       return acc;
     } else if (acc[label]) {
-      // resolve conflict
+      // Resolve conflict
       return {
-        // remove (filter out) existing label from keys list
+        // Remove (filter out) existing label from keys list
         ...Object.fromEntries(Object.entries(acc).filter(([key]) => key !== label)),
-        // existing entry: add suffix with ID
+        // Existing entry: add suffix with ID
         [withSuffix(label, acc[label])]: acc[label],
-        // new entry: create with suffix
+        // New entry: create with suffix
         [withSuffix(label, id)]: id,
       };
-    } else {
-      // happy path
-      return {
-        ...acc,
-        [label]: id,
-      };
     }
+    // Happy path
+    return {
+      ...acc,
+      [label]: id,
+    };
   }, {});
 
 const withSuffix = (label: string, id: string) => `${label}  (ID: ${id}})`;

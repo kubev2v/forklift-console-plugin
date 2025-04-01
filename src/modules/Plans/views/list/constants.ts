@@ -13,11 +13,11 @@ export enum PlanTableResourceId {
 }
 
 export const planResourceApiJsonPaths: Partial<Record<PlanTableResourceId, string>> = {
+  [PlanTableResourceId.Archived]: '$.obj.spec.archived',
+  [PlanTableResourceId.Description]: '$.obj.spec.description',
+  [PlanTableResourceId.Destination]: '$.obj.spec.provider.destination.name',
+  [PlanTableResourceId.MigrationStarted]: '$.obj.status.migration.started',
   [PlanTableResourceId.Name]: '$.obj.metadata.name',
   [PlanTableResourceId.Namespace]: '$.obj.metadata.namespace',
-  [PlanTableResourceId.MigrationStarted]: '$.obj.status.migration.started',
-  [PlanTableResourceId.Destination]: '$.obj.spec.provider.destination.name',
   [PlanTableResourceId.Source]: '$.obj.spec.provider.source.name',
-  [PlanTableResourceId.Description]: '$.obj.spec.description',
-  [PlanTableResourceId.Archived]: '$.obj.spec.archived',
 };

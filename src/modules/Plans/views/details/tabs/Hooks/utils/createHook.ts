@@ -1,4 +1,4 @@
-import { HookModel, PlanModel, V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
+import { HookModel, PlanModel, type V1beta1Hook, type V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 export const createHook = async (
@@ -7,30 +7,30 @@ export const createHook = async (
   step: 'PostHook' | 'PreHook',
 ) => {
   await k8sCreate({
-    model: HookModel,
     data: hook,
+    model: HookModel,
   });
 
-  // update plan
-  const vms = plan.spec.vms;
+  // Update plan
+  const { vms } = plan.spec;
   const newVms = vms.map((vm) => ({
     ...vm,
     hooks: [
       ...(vm?.hooks || []),
       {
-        step: step,
         hook: {
           name: hook.metadata.name,
           namespace: hook.metadata.namespace,
         },
+        step,
       },
     ],
   }));
 
-  return await k8sPatch({
-    model: PlanModel,
-    resource: plan,
-    path: '',
+  return k8sPatch({
     data: [{ op: 'replace', path: '/spec/vms', value: newVms }],
+    model: PlanModel,
+    path: '',
+    resource: plan,
   });
 };

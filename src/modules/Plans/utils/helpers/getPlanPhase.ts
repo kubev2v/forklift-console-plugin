@@ -1,6 +1,6 @@
-import { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@kubev2v/types';
 
-import { PlanData } from '../types/PlanData';
+import type { PlanData } from '../types/PlanData';
 import { PlanPhase } from '../types/PlanPhase';
 
 export const getPlanPhase = (data: PlanData): PlanPhase => {

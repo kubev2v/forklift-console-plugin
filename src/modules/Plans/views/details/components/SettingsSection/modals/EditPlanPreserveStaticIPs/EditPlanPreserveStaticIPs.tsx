@@ -1,24 +1,22 @@
 import React from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
-import {
+import type {
   EditModalProps,
   ModalInputComponentType,
   OnConfirmHookType,
 } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Modify, PlanModel, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { type Modify, PlanModel, type V1beta1Plan, type V1beta1Provider } from '@kubev2v/types';
+import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Switch } from '@patternfly/react-core';
 
-const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
+const onConfirm: OnConfirmHookType = async ({ model, newValue, resource }) => {
   const plan = resource as V1beta1Plan;
   const resourceValue = plan?.spec?.preserveStaticIPs;
   const op = resourceValue ? 'replace' : 'add';
 
   const obj = await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
@@ -26,20 +24,22 @@ const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
         value: newValue === 'true' || undefined,
       },
     ],
+    model,
+    resource,
   });
 
   return obj;
 };
 
-interface SwitchRendererProps {
+type SwitchRendererProps = {
   value: string | number;
   onChange: (string) => void;
-}
+};
 
 const PreserveStaticIPsInputFactory: () => ModalInputComponentType = () => {
   const { t } = useForkliftTranslation();
 
-  const SwitchRenderer: React.FC<SwitchRendererProps> = ({ value, onChange }) => {
+  const SwitchRenderer: React.FC<SwitchRendererProps> = ({ onChange, value }) => {
     const onChangeInternal: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
       checked,
     ) => {
@@ -52,7 +52,9 @@ const PreserveStaticIPsInputFactory: () => ModalInputComponentType = () => {
         label={t('Preserve the static IPs of the virtual machines migrated')}
         isChecked={value === 'true'}
         hasCheckIcon
-        onChange={(e, v) => onChangeInternal(v, e)}
+        onChange={(e, v) => {
+          onChangeInternal(v, e);
+        }}
       />
     );
   };

@@ -25,8 +25,8 @@ describe('validator', () => {
 
     it('should return false for invalid container images', () => {
       const images = [
-        'my-repo/my+image:my-tag', // invalid char
-        'my-repo/my-image@sha256', // missing sha256 hash
+        'my-repo/my+image:my-tag', // Invalid char
+        'my-repo/my-image@sha256', // Missing sha256 hash
       ];
       for (const image of images) {
         expect(validateContainerImage(image)).toBe(false);
@@ -50,8 +50,8 @@ describe('validator', () => {
 
     it('should return false for invalid URLs', () => {
       const urls = [
-        'http:/example.com', // missing slash
-        // no TLD
+        'http:/example.com', // Missing slash
+        // No TLD
         'http://example', // NOSONAR
       ];
       for (const url of urls) {
@@ -82,14 +82,14 @@ BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRtZSBXaWRn
 -----BEGIN CERTIFICATE-----
 MIIDXTCCAkWgAwIBAgIJAJC1HiIAZAiIMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
 BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRtZSBXaWRn
-        `, // missing end tag
+        `, // Missing end tag
         `
 -----BEGIN CERTIFICATE-----
 MIIDXTCCAkWgAwIBAgIJAJC1HiIAZAiIMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
 BAYTAkFVMRMwEQYDVQQIDApTb21lLVN 0YXRlMSEwHwYDVQQKDBhJ=
 -----END CERTIFICATE-----
-        `, // invalid Base64 content
-        '-----BEGIN CERTIFICATE-----', // missing content and end tag
+        `, // Invalid Base64 content
+        '-----BEGIN CERTIFICATE-----', // Missing content and end tag
       ];
       for (const ca of certs) {
         expect(validatePublicCert(ca.trim())).toBe(false);
@@ -171,10 +171,10 @@ BAYTAkFVMRMwEQYDVQQIDApTb21lLVN 0YXRlMSEwHwYDVQQKDBhJ=
 
     it('should not validate incorrect NFS paths', () => {
       const invalidNFSPaths = [
-        '10.10.0.10:backups', // missing leading slash in path
-        'my-nfs-server:/exports', // missing .com or similar in the hostname
-        '10.10.0.10:', // missing path
-        // protocol included in the path
+        '10.10.0.10:backups', // Missing leading slash in path
+        'my-nfs-server:/exports', // Missing .com or similar in the hostname
+        '10.10.0.10:', // Missing path
+        // Protocol included in the path
         'http://10.10.0.10:/backups', // NOSONAR
       ];
 

@@ -8,11 +8,12 @@ import { exposedModules as storageMapModules } from './src/modules/StorageMaps/d
 import pkg from './package.json';
 
 const pluginMetadata: ConsolePluginBuildMetadata = {
-  name: process.env.PLUGIN_NAME || 'forklift-console-plugin',
-  version: process.env.VERSION || pkg?.version || '0.0.0',
-  displayName: 'OpenShift Console Plugin For Forklift',
+  dependencies: {
+    '@console/pluginAPI': '*',
+  },
   description:
     'Forklift is a suite of migration tools that facilitate the migration of VM workloads to KubeVirt.',
+  displayName: 'OpenShift Console Plugin For Forklift',
   exposedModules: {
     ...overviewModules,
     ...providerModules,
@@ -20,9 +21,8 @@ const pluginMetadata: ConsolePluginBuildMetadata = {
     ...networkMapModules,
     ...storageMapModules,
   },
-  dependencies: {
-    '@console/pluginAPI': '*',
-  },
+  name: process.env.PLUGIN_NAME || 'forklift-console-plugin',
+  version: process.env.VERSION || pkg?.version || '0.0.0',
 };
 
 export default pluginMetadata;

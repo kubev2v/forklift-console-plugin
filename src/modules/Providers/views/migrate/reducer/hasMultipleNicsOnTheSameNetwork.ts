@@ -1,6 +1,7 @@
-import { OVirtNicProfile } from '@kubev2v/types';
+import type { OVirtNicProfile } from '@kubev2v/types';
 
-import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+
 import { toNetworks } from './getNetworksUsedBySelectedVMs';
 
 /**
@@ -16,6 +17,6 @@ export const hasMultipleNicsOnTheSameNetwork = (
 ): boolean =>
   selectedVms
     .map(({ vm }) => toNetworks(vm, nicProfiles))
-    // filter out invalid networks
+    // Filter out invalid networks
     .map((networks) => networks.filter(Boolean))
     .some((networks) => networks.length !== new Set(networks).size);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { RowProps } from 'src/components/common/TableView/types';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import StatusIcon from 'src/components/status/StatusIcon';
@@ -8,7 +8,7 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
+import type {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1Pod,
   V1beta1PlanStatusMigrationVmsPipeline,
@@ -29,7 +29,8 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { hasTaskCompleted } from '../../../utils/hasTaskCompleted';
 import { PipelineTasksModal } from '../modals/PipelineTasksModal';
-import { VMData } from '../types/VMData';
+import type { VMData } from '../types/VMData';
+
 import { getIcon, getVariant } from './MigrationVirtualMachinesRow';
 
 export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (props) => {
@@ -38,19 +39,19 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
 
   const pipeline = props.resourceData.statusVM?.pipeline || [];
   const conditions = props.resourceData.statusVM?.conditions || [];
-  const pods = props.resourceData.pods;
-  const jobs = props.resourceData.jobs;
-  const pvcs = props.resourceData.pvcs;
-  const dvs = props.resourceData.dvs;
+  const { pods } = props.resourceData;
+  const { jobs } = props.resourceData;
+  const { pvcs } = props.resourceData;
+  const { dvs } = props.resourceData;
   const vmCreated = pipeline.find(
     (p) => p?.name === 'VirtualMachineCreation' && p?.phase === 'Completed',
   );
 
   const getPodLogsLink = (pod: IoK8sApiCoreV1Pod) =>
     getResourceUrl({
-      reference: 'pods',
-      namespace: pod.metadata.namespace,
       name: pod.metadata.name,
+      namespace: pod.metadata.namespace,
+      reference: 'pods',
     });
 
   const getStatusLabel = (phase: string) => {
@@ -84,8 +85,8 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                   <ResourceLink
                     groupVersionKind={{
                       group: 'kubevirt.io',
-                      version: 'v1',
                       kind: 'VirtualMachine',
+                      version: 'v1',
                     }}
                     name={props.resourceData.statusVM?.name}
                     namespace={props.resourceData.targetNamespace}
@@ -154,7 +155,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 <Tr key={job.metadata.uid}>
                   <Td>
                     <ResourceLink
-                      groupVersionKind={{ group: 'batch', version: 'v1', kind: 'Job' }}
+                      groupVersionKind={{ group: 'batch', kind: 'Job', version: 'v1' }}
                       name={job?.metadata?.name}
                       namespace={job?.metadata?.namespace}
                     />
@@ -187,7 +188,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 <Tr key={pvc.metadata.uid}>
                   <Td>
                     <ResourceLink
-                      groupVersionKind={{ version: 'v1', kind: 'PersistentVolumeClaim' }}
+                      groupVersionKind={{ kind: 'PersistentVolumeClaim', version: 'v1' }}
                       name={pvc?.metadata?.name}
                       namespace={pvc?.metadata?.namespace}
                     />
@@ -221,9 +222,9 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                   <Td>
                     <ResourceLink
                       groupVersionKind={{
-                        version: 'v1beta1',
-                        kind: 'DataVolume',
                         group: 'cdi.kubevirt.io',
+                        kind: 'DataVolume',
+                        version: 'v1beta1',
                       }}
                       name={dv?.metadata?.name}
                       namespace={dv?.metadata?.namespace}
@@ -313,9 +314,9 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                     <Button
                       className="forklift-page-plan-details-vm-tasks"
                       variant="link"
-                      onClick={() =>
-                        showModal(<PipelineTasksModal name={p?.name} tasks={p.tasks} />)
-                      }
+                      onClick={() => {
+                        showModal(<PipelineTasksModal name={p?.name} tasks={p.tasks} />);
+                      }}
                     >
                       <TaskIcon /> {t('{{completed}} / {{total}}', getPipelineTasks(p))}
                     </Button>
@@ -354,8 +355,8 @@ const getJobPhase = (job: IoK8sApiBatchV1Job) => {
 const getPipelineTasks = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => {
   const tasks = pipeline?.tasks || [];
 
-  // search for all completed tasks (either tasks that completed successfully or ones that aren't finished but their pipeline step is).
+  // Search for all completed tasks (either tasks that completed successfully or ones that aren't finished but their pipeline step is).
   const tasksCompleted = tasks.filter((c) => hasTaskCompleted(c.phase, c.progress, pipeline));
 
-  return { total: tasks.length, completed: tasksCompleted.length, name: pipeline.name };
+  return { completed: tasksCompleted.length, name: pipeline.name, total: tasks.length };
 };

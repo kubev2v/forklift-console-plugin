@@ -1,7 +1,7 @@
-import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
-import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
+import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 
-import {
+import type {
   OpenShiftNetworkAttachmentDefinition,
   OpenShiftStorageClass,
   V1beta1Plan,
@@ -9,35 +9,34 @@ import {
 
 import { POD_NETWORK } from './constants';
 
-const resolveCollisions = (tuples: [string, string][]): { [key: string]: string } =>
+const resolveCollisions = (tuples: [string, string][]): Record<string, string> =>
   tuples.reduce((acc, [label, id]) => {
     if (acc[label] === id) {
-      //already included - no collisions
+      //Already included - no collisions
       return acc;
-    } else if (acc[`${label}`] === id) {
-      //already included with suffix - there was a collision before
+    } else if (acc[label] === id) {
+      //Already included with suffix - there was a collision before
       return acc;
     } else if (acc[label]) {
-      // resolve conflict
+      // Resolve conflict
       return {
-        // remove (filter out) existing label from keys list
+        // Remove (filter out) existing label from keys list
         ...Object.fromEntries(Object.entries(acc).filter(([key]) => key !== label)),
-        // existing entry: add suffix with ID
-        [`${label}`]: acc[label],
-        // new entry: create with suffix
-        [`${label}`]: id,
-      };
-    } else {
-      return {
-        ...acc,
+        // Existing entry: add suffix with ID
+        [label]: acc[label],
+        // New entry: create with suffix
         [label]: id,
       };
     }
+    return {
+      ...acc,
+      [label]: id,
+    };
   }, {});
 
 export const mapSourceNetworksIdsToLabels = (
   sources: InventoryNetwork[],
-): { [label: string]: string } => {
+): Record<string, string> => {
   const tuples: [string, string][] = sources
     .map((net): [string, string] => {
       switch (net.providerType) {
@@ -68,7 +67,7 @@ export const mapSourceNetworksIdsToLabels = (
 
 export const mapSourceStoragesIdsToLabels = (
   sources: InventoryStorage[],
-): { [label: string]: string } => {
+): Record<string, string> => {
   const tuples: [string, string][] = sources
     .map((storage): [string, string] => {
       switch (storage.providerType) {
@@ -101,7 +100,7 @@ export const mapSourceStoragesIdsToLabels = (
 export const mapTargetNetworksIdsToLabels = (
   targets: OpenShiftNetworkAttachmentDefinition[],
   plan: V1beta1Plan,
-): { [label: string]: string } => {
+): Record<string, string> => {
   const tuples: [string, string][] = targets
     .filter(({ namespace }) => namespace === plan.spec.targetNamespace || namespace === 'default')
     .map((net) => [net.uid, `${net.namespace}/${net.name}`]);
@@ -114,7 +113,7 @@ export const mapTargetNetworksIdsToLabels = (
 export const mapTargetStoragesLabelsToIds = (
   targets: OpenShiftStorageClass[],
   plan: V1beta1Plan,
-): { [label: string]: string } => {
+): Record<string, string> => {
   const tuples: [string, string][] = targets
     .filter(({ namespace }) => namespace === plan.spec.targetNamespace || !namespace)
     .map((storage): [string, string] => [storage.name, storage.uid]);

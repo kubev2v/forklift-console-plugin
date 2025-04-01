@@ -1,4 +1,4 @@
-import { V1beta1NetworkMapSpecMap, V1beta1StorageMapSpecMap } from '@kubev2v/types';
+import type { V1beta1NetworkMapSpecMap, V1beta1StorageMapSpecMap } from '@kubev2v/types';
 
 function hasPlanMappingsNetworkChanged(
   currPlanNetworkMaps: V1beta1NetworkMapSpecMap[],

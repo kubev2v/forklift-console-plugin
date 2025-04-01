@@ -12,8 +12,8 @@ describe('manage fields', () => {
       result: {
         current: [fields],
       },
-    } = renderHook(() => useFields(undefined, [{ resourceFieldId: NAME, label: '' }]));
-    expect(fields).toMatchObject([{ resourceFieldId: NAME, isVisible: false }]);
+    } = renderHook(() => useFields(undefined, [{ label: '', resourceFieldId: NAME }]));
+    expect(fields).toMatchObject([{ isVisible: false, resourceFieldId: NAME }]);
   });
   it('enables namespace column visibility if no namespace is chosen', () => {
     const {
@@ -22,13 +22,13 @@ describe('manage fields', () => {
       },
     } = renderHook(() =>
       useFields(undefined, [
-        { resourceFieldId: NAME, label: '', isVisible: true },
-        { resourceFieldId: NAMESPACE, label: '', isVisible: false },
+        { isVisible: true, label: '', resourceFieldId: NAME },
+        { isVisible: false, label: '', resourceFieldId: NAMESPACE },
       ]),
     );
     expect(fields).toMatchObject([
-      { resourceFieldId: NAME, isVisible: true },
-      { resourceFieldId: NAMESPACE, isVisible: true },
+      { isVisible: true, resourceFieldId: NAME },
+      { isVisible: true, resourceFieldId: NAMESPACE },
     ]);
   });
   it('disables namespace column visibility if a namespace is chosen', () => {
@@ -38,13 +38,13 @@ describe('manage fields', () => {
       },
     } = renderHook(() =>
       useFields('some_namespace', [
-        { resourceFieldId: NAME, label: '', isVisible: true },
-        { resourceFieldId: NAMESPACE, label: '', isVisible: true },
+        { isVisible: true, label: '', resourceFieldId: NAME },
+        { isVisible: true, label: '', resourceFieldId: NAMESPACE },
       ]),
     );
     expect(fields).toMatchObject([
-      { resourceFieldId: NAME, isVisible: true },
-      { resourceFieldId: NAMESPACE, isVisible: false },
+      { isVisible: true, resourceFieldId: NAME },
+      { isVisible: false, resourceFieldId: NAMESPACE },
     ]);
   });
 });
@@ -59,22 +59,22 @@ describe('initialize fields from user settings', () => {
       useFields(
         undefined,
         [
-          { resourceFieldId: NAME, label: '', isVisible: true },
-          { resourceFieldId: NAMESPACE, label: '', isVisible: true },
+          { isVisible: true, label: '', resourceFieldId: NAME },
+          { isVisible: true, label: '', resourceFieldId: NAMESPACE },
         ],
         {
+          clear: () => undefined,
           data: [
-            { resourceFieldId: NAMESPACE, isVisible: true },
-            { resourceFieldId: NAME, isVisible: true },
+            { isVisible: true, resourceFieldId: NAMESPACE },
+            { isVisible: true, resourceFieldId: NAME },
           ],
           save: () => undefined,
-          clear: () => undefined,
         },
       ),
     );
     expect(fields).toMatchObject([
-      { resourceFieldId: NAMESPACE, isVisible: true },
-      { resourceFieldId: NAME, isVisible: true },
+      { isVisible: true, resourceFieldId: NAMESPACE },
+      { isVisible: true, resourceFieldId: NAME },
     ]);
   });
 
@@ -87,22 +87,22 @@ describe('initialize fields from user settings', () => {
       useFields(
         'some-namespace',
         [
-          { resourceFieldId: NAME, label: '', isVisible: true, isIdentity: true },
-          { resourceFieldId: NAMESPACE, label: '', isVisible: true },
+          { isIdentity: true, isVisible: true, label: '', resourceFieldId: NAME },
+          { isVisible: true, label: '', resourceFieldId: NAMESPACE },
         ],
         {
+          clear: () => undefined,
           data: [
-            { resourceFieldId: NAME, isVisible: false },
-            { resourceFieldId: NAMESPACE, isVisible: false },
+            { isVisible: false, resourceFieldId: NAME },
+            { isVisible: false, resourceFieldId: NAMESPACE },
           ],
           save: () => undefined,
-          clear: () => undefined,
         },
       ),
     );
     expect(fields).toMatchObject([
-      { resourceFieldId: NAME, isVisible: true },
-      { resourceFieldId: NAMESPACE, isVisible: false },
+      { isVisible: true, resourceFieldId: NAME },
+      { isVisible: false, resourceFieldId: NAMESPACE },
     ]);
   });
   it('filters out duplicated and unsupported fields', () => {
@@ -114,23 +114,23 @@ describe('initialize fields from user settings', () => {
       useFields(
         undefined,
         [
-          { resourceFieldId: NAME, label: '', isVisible: true },
-          { resourceFieldId: NAMESPACE, label: '', isVisible: true },
+          { isVisible: true, label: '', resourceFieldId: NAME },
+          { isVisible: true, label: '', resourceFieldId: NAMESPACE },
         ],
         {
+          clear: () => undefined,
           data: [
-            { resourceFieldId: NAME, isVisible: false },
-            { resourceFieldId: NAME, isVisible: true },
-            { resourceFieldId: 'foo', isVisible: false },
+            { isVisible: false, resourceFieldId: NAME },
+            { isVisible: true, resourceFieldId: NAME },
+            { isVisible: false, resourceFieldId: 'foo' },
           ],
           save: () => undefined,
-          clear: () => undefined,
         },
       ),
     );
     expect(fields).toMatchObject([
-      { resourceFieldId: NAME, isVisible: false },
-      { resourceFieldId: NAMESPACE, isVisible: true },
+      { isVisible: false, resourceFieldId: NAME },
+      { isVisible: true, resourceFieldId: NAMESPACE },
     ]);
   });
 });
@@ -146,21 +146,21 @@ describe('saves fields to user settings', () => {
       useFields(
         undefined,
         [
-          { resourceFieldId: NAME, label: '', isVisible: true },
-          { resourceFieldId: NAMESPACE, label: '', isVisible: true },
+          { isVisible: true, label: '', resourceFieldId: NAME },
+          { isVisible: true, label: '', resourceFieldId: NAMESPACE },
         ],
-        { data: [], save: saveSettings, clear: () => undefined },
+        { clear: () => undefined, data: [], save: saveSettings },
       ),
     );
-    act(() =>
+    act(() => {
       setFields([
-        { resourceFieldId: NAMESPACE, label: '', isVisible: true },
-        { resourceFieldId: NAME, label: '', isVisible: false },
-      ]),
-    );
+        { isVisible: true, label: '', resourceFieldId: NAMESPACE },
+        { isVisible: false, label: '', resourceFieldId: NAME },
+      ]);
+    });
     expect(saveSettings).toBeCalledWith([
-      { resourceFieldId: NAMESPACE, isVisible: true },
-      { resourceFieldId: NAME, isVisible: false },
+      { isVisible: true, resourceFieldId: NAMESPACE },
+      { isVisible: false, resourceFieldId: NAME },
     ]);
   });
   it('clears settings if equal to defaults)', () => {
@@ -173,18 +173,18 @@ describe('saves fields to user settings', () => {
       useFields(
         undefined,
         [
-          { resourceFieldId: NAME, label: '', isVisible: true },
-          { resourceFieldId: NAMESPACE, label: '', isVisible: true },
+          { isVisible: true, label: '', resourceFieldId: NAME },
+          { isVisible: true, label: '', resourceFieldId: NAMESPACE },
         ],
-        { data: [], save: () => undefined, clear: clearSettings },
+        { clear: clearSettings, data: [], save: () => undefined },
       ),
     );
-    act(() =>
+    act(() => {
       setFields([
-        { resourceFieldId: NAME, label: '', isVisible: true },
-        { resourceFieldId: NAMESPACE, label: '', isVisible: true },
-      ]),
-    );
+        { isVisible: true, label: '', resourceFieldId: NAME },
+        { isVisible: true, label: '', resourceFieldId: NAMESPACE },
+      ]);
+    });
     expect(clearSettings).toBeCalled();
   });
 });

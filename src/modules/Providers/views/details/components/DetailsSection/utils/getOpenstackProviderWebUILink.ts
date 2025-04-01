@@ -1,4 +1,4 @@
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 
 import { getProviderUIAnnotation } from './getProviderUIAnnotation';
 
@@ -22,16 +22,15 @@ export const getOpenstackProviderWebUILink = (provider: V1beta1Provider): string
   }
   const urlObj = new URL(url);
 
-  // remove the port
+  // Remove the port
   urlObj.port = '';
 
-  // replace the '/v3' path with the '/dashboard' path
+  // Replace the '/v3' path with the '/dashboard' path
   if (urlObj.pathname.endsWith('/v3')) {
-    const newPath = urlObj.pathname.slice(0, -3) + '/dashboard';
+    const newPath = `${urlObj.pathname.slice(0, -3)}/dashboard`;
     urlObj.pathname = newPath;
 
     return urlObj.toString();
-  } else {
-    return '';
   }
+  return '';
 };

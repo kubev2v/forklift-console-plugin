@@ -1,4 +1,4 @@
-import { Dispatch, useEffect } from 'react';
+import { type Dispatch, useEffect } from 'react';
 import { useImmerReducer } from 'use-immer';
 
 import {
@@ -6,17 +6,23 @@ import {
   PlanModelGroupVersionKind,
   ProviderModelGroupVersionKind,
   StorageMapModelGroupVersionKind,
-  V1beta1NetworkMap,
-  V1beta1Plan,
-  V1beta1Provider,
-  V1beta1StorageMap,
+  type V1beta1NetworkMap,
+  type V1beta1Plan,
+  type V1beta1Provider,
+  type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import { useDisks } from '../../hooks/useDisks';
+import { useNamespaces } from '../../hooks/useNamespaces';
+import { useOpenShiftNetworks, useSourceNetworks } from '../../hooks/useNetworks';
+import { useNicProfiles } from '../../hooks/useNicProfiles';
+import { useOpenShiftStorages, useSourceStorages } from '../../hooks/useStorages';
+
 import {
-  CreateVmMigration,
+  type CreateVmMigration,
   initState,
-  PageAction,
+  type PageAction,
   setAPiError,
   setAvailableProviders,
   setAvailableSourceNetworks,
@@ -34,37 +40,32 @@ import {
 } from './reducer/actions';
 import { createInitialState } from './reducer/createInitialState';
 import { reducer } from './reducer/reducer';
-import { useDisks } from '../../hooks/useDisks';
-import { useNamespaces } from '../../hooks/useNamespaces';
-import { useOpenShiftNetworks, useSourceNetworks } from '../../hooks/useNetworks';
-import { useNicProfiles } from '../../hooks/useNicProfiles';
-import { useOpenShiftStorages, useSourceStorages } from '../../hooks/useStorages';
-import { CreateVmMigrationContextType } from './ProvidersCreateVmMigrationContext';
-import { CreateVmMigrationPageState } from './types';
+import type { CreateVmMigrationContextType } from './ProvidersCreateVmMigrationContext';
+import type { CreateVmMigrationPageState } from './types';
 
 export const useFetchEffects = (
   createVmMigrationContext: CreateVmMigrationContextType,
 ): [CreateVmMigrationPageState, Dispatch<PageAction<CreateVmMigration, unknown>>, boolean] => {
   const {
-    selectedVms,
-    provider: sourceProvider,
     planName,
     projectName,
+    provider: sourceProvider,
+    selectedVms,
   } = createVmMigrationContext?.data || {};
 
-  // error state - the page was entered directly without choosing the VMs
+  // Error state - the page was entered directly without choosing the VMs
   const emptyContext = !selectedVms?.length || !sourceProvider;
   const namespace = sourceProvider?.metadata?.namespace ?? '';
 
   const [state, dispatch] = useImmerReducer(
     reducer,
-    { namespace, sourceProvider, selectedVms, planName, projectName },
+    { namespace, planName, projectName, selectedVms, sourceProvider },
     createInitialState,
   );
 
   const {
-    workArea: { targetProvider },
     flow: { editingDone },
+    workArea: { targetProvider },
   } = state;
   const targetProviderName = targetProvider?.metadata?.name;
 
@@ -100,9 +101,9 @@ export const useFetchEffects = (
 
   const [providers, providersLoaded, providerError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace,
+    namespaced: true,
   });
   useEffect(
     () =>
@@ -113,9 +114,9 @@ export const useFetchEffects = (
 
   const [plans, plansLoaded, plansError] = useK8sWatchResource<V1beta1Plan[]>({
     groupVersionKind: PlanModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace,
+    namespaced: true,
   });
   useEffect(
     () => !editingDone && dispatchWithFallback(setExistingPlans(plans), !plansLoaded, plansError),
@@ -124,9 +125,9 @@ export const useFetchEffects = (
 
   const [netMaps, netMapsLoaded, netMapsError] = useK8sWatchResource<V1beta1NetworkMap[]>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace,
+    namespaced: true,
   });
   useEffect(
     () =>
@@ -137,9 +138,9 @@ export const useFetchEffects = (
 
   const [stMaps, stMapsLoaded, stMapsError] = useK8sWatchResource<V1beta1StorageMap[]>({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace,
+    namespaced: true,
   });
   useEffect(
     () =>

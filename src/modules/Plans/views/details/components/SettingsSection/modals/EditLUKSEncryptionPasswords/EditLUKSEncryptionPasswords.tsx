@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
-import {
+import type {
   EditModalProps,
   ModalInputComponentType,
 } from 'src/modules/Providers/modals/EditModal/types';
@@ -9,22 +9,22 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { InputList } from '@components/InputList/InputList';
 import { LazyTextInput } from '@components/InputList/LazyTextInput';
 import {
-  IoK8sApiCoreV1Secret,
-  Modify,
+  type IoK8sApiCoreV1Secret,
+  type Modify,
   PlanModel,
-  V1beta1Plan,
-  V1beta1Provider,
+  type V1beta1Plan,
+  type V1beta1Provider,
 } from '@kubev2v/types';
-import { K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { editLUKSModalAlert } from './editLUKSModalAlert';
 import { editLUKSModalBody } from './editLUKSModalBody';
 import { onLUKSEncryptionPasswordsConfirm } from './onLUKSEncryptionPasswordsConfirm';
 
-interface SecretRendererProps {
+type SecretRendererProps = {
   value: string | number;
   onChange: (string) => void;
-}
+};
 
 const EditPassphraseFactory: (initialValue: string) => ModalInputComponentType = (initialValue) => {
   const SecretRenderer: React.FC<SecretRendererProps> = ({ onChange }) => {
@@ -32,12 +32,16 @@ const EditPassphraseFactory: (initialValue: string) => ModalInputComponentType =
     const items = initialValue && JSON.parse(initialValue);
 
     // Init component internal value
-    useEffect(() => onChange(initialValue), [initialValue]);
+    useEffect(() => {
+      onChange(initialValue);
+    }, [initialValue]);
 
     return (
       <InputList
         items={items}
-        onChange={(list) => onChange(JSON.stringify(list))}
+        onChange={(list) => {
+          onChange(JSON.stringify(list));
+        }}
         InputRow={LazyTextInput}
         addButtonText={t('Add passphrase')}
       />
@@ -79,7 +83,7 @@ export const EditLUKSEncryptionPasswords: React.FC<EditLUKSEncryptionPasswordsPr
   return (
     <EditModal
       {...props}
-      jsonPath={() => null} // we can't get the keys from the plan
+      jsonPath={() => null} // We can't get the keys from the plan
       title={props?.title || t('Disk decryption passphrases')}
       label={props?.label || t('Passphrases for LUKS encrypted devices')}
       model={PlanModel}

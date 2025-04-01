@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
-import { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { type Modify, ProviderModel, type V1beta1Provider } from '@kubev2v/types';
+import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Checkbox, TextInput } from '@patternfly/react-core';
 
 import { VDDKHelperTextShort } from '../../utils/components/VDDKHelperText/VDDKHelperText';
 import { validateVDDKImage } from '../../utils/validators/provider/vsphere/validateVDDKImage';
 import { EditModal } from '../EditModal/EditModal';
-import { EditModalProps } from '../EditModal/types';
+import type { EditModalProps } from '../EditModal/types';
+
 import { onEmptyVddkConfirm } from './onEmptyVddkConfirm';
 import { onNoneEmptyVddkConfirm } from './onNoneEmptyVddkConfirm';
 
@@ -53,7 +54,9 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
           'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
         )}
         isChecked={isEmptyImage}
-        onChange={(e, v) => onChange(v, e)}
+        onChange={(e, v) => {
+          onChange(v, e);
+        }}
         id="emptyVddkInitImage"
         name="emptyVddkInitImage"
       />

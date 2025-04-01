@@ -4,7 +4,7 @@ import { esxiSecretValidator } from 'src/modules/Providers/utils/validators/prov
 
 import {
   BaseCredentialsSection,
-  BaseCredentialsSectionProps,
+  type BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { EsxiCredentialsEdit } from './components/edit/EsxiCredentialsEdit';
 import { EsxiCredentialsList } from './components/list/EsxiCredentialsList';

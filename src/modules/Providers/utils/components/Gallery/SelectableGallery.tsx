@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 
 import { Gallery, GalleryItem } from '@patternfly/react-core';
 
@@ -6,25 +6,25 @@ import { SelectableCard } from './SelectableCard';
 
 import './SelectableGallery.style.css';
 
-export interface SelectableGalleryItem {
+export type SelectableGalleryItem = {
   /** The title of the item */
   title: ReactNode;
   /** The logo of the item */
   logo?: ReactNode;
   /** The content of the item */
   content: string;
-}
+};
 
-interface SelectableGalleryProps {
+type SelectableGalleryProps = {
   /** An object of items to be displayed in the gallery. Key is the item's id */
   items: Record<string, SelectableGalleryItem>;
   /** Handler function to be called when a card is selected */
   onChange: (selectedCardId: string | null) => void;
   /** A function to sort the items. Default is alphabetic sort on item titles. */
   sortFunction?: (a: [string, SelectableGalleryItem], b: [string, SelectableGalleryItem]) => number;
-  /** initial selected value */
+  /** Initial selected value */
   selectedID?: string;
-}
+};
 
 /**
  * SelectableGallery component
@@ -33,8 +33,8 @@ interface SelectableGalleryProps {
 export const SelectableGallery: FC<SelectableGalleryProps> = ({
   items,
   onChange,
-  sortFunction,
   selectedID,
+  sortFunction,
 }) => {
   // State to manage the selected card's id
   const [selectedCardId, setSelectedCardId] = React.useState<string | null>(selectedID);
@@ -65,7 +65,9 @@ export const SelectableGallery: FC<SelectableGalleryProps> = ({
             titleLogo={item.logo}
             content={item.content}
             isSelected={id === selectedCardId}
-            onChange={(isSelected) => handleCardChange(isSelected, id)}
+            onChange={(isSelected) => {
+              handleCardChange(isSelected, id);
+            }}
           />
         </GalleryItem>
       ))}

@@ -1,6 +1,6 @@
 import { Base64 } from 'js-base64';
 
-import { IoK8sApiCoreV1Secret, SecretModel, V1beta1Provider } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -39,21 +39,21 @@ export async function createProviderSecret(
 
   const newSecret: IoK8sApiCoreV1Secret = {
     ...secret,
+    data: { ...cleanedData, url: encodedURL },
     metadata: {
       ...secret?.metadata,
-      generateName: generateName,
+      generateName,
       labels: {
         ...secret?.metadata?.labels,
         createdForProviderType: provider?.spec?.type,
         createdForResourceType: 'providers',
       },
     },
-    data: { ...cleanedData, url: encodedURL },
   };
 
   const obj = await k8sCreate({
-    model: SecretModel,
     data: newSecret,
+    model: SecretModel,
   });
 
   return obj;
@@ -69,7 +69,7 @@ function cleanObject(obj) {
 
   // Don't save cacert when insecureSkipVerify is true
   if (Base64.decode(obj?.insecureSkipVerify || '') === 'true') {
-    delete result['cacert'];
+    delete result.cacert;
   }
 
   return result;

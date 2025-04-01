@@ -5,7 +5,7 @@ import { isProviderLocalOpenshift } from 'src/utils/resources';
 
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 
 /**
  * ProviderLinkCell component, used for displaying a link cell with information about the provider.

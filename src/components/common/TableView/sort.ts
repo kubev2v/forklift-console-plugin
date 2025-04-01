@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 
-import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base/types';
+import type { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base/types';
 
 import { getResourceFieldValue } from '../FilterGroup/matchers';
 import { localeCompare } from '../utils/localCompare';
-import { ResourceField } from '../utils/types';
-import { SortType } from './types';
+import type { ResourceField } from '../utils/types';
+
+import type { SortType } from './types';
 
 /**
  * Compares all types by converting them to string.
@@ -60,16 +61,16 @@ export const useSort = (
   fields: ResourceField[],
   resolvedLanguage = 'en',
 ): [SortType, (sort: SortType) => void, (a, b) => number] => {
-  // by default sort by the first identity column (if any)
+  // By default sort by the first identity column (if any)
   const [firstField] = [...fields].sort(
     (a, b) => Number(Boolean(b.isIdentity)) - Number(Boolean(a.isIdentity)),
   );
 
   const [activeSort, setActiveSort] = useState<SortType>({
-    // when no other order is define, default to ascending order
+    // When no other order is define, default to ascending order
     isAsc: true,
-    resourceFieldId: firstField?.resourceFieldId,
     label: firstField?.label,
+    resourceFieldId: firstField?.resourceFieldId,
   });
 
   const compareFn = useMemo(
@@ -91,9 +92,9 @@ export const useSort = (
  * @see ThSortType
  */
 export const buildSort = ({
+  activeSort,
   columnIndex,
   resourceFields,
-  activeSort,
   setActiveSort,
 }: {
   columnIndex: number;
@@ -101,16 +102,7 @@ export const buildSort = ({
   activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
 }): ThSortType => ({
-  sortBy: {
-    index:
-      resourceFields.find(
-        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
-      ) &&
-      resourceFields.findIndex(
-        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
-      ),
-    direction: activeSort.isAsc ? 'asc' : 'desc',
-  },
+  columnIndex,
   onSort: (_event, index, direction) => {
     resourceFields[index]?.resourceFieldId &&
       setActiveSort({
@@ -118,5 +110,14 @@ export const buildSort = ({
         ...resourceFields[index],
       });
   },
-  columnIndex,
+  sortBy: {
+    direction: activeSort.isAsc ? 'asc' : 'desc',
+    index:
+      resourceFields.find(
+        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
+      ) &&
+      resourceFields.findIndex(
+        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
+      ),
+  },
 });
