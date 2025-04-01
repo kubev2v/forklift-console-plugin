@@ -4,16 +4,14 @@ import { RowProps } from 'src/components/common/TableView/types';
 import { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { NetworkMapActionsDropdown } from '../../actions';
-import { NetworkMapData } from '../../utils';
-import {
-  CellProps,
-  NamespaceCell,
-  NetworkMapLinkCell,
-  PlanCell,
-  ProviderLinkCell,
-  StatusCell,
-} from './components';
+import { CellProps } from './components/CellProps';
+import { NamespaceCell } from './components/NamespaceCell';
+import { NetworkMapLinkCell } from './components/NetworkMapLinkCell';
+import { PlanCell } from './components/PlanCell';
+import { ProviderLinkCell } from './components/ProviderLinkCell';
+import { StatusCell } from './components/StatusCell';
+import { NetworkMapActionsDropdown } from '../../actions/NetworkMapActionsDropdown';
+import { NetworkMapData } from '../../utils/types/NetworkMapData';
 
 export const ProviderRow: React.FC<RowProps<NetworkMapData>> = ({
   resourceFields,

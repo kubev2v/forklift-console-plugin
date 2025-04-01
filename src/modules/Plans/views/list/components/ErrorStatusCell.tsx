@@ -1,8 +1,9 @@
 import React from 'react';
 import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom-v5-compat';
-import { getPlanPhase } from 'src/modules/Plans/utils';
-import { getResourceUrl, TableIconCell } from 'src/modules/Providers/utils';
+import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef } from '@kubev2v/types';
@@ -14,7 +15,7 @@ import { PlanStatusIcon } from './PlanStatusIcon';
 export const ErrorStatusCell: React.FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
-  const { obj: plan } = data;
+  const { plan } = data;
   const phase = getPlanPhase(data);
   const phaseLabel: string = phase;
 

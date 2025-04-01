@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -11,8 +11,8 @@ import {
 import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, DescriptionList, Flex, FlexItem, Spinner } from '@patternfly/react-core';
 
-import { ProvidersEdit } from './components';
-import { providersSectionReducer, ProvidersSectionState } from './state';
+import { ProvidersEdit } from './components/ProvidersEdit';
+import { providersSectionReducer, ProvidersSectionState } from './state/reducer';
 
 const initialState: ProvidersSectionState = {
   StorageMap: null,

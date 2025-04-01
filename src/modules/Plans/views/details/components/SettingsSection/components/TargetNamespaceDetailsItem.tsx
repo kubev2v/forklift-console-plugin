@@ -1,11 +1,11 @@
 import React from 'react';
-import { isPlanEditable } from 'src/modules/Plans/utils';
-import { useModal } from 'src/modules/Providers/modals';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanDetailsItemProps } from '../../DetailsSection';
-import { EditPlanTargetNamespace } from '../modals';
+import { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import { EditPlanTargetNamespace } from '../modals/EditPlanTargetNamespace/EditPlanTargetNamespace';
 
 export const TargetNamespaceDetailsItem: React.FC<PlanDetailsItemProps> = ({
   resource,

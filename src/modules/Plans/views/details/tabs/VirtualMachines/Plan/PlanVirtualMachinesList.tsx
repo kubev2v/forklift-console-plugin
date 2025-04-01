@@ -4,6 +4,7 @@ import {
   GlobalActionWithSelection,
   StandardPageWithSelection,
 } from 'src/components/page/StandardPageWithSelection';
+import { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
@@ -14,8 +15,8 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 
-import { PlanVMsDeleteButton } from '../components';
-import { PlanData, VMData } from '../types';
+import { PlanVMsDeleteButton } from '../components/PlanVMsDeleteButton';
+import { VMData } from '../types/VMData';
 import { PlanVirtualMachinesRow } from './PlanVirtualMachinesRow';
 
 const fieldsMetadataFactory: (isVsphere: boolean) => ResourceFieldFactory = (isVsphere) => (t) =>
@@ -55,12 +56,12 @@ const PageWithSelection = StandardPageWithSelection<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
 export const PlanVirtualMachinesList: FC<{
-  obj: PlanData;
+  planData: PlanData;
   sourceProvider?: V1beta1Provider;
-}> = ({ obj, sourceProvider }) => {
+}> = ({ planData, sourceProvider }) => {
   const { t } = useForkliftTranslation();
 
-  const { plan } = obj;
+  const { plan } = planData;
 
   const userSettings = loadUserSettings({ pageId: 'PlanVirtualMachines' });
 
@@ -89,7 +90,7 @@ export const PlanVirtualMachinesList: FC<{
     dvs: [],
     conditions: conditionsDict[vm.id],
     targetNamespace: plan?.spec?.targetNamespace,
-    planData: obj,
+    planData,
     vmIndex: index,
   }));
   const vmDataSource: [VMData[], boolean, unknown] = [vmData || [], true, undefined];

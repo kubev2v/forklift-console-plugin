@@ -2,7 +2,7 @@ import { Draft } from 'immer';
 
 import { OpenstackVolume, OVirtDisk } from '@kubev2v/types';
 
-import { VmData } from '../../details';
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 
 // based on packages legacy/src/Plans/components/Wizard/helpers.tsx
 export const getStoragesUsedBySelectedVms = (

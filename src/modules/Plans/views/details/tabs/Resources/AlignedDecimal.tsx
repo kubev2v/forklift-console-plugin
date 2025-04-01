@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForkliftTranslation } from 'src/utils';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 export type AlignedDecimalProps = {
   /**

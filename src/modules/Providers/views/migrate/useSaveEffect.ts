@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { produce } from 'immer';
-import { deepCopy } from 'src/utils';
+import { deepCopy } from 'src/utils/deepCopy';
 
 import {
   NetworkMapModel,
@@ -16,7 +16,7 @@ import { k8sCreate, K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin
 
 import { setAPiError } from './reducer/actions';
 import { getObjectRef } from './reducer/helpers';
-import { getResourceUrl } from '../../utils';
+import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
 import { CreateVmMigrationPageState } from './types';
 
 const createStorage = (storageMap: V1beta1StorageMap) =>

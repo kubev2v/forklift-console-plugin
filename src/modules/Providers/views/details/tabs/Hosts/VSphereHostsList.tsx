@@ -5,15 +5,15 @@ import {
   StandardPageWithSelection,
   StandardPageWithSelectionProps,
 } from 'src/components/page/StandardPageWithSelection';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
+import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
 import { HostModelGroupVersionKind, V1beta1Host, VSphereHost } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { InventoryHostPair, matchHostsToInventory } from './utils/helpers';
-import { SelectNetworkButton } from './components';
+import { SelectNetworkButton } from './components/SelectNetworkButton';
+import { InventoryHostPair, matchHostsToInventory } from './utils/helpers/matchHostsToInventory';
 import { ProviderHostsProps } from './ProviderHosts';
 import { VSphereHostsCells } from './VSphereHostsRow';
 

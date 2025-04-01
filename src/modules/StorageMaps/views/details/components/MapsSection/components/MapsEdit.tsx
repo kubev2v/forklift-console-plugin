@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';

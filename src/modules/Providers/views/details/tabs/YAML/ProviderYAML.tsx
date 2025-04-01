@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProviderData } from 'src/modules/Providers/utils';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';

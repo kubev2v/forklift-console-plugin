@@ -1,4 +1,4 @@
-import { EditModalProps } from 'src/modules/Providers/modals';
+import { EditModalProps } from 'src/modules/Providers/modals/EditModal/types';
 
 import { Modify, V1beta1ForkliftController } from '@kubev2v/types';
 import { K8sModel } from '@openshift-console/dynamic-plugin-sdk';

@@ -18,8 +18,8 @@ import {
 import { CreateVmMigration } from './reducer/actions';
 import { InventoryNetwork } from '../../hooks/useNetworks';
 import { InventoryStorage } from '../../hooks/useStorages';
-import { Validation } from '../../utils';
-import { VmData } from '../details';
+import { Validation } from '../../utils/types/Validation';
+import { VmData } from '../details/tabs/VirtualMachines/components/VMCellProps';
 
 export interface CreateVmMigrationPageState {
   underConstruction: {

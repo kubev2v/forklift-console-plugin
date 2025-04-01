@@ -1,4 +1,4 @@
-import { StorageMapData } from 'src/modules/StorageMaps/utils';
+import { StorageMapData } from 'src/modules/StorageMaps/utils/types/StorageMapData';
 
 import { ResourceField } from '@components/common/utils/types';
 

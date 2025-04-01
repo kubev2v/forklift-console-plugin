@@ -2,11 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import {
   getMigrationVmsCounts,
-  getPlanPhase,
-  getPlanProgressVariant,
   MigrationVmsCounts,
-} from 'src/modules/Plans/utils';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+} from 'src/modules/Plans/utils/helpers/getMigrationVmsCounts';
+import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { getPlanProgressVariant } from 'src/modules/Plans/utils/helpers/getPlanProgressVariant';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef } from '@kubev2v/types';
@@ -47,16 +47,16 @@ const PlanStatusDetails: React.FC<PlanStatusDetailsProps> = (props) => {
 export const VMsProgressCell: React.FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
-  const specVms = data?.obj?.spec?.vms;
-  const vms = data?.obj?.status?.migration?.vms;
+  const specVms = data?.plan?.spec?.vms;
+  const vms = data?.plan?.status?.migration?.vms;
 
   const phase = getPlanPhase(data);
   const phaseLabel: string = phase;
 
   const planURL = getResourceUrl({
     reference: PlanModelRef,
-    name: data?.obj?.metadata?.name,
-    namespace: data?.obj?.metadata?.namespace,
+    name: data?.plan?.metadata?.name,
+    namespace: data?.plan?.metadata?.namespace,
   });
 
   if (!vms) {

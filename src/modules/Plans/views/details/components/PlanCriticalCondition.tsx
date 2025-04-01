@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { useHistory } from 'react-router';
 import { PlanConditionType } from 'src/modules/Plans/utils/types/PlanCondition';
-import { getResourceUrl } from 'src/modules/Providers';
-import { ForkliftTrans } from 'src/utils';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { EMPTY_MSG } from 'src/utils/constants';
+import { ForkliftTrans } from 'src/utils/i18n';
 
 import { PlanModelRef, V1beta1Plan, V1beta1PlanStatusConditions } from '@kubev2v/types';
 import {

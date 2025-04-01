@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { SectionHeading } from 'src/components/headers/SectionHeading';
-import { Loading } from 'src/modules/Plans/views/details';
-import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
-import { getResourceUrl, ProviderData } from 'src/modules/Providers/utils';
+import { Loading } from 'src/modules/Plans/views/details/components/Loading';
+import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import { useProviderInventory } from 'src/modules/Providers/hooks/useProviderInventory';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -17,12 +19,10 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Bullseye, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
-import {
-  ConditionsSection,
-  DetailsSection,
-  InventorySection,
-  SecretsSection,
-} from '../../components';
+import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
+import { DetailsSection } from '../../components/DetailsSection/DetailsSection';
+import { InventorySection } from '../../components/InventorySection/InventorySection';
+import { SecretsSection } from '../../components/SecretsSection/SecretsSection';
 
 interface ProviderDetailsProps {
   obj: ProviderData;

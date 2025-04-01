@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 
-import { useToggle } from '../../hooks';
+import { useToggle } from '../../hooks/useToggle';
 
 /**
  * A provider component that wraps its children with the modal context.

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Td, Tr } from '@patternfly/react-table';
 
-import { getResourceFieldValue } from '../FilterGroup';
+import { getResourceFieldValue } from '../FilterGroup/matchers';
 import { RowProps } from './types';
 
 /**

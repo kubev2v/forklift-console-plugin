@@ -1,15 +1,18 @@
 import React, { ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useToggle } from 'src/modules/Providers/hooks';
-import { AlertMessageForModals, ItemIsOwnedAlert, useModal } from 'src/modules/Providers/modals';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import { useToggle } from 'src/modules/Providers/hooks/useToggle';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { ItemIsOwnedAlert } from 'src/modules/Providers/modals/components/ItemIsOwnedAlert';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Plan } from '@kubev2v/types';
 import { k8sDelete, K8sGroupVersionKind, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { getPlanPhase, PlanPhase } from '../utils';
+import { getPlanPhase } from '../utils/helpers/getPlanPhase';
+import { PlanPhase } from '../utils/types/PlanPhase';
 
 /**
  * Props for the DeleteModal component
@@ -86,7 +89,7 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
     </Button>,
   ];
 
-  const phase = getPlanPhase({ obj: resource });
+  const phase = getPlanPhase({ plan: resource });
 
   const IsExecutingAlert: React.FC = () => (
     <Alert

@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { useForkliftTranslation } from 'src/utils';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   ExpandableSection,

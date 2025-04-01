@@ -3,7 +3,7 @@ import { KJUR, pemtohex, X509, zulutodate } from 'jsrsasign';
 
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
 
-import { getServicesApiUrl } from '../utils/helpers';
+import { getServicesApiUrl } from '../utils/helpers/getApiUrl';
 
 /**
  * @param value PEM encoded certificate

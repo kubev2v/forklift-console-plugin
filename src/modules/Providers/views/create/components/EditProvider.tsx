@@ -1,13 +1,11 @@
 import React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  EsxiCredentialsEdit,
-  OpenshiftCredentialsEdit,
-  OpenstackCredentialsEdit,
-  OvirtCredentialsEdit,
-  VCenterCredentialsEdit,
-} from '../../details';
+import { EsxiCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/EsxiCredentialsEdit';
+import { OpenshiftCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/OpenshiftCredentialsEdit';
+import { OpenstackCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/OpenstackCredentialsEdit';
+import { OvirtCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/OvirtCredentialsEdit';
+import { VCenterCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/VCenterCredentialsEdit';
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
 import { EsxiProviderCreateForm } from './EsxiProviderCreateForm';
 import { OpenshiftProviderFormCreate } from './OpenshiftProviderCreateForm';

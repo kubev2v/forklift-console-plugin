@@ -1,6 +1,6 @@
 import React, { useReducer, useState } from 'react';
-import { AlertMessageForModals } from 'src/modules/Providers/modals';
-import { ValidationMsg } from 'src/modules/Providers/utils';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
@@ -17,8 +17,8 @@ import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
-import { patchSecretData } from './edit';
-import { baseCredentialsSectionReducerFactory, BaseCredentialsSectionState } from './state';
+import { patchSecretData } from './edit/patchSecretData';
+import { baseCredentialsSectionReducerFactory, BaseCredentialsSectionState } from './state/reducer';
 
 import './BaseCredentialsSection.style.css';
 

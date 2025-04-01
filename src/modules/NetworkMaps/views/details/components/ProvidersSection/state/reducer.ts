@@ -1,4 +1,4 @@
-import { deepCopy } from 'src/utils';
+import { deepCopy } from 'src/utils/deepCopy';
 
 import { V1beta1NetworkMap, V1beta1Provider } from '@kubev2v/types';
 

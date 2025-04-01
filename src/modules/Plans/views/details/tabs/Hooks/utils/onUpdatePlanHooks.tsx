@@ -1,10 +1,10 @@
 import React from 'react';
-import { AlertMessageForModals } from 'src/modules/Providers/modals';
-import { deepCopy } from 'src/utils';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { deepCopy } from 'src/utils/deepCopy';
 
 import { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
 
-import { FormAction, FormState } from '../state';
+import { FormAction, FormState } from '../state/reducer';
 import { createHook } from './createHook';
 import { deleteHook } from './deleteHook';
 import { updateHook } from './updateHook';

@@ -4,7 +4,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 import { NetworkMapPageHeadings } from './components/DetailsSection/components/NetworkMapPageHeadings';
-import { NetworkMapDetailsTab, NetworkMapYAMLTab } from './tabs';
+import { NetworkMapDetailsTab } from './tabs/Details/NetworkMapDetailsTab';
+import NetworkMapYAMLTab from './tabs/YAML/NetworkMapYAMLTab';
 
 import './NetworkMapDetailsPage.style.css';
 

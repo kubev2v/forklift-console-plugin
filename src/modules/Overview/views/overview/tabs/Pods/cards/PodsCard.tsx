@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 
 import { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { PodsTable } from '../../../components';
+import { PodsTable } from '../../../components/PodsTable';
 
 type PodsCardProps = {
   obj?: V1beta1ForkliftController;

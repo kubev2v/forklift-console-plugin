@@ -1,9 +1,10 @@
 import { V1beta1Plan } from '@kubev2v/types';
 
-import { PlanData, PlanPhase } from '../types';
+import { PlanData } from '../types/PlanData';
+import { PlanPhase } from '../types/PlanPhase';
 
 export const getPlanPhase = (data: PlanData): PlanPhase => {
-  const plan = data?.obj;
+  const plan = data?.plan;
   if (!plan) return PlanPhase.Unknown;
 
   // Check condition type
@@ -103,7 +104,7 @@ export const isPlanSucceeded = (plan: V1beta1Plan) => {
 };
 
 export const isPlanEditable = (plan: V1beta1Plan) => {
-  const planStatus = getPlanPhase({ obj: plan });
+  const planStatus = getPlanPhase({ plan });
 
   return (
     planStatus === PlanPhase.Unknown ||
@@ -117,7 +118,7 @@ export const isPlanEditable = (plan: V1beta1Plan) => {
 };
 
 export const isPlanArchived = (plan: V1beta1Plan) => {
-  const planStatus = getPlanPhase({ obj: plan });
+  const planStatus = getPlanPhase({ plan });
 
   return planStatus === PlanPhase.Archiving || planStatus === PlanPhase.Archived;
 };

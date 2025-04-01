@@ -1,7 +1,7 @@
 import React from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { RowProps } from 'src/components/common/TableView/types';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 
 import { ResourceField } from '@components/common/utils/types';
 import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
@@ -9,10 +9,10 @@ import { FlexItem, Popover, ProgressStep, ProgressStepper } from '@patternfly/re
 import { ResourcesAlmostFullIcon, ResourcesFullIcon } from '@patternfly/react-icons';
 import { Table, Td, Tr } from '@patternfly/react-table';
 
-import { hasTaskCompleted } from '../../../utils';
-import { PlanVMsCellProps } from '../components';
+import { hasTaskCompleted } from '../../../utils/hasTaskCompleted';
 import { NameCellRenderer } from '../components/NameCellRenderer';
-import { VMData } from '../types';
+import { PlanVMsCellProps } from '../components/PlanVMsCellProps';
+import { VMData } from '../types/VMData';
 
 export const MigrationVirtualMachinesRow: React.FC<RowProps<VMData>> = ({
   resourceFields,

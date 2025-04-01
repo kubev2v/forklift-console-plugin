@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { useHistory } from 'react-router';
-import { getResourceUrl } from 'src/modules/Providers/utils';
-import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef, V1beta1Provider } from '@kubev2v/types';

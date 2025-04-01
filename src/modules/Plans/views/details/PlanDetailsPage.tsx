@@ -1,18 +1,16 @@
 import React, { memo } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
-import { PlanPageHeadings } from './components';
-import {
-  PlanDetails,
-  PlanHooks,
-  PlanMappings,
-  PlanResources,
-  PlanVirtualMachines,
-  PlanYAML,
-} from './tabs';
+import { PlanPageHeadings } from './components/PlanPageHeadings';
+import { PlanDetails } from './tabs/Details/PlanDetails';
+import { PlanHooks } from './tabs/Hooks/PlanHooks';
+import { PlanMappings } from './tabs/Mappings/PlanMappings';
+import { PlanResources } from './tabs/Resources/PlanResources';
+import { PlanVirtualMachines } from './tabs/VirtualMachines/PlanVirtualMachines';
+import { PlanYAML } from './tabs/YAML/PlanYAML';
 
 import './PlanDetailsPage.style.css';
 

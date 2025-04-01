@@ -1,5 +1,5 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
-import { ModalInputComponentType } from 'src/modules/Providers/modals';
+import { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Radio, TextInput } from '@patternfly/react-core';

@@ -3,6 +3,8 @@ import { Draft } from 'immer';
 import { DefaultRow } from 'src/components/common/TableView/DefaultRow';
 import { RowProps } from 'src/components/common/TableView/types';
 import { withTr } from 'src/components/common/TableView/withTr';
+import { getIsTarget } from 'src/modules/Providers/utils/helpers/getIsTarget';
+import { validateK8sName } from 'src/modules/Providers/utils/validators/common';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
@@ -13,8 +15,7 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 
-import { getIsTarget, validateK8sName } from '../../../utils';
-import { VmData } from '../../details';
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 import { openShiftVmFieldsMetadataFactory } from '../../details/tabs/VirtualMachines/OpenShiftVirtualMachinesList';
 import { OpenShiftVirtualMachinesCells } from '../../details/tabs/VirtualMachines/OpenShiftVirtualMachinesRow';
 import { openStackVmFieldsMetadataFactory } from '../../details/tabs/VirtualMachines/OpenStackVirtualMachinesList';

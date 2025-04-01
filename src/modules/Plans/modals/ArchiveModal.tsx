@@ -1,14 +1,16 @@
 import React, { ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useToggle } from 'src/modules/Providers/hooks';
-import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
+import { useToggle } from 'src/modules/Providers/hooks/useToggle';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, V1beta1Plan } from '@kubev2v/types';
 import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { getPlanPhase, PlanPhase } from '../utils';
+import { getPlanPhase } from '../utils/helpers/getPlanPhase';
+import { PlanPhase } from '../utils/types/PlanPhase';
 
 /**
  * Props for the DeleteModal component
@@ -65,7 +67,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
     }
   }, [resource, navigate]);
 
-  const phase = getPlanPhase({ obj: resource });
+  const phase = getPlanPhase({ plan: resource });
 
   const actions = [
     <Button

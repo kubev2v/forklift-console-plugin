@@ -1,8 +1,8 @@
 import React from 'react';
-import { NetworkMapActionsDropdown } from 'src/modules/NetworkMaps/actions';
-import { NetworkMapCriticalConditions } from 'src/modules/NetworkMaps/components';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
-import { PageHeadings } from 'src/modules/Providers/utils';
+import { NetworkMapActionsDropdown } from 'src/modules/NetworkMaps/actions/NetworkMapActionsDropdown';
+import NetworkMapCriticalConditions from 'src/modules/NetworkMaps/components/NetworkMapCriticalConditions';
+import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
 
 import {
   NetworkMapModel,

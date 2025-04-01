@@ -11,7 +11,7 @@ import {
   ToolbarFilter,
 } from '@patternfly/react-core';
 
-import { localeCompare } from '../utils';
+import { localeCompare } from '../utils/localCompare';
 import { FilterTypeProps } from './types';
 
 /**

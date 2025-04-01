@@ -1,15 +1,13 @@
 import React from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import { V1beta1StorageMap } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 
-import {
-  CreatedAtDetailsItem,
-  NameDetailsItem,
-  NamespaceDetailsItem,
-  OwnerDetailsItem,
-} from './components';
+import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';
+import { NameDetailsItem } from './components/NameDetailsItem';
+import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
+import { OwnerDetailsItem } from './components/OwnerDetailsItem';
 
 export const DetailsSection: React.FC<DetailsSectionProps> = (props) => (
   <ModalHOC>

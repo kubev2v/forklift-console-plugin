@@ -15,7 +15,7 @@ import {
 
 import { InventoryNetwork } from '../../../hooks/useNetworks';
 import { InventoryStorage } from '../../../hooks/useStorages';
-import { VmData } from '../../details';
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 import { Mapping, NetworkAlerts, StorageAlerts } from '../types';
 import { InitialStateParameters } from './createInitialState';
 

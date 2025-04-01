@@ -2,7 +2,7 @@ import React from 'react';
 
 import { V1beta1ForkliftController } from '@kubev2v/types';
 
-import { PodsCard } from './cards';
+import PodsCard from './cards/PodsCard';
 
 interface ForkliftControllerDetailsTabProps {
   obj: V1beta1ForkliftController;

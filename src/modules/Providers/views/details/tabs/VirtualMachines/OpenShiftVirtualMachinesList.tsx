@@ -3,11 +3,13 @@ import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
 
+import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import { VmData } from './components/VMCellProps';
+import { getOpenShiftFeatureMap } from './utils/helpers/getOpenShiftFeatureMap';
+import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
-import { ProviderVirtualMachinesList, VmData } from './components';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
-import { getOpenShiftFeatureMap, getVmPowerState } from './utils';
 
 export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {

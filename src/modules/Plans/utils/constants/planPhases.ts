@@ -1,4 +1,4 @@
-import { PlanPhase } from '../types';
+import { PlanPhase } from '../types/PlanPhase';
 
 /**
  * Represents a list of potential phases that a plan can be in, formatted for use in a dropdown menu.

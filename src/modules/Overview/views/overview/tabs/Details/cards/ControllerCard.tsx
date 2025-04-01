@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
-import { PodsTable } from '../../../components';
+import { PodsTable } from '../../../components/PodsTable';
 
 type ControllerCardProps = {
   obj?: V1beta1ForkliftController;

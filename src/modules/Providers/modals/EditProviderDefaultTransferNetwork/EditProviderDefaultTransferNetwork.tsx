@@ -16,13 +16,9 @@ import {
   MenuToggleElement,
 } from '@patternfly/react-core';
 
-import { useProviderInventory } from '../../hooks';
-import {
-  EditModal,
-  EditModalProps,
-  ModalInputComponentType,
-  OnConfirmHookType,
-} from '../EditModal';
+import useProviderInventory from '../../hooks/useProviderInventory';
+import { EditModal } from '../EditModal/EditModal';
+import { EditModalProps, ModalInputComponentType, OnConfirmHookType } from '../EditModal/types';
 
 /**
  * Handles the confirmation action for editing a resource annotations.

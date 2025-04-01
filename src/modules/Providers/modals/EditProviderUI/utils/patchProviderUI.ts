@@ -1,6 +1,6 @@
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-import { OnConfirmHookType } from '../../EditModal';
+import { OnConfirmHookType } from '../../EditModal/types';
 
 /**
  * Handles the confirmation action for editing a resource annotations.

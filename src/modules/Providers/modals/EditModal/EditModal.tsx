@@ -7,11 +7,12 @@ import { Button, Form, Modal, ModalVariant, Popover, TextInput } from '@patternf
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import { defaultOnConfirm } from './utils/defaultOnConfirm';
-import { useToggle } from '../../hooks';
-import { getValueByJsonPath } from '../../utils/helpers';
-import { ValidationMsg } from '../../utils/validators';
-import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
-import { useModal } from '../ModalHOC';
+import { useToggle } from '../../hooks/useToggle';
+import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';
+import { ValidationMsg } from '../../utils/validators/common';
+import { AlertMessageForModals } from '../components/AlertMessageForModals';
+import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
+import { useModal } from '../ModalHOC/ModalHOC';
 import { EditModalProps } from './types';
 
 import './EditModal.style.css';

@@ -1,13 +1,13 @@
 import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { ProviderData } from 'src/modules/Providers/utils';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-import { CredentialsSection } from '../../components';
+import { CredentialsSection } from '../../components/CredentialsSection/CredentialsSection';
 
 interface ProviderCredentialsProps {
   obj: ProviderData;

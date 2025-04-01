@@ -1,14 +1,13 @@
 import jsonpath from 'jsonpath';
 
-import {
-  DateFilter,
-  DateRangeFilter,
-  EnumFilter,
-  FreetextFilter,
-  GroupedEnumFilter,
-  SwitchFilter,
-} from '../Filter';
-import { areSameDayInUTCZero, isInClosedRange, ResourceField } from '../utils';
+import { DateFilter } from '../Filter/DateFilter';
+import { DateRangeFilter } from '../Filter/DateRangeFilter';
+import { EnumFilter } from '../Filter/EnumFilter';
+import { FreetextFilter } from '../Filter/FreetextFilter';
+import { GroupedEnumFilter } from '../Filter/GroupedEnumFilter';
+import { SwitchFilter } from '../Filter/SwitchFilter';
+import { areSameDayInUTCZero, isInClosedRange } from '../utils/dates';
+import { ResourceField } from '../utils/types';
 import { FilterRenderer, ValueMatcher } from './types';
 
 /**

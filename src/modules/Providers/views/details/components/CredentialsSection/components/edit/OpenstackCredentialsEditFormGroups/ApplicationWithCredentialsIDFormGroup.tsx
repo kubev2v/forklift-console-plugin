@@ -1,7 +1,8 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { openstackSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
+import { safeBase64Decode } from 'src/modules/Providers/utils/helpers/safeBase64Decode';
+import { openstackSecretFieldValidator } from 'src/modules/Providers/utils/validators/provider/openstack/openstackSecretFieldValidator';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, InputGroup, TextInput } from '@patternfly/react-core';

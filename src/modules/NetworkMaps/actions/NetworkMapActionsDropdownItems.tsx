@@ -1,13 +1,14 @@
 import React from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
-import { DeleteModal, useModal } from 'src/modules/Providers/modals';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import { DeleteModal } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModel, NetworkMapModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
-import { NetworkMapData } from '../utils';
+import { NetworkMapData } from '../utils/types/NetworkMapData';
 
 export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();

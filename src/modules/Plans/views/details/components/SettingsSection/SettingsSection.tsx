@@ -1,24 +1,22 @@
 import React from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals';
-import { ProvidersPermissionStatus } from 'src/modules/Providers/utils';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { ProvidersPermissionStatus } from 'src/modules/Providers/utils/types/ProvidersPermissionStatus';
 
 import { ProviderModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 
 import NetworkNameTemplateDetailsItem from './components/NetworkNameTemplate/NetworkNameTemplateDetailsItem';
+import { PreserveClusterCpuModelDetailsItem } from './components/PreserveClusterCpuModelDetailsItem';
+import { PreserveStaticIPsDetailsItem } from './components/PreserveStaticIPsDetailsItem';
 import PVCNameTemplateDetailsItem from './components/PVCNameTemplate/PVCNameTemplateDetailsItem';
+import { RootDiskDetailsItem } from './components/RootDiskDetailsItem';
+import { SetLUKSEncryptionPasswordsDetailsItem } from './components/SetLUKSEncryptionPasswordsDetailsItem';
 import SharedDisksDetailsItem from './components/SharedDisksDetailsItem/SharedDisksDetailsItem';
+import { TargetNamespaceDetailsItem } from './components/TargetNamespaceDetailsItem';
+import { TransferNetworkDetailsItem } from './components/TransferNetworkDetailsItem';
 import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
-import {
-  PreserveClusterCpuModelDetailsItem,
-  PreserveStaticIPsDetailsItem,
-  RootDiskDetailsItem,
-  SetLUKSEncryptionPasswordsDetailsItem,
-  TargetNamespaceDetailsItem,
-  TransferNetworkDetailsItem,
-  WarmDetailsItem,
-} from './components';
+import { WarmDetailsItem } from './components/WarmDetailsItem';
 
 export const SettingsSection: React.FC<SettingsSectionProps> = (props) => (
   <ModalHOC>

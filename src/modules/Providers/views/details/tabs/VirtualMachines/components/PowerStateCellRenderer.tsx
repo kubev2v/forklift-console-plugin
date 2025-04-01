@@ -1,12 +1,11 @@
 import React from 'react';
-import { TableIconCell } from 'src/modules/Providers/utils';
+import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Tooltip } from '@patternfly/react-core';
 import { OffIcon, PowerOffIcon, UnknownIcon } from '@patternfly/react-icons';
 
-import { getVmPowerState } from '../utils';
-import { PowerState } from '../utils/helpers/getVmPowerState';
+import { getVmPowerState, PowerState } from '../utils/helpers/getVmPowerState';
 import { VMCellProps } from './VMCellProps';
 
 export const PowerStateCellRenderer: React.FC<VMCellProps> = ({ data }) => {

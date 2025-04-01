@@ -5,9 +5,10 @@ import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
 import { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Checkbox, TextInput } from '@patternfly/react-core';
 
-import { VDDKHelperTextShort } from '../../utils/components/VDDKHelperText';
-import { validateVDDKImage } from '../../utils/validators';
-import { EditModal, EditModalProps } from '../EditModal';
+import { VDDKHelperTextShort } from '../../utils/components/VDDKHelperText/VDDKHelperText';
+import { validateVDDKImage } from '../../utils/validators/provider/vsphere/validateVDDKImage';
+import { EditModal } from '../EditModal/EditModal';
+import { EditModalProps } from '../EditModal/types';
 import { onEmptyVddkConfirm } from './onEmptyVddkConfirm';
 import { onNoneEmptyVddkConfirm } from './onNoneEmptyVddkConfirm';
 

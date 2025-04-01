@@ -1,3 +1,5 @@
+import { PlanData } from 'src/modules/Plans/utils/types/PlanData';
+
 import {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1PersistentVolumeClaim,
@@ -7,8 +9,6 @@ import {
   V1beta1PlanStatusConditions,
   V1beta1PlanStatusMigrationVms,
 } from '@kubev2v/types';
-
-import { PlanData } from './PlanData';
 
 export type VMData = {
   specVM: V1beta1PlanSpecVms;

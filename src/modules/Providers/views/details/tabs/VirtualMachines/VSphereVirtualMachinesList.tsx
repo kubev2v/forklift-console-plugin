@@ -4,10 +4,13 @@ import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { ResourceFieldFactory } from '@components/common/utils/types';
 import { VSphereVM } from '@kubev2v/types';
 
-import { concernFilter, VsphereHostFilter } from './utils/filters';
-import { ProviderVirtualMachinesList, VmData } from './components';
+import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import { VmData } from './components/VMCellProps';
+import { concernFilter } from './utils/filters/concernFilter';
+import { VsphereHostFilter } from './utils/filters/VsphereHostFilter';
+import { getVmPowerState } from './utils/helpers/getVmPowerState';
+import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
-import { getVmPowerState, useVSphereInventoryVms } from './utils';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
 export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [

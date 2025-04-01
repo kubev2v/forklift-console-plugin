@@ -2,7 +2,7 @@ import React from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
+import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
@@ -13,9 +13,11 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { StorageMapsAddButton } from '../../components';
+import StorageMapsAddButton from '../../components/StorageMapsAddButton';
 import StorageMapsEmptyState from '../../components/StorageMapsEmptyState';
-import { getStorageMapPhase, STORAGE_MAP_STATUS, StorageMapData } from '../../utils';
+import { STORAGE_MAP_STATUS } from '../../utils/constants/storage-map-status';
+import { getStorageMapPhase } from '../../utils/helpers/getStorageMapPhase';
+import { StorageMapData } from '../../utils/types/StorageMapData';
 import StorageMapRow from './StorageMapRow';
 
 import './StorageMapsListPage.style.css';

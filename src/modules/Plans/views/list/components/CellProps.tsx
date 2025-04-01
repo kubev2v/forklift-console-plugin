@@ -1,4 +1,4 @@
-import { PlanData } from 'src/modules/Plans/utils';
+import { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 
 import { ResourceField } from '@components/common/utils/types';
 

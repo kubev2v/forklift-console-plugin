@@ -1,4 +1,4 @@
-import { MigrationType } from '../types';
+import { MigrationType } from '../types/MigrationType';
 
 export const migrationTypes: { id: MigrationType; label: MigrationType }[] = [
   { id: MigrationType.Warm, label: MigrationType.Warm },

@@ -4,7 +4,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 import { StorageMapPageHeadings } from './components/DetailsSection/components/StorageMapPageHeadings';
-import { StorageMapDetailsTab, StorageMapYAMLTab } from './tabs';
+import { StorageMapDetailsTab } from './tabs/Details/StorageMapDetailsTab';
+import { StorageMapYAMLTab } from './tabs/YAML/StorageMapYAMLTab';
 
 import './StorageMapDetailsPage.style.css';
 

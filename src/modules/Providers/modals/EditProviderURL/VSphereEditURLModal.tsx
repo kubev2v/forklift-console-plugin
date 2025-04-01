@@ -5,8 +5,10 @@ import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
 import { patchProviderURL } from './utils/patchProviderURL';
-import { validateEsxiURL, validateVCenterURL } from '../../utils/validators';
-import { EditModal, ValidationHookType } from '../EditModal';
+import { validateEsxiURL } from '../../utils/validators/provider/vsphere/validateEsxiURL';
+import { validateVCenterURL } from '../../utils/validators/provider/vsphere/validateVCenterURL';
+import { EditModal } from '../EditModal/EditModal';
+import { ValidationHookType } from '../EditModal/types';
 import { EditProviderURLModalProps } from './EditProviderURLModal';
 
 export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = ({

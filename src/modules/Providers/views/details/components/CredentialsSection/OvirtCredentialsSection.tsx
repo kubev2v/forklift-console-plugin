@@ -1,5 +1,5 @@
 import React from 'react';
-import { ovirtSecretValidator } from 'src/modules/Providers/utils';
+import { ovirtSecretValidator } from 'src/modules/Providers/utils/validators/provider/ovirt/ovirtSecretValidator';
 
 import {
   BaseCredentialsSection,

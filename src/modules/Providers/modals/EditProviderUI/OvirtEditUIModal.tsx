@@ -5,8 +5,8 @@ import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
 import { patchProviderUI } from './utils/patchProviderUI';
-import { validateOvirtUILink } from '../../utils/validators';
-import { EditModal } from '../EditModal';
+import { validateOvirtUILink } from '../../utils/validators/provider/ovirt/validateOvirtUILink';
+import { EditModal } from '../EditModal/EditModal';
 import { EditProviderUIModalProps } from './EditProviderUIModal';
 
 export const OvirtEditUIModal: React.FC<EditProviderUIModalProps> = (props) => {

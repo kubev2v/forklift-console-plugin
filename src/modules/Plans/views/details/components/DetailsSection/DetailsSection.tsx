@@ -3,13 +3,11 @@ import React from 'react';
 import { V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 
-import {
-  CreatedAtDetailsItem,
-  NameDetailsItem,
-  NamespaceDetailsItem,
-  OwnerDetailsItem,
-  StatusDetailsItem,
-} from './components';
+import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';
+import { NameDetailsItem } from './components/NameDetailsItem';
+import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
+import { OwnerDetailsItem } from './components/OwnerDetailsItem';
+import { StatusDetailsItem } from './components/StatusDetailsItem';
 
 export type DetailsSectionProps = {
   obj: V1beta1Plan;

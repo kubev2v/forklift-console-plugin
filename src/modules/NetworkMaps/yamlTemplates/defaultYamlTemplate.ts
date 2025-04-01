@@ -2,7 +2,7 @@ import { Map as ImmutableMap } from 'immutable';
 
 import { NetworkMapModel } from '@kubev2v/types';
 
-export const NetworkMapModelYAMLTemplates = ImmutableMap().setIn(
+const NetworkMapModelYAMLTemplates = ImmutableMap().setIn(
   ['default'],
   `
 apiVersion: ${NetworkMapModel.apiGroup}/${NetworkMapModel.apiVersion}
@@ -17,4 +17,6 @@ spec:
 `,
 );
 
-export const defaultYamlTemplate = NetworkMapModelYAMLTemplates.getIn(['default']);
+const defaultYamlTemplate = NetworkMapModelYAMLTemplates.getIn(['default']);
+
+export default defaultYamlTemplate;

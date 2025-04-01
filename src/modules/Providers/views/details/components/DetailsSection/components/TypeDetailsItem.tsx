@@ -1,11 +1,11 @@
 import React from 'react';
-import { isProviderLocalOpenshift } from 'src/utils';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
+import { isProviderLocalOpenshift } from 'src/utils/resources';
 
 import { Label } from '@patternfly/react-core';
 
-import { DetailsItem } from '../../../../../utils';
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const TypeDetailsItem: React.FC<ProviderDetailsItemProps> = ({

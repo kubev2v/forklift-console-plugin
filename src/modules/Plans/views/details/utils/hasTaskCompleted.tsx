@@ -3,7 +3,8 @@ import {
   V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
 } from '@kubev2v/types';
 
-import { hasPipelineCompleted, hasPipelineNotFailed } from '.';
+import { hasPipelineCompleted } from './hasPipelineCompleted';
+import { hasPipelineNotFailed } from './hasPipelineNotFailed';
 
 /**
  *  Check if a given task within a pipeline has completed.
