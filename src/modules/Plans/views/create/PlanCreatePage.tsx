@@ -31,7 +31,7 @@ import { validateSourceProviderStep } from './utils';
 
 import './PlanCreatePage.style.css';
 
-export const PlanCreatePage: FC<{ namespace: string }> = ({ namespace }) => {
+const PlanCreatePage: FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
   // Get optional initial state context

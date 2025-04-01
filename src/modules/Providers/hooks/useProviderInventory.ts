@@ -58,7 +58,7 @@ interface UseProviderInventoryResult<T> {
  *
  * @template T Type of the inventory data
  */
-export const useProviderInventory = <T>({
+const useProviderInventory = <T>({
   provider,
   subPath = '',
   fieldsToAvoidComparing = DEFAULT_FIELDS_TO_AVOID_COMPARING,

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { OpenShiftNamespace, V1beta1Provider } from '@kubev2v/types';
 
-import { useProviderInventory } from './useProviderInventory';
+import useProviderInventory from './useProviderInventory';
 
 export const useNamespaces = (
   provider: V1beta1Provider,

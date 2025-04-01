@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Alert, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
-export const InventoryNotReachable: React.FC = () => {
+const InventoryNotReachable: React.FC = () => {
   const { t } = useTranslation();
   return (
     <Alert title={t('Inventory')} variant="warning">

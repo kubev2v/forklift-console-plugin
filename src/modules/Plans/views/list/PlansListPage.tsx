@@ -5,7 +5,7 @@ import {
   ResourceFieldFactory,
 } from "src/components/common/utils/types";
 import StandardPage from "src/components/page/StandardPage";
-import { useGetDeleteAndEditAccessReview } from "src/modules/Providers/hooks/useGetDeleteAndEditAccessReview";
+import useGetDeleteAndEditAccessReview from "src/modules/Providers/hooks/useGetDeleteAndEditAccessReview";
 import { ModalHOC } from "src/modules/Providers/modals/ModalHOC/ModalHOC";
 import { useForkliftTranslation } from "src/utils/i18n";
 

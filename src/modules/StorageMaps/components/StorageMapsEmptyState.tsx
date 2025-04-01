@@ -10,7 +10,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
-import { StorageMapsAddButton } from './StorageMapsAddButton';
+import StorageMapsAddButton from './StorageMapsAddButton';
 
 const HELP_LINK_HREF =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';

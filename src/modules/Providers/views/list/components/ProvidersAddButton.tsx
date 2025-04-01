@@ -12,7 +12,7 @@ type ProvidersAddButtonProps = {
   buttonProps?: ButtonProps;
 };
 
-export const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({
+const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({
   namespace,
   dataTestId,
   buttonProps,

@@ -37,7 +37,7 @@ const NetworkMapDetailsPageInternal: React.FC<{
 };
 const NetworkMapDetailsPageInternalMemo = memo(NetworkMapDetailsPageInternal);
 
-export const NetworkMapDetailsPage: React.FC<NetworkMapDetailsPageProps> = ({
+const NetworkMapDetailsPage: React.FC<NetworkMapDetailsPageProps> = ({
   name,
   namespace,
 }) => {

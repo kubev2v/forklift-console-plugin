@@ -36,7 +36,6 @@ export default [
   },
   eslint.configs.all,
   ...tseslint.configs.all,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   importPlugin.flatConfigs.recommended,
   cspellConfigs.recommended,
   {

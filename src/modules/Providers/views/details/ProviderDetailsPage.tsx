@@ -14,7 +14,7 @@ import { VSphereProviderDetailsPage } from './VSphereProviderDetailsPage';
 
 import './ProviderDetailsPage.style.css';
 
-export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
+const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const [provider, loaded, error] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,

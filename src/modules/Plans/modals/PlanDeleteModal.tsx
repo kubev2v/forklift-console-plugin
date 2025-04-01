@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useToggle } from 'src/modules/Providers/hooks/useToggle';
+import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { ItemIsOwnedAlert } from 'src/modules/Providers/modals/components/ItemIsOwnedAlert';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';

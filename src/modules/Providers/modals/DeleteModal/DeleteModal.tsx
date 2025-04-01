@@ -10,7 +10,7 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { useToggle } from '../../hooks/useToggle';
+import useToggle from '../../hooks/useToggle';
 import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
 import { AlertMessageForModals } from '../components/AlertMessageForModals';
 import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';

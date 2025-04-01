@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { NetworkMapModelRef } from '@kubev2v/types';
 import { Button } from '@patternfly/react-core';
 
-export const NetworkMapsAddButton: React.FC<{ namespace: string; dataTestId?: string }> = ({
+const NetworkMapsAddButton: React.FC<{ namespace: string; dataTestId?: string }> = ({
   namespace,
   dataTestId,
 }) => {

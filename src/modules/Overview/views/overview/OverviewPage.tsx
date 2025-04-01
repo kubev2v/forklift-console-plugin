@@ -17,7 +17,7 @@ import { getOperatorPhase } from '../../utils/helpers/getOperatorPhase';
 
 import './OverviewPage.style.css';
 
-export const OverviewPage: React.FC<OverviewPageProps> = () => {
+const OverviewPage: React.FC<OverviewPageProps> = () => {
   const { t } = useForkliftTranslation();
 
   const pages = [

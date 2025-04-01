@@ -41,7 +41,7 @@ interface ProvidersCreatePageState {
   apiError: Error | null;
 }
 
-export const ProvidersCreatePage: React.FC<{
+const ProvidersCreatePage: React.FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
