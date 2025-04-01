@@ -19,7 +19,7 @@ import {
   isPlanArchived,
   isPlanExecuting,
 } from '../utils/helpers/getPlanPhase';
-import type { PlanData } from '../utils/types/PlanData';
+import { PlanData } from '../utils/types/PlanData';
 import { PlanPhase } from '../utils/types/PlanPhase';
 
 export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps) => {
@@ -29,9 +29,9 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
   const { plan } = data;
 
   const planURL = getResourceUrl({
+    reference: PlanModelRef,
     name: plan?.metadata?.name,
     namespace: plan?.metadata?.namespace,
-    reference: PlanModelRef,
   });
 
   const phase = getPlanPhase(data);
@@ -127,6 +127,6 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
   ];
 };
 
-type PlanActionsDropdownItemsProps = {
+interface PlanActionsDropdownItemsProps {
   data: PlanData;
-};
+}

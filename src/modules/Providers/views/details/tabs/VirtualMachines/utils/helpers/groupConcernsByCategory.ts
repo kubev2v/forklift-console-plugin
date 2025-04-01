@@ -1,4 +1,4 @@
-import type { Concern } from '@kubev2v/types';
+import { Concern } from '@kubev2v/types';
 
 /**
  * Groups concerns by their category.

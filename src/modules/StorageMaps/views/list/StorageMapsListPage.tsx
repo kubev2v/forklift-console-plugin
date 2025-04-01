@@ -5,11 +5,11 @@ import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   StorageMapModel,
   StorageMapModelGroupVersionKind,
-  type V1beta1StorageMap,
+  V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -17,88 +17,87 @@ import StorageMapsAddButton from '../../components/StorageMapsAddButton';
 import StorageMapsEmptyState from '../../components/StorageMapsEmptyState';
 import { STORAGE_MAP_STATUS } from '../../utils/constants/storage-map-status';
 import { getStorageMapPhase } from '../../utils/helpers/getStorageMapPhase';
-import type { StorageMapData } from '../../utils/types/StorageMapData';
-
+import { StorageMapData } from '../../utils/types/StorageMapData';
 import StorageMapRow from './StorageMapRow';
 
 import './StorageMapsListPage.style.css';
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    filter: {
-      placeholderLabel: t('Filter by name'),
-      type: 'freetext',
-    },
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    isVisible: true,
+    resourceFieldId: 'name',
     jsonPath: '$.obj.metadata.name',
     label: t('Name'),
-    resourceFieldId: 'name',
+    isVisible: true,
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by name'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by namespace'),
-      type: 'freetext',
-    },
-    isIdentity: true,
-    isVisible: true,
+    resourceFieldId: 'namespace',
     jsonPath: '$.obj.metadata.namespace',
     label: t('Namespace'),
-    resourceFieldId: 'namespace',
+    isVisible: true,
+    isIdentity: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by namespace'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Status'),
-      primary: true,
-      type: 'enum',
-      values: EnumToTuple(STORAGE_MAP_STATUS),
-    },
-    isVisible: true,
+    resourceFieldId: 'phase',
     jsonPath: getStorageMapPhase,
     label: t('Status'),
-    resourceFieldId: 'phase',
+    isVisible: true,
+    filter: {
+      type: 'enum',
+      primary: true,
+      placeholderLabel: t('Status'),
+      values: EnumToTuple(STORAGE_MAP_STATUS),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by source'),
-      type: 'freetext',
-    },
-    isVisible: true,
+    resourceFieldId: 'source',
     jsonPath: '$.obj.spec.provider.source.name',
     label: t('Source provider'),
-    resourceFieldId: 'source',
+    isVisible: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by source'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by target'),
-      type: 'freetext',
-    },
-    isVisible: true,
+    resourceFieldId: 'destination',
     jsonPath: '$.obj.spec.provider.destination.name',
     label: t('Target provider'),
-    resourceFieldId: 'destination',
+    isVisible: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by target'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by namespace'),
-      type: 'freetext',
-    },
-    isVisible: true,
+    resourceFieldId: 'owner',
     jsonPath: '$.obj.metadata.ownerReferences[0].name',
     label: t('Owner'),
-    resourceFieldId: 'owner',
+    isVisible: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by namespace'),
+    },
     sortable: true,
   },
   {
+    resourceFieldId: 'actions',
+    label: '',
     isAction: true,
     isVisible: true,
-    label: '',
-    resourceFieldId: 'actions',
     sortable: false,
   },
 ];
@@ -114,9 +113,9 @@ const StorageMapsListPage: React.FC<{
     V1beta1StorageMap[]
   >({
     groupVersionKind: StorageMapModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace,
-    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({
@@ -161,10 +160,10 @@ const StorageMapsListPage: React.FC<{
   );
 };
 
-type EmptyStateProps = {
+interface EmptyStateProps {
   AddButton: JSX.Element;
   namespace?: string;
-};
+}
 
 const EmptyState_: React.FC<EmptyStateProps> = ({ namespace }) => {
   return <StorageMapsEmptyState namespace={namespace} />;

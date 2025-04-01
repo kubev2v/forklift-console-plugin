@@ -23,9 +23,9 @@ const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
   const ProvidersListURL = getResourceUrl({
-    namespace,
-    namespaced: namespace !== undefined,
     reference: ProviderModelRef,
+    namespace: namespace,
+    namespaced: namespace !== undefined,
   });
 
   return (

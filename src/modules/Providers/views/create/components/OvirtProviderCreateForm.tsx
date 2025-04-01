@@ -3,17 +3,17 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import { validateOvirtURL } from 'src/modules/Providers/utils/validators/provider/ovirt/validateOvirtURL';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Provider } from '@kubev2v/types';
 import { Form, TextInput } from '@patternfly/react-core';
 
-type OvirtProviderCreateFormProps = {
+interface OvirtProviderCreateFormProps {
   provider: V1beta1Provider;
   onChange: (newValue: V1beta1Provider) => void;
-};
+}
 
 export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = ({
-  onChange,
   provider,
+  onChange,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -50,8 +50,8 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
       const validationState = validateOvirtURL(trimmedValue);
 
       dispatch({
-        payload: { field: 'url', validationState },
         type: 'SET_FIELD_VALIDATED',
+        payload: { field: 'url', validationState },
       });
 
       onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
@@ -83,9 +83,7 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
           name="url"
           value={url || ''}
           validated={state.validation.url.type}
-          onChange={(e, v) => {
-            onChangeUrl(v, e);
-          }}
+          onChange={(e, v) => onChangeUrl(v, e)}
         />
       </FormGroupWithHelpText>
     </Form>

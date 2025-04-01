@@ -1,9 +1,9 @@
-import type { ResourceField } from '@components/common/utils/types';
+import { ResourceField } from '@components/common/utils/types';
 
-import type { InventoryHostPair } from '../utils/helpers/matchHostsToInventory';
+import { InventoryHostPair } from '../utils/helpers/matchHostsToInventory';
 
-export type HostCellProps = {
+export interface HostCellProps {
   data: InventoryHostPair;
   fieldId: string;
   fields: ResourceField[];
-};
+}

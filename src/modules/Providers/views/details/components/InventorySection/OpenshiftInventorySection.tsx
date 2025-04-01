@@ -4,28 +4,28 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
-import type { InventoryProps } from './InventorySection';
+import { InventoryProps } from './InventorySection';
 
 export const OpenshiftInventorySection: React.FC<InventoryProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
-  const { inventory, provider } = data;
+  const { provider, inventory } = data;
 
   if (!provider || !inventory) {
     return <span className="text-muted">{t('No inventory data available.')}</span>;
   }
 
   const inventoryItems = {
+    vmCount: {
+      title: t('Virtual machines'),
+      helpContent: t('Number of virtual machines in cluster'),
+    },
     networkCount: {
-      helpContent: t('Number of network interfaces in provider cluster'),
       title: t('Network interfaces'),
+      helpContent: t('Number of network interfaces in provider cluster'),
     },
     storageClassCount: {
-      helpContent: t('Number of storage classes in provider cluster'),
       title: t('Storage classes'),
-    },
-    vmCount: {
-      helpContent: t('Number of virtual machines in cluster'),
-      title: t('Virtual machines'),
+      helpContent: t('Number of storage classes in provider cluster'),
     },
   };
 
@@ -41,7 +41,7 @@ export const OpenshiftInventorySection: React.FC<InventoryProps> = ({ data }) =>
           title={item.title}
           content={value}
           helpContent={item.helpContent}
-          crumbs={['Inventory', 'providers', provider.spec.type, '[UID]', key]}
+          crumbs={['Inventory', 'providers', `${provider.spec.type}`, '[UID]', key]}
         />,
       );
     }
@@ -52,8 +52,8 @@ export const OpenshiftInventorySection: React.FC<InventoryProps> = ({ data }) =>
       isHorizontal
       horizontalTermWidthModifier={{
         default: '12ch',
-        md: '20ch',
         sm: '15ch',
+        md: '20ch',
       }}
       columnModifier={{
         default: '2Col',

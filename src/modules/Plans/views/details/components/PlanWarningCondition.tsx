@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { EMPTY_MSG } from 'src/utils/constants';
@@ -9,11 +9,11 @@ const PlanWarningCondition: React.FC<{
   type: string;
   message: string;
   suggestion: ReactNode;
-}> = ({ message, suggestion, type }) => {
+}> = ({ type, message, suggestion }) => {
   const { t } = useTranslation();
   return (
     <Alert
-      title={`${t('The plan migration might not work as expected')} - ${type}`}
+      title={t('The plan migration might not work as expected') + ' - ' + type}
       variant={AlertVariant.warning}
     >
       <TextContent className="forklift-providers-list-header__alert">

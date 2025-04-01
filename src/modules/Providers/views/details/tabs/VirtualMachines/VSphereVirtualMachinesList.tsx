@@ -1,83 +1,83 @@
 import React from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
-import type { VSphereVM } from '@kubev2v/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
+import { VSphereVM } from '@kubev2v/types';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
-import type { VmData } from './components/VMCellProps';
+import { VmData } from './components/VMCellProps';
 import { concernFilter } from './utils/filters/concernFilter';
 import { VsphereHostFilter } from './utils/filters/VsphereHostFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
-import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
+import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
 export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    filter: {
-      placeholderLabel: t('Filter by name'),
-      type: 'freetext',
-    },
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    isVisible: true,
+    resourceFieldId: 'name',
     jsonPath: '$.name',
     label: t('Name'),
-    resourceFieldId: 'name',
+    isVisible: true,
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by name'),
+    },
     sortable: true,
   },
   {
-    filter: concernFilter(t),
-    isVisible: true,
+    resourceFieldId: 'concerns',
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
-    resourceFieldId: 'concerns',
+    isVisible: true,
     sortable: true,
+    filter: concernFilter(t),
   },
   {
-    filter: VsphereHostFilter(t),
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'host',
     jsonPath: '$.hostName',
     label: t('Host'),
-    resourceFieldId: 'host',
+    isVisible: true,
+    isIdentity: false,
     sortable: true,
+    filter: VsphereHostFilter(t),
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by folder'),
-      type: 'freetext',
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'folder',
     jsonPath: '$.folderName',
     label: t('Folder'),
-    resourceFieldId: 'folder',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by folder'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by path'),
-      type: 'freetext',
-    },
-    isIdentity: false,
-    isVisible: false,
+    resourceFieldId: 'path',
     jsonPath: '$.vm.path',
     label: t('Path'),
-    resourceFieldId: 'path',
+    isVisible: false,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by path'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by power state'),
-      type: 'enum',
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'powerState',
     jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Power state'),
-    resourceFieldId: 'powerState',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'enum',
+      placeholderLabel: t('Filter by power state'),
+      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+    },
     sortable: true,
   },
 ];

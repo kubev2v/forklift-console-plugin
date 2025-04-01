@@ -16,14 +16,14 @@ describe('aggregate filters with the same labels', () => {
     const onSelectedEnumIdsChange = jest.fn();
     const {
       result: {
-        current: { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels },
+        current: { uniqueEnumLabels, onUniqueFilterUpdate, selectedUniqueEnumLabels },
       },
     } = renderHook(() =>
       useUnique({
-        onSelectedEnumIdsChange,
-        resolvedLanguage: 'en',
-        selectedEnumIds: [],
         supportedEnumValues: testEnumValues,
+        onSelectedEnumIdsChange,
+        selectedEnumIds: [],
+        resolvedLanguage: 'en',
       }),
     );
     expect(uniqueEnumLabels).toStrictEqual(['FalseTranslated', 'TrueTranslated']);
@@ -36,14 +36,14 @@ describe('aggregate filters with the same labels', () => {
     const onSelectedEnumIdsChange = jest.fn();
     const {
       result: {
-        current: { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels },
+        current: { uniqueEnumLabels, onUniqueFilterUpdate, selectedUniqueEnumLabels },
       },
     } = renderHook(() =>
       useUnique({
-        onSelectedEnumIdsChange,
-        resolvedLanguage: 'en',
-        selectedEnumIds: ['True', 'AlsoTrue'],
         supportedEnumValues: testEnumValues,
+        onSelectedEnumIdsChange,
+        selectedEnumIds: ['True', 'AlsoTrue'],
+        resolvedLanguage: 'en',
       }),
     );
     expect(uniqueEnumLabels).toStrictEqual(['FalseTranslated', 'TrueTranslated']);

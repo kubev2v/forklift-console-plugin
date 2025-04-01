@@ -1,32 +1,32 @@
 import { useMemo } from 'react';
 
-import type { OpenstackVolume, OVirtDisk, ProviderType, V1beta1Provider } from '@kubev2v/types';
+import { OpenstackVolume, OVirtDisk, ProviderType, V1beta1Provider } from '@kubev2v/types';
 
 import useProviderInventory from './useProviderInventory';
 
-const subPath: Partial<Record<Partial<ProviderType>, string>> = {
-  openstack: '/volumes?detail=1',
+const subPath: { [keys in Partial<ProviderType>]?: string } = {
   ovirt: '/disks?detail=1',
+  openstack: '/volumes?detail=1',
 };
 
 const glanceStorage: OpenstackVolume = {
-  attachments: [],
-  availabilityZone: '',
-  bootable: 'false',
-  createdAt: '',
-  encrypted: false,
-  id: 'glance',
-  multiattach: false,
-  name: 'glance',
   providerType: 'openstack',
-  replicationStatus: '',
+  id: 'glance',
   revision: 1,
+  name: 'glance',
   selfLink: '',
-  size: 1,
   status: 'available',
+  size: 1,
+  availabilityZone: '',
+  createdAt: '',
   updatedAt: '',
-  userID: '0',
+  attachments: [],
   volumeType: 'glance',
+  userID: '0',
+  bootable: 'false',
+  encrypted: false,
+  replicationStatus: '',
+  multiattach: false,
 };
 
 /**
@@ -37,13 +37,13 @@ export const useDisks = (
 ): [(OVirtDisk | OpenstackVolume)[], boolean, Error] => {
   const providerType = provider?.spec?.type;
   const {
-    error,
     inventory: disks,
     loading,
+    error,
   } = useProviderInventory<(OVirtDisk | OpenstackVolume)[]>({
-    disabled: !provider || !subPath[providerType],
     provider,
     subPath: subPath[providerType] ?? '',
+    disabled: !provider || !subPath[providerType],
   });
 
   const stable = useMemo(() => {
@@ -52,7 +52,7 @@ export const useDisks = (
     }
 
     const storageList = Array.isArray(disks)
-      ? disks.map((d) => ({ ...d, providerType }) as OVirtDisk | OpenstackVolume)
+      ? disks.map((d) => ({ ...d, providerType } as OVirtDisk | OpenstackVolume))
       : [];
 
     if (providerType === 'openstack') {

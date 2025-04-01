@@ -27,9 +27,9 @@ const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
   });
 
   const ProvidersListURL = getResourceUrl({
-    namespace,
-    namespaced: namespace !== undefined,
     reference: ProviderModelRef,
+    namespace: namespace,
+    namespaced: namespace !== undefined,
   });
 
   return (

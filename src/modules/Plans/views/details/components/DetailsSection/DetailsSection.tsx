@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import { V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 
 import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';

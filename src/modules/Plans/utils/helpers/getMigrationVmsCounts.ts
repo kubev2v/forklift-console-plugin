@@ -1,11 +1,11 @@
-import type { V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import { V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
 
 const emptyCount = {
-  canceled: 0,
   completed: 0,
+  total: 0,
+  canceled: 0,
   error: 0,
   success: 0,
-  total: 0,
 };
 
 export const getMigrationVmsCounts = (vms: V1beta1PlanStatusMigrationVms[]): MigrationVmsCounts => {
@@ -21,11 +21,11 @@ export const getMigrationVmsCounts = (vms: V1beta1PlanStatusMigrationVms[]): Mig
   const success = vmsCompleted.length - vmsError.length - vmsCanceled.length;
 
   return {
-    canceled: vmsCanceled.length,
     completed: vmsCompleted.length,
+    total: vms.length,
+    canceled: vmsCanceled.length,
     error: vmsError.length,
     success: success >= 0 ? success : 0,
-    total: vms.length,
   };
 };
 

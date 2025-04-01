@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 
-import type { CellProps } from './CellProps';
+import { CellProps } from './CellProps';
 
 /**
  * NamespaceCell component, used for displaying a link cell with information about the namespace.
@@ -14,7 +14,7 @@ export const NamespaceCell: React.FC<CellProps> = ({ data }) => {
 
   return (
     <TableLinkCell
-      groupVersionKind={{ kind: 'Namespace', version: 'v1' }}
+      groupVersionKind={{ version: 'v1', kind: 'Namespace' }}
       name={namespace}
       namespace={namespace}
     />

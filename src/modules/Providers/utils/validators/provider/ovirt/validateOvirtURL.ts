@@ -1,17 +1,17 @@
-import { validateURL, type ValidationMsg } from '../../common';
+import { validateURL, ValidationMsg } from '../../common';
 
 export const validateOvirtURL = (url: string | number): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (url === undefined) {
     return {
-      msg: 'The URL of the Red Hat Virtualization Manager (RHVM) API endpoint, for example: https://rhv-host-example.com/ovirt-engine/api .',
       type: 'default',
+      msg: 'The URL of the Red Hat Virtualization Manager (RHVM) API endpoint, for example: https://rhv-host-example.com/ovirt-engine/api .',
     };
   }
 
   // Sanity check
   if (typeof url !== 'string') {
-    return { msg: 'URL is not a string', type: 'error' };
+    return { type: 'error', msg: 'URL is not a string' };
   }
 
   const trimmedUrl: string = url.trim();
@@ -19,15 +19,15 @@ export const validateOvirtURL = (url: string | number): ValidationMsg => {
 
   if (trimmedUrl === '') {
     return {
-      msg: 'The URL is required. URL should include the schema and path, for example: https://rhv-host-example.com/ovirt-engine/api .',
       type: 'error',
+      msg: 'The URL is required. URL should include the schema and path, for example: https://rhv-host-example.com/ovirt-engine/api .',
     };
   }
 
   if (!isValidURL) {
     return {
-      msg: 'The URL is invalid. URL should include the schema and path, for example: https://rhv-host-example.com/ovirt-engine/api .',
       type: 'error',
+      msg: 'The URL is invalid. URL should include the schema and path, for example: https://rhv-host-example.com/ovirt-engine/api .',
     };
   }
 
@@ -38,7 +38,7 @@ export const validateOvirtURL = (url: string | number): ValidationMsg => {
     };
 
   return {
-    msg: 'The URL of the Red Hat Virtualization Manager (RHVM) API endpoint, for example: https://rhv-host-example.com/ovirt-engine/api .',
     type: 'success',
+    msg: 'The URL of the Red Hat Virtualization Manager (RHVM) API endpoint, for example: https://rhv-host-example.com/ovirt-engine/api .',
   };
 };

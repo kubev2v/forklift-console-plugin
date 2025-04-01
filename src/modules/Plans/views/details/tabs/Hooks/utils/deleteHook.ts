@@ -1,4 +1,4 @@
-import { HookModel, PlanModel, type V1beta1Hook, type V1beta1Plan } from '@kubev2v/types';
+import { HookModel, PlanModel, V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
 import { k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 export const deleteHook = async (
@@ -8,8 +8,8 @@ export const deleteHook = async (
 ) => {
   await k8sDelete({ model: HookModel, resource: hook });
 
-  // Update plan
-  const { vms } = plan.spec;
+  // update plan
+  const vms = plan.spec.vms;
   const newVms = vms.map((vm) => {
     const newHooks = vm?.hooks?.filter((h) => h.step !== step) || [];
 
@@ -19,10 +19,10 @@ export const deleteHook = async (
     };
   });
 
-  return k8sPatch({
-    data: [{ op: 'replace', path: '/spec/vms', value: newVms }],
+  return await k8sPatch({
     model: PlanModel,
-    path: '',
     resource: plan,
+    path: '',
+    data: [{ op: 'replace', path: '/spec/vms', value: newVms }],
   });
 };

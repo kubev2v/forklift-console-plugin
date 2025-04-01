@@ -1,4 +1,4 @@
-import React, { type ComponentType } from 'react';
+import React, { ComponentType } from 'react';
 
 import {
   Button,
@@ -21,9 +21,9 @@ import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Page/PageStates.tsx)
  */
 const BaseState = ({
-  color,
-  icon,
   title,
+  icon,
+  color,
 }: {
   title?: string;
   icon?: ComponentType<unknown>;
@@ -58,9 +58,9 @@ export const NoResultsFound = ({ title }: { title: string }) => (
  */
 export const NoResultsMatchFilter = ({
   clearAllFilters,
-  clearAllLabel = 'Clear all filters',
-  description = 'No results match the filter criteria. Clear all filters and try again.',
   title = 'No results found',
+  description = 'No results match the filter criteria. Clear all filters and try again.',
+  clearAllLabel = 'Clear all filters',
 }: {
   clearAllFilters: () => void;
   title?: string;

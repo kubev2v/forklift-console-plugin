@@ -3,24 +3,24 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { SearchInput } from '@patternfly/react-core';
 
-import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
+import { PlanCreatePageState } from '../states/PlanCreatePageStore';
 
-type SearchInputProviderProps = {
+interface SearchInputProviderProps {
   filterState: PlanCreatePageState;
   filterDispatch: React.Dispatch<{
     type: string;
     payload?: string | string[];
   }>;
-};
+}
 
 const SearchInputProvider: React.FunctionComponent<SearchInputProviderProps> = ({
-  filterDispatch,
   filterState,
+  filterDispatch,
 }) => {
   const { t } = useForkliftTranslation();
 
   const updateNameFilter = (value: string) => {
-    filterDispatch({ payload: value, type: 'SET_NAME_FILTER' });
+    filterDispatch({ type: 'SET_NAME_FILTER', payload: value });
   };
 
   const onChange: (event: React.FormEvent<HTMLInputElement>, value: string) => void = (

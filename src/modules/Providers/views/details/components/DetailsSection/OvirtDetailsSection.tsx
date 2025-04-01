@@ -13,12 +13,12 @@ import { OwnerDetailsItem } from './components/OwnerDetailsItem';
 import { TypeDetailsItem } from './components/TypeDetailsItem';
 import { URLDetailsItem } from './components/URLDetailsItem';
 import { getOvirtProviderWebUILink } from './utils/getOvirtProviderWebUILink';
-import type { DetailsSectionProps } from './DetailsSection';
+import { DetailsSectionProps } from './DetailsSection';
 
 export const OvirtDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
-  const { permissions, provider } = data;
+  const { provider, permissions } = data;
   const webUILink = getOvirtProviderWebUILink(provider);
 
   return (

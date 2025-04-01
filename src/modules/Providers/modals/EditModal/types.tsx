@@ -1,12 +1,18 @@
-import type { FC, JSX, ReactNode } from 'react';
+import type { FC, JSX, ReactNode } from "react";
 
-import type { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type {
+  K8sModel,
+  K8sResourceCommon,
+} from "@openshift-console/dynamic-plugin-sdk";
 
-import type { ValidationMsg } from '../../utils/validators/common';
+import { ValidationMsg } from "../../utils/validators/common";
 
-import './EditModal.style.css';
+import "./EditModal.style.css";
 
-export type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => unknown);
+export type OpenApiJsonPath =
+  | string
+  | string[]
+  | ((resourceData: unknown) => unknown);
 export type EditModalProps = {
   /** The Kubernetes resource being edited. This object contains all the information about the Kubernetes resource including its metadata, status, and spec. */
   resource: K8sResourceCommon;
@@ -33,7 +39,7 @@ export type EditModalProps = {
   bodyContent?: ReactNode;
 
   /** Optional. The size variant of the modal. Can be 'small', 'default', 'medium', or 'large'. */
-  variant?: 'small' | 'default' | 'medium' | 'large';
+  variant?: "small" | "default" | "medium" | "large";
 
   /** Optional. The custom input component to be used in the form. If not provided, a default TextInput will be used. */
   InputComponent?: ModalInputComponentType;

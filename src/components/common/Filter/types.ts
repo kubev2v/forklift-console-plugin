@@ -1,4 +1,4 @@
-import type { EnumGroup, EnumValue } from '../utils/types';
+import { EnumGroup, EnumValue } from '../utils/types';
 
 /**
  * Components implementing this interface may be added to complex filters.
@@ -6,13 +6,13 @@ import type { EnumGroup, EnumValue } from '../utils/types';
  * @see PrimaryFilters
  * @see AttributeValueFilter
  */
-export type FilterTypeProps = {
+export interface FilterTypeProps {
   filterId: string;
   /**
    * Filter apply handler. Implementation of filter values is filter specific.
    * @param values list of selected filter values
    */
-  onFilterUpdate: (values: string[], resourceFieldId?: string) => any;
+  onFilterUpdate(values: string[], resourceFieldId?: string);
   /**
    * A text located inside the filter field or next to it.
    */
@@ -34,7 +34,7 @@ export type FilterTypeProps = {
    */
   supportedValues?: EnumValue[];
   /**
-   * Groups for supported values (if exists or required by a specific filter)
+   * groups for supported values (if exists or required by a specific filter)
    */
   supportedGroups: EnumGroup[];
   /**
@@ -47,8 +47,8 @@ export type FilterTypeProps = {
   showFilterIcon?: boolean;
   /** Used for grouped enum filters that deal with groups pointing to different resources. */
   hasMultipleResources?: boolean;
-};
+}
 
-type InlineFilter = {
+interface InlineFilter {
   hasInlineFilter?: boolean;
-};
+}

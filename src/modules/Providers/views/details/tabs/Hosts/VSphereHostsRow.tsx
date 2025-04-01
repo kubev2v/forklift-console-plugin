@@ -1,20 +1,20 @@
 import React from 'react';
-import type { RowProps } from 'src/components/common/TableView/types';
+import { RowProps } from 'src/components/common/TableView/types';
 
-import type { ResourceField } from '@components/common/utils/types';
+import { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
-import type { HostCellProps } from './components/HostCellProps';
+import { HostCellProps } from './components/HostCellProps';
 import { IDCellRenderer } from './components/IDCellRenderer';
 import { LinkSpeedCellRenderer } from './components/LinkSpeedCellRenderer';
 import { MTUCellRenderer } from './components/MTUCellRenderer';
 import { NameCellRenderer } from './components/NameCellRenderer';
 import { NetworkCellRenderer } from './components/NetworkCellRenderer';
-import type { InventoryHostPair } from './utils/helpers/matchHostsToInventory';
+import { InventoryHostPair } from './utils/helpers/matchHostsToInventory';
 
 export const VSphereHostsCells: React.FC<RowProps<InventoryHostPair>> = ({
-  resourceData,
   resourceFields,
+  resourceData,
 }) => {
   return (
     <>
@@ -49,15 +49,15 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 };
 
 const cellRenderers: Record<string, React.FC<HostCellProps>> = {
+  name: NameCellRenderer,
   id: IDCellRenderer,
+  network: NetworkCellRenderer,
   linkSpeed: LinkSpeedCellRenderer,
   mtu: MTUCellRenderer,
-  name: NameCellRenderer,
-  network: NetworkCellRenderer,
 };
 
-type RenderTdProps = {
+interface RenderTdProps {
   resourceData: InventoryHostPair;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-};
+}

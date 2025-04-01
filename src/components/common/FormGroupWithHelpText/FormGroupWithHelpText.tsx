@@ -2,13 +2,13 @@ import React from 'react';
 
 import {
   FormGroup,
-  type FormGroupProps,
+  FormGroupProps,
   FormHelperText,
   HelperText,
   HelperTextItem,
 } from '@patternfly/react-core';
 
-type FormGroupWithHelpTextProps = {
+interface FormGroupWithHelpTextProps extends FormGroupProps {
   /**
    * Sets the FormGroup validated. If you set to success, text color of helper text will be modified to indicate valid state.
    * If set to error, text color of helper text will be modified to indicate error state.
@@ -23,7 +23,7 @@ type FormGroupWithHelpTextProps = {
    * Helper text after the field when the field is invalid. It can be a simple text or an object.
    */
   helperTextInvalid?: React.ReactNode;
-} & FormGroupProps;
+}
 
 /**
  * Convert the formGroup validated mode into the variant styling of the helper text item
@@ -46,15 +46,15 @@ const validatedToVariant = (validated) =>
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/FormGroupWithHelpText/FormGroupWithHelpText.tsx)
  */
 export const FormGroupWithHelpText: React.FC<FormGroupWithHelpTextProps> = ({
-  children,
-  fieldId,
-  helperText,
-  helperTextInvalid,
-  isRequired,
   label,
+  isRequired,
+  fieldId,
   labelIcon,
   role,
+  children,
   validated,
+  helperText,
+  helperTextInvalid,
 }) => {
   const helperTextMsg = validated === 'error' && helperTextInvalid ? helperTextInvalid : helperText;
   const variant = validatedToVariant(validated);

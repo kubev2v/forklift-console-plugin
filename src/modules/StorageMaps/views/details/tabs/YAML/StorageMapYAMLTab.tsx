@@ -2,23 +2,23 @@ import React from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@kubev2v/types';
+import { StorageMapModelGroupVersionKind, V1beta1StorageMap } from '@kubev2v/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-type StorageMapYAMLTabProps = {
+interface StorageMapYAMLTabProps {
   name: string;
   namespace: string;
-};
+}
 
 export const StorageMapYAMLTab: React.FC<StorageMapYAMLTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1StorageMap>({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    isList: false,
-    name,
-    namespace,
     namespaced: true,
+    isList: false,
+    namespace,
+    name,
   });
 
   return (
@@ -27,3 +27,4 @@ export const StorageMapYAMLTab: React.FC<StorageMapYAMLTabProps> = ({ name, name
     </Suspend>
   );
 };
+

@@ -3,8 +3,7 @@ import {
   removeFromLocalStorage,
   saveToLocalStorage,
 } from '../utils/localStorage';
-
-import type { UserSettings } from './types';
+import { UserSettings } from './types';
 
 const parseOrClean = (key) => {
   try {
@@ -16,7 +15,7 @@ const parseOrClean = (key) => {
   return {};
 };
 
-const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string, unknown>>) => {
+const saveRestOrRemoveKey = (key: string, { rest }: { [k: string]: { [n: string]: unknown } }) => {
   if (!Object.keys(rest).length) {
     removeFromLocalStorage(key);
   } else {
@@ -24,16 +23,16 @@ const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string
   }
 };
 
-const toField = ({ isVisible, resourceFieldId }) => ({ isVisible, resourceFieldId });
+const toField = ({ resourceFieldId, isVisible }) => ({ resourceFieldId, isVisible });
 
 const sanitizeFields = (fields: unknown): { resourceFieldId: string; isVisible?: boolean }[] =>
   Array.isArray(fields)
     ? fields
-        // Array should contain objects
+        // array should contain objects
         .filter((it) => it && typeof it === 'object')
-        // Cherry-pick desired props
+        // cherry-pick desired props
         .map(toField)
-        // Verify that ID is string
+        // verify that ID is string
         .filter(({ resourceFieldId }) => resourceFieldId && typeof resourceFieldId === 'string')
     : [];
 
@@ -47,40 +46,35 @@ const sanitizeFields = (fields: unknown): { resourceFieldId: string; isVisible?:
  */
 export const loadUserSettings = ({ pageId }): UserSettings => {
   const key = `${process.env.PLUGIN_NAME}/${pageId}`;
-  const { fields, filters, perPage } = parseOrClean(key);
+  const { fields, perPage, filters } = parseOrClean(key);
 
   return {
     fields: {
+      data: sanitizeFields(fields),
+      save: (fields) =>
+        saveToLocalStorage(
+          key,
+          JSON.stringify({ ...parseOrClean(key), fields: fields.map(toField) }),
+        ),
       clear: () => {
         const { fields, ...rest } = parseOrClean(key);
         saveRestOrRemoveKey(key, { fields, rest });
       },
-      data: sanitizeFields(fields),
-      save: (fields) => {
-        saveToLocalStorage(
-          key,
-          JSON.stringify({ ...parseOrClean(key), fields: fields.map(toField) }),
-        );
-      },
-    },
-    filters: {
-      clear: () => {
-        const { filters, ...rest } = parseOrClean(key);
-        saveRestOrRemoveKey(key, { filters, rest });
-      },
-      data: filters,
-      save: (filters) => {
-        saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), filters }));
-      },
     },
     pagination: {
+      perPage: typeof perPage === 'number' ? perPage : undefined,
+      save: (perPage) => saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), perPage })),
       clear: () => {
         const { perPage, ...rest } = parseOrClean(key);
         saveRestOrRemoveKey(key, { perPage, rest });
       },
-      perPage: typeof perPage === 'number' ? perPage : undefined,
-      save: (perPage) => {
-        saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), perPage }));
+    },
+    filters: {
+      data: filters,
+      save: (filters) => saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), filters })),
+      clear: () => {
+        const { filters, ...rest } = parseOrClean(key);
+        saveRestOrRemoveKey(key, { filters, rest });
       },
     },
   };

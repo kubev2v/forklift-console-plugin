@@ -15,10 +15,10 @@ describe('universal compareFn', () => {
 describe('compareWith compareFn factory', () => {
   it('works without custom compareFn', () => {
     expect(
-      compareWith({ isAsc: true, label: NAME, resourceFieldId: NAME }, 'en', undefined, [
+      compareWith({ resourceFieldId: NAME, isAsc: true, label: NAME }, 'en', undefined, [
         {
-          label: NAME,
           resourceFieldId: NAME,
+          label: NAME,
         },
       ])({ name: 'name_a' }, { name: 'name_b' }),
     ).toBeLessThan(0);
@@ -26,10 +26,10 @@ describe('compareWith compareFn factory', () => {
 
   it('works for nullish entities', () => {
     expect(
-      compareWith({ isAsc: true, label: NAME, resourceFieldId: NAME }, 'en', undefined, [
+      compareWith({ resourceFieldId: NAME, isAsc: true, label: NAME }, 'en', undefined, [
         {
-          label: NAME,
           resourceFieldId: NAME,
+          label: NAME,
         },
       ])(null, undefined),
     ).toBe(0);
@@ -37,10 +37,10 @@ describe('compareWith compareFn factory', () => {
 
   it('treats all values equal if sortType is not defined', () => {
     expect(
-      compareWith({ isAsc: false, label: undefined, resourceFieldId: undefined }, 'en', undefined, [
+      compareWith({ resourceFieldId: undefined, isAsc: false, label: undefined }, 'en', undefined, [
         {
-          label: NAME,
           resourceFieldId: NAME,
+          label: NAME,
         },
       ])('a', 'b'),
     ).toBe(0);
@@ -48,10 +48,10 @@ describe('compareWith compareFn factory', () => {
 
   it('reverts sorting order based on sortType.isAsc', () => {
     expect(
-      compareWith({ isAsc: false, label: NAME, resourceFieldId: NAME }, 'en', undefined, [
+      compareWith({ resourceFieldId: NAME, isAsc: false, label: NAME }, 'en', undefined, [
         {
-          label: NAME,
           resourceFieldId: NAME,
+          label: NAME,
         },
       ])({ name: 'name_a' }, { name: 'name_b' }),
     ).toBeGreaterThan(0);
@@ -60,13 +60,13 @@ describe('compareWith compareFn factory', () => {
   it('uses custom field compareFn if provided', () => {
     expect(
       compareWith(
-        { isAsc: true, label: NAME, resourceFieldId: NAME },
+        { resourceFieldId: NAME, isAsc: true, label: NAME },
         'en',
-        (a, b) => a.localeCompare(b), // No numeric
+        (a, b) => a.localeCompare(b), // no numeric
         [
           {
-            label: NAME,
             resourceFieldId: NAME,
+            label: NAME,
           },
         ],
       )({ name: 'a10' }, { name: 'a5' }),
@@ -75,77 +75,77 @@ describe('compareWith compareFn factory', () => {
 });
 
 describe('buildSort factory', () => {
-  const NameColumn = { label: NAME, resourceFieldId: NAME };
-  const NamespaceColumn = { label: NAMESPACE, resourceFieldId: NAMESPACE };
+  const NameColumn = { resourceFieldId: NAME, label: NAME };
+  const NamespaceColumn = { resourceFieldId: NAMESPACE, label: NAMESPACE };
   it('sorts ascending', () => {
     const setActiveSort = jest.fn();
-    const { columnIndex, onSort, sortBy } = buildSort({
-      activeSort: {
-        isAsc: true,
-        label: NAME,
-        resourceFieldId: NAME,
-      },
+    const { sortBy, onSort, columnIndex } = buildSort({
       columnIndex: 0,
       resourceFields: [NameColumn, NamespaceColumn],
+      activeSort: {
+        resourceFieldId: NAME,
+        isAsc: true,
+        label: NAME,
+      },
       setActiveSort,
     });
     expect(columnIndex).toBe(0);
-    expect(sortBy).toStrictEqual({ direction: 'asc', index: 0 });
+    expect(sortBy).toStrictEqual({ index: 0, direction: 'asc' });
     onSort(undefined, 1, SortByDirection.asc, undefined);
     expect(setActiveSort).toBeCalledWith({
       isAsc: true,
-      label: NamespaceColumn.label,
       resourceFieldId: NAMESPACE,
+      label: NamespaceColumn.label,
     });
   });
 
   it('sorts descending', () => {
     const setActiveSort = jest.fn();
-    const { columnIndex, onSort, sortBy } = buildSort({
-      activeSort: {
-        isAsc: false,
-        label: NAME,
-        resourceFieldId: NAME,
-      },
+    const { sortBy, onSort, columnIndex } = buildSort({
       columnIndex: 1,
       resourceFields: [NameColumn, NamespaceColumn],
+      activeSort: {
+        resourceFieldId: NAME,
+        isAsc: false,
+        label: NAME,
+      },
       setActiveSort,
     });
     expect(columnIndex).toBe(1);
-    expect(sortBy).toStrictEqual({ direction: 'desc', index: 0 });
+    expect(sortBy).toStrictEqual({ index: 0, direction: 'desc' });
     onSort(undefined, 1, SortByDirection.desc, undefined);
     expect(setActiveSort).toBeCalledWith({
       isAsc: false,
-      label: NamespaceColumn.label,
       resourceFieldId: NAMESPACE,
+      label: NamespaceColumn.label,
     });
   });
 
   it('shows no sorting if activeSort column cannot be found', () => {
     const setActiveSort = jest.fn();
     const { sortBy } = buildSort({
-      activeSort: {
-        isAsc: undefined,
-        label: undefined,
-        resourceFieldId: undefined,
-      },
       columnIndex: 1,
       resourceFields: [NameColumn, NamespaceColumn],
+      activeSort: {
+        resourceFieldId: undefined,
+        isAsc: undefined,
+        label: undefined,
+      },
       setActiveSort,
     });
-    expect(sortBy).toStrictEqual({ direction: 'desc', index: undefined });
+    expect(sortBy).toStrictEqual({ index: undefined, direction: 'desc' });
   });
 
   it('skips sort callback if column cannot be found', () => {
     const setActiveSort = jest.fn();
     const { onSort } = buildSort({
-      activeSort: {
-        isAsc: false,
-        label: NAME,
-        resourceFieldId: NAME,
-      },
       columnIndex: 1,
       resourceFields: [NameColumn, NamespaceColumn],
+      activeSort: {
+        resourceFieldId: NAME,
+        isAsc: false,
+        label: NAME,
+      },
       setActiveSort,
     });
     onSort(undefined, 100, SortByDirection.desc, undefined);

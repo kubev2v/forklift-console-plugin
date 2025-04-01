@@ -1,8 +1,7 @@
-import type { Draft } from 'immer';
+import { Draft } from 'immer';
 import { universalComparator } from 'src/components/common/TableView/sort';
 
-import type { CreateVmMigrationPageState } from '../types';
-
+import { CreateVmMigrationPageState } from '../types';
 import {
   POD_NETWORK,
   SET_AVAILABLE_SOURCE_NETWORKS,
@@ -17,11 +16,11 @@ export const calculateNetworks = (
   draft: Draft<CreateVmMigrationPageState>,
 ): Partial<CreateVmMigrationPageState['calculatedPerNamespace']> => {
   const {
-    calculatedOnce: { networkIdsUsedBySelectedVms, sourceNetworkLabelToId },
-    calculatedPerNamespace: { networkMappings, sourceNetworks, targetNetworks },
     existingResources,
-    flow: { initialLoading },
     underConstruction: { plan },
+    calculatedOnce: { sourceNetworkLabelToId, networkIdsUsedBySelectedVms },
+    calculatedPerNamespace: { sourceNetworks, targetNetworks, networkMappings },
+    flow: { initialLoading },
   } = draft;
   if (
     !initialLoading[SET_AVAILABLE_SOURCE_NETWORKS] ||
@@ -29,9 +28,9 @@ export const calculateNetworks = (
     !initialLoading[SET_AVAILABLE_TARGET_NETWORKS]
   ) {
     return {
-      networkMappings,
       sourceNetworks,
       targetNetworks,
+      networkMappings,
     };
   }
 
@@ -53,21 +52,21 @@ export const calculateNetworks = (
         (id) => id === sourceNetworkLabelToId[label] || id === label,
       );
       return {
-        isMapped: usedBySelectedVms,
         label,
         usedBySelectedVms,
+        isMapped: usedBySelectedVms,
       };
     });
 
   return {
+    targetNetworks: targetNetworkLabels,
+    sourceNetworks: generatedSourceNetworks,
     networkMappings: generatedSourceNetworks
       .filter(({ usedBySelectedVms }) => usedBySelectedVms)
       .map(({ label }) => ({
-        destination: defaultDestination,
         source: label,
+        destination: defaultDestination,
       })),
-    sourceNetworks: generatedSourceNetworks,
-    targetNetworks: targetNetworkLabels,
   };
 };
 
@@ -75,11 +74,11 @@ export const calculateStorages = (
   draft: Draft<CreateVmMigrationPageState>,
 ): Partial<CreateVmMigrationPageState['calculatedPerNamespace']> => {
   const {
-    calculatedOnce: { sourceStorageLabelToId, storageIdsUsedBySelectedVms },
-    calculatedPerNamespace: { sourceStorages, storageMappings, targetStorages },
     existingResources,
-    flow: { initialLoading },
     underConstruction: { plan },
+    calculatedOnce: { sourceStorageLabelToId, storageIdsUsedBySelectedVms },
+    calculatedPerNamespace: { storageMappings, targetStorages, sourceStorages },
+    flow: { initialLoading },
   } = draft;
 
   if (
@@ -87,11 +86,11 @@ export const calculateStorages = (
     !initialLoading[SET_AVAILABLE_TARGET_STORAGES] ||
     !initialLoading[SET_DISKS]
   ) {
-    // Wait for all resources
+    // wait for all resources
     return {
-      sourceStorages,
       storageMappings,
       targetStorages,
+      sourceStorages,
     };
   }
   const filteredTargets = existingResources.targetStorages
@@ -121,22 +120,22 @@ export const calculateStorages = (
         (id) => id === sourceStorageLabelToId[label] || id === label,
       );
       return {
-        isMapped: usedBySelectedVms,
         label,
         usedBySelectedVms,
+        isMapped: usedBySelectedVms,
       };
     });
 
   return {
+    targetStorages: targetLabels,
     sourceStorages: generatedSourceStorages,
     storageMappings: defaultDestination
       ? generatedSourceStorages
           .filter(({ usedBySelectedVms }) => usedBySelectedVms)
           .map(({ label }) => ({
-            destination: defaultDestination,
             source: label,
+            destination: defaultDestination,
           }))
       : [],
-    targetStorages: targetLabels,
   };
 };

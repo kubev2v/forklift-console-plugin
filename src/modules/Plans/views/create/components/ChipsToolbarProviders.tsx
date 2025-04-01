@@ -2,28 +2,28 @@ import React from 'react';
 
 import { Chip, ChipGroup, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 
-import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
+import { PlanCreatePageState } from '../states/PlanCreatePageStore';
 
-type ChipsToolbarProvidersProps = {
+interface ChipsToolbarProvidersProps {
   filterState: PlanCreatePageState;
   filterDispatch: React.Dispatch<{
     type: string;
     payload?: string | string[];
   }>;
-};
+}
 
 export const ChipsToolbarProviders: React.FunctionComponent<ChipsToolbarProvidersProps> = ({
-  filterDispatch,
   filterState,
+  filterDispatch,
 }) => {
   const deleteNameFilter = (_) => {
-    filterDispatch({ payload: '', type: 'SET_NAME_FILTER' });
+    filterDispatch({ type: 'SET_NAME_FILTER', payload: '' });
   };
 
   const deleteTypeFilter = (type: string) => {
     filterDispatch({
-      payload: filterState.typeFilters.filter((t) => t !== type),
       type: 'UPDATE_TYPE_FILTERS',
+      payload: filterState.typeFilters.filter((t) => t !== type),
     });
   };
 
@@ -36,12 +36,7 @@ export const ChipsToolbarProviders: React.FunctionComponent<ChipsToolbarProvider
         {name && (
           <ToolbarItem>
             <ChipGroup categoryName="Name">
-              <Chip
-                key={name}
-                onClick={() => {
-                  deleteNameFilter(name);
-                }}
-              >
+              <Chip key={name} onClick={() => deleteNameFilter(name)}>
                 {name}
               </Chip>
             </ChipGroup>
@@ -51,12 +46,7 @@ export const ChipsToolbarProviders: React.FunctionComponent<ChipsToolbarProvider
           <ToolbarItem>
             <ChipGroup categoryName="Types">
               {types.map((type, index) => (
-                <Chip
-                  key={index}
-                  onClick={() => {
-                    deleteTypeFilter(type);
-                  }}
-                >
+                <Chip key={index} onClick={() => deleteTypeFilter(type)}>
                   {type}
                 </Chip>
               ))}

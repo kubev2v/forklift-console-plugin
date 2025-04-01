@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import React, { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -23,7 +23,7 @@ export const VerifyCertificate: FC<{
   hasThumbprintChanged: boolean;
   isTrusted: boolean;
   setIsTrusted: (flag: boolean) => void;
-}> = ({ hasThumbprintChanged, issuer, isTrusted, setIsTrusted, thumbprint, validTo }) => {
+}> = ({ thumbprint, issuer, validTo, isTrusted, setIsTrusted, hasThumbprintChanged }) => {
   const { t } = useForkliftTranslation();
 
   const onChange: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
@@ -66,9 +66,7 @@ export const VerifyCertificate: FC<{
             id="certificate-check"
             name="certificateCheck"
             isChecked={isTrusted}
-            onChange={(e, v) => {
-              onChange(v, e);
-            }}
+            onChange={(e, v) => onChange(v, e)}
           />
         </FlexItem>
       </Flex>

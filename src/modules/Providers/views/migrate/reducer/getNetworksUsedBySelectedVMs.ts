@@ -1,10 +1,9 @@
-import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
+import { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
 
-import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
-
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 import { POD_NETWORK } from './actions';
 
-// Based on packages legacy/src/Plans/components/Wizard/helpers.tsx
+// based on packages legacy/src/Plans/components/Wizard/helpers.tsx
 export const getNetworksUsedBySelectedVms = (
   selectedVMs: VmData[],
   nicProfiles: OVirtNicProfile[],

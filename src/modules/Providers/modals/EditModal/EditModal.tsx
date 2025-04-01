@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -6,15 +6,14 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { Button, Form, Modal, ModalVariant, Popover, TextInput } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
+import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import useToggle from '../../hooks/useToggle';
 import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';
-import type { ValidationMsg } from '../../utils/validators/common';
+import { ValidationMsg } from '../../utils/validators/common';
 import { AlertMessageForModals } from '../components/AlertMessageForModals';
 import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
 import { useModal } from '../ModalHOC/ModalHOC';
-
-import { defaultOnConfirm } from './utils/defaultOnConfirm';
-import type { EditModalProps } from './types';
+import { EditModalProps } from './types';
 
 import './EditModal.style.css';
 
@@ -41,20 +40,20 @@ import './EditModal.style.css';
  * @returns {ReactElement} Returns a `Modal` React Element that renders the modal.
  */
 export const EditModal: React.FC<EditModalProps> = ({
-  body,
-  bodyContent,
-  headerContent,
-  helperText,
-  InputComponent,
-  jsonPath,
-  label,
-  model,
-  onConfirmHook = defaultOnConfirm,
-  redirectTo,
-  resource,
   title,
-  validationHook,
+  body,
+  label,
+  headerContent,
+  bodyContent,
+  resource,
+  jsonPath,
+  model,
+  InputComponent,
+  helperText,
   variant,
+  redirectTo,
+  onConfirmHook = defaultOnConfirm,
+  validationHook,
 }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
@@ -100,7 +99,7 @@ export const EditModal: React.FC<EditModalProps> = ({
     toggleIsLoading();
 
     try {
-      await onConfirmHook({ jsonPath, model, newValue: value, resource });
+      await onConfirmHook({ resource, jsonPath, model, newValue: value });
 
       if (redirectTo) {
         navigate(redirectTo);
@@ -116,7 +115,7 @@ export const EditModal: React.FC<EditModalProps> = ({
     }
   }, [resource, value, onConfirmHook]);
 
-  const onClick: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -145,21 +144,14 @@ export const EditModal: React.FC<EditModalProps> = ({
    * InputComponent_ is a higher-order component that renders either the passed-in InputComponent, or a default TextInput,
    */
   const InputComponent_ = InputComponent ? (
-    <InputComponent
-      value={value}
-      onChange={(value) => {
-        handleValueChange(value);
-      }}
-    />
+    <InputComponent value={value} onChange={(value) => handleValueChange(value)} />
   ) : (
     <TextInput
       spellCheck="false"
       id="modal-with-form-form-field"
       name="modal-with-form-form-field"
       value={value}
-      onChange={(e, v) => {
-        onChange(v, e);
-      }}
+      onChange={(e, v) => onChange(v, e)}
       validated={validation.type}
     />
   );

@@ -1,25 +1,19 @@
-import React, { type FC } from 'react';
+import React, { FC } from 'react';
 
-import { Alert, AlertActionCloseButton, type AlertVariant } from '@patternfly/react-core';
+import { Alert, AlertActionCloseButton, AlertVariant } from '@patternfly/react-core';
 
 export const StateAlerts: FC<{
   variant: AlertVariant;
   messages: { key: string; title: string; body: string; blocker?: boolean }[];
   onClose?: (key: string) => void;
-}> = ({ messages, onClose, variant }) => (
+}> = ({ variant, messages, onClose }) => (
   <>
-    {messages.map(({ blocker, body, key, title }) => (
+    {messages.map(({ key, title, body, blocker }) => (
       <Alert
         key={key}
         isInline
         actionClose={
-          onClose && !blocker ? (
-            <AlertActionCloseButton
-              onClose={() => {
-                onClose(key);
-              }}
-            />
-          ) : undefined
+          onClose && !blocker ? <AlertActionCloseButton onClose={() => onClose(key)} /> : undefined
         }
         variant={variant}
         title={title}

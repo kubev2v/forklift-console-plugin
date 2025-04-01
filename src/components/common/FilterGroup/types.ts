@@ -1,5 +1,5 @@
-import type { FilterTypeProps } from '../Filter/types';
-import type { FilterDef } from '../utils/types';
+import { FilterTypeProps } from '../Filter/types';
+import { FilterDef } from '../utils/types';
 
 /**
  * Filter rendering component,
@@ -17,7 +17,7 @@ export type FieldFilter = {
   filterDef: FilterDef;
 };
 
-export type MetaFilterProps = {
+export interface MetaFilterProps {
   /**
    * List of the selected values for the filter.
    * Field-to-filter values mapping where:
@@ -38,22 +38,26 @@ export type MetaFilterProps = {
    * Implementation of filter values is filter specific.
    * @param values list of selected filter values
    */
-  onFilterUpdate: (filters: GlobalFilters) => void;
+  onFilterUpdate(filters: GlobalFilters): void;
 
   /**
    * The supported filter types that will be included in this filter group
    * (e.g. EnumFilter, FreetextFilter, GroupedEnumFilter, SwitchFilter)
    */
-  supportedFilterTypes: Record<string, FilterRenderer>;
+  supportedFilterTypes: {
+    [type: string]: FilterRenderer;
+  };
   /**
    * Language to be used for locale sensitive sorting/filtering. Defaults to 'en'.
    */
   resolvedLanguage?: string;
-};
+}
 
-export type GlobalFilters = Record<string, string[]>;
+export interface GlobalFilters {
+  [id: string]: string[];
+}
 
-export type ValueMatcher = {
+export interface ValueMatcher {
   filterType: string;
   matchValue: (value: unknown) => (filter: string) => boolean;
-};
+}

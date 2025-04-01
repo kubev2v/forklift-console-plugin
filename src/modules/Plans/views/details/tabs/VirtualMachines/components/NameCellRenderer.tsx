@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
-import type { PlanVMsCellProps } from './PlanVMsCellProps';
+import { PlanVMsCellProps } from './PlanVMsCellProps';
 
 // Define cell renderer for 'name'
 export const NameCellRenderer: React.FC<PlanVMsCellProps> = ({ data }) => {

@@ -3,21 +3,17 @@ import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  ProviderModelGroupVersionKind,
-  type V1beta1Plan,
-  type V1beta1Provider,
-} from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 
-import { providersSectionReducer, type ProvidersSectionState } from './state/reducer';
+import { providersSectionReducer, ProvidersSectionState } from './state/reducer';
 
 const initialState: ProvidersSectionState = {
-  hasChanges: false,
   plan: null,
   sourceProviderMode: 'view',
   targetProviderMode: 'view',
+  hasChanges: false,
   updating: false,
 };
 
@@ -27,14 +23,14 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
 
   // Initialize the state with the prop obj
   React.useEffect(() => {
-    dispatch({ payload: obj, type: 'INIT' });
+    dispatch({ type: 'INIT', payload: obj });
   }, [obj]);
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace: obj.metadata.namespace,
-    namespaced: true,
   });
 
   return (

@@ -2,12 +2,12 @@ import React from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { NetworkDetailsItemProps } from './NetworkDetailsItemProps';
+import { NetworkDetailsItemProps } from './NetworkDetailsItemProps';
 
 export const NameDetailsItem: React.FC<NetworkDetailsItemProps> = ({
-  helpContent,
-  moreInfoLink,
   resource,
+  moreInfoLink,
+  helpContent,
 }) => {
   const { t } = useForkliftTranslation();
 

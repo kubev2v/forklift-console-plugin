@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Provider } from '@kubev2v/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
+import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils/constants';
 import { getInventoryApiUrl } from '../utils/helpers/getApiUrl';
 import { hasObjectChangedInGivenFields } from '../utils/helpers/hasObjectChangedInGivenFields';
-
-import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils/constants';
 
 /**
  * @typedef {Object} UseProviderInventoryParams
@@ -19,14 +18,14 @@ import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils/constants';
  * @property {number} [cacheExpiryDuration] - Duration in milliseconds till the cache remains valid.
  * @param {boolean} [disabled] - Prevent query execution.
  */
-export type UseProviderInventoryParams = {
+export interface UseProviderInventoryParams {
   provider: V1beta1Provider;
   subPath?: string;
   fieldsToAvoidComparing?: string[];
   interval?: number;
   fetchTimeout?: number;
   disabled?: boolean;
-};
+}
 
 /**
  * @typedef {Object} UseProviderInventoryResult
@@ -35,11 +34,11 @@ export type UseProviderInventoryParams = {
  * @property {boolean} loading - Whether the inventory fetch is in progress.
  * @property {Error | null} error - The error occurred during inventory fetch.
  */
-type UseProviderInventoryResult<T> = {
+interface UseProviderInventoryResult<T> {
   inventory: T | null;
   loading: boolean;
   error: Error | null;
-};
+}
 
 /**
  * A React hook to fetch and cache inventory data from a provider.
@@ -60,12 +59,12 @@ type UseProviderInventoryResult<T> = {
  * @template T Type of the inventory data
  */
 const useProviderInventory = <T>({
-  disabled = false,
-  fetchTimeout,
-  fieldsToAvoidComparing = DEFAULT_FIELDS_TO_AVOID_COMPARING,
-  interval = 20000,
   provider,
   subPath = '',
+  fieldsToAvoidComparing = DEFAULT_FIELDS_TO_AVOID_COMPARING,
+  interval = 20000,
+  fetchTimeout,
+  disabled = false,
 }: UseProviderInventoryParams): UseProviderInventoryResult<T> => {
   const [inventory, setInventory] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -73,7 +72,7 @@ const useProviderInventory = <T>({
   const oldDataRef = useRef(null);
   const oldErrorRef = useRef(null);
 
-  // We only use type and uid in this context
+  // we only use type and uid in this context
   const stableProvider = useMemo(() => provider, [provider?.spec?.type, provider?.metadata?.uid]);
 
   // Fetch data from API
@@ -115,9 +114,7 @@ const useProviderInventory = <T>({
     fetchData();
 
     const intervalId = setInterval(fetchData, interval);
-    return () => {
-      clearInterval(intervalId);
-    };
+    return () => clearInterval(intervalId);
   }, [stableProvider, subPath, interval, disabled]);
 
   /**
@@ -152,9 +149,9 @@ const useProviderInventory = <T>({
    */
   function updateInventoryIfChanged(newInventory: T, fieldsToAvoidComparing: string[]): void {
     const needReRender = hasObjectChangedInGivenFields({
-      fieldsToAvoidComparing,
-      newObject: newInventory,
       oldObject: oldDataRef.current?.inventory,
+      newObject: newInventory,
+      fieldsToAvoidComparing: fieldsToAvoidComparing,
     });
 
     if (needReRender) {
@@ -164,8 +161,8 @@ const useProviderInventory = <T>({
   }
 
   return disabled
-    ? { error: null, inventory: null, loading: false }
-    : { error, inventory, loading };
+    ? { inventory: null, loading: false, error: null }
+    : { inventory, loading, error };
 };
 
 export default useProviderInventory;

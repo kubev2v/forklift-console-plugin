@@ -1,8 +1,7 @@
-import type { OVirtNicProfile } from '@kubev2v/types';
+import { OVirtNicProfile } from '@kubev2v/types';
 
-import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
-import type { Mapping } from '../types';
-
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+import { Mapping } from '../types';
 import { POD_NETWORK } from './actions';
 import { toNetworks } from './getNetworksUsedBySelectedVMs';
 
@@ -13,7 +12,7 @@ import { toNetworks } from './getNetworksUsedBySelectedVMs';
 export const hasMultiplePodNetworkMappings = (
   mappings: Mapping[],
   selectedVMs: VmData[],
-  sourceNetworkLabelToId: Record<string, string>,
+  sourceNetworkLabelToId: { [label: string]: string },
   nicProfiles?: OVirtNicProfile[],
 ) => {
   const netIdsMappedToPodNet = new Set(

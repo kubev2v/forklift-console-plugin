@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 
 import useToggle from '../../hooks/useToggle';
 
@@ -69,14 +62,14 @@ export const useModal = (): ModalContextType => {
   return context;
 };
 
-type ModalContextType = {
+interface ModalContextType {
   showModal: (modal: ReactNode) => void;
   toggleModal: () => void;
-};
+}
 
-type ModalHOCProps = {
+interface ModalHOCProps {
   children: ReactNode;
-};
+}
 
 // Creating the context.
 const ModalContext = createContext<ModalContextType | undefined>(undefined);

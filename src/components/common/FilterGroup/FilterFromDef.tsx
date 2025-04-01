@@ -1,30 +1,29 @@
 import React, { useMemo, useState } from 'react';
 
-import type { FilterTypeProps } from '../Filter/types';
-import type { FilterDef } from '../utils/types';
+import { FilterTypeProps } from '../Filter/types';
+import { FilterDef } from '../utils/types';
+import { GlobalFilters } from './types';
 
-import type { GlobalFilters } from './types';
-
-type FilterFromDefProps = {
+interface FilterFromDefProps {
   resourceFieldId: string;
   label: string;
   filterDef: FilterDef;
   selectedFilters: GlobalFilters;
-  onFilterUpdate: (filters: GlobalFilters) => void;
+  onFilterUpdate(filters: GlobalFilters): void;
   FilterType: (props: FilterTypeProps) => JSX.Element;
   showFilter?: boolean;
   resolvedLanguage: string;
-};
+}
 
 export const FilterFromDef = ({
-  filterDef: def,
-  FilterType,
-  label,
-  onFilterUpdate,
-  resolvedLanguage,
   resourceFieldId,
+  label,
+  filterDef: def,
   selectedFilters,
+  FilterType,
+  onFilterUpdate,
   showFilter = true,
+  resolvedLanguage,
 }: FilterFromDefProps) => {
   const [filterId, setFilterId] = useState(resourceFieldId);
 

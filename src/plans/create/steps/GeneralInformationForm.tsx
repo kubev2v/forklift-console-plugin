@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import React, { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
@@ -59,3 +59,4 @@ export const GeneralInformationForm: FC = () => {
     </div>
   );
 };
+

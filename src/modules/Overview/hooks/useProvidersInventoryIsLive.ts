@@ -8,9 +8,9 @@ import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
  * @typedef {Object} UseInventoryParams
  * @property {number} [interval=20000] - Time interval to fetch inventory from server, default is 20 seconds.
  */
-type UseInventoryParams = {
+interface UseInventoryParams {
   interval?: number;
-};
+}
 
 /**
  * Result of useProvidersInventoryIsLive hook.
@@ -18,10 +18,10 @@ type UseInventoryParams = {
  * @property {boolean} loaded - Whether the server has returned data, indicating it is live.
  * @property {Error|null} loadError - Any error that occurred while checking server, null if no error occurred.
  */
-type UseInventoryIsLiveResult = {
+interface UseInventoryIsLiveResult {
   loaded: boolean;
   loadError: Error | null;
-};
+}
 
 /**
  * Hook to periodically check server liveliness by attempting to fetch inventory.
@@ -40,7 +40,7 @@ export const useProvidersInventoryIsLive = ({
       try {
         await consoleFetchJSON(getInventoryApiUrl(`providers`));
 
-        if (oldErrorRef.current?.error !== '') {
+        if ('' !== oldErrorRef.current?.error) {
           oldErrorRef.current = { error: '' };
           setLoadError(null);
           setLoaded(true);
@@ -58,9 +58,7 @@ export const useProvidersInventoryIsLive = ({
 
     // Polling interval set by the passed parameter
     const intervalId = setInterval(fetchData, interval);
-    return () => {
-      clearInterval(intervalId);
-    };
+    return () => clearInterval(intervalId);
   }, [interval]);
 
   return { loaded, loadError };

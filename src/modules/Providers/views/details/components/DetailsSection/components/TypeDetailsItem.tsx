@@ -6,12 +6,12 @@ import { isProviderLocalOpenshift } from 'src/utils/resources';
 
 import { Label } from '@patternfly/react-core';
 
-import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
+import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const TypeDetailsItem: React.FC<ProviderDetailsItemProps> = ({
-  helpContent,
-  moreInfoLink,
   resource: provider,
+  moreInfoLink,
+  helpContent,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -37,7 +37,7 @@ export const TypeDetailsItem: React.FC<ProviderDetailsItemProps> = ({
             </Label>
           )}
           {provider?.spec?.type === 'vsphere' &&
-            (provider?.spec?.settings?.sdkEndpoint === 'esxi' ? (
+            (provider?.spec?.settings?.['sdkEndpoint'] === 'esxi' ? (
               <Label isCompact color={'grey'} className="forklift-table__flex-cell-label">
                 {t('ESXi')}
               </Label>

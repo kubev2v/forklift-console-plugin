@@ -3,7 +3,7 @@ import { openshiftSecretValidator } from 'src/modules/Providers/utils/validators
 
 import {
   BaseCredentialsSection,
-  type BaseCredentialsSectionProps,
+  BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { OpenshiftCredentialsEdit } from './components/edit/OpenshiftCredentialsEdit';
 import { OpenshiftCredentialsList } from './components/list/OpenshiftCredentialsList';

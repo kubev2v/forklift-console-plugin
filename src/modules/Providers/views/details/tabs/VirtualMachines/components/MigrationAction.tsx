@@ -1,29 +1,29 @@
-import React, { type FC } from 'react';
+import React, { FC } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModelRef, type V1beta1Provider } from '@kubev2v/types';
+import { PlanModelRef, V1beta1Provider } from '@kubev2v/types';
 import { Button, ToolbarItem } from '@patternfly/react-core';
 
-import type { VmData } from './VMCellProps';
+import { VmData } from './VMCellProps';
 
 export const MigrationAction: FC<{
   selectedVms: VmData[];
   provider: V1beta1Provider;
   className?: string;
-}> = ({ className, provider, selectedVms }) => {
+}> = ({ selectedVms, provider, className }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
   const planListURL = getResourceUrl({
-    namespaced: false,
     reference: PlanModelRef,
+    namespaced: false,
   });
   const { setData } = useCreateVmMigrationData();
 
   const onClick = () => {
-    setData({ projectName: provider?.metadata?.namespace, provider, selectedVms });
+    setData({ selectedVms, provider, projectName: provider?.metadata?.namespace });
     history.push(`${planListURL}/~new`);
   };
 

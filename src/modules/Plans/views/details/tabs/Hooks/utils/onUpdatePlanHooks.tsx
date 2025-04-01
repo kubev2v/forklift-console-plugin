@@ -2,10 +2,9 @@ import React from 'react';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { deepCopy } from 'src/utils/deepCopy';
 
-import type { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
+import { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
 
-import type { FormAction, FormState } from '../state/reducer';
-
+import { FormAction, FormState } from '../state/reducer';
 import { createHook } from './createHook';
 import { deleteHook } from './deleteHook';
 import { updateHook } from './updateHook';
@@ -20,9 +19,9 @@ type onUpdatePlanHooksProps = {
 
 // Handle user clicking "save"
 export async function onUpdatePlanHooks(props: onUpdatePlanHooksProps) {
-  const { dispatch, plan, postHookResource, preHookResource, state } = props;
+  const { plan, preHookResource, postHookResource, dispatch, state } = props;
 
-  dispatch({ payload: true, type: 'SET_LOADING' });
+  dispatch({ type: 'SET_LOADING', payload: true });
 
   let newPlan = deepCopy(plan);
 
@@ -53,13 +52,13 @@ export async function onUpdatePlanHooks(props: onUpdatePlanHooksProps) {
       await deleteHook(newPlan, postHookResource, 'PostHook');
     }
 
-    dispatch({ payload: false, type: 'SET_LOADING' });
+    dispatch({ type: 'SET_LOADING', payload: false });
   } catch (err) {
     dispatch({
-      payload: <AlertMessageForModals title={'Error'} message={err.message || err.toString()} />,
       type: 'SET_ALERT_MESSAGE',
+      payload: <AlertMessageForModals title={'Error'} message={err.message || err.toString()} />,
     });
 
-    dispatch({ payload: false, type: 'SET_LOADING' });
+    dispatch({ type: 'SET_LOADING', payload: false });
   }
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { TextInput } from '@patternfly/react-core';
 
-type LazyTextInputProps = {
+interface LazyTextInputProps {
   value: string;
   onChange: (value: string) => void;
   type?:
@@ -18,7 +18,7 @@ type LazyTextInputProps = {
     | 'time'
     | 'url';
   ariaLabel?: string;
-};
+}
 
 /**
  * LazyTextInput is a custom input component that triggers the onChange event
@@ -30,10 +30,10 @@ type LazyTextInputProps = {
  * @returns {React.ReactElement} The rendered input component.
  */
 export const LazyTextInput: React.FunctionComponent<LazyTextInputProps> = ({
-  ariaLabel = '',
+  value: propValue,
   onChange,
   type = 'text',
-  value: propValue,
+  ariaLabel = '',
 }) => {
   const [value, setValue] = useState(propValue);
 
@@ -62,9 +62,7 @@ export const LazyTextInput: React.FunctionComponent<LazyTextInputProps> = ({
       spellCheck="false"
       value={value}
       type={type}
-      onChange={(e, v) => {
-        onChangeText(v, e);
-      }}
+      onChange={(e, v) => onChangeText(v, e)}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       aria-label={ariaLabel}

@@ -1,4 +1,4 @@
-import { validateK8sToken, validatePublicCert, type ValidationMsg } from '../../common';
+import { validateK8sToken, validatePublicCert, ValidationMsg } from '../../common';
 
 /**
  * Validates form input fields based on their id.
@@ -43,21 +43,21 @@ const validateToken = (value: string): ValidationMsg => {
 
   if (value === undefined || value === '') {
     return {
-      msg: 'A service account token, optional, used for authenticating the the connection to the API server.',
       type: 'default',
+      msg: 'A service account token, optional, used for authenticating the the connection to the API server.',
     };
   }
 
   if (valid) {
     return {
-      msg: 'A service account token, optional, used for authenticating the the connection to the API server.',
       type: 'success',
+      msg: 'A service account token, optional, used for authenticating the the connection to the API server.',
     };
   }
 
   return {
-    msg: 'Invalid token, a valid Kubernetes service account token is required',
     type: 'error',
+    msg: 'Invalid token, a valid Kubernetes service account token is required',
   };
 };
 
@@ -66,35 +66,35 @@ const validateCacert = (value: string): ValidationMsg => {
 
   if (value === undefined || value === '') {
     return {
-      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
       type: 'default',
+      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
     };
   }
 
   if (valid) {
     return {
-      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
       type: 'success',
+      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
     };
   }
 
   return {
-    msg: 'Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.',
     type: 'error',
+    msg: 'Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.',
   };
 };
 
 const validateInsecureSkipVerify = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
-    return { msg: 'Migrate without validating a CA certificate', type: 'default' };
+    return { type: 'default', msg: 'Migrate without validating a CA certificate' };
   }
 
   const valid = ['true', 'false', ''].includes(value);
 
   if (valid) {
-    return { msg: 'Migrate without validating a CA certificate', type: 'success' };
+    return { type: 'success', msg: 'Migrate without validating a CA certificate' };
   }
 
-  return { msg: 'Invalid Skip certificate validation value, must be true or false', type: 'error' };
+  return { type: 'error', msg: 'Invalid Skip certificate validation value, must be true or false' };
 };

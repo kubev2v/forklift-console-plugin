@@ -1,14 +1,14 @@
 import { deepCopy } from 'src/utils/deepCopy';
 
-import type { V1beta1NetworkMap, V1beta1Provider } from '@kubev2v/types';
+import { V1beta1NetworkMap, V1beta1Provider } from '@kubev2v/types';
 
-export type ProvidersSectionState = {
+export interface ProvidersSectionState {
   networkMap: V1beta1NetworkMap | null;
   sourceProviderMode: 'view' | 'edit';
   targetProviderMode: 'view' | 'edit';
   hasChanges: boolean;
   updating: boolean;
-};
+}
 
 type ProvidersAction =
   | { type: 'SET_SOURCE_PROVIDER'; payload: V1beta1Provider }
@@ -54,10 +54,10 @@ export function providersSectionReducer(
       return { ...state, updating: action.payload };
     case 'INIT':
       return {
-        hasChanges: false,
         networkMap: deepCopy(action.payload),
-        sourceProviderMode: 'view',
         targetProviderMode: 'view',
+        sourceProviderMode: 'view',
+        hasChanges: false,
         updating: false,
       };
     default:

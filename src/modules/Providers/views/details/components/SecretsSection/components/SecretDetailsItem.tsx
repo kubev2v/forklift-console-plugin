@@ -1,20 +1,20 @@
-import React, { type ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
-type SecretDetailsItemProps = {
+interface SecretDetailsItemProps {
   resource: V1beta1Provider;
   moreInfoLink?: string;
   helpContent?: ReactNode;
-};
+}
 
 export const SecretDetailsItem: React.FC<SecretDetailsItemProps> = ({
-  helpContent,
-  moreInfoLink,
   resource: provider,
+  moreInfoLink,
+  helpContent,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -29,7 +29,7 @@ export const SecretDetailsItem: React.FC<SecretDetailsItemProps> = ({
       content={
         provider?.spec?.secret.name ? (
           <ResourceLink
-            groupVersionKind={{ kind: 'Secret', version: 'v1' }}
+            groupVersionKind={{ version: 'v1', kind: 'Secret' }}
             name={provider?.spec?.secret.name}
             namespace={provider?.spec?.secret.namespace}
           />

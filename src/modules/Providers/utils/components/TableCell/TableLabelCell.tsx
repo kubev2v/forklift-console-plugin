@@ -1,8 +1,8 @@
-import React, { type ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 import { Label } from '@patternfly/react-core';
 
-import { TableCell, type TableCellProps } from './TableCell';
+import { TableCell, TableCellProps } from './TableCell';
 
 /**
  * A component that displays a table cell, with an optional label.
@@ -12,8 +12,8 @@ import { TableCell, type TableCellProps } from './TableCell';
  */
 export const TableLabelCell: React.FC<TableLabelCellProps> = ({
   children,
-  hasLabel = false,
   isWrap = false,
+  hasLabel = false,
   label,
   labelColor = 'grey',
 }) => {
@@ -51,9 +51,9 @@ export const TableLabelCell: React.FC<TableLabelCellProps> = ({
 };
 
 type Colors = 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey';
-export type TableLabelCellProps = {
+export interface TableLabelCellProps extends TableCellProps {
   hasLabel?: boolean;
   label?: ReactNode | ReactNode[];
   labelColor?: Colors | Colors[];
   isWrap?: boolean;
-} & TableCellProps;
+}

@@ -1,12 +1,12 @@
-import React, { type ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
-import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { PlanModel, V1beta1Plan } from '@kubev2v/types';
+import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
 import { getPlanPhase } from '../utils/helpers/getPlanPhase';
@@ -20,12 +20,12 @@ import { PlanPhase } from '../utils/types/PlanPhase';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-type ArchiveModalProps = {
+interface ArchiveModalProps {
   resource: V1beta1Plan;
   model: K8sModel;
   title?: string;
   redirectTo?: string;
-};
+}
 
 /**
  * A generic delete modal component
@@ -33,7 +33,7 @@ type ArchiveModalProps = {
  * @param {ArchiveModalProps} props - Props for DeleteModal
  * @returns {React.Element} The DeleteModal component
  */
-export const ArchiveModal: React.FC<ArchiveModalProps> = ({ redirectTo, resource, title }) => {
+export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, redirectTo }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
@@ -49,10 +49,10 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ redirectTo, resource
       const op = resource?.spec?.archived ? 'replace' : 'add';
 
       await k8sPatch({
-        data: [{ op, path: '/spec/archived', value: true }],
         model: PlanModel,
-        path: '',
         resource,
+        path: '',
+        data: [{ op, path: '/spec/archived', value: true }],
       });
 
       if (redirectTo) {

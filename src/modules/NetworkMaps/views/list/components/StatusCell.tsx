@@ -10,9 +10,9 @@ import { NetworkMapModelRef } from '@kubev2v/types';
 import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
-import type { CellProps } from './CellProps';
+import { CellProps } from './CellProps';
 
-export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
+export const StatusCell: React.FC<CellProps> = ({ data, fields, fieldId }) => {
   const { t } = useForkliftTranslation();
 
   const phase = getResourceFieldValue(data, 'phase', fields);
@@ -21,24 +21,24 @@ export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
   switch (phase) {
     case 'Critical':
       return ErrorStatusCell({
-        data,
-        fieldId,
-        fields,
         t,
+        data,
+        fields,
+        fieldId,
       });
     default:
       return <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>;
   }
 };
 
-const ErrorStatusCell: React.FC<CellProps & { t }> = ({ data, fields, t }) => {
+const ErrorStatusCell: React.FC<CellProps & { t }> = ({ t, data, fields }) => {
   const { obj: networkMap } = data;
   const phase = getResourceFieldValue(data, 'phase', fields);
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
   const networkMapURL = getResourceUrl({
+    reference: NetworkMapModelRef,
     name: networkMap?.metadata?.name,
     namespace: networkMap?.metadata?.namespace,
-    reference: NetworkMapModelRef,
   });
 
   // Find the error message from the status conditions
@@ -75,16 +75,16 @@ const ErrorStatusCell: React.FC<CellProps & { t }> = ({ data, fields, t }) => {
 };
 
 const statusIcons = {
-  Critical: <ExclamationCircleIcon color="#C9190B" />,
-  'Not Ready': <Spinner size="sm" />,
   Ready: <CheckCircleIcon color="#3E8635" />,
+  'Not Ready': <Spinner size="sm" />,
+  Critical: <ExclamationCircleIcon color="#C9190B" />,
 };
 
 const phaseLabels = {
-  // T('Critical')
-  Critical: 'Critical',
-  // T('Not Ready')
-  'Not Ready': 'Not Ready',
-  // T('Ready')
+  // t('Ready')
   Ready: 'Ready',
+  // t('Not Ready')
+  'Not Ready': 'Not Ready',
+  // t('Critical')
+  Critical: 'Critical',
 };

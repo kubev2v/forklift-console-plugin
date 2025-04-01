@@ -1,43 +1,43 @@
 import React from 'react';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import { concernFilter } from './utils/filters/concernFilter';
 import { OvaVirtualMachinesCells } from './OvaVirtualMachinesRow';
-import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
+import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
 export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    filter: {
-      placeholderLabel: t('Filter by name'),
-      type: 'freetext',
-    },
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    isVisible: true,
+    resourceFieldId: 'name',
     jsonPath: '$.name',
     label: t('Name'),
-    resourceFieldId: 'name',
+    isVisible: true,
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by name'),
+    },
     sortable: true,
   },
   {
-    filter: concernFilter(t),
-    isVisible: true,
+    resourceFieldId: 'concerns',
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
-    resourceFieldId: 'concerns',
+    isVisible: true,
     sortable: true,
+    filter: concernFilter(t),
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by path'),
-      type: 'freetext',
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'ovaPath',
     jsonPath: '$.vm.OvaPath',
     label: t('OvaPath'),
-    resourceFieldId: 'ovaPath',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by path'),
+    },
     sortable: true,
   },
 ];

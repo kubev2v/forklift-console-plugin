@@ -1,95 +1,96 @@
-import React from 'react';
-import { loadUserSettings } from 'src/components/common/Page/userSettings';
-import { FilterDefType, type ResourceFieldFactory } from 'src/components/common/utils/types';
-import StandardPage from 'src/components/page/StandardPage';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import React from "react";
+import { loadUserSettings } from "src/components/common/Page/userSettings";
+import {
+  FilterDefType,
+  ResourceFieldFactory,
+} from "src/components/common/utils/types";
+import StandardPage from "src/components/page/StandardPage";
+import useGetDeleteAndEditAccessReview from "src/modules/Providers/hooks/useGetDeleteAndEditAccessReview";
+import { ModalHOC } from "src/modules/Providers/modals/ModalHOC/ModalHOC";
+import { useForkliftTranslation } from "src/utils/i18n";
 
-import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { HelperText, HelperTextItem } from '@patternfly/react-core';
+import {
+  PlanModel,
+  PlanModelGroupVersionKind,
+  V1beta1Plan,
+} from "@kubev2v/types";
+import { useK8sWatchResource } from "@openshift-console/dynamic-plugin-sdk";
+import { HelperText, HelperTextItem } from "@patternfly/react-core";
 
-import PlansAddButton from '../../components/PlansAddButton';
-import PlansEmptyState from '../../components/PlansEmptyState';
-import { migrationTypes } from '../../utils/constants/migrationTypes';
-import { planPhases } from '../../utils/constants/planPhases';
-import { getMigrationType } from '../../utils/helpers/getMigrationType';
-import { getPlanPhase } from '../../utils/helpers/getPlanPhase';
-import type { PlanData } from '../../utils/types/PlanData';
+import PlansAddButton from "../../components/PlansAddButton";
+import PlansEmptyState from "../../components/PlansEmptyState";
+import { migrationTypes } from "../../utils/constants/migrationTypes";
+import { planPhases } from "../../utils/constants/planPhases";
+import { getMigrationType } from "../../utils/helpers/getMigrationType";
+import { getPlanPhase } from "../../utils/helpers/getPlanPhase";
+import { PlanData } from "../../utils/types/PlanData";
+import { planResourceApiJsonPaths, PlanTableResourceId } from "./constants";
+import PlanRow from "./PlanRow";
 
-import { planResourceApiJsonPaths, PlanTableResourceId } from './constants';
-import PlanRow from './PlanRow';
-
-import './PlansListPage.style.css';
+import "./PlansListPage.style.css";
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    filter: {
-      placeholderLabel: t('Filter by name'),
-      type: FilterDefType.FreeText,
-    },
-    isIdentity: true,
-    isVisible: true,
-    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Name],
-    label: t('Name'),
     resourceFieldId: PlanTableResourceId.Name,
-    sortable: true,
-  },
-  {
-    filter: {
-      placeholderLabel: t('Filter by namespace'),
-      type: FilterDefType.FreeText,
-    },
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Name],
+    label: t("Name"),
+    isVisible: true,
     isIdentity: true,
-    isVisible: true,
-    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Namespace],
-    label: t('Namespace'),
+    filter: {
+      type: FilterDefType.FreeText,
+      placeholderLabel: t("Filter by name"),
+    },
+    sortable: true,
+  },
+  {
     resourceFieldId: PlanTableResourceId.Namespace,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Namespace],
+    label: t("Namespace"),
+    isVisible: true,
+    isIdentity: true,
+    filter: {
+      type: FilterDefType.FreeText,
+      placeholderLabel: t("Filter by namespace"),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by source'),
-      type: FilterDefType.FreeText,
-    },
-    isVisible: true,
-    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Source],
-    label: t('Source provider'),
     resourceFieldId: PlanTableResourceId.Source,
-    sortable: true,
-  },
-  {
-    filter: {
-      placeholderLabel: t('Filter by target'),
-      type: FilterDefType.FreeText,
-    },
-    isVisible: false,
-    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Destination],
-    label: t('Target provider'),
-    resourceFieldId: PlanTableResourceId.Destination,
-    sortable: true,
-  },
-  {
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Source],
+    label: t("Source provider"),
     isVisible: true,
-    jsonPath: (data: PlanData) => data?.plan?.spec?.vms?.length ?? 0,
-    label: t('Virtual machines'),
-    resourceFieldId: PlanTableResourceId.Vms,
+    filter: {
+      type: FilterDefType.FreeText,
+      placeholderLabel: t("Filter by source"),
+    },
     sortable: true,
   },
   {
+    resourceFieldId: PlanTableResourceId.Destination,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Destination],
+    label: t("Target provider"),
+    isVisible: false,
     filter: {
-      groups: [
-        {
-          groupId: PlanTableResourceId.MigrationType,
-          label: t('Migration type'),
-        },
-        { groupId: PlanTableResourceId.Phase, label: t('Migration status') },
-      ],
-      placeholderLabel: t('Filter'),
+      type: FilterDefType.FreeText,
+      placeholderLabel: t("Filter by target"),
+    },
+    sortable: true,
+  },
+  {
+    resourceFieldId: PlanTableResourceId.Vms,
+    jsonPath: (data: PlanData) => data?.plan?.spec?.vms?.length ?? 0,
+    label: t("Virtual machines"),
+    isVisible: true,
+    sortable: true,
+  },
+  {
+    resourceFieldId: null,
+    label: null,
+    filter: {
       primary: true,
-      showFilterIcon: true,
       type: FilterDefType.GroupedEnum,
+      placeholderLabel: t("Filter"),
+      showFilterIcon: true,
       values: [
         ...migrationTypes.map((migrationType) => ({
           ...migrationType,
@@ -102,77 +103,82 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
           resourceFieldId: PlanTableResourceId.Phase,
         })),
       ],
+      groups: [
+        {
+          groupId: PlanTableResourceId.MigrationType,
+          label: t("Migration type"),
+        },
+        { groupId: PlanTableResourceId.Phase, label: t("Migration status") },
+      ],
     },
-    label: null,
-    resourceFieldId: null,
   },
   {
+    resourceFieldId: PlanTableResourceId.Phase,
+    jsonPath: getPlanPhase,
+    label: t("Migration status"),
+    isVisible: true,
     filter: {
-      isHidden: true,
       type: FilterDefType.Enum,
+      isHidden: true,
       values: planPhases,
     },
-    isVisible: true,
-    jsonPath: getPlanPhase,
-    label: t('Migration status'),
-    resourceFieldId: PlanTableResourceId.Phase,
     sortable: true,
   },
   {
+    resourceFieldId: PlanTableResourceId.MigrationType,
+    jsonPath: getMigrationType,
+    label: t("Migration type"),
+    isVisible: true,
     filter: {
-      isHidden: true,
       type: FilterDefType.Enum,
+      isHidden: true,
       values: migrationTypes,
     },
-    isVisible: true,
-    jsonPath: getMigrationType,
-    label: t('Migration type'),
-    resourceFieldId: PlanTableResourceId.MigrationType,
     sortable: true,
   },
   {
+    resourceFieldId: PlanTableResourceId.MigrationStarted,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.MigrationStarted],
+    label: t("Migration started"),
+    isVisible: true,
     filter: {
+      type: FilterDefType.DateRange,
+      placeholderLabel: "YYYY-MM-DD",
       helperText: (
         <HelperText className="forklift-date-range-helper-text">
           <HelperTextItem variant="indeterminate">
-            {t('Dates are compared in UTC. End of the interval is included.')}
+            {t("Dates are compared in UTC. End of the interval is included.")}
           </HelperTextItem>
         </HelperText>
       ),
-      placeholderLabel: 'YYYY-MM-DD',
-      type: FilterDefType.DateRange,
     },
-    isVisible: true,
-    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.MigrationStarted],
-    label: t('Migration started'),
-    resourceFieldId: PlanTableResourceId.MigrationStarted,
     sortable: true,
   },
   {
-    isVisible: false,
-    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Description],
-    label: t('Description'),
     resourceFieldId: PlanTableResourceId.Description,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Description],
+    label: t("Description"),
+    isVisible: false,
   },
   {
+    resourceFieldId: PlanTableResourceId.Actions,
+    label: "",
     isAction: true,
     isVisible: true,
-    label: '',
-    resourceFieldId: PlanTableResourceId.Actions,
     sortable: false,
   },
   {
-    filter: {
-      defaultValues: ['false'],
-      placeholderLabel: t('Show archived'),
-      standalone: true,
-      type: FilterDefType.Slider,
-    },
+    resourceFieldId: PlanTableResourceId.Archived,
+    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Archived],
+    label: t("Archived"),
     isHidden: true,
     isPersistent: true,
-    jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Archived],
-    label: t('Archived'),
-    resourceFieldId: PlanTableResourceId.Archived,
+    filter: {
+      type: FilterDefType.Slider,
+      standalone: true,
+      placeholderLabel: t("Show archived"),
+      defaultValues: ["false"],
+    },
   },
 ];
 
@@ -181,13 +187,15 @@ const PlansListPage: React.FC<{
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
-  const userSettings = loadUserSettings({ pageId: 'Plans' });
+  const userSettings = loadUserSettings({ pageId: "Plans" });
 
-  const [plans, plansLoaded, plansLoadError] = useK8sWatchResource<V1beta1Plan[]>({
+  const [plans, plansLoaded, plansLoadError] = useK8sWatchResource<
+    V1beta1Plan[]
+  >({
     groupVersionKind: PlanModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace,
-    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({
@@ -195,10 +203,12 @@ const PlansListPage: React.FC<{
     namespace,
   });
 
-  const data: PlanData[] = (plansLoaded && !plansLoadError ? plans : []).map((plan) => ({
-    permissions,
-    plan,
-  }));
+  const data: PlanData[] = (plansLoaded && !plansLoadError ? plans : []).map(
+    (plan) => ({
+      plan,
+      permissions,
+    })
+  );
 
   const EmptyState = <EmptyState_ namespace={namespace} />;
 
@@ -208,14 +218,17 @@ const PlansListPage: React.FC<{
         data-testid="network-maps-list"
         addButton={
           permissions.canCreate && (
-            <PlansAddButton dataTestId="add-network-map-button" namespace={namespace} />
+            <PlansAddButton
+              dataTestId="add-network-map-button"
+              namespace={namespace}
+            />
           )
         }
         dataSource={[data || [], plansLoaded, plansLoadError]}
         RowMapper={PlanRow}
         fieldsMetadata={fieldsMetadataFactory(t)}
         namespace={namespace}
-        title={t('Plans')}
+        title={t("Plans")}
         userSettings={userSettings}
         customNoResultsFound={EmptyState}
         page={1}
@@ -224,9 +237,9 @@ const PlansListPage: React.FC<{
   );
 };
 
-type EmptyStateProps = {
+interface EmptyStateProps {
   namespace: string;
-};
+}
 
 const EmptyState_: React.FC<EmptyStateProps> = ({ namespace }) => {
   return <PlansEmptyState namespace={namespace} />;

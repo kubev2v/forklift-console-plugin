@@ -6,11 +6,10 @@ import { Text, TextVariants } from '@patternfly/react-core';
 
 import { FieldWithClipboardCopy } from '../../FieldWithClipboardCopy';
 import { MaskedField } from '../../MaskedField';
-import type { ListComponentProps } from '../BaseCredentialsSection';
+import { ListComponentProps } from '../BaseCredentialsSection';
+import { Fields } from './Fields';
 
-import type { Fields } from './Fields';
-
-export const EsxiCredentialsList: React.FC<ListComponentProps> = ({ reveal, secret }) => {
+export const EsxiCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
   const { t } = useForkliftTranslation();
 
   const items = [];
@@ -40,25 +39,8 @@ export const EsxiCredentialsList: React.FC<ListComponentProps> = ({ reveal, secr
   );
 
   const fields: Fields = {
-    cacert: {
-      description: t(
-        'A CA certificate to be trusted when connecting to the ESXi API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
-      ),
-      displayType: 'textArea',
-      helperTextPopover: cacertHelperTextPopover,
-      label: t('CA certificate'),
-    },
-    insecureSkipVerify: {
-      cacertHelperTextPopover: insecureSkipVerifyHelperTextPopover,
-      description: t("If true, the provider's TLS certificate won't be validated."),
-      displayType: 'switch',
-      label: t('Skip certificate validation'),
-    },
-    password: {
-      description: 'A user password for connecting to the ESXi API endpoint.',
-      label: t('Password'),
-    },
     user: {
+      label: t('Username'),
       description: (
         <div className="forklift-page-provider-field-default-validation">
           <ForkliftTrans>
@@ -67,7 +49,24 @@ export const EsxiCredentialsList: React.FC<ListComponentProps> = ({ reveal, secr
           </ForkliftTrans>
         </div>
       ),
-      label: t('Username'),
+    },
+    password: {
+      label: t('Password'),
+      description: 'A user password for connecting to the ESXi API endpoint.',
+    },
+    insecureSkipVerify: {
+      label: t('Skip certificate validation'),
+      description: t("If true, the provider's TLS certificate won't be validated."),
+      cacertHelperTextPopover: insecureSkipVerifyHelperTextPopover,
+      displayType: 'switch',
+    },
+    cacert: {
+      label: t('CA certificate'),
+      description: t(
+        'A CA certificate to be trusted when connecting to the ESXi API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
+      ),
+      helperTextPopover: cacertHelperTextPopover,
+      displayType: 'textArea',
     },
   };
 

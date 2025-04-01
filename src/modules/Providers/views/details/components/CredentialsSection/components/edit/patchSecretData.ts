@@ -1,6 +1,6 @@
 import { Base64 } from 'js-base64';
 
-import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -17,6 +17,8 @@ export async function patchSecretData(secret: IoK8sApiCoreV1Secret, clean?: bool
   const sanitizedData = cleanObject(secret.data);
 
   await k8sPatch({
+    model: SecretModel,
+    resource: secret,
     data: [
       {
         op,
@@ -24,25 +26,23 @@ export async function patchSecretData(secret: IoK8sApiCoreV1Secret, clean?: bool
         value: clean ? { ...EmptyOpenstackCredentials, ...sanitizedData } : sanitizedData,
       },
     ],
-    model: SecretModel,
-    resource: secret,
   });
 }
 
-// When patching a secret with new data, first remove all other fields
+// when patching a secret with new data, first remove all other fields
 const EmptyOpenstackCredentials = {
-  applicationCredentialID: undefined,
-  applicationCredentialName: undefined,
-  applicationCredentialSecret: undefined,
   authType: undefined,
-  domainName: undefined,
+  username: undefined,
   password: undefined,
-  projectID: undefined,
-  projectName: undefined,
   regionName: undefined,
+  projectName: undefined,
+  domainName: undefined,
   token: undefined,
   userID: undefined,
-  username: undefined,
+  projectID: undefined,
+  applicationCredentialID: undefined,
+  applicationCredentialSecret: undefined,
+  applicationCredentialName: undefined,
 };
 
 function cleanObject(obj) {
@@ -55,7 +55,7 @@ function cleanObject(obj) {
 
   // Don't save cacert when insecureSkipVerify is true
   if (Base64.decode(obj?.insecureSkipVerify || '') === 'true') {
-    delete result.cacert;
+    delete result['cacert'];
   }
 
   return result;

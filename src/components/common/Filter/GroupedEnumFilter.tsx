@@ -1,9 +1,9 @@
-import React, { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
+import React, { MouseEvent as ReactMouseEvent, Ref, useState } from 'react';
 
 import {
   Badge,
   MenuToggle,
-  type MenuToggleElement,
+  MenuToggleElement,
   Select,
   SelectGroup,
   SelectList,
@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
-import type { FilterTypeProps } from './types';
+import { FilterTypeProps } from './types';
 
 /**
  * This Filter type enables selecting one or many enum values that are separated by groups.
@@ -35,18 +35,18 @@ import type { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/GroupedEnumFilter.tsx)
  */
 export const GroupedEnumFilter = ({
-  hasMultipleResources,
-  onFilterUpdate: onSelectedEnumIdsChange,
-  placeholderLabel,
   selectedFilters: selectedEnumIds = [],
+  onFilterUpdate: onSelectedEnumIdsChange,
+  supportedValues: supportedEnumValues = [],
+  supportedGroups = [],
+  placeholderLabel,
   showFilter = true,
   showFilterIcon,
-  supportedGroups = [],
-  supportedValues: supportedEnumValues = [],
+  hasMultipleResources,
 }: FilterTypeProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Simplify lookup
+  // simplify lookup
   const id2enum = Object.fromEntries(
     supportedEnumValues.map(({ id, ...rest }) => [id, { id, ...rest }]),
   );
@@ -84,7 +84,7 @@ export const GroupedEnumFilter = ({
   };
 
   const hasFilter = (id: string): boolean =>
-    Boolean(id2enum[id]) && Boolean(selectedEnumIds.find((enumId) => enumId === id));
+    !!id2enum[id] && !!selectedEnumIds.find((enumId) => enumId === id);
 
   const addFilter = (id: string): void => {
     if (hasMultipleResources) {
@@ -105,7 +105,10 @@ export const GroupedEnumFilter = ({
     );
   };
 
-  const onSelect = (_event: ReactMouseEvent | undefined, value: string | number | undefined) => {
+  const onSelect = (
+    _event: ReactMouseEvent<Element, MouseEvent> | undefined,
+    value: string | number | undefined,
+  ) => {
     const label = value?.toString();
     const id = label2enum?.[label] ? label2enum[label]?.id : label;
     hasFilter(id) ? deleteFilter(id) : addFilter(id);
@@ -129,7 +132,7 @@ export const GroupedEnumFilter = ({
   );
 
   const renderOptions = () =>
-    supportedGroups.map(({ groupId, label }) => (
+    supportedGroups.map(({ label, groupId }) => (
       <SelectGroup key={groupId} label={label}>
         <SelectList>
           {supportedEnumValues
@@ -151,12 +154,12 @@ export const GroupedEnumFilter = ({
   return (
     <>
       {/**
-       * Use nested ToolbarFilter trick borrowed from the Openshift Console filter-toolbar:
+       * use nested ToolbarFilter trick borrowed from the Openshift Console filter-toolbar:
        * 1. one Select belongs to multiple ToolbarFilters.
        * 2. each ToolbarFilter provides a different chip category
        * 3. a chip category maps to group within the Select */}
       {supportedGroups.reduce(
-        (acc, { groupId, label }) => (
+        (acc, { label, groupId }) => (
           <ToolbarFilter
             chips={selectedEnumIds
               .filter((id) => id2enum[id])
@@ -164,7 +167,7 @@ export const GroupedEnumFilter = ({
               .filter((enumVal) => enumVal.groupId === groupId)
               .map(({ id, label }) => ({ key: id, node: label }))}
             deleteChip={(category, option) => {
-              // Values are one enum so id is enough to identify (category is not needed)
+              // values are one enum so id is enough to identify (category is not needed)
               const id = typeof option === 'string' ? option : option.key;
               deleteFilter(id);
             }}
@@ -184,9 +187,7 @@ export const GroupedEnumFilter = ({
           isOpen={isOpen}
           selected={supportedEnumValues.filter(({ id }) => selectedEnumIds.includes(id))}
           onSelect={onSelect}
-          onOpenChange={(nextOpen: boolean) => {
-            setIsOpen(nextOpen);
-          }}
+          onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
           toggle={toggle}
           shouldFocusToggleOnSelect
           shouldFocusFirstItemOnOpen={false}

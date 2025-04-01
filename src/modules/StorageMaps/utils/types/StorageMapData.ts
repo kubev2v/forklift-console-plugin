@@ -1,8 +1,8 @@
-import type { ProvidersPermissionStatus } from 'src/modules/Providers/utils/types/ProvidersPermissionStatus';
+import { ProvidersPermissionStatus } from 'src/modules/Providers/utils/types/ProvidersPermissionStatus';
 
-import type { V1beta1StorageMap } from '@kubev2v/types';
+import { V1beta1StorageMap } from '@kubev2v/types';
 
-export type StorageMapData = {
+export interface StorageMapData {
   obj?: V1beta1StorageMap;
   permissions?: ProvidersPermissionStatus;
-};
+}

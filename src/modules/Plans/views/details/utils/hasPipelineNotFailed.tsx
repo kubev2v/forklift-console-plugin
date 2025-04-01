@@ -1,4 +1,4 @@
-import type { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
+import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
 
 /**
  * Check if a given migration's pipeline step has not failed.

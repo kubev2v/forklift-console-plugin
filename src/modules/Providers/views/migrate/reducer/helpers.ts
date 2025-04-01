@@ -1,13 +1,13 @@
-import type { FC } from 'react';
-import type { Draft } from 'immer';
+import { FC } from 'react';
+import { Draft } from 'immer';
 import { DefaultRow } from 'src/components/common/TableView/DefaultRow';
-import type { RowProps } from 'src/components/common/TableView/types';
+import { RowProps } from 'src/components/common/TableView/types';
 import { withTr } from 'src/components/common/TableView/withTr';
 import { getIsTarget } from 'src/modules/Providers/utils/helpers/getIsTarget';
 import { validateK8sName } from 'src/modules/Providers/utils/validators/common';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
-import type {
+import { ResourceFieldFactory } from '@components/common/utils/types';
+import {
   IoK8sApimachineryPkgApisMetaV1ObjectMeta,
   OVirtNicProfile,
   ProviderType,
@@ -15,7 +15,7 @@ import type {
   V1beta1Provider,
 } from '@kubev2v/types';
 
-import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 import { openShiftVmFieldsMetadataFactory } from '../../details/tabs/VirtualMachines/OpenShiftVirtualMachinesList';
 import { OpenShiftVirtualMachinesCells } from '../../details/tabs/VirtualMachines/OpenShiftVirtualMachinesRow';
 import { openStackVmFieldsMetadataFactory } from '../../details/tabs/VirtualMachines/OpenStackVirtualMachinesList';
@@ -27,22 +27,21 @@ import { OVirtVirtualMachinesCells } from '../../details/tabs/VirtualMachines/OV
 import { vSphereVmFieldsMetadataFactory } from '../../details/tabs/VirtualMachines/VSphereVirtualMachinesList';
 import { VSphereVirtualMachinesCells } from '../../details/tabs/VirtualMachines/VSphereVirtualMachinesRow';
 import {
-  type CreateVmMigrationPageState,
-  type Mapping,
-  type MappingSource,
+  CreateVmMigrationPageState,
+  Mapping,
+  MappingSource,
   MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING,
   NETWORK_MAPPING_EMPTY,
   NETWORK_MAPPING_REGENERATED,
-  type NetworkAlerts,
+  NetworkAlerts,
   OVIRT_NICS_WITH_EMPTY_PROFILE,
   STORAGE_MAPPING_EMPTY,
   STORAGE_MAPPING_REGENERATED,
-  type StorageAlerts,
+  StorageAlerts,
   UNMAPPED_NETWORKS,
   UNMAPPED_STORAGES,
 } from '../types';
-
-import type { CreateVmMigration } from './actions';
+import { CreateVmMigration } from './actions';
 import { calculateNetworks, calculateStorages } from './calculateMappings';
 import { hasMultiplePodNetworkMappings } from './hasMultiplePodNetworkMappings';
 
@@ -59,9 +58,7 @@ export const validatePlanName = (name: string, existingPlans: V1beta1Plan[]) =>
     : 'error';
 
 export const validateTargetNamespace = (namespace: string, alreadyInUseBySelectedVms: boolean) =>
-  Boolean(namespace) && validateK8sName(namespace) && !alreadyInUseBySelectedVms
-    ? 'success'
-    : 'error';
+  !!namespace && validateK8sName(namespace) && !alreadyInUseBySelectedVms ? 'success' : 'error';
 
 export const setTargetProvider = (
   draft: Draft<CreateVmMigrationPageState>,
@@ -70,16 +67,16 @@ export const setTargetProvider = (
 ): V1beta1Provider => {
   const {
     existingResources,
-    underConstruction: { netMap, plan, storageMap },
     validation,
+    underConstruction: { plan, netMap, storageMap },
     workArea,
   } = draft;
 
   if (plan.spec.provider.destination) {
-    // Case: changing already chosen provider
-    // Reset props that depend on the target provider
+    // case: changing already chosen provider
+    // reset props that depend on the target provider
     plan.spec.targetNamespace = undefined;
-    // Temporarily assume no namespace is OK - the validation will continue when new namespaces are loaded
+    // temporarily assume no namespace is OK - the validation will continue when new namespaces are loaded
     validation.targetNamespace = 'default';
     existingResources.targetNamespaces = [];
     existingResources.targetNetworks = [];
@@ -87,7 +84,7 @@ export const setTargetProvider = (
     draft.calculatedPerNamespace = initCalculatedPerNamespaceSlice();
   }
 
-  // There might be no target provider in the namespace
+  // there might be no target provider in the namespace
   const resolvedTarget = resolveTargetProvider(targetProviderName, availableProviders);
   validation.targetProvider = resolvedTarget ? 'success' : 'error';
   plan.spec.provider.destination = resolvedTarget && getObjectRef(resolvedTarget);
@@ -102,10 +99,10 @@ export const setTargetNamespace = (
   targetNamespace: string,
 ): void => {
   const {
-    calculatedOnce: { namespacesUsedBySelectedVms },
-    receivedAsParams: { sourceProvider },
     underConstruction: { plan },
+    calculatedOnce: { namespacesUsedBySelectedVms },
     workArea: { targetProvider },
+    receivedAsParams: { sourceProvider },
   } = draft;
 
   plan.spec.targetNamespace = targetNamespace;
@@ -114,8 +111,8 @@ export const setTargetNamespace = (
     alreadyInUseBySelectedVms({
       namespace: targetNamespace,
       namespacesUsedBySelectedVms,
-      sourceProvider,
       targetProvider,
+      sourceProvider,
     }),
   );
 
@@ -127,7 +124,7 @@ const areMappingsEqual = (a: Mapping[], b: Mapping[]) => {
   if (a?.length !== b.length) {
     return;
   }
-  return a?.every(({ destination, source }) =>
+  return a?.every(({ source, destination }) =>
     b.find((mapping) => mapping.source === source && mapping.destination === destination),
   );
 };
@@ -144,7 +141,7 @@ export const recalculateStorages = (draft) => {
 export const reTestStorages = (draft) => {
   draft.alerts.storageMappings.warnings = [];
 
-  const { storageMappings } = draft.calculatedPerNamespace;
+  const storageMappings = draft.calculatedPerNamespace.storageMappings;
   if (
     storageMappings &&
     storageMappings.length > 1 &&
@@ -169,7 +166,7 @@ export const recalculateNetworks = (draft) => {
 export const reTestNetworks = (draft) => {
   draft.alerts.networkMappings.warnings = [];
 
-  const { networkMappings } = draft.calculatedPerNamespace;
+  const networkMappings = draft.calculatedPerNamespace.networkMappings;
   if (
     networkMappings &&
     networkMappings.length !== 0 &&
@@ -184,19 +181,19 @@ export const reTestNetworks = (draft) => {
 
 const initCalculatedPerNamespaceSlice =
   (): CreateVmMigrationPageState['calculatedPerNamespace'] => ({
-    networkMappings: undefined,
-    sourceNetworks: [],
-    sourceStorages: [],
-    storageMappings: undefined,
     targetNetworks: [],
     targetStorages: [],
+    networkMappings: undefined,
+    storageMappings: undefined,
+    sourceStorages: [],
+    sourceNetworks: [],
   });
 
 const resolveTargetProvider = (name: string, availableProviders: V1beta1Provider[]) =>
   availableProviders.filter(getIsTarget).find((p) => p?.metadata?.name === name);
 
-// Based on the method used in legacy/src/common/helpers
-// And mocks/src/definitions/utils
+// based on the method used in legacy/src/common/helpers
+// and mocks/src/definitions/utils
 export const getObjectRef = (
   {
     apiVersion,
@@ -256,9 +253,9 @@ const removeIfPresent = <T>(key: T, keys: T[]) => {
 
 export const alreadyInUseBySelectedVms = ({
   namespace,
-  namespacesUsedBySelectedVms,
   sourceProvider,
   targetProvider,
+  namespacesUsedBySelectedVms,
 }: {
   namespace: string;
   sourceProvider: V1beta1Provider;
@@ -270,18 +267,18 @@ export const alreadyInUseBySelectedVms = ({
   namespacesUsedBySelectedVms.some((name) => name === namespace);
 
 const validateNetworkMapping = ({
+  sources,
   errors,
   mappings,
-  nicProfiles,
   selectedVms,
   sourceNetworkLabelToId,
-  sources,
+  nicProfiles,
 }: {
   sources: MappingSource[];
   errors: NetworkAlerts[];
   mappings: Mapping[];
   selectedVms: VmData[];
-  sourceNetworkLabelToId: Record<string, string>;
+  sourceNetworkLabelToId: { [label: string]: string };
   nicProfiles?: OVirtNicProfile[];
 }): [boolean, NetworkAlerts][] => [
   [sources.some((src) => src.usedBySelectedVms && !src.isMapped), UNMAPPED_NETWORKS],
@@ -294,22 +291,22 @@ const validateNetworkMapping = ({
 
 export const executeNetworkMappingValidation = (draft: Draft<CreateVmMigrationPageState>) => {
   const {
+    calculatedPerNamespace: cpn,
     alerts: {
       networkMappings: { errors },
     },
-    calculatedOnce: { sourceNetworkLabelToId },
-    calculatedPerNamespace: cpn,
-    existingResources: { nicProfiles },
     receivedAsParams: { selectedVms },
+    calculatedOnce: { sourceNetworkLabelToId },
+    existingResources: { nicProfiles },
     validation,
   } = draft;
   validation.networkMappings = validateNetworkMapping({
     errors,
     mappings: cpn.networkMappings,
-    nicProfiles,
     selectedVms,
     sourceNetworkLabelToId,
     sources: cpn.sourceNetworks,
+    nicProfiles,
   }).reduce((validation, [hasFailed, alert]) => {
     hasFailed ? addIfMissing(alert, errors) : removeIfPresent(alert, errors);
     return hasFailed ? 'error' : validation;
@@ -326,10 +323,10 @@ const validateStorageMapping = ({
 
 export const executeStorageMappingValidation = (draft: Draft<CreateVmMigrationPageState>) => {
   const {
+    calculatedPerNamespace: cpn,
     alerts: {
       storageMappings: { errors },
     },
-    calculatedPerNamespace: cpn,
     validation,
   } = draft;
   validation.storageMappings = validateStorageMapping({ sources: cpn.sourceStorages }).reduce(
@@ -341,5 +338,5 @@ export const executeStorageMappingValidation = (draft: Draft<CreateVmMigrationPa
   );
 };
 
-export const isDone = (initialLoading: Partial<Record<CreateVmMigration, boolean>>) =>
+export const isDone = (initialLoading: { [key in CreateVmMigration]?: boolean }) =>
   Object.values(initialLoading).every((value) => value);

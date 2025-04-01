@@ -1,10 +1,11 @@
 import { deepCopy } from 'src/utils/deepCopy';
 
-import type { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
+import { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
 
-import type { FormState } from './reducer';
+import { FormState } from './reducer';
 
 const preHookTemplate = (plan: V1beta1Plan) => ({
+  spec: { image: 'quay.io/konveyor/hook-runner', playbook: '' },
   apiVersion: 'forklift.konveyor.io/v1beta1',
   kind: 'Hook',
   metadata: {
@@ -19,10 +20,10 @@ const preHookTemplate = (plan: V1beta1Plan) => ({
       },
     ],
   },
-  spec: { image: 'quay.io/konveyor/hook-runner', playbook: '' },
 });
 
 const postHookTemplate = (plan: V1beta1Plan) => ({
+  spec: { image: 'quay.io/konveyor/hook-runner', playbook: '' },
   apiVersion: 'forklift.konveyor.io/v1beta1',
   kind: 'Hook',
   metadata: {
@@ -37,7 +38,6 @@ const postHookTemplate = (plan: V1beta1Plan) => ({
       },
     ],
   },
-  spec: { image: 'quay.io/konveyor/hook-runner', playbook: '' },
 });
 
 export const initialState = (
@@ -45,11 +45,11 @@ export const initialState = (
   preHookResource: V1beta1Hook,
   postHookResource: V1beta1Hook,
 ): FormState => ({
-  alertMessage: undefined,
+  preHookSet: !!preHookResource,
+  postHookSet: !!postHookResource,
+  preHook: deepCopy(preHookResource) || preHookTemplate(plan),
+  postHook: deepCopy(postHookResource) || postHookTemplate(plan),
   hasChanges: false,
   isLoading: false,
-  postHook: deepCopy(postHookResource) || postHookTemplate(plan),
-  postHookSet: Boolean(postHookResource),
-  preHook: deepCopy(preHookResource) || preHookTemplate(plan),
-  preHookSet: Boolean(preHookResource),
+  alertMessage: undefined,
 });

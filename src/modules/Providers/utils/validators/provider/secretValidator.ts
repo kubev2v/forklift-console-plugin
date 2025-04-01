@@ -1,12 +1,11 @@
-import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
-
-import type { ValidationMsg } from '../common';
+import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
 import { openshiftSecretValidator } from './openshift/openshiftSecretValidator';
 import { openstackSecretValidator } from './openstack/openstackSecretValidator';
 import { ovirtSecretValidator } from './ovirt/ovirtSecretValidator';
 import { esxiSecretValidator } from './vsphere/esxiSecretValidator';
 import { vcenterSecretValidator } from './vsphere/vcenterSecretValidator';
+import { ValidationMsg } from '../common';
 
 export type SecretSubType = 'esxi' | 'vcenter';
 
@@ -39,7 +38,7 @@ export function secretValidator(
       validationError = { type: 'default' };
       break;
     default:
-      validationError = { msg: 'bad provider type', type: 'error' };
+      validationError = { type: 'error', msg: 'bad provider type' };
   }
 
   return validationError;

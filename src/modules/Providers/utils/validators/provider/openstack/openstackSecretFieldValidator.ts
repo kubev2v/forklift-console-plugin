@@ -1,4 +1,4 @@
-import { validateNoSpaces, validatePublicCert, type ValidationMsg } from '../../common';
+import { validateNoSpaces, validatePublicCert, ValidationMsg } from '../../common';
 
 /**
  * Validates form input fields based on their id.
@@ -70,26 +70,26 @@ const validateUsername = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
       type: 'default',
+      msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
       type: 'error',
+      msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
     };
   }
 
   if (valid) {
     return {
-      msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint.',
       type: 'success',
+      msg: 'A username for connecting to the OpenStack Identity (Keystone) endpoint.',
     };
   }
 
-  return { msg: 'Invalid username, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid username, spaces are not allowed' };
 };
 
 const validatePassword = (value: string): ValidationMsg => {
@@ -98,26 +98,26 @@ const validatePassword = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'A user password for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
       type: 'default',
+      msg: 'A user password for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'A user password for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
       type: 'error',
+      msg: 'A user password for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
     };
   }
 
   if (valid) {
     return {
-      msg: 'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
       type: 'success',
+      msg: 'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
     };
   }
 
-  return { msg: 'Invalid password, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid password, spaces are not allowed' };
 };
 
 const validateRegionName = (value: string): ValidationMsg => {
@@ -126,23 +126,23 @@ const validateRegionName = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'OpenStack region name. [required]',
       type: 'default',
+      msg: 'OpenStack region name. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'OpenStack region name. [required]',
       type: 'error',
+      msg: 'OpenStack region name. [required]',
     };
   }
 
   if (valid) {
-    return { msg: 'OpenStack region name.', type: 'success' };
+    return { type: 'success', msg: 'OpenStack region name.' };
   }
 
-  return { msg: 'Invalid region, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid region, spaces are not allowed' };
 };
 
 const validateProjectName = (value: string): ValidationMsg => {
@@ -151,23 +151,23 @@ const validateProjectName = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'OpenStack project name. [required]',
       type: 'default',
+      msg: 'OpenStack project name. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'OpenStack project name. [required]',
       type: 'error',
+      msg: 'OpenStack project name. [required]',
     };
   }
 
   if (valid) {
-    return { msg: 'OpenStack project name.', type: 'success' };
+    return { type: 'success', msg: 'OpenStack project name.' };
   }
 
-  return { msg: 'Invalid project name, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid project name, spaces are not allowed' };
 };
 
 const validateDomainName = (value: string): ValidationMsg => {
@@ -176,23 +176,23 @@ const validateDomainName = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'OpenStack domain name. [required]',
       type: 'default',
+      msg: 'OpenStack domain name. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'OpenStack domain name. [required]',
       type: 'error',
+      msg: 'OpenStack domain name. [required]',
     };
   }
 
   if (valid) {
-    return { msg: 'OpenStack domain name.', type: 'success' };
+    return { type: 'success', msg: 'OpenStack domain name.' };
   }
 
-  return { msg: 'Invalid domain name, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid domain name, spaces are not allowed' };
 };
 
 const validateToken = (value: string): ValidationMsg => {
@@ -201,23 +201,23 @@ const validateToken = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'OpenStack token for authentication using a user name. [required]',
       type: 'default',
+      msg: 'OpenStack token for authentication using a user name. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'OpenStack token for authentication using a user name. [required]',
       type: 'error',
+      msg: 'OpenStack token for authentication using a user name. [required]',
     };
   }
 
   if (valid) {
-    return { msg: 'OpenStack token for authentication using a user name.', type: 'success' };
+    return { type: 'success', msg: 'OpenStack token for authentication using a user name.' };
   }
 
-  return { msg: 'Invalid token, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid token, spaces are not allowed' };
 };
 
 const validateUserID = (value: string): ValidationMsg => {
@@ -226,26 +226,26 @@ const validateUserID = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'A user ID for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
       type: 'default',
+      msg: 'A user ID for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'A user ID for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
       type: 'error',
+      msg: 'A user ID for connecting to the OpenStack Identity (Keystone) endpoint. [required]',
     };
   }
 
   if (valid) {
     return {
-      msg: 'A user ID for connecting to the OpenStack Identity (Keystone) endpoint.',
       type: 'success',
+      msg: 'A user ID for connecting to the OpenStack Identity (Keystone) endpoint.',
     };
   }
 
-  return { msg: 'Invalid user ID, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid user ID, spaces are not allowed' };
 };
 
 const validateProjectID = (value: string): ValidationMsg => {
@@ -254,23 +254,23 @@ const validateProjectID = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'OpenStack project ID. [required]',
       type: 'default',
+      msg: 'OpenStack project ID. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'OpenStack project ID. [required]',
       type: 'error',
+      msg: 'OpenStack project ID. [required]',
     };
   }
 
   if (valid) {
-    return { msg: 'OpenStack project ID.', type: 'success' };
+    return { type: 'success', msg: 'OpenStack project ID.' };
   }
 
-  return { msg: 'Invalid project ID, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid project ID, spaces are not allowed' };
 };
 
 const validateApplicationCredentialID = (value: string): ValidationMsg => {
@@ -279,26 +279,26 @@ const validateApplicationCredentialID = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'OpenStack application credential ID needed for the application credential authentication. [required]',
       type: 'default',
+      msg: 'OpenStack application credential ID needed for the application credential authentication. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'OpenStack application credential ID needed for the application credential authentication. [required]',
       type: 'error',
+      msg: 'OpenStack application credential ID needed for the application credential authentication. [required]',
     };
   }
 
   if (valid) {
     return {
-      msg: 'OpenStack application credential ID needed for the application credential authentication.',
       type: 'success',
+      msg: 'OpenStack application credential ID needed for the application credential authentication.',
     };
   }
 
-  return { msg: 'Invalid application ID, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid application ID, spaces are not allowed' };
 };
 
 const validateApplicationCredentialSecret = (value: string): ValidationMsg => {
@@ -307,26 +307,26 @@ const validateApplicationCredentialSecret = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'OpenStack application credential Secret needed for the application credential authentication. [required]',
       type: 'default',
+      msg: 'OpenStack application credential Secret needed for the application credential authentication. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'OpenStack application credential Secret needed for the application credential authentication. [required]',
       type: 'error',
+      msg: 'OpenStack application credential Secret needed for the application credential authentication. [required]',
     };
   }
 
   if (valid) {
     return {
-      msg: 'OpenStack application credential Secret needed for the application credential authentication.',
       type: 'success',
+      msg: 'OpenStack application credential Secret needed for the application credential authentication.',
     };
   }
 
-  return { msg: 'Invalid application secret, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid application secret, spaces are not allowed' };
 };
 
 const validateApplicationCredentialName = (value: string): ValidationMsg => {
@@ -335,41 +335,41 @@ const validateApplicationCredentialName = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'OpenStack application credential name needed for application credential authentication. [required]',
       type: 'default',
+      msg: 'OpenStack application credential name needed for application credential authentication. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'OpenStack application credential name needed for application credential authentication. [required]',
       type: 'error',
+      msg: 'OpenStack application credential name needed for application credential authentication. [required]',
     };
   }
 
   if (valid) {
     return {
-      msg: 'OpenStack application credential name needed for application credential authentication.',
       type: 'success',
+      msg: 'OpenStack application credential name needed for application credential authentication.',
     };
   }
 
-  return { msg: 'Invalid application name, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid application name, spaces are not allowed' };
 };
 
 const validateInsecureSkipVerify = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
-    return { msg: 'Migrate without validating a CA certificate', type: 'default' };
+    return { type: 'default', msg: 'Migrate without validating a CA certificate' };
   }
 
   const valid = ['true', 'false', ''].includes(value);
 
   if (valid) {
-    return { msg: 'Migrate without validating a CA certificate', type: 'success' };
+    return { type: 'success', msg: 'Migrate without validating a CA certificate' };
   }
 
-  return { msg: 'Invalid Skip certificate validation value, must be true or false', type: 'error' };
+  return { type: 'error', msg: 'Invalid Skip certificate validation value, must be true or false' };
 };
 
 const validateCacert = (value: string): ValidationMsg => {
@@ -377,20 +377,20 @@ const validateCacert = (value: string): ValidationMsg => {
 
   if (value === undefined || value === '') {
     return {
-      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
       type: 'default',
+      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
     };
   }
 
   if (valid) {
     return {
-      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
       type: 'success',
+      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
     };
   }
 
   return {
-    msg: 'Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.',
     type: 'error',
+    msg: 'Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.',
   };
 };

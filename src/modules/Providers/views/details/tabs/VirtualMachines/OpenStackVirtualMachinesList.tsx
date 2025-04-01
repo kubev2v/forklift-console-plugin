@@ -1,107 +1,107 @@
 import React from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
-import type { VmData } from './components/VMCellProps';
+import { VmData } from './components/VMCellProps';
 import { concernFilter } from './utils/filters/concernFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { OpenStackVirtualMachinesCells } from './OpenStackVirtualMachinesRow';
-import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
+import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
 export const openStackVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    filter: {
-      placeholderLabel: t('Filter by name'),
-      type: 'freetext',
-    },
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    isVisible: true,
+    resourceFieldId: 'name',
     jsonPath: '$.name',
     label: t('Name'),
-    resourceFieldId: 'name',
+    isVisible: true,
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by name'),
+    },
     sortable: true,
   },
   {
-    filter: concernFilter(t),
-    isVisible: true,
+    resourceFieldId: 'concerns',
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
-    resourceFieldId: 'concerns',
+    isVisible: true,
     sortable: true,
+    filter: concernFilter(t),
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by host'),
-      type: 'freetext',
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'hostID',
     jsonPath: '$.vm.hostID',
     label: t('Host'),
-    resourceFieldId: 'hostID',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by host'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by path'),
-      type: 'freetext',
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'path',
     jsonPath: '$.vm.path',
     label: t('Path'),
-    resourceFieldId: 'path',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by path'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by status'),
-      type: 'enum',
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'status',
     jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Status'),
-    resourceFieldId: 'status',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'enum',
+      placeholderLabel: t('Filter by status'),
+      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by tenant'),
-      type: 'freetext',
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'tenantID',
     jsonPath: '$.vm.tenantID',
     label: t('Tenant'),
-    resourceFieldId: 'tenantID',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by tenant'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by image'),
-      type: 'freetext',
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'imageID',
     jsonPath: '$.vm.imageID',
     label: t('Image'),
-    resourceFieldId: 'imageID',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by image'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by flavor'),
-      type: 'freetext',
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'flavorID',
     jsonPath: '$.vm.flavorID',
     label: t('Flavor'),
-    resourceFieldId: 'flavorID',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by flavor'),
+    },
     sortable: true,
   },
 ];

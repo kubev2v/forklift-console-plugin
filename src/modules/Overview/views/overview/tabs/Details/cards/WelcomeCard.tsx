@@ -1,20 +1,22 @@
-import React, { type FC, type Ref, useState } from 'react';
+import React, { FC, Ref, useState } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1ForkliftController } from '@kubev2v/types';
+import { V1beta1ForkliftController } from '@kubev2v/types';
 import {
   Card,
   CardBody,
   CardHeader,
   CardTitle,
+  Split,
+  SplitItem,
+  Text,
+} from '@patternfly/react-core';
+import {
   Dropdown,
   DropdownItem,
   DropdownList,
   MenuToggle,
-  type MenuToggleElement,
-  Split,
-  SplitItem,
-  Text,
+  MenuToggleElement,
 } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
@@ -28,7 +30,7 @@ type OverviewCardProps = {
 };
 
 const hideFromViewDropdownOption = (onHide: () => void, t) => {
-  const hasHideAction = Boolean(onHide);
+  const hasHideAction = !!onHide;
 
   return hasHideAction ? (
     <DropdownItem
@@ -40,7 +42,7 @@ const hideFromViewDropdownOption = (onHide: () => void, t) => {
       )}
       onClick={onHide}
       data-testid="hide"
-      style={{ fontWeight: 'bold', whiteSpace: 'pre-wrap', width: 280 }}
+      style={{ whiteSpace: 'pre-wrap', width: 280, fontWeight: 'bold' }}
     >
       {t('Hide from view')}
     </DropdownItem>
@@ -53,16 +55,12 @@ const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
   const { t } = useForkliftTranslation();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const actionDropdownItems = [hideFromViewDropdownOption(onHide, t)];
-  const onToggle = () => {
-    setMenuIsOpen((open) => !open);
-  };
+  const onToggle = () => setMenuIsOpen((open) => !open);
 
   const headerActions = (
     <Dropdown
       isOpen={menuIsOpen}
-      onOpenChange={(menuIsOpen: boolean) => {
-        setMenuIsOpen(menuIsOpen);
-      }}
+      onOpenChange={(menuIsOpen: boolean) => setMenuIsOpen(menuIsOpen)}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle ref={toggleRef} onClick={onToggle} isExpanded={menuIsOpen} variant={'plain'}>
           {<EllipsisVIcon />}

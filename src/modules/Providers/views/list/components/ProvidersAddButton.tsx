@@ -1,10 +1,10 @@
-import React, { type FC } from 'react';
+import React, { FC } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef } from '@kubev2v/types';
-import { Button, type ButtonProps, ButtonVariant } from '@patternfly/react-core';
+import { Button, ButtonProps, ButtonVariant } from '@patternfly/react-core';
 
 type ProvidersAddButtonProps = {
   namespace?: string;
@@ -13,17 +13,17 @@ type ProvidersAddButtonProps = {
 };
 
 const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({
-  buttonProps,
-  dataTestId,
   namespace,
+  dataTestId,
+  buttonProps,
 }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
 
   const providersListURL = getResourceUrl({
-    namespace,
-    namespaced: namespace !== undefined,
     reference: ProviderModelRef,
+    namespace: namespace,
+    namespaced: namespace !== undefined,
   });
 
   const onClick = () => {

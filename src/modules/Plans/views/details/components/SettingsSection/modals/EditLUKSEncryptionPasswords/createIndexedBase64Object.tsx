@@ -1,4 +1,4 @@
-export function createIndexedBase64Object(encodedString: string): Record<number, string> {
+export function createIndexedBase64Object(encodedString: string): { [key: number]: string } {
   // Parse the JSON encoded string to get the list of strings
   const list: string[] = JSON.parse(encodedString || '[]');
 
@@ -8,7 +8,7 @@ export function createIndexedBase64Object(encodedString: string): Record<number,
   }
 
   // Create an object with index as key and base64 encoded string as value
-  const result: Record<number, string> = {};
+  const result: { [key: number]: string } = {};
   list
     .filter((item) => item)
     .forEach((item, index) => {

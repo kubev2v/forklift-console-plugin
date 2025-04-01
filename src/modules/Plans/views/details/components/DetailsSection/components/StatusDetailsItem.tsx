@@ -3,7 +3,7 @@ import { PlanStatusCell } from 'src/modules/Plans/views/list/components/PlanStat
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { PlanDetailsItemProps } from './PlanDetailsItemProps';
+import { PlanDetailsItemProps } from './PlanDetailsItemProps';
 
 export const StatusDetailsItem: React.FC<PlanDetailsItemProps> = ({ resource }) => {
   const { t } = useForkliftTranslation();

@@ -1,40 +1,39 @@
-import React, { type FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { Td, Th } from '@patternfly/react-table';
 
 import { DefaultHeader } from '../common/TableView/DefaultHeader';
-import type { RowProps, TableViewHeaderProps } from '../common/TableView/types';
+import { RowProps, TableViewHeaderProps } from '../common/TableView/types';
 import { withTr } from '../common/TableView/withTr';
-import type { GlobalActionToolbarProps } from '../common/utils/types';
-
-import StandardPage, { type StandardPageProps } from './StandardPage';
+import { GlobalActionToolbarProps } from '../common/utils/types';
+import StandardPage, { StandardPageProps } from './StandardPage';
 
 function withRowSelection<T>({
-  canSelect,
   CellMapper,
-  isExpanded,
   isSelected,
-  toggleExpandFor,
+  isExpanded,
   toggleSelectFor,
+  toggleExpandFor,
+  canSelect,
 }) {
   const Enhanced = (props: RowProps<T>) => (
     <>
       {isExpanded && (
         <Td
           expand={{
+            rowIndex: props.resourceIndex,
             isExpanded: isExpanded(props.resourceData),
             onToggle: () => toggleExpandFor([props.resourceData]),
-            rowIndex: props.resourceIndex,
           }}
         />
       )}
       {isSelected && (
         <Td
           select={{
-            isDisabled: !canSelect(props.resourceData),
-            isSelected: isSelected(props.resourceData),
-            onSelect: () => toggleSelectFor([props.resourceData]),
             rowIndex: props.resourceIndex,
+            onSelect: () => toggleSelectFor([props.resourceData]),
+            isSelected: isSelected(props.resourceData),
+            isDisabled: !canSelect(props.resourceData),
           }}
         />
       )}
@@ -46,11 +45,11 @@ function withRowSelection<T>({
 }
 
 function withHeaderSelection<T>({
-  canSelect,
   HeaderMapper,
-  isExpanded,
   isSelected,
+  isExpanded,
   toggleSelectFor,
+  canSelect,
 }) {
   const Enhanced = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
     const selectableItems = dataOnScreen.filter(canSelect);
@@ -62,9 +61,9 @@ function withHeaderSelection<T>({
         {isSelected && (
           <Th
             select={{
-              isHeaderSelectDisabled: !selectableItems?.length, // Disable if no selectable items
-              isSelected: allSelected,
               onSelect: () => toggleSelectFor(selectableItems),
+              isSelected: allSelected,
+              isHeaderSelectDisabled: !selectableItems?.length, // Disable if no selectable items
             }}
           />
         )}
@@ -76,7 +75,7 @@ function withHeaderSelection<T>({
   return Enhanced;
 }
 
-type IdBasedSelectionProps<T> = {
+interface IdBasedSelectionProps<T> {
   /**
    * @returns string that can be used as an unique identifier
    */
@@ -88,7 +87,7 @@ type IdBasedSelectionProps<T> = {
   canSelect?: (item: T) => boolean;
 
   /**
-   * OnSelect is called when selection changes
+   * onSelect is called when selection changes
    */
   onSelect?: (selectedIds: string[]) => void;
 
@@ -98,7 +97,7 @@ type IdBasedSelectionProps<T> = {
   selectedIds?: string[];
 
   /**
-   * OnExpand is called when expand changes
+   * onExpand is called when expand changes
    */
   onExpand?: (expandedIds: string[]) => void;
 
@@ -106,7 +105,7 @@ type IdBasedSelectionProps<T> = {
    * Expanded ids
    */
   expandedIds?: string[];
-};
+}
 
 export type GlobalActionWithSelection<T> = GlobalActionToolbarProps<T> & {
   selectedIds: string[];
@@ -119,12 +118,12 @@ export type GlobalActionWithSelection<T> = GlobalActionToolbarProps<T> & {
  * 2. check box status at row level does not depend from other rows and  can be calculated from the item via canSelect() function
  */
 function withIdBasedSelection<T>({
-  canSelect,
-  expandedIds: initialExpandedIds,
-  onExpand,
-  onSelect,
-  selectedIds: initialSelectedIds,
   toId,
+  canSelect,
+  onSelect,
+  onExpand,
+  selectedIds: initialSelectedIds,
+  expandedIds: initialExpandedIds,
 }: IdBasedSelectionProps<T>) {
   const Enhanced = (props: StandardPageProps<T>) => {
     const [selectedIds, setSelectedIds] = useState(initialSelectedIds);
@@ -168,21 +167,21 @@ function withIdBasedSelection<T>({
 
     const RowMapper = withTr(
       withRowSelection({
+        CellMapper: CellMapper,
         canSelect,
-        CellMapper,
-        isExpanded,
         isSelected,
-        toggleExpandFor,
+        isExpanded,
         toggleSelectFor,
+        toggleExpandFor,
       }),
       ExpandedComponent,
     );
 
     const HeaderMapper = withHeaderSelection({
-      canSelect,
       HeaderMapper: props.HeaderMapper ?? DefaultHeader,
-      isExpanded,
+      canSelect,
       isSelected,
+      isExpanded,
       toggleSelectFor,
     });
 
@@ -223,14 +222,14 @@ function withIdBasedSelection<T>({
  *
  * @template T - The type of the items being displayed in the table.
  */
-export type StandardPageWithSelectionProps<T> = {
+export interface StandardPageWithSelectionProps<T> extends StandardPageProps<T> {
   toId?: (item: T) => string;
   canSelect?: (item: T) => boolean;
   onSelect?: (selectedIds: string[]) => void;
   selectedIds?: string[];
   onExpand?: (expandedIds: string[]) => void;
   expandedIds?: string[];
-} & StandardPageProps<T>;
+}
 
 /**
  * Renders a standard page with selection capabilities.
@@ -259,12 +258,12 @@ export type StandardPageWithSelectionProps<T> = {
  */
 export function StandardPageWithSelection<T>(props: StandardPageWithSelectionProps<T>) {
   const {
+    toId,
     canSelect = () => true,
-    expandedIds,
-    onExpand,
     onSelect,
     selectedIds,
-    toId,
+    onExpand,
+    expandedIds,
     ...rest
   } = props;
 
@@ -277,12 +276,12 @@ export function StandardPageWithSelection<T>(props: StandardPageWithSelectionPro
   }
 
   const EnhancedStandardPage = withIdBasedSelection<T>({
+    toId,
     canSelect,
-    expandedIds,
-    onExpand,
     onSelect,
     selectedIds,
-    toId,
+    onExpand,
+    expandedIds,
   });
 
   return onSelect ? <EnhancedStandardPage {...rest} /> : <StandardPage {...rest} />;

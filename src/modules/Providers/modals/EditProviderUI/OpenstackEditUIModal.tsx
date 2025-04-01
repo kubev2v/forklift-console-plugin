@@ -4,11 +4,10 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
+import { patchProviderUI } from './utils/patchProviderUI';
 import { validateOpenstackUILink } from '../../utils/validators/provider/openstack/validateOpenstackUILink';
 import { EditModal } from '../EditModal/EditModal';
-
-import { patchProviderUI } from './utils/patchProviderUI';
-import type { EditProviderUIModalProps } from './EditProviderUIModal';
+import { EditProviderUIModalProps } from './EditProviderUIModal';
 
 export const OpenstackEditUIModal: React.FC<EditProviderUIModalProps> = (props) => {
   const { t } = useForkliftTranslation();

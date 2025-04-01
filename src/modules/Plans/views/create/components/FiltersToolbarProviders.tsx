@@ -2,24 +2,23 @@ import React from 'react';
 
 import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 
-import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
-
+import { PlanCreatePageState } from '../states/PlanCreatePageStore';
 import SearchInputProvider from './SearchInputProvider';
 import SelectProvider from './SelectProvider';
 
-type FiltersToolbarProvidersProps = {
+interface FiltersToolbarProvidersProps {
   filterState: PlanCreatePageState;
   filterDispatch: React.Dispatch<{
     type: string;
     payload?: string | string[];
   }>;
   className?: string;
-};
+}
 
 export const FiltersToolbarProviders: React.FunctionComponent<FiltersToolbarProvidersProps> = ({
-  className,
-  filterDispatch,
   filterState,
+  filterDispatch,
+  className,
 }) => {
   return (
     <Toolbar className={className}>

@@ -1,14 +1,13 @@
-import type { ProviderInventory, V1beta1Provider } from '@kubev2v/types';
+import { ProviderInventory, V1beta1Provider } from '@kubev2v/types';
 
-import type { VmData } from '../../views/details/tabs/VirtualMachines/components/VMCellProps';
+import { VmData } from '../../views/details/tabs/VirtualMachines/components/VMCellProps';
+import { ProvidersPermissionStatus } from './ProvidersPermissionStatus';
 
-import type { ProvidersPermissionStatus } from './ProvidersPermissionStatus';
-
-export type ProviderData = {
+export interface ProviderData {
   provider?: V1beta1Provider;
   inventory?: ProviderInventory;
   inventoryLoading?: boolean;
   vmData?: VmData[];
   vmDataLoading?: boolean;
   permissions?: ProvidersPermissionStatus;
-};
+}

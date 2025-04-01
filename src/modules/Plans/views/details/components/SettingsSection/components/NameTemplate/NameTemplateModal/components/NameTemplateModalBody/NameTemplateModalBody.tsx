@@ -1,4 +1,4 @@
-import React, { type FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -13,7 +13,7 @@ type NameTemplateModalBodyProps = {
   allowedVariables: string[];
 };
 
-const NameTemplateModalBody: FC<NameTemplateModalBodyProps> = ({ allowedVariables, bodyText }) => {
+const NameTemplateModalBody: FC<NameTemplateModalBodyProps> = ({ bodyText, allowedVariables }) => {
   const { t } = useForkliftTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   return (
@@ -28,9 +28,7 @@ const NameTemplateModalBody: FC<NameTemplateModalBodyProps> = ({ allowedVariable
           toggleText={isExpanded ? t('Hide variables') : t('Show variables')}
           isExpanded={isExpanded}
           truncateMaxLines={1}
-          onToggle={(_, expand) => {
-            setIsExpanded(expand);
-          }}
+          onToggle={(_, expand) => setIsExpanded(expand)}
         >
           <StackItem>{t('Variables that can be used for the template:')}</StackItem>
           {allowedVariables.map((allowedVariable) => (

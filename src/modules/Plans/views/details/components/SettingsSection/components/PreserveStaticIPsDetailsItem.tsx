@@ -6,14 +6,14 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 
-import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
 import { EditPlanPreserveStaticIPs } from '../modals/EditPlanPreserveStaticIPs/EditPlanPreserveStaticIPs';
 
 export const PreserveStaticIPsDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  canPatch,
-  destinationProvider,
-  helpContent,
   resource,
+  canPatch,
+  helpContent,
+  destinationProvider,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -42,14 +42,13 @@ export const PreserveStaticIPsDetailsItem: React.FC<PlanDetailsItemProps> = ({
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() => {
+        (() =>
           showModal(
             <EditPlanPreserveStaticIPs
               resource={resource}
               destinationProvider={destinationProvider}
             />,
-          );
-        })
+          ))
       }
     />
   );

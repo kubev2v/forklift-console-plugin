@@ -6,7 +6,7 @@ import { Namespace } from 'src/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { getDefaultNamespace } from 'src/utils/namespaces';
 
-import { type IoK8sApiCoreV1Secret, ProviderModelRef, type V1beta1Provider } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Alert,
@@ -19,28 +19,27 @@ import {
   PageSection,
 } from '@patternfly/react-core';
 
-import { useK8sWatchProviderNames } from '../../hooks/useK8sWatchProviderNames';
-import useToggle from '../../hooks/useToggle';
-import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
-import type { ValidationMsg } from '../../utils/validators/common';
-import { providerAndSecretValidator } from '../../utils/validators/provider/providerAndSecretValidator';
-
 import ProvidersCreateForm from './components/ProviderCreateForm';
 import { providerTemplate } from './templates/providerTemplate';
 import { secretTemplate } from './templates/secretTemplate';
 import { createProvider } from './utils/createProvider';
 import { createProviderSecret } from './utils/createProviderSecret';
 import { patchProviderSecretOwner } from './utils/patchProviderSecretOwner';
+import { useK8sWatchProviderNames } from '../../hooks/useK8sWatchProviderNames';
+import useToggle from '../../hooks/useToggle';
+import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
+import { ValidationMsg } from '../../utils/validators/common';
+import { providerAndSecretValidator } from '../../utils/validators/provider/providerAndSecretValidator';
 
 import './ProvidersCreatePage.style.css';
 
-type ProvidersCreatePageState = {
+interface ProvidersCreatePageState {
   newSecret: IoK8sApiCoreV1Secret;
   newProvider: V1beta1Provider;
   projectName: string;
   validationError: ValidationMsg;
   apiError: Error | null;
-};
+}
 
 const ProvidersCreatePage: React.FC<{
   namespace: string;
@@ -56,14 +55,7 @@ const ProvidersCreatePage: React.FC<{
   const initialNamespace = namespace || projectName || defaultNamespace;
 
   const initialState: ProvidersCreatePageState = {
-    apiError: null,
-    newProvider: {
-      ...providerTemplate,
-      metadata: {
-        ...providerTemplate.metadata,
-        namespace: initialNamespace,
-      },
-    },
+    projectName,
     newSecret: {
       ...secretTemplate,
       metadata: {
@@ -71,8 +63,15 @@ const ProvidersCreatePage: React.FC<{
         namespace: initialNamespace,
       },
     },
-    projectName,
-    validationError: { msg: 'Missing provider name', type: 'error' },
+    newProvider: {
+      ...providerTemplate,
+      metadata: {
+        ...providerTemplate.metadata,
+        namespace: initialNamespace,
+      },
+    },
+    validationError: { type: 'error', msg: 'Missing provider name' },
+    apiError: null,
   };
 
   function reducer(
@@ -85,18 +84,18 @@ const ProvidersCreatePage: React.FC<{
         let validationError = providerAndSecretValidator(state.newProvider, value);
 
         if (!state.newProvider?.metadata?.name) {
-          validationError = { msg: 'Missing provider name', type: 'error' };
+          validationError = { type: 'error', msg: 'Missing provider name' };
         }
 
         if (providerNames.includes(state.newProvider?.metadata?.name)) {
-          validationError = { msg: 'Provider name is not unique', type: 'error' };
+          validationError = { type: 'error', msg: 'Provider name is not unique' };
         }
 
         return {
           ...state,
-          apiError: null,
+          validationError: validationError,
           newSecret: value,
-          validationError,
+          apiError: null,
         };
       }
       case 'SET_NEW_PROVIDER': {
@@ -104,11 +103,11 @@ const ProvidersCreatePage: React.FC<{
         let validationError = providerAndSecretValidator(value, state.newSecret);
 
         if (!value?.metadata?.name) {
-          validationError = { msg: 'Missing provider name', type: 'error' };
+          validationError = { type: 'error', msg: 'Missing provider name' };
         }
 
         if (providerNames.includes(value?.metadata?.name)) {
-          validationError = { msg: 'Provider name is not unique', type: 'error' };
+          validationError = { type: 'error', msg: 'Provider name is not unique' };
         }
 
         // Sync secret with new URL
@@ -119,10 +118,10 @@ const ProvidersCreatePage: React.FC<{
 
         return {
           ...state,
-          apiError: null,
+          validationError: validationError,
           newProvider: value,
           newSecret: updatedSecret,
-          validationError,
+          apiError: null,
         };
       }
       case 'SET_PROJECT_NAME': {
@@ -130,14 +129,14 @@ const ProvidersCreatePage: React.FC<{
         let validationError: ValidationMsg = { type: 'default' };
 
         if (!value) {
-          validationError = { msg: 'Missing project name', type: 'error' };
+          validationError = { type: 'error', msg: 'Missing project name' };
         }
 
         return {
           ...state,
-          apiError: null,
-          projectName: String(value),
           validationError,
+          projectName: String(value),
+          apiError: null,
         };
       }
       case 'SET_API_ERROR': {
@@ -157,14 +156,14 @@ const ProvidersCreatePage: React.FC<{
 
   // Handle user edits
   function onNewSecretChange(newValue: IoK8sApiCoreV1Secret) {
-    // Update staged secret with new value
-    dispatch({ payload: newValue, type: 'SET_NEW_SECRET' });
+    // update staged secret with new value
+    dispatch({ type: 'SET_NEW_SECRET', payload: newValue });
   }
 
   // Handle user edits
   function onNewProviderChange(newValue: V1beta1Provider) {
-    // Update staged provider with new value
-    dispatch({ payload: newValue, type: 'SET_NEW_PROVIDER' });
+    // update staged provider with new value
+    dispatch({ type: 'SET_NEW_PROVIDER', payload: newValue });
   }
 
   // Handle user clicking "save"
@@ -174,25 +173,25 @@ const ProvidersCreatePage: React.FC<{
 
     toggleIsLoading();
 
-    // Try to generate a secret with data
+    // try to generate a secret with data
     //
-    // Add generateName using provider name as prefix
-    // Add createdForProviderType label
-    // Add url
+    // add generateName using provider name as prefix
+    // add createdForProviderType label
+    // add url
     try {
       secret = await createProviderSecret(state.newProvider, state.newSecret);
     } catch (err) {
       dispatch({
-        payload: err,
         type: 'SET_API_ERROR',
+        payload: err,
       });
 
       toggleIsLoading();
       return;
     }
 
-    // Try to create a provider with secret
-    // Add spec.secret
+    // try to create a provider with secret
+    // add spec.secret
     try {
       provider = await createProvider(
         {
@@ -205,40 +204,40 @@ const ProvidersCreatePage: React.FC<{
       );
     } catch (err) {
       dispatch({
-        payload: err,
         type: 'SET_API_ERROR',
+        payload: err,
       });
 
       toggleIsLoading();
       return;
     }
 
-    // Set secret ownership using provider uid
+    // set secret ownership using provider uid
     try {
       await patchProviderSecretOwner(provider, secret);
     } catch (err) {
       dispatch({
-        payload: err,
         type: 'SET_API_ERROR',
+        payload: err,
       });
 
       toggleIsLoading();
       return;
     }
 
-    // Go to providers derails page
+    // go to providers derails page
     const providerURL = getResourceUrl({
-      name: provider.metadata.name,
-      namespace: provider.metadata.namespace,
       reference: ProviderModelRef,
+      namespace: provider.metadata.namespace,
+      name: provider.metadata.name,
     });
 
     history.push(providerURL);
   }
 
   const providersListURL = getResourceUrl({
-    namespace,
     reference: ProviderModelRef,
+    namespace: namespace,
   });
 
   const onClick = () => {
@@ -275,9 +274,7 @@ const ProvidersCreatePage: React.FC<{
           projectName={state.projectName}
           onNewProviderChange={onNewProviderChange}
           onNewSecretChange={onNewSecretChange}
-          onProjectNameChange={(value) => {
-            dispatch({ payload: value, type: 'SET_PROJECT_NAME' });
-          }}
+          onProjectNameChange={(value) => dispatch({ type: 'SET_PROJECT_NAME', payload: value })}
           providerNames={providerNames}
         />
 

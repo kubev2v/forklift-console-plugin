@@ -18,7 +18,7 @@ export function changeTimeZoneToUTCZero(isoDateString: string): string | undefin
  * @returns {string} The equivalent ISO date string if input is valid or undefined otherwise.
  */
 export const changeFormatToISODate = (isoDateString: string): string | undefined => {
-  // Preserve the original zone
+  // preserve the original zone
   const date = DateTime.fromISO(isoDateString, { setZone: true, zone: 'utc' });
   return date.isValid ? date.toISODate() : undefined;
 };
@@ -52,8 +52,8 @@ export const parseISOtoJSDate = (isoDateString: string): Date | undefined => {
  * @returns true if both dates are on the same day in UTC+00:00
  */
 export const areSameDayInUTCZero = (dateTime: string, calendarDate: string): boolean => {
-  // Calendar date has no zone - during conversion to UTC the local zone is used
-  // Which results in shifting to previous day for zones with positive offsets
+  // calendar date has no zone - during conversion to UTC the local zone is used
+  // which results in shifting to previous day for zones with positive offsets
   return DateTime.fromISO(dateTime).toUTC().hasSame(DateTime.fromISO(calendarDate), 'day');
 };
 
@@ -64,7 +64,7 @@ export const areSameDayInUTCZero = (dateTime: string, calendarDate: string): boo
  * @returns true if the provided date is in the time interval
  */
 export const isInClosedRange = (interval: string, date: string): boolean => {
-  const { end, start } = Interval.fromISO(interval);
+  const { start, end } = Interval.fromISO(interval);
   return Interval.fromDateTimes(start, end.plus({ days: 1 })).contains(
     DateTime.fromISO(date).toUTC().setZone('local', { keepCalendarTime: true }),
   );

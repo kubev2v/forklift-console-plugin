@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren, type ReactNode } from 'react';
+import React, { PropsWithChildren, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { useHistory } from 'react-router';
@@ -7,7 +7,7 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceU
 import { EMPTY_MSG } from 'src/utils/constants';
 import { ForkliftTrans } from 'src/utils/i18n';
 
-import { PlanModelRef, type V1beta1Plan, type V1beta1PlanStatusConditions } from '@kubev2v/types';
+import { PlanModelRef, V1beta1Plan, V1beta1PlanStatusConditions } from '@kubev2v/types';
 import {
   Alert,
   AlertVariant,
@@ -25,14 +25,14 @@ type PlanCriticalConditionProps = PropsWithChildren & {
 };
 
 const PlanCriticalCondition: React.FC<PlanCriticalConditionProps> = ({
-  children,
-  condition,
   plan,
+  condition,
+  children,
 }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const { message: conditionMessage, type } = condition;
+  const { type, message: conditionMessage } = condition;
   let troubleshootMessage: ReactNode = t(
     'To troubleshoot, check the Forklift controller pod logs.',
   );
@@ -43,21 +43,15 @@ const PlanCriticalCondition: React.FC<PlanCriticalConditionProps> = ({
     type === PlanConditionType.VMMultiplePodNetworkMappings
   ) {
     const planURL = getResourceUrl({
+      reference: PlanModelRef,
       name: plan?.metadata?.name,
       namespace: plan?.metadata?.namespace,
-      reference: PlanModelRef,
     });
 
     troubleshootMessage = (
       <ForkliftTrans>
         To troubleshoot, check and edit your plan{' '}
-        <Button
-          isInline
-          variant="link"
-          onClick={() => {
-            history.push(`${planURL}/mappings`);
-          }}
-        >
+        <Button isInline variant="link" onClick={() => history.push(`${planURL}/mappings`)}>
           mappings
         </Button>
         .
@@ -67,7 +61,7 @@ const PlanCriticalCondition: React.FC<PlanCriticalConditionProps> = ({
 
   return (
     <Alert
-      title={`${t('The plan is not ready')} - ${type}`}
+      title={t('The plan is not ready') + ' - ' + type}
       variant={AlertVariant.danger}
       isExpandable={
         type === PlanConditionType.VMNetworksNotMapped ||

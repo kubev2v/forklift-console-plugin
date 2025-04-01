@@ -1,4 +1,4 @@
-import React, { type FC, type ReactNode, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -22,7 +22,7 @@ import {
   defaultSupportedFilters,
   defaultValueMatchers,
 } from '../common/FilterGroup/matchers';
-import type { FilterRenderer, ValueMatcher } from '../common/FilterGroup/types';
+import { FilterRenderer, ValueMatcher } from '../common/FilterGroup/types';
 import { useUrlFilters } from '../common/FilterGroup/useUrlFilters';
 import {
   ErrorState,
@@ -30,22 +30,21 @@ import {
   NoResultsFound,
   NoResultsMatchFilter,
 } from '../common/Page/PageStates';
-import type { UserSettings } from '../common/Page/types';
+import { UserSettings } from '../common/Page/types';
 import { useFields } from '../common/Page/useFields';
 import { DEFAULT_PER_PAGE, usePagination } from '../common/Page/usePagination';
 import { DefaultHeader } from '../common/TableView/DefaultHeader';
 import { DefaultRow } from '../common/TableView/DefaultRow';
 import { TableView } from '../common/TableView/TableView';
-import type { RowProps, TableViewHeaderProps } from '../common/TableView/types';
+import { RowProps, TableViewHeaderProps } from '../common/TableView/types';
 import { withTr } from '../common/TableView/withTr';
-import type { GlobalActionToolbarProps, ResourceField } from '../common/utils/types';
+import { GlobalActionToolbarProps, ResourceField } from '../common/utils/types';
 import {
   TableSortContext,
-  type TableSortContextProps,
+  TableSortContextProps,
   TableSortContextProvider,
   useTableSortContext,
 } from '../TableSortContext';
-
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
 import './StandardPage.style.css';
@@ -62,7 +61,7 @@ const reduceValueFilters = (
   extraFilters: ValueMatcher[],
   defaultFilters: ValueMatcher[],
 ): ValueMatcher[] => {
-  const filters = [...extraFilters, ...defaultFilters].reduce<ValueMatcher[]>((acc, filter) => {
+  const filters = [...extraFilters, ...defaultFilters].reduce((acc, filter) => {
     const accFilterTypes = acc.map((matcher) => matcher.filterType);
     const filterTypeFound = accFilterTypes.includes(filter.filterType);
 
@@ -71,7 +70,7 @@ const reduceValueFilters = (
     }
 
     return acc;
-  }, []);
+  }, [] as ValueMatcher[]);
 
   return filters;
 };
@@ -98,7 +97,7 @@ const reduceValueFilters = (
  *
  * @template T - The type of the items being displayed in the table.
  */
-export type StandardPageProps<T> = {
+export interface StandardPageProps<T> {
   /**
    * Component displayed close to the top right corner. By convention it's usually "add" or "create" button.
    */
@@ -145,7 +144,9 @@ export type StandardPageProps<T> = {
    * Filter types that will be used.
    * Default are: EnumFilter and FreetextFilter
    */
-  extraSupportedFilters?: Record<string, FilterRenderer>;
+  extraSupportedFilters?: {
+    [type: string]: FilterRenderer;
+  };
 
   /**
    * Extract value from fields and compare to selected filter.
@@ -173,7 +174,7 @@ export type StandardPageProps<T> = {
   pagination?: number | 'on' | 'off';
 
   /**
-   * Page number
+   * page number
    */
   page: number;
 
@@ -193,7 +194,7 @@ export type StandardPageProps<T> = {
   GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<T>>[];
 
   /**
-   * ClassName
+   * className
    */
   className?: string;
 
@@ -208,7 +209,7 @@ export type StandardPageProps<T> = {
   canSelect?: (item: T) => boolean;
 
   /**
-   * OnSelect is called when selection changes
+   * onSelect is called when selection changes
    */
   onSelect?: (selectedIds: string[]) => void;
 
@@ -218,7 +219,7 @@ export type StandardPageProps<T> = {
   selectedIds?: string[];
 
   /**
-   * OnExpand is called when expand changes
+   * onExpand is called when expand changes
    */
   onExpand?: (expandedIds: string[]) => void;
 
@@ -231,7 +232,7 @@ export type StandardPageProps<T> = {
    * Label to show count of selected items
    */
   selectedCountLabel?: (selectedIdCount: number) => string;
-};
+}
 
 /**
  * Standard list page component.
@@ -267,31 +268,31 @@ export type StandardPageProps<T> = {
  * />
  */
 const StandardPageInner = <T,>({
-  activeSort,
-  addButton,
-  alerts,
+  namespace,
+  dataSource: [flatData, loaded, error],
+  RowMapper = DefaultRow<T>,
   CellMapper,
-  className,
-  compareFn,
+  title,
+  addButton,
+  fieldsMetadata,
+  extraSupportedFilters,
   customNoResultsFound,
   customNoResultsMatchFilter,
-  dataSource: [flatData, loaded, error],
-  expandedIds,
-  extraSupportedFilters,
-  extraSupportedMatchers,
-  fieldsMetadata,
-  GlobalActionToolbarItems = [],
-  HeaderMapper = DefaultHeader<T>,
-  namespace,
-  page: initialPage,
   pagination = DEFAULT_PER_PAGE,
-  RowMapper = DefaultRow<T>,
-  selectedCountLabel,
-  selectedIds,
-  setActiveSort,
-  title,
-  toId,
+  page: initialPage,
   userSettings,
+  extraSupportedMatchers,
+  HeaderMapper = DefaultHeader<T>,
+  GlobalActionToolbarItems = [],
+  alerts,
+  toId,
+  expandedIds,
+  className,
+  selectedIds,
+  selectedCountLabel,
+  activeSort,
+  setActiveSort,
+  compareFn,
 }: StandardPageProps<T> & TableSortContextProps) => {
   const { t } = useForkliftTranslation();
   const [sortedData, setSortedData] = useState([]);
@@ -302,9 +303,7 @@ const StandardPageInner = <T,>({
     fields: fieldsMetadata,
     userSettings,
   });
-  const clearAllFilters = () => {
-    setSelectedFilters({});
-  };
+  const clearAllFilters = () => setSelectedFilters({});
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
 
   const supportedMatchers = extraSupportedMatchers
@@ -405,7 +404,7 @@ const StandardPageInner = <T,>({
                 selectedFilters={selectedFilters}
                 supportedFilterTypes={supportedFilters}
               />
-              {Boolean(fields.find((field) => field.filter?.standalone)) && (
+              {!!fields.find((field) => field.filter?.standalone) && (
                 <FilterGroup
                   fieldFilters={fields
                     .filter((field) => field.filter?.standalone)
@@ -448,7 +447,7 @@ const StandardPageInner = <T,>({
         </Toolbar>
         <TableView<T>
           entities={showPagination ? pageData : filteredData}
-          visibleColumns={fields.filter(({ isHidden, isVisible }) => isVisible && !isHidden)}
+          visibleColumns={fields.filter(({ isVisible, isHidden }) => isVisible && !isHidden)}
           aria-label={title}
           Row={CellMapper ? withTr(CellMapper) : RowMapper}
           Header={HeaderMapper}
@@ -493,7 +492,7 @@ const StandardPageInner = <T,>({
 };
 
 const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
-  const { activeSort, compareFn, setActiveSort } = useTableSortContext();
+  const { activeSort, setActiveSort, compareFn } = useTableSortContext();
 
   if (activeSort.resourceFieldId) {
     return (

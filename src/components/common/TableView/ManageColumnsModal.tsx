@@ -12,7 +12,7 @@ import {
   DataListItemRow,
   DragDrop,
   Draggable,
-  type DraggableItemPosition,
+  DraggableItemPosition,
   Droppable,
   Modal,
   Text,
@@ -20,9 +20,9 @@ import {
   TextVariants,
 } from '@patternfly/react-core';
 
-import type { ResourceField } from '../utils/types';
+import { ResourceField } from '../utils/types';
 
-type ManagedColumnsProps = {
+interface ManagedColumnsProps {
   /**
    * To flag an open or a closed modal.
    */
@@ -30,11 +30,11 @@ type ManagedColumnsProps = {
   /**
    * A callback for when the ``close`` button is clicked.
    */
-  onClose: () => void;
+  onClose(): void;
   /**
    * A callback for when the ``Save`` button is clicked. A setter to modify state in the parent
    */
-  onChange: (columns: ResourceField[]) => void;
+  onChange(columns: ResourceField[]): void;
   /**
    * The list of fields to manage by the modal. This is the state maintained by parent component. Read only.
    */
@@ -67,7 +67,7 @@ type ManagedColumnsProps = {
    * A Simple text content of the modal header.
    */
   title?: string;
-};
+}
 
 const filterActionsAndHidden = (resourceFields: ResourceField[]) =>
   resourceFields.filter((col) => !col.isAction && !col.isHidden);
@@ -83,22 +83,20 @@ const filterActionsAndHidden = (resourceFields: ResourceField[]) =>
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/TableView/ManageColumnsModal.tsx)
  */
 export const ManageColumnsModal = ({
-  cancelLabel = 'Cancel',
-  defaultColumns,
-  description = 'Selected columns will be displayed in the table.',
-  onChange,
-  onClose,
-  reorderLabel = 'Reorder',
-  resourceFields,
-  restoreLabel = 'Restore default columns',
-  saveLabel = 'Save',
   showModal,
+  description = 'Selected columns will be displayed in the table.',
+  onClose,
+  onChange,
+  resourceFields,
+  defaultColumns,
+  saveLabel = 'Save',
+  cancelLabel = 'Cancel',
+  reorderLabel = 'Reorder',
+  restoreLabel = 'Restore default columns',
   title = 'Manage Columns',
 }: ManagedColumnsProps) => {
   const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(resourceFields));
-  const restoreDefaults = () => {
-    setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
-  };
+  const restoreDefaults = () => setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
   const onDrop: (source: DraggableItemPosition, dest?: DraggableItemPosition) => boolean = (
     source: { index: number },
     dest: { index: number },
@@ -120,7 +118,7 @@ export const ManageColumnsModal = ({
   };
   const onSelect = (updatedId: string, updatedValue: boolean): void => {
     setEditedColumns(
-      editedColumns.map(({ isVisible, resourceFieldId, ...rest }) => ({
+      editedColumns.map(({ resourceFieldId, isVisible, ...rest }) => ({
         resourceFieldId,
         ...rest,
         isVisible: resourceFieldId === updatedId ? updatedValue : isVisible,
@@ -128,7 +126,7 @@ export const ManageColumnsModal = ({
     );
   };
   const onSave = () => {
-    // Assume that action resourceFields are always at the end
+    // assume that action resourceFields are always at the end
     onChange([...editedColumns, ...resourceFields.filter((col) => col.isAction || col.isHidden)]);
     onClose();
   };
@@ -137,9 +135,7 @@ export const ManageColumnsModal = ({
     id: string,
   ) => (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void;
 
-  const onChangeFactory: onChangeFactoryType = (id) => (checked) => {
-    onSelect(id, checked);
-  };
+  const onChangeFactory: onChangeFactoryType = (id) => (checked) => onSelect(id, checked);
 
   return (
     <Modal
@@ -172,7 +168,7 @@ export const ManageColumnsModal = ({
       <DragDrop onDrop={onDrop}>
         <Droppable hasNoWrapper>
           <DataList aria-label={title} id="table-column-management" isCompact>
-            {editedColumns.map(({ isIdentity, isVisible, label, resourceFieldId: id }) => (
+            {editedColumns.map(({ resourceFieldId: id, isVisible, isIdentity, label }) => (
               <Draggable key={id} hasNoWrapper>
                 <DataListItem aria-labelledby={`draggable-${id}`} ref={React.createRef()}>
                   <DataListItemRow>
@@ -185,15 +181,13 @@ export const ManageColumnsModal = ({
                         aria-labelledby={`draggable-${id}`}
                         name={id}
                         checked={
-                          // Visibility for identity resourceFields (namespace) is governed by parent component
+                          // visibility for identity resourceFields (namespace) is governed by parent component
                           isIdentity
                             ? resourceFields.find((c) => c.resourceFieldId === id)?.isVisible
                             : isVisible
                         }
                         isDisabled={isIdentity}
-                        onChange={(e, v) => {
-                          onChangeFactory(id)(v, e);
-                        }}
+                        onChange={(e, v) => onChangeFactory(id)(v, e)}
                         otherControls
                       />
                     </DataListControl>

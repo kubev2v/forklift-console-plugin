@@ -3,7 +3,7 @@ import SectionHeading from 'src/components/headers/SectionHeading';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@kubev2v/types';
+import { StorageMapModelGroupVersionKind, V1beta1StorageMap } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
@@ -12,20 +12,20 @@ import { DetailsSection } from '../../components/DetailsSection/DetailsSection';
 import { MapsSection } from '../../components/MapsSection/MapsSection';
 import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSection';
 
-type StorageMapDetailsTabProps = {
+interface StorageMapDetailsTabProps {
   name: string;
   namespace: string;
-};
+}
 
 export const StorageMapDetailsTab: React.FC<StorageMapDetailsTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1StorageMap>({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    isList: false,
-    name,
-    namespace,
     namespaced: true,
+    isList: false,
+    namespace,
+    name,
   });
 
   return (

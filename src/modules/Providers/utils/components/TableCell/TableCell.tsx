@@ -1,4 +1,4 @@
-import React, { Children, type ReactNode } from 'react';
+import React, { Children, ReactNode } from 'react';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
 
@@ -28,7 +28,7 @@ export const TableCell: React.FC<TableCellProps> = ({ children, isWrap = false }
   );
 };
 
-export type TableCellProps = {
+export interface TableCellProps {
   children?: ReactNode;
   isWrap?: boolean;
-};
+}

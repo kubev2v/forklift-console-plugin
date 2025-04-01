@@ -1,26 +1,26 @@
 export enum PlanPhase {
-  // T('Error')
+  // t('Error')
   Error = 'Error',
-  // T('Some VMs Failed')
+  // t('Some VMs Failed')
   vmError = 'Some VMs Failed',
-  // T('Unknown')
+  // t('Unknown')
   Unknown = 'Unknown',
-  // T('Archiving')
+  // t('Archiving')
   Archiving = 'Archiving',
-  // T('Archived')
+  // t('Archived')
   Archived = 'Archived',
-  // T('Failed')
+  // t('Failed')
   Failed = 'Failed',
-  // T('Canceled')
+  // t('Canceled')
   Canceled = 'Canceled',
-  // T('Succeeded')
+  // t('Succeeded')
   Succeeded = 'Succeeded',
-  // T('Running')
+  // t('Running')
   Running = 'Running',
-  // T('Ready')
+  // t('Ready')
   Ready = 'Ready',
-  // T('Warning')
+  // t('Warning')
   Warning = 'Warning',
-  // T('Not Ready')
+  // t('Not Ready')
   NotReady = 'Not Ready',
 }

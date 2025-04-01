@@ -1,4 +1,4 @@
-import type { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Provider } from '@kubev2v/types';
 
 import { getProviderUIAnnotation } from './getProviderUIAnnotation';
 
@@ -20,6 +20,7 @@ export const getVSphereProviderWebUILink = (provider: V1beta1Provider): string =
 
   if (url.endsWith(suffix)) {
     return url.slice(0, -suffix.length) + newSuffix;
+  } else {
+    return '';
   }
-  return '';
 };

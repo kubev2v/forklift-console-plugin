@@ -2,7 +2,7 @@ import {
   validateNoSpaces,
   validatePublicCert,
   validateUsernameAndDomain,
-  type ValidationMsg,
+  ValidationMsg,
 } from '../../common';
 
 /**
@@ -49,34 +49,34 @@ const validateUser = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local. [required]',
       type: 'default',
+      msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local. [required]',
       type: 'error',
+      msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local. [required]',
     };
   }
 
   if (!noSpaces) {
-    return { msg: 'Invalid username, spaces are not allowed', type: 'error' };
+    return { type: 'error', msg: 'Invalid username, spaces are not allowed' };
   }
 
   const hasAtChar = validateUsernameAndDomain(value);
 
   if (!hasAtChar) {
     return {
-      msg: 'User name usually include the domain, for example: user@vsphere.local',
       type: 'warning',
+      msg: 'User name usually include the domain, for example: user@vsphere.local',
     };
   }
 
   return {
-    msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local.',
     type: 'success',
+    msg: 'A username and domain for the vCenter API endpoint, for example: user@vsphere.local.',
   };
 };
 
@@ -86,23 +86,23 @@ const validatePassword = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      msg: 'A user password for connecting to the vCenter API endpoint. [required]',
       type: 'default',
+      msg: 'A user password for connecting to the vCenter API endpoint. [required]',
     };
   }
 
   if (value === '') {
     return {
-      msg: 'A user password for connecting to the vCenter API endpoint. [required]',
       type: 'error',
+      msg: 'A user password for connecting to the vCenter API endpoint. [required]',
     };
   }
 
   if (valid) {
-    return { msg: 'A user password for connecting to the vCenter API endpoint.', type: 'success' };
+    return { type: 'success', msg: 'A user password for connecting to the vCenter API endpoint.' };
   }
 
-  return { msg: 'Invalid password, spaces are not allowed', type: 'error' };
+  return { type: 'error', msg: 'Invalid password, spaces are not allowed' };
 };
 
 const validateCacert = (value: string): ValidationMsg => {
@@ -110,35 +110,35 @@ const validateCacert = (value: string): ValidationMsg => {
 
   if (value === undefined || value === '') {
     return {
-      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
       type: 'default',
+      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
     };
   }
 
   if (valid) {
     return {
-      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
       type: 'success',
+      msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
     };
   }
 
   return {
-    msg: 'Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.',
     type: 'error',
+    msg: 'Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.',
   };
 };
 
 const validateInsecureSkipVerify = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
-    return { msg: 'Migrate without validating a CA certificate', type: 'default' };
+    return { type: 'default', msg: 'Migrate without validating a CA certificate' };
   }
 
   const valid = ['true', 'false', ''].includes(value);
 
   if (valid) {
-    return { msg: 'Migrate without validating a CA certificate', type: 'success' };
+    return { type: 'success', msg: 'Migrate without validating a CA certificate' };
   }
 
-  return { msg: 'Invalid Skip certificate validation value, must be true or false', type: 'error' };
+  return { type: 'error', msg: 'Invalid Skip certificate validation value, must be true or false' };
 };

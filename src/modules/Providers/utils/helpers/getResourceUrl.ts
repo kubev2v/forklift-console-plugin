@@ -1,6 +1,6 @@
 import { Namespace } from 'src/utils/constants';
 
-import type { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
+import { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Provides resource url.
@@ -9,11 +9,11 @@ import type { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk'
  * @returns {string} - The resource URL
  */
 export const getResourceUrl = ({
-  groupVersionKind,
-  name,
-  namespace,
-  namespaced = true,
   reference,
+  groupVersionKind,
+  namespaced = true,
+  namespace,
+  name,
 }: GetResourceUrlProps): string => {
   const ns =
     namespace && namespace !== Namespace.AllProjects ? `ns/${namespace}` : 'all-namespaces';
@@ -25,10 +25,10 @@ export const getResourceUrl = ({
   return `/k8s/${resourcePath}/${reference_}${name_}`;
 };
 
-type GetResourceUrlProps = {
+interface GetResourceUrlProps {
   reference?: string;
   groupVersionKind?: K8sGroupVersionKind;
   namespaced?: boolean;
   namespace?: string;
   name?: string;
-};
+}

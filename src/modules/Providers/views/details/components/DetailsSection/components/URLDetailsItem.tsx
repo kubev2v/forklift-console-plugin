@@ -4,25 +4,25 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
+import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const URLDetailsItem: React.FC<ProviderDetailsItemProps> = ({
-  canPatch,
-  helpContent,
-  moreInfoLink,
   resource: provider,
+  canPatch,
+  moreInfoLink,
+  helpContent,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
   const [secret] = useK8sWatchResource<IoK8sApiCoreV1Secret>({
-    groupVersionKind: { kind: 'Secret', version: 'v1' },
-    name: provider?.spec?.secret?.name,
-    namespace: provider?.spec?.secret?.namespace,
+    groupVersionKind: { version: 'v1', kind: 'Secret' },
     namespaced: true,
+    namespace: provider?.spec?.secret?.namespace,
+    name: provider?.spec?.secret?.name,
   });
 
   const defaultMoreInfoLink =
@@ -41,14 +41,13 @@ export const URLDetailsItem: React.FC<ProviderDetailsItemProps> = ({
       onEdit={
         canPatch &&
         provider?.spec?.url &&
-        (() => {
+        (() =>
           showModal(
             <EditProviderURLModal
               resource={provider}
               insecureSkipVerify={secret?.data?.insecureSkipVerify}
             />,
-          );
-        })
+          ))
       }
     />
   );

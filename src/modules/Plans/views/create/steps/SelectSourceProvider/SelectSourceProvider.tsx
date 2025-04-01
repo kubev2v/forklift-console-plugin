@@ -1,20 +1,13 @@
 import React from 'react';
-import type {
-  CreateVmMigration,
-  PageAction,
-} from 'src/modules/Providers/views/migrate/reducer/actions';
-import type { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
+import { CreateVmMigration, PageAction } from 'src/modules/Providers/views/migrate/reducer/actions';
+import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Provider } from '@kubev2v/types';
 import { Title } from '@patternfly/react-core';
 
 import PlanCreateForm from '../../components/PlanCreateForm';
-import type {
-  PlanCreatePageActionTypes,
-  PlanCreatePageState,
-} from '../../states/PlanCreatePageStore';
-
+import { PlanCreatePageActionTypes, PlanCreatePageState } from '../../states/PlanCreatePageStore';
 import { MemoizedProviderVirtualMachinesList } from './MemoizedProviderVirtualMachinesList';
 
 export const SelectSourceProvider: React.FC<{
@@ -26,13 +19,13 @@ export const SelectSourceProvider: React.FC<{
   dispatch: React.Dispatch<PageAction<CreateVmMigration, unknown>>;
   filterDispatch: React.Dispatch<PlanCreatePageActionTypes>;
 }> = ({
-  dispatch,
-  filterDispatch,
   filterState,
-  projectName,
   providers,
   selectedProvider,
   state,
+  projectName,
+  dispatch,
+  filterDispatch,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -72,9 +65,9 @@ export const SelectSourceProvider: React.FC<{
             title=""
             name={selectedProviderName}
             namespace={selectedProviderNamespace}
-            onSelect={(selectedVms) => {
-              filterDispatch({ payload: selectedVms, type: 'UPDATE_SELECTED_VMS' });
-            }}
+            onSelect={(selectedVms) =>
+              filterDispatch({ type: 'UPDATE_SELECTED_VMS', payload: selectedVms })
+            }
             initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
             showActions={false}
             selectedCountLabel={(selectedIdCount) =>

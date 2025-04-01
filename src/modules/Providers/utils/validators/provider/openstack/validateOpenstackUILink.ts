@@ -1,19 +1,19 @@
-import { validateURL, type ValidationMsg } from '../../common';
+import { validateURL, ValidationMsg } from '../../common';
 
 export const validateOpenstackUILink = (uiLink: string | number): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (uiLink === undefined) {
     return {
-      msg: 'The link for the OpenStack dashboard. For example, https://identity_service.com/dashboard.',
       type: 'default',
+      msg: 'The link for the OpenStack dashboard. For example, https://identity_service.com/dashboard.',
     };
   }
 
   // Sanity check
   if (typeof uiLink !== 'string') {
     return {
-      msg: 'The link for the OpenStack dashboard is not a string.',
       type: 'error',
+      msg: 'The link for the OpenStack dashboard is not a string.',
     };
   }
 
@@ -22,15 +22,15 @@ export const validateOpenstackUILink = (uiLink: string | number): ValidationMsg 
 
   if (trimmedUrl === '') {
     return {
-      msg: 'The link for the OpenStack dashboard is empty. A default or an empty value will be used.',
       type: 'warning',
+      msg: 'The link for the OpenStack dashboard is empty. A default or an empty value will be used.',
     };
   }
 
   if (!isValidURL) {
     return {
-      msg: 'The link for the OpenStack dashboard is invalid. It should include the schema and path, for example: https://identity_service.com/dashboard.',
       type: 'error',
+      msg: 'The link for the OpenStack dashboard is invalid. It should include the schema and path, for example: https://identity_service.com/dashboard.',
     };
   }
 
@@ -41,7 +41,7 @@ export const validateOpenstackUILink = (uiLink: string | number): ValidationMsg 
     };
 
   return {
-    msg: 'The link for the OpenStack dashboard. For example, https://identity_service.com/dashboard.',
     type: 'success',
+    msg: 'The link for the OpenStack dashboard. For example, https://identity_service.com/dashboard.',
   };
 };

@@ -1,20 +1,20 @@
 import React from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
-import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
+import { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import type { EditSettingsModalProps } from './EditSettingsModalProps';
+import { EditSettingsModalProps } from './EditSettingsModalProps';
 import SettingsSelectInput from './SettingsSelectInput';
 
 // Define the options
 const options = [
-  { description: 'Low memory limit', key: '200Mi', name: '200Mi' },
-  { description: 'Moderate memory limit', key: '800Mi', name: '800Mi' },
-  { description: 'High memory limit', key: '2000Mi', name: '2000Mi' },
-  { description: 'Very high memory limit', key: '8000Mi', name: '8000Mi' },
+  { key: '200Mi', name: '200Mi', description: 'Low memory limit' },
+  { key: '800Mi', name: '800Mi', description: 'Moderate memory limit' },
+  { key: '2000Mi', name: '2000Mi', description: 'High memory limit' },
+  { key: '8000Mi', name: '8000Mi', description: 'Very high memory limit' },
 ];
 
 /**

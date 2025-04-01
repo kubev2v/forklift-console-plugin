@@ -1,12 +1,12 @@
-import type { ResourceField } from '../utils/types';
+import { ResourceField } from '../utils/types';
 
-export type SortType = {
+export interface SortType {
   isAsc: boolean;
   resourceFieldId: string;
   label: string;
-};
+}
 
-export type RowProps<T> = {
+export interface RowProps<T> {
   resourceFields: ResourceField[];
   resourceData: T;
   resourceIndex: number;
@@ -15,9 +15,9 @@ export type RowProps<T> = {
   isExpanded?: boolean;
   toggleSelect?: () => void;
   length?: number;
-};
+}
 
-export type TableViewHeaderProps<T> = {
+export interface TableViewHeaderProps<T> {
   /**
    * List of visible columns and their properties
    */
@@ -32,7 +32,7 @@ export type TableViewHeaderProps<T> = {
    */
   setActiveSort: (sort: SortType) => void;
   /**
-   * Currently visible items on the screen, for handling bulk selection ("select all" checkbox).
+   * currently visible items on the screen, for handling bulk selection ("select all" checkbox).
    */
   dataOnScreen?: T[];
-};
+}

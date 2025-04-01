@@ -2,23 +2,23 @@ import React from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { NetworkMapModelGroupVersionKind, type V1beta1NetworkMap } from '@kubev2v/types';
+import { NetworkMapModelGroupVersionKind, V1beta1NetworkMap } from '@kubev2v/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-type NetworkMapYAMLTabProps = {
+interface NetworkMapYAMLTabProps {
   name: string;
   namespace: string;
-};
+}
 
 const NetworkMapYAMLTab: React.FC<NetworkMapYAMLTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1NetworkMap>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
-    isList: false,
-    name,
-    namespace,
     namespaced: true,
+    isList: false,
+    namespace,
+    name,
   });
 
   return (

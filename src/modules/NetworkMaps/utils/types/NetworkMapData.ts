@@ -1,8 +1,8 @@
-import type { ProvidersPermissionStatus } from 'src/modules/Providers/utils/types/ProvidersPermissionStatus';
+import { ProvidersPermissionStatus } from 'src/modules/Providers/utils/types/ProvidersPermissionStatus';
 
-import type { V1beta1NetworkMap } from '@kubev2v/types';
+import { V1beta1NetworkMap } from '@kubev2v/types';
 
-export type NetworkMapData = {
+export interface NetworkMapData {
   obj?: V1beta1NetworkMap;
   permissions?: ProvidersPermissionStatus;
-};
+}

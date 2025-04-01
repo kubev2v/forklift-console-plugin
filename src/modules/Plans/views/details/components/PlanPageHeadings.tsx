@@ -15,9 +15,9 @@ import {
   PlanModel,
   PlanModelGroupVersionKind,
   StorageMapModelGroupVersionKind,
-  type V1beta1NetworkMap,
-  type V1beta1Plan,
-  type V1beta1StorageMap,
+  V1beta1NetworkMap,
+  V1beta1Plan,
+  V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Level, List, ListItem, PageSection } from '@patternfly/react-core';
@@ -33,23 +33,23 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
   const [plan, planLoaded, planError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
+    namespaced: true,
     name,
     namespace,
-    namespaced: true,
   });
 
   const [netMaps, netMapsLoaded, netMapsError] = useK8sWatchResource<V1beta1NetworkMap[]>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace,
-    namespaced: true,
   });
 
   const [storageMaps] = useK8sWatchResource<V1beta1StorageMap[]>({
     groupVersionKind: StorageMapModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace: plan?.metadata?.namespace,
-    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({
@@ -88,7 +88,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
   };
 
   const handleAlerts = () => {
-    // Alerts are not relevant to display if plan was completed successfully or archived
+    // alerts are not relevant to display if plan was completed successfully or archived
     if (planStatus === PlanPhase.Succeeded || planStatus === PlanPhase.Archived) {
       return;
     }
@@ -161,7 +161,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
   const actions = (
     <Level hasGutter>
-      <PlanActionsDropdown data={{ permissions, plan }} fieldId={''} fields={[]} />
+      <PlanActionsDropdown data={{ plan, permissions }} fieldId={''} fields={[]} />
     </Level>
   );
 

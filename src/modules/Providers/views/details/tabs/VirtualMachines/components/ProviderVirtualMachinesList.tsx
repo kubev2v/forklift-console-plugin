@@ -1,24 +1,24 @@
-import React, { type FC } from 'react';
+import React, { FC } from 'react';
 import { EnumFilter } from 'src/components/common/Filter/EnumFilter';
 import { GroupedEnumFilter } from 'src/components/common/Filter/GroupedEnumFilter';
-import type { ValueMatcher } from 'src/components/common/FilterGroup/types';
+import { ValueMatcher } from 'src/components/common/FilterGroup/types';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
-import type { RowProps } from 'src/components/common/TableView/types';
+import { RowProps } from 'src/components/common/TableView/types';
 import {
-  type GlobalActionWithSelection,
+  GlobalActionWithSelection,
   StandardPageWithSelection,
 } from 'src/components/page/StandardPageWithSelection';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
-import type { Concern } from '@kubev2v/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
+import { Concern } from '@kubev2v/types';
 
 import { ConcernsTable } from './ConcernsTable';
 import { MigrationAction } from './MigrationAction';
-import type { VmData } from './VMCellProps';
+import { VmData } from './VMCellProps';
 
-type ProviderVirtualMachinesListProps = {
+interface ProviderVirtualMachinesListProps {
   title?: string;
   obj: ProviderData;
   ns?: string;
@@ -32,21 +32,21 @@ type ProviderVirtualMachinesListProps = {
   showActions: boolean;
   className?: string;
   selectedCountLabel?: (selectedIdCount: number) => string;
-};
+}
 
 export const toId = (item: VmData) => item.vm.id;
 
 export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
-  cellMapper,
-  className,
-  fieldsMetadataFactory,
-  initialSelectedIds,
-  obj,
-  onSelect,
-  pageId,
-  selectedCountLabel,
-  showActions,
   title,
+  obj,
+  cellMapper,
+  fieldsMetadataFactory,
+  pageId,
+  onSelect,
+  initialSelectedIds,
+  showActions,
+  className,
+  selectedCountLabel,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -86,8 +86,8 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       userSettings={userSettings}
       extraSupportedFilters={{
         concerns: GroupedEnumFilter,
-        features: EnumFilter,
         host: EnumFilter,
+        features: EnumFilter,
       }}
       extraSupportedMatchers={[concernsMatcher, hostMatcher, featuresMatcher]}
       GlobalActionToolbarItems={showActions ? actions : undefined}
@@ -111,8 +111,7 @@ const concernsMatcher: ValueMatcher = {
 
 const featuresMatcher: ValueMatcher = {
   filterType: 'features',
-  matchValue: (features: Record<string, boolean>) => (filter: string) =>
-    Boolean(features?.[filter]),
+  matchValue: (features: { [key: string]: boolean }) => (filter: string) => !!features?.[filter],
 };
 
 const hostMatcher: ValueMatcher = {

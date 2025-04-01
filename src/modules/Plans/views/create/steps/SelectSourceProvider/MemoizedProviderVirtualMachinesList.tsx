@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 
 import { ProviderVirtualMachinesList } from '../../components/ProvidersVirtualMachinesList';
 
-type ProviderVirtualMachinesListProps = {
+interface ProviderVirtualMachinesListProps {
   title: string;
   name: string;
   namespace: string;
@@ -11,17 +11,17 @@ type ProviderVirtualMachinesListProps = {
   initialSelectedIds: string[];
   showActions: boolean;
   selectedCountLabel?: (selectedIdCount: number) => string;
-};
+}
 
 export const MemoizedProviderVirtualMachinesList = memo(
   ({
-    initialSelectedIds,
+    title,
     name,
     namespace,
     onSelect,
-    selectedCountLabel,
+    initialSelectedIds,
     showActions,
-    title,
+    selectedCountLabel,
   }: ProviderVirtualMachinesListProps) => {
     return (
       <ProviderVirtualMachinesList

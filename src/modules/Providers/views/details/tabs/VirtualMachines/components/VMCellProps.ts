@@ -1,17 +1,17 @@
-import type { ResourceField } from '@components/common/utils/types';
-import type { ProviderVirtualMachine } from '@kubev2v/types';
+import { ResourceField } from '@components/common/utils/types';
+import { ProviderVirtualMachine } from '@kubev2v/types';
 
-export type VmData = {
+export interface VmData {
   vm: ProviderVirtualMachine;
   name: string;
   namespace: string;
   isProviderLocalOpenshift?: boolean;
   folderName?: string;
   hostName?: string;
-};
+}
 
-export type VMCellProps = {
+export interface VMCellProps {
   data: VmData;
   fieldId: string;
   fields: ResourceField[];
-};
+}

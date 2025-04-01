@@ -1,8 +1,8 @@
-import type { FC } from 'react';
-import type { RowProps } from 'src/components/common/TableView/types';
+import { FC } from 'react';
+import { RowProps } from 'src/components/common/TableView/types';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
-import type {
+import { ResourceFieldFactory } from '@components/common/utils/types';
+import {
   OpenShiftNamespace,
   OpenshiftResource,
   OpenShiftStorageClass,
@@ -15,14 +15,13 @@ import type {
   V1beta1StorageMap,
 } from '@kubev2v/types';
 
-import type { InventoryNetwork } from '../../hooks/useNetworks';
-import type { InventoryStorage } from '../../hooks/useStorages';
-import type { Validation } from '../../utils/types/Validation';
-import type { VmData } from '../details/tabs/VirtualMachines/components/VMCellProps';
+import { CreateVmMigration } from './reducer/actions';
+import { InventoryNetwork } from '../../hooks/useNetworks';
+import { InventoryStorage } from '../../hooks/useStorages';
+import { Validation } from '../../utils/types/Validation';
+import { VmData } from '../details/tabs/VirtualMachines/components/VMCellProps';
 
-import type { CreateVmMigration } from './reducer/actions';
-
-export type CreateVmMigrationPageState = {
+export interface CreateVmMigrationPageState {
   underConstruction: {
     plan: V1beta1Plan;
     projectName: string;
@@ -48,7 +47,7 @@ export type CreateVmMigrationPageState = {
       warnings: StorageAlerts[];
     };
   };
-  // Data fetched from k8s or inventory
+  // data fetched from k8s or inventory
   existingResources: {
     providers: V1beta1Provider[];
     plans: V1beta1Plan[];
@@ -63,26 +62,26 @@ export type CreateVmMigrationPageState = {
     storageMaps: V1beta1StorageMap[];
   };
   calculatedOnce: {
-    // Calculated on start (exception:for ovirt/openstack we need to fetch disks)
+    // calculated on start (exception:for ovirt/openstack we need to fetch disks)
     storageIdsUsedBySelectedVms: string[];
-    sourceStorageLabelToId: Record<string, string>;
-    // Calculated on start (exception:for ovirt we need to fetch nic profiles)
+    sourceStorageLabelToId: { [label: string]: string };
+    // calculated on start (exception:for ovirt we need to fetch nic profiles)
     networkIdsUsedBySelectedVms: string[];
-    sourceNetworkLabelToId: Record<string, string>;
-    // Calculated on start
+    sourceNetworkLabelToId: { [label: string]: string };
+    // calculated on start
     vmFieldsFactory: [ResourceFieldFactory, FC<RowProps<VmData>>];
-    // For OpenShift source providers
+    // for OpenShift source providers
     namespacesUsedBySelectedVms: string[];
   };
-  // Re-calculated on every target namespace change
+  // re-calculated on every target namespace change
   calculatedPerNamespace: {
-    // Read-only
+    // read-only
     targetStorages: string[];
-    // Read-only, human-readable
+    // read-only, human-readable
     targetNetworks: string[];
     sourceNetworks: MappingSource[];
     sourceStorages: MappingSource[];
-    // Mutated, both source and destination human-readable
+    // mutated, both source and destination human-readable
     networkMappings: Mapping[];
     storageMappings: Mapping[];
   };
@@ -91,28 +90,28 @@ export type CreateVmMigrationPageState = {
     sourceProvider: V1beta1Provider;
     namespace: string;
   };
-  // Placeholder for helper data
+  // placeholder for helper data
   workArea: {
     targetProvider: V1beta1Provider;
   };
   flow: {
     editingDone: boolean;
     apiError?: Error;
-    initialLoading: Partial<Record<CreateVmMigration, boolean>>;
+    initialLoading: { [keys in CreateVmMigration]?: boolean };
   };
-};
-export type MappingSource = {
-  // Read-only
+}
+export interface MappingSource {
+  // read-only
   label: string;
   usedBySelectedVms: boolean;
-  // Mutated via UI
+  // mutated via UI
   isMapped: boolean;
-};
+}
 
-export type Mapping = {
+export interface Mapping {
   source: string;
   destination: string;
-};
+}
 
 const NET_MAP_NAME_REGENERATED = 'NET_MAP_NAME_REGENERATED';
 export const NETWORK_MAPPING_REGENERATED = 'NETWORK_MAPPING_REGENERATED';

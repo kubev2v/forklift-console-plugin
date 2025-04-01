@@ -1,14 +1,13 @@
-import type { ResourceField } from '../utils/types';
-
-import type { FieldFilter } from './types';
+import { ResourceField } from '../utils/types';
+import { FieldFilter } from './types';
 
 export const toFieldFilter =
   (data?: unknown[]): ((field: ResourceField) => FieldFilter) =>
-  ({ filter, label, resourceFieldId }: ResourceField): FieldFilter => ({
-    filterDef: { ...filter, ...filter?.dynamicFilter?.(data ?? []) },
-    label,
+  ({ resourceFieldId, label, filter }: ResourceField): FieldFilter => ({
     resourceFieldId,
+    label,
+    filterDef: { ...filter, ...filter?.dynamicFilter?.(data ?? []) },
   });
 
-export const EnumToTuple = (i18nEnum: Record<string, string>) =>
+export const EnumToTuple = (i18nEnum: { [k: string]: string }) =>
   Object.entries(i18nEnum).map(([type, label]) => ({ id: type, label }));

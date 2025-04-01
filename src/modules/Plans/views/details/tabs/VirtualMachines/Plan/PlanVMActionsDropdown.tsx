@@ -1,10 +1,9 @@
-import React, { type FC, type Ref, useState } from 'react';
+import React, { FC, Ref, useState } from 'react';
 
-import { Dropdown, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
+import { Dropdown, MenuToggle, MenuToggleElement } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
-import type { PlanVMsCellProps } from '../components/PlanVMsCellProps';
-
+import { PlanVMsCellProps } from '../components/PlanVMsCellProps';
 import { PlanVMActionsDropdownItems } from './PlanVMActionsDropdownItems';
 
 const PlanVMActionsDropdown: FC<PlanVMsCellProps> = ({ data }) => {

@@ -1,12 +1,12 @@
 import { deepCopy } from 'src/utils/deepCopy';
 
-import type { V1beta1NetworkMap, V1beta1NetworkMapSpecMap } from '@kubev2v/types';
+import { V1beta1NetworkMap, V1beta1NetworkMapSpecMap } from '@kubev2v/types';
 
-export type MapsSectionState = {
+export interface MapsSectionState {
   networkMap: V1beta1NetworkMap | null;
   hasChanges: boolean;
   updating: boolean;
-};
+}
 
 type MapsAction =
   | { type: 'SET_MAP'; payload: V1beta1NetworkMapSpecMap[] }
@@ -25,8 +25,8 @@ export function mapsSectionReducer(state: MapsSectionState, action: MapsAction):
       return { ...state, updating: action.payload };
     case 'INIT':
       return {
-        hasChanges: false,
         networkMap: deepCopy(action.payload),
+        hasChanges: false,
         updating: false,
       };
     default:

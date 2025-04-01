@@ -1,8 +1,8 @@
-import React, { createContext, type FC, type PropsWithChildren, useContext } from 'react';
+import React, { createContext, FC, PropsWithChildren, useContext } from 'react';
 
 import { useSort } from './common/TableView/sort';
-import type { SortType } from './common/TableView/types';
-import type { ResourceField } from './common/utils/types';
+import { SortType } from './common/TableView/types';
+import { ResourceField } from './common/utils/types';
 
 export type TableSortContextProps = {
   activeSort: SortType;
@@ -11,9 +11,9 @@ export type TableSortContextProps = {
 };
 
 const defaultTableSortContext = {
-  activeSort: { isAsc: true, label: '', resourceFieldId: undefined },
-  compareFn: () => undefined,
+  activeSort: { isAsc: true, resourceFieldId: undefined, label: '' },
   setActiveSort: () => undefined,
+  compareFn: () => undefined,
 };
 
 export const TableSortContext = createContext<TableSortContextProps>(defaultTableSortContext);
@@ -23,13 +23,13 @@ type TableSortContextProviderProps = PropsWithChildren & {
 };
 
 export const TableSortContextProvider: FC<TableSortContextProviderProps> = ({
-  children,
   fields,
+  children,
 }) => {
   const [activeSort, setActiveSort, compareFn] = useSort(fields);
 
   return (
-    <TableSortContext.Provider value={{ activeSort, compareFn, setActiveSort }}>
+    <TableSortContext.Provider value={{ activeSort, setActiveSort, compareFn }}>
       {children}
     </TableSortContext.Provider>
   );

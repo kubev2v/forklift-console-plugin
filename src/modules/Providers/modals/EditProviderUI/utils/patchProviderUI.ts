@@ -1,6 +1,6 @@
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-import type { OnConfirmHookType } from '../../EditModal/types';
+import { OnConfirmHookType } from '../../EditModal/types';
 
 /**
  * Handles the confirmation action for editing a resource annotations.
@@ -12,7 +12,7 @@ import type { OnConfirmHookType } from '../../EditModal/types';
  * @param {any} options.newValue - The new value for the 'forklift.konveyor.io/providerUI' annotation.
  * @returns {Promise<Object>} - The modified resource.
  */
-export const patchProviderUI: OnConfirmHookType = async ({ model, newValue: value, resource }) => {
+export const patchProviderUI: OnConfirmHookType = async ({ resource, model, newValue: value }) => {
   const currentAnnotations = resource?.metadata?.annotations;
   const newAnnotations = {
     ...currentAnnotations,
@@ -22,6 +22,8 @@ export const patchProviderUI: OnConfirmHookType = async ({ model, newValue: valu
   const op = resource?.metadata?.annotations ? 'replace' : 'add';
 
   const obj = await k8sPatch({
+    model: model,
+    resource: resource,
     data: [
       {
         op,
@@ -29,8 +31,6 @@ export const patchProviderUI: OnConfirmHookType = async ({ model, newValue: valu
         value: newAnnotations,
       },
     ],
-    model,
-    resource,
   });
 
   return obj;

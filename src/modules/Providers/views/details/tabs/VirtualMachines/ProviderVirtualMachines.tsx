@@ -1,13 +1,13 @@
 import React from 'react';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
 import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
 
-import type { VmData } from './components/VMCellProps';
+import { VmData } from './components/VMCellProps';
 import { useInventoryVms } from './utils/hooks/useInventoryVms';
 import { OpenShiftVirtualMachinesList } from './OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from './OpenStackVirtualMachinesList';
@@ -15,7 +15,7 @@ import { OvaVirtualMachinesList } from './OvaVirtualMachinesList';
 import { OVirtVirtualMachinesList } from './OVirtVirtualMachinesList';
 import { VSphereVirtualMachinesList } from './VSphereVirtualMachinesList';
 
-export type ProviderVirtualMachinesProps = {
+export interface ProviderVirtualMachinesProps {
   title?: string;
   obj: ProviderData;
   loaded?: boolean;
@@ -25,7 +25,7 @@ export type ProviderVirtualMachinesProps = {
   showActions: boolean;
   className?: string;
   selectedCountLabel?: (selectedIdCount: number) => string;
-};
+}
 
 export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
   name,
@@ -35,9 +35,9 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
 
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
     name,
     namespace,
-    namespaced: true,
   });
 
   const [vmData, vmDataLoading] = useInventoryVms({ provider }, providerLoaded, providerLoadError);
@@ -86,7 +86,7 @@ export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachine
     case 'ova':
       return <OvaVirtualMachinesList {...props} />;
     default:
-      // Unsupported provider or loading errors will be handled by parent page
+      // unsupported provider or loading errors will be handled by parent page
       return <></>;
   }
 };

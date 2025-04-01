@@ -1,16 +1,16 @@
-import React, { type FC } from 'react';
+import React, { FC } from 'react';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, FileUpload, type FileUploadProps, Flex, FlexItem } from '@patternfly/react-core';
+import { Button, FileUpload, FileUploadProps, Flex, FlexItem } from '@patternfly/react-core';
 
 import { FetchCertificateModal } from './FetchCertificateModal';
 
 import './CertificateUpload.style.css';
 
-type CertificateUploadProps = {
+interface CertificateUploadProps extends FileUploadProps {
   url?: string;
-} & FileUploadProps;
+}
 
 /**
  * Provide the certificate using following paths:
@@ -19,17 +19,17 @@ type CertificateUploadProps = {
  * 3. fetch from the specified URL (via tls-certificate endpoint) end verify
  */
 export const CertificateUpload: FC<CertificateUploadProps> = ({
-  browseButtonText,
-  filenamePlaceholder,
   id,
-  isDisabled,
-  onClearClick,
+  url,
+  value,
+  filenamePlaceholder,
+  browseButtonText,
+  validated,
   onDataChange,
   onTextChange,
+  onClearClick,
+  isDisabled,
   type,
-  url,
-  validated,
-  value,
 }) => {
   const { showModal } = useModal();
   const { t } = useForkliftTranslation();
@@ -38,9 +38,7 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
     showModal(
       <FetchCertificateModal
         url={url}
-        handleSave={(v) => {
-          onTextChange(null, v);
-        }}
+        handleSave={(v) => onTextChange(null, v)}
         existingCert={value ? String(value) : undefined}
       />,
     );

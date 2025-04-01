@@ -1,9 +1,9 @@
 import { Base64 } from 'js-base64';
 import { deepCopy } from 'src/utils/deepCopy';
 
-import type { V1beta1Hook } from '@kubev2v/types';
+import { V1beta1Hook } from '@kubev2v/types';
 
-export type FormState = {
+export interface FormState {
   preHookSet: boolean;
   postHookSet: boolean;
   preHook: V1beta1Hook;
@@ -11,7 +11,7 @@ export type FormState = {
   hasChanges: boolean;
   isLoading: boolean;
   alertMessage: React.ReactNode;
-};
+}
 
 export type FormAction =
   | { type: 'PRE_HOOK_SET'; payload: boolean }

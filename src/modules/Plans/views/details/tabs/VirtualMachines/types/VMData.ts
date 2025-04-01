@@ -1,6 +1,6 @@
-import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
+import { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 
-import type {
+import {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1PersistentVolumeClaim,
   IoK8sApiCoreV1Pod,

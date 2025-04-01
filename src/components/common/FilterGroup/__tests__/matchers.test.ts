@@ -5,8 +5,8 @@ import { createMatcher, createMetaMatcher, freetextMatcher } from '../matchers';
 const matchFreetext = (
   selectedFilters,
   filter = {
-    placeholderLabel: NAME,
     type: 'freetext',
+    placeholderLabel: NAME,
   },
 ) =>
   createMatcher({
@@ -14,9 +14,9 @@ const matchFreetext = (
     ...freetextMatcher,
     resourceFields: [
       {
-        filter,
-        label: NAME,
         resourceFieldId: NAME,
+        label: NAME,
+        filter,
       },
     ],
   });
@@ -51,8 +51,8 @@ describe('standard matchers', () => {
     const match = matchFreetext(
       { [NAME]: ['b', 'c', 'd'] },
       {
-        placeholderLabel: NAME,
         type: 'enum',
+        placeholderLabel: NAME,
       },
     );
     expect(match({ [NAME]: 'bar' })).toBeTruthy();
@@ -72,20 +72,20 @@ const matchBothFieldsFreetext = () =>
     },
     [
       {
-        filter: {
-          placeholderLabel: NAME,
-          type: 'freetext',
-        },
-        label: NAME,
         resourceFieldId: NAME,
+        label: NAME,
+        filter: {
+          type: 'freetext',
+          placeholderLabel: NAME,
+        },
       },
       {
-        filter: {
-          placeholderLabel: NAMESPACE,
-          type: 'freetext',
-        },
-        label: NAMESPACE,
         resourceFieldId: NAMESPACE,
+        label: NAMESPACE,
+        filter: {
+          type: 'freetext',
+          placeholderLabel: NAMESPACE,
+        },
       },
     ],
   );

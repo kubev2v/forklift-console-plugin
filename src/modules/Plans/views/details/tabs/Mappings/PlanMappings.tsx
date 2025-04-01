@@ -9,10 +9,10 @@ import {
   PlanModelGroupVersionKind,
   ProviderModelGroupVersionKind,
   StorageMapModelGroupVersionKind,
-  type V1beta1NetworkMap,
-  type V1beta1Plan,
-  type V1beta1Provider,
-  type V1beta1StorageMap,
+  V1beta1NetworkMap,
+  V1beta1Plan,
+  V1beta1Provider,
+  V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
@@ -33,9 +33,9 @@ export const PlanMappings: React.FC<{ name: string; namespace: string }> = ({
 
   const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
+    namespaced: true,
     name,
     namespace,
-    namespaced: true,
   });
 
   return (
@@ -57,9 +57,9 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
   // Retrieve all k8s Providers
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace: plan?.metadata?.namespace,
-    namespaced: true,
   });
 
   // Retrieve all k8s Network Mappings
@@ -67,9 +67,9 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     V1beta1NetworkMap[]
   >({
     groupVersionKind: NetworkMapModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace: plan?.metadata?.namespace,
-    namespaced: true,
   });
 
   // Retrieve all k8s Storage Mappings
@@ -77,9 +77,9 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     V1beta1StorageMap[]
   >({
     groupVersionKind: StorageMapModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace: plan?.metadata?.namespace,
-    namespaced: true,
   });
 
   const planNetworkMaps = networkMaps
@@ -149,7 +149,7 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     );
 
   // Warn when missing inventory data, missing inventory will make
-  // Some editing options missing.
+  // some editing options missing.
   const alerts = [];
 
   if (targetStorages.length == 0) {

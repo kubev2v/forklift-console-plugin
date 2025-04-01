@@ -7,16 +7,16 @@ import { NetworkMapModelRef } from '@kubev2v/types';
 import { Button } from '@patternfly/react-core';
 
 const NetworkMapsAddButton: React.FC<{ namespace: string; dataTestId?: string }> = ({
-  dataTestId,
   namespace,
+  dataTestId,
 }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
 
   const NetworkMapsListURL = getResourceUrl({
-    namespace,
-    namespaced: namespace !== undefined,
     reference: NetworkMapModelRef,
+    namespace: namespace,
+    namespaced: namespace !== undefined,
   });
 
   const onClick = () => {

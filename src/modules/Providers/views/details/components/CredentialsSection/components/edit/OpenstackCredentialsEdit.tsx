@@ -9,21 +9,20 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { Divider, Form, Popover, Radio, Switch } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
-import type { EditComponentProps } from '../BaseCredentialsSection';
-
 import { ApplicationCredentialNameSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/ApplicationCredentialNameSecretFieldsFormGroup';
 import { ApplicationWithCredentialsIDFormGroup } from './OpenstackCredentialsEditFormGroups/ApplicationWithCredentialsIDFormGroup';
 import { PasswordSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/PasswordSecretFieldsFormGroup';
 import { TokenWithUserIDSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/TokenWithUserIDSecretFieldsFormGroup';
 import { TokenWithUsernameSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/TokenWithUsernameSecretFieldsFormGroup';
+import { EditComponentProps } from '../BaseCredentialsSection';
 
-export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, secret }) => {
+export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
   const { t } = useForkliftTranslation();
 
   const insecureSkipVerifyHelperTextMsgs = {
     error: t('Error: this field must be set to a boolean value.'),
-    successAndNotSkipped: t("The provider's CA certificate will be validated."),
     successAndSkipped: t("The provider's CA certificate won't be validated."),
+    successAndNotSkipped: t("The provider's CA certificate will be validated."),
   };
 
   const insecureSkipVerifyHelperTextPopover = (
@@ -47,7 +46,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
     | 'applicationCredentialIdSecretFields'
     | 'applicationCredentialNameSecretFields';
 
-  // Guess initial authenticationType based on authType and username
+  // guess initial authenticationType based on authType and username
   switch (authType) {
     case 'password':
       authenticationType = 'passwordSecretFields';
@@ -72,7 +71,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
   }
 
   const initialState = {
-    authenticationType,
+    authenticationType: authenticationType,
     validation: {
       cacert: openstackSecretFieldValidator('cacert', cacert),
       insecureSkipVerify: openstackSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
@@ -105,9 +104,9 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
   const handleChange = useCallback(
     (id, value) => {
       const validationState = openstackSecretFieldValidator(id, value);
-      dispatch({ payload: { field: id, validationState }, type: 'SET_FIELD_VALIDATED' });
+      dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
-      // Don't trim fields that allow spaces
+      // don't trim fields that allow spaces
       const encodedValue = ['cacert'].includes(id)
         ? Base64.encode(value || '')
         : Base64.encode(value?.trim() || '');
@@ -119,23 +118,23 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
 
   const handleAuthTypeChange = useCallback(
     (type: string) => {
-      dispatch({ payload: type, type: 'SET_AUTHENTICATION_TYPE' });
+      dispatch({ type: 'SET_AUTHENTICATION_TYPE', payload: type });
 
       switch (type) {
         case 'passwordSecretFields':
           onChange({
             ...secret,
-            data: { ...secret.data, authType: Base64.encode('password') },
+            data: { ...secret.data, ['authType']: Base64.encode('password') },
           });
           break;
         case 'tokenWithUserIDSecretFields':
         case 'tokenWithUsernameSecretFields':
-          // On change also clean userID and username
+          // on change also clean userID and username
           onChange({
             ...secret,
             data: {
               ...secret.data,
-              authType: Base64.encode('token'),
+              ['authType']: Base64.encode('token'),
               userID: undefined,
               username: undefined,
             },
@@ -143,13 +142,13 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
           break;
         case 'applicationCredentialIdSecretFields':
         case 'applicationCredentialNameSecretFields':
-          // On change also clean userID and username
+          // on change also clean userID and username
           onChange({
             ...secret,
             data: {
               ...secret.data,
+              ['authType']: Base64.encode('applicationcredential'),
               applicationCredentialID: undefined,
-              authType: Base64.encode('applicationcredential'),
               username: undefined,
             },
           });
@@ -159,7 +158,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
     [secret],
   );
 
-  const onClick: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -192,45 +191,35 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
           label="Application credential ID"
           id="applicationCredentialIdSecretFields"
           isChecked={state.authenticationType === 'applicationCredentialIdSecretFields'}
-          onChange={() => {
-            handleAuthTypeChange('applicationCredentialIdSecretFields');
-          }}
+          onChange={() => handleAuthTypeChange('applicationCredentialIdSecretFields')}
         />
         <Radio
           name="authType"
           label="Application credential name"
           id="applicationCredentialNameSecretFields"
           isChecked={state.authenticationType === 'applicationCredentialNameSecretFields'}
-          onChange={() => {
-            handleAuthTypeChange('applicationCredentialNameSecretFields');
-          }}
+          onChange={() => handleAuthTypeChange('applicationCredentialNameSecretFields')}
         />
         <Radio
           name="authType"
           label="Token with user ID"
           id="tokenWithUserIDSecretFields"
           isChecked={state.authenticationType === 'tokenWithUserIDSecretFields'}
-          onChange={() => {
-            handleAuthTypeChange('tokenWithUserIDSecretFields');
-          }}
+          onChange={() => handleAuthTypeChange('tokenWithUserIDSecretFields')}
         />
         <Radio
           name="authType"
           label="Token with user name"
           id="tokenWithUsernameSecretFields"
           isChecked={state.authenticationType === 'tokenWithUsernameSecretFields'}
-          onChange={() => {
-            handleAuthTypeChange('tokenWithUsernameSecretFields');
-          }}
+          onChange={() => handleAuthTypeChange('tokenWithUsernameSecretFields')}
         />
         <Radio
           name="authType"
           label="Password"
           id="passwordSecretFields"
           isChecked={state.authenticationType === 'passwordSecretFields'}
-          onChange={() => {
-            handleAuthTypeChange('passwordSecretFields');
-          }}
+          onChange={() => handleAuthTypeChange('passwordSecretFields')}
         />
       </FormGroupWithHelpText>
 
@@ -280,9 +269,7 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
           aria-label={insecureSkipVerifyHelperTextMsgs.successAndSkipped}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(e, v) => {
-            onChangeInsecure(v, e);
-          }}
+          onChange={(e, v) => onChangeInsecure(v, e)}
         />
       </FormGroupWithHelpText>
       <FormGroupWithHelpText
@@ -302,15 +289,9 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
           filenamePlaceholder="Drag and drop a file or upload one"
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(_e, v) => {
-            onDataChange(v);
-          }}
-          onTextChange={(_e, v) => {
-            onTextChange(v);
-          }}
-          onClearClick={() => {
-            handleChange('cacert', '');
-          }}
+          onDataChange={(_e, v) => onDataChange(v)}
+          onTextChange={(_e, v) => onTextChange(v)}
+          onClearClick={() => handleChange('cacert', '')}
           browseButtonText="Upload"
           url={url}
           isDisabled={insecureSkipVerify === 'true'}

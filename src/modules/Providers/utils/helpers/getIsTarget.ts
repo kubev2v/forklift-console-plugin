@@ -1,4 +1,4 @@
-import type { ProviderType, V1beta1Provider } from '@kubev2v/types';
+import { ProviderType, V1beta1Provider } from '@kubev2v/types';
 
 /**
  * Checks if the provider is a target provider or not.

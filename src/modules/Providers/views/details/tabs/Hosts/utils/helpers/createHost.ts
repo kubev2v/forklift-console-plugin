@@ -1,4 +1,4 @@
-import { HostModel, type V1beta1Host } from '@kubev2v/types';
+import { HostModel, V1beta1Host } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -9,8 +9,8 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
  */
 export async function createHost(newHostData: V1beta1Host) {
   const createdHost = await k8sCreate({
-    data: newHostData,
     model: HostModel,
+    data: newHostData,
   });
 
   return createdHost;

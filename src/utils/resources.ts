@@ -1,5 +1,5 @@
-import type { V1beta1Provider } from '@kubev2v/types';
-import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import { V1beta1Provider } from '@kubev2v/types';
+import { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
  * Get reference group version kind string for group version kind strings
@@ -20,7 +20,7 @@ const groupVersionKindForObj = (obj: K8sResourceCommon) => {
   }
 
   const [group, version] = obj.apiVersion.split('/');
-  return { group, kind: obj.kind, version };
+  return { group, version, kind: obj.kind };
 };
 
 /**
@@ -29,7 +29,7 @@ const groupVersionKindForObj = (obj: K8sResourceCommon) => {
  */
 const groupVersionKindForReference = (reference: string) => {
   const [group, version, kind] = reference.split('~');
-  return { group, kind, version };
+  return { group, version, kind };
 };
 
 /**
@@ -37,7 +37,7 @@ const groupVersionKindForReference = (reference: string) => {
  * @param  {K8sResourceCommon} obj
  */
 const referenceForObj = (obj: K8sResourceCommon) => {
-  const { group, kind, version } = groupVersionKindForObj(obj);
+  const { group, version, kind } = groupVersionKindForObj(obj);
   return referenceFor(group, version, kind);
 };
 

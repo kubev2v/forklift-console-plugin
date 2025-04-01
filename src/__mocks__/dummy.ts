@@ -3,10 +3,10 @@
 // This dummy file is used to resolve @Console imports from @openshift-console for JEST
 // Check "moduleNameMapper" in jest.config.ts
 
-// Re-export React components that require tsx syntax
+// re-export React components that require tsx syntax
 export * from './console_components';
 
-// Mocks for non-React code (standard ts syntax)
+// mocks for non-React code (standard ts syntax)
 export class Dummy extends Error {
   constructor() {
     super('Dummy file for exports');

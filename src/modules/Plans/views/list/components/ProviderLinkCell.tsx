@@ -3,7 +3,7 @@ import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/
 
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
 
-import type { CellProps } from './CellProps';
+import { CellProps } from './CellProps';
 
 export const ProviderLinkCell: React.FC<CellProps> = ({ data, fieldId }) => {
   const provider = data.plan?.spec?.provider?.[fieldId];

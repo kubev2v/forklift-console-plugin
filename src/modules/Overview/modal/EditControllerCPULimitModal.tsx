@@ -1,20 +1,20 @@
 import React from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
-import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
+import { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import type { EditSettingsModalProps } from './EditSettingsModalProps';
+import { EditSettingsModalProps } from './EditSettingsModalProps';
 import SettingsSelectInput from './SettingsSelectInput';
 
 // Define the options
 const options = [
-  { description: 'Low CPU limit', key: '200m', name: '200m' },
-  { description: 'Moderate CPU limit', key: '500m', name: '500m' },
-  { description: 'High CPU limit', key: '2000m', name: '2000m' },
-  { description: 'Very high CPU limit', key: '8000m', name: '8000m' },
+  { key: '200m', name: '200m', description: 'Low CPU limit' },
+  { key: '500m', name: '500m', description: 'Moderate CPU limit' },
+  { key: '2000m', name: '2000m', description: 'High CPU limit' },
+  { key: '8000m', name: '8000m', description: 'Very high CPU limit' },
 ];
 
 /**

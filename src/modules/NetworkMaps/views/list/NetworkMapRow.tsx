@@ -1,20 +1,22 @@
 import React from 'react';
-import type { RowProps } from 'src/components/common/TableView/types';
+import { RowProps } from 'src/components/common/TableView/types';
 
-import type { ResourceField } from '@components/common/utils/types';
+import { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { NetworkMapActionsDropdown } from '../../actions/NetworkMapActionsDropdown';
-import type { NetworkMapData } from '../../utils/types/NetworkMapData';
-
-import type { CellProps } from './components/CellProps';
+import { CellProps } from './components/CellProps';
 import { NamespaceCell } from './components/NamespaceCell';
 import { NetworkMapLinkCell } from './components/NetworkMapLinkCell';
 import { PlanCell } from './components/PlanCell';
 import { ProviderLinkCell } from './components/ProviderLinkCell';
 import { StatusCell } from './components/StatusCell';
+import { NetworkMapActionsDropdown } from '../../actions/NetworkMapActionsDropdown';
+import { NetworkMapData } from '../../utils/types/NetworkMapData';
 
-const ProviderRow: React.FC<RowProps<NetworkMapData>> = ({ resourceData, resourceFields }) => {
+const ProviderRow: React.FC<RowProps<NetworkMapData>> = ({
+  resourceFields,
+  resourceData,
+}) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>
@@ -36,19 +38,19 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 };
 
 const cellRenderers: Record<string, React.FC<CellProps>> = {
-  actions: (props) => NetworkMapActionsDropdown({ isKebab: true, ...props }),
-  destination: ProviderLinkCell,
-  name: NetworkMapLinkCell,
-  namespace: NamespaceCell,
-  owner: PlanCell,
-  phase: StatusCell,
-  source: ProviderLinkCell,
+  ['name']: NetworkMapLinkCell,
+  ['namespace']: NamespaceCell,
+  ['owner']: PlanCell,
+  ['phase']: StatusCell,
+  ['destination']: ProviderLinkCell,
+  ['source']: ProviderLinkCell,
+  ['actions']: (props) => NetworkMapActionsDropdown({ isKebab: true, ...props }),
 };
 
-type RenderTdProps = {
+interface RenderTdProps {
   resourceData: NetworkMapData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-};
+}
 
 export default ProviderRow;

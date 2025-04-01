@@ -4,32 +4,26 @@ import {
   isPlanExecuting,
   isPlanSucceeded,
 } from 'src/modules/Plans/utils/helpers/getPlanPhase';
-import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
+import { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import usePlanSourceProvider from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
-import {
-  PlanModel,
-  PlanModelGroupVersionKind,
-  type V1beta1Plan,
-  type V1beta1Provider,
-} from '@kubev2v/types';
+import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-
-import { Suspend } from '../../components/Suspend';
 
 import { MigrationVirtualMachinesList } from './Migration/MigrationVirtualMachinesList';
 import { PlanVirtualMachinesList } from './Plan/PlanVirtualMachinesList';
+import { Suspend } from '../../components/Suspend';
 
-type PlanVirtualMachinesProps = {
+interface PlanVirtualMachinesProps {
   planData: PlanData;
   ns?: string;
   name?: string;
   loaded?: boolean;
   loadError?: unknown;
   sourceProvider?: V1beta1Provider;
-};
+}
 
 const PlanVirtualMachines_: React.FC<PlanVirtualMachinesProps> = (props) => {
   const plan = props?.planData.plan;
@@ -40,8 +34,9 @@ const PlanVirtualMachines_: React.FC<PlanVirtualMachinesProps> = (props) => {
     return <MigrationVirtualMachinesList {...props} />;
   } else if (canPlanReStart(plan)) {
     return <MigrationVirtualMachinesList {...props} />;
+  } else {
+    return <PlanVirtualMachinesList {...props} />;
   }
-  return <PlanVirtualMachinesList {...props} />;
 };
 
 export const PlanVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
@@ -50,15 +45,15 @@ export const PlanVirtualMachines: React.FC<{ name: string; namespace: string }> 
 }) => {
   const [plan, planLoaded, planLoadError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
+    namespaced: true,
     name,
     namespace,
-    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({ model: PlanModel, namespace });
   const [sourceProvider] = usePlanSourceProvider(plan, namespace);
 
-  const data = { permissions, plan };
+  const data = { plan, permissions };
 
   return (
     <ModalHOC>

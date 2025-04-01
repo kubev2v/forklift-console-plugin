@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import React, { FC } from 'react';
 import { PlanCutoverMigrationModal } from 'src/modules/Plans/modals/PlanCutoverMigrationModal';
 import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, ButtonVariant, Flex, Label } from '@patternfly/react-core';
 
-import type { CellProps } from './CellProps';
+import { CellProps } from './CellProps';
 
 export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();

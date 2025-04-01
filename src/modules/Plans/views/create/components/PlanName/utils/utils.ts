@@ -1,4 +1,4 @@
-import type { Validation } from 'src/modules/Providers/utils/types/Validation';
+import { Validation } from 'src/modules/Providers/utils/types/Validation';
 import { validateK8sName } from 'src/modules/Providers/utils/validators/common';
 
 import { ValidatedOptions } from '@patternfly/react-core';

@@ -1,6 +1,6 @@
-import React, { type ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
-import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
+import { TableLabelCell, TableLabelCellProps } from './TableLabelCell';
 
 /**
  * A component that displays a table cell, with an optional icon.
@@ -10,8 +10,8 @@ import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
  */
 export const TableIconCell: React.FC<TableIconCellProps> = ({
   children,
-  hasLabel = false,
   icon,
+  hasLabel = false,
   label,
   labelColor = 'grey',
 }) => {
@@ -23,6 +23,6 @@ export const TableIconCell: React.FC<TableIconCellProps> = ({
   );
 };
 
-type TableIconCellProps = {
+interface TableIconCellProps extends TableLabelCellProps {
   icon?: ReactNode;
-} & TableLabelCellProps;
+}

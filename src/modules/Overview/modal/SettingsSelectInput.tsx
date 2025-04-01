@@ -1,7 +1,7 @@
 import React, {
-  type FC,
-  type MouseEvent as ReactMouseEvent,
-  type Ref,
+  FC,
+  MouseEvent as ReactMouseEvent,
+  Ref,
   useCallback,
   useMemo,
   useState,
@@ -9,7 +9,7 @@ import React, {
 
 import {
   MenuToggle,
-  type MenuToggleElement,
+  MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
@@ -21,11 +21,11 @@ import {
  * @property {number | string} name
  * @property {string} description
  */
-type Option = {
+interface Option {
   key: number | string;
   name: number | string;
   description: string;
-};
+}
 
 /**
  * @typedef SettingsSelectInputProps
@@ -33,11 +33,11 @@ type Option = {
  * @property {(value: string) => void} onChange - Function to call when the value changes
  * @property {Option[]} options - The options to present to the user
  */
-export type SettingsSelectInputProps = {
+export interface SettingsSelectInputProps {
   value: number | string;
   onChange: (value: number | string) => void;
   options?: Option[];
-};
+}
 
 /**
  * SelectInput component. Provides a select input form element with predefined options.
@@ -45,7 +45,7 @@ export type SettingsSelectInputProps = {
  * @param {ModalInputComponentProps} props - Properties passed to the component
  * @returns {JSX.Element}
  */
-const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, value }) => {
+const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ value, onChange, options }) => {
   // State to keep track of the dropdown menu open/closed state
   const [isOpen, setIsOpen] = useState(false);
 
@@ -87,18 +87,19 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
   };
 
   // Callback function to handle selection in the dropdown menu
-  const onSelect: (event?: ReactMouseEvent, value?: string | number) => void = useCallback(
-    (_event, value: string | number) => {
-      // Use the dictionary to find the key corresponding to the selected name
-      const key = nameToKey[value] || value;
-      onChange(key);
+  const onSelect: (event?: ReactMouseEvent<Element, MouseEvent>, value?: string | number) => void =
+    useCallback(
+      (_event, value: string | number) => {
+        // Use the dictionary to find the key corresponding to the selected name
+        const key = nameToKey[value] || value;
+        onChange(key);
 
-      // Toggle the dropdown menu open state
-      setSelected(value as string);
-      setIsOpen(false);
-    },
-    [isOpen, nameToKey, onChange], // Dependencies for useCallback
-  );
+        // Toggle the dropdown menu open state
+        setSelected(value as string);
+        setIsOpen(false);
+      },
+      [isOpen, nameToKey, onChange], // Dependencies for useCallback
+    );
 
   // Render the Select component with dynamically created SelectOption children
   return (
@@ -109,9 +110,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
       isOpen={isOpen}
       selected={selected}
       onSelect={onSelect}
-      onOpenChange={(nextOpen: boolean) => {
-        setIsOpen(nextOpen);
-      }}
+      onOpenChange={(nextOpen: boolean) => setIsOpen(nextOpen)}
       toggle={toggle}
       shouldFocusToggleOnSelect
       shouldFocusFirstItemOnOpen={false}

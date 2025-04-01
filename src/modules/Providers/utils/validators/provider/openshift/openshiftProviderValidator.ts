@@ -1,7 +1,7 @@
-import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
 import { validateUrlAndTokenExistence } from '../../../helpers/validateUrlAndTokenExistence';
-import { validateK8sName, validateURL, type ValidationMsg } from '../../common';
+import { validateK8sName, validateURL, ValidationMsg } from '../../common';
 
 export function openshiftProviderValidator(
   provider: V1beta1Provider,
@@ -12,15 +12,15 @@ export function openshiftProviderValidator(
   const token = secret?.data?.token || '';
 
   if (!validateK8sName(name)) {
-    return { msg: 'Invalid kubernetes resource name', type: 'error' };
+    return { type: 'error', msg: 'Invalid kubernetes resource name' };
   }
 
   const validation: ValidationMsg = validateUrlAndTokenExistence(url, token);
   if (validation) return validation;
 
-  // Validate fields
+  // validate fields
   if (url !== '' && !validateURL(url)) {
-    return { msg: 'Invalid URL', type: 'error' };
+    return { type: 'error', msg: 'Invalid URL' };
   }
 
   return { type: 'default' };

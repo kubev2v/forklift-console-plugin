@@ -5,134 +5,133 @@ import StandardPage from 'src/components/page/StandardPage';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
-  type OpenshiftProvider,
-  type OpenstackProvider,
-  type OvaProvider,
-  type OVirtProvider,
+  OpenshiftProvider,
+  OpenstackProvider,
+  OvaProvider,
+  OVirtProvider,
   ProviderModel,
   ProviderModelGroupVersionKind,
-  type ProviderType,
-  type V1beta1Provider,
-  type VSphereProvider,
+  ProviderType,
+  V1beta1Provider,
+  VSphereProvider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import InventoryNotReachable from './components/InventoryNotReachable';
+import ProvidersAddButton from './components/ProvidersAddButton';
+import ProvidersEmptyState from './components/ProvidersEmptyState';
 import useGetDeleteAndEditAccessReview from '../../hooks/useGetDeleteAndEditAccessReview';
 import useProvidersInventoryList from '../../hooks/useProvidersInventoryList';
 import modernizeMigration from '../../images/modernizeMigration.svg';
 import { findInventoryByID } from '../../utils/helpers/findInventoryByID';
 import { SOURCE_ONLY_PROVIDER_TYPES } from '../../utils/helpers/getIsTarget';
-import type { ProviderData } from '../../utils/types/ProviderData';
-
-import InventoryNotReachable from './components/InventoryNotReachable';
-import ProvidersAddButton from './components/ProvidersAddButton';
-import ProvidersEmptyState from './components/ProvidersEmptyState';
+import { ProviderData } from '../../utils/types/ProviderData';
 import ProviderRow from './ProviderRow';
 
 import './ProvidersListPage.style.css';
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    filter: {
-      placeholderLabel: t('Filter by name'),
-      type: 'freetext',
-    },
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    isVisible: true,
+    resourceFieldId: 'name',
     jsonPath: '$.provider.metadata.name',
     label: t('Name'),
-    resourceFieldId: 'name',
+    isVisible: true,
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by name'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by namespace'),
-      type: 'freetext',
-    },
-    isIdentity: true,
-    isVisible: true,
+    resourceFieldId: 'namespace',
     jsonPath: '$.provider.metadata.namespace',
     label: t('Namespace'),
-    resourceFieldId: 'namespace',
+    isVisible: true,
+    isIdentity: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by namespace'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Status'),
-      primary: true,
-      type: 'enum',
-      values: EnumToTuple(PROVIDER_STATUS),
-    },
-    isVisible: true,
+    resourceFieldId: 'phase',
     jsonPath: '$.provider.status.phase',
     label: t('Status'),
-    resourceFieldId: 'phase',
+    isVisible: true,
+    filter: {
+      type: 'enum',
+      primary: true,
+      placeholderLabel: t('Status'),
+      values: EnumToTuple(PROVIDER_STATUS),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by endpoint'),
-      type: 'freetext',
-    },
-    isVisible: true,
+    resourceFieldId: 'url',
     jsonPath: '$.provider.spec.url',
     label: t('Endpoint'),
-    resourceFieldId: 'url',
+    isVisible: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by endpoint'),
+    },
     sortable: true,
   },
   {
+    resourceFieldId: 'type',
+    jsonPath: '$.provider.spec.type',
+    label: t('Type'),
+    isVisible: true,
     filter: {
+      type: 'groupedEnum',
+      primary: true,
+      placeholderLabel: t('Type'),
+      values: EnumToTuple(PROVIDERS).map(({ id, ...rest }) => ({
+        id,
+        groupId: SOURCE_ONLY_PROVIDER_TYPES.includes(id as ProviderType) ? 'source' : 'target',
+        ...rest,
+      })),
       groups: [
         { groupId: 'target', label: t('Target and Source') },
         { groupId: 'source', label: t('Source Only') },
       ],
-      placeholderLabel: t('Type'),
-      primary: true,
-      type: 'groupedEnum',
-      values: EnumToTuple(PROVIDERS).map(({ id, ...rest }) => ({
-        groupId: SOURCE_ONLY_PROVIDER_TYPES.includes(id as ProviderType) ? 'source' : 'target',
-        id,
-        ...rest,
-      })),
     },
-    isVisible: true,
-    jsonPath: '$.provider.spec.type',
-    label: t('Type'),
-    resourceFieldId: 'type',
     sortable: true,
   },
   {
-    isVisible: true,
+    resourceFieldId: 'vmCount',
     jsonPath: '$.inventory.vmCount',
     label: t('VMs'),
-    resourceFieldId: 'vmCount',
+    isVisible: true,
     sortable: true,
   },
   {
-    isVisible: true,
+    resourceFieldId: 'networkCount',
     jsonPath: '$.inventory.networkCount',
     label: t('Networks'),
-    resourceFieldId: 'networkCount',
+    isVisible: true,
     sortable: true,
   },
   {
-    isVisible: false,
+    resourceFieldId: 'clusterCount',
     jsonPath: '$.inventory.clusterCount',
     label: t('Clusters'),
-    resourceFieldId: 'clusterCount',
+    isVisible: false,
     sortable: true,
   },
   {
-    isVisible: true,
+    resourceFieldId: 'hostCount',
     jsonPath: '$.inventory.hostCount',
     label: t('Hosts'),
-    resourceFieldId: 'hostCount',
+    isVisible: true,
     sortable: true,
   },
   {
-    isVisible: false,
+    resourceFieldId: 'storageCount',
     jsonPath: (obj: ProviderData) => {
       let storageCount: number;
       const { inventory } = obj;
@@ -158,14 +157,14 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       return storageCount;
     },
     label: t('Storage'),
-    resourceFieldId: 'storageCount',
+    isVisible: false,
     sortable: true,
   },
   {
+    resourceFieldId: 'actions',
+    label: '',
     isAction: true,
     isVisible: true,
-    label: '',
-    resourceFieldId: 'actions',
     sortable: false,
   },
 ];
@@ -179,15 +178,15 @@ const ProvidersListPage: React.FC<{
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace,
-    namespaced: true,
   });
 
   const {
-    error: inventoryError,
     inventory,
     loading: inventoryLoading,
+    error: inventoryError,
   } = useProvidersInventoryList({ namespace });
 
   const permissions = useGetDeleteAndEditAccessReview({
@@ -196,9 +195,9 @@ const ProvidersListPage: React.FC<{
   });
 
   const data: ProviderData[] = providers.map((provider) => ({
+    provider,
     inventory: findInventoryByID(inventory, provider.metadata?.uid),
     permissions,
-    provider,
   }));
 
   const EmptyState = (
@@ -229,10 +228,10 @@ const ProvidersListPage: React.FC<{
   );
 };
 
-type EmptyStateProps = {
+interface EmptyStateProps {
   AddButton: JSX.Element;
   namespace?: string;
-};
+}
 
 const ModernizeMigration = () => (
   <img src={modernizeMigration} className="forklift-empty-state__icon" />

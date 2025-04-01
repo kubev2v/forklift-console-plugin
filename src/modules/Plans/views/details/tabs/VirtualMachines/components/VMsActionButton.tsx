@@ -1,4 +1,4 @@
-import React, { type FC, type ReactNode } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import { Button, ButtonVariant, Tooltip } from '@patternfly/react-core';
 
@@ -6,7 +6,7 @@ export const VMsActionButton: FC<{
   children: ReactNode;
   onClick: () => void;
   disabledReason?: string;
-}> = ({ children, disabledReason, onClick }) => {
+}> = ({ children, onClick, disabledReason }) => {
   const button = (
     <Button
       variant={ButtonVariant.secondary}

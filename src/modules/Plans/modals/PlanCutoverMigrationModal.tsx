@@ -1,10 +1,10 @@
-import React, { type ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { MigrationModel, type V1beta1Migration, type V1beta1Plan } from '@kubev2v/types';
+import { MigrationModel, V1beta1Migration, V1beta1Plan } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -29,10 +29,10 @@ import './PlanCutoverMigrationModal.style.css';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-type PlanCutoverMigrationModalProps = {
+interface PlanCutoverMigrationModalProps {
   resource: V1beta1Plan;
   title?: string;
-};
+}
 
 /**
  * A generic delete modal component
@@ -41,8 +41,8 @@ type PlanCutoverMigrationModalProps = {
  * @returns {React.Element} The DeleteModal component
  */
 export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps> = ({
-  resource,
   title,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
@@ -70,7 +70,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     value: string,
     date?: Date,
   ) => void = (_event, value, date) => {
-    setIsDateValid(Boolean(date));
+    setIsDateValid(!!date);
     if (!date) return;
 
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
@@ -93,7 +93,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     isTimeValid?: boolean,
   ) => void = (_event, timeInput, hour, minute, _seconds, isTimeValid) => {
     setTime(timeInput);
-    setIsTimeValid(isTimeValid && Boolean(timeInput));
+    setIsTimeValid(isTimeValid && !!timeInput);
 
     if (!isTimeValid) return;
 
@@ -198,6 +198,8 @@ async function patchMigrationCutover(migration: V1beta1Migration, cutover: strin
   const op = migration?.spec?.cutover ? 'replace' : 'add';
 
   await k8sPatch({
+    model: MigrationModel,
+    resource: migration,
     data: [
       {
         op,
@@ -205,7 +207,5 @@ async function patchMigrationCutover(migration: V1beta1Migration, cutover: strin
         value: cutover,
       },
     ],
-    model: MigrationModel,
-    resource: migration,
   });
 }

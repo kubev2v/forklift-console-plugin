@@ -1,9 +1,9 @@
-import type { V1beta1Host } from '@kubev2v/types';
+import { V1beta1Host } from '@kubev2v/types';
 
-type StatusResult = {
+interface StatusResult {
   status: string;
   message: string;
-};
+}
 
 /**
  * @description Determine the current status of a host.
@@ -24,19 +24,19 @@ export function determineHostStatus(host: V1beta1Host): StatusResult {
   const runningTypes = ['ConnectionTestSucceeded', 'Validated'];
 
   if (!host?.status?.conditions) {
-    return { message: '', status: 'unknown' };
+    return { status: 'unknown', message: '' };
   }
 
   for (const condition of host.status.conditions) {
     if (condition.type === 'Ready' && condition.status === 'True') {
-      return { message: condition.message, status: 'Ready' };
+      return { status: 'Ready', message: condition.message };
     }
   }
 
   for (const condition of host.status.conditions) {
     if (condition.status === 'True') {
       if (errorTypes.includes(condition.type)) {
-        return { message: condition.message, status: 'Error' };
+        return { status: 'Error', message: condition.message };
       }
     }
   }
@@ -44,10 +44,10 @@ export function determineHostStatus(host: V1beta1Host): StatusResult {
   for (const condition of host.status.conditions) {
     if (condition.status === 'True') {
       if (runningTypes.includes(condition.type)) {
-        return { message: condition.message, status: 'Running' };
+        return { status: 'Running', message: condition.message };
       }
     }
   }
 
-  return { message: '', status: 'unknown' };
+  return { status: 'unknown', message: '' };
 }

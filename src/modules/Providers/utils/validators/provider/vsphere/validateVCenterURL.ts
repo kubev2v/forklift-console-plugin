@@ -1,5 +1,5 @@
 import { safeBase64Decode } from '../../../helpers/safeBase64Decode';
-import { validateIpv4, validateURL, type ValidationMsg } from '../../common';
+import { validateIpv4, validateURL, ValidationMsg } from '../../common';
 
 export const validateVCenterURL = (
   url: string | number,
@@ -8,14 +8,14 @@ export const validateVCenterURL = (
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (url === undefined) {
     return {
-      msg: 'The URL is required, URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
       type: 'default',
+      msg: 'The URL is required, URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
     };
   }
 
   // Sanity check
   if (typeof url !== 'string') {
-    return { msg: 'URL is not a string', type: 'error' };
+    return { type: 'error', msg: 'URL is not a string' };
   }
 
   const trimmedUrl: string = url.trim();
@@ -26,15 +26,15 @@ export const validateVCenterURL = (
 
   if (trimmedUrl === '') {
     return {
-      msg: 'The URL is required, URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
       type: 'error',
+      msg: 'The URL is required, URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
     };
   }
 
   if (!isValidURL) {
     return {
-      msg: 'The URL is invalid. URL should include the schema and path, for example: https://host-example.com/sdk .',
       type: 'error',
+      msg: 'The URL is invalid. URL should include the schema and path, for example: https://host-example.com/sdk .',
     };
   }
 
@@ -43,8 +43,8 @@ export const validateVCenterURL = (
 
     if (isValidIpAddress) {
       return {
-        msg: 'The URL is not a fully qualified domain name (FQDN). If the certificate is not skipped and does not match the URL, the connection might fail.',
         type: 'warning',
+        msg: 'The URL is not a fully qualified domain name (FQDN). If the certificate is not skipped and does not match the URL, the connection might fail.',
       };
     }
   }
@@ -56,8 +56,8 @@ export const validateVCenterURL = (
     };
 
   return {
-    msg: 'The URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
     type: 'success',
+    msg: 'The URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
   };
 };
 

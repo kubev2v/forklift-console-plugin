@@ -3,19 +3,19 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   getGroupVersionKindForResource,
-  type OwnerReference,
+  OwnerReference,
   ResourceLink,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert } from '@patternfly/react-core';
 
 import './alerts.style.css';
 
-type ItemIsOwnedAlertProps = {
+interface ItemIsOwnedAlertProps {
   owner: OwnerReference;
   namespace: string;
-};
+}
 
-export const ItemIsOwnedAlert: React.FC<ItemIsOwnedAlertProps> = ({ namespace, owner }) => {
+export const ItemIsOwnedAlert: React.FC<ItemIsOwnedAlertProps> = ({ owner, namespace }) => {
   const { t } = useForkliftTranslation();
 
   return (

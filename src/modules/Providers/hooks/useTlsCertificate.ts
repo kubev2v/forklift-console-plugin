@@ -62,39 +62,33 @@ export const useTlsCertificate = (url: string) => {
     consoleFetch(getServicesApiUrl(`tls-certificate?URL=${url}`), {
       method: 'GET',
     })
-      .then(async (response: Response) => response.text())
-      .then((certificate) => {
-        setCertificate(certificate);
-      })
-      .catch((e) => {
-        setFetchError(e);
-      })
-      .then(() => {
-        setLoading(false);
-      });
+      .then((response: Response) => response.text())
+      .then((certificate) => setCertificate(certificate))
+      .catch((e) => setFetchError(e))
+      .then(() => setLoading(false));
   }, [url]);
 
   const x509Cert: X509 = parseToX509(certificate);
   const certError = !x509Cert && !loading && !fetchError;
   const {
-    issuer = '',
     thumbprint = '',
+    issuer = '',
     validTo = undefined,
   } = x509Cert
     ? {
-        issuer: KJUR.asn1.x509.X500Name.onelineToLDAP(x509Cert.getIssuerString()),
         thumbprint: calculateThumbprint(certificate),
+        issuer: KJUR.asn1.x509.X500Name.onelineToLDAP(x509Cert.getIssuerString()),
         validTo: zulutodate(x509Cert.getNotAfter()),
       }
     : {};
 
   return {
-    certError,
-    certificate,
-    fetchError,
-    issuer,
     loading,
+    fetchError,
+    certError,
     thumbprint,
+    issuer,
     validTo,
+    certificate,
   };
 };

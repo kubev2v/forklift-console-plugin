@@ -7,8 +7,8 @@ import { useUrlFilters } from '../useUrlFilters';
 afterEach(cleanup);
 beforeEach(() => {
   Object.defineProperty(window, 'location', {
-    value: { assign: jest.fn() },
     writable: true,
+    value: { assign: jest.fn() },
   });
   window.location.pathname = '';
   window.history.pushState = jest.fn();
@@ -32,7 +32,7 @@ describe('parse filters from the URL on initialization', () => {
         },
       } = renderHook(() =>
         useUrlFilters({
-          fields: [{ label: NAME, resourceFieldId: NAME }],
+          fields: [{ resourceFieldId: NAME, label: NAME }],
         }),
       );
       expect(selectedFilters[NAME]).toStrictEqual(output);
@@ -47,7 +47,7 @@ describe('parse filters from the URL on initialization', () => {
       },
     } = renderHook(() =>
       useUrlFilters({
-        fields: [{ label: NAME, resourceFieldId: NAME }],
+        fields: [{ resourceFieldId: NAME, label: NAME }],
       }),
     );
     expect(Object.entries(selectedFilters).length).toStrictEqual(0);
@@ -67,12 +67,10 @@ describe('display currently selected filters in the URL', () => {
       },
     } = renderHook(() =>
       useUrlFilters({
-        fields: [{ label: NAME, resourceFieldId: NAME }],
+        fields: [{ resourceFieldId: NAME, label: NAME }],
       }),
     );
-    act(() => {
-      setSelectedFilters({ [NAME]: update });
-    });
+    act(() => setSelectedFilters({ [NAME]: update }));
     expect(window.history.pushState).toBeCalledWith({}, '', pushedState);
   });
 });

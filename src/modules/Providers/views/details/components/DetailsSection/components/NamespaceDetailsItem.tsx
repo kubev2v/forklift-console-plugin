@@ -4,12 +4,12 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
-import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
+import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const NamespaceDetailsItem: React.FC<ProviderDetailsItemProps> = ({
-  helpContent,
-  moreInfoLink,
   resource: provider,
+  moreInfoLink,
+  helpContent,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -27,7 +27,7 @@ export const NamespaceDetailsItem: React.FC<ProviderDetailsItemProps> = ({
       title={t('Namespace')}
       content={
         <ResourceLink
-          groupVersionKind={{ kind: 'Namespace', version: 'v1' }}
+          groupVersionKind={{ version: 'v1', kind: 'Namespace' }}
           name={provider?.metadata?.namespace}
           namespace={provider?.metadata?.namespace}
         />

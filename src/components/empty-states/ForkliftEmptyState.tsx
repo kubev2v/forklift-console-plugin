@@ -18,10 +18,10 @@ type EmptyStateProps = {
 };
 
 const ForkliftEmptyState: React.FC<EmptyStateProps> = ({
-  callForActionButtons,
   icon,
-  textContent,
   title,
+  textContent,
+  callForActionButtons,
 }) => {
   return (
     <EmptyState variant={EmptyStateVariant.lg} isFullHeight>

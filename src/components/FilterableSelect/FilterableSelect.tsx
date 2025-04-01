@@ -1,14 +1,14 @@
-import React, { type ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 import {
   Button,
   Divider,
   MenuToggle,
-  type MenuToggleElement,
+  MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
-  type SelectOptionProps,
+  SelectOptionProps,
   Text,
   TextInputGroup,
   TextInputGroupMain,
@@ -19,7 +19,7 @@ import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
 /**
  * Props for the FilterableSelect component.
  */
-type FilterableSelectProps = {
+interface FilterableSelectProps {
   /** Array of options to display in the select dropdown */
   selectOptions: SelectOptionProps[];
   /** The currently selected value */
@@ -40,7 +40,7 @@ type FilterableSelectProps = {
   isPlain?: boolean;
   /** Indicates if the menu should be scrollable */
   isScrollable?: boolean;
-};
+}
 
 /**
  * A filterable select component that allows users to select from a list of options,
@@ -50,26 +50,26 @@ type FilterableSelectProps = {
  * @returns {JSX.Element} The rendered FilterableSelect component.
  */
 export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = ({
+  selectOptions: initialSelectOptions,
+  value,
+  onSelect: onSelect,
   canCreate,
+  placeholder = 'Select item',
+  noResultFoundLabel = 'No results found',
   createNewOptionLabel = 'Create new option:',
   isDisabled = false,
   isPlain = false,
   isScrollable = false,
-  noResultFoundLabel = 'No results found',
-  onSelect,
-  placeholder = 'Select item',
-  selectOptions: initialSelectOptions,
-  value,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState<string>(value);
   /**
-   * InputValue: The current value displayed in the input field.
+   * inputValue: The current value displayed in the input field.
    * This is the value the user types in.
    */
   const [inputValue, setInputValue] = React.useState<string>(value);
   /**
-   * FilterValue: The value used to filter the options.
+   * filterValue: The value used to filter the options.
    * This is typically synchronized with inputValue, but they can be different if needed.
    */
   const [filterValue, setFilterValue] = React.useState<string>('');
@@ -107,7 +107,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
 
       // When no options are found after filtering, display 'No results found'
       if (!newSelectOptions.length) {
-        newSelectOptions = [{ children: noResultFoundLabel, isDisabled: true }];
+        newSelectOptions = [{ isDisabled: true, children: noResultFoundLabel }];
       }
     }
 
@@ -128,7 +128,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
    * @param {string | number | undefined} itemId The id of the selected item.
    */
   const onItemSelect = (
-    _event: React.MouseEvent | undefined,
+    _event: React.MouseEvent<Element, MouseEvent> | undefined,
     itemId: string | number | undefined,
   ) => {
     if (itemId !== undefined) {
@@ -250,7 +250,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
         />
 
         <TextInputGroupUtilities>
-          {Boolean(inputValue) && (
+          {!!inputValue && (
             <Button
               variant="plain"
               onClick={() => {
@@ -291,9 +291,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
             key={option.itemId}
             isFocused={focusedItemIndex === index}
             className={option.className}
-            onClick={() => {
-              setSelected(option.itemId);
-            }}
+            onClick={() => setSelected(option.itemId)}
             {...option}
             ref={null}
           />
@@ -304,9 +302,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
             <SelectOption
               itemId={filterValue}
               key={filterValue}
-              onClick={() => {
-                setSelected(filterValue);
-              }}
+              onClick={() => setSelected(filterValue)}
               ref={null}
             >
               <>

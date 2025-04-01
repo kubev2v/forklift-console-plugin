@@ -5,10 +5,10 @@ import useProviderInventory from 'src/modules/Providers/hooks/useProviderInvento
 import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
 
 import {
-  type ProviderInventory,
+  ProviderInventory,
   ProviderModel,
   ProviderModelGroupVersionKind,
-  type V1beta1Provider,
+  V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
@@ -22,15 +22,15 @@ export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }>
 }) => {
   const [provider, providerLoaded] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
     name,
     namespace,
-    namespaced: true,
   });
 
   const {
-    error: inventoryError,
     inventory,
     loading: inventoryLoading,
+    error: inventoryError,
   } = useProviderInventory<ProviderInventory>({
     provider,
   });
@@ -40,7 +40,7 @@ export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }>
     namespace,
   });
 
-  const data = { inventory, permissions, provider };
+  const data = { provider, inventory, permissions };
   const alerts = [];
 
   const criticalCondition =

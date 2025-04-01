@@ -1,7 +1,7 @@
 import React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
-import type { V1beta1NetworkMap } from '@kubev2v/types';
+import { V1beta1NetworkMap } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 
 import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';

@@ -9,13 +9,12 @@ import { Button, InputGroup, TextInput } from '@patternfly/react-core';
 import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
 import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
 
-import type { EditComponentProps } from '../../BaseCredentialsSection';
-
+import { EditComponentProps } from '../../BaseCredentialsSection';
 import { OpenstackSecretFieldId } from './constants';
 
 export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
-  onChange,
   secret,
+  onChange,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -27,10 +26,10 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
   const initialState = {
     passwordHidden: true,
     validation: {
-      projectID: openstackSecretFieldValidator(OpenstackSecretFieldId.ProjectId, projectID),
-      regionName: openstackSecretFieldValidator(OpenstackSecretFieldId.RegionName, regionName),
       token: openstackSecretFieldValidator(OpenstackSecretFieldId.Token, token),
       userID: openstackSecretFieldValidator(OpenstackSecretFieldId.UserId, userID),
+      projectID: openstackSecretFieldValidator(OpenstackSecretFieldId.ProjectId, projectID),
+      regionName: openstackSecretFieldValidator(OpenstackSecretFieldId.RegionName, regionName),
     },
   };
 
@@ -56,7 +55,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
   const handleChange = useCallback(
     (id, value) => {
       const validationState = openstackSecretFieldValidator(id, value);
-      dispatch({ payload: { field: id, validationState }, type: 'SET_FIELD_VALIDATED' });
+      dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
 
       const encodedValue = Base64.encode(value?.trim() || '');
       onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
@@ -72,9 +71,8 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
     changedField: string,
   ) => (value: string, event: React.FormEvent<HTMLInputElement>) => void;
 
-  const onChangeFactory: onChangeFactoryType = (changedField) => (value) => {
+  const onChangeFactory: onChangeFactoryType = (changedField) => (value) =>
     handleChange(changedField, value);
-  };
 
   return (
     <>
@@ -95,9 +93,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
             id={OpenstackSecretFieldId.Token}
             name={OpenstackSecretFieldId.Token}
             value={token}
-            onChange={(e, v) => {
-              onChangeFactory(OpenstackSecretFieldId.Token)(v, e);
-            }}
+            onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.Token)(v, e)}
             validated={state.validation.token.type}
           />
           <Button
@@ -125,9 +121,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id={OpenstackSecretFieldId.UserId}
           name={OpenstackSecretFieldId.UserId}
           value={userID}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.UserId)(v, e);
-          }}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.UserId)(v, e)}
           validated={state.validation.userID.type}
         />
       </FormGroupWithHelpText>
@@ -147,9 +141,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id={OpenstackSecretFieldId.ProjectId}
           name={OpenstackSecretFieldId.ProjectId}
           value={projectID}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.ProjectId)(v, e);
-          }}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.ProjectId)(v, e)}
           validated={state.validation.projectID.type}
         />
       </FormGroupWithHelpText>
@@ -169,9 +161,7 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id={OpenstackSecretFieldId.RegionName}
           name={OpenstackSecretFieldId.RegionName}
           value={regionName}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.RegionName)(v, e);
-          }}
+          onChange={(e, v) => onChangeFactory(OpenstackSecretFieldId.RegionName)(v, e)}
           validated={state.validation.regionName.type}
         />
       </FormGroupWithHelpText>

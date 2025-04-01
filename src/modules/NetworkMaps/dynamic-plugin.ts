@@ -1,6 +1,6 @@
 import { NetworkMapModel, NetworkMapModelGroupVersionKind } from '@kubev2v/types';
-import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
-import type {
+import { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
+import {
   ModelMetadata,
   ResourceDetailsPage,
   ResourceListPage,
@@ -9,64 +9,64 @@ import type {
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
-  NetworkMapDetailsPage: './modules/NetworkMaps/views/details/NetworkMapDetailsPage',
   NetworkMapsListPage: './modules/NetworkMaps/views/list/NetworkMapsListPage',
+  NetworkMapDetailsPage: './modules/NetworkMaps/views/details/NetworkMapDetailsPage',
   yamlTemplate: './modules/NetworkMaps/yamlTemplates/defaultYamlTemplate.ts',
 };
 
 export const extensions: EncodedExtension[] = [
   {
+    type: 'console.navigation/resource-ns',
     properties: {
+      id: 'networkMappings',
+      insertAfter: 'plans',
+      perspective: 'admin',
+      section: 'migration',
+      // t('plugin__forklift-console-plugin~NetworkMaps for virtualization')
+      name: '%plugin__forklift-console-plugin~NetworkMaps for virtualization%',
+      model: NetworkMapModelGroupVersionKind,
       dataAttributes: {
         'data-quickstart-id': 'qs-nav-network-mappings',
         'data-testid': 'network-mappings-nav-item',
       },
-      id: 'networkMappings',
-      insertAfter: 'plans',
-      model: NetworkMapModelGroupVersionKind,
-      // T('plugin__forklift-console-plugin~NetworkMaps for virtualization')
-      name: '%plugin__forklift-console-plugin~NetworkMaps for virtualization%',
-      perspective: 'admin',
-      section: 'migration',
     },
-    type: 'console.navigation/resource-ns',
   } as EncodedExtension<ResourceNSNavItem>,
 
   {
+    type: 'console.page/resource/list',
     properties: {
       component: {
         $codeRef: 'NetworkMapsListPage',
       },
       model: NetworkMapModelGroupVersionKind,
     },
-    type: 'console.page/resource/list',
   } as EncodedExtension<ResourceListPage>,
 
   {
+    type: 'console.page/resource/details',
     properties: {
       component: {
         $codeRef: 'NetworkMapDetailsPage',
       },
       model: NetworkMapModelGroupVersionKind,
     },
-    type: 'console.page/resource/details',
   } as EncodedExtension<ResourceDetailsPage>,
 
   {
+    type: 'console.model-metadata',
     properties: {
       model: NetworkMapModelGroupVersionKind,
       ...NetworkMapModel,
     },
-    type: 'console.model-metadata',
   } as EncodedExtension<ModelMetadata>,
 
   {
+    type: 'console.yaml-template',
     properties: {
-      model: NetworkMapModelGroupVersionKind,
       name: 'default',
+      model: NetworkMapModelGroupVersionKind,
       ...NetworkMapModel,
       template: { $codeRef: 'yamlTemplate' },
     },
-    type: 'console.yaml-template',
   },
 ];

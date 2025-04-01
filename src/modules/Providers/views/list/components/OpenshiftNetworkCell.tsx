@@ -8,15 +8,15 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceU
 import { ProviderModelRef } from '@kubev2v/types';
 import { NetworkIcon } from '@patternfly/react-icons';
 
-import type { CellProps } from './CellProps';
+import { CellProps } from './CellProps';
 
 export const OpenshiftNetworkCell: React.FC<CellProps> = ({ data, fieldId, fields }: CellProps) => {
-  const { inventory, provider } = data;
+  const { provider, inventory } = data;
   const value = getResourceFieldValue({ ...provider, inventory }, fieldId, fields);
   const providerURL = getResourceUrl({
+    reference: ProviderModelRef,
     name: provider?.metadata?.name,
     namespace: provider?.metadata?.namespace,
-    reference: ProviderModelRef,
   });
 
   if (value === undefined) {

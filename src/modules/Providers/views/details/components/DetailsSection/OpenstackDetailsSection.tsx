@@ -13,11 +13,11 @@ import { OwnerDetailsItem } from './components/OwnerDetailsItem';
 import { TypeDetailsItem } from './components/TypeDetailsItem';
 import { URLDetailsItem } from './components/URLDetailsItem';
 import { getOpenstackProviderWebUILink } from './utils/getOpenstackProviderWebUILink';
-import type { DetailsSectionProps } from './DetailsSection';
+import { DetailsSectionProps } from './DetailsSection';
 
 export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
-  const { permissions, provider } = data;
+  const { provider, permissions } = data;
   const webUILink = getOpenstackProviderWebUILink(provider);
 
   return (

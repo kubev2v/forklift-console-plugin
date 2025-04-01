@@ -1,4 +1,4 @@
-import React, { type FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Loading } from 'src/components/common/Page/PageStates';
 import {
   calculateThumbprint,
@@ -15,11 +15,11 @@ export const FetchCertificateModal: FC<{
   url: string;
   existingCert: string;
   handleSave: (cert: string) => void;
-}> = ({ existingCert, handleSave, url }) => {
+}> = ({ existingCert, url, handleSave }) => {
   const { toggleModal } = useModal();
   const { t } = useForkliftTranslation();
   const [isTrusted, setIsTrusted] = useState(false);
-  const { certError, certificate, fetchError, issuer, loading, thumbprint, validTo } =
+  const { loading, fetchError, certError, thumbprint, issuer, validTo, certificate } =
     useTlsCertificate(url);
   const success = !loading && !fetchError && !certError;
   const hasThumbprintChanged =
@@ -68,7 +68,7 @@ export const FetchCertificateModal: FC<{
 
       {success && (
         <VerifyCertificate
-          {...{ hasThumbprintChanged, issuer, isTrusted, setIsTrusted, thumbprint, validTo }}
+          {...{ thumbprint, issuer, validTo, isTrusted, setIsTrusted, hasThumbprintChanged }}
         />
       )}
     </Modal>

@@ -1,4 +1,4 @@
-import React, { type FC, type MouseEvent } from 'react';
+import React, { FC, MouseEvent } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
@@ -9,7 +9,7 @@ import {
   Button,
   ButtonVariant,
   useWizardContext,
-  type WizardFooterProps,
+  WizardFooterProps,
   WizardFooterWrapper,
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -58,8 +58,8 @@ export const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
 
   const onCancel = () => {
     const plansListURL = getResourceUrl({
-      namespace: activeNamespace,
       reference: PlanModelRef,
+      namespace: activeNamespace,
     });
 
     history.push(plansListURL);
@@ -88,3 +88,4 @@ export const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
     </WizardFooterWrapper>
   );
 };
+

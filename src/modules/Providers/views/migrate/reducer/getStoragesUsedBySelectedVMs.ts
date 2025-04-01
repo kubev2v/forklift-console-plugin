@@ -1,12 +1,14 @@
-import type { Draft } from 'immer';
+import { Draft } from 'immer';
 
-import type { OpenstackVolume, OVirtDisk } from '@kubev2v/types';
+import { OpenstackVolume, OVirtDisk } from '@kubev2v/types';
 
-import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 
-// Based on packages legacy/src/Plans/components/Wizard/helpers.tsx
+// based on packages legacy/src/Plans/components/Wizard/helpers.tsx
 export const getStoragesUsedBySelectedVms = (
-  sourceStorageLabelToId: Draft<Record<string, string>>,
+  sourceStorageLabelToId: Draft<{
+    [label: string]: string;
+  }>,
   selectedVMs: VmData[],
   disks: (OVirtDisk | OpenstackVolume)[],
 ): string[] => {

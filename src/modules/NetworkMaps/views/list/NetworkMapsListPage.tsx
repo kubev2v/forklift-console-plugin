@@ -5,11 +5,11 @@ import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   NetworkMapModel,
   NetworkMapModelGroupVersionKind,
-  type V1beta1NetworkMap,
+  V1beta1NetworkMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -17,88 +17,87 @@ import NetworkMapsAddButton from '../../components/NetworkMapsAddButton';
 import NetworkMapsEmptyState from '../../components/NetworkMapsEmptyState';
 import { NETWORK_MAP_STATUS } from '../../utils/constants/network-map-status';
 import { getNetworkMapPhase } from '../../utils/helpers/getNetworkMapPhase';
-import type { NetworkMapData } from '../../utils/types/NetworkMapData';
-
+import { NetworkMapData } from '../../utils/types/NetworkMapData';
 import NetworkMapRow from './NetworkMapRow';
 
 import './NetworkMapsListPage.style.css';
 
 export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    filter: {
-      placeholderLabel: t('Filter by name'),
-      type: 'freetext',
-    },
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    isVisible: true,
+    resourceFieldId: 'name',
     jsonPath: '$.obj.metadata.name',
     label: t('Name'),
-    resourceFieldId: 'name',
+    isVisible: true,
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by name'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by namespace'),
-      type: 'freetext',
-    },
-    isIdentity: true,
-    isVisible: true,
+    resourceFieldId: 'namespace',
     jsonPath: '$.obj.metadata.namespace',
     label: t('Namespace'),
-    resourceFieldId: 'namespace',
+    isVisible: true,
+    isIdentity: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by namespace'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Status'),
-      primary: true,
-      type: 'enum',
-      values: EnumToTuple(NETWORK_MAP_STATUS),
-    },
-    isVisible: true,
+    resourceFieldId: 'phase',
     jsonPath: getNetworkMapPhase,
     label: t('Status'),
-    resourceFieldId: 'phase',
+    isVisible: true,
+    filter: {
+      type: 'enum',
+      primary: true,
+      placeholderLabel: t('Status'),
+      values: EnumToTuple(NETWORK_MAP_STATUS),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by source'),
-      type: 'freetext',
-    },
-    isVisible: true,
+    resourceFieldId: 'source',
     jsonPath: '$.obj.spec.provider.source.name',
     label: t('Source provider'),
-    resourceFieldId: 'source',
+    isVisible: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by source'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by target'),
-      type: 'freetext',
-    },
-    isVisible: true,
+    resourceFieldId: 'destination',
     jsonPath: '$.obj.spec.provider.destination.name',
     label: t('Target provider'),
-    resourceFieldId: 'destination',
+    isVisible: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by target'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by namespace'),
-      type: 'freetext',
-    },
-    isVisible: true,
+    resourceFieldId: 'owner',
     jsonPath: '$.obj.metadata.ownerReferences[0].name',
     label: t('Owner'),
-    resourceFieldId: 'owner',
+    isVisible: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by namespace'),
+    },
     sortable: true,
   },
   {
+    resourceFieldId: 'actions',
+    label: '',
     isAction: true,
     isVisible: true,
-    label: '',
-    resourceFieldId: 'actions',
     sortable: false,
   },
 ];
@@ -114,9 +113,9 @@ const NetworkMapsListPage: React.FC<{
     V1beta1NetworkMap[]
   >({
     groupVersionKind: NetworkMapModelGroupVersionKind,
+    namespaced: true,
     isList: true,
     namespace,
-    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({
@@ -161,10 +160,10 @@ const NetworkMapsListPage: React.FC<{
   );
 };
 
-type EmptyStateProps = {
+interface EmptyStateProps {
   AddButton: JSX.Element;
   namespace?: string;
-};
+}
 
 const EmptyState_: React.FC<EmptyStateProps> = ({ namespace }) => {
   return <NetworkMapsEmptyState namespace={namespace} />;

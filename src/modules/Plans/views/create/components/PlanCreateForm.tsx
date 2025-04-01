@@ -2,21 +2,21 @@ import React, { useCallback, useMemo } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext';
 import {
-  type PageAction,
+  PageAction,
   setPlanName,
   setProjectName as setProjectNameAction,
 } from 'src/modules/Providers/views/migrate/reducer/actions';
-import type { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
+import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   ProjectNameSelect,
   useProjectNameSelectOptions,
 } from '@components/common/ProjectNameSelect';
-import type { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Provider } from '@kubev2v/types';
 import {
   Flex,
   FlexItem,
@@ -28,9 +28,8 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 
-import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
-
 import { PlanNameTextField } from './PlanName/PlanNameTextField';
+import { PlanCreatePageState } from '../states/PlanCreatePageStore';
 import { ChipsToolbarProviders } from './ChipsToolbarProviders';
 import { createProviderCardItems } from './createProviderCardItems';
 import { FiltersToolbarProviders } from './FiltersToolbarProviders';
@@ -53,12 +52,12 @@ type PlanCreateFormProps = {
  * It allows users to select a source provider from a gallery of available providers.
  */
 const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
-  dispatch,
-  filterDispatch,
-  filterState,
-  projectName,
   providers,
+  filterState,
   state,
+  projectName,
+  filterDispatch,
+  dispatch,
 }) => {
   const { t } = useForkliftTranslation();
   const { data, setData } = useCreateVmMigrationData();
@@ -74,7 +73,7 @@ const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
   const selectedProviderCardItem = providerCardItems[selectedProviderId];
 
   const onProviderChange = useCallback((id: string) => {
-    filterDispatch({ payload: id || '', type: 'SELECT_PROVIDER' });
+    filterDispatch({ type: 'SELECT_PROVIDER', payload: id || '' });
   }, []);
 
   return (
@@ -136,9 +135,7 @@ const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
                   <SelectableCard
                     title={selectedProviderCardItem.title}
                     titleLogo={selectedProviderCardItem.logo}
-                    onChange={() => {
-                      onProviderChange('');
-                    }}
+                    onChange={() => onProviderChange('')}
                     isSelected
                     isCompact
                     content={

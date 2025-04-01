@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type {
+import {
   OpenShiftNetworkAttachmentDefinition,
   OpenstackNetwork,
   OvaNetwork,
@@ -13,14 +13,14 @@ import type {
 import useProviderInventory from './useProviderInventory';
 
 const podNetwork: InventoryNetwork = {
-  id: 'pod',
-  name: 'Pod network',
-  namespace: '',
-  object: undefined,
   providerType: 'openshift',
-  selfLink: '',
+  object: undefined,
   uid: 'pod',
   version: '',
+  namespace: '',
+  name: 'Pod network',
+  selfLink: '',
+  id: 'pod',
 };
 
 export type InventoryNetwork =
@@ -35,18 +35,18 @@ export const useSourceNetworks = (
 ): [InventoryNetwork[], boolean, Error] => {
   const providerType: ProviderType = provider?.spec?.type as ProviderType;
   const {
-    error,
     inventory: networks,
     loading,
+    error,
   } = useProviderInventory<InventoryNetwork[]>({
-    disabled: !provider,
     provider,
     subPath: providerType === 'openshift' ? '/networkattachmentdefinitions' : '/networks',
+    disabled: !provider,
   });
 
   const typedNetworks = useMemo(() => {
     const networksList = Array.isArray(networks)
-      ? networks.map((net) => ({ ...net, providerType }) as InventoryNetwork)
+      ? networks.map((net) => ({ ...net, providerType } as InventoryNetwork))
       : [];
 
     if (Array.isArray(networks) && provider?.spec?.type === 'openshift') {
@@ -64,13 +64,13 @@ export const useOpenShiftNetworks = (
 ): [OpenShiftNetworkAttachmentDefinition[], boolean, Error] => {
   const isOpenShift = provider?.spec?.type === 'openshift';
   const {
-    error,
     inventory: networks,
     loading,
+    error,
   } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
-    disabled: !provider || !isOpenShift,
     provider,
     subPath: '/networkattachmentdefinitions',
+    disabled: !provider || !isOpenShift,
   });
 
   const typedNetworks: OpenShiftNetworkAttachmentDefinition[] = useMemo(

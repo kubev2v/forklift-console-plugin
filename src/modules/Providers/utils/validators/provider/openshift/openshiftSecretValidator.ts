@@ -1,10 +1,9 @@
 import { Base64 } from 'js-base64';
 
-import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
 import { validateUrlAndTokenExistence } from '../../../helpers/validateUrlAndTokenExistence';
-import type { ValidationMsg } from '../../common';
-
+import { ValidationMsg } from '../../common';
 import { openshiftSecretFieldValidator } from './openshiftSecretFieldValidator';
 
 export function openshiftSecretValidator(
@@ -21,7 +20,7 @@ export function openshiftSecretValidator(
   const validateFields = ['user', 'token', 'insecureSkipVerify'];
 
   // Add ca cert validation if not insecureSkipVerify
-  const insecureSkipVerify = Base64.decode(secret?.data?.insecureSkipVerify || '');
+  const insecureSkipVerify = Base64.decode(secret?.data?.['insecureSkipVerify'] || '');
   if (insecureSkipVerify !== 'true') {
     validateFields.push('cacert');
   }

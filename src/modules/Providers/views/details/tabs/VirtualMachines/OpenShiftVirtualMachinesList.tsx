@@ -1,77 +1,77 @@
 import React from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { ResourceFieldFactory } from '@components/common/utils/types';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
-import type { VmData } from './components/VMCellProps';
+import { VmData } from './components/VMCellProps';
 import { getOpenShiftFeatureMap } from './utils/helpers/getOpenShiftFeatureMap';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
-import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
+import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
 export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
-    filter: {
-      placeholderLabel: t('Filter by name'),
-      type: 'freetext',
-    },
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    isVisible: true,
+    resourceFieldId: 'name',
     jsonPath: '$.name',
     label: t('Name'),
-    resourceFieldId: 'name',
+    isVisible: true,
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by name'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by namespace'),
-      type: 'freetext',
-    },
-    isIdentity: true,
-    isVisible: true,
+    resourceFieldId: 'possibly_remote_namespace',
     jsonPath: '$.vm.object.metadata.namespace',
     label: t('Namespace'),
-    resourceFieldId: 'possibly_remote_namespace',
+    isVisible: true,
+    isIdentity: true,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by namespace'),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by status'),
-      type: 'enum',
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'status',
     jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Status'),
-    resourceFieldId: 'status',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'enum',
+      placeholderLabel: t('Filter by status'),
+      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by features'),
-      type: 'features',
-      values: EnumToTuple(toVmFeatureEnum(t)),
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'features',
     jsonPath: (data: VmData) => getOpenShiftFeatureMap(data?.vm),
     label: t('Features'),
-    resourceFieldId: 'features',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'features',
+      placeholderLabel: t('Filter by features'),
+      values: EnumToTuple(toVmFeatureEnum(t)),
+    },
     sortable: true,
   },
   {
-    filter: {
-      placeholderLabel: t('Filter by template'),
-      type: 'freetext',
-    },
-    isIdentity: false,
-    isVisible: true,
+    resourceFieldId: 'template',
     jsonPath: "$.vm.object.metadata.labels['vm.kubevirt.io/template']",
     label: t('Template'),
-    resourceFieldId: 'template',
+    isVisible: true,
+    isIdentity: false,
+    filter: {
+      type: 'freetext',
+      placeholderLabel: t('Filter by template'),
+    },
     sortable: true,
   },
 ];

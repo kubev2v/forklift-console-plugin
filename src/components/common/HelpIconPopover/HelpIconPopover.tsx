@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { Popover, type PopoverProps } from '@patternfly/react-core';
+import { Popover, PopoverProps } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
-type HelpIconPopoverProps = {
+interface HelpIconPopoverProps {
   children: React.ReactNode;
   header?: string;
   popoverProps?: Omit<PopoverProps, 'bodyContent' | 'titleContent'>;
-};
+}
 
 export const HelpIconPopover: React.FC<HelpIconPopoverProps> = ({
   children,

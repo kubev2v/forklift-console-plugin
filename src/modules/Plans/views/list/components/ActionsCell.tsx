@@ -3,7 +3,7 @@ import { PlanActionsDropdown } from 'src/modules/Plans/actions/PlanActionsDropdo
 
 import { Flex, FlexItem } from '@patternfly/react-core';
 
-import type { CellProps } from './CellProps';
+import { CellProps } from './CellProps';
 
 export const ActionsCell = ({ data }: CellProps) => (
   <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>

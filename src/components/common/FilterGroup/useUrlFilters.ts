@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react';
 
 import { useSearchParams } from '../hooks/useSearchParams';
-import type { UserSettings } from '../Page/types';
-import type { ResourceField } from '../utils/types';
-
-import type { GlobalFilters } from './types';
+import { UserSettings } from '../Page/types';
+import { ResourceField } from '../utils/types';
+import { GlobalFilters } from './types';
 
 /**
  * Safely parses a JSON string.
@@ -29,11 +28,11 @@ function getValidFilters(fields, searchParams) {
   const validFilters = fields
     .map(({ resourceFieldId }) => {
       const params = safeParse(searchParams[`${resourceFieldId}`]);
-      return { params, resourceFieldId };
+      return { resourceFieldId, params };
     })
     // Valid filter values are arrays
     .filter(({ params }) => Array.isArray(params) && params.length)
-    .map(({ params, resourceFieldId }) => [resourceFieldId, params]);
+    .map(({ resourceFieldId, params }) => [resourceFieldId, params]);
 
   return Object.fromEntries(validFilters);
 }
@@ -46,8 +45,8 @@ function getValidFilters(fields, searchParams) {
  */
 function convertFiltersToSearchParams(fields, filters) {
   const searchParams = fields
-    .map(({ resourceFieldId }) => ({ filters: filters[resourceFieldId], resourceFieldId }))
-    .map(({ filters, resourceFieldId }) => [
+    .map(({ resourceFieldId }) => ({ resourceFieldId, filters: filters[resourceFieldId] }))
+    .map(({ resourceFieldId, filters }) => [
       resourceFieldId,
       Array.isArray(filters) && filters.length ? JSON.stringify(filters) : undefined,
     ]);

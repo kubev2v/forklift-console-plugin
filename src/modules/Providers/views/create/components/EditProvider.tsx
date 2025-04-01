@@ -6,14 +6,13 @@ import { OpenshiftCredentialsEdit } from '../../details/components/CredentialsSe
 import { OpenstackCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/OpenstackCredentialsEdit';
 import { OvirtCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/OvirtCredentialsEdit';
 import { VCenterCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/VCenterCredentialsEdit';
-
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
 import { EsxiProviderCreateForm } from './EsxiProviderCreateForm';
 import { OpenshiftProviderFormCreate } from './OpenshiftProviderCreateForm';
 import { OpenstackProviderCreateForm } from './OpenstackProviderCreateForm';
 import { OVAProviderCreateForm } from './OVAProviderCreateForm';
 import { OvirtProviderCreateForm } from './OvirtProviderCreateForm';
-import type { ProvidersCreateFormProps } from './ProviderCreateForm';
+import { ProvidersCreateFormProps } from './ProviderCreateForm';
 import { VCenterProviderCreateForm } from './VCenterProviderCreateForm';
 
 export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
@@ -25,7 +24,7 @@ export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
   const { t } = useForkliftTranslation();
 
   const type = newProvider?.spec?.type || '';
-  const subType = newProvider?.spec?.settings?.sdkEndpoint || '';
+  const subType = newProvider?.spec?.settings?.['sdkEndpoint'] || '';
 
   switch (type) {
     case 'openstack':

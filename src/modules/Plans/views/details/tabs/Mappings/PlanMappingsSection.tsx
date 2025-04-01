@@ -1,20 +1,20 @@
-import React, { type ReactNode, useReducer, useState } from 'react';
+import React, { ReactNode, useReducer, useState } from 'react';
 import { universalComparator } from 'src/components/common/TableView/sort';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
-import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
-import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
+import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   NetworkMapModelGroupVersionKind,
-  type OpenShiftNetworkAttachmentDefinition,
-  type OpenShiftStorageClass,
+  OpenShiftNetworkAttachmentDefinition,
+  OpenShiftStorageClass,
   StorageMapModelGroupVersionKind,
-  type V1beta1NetworkMap,
-  type V1beta1NetworkMapSpecMap,
-  type V1beta1Plan,
-  type V1beta1StorageMap,
-  type V1beta1StorageMapSpecMap,
+  V1beta1NetworkMap,
+  V1beta1NetworkMapSpecMap,
+  V1beta1Plan,
+  V1beta1StorageMap,
+  V1beta1StorageMapSpecMap,
 } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {
@@ -34,7 +34,7 @@ import {
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
 import { MappingList } from '../../components/MappingList';
-import type { Mapping } from '../../components/MappingListItem';
+import { Mapping } from '../../components/MappingListItem';
 import { canDeleteAndPatchPlanMaps } from '../../utils/canDeleteAndPatchPlan';
 import { POD_NETWORK } from '../../utils/constants';
 import { hasPlanMappingsChanged } from '../../utils/hasPlanMappingsChanged';
@@ -57,13 +57,13 @@ import { patchPlanMappingsData } from '../../utils/patchPlanMappingsData';
  * @property {V1beta1NetworkMapSpecMap[]} updatedNetwork - The new version of the Plan Network Maps being edited.
  * @property {V1beta1StorageMapSpecMap[]} updatedStorage - The new version of the Plan Storage Maps being edited.
  */
-type PlanMappingsSectionState = {
+interface PlanMappingsSectionState {
   edit: boolean;
   dataChanged: boolean;
   alertMessage: ReactNode;
   updatedNetwork: V1beta1NetworkMapSpecMap[];
   updatedStorage: V1beta1StorageMapSpecMap[];
-};
+}
 
 type PlanMappingsSectionProps = {
   plan: V1beta1Plan;
@@ -80,16 +80,16 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   planNetworkMaps,
   planStorageMaps,
   sourceNetworks,
-  sourceStorages,
   targetNetworks,
+  sourceStorages,
   targetStorages,
 }) => {
   const { t } = useForkliftTranslation();
 
   const initialState: PlanMappingsSectionState = {
-    alertMessage: null,
-    dataChanged: false,
     edit: false,
+    dataChanged: false,
+    alertMessage: null,
     updatedNetwork: planNetworkMaps?.spec?.map,
     updatedStorage: planStorageMaps?.spec?.map,
   };
@@ -112,8 +112,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
         return {
           ...state,
-          alertMessage: null,
           dataChanged,
+          alertMessage: null,
           updatedNetwork: planNetworkMaps?.spec?.map,
           updatedStorage: planStorageMaps?.spec?.map,
         };
@@ -134,8 +134,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
         return {
           ...state,
-          alertMessage: null,
           dataChanged,
+          alertMessage: null,
           updatedNetwork,
         };
       }
@@ -152,8 +152,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
         return {
           ...state,
-          alertMessage: null,
           dataChanged,
+          alertMessage: null,
           updatedStorage,
         };
       }
@@ -169,7 +169,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
   // Handle user clicking "cancel"
   function onCancel() {
-    // Clear changes and return to view mode
+    // clear changes and return to view mode
     setIsAddNetworkMapAvailable(true);
     setIsAddStorageMapAvailable(true);
     dispatch({ type: 'SET_CANCEL' });
@@ -189,12 +189,12 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
     // If there is no more network maps to use, set the 'Add mappings' button as disabled, otherwise add the map entity
     newNetworkMap
-      ? newState.push({ destination: newNetworkMap.destination, source: newNetworkMap.source })
+      ? newState.push({ source: newNetworkMap.source, destination: newNetworkMap.destination })
       : setIsAddNetworkMapAvailable(false);
 
     return {
-      payload: { newState },
       type: 'ADD_NETWORK_MAPPING',
+      payload: { newState },
     };
   };
 
@@ -214,16 +214,16 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
     // If there is no more storage maps to use, set the 'Add mappings' button as disabled, otherwise add the map entity
     newStorageMap
-      ? newState.push({ destination: newStorageMap.destination, source: newStorageMap.source })
+      ? newState.push({ source: newStorageMap.source, destination: newStorageMap.destination })
       : setIsAddStorageMapAvailable(false);
 
     return {
-      payload: { newState },
       type: 'ADD_STORAGE_MAPPING',
+      payload: { newState },
     };
   };
 
-  const onDeleteNetworkMapping = ({ destination, source }: Mapping) => {
+  const onDeleteNetworkMapping = ({ source, destination }: Mapping) => {
     const newState = state.updatedNetwork.filter(
       (obj) =>
         (mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id] !== source &&
@@ -236,12 +236,12 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     setIsAddNetworkMapAvailable(true);
 
     return {
-      payload: { newState },
       type: 'DELETE_NETWORK_MAPPING',
+      payload: { newState },
     };
   };
 
-  const onDeleteStorageMapping = ({ destination, source }: Mapping) => {
+  const onDeleteStorageMapping = ({ source, destination }: Mapping) => {
     const newState = state.updatedStorage.filter(
       (obj) =>
         mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] != source ||
@@ -253,8 +253,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     setIsAddStorageMapAvailable(true);
 
     return {
-      payload: { newState },
       type: 'DELETE_STORAGE_MAPPING',
+      payload: { newState },
     };
   };
 
@@ -273,12 +273,15 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
         (obj.providerType === 'ovirt' && ovirtFindObj(obj, next.source)) ||
         (obj.providerType === 'vsphere' && vsphereFindObj(obj, next.source)) ||
         (obj.providerType === 'openstack' && openstackFindObj(obj, next.source)) ||
-        (obj.providerType === 'openshift' && openshiftFindObj(obj, next.source)) ||
+        (obj.providerType === 'openshift' &&
+          openshiftFindObj(obj as OpenShiftNetworkAttachmentDefinition, next.source)) ||
         (obj.providerType === 'ova' && ovaFindObj(obj, next.source)),
     );
 
     const nextTargetIndex = targetNetworks.findIndex(
-      (obj) => obj.providerType === 'openshift' && openshiftFindObj(obj, next.destination),
+      (obj) =>
+        obj.providerType === 'openshift' &&
+        openshiftFindObj(obj as OpenShiftNetworkAttachmentDefinition, next.destination),
     );
     const newState = [...state.updatedNetwork];
 
@@ -292,8 +295,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     }
 
     return {
-      payload: { newState },
       type: 'REPLACE_NETWORK_MAPPING',
+      payload: { newState },
     };
   };
 
@@ -311,7 +314,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
         (obj.providerType === 'ovirt' && ovirtFindObj(obj, next.source)) ||
         (obj.providerType === 'vsphere' && vsphereFindObj(obj, next.source)) ||
         (obj.providerType === 'openstack' && openstackFindObj(obj, next.source)) ||
-        (obj.providerType === 'openshift' && openshiftFindObj(obj, next.source)),
+        (obj.providerType === 'openshift' &&
+          openshiftFindObj(obj as OpenShiftStorageClass, next.source)),
     );
 
     const nextTargetIndex = targetStorages.findIndex(
@@ -327,8 +331,8 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     }
 
     return {
-      payload: { newState },
       type: 'REPLACE_STORAGE_MAPPING',
+      payload: { newState },
     };
   };
 
@@ -347,7 +351,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
       planNetworkMaps.spec.map = [...state.updatedNetwork];
       planStorageMaps.spec.map = [...state.updatedStorage];
 
-      // Clear changes and return to view mode
+      // clear changes and return to view mode
       dispatch({ type: 'SET_CANCEL' });
       dispatch({ type: 'TOGGLE_EDIT' });
 
@@ -356,11 +360,12 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
       setIsAddStorageMapAvailable(true);
     } catch (err) {
       dispatch({
-        payload: err.message || err.toString(),
         type: 'SET_ALERT_MESSAGE',
+        payload: err.message || err.toString(),
       });
 
       setIsLoading(false);
+      return;
     }
   }
 
@@ -436,18 +441,18 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   };
 
   const labeledSelectedNetworkMaps: Mapping[] = state.updatedNetwork?.map((obj) => ({
+    source: mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id || obj.source?.type],
     destination:
       mapTargetNetworksIdsToLabels(targetNetworks, plan)[obj.destination.type] ??
       obj.destination?.name ??
       'Not available',
-    source: mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id || obj.source?.type],
   }));
 
   const labeledSelectedStorageMaps: Mapping[] = state.updatedStorage?.map((obj) => ({
+    source: mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] || obj.source?.name,
     destination: mapTargetStoragesLabelsToIds(targetStorages, plan)[obj.destination.storageClass]
       ? obj.destination.storageClass
       : 'Not available',
-    source: mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] || obj.source?.name,
   }));
 
   const nonSelectedSourceNetworks = sourceNetworks.filter(
@@ -514,15 +519,11 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                   mappings={labeledSelectedNetworkMaps}
                   availableSources={labeledAvailableSourceNetworks}
                   availableDestinations={labeledAvailableTargetNetworks}
-                  deleteMapping={(current) => {
-                    dispatch(onDeleteNetworkMapping({ ...current }));
-                  }}
-                  addMapping={() => {
-                    dispatch(onAddNetworkMapping());
-                  }}
-                  replaceMapping={({ current, next }) => {
-                    dispatch(onReplaceNetworkMapping({ current, next }));
-                  }}
+                  deleteMapping={(current) => dispatch(onDeleteNetworkMapping({ ...current }))}
+                  addMapping={() => dispatch(onAddNetworkMapping())}
+                  replaceMapping={({ current, next }) =>
+                    dispatch(onReplaceNetworkMapping({ current, next }))
+                  }
                   generalSourcesLabel={t('Other networks present on the source provider ')}
                   noSourcesLabel={t('No networks in this category')}
                   isDisabled={!isAddNetworkMapAvailable}
@@ -546,15 +547,11 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
                   mappings={labeledSelectedStorageMaps}
                   availableSources={labeledAvailableSourceStorages}
                   availableDestinations={labeledAvailableTargetStorages}
-                  deleteMapping={(current) => {
-                    dispatch(onDeleteStorageMapping({ ...current }));
-                  }}
-                  addMapping={() => {
-                    dispatch(onAddStorageMapping());
-                  }}
-                  replaceMapping={({ current, next }) => {
-                    dispatch(onReplaceStorageMapping({ current, next }));
-                  }}
+                  deleteMapping={(current) => dispatch(onDeleteStorageMapping({ ...current }))}
+                  addMapping={() => dispatch(onAddStorageMapping())}
+                  replaceMapping={({ current, next }) =>
+                    dispatch(onReplaceStorageMapping({ current, next }))
+                  }
                   generalSourcesLabel={t('Other storages present on the source provider ')}
                   noSourcesLabel={t('No storages in this category')}
                   isDisabled={!isAddStorageMapAvailable}

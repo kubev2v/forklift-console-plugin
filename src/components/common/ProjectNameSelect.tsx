@@ -1,7 +1,7 @@
-import React, { type FC, type ReactNode } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import {
-  type K8sResourceKind,
+  K8sResourceKind,
   useFlag,
   useK8sWatchResource,
 } from '@openshift-console/dynamic-plugin-sdk';
@@ -10,22 +10,22 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { FormGroupWithHelpText } from './FormGroupWithHelpText/FormGroupWithHelpText';
-import { TypeaheadSelect, type TypeaheadSelectOption } from './TypeaheadSelect/TypeaheadSelect';
+import { TypeaheadSelect, TypeaheadSelectOption } from './TypeaheadSelect/TypeaheadSelect';
 
-type ProjectNameSelectProps = {
+interface ProjectNameSelectProps {
   value: string | undefined;
   options: TypeaheadSelectOption[];
   onSelect: (value: string) => void;
   isDisabled?: boolean;
   popoverHelpContent?: ReactNode;
-};
+}
 
 export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
-  isDisabled,
-  onSelect,
-  options,
-  popoverHelpContent,
   value,
+  options,
+  isDisabled,
+  popoverHelpContent,
+  onSelect,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -46,12 +46,8 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
         id="project-name-select"
         selectOptions={options}
         selected={value}
-        onSelect={(_, value) => {
-          onSelect(String(value));
-        }}
-        onClearSelection={() => {
-          onSelect('');
-        }}
+        onSelect={(_, value) => onSelect(String(value))}
+        onClearSelection={() => onSelect('')}
         isDisabled={isDisabled}
       />
     </FormGroupWithHelpText>
@@ -62,15 +58,15 @@ export const useProjectNameSelectOptions = (defaultProject: string): TypeaheadSe
   const isUseProjects = useFlag('OPENSHIFT'); // OCP or Kind installations
 
   const [projects, projectsLoaded, projectsLoadError] = useK8sWatchResource<K8sResourceKind[]>({
-    isList: true,
     kind: isUseProjects ? 'Project' : 'Namespace',
+    isList: true,
   });
 
   return projects.length === 0 || !projectsLoaded || projectsLoadError
     ? // In case of an error or an empty list, returns the active namespace
-      [{ content: defaultProject, value: defaultProject }]
+      [{ value: defaultProject, content: defaultProject }]
     : projects.map((project) => ({
-        content: project.metadata?.name,
         value: project.metadata?.name,
+        content: project.metadata?.name,
       }));
 };

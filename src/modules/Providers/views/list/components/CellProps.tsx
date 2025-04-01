@@ -1,6 +1,6 @@
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
-import type { ResourceField } from '@components/common/utils/types';
+import { ResourceField } from '@components/common/utils/types';
 
 export type CellProps = {
   data: ProviderData;

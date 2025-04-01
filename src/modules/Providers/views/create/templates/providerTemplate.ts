@@ -1,4 +1,4 @@
-import type { V1beta1Provider } from '@kubev2v/types';
+import { V1beta1Provider } from '@kubev2v/types';
 
 export const providerTemplate: V1beta1Provider = {
   apiVersion: 'forklift.konveyor.io/v1beta1',

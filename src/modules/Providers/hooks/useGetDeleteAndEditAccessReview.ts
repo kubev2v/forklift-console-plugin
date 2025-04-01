@@ -1,6 +1,6 @@
-import { type K8sModel, useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
+import { K8sModel, useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 
-import type { ProvidersPermissionStatus } from '../utils/types/ProvidersPermissionStatus';
+import { ProvidersPermissionStatus } from '../utils/types/ProvidersPermissionStatus';
 
 /**
  * Type for the parameters of the useGetDeleteAndEditAccessReview custom hook.
@@ -10,11 +10,11 @@ import type { ProvidersPermissionStatus } from '../utils/types/ProvidersPermissi
  * @property {string} [name] - The name of the specific instance of the model, if any.
  * @property {string} [namespace] - The namespace in which to review access permissions.
  */
-type K8sModelAccessReviewParams = {
+interface K8sModelAccessReviewParams {
   model: K8sModel;
   name?: string;
   namespace?: string;
-};
+}
 
 /**
  * A React hook that checks permissions for different actions on a Kubernetes model within a specified namespace.
@@ -24,40 +24,40 @@ type K8sModelAccessReviewParams = {
 const useGetDeleteAndEditAccessReview: UseAccessReviewFn = ({ model, name, namespace }) => {
   const [canCreate, loadingCreate] = useAccessReview({
     group: model.apiGroup,
-    namespace,
     resource: model.plural,
     verb: 'create',
+    namespace,
   });
 
   const [canPatch, loadingPatch] = useAccessReview({
     group: model.apiGroup,
-    name,
-    namespace,
     resource: model.plural,
     verb: 'patch',
+    name,
+    namespace,
   });
 
   const [canDelete, loadingDelete] = useAccessReview({
     group: model.apiGroup,
-    name,
-    namespace,
     resource: model.plural,
     verb: 'delete',
+    name,
+    namespace,
   });
 
   const [canGet, loadingGet] = useAccessReview({
     group: model.apiGroup,
-    name,
-    namespace,
     resource: model.plural,
     verb: 'get',
+    name,
+    namespace,
   });
 
   return {
     canCreate,
+    canPatch,
     canDelete,
     canGet,
-    canPatch,
     loading: loadingCreate || loadingPatch || loadingDelete || loadingGet,
   };
 };

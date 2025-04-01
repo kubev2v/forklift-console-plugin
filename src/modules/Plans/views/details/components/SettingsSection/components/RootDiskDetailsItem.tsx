@@ -7,15 +7,15 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { Label, Tooltip } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
-import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
 import { VIRT_V2V_HELP_LINK } from '../modals/EditLUKSEncryptionPasswords/editLUKSModalBody';
 import { EditRootDisk } from '../modals/EditRootDisk/EditRootDisk';
 import { getRootDiskLabelByKey } from '../modals/EditRootDisk/getRootDiskLabelByKey';
 
 export const RootDiskDetailsItem: React.FC<PlanDetailsItemProps> = ({
+  resource,
   canPatch,
   helpContent,
-  resource,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -34,9 +34,7 @@ export const RootDiskDetailsItem: React.FC<PlanDetailsItemProps> = ({
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() => {
-          showModal(<EditRootDisk resource={resource} />);
-        })
+        (() => showModal(<EditRootDisk resource={resource} />))
       }
     />
   );

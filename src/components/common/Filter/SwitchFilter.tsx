@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Switch, ToolbarItem } from '@patternfly/react-core';
 
-import type { FilterTypeProps } from './types';
+import { FilterTypeProps } from './types';
 
 /**
  * Simple boolean filter without support for filter chips.
@@ -16,9 +16,9 @@ import type { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/SwitchFilter.tsx)
  */
 export const SwitchFilter = ({
+  selectedFilters,
   onFilterUpdate,
   placeholderLabel,
-  selectedFilters,
 }: FilterTypeProps) => {
   const onChange: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
     checked,
@@ -31,9 +31,7 @@ export const SwitchFilter = ({
       <Switch
         label={placeholderLabel}
         isChecked={selectedFilters.length === 1 && selectedFilters[0] === 'true'}
-        onChange={(e, v) => {
-          onChange(v, e);
-        }}
+        onChange={(e, v) => onChange(v, e)}
       />
     </ToolbarItem>
   );

@@ -4,33 +4,33 @@ import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetD
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { EditProviderDefaultTransferNetwork } from 'src/modules/Providers/modals/EditProviderDefaultTransferNetwork/EditProviderDefaultTransferNetwork';
 import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  type CnoConfig,
-  type OpenShiftNetworkAttachmentDefinition,
+  CnoConfig,
+  OpenShiftNetworkAttachmentDefinition,
   ProviderModel,
   ProviderModelGroupVersionKind,
-  type V1beta1Provider,
+  V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Label, PageSection } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-type ProviderNetworksProps = {
+interface ProviderNetworksProps {
   obj: ProviderData;
   ns?: string;
   name?: string;
   loaded?: boolean;
   loadError?: unknown;
-};
+}
 
 const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const { permissions, provider } = obj;
+  const { provider, permissions } = obj;
 
   const { inventory: networks } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
     provider,
@@ -40,10 +40,10 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
   const defaultNetwork =
     provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'];
   const networkData = networks?.map((net) => ({
-    config: JSON.parse(net?.object?.spec?.config || '{}') as CnoConfig,
-    isDefault: `${net.namespace}/${net.name}` === defaultNetwork,
     name: net.name,
     namespace: net.namespace,
+    isDefault: `${net.namespace}/${net.name}` === defaultNetwork,
+    config: JSON.parse(net?.object?.spec?.config || '{}') as CnoConfig,
   }));
   const onClick = () => {
     showModal(<EditProviderDefaultTransferNetwork resource={provider} />);
@@ -116,14 +116,14 @@ export const ProviderNetworksWrapper: React.FC<{ name: string; namespace: string
 }) => {
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
+    namespaced: true,
     name,
     namespace,
-    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({ model: ProviderModel, namespace });
 
-  const data = { permissions, provider };
+  const data = { provider, permissions };
 
   return <ProviderNetworks obj={data} loaded={providerLoaded} loadError={providerLoadError} />;
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { OvaVM } from '@kubev2v/types';
+import { OvaVM } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
@@ -11,13 +11,13 @@ import { AlignedDecimal } from './AlignedDecimal';
 export const OVAPlanResources: React.FC<{ planInventory: OvaVM[] }> = ({ planInventory }) => {
   const { t } = useForkliftTranslation();
 
-  const planInventoryRunning = planInventory?.filter((vm) => vm.powerState === 'poweredOn');
+  const planInventoryRunning = planInventory?.filter((vm) => vm['powerState'] === 'poweredOn');
 
   const totalResources = planInventory.reduce(
     (accumulator, currentVM) => {
       return {
-        cpuCount: accumulator.cpuCount + currentVM.cpuCount,
-        memoryMB: accumulator.memoryMB + currentVM.memoryMB,
+        cpuCount: accumulator.cpuCount + currentVM['cpuCount'],
+        memoryMB: accumulator.memoryMB + currentVM['memoryMB'],
       };
     },
     { cpuCount: 0, memoryMB: 0 },
@@ -26,8 +26,8 @@ export const OVAPlanResources: React.FC<{ planInventory: OvaVM[] }> = ({ planInv
   const totalResourcesRunning = planInventoryRunning.reduce(
     (accumulator, currentVM) => {
       return {
-        cpuCount: accumulator.cpuCount + currentVM.cpuCount,
-        memoryMB: accumulator.memoryMB + currentVM.memoryMB,
+        cpuCount: accumulator.cpuCount + currentVM['cpuCount'],
+        memoryMB: accumulator.memoryMB + currentVM['memoryMB'],
       };
     },
     { cpuCount: 0, memoryMB: 0 },

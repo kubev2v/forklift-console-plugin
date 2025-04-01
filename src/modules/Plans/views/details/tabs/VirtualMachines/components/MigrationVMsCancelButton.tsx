@@ -1,18 +1,17 @@
-import React, { type FC } from 'react';
+import React, { FC } from 'react';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1Migration } from '@kubev2v/types';
+import { V1beta1Migration } from '@kubev2v/types';
 import { ToolbarItem } from '@patternfly/react-core';
 
 import { MigrationVMsCancelModal } from '../modals/MigrationVMsCancelModal';
-
 import { VMsActionButton } from './VMsActionButton';
 
 export const MigrationVMsCancelButton: FC<{
   selectedIds: string[];
   migration: V1beta1Migration;
-}> = ({ migration, selectedIds }) => {
+}> = ({ selectedIds, migration }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
   const onClick = () => {

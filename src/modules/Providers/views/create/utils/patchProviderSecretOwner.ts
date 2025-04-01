@@ -1,4 +1,4 @@
-import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@kubev2v/types';
+import { IoK8sApiCoreV1Secret, SecretModel, V1beta1Provider } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -31,6 +31,8 @@ export async function patchProviderSecretOwner(
   const op = secret?.metadata?.ownerReferences ? 'replace' : 'add';
 
   await k8sPatch({
+    model: SecretModel,
+    resource: secret,
     data: [
       {
         op,
@@ -45,7 +47,5 @@ export async function patchProviderSecretOwner(
         ],
       },
     ],
-    model: SecretModel,
-    resource: secret,
   });
 }

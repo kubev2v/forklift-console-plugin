@@ -4,14 +4,14 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
 import { EditPlanTargetNamespace } from '../modals/EditPlanTargetNamespace/EditPlanTargetNamespace';
 
 export const TargetNamespaceDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  canPatch,
-  destinationProvider,
-  helpContent,
   resource,
+  canPatch,
+  helpContent,
+  destinationProvider,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -30,14 +30,13 @@ export const TargetNamespaceDetailsItem: React.FC<PlanDetailsItemProps> = ({
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() => {
+        (() =>
           showModal(
             <EditPlanTargetNamespace
               resource={resource}
               destinationProvider={destinationProvider}
             />,
-          );
-        })
+          ))
       }
     />
   );
