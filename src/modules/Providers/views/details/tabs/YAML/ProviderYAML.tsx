@@ -14,7 +14,7 @@ interface ProviderYAMLPageProps {
   loadError?: unknown;
 }
 
-export const ProviderYAMLPage: React.FC<ProviderYAMLPageProps> = ({ obj, loaded, loadError }) => {
+const ProviderYAMLPage: React.FC<ProviderYAMLPageProps> = ({ obj, loaded, loadError }) => {
   const { t } = useForkliftTranslation();
   const { provider } = obj;
 

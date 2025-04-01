@@ -58,7 +58,7 @@ export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
   );
 };
 
-export const CredentialsSection_: React.FC<{
+const CredentialsSection_: React.FC<{
   name: string;
   namespace: string;
   type: string;

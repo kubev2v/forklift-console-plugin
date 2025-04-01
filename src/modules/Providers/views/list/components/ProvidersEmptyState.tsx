@@ -25,7 +25,7 @@ interface ProvidersEmptyStateProps {
   Icon: ComponentType;
 }
 
-export const ProvidersEmptyState: React.FC<ProvidersEmptyStateProps> = ({
+const ProvidersEmptyState: React.FC<ProvidersEmptyStateProps> = ({
   AddButton,
   title,
   Icon,

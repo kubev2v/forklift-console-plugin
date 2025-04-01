@@ -60,4 +60,3 @@ export const GeneralInformationForm: FC = () => {
   );
 };
 
-export default GeneralInformationForm;

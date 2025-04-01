@@ -13,7 +13,7 @@ import { StatusCell } from './components/StatusCell';
 import { NetworkMapActionsDropdown } from '../../actions/NetworkMapActionsDropdown';
 import { NetworkMapData } from '../../utils/types/NetworkMapData';
 
-export const ProviderRow: React.FC<RowProps<NetworkMapData>> = ({
+const ProviderRow: React.FC<RowProps<NetworkMapData>> = ({
   resourceFields,
   resourceData,
 }) => {

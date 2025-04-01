@@ -50,7 +50,7 @@ interface UseInventoryResult {
  *
  * @returns {UseInventoryResult} result - Contains the inventory data, the loading state, and the error state.
  */
-export const useProvidersInventoryList = ({
+const useProvidersInventoryList = ({
   namespace = null,
   interval = 20000,
 }: UseInventoryParams): UseInventoryResult => {

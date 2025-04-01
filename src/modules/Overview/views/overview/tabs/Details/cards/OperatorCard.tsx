@@ -23,7 +23,7 @@ type OperatorCardProps = {
   loadError?: unknown;
 };
 
-export const OperatorCard: FC<OperatorCardProps> = ({ obj }) => {
+const OperatorCard: FC<OperatorCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const phaseObj = getOperatorPhase(obj);
 

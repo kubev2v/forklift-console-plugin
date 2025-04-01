@@ -17,7 +17,7 @@ import { InventoryHostPair, matchHostsToInventory } from './utils/helpers/matchH
 import { ProviderHostsProps } from './ProviderHosts';
 import { VSphereHostsCells } from './VSphereHostsRow';
 
-export const hostsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+const hostsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     resourceFieldId: 'name',
     jsonPath: '$.inventory.name',

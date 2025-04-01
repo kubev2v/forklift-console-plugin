@@ -19,7 +19,7 @@ export type DetailsSectionProps = {
   obj: V1beta1NetworkMap;
 };
 
-export const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) => {
+const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) => {
   return (
     <DescriptionList
       columnModifier={{

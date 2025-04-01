@@ -105,4 +105,3 @@ export const CreatePlanWizard: FC = () => {
   );
 };
 
-export default CreatePlanWizard;

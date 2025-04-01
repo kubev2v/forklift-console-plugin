@@ -8,7 +8,7 @@ export const safeBoolean = (value): boolean => {
 };
 
 // Normalize jsonPath to always be an array of strings
-export const normalizePath = (obj: object, path: OpenApiJsonPath): string[] => {
+const normalizePath = (obj: object, path: OpenApiJsonPath): string[] => {
   if (typeof path === 'function') {
     const resolvedPath = path(obj);
     if (typeof resolvedPath === 'string') return resolvedPath.split('.');

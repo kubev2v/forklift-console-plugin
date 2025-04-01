@@ -17,7 +17,7 @@ export type EmptyStateProps = {
   callForActionButtons?: React.ReactNode;
 };
 
-export const ForkliftEmptyState: React.FC<EmptyStateProps> = ({
+const ForkliftEmptyState: React.FC<EmptyStateProps> = ({
   icon,
   title,
   textContent,

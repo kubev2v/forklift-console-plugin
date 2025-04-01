@@ -27,7 +27,7 @@ export const SET_NAME = 'SET_NAME';
 export const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
 export const SET_SOURCE_PROVIDER = 'SET_SOURCE_PROVIDER';
 export const SET_SELECTED_VMS = 'SET_SELECTED_VMS';
-export const SET_DESCRIPTION = 'SET_DESCRIPTION';
+const SET_DESCRIPTION = 'SET_DESCRIPTION';
 export const SET_TARGET_PROVIDER = 'SET_TARGET_PROVIDER';
 export const SET_TARGET_NAMESPACE = 'SET_TARGET_NAMESPACE';
 export const SET_AVAILABLE_PROVIDERS = 'SET_AVAILABLE_PROVIDERS';
@@ -213,7 +213,7 @@ export const setPlanTargetNamespace = (
   payload: { targetNamespace },
 });
 
-export const setPlanDescription = (
+const setPlanDescription = (
   description: string,
 ): PageAction<CreateVmMigration, PlanDescription> => ({
   type: 'SET_DESCRIPTION',

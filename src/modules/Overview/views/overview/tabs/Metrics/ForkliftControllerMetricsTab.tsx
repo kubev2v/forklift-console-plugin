@@ -15,7 +15,7 @@ interface ForkliftControllerMetricsTabProps {
   loadError?: unknown;
 }
 
-export const ForkliftControllerMetricsTab: React.FC<ForkliftControllerMetricsTabProps> = ({
+const ForkliftControllerMetricsTab: React.FC<ForkliftControllerMetricsTabProps> = ({
   obj,
 }) => {
   return (

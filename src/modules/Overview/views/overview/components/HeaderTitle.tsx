@@ -9,7 +9,7 @@ interface HeaderTitleProps {
   badge?: React.ReactNode;
 }
 
-export const HeaderTitle: FC<HeaderTitleProps> = ({ title, status, badge }) => {
+const HeaderTitle: FC<HeaderTitleProps> = ({ title, status, badge }) => {
   return (
     <div className="co-m-nav-title co-m-nav-title--detail forklift-page-headings">
       <span className="                                                                                                                             ">

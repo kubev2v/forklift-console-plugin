@@ -13,7 +13,7 @@ type PlansAddButtonProps = {
   dataTestId?: string;
 };
 
-export const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId }) => {
+const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
   const { setData } = useCreateVmMigrationData();

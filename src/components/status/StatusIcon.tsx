@@ -17,7 +17,7 @@ import { NotStartedIcon } from '@patternfly/react-icons/dist/esm/icons/not-start
 import { SyncAltIcon } from '@patternfly/react-icons/dist/esm/icons/sync-alt-icon';
 import { UnknownIcon } from '@patternfly/react-icons/dist/esm/icons/unknown-icon';
 
-export const StatusIcon: React.FC<{ phase: string }> = ({ phase }) => {
+const StatusIcon: React.FC<{ phase: string }> = ({ phase }) => {
   switch (phase) {
     case 'New':
       return <HourglassStartIcon />;

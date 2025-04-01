@@ -14,10 +14,10 @@ export const planCreatePageInitialState: PlanCreatePageState = {
   selectedVMs: [],
 };
 
-export const SET_NAME_FILTER = 'SET_NAME_FILTER';
-export const UPDATE_TYPE_FILTERS = 'UPDATE_TYPE_FILTERS';
-export const SELECT_PROVIDER = 'SELECT_PROVIDER';
-export const UPDATE_SELECTED_VMS = 'UPDATE_SELECTED_VMS';
+const SET_NAME_FILTER = 'SET_NAME_FILTER';
+const UPDATE_TYPE_FILTERS = 'UPDATE_TYPE_FILTERS';
+const SELECT_PROVIDER = 'SELECT_PROVIDER';
+const UPDATE_SELECTED_VMS = 'UPDATE_SELECTED_VMS';
 
 // Refine the action type to include specific payloads
 interface SetNameFilterAction {

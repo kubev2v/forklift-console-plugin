@@ -28,7 +28,7 @@ export interface SelectProviderProps {
   }>;
 }
 
-export const SelectProvider: FunctionComponent<SelectProviderProps> = ({
+const SelectProvider: FunctionComponent<SelectProviderProps> = ({
   filterState,
   filterDispatch,
 }) => {

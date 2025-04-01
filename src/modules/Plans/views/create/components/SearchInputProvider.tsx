@@ -13,7 +13,7 @@ export interface SearchInputProviderProps {
   }>;
 }
 
-export const SearchInputProvider: React.FunctionComponent<SearchInputProviderProps> = ({
+const SearchInputProvider: React.FunctionComponent<SearchInputProviderProps> = ({
   filterState,
   filterDispatch,
 }) => {

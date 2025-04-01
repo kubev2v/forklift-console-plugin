@@ -26,7 +26,7 @@ type CountState = {
  * Only triggers a re-render if the counts change.
  * @return {MigrationCountsHookResponse} An object with 'count', 'vmCount', 'loaded', and 'loadError' keys.
  */
-export const useMigrationCounts = (): MigrationCountsHookResponse => {
+const useMigrationCounts = (): MigrationCountsHookResponse => {
   const [counts, setCounts] = useState<CountState>({
     migrationCounts: {
       Total: 0,

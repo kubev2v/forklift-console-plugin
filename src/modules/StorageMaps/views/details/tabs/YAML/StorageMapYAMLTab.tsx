@@ -28,4 +28,3 @@ export const StorageMapYAMLTab: React.FC<StorageMapYAMLTabProps> = ({ name, name
   );
 };
 
-export default StorageMapYAMLTab;

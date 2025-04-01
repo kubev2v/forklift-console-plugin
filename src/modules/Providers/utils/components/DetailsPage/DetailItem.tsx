@@ -70,7 +70,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
  *
  * @component
  */
-export const DisplayTitle: React.FC<{
+const DisplayTitle: React.FC<{
   title: string;
   helpContent: ReactNode;
   showHelpIconNextToTitle: boolean;
@@ -96,7 +96,7 @@ export const DisplayTitle: React.FC<{
  *
  * @component
  */
-export const DescriptionTitleWithHelp: React.FC<{
+const DescriptionTitleWithHelp: React.FC<{
   title: string;
   helpContent: ReactNode;
   showHelpIconNextToTitle: boolean;
@@ -162,7 +162,7 @@ export const DescriptionTitleWithHelp: React.FC<{
  *
  * @component
  */
-export const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
+const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
   <DescriptionListTerm> {title} </DescriptionListTerm>
 );
 
@@ -176,7 +176,7 @@ export const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
  * @param {Function} onEdit - Function to be called when the button is clicked.
  */
 
-export const ContentField: React.FC<{
+const ContentField: React.FC<{
   content: ReactNode;
   onEdit: () => void;
   canEdit?: boolean;

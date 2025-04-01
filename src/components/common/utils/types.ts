@@ -61,7 +61,7 @@ export interface ResourceField {
 export type ResourceFieldPartialFactory = { (t: (string) => string): Partial<ResourceField> };
 export type ResourceFieldFactory = { (t: (string) => string): ResourceField[] };
 
-export const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
+const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
 export type K8sConditionStatus = (typeof K8sConditionStatusValues)[number];
 
 export interface GlobalActionToolbarProps<T> {

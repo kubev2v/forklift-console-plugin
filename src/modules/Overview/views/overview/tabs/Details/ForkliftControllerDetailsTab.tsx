@@ -18,7 +18,7 @@ interface ForkliftControllerDetailsTabProps {
   loadError?: unknown;
 }
 
-export const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTabProps> = ({
+const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTabProps> = ({
   obj,
 }) => {
   // Set and use context data for the overview page state

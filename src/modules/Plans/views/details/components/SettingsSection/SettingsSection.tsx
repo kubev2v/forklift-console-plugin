@@ -29,7 +29,7 @@ export type SettingsSectionProps = {
   permissions: ProvidersPermissionStatus;
 };
 
-export const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, permissions }) => {
+const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, permissions }) => {
   const [sourceProvider] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     namespaced: true,

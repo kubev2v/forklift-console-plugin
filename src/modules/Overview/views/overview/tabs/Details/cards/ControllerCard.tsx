@@ -12,7 +12,7 @@ type ControllerCardProps = {
   obj?: V1beta1ForkliftController;
 };
 
-export const ControllerCard: FC<ControllerCardProps> = ({ obj }) => {
+const ControllerCard: FC<ControllerCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
 
   const [pods, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({

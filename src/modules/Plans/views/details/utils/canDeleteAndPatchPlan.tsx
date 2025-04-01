@@ -37,7 +37,7 @@ export const canDeleteAndPatchPlanMaps = (plan: V1beta1Plan) => {
   return canPatchNetworkMap && canDeleteNetworkMap && canPatchStorageMap && canDeleteStorageMap;
 };
 
-export const canDeleteAndPatchPlanHooks = (plan: V1beta1Plan) => {
+const canDeleteAndPatchPlanHooks = (plan: V1beta1Plan) => {
   const [canDeleteHooks] = useAccessReview({
     group: '',
     resource: HookModel.plural,

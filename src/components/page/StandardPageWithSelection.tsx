@@ -8,7 +8,7 @@ import { withTr } from '../common/TableView/withTr';
 import { GlobalActionToolbarProps } from '../common/utils/types';
 import StandardPage, { StandardPageProps } from './StandardPage';
 
-export function withRowSelection<T>({
+function withRowSelection<T>({
   CellMapper,
   isSelected,
   isExpanded,
@@ -44,7 +44,7 @@ export function withRowSelection<T>({
   return Enhanced;
 }
 
-export function withHeaderSelection<T>({
+function withHeaderSelection<T>({
   HeaderMapper,
   isSelected,
   isExpanded,
@@ -117,7 +117,7 @@ export type GlobalActionWithSelection<T> = GlobalActionToolbarProps<T> & {
  * 1. IDs provided with toId() function are unique and constant in time
  * 2. check box status at row level does not depend from other rows and  can be calculated from the item via canSelect() function
  */
-export function withIdBasedSelection<T>({
+function withIdBasedSelection<T>({
   toId,
   canSelect,
   onSelect,

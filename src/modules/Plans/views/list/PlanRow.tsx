@@ -18,7 +18,7 @@ import { VMsCell } from './components/VMsCell';
 import { PlanData } from '../../utils/types/PlanData';
 import { PlanTableResourceId } from './constants';
 
-export const PlanRow: React.FC<RowProps<PlanData>> = ({ resourceFields, resourceData }) => {
+const PlanRow: React.FC<RowProps<PlanData>> = ({ resourceFields, resourceData }) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>

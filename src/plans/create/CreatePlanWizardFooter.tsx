@@ -89,4 +89,3 @@ export const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   );
 };
 
-export default CreatePlanWizardFooter;
