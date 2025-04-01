@@ -21,7 +21,7 @@ interface K8sModelAccessReviewParams {
  * @param {K8sModelAccessReviewParams} param0 - An object that contains model, name and namespace details.
  * @returns {Object} An object containing permissions and a loading state.
  */
-export const useGetDeleteAndEditAccessReview: UseAccessReviewFn = ({ model, name, namespace }) => {
+const useGetDeleteAndEditAccessReview: UseAccessReviewFn = ({ model, name, namespace }) => {
   const [canCreate, loadingCreate] = useAccessReview({
     group: model.apiGroup,
     resource: model.plural,

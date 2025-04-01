@@ -1,5 +1,5 @@
 import React from 'react';
-import { SectionHeading } from 'src/components/headers/SectionHeading';
+import SectionHeading from 'src/components/headers/SectionHeading';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

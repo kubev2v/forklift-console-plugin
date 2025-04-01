@@ -14,7 +14,7 @@ interface SectionHeadingProps {
  * @param {SectionHeadingProps} props - Props for the component.
  * @returns {ReactNode} - The rendered h2 element.
  */
-export const SectionHeading: FC<SectionHeadingProps> = ({
+const SectionHeading: FC<SectionHeadingProps> = ({
   children,
   text,
   className,

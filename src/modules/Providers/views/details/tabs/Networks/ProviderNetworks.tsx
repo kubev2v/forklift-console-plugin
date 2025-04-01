@@ -1,7 +1,7 @@
 import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { useProviderInventory } from 'src/modules/Providers/hooks/useProviderInventory';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { EditProviderDefaultTransferNetwork } from 'src/modules/Providers/modals/EditProviderDefaultTransferNetwork/EditProviderDefaultTransferNetwork';
 import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';

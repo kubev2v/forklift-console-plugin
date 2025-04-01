@@ -37,7 +37,7 @@ const StorageMapDetailsPageInternal: React.FC<{
 };
 const StorageMapDetailsPageInternalMemo = memo(StorageMapDetailsPageInternal);
 
-export const StorageMapDetailsPage: React.FC<StorageMapDetailsPageProps> = ({
+const StorageMapDetailsPage: React.FC<StorageMapDetailsPageProps> = ({
   name,
   namespace,
 }) => {

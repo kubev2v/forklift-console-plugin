@@ -1,6 +1,6 @@
 import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/types';

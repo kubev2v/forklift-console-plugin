@@ -66,6 +66,6 @@ const PlanDetailsPage_: React.FC<{ name: string; namespace: string }> = ({ name,
   );
 };
 
-export const PlanDetailsPage = memo(PlanDetailsPage_);
+const PlanDetailsPage = memo(PlanDetailsPage_);
 
 export default PlanDetailsPage;

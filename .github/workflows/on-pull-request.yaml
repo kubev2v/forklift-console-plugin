@@ -31,6 +31,9 @@ jobs:
       - name: Lint, test i18n files
         run: yarn test:i18n
 
+      - name: Knip
+        run: yarn knip
+
       - name: Test build
         run: yarn build
 

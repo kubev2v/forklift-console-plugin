@@ -5,7 +5,7 @@ import {
   isPlanSucceeded,
 } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { PlanData } from 'src/modules/Plans/utils/types/PlanData';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import usePlanSourceProvider from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 

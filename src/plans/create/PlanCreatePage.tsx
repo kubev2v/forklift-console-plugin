@@ -5,7 +5,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { CreatePlanWizard } from './CreatePlanWizard';
 
-export const PlanCreatePage: FC = () => {
+const PlanCreatePage: FC = () => {
   const { t } = useForkliftTranslation();
 
   return (

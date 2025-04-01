@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { SectionHeading } from 'src/components/headers/SectionHeading';
+import SectionHeading from 'src/components/headers/SectionHeading';
 import { Loading } from 'src/modules/Plans/views/details/components/Loading';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { useProviderInventory } from 'src/modules/Providers/hooks/useProviderInventory';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
