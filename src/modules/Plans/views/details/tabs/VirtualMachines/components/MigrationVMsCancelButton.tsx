@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import { useModal } from 'src/modules/Providers/modals';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Migration } from '@kubev2v/types';
 import { ToolbarItem } from '@patternfly/react-core';
 
-import { MigrationVMsCancelModal } from '../modals';
+import { MigrationVMsCancelModal } from '../modals/MigrationVMsCancelModal';
 import { VMsActionButton } from './VMsActionButton';
 
 export const MigrationVMsCancelButton: FC<{

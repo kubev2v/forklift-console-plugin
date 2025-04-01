@@ -1,6 +1,6 @@
 import { ProgressVariant } from '@patternfly/react-core';
 
-import { PlanPhase } from '../types';
+import { PlanPhase } from '../types/PlanPhase';
 
 export const getPlanProgressVariant = (phase: PlanPhase): ProgressVariant => {
   let progressVariant;

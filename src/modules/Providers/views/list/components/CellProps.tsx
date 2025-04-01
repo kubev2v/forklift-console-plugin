@@ -1,4 +1,4 @@
-import { ProviderData } from 'src/modules/Providers/utils';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
 import { ResourceField } from '@components/common/utils/types';
 

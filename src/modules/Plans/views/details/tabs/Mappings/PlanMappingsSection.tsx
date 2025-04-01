@@ -1,6 +1,6 @@
 import React, { ReactNode, useReducer, useState } from 'react';
 import { universalComparator } from 'src/components/common/TableView/sort';
-import { isPlanEditable } from 'src/modules/Plans/utils';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -33,18 +33,19 @@ import {
 } from '@patternfly/react-core';
 import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
 
-import { Mapping, MappingList } from '../../components';
+import { MappingList } from '../../components/MappingList';
+import { Mapping } from '../../components/MappingListItem';
+import { canDeleteAndPatchPlanMaps } from '../../utils/canDeleteAndPatchPlan';
+import { POD_NETWORK } from '../../utils/constants';
+import { hasPlanMappingsChanged } from '../../utils/hasPlanMappingsChanged';
+import { hasSomeCompleteRunningVMs } from '../../utils/hasSomeCompleteRunningVMs';
 import {
-  canDeleteAndPatchPlanMaps,
-  hasPlanMappingsChanged,
-  hasSomeCompleteRunningVMs,
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
   mapTargetNetworksIdsToLabels,
   mapTargetStoragesLabelsToIds,
-  patchPlanMappingsData,
-  POD_NETWORK,
-} from '../../utils';
+} from '../../utils/mapMappingsIdsToLabels';
+import { patchPlanMappingsData } from '../../utils/patchPlanMappingsData';
 
 /**
  * Represents the state (edit/view) of the Plan mappings section.

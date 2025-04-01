@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { EditModal } from 'src/modules/Providers/modals';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import { ForkliftTrans } from 'src/utils/i18n';
 
 import { PlanModel } from '@kubev2v/types';

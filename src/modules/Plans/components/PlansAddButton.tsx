@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { useHistory } from 'react-router';
-import { getResourceUrl } from 'src/modules/Providers/utils';
-import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

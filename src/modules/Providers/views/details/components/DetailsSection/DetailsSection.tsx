@@ -1,6 +1,6 @@
 import React from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals';
-import { ProviderData } from 'src/modules/Providers/utils';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
 import { OpenshiftDetailsSection } from './OpenshiftDetailsSection';
 import { OpenstackDetailsSection } from './OpenstackDetailsSection';

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { RowProps } from 'src/components/common/TableView/types';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import StatusIcon from 'src/components/status/StatusIcon';
-import { useModal } from 'src/modules/Providers/modals';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -27,9 +27,9 @@ import {
 import { TaskIcon } from '@patternfly/react-icons';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-import { hasTaskCompleted } from '../../../utils';
-import { PipelineTasksModal } from '../modals';
-import { VMData } from '../types';
+import { hasTaskCompleted } from '../../../utils/hasTaskCompleted';
+import { PipelineTasksModal } from '../modals/PipelineTasksModal';
+import { VMData } from '../types/VMData';
 import { getIcon, getVariant } from './MigrationVirtualMachinesRow';
 
 export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (props) => {

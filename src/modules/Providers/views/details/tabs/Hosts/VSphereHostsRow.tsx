@@ -4,15 +4,13 @@ import { RowProps } from 'src/components/common/TableView/types';
 import { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
+import { HostCellProps } from './components/HostCellProps';
+import { IDCellRenderer } from './components/IDCellRenderer';
+import { LinkSpeedCellRenderer } from './components/LinkSpeedCellRenderer';
+import { MTUCellRenderer } from './components/MTUCellRenderer';
 import { NameCellRenderer } from './components/NameCellRenderer';
-import { InventoryHostPair } from './utils/helpers';
-import {
-  HostCellProps,
-  IDCellRenderer,
-  LinkSpeedCellRenderer,
-  MTUCellRenderer,
-  NetworkCellRenderer,
-} from './components';
+import { NetworkCellRenderer } from './components/NetworkCellRenderer';
+import { InventoryHostPair } from './utils/helpers/matchHostsToInventory';
 
 export const VSphereHostsCells: React.FC<RowProps<InventoryHostPair>> = ({
   resourceFields,

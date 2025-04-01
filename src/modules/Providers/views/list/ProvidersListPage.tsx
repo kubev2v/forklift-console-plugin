@@ -2,7 +2,6 @@ import React from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
-import { ProviderData, SOURCE_ONLY_PROVIDER_TYPES } from 'src/modules/Providers/utils';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -21,10 +20,14 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { InventoryNotReachable } from './components/InventoryNotReachable';
-import { useGetDeleteAndEditAccessReview, useProvidersInventoryList } from '../../hooks';
+import ProvidersAddButton from './components/ProvidersAddButton';
+import ProvidersEmptyState from './components/ProvidersEmptyState';
+import { useGetDeleteAndEditAccessReview } from '../../hooks/useGetDeleteAndEditAccessReview';
+import useProvidersInventoryList from '../../hooks/useProvidersInventoryList';
 import modernizeMigration from '../../images/modernizeMigration.svg';
-import { findInventoryByID } from '../../utils';
-import { ProvidersAddButton, ProvidersEmptyState } from './components';
+import { findInventoryByID } from '../../utils/helpers/findInventoryByID';
+import { SOURCE_ONLY_PROVIDER_TYPES } from '../../utils/helpers/getIsTarget';
+import { ProviderData } from '../../utils/types/ProviderData';
 import ProviderRow from './ProviderRow';
 
 import './ProvidersListPage.style.css';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableCell } from 'src/modules/Providers/utils';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
 import { Label, Level, LevelItem } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';

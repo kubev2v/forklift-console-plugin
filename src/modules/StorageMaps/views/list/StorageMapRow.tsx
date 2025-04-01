@@ -4,16 +4,14 @@ import { RowProps } from 'src/components/common/TableView/types';
 import { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { StorageMapActionsDropdown } from '../../actions';
-import { StorageMapData } from '../../utils';
-import {
-  CellProps,
-  NamespaceCell,
-  PlanCell,
-  ProviderLinkCell,
-  StatusCell,
-  StorageMapLinkCell,
-} from './components';
+import { CellProps } from './components/CellProps';
+import { NamespaceCell } from './components/NamespaceCell';
+import { PlanCell } from './components/PlanCell';
+import { ProviderLinkCell } from './components/ProviderLinkCell';
+import { StatusCell } from './components/StatusCell';
+import { StorageMapLinkCell } from './components/StorageMapLinkCell';
+import { StorageMapActionsDropdown } from '../../actions/StorageMapActionsDropdown';
+import { StorageMapData } from '../../utils/types/StorageMapData';
 
 export const ProviderRow: React.FC<RowProps<StorageMapData>> = ({
   resourceFields,

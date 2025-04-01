@@ -1,4 +1,4 @@
-import { safeBase64Decode } from '../../../helpers';
+import { safeBase64Decode } from '../../../helpers/safeBase64Decode';
 import { validateIpv4, validateURL, ValidationMsg } from '../../common';
 
 export const validateVCenterURL = (

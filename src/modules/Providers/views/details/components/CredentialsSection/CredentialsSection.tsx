@@ -1,6 +1,7 @@
 import React from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals';
-import { ProviderData, SecretSubType } from 'src/modules/Providers/utils';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import { SecretSubType } from 'src/modules/Providers/utils/validators/provider/secretValidator';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Secret } from '@kubev2v/types';

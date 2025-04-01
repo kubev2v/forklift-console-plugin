@@ -2,7 +2,7 @@ import React from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
+import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
@@ -13,9 +13,11 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { NetworkMapsAddButton } from '../../components';
+import NetworkMapsAddButton from '../../components/NetworkMapsAddButton';
 import NetworkMapsEmptyState from '../../components/NetworkMapsEmptyState';
-import { getNetworkMapPhase, NETWORK_MAP_STATUS, NetworkMapData } from '../../utils';
+import { NETWORK_MAP_STATUS } from '../../utils/constants/network-map-status';
+import { getNetworkMapPhase } from '../../utils/helpers/getNetworkMapPhase';
+import { NetworkMapData } from '../../utils/types/NetworkMapData';
 import NetworkMapRow from './NetworkMapRow';
 
 import './NetworkMapsListPage.style.css';

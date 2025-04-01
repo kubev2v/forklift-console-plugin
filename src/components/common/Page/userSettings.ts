@@ -1,4 +1,8 @@
-import { loadFromLocalStorage, removeFromLocalStorage, saveToLocalStorage } from '../utils';
+import {
+  loadFromLocalStorage,
+  removeFromLocalStorage,
+  saveToLocalStorage,
+} from '../utils/localStorage';
 import { UserSettings } from './types';
 
 const parseOrClean = (key) => {

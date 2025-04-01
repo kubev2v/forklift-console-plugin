@@ -11,7 +11,7 @@ import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plug
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   StorageMapsListPage: './modules/StorageMaps/views/list/StorageMapsListPage',
   StorageMapDetailsPage: './modules/StorageMaps/views/details/StorageMapDetailsPage',
-  yamlTemplates: './modules/StorageMaps/yamlTemplates',
+  yamlTemplate: './modules/StorageMaps/yamlTemplates/defaultYamlTemplate.ts',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -66,7 +66,7 @@ export const extensions: EncodedExtension[] = [
       name: 'default',
       model: StorageMapModelGroupVersionKind,
       ...StorageMapModel,
-      template: { $codeRef: 'yamlTemplates.defaultYamlTemplate' },
+      template: { $codeRef: 'yamlTemplate' },
     },
   },
 ];

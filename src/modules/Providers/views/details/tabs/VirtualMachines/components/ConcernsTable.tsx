@@ -9,8 +9,8 @@ import {
   getCategoryColor,
   getCategoryIcon,
   getCategoryTitle,
-  groupConcernsByCategory,
-} from '../utils';
+} from '../utils/helpers/getCategoryTitle';
+import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategory';
 import { VmData } from './VMCellProps';
 
 /**

@@ -1,4 +1,4 @@
-import { OnConfirmHookType } from 'src/modules/Providers/modals';
+import { OnConfirmHookType } from 'src/modules/Providers/modals/EditModal/types';
 
 import { IoK8sApiCoreV1Secret, SecretModel, V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate, k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';

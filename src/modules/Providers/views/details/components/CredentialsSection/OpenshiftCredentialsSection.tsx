@@ -1,5 +1,5 @@
 import React from 'react';
-import { openshiftSecretValidator } from 'src/modules/Providers/utils';
+import { openshiftSecretValidator } from 'src/modules/Providers/utils/validators/provider/openshift/openshiftSecretValidator';
 
 import {
   BaseCredentialsSection,

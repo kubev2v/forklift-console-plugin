@@ -11,7 +11,7 @@ import { produce } from 'immer';
 
 import { V1beta1Provider } from '@kubev2v/types';
 
-import { VmData } from '../details';
+import { VmData } from '../details/tabs/VirtualMachines/components/VMCellProps';
 
 export interface CreateVmMigrationContextData {
   selectedVms: VmData[];

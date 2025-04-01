@@ -1,12 +1,10 @@
 import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
-import {
-  EditProviderDefaultTransferNetwork,
-  ModalHOC,
-  useModal,
-} from 'src/modules/Providers/modals';
-import { ProviderData } from 'src/modules/Providers/utils';
+import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import { useProviderInventory } from 'src/modules/Providers/hooks/useProviderInventory';
+import { EditProviderDefaultTransferNetwork } from 'src/modules/Providers/modals/EditProviderDefaultTransferNetwork/EditProviderDefaultTransferNetwork';
+import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {

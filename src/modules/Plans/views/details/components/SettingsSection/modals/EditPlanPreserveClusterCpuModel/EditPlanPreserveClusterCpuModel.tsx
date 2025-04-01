@@ -1,10 +1,10 @@
 import React from 'react';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import {
-  EditModal,
   EditModalProps,
   ModalInputComponentType,
   OnConfirmHookType,
-} from 'src/modules/Providers/modals';
+} from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Modify, PlanModel, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';

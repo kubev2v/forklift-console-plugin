@@ -1,6 +1,6 @@
 import { V1beta1Migration } from '@kubev2v/types';
 
-import { MigrationPhase } from '../types';
+import { MigrationPhase } from '../types/MigrationPhase';
 
 export const getMigrationPhase = (migration: V1beta1Migration): MigrationPhase => {
   let phase: MigrationPhase;

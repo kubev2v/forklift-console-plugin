@@ -1,5 +1,7 @@
 import React from 'react';
-import { useProviderInventory, UseProviderInventoryParams } from 'src/modules/Providers/hooks';
+import useProviderInventory, {
+  UseProviderInventoryParams,
+} from 'src/modules/Providers/hooks/useProviderInventory';
 
 import {
   OpenshiftVM,
@@ -16,7 +18,8 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
-import { Loading, Suspend } from '../../components';
+import { Loading } from '../../components/Loading';
+import { Suspend } from '../../components/Suspend';
 import { OpenshiftPlanResources } from './OpenshiftPlanResources';
 import { OpenstackPlanResources } from './OpenstackPlanResources';
 import { OVAPlanResources } from './OVAPlanResources';

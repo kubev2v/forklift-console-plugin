@@ -3,9 +3,10 @@ import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
 
+import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import { VmData } from './components/VMCellProps';
 import { concernFilter } from './utils/filters/concernFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
-import { ProviderVirtualMachinesList, VmData } from './components';
 import { OpenStackVirtualMachinesCells } from './OpenStackVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 

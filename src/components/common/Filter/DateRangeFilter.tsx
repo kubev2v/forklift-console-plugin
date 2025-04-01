@@ -16,7 +16,7 @@ import {
   parseISOtoJSDate,
   toISODate,
   toISODateInterval,
-} from '../utils';
+} from '../utils/dates';
 import { FilterTypeProps } from './types';
 
 /**

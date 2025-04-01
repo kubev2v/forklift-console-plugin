@@ -1,23 +1,21 @@
 import React, { FC } from 'react';
-import { ConsoleTimestamp } from 'src/components';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { RowProps } from 'src/components/common/TableView/types';
-import { TableCell } from 'src/modules/Providers/utils';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
 import { ResourceField } from '@components/common/utils/types';
+import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { PlanData } from '../../utils';
-import {
-  ActionsCell,
-  CellProps,
-  MigrationTypeCell,
-  NamespaceCell,
-  PlanCell,
-  PlanStatusCell,
-  ProviderLinkCell,
-  VMsCell,
-} from './components';
+import { ActionsCell } from './components/ActionsCell';
+import { CellProps } from './components/CellProps';
+import { MigrationTypeCell } from './components/MigrationTypeCell';
+import { NamespaceCell } from './components/NamespaceCell';
+import { PlanCell } from './components/PlanCell';
+import { PlanStatusCell } from './components/PlanStatusCell';
+import { ProviderLinkCell } from './components/ProviderLinkCell';
+import { VMsCell } from './components/VMsCell';
+import { PlanData } from '../../utils/types/PlanData';
 import { PlanTableResourceId } from './constants';
 
 export const PlanRow: React.FC<RowProps<PlanData>> = ({ resourceFields, resourceData }) => {
@@ -54,7 +52,7 @@ const cellRenderers: Partial<Record<PlanTableResourceId, FC<CellProps>>> = {
   [PlanTableResourceId.MigrationType]: MigrationTypeCell,
   [PlanTableResourceId.Vms]: VMsCell,
   [PlanTableResourceId.Description]: ({ data }: CellProps) => (
-    <TableCell>{data?.obj?.spec?.description}</TableCell>
+    <TableCell>{data?.plan?.spec?.description}</TableCell>
   ),
   [PlanTableResourceId.Actions]: ActionsCell,
 };

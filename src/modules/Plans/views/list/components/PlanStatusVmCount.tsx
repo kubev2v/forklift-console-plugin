@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { useForkliftTranslation } from 'src/utils';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Flex, FlexItem, Icon, IconComponentProps, Tooltip } from '@patternfly/react-core';
 import {

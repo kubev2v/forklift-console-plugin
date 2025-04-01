@@ -1,23 +1,21 @@
 import React from 'react';
 import { RowProps } from 'src/components/common/TableView/types';
-import { ProviderData } from 'src/modules/Providers/utils';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
 import { ResourceField } from '@components/common/utils/types';
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { ProviderActionsDropdown } from '../../actions';
-import { TableEmptyCell } from '../../utils';
-import {
-  CellProps,
-  InventoryCellFactory,
-  NamespaceCell,
-  ProviderLinkCell,
-  StatusCell,
-  TypeCell,
-  URLCell,
-  VirtualMachinesCell,
-} from './components';
+import { CellProps } from './components/CellProps';
+import { InventoryCellFactory } from './components/InventoryCellFactory';
+import { NamespaceCell } from './components/NamespaceCell';
+import { ProviderLinkCell } from './components/ProviderLinkCell';
+import { StatusCell } from './components/StatusCell';
+import { TypeCell } from './components/TypeCell';
+import { URLCell } from './components/URLCell';
+import { VirtualMachinesCell } from './components/VirtualMachinesCell';
+import { ProviderActionsDropdown } from '../../actions/ProviderActionsDropdown';
+import { TableEmptyCell } from '../../utils/components/TableCell/TableEmptyCell';
 
 /**
  * Function component to render a table row (Tr) for a provider with inventory.

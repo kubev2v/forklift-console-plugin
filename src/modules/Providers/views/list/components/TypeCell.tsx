@@ -1,6 +1,7 @@
 import React from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
-import { getIsOnlySource, TableLabelCell } from 'src/modules/Providers/utils';
+import { TableLabelCell } from 'src/modules/Providers/utils/components/TableCell/TableLabelCell';
+import { getIsOnlySource } from 'src/modules/Providers/utils/helpers/getIsTarget';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

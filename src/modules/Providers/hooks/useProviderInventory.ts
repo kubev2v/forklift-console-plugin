@@ -3,8 +3,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { V1beta1Provider } from '@kubev2v/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils/helpers';
-import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils';
+import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils/constants';
+import { getInventoryApiUrl } from '../utils/helpers/getApiUrl';
+import { hasObjectChangedInGivenFields } from '../utils/helpers/hasObjectChangedInGivenFields';
 
 /**
  * @typedef {Object} UseProviderInventoryParams

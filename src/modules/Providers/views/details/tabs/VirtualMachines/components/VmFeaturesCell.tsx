@@ -1,10 +1,10 @@
 import React from 'react';
-import { TableCell } from 'src/modules/Providers/utils';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 
-import { getOpenShiftFeatureMap } from '../utils';
+import { getOpenShiftFeatureMap } from '../utils/helpers/getOpenShiftFeatureMap';
 import { toVmFeatureEnum } from '../utils/helpers/toVmFeatureEnum';
 import { VMCellProps } from './VMCellProps';
 

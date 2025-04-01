@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableLinkCell } from 'src/modules/Providers/utils';
+import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 
 import { CellProps } from './CellProps';
 
@@ -9,8 +9,8 @@ import { CellProps } from './CellProps';
  * @returns {JSX.Element} - The rendered component.
  */
 export const NamespaceCell: React.FC<CellProps> = ({ data }) => {
-  const { obj } = data;
-  const { namespace } = obj?.metadata || {};
+  const { plan } = data;
+  const { namespace } = plan?.metadata || {};
 
   return (
     <TableLinkCell

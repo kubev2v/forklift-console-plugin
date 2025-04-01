@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { usePlanMigration } from 'src/modules/Plans/hooks';
-import { PlanStartMigrationModal } from 'src/modules/Plans/modals';
+import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
+import { PlanStartMigrationModal } from 'src/modules/Plans/modals/PlanStartMigrationModal';
+import { getMigrationVmsCounts } from 'src/modules/Plans/utils/helpers/getMigrationVmsCounts';
 import {
-  getMigrationVmsCounts,
   getPlanPhase,
   isPlanArchived,
   isPlanExecuting,
-  PlanPhase,
-} from 'src/modules/Plans/utils';
-import { useModal } from 'src/modules/Providers/modals';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+} from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { PlanPhase } from 'src/modules/Plans/utils/types/PlanPhase';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
@@ -39,7 +39,7 @@ type VmPipelineTask = {
 export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
-  const plan = data?.obj;
+  const plan = data?.plan;
 
   const vmStatuses = plan?.status?.migration?.vms;
   const [lastMigration] = usePlanMigration(plan);

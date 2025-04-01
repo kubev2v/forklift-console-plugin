@@ -1,7 +1,7 @@
+import { NAME } from '@components/common/utils/constants';
 import { cleanup } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 
-import { NAME } from '../../utils';
 import { useSort } from '../sort';
 
 afterEach(cleanup);

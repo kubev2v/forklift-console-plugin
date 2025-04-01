@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { isPlanEditable } from 'src/modules/Plans/utils';
-import { useModal } from 'src/modules/Providers/modals';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
@@ -8,7 +8,7 @@ import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import NetworkNameTemplateModal from '../../../components/SettingsSection/components/NetworkNameTemplate/NetworkNameTemplateModal';
 import PVCNameTemplateModal from '../../../components/SettingsSection/components/PVCNameTemplate/PVCNameTemplateModal';
 import VolumeNameTemplateModal from '../../../components/SettingsSection/components/VolumeNameTemplate/VolumeNameTemplateModal';
-import { VMData } from '../types';
+import { VMData } from '../types/VMData';
 
 type PlanVMActionsDropdownItemsProps = {
   data: VMData;

@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -13,6 +12,8 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import { Breadcrumb, BreadcrumbItem, Split, SplitItem } from '@patternfly/react-core';
+
+import { getResourceUrl } from '../../helpers/getResourceUrl';
 
 import './PageHeadings.style.css';
 

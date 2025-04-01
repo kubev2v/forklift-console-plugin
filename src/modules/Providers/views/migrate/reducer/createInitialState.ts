@@ -4,8 +4,11 @@ import {
   V1beta1Provider,
 } from '@kubev2v/types';
 
-import { networkMapTemplate, planTemplate, storageMapTemplate } from '../../create/templates';
-import { toId, VmData } from '../../details';
+import { networkMapTemplate } from '../../create/templates/networkMapTemplate';
+import { planTemplate } from '../../create/templates/planTemplate';
+import { storageMapTemplate } from '../../create/templates/storageMapTemplate';
+import { toId } from '../../details/tabs/VirtualMachines/components/ProviderVirtualMachinesList';
+import { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 import {
   CreateVmMigrationPageState,
   MULTIPLE_NICS_ON_THE_SAME_NETWORK,

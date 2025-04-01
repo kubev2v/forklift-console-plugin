@@ -1,5 +1,5 @@
-import { FilterTypeProps } from '../Filter';
-import { FilterDef } from '../utils';
+import { FilterTypeProps } from '../Filter/types';
+import { FilterDef } from '../utils/types';
 
 /**
  * Filter rendering component,

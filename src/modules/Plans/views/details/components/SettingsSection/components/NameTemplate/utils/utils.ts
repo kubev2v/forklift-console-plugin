@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { OnConfirmHookType } from 'src/modules/Providers';
+import { OnConfirmHookType } from 'src/modules/Providers/modals/EditModal/types';
 
 import { k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
 import { setObjectValueByPath, unsetObjectValueByPath } from '@utils/helpers';

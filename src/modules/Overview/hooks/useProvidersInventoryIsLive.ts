@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { getInventoryApiUrl } from 'src/modules/Providers/utils';
+import { getInventoryApiUrl } from 'src/modules/Providers/utils/helpers/getApiUrl';
 
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 

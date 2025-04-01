@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { ModalHOC } from 'src/modules/Providers';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
 
-import { PlanVMsCellProps } from '../components';
+import { PlanVMsCellProps } from '../components/PlanVMsCellProps';
 import PlanVMActionsDropdown from './PlanVMActionsDropdown';
 
 const ActionsCell: FC<PlanVMsCellProps> = ({ data: vm }) => {

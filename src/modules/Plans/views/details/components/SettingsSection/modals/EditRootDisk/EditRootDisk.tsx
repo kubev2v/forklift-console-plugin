@@ -1,11 +1,11 @@
 import React from 'react';
 import { FilterableSelect } from 'src/components/FilterableSelect/FilterableSelect';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import {
-  EditModal,
   EditModalProps,
   ModalInputComponentType,
   OnConfirmHookType,
-} from 'src/modules/Providers/modals';
+} from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Modify, PlanModel, V1beta1Plan } from '@kubev2v/types';

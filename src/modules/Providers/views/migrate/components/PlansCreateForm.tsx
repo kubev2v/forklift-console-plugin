@@ -1,10 +1,12 @@
 import React, { ReactNode } from 'react';
-import { FilterableSelect } from 'src/components';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import { getIsTarget } from 'src/modules/Providers/utils/helpers/getIsTarget';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
 import {
   NetworkMapModelGroupVersionKind,
   ProviderModelGroupVersionKind,
@@ -23,7 +25,6 @@ import {
   StackItem,
 } from '@patternfly/react-core';
 
-import { DetailsItem, getIsTarget } from '../../../utils';
 import {
   addNetworkMapping,
   addStorageMapping,

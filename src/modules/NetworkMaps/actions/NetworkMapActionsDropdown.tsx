@@ -1,5 +1,5 @@
 import React, { FC, Ref, useState } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
-import { CellProps } from '../views/list/components';
+import { CellProps } from '../views/list/components/CellProps';
 import { NetworkMapActionsDropdownItems } from './NetworkMapActionsDropdownItems';
 
 import './NetworkMapActionsDropdown.style.css';

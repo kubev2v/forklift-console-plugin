@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
-import { InputList, LazyTextInput } from 'src/components';
-import { EditModal, EditModalProps, ModalInputComponentType } from 'src/modules/Providers/modals';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
+import {
+  EditModalProps,
+  ModalInputComponentType,
+} from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { InputList } from '@components/InputList/InputList';
+import { LazyTextInput } from '@components/InputList/LazyTextInput';
 import {
   IoK8sApiCoreV1Secret,
   Modify,

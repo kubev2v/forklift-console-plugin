@@ -1,5 +1,5 @@
 import React from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModelGroupVersionKind, V1beta1NetworkMap } from '@kubev2v/types';

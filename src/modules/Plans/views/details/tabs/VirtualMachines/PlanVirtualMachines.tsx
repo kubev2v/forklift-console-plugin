@@ -1,19 +1,23 @@
 import React from 'react';
-import { canPlanReStart, isPlanExecuting, isPlanSucceeded } from 'src/modules/Plans/utils';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
+import {
+  canPlanReStart,
+  isPlanExecuting,
+  isPlanSucceeded,
+} from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { PlanData } from 'src/modules/Plans/utils/types/PlanData';
+import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import usePlanSourceProvider from 'src/modules/Providers/hooks/usePlanSourceProvider';
-import { ModalHOC } from 'src/modules/Providers/modals';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { Suspend } from '../../components';
-import { MigrationVirtualMachinesList } from './Migration';
-import { PlanVirtualMachinesList } from './Plan';
-import { PlanData } from './types';
+import { MigrationVirtualMachinesList } from './Migration/MigrationVirtualMachinesList';
+import { PlanVirtualMachinesList } from './Plan/PlanVirtualMachinesList';
+import { Suspend } from '../../components/Suspend';
 
 export interface PlanVirtualMachinesProps {
-  obj: PlanData;
+  planData: PlanData;
   ns?: string;
   name?: string;
   loaded?: boolean;
@@ -22,7 +26,7 @@ export interface PlanVirtualMachinesProps {
 }
 
 const PlanVirtualMachines_: React.FC<PlanVirtualMachinesProps> = (props) => {
-  const plan = props?.obj.plan;
+  const plan = props?.planData.plan;
 
   if (isPlanExecuting(plan)) {
     return <MigrationVirtualMachinesList {...props} />;
@@ -55,7 +59,7 @@ export const PlanVirtualMachines: React.FC<{ name: string; namespace: string }> 
     <ModalHOC>
       <Suspend obj={plan} loaded={planLoaded} loadError={planLoadError}>
         <PlanVirtualMachines_
-          obj={data}
+          planData={data}
           loaded={planLoaded}
           loadError={planLoadError}
           sourceProvider={sourceProvider}

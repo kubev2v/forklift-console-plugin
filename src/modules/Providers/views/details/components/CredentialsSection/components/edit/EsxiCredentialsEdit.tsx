@@ -1,8 +1,9 @@
 import React, { useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { esxiSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
-import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
+import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload/CertificateUpload';
+import { safeBase64Decode } from 'src/modules/Providers/utils/helpers/safeBase64Decode';
+import { esxiSecretFieldValidator } from 'src/modules/Providers/utils/validators/provider/vsphere/esxiSecretFieldValidator';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {

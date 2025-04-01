@@ -4,9 +4,10 @@ import { RowProps } from 'src/components/common/TableView/types';
 import { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
-import { ConditionsCellRenderer, PlanVMsCellProps } from '../components';
+import { ConditionsCellRenderer } from '../components/ConditionsCellRenderer';
 import { NameCellRenderer } from '../components/NameCellRenderer';
-import { VMData } from '../types';
+import { PlanVMsCellProps } from '../components/PlanVMsCellProps';
+import { VMData } from '../types/VMData';
 import ActionsCell from './ActionsCell';
 
 export const PlanVirtualMachinesRow: React.FC<RowProps<VMData>> = ({

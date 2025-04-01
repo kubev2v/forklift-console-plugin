@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { TableCell } from 'src/modules/Providers/utils';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
 import { K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
-import { useModal } from 'src/modules/Providers/modals';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';

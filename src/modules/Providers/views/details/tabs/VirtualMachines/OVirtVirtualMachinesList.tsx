@@ -3,11 +3,13 @@ import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import { ResourceFieldFactory } from '@components/common/utils/types';
 
-import { concernFilter, OvirtHostFiler } from './utils/filters';
-import { ProviderVirtualMachinesList, VmData } from './components';
+import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import { VmData } from './components/VMCellProps';
+import { concernFilter } from './utils/filters/concernFilter';
+import { OvirtHostFiler } from './utils/filters/OvirtHostFilter';
+import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
 import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
-import { getVmPowerState } from './utils';
 
 export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {

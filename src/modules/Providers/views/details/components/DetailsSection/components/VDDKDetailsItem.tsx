@@ -1,11 +1,12 @@
 import React from 'react';
-import { EditProviderVDDKImage, useModal } from 'src/modules/Providers/modals';
+import { EditProviderVDDKImage } from 'src/modules/Providers/modals/EditProviderVDDKImage/EditProviderVDDKImage';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
-import { DetailsItem } from '../../../../../utils';
 import { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const VDDKDetailsItem: React.FC<ProviderDetailsItemProps> = ({

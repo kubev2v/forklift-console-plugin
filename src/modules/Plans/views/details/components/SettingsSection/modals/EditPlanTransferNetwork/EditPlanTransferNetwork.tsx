@@ -1,11 +1,11 @@
 import React, { FC, Ref, useState } from 'react';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
+import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import {
-  EditModal,
   EditModalProps,
   ModalInputComponentType,
   OnConfirmHookType,
-} from 'src/modules/Providers/modals';
+} from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {

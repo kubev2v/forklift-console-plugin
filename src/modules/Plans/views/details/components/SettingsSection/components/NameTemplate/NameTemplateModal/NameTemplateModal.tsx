@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
-import { getValueByJsonPath } from 'src/modules/Providers';
-import { EditModal } from 'src/modules/Providers/modals';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
+import { getValueByJsonPath } from 'src/modules/Providers/utils/helpers/getValueByJsonPath';
 
 import { PlanModel } from '@kubev2v/types';
 

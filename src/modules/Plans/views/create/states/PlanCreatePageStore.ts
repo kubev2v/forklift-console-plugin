@@ -1,4 +1,4 @@
-import { VmData } from 'src/modules/Providers/views';
+import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 
 export interface PlanCreatePageState {
   nameFilter: string;

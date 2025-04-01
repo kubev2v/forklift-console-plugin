@@ -1,12 +1,12 @@
 import React, { FC, useMemo } from 'react';
-import { isPlanArchived } from 'src/modules/Plans/utils';
-import { useModal } from 'src/modules/Providers/modals';
+import { isPlanArchived } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { V1beta1Plan } from '@kubev2v/types';
 import { ToolbarItem } from '@patternfly/react-core';
 
-import { PlanVMsDeleteModal } from '../modals';
+import { PlanVMsDeleteModal } from '../modals/PlanVMsDeleteModal';
 import { VMsActionButton } from './VMsActionButton';
 
 export const PlanVMsDeleteButton: FC<{

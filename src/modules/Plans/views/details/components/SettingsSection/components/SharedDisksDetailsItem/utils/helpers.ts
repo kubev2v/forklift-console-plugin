@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { OnConfirmHookType } from 'src/modules/Providers/modals';
+import { OnConfirmHookType } from 'src/modules/Providers/modals/EditModal/types';
 
 import { V1beta1Plan } from '@kubev2v/types';
 import { k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import StatusIcon from 'src/components/status/StatusIcon';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { IoK8sApiCoreV1Pod } from '@kubev2v/types';

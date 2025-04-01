@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 
-import { PlanCreatePageState } from '../states';
+import { PlanCreatePageState } from '../states/PlanCreatePageStore';
 import SearchInputProvider from './SearchInputProvider';
 import SelectProvider from './SelectProvider';
 

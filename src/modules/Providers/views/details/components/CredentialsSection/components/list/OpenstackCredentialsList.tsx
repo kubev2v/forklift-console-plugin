@@ -1,6 +1,6 @@
 import React from 'react';
 import { Base64 } from 'js-base64';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList, Text, TextVariants } from '@patternfly/react-core';

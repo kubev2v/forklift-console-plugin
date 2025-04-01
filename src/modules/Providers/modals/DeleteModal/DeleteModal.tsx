@@ -10,10 +10,11 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { useToggle } from '../../hooks';
-import { getResourceUrl } from '../../utils/helpers';
-import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
-import { useModal } from '../ModalHOC';
+import { useToggle } from '../../hooks/useToggle';
+import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
+import { AlertMessageForModals } from '../components/AlertMessageForModals';
+import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
+import { useModal } from '../ModalHOC/ModalHOC';
 
 /**
  * Props for the DeleteModal component

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableLinkCell } from 'src/modules/Providers/utils';
+import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 
 import { StorageMapModelGroupVersionKind } from '@kubev2v/types';
 

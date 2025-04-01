@@ -1,5 +1,7 @@
-import { useProviderInventory, UseProviderInventoryParams } from 'src/modules/Providers/hooks';
-import { ProviderData } from 'src/modules/Providers/utils';
+import useProviderInventory, {
+  UseProviderInventoryParams,
+} from 'src/modules/Providers/hooks/useProviderInventory';
+import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
 import { ProviderHost, VSphereResource } from '@kubev2v/types';
 
