@@ -1,24 +1,24 @@
 import React, { useReducer } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import {
-  InventoryNetwork,
+  type InventoryNetwork,
   useOpenShiftNetworks,
   useSourceNetworks,
 } from 'src/modules/Providers/hooks/useNetworks';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
-import { Mapping } from 'src/modules/Providers/views/migrate/types';
+import type { Mapping } from 'src/modules/Providers/views/migrate/types';
 import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   NetworkMapModel,
-  OpenShiftNetworkAttachmentDefinition,
+  type OpenShiftNetworkAttachmentDefinition,
   ProviderModelGroupVersionKind,
-  V1beta1NetworkMap,
-  V1beta1NetworkMapSpecMap,
-  V1beta1NetworkMapSpecMapDestination,
-  V1beta1NetworkMapSpecMapSource,
-  V1beta1Provider,
+  type V1beta1NetworkMap,
+  type V1beta1NetworkMapSpecMap,
+  type V1beta1NetworkMapSpecMapDestination,
+  type V1beta1NetworkMapSpecMapSource,
+  type V1beta1Provider,
 } from '@kubev2v/types';
 import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
@@ -29,11 +29,11 @@ import {
   Spinner,
 } from '@patternfly/react-core';
 
-import { mapsSectionReducer, MapsSectionState } from './state/reducer';
+import { mapsSectionReducer, type MapsSectionState } from './state/reducer';
 
 const initialState: MapsSectionState = {
-  networkMap: null,
   hasChanges: false,
+  networkMap: null,
   updating: false,
 };
 
@@ -43,14 +43,14 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
 
   // Initialize the state with the prop obj
   React.useEffect(() => {
-    dispatch({ type: 'INIT', payload: obj });
+    dispatch({ payload: obj, type: 'INIT' });
   }, [obj]);
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace: obj.metadata.namespace,
+    namespaced: true,
   });
 
   const sourceProvider = providers.find(
@@ -68,12 +68,12 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
   const [destinationNetworks] = useOpenShiftNetworks(destinationProvider);
 
   const onUpdate = async () => {
-    dispatch({ type: 'SET_UPDATING', payload: true });
+    dispatch({ payload: true, type: 'SET_UPDATING' });
     await k8sUpdate({
-      model: NetworkMapModel,
       data: updateNetworkMapDestination(state.networkMap),
+      model: NetworkMapModel,
     });
-    dispatch({ type: 'SET_UPDATING', payload: false });
+    dispatch({ payload: false, type: 'SET_UPDATING' });
   };
 
   const isNetMapped = (networkMapID: string) => {
@@ -85,14 +85,14 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
   const onAdd = () =>
     availableSources.length > 0 &&
     dispatch({
-      type: 'SET_MAP',
       payload: [
         ...(state.networkMap?.spec?.map || []),
         {
-          source: convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(availableSources[0]),
           destination: { type: 'pod' },
+          source: convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(availableSources[0]),
         },
       ],
+      type: 'SET_MAP',
     });
 
   const onReplace = ({ current, next }) => {
@@ -114,25 +114,25 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     }
 
     const nextMap: V1beta1NetworkMapSpecMap = {
-      source: convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(nextSourceNet),
       destination:
         convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination(
           nextDestinationNet,
         ),
+      source: convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(nextSourceNet),
     };
 
     const payload = state?.networkMap?.spec?.map?.map((map) => {
       return (map?.source?.id === currentSourceNet?.id ||
         map.source?.type === currentSourceNet?.id) &&
-        (map.destination?.name === currentDestinationNet?.['name'] ||
-          map.destination?.type === currentDestinationNet?.['type'])
+        (map.destination?.name === currentDestinationNet?.name ||
+          map.destination?.type === currentDestinationNet?.type)
         ? nextMap
         : map;
     });
 
     dispatch({
-      type: 'SET_MAP',
       payload: payload || [],
+      type: 'SET_MAP',
     });
   };
 
@@ -145,23 +145,23 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     };
 
     dispatch({
-      type: 'SET_MAP',
       payload: [
         ...(state?.networkMap?.spec?.map.filter(
           (map) =>
             !(
               (map?.source?.id === currentSourceNet?.id ||
                 map.source?.type === currentSourceNet?.id) &&
-              (map.destination?.name === currentDestinationNet['name'] ||
-                map.destination?.type === currentDestinationNet['type'])
+              (map.destination?.name === currentDestinationNet.name ||
+                map.destination?.type === currentDestinationNet.type)
             ),
         ) || []),
       ],
+      type: 'SET_MAP',
     });
   };
 
   const onClick = () => {
-    dispatch({ type: 'INIT', payload: obj });
+    dispatch({ payload: obj, type: 'INIT' });
   };
 
   return (
@@ -199,14 +199,14 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
             'Pod',
           ]}
           sources={sourceNetworks.map((n) => ({
+            isMapped: isNetMapped(n?.id),
             label: n.name,
             usedBySelectedVms: false,
-            isMapped: isNetMapped(n?.id),
           }))}
           mappings={state?.networkMap?.spec?.map.map((m) => ({
+            destination: getDestinationNetName(destinationNetworks, m.destination),
             source:
               m.source?.type === 'pod' ? 'Pod network' : getSourceNetName(sourceNetworks, m.source),
-            destination: getDestinationNetName(destinationNetworks, m.destination),
           }))}
           generalSourcesLabel={t('Other networks present on the source provider ')}
           usedSourcesLabel={t('Networks used by the selected VMs')}
@@ -252,8 +252,8 @@ function convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(
 
   return {
     id: inventoryNetwork?.id,
-    name: inventoryNetwork['name'],
-    namespace: inventoryNetwork['namespace'],
+    name: inventoryNetwork.name,
+    namespace: inventoryNetwork.namespace,
   };
 }
 
@@ -267,7 +267,7 @@ function convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDe
   return {
     name: networkAttachmentDefinition.name,
     namespace: networkAttachmentDefinition.namespace,
-    type: networkAttachmentDefinition['type'] || 'multus',
+    type: networkAttachmentDefinition.type || 'multus',
   };
 }
 

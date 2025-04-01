@@ -1,28 +1,28 @@
-import { ProviderType } from '@kubev2v/types';
+import type { ProviderType } from '@kubev2v/types';
 
-import { ProviderStatus } from './types';
+import type { ProviderStatus } from './types';
 
 export const PROVIDERS: Record<ProviderType, string> =
   process.env.BRAND_TYPE === 'RedHat'
     ? {
-        vsphere: 'VMware',
-        ovirt: 'RHV',
-        openstack: 'OpenStack',
         openshift: 'OpenShift',
+        openstack: 'OpenStack',
         ova: 'OVA',
+        ovirt: 'RHV',
+        vsphere: 'VMware',
       }
     : {
-        vsphere: 'VMware',
-        ovirt: 'oVirt',
-        openstack: 'OpenStack',
         openshift: 'KubeVirt',
+        openstack: 'OpenStack',
         ova: 'OVA',
+        ovirt: 'oVirt',
+        vsphere: 'VMware',
       };
 
 export const PROVIDER_STATUS: Record<ProviderStatus, string> = {
-  Ready: 'Ready',
   ConnectionFailed: 'Connection Failed',
+  Ready: 'Ready',
   Staging: 'Staging',
-  ValidationFailed: 'Validation Failed',
   Unknown: 'Unknown',
+  ValidationFailed: 'Validation Failed',
 };

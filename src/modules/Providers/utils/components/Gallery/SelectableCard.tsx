@@ -1,8 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
 import { Card, CardBody, CardHeader, CardTitle, Split, SplitItem } from '@patternfly/react-core';
 
-interface SelectableCardProps {
+type SelectableCardProps = {
   /** The title of the card. It can be any element - a string, a React component, etc. */
   title: ReactNode;
   /** Optional: A logo or symbol to be displayed along with the title. It can be any element - a string, a React component, etc. */
@@ -17,20 +17,20 @@ interface SelectableCardProps {
   isCompact?: boolean;
   /** Optional: A string representing a CSS class name. This class will be applied to the card's top-level DOM element, allowing you to style the card with custom CSS. */
   className?: string;
-}
+};
 
 /**
  * SelectableCard component
  * @param props The properties of the SelectableCard
  */
 export const SelectableCard: React.FC<SelectableCardProps> = ({
+  className,
+  content,
+  isCompact,
+  isSelected,
+  onChange,
   title,
   titleLogo,
-  content,
-  onChange,
-  isSelected,
-  isCompact,
-  className,
 }) => {
   // Handler function to toggle selection and call onChange
   const handleClick = () => {
@@ -50,11 +50,11 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
     >
       <CardHeader
         selectableActions={{
-          selectableActionId: 'selectable-card-header',
-          selectableActionAriaLabelledby: 'selectable-card-header',
           name: 'selectable-card-header',
-          variant: 'single',
           onChange: handleClick,
+          selectableActionAriaLabelledby: 'selectable-card-header',
+          selectableActionId: 'selectable-card-header',
+          variant: 'single',
         }}
       >
         {titleLogo ? (

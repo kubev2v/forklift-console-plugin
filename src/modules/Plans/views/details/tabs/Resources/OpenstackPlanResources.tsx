@@ -2,7 +2,7 @@ import React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { OpenstackVM } from '@kubev2v/types';
+import type { OpenstackVM } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 

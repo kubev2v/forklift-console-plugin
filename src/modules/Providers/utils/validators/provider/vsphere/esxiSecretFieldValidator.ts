@@ -1,4 +1,4 @@
-import { validateNoSpaces, validatePublicCert, ValidationMsg } from '../../common';
+import { validateNoSpaces, validatePublicCert, type ValidationMsg } from '../../common';
 
 /**
  * Validates form input fields based on their id.
@@ -44,25 +44,25 @@ const validateUser = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      type: 'default',
       msg: 'A username and domain for the ESXi API endpoint, for example: user . [required]',
+      type: 'default',
     };
   }
 
   if (value === '') {
     return {
-      type: 'error',
       msg: 'A username and domain for the ESXi API endpoint, for example: user . [required]',
+      type: 'error',
     };
   }
 
   if (!noSpaces) {
-    return { type: 'error', msg: 'Invalid username, spaces are not allowed' };
+    return { msg: 'Invalid username, spaces are not allowed', type: 'error' };
   }
 
   return {
-    type: 'success',
     msg: 'A username and domain for the ESXi API endpoint, for example: user .',
+    type: 'success',
   };
 };
 
@@ -72,38 +72,38 @@ const validatePassword = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
     return {
-      type: 'default',
       msg: 'A user password for connecting to the ESXi API endpoint. [required]',
+      type: 'default',
     };
   }
 
   if (value === '') {
     return {
-      type: 'error',
       msg: 'A user password for connecting to the ESXi API endpoint. [required]',
+      type: 'error',
     };
   }
 
   if (valid) {
-    return { type: 'success', msg: 'A user password for connecting to the ESXi API endpoint.' };
+    return { msg: 'A user password for connecting to the ESXi API endpoint.', type: 'success' };
   }
 
-  return { type: 'error', msg: 'Invalid password, spaces are not allowed' };
+  return { msg: 'Invalid password, spaces are not allowed', type: 'error' };
 };
 
 const validateInsecureSkipVerify = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (value === undefined) {
-    return { type: 'default', msg: 'Migrate without validating a CA certificate' };
+    return { msg: 'Migrate without validating a CA certificate', type: 'default' };
   }
 
   const valid = ['true', 'false', ''].includes(value);
 
   if (valid) {
-    return { type: 'success', msg: 'Migrate without validating a CA certificate' };
+    return { msg: 'Migrate without validating a CA certificate', type: 'success' };
   }
 
-  return { type: 'error', msg: 'Invalid Skip certificate validation value, must be true or false' };
+  return { msg: 'Invalid Skip certificate validation value, must be true or false', type: 'error' };
 };
 
 const validateCacert = (value: string): ValidationMsg => {
@@ -111,20 +111,20 @@ const validateCacert = (value: string): ValidationMsg => {
 
   if (value === undefined || value === '') {
     return {
-      type: 'default',
       msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
+      type: 'default',
     };
   }
 
   if (valid) {
     return {
-      type: 'success',
       msg: 'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
+      type: 'success',
     };
   }
 
   return {
-    type: 'error',
     msg: 'Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.',
+    type: 'error',
   };
 };

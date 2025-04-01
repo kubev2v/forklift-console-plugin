@@ -6,10 +6,10 @@ import React from 'react';
  * @returns {{ t: (k: string) => string; }}
  */
 export const useTranslation = () => ({
-  t: (k: string) => k,
   i18n: {
     resolvedLanguage: 'en',
   },
+  t: (k: string) => k,
 });
 
 export const Trans = () => <div data-test-element-name="Trans" />;

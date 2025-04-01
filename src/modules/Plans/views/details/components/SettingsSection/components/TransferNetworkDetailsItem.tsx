@@ -4,16 +4,16 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1PlanSpecTransferNetwork } from '@kubev2v/types';
+import type { V1beta1PlanSpecTransferNetwork } from '@kubev2v/types';
 
-import { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
 import { EditPlanTransferNetwork } from '../modals/EditPlanTransferNetwork/EditPlanTransferNetwork';
 
 export const TransferNetworkDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  resource,
   canPatch,
-  helpContent,
   destinationProvider,
+  helpContent,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -39,13 +39,14 @@ export const TransferNetworkDetailsItem: React.FC<PlanDetailsItemProps> = ({
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() =>
+        (() => {
           showModal(
             <EditPlanTransferNetwork
               resource={resource}
               destinationProvider={destinationProvider}
             />,
-          ))
+          );
+        })
       }
     />
   );

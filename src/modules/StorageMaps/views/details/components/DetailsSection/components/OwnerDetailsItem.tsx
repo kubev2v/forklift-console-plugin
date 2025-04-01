@@ -3,12 +3,12 @@ import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/
 import { OwnerReferencesItem } from 'src/modules/Providers/utils/components/DetailsPage/OwnerReferencesItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { StorageDetailsItemProps } from './StorageDetailsItemProps';
+import type { StorageDetailsItemProps } from './StorageDetailsItemProps';
 
 export const OwnerDetailsItem: React.FC<StorageDetailsItemProps> = ({
-  resource,
-  moreInfoLink,
   helpContent,
+  moreInfoLink,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
 

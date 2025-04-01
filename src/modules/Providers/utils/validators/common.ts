@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
-import { Validation } from '../types/Validation';
+import type { Validation } from '../types/Validation';
 
 // regex
 

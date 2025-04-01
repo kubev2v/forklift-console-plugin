@@ -1,6 +1,6 @@
-import { PlanData } from 'src/modules/Plans/utils/types/PlanData';
+import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 
 export type CellProps = {
   data: PlanData;

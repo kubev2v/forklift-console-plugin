@@ -1,9 +1,10 @@
-import React, { FormEvent, useState } from 'react';
+import React, { type FormEvent, useState } from 'react';
 
 import { DatePicker, InputGroup, ToolbarFilter } from '@patternfly/react-core';
 
 import { changeFormatToISODate, isValidDate, parseISOtoJSDate, toISODate } from '../utils/dates';
-import { FilterTypeProps } from './types';
+
+import type { FilterTypeProps } from './types';
 
 /**
  * This Filter type enables selecting a single date (a day).
@@ -16,12 +17,12 @@ import { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/DateFilter.tsx)
  */
 export const DateFilter = ({
-  selectedFilters = [],
-  onFilterUpdate,
-  title,
   filterId,
+  onFilterUpdate,
   placeholderLabel,
+  selectedFilters = [],
   showFilter = true,
+  title,
 }: FilterTypeProps) => {
   const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(Boolean) ?? [];
 
@@ -50,7 +51,9 @@ export const DateFilter = ({
     <ToolbarFilter
       key={filterId}
       chips={validFilters}
-      deleteChip={(category, option) => clearSingleDate(option)}
+      deleteChip={(category, option) => {
+        clearSingleDate(option);
+      }}
       deleteChipGroup={() => onFilterUpdate([])}
       categoryName={title}
       showToolbarItem={showFilter}

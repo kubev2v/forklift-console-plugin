@@ -8,7 +8,7 @@ import { DropdownItem } from '@patternfly/react-core';
 import { DeleteModal } from '../modals/DeleteModal/DeleteModal';
 import { useModal } from '../modals/ModalHOC/ModalHOC';
 import { getResourceUrl } from '../utils/helpers/getResourceUrl';
-import { ProviderData } from '../utils/types/ProviderData';
+import type { ProviderData } from '../utils/types/ProviderData';
 
 export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
@@ -17,9 +17,9 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
   const { provider } = data;
 
   const providerURL = getResourceUrl({
-    reference: ProviderModelRef,
     name: provider?.metadata?.name,
     namespace: provider?.metadata?.namespace,
+    reference: ProviderModelRef,
   });
 
   const onClick = () => {
@@ -64,6 +64,6 @@ export const ProviderActionsDropdownItems = ({ data }: ProviderActionsDropdownIt
   return provider?.spec?.type === 'ova' ? ovaDropdownItems : dropdownItems;
 };
 
-interface ProviderActionsDropdownItemsProps {
+type ProviderActionsDropdownItemsProps = {
   data: ProviderData;
-}
+};

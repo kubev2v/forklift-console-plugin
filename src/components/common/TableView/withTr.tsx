@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
-import { RowProps } from './types';
+import type { RowProps } from './types';
 
 export function withTr<T>(
   Component: React.FC<RowProps<T>>,

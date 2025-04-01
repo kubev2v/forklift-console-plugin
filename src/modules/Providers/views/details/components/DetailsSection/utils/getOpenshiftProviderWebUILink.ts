@@ -1,4 +1,4 @@
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 
 import { getProviderUIAnnotation } from './getProviderUIAnnotation';
 
@@ -27,11 +27,10 @@ export const getOpenshiftProviderWebUILink = (provider: V1beta1Provider): string
 
   // replace the host prefix of 'api.' with 'console-openshift-console.apps.'
   if (urlObj.host.startsWith('api.')) {
-    const newHostName = 'console-openshift-console.apps.' + urlObj.host.slice(4);
+    const newHostName = `console-openshift-console.apps.${urlObj.host.slice(4)}`;
     urlObj.host = newHostName;
 
     return urlObj.toString();
-  } else {
-    return '';
   }
+  return '';
 };

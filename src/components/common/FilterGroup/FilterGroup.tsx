@@ -3,7 +3,7 @@ import React from 'react';
 import { ToolbarGroup } from '@patternfly/react-core';
 
 import { FilterFromDef } from './FilterFromDef';
-import { MetaFilterProps } from './types';
+import type { MetaFilterProps } from './types';
 
 /**
  * This is an implementation of [<font>``PatternFly 4`` filter group</font>](https://www.patternfly.org/v4/demos/filters/design-guidelines/#filter-group) pattern,
@@ -15,24 +15,24 @@ import { MetaFilterProps } from './types';
  * @see FilterTypeProps
  */
 export const FilterGroup = ({
-  selectedFilters = {},
-  onFilterUpdate,
   fieldFilters,
-  supportedFilterTypes,
+  onFilterUpdate,
   resolvedLanguage = 'en',
+  selectedFilters = {},
+  supportedFilterTypes,
 }: MetaFilterProps) => (
   <ToolbarGroup variant="filter-group">
-    {fieldFilters.map(({ resourceFieldId, label, filterDef }) => (
+    {fieldFilters.map(({ filterDef, label, resourceFieldId }) => (
       <FilterFromDef
         key={resourceFieldId}
         {...{
-          resourceFieldId,
-          label,
           filterDef,
-          onFilterUpdate,
-          selectedFilters,
           FilterType: supportedFilterTypes[filterDef.type],
+          label,
+          onFilterUpdate,
           resolvedLanguage,
+          resourceFieldId,
+          selectedFilters,
         }}
       />
     ))}

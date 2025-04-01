@@ -4,4 +4,4 @@ export enum PlanConditionType {
   VMNetworksNotMapped = 'VMNetworksNotMapped',
   VMStorageNotMapped = 'VMStorageNotMapped',
   VMMultiplePodNetworkMappings = 'VMMultiplePodNetworkMappings',
-  }
+}

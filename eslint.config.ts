@@ -121,6 +121,7 @@ export default [
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
       'arrow-body-style': 'off',
       camelcase: ['error', { allow: ['required_'] }],
+      'capitalized-comments': 'off',
       complexity: 'off',
       'id-length': ['error', { exceptions: ['t'] }],
       'import/named': 'error',

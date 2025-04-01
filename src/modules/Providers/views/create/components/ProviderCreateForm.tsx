@@ -4,14 +4,14 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
-import { validateK8sName, ValidationMsg } from 'src/modules/Providers/utils/validators/common';
+import { validateK8sName, type ValidationMsg } from 'src/modules/Providers/utils/validators/common';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   ProjectNameSelect,
   useProjectNameSelectOptions,
 } from '@components/common/ProjectNameSelect';
-import { IoK8sApiCoreV1Secret, ProviderType, V1beta1Provider } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, ProviderType, V1beta1Provider } from '@kubev2v/types';
 import {
   Flex,
   FlexItem,
@@ -26,7 +26,7 @@ import { EditProvider } from './EditProvider';
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
 import { providerCardItems } from './providerCardItems';
 
-export interface ProvidersCreateFormProps {
+export type ProvidersCreateFormProps = {
   newProvider: V1beta1Provider;
   newSecret: IoK8sApiCoreV1Secret;
   onNewProviderChange: (V1beta1Provider) => void;
@@ -34,15 +34,15 @@ export interface ProvidersCreateFormProps {
   providerNames?: string[];
   projectName?: string;
   onProjectNameChange?: (value: string) => void;
-}
+};
 
 const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
   newProvider,
   newSecret,
-  projectName,
   onNewProviderChange,
   onNewSecretChange,
   onProjectNameChange,
+  projectName,
   providerNames = [],
 }) => {
   const { t } = useForkliftTranslation();
@@ -50,7 +50,7 @@ const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
 
   const initialState = {
     validation: {
-      name: { type: 'default', msg: 'Unique Kubernetes resource name identifier.' },
+      name: { msg: 'Unique Kubernetes resource name identifier.', type: 'default' },
     },
   };
 
@@ -68,21 +68,21 @@ const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
     let validation: ValidationMsg;
 
     if (trimmedValue === '') {
-      validation = { type: 'error', msg: 'Required, unique Kubernetes resource name identifier.' };
+      validation = { msg: 'Required, unique Kubernetes resource name identifier.', type: 'error' };
     } else if (providerNames.includes(trimmedValue))
       validation = {
-        type: 'error',
         msg: `A provider named ${trimmedValue} already exists in the system`,
+        type: 'error',
       };
     else if (!validateK8sName(trimmedValue)) {
-      validation = { type: 'error', msg: 'Invalid kubernetes resource name' };
+      validation = { msg: 'Invalid kubernetes resource name', type: 'error' };
     } else {
-      validation = { type: 'success', msg: 'Unique Kubernetes resource name identifier.' };
+      validation = { msg: 'Unique Kubernetes resource name identifier.', type: 'success' };
     }
 
     dispatch({
-      type: 'SET_VALIDATION',
       payload: { name: validation },
+      type: 'SET_VALIDATION',
     });
 
     onNewProviderChange({
@@ -100,7 +100,7 @@ const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
       });
     }
 
-    onNewProviderChange({ ...newProvider, spec: { ...newProvider?.spec, type: type } });
+    onNewProviderChange({ ...newProvider, spec: { ...newProvider?.spec, type } });
   };
 
   const onChange: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (value) => {
@@ -129,7 +129,9 @@ const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
                   <SelectableCard
                     title={providerCardItems[newProvider?.spec?.type]?.title}
                     titleLogo={providerCardItems[newProvider?.spec?.type]?.logo}
-                    onChange={() => handleTypeChange(null)}
+                    onChange={() => {
+                      handleTypeChange(null);
+                    }}
                     isSelected
                     isCompact
                     content={
@@ -176,7 +178,9 @@ const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
                 name="name"
                 value={newProvider.metadata.name} // Use the appropriate prop value here
                 validated={state.validation.name.type}
-                onChange={(e, v) => onChange(v, e)} // Call the custom handler method
+                onChange={(e, v) => {
+                  onChange(v, e);
+                }} // Call the custom handler method
               />
             </FormGroupWithHelpText>
           </Form>

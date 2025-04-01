@@ -1,7 +1,7 @@
-import { TFunction } from 'react-i18next';
+import type { TFunction } from 'react-i18next';
 
 export const getPVCNameTemplateAllowedVariables = (
-  t: TFunction<'plugin__forklift-console-plugin', undefined>,
+  t: TFunction<'plugin__forklift-console-plugin'>,
 ) => [
   t('- .VmName: name of the VM'),
   t('- .PlanName: name of the migration plan'),

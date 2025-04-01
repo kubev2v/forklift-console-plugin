@@ -1,4 +1,4 @@
-import { IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -12,8 +12,8 @@ export async function createHostSecret(secret: IoK8sApiCoreV1Secret) {
   const cleanedSecret = { ...secret, data: secretData };
 
   const createdSecret = await k8sCreate({
-    model: SecretModel,
     data: cleanedSecret,
+    model: SecretModel,
   });
 
   return createdSecret;

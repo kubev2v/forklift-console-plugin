@@ -8,7 +8,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { NetworkMapModel, NetworkMapModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
-import { NetworkMapData } from '../utils/types/NetworkMapData';
+import type { NetworkMapData } from '../utils/types/NetworkMapData';
 
 export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
@@ -17,9 +17,9 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
   const { obj: networkMap } = data;
 
   const networkMapURL = getResourceUrl({
-    reference: NetworkMapModelRef,
     name: networkMap?.metadata?.name,
     namespace: networkMap?.metadata?.namespace,
+    reference: NetworkMapModelRef,
   });
 
   const onClick = () => {
@@ -45,6 +45,6 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
   ];
 };
 
-interface NetworkMapActionsDropdownItemsProps {
+type NetworkMapActionsDropdownItemsProps = {
   data: NetworkMapData;
-}
+};

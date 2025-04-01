@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 import { OpenshiftNetworkCell } from './OpenshiftNetworkCell';
 import { VSphereHostCell } from './VSphereHostCell';
 
@@ -19,7 +19,7 @@ export const InventoryCellFactory: CellFactory = ({ icon }) => {
    * @returns {JSX.Element} - The rendered component.
    */
   return ({ data, fieldId, fields }: CellProps) => {
-    const { provider, inventory } = data;
+    const { inventory, provider } = data;
     const type = provider?.spec.type;
 
     const value = getResourceFieldValue({ ...provider, inventory }, fieldId, fields);

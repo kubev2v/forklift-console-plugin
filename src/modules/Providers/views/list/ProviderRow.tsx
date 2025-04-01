@@ -1,12 +1,15 @@
 import React from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
-import { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import type { RowProps } from 'src/components/common/TableView/types';
+import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { CellProps } from './components/CellProps';
+import { ProviderActionsDropdown } from '../../actions/ProviderActionsDropdown';
+import { TableEmptyCell } from '../../utils/components/TableCell/TableEmptyCell';
+
+import type { CellProps } from './components/CellProps';
 import { InventoryCellFactory } from './components/InventoryCellFactory';
 import { NamespaceCell } from './components/NamespaceCell';
 import { ProviderLinkCell } from './components/ProviderLinkCell';
@@ -14,8 +17,6 @@ import { StatusCell } from './components/StatusCell';
 import { TypeCell } from './components/TypeCell';
 import { URLCell } from './components/URLCell';
 import { VirtualMachinesCell } from './components/VirtualMachinesCell';
-import { ProviderActionsDropdown } from '../../actions/ProviderActionsDropdown';
-import { TableEmptyCell } from '../../utils/components/TableCell/TableEmptyCell';
 
 /**
  * Function component to render a table row (Tr) for a provider with inventory.
@@ -27,7 +28,7 @@ import { TableEmptyCell } from '../../utils/components/TableCell/TableEmptyCell'
  *
  * @returns {ReactNode - A React table row (Tr) component.
  */
-const ProviderRow: React.FC<RowProps<ProviderData>> = ({ resourceFields, resourceData }) => {
+const ProviderRow: React.FC<RowProps<ProviderData>> = ({ resourceData, resourceFields }) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>
@@ -69,22 +70,22 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 };
 
 const cellRenderers: Record<string, React.FC<CellProps>> = {
-  ['name']: ProviderLinkCell,
-  ['phase']: StatusCell,
-  ['url']: URLCell,
-  ['type']: TypeCell,
-  ['namespace']: NamespaceCell,
-  ['networkCount']: InventoryCellFactory({ icon: <NetworkIcon /> }),
-  ['storageCount']: InventoryCellFactory({ icon: <DatabaseIcon /> }),
-  ['vmCount']: VirtualMachinesCell,
-  ['hostCount']: InventoryCellFactory({ icon: <OutlinedHddIcon /> }),
-  ['actions']: (props) => ProviderActionsDropdown({ isKebab: true, ...props }),
+  actions: (props) => ProviderActionsDropdown({ isKebab: true, ...props }),
+  hostCount: InventoryCellFactory({ icon: <OutlinedHddIcon /> }),
+  name: ProviderLinkCell,
+  namespace: NamespaceCell,
+  networkCount: InventoryCellFactory({ icon: <NetworkIcon /> }),
+  phase: StatusCell,
+  storageCount: InventoryCellFactory({ icon: <DatabaseIcon /> }),
+  type: TypeCell,
+  url: URLCell,
+  vmCount: VirtualMachinesCell,
 };
 
-interface RenderTdProps {
+type RenderTdProps = {
   resourceData: ProviderData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-}
+};
 
 export default ProviderRow;

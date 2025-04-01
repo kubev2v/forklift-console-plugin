@@ -3,7 +3,7 @@ import { ovirtSecretValidator } from 'src/modules/Providers/utils/validators/pro
 
 import {
   BaseCredentialsSection,
-  BaseCredentialsSectionProps,
+  type BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { OvirtCredentialsEdit } from './components/edit/OvirtCredentialsEdit';
 import { OvirtCredentialsList } from './components/list/OvirtCredentialsList';

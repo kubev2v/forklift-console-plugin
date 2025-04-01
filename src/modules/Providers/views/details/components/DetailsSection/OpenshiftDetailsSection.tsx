@@ -14,12 +14,12 @@ import { TransferNetworkDetailsItem } from './components/TransferNetworkDetailsI
 import { TypeDetailsItem } from './components/TypeDetailsItem';
 import { URLDetailsItem } from './components/URLDetailsItem';
 import { getOpenshiftProviderWebUILink } from './utils/getOpenshiftProviderWebUILink';
-import { DetailsSectionProps } from './DetailsSection';
+import type { DetailsSectionProps } from './DetailsSection';
 
 export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
-  const { provider, permissions } = data;
+  const { permissions, provider } = data;
   const webUILink = getOpenshiftProviderWebUILink(provider);
 
   return (

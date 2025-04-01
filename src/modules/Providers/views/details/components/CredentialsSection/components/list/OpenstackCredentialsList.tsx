@@ -7,10 +7,11 @@ import { DescriptionList, Text, TextVariants } from '@patternfly/react-core';
 
 import { FieldWithClipboardCopy } from '../../FieldWithClipboardCopy';
 import { MaskedField } from '../../MaskedField';
-import { ListComponentProps } from '../BaseCredentialsSection';
-import { Fields } from './Fields';
+import type { ListComponentProps } from '../BaseCredentialsSection';
 
-export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret, reveal }) => {
+import type { Fields } from './Fields';
+
+export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ reveal, secret }) => {
   const { t } = useForkliftTranslation();
 
   const items = [];
@@ -27,184 +28,184 @@ export const OpenstackCredentialsList: React.FC<ListComponentProps> = ({ secret,
   );
 
   const fields: Record<string, Fields> = {
-    passwordSecretFields: {
+    applicationCredentialIdSecretFields: {
+      applicationCredentialID: {
+        description: t(
+          'OpenStack application credential ID needed for the application credential authentication.',
+        ),
+        label: t('Application credential ID'),
+      },
+      applicationCredentialSecret: {
+        description: t(
+          'OpenStack application credential Secret needed for the application credential authentication.',
+        ),
+        label: t('Application credential Secret'),
+      },
       authType: {
-        label: t('Authentication type'),
         description: t(
           'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
         ),
-      },
-      username: {
-        label: t('Username'),
-        description: t('A username for connecting to the OpenStack Identity (Keystone) endpoint.'),
-      },
-      password: {
-        label: t('Password'),
-        description: t(
-          'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
-        ),
-      },
-      regionName: { label: t('Region'), description: t('OpenStack region name.') },
-      projectName: { label: t('Project'), description: t('OpenStack project name.') },
-      domainName: { label: t('Domain'), description: t('OpenStack domain name.') },
-      insecureSkipVerify: {
-        label: t('Skip certificate validation'),
-        description: t('Migrate without validating a CA certificate'),
-        helperTextPopover: insecureSkipVerifyHelperTextPopover,
-        displayType: 'switch',
+        label: t('Authentication type'),
       },
       cacert: {
+        description: t(
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
+        ),
+        displayType: 'textArea',
         label: t('CA certificate'),
+      },
+      insecureSkipVerify: {
+        description: t('Migrate without validating a CA certificate'),
+        displayType: 'switch',
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        label: t('Skip certificate validation'),
+      },
+      projectName: { description: t('OpenStack project name.'), label: t('Project') },
+      regionName: { description: t('OpenStack region name.'), label: t('Region') },
+    },
+
+    applicationCredentialNameSecretFields: {
+      applicationCredentialName: {
+        description: t(
+          'OpenStack application credential name needed for application credential authentication.',
+        ),
+        label: t('Application credential name'),
+      },
+      applicationCredentialSecret: {
+        description: t(
+          'OpenStack application credential Secret needed for the application credential authentication.',
+        ),
+        label: t('Application credential Secret'),
+      },
+      authType: {
+        description: t(
+          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
+        ),
+        label: t('Authentication type'),
+      },
+      cacert: {
+        description: t(
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
+        ),
+        displayType: 'textArea',
+        label: t('CA certificate'),
+      },
+      domainName: { description: t('OpenStack domain name.'), label: t('Domain') },
+      insecureSkipVerify: {
+        description: t('Migrate without validating a CA certificate'),
+        displayType: 'switch',
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        label: t('Skip certificate validation'),
+      },
+      projectName: { description: t('OpenStack project name.'), label: t('Project') },
+      regionName: { description: t('OpenStack region name.'), label: t('Region') },
+      username: {
+        description: t(
+          t('A username for connecting to the OpenStack Identity (Keystone) endpoint.'),
+        ),
+        label: t('Username'),
+      },
+    },
+
+    passwordSecretFields: {
+      authType: {
+        description: t(
+          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
+        ),
+        label: t('Authentication type'),
+      },
+      cacert: {
         description: t(
           'A CA certificate to be trusted when connecting to the OpenStack Identity (Keystone) endpoint. Ensure the CA certificate format is valid. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
         ),
         displayType: 'textArea',
+        label: t('CA certificate'),
+      },
+      domainName: { description: t('OpenStack domain name.'), label: t('Domain') },
+      insecureSkipVerify: {
+        description: t('Migrate without validating a CA certificate'),
+        displayType: 'switch',
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        label: t('Skip certificate validation'),
+      },
+      password: {
+        description: t(
+          'A user password for connecting to the OpenStack Identity (Keystone) endpoint.',
+        ),
+        label: t('Password'),
+      },
+      projectName: { description: t('OpenStack project name.'), label: t('Project') },
+      regionName: { description: t('OpenStack region name.'), label: t('Region') },
+      username: {
+        description: t('A username for connecting to the OpenStack Identity (Keystone) endpoint.'),
+        label: t('Username'),
       },
     },
 
     tokenWithUserIDSecretFields: {
       authType: {
-        label: t('Authentication type'),
         description: t(
           'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
         ),
-      },
-      token: {
-        label: t('Token'),
-        description: t('OpenStack token for authentication using a user ID.'),
-      },
-      userID: {
-        label: t('User ID'),
-        description: t('A user ID for connecting to the OpenStack Identity (Keystone) endpoint.'),
-      },
-      projectID: { label: t('Project ID'), description: t('OpenStack project ID.') },
-      regionName: { label: t('Region'), description: t('OpenStack region name.') },
-      insecureSkipVerify: {
-        label: t('Skip certificate validation'),
-        description: t('Migrate without validating a CA certificate'),
-        helperTextPopover: insecureSkipVerifyHelperTextPopover,
-        displayType: 'switch',
+        label: t('Authentication type'),
       },
       cacert: {
-        label: t('CA certificate'),
         description: t(
           'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
         ),
         displayType: 'textArea',
+        label: t('CA certificate'),
+      },
+      insecureSkipVerify: {
+        description: t('Migrate without validating a CA certificate'),
+        displayType: 'switch',
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        label: t('Skip certificate validation'),
+      },
+      projectID: { description: t('OpenStack project ID.'), label: t('Project ID') },
+      regionName: { description: t('OpenStack region name.'), label: t('Region') },
+      token: {
+        description: t('OpenStack token for authentication using a user ID.'),
+        label: t('Token'),
+      },
+      userID: {
+        description: t('A user ID for connecting to the OpenStack Identity (Keystone) endpoint.'),
+        label: t('User ID'),
       },
     },
 
     tokenWithUsernameSecretFields: {
       authType: {
-        label: t('Authentication type'),
         description: t(
           'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
         ),
+        label: t('Authentication type'),
       },
+      cacert: {
+        description: t(
+          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
+        ),
+        displayType: 'textArea',
+        label: t('CA certificate'),
+      },
+      domainName: { description: t('OpenStack domain name.'), label: t('Domain name') },
+      insecureSkipVerify: {
+        description: t('Migrate without validating a CA certificate'),
+        displayType: 'switch',
+        helperTextPopover: insecureSkipVerifyHelperTextPopover,
+        label: t('Skip certificate validation'),
+      },
+      projectName: { description: t('OpenStack project name.'), label: t('Project') },
+      regionName: { description: t('OpenStack region name.'), label: t('Region') },
       token: {
-        label: t('Token'),
         description: t('OpenStack token for authentication using a user name.'),
+        label: t('Token'),
       },
       username: {
-        label: t('Username'),
         description: t(
           t('A username for connecting to the OpenStack Identity (Keystone) endpoint.'),
         ),
-      },
-      regionName: { label: t('Region'), description: t('OpenStack region name.') },
-      projectName: { label: t('Project'), description: t('OpenStack project name.') },
-      domainName: { label: t('Domain name'), description: t('OpenStack domain name.') },
-      insecureSkipVerify: {
-        label: t('Skip certificate validation'),
-        description: t('Migrate without validating a CA certificate'),
-        helperTextPopover: insecureSkipVerifyHelperTextPopover,
-        displayType: 'switch',
-      },
-      cacert: {
-        label: t('CA certificate'),
-        description: t(
-          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
-        ),
-        displayType: 'textArea',
-      },
-    },
-
-    applicationCredentialIdSecretFields: {
-      authType: {
-        label: t('Authentication type'),
-        description: t(
-          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
-        ),
-      },
-      applicationCredentialID: {
-        label: t('Application credential ID'),
-        description: t(
-          'OpenStack application credential ID needed for the application credential authentication.',
-        ),
-      },
-      applicationCredentialSecret: {
-        label: t('Application credential Secret'),
-        description: t(
-          'OpenStack application credential Secret needed for the application credential authentication.',
-        ),
-      },
-      regionName: { label: t('Region'), description: t('OpenStack region name.') },
-      projectName: { label: t('Project'), description: t('OpenStack project name.') },
-      insecureSkipVerify: {
-        label: t('Skip certificate validation'),
-        description: t('Migrate without validating a CA certificate'),
-        helperTextPopover: insecureSkipVerifyHelperTextPopover,
-        displayType: 'switch',
-      },
-      cacert: {
-        label: t('CA certificate'),
-        description: t(
-          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
-        ),
-        displayType: 'textArea',
-      },
-    },
-
-    applicationCredentialNameSecretFields: {
-      authType: {
-        label: t('Authentication type'),
-        description: t(
-          'Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.',
-        ),
-      },
-      applicationCredentialName: {
-        label: t('Application credential name'),
-        description: t(
-          'OpenStack application credential name needed for application credential authentication.',
-        ),
-      },
-      applicationCredentialSecret: {
-        label: t('Application credential Secret'),
-        description: t(
-          'OpenStack application credential Secret needed for the application credential authentication.',
-        ),
-      },
-      username: {
         label: t('Username'),
-        description: t(
-          t('A username for connecting to the OpenStack Identity (Keystone) endpoint.'),
-        ),
-      },
-      regionName: { label: t('Region'), description: t('OpenStack region name.') },
-      projectName: { label: t('Project'), description: t('OpenStack project name.') },
-      domainName: { label: t('Domain'), description: t('OpenStack domain name.') },
-      insecureSkipVerify: {
-        label: t('Skip certificate validation'),
-        description: t('Migrate without validating a CA certificate'),
-        helperTextPopover: insecureSkipVerifyHelperTextPopover,
-        displayType: 'switch',
-      },
-      cacert: {
-        label: t('CA certificate'),
-        description: t(
-          'The Manager CA certificate unless it was replaced by a third-party certificate, in which case, enter the Manager Apache CA certificate.',
-        ),
-        displayType: 'textArea',
       },
     },
   };

@@ -24,7 +24,7 @@ export const toMap = (search: string): MappedSearchParams => {
 export const useSearchParams = (): [MappedSearchParams, SetURLSearchParams] => {
   const [searchParams, internalSetSearchParams] = React.useState(toMap(location.search));
 
-  const removeUndefinedKeys = (obj: { [k: string]: string }): { [k: string]: string } =>
+  const removeUndefinedKeys = (obj: Record<string, string>): Record<string, string> =>
     Object.fromEntries(Object.entries(obj).filter(([, value]) => value !== undefined));
 
   /**

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { ResourceLinkProps } from '@openshift-console/dynamic-plugin-sdk';
+import type { ResourceLinkProps } from '@openshift-console/dynamic-plugin-sdk';
 
 export const ResourceLink = ({
+  groupVersionKind: { group = '', kind = '', version = '' } = { kind: '', version: '' },
   name,
-  groupVersionKind: { group = '', version = '', kind = '' } = { version: '', kind: '' },
   namespace: ns,
 }: ResourceLinkProps) => (
   <div className="ResourceLink_mock">
