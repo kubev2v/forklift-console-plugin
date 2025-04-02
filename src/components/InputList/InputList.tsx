@@ -85,7 +85,7 @@ export const InputList = <T,>({
   onChange,
   removeIconContent = 'Remove',
 }: InputListProps<T>) => {
-  const initialStateItems = (items || []).length > 0 ? items : [];
+  const initialStateItems = (items || []).length > 0 ? items : [null as unknown as T];
   const [localItems, setLocalItems] = useState<InputListItem<T>[]>(
     assignIdsToItems(initialStateItems),
   );
