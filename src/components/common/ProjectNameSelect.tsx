@@ -1,4 +1,4 @@
-import React, { type FC, type ReactNode } from 'react';
+import { type FC, type ReactNode } from 'react';
 
 import {
   type K8sResourceKind,
@@ -8,6 +8,7 @@ import {
 import { Popover } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { useForkliftTranslation } from '@utils/i18n';
+import { isEmpty } from '@utils/helpers';
 
 import { FormGroupWithHelpText } from './FormGroupWithHelpText/FormGroupWithHelpText';
 import { TypeaheadSelect, type TypeaheadSelectOption } from './TypeaheadSelect/TypeaheadSelect';
@@ -43,6 +44,7 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
       }
     >
       <TypeaheadSelect
+        isScrollable
         id="project-name-select"
         selectOptions={options}
         selected={value}
@@ -58,19 +60,24 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
   );
 };
 
-export const useProjectNameSelectOptions = (defaultProject: string): TypeaheadSelectOption[] => {
+export const useProjectNameSelectOptions = (
+  defaultProject?: string,
+): [TypeaheadSelectOption[], boolean, Error | undefined] => {
   const isUseProjects = useFlag('OPENSHIFT'); // OCP or Kind installations
 
   const [projects, projectsLoaded, projectsLoadError] = useK8sWatchResource<K8sResourceKind[]>({
     isList: true,
     kind: isUseProjects ? 'Project' : 'Namespace',
   });
+  const defaultOptions = defaultProject ? [{ value: defaultProject, content: defaultProject }] : [];
+  const selectOptions =
+    isEmpty(projects) || !projectsLoaded || projectsLoadError
+      ? // In case of an error or an empty list, returns the active namespace
+        defaultOptions
+      : projects.map((project) => ({
+          value: project.metadata?.name ?? '',
+          content: project.metadata?.name ?? '',
+        }));
 
-  return projects.length === 0 || !projectsLoaded || projectsLoadError
-    ? // In case of an error or an empty list, returns the active namespace
-      [{ content: defaultProject, value: defaultProject }]
-    : projects.map((project) => ({
-        content: project.metadata?.name,
-        value: project.metadata?.name,
-      }));
+  return [selectOptions, projectsLoaded, projectsLoadError];
 };

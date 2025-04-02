@@ -1,0 +1,8 @@
+.wizard-step-container {
+  display: flex;
+  flex-direction: column;
+
+  &--form {
+    width: 66%;
+  }
+}

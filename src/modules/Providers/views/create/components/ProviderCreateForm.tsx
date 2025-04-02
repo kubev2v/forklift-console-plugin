@@ -29,8 +29,8 @@ import { providerCardItems } from './providerCardItems';
 export type ProvidersCreateFormProps = {
   newProvider: V1beta1Provider;
   newSecret: IoK8sApiCoreV1Secret;
-  onNewProviderChange: (V1beta1Provider) => void;
-  onNewSecretChange: (IoK8sApiCoreV1Secret) => void;
+  onNewProviderChange: (provider: V1beta1Provider) => void;
+  onNewSecretChange: (secret: IoK8sApiCoreV1Secret) => void;
   providerNames?: string[];
   projectName?: string;
   onProjectNameChange?: (value: string) => void;
@@ -46,7 +46,7 @@ const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
   providerNames = [],
 }) => {
   const { t } = useForkliftTranslation();
-  const projectNameOptions = useProjectNameSelectOptions(projectName);
+  const [projectNameOptions] = useProjectNameSelectOptions(projectName);
 
   const initialState = {
     validation: {

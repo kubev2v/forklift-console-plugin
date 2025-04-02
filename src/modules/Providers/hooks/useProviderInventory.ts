@@ -20,7 +20,7 @@ import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils/constants';
  * @param {boolean} [disabled] - Prevent query execution.
  */
 export type UseProviderInventoryParams = {
-  provider: V1beta1Provider;
+  provider: V1beta1Provider | undefined;
   subPath?: string;
   fieldsToAvoidComparing?: string[];
   interval?: number;
@@ -70,8 +70,8 @@ const useProviderInventory = <T>({
   const [inventory, setInventory] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const oldDataRef = useRef(null);
-  const oldErrorRef = useRef(null);
+  const oldDataRef = useRef<{ inventory: T | null } | null>(null);
+  const oldErrorRef = useRef<{ error: string } | null>(null);
 
   // we only use type and uid in this context
   const stableProvider = useMemo(() => provider, [provider?.spec?.type, provider?.metadata?.uid]);
@@ -94,7 +94,7 @@ const useProviderInventory = <T>({
       try {
         const newInventory = await consoleFetchJSON(
           getInventoryApiUrl(
-            `providers/${provider.spec.type}/${provider.metadata.uid}${
+            `providers/${provider?.spec?.type}/${provider?.metadata?.uid}${
               subPath ? `/${subPath}` : ''
             }`,
           ),
@@ -104,9 +104,13 @@ const useProviderInventory = <T>({
         );
 
         updateInventoryIfChanged(newInventory, fieldsToAvoidComparing);
-        handleError(null);
+        setError(null);
       } catch (e) {
-        handleError(e);
+        updateInventoryIfChanged(null, []);
+
+        if (e instanceof Error) {
+          handleError(e);
+        }
       } finally {
         setLoading(false);
       }
@@ -140,7 +144,7 @@ const useProviderInventory = <T>({
    * @param {V1beta1Provider} provider - The provider object to be validated.
    * @returns {boolean} - True if the provider object is valid, false otherwise.
    */
-  function isValidProvider(provider: V1beta1Provider): boolean {
+  function isValidProvider(provider: V1beta1Provider | undefined): boolean {
     return provider?.spec?.type !== undefined && provider?.metadata?.uid !== undefined;
   }
 
@@ -150,7 +154,10 @@ const useProviderInventory = <T>({
    * @param {T} newInventory - The new inventory data.
    * @param {string[]} fieldsToAvoidComparing - The fields to ignore comparing when checking if the inventory data has changed.
    */
-  function updateInventoryIfChanged(newInventory: T, fieldsToAvoidComparing: string[]): void {
+  function updateInventoryIfChanged(
+    newInventory: T | null,
+    fieldsToAvoidComparing: string[],
+  ): void {
     const needReRender = hasObjectChangedInGivenFields({
       fieldsToAvoidComparing,
       newObject: newInventory,
