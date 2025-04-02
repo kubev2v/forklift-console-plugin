@@ -24,7 +24,7 @@ export type FormAction =
   | { type: 'SET_ALERT_MESSAGE'; payload: React.ReactNode }
   | { type: 'INIT'; payload: FormState };
 
-export function formReducer(state: FormState, action: FormAction): FormState {
+export const formReducer = (state: FormState, action: FormAction): FormState => {
   let newState: FormState;
 
   switch (action.type) {
@@ -62,4 +62,4 @@ export function formReducer(state: FormState, action: FormAction): FormState {
     default:
       return state;
   }
-}
+};

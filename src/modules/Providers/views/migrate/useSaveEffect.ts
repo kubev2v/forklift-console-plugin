@@ -124,7 +124,7 @@ export const useSaveEffect = (state: CreateVmMigrationPageState, dispatch) => {
  * @param {NetworkMap} networkMap - The network map object to update.
  * @returns {NetworkMap} The updated network map object.
  */
-export function updateNetworkMapDestination(networkMap: V1beta1NetworkMap): V1beta1NetworkMap {
+export const updateNetworkMapDestination = (networkMap: V1beta1NetworkMap): V1beta1NetworkMap => {
   const networkMapCopy = deepCopy(networkMap);
 
   networkMapCopy.spec.map?.forEach((entry) => {
@@ -135,4 +135,4 @@ export function updateNetworkMapDestination(networkMap: V1beta1NetworkMap): V1be
     }
   });
   return networkMapCopy;
-}
+};

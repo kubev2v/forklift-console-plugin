@@ -5,7 +5,7 @@
  * @returns - The CIDR notation as a string (e.g., "192.168.0.1/24").
  * @throws - If the subnet mask is not a valid IPv4 address.
  */
-export function calculateCidrNotation(ip: string, subnetMask: string): string {
+export const calculateCidrNotation = (ip: string, subnetMask: string): string => {
   // Split subnet mask into its respective octets.
   const maskOctets = subnetMask.split('.').map(Number);
 
@@ -24,4 +24,4 @@ export function calculateCidrNotation(ip: string, subnetMask: string): string {
     .split('0', 1)[0].length;
 
   return `${ip}/${cidr}`;
-}
+};
