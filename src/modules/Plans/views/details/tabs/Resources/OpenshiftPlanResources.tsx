@@ -147,7 +147,7 @@ export const k8sMemoryToBytes = (memoryString: string) => {
   throw new Error('Invalid memory string format');
 };
 
-function k8sCpuToCores(cpuString) {
+const k8sCpuToCores = (cpuString) => {
   if (cpuString === undefined) {
     return undefined;
   }
@@ -163,4 +163,4 @@ function k8sCpuToCores(cpuString) {
   }
   // Directly parse the string as a float representing cores.
   return parseFloat(cpuString);
-}
+};

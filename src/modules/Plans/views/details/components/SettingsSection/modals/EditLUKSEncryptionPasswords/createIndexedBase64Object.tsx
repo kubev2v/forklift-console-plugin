@@ -1,4 +1,4 @@
-export function createIndexedBase64Object(encodedString: string): Record<number, string> {
+export const createIndexedBase64Object = (encodedString: string): Record<number, string> => {
   // Parse the JSON encoded string to get the list of strings
   const list: string[] = JSON.parse(encodedString || '[]');
 
@@ -17,4 +17,4 @@ export function createIndexedBase64Object(encodedString: string): Record<number,
     });
 
   return result;
-}
+};

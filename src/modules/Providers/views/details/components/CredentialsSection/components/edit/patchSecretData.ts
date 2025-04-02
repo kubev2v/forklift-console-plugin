@@ -10,7 +10,7 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
  * @param {boolean} clean - Clean old values from the secret before patching.
  * @returns {Promise<void>} A promise that resolves when the patch operation is complete.
  */
-export async function patchSecretData(secret: IoK8sApiCoreV1Secret, clean?: boolean) {
+export const patchSecretData = async (secret: IoK8sApiCoreV1Secret, clean?: boolean) => {
   const op = secret?.data ? 'replace' : 'add';
 
   // Sanitize secret data
@@ -27,7 +27,7 @@ export async function patchSecretData(secret: IoK8sApiCoreV1Secret, clean?: bool
     model: SecretModel,
     resource: secret,
   });
-}
+};
 
 // when patching a secret with new data, first remove all other fields
 const EmptyOpenstackCredentials = {
@@ -45,7 +45,7 @@ const EmptyOpenstackCredentials = {
   username: undefined,
 };
 
-function cleanObject(obj) {
+const cleanObject = (obj) => {
   const result = {};
   for (const key in obj) {
     if (obj[key] !== null && obj[key] !== '') {
@@ -59,4 +59,4 @@ function cleanObject(obj) {
   }
 
   return result;
-}
+};

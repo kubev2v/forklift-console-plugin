@@ -22,10 +22,10 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
  *  .then(newSecret => console.log(newSecret))
  *  .catch(err => console.error(err));
  */
-export async function createProviderSecret(
+export const createProviderSecret = async (
   provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret,
-) {
+): Promise<object> => {
   const url = provider?.spec?.url;
 
   // Sanity check, don't try to create empty secret, or a secret without url
@@ -57,20 +57,20 @@ export async function createProviderSecret(
   });
 
   return obj;
-}
+};
 
-function cleanObject(obj) {
-  const result = {};
+const cleanObject = (obj: Record<string, string | null | undefined>): Record<string, string> => {
+  const result: Record<string, string> = {};
   for (const key in obj) {
-    if (obj[key] !== null && obj[key] !== '') {
+    if (obj[key] !== null && obj[key] !== undefined && obj[key] !== '') {
       result[key] = obj[key];
     }
   }
 
   // Don't save cacert when insecureSkipVerify is true
-  if (Base64.decode(obj?.insecureSkipVerify || '') === 'true') {
+  if (Base64.decode(obj?.insecureSkipVerify ?? '') === 'true') {
     delete result.cacert;
   }
 
   return result;
-}
+};

@@ -7,7 +7,7 @@ import type { ValidationMsg } from '../../common';
 
 import { esxiSecretFieldValidator } from './esxiSecretFieldValidator';
 
-export function esxiSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
+export const esxiSecretValidator = (secret: IoK8sApiCoreV1Secret): ValidationMsg => {
   const requiredFields = ['user', 'password'];
   const validateFields = ['user', 'password', 'insecureSkipVerify'];
 
@@ -33,4 +33,4 @@ export function esxiSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg
   }
 
   return { type: 'default' };
-}
+};

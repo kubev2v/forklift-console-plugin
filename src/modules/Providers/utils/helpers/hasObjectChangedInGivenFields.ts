@@ -10,11 +10,11 @@ type FieldsComparisonArgs<T> = {
  * @param params - An object containing the old object, new object, and fields to avoid comparing.
  * @returns A boolean indicating whether any of the specified fields have changed.
  */
-export function hasObjectChangedInGivenFields<T>(params: FieldsComparisonArgs<T>): boolean {
+export const hasObjectChangedInGivenFields = <T>(params: FieldsComparisonArgs<T>): boolean => {
   return !isEqual(params.newObject, params.oldObject, params.fieldsToAvoidComparing);
-}
+};
 
-function isEqual(obj1: unknown, obj2: unknown, fieldsToAvoidComparing: string[]): boolean {
+const isEqual = (obj1: unknown, obj2: unknown, fieldsToAvoidComparing: string[]): boolean => {
   const isFieldToCompare = (key: string) => !fieldsToAvoidComparing.includes(key);
   const isFieldChanged = (key: string, keys2: string[], fieldsToAvoidComparing: string[]) =>
     !keys2.includes(key) || !isEqual(obj1[key], obj2[key], fieldsToAvoidComparing);
@@ -65,4 +65,4 @@ function isEqual(obj1: unknown, obj2: unknown, fieldsToAvoidComparing: string[])
   }
 
   return true;
-}
+};

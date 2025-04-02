@@ -71,45 +71,45 @@ export type ValidationMsg = {
 
 // helper methods
 
-export function validateContainerImage(image: string) {
+export const validateContainerImage = (image: string) => {
   return IMAGE_REGEX.test(image);
-}
+};
 
-export function validateURL(url: string) {
+export const validateURL = (url: string) => {
   return URL_REGEX.test(url);
-}
+};
 
-export function validateIpv4(value: string) {
+export const validateIpv4 = (value: string) => {
   return IPV4_REGEX.test(value);
-}
+};
 
-export function validateNFSMount(nfsPath: string) {
+export const validateNFSMount = (nfsPath: string) => {
   return NFS_REGEX.test(nfsPath);
-}
+};
 
-export function validatePublicCert(ca: string) {
+export const validatePublicCert = (ca: string) => {
   return CERTIFICATE_REGEX.test(ca);
-}
+};
 
-export function validateFingerprint(fingerprint: string) {
+export const validateFingerprint = (fingerprint: string) => {
   return FINGERPRINT_REGEX.test(fingerprint);
-}
+};
 
-export function validateK8sName(k8sName: string) {
+export const validateK8sName = (k8sName: string) => {
   return DNS_SUBDOMAINS_NAME_REGEXP.test(k8sName);
-}
+};
 
-export function validateK8sToken(token: string) {
+export const validateK8sToken = (token: string) => {
   return JWT_TOKEN_REGEX.test(token) || K8S_TOKEN_REGEX.test(token) || TMP_TOKEN_REGEX.test(token);
-}
+};
 
-export function validateNoSpaces(value: string) {
+export const validateNoSpaces = (value: string) => {
   // any string without spaces
-  return /^[^\s]+$/.test(value);
-}
+  return /^[^\s]+$/u.test(value);
+};
 
-export function validateUsernameAndDomain(value: string) {
+export const validateUsernameAndDomain = (value: string) => {
   // Must contain exactly one @, and no whitespace
   // example: user@domain valid, user@ domain OR user@@domain invalid
-  return /^[^\s@]+@[^\s@]+$/.test(value);
-}
+  return /^[^\s@]+@[^\s@]+$/u.test(value);
+};

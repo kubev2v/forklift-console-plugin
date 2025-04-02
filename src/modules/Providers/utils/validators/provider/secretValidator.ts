@@ -10,12 +10,12 @@ import { vcenterSecretValidator } from './vsphere/vcenterSecretValidator';
 
 export type SecretSubType = 'esxi' | 'vcenter';
 
-export function secretValidator(
+export const secretValidator = (
   provider: V1beta1Provider,
   type: string,
   subType: SecretSubType,
   secret: IoK8sApiCoreV1Secret,
-): ValidationMsg {
+): ValidationMsg => {
   let validationError: ValidationMsg;
 
   switch (type) {
@@ -43,4 +43,4 @@ export function secretValidator(
   }
 
   return validationError;
-}
+};

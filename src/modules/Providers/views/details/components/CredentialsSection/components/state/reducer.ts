@@ -31,7 +31,7 @@ type BaseCredentialsAction =
   | { type: 'SET_NEW_SECRET'; payload: IoK8sApiCoreV1Secret }
   | { type: 'SET_ALERT_MESSAGE'; payload: ReactNode };
 
-export function baseCredentialsSectionReducerFactory(secret, validator) {
+export const baseCredentialsSectionReducerFactory = (secret, validator) => {
   return function baseCredentialsSectionReducer(
     state: BaseCredentialsSectionState,
     action: BaseCredentialsAction,
@@ -62,4 +62,4 @@ export function baseCredentialsSectionReducerFactory(secret, validator) {
         return state;
     }
   };
-}
+};
