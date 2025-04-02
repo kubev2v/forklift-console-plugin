@@ -17,18 +17,20 @@ import {
  */
 export const OwnerReferencesItem: React.FC<OwnerReferencesProps> = ({ resource }) => {
   const { t } = useForkliftTranslation();
-  const owners = (resource?.metadata?.ownerReferences || []).map((o: OwnerReference) => (
-    <ResourceLink
-      key={o.uid}
-      groupVersionKind={{
-        group: o.apiVersion.split('/')[0],
-        kind: o.kind,
-        version: o.apiVersion.split('/')[1],
-      }}
-      name={o.name}
-      namespace={resource.metadata.namespace}
-    />
-  ));
+  const owners = (resource?.metadata?.ownerReferences || []).map(
+    (ownerReference: OwnerReference) => (
+      <ResourceLink
+        key={ownerReference.uid}
+        groupVersionKind={{
+          group: ownerReference.apiVersion.split('/')[0],
+          kind: ownerReference.kind,
+          version: ownerReference.apiVersion.split('/')[1],
+        }}
+        name={ownerReference.name}
+        namespace={resource.metadata.namespace}
+      />
+    ),
+  );
   return owners.length ? <>{owners}</> : <span className="text-muted">{t('No owner')}</span>;
 };
 

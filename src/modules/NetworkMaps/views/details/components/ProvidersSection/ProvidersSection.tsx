@@ -39,7 +39,9 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
     namespaced: true,
   });
 
-  const targetProviders = providers.filter((p) => ['openshift'].includes(p?.spec?.type));
+  const targetProviders = providers.filter((provider) =>
+    ['openshift'].includes(provider?.spec?.type),
+  );
 
   const onUpdate = async () => {
     dispatch({ payload: true, type: 'SET_UPDATING' });
@@ -57,7 +59,7 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
     value,
   ) => {
     dispatch({
-      payload: providers.find((p) => p?.metadata?.name === value),
+      payload: providers.find((provider) => provider?.metadata?.name === value),
       type: 'SET_SOURCE_PROVIDER',
     });
   };
@@ -66,7 +68,7 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
     value,
   ) => {
     dispatch({
-      payload: providers.find((p) => p?.metadata?.name === value),
+      payload: providers.find((provider) => provider?.metadata?.name === value),
       type: 'SET_TARGET_PROVIDER',
     });
   };

@@ -52,8 +52,8 @@ const PreserveStaticIPsInputFactory: () => ModalInputComponentType = () => {
         label={t('Preserve the static IPs of the virtual machines migrated')}
         isChecked={value === 'true'}
         hasCheckIcon
-        onChange={(e, v) => {
-          onChangeInternal(v, e);
+        onChange={(e, value) => {
+          onChangeInternal(value, e);
         }}
       />
     );

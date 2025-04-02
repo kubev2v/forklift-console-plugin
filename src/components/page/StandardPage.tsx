@@ -344,7 +344,7 @@ const StandardPageInner = <T,>({
   );
 
   const errorFetchingData = error;
-  const noResults = loaded && !error && sortedData.length == 0;
+  const noResults = loaded && !error && sortedData.length === 0;
   const noMatchingResults = loaded && !error && filteredData.length === 0 && sortedData.length > 0;
 
   const primaryFilters = fields

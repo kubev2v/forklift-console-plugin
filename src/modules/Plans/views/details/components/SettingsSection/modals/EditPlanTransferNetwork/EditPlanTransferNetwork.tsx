@@ -74,12 +74,12 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
       subPath: 'networkattachmentdefinitions?detail=4',
     });
 
-    const transferNetworks: V1beta1PlanSpecTransferNetwork[] = (networks || []).map((n) => ({
-      apiVersion: n.object.apiVersion,
-      kind: n.object.kind,
-      name: n.name,
-      namespace: n.namespace,
-      uid: n.uid,
+    const transferNetworks: V1beta1PlanSpecTransferNetwork[] = (networks || []).map((network) => ({
+      apiVersion: network.object.apiVersion,
+      kind: network.object.kind,
+      name: network.name,
+      namespace: network.namespace,
+      uid: network.uid,
     }));
 
     const dropdownItems = [
@@ -93,16 +93,16 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
       >
         {'Providers default'}
       </DropdownItem>,
-      ...(transferNetworks || []).map((n) => (
+      ...(transferNetworks || []).map((network) => (
         <DropdownItem
           value={1}
-          key={getNetworkName(n)}
-          description={n.namespace}
+          key={getNetworkName(network)}
+          description={network.namespace}
           onClick={() => {
-            onChange(n);
+            onChange(network);
           }}
         >
-          {n.name}
+          {network.name}
         </DropdownItem>
       )),
     ];

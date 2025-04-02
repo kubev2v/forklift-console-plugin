@@ -125,7 +125,7 @@ export default [
       camelcase: ['error', { allow: ['required_'] }],
       'capitalized-comments': 'off',
       complexity: 'off',
-      'id-length': ['error', { exceptions: ['t'] }],
+      'id-length': ['error', { exceptions: ['t', 'e', 'x', 'y', 'a', 'b', '_', 'i'] }],
       'import/named': 'error',
       'import/no-duplicates': ['error', { 'prefer-inline': true }],
       'import/no-named-as-default-member': 'off',

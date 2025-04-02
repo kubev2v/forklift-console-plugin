@@ -14,7 +14,9 @@ export const getMigrationVmsCounts = (vms: V1beta1PlanStatusMigrationVms[]): Mig
   }
 
   const vmsCanceled = vms.filter((vm) =>
-    (vm?.conditions || []).find((c) => c.type === 'Canceled' && c.status === 'True'),
+    (vm?.conditions || []).find(
+      (condition) => condition.type === 'Canceled' && condition.status === 'True',
+    ),
   );
   const vmsCompleted = vms.filter((vm) => vm?.completed);
   const vmsError = vms.filter((vm) => vm?.error);

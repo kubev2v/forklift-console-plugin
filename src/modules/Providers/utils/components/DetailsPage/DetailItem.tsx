@@ -136,8 +136,8 @@ const DescriptionTitleWithHelp: React.FC<{
             {crumbs && crumbs.length > 0 && (
               <FlexItem>
                 <Breadcrumb>
-                  {crumbs.map((c) => (
-                    <BreadcrumbItem key={c}>{c}</BreadcrumbItem>
+                  {crumbs.map((crumb) => (
+                    <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>
                   ))}
                 </Breadcrumb>
               </FlexItem>

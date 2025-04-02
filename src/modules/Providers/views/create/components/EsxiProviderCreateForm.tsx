@@ -56,7 +56,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
     (id, value) => {
       const trimmedValue = value?.trim();
 
-      if (id == 'emptyVddkInitImage') {
+      if (id === 'emptyVddkInitImage') {
         const validationState = validateVDDKImage(undefined);
 
         dispatch({
@@ -83,7 +83,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
         });
       }
 
-      if (id == 'vddkInitImage') {
+      if (id === 'vddkInitImage') {
         const validationState = validateVDDKImage(trimmedValue);
 
         dispatch({
@@ -103,7 +103,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
         });
       }
 
-      if (id == 'sdkEndpoint') {
+      if (id === 'sdkEndpoint') {
         const sdkEndpoint = trimmedValue || undefined;
 
         onChange({
@@ -196,8 +196,8 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
           name="url"
           value={url}
           validated={state.validation.url.type}
-          onChange={(e, v) => {
-            onChangeUrl(v, e);
+          onChange={(e, value) => {
+            onChangeUrl(value, e);
           }}
         />
       </FormGroupWithHelpText>
@@ -227,8 +227,8 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
               'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
             )}
             isChecked={emptyVddkInitImage === 'yes'}
-            onChange={(e, v) => {
-              onChangEmptyVddk(v, e);
+            onChange={(e, value) => {
+              onChangEmptyVddk(value, e);
             }}
             id="emptyVddkInitImage"
             name="emptyVddkInitImage"
@@ -245,8 +245,8 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
             validated={
               emptyVddkInitImage === 'yes' ? 'default' : state.validation.vddkInitImage.type
             }
-            onChange={(e, v) => {
-              onChangeVddk(v, e);
+            onChange={(e, value) => {
+              onChangeVddk(value, e);
             }}
           />
         </div>

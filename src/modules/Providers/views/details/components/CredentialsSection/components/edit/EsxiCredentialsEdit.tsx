@@ -152,8 +152,8 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, se
           type="text"
           id="username"
           name="username"
-          onChange={(e, v) => {
-            onChangeUser(v, e);
+          onChange={(e, value) => {
+            onChangeUser(value, e);
           }}
           value={user}
           validated={state.validation.user.type}
@@ -174,8 +174,8 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, se
             isRequired
             type={state.passwordHidden ? 'password' : 'text'}
             aria-label="Password input"
-            onChange={(e, v) => {
-              onChangePassword(v, e);
+            onChange={(e, value) => {
+              onChangePassword(value, e);
             }}
             value={password}
             validated={state.validation.password.type}
@@ -220,8 +220,8 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, se
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(e, v) => {
-            onChangeInsecure(v, e);
+          onChange={(e, value) => {
+            onChangeInsecure(value, e);
           }}
         />
       </FormGroupWithHelpText>
@@ -253,11 +253,11 @@ export const EsxiCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, se
           url={url}
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(_e, v) => {
-            onDataChange(v);
+          onDataChange={(_e, value) => {
+            onDataChange(value);
           }}
-          onTextChange={(_e, v) => {
-            onTextChange(v);
+          onTextChange={(_e, value) => {
+            onTextChange(value);
           }}
           onClearClick={() => {
             handleChange('cacert', '');

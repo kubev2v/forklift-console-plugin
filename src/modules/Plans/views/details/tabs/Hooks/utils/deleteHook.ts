@@ -11,7 +11,7 @@ export const deleteHook = async (
   // update plan
   const { vms } = plan.spec;
   const newVms = vms.map((vm) => {
-    const newHooks = vm?.hooks?.filter((h) => h.step !== step) || [];
+    const newHooks = vm?.hooks?.filter((hook) => hook.step !== step) || [];
 
     return {
       ...vm,

@@ -66,8 +66,8 @@ export const VerifyCertificate: FC<{
             id="certificate-check"
             name="certificateCheck"
             isChecked={isTrusted}
-            onChange={(e, v) => {
-              onChange(v, e);
+            onChange={(event, value) => {
+              onChange(value, event);
             }}
           />
         </FlexItem>

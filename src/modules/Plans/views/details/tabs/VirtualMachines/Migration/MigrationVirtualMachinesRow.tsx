@@ -40,8 +40,8 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 
 const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
   diskCounter: (props: PlanVMsCellProps) => {
-    const diskTransfer = props.data.statusVM?.pipeline.find((p) =>
-      p?.name?.startsWith('DiskTransfer'),
+    const diskTransfer = props.data.statusVM?.pipeline.find((pipe) =>
+      pipe?.name?.startsWith('DiskTransfer'),
     );
 
     const { completedTasks, totalTasks } = countTasks(diskTransfer);
@@ -72,7 +72,7 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
     } else if (pipeline[pipeline.length - 1]?.phase === 'Completed') {
       lastRunningItem = pipeline[pipeline.length - 1];
     } else {
-      const lastNonePendingIndex = pipeline.findIndex((p) => p?.phase === 'Pending') - 1;
+      const lastNonePendingIndex = pipeline.findIndex((pipe) => pipe?.phase === 'Pending') - 1;
       lastRunningItem = pipeline[lastNonePendingIndex];
     }
 
@@ -122,15 +122,15 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
           isCenterAligned={true}
           className="forklift-page-plan-details-vm-status"
         >
-          {pipeline.map((p) => (
+          {pipeline.map((pipe) => (
             <ProgressStep
-              key={p?.name}
-              variant={getVariant(p)}
-              icon={getIcon(p)}
-              id={p?.name}
-              titleId={p?.name}
+              key={pipe?.name}
+              variant={getVariant(pipe)}
+              icon={getIcon(pipe)}
+              id={pipe?.name}
+              titleId={pipe?.name}
             >
-              {p?.name}
+              {pipe?.name}
             </ProgressStep>
           ))}
         </ProgressStepper>
@@ -138,8 +138,8 @@ const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
     );
   },
   transfer: (props: PlanVMsCellProps) => {
-    const diskTransfer = props.data.statusVM?.pipeline.find((p) =>
-      p?.name?.startsWith('DiskTransfer'),
+    const diskTransfer = props.data.statusVM?.pipeline.find((pipe) =>
+      pipe?.name?.startsWith('DiskTransfer'),
     );
     const annotations: { unit: string } = diskTransfer?.annotations as undefined;
     const { completed, total } = getTransferProgress(diskTransfer);
@@ -168,12 +168,12 @@ type GetPopoverVariantType = (p: V1beta1PlanStatusMigrationVmsPipeline) => Popov
 
 type GetIconType = (p: V1beta1PlanStatusMigrationVmsPipeline) => React.ReactNode;
 
-export const getVariant: GetVariantType = (p) => {
-  if (p?.error) {
+export const getVariant: GetVariantType = (plan) => {
+  if (plan?.error) {
     return 'danger';
   }
 
-  switch (p?.phase) {
+  switch (plan?.phase) {
     case 'Completed':
       return 'success';
     case 'Pending':
@@ -185,12 +185,12 @@ export const getVariant: GetVariantType = (p) => {
   }
 };
 
-const gePopoverVariant: GetPopoverVariantType = (p) => {
-  if (p?.error) {
+const gePopoverVariant: GetPopoverVariantType = (plan) => {
+  if (plan?.error) {
     return 'danger';
   }
 
-  switch (p?.phase) {
+  switch (plan?.phase) {
     case 'Completed':
       return 'success';
     case 'Pending':
@@ -201,12 +201,12 @@ const gePopoverVariant: GetPopoverVariantType = (p) => {
   }
 };
 
-export const getIcon: GetIconType = (p) => {
-  if (p?.error) {
+export const getIcon: GetIconType = (plan) => {
+  if (plan?.error) {
     return <ResourcesAlmostFullIcon />;
   }
 
-  switch (p?.phase) {
+  switch (plan?.phase) {
     case 'Completed':
       return <ResourcesFullIcon />;
     case 'Pending':

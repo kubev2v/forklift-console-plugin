@@ -30,7 +30,7 @@ const onConfirm: OnConfirmHookType = async ({ model, newValue, resource }) => {
       {
         op,
         path: '/spec/targetNamespace',
-        value: newValue || undefined,
+        value: newValue ?? undefined,
       },
     ],
     model,
@@ -42,7 +42,7 @@ const onConfirm: OnConfirmHookType = async ({ model, newValue, resource }) => {
 
 type DropdownRendererProps = {
   value: string | number;
-  onChange: (string) => void;
+  onChange: (val: string) => void;
 };
 
 const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType = ({
@@ -58,11 +58,13 @@ const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType 
       subPath: 'namespaces?detail=4',
     });
 
-    const options: string[] = (namespaces || []).map((n) => n?.object?.metadata?.name);
+    const options: string[] = (namespaces || []).map(
+      (namespace) => namespace?.object?.metadata?.name,
+    );
 
-    const dropdownItems = (options || []).map((n) => ({
-      children: <Text>{n}</Text>,
-      itemId: n,
+    const dropdownItems = (options || []).map((item) => ({
+      children: <Text>{item}</Text>,
+      itemId: item,
     }));
 
     return (

@@ -82,9 +82,9 @@ const ConcernPopover: React.FC<{
  */
 const ConcernList: React.FC<{ concerns: Concern[] }> = ({ concerns }) => (
   <Stack>
-    {concerns.map((c) => (
-      <StackItem key={c.category}>
-        {getCategoryIcon(c.category)} {c.label}
+    {concerns.map((concern) => (
+      <StackItem key={concern.category}>
+        {getCategoryIcon(concern.category)} {concern.label}
       </StackItem>
     ))}
   </Stack>

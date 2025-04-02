@@ -42,8 +42,8 @@ export const useK8sWatchProviderNames = ({ namespace }): K8sProvidersWatchResult
   const handleLoadedProviders = (providers: V1beta1Provider[] | null) => {
     setLoaded(true);
 
-    const names = (providers || []).map((p) => p.metadata.name);
-    setNames(names.filter((n) => n));
+    const names = (providers || []).map((provider) => provider.metadata.name);
+    setNames(names.filter((name) => name));
   };
 
   return [names, namesLoaded, namesLoadError];

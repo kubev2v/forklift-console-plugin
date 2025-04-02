@@ -37,7 +37,7 @@ export const SelectSourceProvider: React.FC<{
   const { t } = useForkliftTranslation();
 
   // Get the ready providers (note: currently forklift does not allow filter be status.phase)
-  const readyProviders = providers.filter((p) => p?.status?.phase === 'Ready');
+  const readyProviders = providers.filter((provider) => provider?.status?.phase === 'Ready');
 
   const filteredProviders = readyProviders.filter(
     (provider) =>
