@@ -1,7 +1,6 @@
 /* eslint-disable @cspell/spellchecker */
 
 declare module '*.svg' {
-  const content: string;
   export default ReactComponent;
 }
 declare module '*.jpg' {

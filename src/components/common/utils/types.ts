@@ -58,27 +58,12 @@ export type ResourceField = {
   compareFn?: (a: any, b: any, locale: string) => number;
 };
 
-type ResourceFieldPartialFactory = (t: (string) => string) => Partial<ResourceField>;
 export type ResourceFieldFactory = (t: (string) => string) => ResourceField[];
-
-const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
-type K8sConditionStatus = (typeof K8sConditionStatusValues)[number];
 
 export type GlobalActionToolbarProps<T> = {
   // data currently visible on the screen (i.e. adjusted by paging and filtering)
   dataOnScreen: T[];
 };
-
-/**
- * @typedef {Object} ToggleEventType
- * @description Represents the possible event types that can be used for toggling actions.
- *
- * @property {Event} Event - A standard DOM event.
- * @property {React.KeyboardEvent<Element>} React.KeyboardEvent - A React-specific keyboard event.
- * @property {React.MouseEvent<Element, MouseEvent>} React.MouseEvent - A React-specific mouse event.
- * @property {React.ChangeEvent<Element>} React.ChangeEvent - A React-specific change event.
- */
-type ToggleEventType = Event | React.KeyboardEvent | React.MouseEvent | React.ChangeEvent;
 
 /**
  * @typedef {Object} SelectEventType

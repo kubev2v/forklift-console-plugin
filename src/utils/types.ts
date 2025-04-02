@@ -1,11 +1,9 @@
-const ProviderStatusValues = [
-  'ValidationFailed',
-  'ConnectionFailed',
-  'Ready',
-  'Staging',
-  'Unknown',
-] as const;
-export type ProviderStatus = (typeof ProviderStatusValues)[number];
+export type ProviderStatus =
+  | 'ValidationFailed'
+  | 'ConnectionFailed'
+  | 'Ready'
+  | 'Staging'
+  | 'Unknown';
 
 export type VmFeatures = {
   numa?: boolean;
