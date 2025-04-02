@@ -11,9 +11,10 @@ import { Button, Tooltip } from '@patternfly/react-core';
 type PlansAddButtonProps = {
   namespace?: string;
   dataTestId?: string;
+  canCreate?: boolean;
 };
 
-const PlansAddButton: FC<PlansAddButtonProps> = ({ dataTestId, namespace }) => {
+const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namespace }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
   const { setData } = useCreateVmMigrationData();
@@ -38,12 +39,15 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ dataTestId, namespace }) => {
       variant="primary"
       isAriaDisabled={!hasSufficientProviders}
       onClick={onClick}
+      isDisabled={!canCreate}
     >
       {t('Create Plan')}
     </Button>
   );
 
-  return !hasSufficientProviders ? (
+  if (hasSufficientProviders) return button;
+
+  return (
     <Tooltip
       content={
         namespace
@@ -56,8 +60,6 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ dataTestId, namespace }) => {
     >
       {button}
     </Tooltip>
-  ) : (
-    button
   );
 };
 

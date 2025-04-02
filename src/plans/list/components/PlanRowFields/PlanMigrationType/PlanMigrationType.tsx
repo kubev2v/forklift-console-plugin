@@ -5,29 +5,29 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, ButtonVariant, Flex, Label } from '@patternfly/react-core';
+import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 
-import type { CellProps } from './CellProps';
+import type { PlanFieldProps } from '../utils/types';
 
-export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
+const PlanMigrationType: FC<PlanFieldProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
-  const plan = data?.plan;
 
-  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
-  const isArchived = isPlanArchived(plan);
+  const isWarm = getPlanIsWarm(plan);
+  const isWaitingForCutover = isWarm && isPlanExecuting(plan) && !isPlanArchived(plan);
 
   const onClickPlanCutoverMigration = () => {
     showModal(<PlanCutoverMigrationModal resource={plan} />);
   };
 
-  if (plan.spec.warm) {
+  if (isWarm) {
     return (
       <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsMd' }}>
         <Label isCompact color="orange">
           {t('Warm')}
         </Label>
 
-        {isWarmAndExecuting && !isArchived && (
+        {isWaitingForCutover && (
           <Button isInline variant={ButtonVariant.link} onClick={onClickPlanCutoverMigration}>
             {t('Cutover')}
           </Button>
@@ -42,3 +42,5 @@ export const MigrationTypeCell: FC<CellProps> = ({ data }) => {
     </Label>
   );
 };
+
+export default PlanMigrationType;

@@ -25,29 +25,26 @@ export const TransferNetworkDetailsItem: FC<PlanDetailsItemProps> = ({
     network for all migration plans. Otherwise, the pod network is used.`,
   );
 
-  const TransferNetworkToName = (network: V1beta1PlanSpecTransferNetwork) =>
+  const transferNetworkToName = (network: V1beta1PlanSpecTransferNetwork | undefined) =>
     network && `${network.namespace}/${network.name}`;
 
-  const content = TransferNetworkToName(resource?.spec?.transferNetwork);
+  const content = transferNetworkToName(resource?.spec?.transferNetwork);
 
   return (
     <DetailsItem
       title={t('Transfer Network')}
-      content={content || <span className="text-muted">{t('Providers default')}</span>}
+      content={content ?? <span className="text-muted">{t('Providers default')}</span>}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['spec', 'transferNetwork ']}
-      onEdit={
-        canPatch &&
-        isPlanEditable(resource) &&
-        (() => {
-          showModal(
-            <EditPlanTransferNetwork
-              resource={resource}
-              destinationProvider={destinationProvider}
-            />,
-          );
-        })
-      }
+      onEdit={() => {
+        showModal(
+          <EditPlanTransferNetwork
+            resource={resource}
+            destinationProvider={destinationProvider!}
+          />,
+        );
+      }}
+      canEdit={canPatch && isPlanEditable(resource)}
     />
   );
 };

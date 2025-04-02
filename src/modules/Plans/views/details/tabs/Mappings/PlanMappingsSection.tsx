@@ -97,7 +97,6 @@ export const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isAddNetworkMapAvailable, setIsAddNetworkMapAvailable] = useState(true);
   const [isAddStorageMapAvailable, setIsAddStorageMapAvailable] = useState(true);
-  const [state, dispatch] = useReducer(reducer, initialState);
 
   const reducer = (
     state: PlanMappingsSectionState,
@@ -161,6 +160,7 @@ export const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
         return state;
     }
   };
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   // Toggles between view and edit modes
   const onToggleEdit = () => {

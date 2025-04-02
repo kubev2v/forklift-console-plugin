@@ -48,9 +48,9 @@ export const TargetProjectField: FC = () => {
                 field.onChange('');
               }}
               noOptionsAvailableMessage={
-                !targetProvider
-                  ? t('Select a target provider to list available target projects')
-                  : undefined
+                targetProvider
+                  ? undefined
+                  : t('Select a target provider to list available target projects')
               }
               toggleProps={{
                 status: errors[GeneralFormFieldId.TargetProject] && MenuToggleStatus.danger,

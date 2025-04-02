@@ -3,7 +3,7 @@ import { useForm, useFormContext, type UseFormProps, useWatch } from 'react-hook
 
 import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
-import { Namespace } from '@utils/constants';
+import { ALL_PROJECTS_KEY } from '@utils/constants';
 import { getDefaultNamespace } from '@utils/namespaces';
 
 import { GeneralFormFieldId } from './steps/general-information/constants';
@@ -15,14 +15,14 @@ export const useDefaultFormValues = (): CreatePlanFormValues => {
   const [projectOptions] = useProjectNameSelectOptions();
   const initialPlanProject = useMemo(() => {
     const defaultProject =
-      activeNamespace === Namespace.AllProjects ? defaultNamespace : activeNamespace;
+      activeNamespace === ALL_PROJECTS_KEY ? defaultNamespace : activeNamespace;
 
     if (projectOptions?.find((option) => option.value === defaultProject)) {
       return defaultProject;
     }
 
     return '';
-  }, []);
+  }, [activeNamespace, defaultNamespace, projectOptions]);
 
   return {
     [GeneralFormFieldId.PlanName]: '',

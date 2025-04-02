@@ -1,31 +1,32 @@
-import { type FC, type MouseEvent, type Ref, useState } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { type FC, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Dropdown, DropdownList, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
+import type { V1beta1Plan } from '@kubev2v/types';
+import { Dropdown, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
-import type { CellProps } from '../views/list/components/CellProps';
-
-import { PlanActionsDropdownItems } from './PlanActionsDropdownItems';
+import PlanActionsDropdownItems from './PlanActionsDropdownItems';
 
 import './PlanActionsDropdown.style.css';
 
-const PlanActionsKebabDropdown_: FC<PlanActionsDropdownProps> = ({ data, isKebab }) => {
+type PlanActionsDropdownProps = {
+  isKebab?: boolean;
+  plan: V1beta1Plan;
+};
+
+const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isKebab, plan }) => {
   const { t } = useForkliftTranslation();
 
-  // Hook for managing the open/close state of the dropdown
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
+    setIsOpen((open) => !open);
   };
 
-  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
+  const onSelect = () => {
     setIsOpen(false);
   };
 
-  // Returning the Dropdown component from PatternFly library
   return (
     <Dropdown
       className={isKebab ? undefined : 'forklift-dropdown'}
@@ -47,17 +48,9 @@ const PlanActionsKebabDropdown_: FC<PlanActionsDropdownProps> = ({ data, isKebab
         position: 'right',
       }}
     >
-      <DropdownList>{PlanActionsDropdownItems({ data })}</DropdownList>
+      <PlanActionsDropdownItems plan={plan} />
     </Dropdown>
   );
 };
 
-export const PlanActionsDropdown: FC<PlanActionsDropdownProps> = (props) => (
-  <ModalHOC>
-    <PlanActionsKebabDropdown_ {...props} />
-  </ModalHOC>
-);
-
-type PlanActionsDropdownProps = {
-  isKebab?: boolean;
-} & CellProps;
+export default PlanActionsDropdown;
