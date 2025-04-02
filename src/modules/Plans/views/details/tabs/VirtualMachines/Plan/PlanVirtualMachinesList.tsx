@@ -70,14 +70,18 @@ export const PlanVirtualMachinesList: FC<{
     plan?.status?.migration?.vms || [];
 
   const vmDict: Record<string, V1beta1PlanStatusMigrationVms> = {};
-  migrationVirtualMachines.forEach((m) => (vmDict[m.id] = m));
+  migrationVirtualMachines.forEach((migration) => (vmDict[migration.id] = m));
 
-  const conditions = plan?.status?.conditions?.filter((c) => c?.items && c.items.length > 0);
+  const conditions = plan?.status?.conditions?.filter(
+    (condition) => condition?.items && condition.items.length > 0,
+  );
   const conditionsDict: Record<string, V1beta1PlanStatusConditions[]> = {};
-  conditions?.forEach((c) => {
-    c.items.forEach((i) => {
+  conditions?.forEach((condition) => {
+    condition.items.forEach((i) => {
       const { id: vmID } = extractIdAndNameFromConditionItem(i);
-      conditionsDict[vmID] ? conditionsDict[vmID].push(c) : (conditionsDict[vmID] = [c]);
+      conditionsDict[vmID]
+        ? conditionsDict[vmID].push(condition)
+        : (conditionsDict[vmID] = [condition]);
     });
   });
 

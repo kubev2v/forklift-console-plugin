@@ -69,7 +69,9 @@ type TypeaheadSelectProps = {
 const defaultNoOptionsFoundMessage = (filter: string) => `No results found for "${filter}"`;
 const defaultCreateOptionMessage = (newValue: string) => `Create "${newValue}"`;
 const defaultFilterFunction = (filterValue: string, options: TypeaheadSelectOption[]) =>
-  options.filter((o) => String(o.content).toLowerCase().includes(filterValue.toLowerCase()));
+  options.filter((option) =>
+    String(option.content).toLowerCase().includes(filterValue.toLowerCase()),
+  );
 
 export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
   allowClear,
@@ -115,7 +117,9 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
       if (
         isCreatable &&
         filterValue.trim() &&
-        !newSelectOptions.find((o) => String(o.content).toLowerCase() === filterValue.toLowerCase())
+        !newSelectOptions.find(
+          (option) => String(option.content).toLowerCase() === filterValue.toLowerCase(),
+        )
       ) {
         const createOption = {
           content:

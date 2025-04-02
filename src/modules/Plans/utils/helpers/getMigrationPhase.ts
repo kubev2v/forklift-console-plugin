@@ -17,10 +17,12 @@ export const getMigrationPhase = (migration: V1beta1Migration): MigrationPhase =
   const phases: MigrationPhase[] = ['Ready', 'Running', 'Succeeded', 'Failed'];
 
   // Look for a condition indicating a migration phase
-  phases.forEach((p) => {
-    const condition = conditions.find((c) => c.type === p && c.status === 'True');
+  phases.forEach((phaseVal) => {
+    const condition = conditions.find(
+      (condition) => condition.type === phaseVal && condition.status === 'True',
+    );
     if (condition) {
-      phase = p;
+      phase = phaseVal;
     }
   });
 

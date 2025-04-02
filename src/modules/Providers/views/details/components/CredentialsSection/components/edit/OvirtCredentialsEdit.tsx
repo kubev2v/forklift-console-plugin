@@ -160,8 +160,8 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, s
           name="user"
           value={user}
           validated={state.validation.user.type}
-          onChange={(e, v) => {
-            onChangeUser(v, e);
+          onChange={(e, value) => {
+            onChangeUser(value, e);
           }}
         />
       </FormGroupWithHelpText>
@@ -182,8 +182,8 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, s
             aria-label="Password input"
             value={password}
             validated={state.validation.password.type}
-            onChange={(e, v) => {
-              onChangePassword(v, e);
+            onChange={(e, value) => {
+              onChangePassword(value, e);
             }}
           />
           <Button
@@ -226,8 +226,8 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, s
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(e, v) => {
-            onChangeInsecure(v, e);
+          onChange={(e, value) => {
+            onChangeInsecure(value, e);
           }}
         />
       </FormGroupWithHelpText>
@@ -260,11 +260,11 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, s
           filenamePlaceholder="Drag and drop a file or upload one"
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(_e, v) => {
-            onDataChange(v);
+          onDataChange={(_e, value) => {
+            onDataChange(value);
           }}
-          onTextChange={(_e, v) => {
-            onTextChange(v);
+          onTextChange={(_e, value) => {
+            onTextChange(value);
           }}
           onClearClick={() => {
             handleChange('cacert', '');

@@ -40,7 +40,7 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
 
   // Check condition category
   const isCritical = plan?.status?.conditions?.find(
-    (c) => c.category === 'Critical' && c.status === 'True',
+    (condition) => condition.category === 'Critical' && condition.status === 'True',
   );
 
   if (isCritical) {
@@ -60,7 +60,7 @@ export const getPlanPhase = (data: PlanData): PlanPhase => {
 
   // Check condition category
   const isWarn = plan?.status?.conditions?.find(
-    (c) => c.category === 'Warn' && c.status === 'True',
+    (condition) => condition.category === 'Warn' && condition.status === 'True',
   );
 
   if (isWarn) {
@@ -124,4 +124,6 @@ export const isPlanArchived = (plan: V1beta1Plan) => {
 };
 
 const getConditions = (obj: V1beta1Plan) =>
-  obj?.status?.conditions?.filter((c) => c.status === 'True').map((c) => c.type);
+  obj?.status?.conditions
+    ?.filter((condition) => condition.status === 'True')
+    .map((condition) => condition.type);

@@ -21,7 +21,7 @@ const useHasSourceAndTargetProviders = (
   });
 
   const hasSourceProviders = providers.length > 0;
-  const hasTargetProviders = providers.some((p) => p?.spec?.type === 'openshift');
+  const hasTargetProviders = providers.some((provider) => provider?.spec?.type === 'openshift');
 
   return [hasSourceProviders, hasTargetProviders, providersLoaded, providersError];
 };

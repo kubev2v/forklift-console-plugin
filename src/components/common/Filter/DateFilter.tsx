@@ -30,7 +30,7 @@ export const DateFilter = ({
   const [date, setDate] = useState(toISODate(new Date()));
 
   const clearSingleDate = (option) => {
-    onFilterUpdate([...validFilters.filter((d) => d !== option)]);
+    onFilterUpdate([...validFilters.filter((filter) => filter !== option)]);
   };
 
   const onDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
@@ -43,7 +43,7 @@ export const DateFilter = ({
     if (value?.length === 10 && isValidDate(value)) {
       const targetDate = changeFormatToISODate(value);
       setDate(targetDate);
-      onFilterUpdate([...validFilters.filter((d) => d !== targetDate), targetDate]);
+      onFilterUpdate([...validFilters.filter((filter) => filter !== targetDate), targetDate]);
     }
   };
 

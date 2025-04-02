@@ -18,7 +18,7 @@ export function getMigrationCounts(migrations: V1beta1Migration[]): Record<strin
     migrationCounts.Total++;
     if ('conditions' in migration.status) {
       for (const condition of migration.status.conditions) {
-        if (condition.status == 'True') {
+        if (condition.status === 'True') {
           if (condition.type in migrationCounts) {
             migrationCounts[condition.type]++;
           }

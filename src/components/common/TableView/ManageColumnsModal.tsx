@@ -187,12 +187,14 @@ export const ManageColumnsModal = ({
                         checked={
                           // visibility for identity resourceFields (namespace) is governed by parent component
                           isIdentity
-                            ? resourceFields.find((c) => c.resourceFieldId === id)?.isVisible
+                            ? resourceFields.find(
+                                (resourceField) => resourceField.resourceFieldId === id,
+                              )?.isVisible
                             : isVisible
                         }
                         isDisabled={isIdentity}
-                        onChange={(e, v) => {
-                          onChangeFactory(id)(v, e);
+                        onChange={(e, value) => {
+                          onChangeFactory(id)(value, e);
                         }}
                         otherControls
                       />

@@ -46,16 +46,16 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
   });
 
   const sourceProvider = providers.find(
-    (p) =>
-      p?.metadata?.uid === obj?.spec?.provider?.source?.uid ||
-      p?.metadata?.name === obj?.spec?.provider?.source?.name,
+    (provider) =>
+      provider?.metadata?.uid === obj?.spec?.provider?.source?.uid ||
+      provider?.metadata?.name === obj?.spec?.provider?.source?.name,
   );
   const [sourceStorages] = useSourceStorages(sourceProvider);
 
   const destinationProvider = providers.find(
-    (p) =>
-      p?.metadata?.uid === obj?.spec?.provider?.destination?.uid ||
-      p?.metadata?.name === obj?.spec?.provider?.destination?.name,
+    (provider) =>
+      provider?.metadata?.uid === obj?.spec?.provider?.destination?.uid ||
+      provider?.metadata?.name === obj?.spec?.provider?.destination?.name,
   );
   const [destinationStorages] = useOpenShiftStorages(destinationProvider);
 
@@ -66,12 +66,15 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
   };
 
   const isStorageMapped = (StorageMapID: string) => {
-    return state.StorageMap.spec.map.find((m) => StorageMapID === m?.source?.id) !== undefined;
+    return state.StorageMap.spec.map.find((map) => StorageMapID === map?.source?.id) !== undefined;
   };
 
-  const availableSources = sourceStorages?.filter((n) => !isStorageMapped(n?.id));
+  const availableSources = sourceStorages?.filter(
+    (sourceStorage) => !isStorageMapped(sourceStorage?.id),
+  );
 
-  const getInventoryStorageName = (id: string) => sourceStorages?.find((s) => s.id === id)?.name;
+  const getInventoryStorageName = (id: string) =>
+    sourceStorages?.find((sourceStorage) => sourceStorage.id === id)?.name;
 
   const onAdd = () =>
     availableSources.length > 0 &&
@@ -93,12 +96,18 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
 
   const onReplace = ({ current, next }) => {
     const currentDestinationStorage = destinationStorages.find(
-      (n) => n.name == current.destination,
+      (destinationStorage) => destinationStorage.name === current.destination,
     );
-    const currentSourceStorage = sourceStorages?.find((n) => n?.name === current.source);
+    const currentSourceStorage = sourceStorages?.find(
+      (sourceStorage) => sourceStorage?.name === current.source,
+    );
 
-    const nextDestinationStorage = destinationStorages.find((n) => n.name == next.destination);
-    const nextSourceStorage = sourceStorages?.find((n) => n?.name === next.source);
+    const nextDestinationStorage = destinationStorages.find(
+      (destinationStorage) => destinationStorage.name === next.destination,
+    );
+    const nextSourceStorage = sourceStorages?.find(
+      (sourceStorage) => sourceStorage?.name === next.source,
+    );
 
     // sanity check, names may not be valid
     if (!nextSourceStorage || !nextDestinationStorage) {
@@ -131,7 +140,9 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
 
   const onDelete = (current: Mapping) => {
     const references = storageNameToIDReference(state?.StorageMap?.status?.references || []);
-    const currentSourceStorage = sourceStorages?.find((n) => n.name === current.source);
+    const currentSourceStorage = sourceStorages?.find(
+      (sourceStorage) => sourceStorage.name === current.source,
+    );
 
     dispatch({
       payload: [
@@ -183,15 +194,17 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
           addMapping={onAdd}
           replaceMapping={onReplace}
           deleteMapping={onDelete}
-          availableDestinations={[...destinationStorages.map((s) => s?.name)]}
-          sources={sourceStorages.map((n) => ({
-            isMapped: isStorageMapped(n?.id),
-            label: n.name,
+          availableDestinations={[
+            ...destinationStorages.map((destinationStorage) => destinationStorage?.name),
+          ]}
+          sources={sourceStorages.map((sourceStorage) => ({
+            isMapped: isStorageMapped(sourceStorage?.id),
+            label: sourceStorage.name,
             usedBySelectedVms: false,
           }))}
-          mappings={state?.StorageMap?.spec?.map.map((m) => ({
-            destination: m.destination.storageClass,
-            source: getInventoryStorageName(m.source.id) || m.source?.name,
+          mappings={state?.StorageMap?.spec?.map.map((storageMap) => ({
+            destination: storageMap.destination.storageClass,
+            source: getInventoryStorageName(storageMap.source.id) ?? storageMap.source?.name,
           }))}
           generalSourcesLabel={t('Other storages present on the source provider ')}
           usedSourcesLabel={t('Storages used by the selected VMs')}

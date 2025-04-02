@@ -42,7 +42,7 @@ const OverviewPage: React.FC<OverviewPageProps> = () => {
   return (
     <>
       <HeaderTitleWrapper />
-      <HorizontalNav pages={pages.filter((p) => p)} />
+      <HorizontalNav pages={pages.filter(Boolean)} />
     </>
   );
 };

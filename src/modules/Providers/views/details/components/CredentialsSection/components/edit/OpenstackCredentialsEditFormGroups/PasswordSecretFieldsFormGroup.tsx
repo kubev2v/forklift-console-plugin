@@ -96,8 +96,8 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id={OpenstackSecretFieldId.Username}
           name={OpenstackSecretFieldId.Username}
           value={username}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.Username)(v, e);
+          onChange={(e, value) => {
+            onChangeFactory(OpenstackSecretFieldId.Username)(value, e);
           }}
           validated={state.validation.username.type}
         />
@@ -119,8 +119,8 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
             type={state.passwordHidden ? 'password' : 'text'}
             aria-label="Password input"
             value={password}
-            onChange={(e, v) => {
-              onChangeFactory(OpenstackSecretFieldId.Password)(v, e);
+            onChange={(e, value) => {
+              onChangeFactory(OpenstackSecretFieldId.Password)(value, e);
             }}
             validated={state.validation.password.type}
           />
@@ -149,8 +149,8 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id={OpenstackSecretFieldId.RegionName}
           name={OpenstackSecretFieldId.RegionName}
           value={regionName}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.RegionName)(v, e);
+          onChange={(e, value) => {
+            onChangeFactory(OpenstackSecretFieldId.RegionName)(value, e);
           }}
           validated={state.validation.regionName.type}
         />
@@ -171,8 +171,8 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id={OpenstackSecretFieldId.ProjectName}
           name={OpenstackSecretFieldId.ProjectName}
           value={projectName}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.ProjectName)(v, e);
+          onChange={(e, value) => {
+            onChangeFactory(OpenstackSecretFieldId.ProjectName)(value, e);
           }}
           validated={state.validation.projectName.type}
         />
@@ -193,8 +193,8 @@ export const PasswordSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
           id={OpenstackSecretFieldId.DomainName}
           name={OpenstackSecretFieldId.DomainName}
           value={domainName}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.DomainName)(v, e);
+          onChange={(e, value) => {
+            onChangeFactory(OpenstackSecretFieldId.DomainName)(value, e);
           }}
           validated={state.validation.domainName.type}
         />

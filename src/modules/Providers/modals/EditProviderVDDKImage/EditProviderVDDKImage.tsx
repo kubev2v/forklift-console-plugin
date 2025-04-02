@@ -54,8 +54,8 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
           'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
         )}
         isChecked={isEmptyImage}
-        onChange={(e, v) => {
-          onChange(v, e);
+        onChange={(event, value) => {
+          onChange(value, event);
         }}
         id="emptyVddkInitImage"
         name="emptyVddkInitImage"

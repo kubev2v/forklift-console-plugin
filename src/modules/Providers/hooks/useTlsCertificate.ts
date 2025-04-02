@@ -25,7 +25,7 @@ export const toColonSeparatedHex = (hexString: string) =>
     // [a,b,c,d] => [[c,d][a,b]]
     .reduce(
       ([last = [], ...rest]: string[][], char: string) =>
-        last.length != 2 ? [[...last, char], ...rest] : [[char], last, ...rest],
+        last.length !== 2 ? [[...last, char], ...rest] : [[char], last, ...rest],
       [],
     )
     // [[c,d][a,b]] => [[a,b], [c,d]]

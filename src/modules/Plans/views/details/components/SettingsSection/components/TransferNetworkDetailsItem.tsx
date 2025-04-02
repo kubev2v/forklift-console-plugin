@@ -25,8 +25,8 @@ export const TransferNetworkDetailsItem: React.FC<PlanDetailsItemProps> = ({
     network for all migration plans. Otherwise, the pod network is used.`,
   );
 
-  const TransferNetworkToName = (n: V1beta1PlanSpecTransferNetwork) =>
-    n && `${n.namespace}/${n.name}`;
+  const TransferNetworkToName = (network: V1beta1PlanSpecTransferNetwork) =>
+    n && `${network.namespace}/${network.name}`;
 
   const content = TransferNetworkToName(resource?.spec?.transferNetwork);
 

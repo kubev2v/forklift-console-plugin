@@ -136,9 +136,9 @@ const handlers: Record<
       ({ isMapped, label }) => label === source && isMapped,
     );
     if (currentSource) {
-      cpn.sourceNetworks = cpn.sourceNetworks.map((m) => ({
-        ...m,
-        isMapped: m.label === source ? false : m.isMapped,
+      cpn.sourceNetworks = cpn.sourceNetworks.map((sourceNetwork) => ({
+        ...sourceNetwork,
+        isMapped: sourceNetwork.label === source ? false : sourceNetwork.isMapped,
       }));
       cpn.networkMappings = cpn.networkMappings.filter(
         ({ source }) => source !== currentSource.label,
@@ -262,11 +262,13 @@ const handlers: Record<
     const oldTarget = workArea.targetProvider;
     const resolvedDestination = availableProviders
       .filter(getIsTarget)
-      .find((p) => p?.metadata?.name === plan.spec.provider.destination?.name);
+      .find((provider) => provider?.metadata?.name === plan?.spec?.provider.destination?.name);
     if (!resolvedDestination && !oldTarget) {
       // case: no provider set (yet)
       // it's possible that there is no host provider in the namespace (empty will trigger error)
-      const firstHostProvider = availableProviders.find((p) => isProviderLocalOpenshift(p));
+      const firstHostProvider = availableProviders.find((provider) =>
+        isProviderLocalOpenshift(provider),
+      );
       setTargetProvider(draft, firstHostProvider?.metadata?.name, availableProviders);
     } else if (!resolvedDestination) {
       // case: provider got removed in the meantime
@@ -340,13 +342,13 @@ const handlers: Record<
 
     const targetNamespace =
       // use the selected project name
-      draft.underConstruction?.projectName ||
-      (availableTargetNamespaces.find(
-        (n) => n.name === DEFAULT_NAMESPACE && !alreadyInUse(DEFAULT_NAMESPACE),
-      ) &&
-        DEFAULT_NAMESPACE) ||
+      (draft.underConstruction?.projectName ||
+        (availableTargetNamespaces.find(
+          (namespace) => namespace.name === DEFAULT_NAMESPACE && !alreadyInUse(DEFAULT_NAMESPACE),
+        ) &&
+          DEFAULT_NAMESPACE)) ??
       // use the first from the list (if exists)
-      availableTargetNamespaces.find((n) => !alreadyInUse(n.name))?.name;
+      availableTargetNamespaces.find((namespace) => !alreadyInUse(namespace.name))?.name;
 
     setTargetNamespace(draft, targetNamespace);
     return draft;

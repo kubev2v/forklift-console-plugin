@@ -117,5 +117,5 @@ const featuresMatcher: ValueMatcher = {
 
 const hostMatcher: ValueMatcher = {
   filterType: 'host',
-  matchValue: (value: string) => (filter: string) => value == filter,
+  matchValue: (value: string) => (filter: string) => value === filter,
 };

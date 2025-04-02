@@ -99,16 +99,16 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
       >
         {'Pod network'}
       </DropdownItem>,
-      ...(networks || []).map((n) => (
+      ...(networks || []).map((network) => (
         <DropdownItem
           value={1}
-          key={n.name}
-          description={n.namespace}
+          key={network.name}
+          description={network.namespace}
           onClick={() => {
-            onChange(`${n.namespace}/${n.name}`);
+            onChange(`${network.namespace}/${network.name}`);
           }}
         >
-          {n.name}
+          {network.name}
         </DropdownItem>
       )),
     ];

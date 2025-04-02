@@ -95,8 +95,8 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
             id={OpenstackSecretFieldId.Token}
             name={OpenstackSecretFieldId.Token}
             value={token}
-            onChange={(e, v) => {
-              onChangeFactory(OpenstackSecretFieldId.Token)(v, e);
+            onChange={(e, value) => {
+              onChangeFactory(OpenstackSecretFieldId.Token)(value, e);
             }}
             validated={state.validation.token.type}
           />
@@ -125,8 +125,8 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id={OpenstackSecretFieldId.UserId}
           name={OpenstackSecretFieldId.UserId}
           value={userID}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.UserId)(v, e);
+          onChange={(e, value) => {
+            onChangeFactory(OpenstackSecretFieldId.UserId)(value, e);
           }}
           validated={state.validation.userID.type}
         />
@@ -147,8 +147,8 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id={OpenstackSecretFieldId.ProjectId}
           name={OpenstackSecretFieldId.ProjectId}
           value={projectID}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.ProjectId)(v, e);
+          onChange={(e, value) => {
+            onChangeFactory(OpenstackSecretFieldId.ProjectId)(value, e);
           }}
           validated={state.validation.projectID.type}
         />
@@ -169,8 +169,8 @@ export const TokenWithUserIDSecretFieldsFormGroup: React.FC<EditComponentProps> 
           id={OpenstackSecretFieldId.RegionName}
           name={OpenstackSecretFieldId.RegionName}
           value={regionName}
-          onChange={(e, v) => {
-            onChangeFactory(OpenstackSecretFieldId.RegionName)(v, e);
+          onChange={(e, value) => {
+            onChangeFactory(OpenstackSecretFieldId.RegionName)(value, e);
           }}
           validated={state.validation.regionName.type}
         />

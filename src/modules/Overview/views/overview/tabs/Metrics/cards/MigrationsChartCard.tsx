@@ -26,8 +26,8 @@ import { type MigrationDataPoint, toDataPoints } from '../utils/toDataPointsHelp
 
 import type { MigrationsCardProps } from './MigrationsCard';
 
-const toStartedMigration = (m: V1beta1Migration): string => m.status.started;
-const toFinishedMigration = (m: V1beta1Migration): string => m.status.completed;
+const toStartedMigration = (migration: V1beta1Migration): string => migration.status.started;
+const toFinishedMigration = (migration: V1beta1Migration): string => migration.status.completed;
 const toDataPointsForMigrations = (
   allMigrations: V1beta1Migration[],
   toTimestamp: (m: V1beta1Migration) => string,
@@ -60,26 +60,32 @@ export const MigrationsChartCard: FC<MigrationsCardProps> = () => {
     succeeded: MigrationDataPoint[];
   } = {
     failed: toDataPointsForMigrations(
-      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Failed')),
+      migrations.filter((migration) =>
+        migration?.status?.conditions?.find((it) => it?.type === 'Failed'),
+      ),
       toFinishedMigration,
       selectedTimeRange,
     ),
     running: toDataPointsForMigrations(
-      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Running')),
+      migrations.filter((migration) =>
+        migration?.status?.conditions?.find((it) => it?.type === 'Running'),
+      ),
       toStartedMigration,
       selectedTimeRange,
     ),
     succeeded: toDataPointsForMigrations(
-      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Succeeded')),
+      migrations.filter((migration) =>
+        migration?.status?.conditions?.find((it) => it?.type === 'Succeeded'),
+      ),
       toFinishedMigration,
       selectedTimeRange,
     ),
   };
 
   const maxMigrationValue = Math.max(
-    ...migrationsDataPoints.running.map((m) => m.value),
-    ...migrationsDataPoints.failed.map((m) => m.value),
-    ...migrationsDataPoints.succeeded.map((m) => m.value),
+    ...migrationsDataPoints.running.map((migration) => migration.value),
+    ...migrationsDataPoints.failed.map((migration) => migration.value),
+    ...migrationsDataPoints.succeeded.map((migration) => migration.value),
   );
 
   const handleTimeRangeSelectedFactory = (timeRange: TimeRangeOptions) => () => {

@@ -193,7 +193,7 @@ const initCalculatedPerNamespaceSlice =
   });
 
 const resolveTargetProvider = (name: string, availableProviders: V1beta1Provider[]) =>
-  availableProviders.filter(getIsTarget).find((p) => p?.metadata?.name === name);
+  availableProviders.filter(getIsTarget).find((provider) => provider?.metadata?.name === name);
 
 // based on the method used in legacy/src/common/helpers
 // and mocks/src/definitions/utils
@@ -247,7 +247,7 @@ export const addIfMissing = <T>(key: T, keys: T[]) => {
 
 const removeIfPresent = <T>(key: T, keys: T[]) => {
   console.warn('removeIfPresent', key, keys);
-  const index = keys?.findIndex((k) => k === key);
+  const index = keys?.findIndex((val) => val === key);
   if (index === undefined || index === -1) {
     return;
   }

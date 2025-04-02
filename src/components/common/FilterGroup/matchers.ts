@@ -25,7 +25,7 @@ export const getResourceFieldValue = (
   resourceFieldId: string,
   resourceFields: ResourceField[],
 ) => {
-  const field = resourceFields.find((f) => f.resourceFieldId === resourceFieldId);
+  const field = resourceFields.find((field) => field.resourceFieldId === resourceFieldId);
   if (typeof resourceData !== 'object' || !field) {
     return undefined;
   }

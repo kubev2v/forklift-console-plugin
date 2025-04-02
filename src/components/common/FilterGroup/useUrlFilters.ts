@@ -63,7 +63,9 @@ function convertFiltersToSearchParams(fields, filters) {
  * @returns {Function} - The function to set state and update URL.
  */
 function createSetStateAndUrl(setSelectedFilters, updateSearchParams, updateUserSettings, fields) {
-  const persistentFieldIds = fields.filter((f) => f?.isPersistent).map((f) => f.resourceFieldId);
+  const persistentFieldIds = fields
+    .filter((field) => field?.isPersistent)
+    .map((field) => field.resourceFieldId);
 
   return (filters) => {
     if (updateUserSettings) {
@@ -95,9 +97,11 @@ export const useUrlFilters = ({
   fields: ResourceField[];
   userSettings?: UserSettings;
 }): [GlobalFilters, (filters: GlobalFilters) => void] => {
-  const persistentFieldIds = fields.filter((f) => f?.isPersistent).map((f) => f.resourceFieldId);
+  const persistentFieldIds = fields
+    .filter((field) => field?.isPersistent)
+    .map((field) => field.resourceFieldId);
   const persistentFilters = Object.fromEntries(
-    Object.entries(userSettings?.filters.data || {}).filter(([key]) =>
+    Object.entries(userSettings?.filters?.data ?? {}).filter(([key]) =>
       persistentFieldIds.includes(key),
     ),
   );
@@ -107,7 +111,7 @@ export const useUrlFilters = ({
     ...persistentFilters,
     ...getValidFilters(fields, searchParams),
   }));
-  const updateUserSettings = userSettings?.filters.save;
+  const updateUserSettings = userSettings?.filters?.save;
 
   const setStateAndUrl = useMemo(
     () => createSetStateAndUrl(setSelectedFilters, updateSearchParams, updateUserSettings, fields),

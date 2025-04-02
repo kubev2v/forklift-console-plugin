@@ -31,8 +31,8 @@ export const SwitchFilter = ({
       <Switch
         label={placeholderLabel}
         isChecked={selectedFilters.length === 1 && selectedFilters[0] === 'true'}
-        onChange={(e, v) => {
-          onChange(v, e);
+        onChange={(e, value) => {
+          onChange(value, e);
         }}
       />
     </ToolbarItem>

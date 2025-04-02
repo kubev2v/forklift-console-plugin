@@ -94,7 +94,11 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ redirectTo, reso
       return;
     }
 
-    if (plansLoaded && !plansLoadError && plans?.map((p) => p?.metadata?.name)?.includes(name)) {
+    if (
+      plansLoaded &&
+      !plansLoadError &&
+      plans?.map((plan) => plan?.metadata?.name)?.includes(name)
+    ) {
       setNewNameValidation('error');
       return;
     }
@@ -243,8 +247,8 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ redirectTo, reso
                   value={newName}
                   id="name"
                   aria-describedby="name-helper"
-                  onChange={(e, v) => {
-                    onChange(v, e);
+                  onChange={(e, value) => {
+                    onChange(value, e);
                   }}
                 />
               </FormGroupWithHelpText>

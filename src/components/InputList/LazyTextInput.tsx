@@ -62,8 +62,8 @@ export const LazyTextInput: React.FunctionComponent<LazyTextInputProps> = ({
       spellCheck="false"
       value={value}
       type={type}
-      onChange={(e, v) => {
-        onChangeText(v, e);
+      onChange={(e, val) => {
+        onChangeText(val, e);
       }}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
