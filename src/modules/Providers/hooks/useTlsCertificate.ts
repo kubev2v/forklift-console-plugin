@@ -15,7 +15,7 @@ const parseToX509 = (value: string) => {
     const cert = new X509();
     cert.readCertPEM(value);
     return cert;
-  } catch (e) {
+  } catch (_e) {
     return undefined;
   }
 };

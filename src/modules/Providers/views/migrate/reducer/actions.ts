@@ -28,7 +28,7 @@ export const SET_NAME = 'SET_NAME';
 export const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
 export const SET_SOURCE_PROVIDER = 'SET_SOURCE_PROVIDER';
 export const SET_SELECTED_VMS = 'SET_SELECTED_VMS';
-const SET_DESCRIPTION = 'SET_DESCRIPTION';
+type SET_DESCRIPTION = 'SET_DESCRIPTION';
 export const SET_TARGET_PROVIDER = 'SET_TARGET_PROVIDER';
 export const SET_TARGET_NAMESPACE = 'SET_TARGET_NAMESPACE';
 export const SET_AVAILABLE_PROVIDERS = 'SET_AVAILABLE_PROVIDERS';
@@ -58,7 +58,7 @@ export type CreateVmMigration =
   | typeof SET_PROJECT_NAME
   | typeof SET_SOURCE_PROVIDER
   | typeof SET_SELECTED_VMS
-  | typeof SET_DESCRIPTION
+  | SET_DESCRIPTION
   | typeof SET_TARGET_PROVIDER
   | typeof SET_TARGET_NAMESPACE
   | typeof SET_AVAILABLE_PROVIDERS
@@ -105,10 +105,6 @@ export type SourceProvider = {
 export type SelectedVms = {
   vms: VmData[];
   sourceProvider: V1beta1Provider;
-};
-
-type PlanDescription = {
-  description: string;
 };
 
 export type PlanTargetProvider = {
@@ -212,13 +208,6 @@ export const setPlanTargetNamespace = (
 ): PageAction<CreateVmMigration, PlanTargetNamespace> => ({
   payload: { targetNamespace },
   type: 'SET_TARGET_NAMESPACE',
-});
-
-const setPlanDescription = (
-  description: string,
-): PageAction<CreateVmMigration, PlanDescription> => ({
-  payload: { description },
-  type: 'SET_DESCRIPTION',
 });
 
 export const setPlanName = (name: string): PageAction<CreateVmMigration, PlanName> => ({

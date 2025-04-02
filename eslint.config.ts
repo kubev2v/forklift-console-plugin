@@ -43,6 +43,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
+        process: 'readonly',
       },
       parser: tseslint.parser,
       parserOptions: {
@@ -113,6 +114,7 @@ export default [
         'error',
         {
           argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
         },
       ],
@@ -138,6 +140,7 @@ export default [
       'no-magic-numbers': 'off',
       'no-ternary': 'off',
       'no-undefined': 'off',
+      'no-unused-vars': 'off',
       'no-warning-comments': 'off',
       'one-var': 'off',
       'perfectionist/sort-classes': [

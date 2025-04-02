@@ -17,7 +17,7 @@ type WelcomeSettings = {
 const parseOrClean = (key) => {
   try {
     return JSON.parse(loadFromLocalStorage(key)) ?? {};
-  } catch (e) {
+  } catch (_e) {
     removeFromLocalStorage(key);
     console.error(`Removed invalid key [${key}] from local storage`);
   }

@@ -14,7 +14,7 @@ import type { GlobalFilters } from './types';
 const safeParse = (str: string) => {
   try {
     return JSON.parse(str);
-  } catch (e) {
+  } catch (_e) {
     return undefined;
   }
 };
