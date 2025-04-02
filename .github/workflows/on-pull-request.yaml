@@ -7,8 +7,8 @@ env:
   OKD_CONSOLE_YAML: ./ci/yaml/okd-console.yaml
 
 jobs:
-  common-setup:
-    name: Common setup
+  linters:
+    name: Run linters
     runs-on: ubuntu-latest
     steps:
       - name: Increase File Descriptors Limit
@@ -25,11 +25,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-  linters:
-    name: Run linters
-    runs-on: ubuntu-latest
-    needs: common-setup
-    steps:
       - name: Lint, eslint and stylelint
         run: yarn lint
 
@@ -42,16 +37,42 @@ jobs:
   build:
     name: Build project
     runs-on: ubuntu-latest
-    needs: common-setup
     steps:
+      - name: Increase File Descriptors Limit
+        run: ulimit -n 4096
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install
+
       - name: Build project
         run: yarn build
 
-  tests:
+  test:
     name: Run tests and coverage
     runs-on: ubuntu-latest
-    needs: common-setup
     steps:
+      - name: Increase File Descriptors Limit
+        run: ulimit -n 4096
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install
+
       - name: Test
         run: yarn test:coverage
 
@@ -64,10 +85,15 @@ jobs:
   e2e:
     name: Run e2e tests
     runs-on: ubuntu-latest
-    needs: common-setup
     env:
       BASE_ADDRESS: http://localhost:30080
     steps:
+      - name: Increase File Descriptors Limit
+        run: ulimit -n 4096
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Run pre e2e test tasks
         run: yarn e2e:pre-test
 
