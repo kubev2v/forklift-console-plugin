@@ -11,9 +11,9 @@ import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plug
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
-  PlanCreatePageV2: './plans/create/PlanCreatePage',
+  PlanCreatePageV2: './views/plans/create/PlanCreatePage',
   PlanDetailsPage: './modules/Plans/views/details/PlanDetailsPage',
-  PlansListPage: './modules/Plans/views/list/PlansListPage',
+  PlansListPage: './views/plans/list/PlansListPage',
 };
 
 export const extensions: EncodedExtension[] = [

@@ -22,13 +22,13 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   });
 
   const onClick = () => {
-    showModal(<DeleteModal resource={StorageMap} model={StorageMapModel} />);
+    showModal(<DeleteModal resource={StorageMap!} model={StorageMapModel} />);
   };
 
   return [
     <DropdownItemLink
       value={0}
-      key="EditStorageMapping"
+      itemKey="EditStorageMapping"
       href={StorageMapURL}
       description={t('Edit StorageMap')}
     />,

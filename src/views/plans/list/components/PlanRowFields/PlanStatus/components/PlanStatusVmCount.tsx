@@ -17,7 +17,7 @@ type PlanStatusVmCountProps = {
   tooltipLabel?: string;
 };
 
-export const PlanStatusVmCount: FC<PlanStatusVmCountProps> = ({
+const PlanStatusVmCount: FC<PlanStatusVmCountProps> = ({
   count,
   linkPath,
   status,
@@ -35,6 +35,11 @@ export const PlanStatusVmCount: FC<PlanStatusVmCountProps> = ({
         return <ExclamationCircleIcon />;
       case 'canceled':
         return <MinusCircleIcon color="grey" />;
+      case undefined:
+      case 'custom':
+      case 'info':
+      default:
+        return null;
     }
   }, [status]);
 
@@ -52,3 +57,5 @@ export const PlanStatusVmCount: FC<PlanStatusVmCountProps> = ({
     </Flex>
   );
 };
+
+export default PlanStatusVmCount;

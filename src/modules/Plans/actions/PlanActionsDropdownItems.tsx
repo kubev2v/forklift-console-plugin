@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, PlanModelRef } from '@kubev2v/types';
-import { DropdownItem } from '@patternfly/react-core';
+import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { DropdownItem, DropdownList } from '@patternfly/react-core';
+import { getNamespace } from '@utils/crds/common/selectors';
+import { getPlanIsWarm } from '@utils/crds/plans/selectors';
+import { getPlanURL } from '@utils/crds/plans/utils';
 
 import { ArchiveModal } from '../modals/ArchiveModal';
 import { DuplicateModal } from '../modals/DuplicateModal';
@@ -19,26 +22,28 @@ import {
   isPlanArchived,
   isPlanExecuting,
 } from '../utils/helpers/getPlanPhase';
-import type { PlanData } from '../utils/types/PlanData';
 import { PlanPhase } from '../utils/types/PlanPhase';
 
-export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps) => {
+type PlanActionsDropdownItemsProps = {
+  plan: V1beta1Plan;
+};
+
+const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
-  const { plan } = data;
-
-  const planURL = getResourceUrl({
-    name: plan?.metadata?.name,
-    namespace: plan?.metadata?.namespace,
-    reference: PlanModelRef,
+  const { canDelete } = useGetDeleteAndEditAccessReview({
+    model: PlanModel,
+    namespace: getNamespace(plan),
   });
 
-  const phase = getPlanPhase(data);
+  const planURL = getPlanURL(plan);
+
+  const phase = getPlanPhase({ plan });
 
   const canStart = canPlanStart(plan);
   const canReStart = canPlanReStart(plan);
-  const isWarmAndExecuting = plan?.spec?.warm && isPlanExecuting(plan);
+  const isWarmAndExecuting = getPlanIsWarm(plan) && isPlanExecuting(plan);
   const isArchived = isPlanArchived(plan);
   const buttonStartLabel = canReStart ? t('Restart migration') : t('Start migration');
 
@@ -75,58 +80,41 @@ export const PlanActionsDropdownItems = ({ data }: PlanActionsDropdownItemsProps
     showModal(<PlanDeleteModal resource={plan} model={PlanModel} />);
   };
 
-  return [
-    <DropdownItemLink value={0} key="EditPlan" href={planURL} description={t('Edit Plan')} />,
-
-    <DropdownItem
-      value={1}
-      key="start"
-      isDisabled={!canStart || !isStartItemEnabled}
-      onClick={onClickPlanStart}
-    >
-      {buttonStartLabel}
-    </DropdownItem>,
-
-    <DropdownItem
-      value={2}
-      key="cutover"
-      isDisabled={!isWarmAndExecuting || isArchived}
-      onClick={onClickPlanCutover}
-    >
-      {t('Cutover')}
-    </DropdownItem>,
-
-    <DropdownItem
-      value={3}
-      key="duplicate"
-      isDisabled={!data?.permissions?.canDelete}
-      onClick={onClickDuplicate}
-    >
-      {t('Duplicate Plan')}
-    </DropdownItem>,
-
-    <DropdownItem
-      value={4}
-      key="archive"
-      isDisabled={
-        !data?.permissions?.canDelete || [PlanPhase.Archived, PlanPhase.Archiving].includes(phase)
-      }
-      onClick={onClickArchive}
-    >
-      {t('Archive Plan')}
-    </DropdownItem>,
-
-    <DropdownItem
-      value={5}
-      key="delete"
-      isDisabled={!data?.permissions?.canDelete}
-      onClick={onClickPlanDelete}
-    >
-      {t('Delete Plan')}
-    </DropdownItem>,
-  ];
+  return (
+    <DropdownList>
+      <DropdownItemLink value={0} itemKey="EditPlan" href={planURL} description={t('Edit Plan')} />
+      <DropdownItem
+        value={1}
+        key="start"
+        isDisabled={!canStart || !isStartItemEnabled}
+        onClick={onClickPlanStart}
+      >
+        {buttonStartLabel}
+      </DropdownItem>
+      <DropdownItem
+        value={2}
+        key="cutover"
+        isDisabled={!isWarmAndExecuting || isArchived}
+        onClick={onClickPlanCutover}
+      >
+        {t('Cutover')}
+      </DropdownItem>
+      <DropdownItem value={3} key="duplicate" isDisabled={!canDelete} onClick={onClickDuplicate}>
+        {t('Duplicate Plan')}
+      </DropdownItem>
+      <DropdownItem
+        value={4}
+        key="archive"
+        isDisabled={!canDelete || [PlanPhase.Archived, PlanPhase.Archiving].includes(phase)}
+        onClick={onClickArchive}
+      >
+        {t('Archive Plan')}
+      </DropdownItem>
+      <DropdownItem value={5} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
+        {t('Delete Plan')}
+      </DropdownItem>
+    </DropdownList>
+  );
 };
 
-type PlanActionsDropdownItemsProps = {
-  data: PlanData;
-};
+export default PlanActionsDropdownItems;

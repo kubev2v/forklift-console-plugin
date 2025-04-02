@@ -3,7 +3,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   Dropdown,
-  DropdownList,
   Flex,
   FlexItem,
   MenuToggle,
@@ -14,9 +13,13 @@ import { EllipsisVIcon } from '@patternfly/react-icons';
 import { ModalHOC } from '../modals/ModalHOC/ModalHOC';
 import type { CellProps } from '../views/list/components/CellProps';
 
-import { ProviderActionsDropdownItems } from './ProviderActionsDropdownItems';
+import ProviderActionsDropdownItems from './ProviderActionsDropdownItems';
 
 import './ProviderActionsDropdown.style.css';
+
+type ProviderActionsDropdownProps = {
+  isKebab?: boolean;
+} & CellProps;
 
 /**
  * ProviderActionsKebabDropdown_ is a helper component that displays a kebab dropdown menu.
@@ -24,14 +27,14 @@ import './ProviderActionsDropdown.style.css';
  * @param {ProviderWithInventory} props.data - The data to be used in ProviderActionsDropdownItems.
  * @returns {Element} The rendered dropdown menu component.
  */
-const ProviderActionsKebabDropdown_: FC<ProviderActionsDropdownProps> = ({ data, isKebab }) => {
+export const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isKebab }) => {
   const { t } = useForkliftTranslation();
 
   // Hook for managing the open/close state of the dropdown
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
+    setIsOpen((open) => !open);
   };
 
   const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
@@ -40,48 +43,34 @@ const ProviderActionsKebabDropdown_: FC<ProviderActionsDropdownProps> = ({ data,
 
   // Returning the Dropdown component from PatternFly library
   return (
-    <Dropdown
-      className={isKebab ? undefined : 'forklift-dropdown pf-c-menu-toggle'}
-      isOpen={isOpen}
-      onOpenChange={setIsOpen}
-      onSelect={onSelect}
-      toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle
-          ref={toggleRef}
-          onClick={onToggleClick}
-          isExpanded={isOpen}
-          variant={isKebab ? 'plain' : 'default'}
-        >
-          {isKebab ? <EllipsisVIcon /> : t('Actions')}
-        </MenuToggle>
-      )}
-      shouldFocusToggleOnSelect
-      popperProps={{
-        position: 'right',
-      }}
-    >
-      <DropdownList>{ProviderActionsDropdownItems({ data })}</DropdownList>
-    </Dropdown>
+    <ModalHOC>
+      <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
+        <FlexItem grow={{ default: 'grow' }} />
+        <FlexItem align={{ default: 'alignRight' }}>
+          <Dropdown
+            className={isKebab ? undefined : 'forklift-dropdown pf-c-menu-toggle'}
+            isOpen={isOpen}
+            onOpenChange={setIsOpen}
+            onSelect={onSelect}
+            toggle={(toggleRef: Ref<MenuToggleElement>) => (
+              <MenuToggle
+                ref={toggleRef}
+                onClick={onToggleClick}
+                isExpanded={isOpen}
+                variant={isKebab ? 'plain' : 'default'}
+              >
+                {isKebab ? <EllipsisVIcon /> : t('Actions')}
+              </MenuToggle>
+            )}
+            shouldFocusToggleOnSelect
+            popperProps={{
+              position: 'right',
+            }}
+          >
+            <ProviderActionsDropdownItems data={data} />
+          </Dropdown>
+        </FlexItem>
+      </Flex>
+    </ModalHOC>
   );
 };
-
-/**
- * ProviderActionsDropdown is a component that provides a context for the dropdown menu.
- * It uses a ModalProvider to manage modals that may be used in the dropdown menu.
- * @param {CellProps} props - The properties passed to this component.
- * @returns {Element} The rendered component with a ModalProvider context.
- */
-export const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = (props) => (
-  <ModalHOC>
-    <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
-      <FlexItem grow={{ default: 'grow' }} />
-      <FlexItem align={{ default: 'alignRight' }}>
-        <ProviderActionsKebabDropdown_ {...props} />
-      </FlexItem>
-    </Flex>
-  </ModalHOC>
-);
-
-type ProviderActionsDropdownProps = {
-  isKebab?: boolean;
-} & CellProps;

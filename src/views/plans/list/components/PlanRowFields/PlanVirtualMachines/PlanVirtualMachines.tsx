@@ -1,24 +1,19 @@
 import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModelRef } from '@kubev2v/types';
 import { Split, SplitItem } from '@patternfly/react-core';
 import { VirtualMachineIcon } from '@patternfly/react-icons';
+import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { getPlanURL } from '@utils/crds/plans/utils';
 
-import type { CellProps } from './CellProps';
+import type { PlanFieldProps } from '../utils/types';
 
-export const VMsCell: FC<CellProps> = ({ data }) => {
+const PlanVirtualMachines: FC<PlanFieldProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
-  const plan = data?.plan;
-  const specVms = plan?.spec?.vms;
+  const planVMs = getPlanVirtualMachines(plan);
 
-  const planURL = getResourceUrl({
-    name: plan?.metadata?.name,
-    namespace: plan?.metadata?.namespace,
-    reference: PlanModelRef,
-  });
+  const planURL = getPlanURL(plan);
 
   return (
     <Link to={`${planURL}/vms`}>
@@ -27,9 +22,14 @@ export const VMsCell: FC<CellProps> = ({ data }) => {
           <VirtualMachineIcon />
         </SplitItem>
         <SplitItem>
-          {t('{{total}} VM', { count: specVms?.length, total: specVms?.length })}
+          {t('{{total}} VM', {
+            count: planVMs?.length,
+            total: planVMs?.length,
+          })}
         </SplitItem>
       </Split>
     </Link>
   );
 };
+
+export default PlanVirtualMachines;

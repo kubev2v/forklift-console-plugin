@@ -1,29 +1,18 @@
-import type { FC } from 'react';
-import { loadUserSettings } from 'src/components/common/Page/userSettings';
-import { FilterDefType, type ResourceFieldFactory } from 'src/components/common/utils/types';
-import StandardPage from 'src/components/page/StandardPage';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { createElement } from 'react';
+import DatesComparedHelperText from 'src/modules/Plans/components/DatesComparedHelperText/DatesComparedHelperText';
+import { migrationTypes } from 'src/modules/Plans/utils/constants/migrationTypes';
+import { planPhases } from 'src/modules/Plans/utils/constants/planPhases';
+import { getMigrationType } from 'src/modules/Plans/utils/helpers/getMigrationType';
+import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 
-import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { HelperText, HelperTextItem } from '@patternfly/react-core';
-
-import PlansAddButton from '../../components/PlansAddButton';
-import PlansEmptyState from '../../components/PlansEmptyState';
-import { migrationTypes } from '../../utils/constants/migrationTypes';
-import { planPhases } from '../../utils/constants/planPhases';
-import { getMigrationType } from '../../utils/helpers/getMigrationType';
-import { getPlanPhase } from '../../utils/helpers/getPlanPhase';
-import type { PlanData } from '../../utils/types/PlanData';
+import { FilterDefType, type ResourceField } from '@components/common/utils/types';
+import type { V1beta1Plan } from '@kubev2v/types';
+import { t } from '@utils/i18n';
 
 import { planResourceApiJsonPaths, PlanTableResourceId } from './constants';
-import PlanRow from './PlanRow';
 
-import './PlansListPage.style.css';
-
-export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const planFields: ResourceField[] = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -72,7 +61,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
   {
     isVisible: true,
-    jsonPath: (data: PlanData) => data?.plan?.spec?.vms?.length ?? 0,
+    jsonPath: (plan) => (plan as V1beta1Plan)?.spec?.vms?.length ?? 0,
     label: t('Virtual machines'),
     resourceFieldId: PlanTableResourceId.Vms,
     sortable: true,
@@ -113,7 +102,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       values: planPhases,
     },
     isVisible: true,
-    jsonPath: getPlanPhase,
+    jsonPath: (plan) => getPlanPhase({ plan } as PlanData),
     label: t('Migration status'),
     resourceFieldId: PlanTableResourceId.Phase,
     sortable: true,
@@ -125,20 +114,14 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       values: migrationTypes,
     },
     isVisible: true,
-    jsonPath: getMigrationType,
+    jsonPath: (plan) => getMigrationType({ plan } as PlanData),
     label: t('Migration type'),
     resourceFieldId: PlanTableResourceId.MigrationType,
     sortable: true,
   },
   {
     filter: {
-      helperText: (
-        <HelperText className="forklift-date-range-helper-text">
-          <HelperTextItem variant="indeterminate">
-            {t('Dates are compared in UTC. End of the interval is included.')}
-          </HelperTextItem>
-        </HelperText>
-      ),
+      helperText: createElement(DatesComparedHelperText),
       placeholderLabel: 'YYYY-MM-DD',
       type: FilterDefType.DateRange,
     },
@@ -175,61 +158,3 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
     resourceFieldId: PlanTableResourceId.Archived,
   },
 ];
-
-const PlansListPage: FC<{
-  namespace: string;
-}> = ({ namespace }) => {
-  const { t } = useForkliftTranslation();
-
-  const userSettings = loadUserSettings({ pageId: 'Plans' });
-
-  const [plans, plansLoaded, plansLoadError] = useK8sWatchResource<V1beta1Plan[]>({
-    groupVersionKind: PlanModelGroupVersionKind,
-    isList: true,
-    namespace,
-    namespaced: true,
-  });
-
-  const permissions = useGetDeleteAndEditAccessReview({
-    model: PlanModel,
-    namespace,
-  });
-
-  const data: PlanData[] = (plansLoaded && !plansLoadError ? plans : []).map((plan) => ({
-    permissions,
-    plan,
-  }));
-
-  const EmptyState = <EmptyState_ namespace={namespace} />;
-
-  return (
-    <ModalHOC>
-      <StandardPage
-        data-testid="network-maps-list"
-        addButton={
-          permissions.canCreate && (
-            <PlansAddButton dataTestId="add-network-map-button" namespace={namespace} />
-          )
-        }
-        dataSource={[data || [], plansLoaded, plansLoadError]}
-        RowMapper={PlanRow}
-        fieldsMetadata={fieldsMetadataFactory(t)}
-        namespace={namespace}
-        title={t('Plans')}
-        userSettings={userSettings}
-        customNoResultsFound={EmptyState}
-        page={1}
-      />
-    </ModalHOC>
-  );
-};
-
-type EmptyStateProps = {
-  namespace: string;
-};
-
-const EmptyState_: FC<EmptyStateProps> = ({ namespace }) => {
-  return <PlansEmptyState namespace={namespace} />;
-};
-
-export default PlansListPage;
