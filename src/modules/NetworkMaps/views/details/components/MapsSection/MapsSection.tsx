@@ -248,9 +248,9 @@ const getDestinationNetName = (
   return net ? OpenShiftNetworkAttachmentDefinitionToName(net) : 'Pod';
 };
 
-function convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(
+const convertInventoryNetworkToV1beta1NetworkMapSpecMapSource = (
   inventoryNetwork: InventoryNetwork,
-): V1beta1NetworkMapSpecMapSource {
+): V1beta1NetworkMapSpecMapSource => {
   if (!inventoryNetwork) {
     return undefined;
   }
@@ -264,11 +264,11 @@ function convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(
     name: inventoryNetwork.name,
     namespace: inventoryNetwork.namespace,
   };
-}
+};
 
-function convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination(
+const convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination = (
   networkAttachmentDefinition: OpenShiftNetworkAttachmentDefinition,
-): V1beta1NetworkMapSpecMapDestination {
+): V1beta1NetworkMapSpecMapDestination => {
   if (!networkAttachmentDefinition) {
     return { type: 'pod' };
   }
@@ -278,7 +278,7 @@ function convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDe
     namespace: networkAttachmentDefinition.namespace,
     type: networkAttachmentDefinition.type || 'multus',
   };
-}
+};
 
 const OpenShiftNetworkAttachmentDefinitionToName = (net) =>
   net?.namespace ? `${net?.namespace}/${net?.name}` : net?.name || 'Pod';

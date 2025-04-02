@@ -9,7 +9,7 @@ import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
  * @param {string[]} keys - The list of keys to check.
  * @returns {string[]} Returns a list of missing keys in secret data.
  */
-export function missingKeysInSecretData(secret: IoK8sApiCoreV1Secret, keys: string[]): string[] {
+export const missingKeysInSecretData = (secret: IoK8sApiCoreV1Secret, keys: string[]): string[] => {
   // If secret or secret's data is not defined, return false
   if (!secret?.data) {
     return keys;
@@ -28,4 +28,4 @@ export function missingKeysInSecretData(secret: IoK8sApiCoreV1Secret, keys: stri
 
   // All keys exist and are not null or empty string
   return missing;
-}
+};

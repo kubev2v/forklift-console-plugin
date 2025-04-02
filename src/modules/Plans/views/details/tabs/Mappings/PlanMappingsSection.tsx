@@ -99,10 +99,10 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   const [isAddStorageMapAvailable, setIsAddStorageMapAvailable] = useState(true);
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function reducer(
+  const reducer = (
     state: PlanMappingsSectionState,
     action: { type: string; payload? },
-  ): PlanMappingsSectionState {
+  ): PlanMappingsSectionState => {
     switch (action.type) {
       case 'TOGGLE_EDIT': {
         return { ...state, edit: !state.edit };
@@ -160,21 +160,21 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
       default:
         return state;
     }
-  }
+  };
 
   // Toggles between view and edit modes
-  function onToggleEdit() {
+  const onToggleEdit = () => {
     dispatch({ type: 'TOGGLE_EDIT' });
-  }
+  };
 
   // Handle user clicking "cancel"
-  function onCancel() {
+  const onCancel = () => {
     // clear changes and return to view mode
     setIsAddNetworkMapAvailable(true);
     setIsAddStorageMapAvailable(true);
     dispatch({ type: 'SET_CANCEL' });
     dispatch({ type: 'TOGGLE_EDIT' });
-  }
+  };
 
   const onAddNetworkMapping = () => {
     const nextSourceNetworksIndex = sourceNetworks.findIndex(
@@ -333,7 +333,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   };
 
   // Handle user clicking "Update Mappings"
-  async function onUpdate() {
+  const onUpdate = async () => {
     setIsLoading(true);
 
     try {
@@ -362,7 +362,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
       setIsLoading(false);
     }
-  }
+  };
 
   const ovirtFindObj = (obj, nextName: string) => {
     return obj.path === nextName || obj.name === nextName;

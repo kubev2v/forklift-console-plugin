@@ -8,10 +8,10 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
  * @param {{ name: string; uid: string }} ownerRef - The owner reference to be added to the secret.
  * @returns {Promise<void>} A promise that resolves when the patch operation is complete.
  */
-export async function patchHostSecretOwner(
+export const patchHostSecretOwner = async (
   secret: IoK8sApiCoreV1Secret,
   ownerRef: { name: string; uid: string },
-) {
+) => {
   const patchedSecret = await k8sPatch({
     data: [
       {
@@ -32,4 +32,4 @@ export async function patchHostSecretOwner(
   });
 
   return patchedSecret;
-}
+};

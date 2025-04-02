@@ -49,7 +49,7 @@ const initialState = {
   },
 };
 
-function reducer(state, action) {
+const reducer = (state, action) => {
   switch (action.type) {
     case 'SET_NETWORK':
       return {
@@ -84,9 +84,9 @@ function reducer(state, action) {
     default:
       throw new Error();
   }
-}
+};
 
-function shouldDisableSave(state, updatedFields) {
+const shouldDisableSave = (state, updatedFields) => {
   const updatedState = { ...state, ...updatedFields };
 
   if (state.endpointType === 'esxi') {
@@ -100,7 +100,7 @@ function shouldDisableSave(state, updatedFields) {
     !validateUsername(updatedState.username) ||
     !validatePassword(updatedState.password)
   );
-}
+};
 
 export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
   data,
@@ -313,7 +313,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
   );
 };
 
-function getNetworkAdapterByLabel(networkAdapters: NetworkAdapters[], label: string) {
+const getNetworkAdapterByLabel = (networkAdapters: NetworkAdapters[], label: string) => {
   const selectedAdapter = networkAdapters.find((adapter) => {
     const cidr = calculateCidrNotation(adapter.ipAddress, adapter.subnetMask);
     const adapterLabel = `${adapter.name} - ${cidr}`;
@@ -321,12 +321,8 @@ function getNetworkAdapterByLabel(networkAdapters: NetworkAdapters[], label: str
   });
 
   return selectedAdapter;
-}
+};
 
-function validateUsername(username) {
-  return validateNoSpaces(username);
-}
-
-function validatePassword(password) {
+const validatePassword = (password) => {
   return validateNoSpaces(password);
-}
+};

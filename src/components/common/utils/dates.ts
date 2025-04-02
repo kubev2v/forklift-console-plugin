@@ -6,10 +6,10 @@ import { DateTime, Interval } from 'luxon';
  * @param {string} isoDateString - The ISO date time string
  * @returns {string} The equivalent UTC+00:00 date time ISO string if input is valid or undefined otherwise.
  */
-export function changeTimeZoneToUTCZero(isoDateString: string): string | undefined {
+export const changeTimeZoneToUTCZero = (isoDateString: string): string | undefined => {
   const date = DateTime.fromISO(isoDateString);
   return date.isValid ? date.toUTC().toISO() : undefined;
-}
+};
 
 /**
  * Converts a given ISO date time string to ISO date string(no time).

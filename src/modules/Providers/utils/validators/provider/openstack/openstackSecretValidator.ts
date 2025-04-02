@@ -6,7 +6,7 @@ import type { ValidationMsg } from '../../common';
 
 import { openstackSecretFieldValidator } from './openstackSecretFieldValidator';
 
-export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
+export const openstackSecretValidator = (secret: IoK8sApiCoreV1Secret): ValidationMsg => {
   const authType = safeBase64Decode(secret?.data?.authType) || 'password';
 
   let requiredFields = [];
@@ -103,4 +103,4 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
   }
 
   return { type: 'default' };
-}
+};

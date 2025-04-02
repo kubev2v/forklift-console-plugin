@@ -49,9 +49,9 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
   }, [plan, preHookResource, postHookResource]);
 
   // Handle user clicking "save"
-  async function onUpdate() {
+  const onUpdate = async () => {
     onUpdatePlanHooks({ dispatch, plan, postHookResource, preHookResource, state });
-  }
+  };
 
   const onClick = () => {
     dispatch({

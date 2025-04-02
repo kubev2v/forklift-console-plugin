@@ -16,10 +16,10 @@ type PaginationHookResult = {
   setPerPage: (perPage: number) => void;
 };
 
-export function usePagination({
+export const usePagination = ({
   filteredDataLength,
   userSettings,
-}: PaginationHookProps): PaginationHookResult {
+}: PaginationHookProps): PaginationHookResult => {
   const {
     clear: clearSavedPerPage = () => undefined,
     perPage: defaultPerPage = DEFAULT_PER_PAGE,
@@ -46,4 +46,4 @@ export function usePagination({
     lastPage,
     setPerPage: setPerPageInStateAndSettings,
   };
-}
+};

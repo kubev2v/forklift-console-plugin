@@ -20,7 +20,10 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
  *  .then(newProvider => console.log(newProvider))
  *  .catch(err => console.error(err));
  */
-export async function createProvider(provider: V1beta1Provider, secret: IoK8sApiCoreV1Secret) {
+export const createProvider = async (
+  provider: V1beta1Provider,
+  secret: IoK8sApiCoreV1Secret,
+): Promise<object> => {
   // Sanity check, don't try to create empty provider
   if (!provider) {
     return;
@@ -63,4 +66,4 @@ export async function createProvider(provider: V1beta1Provider, secret: IoK8sApi
   });
 
   return obj;
-}
+};

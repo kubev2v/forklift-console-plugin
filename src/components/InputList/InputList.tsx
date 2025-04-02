@@ -70,13 +70,13 @@ export const InputList = <T,>({
     onChange(extractContent(updatedItems));
   };
 
-  function handleAddItem() {
+  const handleAddItem = () => {
     const newItem = { content: null, id: generateUniqueId() };
     const updatedItems = [...localItems, newItem];
 
     setLocalItems(updatedItems);
     onChange(extractContent(updatedItems));
-  }
+  };
 
   const isDeleteDisabled = localItems.length === 1;
 
@@ -131,8 +131,6 @@ export const InputList = <T,>({
     </>
   );
 };
-
-let idCounter = 0;
 
 /**
  * Get a new unique ID.

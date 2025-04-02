@@ -21,7 +21,7 @@ import type { RowProps, SortType, TableViewHeaderProps } from './types';
  *
  * @see useSort
  */
-export function TableView<T>({
+export const TableView = <T,>({
   activeSort,
   'aria-label': ariaLabel,
   children,
@@ -34,7 +34,7 @@ export function TableView<T>({
   toId,
   uidFieldId = UID,
   visibleColumns,
-}: TableViewProps<T>) {
+}: TableViewProps<T>) => {
   const hasChildren = children.filter(Boolean).length > 0;
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
 
@@ -68,7 +68,7 @@ export function TableView<T>({
       </Tbody>
     </Table>
   );
-}
+};
 
 type TableViewProps<T> = {
   /**

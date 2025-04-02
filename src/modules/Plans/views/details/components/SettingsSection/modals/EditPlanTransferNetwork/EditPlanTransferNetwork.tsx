@@ -163,13 +163,13 @@ const EditPlanTransferNetwork_: React.FC<EditPlanTransferNetworkProps> = (props)
  * @param {unknown} value - The input string from which the network name is to be extracted.
  * @returns {string} The network name extracted from the input string.
  */
-function getNetworkName(value: unknown): string {
+const getNetworkName = (value: unknown): string => {
   if (!value || typeof value === 'string') {
     return 'Providers default';
   }
 
   return `${value?.namespace}/${value?.name}`;
-}
+};
 
 type EditPlanTransferNetworkProps = Modify<
   EditModalProps,

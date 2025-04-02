@@ -19,7 +19,7 @@ type onUpdatePlanHooksProps = {
 };
 
 // Handle user clicking "save"
-export async function onUpdatePlanHooks(props: onUpdatePlanHooksProps) {
+export const onUpdatePlanHooks = async (props: onUpdatePlanHooksProps) => {
   const { dispatch, plan, postHookResource, preHookResource, state } = props;
 
   dispatch({ payload: true, type: 'SET_LOADING' });
@@ -62,4 +62,4 @@ export async function onUpdatePlanHooks(props: onUpdatePlanHooksProps) {
 
     dispatch({ payload: false, type: 'SET_LOADING' });
   }
-}
+};

@@ -194,7 +194,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
   );
 };
 
-async function patchMigrationCutover(migration: V1beta1Migration, cutover: string) {
+const patchMigrationCutover = async (migration: V1beta1Migration, cutover: string) => {
   const op = migration?.spec?.cutover ? 'replace' : 'add';
 
   await k8sPatch({
@@ -208,4 +208,4 @@ async function patchMigrationCutover(migration: V1beta1Migration, cutover: strin
     model: MigrationModel,
     resource: migration,
   });
-}
+};

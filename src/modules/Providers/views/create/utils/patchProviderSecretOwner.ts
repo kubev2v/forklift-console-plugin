@@ -19,10 +19,10 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
  *  .then(() => console.log('Secret owner patched successfully'))
  *  .catch(err => console.error(err));
  */
-export async function patchProviderSecretOwner(
+export const patchProviderSecretOwner = async (
   provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret,
-) {
+) => {
   // Sanity check, don't try to patch empty secret
   if (!secret) {
     return;
@@ -39,8 +39,8 @@ export async function patchProviderSecretOwner(
           {
             apiVersion: 'forklift.konveyor.io/v1beta1',
             kind: 'Provider',
-            name: provider.metadata.name,
-            uid: provider.metadata.uid,
+            name: provider.metadata?.name ?? '',
+            uid: provider.metadata?.uid ?? '',
           },
         ],
       },
@@ -48,4 +48,4 @@ export async function patchProviderSecretOwner(
     model: SecretModel,
     resource: secret,
   });
-}
+};

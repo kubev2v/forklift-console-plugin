@@ -7,10 +7,10 @@ import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
  * @param {IoK8sApiCoreV1Secret} secret2 - The second version of the secret.
  * @returns {boolean} Returns true if the data records have changed, otherwise returns false.
  */
-export function isSecretDataChanged(
+export const isSecretDataChanged = (
   secret1: IoK8sApiCoreV1Secret,
   secret2: IoK8sApiCoreV1Secret,
-): boolean {
+): boolean => {
   // Both secrets don't have data records
   if (!secret1.data && !secret2.data) {
     return false;
@@ -35,4 +35,4 @@ export function isSecretDataChanged(
 
   // No differences found
   return false;
-}
+};
