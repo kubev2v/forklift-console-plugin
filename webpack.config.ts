@@ -98,6 +98,10 @@ const config: Configuration = {
     new ForkTsCheckerWebpackPlugin({
       typescript: {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
+        diagnosticOptions: {
+          semantic: false,
+          syntactic: false,
+        },
       },
     }),
     new ConsoleRemotePlugin({
