@@ -110,7 +110,7 @@ const getK8sVMMemory = (vm: V1VirtualMachine) =>
   vm?.spec?.template?.spec?.domain?.resources.requests?.memory || '0Mi';
 
 /* eslint-disable id-length */
-const k8sMemoryToBytes = (memoryString: string) => {
+export const k8sMemoryToBytes = (memoryString: string) => {
   const units = {
     E: 10 ** 18,
     EI: 2 ** 60,
@@ -129,12 +129,12 @@ const k8sMemoryToBytes = (memoryString: string) => {
   };
 
   // Enhance the regex to include both binary and decimal SI units
-  const regex = /^\d+Ki|Mi|Gi|Ti|Pi|Ei|K|M|G|T|P|E?$/iu;
+  const regex = /^(?<group1>\d+)(?<group2>Ki|Mi|Gi|Ti|Pi|Ei|K|M|G|T|P|E)?$/iu;
   const match = regex.exec(memoryString);
 
   if (match) {
     const value = parseInt(match[1], 10);
-    const [, unit] = match;
+    const [, , unit] = match;
 
     if (unit) {
       // Normalize unit to handle case-insensitivity

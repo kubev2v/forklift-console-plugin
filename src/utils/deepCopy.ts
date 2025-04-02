@@ -4,10 +4,10 @@
  * @returns {T} A deep copy of the input object.
  * @template T
  */
-export function deepCopy<T>(obj: T): T {
+export const deepCopy = <T>(obj: T): T => {
   if (obj === undefined) {
     return undefined;
   }
 
   return JSON.parse(JSON.stringify(obj));
-}
+};

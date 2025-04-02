@@ -2,9 +2,9 @@ import React, { type ReactNode } from 'react';
 import { getI18n, Trans, useTranslation } from 'react-i18next';
 import type { TranslationOptions } from 'i18next';
 
-export function useForkliftTranslation() {
+export const useForkliftTranslation = () => {
   return useTranslation('plugin__forklift-console-plugin');
-}
+};
 
 export const ForkliftTrans: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const { t } = useForkliftTranslation();
