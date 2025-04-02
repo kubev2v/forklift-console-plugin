@@ -1,9 +1,11 @@
+/* eslint-disable max-lines-per-function */
 import React, { useCallback, useEffect, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import {
   VDDKHelperText,
   VDDKHelperTextShort,
 } from 'src/modules/Providers/utils/components/VDDKHelperText/VDDKHelperText';
+import type { ActionFieldValidated } from 'src/modules/Providers/utils/validators/common';
 import { validateVCenterURL } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVCenterURL';
 import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -38,18 +40,7 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
     },
   };
 
-  // When certificate changes, re-validate the URL
-  useEffect(() => {
-    dispatch({
-      payload: {
-        field: 'url',
-        validationState: validateVCenterURL(url, secret?.data?.insecureSkipVerify),
-      },
-      type: 'SET_FIELD_VALIDATED',
-    });
-  }, [secret]);
-
-  const reducer = (state, action) => {
+  const reducer = (state: typeof initialState, action: ActionFieldValidated) => {
     switch (action.type) {
       case 'SET_FIELD_VALIDATED':
         return {
@@ -66,8 +57,19 @@ export const VCenterProviderCreateForm: React.FC<VCenterProviderCreateFormProps>
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // When certificate changes, re-validate the URL
+  useEffect(() => {
+    dispatch({
+      payload: {
+        field: 'url',
+        validationState: validateVCenterURL(url, secret?.data?.insecureSkipVerify),
+      },
+      type: 'SET_FIELD_VALIDATED',
+    });
+  }, [secret]);
+
   const handleChange = useCallback(
-    (id, value) => {
+    (id: string, value?: string) => {
       const trimmedValue = value?.trim();
 
       if (id == 'emptyVddkInitImage') {

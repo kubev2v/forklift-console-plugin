@@ -12,7 +12,7 @@ export type FilterTypeProps = {
    * Filter apply handler. Implementation of filter values is filter specific.
    * @param values list of selected filter values
    */
-  onFilterUpdate: (values: string[], resourceFieldId?: string) => any;
+  onFilterUpdate: (values: string[], resourceFieldId?: string) => unknown;
   /**
    * A text located inside the filter field or next to it.
    */

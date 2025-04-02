@@ -5,6 +5,7 @@ import {
   DatePicker,
   InputGroup,
   isValidDate as isValidJSDate,
+  type ToolbarChip,
   ToolbarFilter,
   Tooltip,
 } from '@patternfly/react-core';
@@ -56,9 +57,9 @@ export const DateRangeFilter = ({
       ),
     };
   };
-  const optionToRange = (option): string => option?.key;
+  const optionToRange = (option: ToolbarChip): string => option?.key;
 
-  const clearSingleRange = (option) => {
+  const clearSingleRange = (option: ToolbarChip) => {
     const target = optionToRange(option);
     onFilterUpdate([...validFilters.filter((range) => range !== target)]);
   };
@@ -96,10 +97,10 @@ export const DateRangeFilter = ({
       key={filterId}
       chips={validFilters.map(rangeToOption)}
       deleteChip={(category, option) => {
-        clearSingleRange(option);
+        clearSingleRange(option as ToolbarChip);
       }}
       deleteChipGroup={() => onFilterUpdate([])}
-      categoryName={title}
+      categoryName={title as unknown as string}
       showToolbarItem={showFilter}
     >
       <InputGroup>

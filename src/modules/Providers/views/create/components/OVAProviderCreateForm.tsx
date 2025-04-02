@@ -1,5 +1,6 @@
 import React, { useCallback, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import type { ActionFieldValidated } from 'src/modules/Providers/utils/validators/common';
 import { validateOvaNfsPath } from 'src/modules/Providers/utils/validators/provider/ova/validateOvaNfsPath';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -25,7 +26,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
     },
   };
 
-  const reducer = (state, action) => {
+  const reducer = (state: typeof initialState, action: ActionFieldValidated) => {
     switch (action.type) {
       case 'SET_FIELD_VALIDATED':
         return {
@@ -43,16 +44,14 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleChange = useCallback(
-    (id, value) => {
+    (value: string) => {
       const trimmedValue = value?.trim();
 
-      if (id === 'url') {
-        const validationState = validateOvaNfsPath(trimmedValue);
+      const validationState = validateOvaNfsPath(trimmedValue);
 
-        dispatch({ payload: { field: id, validationState }, type: 'SET_FIELD_VALIDATED' });
+      dispatch({ payload: { field: 'url', validationState }, type: 'SET_FIELD_VALIDATED' });
 
-        onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
-      }
+      onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
     },
     [provider],
   );
@@ -60,7 +59,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
   const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
     value,
   ) => {
-    handleChange('url', value);
+    handleChange(value);
   };
 
   return (
