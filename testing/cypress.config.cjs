@@ -6,7 +6,7 @@ export default defineConfig({
   defaultCommandTimeout: 90_000,
   e2e: {
     baseUrl: process.env.BRIDGE_BASE_ADDRESS || process.env.BASE_ADDRESS,
-    setupNodeEvents(on, config) {
+    setupNodeEvents(_on, _config) {
       // implement node event listeners here
     },
   },

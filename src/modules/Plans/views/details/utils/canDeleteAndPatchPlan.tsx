@@ -1,4 +1,4 @@
-import { HookModel, NetworkMapModel, StorageMapModel, type V1beta1Plan } from '@kubev2v/types';
+import { NetworkMapModel, StorageMapModel, type V1beta1Plan } from '@kubev2v/types';
 import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 
 export const canDeleteAndPatchPlanMaps = (plan: V1beta1Plan) => {
@@ -35,24 +35,4 @@ export const canDeleteAndPatchPlanMaps = (plan: V1beta1Plan) => {
   });
 
   return canPatchNetworkMap && canDeleteNetworkMap && canPatchStorageMap && canDeleteStorageMap;
-};
-
-const canDeleteAndPatchPlanHooks = (plan: V1beta1Plan) => {
-  const [canDeleteHooks] = useAccessReview({
-    group: '',
-    name: plan.metadata?.name,
-    namespace: plan.metadata?.name,
-    resource: HookModel.plural,
-    verb: 'delete',
-  });
-
-  const [canPatchHooks] = useAccessReview({
-    group: '',
-    name: plan.metadata?.name,
-    namespace: plan.metadata?.name,
-    resource: HookModel.plural,
-    verb: 'patch',
-  });
-
-  return canDeleteHooks && canPatchHooks;
 };
