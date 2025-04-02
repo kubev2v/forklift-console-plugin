@@ -179,7 +179,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   const onAddNetworkMapping = () => {
     const nextSourceNetworksIndex = sourceNetworks.findIndex(
       (sourceNet) =>
-        state.updatedNetwork.length == 0 ||
+        state.updatedNetwork.length === 0 ||
         !state.updatedNetwork.find((updatedNet) => sourceNet.id === updatedNet.source.id),
     );
     const newNetworkMap = createReplacedNetworkMap(nextSourceNetworksIndex);
@@ -201,7 +201,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   const onAddStorageMapping = () => {
     const nextSourceStoragesIndex = sourceStorages.findIndex(
       (sourceStorage) =>
-        state.updatedStorage.length == 0 ||
+        state.updatedStorage.length === 0 ||
         !state.updatedStorage.find(
           (updatedStorage) => sourceStorage.id === updatedStorage.source.id,
         ),
@@ -244,10 +244,10 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   const onDeleteStorageMapping = ({ destination, source }: Mapping) => {
     const newState = state.updatedStorage.filter(
       (obj) =>
-        mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] != source ||
+        mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] !== source ||
         (mapTargetStoragesLabelsToIds(targetStorages, plan)[obj.destination.storageClass]
           ? obj.destination.storageClass
-          : 'Not available') != destination,
+          : 'Not available') !== destination,
     );
 
     setIsAddStorageMapAvailable(true);
@@ -261,11 +261,11 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   const onReplaceNetworkMapping = ({ current, next }) => {
     const replacedIndex = state.updatedNetwork.findIndex(
       (obj) =>
-        (mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id] == current.source ||
+        (mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id] === current.source ||
           (obj.source.type === 'pod' && current.source.includes('Pod'))) &&
         (mapTargetNetworksIdsToLabels(targetNetworks, plan)[obj.destination.type] ??
           obj.destination?.name ??
-          'Not available') == current.destination,
+          'Not available') === current.destination,
     );
 
     const nextSourceIndex = sourceNetworks.findIndex(
@@ -300,10 +300,10 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   const onReplaceStorageMapping = ({ current, next }) => {
     const replacedIndex = state.updatedStorage.findIndex(
       (obj) =>
-        mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] == current.source &&
+        mapSourceStoragesIdsToLabels(sourceStorages)[obj.source.id] === current.source &&
         (mapTargetStoragesLabelsToIds(targetStorages, plan)[obj.destination.storageClass]
           ? obj.destination.storageClass
-          : 'Not available') == current.destination,
+          : 'Not available') === current.destination,
     );
 
     const nextSourceIndex = sourceStorages.findIndex(
@@ -452,7 +452,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
   const nonSelectedSourceNetworks = sourceNetworks.filter(
     (sourceNet) =>
-      state.updatedNetwork.length == 0 ||
+      state.updatedNetwork.length === 0 ||
       !state.updatedNetwork.find((updatedNet) => sourceNet.id === updatedNet.source.id),
   );
 
@@ -470,7 +470,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
   const nonSelectedSourceStorages = sourceStorages.filter(
     (sourceStorage) =>
-      state.updatedStorage.length == 0 ||
+      state.updatedStorage.length === 0 ||
       !state.updatedStorage.find((updatedStorage) => sourceStorage.id === updatedStorage.source.id),
   );
 

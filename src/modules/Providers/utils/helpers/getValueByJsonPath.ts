@@ -20,7 +20,7 @@ export function getValueByJsonPath<T>(
     pathParts = pathOrFunction;
   }
 
-  return pathParts.reduce((o, key) => o?.[key], obj);
+  return pathParts.reduce((path, key) => path?.[key], obj);
 }
 
 export function jsonPathToPatch(path: string | string[]) {
@@ -32,7 +32,7 @@ export function jsonPathToPatch(path: string | string[]) {
     pathParts = path;
   }
 
-  pathParts = pathParts.map((o) => o.replaceAll('/', '~1'));
+  pathParts = pathParts.map((path) => path.replaceAll('/', '~1'));
 
   return `/${pathParts.join('/')}`;
 }

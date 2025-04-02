@@ -20,7 +20,7 @@ export const MigrationsSection: React.FC<MigrationsSectionProps> = ({ obj }) => 
   });
 
   const ownedMigrations = migrations.filter(
-    (m) => m?.metadata?.ownerReferences?.[0]?.uid === obj.metadata.uid,
+    (migration) => migration?.metadata?.ownerReferences?.[0]?.uid === obj.metadata.uid,
   );
 
   return (

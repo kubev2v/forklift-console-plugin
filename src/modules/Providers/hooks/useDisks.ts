@@ -52,7 +52,7 @@ export const useDisks = (
     }
 
     const storageList = Array.isArray(disks)
-      ? disks.map((d) => ({ ...d, providerType }) as OVirtDisk | OpenstackVolume)
+      ? disks.map((disk) => ({ ...disk, providerType }) as OVirtDisk | OpenstackVolume)
       : [];
 
     if (providerType === 'openstack') {

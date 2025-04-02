@@ -13,9 +13,9 @@ export const addMapping = (sources: MappingSource[], targets: string[], mappings
   return nextDest && nextSource
     ? {
         mappings: [...mappings, { destination: nextDest, source: nextSource.label }],
-        sources: sources.map((m) => ({
-          ...m,
-          isMapped: m.label === nextSource.label ? true : m.isMapped,
+        sources: sources.map((source) => ({
+          ...source,
+          isMapped: source.label === nextSource.label ? true : source.isMapped,
         })),
       }
     : {};
@@ -31,8 +31,8 @@ export const deleteMapping = (
   return currentSource
     ? {
         mappings: mappings.filter(({ source }) => source !== currentSource.label),
-        sources: sources.map((m) => ({
-          ...m,
+        sources: sources.map((source) => ({
+          ...source,
           isMapped: m.label === selectedSource ? false : m.isMapped,
         })),
       }
@@ -57,11 +57,11 @@ export const replaceMapping = (
   }
 
   const updatedSources = sourceChanged
-    ? sources.map((m) => ({
-        ...m,
-        isMapped: [currentSource.label, nextSource.label].includes(m.label)
-          ? !m.isMapped
-          : m.isMapped,
+    ? sources.map((source) => ({
+        ...source,
+        isMapped: [currentSource.label, nextSource.label].includes(source.label)
+          ? !source.isMapped
+          : source.isMapped,
       }))
     : undefined;
 

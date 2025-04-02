@@ -89,10 +89,12 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     ? storageMaps.find((storage) => storage?.metadata?.name === plan.spec.map?.storage?.name)
     : null;
   const sourceProvider: V1beta1Provider = providers
-    ? providers.find((p) => p?.metadata?.name === plan?.spec?.provider?.source?.name)
+    ? providers.find((provider) => provider?.metadata?.name === plan?.spec?.provider?.source?.name)
     : null;
   const targetProvider = providers
-    ? providers.find((p) => p?.metadata?.name === plan?.spec?.provider?.destination?.name)
+    ? providers.find(
+        (provider) => provider?.metadata?.name === plan?.spec?.provider?.destination?.name,
+      )
     : null;
 
   // Retrieve source and target providers Mappings from the inventory
@@ -141,7 +143,7 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     );
   }
 
-  if (networkMaps.length == 0 || storageMaps.length == 0)
+  if (networkMaps.length === 0 || storageMaps.length === 0)
     return (
       <div>
         <span className="text-muted">{t('No Mapping found.')}</span>
@@ -152,12 +154,12 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
   // some editing options missing.
   const alerts = [];
 
-  if (targetStorages.length == 0) {
+  if (targetStorages.length === 0) {
     // Note: target network can't be missing, we always have Pod network.
     alerts.push('Missing target storage inventory.');
   }
 
-  if (sourceStorages.length == 0 || sourceNetworks.length == 0) {
+  if (sourceStorages.length === 0 || sourceNetworks.length === 0) {
     alerts.push('Missing storage inventory.');
   }
 

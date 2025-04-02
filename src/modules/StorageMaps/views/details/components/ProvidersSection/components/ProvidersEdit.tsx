@@ -42,8 +42,8 @@ export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
         >
           <FormSelect
             value={selectedProviderName}
-            onChange={(e, v) => {
-              onChange(v, e);
+            onChange={(event, value) => {
+              onChange(value, event);
             }}
             id="targetProvider"
             isDisabled={!hasProviders}
@@ -107,4 +107,4 @@ type FindProviderFunction = (args: {
 }) => V1beta1Provider;
 
 const fineProvider: FindProviderFunction = ({ name, providers }) =>
-  providers.find((p) => p.metadata.name === name);
+  providers.find((provider) => provider.metadata.name === name);

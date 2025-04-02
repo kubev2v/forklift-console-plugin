@@ -44,7 +44,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
   const { pvcs } = props.resourceData;
   const { dvs } = props.resourceData;
   const vmCreated = pipeline.find(
-    (p) => p?.name === 'VirtualMachineCreation' && p?.phase === 'Completed',
+    (pipe) => pipe?.name === 'VirtualMachineCreation' && pipe?.phase === 'Completed',
   );
 
   const getPodLogsLink = (pod: IoK8sApiCoreV1Pod) =>
@@ -288,23 +288,23 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
           </Tr>
         </Thead>
         <Tbody>
-          {(pipeline || []).map((p) => (
-            <Tr key={p?.name}>
+          {(pipeline || []).map((pipe) => (
+            <Tr key={pipe?.name}>
               <Td modifier="nowrap">
                 <ProgressStepper isCompact isVertical={true} isCenterAligned={false}>
                   <ProgressStep
-                    key={p?.name}
-                    variant={getVariant(p)}
-                    icon={getIcon(p)}
-                    id={p?.name}
-                    titleId={p?.name}
+                    key={pipe?.name}
+                    variant={getVariant(pipe)}
+                    icon={getIcon(pipe)}
+                    id={pipe?.name}
+                    titleId={pipe?.name}
                   />
                 </ProgressStepper>
-                {p?.name}
+                {pipe?.name}
               </Td>
-              <Td>{p?.description}</Td>
+              <Td>{pipe?.description}</Td>
               <Td>
-                {p?.tasks?.length > 0 && (
+                {pipe?.tasks?.length > 0 && (
                   <Tooltip
                     content={t(
                       'Completed {{completed}} of {{total}} {{name}} tasks',
@@ -315,7 +315,7 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                       className="forklift-page-plan-details-vm-tasks"
                       variant="link"
                       onClick={() => {
-                        showModal(<PipelineTasksModal name={p?.name} tasks={p.tasks} />);
+                        showModal(<PipelineTasksModal name={pipe?.name} tasks={pipe.tasks} />);
                       }}
                     >
                       <TaskIcon /> {t('{{completed}} / {{total}}', getPipelineTasks(p))}
@@ -324,9 +324,9 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
                 )}
               </Td>
               <Td>
-                <ConsoleTimestamp timestamp={p?.started} />
+                <ConsoleTimestamp timestamp={pipe?.started} />
               </Td>
-              <Td>{p?.error?.reasons}</Td>
+              <Td>{pipe?.error?.reasons}</Td>
             </Tr>
           ))}
         </Tbody>
@@ -338,8 +338,12 @@ export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (
 const getJobPhase = (job: IoK8sApiBatchV1Job) => {
   const conditions = job?.status?.conditions || [];
 
-  const conditionFailed = conditions.find((c) => c.type === 'Failed' && c.status === 'True');
-  const conditionComplete = conditions.find((c) => c.type === 'Complete' && c.status === 'True');
+  const conditionFailed = conditions.find(
+    (condition) => condition.type === 'Failed' && condition.status === 'True',
+  );
+  const conditionComplete = conditions.find(
+    (condition) => condition.type === 'Complete' && condition.status === 'True',
+  );
 
   if (conditionFailed) {
     return 'Error';
@@ -356,7 +360,9 @@ const getPipelineTasks = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => {
   const tasks = pipeline?.tasks || [];
 
   // search for all completed tasks (either tasks that completed successfully or ones that aren't finished but their pipeline step is).
-  const tasksCompleted = tasks.filter((c) => hasTaskCompleted(c.phase, c.progress, pipeline));
+  const tasksCompleted = tasks.filter((task) =>
+    hasTaskCompleted(task.phase, task.progress, pipeline),
+  );
 
   return { completed: tasksCompleted.length, name: pipeline.name, total: tasks.length };
 };

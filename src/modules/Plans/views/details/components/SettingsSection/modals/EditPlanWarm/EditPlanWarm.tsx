@@ -51,8 +51,8 @@ const WarmInputFactory: () => ModalInputComponentType = () => {
         label="Warm migration, most of the data is copied during the precopy stage while the source virtual machines (VMs) are running."
         labelOff="Cold migration, the source virtual machines are shut down while the data is copied."
         isChecked={value === 'true'}
-        onChange={(e, v) => {
-          onChangeInternal(v, e);
+        onChange={(e, value) => {
+          onChangeInternal(value, e);
         }}
       />
     );

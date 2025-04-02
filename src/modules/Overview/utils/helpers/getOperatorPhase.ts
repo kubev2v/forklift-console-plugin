@@ -24,7 +24,7 @@ export function getOperatorPhase(obj: V1beta1ForkliftController): {
   if ('conditions' in status) {
     for (const condition of status?.conditions || []) {
       // Check if the type of condition is valid and its status is 'True'
-      if (validTypes.includes(condition.type) && condition.status == 'True') {
+      if (validTypes.includes(condition.type) && condition.status === 'True') {
         // Store the found condition type and its associated message
         foundConditions[condition.type] = condition.message;
       }

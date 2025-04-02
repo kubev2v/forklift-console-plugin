@@ -30,8 +30,10 @@ import { type MigrationDataPoint, toDataPoints } from '../utils/toDataPointsHelp
 
 import type { MigrationsCardProps } from './MigrationsCard';
 
-const toStartedVmMigration = (v: V1beta1MigrationStatusVms): string => v.started;
-const toFinishedVmMigration = (v: V1beta1MigrationStatusVms): string => v.completed;
+const toStartedVmMigration = (migrationStatus: V1beta1MigrationStatusVms): string =>
+  migrationStatus.started;
+const toFinishedVmMigration = (migrationStatus: V1beta1MigrationStatusVms): string =>
+  migrationStatus.completed;
 const toDataPointsForVmMigrations = (
   allVmMigrations: V1beta1MigrationStatusVms[],
   toTimestamp: (m: V1beta1MigrationStatusVms) => string,
@@ -78,7 +80,7 @@ export const VmMigrationsChartCard: FC<MigrationsCardProps> = () => {
       migrations
         .map((migration) =>
           migration?.status?.vms.filter(
-            (vm) => vm?.phase !== 'Completed' && vm?.phase != 'Canceled',
+            (vm) => vm?.phase !== 'Completed' && vm?.phase !== 'Canceled',
           ),
         )
         .reduce((append, vm) => append.concat(vm), []),
@@ -99,9 +101,9 @@ export const VmMigrationsChartCard: FC<MigrationsCardProps> = () => {
   };
 
   const maxVmMigrationValue = Math.max(
-    ...VmMigrationsDataPoints.running.map((m) => m.value),
-    ...VmMigrationsDataPoints.failed.map((m) => m.value),
-    ...VmMigrationsDataPoints.succeeded.map((m) => m.value),
+    ...VmMigrationsDataPoints.running.map((migration) => migration.value),
+    ...VmMigrationsDataPoints.failed.map((migration) => migration.value),
+    ...VmMigrationsDataPoints.succeeded.map((migration) => migration.value),
   );
 
   const handleTimeRangeSelectedFactory = (timeRange: TimeRangeOptions) => () => {

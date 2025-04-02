@@ -38,8 +38,8 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
     showModal(
       <FetchCertificateModal
         url={url}
-        handleSave={(v) => {
-          onTextChange(null, v);
+        handleSave={(value) => {
+          onTextChange(null, value);
         }}
         existingCert={value ? String(value) : undefined}
       />,

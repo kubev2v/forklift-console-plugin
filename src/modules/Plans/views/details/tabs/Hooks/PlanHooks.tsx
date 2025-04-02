@@ -180,8 +180,8 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               labelOff="Do not enable a pre migration hook"
               isChecked={state.preHookSet}
               isDisabled={!isPlanEditable(plan)}
-              onChange={(e, v) => {
-                onChangePreHookSet(v, e);
+              onChange={(e, value) => {
+                onChangePreHookSet(value, e);
               }}
             />
           </FormGroupWithHelpText>
@@ -193,8 +193,8 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                   spellCheck="false"
                   value={state.preHook?.spec?.image}
                   type="url"
-                  onChange={(e, v) => {
-                    onChangePreHookImage(v, e);
+                  onChange={(e, value) => {
+                    onChangePreHookImage(value, e);
                   }}
                   isDisabled={!isPlanEditable(plan)}
                   aria-label="pre hook image"
@@ -236,8 +236,8 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
               labelOff="Do not enable a post migration hook"
               isChecked={state.postHookSet}
               isDisabled={!isPlanEditable(plan)}
-              onChange={(e, v) => {
-                onChangePostHookSet(v, e);
+              onChange={(e, value) => {
+                onChangePostHookSet(value, e);
               }}
             />
           </FormGroupWithHelpText>
@@ -249,8 +249,8 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
                   spellCheck="false"
                   value={state.postHook?.spec?.image}
                   type="url"
-                  onChange={(e, v) => {
-                    onChangePostHookImage(v, e);
+                  onChange={(e, value) => {
+                    onChangePostHookImage(value, e);
                   }}
                   aria-label="post hook image"
                 />

@@ -147,8 +147,8 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
             isRequired
             type={state.passwordHidden ? 'password' : 'text'}
             aria-label="Token input"
-            onChange={(e, v) => {
-              onChangeToken(v, e);
+            onChange={(e, vvalue) => {
+              onChangeToken(value, e);
             }}
             value={token}
             validated={state.validation.token.type}
@@ -193,8 +193,8 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(e, v) => {
-            onChangeInsecure(v, e);
+          onChange={(e, value) => {
+            onChangeInsecure(value, e);
           }}
         />
       </FormGroupWithHelpText>
@@ -227,11 +227,11 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
           filenamePlaceholder="Drag and drop a file or upload one"
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(_e, v) => {
-            onDataChange(v);
+          onDataChange={(_e, value) => {
+            onDataChange(value);
           }}
-          onTextChange={(_e, v) => {
-            onTextChange(v);
+          onTextChange={(_e, value) => {
+            onTextChange(value);
           }}
           onClearClick={() => {
             handleChange('cacert', '');

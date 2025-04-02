@@ -195,8 +195,8 @@ export const PlansCreateForm = ({
           >
             <FormSelect
               value={plan.spec.provider?.destination?.name}
-              onChange={(e, v) => {
-                onChangeTargetProvider(v, e);
+              onChange={(e, value) => {
+                onChangeTargetProvider(value, e);
               }}
               id="targetProvider"
               isDisabled={flow.editingDone}

@@ -272,8 +272,8 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                 type="text"
                 id="username"
                 value={state.username}
-                onChange={(e, v) => {
-                  onChangUser(v, e);
+                onChange={(e, value) => {
+                  onChangUser(value, e);
                 }}
                 validated={state.validation.username}
               />
@@ -294,8 +294,8 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
                   type={state.passwordHidden ? 'password' : 'text'}
                   aria-label="Password input"
                   value={state.password}
-                  onChange={(e, v) => {
-                    onChangePassword(v, e);
+                  onChange={(e, value) => {
+                    onChangePassword(value, e);
                   }}
                   validated={state.validation.password}
                 />
