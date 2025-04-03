@@ -8,7 +8,7 @@ export const addMapping = (sources: MappingSource[], targets: string[], mappings
     ({ isMapped, usedBySelectedVms }) => !usedBySelectedVms && !isMapped,
   );
   const nextSource = firstUsedByVms || firstGeneral;
-  const nextDest = targets[0];
+  const [nextDest] = targets;
 
   return nextDest && nextSource
     ? {
@@ -33,7 +33,7 @@ export const deleteMapping = (
         mappings: mappings.filter(({ source }) => source !== currentSource.label),
         sources: sources.map((source) => ({
           ...source,
-          isMapped: m.label === selectedSource ? false : m.isMapped,
+          isMapped: source.label === selectedSource ? false : source.isMapped,
         })),
       }
     : {};

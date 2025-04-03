@@ -12,6 +12,26 @@ import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons'
 
 import type { CellProps } from './CellProps';
 
+type Phase = 'ConnectionFailed' | 'Ready' | 'Staging' | 'ValidationFailed';
+
+const statusIcons = {
+  ConnectionFailed: <ExclamationCircleIcon color="#C9190B" />,
+  Ready: <CheckCircleIcon color="#3E8635" />,
+  Staging: <Spinner size="sm" />,
+  ValidationFailed: <ExclamationCircleIcon color="#C9190B" />,
+};
+
+const phaseLabels = {
+  // t('Connection Failed')
+  ConnectionFailed: 'Connection Failed',
+  // t('Ready')
+  Ready: 'Ready',
+  // t('Staging')
+  Staging: 'Staging',
+  // t('Validation Failed')
+  ValidationFailed: 'Validation Failed',
+};
+
 /**
  * StatusCell component, used for displaying the status of a resource.
  * @param {CellProps} props - The props for the component.
@@ -20,7 +40,7 @@ import type { CellProps } from './CellProps';
 export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
   const { t } = useForkliftTranslation();
 
-  const phase = getResourceFieldValue(data, 'phase', fields);
+  const phase = getResourceFieldValue(data, 'phase', fields) as Phase;
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
 
   switch (phase) {
@@ -32,6 +52,8 @@ export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
         fields,
         t,
       });
+    case 'Ready':
+    case 'Staging':
     default:
       return <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>;
   }
@@ -46,7 +68,7 @@ export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
  */
 const ErrorStatusCell: React.FC<CellProps & { t }> = ({ data, fields, t }) => {
   const { provider } = data;
-  const phase = getResourceFieldValue(data, 'phase', fields);
+  const phase = getResourceFieldValue(data, 'phase', fields) as Phase;
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
   const providerURL = getResourceUrl({
     name: provider?.metadata?.name,
@@ -55,7 +77,7 @@ const ErrorStatusCell: React.FC<CellProps & { t }> = ({ data, fields, t }) => {
   });
 
   // Find the error message from the status conditions
-  const bodyContent = provider?.status?.conditions.find(
+  const bodyContent = provider?.status?.conditions?.find(
     (condition) => condition?.category === 'Critical',
   )?.message;
 
@@ -86,22 +108,4 @@ const ErrorStatusCell: React.FC<CellProps & { t }> = ({ data, fields, t }) => {
       </Button>
     </Popover>
   );
-};
-
-const statusIcons = {
-  ConnectionFailed: <ExclamationCircleIcon color="#C9190B" />,
-  Ready: <CheckCircleIcon color="#3E8635" />,
-  Staging: <Spinner size="sm" />,
-  ValidationFailed: <ExclamationCircleIcon color="#C9190B" />,
-};
-
-const phaseLabels = {
-  // t('Connection Failed')
-  ConnectionFailed: 'Connection Failed',
-  // t('Ready')
-  Ready: 'Ready',
-  // t('Staging')
-  Staging: 'Staging',
-  // t('Validation Failed')
-  ValidationFailed: 'Validation Failed',
 };
