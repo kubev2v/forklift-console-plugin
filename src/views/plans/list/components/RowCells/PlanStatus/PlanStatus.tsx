@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { type FC, useState } from 'react';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import { PlanStartMigrationModal } from 'src/modules/Plans/modals/PlanStartMigrationModal';
 import { getMigrationVmsCounts } from 'src/modules/Plans/utils/helpers/getMigrationVmsCounts';
@@ -13,65 +13,25 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceU
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelRef } from '@kubev2v/types';
-import {
-  Button,
-  ButtonVariant,
-  Flex,
-  FlexItem,
-  Label,
-  Spinner,
-  Split,
-  SplitItem,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, Flex, FlexItem, Split, SplitItem } from '@patternfly/react-core';
 import StartIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
-import type { CellProps } from './CellProps';
-import { PlanStatusVmCount } from './PlanStatusVmCount';
+import type { CellProps } from '../utils/types';
 
-import './PlanStatusCell.style.scss';
+import PlanStatusVmCount from './components/PlanStatusVmCount';
+import StatusPhaseLoader from './components/StatusPhaseLoader';
+import type { VmPipelineTask } from './utils/types';
 
-type VmPipelineTask = {
-  vmName: string;
-  task: string;
-  status: string;
-};
+import './PlanStatus.style.scss';
 
-export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
+const PlanStatus: FC<CellProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
-  const plan = data?.plan;
-
-  const vmStatuses = plan?.status?.migration?.vms;
-  const [lastMigration] = usePlanMigration(plan);
   const [isButtonEnabled, setIsButtonEnabled] = useState(true);
+  const [lastMigration] = usePlanMigration(plan);
 
-  const isWarmAndExecuting = plan.spec?.warm && isPlanExecuting(plan);
-  const isWaitingForCutover = isWarmAndExecuting && !isPlanArchived(plan);
-
-  const vmPipelineTasks = lastMigration?.status?.vms?.reduce(
-    (acc: VmPipelineTask[], migrationVm) => {
-      migrationVm.pipeline.forEach((pipelineStep) => {
-        acc.push({ status: pipelineStep.phase, task: pipelineStep.name, vmName: migrationVm.name });
-      });
-
-      return acc;
-    },
-    [],
-  );
-
-  const phase = getPlanPhase(data);
-  const isPlanLoading =
-    !isWaitingForCutover && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
-  const planURL = getResourceUrl({
-    name: plan?.metadata?.name,
-    namespace: plan?.metadata?.namespace,
-    reference: PlanModelRef,
-  });
-
-  // All VM count links point to the same place for now,
-  // but will be updated to target only affected VMs in the future.
-  // Could possibly use a querystring to dictate a table filter for the list of VMs.
-  const vmCountLinkPath = `${planURL}/vms`;
+  const vms = plan?.status?.migration?.vms;
+  const phase = getPlanPhase({ plan });
 
   if (phase === PlanPhase.Ready) {
     return (
@@ -95,12 +55,42 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
     );
   }
 
-  const vmCount = getMigrationVmsCounts(vmStatuses);
+  const planURL = getResourceUrl({
+    name: plan?.metadata?.name,
+    namespace: plan?.metadata?.namespace,
+    reference: PlanModelRef,
+  });
+
+  // All VM count links point to the same place for now,
+  // but will be updated to target only affected VMs in the future.
+  // Could possibly use a querystring to dictate a table filter for the list of VMs.
+  const vmCountLinkPath = `${planURL}/vms`;
+
+  const isWaitingForCutover = plan?.spec?.warm && isPlanExecuting(plan) && !isPlanArchived(plan);
+  const isPlanLoading =
+    !isWaitingForCutover && (phase === PlanPhase.Running || phase === PlanPhase.Archiving);
+
+  const vmPipelineTasks = lastMigration?.status?.vms?.reduce(
+    (acc: VmPipelineTask[], migrationVm) => {
+      migrationVm.pipeline.forEach((pipelineStep) => {
+        acc.push({
+          status: pipelineStep.phase!,
+          task: pipelineStep.name,
+          vmName: migrationVm.name!,
+        });
+      });
+
+      return acc;
+    },
+    [],
+  );
+
+  const vmCount = getMigrationVmsCounts(vms ?? []);
   const completedVmPipelineTasks = vmPipelineTasks?.filter(
     (pipelineTask) => pipelineTask.status === 'Completed',
   );
   const progressValue = vmPipelineTasks?.length
-    ? (100 * completedVmPipelineTasks.length) / vmPipelineTasks.length
+    ? (100 * (completedVmPipelineTasks?.length ?? 0)) / vmPipelineTasks.length
     : 0;
 
   return (
@@ -111,13 +101,7 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
         className="plan-status-cell-label-section"
       >
         <FlexItem>
-          {isPlanLoading ? (
-            <Spinner size="md" />
-          ) : phase === PlanPhase.NotReady ? (
-            t('Validating...')
-          ) : (
-            <Label isCompact>{phase}</Label>
-          )}
+          <StatusPhaseLoader phase={phase} loading={isPlanLoading} />
         </FlexItem>
 
         {progressValue !== 0 && isPlanLoading && (
@@ -164,3 +148,5 @@ export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
     </Flex>
   );
 };
+
+export default PlanStatus;

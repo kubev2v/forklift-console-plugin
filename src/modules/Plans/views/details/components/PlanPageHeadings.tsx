@@ -1,9 +1,8 @@
-import React from 'react';
-import { PlanActionsDropdown } from 'src/modules/Plans/actions/PlanActionsDropdown';
+import React, { type ReactElement } from 'react';
+import PlanActionsDropdown from 'src/modules/Plans/actions/PlanActionsDropdown';
 import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { PlanConditionType } from 'src/modules/Plans/utils/types/PlanCondition';
 import { PlanPhase } from 'src/modules/Plans/utils/types/PlanPhase';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
@@ -25,26 +24,23 @@ import { Level, List, ListItem, PageSection } from '@patternfly/react-core';
 import PlanCriticalCondition from './PlanCriticalCondition';
 import PlanWarningCondition from './PlanWarningCondition';
 
-export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = ({
-  name,
-  namespace,
-}) => {
+export const PlanPageHeadings: React.FC<{
+  name: string;
+  namespace: string;
+}> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
-
   const [plan, planLoaded, planError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
     name,
     namespace,
     namespaced: true,
   });
-
   const [netMaps, netMapsLoaded, netMapsError] = useK8sWatchResource<V1beta1NetworkMap[]>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
     isList: true,
     namespace,
     namespaced: true,
   });
-
   const [storageMaps] = useK8sWatchResource<V1beta1StorageMap[]>({
     groupVersionKind: StorageMapModelGroupVersionKind,
     isList: true,
@@ -52,17 +48,10 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     namespaced: true,
   });
 
-  const permissions = useGetDeleteAndEditAccessReview({
-    model: PlanModel,
-    namespace,
-  });
-
   const [sourceProvider] = usePlanProviders(plan, namespace);
   const [sourceStorages] = useSourceStorages(sourceProvider);
   const [sourceNetworks] = useSourceNetworks(sourceProvider);
-
-  const alerts = [];
-
+  const alerts: ReactElement[] = [];
   const planStatus = getPlanPhase({ plan });
 
   const criticalCondition =
@@ -84,7 +73,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     const isMapToPod =
       planNetMaps?.spec?.map.find((map) => map.destination.type === 'pod') !== undefined;
 
-    return isPreserveStaticIPs && isMapToPod;
+    return Boolean(isPreserveStaticIPs && isMapToPod);
   };
 
   const handleAlerts = () => {
@@ -95,12 +84,11 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
     if (criticalCondition) {
       const planStorageMaps = storageMaps?.find(
-        (storage) => storage?.metadata?.name === plan.spec.map?.storage?.name,
+        (storage) => storage?.metadata?.name === plan?.spec?.map?.storage?.name,
       );
       const planNetworkMaps = netMaps?.find(
         (net) => net?.metadata?.name === plan?.spec?.map?.network?.name,
       );
-
       const missingStorageMaps = sourceStorages.filter(
         (sourceStorage) =>
           !planStorageMaps?.spec?.map.some(
@@ -113,7 +101,6 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
             (planNetworkMap) => planNetworkMap.source.name === sourceNetwork.name,
           ),
       );
-
       alerts.push(
         <PlanCriticalCondition
           plan={plan}
@@ -122,12 +109,14 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
         >
           {[...missingStorageMaps, ...missingNetworkMaps].length > 0 && (
             <List>
-              {criticalCondition.type === PlanConditionType.VMStorageNotMapped &&
+              {(criticalCondition.type as PlanConditionType) ===
+                PlanConditionType.VMStorageNotMapped &&
                 missingStorageMaps.map((storageMap) => (
                   <ListItem key={storageMap.name}>{storageMap.name}</ListItem>
                 ))}
 
-              {criticalCondition.type === PlanConditionType.VMNetworksNotMapped &&
+              {(criticalCondition.type as PlanConditionType) ===
+                PlanConditionType.VMNetworksNotMapped &&
                 missingNetworkMaps.map((networkMap) => (
                   <ListItem key={networkMap.name}>{networkMap.name}</ListItem>
                 ))}
@@ -159,12 +148,6 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     }
   };
 
-  const actions = (
-    <Level hasGutter>
-      <PlanActionsDropdown data={{ permissions, plan }} fieldId={''} fields={[]} />
-    </Level>
-  );
-
   handleAlerts();
 
   return (
@@ -173,10 +156,14 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
         model={PlanModel}
         obj={plan}
         namespace={namespace}
-        actions={actions}
+        actions={
+          <Level hasGutter>
+            <PlanActionsDropdown plan={plan} />
+          </Level>
+        }
         status={planStatus}
       >
-        {alerts && alerts.length > 0 && (
+        {alerts.length > 0 && (
           <PageSection variant="light" className="forklift-page-headings-alerts">
             {alerts}
           </PageSection>
