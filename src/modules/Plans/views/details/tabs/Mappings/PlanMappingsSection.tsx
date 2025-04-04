@@ -1,4 +1,5 @@
-import React, { type ReactNode, useReducer, useState } from 'react';
+import { type ReactNode, useReducer, useState } from 'react';
+import * as React from 'react';
 import { universalComparator } from 'src/components/common/TableView/sort';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';

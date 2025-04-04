@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import type { Validation } from 'src/modules/Providers/utils/types/Validation';
 import { useForkliftTranslation } from 'src/utils/i18n';

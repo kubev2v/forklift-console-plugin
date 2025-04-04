@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import { PlanStartMigrationModal } from 'src/modules/Plans/modals/PlanStartMigrationModal';
 import { getMigrationVmsCounts } from 'src/modules/Plans/utils/helpers/getMigrationVmsCounts';

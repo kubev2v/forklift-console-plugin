@@ -1,4 +1,5 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
+import * as React from 'react';
 import { EditControllerCPULimitModal } from 'src/modules/Overview/modal/EditControllerCPULimitModal';
 import { EditControllerMemoryLimitModal } from 'src/modules/Overview/modal/EditControllerMemoryLimitModal';
 import { EditInventoryMemoryLimitModal } from 'src/modules/Overview/modal/EditInventoryMemoryLimitModal';

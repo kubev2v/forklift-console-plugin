@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';

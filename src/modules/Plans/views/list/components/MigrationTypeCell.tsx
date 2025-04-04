@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { PlanCutoverMigrationModal } from 'src/modules/Plans/modals/PlanCutoverMigrationModal';
 import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';

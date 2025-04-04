@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { FilterDefType, type ResourceFieldFactory } from 'src/components/common/utils/types';
 import StandardPage from 'src/components/page/StandardPage';

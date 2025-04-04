@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';

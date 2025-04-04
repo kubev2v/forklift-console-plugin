@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';

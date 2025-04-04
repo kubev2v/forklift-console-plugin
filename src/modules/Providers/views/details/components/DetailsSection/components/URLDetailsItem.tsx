@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { EditProviderURLModal } from 'src/modules/Providers/modals/EditProviderURL/EditProviderURLModal';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';

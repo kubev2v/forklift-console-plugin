@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import * as React from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';

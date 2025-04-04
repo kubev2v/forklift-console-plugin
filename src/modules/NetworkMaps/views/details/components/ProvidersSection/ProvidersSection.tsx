@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react';
+import { useReducer } from 'react';
+import * as React from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';

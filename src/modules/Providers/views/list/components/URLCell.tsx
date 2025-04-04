@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 

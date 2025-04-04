@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';

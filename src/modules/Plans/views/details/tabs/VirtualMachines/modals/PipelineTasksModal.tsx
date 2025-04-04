@@ -1,4 +1,5 @@
-import React, { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import * as React from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';

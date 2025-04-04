@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';

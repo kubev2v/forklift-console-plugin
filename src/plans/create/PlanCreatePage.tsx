@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 
 import { PageSection, PageSectionTypes, PageSectionVariants, Title } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';

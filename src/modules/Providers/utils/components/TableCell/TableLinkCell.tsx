@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { type K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 

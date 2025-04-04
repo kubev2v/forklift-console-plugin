@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
+import * as React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

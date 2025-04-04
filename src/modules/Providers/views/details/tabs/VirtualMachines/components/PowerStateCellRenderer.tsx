@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

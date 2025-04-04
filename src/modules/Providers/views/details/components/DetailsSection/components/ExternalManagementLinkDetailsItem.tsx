@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { EditProviderUIModal } from 'src/modules/Providers/modals/EditProviderUI/EditProviderUIModal';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';

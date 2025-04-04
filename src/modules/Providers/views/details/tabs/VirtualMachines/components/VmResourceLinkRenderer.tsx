@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
 import { type K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';

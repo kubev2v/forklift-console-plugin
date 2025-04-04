@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import type { ResourceFieldFactory } from '@components/common/utils/types';

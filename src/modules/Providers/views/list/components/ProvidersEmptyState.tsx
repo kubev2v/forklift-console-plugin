@@ -1,4 +1,5 @@
-import React, { type ComponentType, type ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
+import * as React from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 

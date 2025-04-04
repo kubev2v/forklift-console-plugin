@@ -1,4 +1,5 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
+import * as React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {

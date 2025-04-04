@@ -1,4 +1,5 @@
-import React, { type ReactNode, useCallback, useState } from 'react';
+import { type ReactNode, useCallback, useState } from 'react';
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 

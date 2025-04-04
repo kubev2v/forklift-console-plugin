@@ -1,4 +1,5 @@
-import React, { type FC, useMemo, useReducer } from 'react';
+import { type FC, useMemo, useReducer } from 'react';
+import * as React from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext';

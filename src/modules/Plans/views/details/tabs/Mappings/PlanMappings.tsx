@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';

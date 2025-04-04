@@ -1,4 +1,5 @@
-import React, { useEffect, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
+import * as React from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import SectionHeading from 'src/components/headers/SectionHeading';

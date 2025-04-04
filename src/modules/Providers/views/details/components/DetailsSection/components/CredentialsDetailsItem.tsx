@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';

@@ -1,4 +1,5 @@
-import React, { type Ref } from 'react';
+import type { Ref } from 'react';
+import * as React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {

@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react';
+import { useReducer } from 'react';
+import * as React from 'react';
 import { useHistory } from 'react-router';
 import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';

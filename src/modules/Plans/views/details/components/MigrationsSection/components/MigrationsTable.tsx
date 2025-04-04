@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { getMigrationPhase } from 'src/modules/Plans/utils/helpers/getMigrationPhase';
 import { getMigrationVmsCounts } from 'src/modules/Plans/utils/helpers/getMigrationVmsCounts';

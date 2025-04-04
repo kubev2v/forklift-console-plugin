@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 
 import { InputGroup, SearchInput, ToolbarFilter } from '@patternfly/react-core';
 

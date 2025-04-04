@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { FilterableSelect } from 'src/components/FilterableSelect/FilterableSelect';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type {

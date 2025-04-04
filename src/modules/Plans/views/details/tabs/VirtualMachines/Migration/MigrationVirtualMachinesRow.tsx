@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';

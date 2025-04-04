@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableLabelCell } from 'src/modules/Providers/utils/components/TableCell/TableLabelCell';
 import { getIsOnlySource } from 'src/modules/Providers/utils/helpers/getIsTarget';

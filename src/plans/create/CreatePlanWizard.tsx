@@ -1,4 +1,4 @@
-import React, { type FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Form, Title, Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';

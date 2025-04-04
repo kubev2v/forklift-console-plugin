@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { Popover, type PopoverProps } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';

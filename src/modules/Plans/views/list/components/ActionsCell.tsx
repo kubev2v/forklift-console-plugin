@@ -1,4 +1,3 @@
-import React from 'react';
 import { PlanActionsDropdown } from 'src/modules/Plans/actions/PlanActionsDropdown';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
