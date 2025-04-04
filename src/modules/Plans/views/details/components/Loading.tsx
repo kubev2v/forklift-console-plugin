@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 /**
  * A functional component that renders a loading indicator.

@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import { ForkliftTrans } from 'src/utils/i18n';
 

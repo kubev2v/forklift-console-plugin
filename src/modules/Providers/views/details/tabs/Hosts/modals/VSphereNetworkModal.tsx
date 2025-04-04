@@ -1,4 +1,5 @@
-import React, { type ReactNode, useCallback, useReducer, useState } from 'react';
+import { type ReactNode, useCallback, useReducer, useState } from 'react';
+import * as React from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';

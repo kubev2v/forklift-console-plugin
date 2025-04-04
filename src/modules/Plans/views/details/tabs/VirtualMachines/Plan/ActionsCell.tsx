@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import { Flex, FlexItem } from '@patternfly/react-core';

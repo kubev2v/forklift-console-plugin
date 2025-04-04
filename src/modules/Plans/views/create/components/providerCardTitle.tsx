@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { ResourceStatus } from '@openshift-console/dynamic-plugin-sdk';

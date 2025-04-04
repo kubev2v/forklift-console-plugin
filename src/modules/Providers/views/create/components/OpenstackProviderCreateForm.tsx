@@ -1,4 +1,5 @@
-import React, { useCallback, useReducer } from 'react';
+import { useCallback, useReducer } from 'react';
+import * as React from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { validateOpenstackURL } from 'src/modules/Providers/utils/validators/provider/openstack/validateOpenstackURL';
 import { useForkliftTranslation } from 'src/utils/i18n';

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
 import { DescriptionList } from '@patternfly/react-core';

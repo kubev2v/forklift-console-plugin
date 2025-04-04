@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

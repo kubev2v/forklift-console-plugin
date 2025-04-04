@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { PlanStatusCell } from 'src/modules/Plans/views/list/components/PlanStatusCell';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';

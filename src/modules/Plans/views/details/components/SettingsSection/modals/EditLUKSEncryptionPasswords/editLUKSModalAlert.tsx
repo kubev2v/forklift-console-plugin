@@ -1,4 +1,3 @@
-import React from 'react';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 
 export const editLUKSModalAlert = (

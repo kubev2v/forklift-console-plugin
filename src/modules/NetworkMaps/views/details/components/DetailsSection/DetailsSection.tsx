@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import type { V1beta1NetworkMap } from '@kubev2v/types';

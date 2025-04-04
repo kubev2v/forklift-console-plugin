@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { ToolbarGroup } from '@patternfly/react-core';
 
 import { FilterFromDef } from './FilterFromDef';

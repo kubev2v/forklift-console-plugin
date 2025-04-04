@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 
 import type { ResourceField } from '@components/common/utils/types';

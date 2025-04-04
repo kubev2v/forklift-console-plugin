@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { openstackSecretValidator } from 'src/modules/Providers/utils/validators/provider/openstack/openstackSecretValidator';
 
 import {

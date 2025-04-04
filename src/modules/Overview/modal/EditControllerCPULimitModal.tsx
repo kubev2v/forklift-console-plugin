@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';

@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { EnumFilter } from 'src/components/common/Filter/EnumFilter';
 import { GroupedEnumFilter } from 'src/components/common/Filter/GroupedEnumFilter';
 import type { ValueMatcher } from 'src/components/common/FilterGroup/types';

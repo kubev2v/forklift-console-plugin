@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 
 import { Switch } from '@patternfly/react-core';

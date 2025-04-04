@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import useProviderInventory, {
   type UseProviderInventoryParams,
 } from 'src/modules/Providers/hooks/useProviderInventory';

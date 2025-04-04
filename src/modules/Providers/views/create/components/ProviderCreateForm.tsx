@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react';
+import { useReducer } from 'react';
+import * as React from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';

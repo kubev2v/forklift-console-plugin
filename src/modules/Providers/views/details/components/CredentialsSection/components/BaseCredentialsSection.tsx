@@ -1,4 +1,5 @@
-import React, { useReducer, useState } from 'react';
+import { useReducer, useState } from 'react';
+import * as React from 'react';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import type { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
 import { useForkliftTranslation } from 'src/utils/i18n';

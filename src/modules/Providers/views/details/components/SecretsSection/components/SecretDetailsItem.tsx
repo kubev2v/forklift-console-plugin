@@ -1,4 +1,5 @@
-import React, { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import * as React from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

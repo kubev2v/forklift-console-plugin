@@ -1,4 +1,5 @@
-import React, { type PropsWithChildren, type ReactNode } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { useHistory } from 'react-router';

@@ -1,4 +1,4 @@
-import React, { type FormEvent, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 
 import { DatePicker, InputGroup, ToolbarFilter } from '@patternfly/react-core';
 

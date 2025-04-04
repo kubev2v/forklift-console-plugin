@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Base64 } from 'js-base64';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';

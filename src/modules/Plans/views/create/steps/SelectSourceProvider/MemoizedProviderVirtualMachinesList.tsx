@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 
 import { ProviderVirtualMachinesList } from '../../components/ProvidersVirtualMachinesList';

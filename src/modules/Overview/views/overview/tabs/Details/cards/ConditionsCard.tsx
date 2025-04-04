@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { ConditionsSection } from 'src/modules/Providers/views/details/components/ConditionsSection/ConditionsSection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

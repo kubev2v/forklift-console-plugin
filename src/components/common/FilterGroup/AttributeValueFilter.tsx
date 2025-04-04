@@ -1,4 +1,4 @@
-import React, { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
+import { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
 
 import {
   MenuToggle,

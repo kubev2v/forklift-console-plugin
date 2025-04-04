@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import * as React from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type {
   EditModalProps,

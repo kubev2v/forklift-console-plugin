@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { Loading } from 'src/modules/Plans/views/details/components/Loading';

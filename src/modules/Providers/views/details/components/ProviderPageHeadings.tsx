@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ProviderActionsDropdown } from 'src/modules/Providers/actions/ProviderActionsDropdown';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';

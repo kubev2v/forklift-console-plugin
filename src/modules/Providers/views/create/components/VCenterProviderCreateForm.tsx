@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useReducer } from 'react';
+import { useCallback, useEffect, useReducer } from 'react';
+import * as React from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import {
   VDDKHelperText,

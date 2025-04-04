@@ -1,4 +1,5 @@
-import React, { type FC, type Ref, useState } from 'react';
+import { type FC, type Ref, useState } from 'react';
+import * as React from 'react';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type {

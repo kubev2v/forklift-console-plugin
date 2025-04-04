@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
+import * as React from 'react';
 import { LoadingDots } from 'src/components/common/LoadingDots/LoadingDots';
 import { ErrorState } from 'src/components/common/Page/PageStates';
 import { useForkliftTranslation } from 'src/utils/i18n';

@@ -1,4 +1,5 @@
-import React, { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import * as React from 'react';
 import { getI18n, Trans, useTranslation } from 'react-i18next';
 import type { TranslationOptions } from 'i18next';
 

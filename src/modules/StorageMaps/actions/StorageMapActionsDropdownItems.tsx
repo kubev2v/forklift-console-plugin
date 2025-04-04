@@ -1,4 +1,3 @@
-import React from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { DeleteModal } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';

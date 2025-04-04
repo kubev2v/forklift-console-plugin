@@ -1,4 +1,5 @@
-import React, { type ReactElement } from 'react';
+import type { ReactElement } from 'react';
+import * as React from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

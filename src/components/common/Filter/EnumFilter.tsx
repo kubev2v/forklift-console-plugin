@@ -1,4 +1,4 @@
-import React, { type MouseEvent as ReactMouseEvent, type Ref, useMemo, useState } from 'react';
+import { type MouseEvent as ReactMouseEvent, type Ref, useMemo, useState } from 'react';
 
 import {
   Badge,

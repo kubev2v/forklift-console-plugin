@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { Switch, ToolbarItem } from '@patternfly/react-core';
 

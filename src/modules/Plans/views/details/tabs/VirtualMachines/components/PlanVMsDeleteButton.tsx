@@ -1,4 +1,4 @@
-import React, { type FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 import { isPlanArchived } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';

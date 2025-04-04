@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { Chip, ChipGroup, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 

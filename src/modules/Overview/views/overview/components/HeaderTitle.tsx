@@ -1,4 +1,5 @@
-import React, { type FC, type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
+import * as React from 'react';
 
 import { ResourceStatus } from '@openshift-console/dynamic-plugin-sdk';
 import { Split, SplitItem } from '@patternfly/react-core';

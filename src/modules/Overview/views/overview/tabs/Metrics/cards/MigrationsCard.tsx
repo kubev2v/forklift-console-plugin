@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import useMigrationCounts from 'src/modules/Overview/hooks/useMigrationCounts';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

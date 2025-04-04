@@ -1,4 +1,4 @@
-import React, { type FC, type Ref, useState } from 'react';
+import { type FC, type Ref, useState } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1ForkliftController } from '@kubev2v/types';

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { PlanActionsDropdown } from 'src/modules/Plans/actions/PlanActionsDropdown';
 import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { PlanConditionType } from 'src/modules/Plans/utils/types/PlanCondition';

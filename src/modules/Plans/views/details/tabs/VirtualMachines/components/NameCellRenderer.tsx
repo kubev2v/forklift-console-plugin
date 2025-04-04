@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
 import type { PlanVMsCellProps } from './PlanVMsCellProps';

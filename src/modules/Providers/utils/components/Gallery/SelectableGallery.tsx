@@ -1,4 +1,4 @@
-import React, { type FC, type ReactNode } from 'react';
+import { type FC, type ReactNode, useState } from 'react';
 
 import { Gallery, GalleryItem } from '@patternfly/react-core';
 
@@ -37,7 +37,7 @@ export const SelectableGallery: FC<SelectableGalleryProps> = ({
   sortFunction,
 }) => {
   // State to manage the selected card's id
-  const [selectedCardId, setSelectedCardId] = React.useState<string | null>(selectedID);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(selectedID);
 
   // Callback function for when a card is selected
   const handleCardChange = (isSelected: boolean, id: string) => {

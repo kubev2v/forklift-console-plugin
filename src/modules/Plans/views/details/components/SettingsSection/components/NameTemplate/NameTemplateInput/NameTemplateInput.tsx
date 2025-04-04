@@ -1,4 +1,4 @@
-import React, { type Dispatch, type FC, type SetStateAction } from 'react';
+import type { Dispatch, FC, SetStateAction } from 'react';
 import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

@@ -1,4 +1,5 @@
-import React, { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import * as React from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';

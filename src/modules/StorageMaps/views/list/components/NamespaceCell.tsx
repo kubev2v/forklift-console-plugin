@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 
 import type { CellProps } from './CellProps';

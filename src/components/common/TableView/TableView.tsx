@@ -1,4 +1,5 @@
-import React, { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import * as React from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
 import { Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';

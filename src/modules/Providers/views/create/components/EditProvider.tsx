@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { EsxiCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/EsxiCredentialsEdit';

@@ -1,4 +1,5 @@
-import React, { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import * as React from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

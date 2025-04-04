@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import InventoryNotReachable from 'src/modules/Providers/views/list/components/InventoryNotReachable';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

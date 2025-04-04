@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { vcenterSecretValidator } from 'src/modules/Providers/utils/validators/provider/vsphere/vcenterSecretValidator';
 

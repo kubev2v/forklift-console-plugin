@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { NetworkMapActionsDropdown } from 'src/modules/NetworkMaps/actions/NetworkMapActionsDropdown';
 import NetworkMapCriticalConditions from 'src/modules/NetworkMaps/components/NetworkMapCriticalConditions';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';

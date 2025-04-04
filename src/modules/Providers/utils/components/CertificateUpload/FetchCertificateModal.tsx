@@ -1,4 +1,4 @@
-import React, { type FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { Loading } from 'src/components/common/Page/PageStates';
 import {
   calculateThumbprint,

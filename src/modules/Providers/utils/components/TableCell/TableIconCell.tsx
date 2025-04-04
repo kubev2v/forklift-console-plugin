@@ -1,4 +1,5 @@
-import React, { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import * as React from 'react';
 
 import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
 

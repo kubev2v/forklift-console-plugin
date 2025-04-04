@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { type Modify, ProviderModel, type V1beta1Provider } from '@kubev2v/types';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans } from 'src/utils/i18n';
 

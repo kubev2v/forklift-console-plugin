@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { EditProviderVDDKImage } from 'src/modules/Providers/modals/EditProviderVDDKImage/EditProviderVDDKImage';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';

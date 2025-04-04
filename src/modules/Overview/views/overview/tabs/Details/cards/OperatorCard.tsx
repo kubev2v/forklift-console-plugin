@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { getOperatorPhase } from 'src/modules/Overview/utils/helpers/getOperatorPhase';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
