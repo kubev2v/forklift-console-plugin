@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -15,7 +15,7 @@ type PlanVMsDeleteModalProps = {
   selected: string[];
 };
 
-export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, selected }) => {
+export const PlanVMsDeleteModal: FC<PlanVMsDeleteModalProps> = ({ plan, selected }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);

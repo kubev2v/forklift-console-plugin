@@ -138,6 +138,19 @@ export default [
       'no-duplicate-imports': 'off',
       'no-inline-comments': 'off',
       'no-magic-numbers': 'off',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              importNames: ['default', '*'],
+              message:
+                "Do not import React using default or star import. Import specific exports instead (e.g., `import { useState } from 'react'`).",
+              name: 'react',
+            },
+          ],
+        },
+      ],
       'no-ternary': 'off',
       'no-undefined': 'off',
       'no-unused-vars': 'off',

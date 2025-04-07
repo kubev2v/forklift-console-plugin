@@ -12,6 +12,6 @@ export const generalFormFieldLabels: Record<GeneralFormFieldId, ReturnType<typeo
   [GeneralFormFieldId.PlanName]: t('Plan name'),
   [GeneralFormFieldId.PlanProject]: t('Plan project'),
   [GeneralFormFieldId.SourceProvider]: t('Source provider'),
-  [GeneralFormFieldId.TargetProvider]: t('Target provider'),
   [GeneralFormFieldId.TargetProject]: t('Target project'),
+  [GeneralFormFieldId.TargetProvider]: t('Target provider'),
 };

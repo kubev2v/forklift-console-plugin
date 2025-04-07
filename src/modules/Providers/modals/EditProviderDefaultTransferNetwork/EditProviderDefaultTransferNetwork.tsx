@@ -1,4 +1,4 @@
-import React, { type FC, type Ref, useState } from 'react';
+import { type FC, type FC, type MouseEvent, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -74,10 +74,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
       setIsOpen((isOpen) => !isOpen);
     };
 
-    const onSelect = (
-      _event: React.MouseEvent | undefined,
-      _value: string | number | undefined,
-    ) => {
+    const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
       setIsOpen(false);
     };
 
@@ -142,7 +139,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
   return DropdownRenderer;
 };
 
-const EditProviderDefaultTransferNetwork_: React.FC<EditProviderDefaultTransferNetworkProps> = (
+const EditProviderDefaultTransferNetwork_: FC<EditProviderDefaultTransferNetworkProps> = (
   props,
 ) => {
   const { t } = useForkliftTranslation();
@@ -193,9 +190,9 @@ type EditProviderDefaultTransferNetworkProps = Modify<
   }
 >;
 
-export const EditProviderDefaultTransferNetwork: React.FC<
-  EditProviderDefaultTransferNetworkProps
-> = (props) => {
+export const EditProviderDefaultTransferNetwork: FC<EditProviderDefaultTransferNetworkProps> = (
+  props,
+) => {
   if (props.resource?.spec?.type !== 'openshift') {
     return <></>;
   }

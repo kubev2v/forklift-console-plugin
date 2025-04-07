@@ -1,13 +1,14 @@
-import { FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
 
 import ControlledFormGroup from '@components/common/ControlledFormGroup';
+import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
-import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { useCreatePlanFieldWatch, useCreatePlanFormContext } from '../../hooks';
+
+import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 
 export const TargetProjectField: FC = () => {
   const { t } = useForkliftTranslation();
@@ -20,8 +21,8 @@ export const TargetProjectField: FC = () => {
   const targetProviderOptions = useMemo(
     () =>
       targetProviderProjects.map((project) => ({
-        value: project.name,
         content: project.name,
+        value: project.name,
       })),
     [targetProviderProjects],
   );
@@ -32,7 +33,6 @@ export const TargetProjectField: FC = () => {
       fieldId={GeneralFormFieldId.TargetProject}
       label={generalFormFieldLabels[GeneralFormFieldId.TargetProject]}
       controller={{
-        rules: { required: t('Target project is required.') },
         render: ({ field }) => (
           <div ref={field.ref}>
             <TypeaheadSelect
@@ -41,8 +41,12 @@ export const TargetProjectField: FC = () => {
               id={GeneralFormFieldId.TargetProject}
               selectOptions={targetProviderOptions}
               selected={field.value}
-              onSelect={(_event, value) => field.onChange(value)}
-              onClearSelection={() => field.onChange('')}
+              onSelect={(_event, value) => {
+                field.onChange(value);
+              }}
+              onClearSelection={() => {
+                field.onChange('');
+              }}
               noOptionsAvailableMessage={
                 !targetProvider
                   ? t('Select a target provider to list available target projects')
@@ -54,6 +58,7 @@ export const TargetProjectField: FC = () => {
             />
           </div>
         ),
+        rules: { required: t('Target project is required.') },
       }}
     />
   );

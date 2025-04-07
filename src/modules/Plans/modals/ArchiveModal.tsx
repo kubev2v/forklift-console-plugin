@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
@@ -31,9 +31,9 @@ type ArchiveModalProps = {
  * A generic delete modal component
  * @component
  * @param {ArchiveModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const ArchiveModal: React.FC<ArchiveModalProps> = ({ redirectTo, resource, title }) => {
+export const ArchiveModal: FC<ArchiveModalProps> = ({ redirectTo, resource, title }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
@@ -83,7 +83,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ redirectTo, resource
     </Button>,
   ];
 
-  const IsExecutingAlert: React.FC = () => (
+  const IsExecutingAlert: FC = () => (
     <Alert
       isInline
       variant="danger"

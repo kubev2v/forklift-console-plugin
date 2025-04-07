@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import { type K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -10,7 +10,7 @@ import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
  * @param {TableLinkCellProps} props - The props for the component.
  * @returns {ReactElement} The rendered TableLinkCell component.
  */
-export const TableLinkCell: React.FC<TableLinkCellProps> = ({
+export const TableLinkCell: FC<TableLinkCellProps> = ({
   groupVersionKind,
   hasLabel = false,
   label,

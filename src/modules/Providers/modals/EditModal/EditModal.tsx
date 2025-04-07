@@ -1,4 +1,12 @@
-import React, { type ReactNode, useCallback, useEffect, useState } from 'react';
+import {
+  type FC,
+  type FormEvent,
+  type MouseEvent,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -40,7 +48,7 @@ import './EditModal.style.css';
  *
  * @returns {ReactElement} Returns a `Modal` React Element that renders the modal.
  */
-export const EditModal: React.FC<EditModalProps> = ({
+export const EditModal: FC<EditModalProps> = ({
   body,
   bodyContent,
   headerContent,
@@ -116,7 +124,7 @@ export const EditModal: React.FC<EditModalProps> = ({
     }
   }, [resource, value, onConfirmHook]);
 
-  const onClick: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -137,7 +145,7 @@ export const EditModal: React.FC<EditModalProps> = ({
     </Popover>
   );
 
-  const onChange: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (value) => {
+  const onChange: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleValueChange(value);
   };
 

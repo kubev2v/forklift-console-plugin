@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -17,7 +17,7 @@ type ProviderCredentialsProps = {
   loadError?: unknown;
 };
 
-const ProviderCredentials: React.FC<ProviderCredentialsProps> = ({ loaded, loadError, obj }) => {
+const ProviderCredentials: FC<ProviderCredentialsProps> = ({ loaded, loadError, obj }) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -30,7 +30,7 @@ const ProviderCredentials: React.FC<ProviderCredentialsProps> = ({ loaded, loadE
   );
 };
 
-export const ProviderCredentialsWrapper: React.FC<{ name: string; namespace: string }> = ({
+export const ProviderCredentialsWrapper: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

@@ -1,14 +1,15 @@
-import { FC } from 'react';
+import type { FC } from 'react';
+import { useWatch } from 'react-hook-form';
 
 import ControlledFormGroup from '@components/common/ControlledFormGroup';
+import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
+import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
-import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
-import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { useCreatePlanFormContext } from '../../hooks';
-import { useWatch } from 'react-hook-form';
+
+import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 
 type PlanProjectFieldProps = {
   onSelect: (value: string) => void;
@@ -36,7 +37,6 @@ export const PlanProjectField: FC<PlanProjectFieldProps> = ({ onSelect }) => {
       fieldId={GeneralFormFieldId.PlanProject}
       label={generalFormFieldLabels[GeneralFormFieldId.PlanProject]}
       controller={{
-        rules: { required: t('Plan project is required.') },
         render: ({ field }) => (
           <div ref={field.ref}>
             <TypeaheadSelect
@@ -59,13 +59,16 @@ export const PlanProjectField: FC<PlanProjectFieldProps> = ({ onSelect }) => {
                   setValue(GeneralFormFieldId.TargetProject, '', { shouldValidate: true });
                 }
               }}
-              onClearSelection={() => field.onChange('')}
+              onClearSelection={() => {
+                field.onChange('');
+              }}
               toggleProps={{
                 status: errors[GeneralFormFieldId.PlanProject] && MenuToggleStatus.danger,
               }}
             />
           </div>
         ),
+        rules: { required: t('Plan project is required.') },
       }}
     />
   );

@@ -1,11 +1,11 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { StorageDetailsItemProps } from './StorageDetailsItemProps';
 
-export const CreatedAtDetailsItem: React.FC<StorageDetailsItemProps> = ({
+export const CreatedAtDetailsItem: FC<StorageDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource,

@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import { type FC, useReducer } from 'react';
 import { useHistory } from 'react-router';
 import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
@@ -42,7 +42,7 @@ type ProvidersCreatePageState = {
   apiError: Error | null;
 };
 
-const ProvidersCreatePage: React.FC<{
+const ProvidersCreatePage: FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();

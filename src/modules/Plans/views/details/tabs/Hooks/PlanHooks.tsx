@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import { type FC, type FormEvent, useEffect, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import SectionHeading from 'src/components/headers/SectionHeading';
@@ -27,7 +27,7 @@ import { initialState } from './state/initialState';
 import { formReducer } from './state/reducer';
 import { onUpdatePlanHooks } from './utils/onUpdatePlanHooks';
 
-export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
+export const PlanHooks: FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [plan, preHookResource, postHookResource, loaded, loadError, warning] = usePlanHooks(
@@ -101,42 +101,39 @@ export const PlanHooks: React.FC<{ name: string; namespace: string }> = ({ name,
     </>
   );
 
-  const onChangePreHookSet: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangePreHookSet: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
     checked,
   ) => {
     dispatch({ payload: checked, type: 'PRE_HOOK_SET' });
   };
 
-  const onChangePostHookSet: (
-    checked: boolean,
-    event: React.FormEvent<HTMLInputElement>,
-  ) => void = (checked) => {
+  const onChangePostHookSet: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
+    checked,
+  ) => {
     dispatch({ payload: checked, type: 'POST_HOOK_SET' });
   };
 
-  const onChangePreHookImage: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangePreHookImage: (value: string, event: FormEvent<HTMLInputElement>) => void = (
     value,
   ) => {
     dispatch({ payload: value, type: 'PRE_HOOK_IMAGE' });
   };
 
-  const onChangePreHookPlaybook: (
-    value: string,
-    event: React.FormEvent<HTMLInputElement>,
-  ) => void = (value) => {
+  const onChangePreHookPlaybook: (value: string, event: FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
     dispatch({ payload: value, type: 'PRE_HOOK_PLAYBOOK' });
   };
 
-  const onChangePostHookImage: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangePostHookImage: (value: string, event: FormEvent<HTMLInputElement>) => void = (
     value,
   ) => {
     dispatch({ payload: value, type: 'POST_HOOK_IMAGE' });
   };
 
-  const onChangePostHookPlaybook: (
-    value: string,
-    event: React.FormEvent<HTMLInputElement>,
-  ) => void = (value) => {
+  const onChangePostHookPlaybook: (value: string, event: FormEvent<HTMLInputElement>) => void = (
+    value,
+  ) => {
     dispatch({ payload: value, type: 'POST_HOOK_PLAYBOOK' });
   };
 

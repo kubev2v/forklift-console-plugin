@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
@@ -21,7 +21,7 @@ const MaxVMInFlightNumberInput: ModalInputComponentType = (props) => {
   return <SettingsNumberInput {...props} />;
 };
 
-export const EditMaxVMInFlightModal: React.FC<EditSettingsModalProps> = (props) => {
+export const EditMaxVMInFlightModal: FC<EditSettingsModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   // Set default value to 20

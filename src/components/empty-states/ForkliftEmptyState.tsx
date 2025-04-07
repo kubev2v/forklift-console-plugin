@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ComponentType, FC, ReactNode } from 'react';
 
 import {
   Bullseye,
@@ -11,13 +11,13 @@ import {
 } from '@patternfly/react-core';
 
 type EmptyStateProps = {
-  icon: React.ComponentType;
-  title: React.ReactNode;
-  textContent: React.ReactNode;
-  callForActionButtons?: React.ReactNode;
+  icon: ComponentType;
+  title: ReactNode;
+  textContent: ReactNode;
+  callForActionButtons?: ReactNode;
 };
 
-const ForkliftEmptyState: React.FC<EmptyStateProps> = ({
+const ForkliftEmptyState: FC<EmptyStateProps> = ({
   callForActionButtons,
   icon,
   textContent,

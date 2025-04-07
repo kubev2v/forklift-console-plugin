@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -17,7 +17,7 @@ import { getResourceUrl } from '../../helpers/getResourceUrl';
 
 import './PageHeadings.style.css';
 
-export const PageHeadings: React.FC<PageHeadingsProps> = ({
+export const PageHeadings: FC<PageHeadingsProps> = ({
   actions,
   children,
   model,
@@ -64,10 +64,10 @@ type PageHeadingsProps = {
   title?: ReactNode;
   actions?: ReactNode;
   status?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
-const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ model, namespace }) => {
+const BreadCrumbs: FC<BreadCrumbsProps> = ({ model, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const breadcrumbs = breadcrumbsForModel(t, model, namespace);

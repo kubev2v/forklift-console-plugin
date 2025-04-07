@@ -1,11 +1,13 @@
-import { Namespace } from '@utils/constants';
-import { GeneralFormFieldId } from './steps/general-information/constants';
-import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
-import { getDefaultNamespace } from '@utils/namespaces';
-import { CreatePlanFormValues } from './constants';
-import { useForm, useFormContext, UseFormProps, useWatch } from 'react-hook-form';
-import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
 import { useMemo } from 'react';
+import { useForm, useFormContext, type UseFormProps, useWatch } from 'react-hook-form';
+
+import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
+import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
+import { Namespace } from '@utils/constants';
+import { getDefaultNamespace } from '@utils/namespaces';
+
+import { GeneralFormFieldId } from './steps/general-information/constants';
+import type { CreatePlanFormValues } from './constants';
 
 export const useDefaultFormValues = (): CreatePlanFormValues => {
   const [activeNamespace] = useActiveNamespace();
@@ -26,8 +28,8 @@ export const useDefaultFormValues = (): CreatePlanFormValues => {
     [GeneralFormFieldId.PlanName]: '',
     [GeneralFormFieldId.PlanProject]: initialPlanProject,
     [GeneralFormFieldId.SourceProvider]: undefined,
-    [GeneralFormFieldId.TargetProvider]: undefined,
     [GeneralFormFieldId.TargetProject]: '',
+    [GeneralFormFieldId.TargetProvider]: undefined,
   };
 };
 

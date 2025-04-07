@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { PlanActionsDropdown } from 'src/modules/Plans/actions/PlanActionsDropdown';
 import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { PlanConditionType } from 'src/modules/Plans/utils/types/PlanCondition';
@@ -25,10 +25,7 @@ import { Level, List, ListItem, PageSection } from '@patternfly/react-core';
 import PlanCriticalCondition from './PlanCriticalCondition';
 import PlanWarningCondition from './PlanWarningCondition';
 
-export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = ({
-  name,
-  namespace,
-}) => {
+export const PlanPageHeadings: FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [plan, planLoaded, planError] = useK8sWatchResource<V1beta1Plan>({

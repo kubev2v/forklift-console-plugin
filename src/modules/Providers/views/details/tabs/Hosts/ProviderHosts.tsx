@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
@@ -16,7 +16,7 @@ export type ProviderHostsProps = {
   loadError?: unknown;
 };
 
-const ProviderHosts_: React.FC<ProviderHostsProps> = (props) => {
+const ProviderHosts_: FC<ProviderHostsProps> = (props) => {
   const { provider } = props.obj;
 
   switch (provider?.spec?.type) {
@@ -27,13 +27,13 @@ const ProviderHosts_: React.FC<ProviderHostsProps> = (props) => {
   }
 };
 
-const ProviderHosts: React.FC<ProviderHostsProps> = (props) => (
+const ProviderHosts: FC<ProviderHostsProps> = (props) => (
   <ModalHOC>
     <ProviderHosts_ {...props} />
   </ModalHOC>
 );
 
-export const ProviderHostsWrapper: React.FC<{ name: string; namespace: string }> = ({
+export const ProviderHostsWrapper: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

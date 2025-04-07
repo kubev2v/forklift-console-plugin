@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import type { ProvidersPermissionStatus } from 'src/modules/Providers/utils/types/ProvidersPermissionStatus';
 
@@ -22,7 +22,7 @@ import { TransferNetworkDetailsItem } from './components/TransferNetworkDetailsI
 import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
 import { WarmDetailsItem } from './components/WarmDetailsItem';
 
-export const SettingsSection: React.FC<SettingsSectionProps> = (props) => (
+export const SettingsSection: FC<SettingsSectionProps> = (props) => (
   <ModalHOC>
     <SettingsSectionInternal {...props} />
   </ModalHOC>
@@ -33,7 +33,7 @@ type SettingsSectionProps = {
   permissions: ProvidersPermissionStatus;
 };
 
-const SettingsSectionInternal: React.FC<SettingsSectionProps> = ({ obj, permissions }) => {
+const SettingsSectionInternal: FC<SettingsSectionProps> = ({ obj, permissions }) => {
   const [sourceProvider] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     name: obj?.spec?.provider?.source?.name,

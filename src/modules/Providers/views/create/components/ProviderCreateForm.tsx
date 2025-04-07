@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import { type FC, type FormEvent, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -36,7 +36,7 @@ export type ProvidersCreateFormProps = {
   onProjectNameChange?: (value: string) => void;
 };
 
-const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
+const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
   newProvider,
   newSecret,
   onNewProviderChange,
@@ -103,7 +103,7 @@ const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
     onNewProviderChange({ ...newProvider, spec: { ...newProvider?.spec, type } });
   };
 
-  const onChange: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (value) => {
+  const onChange: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleNameChange(value);
   };
 

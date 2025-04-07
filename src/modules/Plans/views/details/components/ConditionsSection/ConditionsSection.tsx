@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -14,7 +14,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
  * @param {K8sResourceCondition[]} props.conditions - Array of conditions to be displayed.
  * @returns {ReactElement} A table displaying the provided conditions.
  */
-export const ConditionsSection: React.FC<ConditionsSectionProps> = ({ conditions }) => {
+export const ConditionsSection: FC<ConditionsSectionProps> = ({ conditions }) => {
   const { t } = useForkliftTranslation();
 
   if (!conditions) {

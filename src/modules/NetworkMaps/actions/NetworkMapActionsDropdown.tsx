@@ -1,4 +1,4 @@
-import React, { type FC, type Ref, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -27,7 +27,7 @@ const NetworkMapActionsKebabDropdown_: FC<NetworkMapActionsDropdownProps> = ({ d
     setIsOpen((isOpen) => !isOpen);
   };
 
-  const onSelect = (_event: React.MouseEvent | undefined, _value: string | number | undefined) => {
+  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
     setIsOpen(false);
   };
 

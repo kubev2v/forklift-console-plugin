@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
 import {
@@ -23,7 +23,7 @@ const statusLabels = {
   Successful: 'Successful',
 };
 
-const OperatorStatus: React.FC<OperatorStatusProps> = ({ status }) => {
+const OperatorStatus: FC<OperatorStatusProps> = ({ status }) => {
   const Icon = statusIcons[status];
   const label = statusLabels[status] || 'Unknown';
 

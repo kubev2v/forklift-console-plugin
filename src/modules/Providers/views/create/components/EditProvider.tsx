@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { EsxiCredentialsEdit } from '../../details/components/CredentialsSection/components/edit/EsxiCredentialsEdit';
@@ -16,7 +16,7 @@ import { OvirtProviderCreateForm } from './OvirtProviderCreateForm';
 import type { ProvidersCreateFormProps } from './ProviderCreateForm';
 import { VCenterProviderCreateForm } from './VCenterProviderCreateForm';
 
-export const EditProvider: React.FC<ProvidersCreateFormProps> = ({
+export const EditProvider: FC<ProvidersCreateFormProps> = ({
   newProvider,
   newSecret,
   onNewProviderChange,

@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useState } from 'react';
+import { type FC, type MouseEvent, type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
@@ -31,9 +31,9 @@ type PlanStartMigrationModalProps = {
  * A generic delete modal component
  * @component
  * @param {DeleteModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = ({
+export const PlanStartMigrationModal: FC<PlanStartMigrationModalProps> = ({
   redirectTo,
   resource,
   setButtonEnabledOnChange,
@@ -101,7 +101,7 @@ export const PlanStartMigrationModal: React.FC<PlanStartMigrationModalProps> = (
     }
   }, [resource, lastMigration]);
 
-  const onClickToggleModal: (event: React.MouseEvent<HTMLButtonElement>) => void = (_event) => {
+  const onClickToggleModal: (event: MouseEvent<HTMLButtonElement>) => void = (_event) => {
     toggleModal();
     setButtonEnabledOnChange(true);
   };

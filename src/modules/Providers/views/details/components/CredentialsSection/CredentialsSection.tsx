@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import type { SecretSubType } from 'src/modules/Providers/utils/validators/provider/secretValidator';
@@ -13,7 +13,7 @@ import { OpenstackCredentialsSection } from './OpenstackCredentialsSection';
 import { OvirtCredentialsSection } from './OvirtCredentialsSection';
 import { VCenterCredentialsSection } from './VCenterCredentialsSection';
 
-export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
+export const CredentialsSection: FC<CredentialsProps> = (props) => {
   const { t } = useForkliftTranslation();
   const { data, loaded, loadError } = props;
   const { provider } = data;
@@ -58,7 +58,7 @@ export const CredentialsSection: React.FC<CredentialsProps> = (props) => {
   );
 };
 
-const CredentialsSection_: React.FC<{
+const CredentialsSection_: FC<{
   name: string;
   namespace: string;
   type: string;

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -8,7 +8,7 @@ import { Label } from '@patternfly/react-core';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
-export const TypeDetailsItem: React.FC<ProviderDetailsItemProps> = ({
+export const TypeDetailsItem: FC<ProviderDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource: provider,

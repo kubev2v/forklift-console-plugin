@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import ProviderSelect from 'src/plans/components/ProviderSelect';
 
 import ControlledFormGroup from '@components/common/ControlledFormGroup';
@@ -7,10 +7,11 @@ import { Form, FormSection, MenuToggleStatus, TextInput } from '@patternfly/reac
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { useCreatePlanFieldWatch, useCreatePlanFormContext } from '../../hooks';
+
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 import { PlanProjectField } from './PlanProjectField';
 import { TargetProjectField } from './TargetProjectField';
-import { useCreatePlanFieldWatch, useCreatePlanFormContext } from '../../hooks';
 
 export const GeneralInformationStep: FC = () => {
   const { t } = useForkliftTranslation();
@@ -32,17 +33,21 @@ export const GeneralInformationStep: FC = () => {
             fieldId={GeneralFormFieldId.PlanName}
             label={generalFormFieldLabels[GeneralFormFieldId.PlanName]}
             controller={{
-              rules: { required: t('Plan name is required.') },
               render: ({ field }) => (
                 <TextInput
                   {...field}
-                  validated={getInputValidated(!!errors[GeneralFormFieldId.PlanName])}
+                  validated={getInputValidated(Boolean(errors[GeneralFormFieldId.PlanName]))}
                 />
               ),
+              rules: { required: t('Plan name is required.') },
             }}
           />
 
-          <PlanProjectField onSelect={(value) => setProviderNamespace(value)} />
+          <PlanProjectField
+            onSelect={(value) => {
+              setProviderNamespace(value);
+            }}
+          />
         </FormSection>
 
         <FormSection title={t('Source and target providers')} titleElement="h3">
@@ -57,17 +62,19 @@ export const GeneralInformationStep: FC = () => {
             fieldId={GeneralFormFieldId.SourceProvider}
             label={generalFormFieldLabels[GeneralFormFieldId.SourceProvider]}
             controller={{
-              rules: { required: t('Source provider is required.') },
               render: ({ field }) => (
                 <ProviderSelect
                   placeholder={t('Select source provider')}
                   id={GeneralFormFieldId.SourceProvider}
                   namespace={providerNamespace}
                   value={field.value?.metadata?.name || ''}
-                  onSelect={(_, value) => field.onChange(value)}
+                  onSelect={(_, value) => {
+                    field.onChange(value);
+                  }}
                   status={errors[GeneralFormFieldId.SourceProvider] && MenuToggleStatus.danger}
                 />
               ),
+              rules: { required: t('Source provider is required.') },
             }}
           />
 
@@ -76,7 +83,6 @@ export const GeneralInformationStep: FC = () => {
             fieldId={GeneralFormFieldId.TargetProvider}
             label={generalFormFieldLabels[GeneralFormFieldId.TargetProvider]}
             controller={{
-              rules: { required: t('Target provider is required.') },
               render: ({ field }) => (
                 <ProviderSelect
                   placeholder={t('Select target provider')}
@@ -93,6 +99,7 @@ export const GeneralInformationStep: FC = () => {
                   status={errors[GeneralFormFieldId.TargetProvider] && MenuToggleStatus.danger}
                 />
               ),
+              rules: { required: t('Target provider is required.') },
             }}
           />
 

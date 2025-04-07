@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
@@ -41,4 +41,4 @@ export const InventoryCellFactory: CellFactory = ({ icon }) => {
   };
 };
 
-type CellFactory = (props: { icon: ReactNode }) => React.FC<CellProps>;
+type CellFactory = (props: { icon: ReactNode }) => FC<CellProps>;

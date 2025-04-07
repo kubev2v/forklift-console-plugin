@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -16,7 +16,7 @@ import { VDDKDetailsItem } from './components/VDDKDetailsItem';
 import { getVSphereProviderWebUILink } from './utils/getVSphereProviderWebUILink';
 import type { DetailsSectionProps } from './DetailsSection';
 
-export const VSphereDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
+export const VSphereDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
   const { permissions, provider } = data;

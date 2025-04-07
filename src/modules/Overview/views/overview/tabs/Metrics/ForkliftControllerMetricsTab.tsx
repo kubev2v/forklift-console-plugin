@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { Flex, FlexItem } from '@patternfly/react-core';
@@ -15,7 +15,7 @@ type ForkliftControllerMetricsTabProps = {
   loadError?: unknown;
 };
 
-const ForkliftControllerMetricsTab: React.FC<ForkliftControllerMetricsTabProps> = ({ obj }) => {
+const ForkliftControllerMetricsTab: FC<ForkliftControllerMetricsTabProps> = ({ obj }) => {
   return (
     <div className="co-dashboard-body">
       <Flex>

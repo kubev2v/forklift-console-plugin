@@ -1,10 +1,10 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCreateOverviewContext } from 'src/modules/Overview/hooks/OverviewContextProvider';
 
 import { Label } from '@patternfly/react-core';
 
-export const ShowWelcomeCardButton: React.FC = () => {
+export const ShowWelcomeCardButton: FC = () => {
   const { t } = useTranslation();
 
   // Set and use context data for the overview page state

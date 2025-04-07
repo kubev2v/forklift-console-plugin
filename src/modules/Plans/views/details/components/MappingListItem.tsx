@@ -1,4 +1,4 @@
-import React, { type FC, type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
+import { type FC, type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {

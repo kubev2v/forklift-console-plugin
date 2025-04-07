@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC, Suspense } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1ForkliftController } from '@kubev2v/types';
@@ -13,14 +13,14 @@ type ForkliftControllerYAMLTabProps = {
   loadError?: unknown;
 };
 
-const ForkliftControllerYAMLTab: React.FC<ForkliftControllerYAMLTabProps> = ({
+const ForkliftControllerYAMLTab: FC<ForkliftControllerYAMLTabProps> = ({
   loaded,
   loadError,
   obj,
 }) => {
   const { t } = useForkliftTranslation();
   return (
-    <React.Suspense
+    <Suspense
       fallback={
         <Bullseye>
           <Loading />
@@ -30,11 +30,11 @@ const ForkliftControllerYAMLTab: React.FC<ForkliftControllerYAMLTabProps> = ({
       {obj && loaded && !loadError && (
         <ResourceYAMLEditor header={t('Provider YAML')} initialResource={obj} />
       )}
-    </React.Suspense>
+    </Suspense>
   );
 };
 
-const Loading: React.FC = () => (
+const Loading: FC = () => (
   <div
     className="co-m-loader co-an-fade-in-out"
     data-testid="loading-indicator-forklift-controller-yaml"

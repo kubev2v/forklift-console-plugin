@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
@@ -27,7 +27,7 @@ type RenderTdProps = {
   resourceFields: ResourceField[];
 };
 
-const cellRenderers: Record<string, React.FC<VMCellProps>> = {
+const cellRenderers: Record<string, FC<VMCellProps>> = {
   concerns: VMConcernsCellRenderer,
   flavorID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.flavorID}</TableCell>,
   hostID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.hostID}</TableCell>,
@@ -38,7 +38,7 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   tenantID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.tenantID}</TableCell>,
 };
 
-export const OpenStackVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
+export const OpenStackVirtualMachinesCells: FC<RowProps<VmData>> = ({
   resourceData,
   resourceFields,
 }) => {

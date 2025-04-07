@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -15,7 +15,7 @@ import { URLDetailsItem } from './components/URLDetailsItem';
 import { getOpenstackProviderWebUILink } from './utils/getOpenstackProviderWebUILink';
 import type { DetailsSectionProps } from './DetailsSection';
 
-export const OpenstackDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
+export const OpenstackDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { permissions, provider } = data;
   const webUILink = getOpenstackProviderWebUILink(provider);

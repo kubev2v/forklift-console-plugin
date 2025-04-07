@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
 import { StorageMapActionsDropdown } from 'src/modules/StorageMaps/actions/StorageMapActionsDropdown';
@@ -12,7 +12,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-export const StorageMapPageHeadings: React.FC<{ name: string; namespace: string }> = ({
+export const StorageMapPageHeadings: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

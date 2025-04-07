@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import { type FC, useEffect, useReducer } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -21,12 +21,12 @@ const initialState: ProvidersSectionState = {
   updating: false,
 };
 
-export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
+export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const [state, dispatch] = useReducer(providersSectionReducer, initialState);
 
   // Initialize the state with the prop obj
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch({ payload: obj, type: 'INIT' });
   }, [obj]);
 

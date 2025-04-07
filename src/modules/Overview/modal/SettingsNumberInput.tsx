@@ -1,31 +1,28 @@
-import React from 'react';
+import { type FC, type FormEvent, type MouseEvent, useState } from 'react';
 
 import { NumberInput } from '@patternfly/react-core';
 
 import type { SettingsSelectInputProps } from './SettingsSelectInput';
 
-const SettingsNumberInput: React.FC<SettingsSelectInputProps> = ({
-  onChange,
-  value: value_ = 0,
-}) => {
-  const [value, setValue] = React.useState<number | ''>(parseInt(value_.toString()));
+const SettingsNumberInput: FC<SettingsSelectInputProps> = ({ onChange, value: value_ = 0 }) => {
+  const [value, setValue] = useState<number | ''>(parseInt(value_.toString()));
 
   const setNewValue = (newValue: number) => {
     setValue(newValue);
     onChange(newValue.toString());
   };
 
-  const onUserMinus: (event: React.MouseEvent, name?: string) => void = () => {
+  const onUserMinus: (event: MouseEvent, name?: string) => void = () => {
     const newValue = (value || 0) - 1;
     setNewValue(newValue);
   };
 
-  const onUserPlus: (event: React.MouseEvent, name?: string) => void = () => {
+  const onUserPlus: (event: MouseEvent, name?: string) => void = () => {
     const newValue = (value || 0) + 1;
     setNewValue(newValue);
   };
 
-  const onUserChange: (event: React.FormEvent<HTMLInputElement>) => void = (event) => {
+  const onUserChange: (event: FormEvent<HTMLInputElement>) => void = (event) => {
     const { value } = event.target as HTMLInputElement;
     const newValue = value === '' ? value : +value;
     setNewValue(newValue || 0);

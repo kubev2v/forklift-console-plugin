@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
 
@@ -8,7 +8,7 @@ import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
  * @param {TableIconCellProps} props - The props for the component.
  * @returns {ReactElement} The rendered TableLinkCell component.
  */
-export const TableIconCell: React.FC<TableIconCellProps> = ({
+export const TableIconCell: FC<TableIconCellProps> = ({
   children,
   hasLabel = false,
   icon,

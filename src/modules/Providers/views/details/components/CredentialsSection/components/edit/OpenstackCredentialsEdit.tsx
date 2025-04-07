@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react';
+import { type FC, type FormEvent, type MouseEvent, useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload/CertificateUpload';
@@ -17,7 +17,7 @@ import { PasswordSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGro
 import { TokenWithUserIDSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/TokenWithUserIDSecretFieldsFormGroup';
 import { TokenWithUsernameSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/TokenWithUsernameSecretFieldsFormGroup';
 
-export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, secret }) => {
+export const OpenstackCredentialsEdit: FC<EditComponentProps> = ({ onChange, secret }) => {
   const { t } = useForkliftTranslation();
 
   const insecureSkipVerifyHelperTextMsgs = {
@@ -159,11 +159,11 @@ export const OpenstackCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
     [secret],
   );
 
-  const onClick: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
-  const onChangeInsecure: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangeInsecure: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
     checked,
   ) => {
     handleChange('insecureSkipVerify', checked ? 'true' : 'false');

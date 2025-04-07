@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
@@ -9,7 +9,7 @@ import { Label } from '@patternfly/react-core';
 import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
 import { EditPlanPreserveClusterCpuModel } from '../modals/EditPlanPreserveClusterCpuModel/EditPlanPreserveClusterCpuModel';
 
-export const PreserveClusterCpuModelDetailsItem: React.FC<PlanDetailsItemProps> = ({
+export const PreserveClusterCpuModelDetailsItem: FC<PlanDetailsItemProps> = ({
   canPatch,
   destinationProvider,
   helpContent,

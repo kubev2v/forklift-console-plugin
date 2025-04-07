@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
@@ -28,7 +28,7 @@ type RenderTdProps = {
   resourceFields: ResourceField[];
 };
 
-const cellRenderers: Record<string, React.FC<VMCellProps>> = {
+const cellRenderers: Record<string, FC<VMCellProps>> = {
   cluster: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.cluster}</TableCell>,
   concerns: VMConcernsCellRenderer,
   description: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.description}</TableCell>,
@@ -38,7 +38,7 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   status: PowerStateCellRenderer,
 };
 
-export const OVirtVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
+export const OVirtVirtualMachinesCells: FC<RowProps<VmData>> = ({
   resourceData,
   resourceFields,
 }) => {

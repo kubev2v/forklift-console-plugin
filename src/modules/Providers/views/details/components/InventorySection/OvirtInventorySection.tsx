@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -6,7 +6,7 @@ import { DescriptionList } from '@patternfly/react-core';
 
 import type { InventoryProps } from './InventorySection';
 
-export const OvirtInventorySection: React.FC<InventoryProps> = ({ data }) => {
+export const OvirtInventorySection: FC<InventoryProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { inventory, provider } = data;
 

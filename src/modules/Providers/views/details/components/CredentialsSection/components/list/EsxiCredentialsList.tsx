@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Base64 } from 'js-base64';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -10,7 +10,7 @@ import type { ListComponentProps } from '../BaseCredentialsSection';
 
 import type { Fields } from './Fields';
 
-export const EsxiCredentialsList: React.FC<ListComponentProps> = ({ reveal, secret }) => {
+export const EsxiCredentialsList: FC<ListComponentProps> = ({ reveal, secret }) => {
   const { t } = useForkliftTranslation();
 
   const items = [];

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import type { ResourceFieldFactory } from '@components/common/utils/types';
 
@@ -42,7 +42,7 @@ export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const OvaVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = (props) => (
+export const OvaVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => (
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OvaVirtualMachinesCells}
