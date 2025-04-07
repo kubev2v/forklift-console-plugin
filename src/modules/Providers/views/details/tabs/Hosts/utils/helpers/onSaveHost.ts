@@ -81,7 +81,7 @@ export const onSaveHost = async ({
  * @param {string} encodedProvider - The Base64 encoded provider.
  * @param {string} encodedIpAddress - The Base64 encoded IP address.
  */
-async function processHostSecretPair(
+const processHostSecretPair = async (
   provider,
   hostPair,
   ipAddress,
@@ -89,7 +89,7 @@ async function processHostSecretPair(
   encodedPassword,
   encodedProvider,
   encodedIpAddress,
-) {
+) => {
   const { host, inventory }: { host: V1beta1Host; inventory: VSphereHost } = hostPair;
 
   if (host?.metadata?.name) {
@@ -163,14 +163,14 @@ async function processHostSecretPair(
     };
     await patchHostSecretOwner(createdSecret, ownerRef);
   }
-}
+};
 
-async function getSecret(name: string, namespace: string) {
+const getSecret = async (name: string, namespace: string) => {
   const secret = await k8sGet<IoK8sApiCoreV1Secret>({ model: SecretModel, name, ns: namespace });
   return secret;
-}
+};
 
-async function patchHost(host: V1beta1Host, ipAddress: string) {
+const patchHost = async (host: V1beta1Host, ipAddress: string) => {
   await k8sPatch({
     data: [
       {
@@ -182,14 +182,14 @@ async function patchHost(host: V1beta1Host, ipAddress: string) {
     model: HostModel,
     resource: host,
   });
-}
+};
 
-async function patchSecret(
+const patchSecret = async (
   secretData: IoK8sApiCoreV1Secret,
   encodedIpAddress: string,
   encodedUser: string,
   encodedPassword: string,
-) {
+) => {
   await k8sPatch({
     data: [
       {
@@ -211,4 +211,4 @@ async function patchSecret(
     model: SecretModel,
     resource: secretData,
   });
-}
+};

@@ -220,11 +220,13 @@ type MapsSectionProps = {
   obj: V1beta1StorageMap;
 };
 
-function storageNameToIDReference(array: { id?: string; name?: string }[]): Record<string, string> {
+const storageNameToIDReference = (
+  array: { id?: string; name?: string }[],
+): Record<string, string> => {
   return array.reduce<Record<string, string>>((accumulator, current) => {
     if (current?.id && current?.name) {
       accumulator[current.name] = current.id;
     }
     return accumulator;
   }, {});
-}
+};

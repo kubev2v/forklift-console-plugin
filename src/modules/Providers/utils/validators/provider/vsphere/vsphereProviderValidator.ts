@@ -6,11 +6,11 @@ import type { SecretSubType } from '../secretValidator';
 import { validateVCenterURL } from './validateVCenterURL';
 import { validateVDDKImage } from './validateVDDKImage';
 
-export function vsphereProviderValidator(
+export const vsphereProviderValidator = (
   provider: V1beta1Provider,
   subType?: SecretSubType,
   secret?: IoK8sApiCoreV1Secret,
-): ValidationMsg {
+): ValidationMsg => {
   const name = provider?.metadata?.name;
   const url = provider?.spec?.url || '';
   const vddkInitImage = provider?.spec?.settings?.vddkInitImage || '';
@@ -47,4 +47,4 @@ export function vsphereProviderValidator(
   }
 
   return { type: 'default' };
-}
+};

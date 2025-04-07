@@ -7,12 +7,12 @@ import type { ValidationMsg } from '../../common';
 
 import { openshiftSecretFieldValidator } from './openshiftSecretFieldValidator';
 
-export function openshiftSecretValidator(
+export const openshiftSecretValidator = (
   provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret,
-): ValidationMsg {
-  const url = provider?.spec?.url || '';
-  const token = secret?.data?.token || '';
+): ValidationMsg => {
+  const url = provider?.spec?.url ?? '';
+  const token = secret?.data?.token ?? '';
 
   const validation: ValidationMsg = validateUrlAndTokenExistence(url, token);
   if (validation) return validation;
@@ -37,4 +37,4 @@ export function openshiftSecretValidator(
   }
 
   return { type: 'default' };
-}
+};

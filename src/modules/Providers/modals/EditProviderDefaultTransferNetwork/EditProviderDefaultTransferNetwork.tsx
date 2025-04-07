@@ -172,14 +172,15 @@ const EditProviderDefaultTransferNetwork_: React.FC<EditProviderDefaultTransferN
  * @param {string} value - The input string from which the network name is to be extracted.
  * @returns {string} The network name extracted from the input string.
  */
-function getNetworkName(value: string | number): string {
+const getNetworkName = (value: string | number): string => {
   if (!value || typeof value !== 'string') {
     return 'Pod network';
   }
 
   const parts = value.split('/');
+
   return parts[parts.length - 1];
-}
+};
 
 type EditProviderDefaultTransferNetworkProps = Modify<
   EditModalProps,

@@ -7,10 +7,10 @@ import type { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
  * @param {string} uid - The unique identifier of the inventory to be found.
  * @returns {ProviderInventory} - The inventory if found, undefined otherwise.
  */
-export function findInventoryByID(
+export const findInventoryByID = (
   inventory: ProvidersInventoryList,
   uid: string,
-): ProviderInventory {
+): ProviderInventory => {
   if (!inventory || !uid) {
     return undefined;
   }
@@ -20,4 +20,4 @@ export function findInventoryByID(
   }, []);
 
   return providers.find((provider) => provider.uid === uid);
-}
+};

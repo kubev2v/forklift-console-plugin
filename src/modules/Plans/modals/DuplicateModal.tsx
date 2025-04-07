@@ -272,11 +272,11 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ redirectTo, reso
   );
 };
 
-async function patchOwner(
+const patchOwner = async (
   resource: K8sResourceCommon,
   model: K8sModel,
   ownerRef: { name: string; uid: string; kind: string; apiVersion: string },
-) {
+) => {
   const patchedSecret = await k8sPatch({
     data: [
       {
@@ -297,4 +297,4 @@ async function patchOwner(
   });
 
   return patchedSecret;
-}
+};

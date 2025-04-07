@@ -15,18 +15,14 @@ export type InventoryHostPair = {
  * @param hosts - An array of V1beta1Host objects.
  * @returns An array of InventoryHostPair objects where each object is a pair of ProviderHost, matching V1beta1Host and NetworkAdapters.
  */
-export function matchHostsToInventory(
+export const matchHostsToInventory = (
   inventories: VSphereHost[],
   hosts: V1beta1Host[],
   provider: V1beta1Provider,
-): InventoryHostPair[] {
+): InventoryHostPair[] => {
   // Sanity tests
   if (!inventories || inventories.length === 0) {
     return [];
-  }
-
-  if (!hosts || hosts.length === 0) {
-    return inventories.map((inventory) => ({ inventory }));
   }
 
   // Convert the list of hosts to a map for faster lookup
@@ -52,4 +48,4 @@ export function matchHostsToInventory(
     }
     return { host, inventory, networkAdapter };
   });
-}
+};

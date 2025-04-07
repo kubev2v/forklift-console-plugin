@@ -5,12 +5,12 @@ import type { ValidationMsg } from '../common';
 import { providerValidator } from './providerValidator';
 import { secretValidator } from './secretValidator';
 
-export function providerAndSecretValidator(
+export const providerAndSecretValidator = (
   provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret,
-): ValidationMsg {
-  const type = provider?.spec?.type || '';
-  const subTypeString = provider?.spec?.settings?.sdkEndpoint || '';
+): ValidationMsg => {
+  const type = provider?.spec?.type ?? '';
+  const subTypeString = provider?.spec?.settings?.sdkEndpoint ?? '';
   const subType = subTypeString === 'esxi' ? 'esxi' : 'vcenter';
 
   const secretValidation = secretValidator(provider, type, subType, secret);
@@ -36,4 +36,4 @@ export function providerAndSecretValidator(
 
   // Return provider validation
   return providerValidation;
-}
+};

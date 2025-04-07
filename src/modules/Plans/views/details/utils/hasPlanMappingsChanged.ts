@@ -1,9 +1,9 @@
 import type { V1beta1NetworkMapSpecMap, V1beta1StorageMapSpecMap } from '@kubev2v/types';
 
-function hasPlanMappingsNetworkChanged(
+const hasPlanMappingsNetworkChanged = (
   currPlanNetworkMaps: V1beta1NetworkMapSpecMap[],
   nextPlanNetworkMaps: V1beta1NetworkMapSpecMap[],
-): boolean {
+): boolean => {
   // Both mappings don't have mapped entities
   if (!currPlanNetworkMaps && !nextPlanNetworkMaps) {
     return false;
@@ -36,12 +36,12 @@ function hasPlanMappingsNetworkChanged(
 
   // No differences found
   return false;
-}
+};
 
-function hasPlanMappingsStorageChanged(
+const hasPlanMappingsStorageChanged = (
   currPlanStorageMaps: V1beta1StorageMapSpecMap[],
   nextPlanStorageMaps: V1beta1StorageMapSpecMap[],
-): boolean {
+): boolean => {
   // Both mappings don't have mapped entities
   if (!currPlanStorageMaps && !nextPlanStorageMaps) {
     return false;
@@ -70,7 +70,7 @@ function hasPlanMappingsStorageChanged(
 
   // No differences found
   return false;
-}
+};
 
 /**
  * Compares the plan's network and storage mappings between two versions.
@@ -82,14 +82,14 @@ function hasPlanMappingsStorageChanged(
  *
  * @returns {boolean} Returns true if any of the data mappings have changed, otherwise returns false.
  */
-export function hasPlanMappingsChanged(
+export const hasPlanMappingsChanged = (
   currPlanNetworkMaps: V1beta1NetworkMapSpecMap[],
   currPlanStorageMaps: V1beta1StorageMapSpecMap[],
   nextPlanNetworkMaps: V1beta1NetworkMapSpecMap[],
   nextPlanStorageMaps: V1beta1StorageMapSpecMap[],
-): boolean {
+): boolean => {
   return (
     hasPlanMappingsNetworkChanged(currPlanNetworkMaps, nextPlanNetworkMaps) ||
     hasPlanMappingsStorageChanged(currPlanStorageMaps, nextPlanStorageMaps)
   );
-}
+};

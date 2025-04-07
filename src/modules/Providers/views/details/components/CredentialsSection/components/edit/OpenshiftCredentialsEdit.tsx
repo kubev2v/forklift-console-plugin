@@ -97,10 +97,9 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
     [secret],
   );
 
-  // Handle password hide/reveal click
-  function togglePasswordHidden() {
+  const togglePasswordHidden = () => {
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
-  }
+  };
 
   const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();

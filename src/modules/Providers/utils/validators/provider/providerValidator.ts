@@ -9,11 +9,11 @@ import { ovirtProviderValidator } from './ovirt/ovirtProviderValidator';
 import { vsphereProviderValidator } from './vsphere/vsphereProviderValidator';
 import type { SecretSubType } from './secretValidator';
 
-export function providerValidator(
+export const providerValidator = (
   provider: V1beta1Provider,
   subType: SecretSubType,
   secret: IoK8sApiCoreV1Secret,
-): ValidationMsg {
+): ValidationMsg => {
   let validationError: ValidationMsg;
 
   switch (provider.spec.type) {
@@ -37,4 +37,4 @@ export function providerValidator(
   }
 
   return validationError;
-}
+};
