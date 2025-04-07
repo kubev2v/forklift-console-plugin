@@ -144,7 +144,7 @@ export const OpenshiftCredentialsEdit: FC<EditComponentProps> = ({ onChange, sec
             isRequired
             type={state.passwordHidden ? 'password' : 'text'}
             aria-label="Token input"
-            onChange={(e, vvalue) => {
+            onChange={(e, value) => {
               onChangeToken(value, e);
             }}
             value={token}

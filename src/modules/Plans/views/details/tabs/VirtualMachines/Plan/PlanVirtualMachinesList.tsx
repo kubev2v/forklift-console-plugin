@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
   type GlobalActionWithSelection,
@@ -70,7 +70,7 @@ export const PlanVirtualMachinesList: FC<{
     plan?.status?.migration?.vms || [];
 
   const vmDict: Record<string, V1beta1PlanStatusMigrationVms> = {};
-  migrationVirtualMachines.forEach((migration) => (vmDict[migration.id] = m));
+  migrationVirtualMachines.forEach((migration) => (vmDict[migration.id] = migration));
 
   const conditions = plan?.status?.conditions?.filter(
     (condition) => condition?.items && condition.items.length > 0,

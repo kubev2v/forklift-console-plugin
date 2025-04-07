@@ -13,23 +13,13 @@ export const getValueByJsonPath = <T>(
     return pathOrFunction(obj);
   }
 
-  if (typeof pathOrFunction === 'string') {
-    pathParts = pathOrFunction.split('.');
-  } else {
-    pathParts = pathOrFunction;
-  }
+  const pathParts = typeof pathOrFunction === 'string' ? pathOrFunction.split('.') : pathOrFunction;
 
   return pathParts.reduce((path, key) => path?.[key], obj);
 };
 
 export const jsonPathToPatch = (path: string | string[]) => {
-  let pathParts = [];
-
-  if (typeof path === 'string') {
-    pathParts = path.split('.');
-  } else {
-    pathParts = path;
-  }
+  let pathParts = typeof path === 'string' ? path.split('.') : path;
 
   pathParts = pathParts.map((path) => path.replaceAll('/', '~1'));
 

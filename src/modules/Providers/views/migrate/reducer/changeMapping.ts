@@ -33,7 +33,7 @@ export const deleteMapping = (
         mappings: mappings.filter(({ source }) => source !== currentSource.label),
         sources: sources.map((source) => ({
           ...source,
-          isMapped: m.label === selectedSource ? false : m.isMapped,
+          isMapped: source.label === selectedSource ? false : source.isMapped,
         })),
       }
     : {};

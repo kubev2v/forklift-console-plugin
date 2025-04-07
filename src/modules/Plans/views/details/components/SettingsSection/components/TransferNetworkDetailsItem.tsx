@@ -26,7 +26,7 @@ export const TransferNetworkDetailsItem: FC<PlanDetailsItemProps> = ({
   );
 
   const TransferNetworkToName = (network: V1beta1PlanSpecTransferNetwork) =>
-    n && `${network.namespace}/${network.name}`;
+    network && `${network.namespace}/${network.name}`;
 
   const content = TransferNetworkToName(resource?.spec?.transferNetwork);
 
