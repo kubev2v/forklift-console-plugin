@@ -170,6 +170,20 @@ const getSecret = async (name: string, namespace: string) => {
   return secret;
 };
 
+const patchHost = async (host: V1beta1Host, ipAddress: string) => {
+  await k8sPatch({
+    data: [
+      {
+        op: 'replace',
+        path: '/spec/ipAddress',
+        value: ipAddress,
+      },
+    ],
+    model: HostModel,
+    resource: host,
+  });
+};
+
 const patchSecret = async (
   secretData: IoK8sApiCoreV1Secret,
   encodedIpAddress: string,

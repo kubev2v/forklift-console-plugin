@@ -323,6 +323,10 @@ const getNetworkAdapterByLabel = (networkAdapters: NetworkAdapters[], label: str
   return selectedAdapter;
 };
 
+const validateUsername = (username) => {
+  return validateNoSpaces(username);
+};
+
 const validatePassword = (password) => {
   return validateNoSpaces(password);
 };

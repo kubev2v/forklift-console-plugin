@@ -177,6 +177,8 @@ const getNetworkName = (value: string | number): string => {
     return 'Pod network';
   }
 
+  const parts = value.split('/');
+
   return parts[parts.length - 1];
 };
 

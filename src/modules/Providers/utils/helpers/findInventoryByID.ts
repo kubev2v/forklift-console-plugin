@@ -15,5 +15,9 @@ export const findInventoryByID = (
     return undefined;
   }
 
+  const providers = Object.keys(inventory).reduce<ProviderInventory[]>((flatInventory, key) => {
+    return flatInventory.concat(inventory[key] || []);
+  }, []);
+
   return providers.find((provider) => provider.uid === uid);
 };

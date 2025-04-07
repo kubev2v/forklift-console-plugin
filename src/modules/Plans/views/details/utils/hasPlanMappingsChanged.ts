@@ -47,6 +47,11 @@ const hasPlanMappingsStorageChanged = (
     return false;
   }
 
+  // One of the mappings doesn't have data
+  if (!currPlanStorageMaps || !nextPlanStorageMaps) {
+    return true;
+  }
+
   // Both mappings have data, but the number of mappings entries is different
   if (currPlanStorageMaps.length !== nextPlanStorageMaps.length) {
     return true;
