@@ -1,4 +1,4 @@
-import React, { createContext, type FC, type PropsWithChildren, useContext } from 'react';
+import { createContext, type FC, type PropsWithChildren, useContext } from 'react';
 
 import { useSort } from './common/TableView/sort';
 import type { SortType } from './common/TableView/types';

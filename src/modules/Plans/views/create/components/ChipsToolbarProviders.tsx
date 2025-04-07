@@ -1,4 +1,4 @@
-import React from 'react';
+import type { Dispatch, FunctionComponent } from 'react';
 
 import { Chip, ChipGroup, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 
@@ -6,13 +6,13 @@ import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
 
 type ChipsToolbarProvidersProps = {
   filterState: PlanCreatePageState;
-  filterDispatch: React.Dispatch<{
+  filterDispatch: Dispatch<{
     type: string;
     payload?: string | string[];
   }>;
 };
 
-export const ChipsToolbarProviders: React.FunctionComponent<ChipsToolbarProvidersProps> = ({
+export const ChipsToolbarProviders: FunctionComponent<ChipsToolbarProvidersProps> = ({
   filterDispatch,
   filterState,
 }) => {

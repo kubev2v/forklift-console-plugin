@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -12,7 +12,7 @@ import { TypeDetailsItem } from './components/TypeDetailsItem';
 import { URLDetailsItem } from './components/URLDetailsItem';
 import type { DetailsSectionProps } from './DetailsSection';
 
-export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
+export const OVADetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
   const { provider } = data;

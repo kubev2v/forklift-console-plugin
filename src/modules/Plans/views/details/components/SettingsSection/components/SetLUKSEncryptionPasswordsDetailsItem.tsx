@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
@@ -10,7 +10,7 @@ import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanD
 import { EditLUKSEncryptionPasswords } from '../modals/EditLUKSEncryptionPasswords/EditLUKSEncryptionPasswords';
 import { VIRT_V2V_HELP_LINK } from '../modals/EditLUKSEncryptionPasswords/editLUKSModalBody';
 
-export const SetLUKSEncryptionPasswordsDetailsItem: React.FC<PlanDetailsItemProps> = ({
+export const SetLUKSEncryptionPasswordsDetailsItem: FC<PlanDetailsItemProps> = ({
   canPatch,
   destinationProvider,
   helpContent,

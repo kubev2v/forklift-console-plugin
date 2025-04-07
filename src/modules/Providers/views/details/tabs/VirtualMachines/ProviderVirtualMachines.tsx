@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -27,7 +27,7 @@ export type ProviderVirtualMachinesProps = {
   selectedCountLabel?: (selectedIdCount: number) => string;
 };
 
-export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
+export const ProviderVirtualMachines: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {
@@ -71,9 +71,7 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
   );
 };
 
-export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachinesProps> = (
-  props,
-) => {
+export const ProviderVirtualMachinesListWrapper: FC<ProviderVirtualMachinesProps> = (props) => {
   switch (props.obj?.provider?.spec?.type) {
     case 'openshift':
       return <OpenShiftVirtualMachinesList {...props} />;

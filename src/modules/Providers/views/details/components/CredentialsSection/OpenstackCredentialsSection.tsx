@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { openstackSecretValidator } from 'src/modules/Providers/utils/validators/provider/openstack/openstackSecretValidator';
 
 import {
@@ -13,7 +13,7 @@ type OpenstackCredentialsSectionProps = Omit<
   'ListComponent' | 'EditComponent' | 'validator'
 >;
 
-export const OpenstackCredentialsSection: React.FC<OpenstackCredentialsSectionProps> = (props) => (
+export const OpenstackCredentialsSection: FC<OpenstackCredentialsSectionProps> = (props) => (
   <BaseCredentialsSection
     {...props}
     validator={openstackSecretValidator}

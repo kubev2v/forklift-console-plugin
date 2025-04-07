@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent } from 'react';
+import type { FC, MouseEvent } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 

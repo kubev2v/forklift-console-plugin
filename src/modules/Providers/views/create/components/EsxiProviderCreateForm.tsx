@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react';
+import { type FC, type FormEvent, type MouseEvent, useCallback, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import {
   VDDKHelperText,
@@ -16,10 +16,7 @@ type EsxiProviderCreateFormProps = {
   onChange: (newValue: V1beta1Provider) => void;
 };
 
-export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
-  onChange,
-  provider,
-}) => {
+export const EsxiProviderCreateForm: FC<EsxiProviderCreateFormProps> = ({ onChange, provider }) => {
   const { t } = useForkliftTranslation();
 
   const url = provider?.spec?.url;
@@ -130,25 +127,21 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
     [provider],
   );
 
-  const onClick: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
-  const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeUrl: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('url', value);
   };
 
-  const onChangEmptyVddk: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangEmptyVddk: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
     checked,
   ) => {
     handleChange('emptyVddkInitImage', checked ? 'yes' : undefined);
   };
 
-  const onChangeVddk: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeVddk: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('vddkInitImage', value);
   };
 

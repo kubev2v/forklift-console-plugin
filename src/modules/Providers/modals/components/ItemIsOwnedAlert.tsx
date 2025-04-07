@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -15,7 +15,7 @@ type ItemIsOwnedAlertProps = {
   namespace: string;
 };
 
-export const ItemIsOwnedAlert: React.FC<ItemIsOwnedAlertProps> = ({ namespace, owner }) => {
+export const ItemIsOwnedAlert: FC<ItemIsOwnedAlertProps> = ({ namespace, owner }) => {
   const { t } = useForkliftTranslation();
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -9,7 +9,7 @@ import { getVmPowerState, type PowerState } from '../utils/helpers/getVmPowerSta
 
 import type { VMCellProps } from './VMCellProps';
 
-export const PowerStateCellRenderer: React.FC<VMCellProps> = ({ data }) => {
+export const PowerStateCellRenderer: FC<VMCellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const powerState = getVmPowerState(data?.vm);
   const states: Record<PowerState, [JSX.Element, string, string]> = {

@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
@@ -37,9 +37,9 @@ type PlanDeleteModalProps = {
  * A generic delete modal component
  * @component
  * @param {DeleteModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
+export const PlanDeleteModal: FC<PlanDeleteModalProps> = ({
   model,
   redirectTo,
   resource,
@@ -95,7 +95,7 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
 
   const phase = getPlanPhase({ plan: resource });
 
-  const IsExecutingAlert: React.FC = () => (
+  const IsExecutingAlert: FC = () => (
     <Alert
       isInline
       variant="danger"
@@ -103,7 +103,7 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
       className="forklift-delete-modal__alert"
     />
   );
-  const IsNotArchivedAlert: React.FC = () => (
+  const IsNotArchivedAlert: FC = () => (
     <Alert
       isInline
       variant="info"

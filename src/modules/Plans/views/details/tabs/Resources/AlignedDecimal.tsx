@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 type AlignedDecimalProps = {
@@ -16,7 +16,7 @@ type AlignedDecimalProps = {
   fractionalPrecision?: number;
 };
 
-export const AlignedDecimal: React.FC<AlignedDecimalProps> = ({
+export const AlignedDecimal: FC<AlignedDecimalProps> = ({
   fractionalPrecision = 2,
   unit = '',
   value,

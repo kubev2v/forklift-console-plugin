@@ -1,5 +1,3 @@
-import React from 'react';
-
 import type { ResourceLinkProps } from '@openshift-console/dynamic-plugin-sdk';
 
 export const ResourceLink = ({

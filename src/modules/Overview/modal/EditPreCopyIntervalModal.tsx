@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
@@ -29,7 +29,7 @@ const PrecopyIntervalSelect: ModalInputComponentType = (props) => {
   return <SettingsSelectInput {...props} options={options} />;
 };
 
-export const EditPreCopyIntervalModal: React.FC<EditSettingsModalProps> = (props) => {
+export const EditPreCopyIntervalModal: FC<EditSettingsModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (

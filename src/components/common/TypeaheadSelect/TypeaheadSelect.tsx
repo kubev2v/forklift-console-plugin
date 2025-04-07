@@ -1,4 +1,14 @@
-import { type FC, FormEvent, Ref, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type FC,
+  type FormEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+  type Ref,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   Button,
@@ -32,7 +42,7 @@ type TypeaheadSelectProps = {
   selectOptions: TypeaheadSelectOption[];
   /** Callback triggered on selection. */
   onSelect?: (
-    _event: React.MouseEvent | React.KeyboardEvent<HTMLInputElement> | undefined,
+    _event: MouseEvent | KeyboardEvent<HTMLInputElement> | undefined,
     selection: string | number,
   ) => void;
   /** Callback triggered when the select opens or closes. */
@@ -77,6 +87,7 @@ const defaultFilterFunction = (filterValue: string, options: TypeaheadSelectOpti
 
 export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
   allowClear,
+  children,
   createOptionMessage = defaultCreateOptionMessage,
   filterFunction = defaultFilterFunction,
   innerRef,
@@ -93,7 +104,6 @@ export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
   selectOptions,
   toggleProps,
   toggleWidth,
-  children,
   ...props
 }: TypeaheadSelectProps) => {
   const { t } = useForkliftTranslation();
@@ -223,7 +233,7 @@ export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
   };
 
   const selectOption = (
-    _event: React.MouseEvent | React.KeyboardEvent<HTMLInputElement> | undefined,
+    _event: MouseEvent | KeyboardEvent<HTMLInputElement> | undefined,
     option: TypeaheadSelectOption,
   ) => {
     if (onSelect) {
@@ -232,10 +242,7 @@ export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
     closeMenu();
   };
 
-  const handleSelect = (
-    _event: React.MouseEvent | undefined,
-    value: string | number | undefined,
-  ) => {
+  const handleSelect = (_event: MouseEvent | undefined, value: string | number | undefined) => {
     if (value && value !== NO_RESULTS) {
       const optionToSelect = selectOptions.find((option) => option.value === value);
       if (optionToSelect) {
@@ -302,7 +309,7 @@ export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
     setActiveAndFocusedItem(indexToFocus);
   };
 
-  const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     const focusedItem = focusedItemIndex !== null ? filteredSelections[focusedItemIndex] : null;
 
     switch (event.key) {

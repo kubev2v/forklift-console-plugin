@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -15,7 +15,7 @@ import { URLDetailsItem } from './components/URLDetailsItem';
 import { getOvirtProviderWebUILink } from './utils/getOvirtProviderWebUILink';
 import type { DetailsSectionProps } from './DetailsSection';
 
-export const OvirtDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
+export const OvirtDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
   const { permissions, provider } = data;

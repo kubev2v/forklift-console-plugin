@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { EditProviderDefaultTransferNetwork } from 'src/modules/Providers/modals/EditProviderDefaultTransferNetwork/EditProviderDefaultTransferNetwork';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
-export const TransferNetworkDetailsItem: React.FC<ProviderDetailsItemProps> = ({
+export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
   canPatch,
   helpContent,
   moreInfoLink,

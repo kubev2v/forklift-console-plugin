@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 
 import type { CellProps } from './CellProps';
@@ -8,7 +8,7 @@ import type { CellProps } from './CellProps';
  * @param {CellProps} props - The props for the component.
  * @returns {JSX.Element} - The rendered component.
  */
-export const NamespaceCell: React.FC<CellProps> = ({ data }) => {
+export const NamespaceCell: FC<CellProps> = ({ data }) => {
   const { obj: networkMap } = data;
   const { namespace } = networkMap?.metadata || {};
 

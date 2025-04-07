@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
@@ -13,7 +13,7 @@ type DetailsSectionProps = {
   obj: V1beta1Plan;
 };
 
-export const DetailsSection: React.FC<DetailsSectionProps> = ({ obj }) => {
+export const DetailsSection: FC<DetailsSectionProps> = ({ obj }) => {
   return (
     <DescriptionList
       className="forklift-page-section--details-status"

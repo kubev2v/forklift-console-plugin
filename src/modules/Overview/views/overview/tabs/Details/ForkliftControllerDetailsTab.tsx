@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useCreateOverviewContext } from 'src/modules/Overview/hooks/OverviewContextProvider';
 
 import type { V1beta1ForkliftController } from '@kubev2v/types';
@@ -18,7 +18,7 @@ type ForkliftControllerDetailsTabProps = {
   loadError?: unknown;
 };
 
-const ForkliftControllerDetailsTab: React.FC<ForkliftControllerDetailsTabProps> = ({ obj }) => {
+const ForkliftControllerDetailsTab: FC<ForkliftControllerDetailsTabProps> = ({ obj }) => {
   // Set and use context data for the overview page state
   const { setData } = useCreateOverviewContext();
   const { data: { hideWelcomeCardByContext } = {} } = useCreateOverviewContext();

@@ -1,4 +1,4 @@
-import React, { type FC, type Ref, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -83,10 +83,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   );
 
   // Callback functions to handle selection in the dropdown menus
-  const onSelectSource = (
-    _event: React.MouseEvent | undefined,
-    value: string | number | undefined,
-  ) => {
+  const onSelectSource = (_event: MouseEvent | undefined, value: string | number | undefined) => {
     replaceMapping({
       current: { destination, source },
       next: { destination, source: value as string },
@@ -98,7 +95,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   };
 
   const onSelectDestination = (
-    _event: React.MouseEvent | undefined,
+    _event: MouseEvent | undefined,
     value: string | number | undefined,
   ) => {
     replaceMapping({

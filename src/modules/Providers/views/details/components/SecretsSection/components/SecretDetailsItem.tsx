@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -11,7 +11,7 @@ type SecretDetailsItemProps = {
   helpContent?: ReactNode;
 };
 
-export const SecretDetailsItem: React.FC<SecretDetailsItemProps> = ({
+export const SecretDetailsItem: FC<SecretDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource: provider,

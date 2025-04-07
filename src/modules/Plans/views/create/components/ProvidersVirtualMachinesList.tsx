@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import { ProviderVirtualMachinesListWrapper } from 'src/modules/Providers/views/details/tabs/VirtualMachines/ProviderVirtualMachines';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
@@ -6,7 +6,7 @@ import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/Virtua
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-export const ProviderVirtualMachinesList: React.FC<{
+export const ProviderVirtualMachinesList: FC<{
   title: string;
   name: string;
   namespace: string;

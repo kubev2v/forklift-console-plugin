@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { Timestamp, TimestampTooltipVariant } from '@patternfly/react-core';
 import { GlobeAmericasIcon } from '@patternfly/react-icons';
 

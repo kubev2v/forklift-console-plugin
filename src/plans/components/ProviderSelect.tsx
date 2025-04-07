@@ -1,12 +1,16 @@
-import { ComponentProps, FC, ReactNode, useMemo } from 'react';
+import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
+import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import Select from '@components/common/MtvSelect';
-import { ProviderModelGroupVersionKind, ProviderModelRef, V1beta1Provider } from '@kubev2v/types';
+import {
+  ProviderModelGroupVersionKind,
+  ProviderModelRef,
+  type V1beta1Provider,
+} from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { EmptyState, EmptyStateVariant, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans } from '@utils/i18n';
 
 type ProviderSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
@@ -18,26 +22,26 @@ type ProviderSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'sta
 };
 
 export const ProviderSelect: FC<ProviderSelectProps> = ({
-  id,
-  value,
-  namespace,
-  placeholder,
   emptyState,
-  status,
+  id,
+  namespace,
   onSelect,
+  placeholder,
+  status,
+  value,
 }) => {
   const [providers] = useK8sWatchResource<V1beta1Provider[]>({
-    namespace,
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     isList: true,
+    namespace,
+    namespaced: true,
   });
 
   const providersListUrl = useMemo(
     () =>
       getResourceUrl({
+        namespace,
         reference: ProviderModelRef,
-        namespace: namespace,
       }),
     [namespace],
   );

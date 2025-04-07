@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -15,7 +15,7 @@ type MigrationVMsCancelModalProps = {
   selected: string[];
 };
 
-export const MigrationVMsCancelModal: React.FC<MigrationVMsCancelModalProps> = ({
+export const MigrationVMsCancelModal: FC<MigrationVMsCancelModalProps> = ({
   migration,
   selected,
 }) => {

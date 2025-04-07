@@ -1,4 +1,4 @@
-import React from 'react';
+import type { Dispatch, FC } from 'react';
 import { LoadingDots } from 'src/components/common/LoadingDots/LoadingDots';
 
 import { Alert } from '@patternfly/react-core';
@@ -8,9 +8,9 @@ import type { CreateVmMigration, PageAction } from './reducer/actions';
 import { isDone } from './reducer/helpers';
 import type { CreateVmMigrationPageState } from './types';
 
-const ProvidersCreateVmMigrationPage: React.FC<{
+const ProvidersCreateVmMigrationPage: FC<{
   state: CreateVmMigrationPageState;
-  dispatch: React.Dispatch<PageAction<CreateVmMigration, unknown>>;
+  dispatch: Dispatch<PageAction<CreateVmMigration, unknown>>;
   emptyContext: boolean;
 }> = ({ dispatch, emptyContext, state }) => {
   if (emptyContext) {

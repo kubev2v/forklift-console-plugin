@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
@@ -10,7 +10,7 @@ import { EditModal } from '../EditModal/EditModal';
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
-export const OpenshiftEditURLModal: React.FC<EditProviderURLModalProps> = (props) => {
+export const OpenshiftEditURLModal: FC<EditProviderURLModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const ModalBody = (

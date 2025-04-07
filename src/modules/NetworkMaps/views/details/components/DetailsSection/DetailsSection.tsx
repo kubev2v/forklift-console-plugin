@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import type { V1beta1NetworkMap } from '@kubev2v/types';
@@ -9,7 +9,7 @@ import { NameDetailsItem } from './components/NameDetailsItem';
 import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
 import { OwnerDetailsItem } from './components/OwnerDetailsItem';
 
-export const DetailsSection: React.FC<DetailsSectionProps> = (props) => (
+export const DetailsSection: FC<DetailsSectionProps> = (props) => (
   <ModalHOC>
     <DetailsSectionInternal {...props} />
   </ModalHOC>
@@ -19,7 +19,7 @@ type DetailsSectionProps = {
   obj: V1beta1NetworkMap;
 };
 
-const DetailsSectionInternal: React.FC<DetailsSectionProps> = ({ obj }) => {
+const DetailsSectionInternal: FC<DetailsSectionProps> = ({ obj }) => {
   return (
     <DescriptionList
       columnModifier={{

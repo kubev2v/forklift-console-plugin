@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
@@ -9,7 +9,7 @@ import { Label } from '@patternfly/react-core';
 import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
 import { EditPlanWarm } from '../modals/EditPlanWarm/EditPlanWarm';
 
-export const WarmDetailsItem: React.FC<PlanDetailsItemProps> = ({
+export const WarmDetailsItem: FC<PlanDetailsItemProps> = ({
   canPatch,
   destinationProvider,
   helpContent,

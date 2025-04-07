@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { Label } from '@patternfly/react-core';
 
@@ -10,7 +10,7 @@ import { TableCell, type TableCellProps } from './TableCell';
  * @param {TableLabelCellProps} props - The props for the component.
  * @returns {ReactElement} The rendered TableLabelCell component.
  */
-export const TableLabelCell: React.FC<TableLabelCellProps> = ({
+export const TableLabelCell: FC<TableLabelCellProps> = ({
   children,
   hasLabel = false,
   isWrap = false,

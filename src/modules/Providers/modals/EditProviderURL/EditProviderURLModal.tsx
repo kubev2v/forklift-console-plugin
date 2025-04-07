@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import type { Modify, V1beta1Provider } from '@kubev2v/types';
 import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk/lib/api/core-api';
@@ -22,7 +22,7 @@ export type EditProviderURLModalProps = Modify<
   }
 >;
 
-export const EditProviderURLModal: React.FC<EditProviderURLModalProps> = (props) => {
+export const EditProviderURLModal: FC<EditProviderURLModalProps> = (props) => {
   switch (props.resource?.spec?.type) {
     case 'ovirt':
       return <OvirtEditURLModal {...props} />;

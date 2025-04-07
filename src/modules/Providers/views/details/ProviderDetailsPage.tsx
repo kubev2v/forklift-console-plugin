@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { type FC, memo } from 'react';
 import { LoadingDots } from 'src/components/common/LoadingDots/LoadingDots';
 import { ErrorState } from 'src/components/common/Page/PageStates';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -14,7 +14,7 @@ import { VSphereProviderDetailsPage } from './VSphereProviderDetailsPage';
 
 import './ProviderDetailsPage.style.css';
 
-const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
+const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const [provider, loaded, error] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     name,
@@ -33,7 +33,7 @@ const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, namespa
 };
 ProviderDetailsPage.displayName = 'ProviderDetails';
 
-const ProviderDetailsPageInternal: React.FC<{
+const ProviderDetailsPageInternal: FC<{
   name: string;
   namespace: string;
   type: string;

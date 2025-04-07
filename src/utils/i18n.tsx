@@ -1,12 +1,12 @@
-import React, { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { getI18n, Trans, useTranslation } from 'react-i18next';
-import { TOptions } from 'i18next';
+import type { TOptions } from 'i18next';
 
 export const useForkliftTranslation = () => {
   return useTranslation('plugin__forklift-console-plugin');
 };
 
-export const ForkliftTrans: React.FC<{ children?: ReactNode }> = ({ children }) => {
+export const ForkliftTrans: FC<{ children?: ReactNode }> = ({ children }) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -22,4 +22,4 @@ export const ForkliftTrans: React.FC<{ children?: ReactNode }> = ({ children }) 
  * @param options (optional) options for translations
  */
 export const t = (value: string, options?: TOptions) =>
-  getI18n().t(value, { ns: 'plugin__forklift-console-plugin', ...options }) as string;
+  getI18n().t(value, { ns: 'plugin__forklift-console-plugin', ...options });

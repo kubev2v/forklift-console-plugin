@@ -1,4 +1,3 @@
-import React from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

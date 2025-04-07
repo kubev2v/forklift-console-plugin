@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 
 import {
   FormGroup,
@@ -18,11 +18,11 @@ type FormGroupWithHelpTextProps = {
   /**
    * Helper text regarding the field. It can be a simple text or an object.
    */
-  helperText?: React.ReactNode;
+  helperText?: ReactNode;
   /**
    * Helper text after the field when the field is invalid. It can be a simple text or an object.
    */
-  helperTextInvalid?: React.ReactNode;
+  helperTextInvalid?: ReactNode;
 } & FormGroupProps;
 
 /**
@@ -45,7 +45,7 @@ const validatedToVariant = (validated) =>
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/FormGroupWithHelpText/FormGroupWithHelpText.tsx)
  */
-export const FormGroupWithHelpText: React.FC<FormGroupWithHelpTextProps> = ({
+export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
   children,
   fieldId,
   helperText,

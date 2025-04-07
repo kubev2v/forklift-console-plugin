@@ -1,4 +1,4 @@
-import React, { type ReactNode, useReducer, useState } from 'react';
+import { type FC, type ReactNode, useReducer, useState } from 'react';
 import { universalComparator } from 'src/components/common/TableView/sort';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
@@ -75,7 +75,7 @@ type PlanMappingsSectionProps = {
   targetStorages: OpenShiftStorageClass[];
 };
 
-export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
+export const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
   plan,
   planNetworkMaps,
   planStorageMaps,
@@ -486,7 +486,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     ),
   ];
 
-  const PlanMappingsSectionEditMode: React.FC = () => {
+  const PlanMappingsSectionEditMode: FC = () => {
     const { t } = useForkliftTranslation();
     return (
       <>
@@ -567,7 +567,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     );
   };
 
-  const PlanMappingsSectionViewMode: React.FC = () => {
+  const PlanMappingsSectionViewMode: FC = () => {
     const { t } = useForkliftTranslation();
     const DisableEditMappings = hasSomeCompleteRunningVMs(plan) || !isPlanEditable(plan);
 

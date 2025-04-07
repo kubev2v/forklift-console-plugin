@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react';
+import { type FC, type FormEvent, useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { safeBase64Decode } from 'src/modules/Providers/utils/helpers/safeBase64Decode';
@@ -13,7 +13,7 @@ import type { EditComponentProps } from '../../BaseCredentialsSection';
 
 import { OpenstackSecretFieldId } from './constants';
 
-export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps> = ({
+export const TokenWithUsernameSecretFieldsFormGroup: FC<EditComponentProps> = ({
   onChange,
   secret,
 }) => {
@@ -72,7 +72,7 @@ export const TokenWithUsernameSecretFieldsFormGroup: React.FC<EditComponentProps
 
   type onChangeFactoryType = (
     changedField: string,
-  ) => (value: string, event: React.FormEvent<HTMLInputElement>) => void;
+  ) => (value: string, event: FormEvent<HTMLInputElement>) => void;
 
   const onChangeFactory: onChangeFactoryType = (changedField) => (value) => {
     handleChange(changedField, value);

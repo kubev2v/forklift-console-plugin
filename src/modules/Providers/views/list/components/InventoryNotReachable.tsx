@@ -1,9 +1,9 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Alert, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
-const InventoryNotReachable: React.FC = () => {
+const InventoryNotReachable: FC = () => {
   const { t } = useTranslation();
   return (
     <Alert title={t('Inventory')} variant="warning">

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { NetworkMapActionsDropdown } from 'src/modules/NetworkMaps/actions/NetworkMapActionsDropdown';
 import NetworkMapCriticalConditions from 'src/modules/NetworkMaps/components/NetworkMapCriticalConditions';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
@@ -12,7 +12,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-export const NetworkMapPageHeadings: React.FC<{ name: string; namespace: string }> = ({
+export const NetworkMapPageHeadings: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

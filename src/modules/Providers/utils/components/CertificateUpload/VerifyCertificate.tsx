@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC, FormEvent } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -26,9 +26,7 @@ export const VerifyCertificate: FC<{
 }> = ({ hasThumbprintChanged, issuer, isTrusted, setIsTrusted, thumbprint, validTo }) => {
   const { t } = useForkliftTranslation();
 
-  const onChange: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
-    checked,
-  ) => {
+  const onChange: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (checked) => {
     setIsTrusted(checked);
   };
 

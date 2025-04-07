@@ -1,14 +1,11 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { EMPTY_MSG } from 'src/utils/constants';
 
 import { Alert, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
-const StorageMapCriticalConditions: React.FC<{ type: string; message: string }> = ({
-  message,
-  type,
-}) => {
+const StorageMapCriticalConditions: FC<{ type: string; message: string }> = ({ message, type }) => {
   const { t } = useTranslation();
   return (
     <Alert title={type} variant="danger">

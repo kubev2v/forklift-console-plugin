@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -12,7 +12,7 @@ type PipelineTasksModalProps = {
   tasks: V1beta1PlanStatusMigrationVmsPipeline[];
 };
 
-export const PipelineTasksModal: React.FC<PipelineTasksModalProps> = ({ name, tasks }) => {
+export const PipelineTasksModal: FC<PipelineTasksModalProps> = ({ name, tasks }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
 

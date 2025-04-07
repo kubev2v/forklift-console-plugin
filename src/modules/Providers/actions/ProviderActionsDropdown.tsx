@@ -1,4 +1,4 @@
-import React, { type Ref } from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -22,22 +22,19 @@ import './ProviderActionsDropdown.style.css';
  * ProviderActionsKebabDropdown_ is a helper component that displays a kebab dropdown menu.
  * @param {CellProps} props - The properties passed to this component.
  * @param {ProviderWithInventory} props.data - The data to be used in ProviderActionsDropdownItems.
- * @returns {React.Element} The rendered dropdown menu component.
+ * @returns {Element} The rendered dropdown menu component.
  */
-const ProviderActionsKebabDropdown_: React.FC<ProviderActionsDropdownProps> = ({
-  data,
-  isKebab,
-}) => {
+const ProviderActionsKebabDropdown_: FC<ProviderActionsDropdownProps> = ({ data, isKebab }) => {
   const { t } = useForkliftTranslation();
 
   // Hook for managing the open/close state of the dropdown
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
     setIsOpen((isOpen) => !isOpen);
   };
 
-  const onSelect = (_event: React.MouseEvent | undefined, _value: string | number | undefined) => {
+  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
     setIsOpen(false);
   };
 
@@ -72,9 +69,9 @@ const ProviderActionsKebabDropdown_: React.FC<ProviderActionsDropdownProps> = ({
  * ProviderActionsDropdown is a component that provides a context for the dropdown menu.
  * It uses a ModalProvider to manage modals that may be used in the dropdown menu.
  * @param {CellProps} props - The properties passed to this component.
- * @returns {React.Element} The rendered component with a ModalProvider context.
+ * @returns {Element} The rendered component with a ModalProvider context.
  */
-export const ProviderActionsDropdown: React.FC<ProviderActionsDropdownProps> = (props) => (
+export const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = (props) => (
   <ModalHOC>
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
       <FlexItem grow={{ default: 'grow' }} />

@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useReducer, useState } from 'react';
+import { type FC, type FormEvent, type ReactNode, useCallback, useReducer, useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -102,11 +102,7 @@ const shouldDisableSave = (state, updatedFields) => {
   );
 };
 
-export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
-  data,
-  provider,
-  selected,
-}) => {
+export const VSphereNetworkModal: FC<VSphereNetworkModalProps> = ({ data, provider, selected }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
@@ -198,15 +194,11 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
     };
   });
 
-  const onChangUser: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangUser: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     dispatch({ payload: value, type: 'SET_USERNAME' });
   };
 
-  const onChangePassword: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangePassword: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     dispatch({ payload: value, type: 'SET_PASSWORD' });
   };
 

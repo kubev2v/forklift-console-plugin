@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { type FC, memo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
@@ -9,7 +9,7 @@ import NetworkMapYAMLTab from './tabs/YAML/NetworkMapYAMLTab';
 
 import './NetworkMapDetailsPage.style.css';
 
-const NetworkMapDetailsPageInternal: React.FC<{
+const NetworkMapDetailsPageInternal: FC<{
   name: string;
   namespace: string;
 }> = ({ name, namespace }) => {
@@ -37,7 +37,7 @@ const NetworkMapDetailsPageInternal: React.FC<{
 };
 const NetworkMapDetailsPageInternalMemo = memo(NetworkMapDetailsPageInternal);
 
-const NetworkMapDetailsPage: React.FC<NetworkMapDetailsPageProps> = ({ name, namespace }) => {
+const NetworkMapDetailsPage: FC<NetworkMapDetailsPageProps> = ({ name, namespace }) => {
   return <NetworkMapDetailsPageInternalMemo name={name} namespace={namespace} />;
 };
 NetworkMapDetailsPage.displayName = 'NetworkMapDetailsPage';

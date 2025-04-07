@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
@@ -9,7 +9,7 @@ import { ProviderVirtualMachines } from './tabs/VirtualMachines/ProviderVirtualM
 import { ProviderYAMLPageWrapper } from './tabs/YAML/ProviderYAML';
 
 // OvaProviderDetailsPage
-export const OvaProviderDetailsPage: React.FC<{ name: string; namespace: string }> = ({
+export const OvaProviderDetailsPage: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

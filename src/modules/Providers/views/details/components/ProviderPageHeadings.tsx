@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ProviderActionsDropdown } from 'src/modules/Providers/actions/ProviderActionsDropdown';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
@@ -16,7 +16,7 @@ import { PageSection } from '@patternfly/react-core';
 import InventoryNotReachable from '../../list/components/InventoryNotReachable';
 import ProviderCriticalCondition from '../../list/components/ProviderCriticalCondition';
 
-export const ProviderPageHeadings: React.FC<{ name: string; namespace: string }> = ({
+export const ProviderPageHeadings: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

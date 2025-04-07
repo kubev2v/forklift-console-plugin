@@ -1,4 +1,4 @@
-import React, { type FC, type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { ResourceStatus } from '@openshift-console/dynamic-plugin-sdk';
 import { Split, SplitItem } from '@patternfly/react-core';
@@ -6,7 +6,7 @@ import { Split, SplitItem } from '@patternfly/react-core';
 type HeaderTitleProps = {
   title: ReactNode;
   status?: ReactNode;
-  badge?: React.ReactNode;
+  badge?: ReactNode;
 };
 
 const HeaderTitle: FC<HeaderTitleProps> = ({ badge, status, title }) => {

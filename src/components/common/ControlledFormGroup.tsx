@@ -1,9 +1,9 @@
-import { ReactNode } from 'react';
-import { Controller, ControllerProps, useFormContext } from 'react-hook-form';
+import type { ReactNode } from 'react';
+import { Controller, type ControllerProps, useFormContext } from 'react-hook-form';
+import type { CreatePlanFormValues } from 'src/plans/create/constants';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
-import { FormGroup, FormGroupProps } from '@patternfly/react-core';
-import { CreatePlanFormValues } from 'src/plans/create/constants';
+import { FormGroup, type FormGroupProps } from '@patternfly/react-core';
 
 type ControlledFormGroupProps<FieldId extends keyof CreatePlanFormValues> = FormGroupProps & {
   fieldId: FieldId;
@@ -13,8 +13,8 @@ type ControlledFormGroupProps<FieldId extends keyof CreatePlanFormValues> = Form
 
 export const ControlledFormGroup = <FieldId extends keyof CreatePlanFormValues>({
   children,
-  fieldId,
   controller,
+  fieldId,
   helperText,
   ...props
 }: ControlledFormGroupProps<FieldId>) => {

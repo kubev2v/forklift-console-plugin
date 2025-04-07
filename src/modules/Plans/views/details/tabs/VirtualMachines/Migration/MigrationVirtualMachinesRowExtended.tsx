@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
@@ -33,7 +33,7 @@ import type { VMData } from '../types/VMData';
 
 import { getIcon, getVariant } from './MigrationVirtualMachinesRow';
 
-export const MigrationVirtualMachinesRowExtended: React.FC<RowProps<VMData>> = (props) => {
+export const MigrationVirtualMachinesRowExtended: FC<RowProps<VMData>> = (props) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 

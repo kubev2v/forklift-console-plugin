@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 
 import type { ResourceField } from '@components/common/utils/types';
@@ -11,10 +11,7 @@ import type { VMData } from '../types/VMData';
 
 import ActionsCell from './ActionsCell';
 
-export const PlanVirtualMachinesRow: React.FC<RowProps<VMData>> = ({
-  resourceData,
-  resourceFields,
-}) => {
+export const PlanVirtualMachinesRow: FC<RowProps<VMData>> = ({ resourceData, resourceFields }) => {
   return (
     <>
       {resourceFields?.map(({ resourceFieldId }) =>
@@ -35,7 +32,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
+const cellRenderers: Record<string, FC<PlanVMsCellProps>> = {
   actions: ActionsCell,
   conditions: ConditionsCellRenderer,
   name: NameCellRenderer,

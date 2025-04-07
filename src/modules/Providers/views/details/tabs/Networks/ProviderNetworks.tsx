@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
@@ -26,7 +26,7 @@ type ProviderNetworksProps = {
   loadError?: unknown;
 };
 
-const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
+const ProviderNetworks_: FC<ProviderNetworksProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
@@ -104,13 +104,13 @@ const ProviderNetworks_: React.FC<ProviderNetworksProps> = ({ obj }) => {
   );
 };
 
-const ProviderNetworks: React.FC<ProviderNetworksProps> = (props) => (
+const ProviderNetworks: FC<ProviderNetworksProps> = (props) => (
   <ModalHOC>
     <ProviderNetworks_ {...props} />
   </ModalHOC>
 );
 
-export const ProviderNetworksWrapper: React.FC<{ name: string; namespace: string }> = ({
+export const ProviderNetworksWrapper: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

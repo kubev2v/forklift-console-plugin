@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type {
@@ -50,7 +50,7 @@ const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType 
 }) => {
   const provider = resource as V1beta1Provider;
 
-  const DropdownRenderer: React.FC<DropdownRendererProps> = ({ onChange, value }) => {
+  const DropdownRenderer: FC<DropdownRendererProps> = ({ onChange, value }) => {
     const { t } = useForkliftTranslation();
 
     const { inventory: namespaces } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
@@ -81,7 +81,7 @@ const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType 
   return DropdownRenderer;
 };
 
-const EditPlanTargetNamespace_: React.FC<EditPlanTargetNamespaceProps> = (props) => {
+const EditPlanTargetNamespace_: FC<EditPlanTargetNamespaceProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -112,6 +112,6 @@ type EditPlanTargetNamespaceProps = Modify<
   }
 >;
 
-export const EditPlanTargetNamespace: React.FC<EditPlanTargetNamespaceProps> = (props) => {
+export const EditPlanTargetNamespace: FC<EditPlanTargetNamespaceProps> = (props) => {
   return <EditPlanTargetNamespace_ {...props} />;
 };

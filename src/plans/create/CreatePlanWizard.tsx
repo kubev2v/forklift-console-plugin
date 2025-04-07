@@ -5,17 +5,17 @@ import { Form, Title, Wizard, WizardStep, type WizardStepType } from '@patternfl
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import { CreatePlanWizardFooter } from './CreatePlanWizardFooter';
-import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
 import { useCreatePlanForm, useDefaultFormValues } from './hooks';
 
 export const CreatePlanWizard: FC = () => {
   const { t } = useForkliftTranslation();
   const defaultValues = useDefaultFormValues();
   const form = useCreatePlanForm({
-    mode: 'onChange',
     defaultValues,
+    mode: 'onChange',
   });
   const [currentStep, setCurrentStep] = useState<WizardStepType>(firstStep);
   const { formState, watch } = form;

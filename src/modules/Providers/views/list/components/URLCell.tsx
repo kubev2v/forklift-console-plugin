@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
@@ -11,7 +11,7 @@ import type { CellProps } from './CellProps';
  * @param {CellProps} props - The props for the component.
  * @returns {JSX.Element} - The rendered component.
  */
-export const URLCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
+export const URLCell: FC<CellProps> = ({ data, fieldId, fields }) => {
   const url = (getResourceFieldValue(data, fieldId, fields) ?? '').toString();
   return (
     <TableCell>

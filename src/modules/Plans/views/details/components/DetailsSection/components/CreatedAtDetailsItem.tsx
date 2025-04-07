@@ -1,11 +1,11 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { PlanDetailsItemProps } from './PlanDetailsItemProps';
 
-export const CreatedAtDetailsItem: React.FC<PlanDetailsItemProps> = ({
+export const CreatedAtDetailsItem: FC<PlanDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource,

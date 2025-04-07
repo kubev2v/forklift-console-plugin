@@ -1,11 +1,11 @@
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import {
   MenuToggle,
-  MenuToggleStatus,
+  type MenuToggleStatus,
   Select,
   SelectList,
-  SelectProps,
+  type SelectProps,
 } from '@patternfly/react-core';
 
 type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'children'> & {
@@ -17,13 +17,13 @@ type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'children'> & {
 };
 
 export const MtvSelect: FC<MtvSelectProps> = ({
-  id,
-  value,
-  placeholder = '',
-  isDisabled,
   children,
+  id,
+  isDisabled,
   onSelect,
+  placeholder = '',
   status,
+  value,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,7 +39,9 @@ export const MtvSelect: FC<MtvSelectProps> = ({
           ref={ref}
           isDisabled={isDisabled}
           isExpanded={isOpen}
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
           aria-label="Select menu toggle"
           status={status}
         >
