@@ -62,7 +62,7 @@ const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { data, setData } = useCreateVmMigrationData();
-  const projectNameOptions = useProjectNameSelectOptions(projectName);
+  const [projectNameOptions] = useProjectNameSelectOptions(projectName);
   const providerCardItems = useMemo(
     () =>
       createProviderCardItems(
