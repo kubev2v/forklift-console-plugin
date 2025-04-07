@@ -1,5 +1,4 @@
-import { useCallback, useReducer } from 'react';
-import * as React from 'react';
+import { type FC, type FormEvent, useCallback, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { validateOpenstackURL } from 'src/modules/Providers/utils/validators/provider/openstack/validateOpenstackURL';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -12,7 +11,7 @@ type OpenstackProviderCreateFormProps = {
   onChange: (newValue: V1beta1Provider) => void;
 };
 
-export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormProps> = ({
+export const OpenstackProviderCreateForm: FC<OpenstackProviderCreateFormProps> = ({
   onChange,
   provider,
 }) => {
@@ -60,9 +59,7 @@ export const OpenstackProviderCreateForm: React.FC<OpenstackProviderCreateFormPr
     [provider],
   );
 
-  const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeUrl: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('url', value);
   };
 

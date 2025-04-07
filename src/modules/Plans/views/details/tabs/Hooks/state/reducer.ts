@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Base64 } from 'js-base64';
 import { deepCopy } from 'src/utils/deepCopy';
 
@@ -10,7 +11,7 @@ export type FormState = {
   postHook: V1beta1Hook;
   hasChanges: boolean;
   isLoading: boolean;
-  alertMessage: React.ReactNode;
+  alertMessage: ReactNode;
 };
 
 export type FormAction =
@@ -21,10 +22,10 @@ export type FormAction =
   | { type: 'POST_HOOK_IMAGE'; payload: string }
   | { type: 'POST_HOOK_PLAYBOOK'; payload: string }
   | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ALERT_MESSAGE'; payload: React.ReactNode }
+  | { type: 'SET_ALERT_MESSAGE'; payload: ReactNode }
   | { type: 'INIT'; payload: FormState };
 
-export function formReducer(state: FormState, action: FormAction): FormState {
+export const formReducer = (state: FormState, action: FormAction): FormState => {
   let newState: FormState;
 
   switch (action.type) {
@@ -62,4 +63,4 @@ export function formReducer(state: FormState, action: FormAction): FormState {
     default:
       return state;
   }
-}
+};

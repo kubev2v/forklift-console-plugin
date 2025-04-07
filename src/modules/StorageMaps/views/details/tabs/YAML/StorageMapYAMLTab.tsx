@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -10,7 +10,7 @@ type StorageMapYAMLTabProps = {
   namespace: string;
 };
 
-export const StorageMapYAMLTab: React.FC<StorageMapYAMLTabProps> = ({ name, namespace }) => {
+export const StorageMapYAMLTab: FC<StorageMapYAMLTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1StorageMap>({

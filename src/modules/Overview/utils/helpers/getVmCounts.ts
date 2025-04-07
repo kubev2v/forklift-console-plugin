@@ -1,17 +1,17 @@
 import type { V1beta1Migration } from '@kubev2v/types';
 
 // Helper function to process 'True' vm conditions
-function processVmConditions(vm) {
+const processVmConditions = (vm) => {
   if (!('conditions' in vm)) return [];
 
   return vm.conditions.reduce((acc: string[], condition) => {
     if (condition.status === 'True') acc.push(condition.type);
     return acc;
   }, []);
-}
+};
 
 // Helper function to increment vmCounts based on conditions
-function incrementCounts(conditions: string[], vm, vmCounts: Record<string, number>) {
+const incrementCounts = (conditions: string[], vm, vmCounts: Record<string, number>) => {
   vmCounts.Total++;
 
   const isRunning =
@@ -27,14 +27,14 @@ function incrementCounts(conditions: string[], vm, vmCounts: Record<string, numb
       if (condition in vmCounts) vmCounts[condition]++;
     });
   }
-}
+};
 
 /**
  * This function gets the number of 'Running', 'Failed', and 'Succeeded' VMs in the migrations.
  * @param {V1beta1Migration[]} migrations - The array of migration objects to inspect.
  * @return {Object} A dictionary with the phase as the key and the count as the value.
  */
-export function getVmCounts(migrations: V1beta1Migration[]): Record<string, number> {
+export const getVmCounts = (migrations: V1beta1Migration[]): Record<string, number> => {
   const vmCounts: Record<string, number> = {
     Canceled: 0,
     Failed: 0,
@@ -53,4 +53,4 @@ export function getVmCounts(migrations: V1beta1Migration[]): Record<string, numb
   }
 
   return vmCounts;
-}
+};

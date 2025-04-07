@@ -1,5 +1,4 @@
-import type { ReactNode } from 'react';
-import * as React from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { Card, CardBody, CardHeader, CardTitle, Split, SplitItem } from '@patternfly/react-core';
 
@@ -24,7 +23,7 @@ type SelectableCardProps = {
  * SelectableCard component
  * @param props The properties of the SelectableCard
  */
-export const SelectableCard: React.FC<SelectableCardProps> = ({
+export const SelectableCard: FC<SelectableCardProps> = ({
   className,
   content,
   isCompact,

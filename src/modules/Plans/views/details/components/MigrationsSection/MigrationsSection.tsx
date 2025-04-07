@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 
 import {
   MigrationModelGroupVersionKind,
@@ -11,7 +11,7 @@ import { Suspend } from '../Suspend';
 
 import { MigrationsTable } from './components/MigrationsTable';
 
-export const MigrationsSection: React.FC<MigrationsSectionProps> = ({ obj }) => {
+export const MigrationsSection: FC<MigrationsSectionProps> = ({ obj }) => {
   const [migrations, loaded, loadError] = useK8sWatchResource<V1beta1Migration[]>({
     groupVersionKind: MigrationModelGroupVersionKind,
     isList: true,

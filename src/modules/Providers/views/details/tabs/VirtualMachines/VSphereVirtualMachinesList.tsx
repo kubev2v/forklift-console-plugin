@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import type { ResourceFieldFactory } from '@components/common/utils/types';
@@ -82,7 +82,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = (props) => {
+export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => {
   const { obj } = props;
   const [hostsDict, foldersDict] = useVSphereInventoryVms({ provider: obj.provider }, true, null);
   const { vmData } = obj;

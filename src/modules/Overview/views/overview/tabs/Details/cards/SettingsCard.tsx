@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import * as React from 'react';
 import { EditControllerCPULimitModal } from 'src/modules/Overview/modal/EditControllerCPULimitModal';
 import { EditControllerMemoryLimitModal } from 'src/modules/Overview/modal/EditControllerMemoryLimitModal';
 import { EditInventoryMemoryLimitModal } from 'src/modules/Overview/modal/EditInventoryMemoryLimitModal';
@@ -180,7 +179,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
   );
 };
 
-const SettingsCard: React.FC<SettingsCardProps> = (props) => (
+const SettingsCard: FC<SettingsCardProps> = (props) => (
   <ModalHOC>
     <SettingsCard_ {...props} />
   </ModalHOC>

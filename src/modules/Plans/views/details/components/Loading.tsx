@@ -1,11 +1,11 @@
-import * as React from 'react';
+import type { FC } from 'react';
 
 /**
  * A functional component that renders a loading indicator.
  *
  * @returns {JSX.Element} The JSX element representing the loading indicator.
  */
-export const Loading: React.FC = () => (
+export const Loading: FC = () => (
   <div className="co-m-loader co-an-fade-in-out" data-testid="loading-indicator-plan-yaml">
     <div className="co-m-loader-dot__one" />
     <div className="co-m-loader-dot__two" />

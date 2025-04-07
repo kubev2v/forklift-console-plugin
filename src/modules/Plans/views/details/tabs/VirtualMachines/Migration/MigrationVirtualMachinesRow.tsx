@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC, ReactNode } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
@@ -14,7 +14,7 @@ import { NameCellRenderer } from '../components/NameCellRenderer';
 import type { PlanVMsCellProps } from '../components/PlanVMsCellProps';
 import type { VMData } from '../types/VMData';
 
-export const MigrationVirtualMachinesRow: React.FC<RowProps<VMData>> = ({
+export const MigrationVirtualMachinesRow: FC<RowProps<VMData>> = ({
   resourceData,
   resourceFields,
 }) => {
@@ -38,7 +38,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const cellRenderers: Record<string, React.FC<PlanVMsCellProps>> = {
+const cellRenderers: Record<string, FC<PlanVMsCellProps>> = {
   diskCounter: (props: PlanVMsCellProps) => {
     const diskTransfer = props.data.statusVM?.pipeline.find((pipe) =>
       pipe?.name?.startsWith('DiskTransfer'),
@@ -166,7 +166,7 @@ type PopoverVariant = 'success' | 'info' | 'warning' | 'danger' | 'custom';
 type GetVariantType = (p: V1beta1PlanStatusMigrationVmsPipeline) => ProgressStepperVariant;
 type GetPopoverVariantType = (p: V1beta1PlanStatusMigrationVmsPipeline) => PopoverVariant;
 
-type GetIconType = (p: V1beta1PlanStatusMigrationVmsPipeline) => React.ReactNode;
+type GetIconType = (p: V1beta1PlanStatusMigrationVmsPipeline) => ReactNode;
 
 export const getVariant: GetVariantType = (plan) => {
   if (plan?.error) {

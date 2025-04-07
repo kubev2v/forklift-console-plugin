@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { EditProviderURLModal } from 'src/modules/Providers/modals/EditProviderURL/EditProviderURLModal';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
@@ -9,7 +9,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
-export const URLDetailsItem: React.FC<ProviderDetailsItemProps> = ({
+export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
   canPatch,
   helpContent,
   moreInfoLink,

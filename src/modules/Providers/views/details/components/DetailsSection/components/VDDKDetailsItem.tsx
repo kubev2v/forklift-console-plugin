@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { EditProviderVDDKImage } from 'src/modules/Providers/modals/EditProviderVDDKImage/EditProviderVDDKImage';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
@@ -9,7 +9,7 @@ import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
-export const VDDKDetailsItem: React.FC<ProviderDetailsItemProps> = ({
+export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
   canPatch,
   helpContent,
   moreInfoLink,

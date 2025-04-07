@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
@@ -28,7 +28,7 @@ import { VirtualMachinesCell } from './components/VirtualMachinesCell';
  *
  * @returns {ReactNode - A React table row (Tr) component.
  */
-const ProviderRow: React.FC<RowProps<ProviderData>> = ({ resourceData, resourceFields }) => {
+const ProviderRow: FC<RowProps<ProviderData>> = ({ resourceData, resourceFields }) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>
@@ -69,7 +69,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const cellRenderers: Record<string, React.FC<CellProps>> = {
+const cellRenderers: Record<string, FC<CellProps>> = {
   actions: (props) => ProviderActionsDropdown({ isKebab: true, ...props }),
   hostCount: InventoryCellFactory({ icon: <OutlinedHddIcon /> }),
   name: ProviderLinkCell,

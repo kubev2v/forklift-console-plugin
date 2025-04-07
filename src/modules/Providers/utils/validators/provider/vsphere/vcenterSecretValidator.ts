@@ -7,12 +7,12 @@ import type { ValidationMsg } from '../../common';
 
 import { vcenterSecretFieldValidator } from './vcenterSecretFieldValidator';
 
-export function vcenterSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
+export const vcenterSecretValidator = (secret: IoK8sApiCoreV1Secret): ValidationMsg => {
   const requiredFields = ['user', 'password'];
   const validateFields = ['user', 'password', 'insecureSkipVerify'];
 
   // Add ca cert validation if not insecureSkipVerify
-  const insecureSkipVerify = Base64.decode(secret?.data?.insecureSkipVerify || '');
+  const insecureSkipVerify = Base64.decode(secret?.data?.insecureSkipVerify ?? '');
   if (insecureSkipVerify !== 'true') {
     validateFields.push('cacert');
   }
@@ -23,7 +23,7 @@ export function vcenterSecretValidator(secret: IoK8sApiCoreV1Secret): Validation
   }
 
   for (const id of validateFields) {
-    const value = Base64.decode(secret?.data?.[id] || '');
+    const value = Base64.decode(secret?.data?.[id] ?? '');
 
     const validation = vcenterSecretFieldValidator(id, value);
 
@@ -33,4 +33,4 @@ export function vcenterSecretValidator(secret: IoK8sApiCoreV1Secret): Validation
   }
 
   return { type: 'default' };
-}
+};

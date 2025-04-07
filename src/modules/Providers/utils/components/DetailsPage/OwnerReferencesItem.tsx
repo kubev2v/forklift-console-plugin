@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -15,7 +15,7 @@ import {
  * @param {K8sResourceCommon} props.resource - The resource whose owner references will be displayed.
  * @returns {ReactElement} A list of owner references or a 'No owner' message if there are no owner references.
  */
-export const OwnerReferencesItem: React.FC<OwnerReferencesProps> = ({ resource }) => {
+export const OwnerReferencesItem: FC<OwnerReferencesProps> = ({ resource }) => {
   const { t } = useForkliftTranslation();
   const owners = (resource?.metadata?.ownerReferences || []).map(
     (ownerReference: OwnerReference) => (

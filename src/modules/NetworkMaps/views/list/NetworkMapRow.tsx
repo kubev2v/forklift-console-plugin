@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 
 import type { ResourceField } from '@components/common/utils/types';
@@ -14,7 +14,7 @@ import { PlanCell } from './components/PlanCell';
 import { ProviderLinkCell } from './components/ProviderLinkCell';
 import { StatusCell } from './components/StatusCell';
 
-const ProviderRow: React.FC<RowProps<NetworkMapData>> = ({ resourceData, resourceFields }) => {
+const ProviderRow: FC<RowProps<NetworkMapData>> = ({ resourceData, resourceFields }) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>
@@ -35,7 +35,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const cellRenderers: Record<string, React.FC<CellProps>> = {
+const cellRenderers: Record<string, FC<CellProps>> = {
   actions: (props) => NetworkMapActionsDropdown({ isKebab: true, ...props }),
   destination: ProviderLinkCell,
   name: NetworkMapLinkCell,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { FilterDefType, type ResourceFieldFactory } from 'src/components/common/utils/types';
 import StandardPage from 'src/components/page/StandardPage';
@@ -176,7 +176,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-const PlansListPage: React.FC<{
+const PlansListPage: FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
@@ -228,7 +228,7 @@ type EmptyStateProps = {
   namespace: string;
 };
 
-const EmptyState_: React.FC<EmptyStateProps> = ({ namespace }) => {
+const EmptyState_: FC<EmptyStateProps> = ({ namespace }) => {
   return <PlansEmptyState namespace={namespace} />;
 };
 

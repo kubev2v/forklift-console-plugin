@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -8,9 +8,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { AlignedDecimal } from './AlignedDecimal';
 
-export const OpenshiftPlanResources: React.FC<{ planInventory: OpenshiftVM[] }> = ({
-  planInventory,
-}) => {
+export const OpenshiftPlanResources: FC<{ planInventory: OpenshiftVM[] }> = ({ planInventory }) => {
   const { t } = useForkliftTranslation();
 
   const planInventoryRunning = planInventory?.filter((vm) => vm?.object?.spec?.running);
@@ -147,7 +145,7 @@ export const k8sMemoryToBytes = (memoryString: string) => {
   throw new Error('Invalid memory string format');
 };
 
-function k8sCpuToCores(cpuString) {
+const k8sCpuToCores = (cpuString) => {
   if (cpuString === undefined) {
     return undefined;
   }
@@ -163,4 +161,4 @@ function k8sCpuToCores(cpuString) {
   }
   // Directly parse the string as a float representing cores.
   return parseFloat(cpuString);
-}
+};

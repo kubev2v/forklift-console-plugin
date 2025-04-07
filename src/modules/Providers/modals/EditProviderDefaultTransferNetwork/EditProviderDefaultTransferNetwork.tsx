@@ -1,5 +1,4 @@
-import { type FC, type Ref, useState } from 'react';
-import * as React from 'react';
+import { type FC, type FC, type MouseEvent, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -75,10 +74,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
       setIsOpen((isOpen) => !isOpen);
     };
 
-    const onSelect = (
-      _event: React.MouseEvent | undefined,
-      _value: string | number | undefined,
-    ) => {
+    const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
       setIsOpen(false);
     };
 
@@ -143,7 +139,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
   return DropdownRenderer;
 };
 
-const EditProviderDefaultTransferNetwork_: React.FC<EditProviderDefaultTransferNetworkProps> = (
+const EditProviderDefaultTransferNetwork_: FC<EditProviderDefaultTransferNetworkProps> = (
   props,
 ) => {
   const { t } = useForkliftTranslation();
@@ -173,14 +169,15 @@ const EditProviderDefaultTransferNetwork_: React.FC<EditProviderDefaultTransferN
  * @param {string} value - The input string from which the network name is to be extracted.
  * @returns {string} The network name extracted from the input string.
  */
-function getNetworkName(value: string | number): string {
+const getNetworkName = (value: string | number): string => {
   if (!value || typeof value !== 'string') {
     return 'Pod network';
   }
 
   const parts = value.split('/');
+
   return parts[parts.length - 1];
-}
+};
 
 type EditProviderDefaultTransferNetworkProps = Modify<
   EditModalProps,
@@ -193,9 +190,9 @@ type EditProviderDefaultTransferNetworkProps = Modify<
   }
 >;
 
-export const EditProviderDefaultTransferNetwork: React.FC<
-  EditProviderDefaultTransferNetworkProps
-> = (props) => {
+export const EditProviderDefaultTransferNetwork: FC<EditProviderDefaultTransferNetworkProps> = (
+  props,
+) => {
   if (props.resource?.spec?.type !== 'openshift') {
     return <></>;
   }

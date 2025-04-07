@@ -1,5 +1,4 @@
-import { type FC, type Ref, useState } from 'react';
-import * as React from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -49,7 +48,7 @@ export const VmMigrationsChartCard: FC<MigrationsCardProps> = () => {
     setIsDropdownOpened((isDropdownOpened) => !isDropdownOpened);
   };
 
-  const onSelect = (_event: React.MouseEvent | undefined, _value: string | number | undefined) => {
+  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
     setIsDropdownOpened(false);
   };
 

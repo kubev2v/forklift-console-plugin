@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -9,7 +9,7 @@ import { toVmFeatureEnum } from '../utils/helpers/toVmFeatureEnum';
 
 import type { VMCellProps } from './VMCellProps';
 
-export const VmFeaturesCell: React.FC<VMCellProps> = ({ data }) => {
+export const VmFeaturesCell: FC<VMCellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const featureToLabel = toVmFeatureEnum(t);
   return (

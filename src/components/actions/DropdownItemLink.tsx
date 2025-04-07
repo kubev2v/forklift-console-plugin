@@ -11,7 +11,7 @@ import { DropdownItem } from '@patternfly/react-core';
  * @param {string} props.href - The URL to navigate to when the dropdown item is clicked.
  * @param {string} props.description - The description to display below the dropdown item.
  *
- * @returns {React.ReactElement} The rendered JSX element.
+ * @returns {ReactElement} The rendered JSX element.
  */
 export const DropdownItemLink = ({
   children,

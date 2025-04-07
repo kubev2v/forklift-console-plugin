@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC, FormEvent } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type {
   EditModalProps,
@@ -38,8 +38,8 @@ type SwitchRendererProps = {
 };
 
 const PreserveClusterCpuModelInputFactory: () => ModalInputComponentType = () => {
-  const SwitchRenderer: React.FC<SwitchRendererProps> = ({ onChange, value }) => {
-    const onChangeInternal: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const SwitchRenderer: FC<SwitchRendererProps> = ({ onChange, value }) => {
+    const onChangeInternal: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
       checked,
     ) => {
       onChange(checked ? 'true' : 'false');
@@ -61,9 +61,7 @@ const PreserveClusterCpuModelInputFactory: () => ModalInputComponentType = () =>
   return SwitchRenderer;
 };
 
-const EditPlanPreserveClusterCpuModel_: React.FC<EditPlanPreserveClusterCpuModelProps> = (
-  props,
-) => {
+const EditPlanPreserveClusterCpuModel_: FC<EditPlanPreserveClusterCpuModelProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -92,7 +90,7 @@ type EditPlanPreserveClusterCpuModelProps = Modify<
   }
 >;
 
-export const EditPlanPreserveClusterCpuModel: React.FC<EditPlanPreserveClusterCpuModelProps> = (
+export const EditPlanPreserveClusterCpuModel: FC<EditPlanPreserveClusterCpuModelProps> = (
   props,
 ) => {
   return <EditPlanPreserveClusterCpuModel_ {...props} />;

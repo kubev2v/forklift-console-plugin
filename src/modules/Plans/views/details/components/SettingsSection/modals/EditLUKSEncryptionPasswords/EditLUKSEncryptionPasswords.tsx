@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import * as React from 'react';
+import { type FC, useEffect } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type {
   EditModalProps,
@@ -28,7 +27,7 @@ type SecretRendererProps = {
 };
 
 const EditPassphraseFactory: (initialValue: string) => ModalInputComponentType = (initialValue) => {
-  const SecretRenderer: React.FC<SecretRendererProps> = ({ onChange }) => {
+  const SecretRenderer: FC<SecretRendererProps> = ({ onChange }) => {
     const { t } = useForkliftTranslation();
     const items = initialValue && JSON.parse(initialValue);
 
@@ -64,7 +63,7 @@ type EditLUKSEncryptionPasswordsProps = Modify<
   }
 >;
 
-export const EditLUKSEncryptionPasswords: React.FC<EditLUKSEncryptionPasswordsProps> = (props) => {
+export const EditLUKSEncryptionPasswords: FC<EditLUKSEncryptionPasswordsProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const plan = props.resource;

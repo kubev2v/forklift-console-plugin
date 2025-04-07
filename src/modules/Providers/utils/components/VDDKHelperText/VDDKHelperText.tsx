@@ -1,11 +1,11 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans } from 'src/utils/i18n';
 
 const CREATE_VDDK_HELP_LINK =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
 
-export const VDDKHelperText: React.FC = () => (
+export const VDDKHelperText: FC = () => (
   <ForkliftTrans>
     <p>VMware Virtual Disk Development Kit (VDDK) image.</p>
     <br />
@@ -28,7 +28,7 @@ export const VDDKHelperText: React.FC = () => (
   </ForkliftTrans>
 );
 
-export const VDDKHelperTextShort: React.FC = () => (
+export const VDDKHelperTextShort: FC = () => (
   <ForkliftTrans>
     <p>
       It is strongly recommended to use a VDDK image. Not using a VDDK image could result in

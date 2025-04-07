@@ -1,5 +1,4 @@
-import { memo } from 'react';
-import * as React from 'react';
+import { type FC, memo } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -23,7 +22,7 @@ export type PlanDetailsPageProps = {
   namespace?: string;
 };
 
-const PlanDetailsPage_: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
+const PlanDetailsPage_: FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const pages = [

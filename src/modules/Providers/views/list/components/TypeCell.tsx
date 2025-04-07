@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableLabelCell } from 'src/modules/Providers/utils/components/TableCell/TableLabelCell';
 import { getIsOnlySource } from 'src/modules/Providers/utils/helpers/getIsTarget';
@@ -12,7 +12,7 @@ import type { CellProps } from './CellProps';
  * @param {CellProps} props - The props for the component.
  * @returns {JSX.Element} - The rendered component.
  */
-export const TypeCell: React.FC<CellProps> = ({ data, fields }) => {
+export const TypeCell: FC<CellProps> = ({ data, fields }) => {
   const { t } = useForkliftTranslation();
 
   const { provider } = data;

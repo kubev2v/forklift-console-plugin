@@ -1,5 +1,4 @@
-import { type ReactNode, useCallback, useState } from 'react';
-import * as React from 'react';
+import { type FC, type FormEvent, type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
@@ -50,9 +49,9 @@ type DuplicateModalProps = {
  * A generic delete modal component
  * @component
  * @param {DuplicateModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const DuplicateModal: React.FC<DuplicateModalProps> = ({ redirectTo, resource, title }) => {
+export const DuplicateModal: FC<DuplicateModalProps> = ({ redirectTo, resource, title }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
@@ -107,7 +106,7 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ redirectTo, reso
     setNewNameValidation('success');
   };
 
-  const onChange: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (value) => {
+  const onChange: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     validateName(value);
     setNewName(value);
   };
@@ -273,11 +272,11 @@ export const DuplicateModal: React.FC<DuplicateModalProps> = ({ redirectTo, reso
   );
 };
 
-async function patchOwner(
+const patchOwner = async (
   resource: K8sResourceCommon,
   model: K8sModel,
   ownerRef: { name: string; uid: string; kind: string; apiVersion: string },
-) {
+) => {
   const patchedSecret = await k8sPatch({
     data: [
       {
@@ -298,4 +297,4 @@ async function patchOwner(
   });
 
   return patchedSecret;
-}
+};

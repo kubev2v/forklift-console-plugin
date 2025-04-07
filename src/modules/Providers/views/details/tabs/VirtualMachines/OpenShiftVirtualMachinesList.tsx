@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import type { ResourceFieldFactory } from '@components/common/utils/types';
@@ -76,7 +76,7 @@ export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = (props) => (
+export const OpenShiftVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => (
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OpenShiftVirtualMachinesCells}

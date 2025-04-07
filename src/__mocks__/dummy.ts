@@ -17,6 +17,6 @@ export class Dummy extends Error {
  * @export
  * @returns {any[]}
  */
-export function useResolvedExtensions(): any[] {
+export const useResolvedExtensions = (): any[] => {
   return [[], undefined, undefined];
-}
+};

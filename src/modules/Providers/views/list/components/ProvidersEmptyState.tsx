@@ -1,5 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
-import * as React from 'react';
+import type { ComponentType, FC, ReactNode } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -26,7 +25,7 @@ type ProvidersEmptyStateProps = {
   Icon: ComponentType;
 };
 
-const ProvidersEmptyState: React.FC<ProvidersEmptyStateProps> = ({ AddButton, Icon, title }) => {
+const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ AddButton, Icon, title }) => {
   const { t } = useForkliftTranslation();
 
   return (

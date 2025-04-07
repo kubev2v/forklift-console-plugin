@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FormEvent } from 'react';
 
 import { Switch, ToolbarItem } from '@patternfly/react-core';
 
@@ -20,9 +20,7 @@ export const SwitchFilter = ({
   placeholderLabel,
   selectedFilters,
 }: FilterTypeProps) => {
-  const onChange: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
-    checked,
-  ) => {
+  const onChange: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (checked) => {
     onFilterUpdate(checked ? [Boolean(checked).toString()] : []);
   };
 

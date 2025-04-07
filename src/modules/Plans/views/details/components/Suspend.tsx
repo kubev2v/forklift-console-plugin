@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
 
@@ -8,7 +8,7 @@ type SuspendProps = {
   obj: object;
   loaded: boolean;
   loadError: unknown;
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
 /**
@@ -19,11 +19,11 @@ type SuspendProps = {
  * @param {object} props.obj - The object representing the data to be displayed.
  * @param {boolean} props.loaded - Indicates whether the data has finished loading.
  * @param {unknown} props.loadError - Any error that occurred during the loading process.
- * @param {React.ReactNode} [props.children] - The content to be rendered once the data is loaded.
+ * @param {ReactNode} [props.children] - The content to be rendered once the data is loaded.
  *
  * @returns {JSX.Element} The JSX element containing the children or a loading indicator.
  */
-export const Suspend: React.FC<SuspendProps> = ({ children, loaded, loadError, obj }) => {
+export const Suspend: FC<SuspendProps> = ({ children, loaded, loadError, obj }) => {
   if (obj && loaded && !loadError) {
     return <>{children}</>;
   }

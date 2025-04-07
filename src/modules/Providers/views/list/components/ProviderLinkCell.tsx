@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
@@ -12,7 +12,7 @@ import type { CellProps } from './CellProps';
  * @param {CellProps} props - The props for the component.
  * @returns {JSX.Element} - The rendered component.
  */
-export const ProviderLinkCell: React.FC<CellProps> = ({ data }) => {
+export const ProviderLinkCell: FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
   const { provider } = data;

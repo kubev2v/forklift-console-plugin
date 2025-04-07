@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import {
   canPlanReStart,
   isPlanExecuting,
@@ -31,7 +31,7 @@ type PlanVirtualMachinesProps = {
   sourceProvider?: V1beta1Provider;
 };
 
-const PlanVirtualMachines_: React.FC<PlanVirtualMachinesProps> = (props) => {
+const PlanVirtualMachines_: FC<PlanVirtualMachinesProps> = (props) => {
   const plan = props?.planData.plan;
 
   if (isPlanExecuting(plan)) {
@@ -44,7 +44,7 @@ const PlanVirtualMachines_: React.FC<PlanVirtualMachinesProps> = (props) => {
   return <PlanVirtualMachinesList {...props} />;
 };
 
-export const PlanVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
+export const PlanVirtualMachines: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

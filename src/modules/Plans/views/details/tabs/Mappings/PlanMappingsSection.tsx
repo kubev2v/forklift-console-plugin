@@ -1,5 +1,4 @@
-import { type ReactNode, useReducer, useState } from 'react';
-import * as React from 'react';
+import { type FC, type ReactNode, useReducer, useState } from 'react';
 import { universalComparator } from 'src/components/common/TableView/sort';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
@@ -76,7 +75,7 @@ type PlanMappingsSectionProps = {
   targetStorages: OpenShiftStorageClass[];
 };
 
-export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
+export const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
   plan,
   planNetworkMaps,
   planStorageMaps,
@@ -100,10 +99,10 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   const [isAddStorageMapAvailable, setIsAddStorageMapAvailable] = useState(true);
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function reducer(
+  const reducer = (
     state: PlanMappingsSectionState,
     action: { type: string; payload? },
-  ): PlanMappingsSectionState {
+  ): PlanMappingsSectionState => {
     switch (action.type) {
       case 'TOGGLE_EDIT': {
         return { ...state, edit: !state.edit };
@@ -161,21 +160,21 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
       default:
         return state;
     }
-  }
+  };
 
   // Toggles between view and edit modes
-  function onToggleEdit() {
+  const onToggleEdit = () => {
     dispatch({ type: 'TOGGLE_EDIT' });
-  }
+  };
 
   // Handle user clicking "cancel"
-  function onCancel() {
+  const onCancel = () => {
     // clear changes and return to view mode
     setIsAddNetworkMapAvailable(true);
     setIsAddStorageMapAvailable(true);
     dispatch({ type: 'SET_CANCEL' });
     dispatch({ type: 'TOGGLE_EDIT' });
-  }
+  };
 
   const onAddNetworkMapping = () => {
     const nextSourceNetworksIndex = sourceNetworks.findIndex(
@@ -334,7 +333,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
   };
 
   // Handle user clicking "Update Mappings"
-  async function onUpdate() {
+  const onUpdate = async () => {
     setIsLoading(true);
 
     try {
@@ -363,7 +362,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
 
       setIsLoading(false);
     }
-  }
+  };
 
   const ovirtFindObj = (obj, nextName: string) => {
     return obj.path === nextName || obj.name === nextName;
@@ -487,7 +486,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     ),
   ];
 
-  const PlanMappingsSectionEditMode: React.FC = () => {
+  const PlanMappingsSectionEditMode: FC = () => {
     const { t } = useForkliftTranslation();
     return (
       <>
@@ -568,7 +567,7 @@ export const PlanMappingsSection: React.FC<PlanMappingsSectionProps> = ({
     );
   };
 
-  const PlanMappingsSectionViewMode: React.FC = () => {
+  const PlanMappingsSectionViewMode: FC = () => {
     const { t } = useForkliftTranslation();
     const DisableEditMappings = hasSomeCompleteRunningVMs(plan) || !isPlanEditable(plan);
 

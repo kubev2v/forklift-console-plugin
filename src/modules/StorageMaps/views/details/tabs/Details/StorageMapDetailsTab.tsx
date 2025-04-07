@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -17,7 +17,7 @@ type StorageMapDetailsTabProps = {
   namespace: string;
 };
 
-export const StorageMapDetailsTab: React.FC<StorageMapDetailsTabProps> = ({ name, namespace }) => {
+export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1StorageMap>({

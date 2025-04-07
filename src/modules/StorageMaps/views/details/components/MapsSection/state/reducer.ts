@@ -13,7 +13,10 @@ type MapsAction =
   | { type: 'SET_UPDATING'; payload: boolean }
   | { type: 'INIT'; payload: V1beta1StorageMap };
 
-export function mapsSectionReducer(state: MapsSectionState, action: MapsAction): MapsSectionState {
+export const mapsSectionReducer = (
+  state: MapsSectionState,
+  action: MapsAction,
+): MapsSectionState => {
   let newState: MapsSectionState;
 
   switch (action.type) {
@@ -32,4 +35,4 @@ export function mapsSectionReducer(state: MapsSectionState, action: MapsAction):
     default:
       return state;
   }
-}
+};

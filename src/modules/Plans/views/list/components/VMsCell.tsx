@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -9,7 +9,7 @@ import { VirtualMachineIcon } from '@patternfly/react-icons';
 
 import type { CellProps } from './CellProps';
 
-export const VMsCell: React.FC<CellProps> = ({ data }) => {
+export const VMsCell: FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const plan = data?.plan;
   const specVms = plan?.spec?.vms;

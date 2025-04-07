@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import * as React from 'react';
+import { type FC, type FormEvent, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { type Modify, ProviderModel, type V1beta1Provider } from '@kubev2v/types';
@@ -25,7 +24,7 @@ type EditProviderVDDKImageProps = Modify<
   }
 >;
 
-export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (props) => {
+export const EditProviderVDDKImage: FC<EditProviderVDDKImageProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const provider = props.resource;
@@ -37,9 +36,7 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
 
   const isEmptyImage = emptyImage === 'yes';
 
-  const onChange: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
-    checked,
-  ) => {
+  const onChange: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (checked) => {
     if (checked) {
       setEmptyImage('yes');
     } else {
@@ -83,7 +80,7 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
 const VddkTextInput = undefined;
 
 // EmptyVddkTextInput is a mock input item for the empty vddk image string
-const EmptyVddkTextInput: React.FC = () => (
+const EmptyVddkTextInput: FC = () => (
   <TextInput
     spellCheck="false"
     id="modal-with-form-form-field"

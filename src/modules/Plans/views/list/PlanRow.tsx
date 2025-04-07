@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import * as React from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
@@ -20,7 +19,7 @@ import { ProviderLinkCell } from './components/ProviderLinkCell';
 import { VMsCell } from './components/VMsCell';
 import { PlanTableResourceId } from './constants';
 
-const PlanRow: React.FC<RowProps<PlanData>> = ({ resourceData, resourceFields }) => {
+const PlanRow: FC<RowProps<PlanData>> = ({ resourceData, resourceFields }) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>

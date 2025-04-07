@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import InventoryNotReachable from 'src/modules/Providers/views/list/components/InventoryNotReachable';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -18,7 +18,7 @@ import ForkliftControllerYAMLTab from './tabs/YAML/ForkliftControllerYAMLTab';
 
 import './OverviewPage.style.css';
 
-const OverviewPage: React.FC<OverviewPageProps> = () => {
+const OverviewPage: FC<OverviewPageProps> = () => {
   const { t } = useForkliftTranslation();
 
   const pages = [
@@ -56,7 +56,7 @@ type OverviewPageProps = {
   namespace?: string;
 };
 
-const HeaderTitleWrapper: React.FC = () => {
+const HeaderTitleWrapper: FC = () => {
   const [forkliftController] = useK8sWatchForkliftController();
   const { loadError: inventoryLivelinessError } = useProvidersInventoryIsLive({});
 
@@ -80,7 +80,7 @@ const HeaderTitleWrapper: React.FC = () => {
   );
 };
 
-const ForkliftControllerDetailsTabWrapper: React.FC = () => {
+const ForkliftControllerDetailsTabWrapper: FC = () => {
   const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
 
   return (
@@ -88,7 +88,7 @@ const ForkliftControllerDetailsTabWrapper: React.FC = () => {
   );
 };
 
-const ForkliftControllerYAMLTabWrapper: React.FC = () => {
+const ForkliftControllerYAMLTabWrapper: FC = () => {
   const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
 
   return (
@@ -96,7 +96,7 @@ const ForkliftControllerYAMLTabWrapper: React.FC = () => {
   );
 };
 
-const ForkliftControllerMetricsTabWrapper: React.FC = () => {
+const ForkliftControllerMetricsTabWrapper: FC = () => {
   const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
 
   return (

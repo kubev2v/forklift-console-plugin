@@ -1,5 +1,4 @@
-import type { PropsWithChildren, ReactNode } from 'react';
-import * as React from 'react';
+import type { FC, PropsWithChildren, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import Linkify from 'react-linkify';
 import { useHistory } from 'react-router';
@@ -25,11 +24,7 @@ type PlanCriticalConditionProps = PropsWithChildren & {
   condition: V1beta1PlanStatusConditions;
 };
 
-const PlanCriticalCondition: React.FC<PlanCriticalConditionProps> = ({
-  children,
-  condition,
-  plan,
-}) => {
+const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({ children, condition, plan }) => {
   const { t } = useTranslation();
   const history = useHistory();
 

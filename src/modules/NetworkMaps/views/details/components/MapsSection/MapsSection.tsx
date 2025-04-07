@@ -1,5 +1,4 @@
-import { useReducer } from 'react';
-import * as React from 'react';
+import { type FC, useEffect, useReducer } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import {
   type InventoryNetwork,
@@ -38,12 +37,12 @@ const initialState: MapsSectionState = {
   updating: false,
 };
 
-export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
+export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const [state, dispatch] = useReducer(mapsSectionReducer, initialState);
 
   // Initialize the state with the prop obj
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch({ payload: obj, type: 'INIT' });
   }, [obj]);
 
@@ -249,9 +248,9 @@ const getDestinationNetName = (
   return net ? OpenShiftNetworkAttachmentDefinitionToName(net) : 'Pod';
 };
 
-function convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(
+const convertInventoryNetworkToV1beta1NetworkMapSpecMapSource = (
   inventoryNetwork: InventoryNetwork,
-): V1beta1NetworkMapSpecMapSource {
+): V1beta1NetworkMapSpecMapSource => {
   if (!inventoryNetwork) {
     return undefined;
   }
@@ -265,11 +264,11 @@ function convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(
     name: inventoryNetwork.name,
     namespace: inventoryNetwork.namespace,
   };
-}
+};
 
-function convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination(
+const convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination = (
   networkAttachmentDefinition: OpenShiftNetworkAttachmentDefinition,
-): V1beta1NetworkMapSpecMapDestination {
+): V1beta1NetworkMapSpecMapDestination => {
   if (!networkAttachmentDefinition) {
     return { type: 'pod' };
   }
@@ -279,7 +278,7 @@ function convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDe
     namespace: networkAttachmentDefinition.namespace,
     type: networkAttachmentDefinition.type || 'multus',
   };
-}
+};
 
 const OpenShiftNetworkAttachmentDefinitionToName = (net) =>
   net?.namespace ? `${net?.namespace}/${net?.name}` : net?.name || 'Pod';

@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import * as React from 'react';
+import { type FC, useState } from 'react';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import { PlanStartMigrationModal } from 'src/modules/Plans/modals/PlanStartMigrationModal';
 import { getMigrationVmsCounts } from 'src/modules/Plans/utils/helpers/getMigrationVmsCounts';
@@ -37,7 +36,7 @@ type VmPipelineTask = {
   status: string;
 };
 
-export const PlanStatusCell: React.FC<CellProps> = ({ data }) => {
+export const PlanStatusCell: FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
   const plan = data?.plan;

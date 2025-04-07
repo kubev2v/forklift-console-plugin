@@ -1,5 +1,4 @@
-import type { ReactNode } from 'react';
-import * as React from 'react';
+import type { FC, FormEvent, ReactNode } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 
@@ -7,7 +6,7 @@ import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/ty
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Form, FormSelect, FormSelectOption } from '@patternfly/react-core';
 
-export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
+export const ProvidersEdit: FC<ProvidersEditProps> = ({
   helpContent,
   invalidLabel,
   label,
@@ -93,7 +92,7 @@ export const ProvidersEdit: React.FC<ProvidersEditProps> = ({
 type ProvidersEditProps = {
   providers: V1beta1Provider[];
   selectedProviderName: string;
-  onChange: (value: string, event: React.FormEvent<HTMLSelectElement>) => void;
+  onChange: (value: string, event: FormEvent<HTMLSelectElement>) => void;
   label: string;
   placeHolderLabel: string;
   invalidLabel: string;

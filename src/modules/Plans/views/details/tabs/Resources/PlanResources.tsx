@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import useProviderInventory, {
   type UseProviderInventoryParams,
 } from 'src/modules/Providers/hooks/useProviderInventory';
@@ -27,10 +27,7 @@ import { OVAPlanResources } from './OVAPlanResources';
 import { OvirtPlanResources } from './OvirtPlanResources';
 import { VSpherePlanResources } from './VSpherePlanResources';
 
-export const PlanResources: React.FC<{ name: string; namespace: string }> = ({
-  name,
-  namespace,
-}) => {
+export const PlanResources: FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
     name,

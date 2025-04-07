@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC, FormEvent } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type {
   EditModalProps,
@@ -38,8 +38,8 @@ type SwitchRendererProps = {
 };
 
 const WarmInputFactory: () => ModalInputComponentType = () => {
-  const SwitchRenderer: React.FC<SwitchRendererProps> = ({ onChange, value }) => {
-    const onChangeInternal: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const SwitchRenderer: FC<SwitchRendererProps> = ({ onChange, value }) => {
+    const onChangeInternal: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
       checked,
     ) => {
       onChange(checked ? 'true' : 'false');
@@ -61,7 +61,7 @@ const WarmInputFactory: () => ModalInputComponentType = () => {
   return SwitchRenderer;
 };
 
-const EditPlanWarm_: React.FC<EditPlanWarmProps> = (props) => {
+const EditPlanWarm_: FC<EditPlanWarmProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -94,6 +94,6 @@ type EditPlanWarmProps = Modify<
   }
 >;
 
-export const EditPlanWarm: React.FC<EditPlanWarmProps> = (props) => {
+export const EditPlanWarm: FC<EditPlanWarmProps> = (props) => {
   return <EditPlanWarm_ {...props} />;
 };

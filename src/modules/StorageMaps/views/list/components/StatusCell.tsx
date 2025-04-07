@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
@@ -12,7 +12,7 @@ import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons'
 
 import type { CellProps } from './CellProps';
 
-export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
+export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
   const { t } = useForkliftTranslation();
 
   const phase = getResourceFieldValue(data, 'phase', fields);
@@ -31,7 +31,7 @@ export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
   }
 };
 
-const ErrorStatusCell: React.FC<CellProps & { t }> = ({ data, fields, t }) => {
+const ErrorStatusCell: FC<CellProps & { t }> = ({ data, fields, t }) => {
   const { obj: StorageMap } = data;
   const phase = getResourceFieldValue(data, 'phase', fields);
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');

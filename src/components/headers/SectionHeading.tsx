@@ -1,12 +1,11 @@
 import type { FC, ReactNode } from 'react';
-import * as React from 'react';
 
 type SectionHeadingProps = {
   text: ReactNode;
   className?: string;
   id?: string;
   'data-testid'?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
 /**

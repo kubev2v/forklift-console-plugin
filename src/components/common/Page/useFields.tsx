@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
 
 import { NAMESPACE } from '../utils/constants';
 import type { ResourceField } from '../utils/types';
@@ -38,7 +38,7 @@ export const useFields = (
   currentNamespace: string,
   defaultFields: ResourceField[],
   userSettings?: FieldSettings,
-): [ResourceField[], React.Dispatch<React.SetStateAction<ResourceField[]>>] => {
+): [ResourceField[], Dispatch<SetStateAction<ResourceField[]>>] => {
   const {
     clear: clearSettings = () => undefined,
     data: fieldsFromSettings = [],

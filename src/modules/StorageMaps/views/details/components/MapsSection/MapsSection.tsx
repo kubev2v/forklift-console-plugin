@@ -1,5 +1,4 @@
-import { useReducer } from 'react';
-import * as React from 'react';
+import { type FC, useEffect, useReducer } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
@@ -30,12 +29,12 @@ const initialState: MapsSectionState = {
   updating: false,
 };
 
-export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
+export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const [state, dispatch] = useReducer(mapsSectionReducer, initialState);
 
   // Initialize the state with the prop obj
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch({ payload: obj, type: 'INIT' });
   }, [obj]);
 
@@ -221,11 +220,13 @@ type MapsSectionProps = {
   obj: V1beta1StorageMap;
 };
 
-function storageNameToIDReference(array: { id?: string; name?: string }[]): Record<string, string> {
+const storageNameToIDReference = (
+  array: { id?: string; name?: string }[],
+): Record<string, string> => {
   return array.reduce<Record<string, string>>((accumulator, current) => {
     if (current?.id && current?.name) {
       accumulator[current.name] = current.id;
     }
     return accumulator;
   }, {});
-}
+};

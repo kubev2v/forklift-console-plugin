@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import * as React from 'react';
+import { type FormEvent, type FunctionComponent, type KeyboardEvent, useState } from 'react';
 
 import { TextInput } from '@patternfly/react-core';
 
@@ -28,9 +27,9 @@ type LazyTextInputProps = {
  * @param {string} value - The current value of the input.
  * @param {(value: string) => void} onChange - Callback function to handle value changes.
  * @param {string} ariaLabel - Aria label for accessibility.
- * @returns {React.ReactElement} The rendered input component.
+ * @returns {ReactElement} The rendered input component.
  */
-export const LazyTextInput: React.FunctionComponent<LazyTextInputProps> = ({
+export const LazyTextInput: FunctionComponent<LazyTextInputProps> = ({
   ariaLabel = '',
   onChange,
   type = 'text',
@@ -44,7 +43,7 @@ export const LazyTextInput: React.FunctionComponent<LazyTextInputProps> = ({
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       if (value !== propValue) {
         onChange(value);
@@ -52,9 +51,7 @@ export const LazyTextInput: React.FunctionComponent<LazyTextInputProps> = ({
     }
   };
 
-  const onChangeText: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeText: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     setValue(value);
   };
 

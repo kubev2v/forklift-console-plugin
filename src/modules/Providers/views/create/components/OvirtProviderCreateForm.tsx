@@ -1,5 +1,4 @@
-import { useCallback, useReducer } from 'react';
-import * as React from 'react';
+import { type FC, type FormEvent, useCallback, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { validateOvirtURL } from 'src/modules/Providers/utils/validators/provider/ovirt/validateOvirtURL';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -12,7 +11,7 @@ type OvirtProviderCreateFormProps = {
   onChange: (newValue: V1beta1Provider) => void;
 };
 
-export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = ({
+export const OvirtProviderCreateForm: FC<OvirtProviderCreateFormProps> = ({
   onChange,
   provider,
 }) => {
@@ -60,9 +59,7 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
     [provider],
   );
 
-  const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeUrl: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('url', value);
   };
 

@@ -1,5 +1,4 @@
-import type { ReactNode } from 'react';
-import * as React from 'react';
+import type { FormEvent, ReactNode } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import SectionHeading from 'src/components/headers/SectionHeading';
@@ -145,10 +144,9 @@ export const PlansCreateForm = ({
   const networkMessages = buildNetworkMessages(t);
   const storageMessages = buildStorageMessages(t);
 
-  const onChangeTargetProvider: (
-    value: string,
-    event: React.FormEvent<HTMLSelectElement>,
-  ) => void = (value) => {
+  const onChangeTargetProvider: (value: string, event: FormEvent<HTMLSelectElement>) => void = (
+    value,
+  ) => {
     dispatch(setPlanTargetProvider(value));
   };
 

@@ -1,5 +1,4 @@
-import { useCallback, useReducer } from 'react';
-import * as React from 'react';
+import { type FC, type FormEvent, type MouseEvent, useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload/CertificateUpload';
@@ -22,7 +21,7 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import type { EditComponentProps } from '../BaseCredentialsSection';
 
-export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, secret }) => {
+export const VCenterCredentialsEdit: FC<EditComponentProps> = ({ onChange, secret }) => {
   const { t } = useForkliftTranslation();
 
   const user = safeBase64Decode(secret?.data?.user);
@@ -103,23 +102,19 @@ export const VCenterCredentialsEdit: React.FC<EditComponentProps> = ({ onChange,
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
-  const onClick: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
-  const onChangeUser: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeUser: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('user', value);
   };
 
-  const onChangePassword: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangePassword: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('password', value);
   };
 
-  const onChangeInsecure: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangeInsecure: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
     checked,
   ) => {
     handleChange('insecureSkipVerify', checked ? 'true' : 'false');
