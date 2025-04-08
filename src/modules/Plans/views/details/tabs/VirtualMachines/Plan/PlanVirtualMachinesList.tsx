@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import type { FC } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
   type GlobalActionWithSelection,
@@ -70,7 +70,7 @@ export const PlanVirtualMachinesList: FC<{
     plan?.status?.migration?.vms || [];
 
   const vmDict: Record<string, V1beta1PlanStatusMigrationVms> = {};
-  migrationVirtualMachines.forEach((migration) => (vmDict[migration.id] = m));
+  migrationVirtualMachines.forEach((migration) => (vmDict[migration.id] = migration));
 
   const conditions = plan?.status?.conditions?.filter(
     (condition) => condition?.items && condition.items.length > 0,
@@ -137,7 +137,7 @@ export const PlanVirtualMachinesList: FC<{
  * @param {string} input - The string containing the condition item details.
  * @returns {{ id: string; name: string }} An object containing the extracted ID and name.
  */
-function extractIdAndNameFromConditionItem(input: string): { id: string; name: string } {
+const extractIdAndNameFromConditionItem = (input: string): { id: string; name: string } => {
   const idMatch = /id:([^ ]+)/.exec(input);
   const nameMatch = /name:'([^']+)'/.exec(input);
 
@@ -149,4 +149,4 @@ function extractIdAndNameFromConditionItem(input: string): { id: string; name: s
     id: idMatch[1],
     name: nameMatch[1],
   };
-}
+};

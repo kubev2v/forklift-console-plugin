@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ManageColumnsModal } from '../common/TableView/ManageColumnsModal';

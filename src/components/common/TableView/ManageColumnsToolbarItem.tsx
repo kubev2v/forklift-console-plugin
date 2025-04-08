@@ -1,10 +1,10 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 
 import { Button, ToolbarItem, Tooltip } from '@patternfly/react-core';
 import { ColumnsIcon } from '@patternfly/react-icons';
 
 type ManageColumnsToolbarItemProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   /**
    * A handler for clicking the button.
    */

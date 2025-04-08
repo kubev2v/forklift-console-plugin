@@ -1,4 +1,4 @@
-import React, { type Ref } from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -11,17 +11,17 @@ import { PlanActionsDropdownItems } from './PlanActionsDropdownItems';
 
 import './PlanActionsDropdown.style.css';
 
-const PlanActionsKebabDropdown_: React.FC<PlanActionsDropdownProps> = ({ data, isKebab }) => {
+const PlanActionsKebabDropdown_: FC<PlanActionsDropdownProps> = ({ data, isKebab }) => {
   const { t } = useForkliftTranslation();
 
   // Hook for managing the open/close state of the dropdown
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
     setIsOpen((isOpen) => !isOpen);
   };
 
-  const onSelect = (_event: React.MouseEvent | undefined, _value: string | number | undefined) => {
+  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
     setIsOpen(false);
   };
 
@@ -52,7 +52,7 @@ const PlanActionsKebabDropdown_: React.FC<PlanActionsDropdownProps> = ({ data, i
   );
 };
 
-export const PlanActionsDropdown: React.FC<PlanActionsDropdownProps> = (props) => (
+export const PlanActionsDropdown: FC<PlanActionsDropdownProps> = (props) => (
   <ModalHOC>
     <PlanActionsKebabDropdown_ {...props} />
   </ModalHOC>

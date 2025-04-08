@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
@@ -10,7 +10,7 @@ import { OutlinedHddIcon } from '@patternfly/react-icons';
 
 import type { CellProps } from './CellProps';
 
-export const VSphereHostCell: React.FC<CellProps> = ({ data, fieldId, fields }: CellProps) => {
+export const VSphereHostCell: FC<CellProps> = ({ data, fieldId, fields }: CellProps) => {
   const { inventory, provider } = data;
   const value = getResourceFieldValue({ ...provider, inventory }, fieldId, fields);
   const providerURL = getResourceUrl({

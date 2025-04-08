@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useEffect, useState } from 'react';
+import { type FC, type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -38,9 +38,9 @@ type PlanCutoverMigrationModalProps = {
  * A generic delete modal component
  * @component
  * @param {DeleteModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps> = ({
+export const PlanCutoverMigrationModal: FC<PlanCutoverMigrationModalProps> = ({
   resource,
   title,
 }) => {
@@ -65,11 +65,11 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     setTime(formatDateTo12Hours(new Date(migrationCutoverDate)));
   }, [lastMigration]);
 
-  const onDateChange: (
-    event: React.FormEvent<HTMLInputElement>,
-    value: string,
-    date?: Date,
-  ) => void = (_event, value, date) => {
+  const onDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
+    _event,
+    value,
+    date,
+  ) => {
     setIsDateValid(Boolean(date));
     if (!date) return;
 
@@ -85,7 +85,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
   };
 
   const onTimeChange: (
-    event: React.FormEvent<HTMLInputElement>,
+    event: FormEvent<HTMLInputElement>,
     timeInput: string,
     hour?: number,
     minute?: number,
@@ -194,7 +194,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
   );
 };
 
-async function patchMigrationCutover(migration: V1beta1Migration, cutover: string) {
+const patchMigrationCutover = async (migration: V1beta1Migration, cutover: string) => {
   const op = migration?.spec?.cutover ? 'replace' : 'add';
 
   await k8sPatch({
@@ -208,4 +208,4 @@ async function patchMigrationCutover(migration: V1beta1Migration, cutover: strin
     model: MigrationModel,
     resource: migration,
   });
-}
+};

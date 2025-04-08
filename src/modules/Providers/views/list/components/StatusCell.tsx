@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
@@ -37,7 +37,7 @@ const phaseLabels = {
  * @param {CellProps} props - The props for the component.
  * @returns {JSX.Element} - The rendered component.
  */
-export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
+export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
   const { t } = useForkliftTranslation();
 
   const phase = getResourceFieldValue(data, 'phase', fields) as Phase;
@@ -66,7 +66,7 @@ export const StatusCell: React.FC<CellProps> = ({ data, fieldId, fields }) => {
  * @param {Object} props.fields - The fields object for the cell.
  * @returns {JSX.Element} The JSX element representing the error status cell.
  */
-const ErrorStatusCell: React.FC<CellProps & { t }> = ({ data, fields, t }) => {
+const ErrorStatusCell: FC<CellProps & { t }> = ({ data, fields, t }) => {
   const { provider } = data;
   const phase = getResourceFieldValue(data, 'phase', fields) as Phase;
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');

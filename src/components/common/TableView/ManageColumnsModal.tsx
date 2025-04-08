@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { createRef, type FormEvent, useState } from 'react';
 
 import {
   Button,
@@ -135,7 +135,7 @@ export const ManageColumnsModal = ({
 
   type onChangeFactoryType = (
     id: string,
-  ) => (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void;
+  ) => (checked: boolean, event: FormEvent<HTMLInputElement>) => void;
 
   const onChangeFactory: onChangeFactoryType = (id) => (checked) => {
     onSelect(id, checked);
@@ -174,7 +174,7 @@ export const ManageColumnsModal = ({
           <DataList aria-label={title} id="table-column-management" isCompact>
             {editedColumns.map(({ isIdentity, isVisible, label, resourceFieldId: id }) => (
               <Draggable key={id} hasNoWrapper>
-                <DataListItem aria-labelledby={`draggable-${id}`} ref={React.createRef()}>
+                <DataListItem aria-labelledby={`draggable-${id}`} ref={createRef()}>
                   <DataListItemRow>
                     <DataListControl>
                       <DataListDragButton

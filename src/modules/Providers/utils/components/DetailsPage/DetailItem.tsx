@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import type { FC, MouseEvent, ReactNode } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 
 import {
@@ -27,7 +27,7 @@ import { ensureArray } from '../../helpers/ensureArray';
  * @component
  * @param {DetailsItemProps} props - The props of the details item.
  */
-export const DetailsItem: React.FC<DetailsItemProps> = ({
+export const DetailsItem: FC<DetailsItemProps> = ({
   canEdit,
   content,
   crumbs,
@@ -70,7 +70,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
  *
  * @component
  */
-const DisplayTitle: React.FC<{
+const DisplayTitle: FC<{
   title: string;
   helpContent: ReactNode;
   showHelpIconNextToTitle: boolean;
@@ -96,7 +96,7 @@ const DisplayTitle: React.FC<{
  *
  * @component
  */
-const DescriptionTitleWithHelp: React.FC<{
+const DescriptionTitleWithHelp: FC<{
   title: string;
   helpContent: ReactNode;
   showHelpIconNextToTitle: boolean;
@@ -111,7 +111,7 @@ const DescriptionTitleWithHelp: React.FC<{
   showHelpIconNextToTitle = false,
   title,
 }) => {
-  const onClick: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -162,7 +162,7 @@ const DescriptionTitleWithHelp: React.FC<{
  *
  * @component
  */
-const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
+const DescriptionTitle: FC<{ title: string }> = ({ title }) => (
   <DescriptionListTerm> {title} </DescriptionListTerm>
 );
 
@@ -176,7 +176,7 @@ const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
  * @param {Function} onEdit - Function to be called when the button is clicked.
  */
 
-const ContentField: React.FC<{
+const ContentField: FC<{
   content: ReactNode;
   onEdit: () => void;
   canEdit?: boolean;

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
@@ -170,7 +170,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   },
 ];
 
-const ProvidersListPage: React.FC<{
+const ProvidersListPage: FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
@@ -238,7 +238,7 @@ const ModernizeMigration = () => (
   <img src={modernizeMigration} className="forklift-empty-state__icon" />
 );
 
-const EmptyState_: React.FC<EmptyStateProps> = ({ AddButton, namespace }) => {
+const EmptyState_: FC<EmptyStateProps> = ({ AddButton, namespace }) => {
   const { t } = useForkliftTranslation();
 
   return (

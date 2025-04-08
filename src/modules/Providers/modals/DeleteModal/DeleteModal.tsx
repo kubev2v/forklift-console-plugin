@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -35,9 +35,9 @@ type DeleteModalProps = {
  * A generic delete modal component
  * @component
  * @param {DeleteModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const DeleteModal: React.FC<DeleteModalProps> = ({ model, redirectTo, resource, title }) => {
+export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource, title }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();

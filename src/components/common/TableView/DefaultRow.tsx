@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Td, Tr } from '@patternfly/react-table';
 
 import { getResourceFieldValue } from '../FilterGroup/matchers';
@@ -9,7 +7,7 @@ import type { RowProps } from './types';
 /**
  * Renders the value for each field as string.
  */
-export function DefaultRow<T>({ resourceData, resourceFields }: RowProps<T>) {
+export const DefaultRow = <T,>({ resourceData, resourceFields }: RowProps<T>) => {
   return (
     <Tr>
       {resourceFields?.map(({ label, resourceFieldId }) => (
@@ -19,4 +17,4 @@ export function DefaultRow<T>({ resourceData, resourceFields }: RowProps<T>) {
       ))}
     </Tr>
   );
-}
+};

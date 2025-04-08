@@ -43,7 +43,7 @@ export const usePlanHooks = (name: string, namespace: string) => {
  * @param {V1beta1Plan} plan - The plan object containing VM specifications.
  * @returns {string} - Returns a warning string.
  */
-function validateHooks(plan: V1beta1Plan): string {
+const validateHooks = (plan: V1beta1Plan): string => {
   if (!plan?.spec?.vms) {
     return;
   }
@@ -67,4 +67,4 @@ function validateHooks(plan: V1beta1Plan): string {
   if (!sameHooks) {
     return 'the plan is configured with different hooks for different virtual machines';
   }
-}
+};

@@ -1,11 +1,11 @@
-import React from 'react';
+import type { FC } from 'react';
 import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 
 import { PlanModelGroupVersionKind } from '@kubev2v/types';
 
 import type { CellProps } from './CellProps';
 
-export const PlanCell: React.FC<CellProps> = ({ data }) => {
+export const PlanCell: FC<CellProps> = ({ data }) => {
   const plan = data?.obj?.metadata?.ownerReferences?.[0];
 
   if (!plan) {

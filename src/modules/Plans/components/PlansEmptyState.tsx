@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
@@ -16,7 +16,7 @@ import PlansAddButton from './PlansAddButton';
 const HELP_LINK_HREF =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
 
-const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
+const PlansEmptyState: FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
   const hasSufficientProviders = useHasSufficientProviders(namespace);

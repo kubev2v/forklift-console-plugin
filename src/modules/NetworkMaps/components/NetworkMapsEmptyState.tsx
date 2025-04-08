@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
@@ -17,7 +17,7 @@ const HELP_LINK_HREF =
 
 const AutomationIcon = () => <img src={automationIcon} className="forklift-empty-state__icon" />;
 
-const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
+const EmptyStatePlans: FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
   const hasSufficientProviders = useHasSufficientProviders(namespace);

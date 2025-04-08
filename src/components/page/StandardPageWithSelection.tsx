@@ -1,4 +1,4 @@
-import React, { type FC, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import { Td, Th } from '@patternfly/react-table';
 
@@ -9,14 +9,14 @@ import type { GlobalActionToolbarProps } from '../common/utils/types';
 
 import StandardPage, { type StandardPageProps } from './StandardPage';
 
-function withRowSelection<T>({
+const withRowSelection = <T,>({
   canSelect,
   CellMapper,
   isExpanded,
   isSelected,
   toggleExpandFor,
   toggleSelectFor,
-}) {
+}) => {
   const Enhanced = (props: RowProps<T>) => (
     <>
       {isExpanded && (
@@ -43,15 +43,15 @@ function withRowSelection<T>({
   );
   Enhanced.displayName = `${CellMapper.displayName || 'CellMapper'}WithSelection`;
   return Enhanced;
-}
+};
 
-function withHeaderSelection<T>({
+const withHeaderSelection = <T,>({
   canSelect,
   HeaderMapper,
   isExpanded,
   isSelected,
   toggleSelectFor,
-}) {
+}) => {
   const Enhanced = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
     const selectableItems = dataOnScreen.filter(canSelect);
     const allSelected = selectableItems.length > 0 && selectableItems.every(isSelected);
@@ -74,7 +74,7 @@ function withHeaderSelection<T>({
   };
   Enhanced.displayName = `${HeaderMapper.displayName || 'HeaderMapper'}WithSelection`;
   return Enhanced;
-}
+};
 
 type IdBasedSelectionProps<T> = {
   /**
@@ -118,14 +118,14 @@ export type GlobalActionWithSelection<T> = GlobalActionToolbarProps<T> & {
  * 1. IDs provided with toId() function are unique and constant in time
  * 2. check box status at row level does not depend from other rows and  can be calculated from the item via canSelect() function
  */
-function withIdBasedSelection<T>({
+const withIdBasedSelection = <T,>({
   canSelect,
   expandedIds: initialExpandedIds,
   onExpand,
   onSelect,
   selectedIds: initialSelectedIds,
   toId,
-}: IdBasedSelectionProps<T>) {
+}: IdBasedSelectionProps<T>) => {
   const Enhanced = (props: StandardPageProps<T>) => {
     const [selectedIds, setSelectedIds] = useState(initialSelectedIds);
     const [expandedIds, setExpandedIds] = useState(initialExpandedIds);
@@ -206,7 +206,7 @@ function withIdBasedSelection<T>({
   };
   Enhanced.displayName = 'StandardPageWithSelection';
   return Enhanced;
-}
+};
 
 /**
  * Properties for the `StandardPageWithSelection` component.
@@ -257,7 +257,7 @@ export type StandardPageWithSelectionProps<T> = {
  *   // ...other props
  * />
  */
-export function StandardPageWithSelection<T>(props: StandardPageWithSelectionProps<T>) {
+export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionProps<T>) => {
   const {
     canSelect = () => true,
     expandedIds,
@@ -286,4 +286,4 @@ export function StandardPageWithSelection<T>(props: StandardPageWithSelectionPro
   });
 
   return onSelect ? <EnhancedStandardPage {...rest} /> : <StandardPage {...rest} />;
-}
+};

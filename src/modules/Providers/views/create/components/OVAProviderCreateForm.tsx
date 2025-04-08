@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react';
+import { type FC, type FormEvent, useCallback, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import type { ActionFieldValidated } from 'src/modules/Providers/utils/validators/common';
 import { validateOvaNfsPath } from 'src/modules/Providers/utils/validators/provider/ova/validateOvaNfsPath';
@@ -12,10 +12,7 @@ type OVAProviderCreateFormProps = {
   onChange: (newValue: V1beta1Provider) => void;
 };
 
-export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
-  onChange,
-  provider,
-}) => {
+export const OVAProviderCreateForm: FC<OVAProviderCreateFormProps> = ({ onChange, provider }) => {
   const { t } = useForkliftTranslation();
 
   const url = provider?.spec?.url;
@@ -56,9 +53,7 @@ export const OVAProviderCreateForm: React.FC<OVAProviderCreateFormProps> = ({
     [provider],
   );
 
-  const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeUrl: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange(value);
   };
 

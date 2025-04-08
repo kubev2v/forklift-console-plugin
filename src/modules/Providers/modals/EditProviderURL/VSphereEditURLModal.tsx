@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
@@ -12,7 +12,7 @@ import type { ValidationHookType } from '../EditModal/types';
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
-export const VSphereEditURLModal: React.FC<EditProviderURLModalProps> = ({
+export const VSphereEditURLModal: FC<EditProviderURLModalProps> = ({
   insecureSkipVerify,
   label,
   resource: provider,

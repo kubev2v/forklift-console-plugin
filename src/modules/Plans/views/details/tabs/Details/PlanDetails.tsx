@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -14,7 +14,7 @@ import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSec
 import { SettingsSection } from '../../components/SettingsSection/SettingsSection';
 import { Suspend } from '../../components/Suspend';
 
-export const PlanDetails: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
+export const PlanDetails: FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({

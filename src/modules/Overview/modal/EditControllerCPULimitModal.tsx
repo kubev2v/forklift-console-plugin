@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -28,7 +28,7 @@ const ControllerCPULimitSelect: ModalInputComponentType = (props) => {
   return <SettingsSelectInput {...props} options={options} />;
 };
 
-export const EditControllerCPULimitModal: React.FC<EditSettingsModalProps> = (props) => {
+export const EditControllerCPULimitModal: FC<EditSettingsModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (

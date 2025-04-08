@@ -1,4 +1,4 @@
-import React from 'react';
+import type { Dispatch, FormEvent, FunctionComponent, SyntheticEvent } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { SearchInput } from '@patternfly/react-core';
@@ -7,13 +7,13 @@ import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
 
 type SearchInputProviderProps = {
   filterState: PlanCreatePageState;
-  filterDispatch: React.Dispatch<{
+  filterDispatch: Dispatch<{
     type: string;
     payload?: string | string[];
   }>;
 };
 
-const SearchInputProvider: React.FunctionComponent<SearchInputProviderProps> = ({
+const SearchInputProvider: FunctionComponent<SearchInputProviderProps> = ({
   filterDispatch,
   filterState,
 }) => {
@@ -23,14 +23,11 @@ const SearchInputProvider: React.FunctionComponent<SearchInputProviderProps> = (
     filterDispatch({ payload: value, type: 'SET_NAME_FILTER' });
   };
 
-  const onChange: (event: React.FormEvent<HTMLInputElement>, value: string) => void = (
-    _event,
-    value,
-  ) => {
+  const onChange: (event: FormEvent<HTMLInputElement>, value: string) => void = (_event, value) => {
     updateNameFilter(value);
   };
 
-  const onClear: (event: React.SyntheticEvent<HTMLButtonElement>) => void = () => {
+  const onClear: (event: SyntheticEvent<HTMLButtonElement>) => void = () => {
     updateNameFilter('');
   };
 

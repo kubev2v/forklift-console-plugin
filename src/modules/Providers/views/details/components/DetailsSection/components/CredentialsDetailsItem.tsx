@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
@@ -8,7 +8,7 @@ import { ProviderModelRef } from '@kubev2v/types';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
-export const CredentialsDetailsItem: React.FC<ProviderDetailsItemProps> = ({
+export const CredentialsDetailsItem: FC<ProviderDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource: provider,

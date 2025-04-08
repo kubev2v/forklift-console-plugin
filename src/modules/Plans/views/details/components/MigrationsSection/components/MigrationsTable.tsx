@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { getMigrationPhase } from 'src/modules/Plans/utils/helpers/getMigrationPhase';
 import { getMigrationVmsCounts } from 'src/modules/Plans/utils/helpers/getMigrationVmsCounts';
@@ -21,7 +21,7 @@ import {
 } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, showOwner }) => {
+export const MigrationsTable: FC<MigrationTableProps> = ({ migrations, showOwner }) => {
   const { t } = useForkliftTranslation();
 
   if (!migrations || migrations.length < 1) {
@@ -84,7 +84,7 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
   );
 };
 
-const VMsLabel: React.FC<{ migration: V1beta1Migration }> = ({ migration }) => {
+const VMsLabel: FC<{ migration: V1beta1Migration }> = ({ migration }) => {
   const { t } = useForkliftTranslation();
 
   const phase = getMigrationPhase(migration);

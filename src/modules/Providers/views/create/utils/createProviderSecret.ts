@@ -3,22 +3,16 @@ import { Base64 } from 'js-base64';
 import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
-type ObjectToClean = {
-  [key: string]: unknown;
-  insecureSkipVerify?: string;
-  cacert?: string;
-};
-
-const cleanObject = (obj?: ObjectToClean) => {
-  const result: Record<string, unknown> = {};
+const cleanObject = (obj: Record<string, string | null | undefined>): Record<string, string> => {
+  const result: Record<string, string> = {};
   for (const key in obj) {
-    if (obj[key] !== null && obj[key] !== '') {
+    if (obj[key] !== null && obj[key] !== undefined && obj[key] !== '') {
       result[key] = obj[key];
     }
   }
 
   // Don't save cacert when insecureSkipVerify is true
-  if (Base64.decode(obj?.insecureSkipVerify || '') === 'true') {
+  if (Base64.decode(obj?.insecureSkipVerify ?? '') === 'true') {
     delete result.cacert;
   }
 

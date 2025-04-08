@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { type FC, memo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
@@ -9,7 +9,7 @@ import { StorageMapYAMLTab } from './tabs/YAML/StorageMapYAMLTab';
 
 import './StorageMapDetailsPage.style.css';
 
-const StorageMapDetailsPageInternal: React.FC<{
+const StorageMapDetailsPageInternal: FC<{
   name: string;
   namespace: string;
 }> = ({ name, namespace }) => {
@@ -37,7 +37,7 @@ const StorageMapDetailsPageInternal: React.FC<{
 };
 const StorageMapDetailsPageInternalMemo = memo(StorageMapDetailsPageInternal);
 
-const StorageMapDetailsPage: React.FC<StorageMapDetailsPageProps> = ({ name, namespace }) => {
+const StorageMapDetailsPage: FC<StorageMapDetailsPageProps> = ({ name, namespace }) => {
   return <StorageMapDetailsPageInternalMemo name={name} namespace={namespace} />;
 };
 StorageMapDetailsPage.displayName = 'StorageMapDetailsPage';

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -12,7 +12,7 @@ import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
  * @component
  * @param {DetailsItemProps} props - The props of the details item.
  */
-export const NameDetailsItem: React.FC<ProviderDetailsItemProps> = ({
+export const NameDetailsItem: FC<ProviderDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource: provider,

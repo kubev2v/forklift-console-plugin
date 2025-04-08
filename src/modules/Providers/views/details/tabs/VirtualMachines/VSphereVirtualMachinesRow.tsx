@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
@@ -28,7 +28,7 @@ type RenderTdProps = {
   resourceFields: ResourceField[];
 };
 
-const cellRenderers: Record<string, React.FC<VMCellProps>> = {
+const cellRenderers: Record<string, FC<VMCellProps>> = {
   concerns: VMConcernsCellRenderer,
   folder: ({ data }) => <TableCell>{data?.folderName}</TableCell>,
   host: ({ data }) => <TableCell>{data?.hostName}</TableCell>,
@@ -37,7 +37,7 @@ const cellRenderers: Record<string, React.FC<VMCellProps>> = {
   powerState: PowerStateCellRenderer,
 };
 
-export const VSphereVirtualMachinesCells: React.FC<RowProps<VmData>> = ({
+export const VSphereVirtualMachinesCells: FC<RowProps<VmData>> = ({
   resourceData,
   resourceFields,
 }) => {

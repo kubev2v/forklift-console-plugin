@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -6,7 +6,7 @@ import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { NetworkDetailsItemProps } from './NetworkDetailsItemProps';
 
-export const NamespaceDetailsItem: React.FC<NetworkDetailsItemProps> = ({
+export const NamespaceDetailsItem: FC<NetworkDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource,

@@ -1,11 +1,11 @@
-export function saveToLocalStorage(key, value) {
+export const saveToLocalStorage = (key, value) => {
   window?.localStorage?.setItem(key, value);
-}
+};
 
-export function loadFromLocalStorage(key) {
+export const loadFromLocalStorage = (key) => {
   return window?.localStorage?.getItem(key);
-}
+};
 
-export function removeFromLocalStorage(key) {
+export const removeFromLocalStorage = (key) => {
   window?.localStorage?.removeItem(key);
-}
+};

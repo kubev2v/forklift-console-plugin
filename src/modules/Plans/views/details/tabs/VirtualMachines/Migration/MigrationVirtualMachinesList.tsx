@@ -1,4 +1,4 @@
-import React, { type FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
   type GlobalActionWithSelection,
@@ -215,8 +215,8 @@ export const MigrationVirtualMachinesList: FC<{ planData: PlanData }> = ({ planD
   const pvcsDict: Record<string, IoK8sApiCoreV1PersistentVolumeClaim[]> = {};
   (pvcs && pvcsLoaded && !pvcsLoadError ? pvcs : []).forEach((pvc) =>
     pvcsDict[pvc.metadata.labels.vmID]
-      ? pvcsDict[pvc.metadata.labels.vmID].push(p)
-      : (pvcsDict[pvc.metadata.labels.vmID] = [p]),
+      ? pvcsDict[pvc.metadata.labels.vmID].push(pvc)
+      : (pvcsDict[pvc.metadata.labels.vmID] = [pvc]),
   );
 
   const [dvs, dvsLoaded, dvsLoadError] = useK8sWatchResource<V1beta1DataVolume[]>({
@@ -247,7 +247,7 @@ export const MigrationVirtualMachinesList: FC<{ planData: PlanData }> = ({ planD
     plan?.status?.migration?.vms || [];
 
   const vmDict: Record<string, V1beta1PlanStatusMigrationVms> = {};
-  migrationVirtualMachines.forEach((migration) => (vmDict[migration.id] = m));
+  migrationVirtualMachines.forEach((migration) => (vmDict[migration.id] = migration));
 
   const vmData: VMData[] = virtualMachines.map((vmSpec) => ({
     dvs: dvsDict[vmSpec.id],

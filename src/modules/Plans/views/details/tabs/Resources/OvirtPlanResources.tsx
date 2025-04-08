@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -8,7 +8,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { AlignedDecimal } from './AlignedDecimal';
 
-export const OvirtPlanResources: React.FC<{ planInventory: OVirtVM[] }> = ({ planInventory }) => {
+export const OvirtPlanResources: FC<{ planInventory: OVirtVM[] }> = ({ planInventory }) => {
   const { t } = useForkliftTranslation();
 
   const planInventoryRunning = planInventory?.filter((vm) => vm.status === 'up');

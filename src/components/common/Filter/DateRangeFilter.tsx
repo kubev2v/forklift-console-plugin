@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { DateTime } from 'luxon';
 
 import {
@@ -65,7 +65,7 @@ export const DateRangeFilter = ({
   };
 
   const onFromDateChange: (
-    event: React.FormEvent<HTMLInputElement>,
+    event: FormEvent<HTMLInputElement>,
     value: string,
     date?: Date,
   ) => void = (_event, value) => {
@@ -76,11 +76,10 @@ export const DateRangeFilter = ({
     }
   };
 
-  const onToDateChange: (
-    event: React.FormEvent<HTMLInputElement>,
-    value: string,
-    date?: Date,
-  ) => void = (_event, value) => {
+  const onToDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
+    _event,
+    value,
+  ) => {
     //see DateFilter onDateChange
     if (value?.length === 10 && isValidDate(value)) {
       const newTo = parseISOtoJSDate(value);

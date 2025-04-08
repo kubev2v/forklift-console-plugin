@@ -1,11 +1,11 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { OwnerReferencesItem } from 'src/modules/Providers/utils/components/DetailsPage/OwnerReferencesItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
-export const OwnerDetailsItem: React.FC<ProviderDetailsItemProps> = ({
+export const OwnerDetailsItem: FC<ProviderDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource: provider,

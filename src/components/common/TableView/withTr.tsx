@@ -1,13 +1,13 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
 import type { RowProps } from './types';
 
-export function withTr<T>(
-  Component: React.FC<RowProps<T>>,
-  ExpandedComponent?: React.FC<RowProps<T>>,
-): React.FC<RowProps<T>> {
+export const withTr = <T,>(
+  Component: FC<RowProps<T>>,
+  ExpandedComponent?: FC<RowProps<T>>,
+): FC<RowProps<T>> => {
   const Enhanced = (props: RowProps<T>) => {
     const { isExpanded, length } = props;
 
@@ -39,4 +39,4 @@ export function withTr<T>(
   };
 
   return Enhanced;
-}
+};

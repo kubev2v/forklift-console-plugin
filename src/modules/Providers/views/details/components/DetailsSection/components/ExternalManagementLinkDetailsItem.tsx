@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { EditProviderUIModal } from 'src/modules/Providers/modals/EditProviderUI/EditProviderUIModal';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -26,9 +26,14 @@ type ExternalManagementLinkDetailsItemProps = {
  * @component
  * @param {DetailsItemProps} props - The props of the details item.
  */
-export const ExternalManagementLinkDetailsItem: React.FC<
-  ExternalManagementLinkDetailsItemProps
-> = ({ canPatch, helpContent, moreInfoLink, resource: provider, webUILink, webUILinkText }) => {
+export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetailsItemProps> = ({
+  canPatch,
+  helpContent,
+  moreInfoLink,
+  resource: provider,
+  webUILink,
+  webUILinkText,
+}) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 

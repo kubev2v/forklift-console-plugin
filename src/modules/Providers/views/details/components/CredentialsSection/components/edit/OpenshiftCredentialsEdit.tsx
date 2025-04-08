@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react';
+import { type FC, type FormEvent, type MouseEvent, useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload/CertificateUpload';
@@ -21,7 +21,7 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import type { EditComponentProps } from '../BaseCredentialsSection';
 
-export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, secret }) => {
+export const OpenshiftCredentialsEdit: FC<EditComponentProps> = ({ onChange, secret }) => {
   const { t } = useForkliftTranslation();
 
   const url = safeBase64Decode(secret?.data?.url);
@@ -97,12 +97,11 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
     [secret],
   );
 
-  // Handle password hide/reveal click
-  function togglePasswordHidden() {
+  const togglePasswordHidden = () => {
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
-  }
+  };
 
-  const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClickEventPreventDef: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -110,13 +109,11 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
     togglePasswordHidden();
   };
 
-  const onChangeToken: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeToken: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('token', value);
   };
 
-  const onChangeInsecure: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangeInsecure: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
     checked,
   ) => {
     handleChange('insecureSkipVerify', checked ? 'true' : 'false');
@@ -147,7 +144,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ onChang
             isRequired
             type={state.passwordHidden ? 'password' : 'text'}
             aria-label="Token input"
-            onChange={(e, vvalue) => {
+            onChange={(e, value) => {
               onChangeToken(value, e);
             }}
             value={token}

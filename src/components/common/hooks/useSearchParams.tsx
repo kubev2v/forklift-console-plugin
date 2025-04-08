@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 
 type MappedSearchParams = Record<string, string>;
 
@@ -22,7 +22,7 @@ export const toMap = (search: string): MappedSearchParams => {
  *          search params setter method
  */
 export const useSearchParams = (): [MappedSearchParams, SetURLSearchParams] => {
-  const [searchParams, internalSetSearchParams] = React.useState(toMap(location.search));
+  const [searchParams, internalSetSearchParams] = useState(toMap(location.search));
 
   const removeUndefinedKeys = (obj: Record<string, string>): Record<string, string> =>
     Object.fromEntries(Object.entries(obj).filter(([, value]) => value !== undefined));

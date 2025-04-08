@@ -1,4 +1,12 @@
-import React, { type FC, type ReactNode, useEffect, useMemo, useState } from 'react';
+import {
+  type FC,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -352,7 +360,7 @@ const StandardPageInner = <T,>({
     .map(toFieldFilter(sortedData));
 
   const onSetPage: (
-    event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    event: MouseEvent | KeyboardEvent,
     newPage: number,
     perPage?: number,
     startIdx?: number,
@@ -362,7 +370,7 @@ const StandardPageInner = <T,>({
   };
 
   const onPerPageSelect: (
-    event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    event: MouseEvent | KeyboardEvent,
     newPerPage: number,
     newPage: number,
     startIdx?: number,

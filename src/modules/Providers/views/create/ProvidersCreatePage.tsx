@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import { type FC, useReducer } from 'react';
 import { useHistory } from 'react-router';
 import { Base64 } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
@@ -42,7 +42,7 @@ type ProvidersCreatePageState = {
   apiError: Error | null;
 };
 
-const ProvidersCreatePage: React.FC<{
+const ProvidersCreatePage: FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
@@ -75,10 +75,10 @@ const ProvidersCreatePage: React.FC<{
     validationError: { msg: 'Missing provider name', type: 'error' },
   };
 
-  function reducer(
+  const reducer = (
     state: ProvidersCreatePageState,
     action: { type: string; payload?: string | IoK8sApiCoreV1Secret | V1beta1Provider },
-  ): ProvidersCreatePageState {
+  ): ProvidersCreatePageState => {
     switch (action.type) {
       case 'SET_NEW_SECRET': {
         const value = action.payload as V1beta1Provider;
@@ -147,7 +147,7 @@ const ProvidersCreatePage: React.FC<{
       default:
         return state;
     }
-  }
+  };
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -156,19 +156,19 @@ const ProvidersCreatePage: React.FC<{
   }
 
   // Handle user edits
-  function onNewSecretChange(newValue: IoK8sApiCoreV1Secret) {
+  const onNewSecretChange = (newValue: IoK8sApiCoreV1Secret) => {
     // update staged secret with new value
     dispatch({ payload: newValue, type: 'SET_NEW_SECRET' });
-  }
+  };
 
   // Handle user edits
-  function onNewProviderChange(newValue: V1beta1Provider) {
+  const onNewProviderChange = (newValue: V1beta1Provider) => {
     // update staged provider with new value
     dispatch({ payload: newValue, type: 'SET_NEW_PROVIDER' });
-  }
+  };
 
   // Handle user clicking "save"
-  async function onUpdate() {
+  const onUpdate = async () => {
     let secret: IoK8sApiCoreV1Secret;
     let provider: V1beta1Provider;
 
@@ -234,7 +234,7 @@ const ProvidersCreatePage: React.FC<{
     });
 
     history.push(providerURL);
-  }
+  };
 
   const providersListURL = getResourceUrl({
     namespace,

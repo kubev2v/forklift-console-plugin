@@ -1,22 +1,25 @@
+import type { V1beta1Provider } from '@kubev2v/types';
 import type { WizardStepType } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
+import type { GeneralFormFieldId } from './steps/general-information/constants';
+
 export enum PlanWizardStepId {
-  BasicSetUp = 'basic-set-up',
+  BasicSetup = 'basic-setup',
   General = 'general',
   VirtualMachines = 'virtual-machines',
   NetworkMapping = 'network-mapping',
   StorageMapping = 'storage-mapping',
   MigrationType = 'migration-type',
-  AdditionalSetUp = 'additional-set-up',
+  AdditionalSetup = 'additional-setup',
   OtherSettings = 'other-settings',
   Hooks = 'hooks',
   ReviewAndCreate = 'review-and-create',
 }
 
-export const planStepNames: Record<PlanWizardStepId, string> = {
-  [PlanWizardStepId.AdditionalSetUp]: t('Additional set up'),
-  [PlanWizardStepId.BasicSetUp]: t('Basic set up'),
+export const planStepNames: Record<PlanWizardStepId, ReturnType<typeof t>> = {
+  [PlanWizardStepId.AdditionalSetup]: t('Additional setup'),
+  [PlanWizardStepId.BasicSetup]: t('Basic setup'),
   [PlanWizardStepId.General]: t('General'),
   [PlanWizardStepId.Hooks]: t('Hooks (optional)'),
   [PlanWizardStepId.MigrationType]: t('Migration type'),
@@ -28,8 +31,8 @@ export const planStepNames: Record<PlanWizardStepId, string> = {
 };
 
 export const planStepOrder: Record<PlanWizardStepId, number> = {
-  [PlanWizardStepId.AdditionalSetUp]: 7,
-  [PlanWizardStepId.BasicSetUp]: 1,
+  [PlanWizardStepId.AdditionalSetup]: 7,
+  [PlanWizardStepId.BasicSetup]: 1,
   [PlanWizardStepId.General]: 2,
   [PlanWizardStepId.Hooks]: 9,
   [PlanWizardStepId.MigrationType]: 6,
@@ -44,5 +47,13 @@ export const firstStep: WizardStepType = {
   id: PlanWizardStepId.General,
   index: planStepOrder[PlanWizardStepId.General],
   name: PlanWizardStepId.General,
-  parentId: PlanWizardStepId.BasicSetUp,
+  parentId: PlanWizardStepId.BasicSetup,
+};
+
+export type CreatePlanFormValues = {
+  [GeneralFormFieldId.PlanName]: string;
+  [GeneralFormFieldId.PlanProject]: string;
+  [GeneralFormFieldId.SourceProvider]: V1beta1Provider | undefined;
+  [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
+  [GeneralFormFieldId.TargetProject]: string;
 };

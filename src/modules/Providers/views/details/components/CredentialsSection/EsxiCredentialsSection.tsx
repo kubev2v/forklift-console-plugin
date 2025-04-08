@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { esxiSecretValidator } from 'src/modules/Providers/utils/validators/provider/vsphere/esxiSecretValidator';
 
@@ -14,7 +14,7 @@ type EsxiCredentialsSectionProps = Omit<
   'ListComponent' | 'EditComponent' | 'validator'
 >;
 
-export const EsxiCredentialsSection: React.FC<EsxiCredentialsSectionProps> = (props) => (
+export const EsxiCredentialsSection: FC<EsxiCredentialsSectionProps> = (props) => (
   <ModalHOC>
     <BaseCredentialsSection
       {...props}

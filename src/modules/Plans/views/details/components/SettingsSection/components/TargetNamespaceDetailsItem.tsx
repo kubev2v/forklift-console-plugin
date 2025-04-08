@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
@@ -7,7 +7,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
 import { EditPlanTargetNamespace } from '../modals/EditPlanTargetNamespace/EditPlanTargetNamespace';
 
-export const TargetNamespaceDetailsItem: React.FC<PlanDetailsItemProps> = ({
+export const TargetNamespaceDetailsItem: FC<PlanDetailsItemProps> = ({
   canPatch,
   destinationProvider,
   helpContent,

@@ -1,19 +1,22 @@
-import React, { type FC, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { type FC, useState } from 'react';
+import { FormProvider } from 'react-hook-form';
 
 import { Form, Title, Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { GeneralInformationForm } from './steps/GeneralInformationForm';
+import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import { CreatePlanWizardFooter } from './CreatePlanWizardFooter';
-
-import './CreatePlanWizard.style.scss';
+import { useCreatePlanForm, useDefaultFormValues } from './hooks';
 
 export const CreatePlanWizard: FC = () => {
   const { t } = useForkliftTranslation();
-  const form = useForm({ mode: 'onChange' });
+  const defaultValues = useDefaultFormValues();
+  const form = useCreatePlanForm({
+    defaultValues,
+    mode: 'onChange',
+  });
   const [currentStep, setCurrentStep] = useState<WizardStepType>(firstStep);
   const { formState, watch } = form;
   const formValues = watch();
@@ -39,10 +42,10 @@ export const CreatePlanWizard: FC = () => {
         }}
       >
         <WizardStep
-          {...getStepProps(PlanWizardStepId.BasicSetUp)}
+          {...getStepProps(PlanWizardStepId.BasicSetup)}
           steps={[
             <WizardStep key={PlanWizardStepId.General} {...getStepProps(PlanWizardStepId.General)}>
-              <GeneralInformationForm />
+              <GeneralInformationStep />
             </WizardStep>,
             <WizardStep
               key={PlanWizardStepId.VirtualMachines}
@@ -80,7 +83,7 @@ export const CreatePlanWizard: FC = () => {
         />
 
         <WizardStep
-          {...getStepProps(PlanWizardStepId.AdditionalSetUp)}
+          {...getStepProps(PlanWizardStepId.AdditionalSetup)}
           steps={[
             <WizardStep
               key={PlanWizardStepId.OtherSettings}

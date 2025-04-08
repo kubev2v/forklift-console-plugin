@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
 import { Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
@@ -21,7 +21,7 @@ import type { RowProps, SortType, TableViewHeaderProps } from './types';
  *
  * @see useSort
  */
-export function TableView<T>({
+export const TableView = <T,>({
   activeSort,
   'aria-label': ariaLabel,
   children,
@@ -34,7 +34,7 @@ export function TableView<T>({
   toId,
   uidFieldId = UID,
   visibleColumns,
-}: TableViewProps<T>) {
+}: TableViewProps<T>) => {
   const hasChildren = children.filter(Boolean).length > 0;
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
 
@@ -68,7 +68,7 @@ export function TableView<T>({
       </Tbody>
     </Table>
   );
-}
+};
 
 type TableViewProps<T> = {
   /**
@@ -87,7 +87,7 @@ type TableViewProps<T> = {
   /**
    * Maps entities to table rows.
    */
-  Row: React.FC<RowProps<T>>;
+  Row: FC<RowProps<T>>;
   /**
    * Nodes to be displayed instead of the entities.
    * Extension point to handle empty state and related cases.
@@ -110,7 +110,7 @@ type TableViewProps<T> = {
   /**
    * Maps resourceFields to header rows.
    */
-  Header: React.FC<TableViewHeaderProps<T>>;
+  Header: FC<TableViewHeaderProps<T>>;
 
   /**
    * @returns string that can be used as an unique identifier

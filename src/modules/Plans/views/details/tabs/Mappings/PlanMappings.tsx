@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
@@ -25,10 +25,7 @@ type PlanMappingsInitSectionProps = {
   loadError: unknown;
 };
 
-export const PlanMappings: React.FC<{ name: string; namespace: string }> = ({
-  name,
-  namespace,
-}) => {
+export const PlanMappings: FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
@@ -50,7 +47,7 @@ export const PlanMappings: React.FC<{ name: string; namespace: string }> = ({
   );
 };
 
-const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) => {
+const PlanMappingsInitSection: FC<PlanMappingsInitSectionProps> = (props) => {
   const { t } = useForkliftTranslation();
   const { plan } = props;
 

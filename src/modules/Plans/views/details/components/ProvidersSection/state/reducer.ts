@@ -18,10 +18,10 @@ type ProvidersAction =
   | { type: 'SET_UPDATING'; payload: boolean }
   | { type: 'INIT'; payload: V1beta1Plan };
 
-export function providersSectionReducer(
+export const providersSectionReducer = (
   state: ProvidersSectionState,
   action: ProvidersAction,
-): ProvidersSectionState {
+): ProvidersSectionState => {
   let newState: ProvidersSectionState;
 
   switch (action.type) {
@@ -63,4 +63,4 @@ export function providersSectionReducer(
     default:
       return state;
   }
-}
+};

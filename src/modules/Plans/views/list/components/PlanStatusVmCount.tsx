@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC, useMemo } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -17,7 +17,7 @@ type PlanStatusVmCountProps = {
   tooltipLabel?: string;
 };
 
-export const PlanStatusVmCount: React.FC<PlanStatusVmCountProps> = ({
+export const PlanStatusVmCount: FC<PlanStatusVmCountProps> = ({
   count,
   linkPath,
   status,
@@ -25,7 +25,7 @@ export const PlanStatusVmCount: React.FC<PlanStatusVmCountProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const statusIcon = React.useMemo(() => {
+  const statusIcon = useMemo(() => {
     switch (status) {
       case 'success':
         return <CheckCircleIcon />;

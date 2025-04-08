@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { type FC, useState } from 'react';
 
 import {
   Button,
@@ -14,7 +14,7 @@ import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 
 import './InputList.style.css';
 
-export type InputListRow<T> = React.FC<{ value: T; onChange: (value: T) => void }>;
+type InputListRow<T> = FC<{ value: T; onChange: (value: T) => void }>;
 type InputListItem<T> = { id: string; content: T };
 
 let idCounter = 0;

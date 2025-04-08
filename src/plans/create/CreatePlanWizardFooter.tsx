@@ -1,5 +1,4 @@
-import React, { type FC, type MouseEvent } from 'react';
-import { useFormContext } from 'react-hook-form';
+import type { FC, MouseEvent } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
@@ -15,6 +14,7 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { PlanWizardStepId } from './constants';
+import { useCreatePlanFormContext } from './hooks';
 
 type CreatePlanWizardFooterProps = Partial<Pick<WizardFooterProps, 'nextButtonText' | 'onNext'>>;
 
@@ -25,19 +25,19 @@ export const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   const history = useHistory();
   const { t } = useForkliftTranslation();
   const [activeNamespace] = useActiveNamespace();
-  const { trigger } = useFormContext();
+  const { trigger } = useCreatePlanFormContext();
   const { activeStep, goToNextStep, goToPrevStep, goToStepById } = useWizardContext();
   const canSkipToReview =
     activeStep.id === PlanWizardStepId.MigrationType ||
     activeStep.id === PlanWizardStepId.OtherSettings;
 
-  const onStepSubmit = async (event) => {
+  const onStepSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
     if (onSubmit) {
       onSubmit(event);
       return;
     }
 
-    return trigger(null, { shouldFocus: true });
+    return trigger(undefined, { shouldFocus: true });
   };
 
   const onNextClick = async (event: MouseEvent<HTMLButtonElement>) => {

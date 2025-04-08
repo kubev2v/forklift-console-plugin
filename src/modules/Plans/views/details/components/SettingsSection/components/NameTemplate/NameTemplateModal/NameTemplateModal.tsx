@@ -1,4 +1,4 @@
-import React, { type FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import { getValueByJsonPath } from 'src/modules/Providers/utils/helpers/getValueByJsonPath';
 

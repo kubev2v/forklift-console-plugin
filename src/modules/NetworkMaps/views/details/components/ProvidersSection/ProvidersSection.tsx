@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import { type FC, type FormEvent, useEffect, useReducer } from 'react';
 import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -23,12 +23,12 @@ const initialState: ProvidersSectionState = {
   updating: false,
 };
 
-export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
+export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const [state, dispatch] = useReducer(providersSectionReducer, initialState);
 
   // Initialize the state with the prop obj
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch({ payload: obj, type: 'INIT' });
   }, [obj]);
 
@@ -55,18 +55,14 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({ obj }) => {
     dispatch({ payload: obj, type: 'INIT' });
   };
 
-  const onChangeSource: (value: string, event: React.FormEvent<HTMLSelectElement>) => void = (
-    value,
-  ) => {
+  const onChangeSource: (value: string, event: FormEvent<HTMLSelectElement>) => void = (value) => {
     dispatch({
       payload: providers.find((provider) => provider?.metadata?.name === value),
       type: 'SET_SOURCE_PROVIDER',
     });
   };
 
-  const onChangeTarget: (value: string, event: React.FormEvent<HTMLSelectElement>) => void = (
-    value,
-  ) => {
+  const onChangeTarget: (value: string, event: FormEvent<HTMLSelectElement>) => void = (value) => {
     dispatch({
       payload: providers.find((provider) => provider?.metadata?.name === value),
       type: 'SET_TARGET_PROVIDER',

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { NetworkMapModelRef } from '@kubev2v/types';
 import { Button } from '@patternfly/react-core';
 
-const NetworkMapsAddButton: React.FC<{ namespace: string; dataTestId?: string }> = ({
+const NetworkMapsAddButton: FC<{ namespace: string; dataTestId?: string }> = ({
   dataTestId,
   namespace,
 }) => {

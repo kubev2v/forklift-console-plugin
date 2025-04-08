@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -17,7 +17,7 @@ import type { VmData } from './VMCellProps';
 /**
  * React Component to display a table of concerns.
  */
-export const ConcernsTable: React.FC<RowProps<VmData>> = ({ resourceData }) => {
+export const ConcernsTable: FC<RowProps<VmData>> = ({ resourceData }) => {
   const { t } = useForkliftTranslation();
 
   if (!resourceData?.vm?.concerns || resourceData?.vm?.concerns?.length < 1) {

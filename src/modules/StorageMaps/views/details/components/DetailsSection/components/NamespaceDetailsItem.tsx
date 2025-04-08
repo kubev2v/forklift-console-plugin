@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -6,7 +6,7 @@ import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { StorageDetailsItemProps } from './StorageDetailsItemProps';
 
-export const NamespaceDetailsItem: React.FC<StorageDetailsItemProps> = ({
+export const NamespaceDetailsItem: FC<StorageDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource,

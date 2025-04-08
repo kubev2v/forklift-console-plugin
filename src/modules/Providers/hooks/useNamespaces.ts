@@ -5,8 +5,8 @@ import type { OpenShiftNamespace, V1beta1Provider } from '@kubev2v/types';
 import useProviderInventory from './useProviderInventory';
 
 export const useNamespaces = (
-  provider: V1beta1Provider,
-): [OpenShiftNamespace[], boolean, Error] => {
+  provider: V1beta1Provider | undefined,
+): [OpenShiftNamespace[], boolean, Error | null] => {
   const {
     error,
     inventory: namespaces,

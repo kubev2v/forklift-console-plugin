@@ -1,7 +1,18 @@
-import React from 'react';
+import {
+  type FC,
+  type FormEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+  type Ref,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   Button,
+  KeyTypes,
   MenuToggle,
   type MenuToggleElement,
   type MenuToggleProps,
@@ -15,6 +26,7 @@ import {
   TextInputGroupUtilities,
 } from '@patternfly/react-core';
 import { TimesIcon } from '@patternfly/react-icons';
+import { t, useForkliftTranslation } from '@utils/i18n';
 
 export type TypeaheadSelectOption = {
   /** Content of the select option. */
@@ -30,7 +42,7 @@ type TypeaheadSelectProps = {
   selectOptions: TypeaheadSelectOption[];
   /** Callback triggered on selection. */
   onSelect?: (
-    _event: React.MouseEvent | React.KeyboardEvent<HTMLInputElement> | undefined,
+    _event: MouseEvent | KeyboardEvent<HTMLInputElement> | undefined,
     selection: string | number,
   ) => void;
   /** Callback triggered when the select opens or closes. */
@@ -73,41 +85,43 @@ const defaultFilterFunction = (filterValue: string, options: TypeaheadSelectOpti
     String(option.content).toLowerCase().includes(filterValue.toLowerCase()),
   );
 
-export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
+export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
   allowClear,
+  children,
   createOptionMessage = defaultCreateOptionMessage,
   filterFunction = defaultFilterFunction,
   innerRef,
   isCreatable = false,
   isCreateOptionOnTop = false,
   isDisabled,
-  noOptionsAvailableMessage = 'No options are available',
+  noOptionsAvailableMessage = t('No options are available'),
   noOptionsFoundMessage = defaultNoOptionsFoundMessage,
   onClearSelection,
   onInputChange,
   onSelect,
   onToggle,
-  placeholder = 'Select an option',
+  placeholder = t('Select an option'),
   selectOptions,
   toggleProps,
   toggleWidth,
   ...props
 }: TypeaheadSelectProps) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [filterValue, setFilterValue] = React.useState<string>('');
-  const [isFiltering, setIsFiltering] = React.useState<boolean>(false);
-  const [focusedItemIndex, setFocusedItemIndex] = React.useState<number | null>(null);
-  const [activeItemId, setActiveItemId] = React.useState<string | null>(null);
-  const textInputRef = React.useRef<HTMLInputElement>();
+  const { t } = useForkliftTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const [filterValue, setFilterValue] = useState<string>('');
+  const [isFiltering, setIsFiltering] = useState<boolean>(false);
+  const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
+  const [activeItemId, setActiveItemId] = useState<string | null>(null);
+  const textInputRef = useRef<HTMLInputElement>();
 
-  const NO_RESULTS = 'no results';
+  const NO_RESULTS = t('No results');
 
-  const selected = React.useMemo(
+  const selected = useMemo(
     () => selectOptions.find((option) => option.value === props.selected || option.isSelected),
     [props.selected, selectOptions],
   );
 
-  const filteredSelections = React.useMemo(() => {
+  const filteredSelections = useMemo(() => {
     let newSelectOptions: TypeaheadSelectOption[] = selectOptions;
 
     // Filter menu items based on the text input value when one exists
@@ -172,7 +186,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
     noOptionsAvailableMessage,
   ]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isFiltering) {
       openMenu();
     }
@@ -219,7 +233,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
   };
 
   const selectOption = (
-    _event: React.MouseEvent | React.KeyboardEvent<HTMLInputElement> | undefined,
+    _event: MouseEvent | KeyboardEvent<HTMLInputElement> | undefined,
     option: TypeaheadSelectOption,
   ) => {
     if (onSelect) {
@@ -228,10 +242,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
     closeMenu();
   };
 
-  const handleSelect = (
-    _event: React.MouseEvent | undefined,
-    value: string | number | undefined,
-  ) => {
+  const handleSelect = (_event: MouseEvent | undefined, value: string | number | undefined) => {
     if (value && value !== NO_RESULTS) {
       const optionToSelect = selectOptions.find((option) => option.value === value);
       if (optionToSelect) {
@@ -242,7 +253,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
     }
   };
 
-  const onTextInputChange = (_event: React.FormEvent<HTMLInputElement>, value: string) => {
+  const onTextInputChange = (_event: FormEvent<HTMLInputElement>, value: string) => {
     setFilterValue(value || '');
     setIsFiltering(true);
     if (onInputChange) {
@@ -261,7 +272,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
       return;
     }
 
-    if (key === 'ArrowUp') {
+    if (key === KeyTypes.ArrowUp) {
       // When no index is set or at the first index, focus to the last, otherwise decrement focus index
       if (focusedItemIndex === null || focusedItemIndex === 0) {
         indexToFocus = filteredSelections.length - 1;
@@ -278,7 +289,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
       }
     }
 
-    if (key === 'ArrowDown') {
+    if (key === KeyTypes.ArrowDown) {
       // When no index is set or at the last index, focus to the first, otherwise increment focus index
       if (focusedItemIndex === null || focusedItemIndex === filteredSelections.length - 1) {
         indexToFocus = 0;
@@ -298,11 +309,11 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
     setActiveAndFocusedItem(indexToFocus);
   };
 
-  const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     const focusedItem = focusedItemIndex !== null ? filteredSelections[focusedItemIndex] : null;
 
     switch (event.key) {
-      case 'Enter':
+      case KeyTypes.Enter:
         if (
           isOpen &&
           focusedItem &&
@@ -315,8 +326,8 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
         openMenu();
 
         break;
-      case 'ArrowUp':
-      case 'ArrowDown':
+      case KeyTypes.ArrowUp:
+      case KeyTypes.ArrowDown:
         event.preventDefault();
         handleMenuArrowKeys(event.key);
         break;
@@ -352,7 +363,7 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
     }
   };
 
-  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle
       ref={toggleRef}
       variant="typeahead"
@@ -403,21 +414,23 @@ export const TypeaheadSelect: React.FC<TypeaheadSelectProps> = ({
       ref={innerRef}
       {...props}
     >
-      <SelectList>
-        {filteredSelections.map((option, index) => {
-          const { content, value, ...optionProps } = option;
-          return (
-            <SelectOption
-              key={value}
-              value={value}
-              isFocused={focusedItemIndex === index}
-              {...optionProps}
-            >
-              {content}
-            </SelectOption>
-          );
-        })}
-      </SelectList>
+      {children ?? (
+        <SelectList>
+          {filteredSelections.map((option, index) => {
+            const { content, value, ...optionProps } = option;
+            return (
+              <SelectOption
+                key={value}
+                value={value}
+                isFocused={focusedItemIndex === index}
+                {...optionProps}
+              >
+                {content}
+              </SelectOption>
+            );
+          })}
+        </SelectList>
+      )}
     </Select>
   );
 };

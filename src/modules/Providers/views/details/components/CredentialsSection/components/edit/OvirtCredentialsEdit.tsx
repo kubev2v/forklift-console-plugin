@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react';
+import { type FC, type FormEvent, type MouseEvent, useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload/CertificateUpload';
@@ -21,7 +21,7 @@ import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 
 import type { EditComponentProps } from '../BaseCredentialsSection';
 
-export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, secret }) => {
+export const OvirtCredentialsEdit: FC<EditComponentProps> = ({ onChange, secret }) => {
   const { t } = useForkliftTranslation();
 
   const url = safeBase64Decode(secret?.data?.url);
@@ -108,7 +108,7 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, s
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
   };
 
-  const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClickEventPreventDef: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -116,19 +116,15 @@ export const OvirtCredentialsEdit: React.FC<EditComponentProps> = ({ onChange, s
     togglePasswordHidden();
   };
 
-  const onChangeUser: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeUser: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('user', value);
   };
 
-  const onChangePassword: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangePassword: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('password', value);
   };
 
-  const onChangeInsecure: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangeInsecure: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
     checked,
   ) => {
     handleChange('insecureSkipVerify', checked ? 'true' : 'false');

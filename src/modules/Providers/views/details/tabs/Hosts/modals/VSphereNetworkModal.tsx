@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useReducer, useState } from 'react';
+import { type FC, type FormEvent, type ReactNode, useCallback, useReducer, useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -110,7 +110,7 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-function shouldDisableSave(state, updatedFields) {
+const shouldDisableSave = (state, updatedFields) => {
   const updatedState = { ...state, ...updatedFields };
 
   if (state.endpointType === 'esxi') {
@@ -124,14 +124,9 @@ function shouldDisableSave(state, updatedFields) {
     !validateUsername(updatedState.username) ||
     !validatePassword(updatedState.password)
   );
-}
+};
 
-// eslint-disable-next-line max-lines-per-function
-export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
-  data,
-  provider,
-  selected,
-}) => {
+export const VSphereNetworkModal: FC<VSphereNetworkModalProps> = ({ data, provider, selected }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
@@ -226,15 +221,11 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
     };
   });
 
-  const onChangUser: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangUser: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     dispatch({ payload: value, type: 'SET_USERNAME' });
   };
 
-  const onChangePassword: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangePassword: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     dispatch({ payload: value, type: 'SET_PASSWORD' });
   };
 
@@ -341,7 +332,7 @@ export const VSphereNetworkModal: React.FC<VSphereNetworkModalProps> = ({
   );
 };
 
-function getNetworkAdapterByLabel(networkAdapters: NetworkAdapters[], label: string) {
+const getNetworkAdapterByLabel = (networkAdapters: NetworkAdapters[], label: string) => {
   const selectedAdapter = networkAdapters.find((adapter) => {
     const cidr = calculateCidrNotation(adapter.ipAddress, adapter.subnetMask);
     const adapterLabel = `${adapter.name} - ${cidr}`;
@@ -349,12 +340,12 @@ function getNetworkAdapterByLabel(networkAdapters: NetworkAdapters[], label: str
   });
 
   return selectedAdapter;
-}
+};
 
-function validateUsername(username) {
+const validateUsername = (username) => {
   return validateNoSpaces(username);
-}
+};
 
-function validatePassword(password) {
+const validatePassword = (password) => {
   return validateNoSpaces(password);
-}
+};

@@ -1,4 +1,4 @@
-import type React from 'react';
+import type { ChangeEvent, MouseEvent, ReactNode } from 'react';
 
 import type { SelectOptionObject } from '@patternfly/react-core/deprecated';
 export type EnumGroup = {
@@ -32,7 +32,7 @@ export type FilterDef = {
   // override default behavior if there are no filters provided by the user
   // by default missing/empty filters result in positive match (vacuous truth)
   defaultValues?: string[];
-  helperText?: string | React.ReactNode;
+  helperText?: string | ReactNode;
   dynamicFilter?: (items: unknown[]) => Partial<FilterDef>;
   isHidden?: boolean;
   showFilterIcon?: boolean;
@@ -69,10 +69,10 @@ export type GlobalActionToolbarProps<T> = {
  * @typedef {Object} SelectEventType
  * @description Represents the possible event types that can be used for select actions.
  *
- * @property {React.MouseEvent<Element, MouseEvent>} React.MouseEvent - A React-specific mouse event.
- * @property {React.ChangeEvent<Element>} React.ChangeEvent - A React-specific change event.
+ * @property {MouseEvent<Element, MouseEvent>} MouseEvent - A React-specific mouse event.
+ * @property {ChangeEvent<Element>} ChangeEvent - A React-specific change event.
  */
-export type SelectEventType = React.MouseEvent | React.ChangeEvent;
+export type SelectEventType = MouseEvent | ChangeEvent;
 
 /**
  * @typedef {Object} SelectValueType

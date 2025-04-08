@@ -25,7 +25,7 @@ const safeParse = (str: string) => {
  * @param {Object} searchParams - The search parameters to filter and validate.
  * @returns {Object} - An object with valid filters.
  */
-function getValidFilters(fields, searchParams) {
+const getValidFilters = (fields, searchParams) => {
   const validFilters = fields
     .map(({ resourceFieldId }) => {
       const params = safeParse(searchParams[`${resourceFieldId}`]);
@@ -36,7 +36,7 @@ function getValidFilters(fields, searchParams) {
     .map(({ params, resourceFieldId }) => [resourceFieldId, params]);
 
   return Object.fromEntries(validFilters);
-}
+};
 
 /**
  * Converts filters to search parameters.
@@ -44,7 +44,7 @@ function getValidFilters(fields, searchParams) {
  * @param {Object} filters - The filters to convert.
  * @returns {Object} - The search parameters.
  */
-function convertFiltersToSearchParams(fields, filters) {
+const convertFiltersToSearchParams = (fields, filters) => {
   const searchParams = fields
     .map(({ resourceFieldId }) => ({ filters: filters[resourceFieldId], resourceFieldId }))
     .map(({ filters, resourceFieldId }) => [
@@ -53,7 +53,7 @@ function convertFiltersToSearchParams(fields, filters) {
     ]);
 
   return Object.fromEntries(searchParams);
-}
+};
 
 /**
  * Sets the state and updates the URL search parameters.
@@ -62,7 +62,12 @@ function convertFiltersToSearchParams(fields, filters) {
  * @param {Array} fields - The fields containing resourceFieldId.
  * @returns {Function} - The function to set state and update URL.
  */
-function createSetStateAndUrl(setSelectedFilters, updateSearchParams, updateUserSettings, fields) {
+const createSetStateAndUrl = (
+  setSelectedFilters,
+  updateSearchParams,
+  updateUserSettings,
+  fields,
+) => {
   const persistentFieldIds = fields
     .filter((field) => field?.isPersistent)
     .map((field) => field.resourceFieldId);
@@ -78,7 +83,7 @@ function createSetStateAndUrl(setSelectedFilters, updateSearchParams, updateUser
     setSelectedFilters(filters);
     updateSearchParams(convertFiltersToSearchParams(fields, filters));
   };
-}
+};
 
 /**
  * Init and maintain a set of filters on the search part of the URL.

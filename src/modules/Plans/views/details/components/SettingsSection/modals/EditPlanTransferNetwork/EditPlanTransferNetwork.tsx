@@ -1,4 +1,4 @@
-import React, { type FC, type Ref, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type {
@@ -62,10 +62,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
       setIsOpen((isOpen) => !isOpen);
     };
 
-    const onSelect = (
-      _event: React.MouseEvent | undefined,
-      _value: string | number | undefined,
-    ) => {
+    const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
       setIsOpen(false);
     };
 
@@ -136,7 +133,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
   return DropdownRenderer;
 };
 
-const EditPlanTransferNetwork_: React.FC<EditPlanTransferNetworkProps> = (props) => {
+const EditPlanTransferNetwork_: FC<EditPlanTransferNetworkProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -163,13 +160,13 @@ const EditPlanTransferNetwork_: React.FC<EditPlanTransferNetworkProps> = (props)
  * @param {unknown} value - The input string from which the network name is to be extracted.
  * @returns {string} The network name extracted from the input string.
  */
-function getNetworkName(value: unknown): string {
+const getNetworkName = (value: unknown): string => {
   if (!value || typeof value === 'string') {
     return 'Providers default';
   }
 
   return `${value?.namespace}/${value?.name}`;
-}
+};
 
 type EditPlanTransferNetworkProps = Modify<
   EditModalProps,
@@ -183,6 +180,6 @@ type EditPlanTransferNetworkProps = Modify<
   }
 >;
 
-export const EditPlanTransferNetwork: React.FC<EditPlanTransferNetworkProps> = (props) => {
+export const EditPlanTransferNetwork: FC<EditPlanTransferNetworkProps> = (props) => {
   return <EditPlanTransferNetwork_ {...props} />;
 };

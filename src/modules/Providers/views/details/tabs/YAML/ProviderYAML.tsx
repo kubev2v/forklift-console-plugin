@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC, Suspense } from 'react';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -14,12 +14,12 @@ type ProviderYAMLPageProps = {
   loadError?: unknown;
 };
 
-const ProviderYAMLPage: React.FC<ProviderYAMLPageProps> = ({ loaded, loadError, obj }) => {
+const ProviderYAMLPage: FC<ProviderYAMLPageProps> = ({ loaded, loadError, obj }) => {
   const { t } = useForkliftTranslation();
   const { provider } = obj;
 
   return (
-    <React.Suspense
+    <Suspense
       fallback={
         <Bullseye>
           <Loading />
@@ -29,11 +29,11 @@ const ProviderYAMLPage: React.FC<ProviderYAMLPageProps> = ({ loaded, loadError, 
       {provider && loaded && !loadError && (
         <ResourceYAMLEditor header={t('Provider YAML')} initialResource={provider} />
       )}
-    </React.Suspense>
+    </Suspense>
   );
 };
 
-const Loading: React.FC = () => (
+const Loading: FC = () => (
   <div className="co-m-loader co-an-fade-in-out" data-testid="loading-indicator-provider-yaml">
     <div className="co-m-loader-dot__one" />
     <div className="co-m-loader-dot__two" />
@@ -41,7 +41,7 @@ const Loading: React.FC = () => (
   </div>
 );
 
-export const ProviderYAMLPageWrapper: React.FC<{ name: string; namespace: string }> = ({
+export const ProviderYAMLPageWrapper: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import useMigrationCounts from 'src/modules/Overview/hooks/useMigrationCounts';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -25,11 +25,7 @@ type StatusCardProps = {
  * @param {StatusCardProps} props
  * @returns JSX.Element
  */
-const StatusCard: React.FC<StatusCardProps> = ({
-  count,
-  counterClassName,
-  status,
-}: StatusCardProps) => (
+const StatusCard: FC<StatusCardProps> = ({ count, counterClassName, status }: StatusCardProps) => (
   <FlexItem>
     <Text component={TextVariants.h1} className={counterClassName}>
       {count}
@@ -44,7 +40,7 @@ export type MigrationsCardProps = {
   loadError?: unknown;
 };
 
-export const MigrationsCard: React.FC<MigrationsCardProps> = () => {
+export const MigrationsCard: FC<MigrationsCardProps> = () => {
   const { t } = useForkliftTranslation();
   const { count, vmCount } = useMigrationCounts();
 

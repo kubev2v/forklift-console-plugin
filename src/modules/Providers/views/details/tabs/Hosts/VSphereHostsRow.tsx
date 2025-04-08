@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 
 import type { ResourceField } from '@components/common/utils/types';
@@ -12,7 +12,7 @@ import { NameCellRenderer } from './components/NameCellRenderer';
 import { NetworkCellRenderer } from './components/NetworkCellRenderer';
 import type { InventoryHostPair } from './utils/helpers/matchHostsToInventory';
 
-export const VSphereHostsCells: React.FC<RowProps<InventoryHostPair>> = ({
+export const VSphereHostsCells: FC<RowProps<InventoryHostPair>> = ({
   resourceData,
   resourceFields,
 }) => {
@@ -48,7 +48,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const cellRenderers: Record<string, React.FC<HostCellProps>> = {
+const cellRenderers: Record<string, FC<HostCellProps>> = {
   id: IDCellRenderer,
   linkSpeed: LinkSpeedCellRenderer,
   mtu: MTUCellRenderer,

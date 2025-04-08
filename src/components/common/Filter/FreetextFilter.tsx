@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { type FormEvent, type SyntheticEvent, useState } from 'react';
 
 import { InputGroup, SearchInput, ToolbarFilter } from '@patternfly/react-core';
 
@@ -26,7 +26,7 @@ export const FreetextFilter = ({
   const [inputValue, setInputValue] = useState('');
 
   const onTextInput: (
-    event: React.SyntheticEvent<HTMLButtonElement>,
+    event: SyntheticEvent<HTMLButtonElement>,
     value: string,
     attrValueMap: Record<string, string>,
   ) => void = () => {
@@ -38,14 +38,11 @@ export const FreetextFilter = ({
     setInputValue('');
   };
 
-  const onChange: (event: React.FormEvent<HTMLInputElement>, value: string) => void = (
-    _event,
-    value,
-  ) => {
+  const onChange: (event: FormEvent<HTMLInputElement>, value: string) => void = (_event, value) => {
     setInputValue(value);
   };
 
-  const onClear: (event: React.SyntheticEvent<HTMLButtonElement>) => void = () => {
+  const onClear: (event: SyntheticEvent<HTMLButtonElement>) => void = () => {
     setInputValue('');
   };
 

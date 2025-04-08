@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import { type Dispatch, type FC, useCallback, useMemo } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
@@ -41,7 +41,7 @@ type PlanCreateFormProps = {
   filterState: PlanCreatePageState;
   state: CreateVmMigrationPageState;
   projectName: string;
-  filterDispatch: React.Dispatch<{
+  filterDispatch: Dispatch<{
     type: string;
     payload?: string | string[] | VmData[];
   }>;
@@ -52,7 +52,7 @@ type PlanCreateFormProps = {
  * PlanCreateForm component is responsible for rendering the form to create a migration plan.
  * It allows users to select a source provider from a gallery of available providers.
  */
-const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
+const PlanCreateForm: FC<PlanCreateFormProps> = ({
   dispatch,
   filterDispatch,
   filterState,
@@ -62,7 +62,7 @@ const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { data, setData } = useCreateVmMigrationData();
-  const projectNameOptions = useProjectNameSelectOptions(projectName);
+  const [projectNameOptions] = useProjectNameSelectOptions(projectName);
   const providerCardItems = useMemo(
     () =>
       createProviderCardItems(

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { Dispatch, FunctionComponent } from 'react';
 
 import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 
@@ -9,14 +9,14 @@ import SelectProvider from './SelectProvider';
 
 type FiltersToolbarProvidersProps = {
   filterState: PlanCreatePageState;
-  filterDispatch: React.Dispatch<{
+  filterDispatch: Dispatch<{
     type: string;
     payload?: string | string[];
   }>;
   className?: string;
 };
 
-export const FiltersToolbarProviders: React.FunctionComponent<FiltersToolbarProvidersProps> = ({
+export const FiltersToolbarProviders: FunctionComponent<FiltersToolbarProvidersProps> = ({
   className,
   filterDispatch,
   filterState,

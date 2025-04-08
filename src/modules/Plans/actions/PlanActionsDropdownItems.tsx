@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';

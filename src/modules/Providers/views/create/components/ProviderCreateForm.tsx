@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import { type FC, type FormEvent, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -29,14 +29,14 @@ import { providerCardItems } from './providerCardItems';
 export type ProvidersCreateFormProps = {
   newProvider: V1beta1Provider;
   newSecret: IoK8sApiCoreV1Secret;
-  onNewProviderChange: (V1beta1Provider) => void;
-  onNewSecretChange: (IoK8sApiCoreV1Secret) => void;
+  onNewProviderChange: (provider: V1beta1Provider) => void;
+  onNewSecretChange: (secret: IoK8sApiCoreV1Secret) => void;
   providerNames?: string[];
   projectName?: string;
   onProjectNameChange?: (value: string) => void;
 };
 
-const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
+const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
   newProvider,
   newSecret,
   onNewProviderChange,
@@ -46,7 +46,7 @@ const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
   providerNames = [],
 }) => {
   const { t } = useForkliftTranslation();
-  const projectNameOptions = useProjectNameSelectOptions(projectName);
+  const [projectNameOptions] = useProjectNameSelectOptions(projectName);
 
   const initialState = {
     validation: {
@@ -103,7 +103,7 @@ const ProvidersCreateForm: React.FC<ProvidersCreateFormProps> = ({
     onNewProviderChange({ ...newProvider, spec: { ...newProvider?.spec, type } });
   };
 
-  const onChange: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (value) => {
+  const onChange: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleNameChange(value);
   };
 

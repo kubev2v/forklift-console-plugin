@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import StatusIcon from 'src/components/status/StatusIcon';
@@ -10,7 +10,7 @@ import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Split, SplitItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
+export const PodsTable: FC<PodsTableProps> = ({ pods, showOwner }) => {
   const { t } = useForkliftTranslation();
 
   const getPodLogsLink = (pod: IoK8sApiCoreV1Pod) =>

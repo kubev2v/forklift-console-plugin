@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
@@ -8,7 +8,7 @@ import { OVADetailsSection } from './OVADetailsSection';
 import { OvirtDetailsSection } from './OvirtDetailsSection';
 import { VSphereDetailsSection } from './VSphereDetailsSection';
 
-const DetailsSection_: React.FC<DetailsSectionProps> = (props) => {
+const DetailsSection_: FC<DetailsSectionProps> = (props) => {
   const { provider } = props.data;
 
   switch (provider?.spec?.type) {
@@ -27,7 +27,7 @@ const DetailsSection_: React.FC<DetailsSectionProps> = (props) => {
   }
 };
 
-export const DetailsSection: React.FC<DetailsSectionProps> = (props) => (
+export const DetailsSection: FC<DetailsSectionProps> = (props) => (
   <ModalHOC>
     <DetailsSection_ {...props} />
   </ModalHOC>
