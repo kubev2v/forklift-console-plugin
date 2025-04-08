@@ -203,7 +203,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
             'Pod',
           ]}
           sources={sourceNetworks.map((network) => ({
-            isMapped: isNetMapped(n?.id),
+            isMapped: isNetMapped(network?.id),
             label: network.name,
             usedBySelectedVms: false,
           }))}

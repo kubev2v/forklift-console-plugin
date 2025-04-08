@@ -132,6 +132,8 @@ export const InputList = <T,>({
   );
 };
 
+let idCounter = 0;
+
 /**
  * Get a new unique ID.
  *

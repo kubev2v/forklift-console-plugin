@@ -308,7 +308,7 @@ export const MigrationVirtualMachinesRowExtended: FC<RowProps<VMData>> = (props)
                   <Tooltip
                     content={t(
                       'Completed {{completed}} of {{total}} {{name}} tasks',
-                      getPipelineTasks(p),
+                      getPipelineTasks(pipe),
                     )}
                   >
                     <Button
@@ -318,7 +318,7 @@ export const MigrationVirtualMachinesRowExtended: FC<RowProps<VMData>> = (props)
                         showModal(<PipelineTasksModal name={pipe?.name} tasks={pipe.tasks} />);
                       }}
                     >
-                      <TaskIcon /> {t('{{completed}} / {{total}}', getPipelineTasks(p))}
+                      <TaskIcon /> {t('{{completed}} / {{total}}', getPipelineTasks(pipe))}
                     </Button>
                   </Tooltip>
                 )}
