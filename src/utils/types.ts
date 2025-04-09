@@ -1,9 +1,10 @@
-export type ProviderStatus =
-  | 'ValidationFailed'
-  | 'ConnectionFailed'
-  | 'Ready'
-  | 'Staging'
-  | 'Unknown';
+export enum ProviderStatus {
+  ValidationFailed = 'ValidationFailed',
+  ConnectionFailed = 'ConnectionFailed',
+  Ready = 'Ready',
+  Staging = 'Staging',
+  Unknown = 'Unknown',
+}
 
 export type VmFeatures = {
   numa?: boolean;

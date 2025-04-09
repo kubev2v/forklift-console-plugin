@@ -11,11 +11,7 @@ import { useCreatePlanFormContext } from '../../hooks';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 
-type PlanProjectFieldProps = {
-  onSelect: (value: string) => void;
-};
-
-export const PlanProjectField: FC<PlanProjectFieldProps> = ({ onSelect }) => {
+export const PlanProjectField: FC = () => {
   const { t } = useForkliftTranslation();
   const {
     formState: { errors },
@@ -47,7 +43,6 @@ export const PlanProjectField: FC<PlanProjectFieldProps> = ({ onSelect }) => {
               selected={field.value}
               onSelect={(_, value) => {
                 field.onChange(value);
-                onSelect(value.toString());
 
                 if (sourceProvider) {
                   setValue(GeneralFormFieldId.SourceProvider, undefined, { shouldValidate: true });

@@ -1,8 +1,9 @@
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
 import type { WizardStepType } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
 import type { GeneralFormFieldId } from './steps/general-information/constants';
+import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
 export enum PlanWizardStepId {
   BasicSetup = 'basic-setup',
@@ -56,4 +57,13 @@ export type CreatePlanFormValues = {
   [GeneralFormFieldId.SourceProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProject]: string;
+  [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine[]>;
 };
+
+export enum ProviderType {
+  Openshift = 'openshift',
+  Openstack = 'openstack',
+  Ova = 'ova',
+  Ovirt = 'ovirt',
+  Vsphere = 'vsphere',
+}
