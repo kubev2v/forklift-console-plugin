@@ -5,7 +5,8 @@ import { Form, Title, Wizard, WizardStep, type WizardStepType } from '@patternfl
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
+import { GeneralInformationStep } from './steps/general-information/GeneralInformationStep';
+import { VirtualMachinesStep } from './steps/virtual-machines/VirtualMachinesStep';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import { CreatePlanWizardFooter } from './CreatePlanWizardFooter';
 import { useCreatePlanForm, useDefaultFormValues } from './hooks';
@@ -21,9 +22,9 @@ export const CreatePlanWizard: FC = () => {
   const { formState, watch } = form;
   const formValues = watch();
 
-  const onSubmit = () => {
-    console.log('SUBMITTED: ', formValues);
-  };
+  // TODO, Normalize wizard data object and submit
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const onSubmit = () => {};
 
   const getStepProps = (id: PlanWizardStepId) => ({
     id,
@@ -37,8 +38,8 @@ export const CreatePlanWizard: FC = () => {
         isVisitRequired
         title={t('Create migration plan')}
         footer={<CreatePlanWizardFooter />}
-        onStepChange={(_event, currentStep) => {
-          setCurrentStep(currentStep);
+        onStepChange={(_event, step) => {
+          setCurrentStep(step);
         }}
       >
         <WizardStep
@@ -51,9 +52,7 @@ export const CreatePlanWizard: FC = () => {
               key={PlanWizardStepId.VirtualMachines}
               {...getStepProps(PlanWizardStepId.VirtualMachines)}
             >
-              <Form>
-                <Title headingLevel="h2">{t('Virtual machines')}</Title>
-              </Form>
+              <VirtualMachinesStep />
             </WizardStep>,
             <WizardStep
               key={PlanWizardStepId.NetworkMapping}
