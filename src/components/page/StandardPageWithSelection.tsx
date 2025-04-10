@@ -41,38 +41,20 @@ const withRowSelection = <T,>({
       <CellMapper {...props} />
     </>
   );
-  Enhanced.displayName = `${CellMapper.displayName || 'CellMapper'}WithSelection`;
+  Enhanced.displayName = `${CellMapper.displayName ?? 'CellMapper'}WithSelection`;
   return Enhanced;
 };
 
-const withHeaderSelection = <T,>({
-  canSelect,
-  HeaderMapper,
-  isExpanded,
-  isSelected,
-  toggleSelectFor,
-}) => {
+const withHeaderSelection = <T,>({ HeaderMapper, isExpanded }) => {
   const Enhanced = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
-    const selectableItems = dataOnScreen.filter(canSelect);
-    const allSelected = selectableItems.length > 0 && selectableItems.every(isSelected);
-
     return (
       <>
         {isExpanded && <Th />}
-        {isSelected && (
-          <Th
-            select={{
-              isHeaderSelectDisabled: !selectableItems?.length, // Disable if no selectable items
-              isSelected: allSelected,
-              onSelect: () => toggleSelectFor(selectableItems),
-            }}
-          />
-        )}
         <HeaderMapper {...{ ...other, dataOnScreen }} />
       </>
     );
   };
-  Enhanced.displayName = `${HeaderMapper.displayName || 'HeaderMapper'}WithSelection`;
+  Enhanced.displayName = `${HeaderMapper.displayName ?? 'HeaderMapper'}WithSelection`;
   return Enhanced;
 };
 
@@ -139,7 +121,7 @@ const withIdBasedSelection = <T,>({
       const ids = items.map(toId);
       const allSelected = ids.every((id) => selectedIds?.includes(id));
       const newSelectedIds = [
-        ...(selectedIds || []).filter((it) => !ids.includes(it)),
+        ...(selectedIds ?? []).filter((it) => !ids.includes(it)),
         ...(allSelected ? [] : ids),
       ];
 
@@ -154,7 +136,7 @@ const withIdBasedSelection = <T,>({
       const ids = items.map(toId);
       const allExpanded = ids.every((id) => expandedIds?.includes(id));
       const newExpandedIds = [
-        ...(expandedIds || []).filter((it) => !ids.includes(it)),
+        ...(expandedIds ?? []).filter((it) => !ids.includes(it)),
         ...(allExpanded ? [] : ids),
       ];
 
@@ -179,11 +161,8 @@ const withIdBasedSelection = <T,>({
     );
 
     const HeaderMapper = withHeaderSelection({
-      canSelect,
       HeaderMapper: props.HeaderMapper ?? DefaultHeader,
       isExpanded,
-      isSelected,
-      toggleSelectFor,
     });
 
     return (
@@ -191,13 +170,14 @@ const withIdBasedSelection = <T,>({
         {...rest}
         expandedIds={expandedIds}
         selectedIds={selectedIds}
+        onSelect={setSelectedIds}
         toId={toId}
         RowMapper={RowMapper}
         HeaderMapper={HeaderMapper}
         GlobalActionToolbarItems={props.GlobalActionToolbarItems?.map(
           (Action: FC<GlobalActionWithSelection<T>>) => {
             const ActionWithSelection = (props) => <Action {...{ ...props, selectedIds }} />;
-            ActionWithSelection.displayName = `${Action.displayName || 'Action'}WithSelection`;
+            ActionWithSelection.displayName = `${Action.displayName ?? 'Action'}WithSelection`;
             return ActionWithSelection;
           },
         )}

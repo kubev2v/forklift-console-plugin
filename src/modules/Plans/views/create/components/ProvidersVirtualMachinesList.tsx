@@ -14,17 +14,7 @@ export const ProviderVirtualMachinesList: FC<{
   initialSelectedIds?: string[];
   showActions: boolean;
   className?: string;
-  selectedCountLabel?: (selectedIdCount: number) => string;
-}> = ({
-  className,
-  initialSelectedIds,
-  name,
-  namespace,
-  onSelect,
-  selectedCountLabel,
-  showActions,
-  title,
-}) => {
+}> = ({ title, name, namespace, onSelect, initialSelectedIds, showActions, className }) => {
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     name,
@@ -45,7 +35,6 @@ export const ProviderVirtualMachinesList: FC<{
       initialSelectedIds={initialSelectedIds}
       showActions={showActions}
       className={className}
-      selectedCountLabel={selectedCountLabel}
     />
   );
 };
