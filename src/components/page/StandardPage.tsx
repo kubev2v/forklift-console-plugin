@@ -1,7 +1,7 @@
 import {
   type FC,
-  type KeyboardEvent,
-  type MouseEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
   type ReactNode,
   useEffect,
   useMemo,
@@ -9,11 +9,13 @@ import {
 } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import TableBulkSelect from '@components/TableBulkSelect';
 import {
   Level,
   LevelItem,
   PageSection,
   Pagination,
+  Split,
   Title,
   Toolbar,
   ToolbarContent,
@@ -57,6 +59,7 @@ import {
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
 import './StandardPage.style.css';
+import { isEmpty } from '@utils/helpers';
 
 /**
  * Reduce two list of filters to one list.
@@ -234,11 +237,6 @@ export type StandardPageProps<T> = {
    * Expanded ids
    */
   expandedIds?: string[];
-
-  /**
-   * Label to show count of selected items
-   */
-  selectedCountLabel?: (selectedIdCount: number) => string;
 };
 
 /**
@@ -294,16 +292,16 @@ const StandardPageInner = <T,>({
   page: initialPage,
   pagination = DEFAULT_PER_PAGE,
   RowMapper = DefaultRow<T>,
-  selectedCountLabel,
   selectedIds,
   setActiveSort,
   title,
   toId,
   userSettings,
+  onSelect,
 }: StandardPageProps<T> & TableSortContextProps) => {
   const { t } = useForkliftTranslation();
-  const [sortedData, setSortedData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+  const [sortedData, setSortedData] = useState<T[]>([]);
+  const [filteredData, setFilteredData] = useState<T[]>([]);
   const [page, setPage] = useState(initialPage);
 
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
@@ -334,7 +332,7 @@ const StandardPageInner = <T,>({
         sortedData.filter(createMetaMatcher(selectedFilters, fields, supportedMatchers)),
       );
     }
-  }, [sortedData, selectedFilters, fields]);
+  }, [sortedData, selectedFilters, fields, supportedMatchers]);
 
   const showPagination =
     pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination);
@@ -360,7 +358,7 @@ const StandardPageInner = <T,>({
     .map(toFieldFilter(sortedData));
 
   const onSetPage: (
-    event: MouseEvent | KeyboardEvent,
+    event: MouseEvent | ReactMouseEvent | ReactKeyboardEvent,
     newPage: number,
     perPage?: number,
     startIdx?: number,
@@ -370,14 +368,14 @@ const StandardPageInner = <T,>({
   };
 
   const onPerPageSelect: (
-    event: MouseEvent | KeyboardEvent,
+    event: MouseEvent | ReactMouseEvent | ReactKeyboardEvent,
     newPerPage: number,
     newPage: number,
     startIdx?: number,
     endIdx?: number,
-  ) => void = (_event, perPage, page) => {
+  ) => void = (_event, perPage, newPage) => {
     setPerPage(perPage);
-    setPage(page);
+    setPage(newPage);
   };
 
   return (
@@ -396,49 +394,54 @@ const StandardPageInner = <T,>({
       <PageSection variant="light">
         <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
           <ToolbarContent>
-            <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
-              {primaryFilters.length > 0 && (
-                <FilterGroup
-                  fieldFilters={primaryFilters}
-                  onFilterUpdate={setSelectedFilters}
-                  selectedFilters={selectedFilters}
-                  supportedFilterTypes={supportedFilters}
+            <Split hasGutter>
+              {selectedIds && onSelect && (
+                <TableBulkSelect
+                  selectedIds={selectedIds}
+                  dataIds={filteredData?.map((data) => toId?.(data) ?? '')}
+                  pageDataIds={pageData?.map((data) => toId?.(data) ?? '')}
+                  onSelect={onSelect}
                 />
               )}
-              <AttributeValueFilter
-                fieldFilters={fields
-                  .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
-                  .map(toFieldFilter(flatData))}
-                onFilterUpdate={setSelectedFilters}
-                selectedFilters={selectedFilters}
-                supportedFilterTypes={supportedFilters}
-              />
-              {Boolean(fields.find((field) => field.filter?.standalone)) && (
-                <FilterGroup
+
+              <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
+                {primaryFilters.length > 0 && (
+                  <FilterGroup
+                    fieldFilters={primaryFilters}
+                    onFilterUpdate={setSelectedFilters}
+                    selectedFilters={selectedFilters}
+                    supportedFilterTypes={supportedFilters}
+                  />
+                )}
+                <AttributeValueFilter
                   fieldFilters={fields
-                    .filter((field) => field.filter?.standalone)
+                    .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
                     .map(toFieldFilter(flatData))}
                   onFilterUpdate={setSelectedFilters}
                   selectedFilters={selectedFilters}
                   supportedFilterTypes={supportedFilters}
                 />
-              )}
-              <ManageColumnsToolbar
-                resourceFields={fields}
-                defaultColumns={fieldsMetadata}
-                setColumns={setFields}
-              />
-              {GlobalActionToolbarItems?.length > 0 &&
-                GlobalActionToolbarItems.map((Action, index) => (
-                  <Action key={index} dataOnScreen={showPagination ? pageData : filteredData} />
-                ))}
-            </ToolbarToggleGroup>
-
-            {selectedCountLabel && (
-              <ToolbarItem className="forklift-page__toolbar-item__selected-count">
-                {selectedCountLabel(selectedIds.length ?? 0)}
-              </ToolbarItem>
-            )}
+                {Boolean(fields.find((field) => field.filter?.standalone)) && (
+                  <FilterGroup
+                    fieldFilters={fields
+                      .filter((field) => field.filter?.standalone)
+                      .map(toFieldFilter(flatData))}
+                    onFilterUpdate={setSelectedFilters}
+                    selectedFilters={selectedFilters}
+                    supportedFilterTypes={supportedFilters}
+                  />
+                )}
+                <ManageColumnsToolbar
+                  resourceFields={fields}
+                  defaultColumns={fieldsMetadata}
+                  setColumns={setFields}
+                />
+                {!isEmpty(GlobalActionToolbarItems) &&
+                  GlobalActionToolbarItems.map((Action, index) => (
+                    <Action key={index} dataOnScreen={showPagination ? pageData : filteredData} />
+                  ))}
+              </ToolbarToggleGroup>
+            </Split>
 
             {showPagination && (
               <ToolbarItem variant="pagination">
@@ -467,7 +470,9 @@ const StandardPageInner = <T,>({
           expandedIds={expandedIds}
         >
           {!loaded && !error && <Loading key="loading" title={t('Loading')} />}
-          {errorFetchingData && <ErrorState key="error" title={t('Unable to retrieve data')} />}
+          {Boolean(errorFetchingData) && (
+            <ErrorState key="error" title={t('Unable to retrieve data')} />
+          )}
           {noResults &&
             (customNoResultsFound ?? (
               <NoResultsFound key="no_result" title={t('No results found')} />

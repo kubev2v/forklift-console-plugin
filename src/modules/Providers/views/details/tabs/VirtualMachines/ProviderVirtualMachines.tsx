@@ -24,7 +24,6 @@ export type ProviderVirtualMachinesProps = {
   initialSelectedIds?: string[];
   showActions: boolean;
   className?: string;
-  selectedCountLabel?: (selectedIdCount: number) => string;
 };
 
 export const ProviderVirtualMachines: FC<{ name: string; namespace: string }> = ({
