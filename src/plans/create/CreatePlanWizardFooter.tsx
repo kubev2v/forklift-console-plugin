@@ -75,7 +75,7 @@ export const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
         {t('Back')}
       </Button>
       <Button variant={ButtonVariant.primary} onClick={onNextClick}>
-        {nextButtonText || t('Next')}
+        {nextButtonText ?? t('Next')}
       </Button>
       {canSkipToReview && (
         <Button variant={ButtonVariant.tertiary} onClick={onSkipToReviewClick}>

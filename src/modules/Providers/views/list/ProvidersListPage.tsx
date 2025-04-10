@@ -134,28 +134,24 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     isVisible: false,
     jsonPath: (obj: ProviderData) => {
-      let storageCount: number;
       const { inventory } = obj;
-
-      switch (inventory?.type) {
-        case 'ova':
-          storageCount = (inventory as OvaProvider).storageCount;
-          break;
-        case 'openshift':
-          storageCount = (inventory as OpenshiftProvider).storageClassCount;
-          break;
-        case 'vsphere':
-          storageCount = (inventory as VSphereProvider).datastoreCount;
-          break;
-        case 'openstack':
-          storageCount = (inventory as OpenstackProvider).volumeTypeCount;
-          break;
-        case 'ovirt':
-          storageCount = (inventory as OVirtProvider).storageDomainCount;
-          break;
+      if (!inventory) {
+        return undefined;
       }
-
-      return storageCount;
+      switch (inventory.type) {
+        case 'ova':
+          return (inventory as OvaProvider).storageCount;
+        case 'openshift':
+          return (inventory as OpenshiftProvider).storageClassCount;
+        case 'vsphere':
+          return (inventory as VSphereProvider).datastoreCount;
+        case 'openstack':
+          return (inventory as OpenstackProvider).volumeTypeCount;
+        case 'ovirt':
+          return (inventory as OVirtProvider).storageDomainCount;
+        default:
+          return undefined;
+      }
     },
     label: t('Storage'),
     resourceFieldId: 'storageCount',

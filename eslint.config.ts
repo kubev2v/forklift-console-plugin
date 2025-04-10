@@ -1,3 +1,5 @@
+/* eslint-disable @cspell/spellchecker */
+
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -152,6 +154,7 @@ export default [
         },
       ],
       'no-ternary': 'off',
+      'no-undef-init': 'off',
       'no-undefined': 'off',
       'no-unused-vars': 'off',
       'no-warning-comments': 'off',

@@ -7,7 +7,7 @@ import type { CellProps } from './CellProps';
 
 export const ProviderLinkCell: FC<CellProps> = ({ data, fieldId }) => {
   const provider = data.obj?.spec?.provider?.[fieldId];
-  const { name, namespace } = provider || {};
+  const { name, namespace } = provider ?? {};
 
   if (!provider) {
     return <>-</>;

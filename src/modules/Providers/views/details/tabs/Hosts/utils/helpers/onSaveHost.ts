@@ -20,8 +20,8 @@ type OnSaveHostParams = {
   provider: V1beta1Provider;
   hostPairs: InventoryHostPair[];
   network: NetworkAdapters;
-  user: string;
-  password: string;
+  user?: string;
+  password?: string;
 };
 
 /**

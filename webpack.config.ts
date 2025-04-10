@@ -123,12 +123,12 @@ if (process.env.NODE_ENV === 'production') {
   config.mode = 'production';
 
   // Ensure `output` is initialized if undefined
-  config.output = config.output || {};
+  config.output ??= {};
   config.output.filename = '[name]-bundle-[hash].min.js';
   config.output.chunkFilename = '[name]-chunk-[chunkhash].min.js';
 
   // Ensure `optimization` is initialized if undefined
-  config.optimization = config.optimization || {};
+  config.optimization ??= {};
   config.optimization.chunkIds = 'deterministic';
   config.optimization.minimize = true;
 }
