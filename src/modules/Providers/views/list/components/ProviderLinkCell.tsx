@@ -16,7 +16,7 @@ export const ProviderLinkCell: FC<CellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
   const { provider } = data;
-  const { name, namespace } = provider?.metadata || {};
+  const { name, namespace } = provider?.metadata ?? {};
   const localCluster = isProviderLocalOpenshift(provider);
 
   return (

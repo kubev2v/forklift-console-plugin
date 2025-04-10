@@ -212,7 +212,7 @@ export const PlansCreateForm = ({
                   .filter(getIsTarget)
                   .map((provider, index) => (
                     <FormSelectOption
-                      key={provider?.metadata?.name || index}
+                      key={provider?.metadata?.name ?? index}
                       value={provider?.metadata?.name}
                       label={provider?.metadata?.name ?? provider?.metadata?.uid ?? String(index)}
                     />

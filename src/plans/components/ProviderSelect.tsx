@@ -49,7 +49,7 @@ export const ProviderSelect: FC<ProviderSelectProps> = ({
   return (
     <Select id={id} value={value} status={status} onSelect={onSelect} placeholder={placeholder}>
       {isEmpty(providers)
-        ? emptyState || (
+        ? (emptyState ?? (
             <EmptyState variant={EmptyStateVariant.xs}>
               <ForkliftTrans>
                 There are no providers in project <strong>{namespace}</strong>. Create one from the{' '}
@@ -58,7 +58,7 @@ export const ProviderSelect: FC<ProviderSelectProps> = ({
                 </ExternalLink>
               </ForkliftTrans>
             </EmptyState>
-          )
+          ))
         : providers.map((provider) => (
             <SelectOption key={provider.metadata?.name} value={provider}>
               {provider.metadata?.name}

@@ -67,7 +67,7 @@ export const GeneralInformationStep: FC = () => {
                   placeholder={t('Select source provider')}
                   id={GeneralFormFieldId.SourceProvider}
                   namespace={providerNamespace}
-                  value={field.value?.metadata?.name || ''}
+                  value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
                   }}
@@ -88,7 +88,7 @@ export const GeneralInformationStep: FC = () => {
                   placeholder={t('Select target provider')}
                   id={GeneralFormFieldId.TargetProvider}
                   namespace={providerNamespace}
-                  value={field.value?.metadata?.name || ''}
+                  value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
 

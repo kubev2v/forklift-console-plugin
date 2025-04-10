@@ -97,7 +97,6 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       ),
       placeholderLabel: 'YYYY-MM-DD',
       type: 'dateRange',
-      standalone: true,
     },
     isVisible: true,
     jsonPath: '$.statusVM.started',

@@ -19,7 +19,7 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
 }) => {
   const ProviderOption = (provider, index) => (
     <FormSelectOption
-      key={provider?.metadata?.name || index}
+      key={provider?.metadata?.name ?? index}
       value={provider?.metadata?.name}
       label={provider?.metadata?.name}
     />

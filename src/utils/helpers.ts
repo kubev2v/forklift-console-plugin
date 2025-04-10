@@ -1,10 +1,10 @@
 import type { OpenApiJsonPath } from 'src/modules/Providers/modals/EditModal/types';
 
-export const safeBoolean = (value): boolean => {
+export const safeBoolean = (value: unknown): boolean => {
   if (typeof value === 'boolean') return value;
   if (value === 'true') return true;
   if (value === 'false') return false;
-  return value;
+  return Boolean(value);
 };
 
 // Normalize jsonPath to always be an array of strings

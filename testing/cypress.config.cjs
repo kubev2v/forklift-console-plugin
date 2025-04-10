@@ -5,7 +5,7 @@ import { defineConfig } from 'cypress';
 export default defineConfig({
   defaultCommandTimeout: 90_000,
   e2e: {
-    baseUrl: process.env.BRIDGE_BASE_ADDRESS || process.env.BASE_ADDRESS,
+    baseUrl: process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS,
   },
   screenshotOnRunFailure: true,
   screenshotsFolder: '/tmp/gui-test-screenshots/screenshots/',

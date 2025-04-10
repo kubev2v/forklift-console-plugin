@@ -1,4 +1,4 @@
-import type { NetworkAdapters, V1beta1Host, V1beta1Provider, VSphereHost } from '@kubev2v/types';
+import type { NetworkAdapters, V1beta1Host, V1beta1Provider, VSphereHost, VSphereHostInventory } from '@kubev2v/types';
 
 /**
  * Type to represent a pair of ProviderHost, V1beta1Host and NetworkAdapters.
@@ -16,7 +16,7 @@ export type InventoryHostPair = {
  * @returns An array of InventoryHostPair objects where each object is a pair of ProviderHost, matching V1beta1Host and NetworkAdapters.
  */
 export const matchHostsToInventory = (
-  inventories: VSphereHost[],
+  inventories: VSphereHostInventory[],
   hosts: V1beta1Host[],
   provider: V1beta1Provider,
 ): InventoryHostPair[] => {
@@ -40,10 +40,10 @@ export const matchHostsToInventory = (
   // Now iterate through the inventories and try to find a matching host and network adapter for each
   return inventories.map((inventory) => {
     const host = hostMap.get(inventory.id);
-    let networkAdapter: NetworkAdapters | undefined;
+    let networkAdapter: NetworkAdapters | undefined = undefined;
     if (host?.spec?.ipAddress && inventory.networkAdapters) {
       networkAdapter = inventory.networkAdapters.find(
-        (adapter) => adapter.ipAddress === host.spec.ipAddress,
+        (adapter) => adapter.ipAddress === host.spec?.ipAddress,
       );
     }
     return { host, inventory, networkAdapter };
