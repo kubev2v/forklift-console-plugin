@@ -22,13 +22,13 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
   });
 
   const onClick = () => {
-    showModal(<DeleteModal resource={networkMap} model={NetworkMapModel} />);
+    showModal(<DeleteModal resource={networkMap!} model={NetworkMapModel} />);
   };
 
   return [
     <DropdownItemLink
       value={0}
-      key="EditNetworkMapping"
+      itemKey="EditNetworkMapping"
       href={networkMapURL}
       description={t('Edit NetworkMap')}
     />,
