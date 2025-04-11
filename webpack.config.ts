@@ -16,6 +16,7 @@ import extensions from './plugin-extensions';
 import pluginMetadata from './plugin-metadata';
 
 const CopyPlugin = require('copy-webpack-plugin');
+
 type Configuration = {
   devServer?: WebpackDevServerConfiguration;
 } & WebpackConfiguration;
@@ -47,7 +48,7 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /__tests__/, /__mocks__/],
         test: /\.(jsx?|tsx?)$/,
         use: [
           {
@@ -123,13 +124,14 @@ if (process.env.NODE_ENV === 'production') {
   config.mode = 'production';
 
   // Ensure `output` is initialized if undefined
-  config.output = config.output || {};
+  config.output = config.output ?? {};
   config.output.filename = '[name]-bundle-[hash].min.js';
   config.output.chunkFilename = '[name]-chunk-[chunkhash].min.js';
 
   // Ensure `optimization` is initialized if undefined
-  config.optimization = config.optimization || {};
+  config.optimization = config.optimization ?? {};
   config.optimization.chunkIds = 'deterministic';
   config.optimization.minimize = true;
 }
+
 export default config;

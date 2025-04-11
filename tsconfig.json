@@ -35,7 +35,8 @@
       "src/*": ["./src/*"]
     }
   },
-  "include": ["./src/**/*", "*.js", "*.ts", "./testing/cypress.config.cjs", ".prettierrc.mjs"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js"],
+  "exclude": ["node_modules", "dist", "locales", "testing", "docs", "ci"],
   "ts-node": {
     "files": true,
     "compilerOptions": {
