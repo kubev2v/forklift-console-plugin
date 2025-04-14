@@ -1,22 +1,25 @@
-import type { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren, ReactNode } from 'react';
 
-import { Flex, Title } from '@patternfly/react-core';
+import { Flex, FlexItem, Title } from '@patternfly/react-core';
 
 import './WizardStepContainer.style.scss';
 
 type WizardStepContainerProps = PropsWithChildren & {
-  title: string;
+  title: ReactNode;
+  description?: ReactNode;
   isFullWidth?: boolean;
 };
 
 export const WizardStepContainer: FC<WizardStepContainerProps> = ({
   children,
+  description,
   isFullWidth,
   title,
 }) => (
   <Flex className={`wizard-step-container${isFullWidth ? '' : '--form'}`}>
     <Title headingLevel="h2">{title}</Title>
-    {children}
+    {description && <FlexItem>{description}</FlexItem>}
+    <FlexItem>{children}</FlexItem>
   </Flex>
 );
 
