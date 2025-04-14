@@ -1,9 +1,34 @@
-const randomProvider = Math.floor(Math.random() * 100); // Generate random integer
+const randomProvider = Math.floor(Math.random() * 100); // includes 0 to 300
 
 describe('Creating a new provider', () => {
-  before(() => {
-    // cy.session('kubeadmin-session', () => {
-    cy.login();
+  beforeEach(() => {
+    cy.session('kubeadmin-session', () => {
+      cy.login();
+    });
+  });
+
+  after(() => {
+    cy.visit('/');
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('tour')) {
+        // pop windows skip tour
+        cy.get('#tour-step-footer-secondary').check();
+      }
+    });
+    cy.wait(10000);
+    cy.findByTestId('migration-nav-item').should('exist').click();
+    cy.findByTestId('providers-nav-item').should('exist').click();
+
+    cy.contains('a', `${randomProvider}`) // Find the <a> with the provider name
+      .closest('tr') // Go to the parent <tr>
+      .within(() => {
+        // Click the toggle button
+        cy.get('button.pf-v5-c-menu-toggle').click();
+
+        // Now click the "Delete Provider" menu item
+        cy.contains('span.pf-v5-c-menu__item-text', 'Delete Provider').click();
+      });
+    cy.get('.pf-m-danger').should('have.text', 'Delete').click();
   });
 
   it('navigate to providers', () => {
@@ -52,5 +77,30 @@ describe('Creating a new provider', () => {
     cy.get('.pf-v5-c-button.pf-m-primary.pf-m-progress')
       .should('have.text', 'Create provider')
       .click();
+    cy.wait(10000);
   });
+
+  // it('clean the new provider', () => {
+  //   cy.visit('/');
+  //   cy.get('body').then(($body) => {
+  //     if ($body.text().includes('tour')) {
+  //       // pop windows skip tour
+  //       cy.get('#tour-step-footer-secondary').check();
+  //     }
+  //   });
+  //   cy.wait(10000);
+  //   cy.findByTestId('migration-nav-item').should('exist').click();
+  //   cy.findByTestId('providers-nav-item').should('exist').click();
+
+  //   cy.contains('a', `${randomProvider}`) // Find the <a> with the provider name
+  //     .closest('tr') // Go to the parent <tr>
+  //     .within(() => {
+  //       // Click the toggle button
+  //       cy.get('button.pf-v5-c-menu-toggle').click();
+
+  //       // Now click the "Delete Provider" menu item
+  //       cy.contains('span.pf-v5-c-menu__item-text', 'Delete Provider').click();
+  //     });
+  //   cy.get('.pf-m-danger').should('have.text', 'Delete').click();
+  // });
 });
