@@ -138,7 +138,7 @@ export const PlanVirtualMachinesList: FC<{
  * @returns {{ id: string; name: string }} An object containing the extracted ID and name.
  */
 const extractIdAndNameFromConditionItem = (input: string): { id: string; name: string } => {
-  const idMatch = /id:([^ ]+)/.exec(input);
+  const idMatch = /id:<id>([^ ]+)/.exec(input);
   const nameMatch = /name:'([^']+)'/.exec(input);
 
   if (!idMatch || !nameMatch) {
@@ -146,7 +146,7 @@ const extractIdAndNameFromConditionItem = (input: string): { id: string; name: s
   }
 
   return {
-    id: idMatch[1],
+    id: idMatch.groups?.id ?? '',
     name: nameMatch[1],
   };
 };
