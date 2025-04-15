@@ -7,9 +7,6 @@ export default defineConfig({
   e2e: {
     baseUrl: process.env.BRIDGE_BASE_ADDRESS || process.env.BASE_ADDRESS,
     injectDocumentDomain: true,
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
-    },
   },
   screenshotOnRunFailure: true,
   screenshotsFolder: "/tmp/gui-test-screenshots/screenshots/",

@@ -80,27 +80,4 @@ describe('Creating a new provider', () => {
     cy.wait(10000);
   });
 
-  // it('clean the new provider', () => {
-  //   cy.visit('/');
-  //   cy.get('body').then(($body) => {
-  //     if ($body.text().includes('tour')) {
-  //       // pop windows skip tour
-  //       cy.get('#tour-step-footer-secondary').check();
-  //     }
-  //   });
-  //   cy.wait(10000);
-  //   cy.findByTestId('migration-nav-item').should('exist').click();
-  //   cy.findByTestId('providers-nav-item').should('exist').click();
-
-  //   cy.contains('a', `${randomProvider}`) // Find the <a> with the provider name
-  //     .closest('tr') // Go to the parent <tr>
-  //     .within(() => {
-  //       // Click the toggle button
-  //       cy.get('button.pf-v5-c-menu-toggle').click();
-
-  //       // Now click the "Delete Provider" menu item
-  //       cy.contains('span.pf-v5-c-menu__item-text', 'Delete Provider').click();
-  //     });
-  //   cy.get('.pf-m-danger').should('have.text', 'Delete').click();
-  // });
 });

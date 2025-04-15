@@ -36,7 +36,7 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js"],
-  "exclude": ["node_modules", "dist", "locales", "testing", "docs", "ci"],
+  "exclude": ["node_modules", "dist", "locales", "docs", "ci"],
   "ts-node": {
     "files": true,
     "compilerOptions": {
