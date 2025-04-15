@@ -1,7 +1,7 @@
 import { type FC, useCallback } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { WizardStepContainer } from '@components/common/WizardStepContainer';
+import WizardStepContainer from '@components/common/WizardStepContainer';
 import type { ProviderVirtualMachine } from '@kubev2v/types';
 import { Alert, AlertVariant, Stack } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
