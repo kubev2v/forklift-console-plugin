@@ -40,7 +40,7 @@ const BASE64_LINE = '([A-Za-z0-9+\\/=]{1,1256}\\r?\\n)';
 const LAST_BASE64_LINE = '([A-Za-z0-9+\\/=]{1,1256}\\r?\\n)?';
 const BASE64_CONTENT = `(${BASE64_LINE}*${LAST_BASE64_LINE})`;
 
-const EMPTY_LINES = '((\\#[^\\r\\n]*)?\\s*\\r?\\n)*';
+const EMPTY_LINES = '((#[^\\r\\n]*)?\\s*\\r?\\n)*';
 
 const CERTIFICATE_REGEX = new RegExp(
   `^(${EMPTY_LINES}${CERTIFICATE_HEADER}\\r?\\n${BASE64_CONTENT}${CERTIFICATE_FOOTER}${EMPTY_LINES})+$`,
