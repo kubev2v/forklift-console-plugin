@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import Suspend from '@components/Suspend';
 import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';

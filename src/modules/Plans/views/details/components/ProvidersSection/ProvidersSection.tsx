@@ -1,8 +1,8 @@
 import { type FC, useEffect, useReducer } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import Suspend from '@components/Suspend';
 import {
   ProviderModelGroupVersionKind,
   type V1beta1Plan,

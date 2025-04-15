@@ -1,5 +1,4 @@
 import { type FC, useEffect, useReducer } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import {
   type InventoryNetwork,
   useOpenShiftNetworks,
@@ -10,6 +9,7 @@ import type { Mapping } from 'src/modules/Providers/views/migrate/types';
 import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import Suspend from '@components/Suspend';
 import {
   NetworkMapModel,
   type OpenShiftNetworkAttachmentDefinition,

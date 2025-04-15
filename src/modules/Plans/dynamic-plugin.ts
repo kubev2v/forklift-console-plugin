@@ -13,6 +13,7 @@ export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
   PlanCreatePageV2: './plans/create/PlanCreatePage',
   PlanDetailsPage: './modules/Plans/views/details/PlanDetailsPage',
+  // PlanDetailsNav: './plans/details/PlanDetailsNav',
   PlansListPage: './plans/list/PlansListPage',
 };
 
@@ -53,6 +54,16 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.page/resource/details',
   } as EncodedExtension<ResourceDetailsPage>,
+
+  // {
+  //   properties: {
+  //     component: {
+  //       $codeRef: 'PlanDetailsNav',
+  //     },
+  //     model: PlanModelGroupVersionKind,
+  //   },
+  //   type: 'console.page/resource/details',
+  // } as EncodedExtension<ResourceDetailsPage>,
 
   {
     properties: {

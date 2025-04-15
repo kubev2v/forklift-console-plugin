@@ -8,6 +8,7 @@ import type { Validation } from 'src/modules/Providers/utils/types/Validation';
 import { validateK8sName } from 'src/modules/Providers/utils/validators/common';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import Suspend from '@components/Suspend';
 import {
   type K8sResourceCommon,
   NetworkMapModel,
@@ -27,8 +28,6 @@ import {
   useK8sWatchResource,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Form, Modal, ModalVariant, TextInput } from '@patternfly/react-core';
-
-import { Suspend } from '../views/details/components/Suspend';
 
 /**
  * Props for the DeleteModal component

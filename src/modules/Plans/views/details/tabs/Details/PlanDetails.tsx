@@ -3,6 +3,7 @@ import SectionHeading from 'src/components/headers/SectionHeading';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import Suspend from '@components/Suspend';
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
@@ -12,7 +13,6 @@ import { DetailsSection } from '../../components/DetailsSection/DetailsSection';
 import { MigrationsSection } from '../../components/MigrationsSection/MigrationsSection';
 import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSection';
 import { SettingsSection } from '../../components/SettingsSection/SettingsSection';
-import { Suspend } from '../../components/Suspend';
 
 export const PlanDetails: FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
