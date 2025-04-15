@@ -7,6 +7,12 @@ export enum Namespace {
   OpenshiftMtv = 'openshift-mtv',
 }
 
+export const ALL_PROJECTS_KEY = '#ALL_NS#';
+
 export enum ServerBranding {
   Okd = 'okd',
 }
+
+export const taskStatuses = {
+  completed: 'Completed',
+};

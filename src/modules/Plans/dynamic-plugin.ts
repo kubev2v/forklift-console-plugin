@@ -13,7 +13,7 @@ export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
   PlanCreatePageV2: './plans/create/PlanCreatePage',
   PlanDetailsPage: './modules/Plans/views/details/PlanDetailsPage',
-  PlansListPage: './modules/Plans/views/list/PlansListPage',
+  PlansListPage: './plans/list/PlansListPage',
 };
 
 export const extensions: EncodedExtension[] = [
