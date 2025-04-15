@@ -48,7 +48,7 @@ const config: Configuration = {
     rules: [
       {
         exclude: [/node_modules/u, /__tests__/u, /__mocks__/u],
-        test: /\.(?<temp1>jsx?|tsx?)$/u,
+        test: /\.(?:jsx?|tsx?)$/u,
         use: [
           {
             loader: 'ts-loader',
@@ -56,7 +56,7 @@ const config: Configuration = {
         ],
       },
       {
-        test: /\.s?(?<temp1>css)$/u,
+        test: /\.s?(?:css)$/u,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
@@ -73,7 +73,7 @@ const config: Configuration = {
         generator: {
           filename: 'assets/[name].[ext]',
         },
-        test: /\.(?<temp2>png|jpg|jpeg|gif|woff2?|ttf|eot|otf)(?<temp1>\?.*$|$)/u,
+        test: /\.(?:png|jpg|jpeg|gif|woff2?|ttf|eot|otf)(?:\?.*$|$)/u,
         type: 'asset/resource',
       },
       {
