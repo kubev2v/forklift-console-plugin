@@ -223,5 +223,5 @@ export default [
     },
   },
   prettier,
-  disabledRules,
+  ...(process.env.HUSKY_LINT_STAGED ? [] : [disabledRules]),
 ];
