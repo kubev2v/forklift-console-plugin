@@ -26,7 +26,7 @@ jobs:
         run: yarn install
 
       - name: Lint, eslint and stylelint
-        run: yarn lint
+        run: yarn lint-staged
 
       - name: Lint, test i18n files
         run: yarn test:i18n
