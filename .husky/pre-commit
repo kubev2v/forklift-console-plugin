@@ -1,5 +1,6 @@
 # .husky/pre-commit
 
+export HUSKY_LINT_STAGED=true
 yarn lint-staged
 
 echo "run yarn i18n"
