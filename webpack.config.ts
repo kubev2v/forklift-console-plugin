@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable @cspell/spellchecker */
 
 import * as path from 'path';
 
@@ -48,8 +47,8 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        exclude: [/node_modules/, /__tests__/, /__mocks__/],
-        test: /\.(jsx?|tsx?)$/,
+        exclude: [/node_modules/u, /__tests__/u, /__mocks__/u],
+        test: /\.(?:jsx?|tsx?)$/u,
         use: [
           {
             loader: 'ts-loader',
@@ -57,7 +56,7 @@ const config: Configuration = {
         ],
       },
       {
-        test: /\.s?(css)$/,
+        test: /\.s?(?:css)$/u,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
@@ -67,21 +66,21 @@ const config: Configuration = {
             return svgToMiniDataURI(content);
           },
         },
-        test: /\.svg$/,
+        test: /\.svg$/u,
         type: 'asset/inline',
       },
       {
         generator: {
           filename: 'assets/[name].[ext]',
         },
-        test: /\.(png|jpg|jpeg|gif|woff2?|ttf|eot|otf)(\?.*$|$)/,
+        test: /\.(?:png|jpg|jpeg|gif|woff2?|ttf|eot|otf)(?:\?.*$|$)/u,
         type: 'asset/resource',
       },
       {
         resolve: {
           fullySpecified: false,
         },
-        test: /\.m?js/,
+        test: /\.m?js/u,
       },
     ],
   },
@@ -124,12 +123,12 @@ if (process.env.NODE_ENV === 'production') {
   config.mode = 'production';
 
   // Ensure `output` is initialized if undefined
-  config.output = config.output ?? {};
+  config.output ??= {};
   config.output.filename = '[name]-bundle-[hash].min.js';
   config.output.chunkFilename = '[name]-chunk-[chunkhash].min.js';
 
   // Ensure `optimization` is initialized if undefined
-  config.optimization = config.optimization ?? {};
+  config.optimization ??= {};
   config.optimization.chunkIds = 'deterministic';
   config.optimization.minimize = true;
 }

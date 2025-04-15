@@ -35,8 +35,8 @@
       "src/*": ["./src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js"],
-  "exclude": ["node_modules", "dist", "locales", "testing", "docs", "ci"],
+  "include": ["**/*.*.ts", "**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js", "prettier.config.mjs"],
+  "exclude": ["node_modules", "dist", "locales", "docs", "ci"],
   "ts-node": {
     "files": true,
     "compilerOptions": {

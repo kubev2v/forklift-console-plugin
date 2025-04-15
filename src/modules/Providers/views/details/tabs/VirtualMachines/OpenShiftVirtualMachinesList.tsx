@@ -33,7 +33,7 @@ export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     isVisible: true,
     jsonPath: '$.vm.object.metadata.namespace',
     label: t('Namespace'),
-    resourceFieldId: 'possibly_remote_namespace',
+    resourceFieldId: 'possiblyRemoteNamespace',
     sortable: true,
   },
   {

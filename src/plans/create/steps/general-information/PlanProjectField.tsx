@@ -68,5 +68,3 @@ export const PlanProjectField: FC = () => {
     />
   );
 };
-
-export default PlanProjectField;

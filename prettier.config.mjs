@@ -1,4 +1,4 @@
-export default {
+const config = {
   arrowParens: 'always',
   bracketSpacing: true,
   printWidth: 100,
@@ -7,3 +7,5 @@ export default {
   tabWidth: 2,
   trailingComma: 'all',
 };
+
+export default config;

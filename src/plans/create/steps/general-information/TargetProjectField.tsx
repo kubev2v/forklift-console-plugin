@@ -63,5 +63,3 @@ export const TargetProjectField: FC = () => {
     />
   );
 };
-
-export default TargetProjectField;

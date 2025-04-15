@@ -10,7 +10,7 @@ type WizardStepContainerProps = PropsWithChildren & {
   isFullWidth?: boolean;
 };
 
-export const WizardStepContainer: FC<WizardStepContainerProps> = ({
+const WizardStepContainer: FC<WizardStepContainerProps> = ({
   children,
   description,
   isFullWidth,

@@ -14,7 +14,6 @@ import type { SortType } from './types';
  * @see localeCompare
  * @param locale to be used by string compareFn
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const universalComparator = (a: any, b: any, locale: string) => {
   return localeCompare(String(a ?? ''), String(b ?? ''), locale);
 };

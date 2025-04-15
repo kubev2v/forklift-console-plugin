@@ -21,7 +21,7 @@ const cellRenderers: Record<string, FC<VMCellProps>> = {
     toName: ({ data }) => data.name,
     toNamespace,
   }),
-  possibly_remote_namespace: withResourceLink({
+  possiblyRemoteNamespace: withResourceLink({
     toGVK: () => ({ group: '', kind: 'Namespace', version: 'v1' }),
     toName: toNamespace,
     toNamespace: () => '',

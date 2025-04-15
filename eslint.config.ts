@@ -14,6 +14,8 @@ import tseslint from 'typescript-eslint';
 import cspellConfigs from '@cspell/eslint-plugin/configs';
 import eslint from '@eslint/js';
 
+import disabledRules from './eslint-rules-disabled';
+
 const fileName = fileURLToPath(import.meta.url);
 const dirName = dirname(fileName);
 const CSPELL_WORD_LIST = join(dirName, 'cspell.wordlist.txt');
@@ -221,4 +223,5 @@ export default [
     },
   },
   prettier,
+  disabledRules,
 ];

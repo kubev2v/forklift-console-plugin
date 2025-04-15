@@ -1,19 +1,20 @@
-import { type FC } from 'react';
-import { ControllerRenderProps } from 'react-hook-form';
-
-import { ProviderVirtualMachine } from '@kubev2v/types';
-
+import type { FC } from 'react';
+import type { ControllerRenderProps } from 'react-hook-form';
+import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import { OpenShiftVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/OpenStackVirtualMachinesList';
-import { OVirtVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/OVirtVirtualMachinesList';
 import { OvaVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/OvaVirtualMachinesList';
-import { VSphereVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/VSphereVirtualMachinesList';
+import { OVirtVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/OVirtVirtualMachinesList';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
-import { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
-import { CreatePlanFormValues, ProviderType } from '../../constants';
+import { VSphereVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/VSphereVirtualMachinesList';
+
+import type { ProviderVirtualMachine } from '@kubev2v/types';
+
+import { type CreatePlanFormValues, ProviderType } from '../../constants';
 import { useCreatePlanFieldWatch } from '../../hooks';
 import { GeneralFormFieldId } from '../general-information/constants';
-import { VmFormFieldId } from './constants';
+
+import type { VmFormFieldId } from './constants';
 
 type VirtualMachinesTableProps = {
   field: ControllerRenderProps<CreatePlanFormValues, VmFormFieldId>;
@@ -57,5 +58,3 @@ export const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({ field }) =
       return <></>;
   }
 };
-
-export default VirtualMachinesTable;
