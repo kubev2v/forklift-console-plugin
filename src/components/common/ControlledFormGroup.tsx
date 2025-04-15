@@ -11,7 +11,7 @@ type ControlledFormGroupProps<FieldId extends keyof CreatePlanFormValues> = Form
   helperText?: ReactNode;
 };
 
-export const ControlledFormGroup = <FieldId extends keyof CreatePlanFormValues>({
+const ControlledFormGroup = <FieldId extends keyof CreatePlanFormValues>({
   children,
   controller,
   fieldId,

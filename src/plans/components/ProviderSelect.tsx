@@ -25,7 +25,7 @@ type ProviderSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'sta
   isTarget?: boolean;
 };
 
-export const ProviderSelect: FC<ProviderSelectProps> = ({
+const ProviderSelect: FC<ProviderSelectProps> = ({
   emptyState,
   id,
   isTarget,

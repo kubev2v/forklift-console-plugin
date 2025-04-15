@@ -58,5 +58,3 @@ export const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({ field }) =
       return <></>;
   }
 };
-
-export default VirtualMachinesTable;

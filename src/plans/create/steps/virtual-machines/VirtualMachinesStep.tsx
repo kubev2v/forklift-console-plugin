@@ -49,5 +49,3 @@ export const VirtualMachinesStep: FC = () => {
     </WizardStepContainer>
   );
 };
-
-export default VirtualMachinesStep;

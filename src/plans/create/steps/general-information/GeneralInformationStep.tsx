@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import ProviderSelect from 'src/plans/components/ProviderSelect';
 
 import ControlledFormGroup from '@components/common/ControlledFormGroup';
-import { WizardStepContainer } from '@components/common/WizardStepContainer';
+import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Form, FormSection, MenuToggleStatus, TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -106,5 +106,3 @@ export const GeneralInformationStep: FC = () => {
     </WizardStepContainer>
   );
 };
-
-export default GeneralInformationStep;
