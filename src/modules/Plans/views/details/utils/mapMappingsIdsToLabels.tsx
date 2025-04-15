@@ -14,9 +14,6 @@ const resolveCollisions = (tuples: [string, string][]): Record<string, string> =
     if (acc[label] === id) {
       //already included - no collisions
       return acc;
-    } else if (acc[label] === id) {
-      //already included with suffix - there was a collision before
-      return acc;
     } else if (acc[label]) {
       // resolve conflict
       return {

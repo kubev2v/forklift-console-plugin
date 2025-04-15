@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 import {
   validateContainerImage,
   validateFingerprint,

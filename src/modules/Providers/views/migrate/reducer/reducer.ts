@@ -95,7 +95,7 @@ const handlers: Record<
   (
     draft: Draft<CreateVmMigrationPageState>,
     action: PageAction<CreateVmMigration, unknown>,
-  ) => CreateVmMigrationPageState | void
+  ) => CreateVmMigrationPageState
 > = {
   [ADD_NETWORK_MAPPING](draft) {
     const { calculatedPerNamespace: cpn } = draft;
@@ -547,7 +547,7 @@ const handlers: Record<
           destination: { storageClass: destination },
           source: {
             id: sourceStorageLabelToId[source],
-            name: source.replace(/^\//g, ''),
+            name: source.replace(/^\//gu, ''),
           },
         };
       }

@@ -17,9 +17,9 @@ import {
   type MenuToggleElement,
 } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
-import chart_color_blue_200 from '@patternfly/react-tokens/dist/esm/chart_color_blue_200';
-import chart_color_green_400 from '@patternfly/react-tokens/dist/esm/chart_color_green_400';
-import chart_color_red_100 from '@patternfly/react-tokens/dist/esm/chart_color_red_100';
+import chartColorBlue200 from '@patternfly/react-tokens/dist/esm/chart_color_blue_200';
+import chartColorGreen400 from '@patternfly/react-tokens/dist/esm/chart_color_green_400';
+import chartColorRed100 from '@patternfly/react-tokens/dist/esm/chart_color_red_100';
 
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
 import { type MigrationDataPoint, toDataPoints } from '../utils/toDataPointsHelper';
@@ -150,17 +150,13 @@ export const MigrationsChartCard: FC<MigrationsCardProps> = () => {
         <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
           <Chart
             ariaDesc="Bar chart with migration statistics"
-            colorScale={[
-              chart_color_blue_200.var,
-              chart_color_red_100.var,
-              chart_color_green_400.var,
-            ]}
+            colorScale={[chartColorBlue200.var, chartColorRed100.var, chartColorGreen400.var]}
             domainPadding={{ x: [30, 25] }}
             maxDomain={{ y: maxMigrationValue ? undefined : 5 }}
             legendData={[
-              { name: t('Running'), symbol: { fill: chart_color_blue_200.var } },
-              { name: t('Failed'), symbol: { fill: chart_color_red_100.var } },
-              { name: t('Succeeded'), symbol: { fill: chart_color_green_400.var } },
+              { name: t('Running'), symbol: { fill: chartColorBlue200.var } },
+              { name: t('Failed'), symbol: { fill: chartColorRed100.var } },
+              { name: t('Succeeded'), symbol: { fill: chartColorGreen400.var } },
             ]}
             legendPosition="bottom"
             height={400}

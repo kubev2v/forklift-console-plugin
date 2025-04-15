@@ -1,5 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
-
 declare module '*.svg' {
   export default ReactComponent;
 }
@@ -67,7 +65,6 @@ declare type Window = {
 
 declare module 'eslint-plugin-import' {
   const flatConfigs: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recommended: any;
   };
   export { flatConfigs };

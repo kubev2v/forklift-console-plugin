@@ -26,7 +26,15 @@ export const EditMaxVMInFlightModal: FC<EditSettingsModalProps> = (props) => {
 
   // Set default value to 20
   const { resource } = props;
-  resource.spec.controller_max_vm_inflight = resource.spec.controller_max_vm_inflight || 20;
+
+  if (
+    resource?.spec &&
+    typeof resource?.spec === 'object' &&
+    'controller_max_vm_inflight' in resource.spec
+  ) {
+    // eslint-disable-next-line camelcase
+    resource.spec.controller_max_vm_inflight ??= 20;
+  }
 
   return (
     <EditModal
