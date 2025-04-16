@@ -9,6 +9,7 @@ import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetD
 import usePlanSourceProvider from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
+import Suspend from '@components/Suspend';
 import {
   PlanModel,
   PlanModelGroupVersionKind,
@@ -16,8 +17,6 @@ import {
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-
-import { Suspend } from '../../components/Suspend';
 
 import { MigrationVirtualMachinesList } from './Migration/MigrationVirtualMachinesList';
 import { PlanVirtualMachinesList } from './Plan/PlanVirtualMachinesList';

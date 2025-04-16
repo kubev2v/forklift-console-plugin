@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
 
-import { Loading } from './Loading';
+import Loading from './Loading';
 
 type SuspendProps = {
   obj: object;
@@ -23,7 +23,7 @@ type SuspendProps = {
  *
  * @returns {JSX.Element} The JSX element containing the children or a loading indicator.
  */
-export const Suspend: FC<SuspendProps> = ({ children, loaded, loadError, obj }) => {
+const Suspend: FC<SuspendProps> = ({ children, loaded, loadError, obj }) => {
   if (obj && loaded && !loadError) {
     return <>{children}</>;
   }
@@ -34,3 +34,5 @@ export const Suspend: FC<SuspendProps> = ({ children, loaded, loadError, obj }) 
     </Bullseye>
   );
 };
+
+export default Suspend;

@@ -6,6 +6,7 @@ import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import Suspend from '@components/Suspend';
 import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -19,8 +20,6 @@ import {
   Switch,
   TextInput,
 } from '@patternfly/react-core';
-
-import { Suspend } from '../../components/Suspend';
 
 import { usePlanHooks } from './hooks/usePlanHooks';
 import { initialState } from './state/initialState';

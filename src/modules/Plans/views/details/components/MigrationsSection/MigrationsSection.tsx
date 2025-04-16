@@ -1,13 +1,12 @@
 import type { FC } from 'react';
 
+import Suspend from '@components/Suspend';
 import {
   MigrationModelGroupVersionKind,
   type V1beta1Migration,
   type V1beta1Plan,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-
-import { Suspend } from '../Suspend';
 
 import { MigrationsTable } from './components/MigrationsTable';
 

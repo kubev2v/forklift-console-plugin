@@ -16,3 +16,6 @@ export enum ServerBranding {
 export const taskStatuses = {
   completed: 'Completed',
 };
+
+export const ADD = 'add';
+export const REPLACE = 'replace';
