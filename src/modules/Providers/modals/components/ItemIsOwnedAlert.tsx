@@ -7,6 +7,7 @@ import {
   ResourceLink,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import './alerts.style.css';
 
@@ -16,6 +17,9 @@ type ItemIsOwnedAlertProps = {
 };
 
 export const ItemIsOwnedAlert: FC<ItemIsOwnedAlertProps> = ({ namespace, owner }) => {
+  if (isEmpty(owner)) {
+    return null;
+  }
   const { t } = useForkliftTranslation();
 
   return (

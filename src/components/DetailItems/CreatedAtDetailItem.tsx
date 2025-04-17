@@ -4,6 +4,7 @@ import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getCreatedAt } from '@utils/crds/common/selectors';
+import { moreInfoCreatedAtDetailItem } from '@utils/links';
 
 import type { ResourceDetailsItemProps } from './utils/types';
 
@@ -14,7 +15,6 @@ const CreatedAtDetailsItem: FC<ResourceDetailsItemProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const defaultMoreInfoLink = 'https://kubernetes.io/docs/reference/using-api/api-concepts';
   const defaultHelpContent = t(
     `CreationTimestamp is a timestamp representing the server time when this object was created.
     It is not guaranteed to be set in happens-before order across separate operations.
@@ -25,7 +25,7 @@ const CreatedAtDetailsItem: FC<ResourceDetailsItemProps> = ({
     <DetailsItem
       title={t('Created at')}
       content={<ConsoleTimestamp timestamp={getCreatedAt(resource)!} />}
-      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
+      moreInfoLink={moreInfoLink ?? moreInfoCreatedAtDetailItem}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['metadata', 'creationTimestamp']}
     />

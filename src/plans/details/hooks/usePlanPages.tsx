@@ -13,32 +13,32 @@ const usePlanPages = (plan: V1beta1Plan) => {
   const { t } = useForkliftTranslation();
   const pages: NavPage[] = [
     {
-      component: () => <PlanDetailsPage obj={plan} />,
+      component: () => <PlanDetailsPage plan={plan} />,
       href: '',
       name: t('Details'),
     },
     {
-      component: () => <PlanYAMLPage obj={plan} />,
+      component: () => <PlanYAMLPage plan={plan} />,
       href: 'yaml',
       name: t('YAML'),
     },
     {
-      component: () => <PlanVirtualMachinesPage obj={plan} />,
+      component: () => <PlanVirtualMachinesPage plan={plan} />,
       href: 'vms',
       name: t('Virtual Machines'),
     },
     {
-      component: () => <PlanResourcesPage obj={plan} />,
+      component: () => <PlanResourcesPage plan={plan} />,
       href: 'resources',
       name: t('Resources'),
     },
     {
-      component: () => <PlanMappingsPage obj={plan} />,
+      component: () => <PlanMappingsPage plan={plan} />,
       href: 'mappings',
       name: t('Mappings'),
     },
     {
-      component: () => <PlanHooksPage obj={plan} />,
+      component: () => <PlanHooksPage plan={plan} />,
       href: 'hooks',
       name: t('Hooks'),
     },

@@ -4,6 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { moreInfoNamespaceDetailItem } from '@utils/links';
 
 import type { ResourceDetailsItemProps } from './utils/types';
 
@@ -15,8 +16,6 @@ const NamespaceDetailsItem: FC<ResourceDetailsItemProps> = ({
   const { t } = useForkliftTranslation();
   const namespace = getNamespace(resource);
 
-  const defaultMoreInfoLink =
-    'https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces';
   const defaultHelpContent = t(
     `Namespace defines the space within which each name must be unique.
      An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation.
@@ -34,7 +33,7 @@ const NamespaceDetailsItem: FC<ResourceDetailsItemProps> = ({
           namespace={namespace}
         />
       }
-      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
+      moreInfoLink={moreInfoLink ?? moreInfoNamespaceDetailItem}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['metadata', 'namespace']}
     />

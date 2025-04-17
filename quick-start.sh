@@ -47,8 +47,6 @@ KUBEADMIN_PASSWORD=$(cat "$KUBEADMIN_PASSWORD_FILE")
 
 # Export environment variables
 export BRIDGE_BRANDING="openshift"
-export INVENTORY_SERVER_HOST="https://virt-konveyor-forklift.apps.${CLUSTER_ADDRESS}"
-export SERVICES_API_SERVER_HOST="https://virt-konveyor-forklift.apps.${CLUSTER_ADDRESS}"
 export CONSOLE_IMAGE="quay.io/openshift/origin-console:4.18"
 
 # Log in

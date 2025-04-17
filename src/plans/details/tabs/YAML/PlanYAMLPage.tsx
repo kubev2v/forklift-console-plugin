@@ -5,7 +5,7 @@ import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { PlanPageProps } from '../../utils/types';
 
-const PlanYAMLPage: FC<PlanPageProps> = ({ obj: plan }) => {
+const PlanYAMLPage: FC<PlanPageProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
 
   return <ResourceYAMLEditor header={t('Provider YAML')} initialResource={plan} />;

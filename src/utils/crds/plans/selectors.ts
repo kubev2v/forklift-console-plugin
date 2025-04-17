@@ -26,3 +26,10 @@ const getPlanStorageMap = (plan: V1beta1Plan) => getPlanMap(plan)?.storage;
 export const getPlanStorageMapName = (plan: V1beta1Plan) => getPlanStorageMap(plan)?.name;
 
 export const getPlanNetworkMapName = (plan: V1beta1Plan) => getPlanNetworkMap(plan)?.name;
+
+export const getPlanTransferNetwork = (plan: V1beta1Plan) => plan?.spec?.transferNetwork;
+
+export const getPlanTargetNamespace = (plan: V1beta1Plan) => plan?.spec?.targetNamespace;
+
+export const getPlanPreserveClusterCpuModel = (plan: V1beta1Plan) =>
+  plan?.spec?.preserveClusterCpuModel;
