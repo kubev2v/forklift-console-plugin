@@ -15,7 +15,13 @@ export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   ProvidersCreatePage: './modules/Providers/views/create/ProvidersCreatePage',
   ProvidersCreateVmMigrationContext:
     './modules/Providers/views/migrate/ProvidersCreateVmMigrationContext',
-  ProvidersListPage: './modules/Providers/views/list/ProvidersListPage',
+  ProvidersListPageOld: './modules/Providers/views/list/ProvidersListPageOld',
+};
+
+const ProviderModelGroupVersionKind1 = {
+  group: 'forklift.konveyor.io',
+  kind: 'Provider1',
+  version: 'v1beta1',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -27,9 +33,9 @@ export const extensions: EncodedExtension[] = [
       },
       id: 'providers-ng',
       insertAfter: ['forkliftSettings', 'importSeparator'],
-      model: ProviderModelGroupVersionKind,
+      model: ProviderModelGroupVersionKind1,
       // t('plugin__forklift-console-plugin~Providers for virtualization')
-      name: '%plugin__forklift-console-plugin~Providers for virtualization%',
+      name: '%plugin__forklift-console-plugin~Providers for virtualization (old)%',
       perspective: 'admin',
       section: 'migration',
     },
@@ -39,12 +45,26 @@ export const extensions: EncodedExtension[] = [
   {
     properties: {
       component: {
-        $codeRef: 'ProvidersListPage',
+        $codeRef: 'ProvidersListPageOld',
       },
-      model: ProviderModelGroupVersionKind,
+      model: ProviderModelGroupVersionKind1,
     },
     type: 'console.page/resource/list',
   } as EncodedExtension<ResourceListPage>,
+
+  {
+    properties: {
+      component: {
+        $codeRef: 'ProvidersListPageOld',
+      },
+      exact: false,
+      path: [
+        '/k8s/all-namespaces/forklift.konveyor.io~v1beta1~Provider1',
+        '/k8s/ns/konveyor-forklift/forklift.konveyor.io~v1beta1~Provider1',
+      ],
+    },
+    type: 'console.page/route',
+  },
 
   {
     properties: {
