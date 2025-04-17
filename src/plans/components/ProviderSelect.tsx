@@ -12,6 +12,9 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { EmptyState, EmptyStateVariant, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { ForkliftTrans } from '@utils/i18n';
+import { ProviderStatus } from '@utils/types';
+
+import { ProviderType } from '../create/constants';
 
 type ProviderSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
   id: string;
@@ -19,11 +22,13 @@ type ProviderSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'sta
   namespace: string | undefined;
   placeholder?: string;
   emptyState?: ReactNode;
+  isTarget?: boolean;
 };
 
-export const ProviderSelect: FC<ProviderSelectProps> = ({
+const ProviderSelect: FC<ProviderSelectProps> = ({
   emptyState,
   id,
+  isTarget,
   namespace,
   onSelect,
   placeholder,
@@ -36,6 +41,19 @@ export const ProviderSelect: FC<ProviderSelectProps> = ({
     namespace,
     namespaced: true,
   });
+  const filteredProviders = useMemo(
+    () =>
+      providers.filter((provider) => {
+        const isReady = provider.status?.phase === ProviderStatus.Ready;
+
+        if (isTarget) {
+          return isReady && provider.spec?.type === ProviderType.Openshift;
+        }
+
+        return isReady;
+      }),
+    [isTarget, providers],
+  );
 
   const providersListUrl = useMemo(
     () =>
@@ -59,7 +77,7 @@ export const ProviderSelect: FC<ProviderSelectProps> = ({
               </ForkliftTrans>
             </EmptyState>
           ))
-        : providers.map((provider) => (
+        : filteredProviders.map((provider) => (
             <SelectOption key={provider.metadata?.name} value={provider}>
               {provider.metadata?.name}
             </SelectOption>

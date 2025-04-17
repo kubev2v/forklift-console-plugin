@@ -33,8 +33,7 @@ export const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
 
   const onStepSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
     if (onSubmit) {
-      onSubmit(event);
-      return;
+      return onSubmit(event);
     }
 
     return trigger(undefined, { shouldFocus: true });
@@ -44,7 +43,7 @@ export const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
     const isValid = await onStepSubmit(event);
 
     if (isValid) {
-      goToNextStep();
+      await goToNextStep();
     }
   };
 

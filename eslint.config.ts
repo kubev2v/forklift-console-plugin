@@ -16,6 +16,8 @@ import tseslint from 'typescript-eslint';
 import cspellConfigs from '@cspell/eslint-plugin/configs';
 import eslint from '@eslint/js';
 
+import disabledRules from './eslint-rules-disabled';
+
 const fileName = fileURLToPath(import.meta.url);
 const dirName = dirname(fileName);
 const CSPELL_WORD_LIST = join(dirName, 'cspell.wordlist.txt');
@@ -34,6 +36,7 @@ export default [
       'yarn.lock',
       'package-lock.json',
       '**/generated/**',
+      'testing/cypress.config.ts',
     ],
   },
   eslint.configs.all,
@@ -135,6 +138,10 @@ export default [
       'import/order': 'off',
       'max-lines-per-function': ['error', 150],
       'max-statements': 'off',
+      'new-cap': [
+        'error',
+        { capIsNewExceptionPattern: 'Factory$', capIsNewExceptions: ['ImmutableMap'] },
+      ],
       'no-alert': 'off',
       'no-console': 'error',
       'no-duplicate-imports': 'off',
@@ -224,4 +231,5 @@ export default [
     },
   },
   prettier,
+  ...(process.env.HUSKY_LINT_STAGED ? [] : [disabledRules]),
 ];

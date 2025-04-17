@@ -1,8 +1,8 @@
-import { type FC, useState } from 'react';
+import type { FC } from 'react';
 import ProviderSelect from 'src/plans/components/ProviderSelect';
 
 import ControlledFormGroup from '@components/common/ControlledFormGroup';
-import { WizardStepContainer } from '@components/common/WizardStepContainer';
+import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Form, FormSection, MenuToggleStatus, TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -19,8 +19,8 @@ export const GeneralInformationStep: FC = () => {
     formState: { errors },
     setValue,
   } = useCreatePlanFormContext();
+  const planProject = useCreatePlanFieldWatch(GeneralFormFieldId.PlanProject);
   const targetProject = useCreatePlanFieldWatch(GeneralFormFieldId.TargetProject);
-  const [providerNamespace, setProviderNamespace] = useState<string>();
 
   return (
     <WizardStepContainer title={t('General')}>
@@ -43,11 +43,7 @@ export const GeneralInformationStep: FC = () => {
             }}
           />
 
-          <PlanProjectField
-            onSelect={(value) => {
-              setProviderNamespace(value);
-            }}
-          />
+          <PlanProjectField />
         </FormSection>
 
         <FormSection title={t('Source and target providers')} titleElement="h3">
@@ -66,7 +62,7 @@ export const GeneralInformationStep: FC = () => {
                 <ProviderSelect
                   placeholder={t('Select source provider')}
                   id={GeneralFormFieldId.SourceProvider}
-                  namespace={providerNamespace}
+                  namespace={planProject}
                   value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
@@ -85,9 +81,10 @@ export const GeneralInformationStep: FC = () => {
             controller={{
               render: ({ field }) => (
                 <ProviderSelect
+                  isTarget
                   placeholder={t('Select target provider')}
                   id={GeneralFormFieldId.TargetProvider}
-                  namespace={providerNamespace}
+                  namespace={planProject}
                   value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
@@ -109,5 +106,3 @@ export const GeneralInformationStep: FC = () => {
     </WizardStepContainer>
   );
 };
-
-export default GeneralInformationStep;

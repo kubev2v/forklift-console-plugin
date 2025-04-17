@@ -1,4 +1,4 @@
-import { type FC, type FC, type MouseEvent, type Ref, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -53,7 +53,9 @@ const StorageMapActionsKebabDropdown_: FC<StorageMapActionsDropdownProps> = ({ d
         position: 'right',
       }}
     >
-      <DropdownList>{StorageMapActionsDropdownItems({ data })}</DropdownList>
+      <DropdownList>
+        <StorageMapActionsDropdownItems data={data} />
+      </DropdownList>
     </Dropdown>
   );
 };

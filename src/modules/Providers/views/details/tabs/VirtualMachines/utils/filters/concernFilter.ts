@@ -1,11 +1,11 @@
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import type { EnumValue } from '@components/common/utils/types';
 
 export const concernFilter = (t: (string) => string) => ({
   dynamicFilter: (items: { vm: { concerns: { label: string }[] } }[]) => ({
     values: [
-      ...EnumToTuple({
+      ...enumToTuple({
         Critical: 'Critical',
         Information: 'Information',
         Warning: 'Warning',

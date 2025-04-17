@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
@@ -53,7 +53,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       placeholderLabel: t('Status'),
       primary: true,
       type: 'enum',
-      values: EnumToTuple(NETWORK_MAP_STATUS),
+      values: enumToTuple(NETWORK_MAP_STATUS),
     },
     isVisible: true,
     jsonPath: getNetworkMapPhase,

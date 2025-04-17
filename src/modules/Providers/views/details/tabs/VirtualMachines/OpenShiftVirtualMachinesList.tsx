@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import type { ResourceFieldFactory } from '@components/common/utils/types';
 
@@ -33,14 +33,14 @@ export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     isVisible: true,
     jsonPath: '$.vm.object.metadata.namespace',
     label: t('Namespace'),
-    resourceFieldId: 'possibly_remote_namespace',
+    resourceFieldId: 'possiblyRemoteNamespace',
     sortable: true,
   },
   {
     filter: {
       placeholderLabel: t('Filter by status'),
       type: 'enum',
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+      values: enumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
     },
     isIdentity: false,
     isVisible: true,
@@ -53,7 +53,7 @@ export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     filter: {
       placeholderLabel: t('Filter by features'),
       type: 'features',
-      values: EnumToTuple(toVmFeatureEnum(t)),
+      values: enumToTuple(toVmFeatureEnum(t)),
     },
     isIdentity: false,
     isVisible: true,

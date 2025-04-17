@@ -46,12 +46,7 @@ export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
   switch (phase) {
     case 'ConnectionFailed':
     case 'ValidationFailed':
-      return ErrorStatusCell({
-        data,
-        fieldId,
-        fields,
-        t,
-      });
+      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} t={t} />;
     case 'Ready':
     case 'Staging':
     default:

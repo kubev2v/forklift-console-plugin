@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable @cspell/spellchecker */
 
 import * as path from 'path';
 
@@ -16,6 +15,7 @@ import extensions from './plugin-extensions';
 import pluginMetadata from './plugin-metadata';
 
 const CopyPlugin = require('copy-webpack-plugin');
+
 type Configuration = {
   devServer?: WebpackDevServerConfiguration;
 } & WebpackConfiguration;
@@ -47,8 +47,8 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        exclude: /node_modules/,
-        test: /\.(jsx?|tsx?)$/,
+        exclude: [/node_modules/u, /__tests__/u, /__mocks__/u],
+        test: /\.(?:jsx?|tsx?)$/u,
         use: [
           {
             loader: 'ts-loader',
@@ -56,7 +56,7 @@ const config: Configuration = {
         ],
       },
       {
-        test: /\.s?(css)$/,
+        test: /\.s?(?:css)$/u,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
@@ -66,21 +66,21 @@ const config: Configuration = {
             return svgToMiniDataURI(content);
           },
         },
-        test: /\.svg$/,
+        test: /\.svg$/u,
         type: 'asset/inline',
       },
       {
         generator: {
           filename: 'assets/[name].[ext]',
         },
-        test: /\.(png|jpg|jpeg|gif|woff2?|ttf|eot|otf)(\?.*$|$)/,
+        test: /\.(?:png|jpg|jpeg|gif|woff2?|ttf|eot|otf)(?:\?.*$|$)/u,
         type: 'asset/resource',
       },
       {
         resolve: {
           fullySpecified: false,
         },
-        test: /\.m?js/,
+        test: /\.m?js/u,
       },
     ],
   },
@@ -132,4 +132,5 @@ if (process.env.NODE_ENV === 'production') {
   config.optimization.chunkIds = 'deterministic';
   config.optimization.minimize = true;
 }
+
 export default config;

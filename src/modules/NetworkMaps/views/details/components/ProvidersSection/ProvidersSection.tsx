@@ -1,8 +1,8 @@
 import { type FC, type FormEvent, useEffect, useReducer } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import Suspend from '@components/Suspend';
 import {
   NetworkMapModel,
   ProviderModelGroupVersionKind,

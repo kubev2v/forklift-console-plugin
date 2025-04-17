@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 // This dummy file is used to resolve @Console imports from @openshift-console for JEST
 // Check "moduleNameMapper" in jest.config.ts
 

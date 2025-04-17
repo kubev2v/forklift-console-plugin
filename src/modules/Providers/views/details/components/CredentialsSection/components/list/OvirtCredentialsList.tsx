@@ -71,8 +71,7 @@ export const OvirtCredentialsList: FC<ListComponentProps> = ({ reveal, secret })
     },
   };
 
-  for (const key in fields) {
-    const field = fields[key];
+  Object.entries(fields).forEach(([key, field]) => {
     const base64Value = secret.data?.[key];
     const value = base64Value ? Base64.decode(secret.data[key]) : undefined;
 
@@ -100,7 +99,7 @@ export const OvirtCredentialsList: FC<ListComponentProps> = ({ reveal, secret })
         </div>
       </>,
     );
-  }
+  });
 
   return <>{items}</>;
 };

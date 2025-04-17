@@ -1,5 +1,6 @@
 apimachinery
 cacerts
+chunkhash
 crdtotypes
 cutover
 forkliftcontrollers
@@ -41,6 +42,7 @@ groupedenumfilter
 switchfilter
 ipam
 masq
+NOSONAR
 promisc
 enabledad
 macspoofchk

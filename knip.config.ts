@@ -10,10 +10,11 @@ export default {
     'src/modules/Providers/views/create/ProvidersCreatePage.tsx',
     'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext.tsx',
 
-    'src/modules/Plans/views/list/PlansListPage.tsx',
     'src/modules/Plans/views/create/PlanCreatePage.tsx',
-    'src/plans/create/PlanCreatePage.tsx',
     'src/modules/Plans/views/details/PlanDetailsPage.tsx',
+    'src/plans/create/PlanCreatePage.tsx',
+    'src/plans/details/PlanDetailsNav.tsx',
+    'src/plans/list/PlansListPage.tsx',
 
     'src/modules/NetworkMaps/views/list/NetworkMapsListPage.tsx',
     'src/modules/NetworkMaps/views/details/NetworkMapDetailsPage.tsx',
@@ -26,19 +27,4 @@ export default {
   ignore: ['i18next-parser.config.js', 'testing/**'],
   ignoreBinaries: ['kubectl'],
   ignoreDependencies: ['@testing-library/cypress', 'ts-node'],
-  rules: {
-    binaries: 'error',
-    classMembers: 'error',
-    dependencies: 'error',
-    devDependencies: 'error',
-    duplicates: 'error',
-    enumMembers: 'error',
-    exports: 'error',
-    files: 'error',
-    nsExports: 'error',
-    nsTypes: 'error',
-    types: 'error',
-    unlisted: 'error',
-    unresolved: 'error',
-  },
 } satisfies KnipConfig;

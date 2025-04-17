@@ -1,9 +1,12 @@
 # .husky/pre-commit
 
+export HUSKY_LINT_STAGED=true
 yarn lint-staged
 
 echo "run yarn i18n"
 yarn i18n
+echo "run knip..."
+npx knip --config knip.config.ts || true
 
 translation_file_diff=$(git diff --name-only locales/en/plugin__forklift-console-plugin.json)
 

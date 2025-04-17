@@ -36,7 +36,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 };
 
 const cellRenderers: Record<string, FC<CellProps>> = {
-  actions: (props) => StorageMapActionsDropdown({ isKebab: true, ...props }),
+  actions: (props) => <StorageMapActionsDropdown isKebab {...props} />,
   destination: ProviderLinkCell,
   name: StorageMapLinkCell,
   namespace: NamespaceCell,

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
@@ -63,7 +63,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       placeholderLabel: t('Status'),
       primary: true,
       type: 'enum',
-      values: EnumToTuple(PROVIDER_STATUS),
+      values: enumToTuple(PROVIDER_STATUS),
     },
     isVisible: true,
     jsonPath: '$.provider.status.phase',
@@ -91,7 +91,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       placeholderLabel: t('Type'),
       primary: true,
       type: 'groupedEnum',
-      values: EnumToTuple(PROVIDERS).map(({ id, ...rest }) => ({
+      values: enumToTuple(PROVIDERS).map(({ id, ...rest }) => ({
         groupId: SOURCE_ONLY_PROVIDER_TYPES.includes(id as ProviderType) ? 'source' : 'target',
         id,
         ...rest,

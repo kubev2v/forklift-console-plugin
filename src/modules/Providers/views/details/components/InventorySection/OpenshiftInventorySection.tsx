@@ -31,9 +31,7 @@ export const OpenshiftInventorySection: FC<InventoryProps> = ({ data }) => {
 
   const items = [];
 
-  for (const key in inventoryItems) {
-    const item = inventoryItems?.[key];
-
+  Object.entries(inventoryItems).forEach(([key, item]) => {
     if (item) {
       const value = inventory[key] || '-';
       items.push(
@@ -45,7 +43,7 @@ export const OpenshiftInventorySection: FC<InventoryProps> = ({ data }) => {
         />,
       );
     }
-  }
+  });
 
   return (
     <DescriptionList

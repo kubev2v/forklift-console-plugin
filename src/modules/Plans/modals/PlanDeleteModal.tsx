@@ -62,7 +62,7 @@ export const PlanDeleteModal: FC<PlanDeleteModalProps> = ({
 
   const onDelete = useCallback(async () => {
     const isOnResourcePage = () => {
-      const re = new RegExp(`/${name}(/|$)`);
+      const re = new RegExp(`/${name}(/|$)`, 'u');
       return re.test(window.location.pathname);
     };
 

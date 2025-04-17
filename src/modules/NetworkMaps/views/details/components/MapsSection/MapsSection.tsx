@@ -1,5 +1,4 @@
 import { type FC, useEffect, useReducer } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components/Suspend';
 import {
   type InventoryNetwork,
   useOpenShiftNetworks,
@@ -10,6 +9,7 @@ import type { Mapping } from 'src/modules/Providers/views/migrate/types';
 import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import Suspend from '@components/Suspend';
 import {
   NetworkMapModel,
   type OpenShiftNetworkAttachmentDefinition,
@@ -101,14 +101,14 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
 
   const onReplace = ({ current, next }) => {
     const currentDestinationNet = destinationNetworks.find(
-      (network) => OpenShiftNetworkAttachmentDefinitionToName(network) === current.destination,
+      (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
     );
     const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) || {
       id: 'pod',
     };
 
     const nextDestinationNet = destinationNetworks.find(
-      (network) => OpenShiftNetworkAttachmentDefinitionToName(network) === next.destination,
+      (network) => openShiftNetworkAttachmentDefinitionToName(network) === next.destination,
     );
     const nextSourceNet = sourceNetworks.find((network) => network?.name === next.source);
 
@@ -142,7 +142,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
 
   const onDelete = (current: Mapping) => {
     const currentDestinationNet = destinationNetworks.find(
-      (network) => OpenShiftNetworkAttachmentDefinitionToName(network) === current.destination,
+      (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
     ) || { type: 'pod' };
     const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) || {
       id: 'pod',
@@ -245,7 +245,7 @@ const getDestinationNetName = (
       network?.name === destination?.name && network?.namespace === destination?.namespace,
   );
 
-  return net ? OpenShiftNetworkAttachmentDefinitionToName(net) : 'Pod';
+  return net ? openShiftNetworkAttachmentDefinitionToName(net) : 'Pod';
 };
 
 const convertInventoryNetworkToV1beta1NetworkMapSpecMapSource = (
@@ -280,5 +280,5 @@ const convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDesti
   };
 };
 
-const OpenShiftNetworkAttachmentDefinitionToName = (net) =>
+const openShiftNetworkAttachmentDefinitionToName = (net) =>
   net?.namespace ? `${net?.namespace}/${net?.name}` : net?.name || 'Pod';

@@ -1,3 +1,5 @@
+import type { TFunction } from 'react-i18next';
+
 import type { EnumValue } from '@components/common/utils/types';
 
 const labelToFilterItem = (label: string): EnumValue =>
@@ -7,7 +9,7 @@ const labelToFilterItem = (label: string): EnumValue =>
  * This component enables filtering the VMware's virtual machines
  * by the hostname that they are running on.
  */
-export const VsphereHostFilter = (t: (string) => string) => {
+export const vsphereHostFilter = (t: TFunction) => {
   return {
     dynamicFilter: (items: { hostName: string }[]) => ({
       values: [

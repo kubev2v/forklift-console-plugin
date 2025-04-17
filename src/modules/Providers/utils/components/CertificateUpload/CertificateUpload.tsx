@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { ChangeEvent, FC } from 'react';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -35,13 +35,17 @@ export const CertificateUpload: FC<CertificateUploadProps> = ({
   const { t } = useForkliftTranslation();
   const isText = !type || type === 'text';
   const onClick = () => {
+    const syntheticEvent = {
+      target: { value },
+    } as ChangeEvent<HTMLTextAreaElement>;
+
     showModal(
       <FetchCertificateModal
-        url={url}
+        url={url ?? ''}
         handleSave={(value) => {
-          onTextChange(null, value);
+          onTextChange?.(syntheticEvent, value);
         }}
-        existingCert={value ? String(value) : undefined}
+        existingCert={(value as string) ?? ''}
       />,
     );
   };

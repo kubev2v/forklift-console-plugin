@@ -37,12 +37,7 @@ export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
 
   switch (phase) {
     case 'Critical':
-      return ErrorStatusCell({
-        data,
-        fieldId,
-        fields,
-        t,
-      });
+      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} t={t} />;
     case 'Not Ready':
     case 'Ready':
     default:

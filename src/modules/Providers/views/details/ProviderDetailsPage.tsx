@@ -69,7 +69,6 @@ const ProviderDetailsPageInternal: FC<{
 const ProviderDetailsPage_ = memo(ProviderDetailsPageInternal);
 
 // API provides no typing info for the error prop
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LoadError = ({ error }: { error: any }) => {
   const { t } = useForkliftTranslation();
   const status = error?.response?.status;

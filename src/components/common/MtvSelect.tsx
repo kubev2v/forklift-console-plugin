@@ -16,7 +16,7 @@ type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'children'> & {
   isDisabled?: boolean;
 };
 
-export const MtvSelect: FC<MtvSelectProps> = ({
+const MtvSelect: FC<MtvSelectProps> = ({
   children,
   id,
   isDisabled,
