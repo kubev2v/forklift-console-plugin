@@ -4,7 +4,7 @@ import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getCreatedAt } from '@utils/crds/common/selectors';
-import { moreInfoCreatedAtDetailItem } from '@utils/links';
+import { MORE_INFO_CREATED_AT_DETAIL_ITEM } from '@utils/links';
 
 import type { ResourceDetailsItemProps } from './utils/types';
 
@@ -25,7 +25,7 @@ const CreatedAtDetailsItem: FC<ResourceDetailsItemProps> = ({
     <DetailsItem
       title={t('Created at')}
       content={<ConsoleTimestamp timestamp={getCreatedAt(resource)!} />}
-      moreInfoLink={moreInfoLink ?? moreInfoCreatedAtDetailItem}
+      moreInfoLink={moreInfoLink ?? MORE_INFO_CREATED_AT_DETAIL_ITEM}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['metadata', 'creationTimestamp']}
     />
