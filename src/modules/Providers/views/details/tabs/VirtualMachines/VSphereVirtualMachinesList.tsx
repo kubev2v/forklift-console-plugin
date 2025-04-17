@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import type { ResourceFieldFactory } from '@components/common/utils/types';
 import type { VSphereVM } from '@kubev2v/types';
@@ -71,7 +71,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     filter: {
       placeholderLabel: t('Filter by power state'),
       type: 'enum',
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+      values: enumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
     },
     isIdentity: false,
     isVisible: true,
