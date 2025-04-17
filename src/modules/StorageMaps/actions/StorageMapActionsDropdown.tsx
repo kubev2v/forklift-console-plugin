@@ -53,7 +53,9 @@ const StorageMapActionsKebabDropdown_: FC<StorageMapActionsDropdownProps> = ({ d
         position: 'right',
       }}
     >
-      <DropdownList>{StorageMapActionsDropdownItems({ data })}</DropdownList>
+      <DropdownList>
+        <StorageMapActionsDropdownItems data={data} />
+      </DropdownList>
     </Dropdown>
   );
 };

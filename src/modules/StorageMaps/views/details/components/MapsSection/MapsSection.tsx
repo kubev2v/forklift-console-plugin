@@ -80,7 +80,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     availableSources.length > 0 &&
     dispatch({
       payload: [
-        ...(state.StorageMap?.spec?.map || []),
+        ...(state.StorageMap?.spec?.map ?? []),
         sourceProvider?.spec?.type === 'openshift'
           ? {
               destination: { storageClass: destinationStorages?.[0].name },
@@ -133,13 +133,13 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     });
 
     dispatch({
-      payload: payload || [],
+      payload: payload ?? [],
       type: 'SET_MAP',
     });
   };
 
   const onDelete = (current: Mapping) => {
-    const references = storageNameToIDReference(state?.StorageMap?.status?.references || []);
+    const references = storageNameToIDReference(state?.StorageMap?.status?.references ?? []);
     const currentSourceStorage = sourceStorages?.find(
       (sourceStorage) => sourceStorage.name === current.source,
     );
@@ -154,7 +154,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
                 map?.source?.id === references[current.source]) &&
               map.destination?.storageClass === current.destination
             ),
-        ) || []),
+        ) ?? []),
       ],
       type: 'SET_MAP',
     });

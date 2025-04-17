@@ -1,3 +1,5 @@
+/* eslint-disable @cspell/spellchecker */
+
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -34,6 +36,7 @@ export default [
       'yarn.lock',
       'package-lock.json',
       '**/generated/**',
+      'testing/cypress.config.ts',
     ],
   },
   eslint.configs.all,
@@ -135,6 +138,10 @@ export default [
       'import/order': 'off',
       'max-lines-per-function': ['error', 150],
       'max-statements': 'off',
+      'new-cap': [
+        'error',
+        { capIsNewExceptionPattern: 'Factory$', capIsNewExceptions: ['ImmutableMap'] },
+      ],
       'no-alert': 'off',
       'no-console': 'error',
       'no-duplicate-imports': 'off',
@@ -154,6 +161,7 @@ export default [
         },
       ],
       'no-ternary': 'off',
+      'no-undef-init': 'off',
       'no-undefined': 'off',
       'no-unused-vars': 'off',
       'no-warning-comments': 'off',

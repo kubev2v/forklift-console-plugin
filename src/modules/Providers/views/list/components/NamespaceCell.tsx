@@ -10,7 +10,7 @@ import type { CellProps } from './CellProps';
  */
 export const NamespaceCell: FC<CellProps> = ({ data }) => {
   const { provider } = data;
-  const { namespace } = provider?.metadata || {};
+  const { namespace } = provider?.metadata ?? {};
 
   return (
     <TableLinkCell

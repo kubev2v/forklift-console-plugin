@@ -685,7 +685,7 @@ export const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
             variant="danger"
             title={t('Error')}
           >
-            {state.alertMessage?.toString()}
+            {state.alertMessage}
           </Alert>
         </>
       ) : null}

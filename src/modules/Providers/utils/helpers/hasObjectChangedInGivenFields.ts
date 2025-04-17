@@ -42,7 +42,7 @@ const isEqual = (obj1: unknown, obj2: unknown, fieldsToAvoidComparing: string[])
     if (obj1.length !== obj2.length) {
       return false;
     }
-    for (let i = 0; i < obj1.length; i++) {
+    for (let i = 0; i < obj1.length; i += 1) {
       if (!isEqual(obj1[i], obj2[i], fieldsToAvoidComparing)) {
         return false;
       }

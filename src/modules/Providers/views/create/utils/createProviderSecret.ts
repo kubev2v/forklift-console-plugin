@@ -3,6 +3,22 @@ import { Base64 } from 'js-base64';
 import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
+const cleanObject = (obj: Record<string, string | null | undefined>): Record<string, string> => {
+  const result: Record<string, string> = {};
+  for (const key in obj) {
+    if (obj[key] !== null && obj[key] !== undefined && obj[key] !== '') {
+      result[key] = obj[key];
+    }
+  }
+
+  // Don't save cacert when insecureSkipVerify is true
+  if (Base64.decode(obj?.insecureSkipVerify ?? '') === 'true') {
+    delete result.cacert;
+  }
+
+  return result;
+};
+
 /**
  * Creates a new Kubernetes secret using the provided provider and secret data.
  *
@@ -25,16 +41,16 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 export const createProviderSecret = async (
   provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret,
-): Promise<object> => {
+): Promise<IoK8sApiCoreV1Secret | undefined> => {
   const url = provider?.spec?.url;
 
   // Sanity check, don't try to create empty secret, or a secret without url
   if (!secret || !url) {
-    return;
+    return undefined;
   }
 
-  const encodedURL = url ? Base64.encode(url) : undefined;
-  const generateName = `${provider.metadata.name}-`;
+  const encodedURL = url ? Base64.encode(url) : (undefined as unknown as string);
+  const generateName = `${provider?.metadata?.name}-`;
   const cleanedData = cleanObject(secret?.data);
 
   const newSecret: IoK8sApiCoreV1Secret = {
@@ -45,7 +61,7 @@ export const createProviderSecret = async (
       generateName,
       labels: {
         ...secret?.metadata?.labels,
-        createdForProviderType: provider?.spec?.type,
+        createdForProviderType: provider?.spec?.type as unknown as string,
         createdForResourceType: 'providers',
       },
     },
@@ -57,20 +73,4 @@ export const createProviderSecret = async (
   });
 
   return obj;
-};
-
-const cleanObject = (obj: Record<string, string | null | undefined>): Record<string, string> => {
-  const result: Record<string, string> = {};
-  for (const key in obj) {
-    if (obj[key] !== null && obj[key] !== undefined && obj[key] !== '') {
-      result[key] = obj[key];
-    }
-  }
-
-  // Don't save cacert when insecureSkipVerify is true
-  if (Base64.decode(obj?.insecureSkipVerify ?? '') === 'true') {
-    delete result.cacert;
-  }
-
-  return result;
 };

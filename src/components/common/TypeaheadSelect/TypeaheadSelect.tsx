@@ -282,7 +282,7 @@ export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
 
       // Skip disabled options
       while (filteredSelections[indexToFocus].isDisabled) {
-        indexToFocus--;
+        indexToFocus -= 1;
         if (indexToFocus === -1) {
           indexToFocus = filteredSelections.length - 1;
         }
@@ -299,7 +299,7 @@ export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
 
       // Skip disabled options
       while (filteredSelections[indexToFocus].isDisabled) {
-        indexToFocus++;
+        indexToFocus += 1;
         if (indexToFocus === filteredSelections.length) {
           indexToFocus = 0;
         }
@@ -330,6 +330,8 @@ export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
       case KeyTypes.ArrowDown:
         event.preventDefault();
         handleMenuArrowKeys(event.key);
+        break;
+      default:
         break;
     }
   };

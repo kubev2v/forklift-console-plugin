@@ -126,7 +126,7 @@ const ProvidersCreatePage: FC<{
         };
       }
       case 'SET_PROJECT_NAME': {
-        const value = action.payload;
+        const value = action.payload as string;
         let validationError: ValidationMsg = { type: 'default' };
 
         if (!value) {
@@ -136,7 +136,7 @@ const ProvidersCreatePage: FC<{
         return {
           ...state,
           apiError: null,
-          projectName: String(value),
+          projectName: value,
           validationError,
         };
       }
@@ -287,9 +287,9 @@ const ProvidersCreatePage: FC<{
           <FlexItem>
             <Button
               variant="primary"
-              onClick={() => {
+              onClick={async () => {
                 setActiveNamespace(state.projectName);
-                onUpdate();
+                await onUpdate();
               }}
               isDisabled={state.validationError.type === 'error'}
               isLoading={isLoading}

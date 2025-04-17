@@ -20,12 +20,7 @@ export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
 
   switch (phase) {
     case 'Critical':
-      return ErrorStatusCell({
-        data,
-        fieldId,
-        fields,
-        t,
-      });
+      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} t={t} />;
     default:
       return <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>;
   }

@@ -70,7 +70,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 };
 
 const cellRenderers: Record<string, FC<CellProps>> = {
-  actions: (props) => ProviderActionsDropdown({ isKebab: true, ...props }),
+  actions: (props) => <ProviderActionsDropdown isKebab {...props} />,
   hostCount: InventoryCellFactory({ icon: <OutlinedHddIcon /> }),
   name: ProviderLinkCell,
   namespace: NamespaceCell,

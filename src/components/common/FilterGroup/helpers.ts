@@ -10,5 +10,5 @@ export const toFieldFilter =
     resourceFieldId,
   });
 
-export const EnumToTuple = (i18nEnum: Record<string, string>) =>
+export const enumToTuple = (i18nEnum: Record<string, string>) =>
   Object.entries(i18nEnum).map(([type, label]) => ({ id: type, label }));

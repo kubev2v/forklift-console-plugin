@@ -51,7 +51,7 @@ export const useFetchEffects = (
     projectName,
     provider: sourceProvider,
     selectedVms,
-  } = createVmMigrationContext?.data || {};
+  } = createVmMigrationContext?.data ?? {};
 
   // error state - the page was entered directly without choosing the VMs
   const emptyContext = !selectedVms?.length || !sourceProvider;

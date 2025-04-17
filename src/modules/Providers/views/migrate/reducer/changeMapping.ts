@@ -7,8 +7,8 @@ export const addMapping = (sources: MappingSource[], targets: string[], mappings
   const firstGeneral = sources.find(
     ({ isMapped, usedBySelectedVms }) => !usedBySelectedVms && !isMapped,
   );
-  const nextSource = firstUsedByVms || firstGeneral;
-  const nextDest = targets[0];
+  const nextSource = firstUsedByVms ?? firstGeneral;
+  const [nextDest] = targets;
 
   return nextDest && nextSource
     ? {

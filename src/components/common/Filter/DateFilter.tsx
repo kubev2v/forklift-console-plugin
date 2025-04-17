@@ -24,12 +24,13 @@ export const DateFilter = ({
   showFilter = true,
   title,
 }: FilterTypeProps) => {
-  const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(Boolean) ?? [];
+  const isString = (value: string | undefined): value is string => value !== undefined;
+  const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(isString) ?? [];
 
   // internal state - stored as ISO date string (no time)
   const [date, setDate] = useState(toISODate(new Date()));
 
-  const clearSingleDate = (option) => {
+  const clearSingleDate = (option: string) => {
     onFilterUpdate([...validFilters.filter((filter) => filter !== option)]);
   };
 
@@ -43,7 +44,9 @@ export const DateFilter = ({
     if (value?.length === 10 && isValidDate(value)) {
       const targetDate = changeFormatToISODate(value);
       setDate(targetDate);
-      onFilterUpdate([...validFilters.filter((filter) => filter !== targetDate), targetDate]);
+      if (targetDate) {
+        onFilterUpdate([...validFilters.filter((filter) => filter !== targetDate), targetDate]);
+      }
     }
   };
 
@@ -51,11 +54,11 @@ export const DateFilter = ({
     <ToolbarFilter
       key={filterId}
       chips={validFilters}
-      deleteChip={(category, option) => {
-        clearSingleDate(option);
+      deleteChip={(_category, option) => {
+        clearSingleDate(option as string);
       }}
       deleteChipGroup={() => onFilterUpdate([])}
-      categoryName={title}
+      categoryName={title ?? ''}
       showToolbarItem={showFilter}
     >
       <InputGroup>

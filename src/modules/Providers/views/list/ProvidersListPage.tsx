@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
@@ -63,7 +63,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       placeholderLabel: t('Status'),
       primary: true,
       type: 'enum',
-      values: EnumToTuple(PROVIDER_STATUS),
+      values: enumToTuple(PROVIDER_STATUS),
     },
     isVisible: true,
     jsonPath: '$.provider.status.phase',
@@ -91,7 +91,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       placeholderLabel: t('Type'),
       primary: true,
       type: 'groupedEnum',
-      values: EnumToTuple(PROVIDERS).map(({ id, ...rest }) => ({
+      values: enumToTuple(PROVIDERS).map(({ id, ...rest }) => ({
         groupId: SOURCE_ONLY_PROVIDER_TYPES.includes(id as ProviderType) ? 'source' : 'target',
         id,
         ...rest,
@@ -134,28 +134,24 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
   {
     isVisible: false,
     jsonPath: (obj: ProviderData) => {
-      let storageCount: number;
       const { inventory } = obj;
-
-      switch (inventory?.type) {
-        case 'ova':
-          storageCount = (inventory as OvaProvider).storageCount;
-          break;
-        case 'openshift':
-          storageCount = (inventory as OpenshiftProvider).storageClassCount;
-          break;
-        case 'vsphere':
-          storageCount = (inventory as VSphereProvider).datastoreCount;
-          break;
-        case 'openstack':
-          storageCount = (inventory as OpenstackProvider).volumeTypeCount;
-          break;
-        case 'ovirt':
-          storageCount = (inventory as OVirtProvider).storageDomainCount;
-          break;
+      if (!inventory) {
+        return undefined;
       }
-
-      return storageCount;
+      switch (inventory.type) {
+        case 'ova':
+          return (inventory as OvaProvider).storageCount;
+        case 'openshift':
+          return (inventory as OpenshiftProvider).storageClassCount;
+        case 'vsphere':
+          return (inventory as VSphereProvider).datastoreCount;
+        case 'openstack':
+          return (inventory as OpenstackProvider).volumeTypeCount;
+        case 'ovirt':
+          return (inventory as OVirtProvider).storageDomainCount;
+        default:
+          return undefined;
+      }
     },
     label: t('Storage'),
     resourceFieldId: 'storageCount',

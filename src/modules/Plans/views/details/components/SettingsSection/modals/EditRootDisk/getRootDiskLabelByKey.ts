@@ -53,6 +53,7 @@ export const getRootDiskLabelByKey = (key_: string | number): string => {
   const key = key_.toString();
 
   if (key.startsWith('/dev/sd') && key.length >= 8) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     const diskLetter = key[7];
     const partitionNumber = key.length > 8 ? key.slice(8) : '';
 

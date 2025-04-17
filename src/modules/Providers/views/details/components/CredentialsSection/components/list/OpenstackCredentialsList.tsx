@@ -240,8 +240,7 @@ export const OpenstackCredentialsList: FC<ListComponentProps> = ({ reveal, secre
     // Handle case when none of the conditions are met
   }
 
-  for (const key in openstackSecretFields) {
-    const field = openstackSecretFields[key];
+  Object.entries(openstackSecretFields).forEach(([key, field]) => {
     const base64Value = secret.data?.[key];
     const value = base64Value ? Base64.decode(secret.data[key]) : undefined;
 
@@ -267,7 +266,7 @@ export const OpenstackCredentialsList: FC<ListComponentProps> = ({ reveal, secre
         </div>
       </>,
     );
-  }
+  });
 
   return <>{items}</>;
 };

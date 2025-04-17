@@ -67,8 +67,7 @@ export const OpenshiftCredentialsList: FC<ListComponentProps> = ({ reveal, secre
     },
   };
 
-  for (const key in fields) {
-    const field = fields[key];
+  Object.entries(fields).forEach(([key, field]) => {
     const base64Value = secret.data?.[key];
     const value = base64Value ? Base64.decode(secret.data[key]) : undefined;
 
@@ -87,7 +86,7 @@ export const OpenshiftCredentialsList: FC<ListComponentProps> = ({ reveal, secre
         </div>
       </>,
     );
-  }
+  });
 
   return <>{items}</>;
 };

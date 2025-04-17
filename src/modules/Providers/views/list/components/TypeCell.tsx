@@ -21,7 +21,7 @@ export const TypeCell: FC<CellProps> = ({ data, fields }) => {
 
   return (
     <TableLabelCell hasLabel={isSource} label={t('source')} labelColor={'green'}>
-      {PROVIDERS?.[type] || ''}
+      {PROVIDERS?.[type] ?? ''}
     </TableLabelCell>
   );
 };

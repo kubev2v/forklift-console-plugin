@@ -3,7 +3,7 @@ import { NAME, NAMESPACE } from '@components/common/utils/constants';
 import { createMatcher, createMetaMatcher, freetextMatcher } from '../matchers';
 
 const matchFreetext = (
-  selectedFilters,
+  selectedFilters: { name?: string[] },
   filter = {
     placeholderLabel: NAME,
     type: 'freetext',

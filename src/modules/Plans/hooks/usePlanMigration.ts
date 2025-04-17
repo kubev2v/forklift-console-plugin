@@ -24,7 +24,7 @@ export const usePlanMigration = (plan: V1beta1Plan): WatchK8sResult<V1beta1Migra
       new Date(b.metadata.creationTimestamp).getTime() -
       new Date(a.metadata.creationTimestamp).getTime(),
   );
-  const lastMigration = planMigrations[0];
+  const [lastMigration] = planMigrations;
 
   return [lastMigration, migrationLoaded, migrationLoadError];
 };

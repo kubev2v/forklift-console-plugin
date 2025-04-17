@@ -38,7 +38,7 @@ export const TableLabelCell: FC<TableLabelCellProps> = ({
       {hasLabel &&
         labels.map((_, i) => (
           <Label
-            key={labels[i].toString()}
+            key={i}
             isCompact
             color={labelColors[i]}
             className="forklift-table__flex-cell-label"

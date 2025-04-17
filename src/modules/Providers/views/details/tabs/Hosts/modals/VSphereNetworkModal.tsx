@@ -20,7 +20,6 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
-import { DEFAULT } from '@utils/constants';
 
 import { calculateCidrNotation } from '../utils/helpers/calculateCidrNotation';
 import type { InventoryHostPair } from '../utils/helpers/matchHostsToInventory';
@@ -34,22 +33,47 @@ type VSphereNetworkModalProps = {
   selected: string[];
 };
 
+type ValidationState = 'success' | 'warning' | 'error' | 'default' | undefined;
+
+type State = {
+  endpointType: string;
+  isLoading: boolean;
+  isSaveDisabled: boolean;
+  isSelectOpen: boolean;
+  network: NetworkAdapters;
+  password: string;
+  passwordHidden: boolean;
+  username: string;
+  validation: {
+    password: ValidationState;
+    username: ValidationState;
+  };
+};
+
+type Action =
+  | { type: 'SET_NETWORK'; payload: NetworkAdapters }
+  | { type: 'TOGGLE_OPEN' }
+  | { type: 'TOGGLE_LOADING' }
+  | { type: 'SET_USERNAME'; payload: string }
+  | { type: 'SET_PASSWORD'; payload: string }
+  | { type: 'TOGGLE_PASSWORD_HIDDEN' };
+
 const initialState = {
   endpointType: 'vcenter',
   isLoading: false,
   isSaveDisabled: true,
   isSelectOpen: false,
-  network: '',
+  network: undefined as unknown as NetworkAdapters,
   password: '',
   passwordHidden: true,
   username: '',
   validation: {
-    password: DEFAULT,
-    username: DEFAULT,
+    password: 'default' as ValidationState,
+    username: 'default' as ValidationState,
   },
 };
 
-const reducer = (state, action) => {
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'SET_NETWORK':
       return {
@@ -107,9 +131,12 @@ export const VSphereNetworkModal: FC<VSphereNetworkModalProps> = ({ data, provid
   const { toggleModal } = useModal();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
-  const endpointType = provider?.spec?.settings?.sdkEndpoint;
+  const endpointType = provider?.spec?.settings?.sdkEndpoint ?? '';
 
-  const [state, dispatch] = useReducer(reducer, { ...initialState, endpointType });
+  const [state, dispatch] = useReducer<React.Reducer<State, Action>>(reducer, {
+    ...initialState,
+    endpointType,
+  });
 
   const onSelectToggle = () => {
     dispatch({ type: 'TOGGLE_OPEN' });
@@ -141,7 +168,7 @@ export const VSphereNetworkModal: FC<VSphereNetworkModalProps> = ({ data, provid
     .sort((a, b) => a.inventory.name.localeCompare(b.inventory.name));
 
   const selectedLength = selected.length;
-  const firstInventoryHostPair = selectedInventoryHostPairs[0];
+  const [firstInventoryHostPair] = selectedInventoryHostPairs;
 
   /**
    * Handles save action.

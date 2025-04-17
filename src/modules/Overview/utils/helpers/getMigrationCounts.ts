@@ -15,13 +15,12 @@ export const getMigrationCounts = (migrations: V1beta1Migration[]): Record<strin
   };
 
   for (const migration of migrations || []) {
-    migrationCounts.Total++;
-    if ('conditions' in migration.status) {
+    migrationCounts.Total += 1;
+
+    if (migration.status?.conditions) {
       for (const condition of migration.status.conditions) {
-        if (condition.status === 'True') {
-          if (condition.type in migrationCounts) {
-            migrationCounts[condition.type]++;
-          }
+        if (condition.status === 'True' && condition.type in migrationCounts) {
+          migrationCounts[condition.type] += 1;
         }
       }
     }

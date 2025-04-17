@@ -19,14 +19,7 @@ export const getNetworksUsedBySelectedVms = (
   );
 };
 
-export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicProfile[]) =>
-  toNetworksOrProfiles(vm).map((network) =>
-    vm.providerType === 'ovirt' && nicProfiles
-      ? nicProfiles.find((nicProfile) => nicProfile?.id === network)?.network
-      : network,
-  );
-
-const toNetworksOrProfiles = (vm) => {
+const toNetworksOrProfiles = (vm: ProviderVirtualMachine): unknown[] => {
   switch (vm.providerType) {
     case 'vsphere': {
       return vm?.networks?.map((network) => network?.id) ?? [];
@@ -51,3 +44,10 @@ const toNetworksOrProfiles = (vm) => {
       return [];
   }
 };
+
+export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicProfile[]) =>
+  toNetworksOrProfiles(vm).map((network) =>
+    vm.providerType === 'ovirt' && nicProfiles
+      ? nicProfiles.find((nicProfile) => nicProfile?.id === network)?.network
+      : network,
+  );

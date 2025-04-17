@@ -71,6 +71,14 @@ export type ValidationMsg = {
   description?: string | ReactNode;
 };
 
+export type ActionFieldValidated = {
+  type: 'SET_FIELD_VALIDATED';
+  payload: {
+    field: string;
+    validationState: ValidationMsg;
+  };
+};
+
 // helper methods
 
 export const validateContainerImage = (image: string) => {

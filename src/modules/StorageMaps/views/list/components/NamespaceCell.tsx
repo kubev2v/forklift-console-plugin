@@ -10,7 +10,7 @@ import type { CellProps } from './CellProps';
  */
 export const NamespaceCell: FC<CellProps> = ({ data }) => {
   const { obj: StorageMap } = data;
-  const { namespace } = StorageMap?.metadata || {};
+  const { namespace } = StorageMap?.metadata ?? {};
 
   return (
     <TableLinkCell

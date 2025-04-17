@@ -54,7 +54,9 @@ export const useProvidersInventoryIsLive = ({
       }
     };
 
-    fetchData();
+    (async () => {
+      await fetchData();
+    })();
 
     // Polling interval set by the passed parameter
     const intervalId = setInterval(fetchData, interval);

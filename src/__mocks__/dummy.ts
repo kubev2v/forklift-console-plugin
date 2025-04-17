@@ -6,7 +6,7 @@ export * from './console_components';
 
 // mocks for non-React code (standard ts syntax)
 export class Dummy extends Error {
-  constructor() {
+  public constructor() {
     super('Dummy file for exports');
   }
 }

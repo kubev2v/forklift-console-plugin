@@ -12,19 +12,19 @@ const processVmConditions = (vm) => {
 
 // Helper function to increment vmCounts based on conditions
 const incrementCounts = (conditions: string[], vm, vmCounts: Record<string, number>) => {
-  vmCounts.Total++;
+  vmCounts.Total += 1;
 
   const isRunning =
     vm?.phase !== 'Completed' && !conditions.includes('Failed') && !conditions.includes('Canceled');
   const isCompleted = vm?.phase === 'Completed';
 
   if (isRunning) {
-    vmCounts.Running++;
+    vmCounts.Running += 1;
   }
 
   if (isCompleted) {
     conditions.forEach((condition) => {
-      if (condition in vmCounts) vmCounts[condition]++;
+      if (condition in vmCounts) vmCounts[condition] += 1;
     });
   }
 };

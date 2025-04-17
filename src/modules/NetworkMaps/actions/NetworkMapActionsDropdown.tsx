@@ -55,7 +55,9 @@ const NetworkMapActionsKebabDropdown_: FC<NetworkMapActionsDropdownProps> = ({ d
         position: 'right',
       }}
     >
-      <DropdownList>{NetworkMapActionsDropdownItems({ data })}</DropdownList>
+      <DropdownList>
+        <NetworkMapActionsDropdownItems data={data} />
+      </DropdownList>
     </Dropdown>
   );
 };
