@@ -287,9 +287,9 @@ const ProvidersCreatePage: FC<{
           <FlexItem>
             <Button
               variant="primary"
-              onClick={() => {
+              onClick={async () => {
                 setActiveNamespace(state.projectName);
-                onUpdate();
+                await onUpdate();
               }}
               isDisabled={state.validationError.type === 'error'}
               isLoading={isLoading}

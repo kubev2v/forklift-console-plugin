@@ -62,8 +62,7 @@ const config: Configuration = {
       {
         generator: {
           dataUrl: (content: string) => {
-            content = content.toString();
-            return svgToMiniDataURI(content);
+            return svgToMiniDataURI(content.toString());
           },
         },
         test: /\.svg$/u,

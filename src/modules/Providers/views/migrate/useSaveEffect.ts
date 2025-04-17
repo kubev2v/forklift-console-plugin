@@ -140,10 +140,10 @@ export const updateNetworkMapDestination = (networkMap: V1beta1NetworkMap): V1be
   const networkMapCopy = deepCopy(networkMap);
 
   networkMapCopy.spec.map?.forEach((entry) => {
-    const parts = entry?.destination?.name?.split('/');
-    if (parts?.length === 2) {
-      entry.destination.namespace = parts[0];
-      entry.destination.name = parts[1];
+    const [namespace, name] = entry?.destination?.name?.split('/') ?? [];
+    if (namespace && name) {
+      entry.destination.namespace = namespace;
+      entry.destination.name = name;
     }
   });
   return networkMapCopy;

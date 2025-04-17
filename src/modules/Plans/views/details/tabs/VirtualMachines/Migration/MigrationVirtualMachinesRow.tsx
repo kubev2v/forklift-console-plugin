@@ -64,13 +64,16 @@ const cellRenderers: Record<string, FC<PlanVMsCellProps>> = {
   },
   name: NameCellRenderer,
   status: (props: PlanVMsCellProps) => {
-    const pipeline = props.data.statusVM?.pipeline || [];
+    const pipeline = props.data.statusVM?.pipeline ?? [];
     let lastRunningItem: V1beta1PlanStatusMigrationVmsPipeline;
 
+    const [firstPipelineItem] = pipeline;
+    const lastPipelineItem = pipeline[pipeline.length - 1];
+
     if (pipeline[0]?.phase === 'Pending') {
-      lastRunningItem = pipeline[0];
-    } else if (pipeline[pipeline.length - 1]?.phase === 'Completed') {
-      lastRunningItem = pipeline[pipeline.length - 1];
+      lastRunningItem = firstPipelineItem;
+    } else if (lastPipelineItem?.phase === 'Completed') {
+      lastRunningItem = lastPipelineItem;
     } else {
       const lastNonePendingIndex = pipeline.findIndex((pipe) => pipe?.phase === 'Pending') - 1;
       lastRunningItem = pipeline[lastNonePendingIndex];

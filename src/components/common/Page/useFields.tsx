@@ -10,7 +10,7 @@ const sameOrderAndVisibility = (a: ResourceField[], b: ResourceField[]): boolean
     return false;
   }
 
-  for (let i = 0; i < a.length; i++) {
+  for (let i = 0; i < a.length; i += 1) {
     if (
       a[i]?.resourceFieldId !== b[i]?.resourceFieldId ||
       Boolean(a[i]?.isVisible) !== Boolean(b[i]?.isVisible)

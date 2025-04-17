@@ -154,6 +154,8 @@ export const OpenstackCredentialsEdit: FC<EditComponentProps> = ({ onChange, sec
             },
           });
           break;
+        default:
+          break;
       }
     },
     [secret],

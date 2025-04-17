@@ -116,7 +116,9 @@ const useProviderInventory = <T>({
       }
     };
 
-    fetchData();
+    (async () => {
+      await fetchData();
+    })();
 
     const intervalId = setInterval(fetchData, interval);
     return () => {

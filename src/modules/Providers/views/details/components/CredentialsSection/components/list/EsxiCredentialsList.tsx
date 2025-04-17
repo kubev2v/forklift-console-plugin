@@ -90,7 +90,7 @@ export const EsxiCredentialsList: FC<ListComponentProps> = ({ reveal, secret }) 
         </div>
       </>,
     );
-  }
+  });
 
   return <>{items}</>;
 };

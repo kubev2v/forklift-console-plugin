@@ -47,8 +47,8 @@ export const useK8sWatchForkliftController = (): K8sForkliftControllerWatchResul
   const handleLoadedForkliftControllers = (controllers: V1beta1ForkliftController[] | null) => {
     setLoaded(true);
 
-    const controller = (controllers || [])[0];
-    setController(controller);
+    const [firstController] = controllers ?? [];
+    setController(firstController);
   };
 
   return [controller, controllerLoaded, controllerLoadError];

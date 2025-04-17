@@ -45,7 +45,8 @@ export const onSaveHost = async ({
 
   const encodedProvider = Base64.encode(provider.metadata.name);
 
-  for (const hostPair of hostPairs) {
+  const promises = hostPairs.map(async (hostPair) => {
+    // for (const hostPair of hostPairs) {
     // Look for the same network name in each host
     const hostNetwork = hostPair.inventory.networkAdapters.find(
       ({ name }) => name === network.name,
@@ -57,7 +58,7 @@ export const onSaveHost = async ({
 
     const encodedIpAddress = Base64.encode(hostNetwork.ipAddress);
 
-    await processHostSecretPair(
+    return processHostSecretPair(
       provider,
       hostPair,
       hostNetwork.ipAddress,
@@ -66,7 +67,8 @@ export const onSaveHost = async ({
       encodedProvider,
       encodedIpAddress,
     );
-  }
+  });
+  await Promise.all(promises);
 };
 
 /**
