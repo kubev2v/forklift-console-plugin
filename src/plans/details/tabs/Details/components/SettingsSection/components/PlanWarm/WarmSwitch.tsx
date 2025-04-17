@@ -1,9 +1,14 @@
-import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
+import type { FC } from 'react';
 
 import { Switch } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-const WarmSwitch: ModalInputComponentType = ({ onChange, value }) => {
+type WarmSwitchProps = {
+  onChange: (checked: boolean) => void;
+  value: boolean;
+};
+
+const WarmSwitch: FC<WarmSwitchProps> = ({ onChange, value }) => {
   const { t } = useForkliftTranslation();
   return (
     <Switch
@@ -13,9 +18,9 @@ const WarmSwitch: ModalInputComponentType = ({ onChange, value }) => {
       labelOff={t(
         'Cold migration, the source virtual machines are shut down while the data is copied.',
       )}
-      isChecked={value === 'true'}
+      isChecked={value}
       onChange={(_, checked) => {
-        onChange(checked ? 'true' : 'false');
+        onChange(checked);
       }}
     />
   );

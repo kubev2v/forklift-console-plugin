@@ -34,17 +34,14 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
 
   return (
     <PageSection variant={PageSectionVariants.light} className="plan-header-alerts">
-      {criticalCondition && (
-        <PlanCriticalCondition
-          plan={plan}
-          condition={criticalCondition}
-          storageMaps={storageMaps}
-          networkMaps={networkMaps}
-          sourceStorages={sourceStorages}
-          sourceNetworks={sourceNetworks}
-        />
-      )}
-
+      <PlanCriticalCondition
+        plan={plan}
+        condition={criticalCondition}
+        storageMaps={storageMaps}
+        networkMaps={networkMaps}
+        sourceStorages={sourceStorages}
+        sourceNetworks={sourceNetworks}
+      />
       <PlanPreserveIPWarning
         plan={plan}
         networkMaps={networkMaps}
