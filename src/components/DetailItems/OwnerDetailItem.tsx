@@ -3,6 +3,8 @@ import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/
 import { OwnerReferencesItem } from 'src/modules/Providers/utils/components/DetailsPage/OwnerReferencesItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { moreInfoOwnerDetailItem } from '@utils/links';
+
 import type { ResourceDetailsItemProps } from './utils/types';
 
 const OwnerDetailsItem: FC<ResourceDetailsItemProps> = ({
@@ -12,8 +14,6 @@ const OwnerDetailsItem: FC<ResourceDetailsItemProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const defaultMoreInfoLink =
-    'https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/';
   const defaultHelpContent = t(
     `List of objects depended by this object. If ALL objects in the list have been deleted,
     this object will be garbage collected. If this object is managed by a controller,
@@ -25,7 +25,7 @@ const OwnerDetailsItem: FC<ResourceDetailsItemProps> = ({
     <DetailsItem
       title={t('Owner')}
       content={<OwnerReferencesItem resource={resource} />}
-      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
+      moreInfoLink={moreInfoLink ?? moreInfoOwnerDetailItem}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['metadata', 'ownerReferences']}
     />

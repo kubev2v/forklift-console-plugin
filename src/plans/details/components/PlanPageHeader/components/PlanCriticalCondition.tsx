@@ -1,12 +1,9 @@
-import { type FC, type PropsWithChildren, type ReactNode, useMemo } from 'react';
+import { type FC, type PropsWithChildren, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Linkify from 'react-linkify';
-import { useHistory } from 'react-router';
-import { PlanConditionType } from 'src/modules/Plans/utils/types/PlanCondition';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { EMPTY_MSG } from 'src/utils/constants';
-import { ForkliftTrans } from 'src/utils/i18n';
 
 import type {
   V1beta1NetworkMap,
@@ -17,8 +14,6 @@ import type {
 import {
   Alert,
   AlertVariant,
-  Button,
-  ButtonVariant,
   List,
   ListItem,
   Stack,
@@ -30,6 +25,11 @@ import {
 import { getName } from '@utils/crds/common/selectors';
 import { getPlanNetworkMapName, getPlanStorageMapName } from '@utils/crds/plans/selectors';
 import { getPlanURL } from '@utils/crds/plans/utils';
+import { isEmpty } from '@utils/helpers';
+
+import { PlanConditionType } from '../utils/constants';
+
+import TroubleshootMessage from './TroubleshootMessage';
 
 type PlanCriticalConditionProps = PropsWithChildren & {
   plan: V1beta1Plan;
@@ -49,8 +49,7 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
   storageMaps,
 }) => {
   const { t } = useTranslation();
-  const history = useHistory();
-  const planURL = getPlanURL(plan);
+
   const type = condition.type as PlanConditionType;
 
   const planStorageMapName = getPlanStorageMapName(plan);
@@ -82,30 +81,10 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
     [planNetworkMap, sourceNetworks],
   );
 
+  if (isEmpty(condition)) return null;
+
   const showList =
     type === PlanConditionType.VMStorageNotMapped || type === PlanConditionType.VMNetworksNotMapped;
-
-  const troubleshoot: ReactNode = [
-    PlanConditionType.VMNetworksNotMapped,
-    PlanConditionType.VMStorageNotMapped,
-    PlanConditionType.VMMultiplePodNetworkMappings,
-  ].includes(type) ? (
-    <ForkliftTrans>
-      To troubleshoot, check and edit your plan{' '}
-      <Button
-        isInline
-        variant={ButtonVariant.link}
-        onClick={() => {
-          history.push(`${planURL}/mappings`);
-        }}
-      >
-        mappings
-      </Button>
-      .
-    </ForkliftTrans>
-  ) : (
-    t('To troubleshoot, check the Forklift controller pod logs.')
-  );
 
   return (
     <Alert
@@ -118,7 +97,7 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
           <Text component={TextVariants.p}>
             <Linkify>{condition.message ?? EMPTY_MSG}</Linkify>
             {condition.message?.endsWith('.') ? ' ' : '. '}
-            {troubleshoot}
+            <TroubleshootMessage planURL={getPlanURL(plan)} type={type} />
           </Text>
         </TextContent>
         {showList && (

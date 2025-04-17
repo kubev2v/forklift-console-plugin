@@ -25,7 +25,7 @@ const PlanDetailsNav: FC<PlanDetailsNavProps> = ({ name, namespace }) => {
   return (
     <Suspend obj={plan} loaded={loaded} loadError={loadError}>
       <PlanPageHeader plan={plan} />
-      <HorizontalNav pages={pages} resource={plan} />
+      <HorizontalNav pages={pages} />
     </Suspend>
   );
 };
