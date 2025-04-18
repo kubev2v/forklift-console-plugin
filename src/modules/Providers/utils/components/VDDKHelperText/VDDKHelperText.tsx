@@ -3,7 +3,7 @@ import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans } from 'src/utils/i18n';
 
 const CREATE_VDDK_HELP_LINK =
-  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
+  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
 
 export const VDDKHelperText: FC = () => (
   <ForkliftTrans>
