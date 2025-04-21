@@ -56,9 +56,7 @@ export default [
           jsx: true,
         },
         ecmaVersion: 'latest',
-        projectService: {
-          defaultProject: 'tsconfig.json',
-        },
+        project: 'tsconfig.eslint.json',
         sourceType: 'module',
         tsconfigRootDir: import.meta.dirname,
       },

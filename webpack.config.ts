@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-
 import * as path from 'path';
 
+// eslint-disable-next-line import/default
+import CopyPlugin from 'copy-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
@@ -13,8 +13,6 @@ import { ConsoleRemotePlugin } from '@openshift-console/dynamic-plugin-sdk-webpa
 import { ENVIRONMENT_DEFAULTS } from './environment-defaults';
 import extensions from './plugin-extensions';
 import pluginMetadata from './plugin-metadata';
-
-const CopyPlugin = require('copy-webpack-plugin');
 
 type Configuration = {
   devServer?: WebpackDevServerConfiguration;
@@ -47,7 +45,7 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        exclude: [/node_modules/u, /__tests__/u, /__mocks__/u, /testing/u],
+        exclude: [/node_modules/u, /__tests__/u, /__mocks__/u],
         test: /\.(?:jsx?|tsx?)$/u,
         use: [
           {
