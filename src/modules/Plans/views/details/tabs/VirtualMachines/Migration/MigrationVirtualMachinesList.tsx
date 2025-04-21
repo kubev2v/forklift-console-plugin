@@ -11,7 +11,6 @@ import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils/helpers
 import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
 import type {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1PersistentVolumeClaim,
@@ -22,6 +21,7 @@ import type {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
+import { t } from '@utils/i18n';
 
 import { MigrationVMsCancelButton } from '../components/MigrationVMsCancelButton';
 import { PlanVMsDeleteButton } from '../components/PlanVMsDeleteButton';
@@ -73,7 +73,7 @@ const getVMMigrationStatus = (obj: VMData) => {
   return 'Unknown';
 };
 
-const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
+const fieldsMetadata = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -281,7 +281,6 @@ export const MigrationVirtualMachinesList: FC<{ planData: PlanData }> = ({ planD
   const canSelectWhenNotExecuting = (item: VMData) =>
     (item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined) && !isExecuting;
 
-  const fieldsMetadata = fieldsMetadataFactory(t);
   const props: PageWithSelectionProps = {
     CellMapper: MigrationVirtualMachinesRow,
     dataSource: [vmData || [], true, undefined],

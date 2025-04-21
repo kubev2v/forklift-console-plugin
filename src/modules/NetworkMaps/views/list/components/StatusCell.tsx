@@ -20,13 +20,15 @@ export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
 
   switch (phase) {
     case 'Critical':
-      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} t={t} />;
+      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} />;
     default:
       return <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>;
   }
 };
 
-const ErrorStatusCell: FC<CellProps & { t }> = ({ data, fields, t }) => {
+const ErrorStatusCell: FC<CellProps> = ({ data, fields }) => {
+  const { t } = useForkliftTranslation();
+
   const { obj: networkMap } = data;
   const phase = getResourceFieldValue(data, 'phase', fields);
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');

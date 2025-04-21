@@ -1,9 +1,9 @@
-import type { TFunction } from 'react-i18next';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import type { EnumValue } from '@components/common/utils/types';
+import { t } from '@utils/i18n';
 
-export const concernFilter = (t: TFunction) => ({
+export const concernFilter = () => ({
   dynamicFilter: (items: { vm: { concerns: { label: string }[] } }[]) => ({
     values: [
       ...enumToTuple({

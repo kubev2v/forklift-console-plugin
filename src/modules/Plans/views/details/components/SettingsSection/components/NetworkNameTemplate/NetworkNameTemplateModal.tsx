@@ -24,7 +24,7 @@ const NetworkNameTemplateModal: FC<SettingsEditModalProps> = ({ jsonPath, resour
           bodyText={t(
             'Network name template is a template for generating network interface names in the target virtual machine.',
           )}
-          allowedVariables={getNetworkNameTemplateAllowedVariables(t)}
+          allowedVariables={getNetworkNameTemplateAllowedVariables()}
         />
       }
       helperText={<NameTemplateModalHelper examples={networkNameTemplateHelperExamples} />}

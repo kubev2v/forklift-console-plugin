@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
 import type { VSphereVM } from '@kubev2v/types';
+import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
@@ -13,7 +13,7 @@ import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
 import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
-export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const vSphereVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -27,7 +27,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    filter: concernFilter(t),
+    filter: concernFilter(),
     isVisible: true,
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
@@ -35,7 +35,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    filter: vsphereHostFilter(t),
+    filter: vsphereHostFilter(),
     isIdentity: false,
     isVisible: true,
     jsonPath: '$.hostName',
@@ -113,7 +113,7 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (pro
       {...props}
       obj={{ ...obj, vmData: newVMData }}
       cellMapper={VSphereVirtualMachinesCells}
-      fieldsMetadataFactory={vSphereVmFieldsMetadataFactory}
+      fieldsMetadata={vSphereVmFieldsMetadataFactory}
       pageId="VSphereVirtualMachinesList"
     />
   );

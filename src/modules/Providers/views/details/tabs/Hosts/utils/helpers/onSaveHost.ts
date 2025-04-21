@@ -46,7 +46,6 @@ export const onSaveHost = async ({
   const encodedProvider = Base64.encode(provider.metadata.name);
 
   const promises = hostPairs.map(async (hostPair) => {
-    // for (const hostPair of hostPairs) {
     // Look for the same network name in each host
     const hostNetwork = hostPair.inventory.networkAdapters.find(
       ({ name }) => name === network.name,

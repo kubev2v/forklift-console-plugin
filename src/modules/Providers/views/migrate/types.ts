@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import type {
   OpenShiftNamespace,
   OpenshiftResource,
@@ -70,7 +70,7 @@ export type CreateVmMigrationPageState = {
     networkIdsUsedBySelectedVms: string[];
     sourceNetworkLabelToId: Record<string, string>;
     // calculated on start
-    vmFieldsFactory: [ResourceFieldFactory, FC<RowProps<VmData>>];
+    vmFieldsFactory: [ResourceField[], FC<RowProps<VmData>>];
     // for OpenShift source providers
     namespacesUsedBySelectedVms: string[];
   };

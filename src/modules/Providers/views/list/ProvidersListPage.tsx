@@ -5,7 +5,6 @@ import StandardPage from 'src/components/page/StandardPage';
 import { PROVIDER_STATUS, PROVIDERS } from 'src/utils/enums';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   type OpenshiftProvider,
   type OpenstackProvider,
@@ -18,6 +17,7 @@ import {
   type VSphereProvider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { t } from '@utils/i18n';
 
 import useGetDeleteAndEditAccessReview from '../../hooks/useGetDeleteAndEditAccessReview';
 import useProvidersInventoryList from '../../hooks/useProvidersInventoryList';
@@ -33,7 +33,7 @@ import ProviderRow from './ProviderRow';
 
 import './ProvidersListPage.style.css';
 
-export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const fieldsMetadata = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -210,7 +210,7 @@ const ProvidersListPage: FC<{
       addButton={permissions.canCreate && <ProvidersAddButton dataTestId="add-provider-button" />}
       dataSource={[data || [], providersLoaded, providersLoadError]}
       RowMapper={ProviderRow}
-      fieldsMetadata={fieldsMetadataFactory(t)}
+      fieldsMetadata={fieldsMetadata}
       namespace={namespace}
       title={t('Providers')}
       userSettings={userSettings}

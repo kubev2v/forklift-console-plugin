@@ -60,7 +60,7 @@ const ConcernPopover: FC<{
   return (
     <Popover
       aria-label={`${category} popover`}
-      headerContent={<div>{getCategoryTitle(category, t)}</div>}
+      headerContent={<div>{getCategoryTitle(category)}</div>}
       bodyContent={<ConcernList concerns={concerns} />}
       footerContent={t('Total: {{length}}', { length: concerns.length })}
     >

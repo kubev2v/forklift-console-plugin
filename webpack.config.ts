@@ -47,7 +47,7 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        exclude: [/node_modules/u, /__tests__/u, /__mocks__/u],
+        exclude: [/node_modules/u, /__tests__/u, /__mocks__/u, /testing/u],
         test: /\.(?:jsx?|tsx?)$/u,
         use: [
           {

@@ -1,19 +1,17 @@
-import type { TFunction } from 'react-i18next';
-
 import {
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InfoCircleIcon,
 } from '@patternfly/react-icons';
+import { t } from '@utils/i18n';
 
 /**
  * Retrieves the title for a given concern category.
  *
  * @param {string} category - The category of the concern.
- * @param {TFunction} t - The translation function.
  * @returns {string} The title for the given category.
  */
-export const getCategoryTitle = (category: string, t: TFunction): string => {
+export const getCategoryTitle = (category: string): string => {
   const titles = {
     Critical: t('Critical concerns'),
     Information: t('Information concerns'),

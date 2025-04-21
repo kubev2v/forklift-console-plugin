@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
@@ -11,7 +11,7 @@ import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
 import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
-export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const openShiftVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -53,7 +53,7 @@ export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     filter: {
       placeholderLabel: t('Filter by features'),
       type: 'features',
-      values: enumToTuple(toVmFeatureEnum(t)),
+      values: enumToTuple(toVmFeatureEnum()),
     },
     isIdentity: false,
     isVisible: true,
@@ -80,7 +80,7 @@ export const OpenShiftVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (p
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OpenShiftVirtualMachinesCells}
-    fieldsMetadataFactory={openShiftVmFieldsMetadataFactory}
+    fieldsMetadata={openShiftVmFieldsMetadataFactory}
     pageId="OpenShiftVirtualMachinesList"
   />
 );

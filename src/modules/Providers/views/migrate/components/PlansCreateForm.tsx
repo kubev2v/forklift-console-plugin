@@ -1,5 +1,4 @@
 import type { FormEvent, ReactNode } from 'react';
-import type { TFunction } from 'react-i18next';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import SectionHeading from 'src/components/headers/SectionHeading';
@@ -25,6 +24,7 @@ import {
   Stack,
   StackItem,
 } from '@patternfly/react-core';
+import { t } from '@utils/i18n';
 
 import {
   addNetworkMapping,
@@ -44,9 +44,10 @@ import { MappingList } from './MappingList';
 import { MappingListHeader } from './MappingListHeader';
 import { StateAlerts } from './StateAlerts';
 
-const buildNetworkMessages = (
-  t: TFunction,
-): Record<NetworkAlerts, { title: string; body: string; blocker?: boolean }> => ({
+const buildNetworkMessages = (): Record<
+  NetworkAlerts,
+  { title: string; body: string; blocker?: boolean }
+> => ({
   MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING: {
     blocker: true,
     body: t('VM(s) with more than one interface mapped to Pod Networking were detected.'),
@@ -81,9 +82,10 @@ const buildNetworkMessages = (
     title: t('Incomplete mapping'),
   },
 });
-const buildStorageMessages = (
-  t: TFunction,
-): Record<StorageAlerts, { title: string; body: string; blocker?: boolean }> => ({
+const buildStorageMessages = (): Record<
+  StorageAlerts,
+  { title: string; body: string; blocker?: boolean }
+> => ({
   STORAGE_MAP_NAME_REGENERATED: {
     body: t('New name was generated for the Storage Map due to naming conflict.'),
     title: t('Storage Map name re-generated'),
@@ -142,8 +144,8 @@ export const PlansCreateForm = ({
     validation,
   } = state;
 
-  const networkMessages = buildNetworkMessages(t);
-  const storageMessages = buildStorageMessages(t);
+  const networkMessages = buildNetworkMessages();
+  const storageMessages = buildStorageMessages();
 
   const onChangeTargetProvider: (value: string, event: FormEvent<HTMLSelectElement>) => void = (
     value,

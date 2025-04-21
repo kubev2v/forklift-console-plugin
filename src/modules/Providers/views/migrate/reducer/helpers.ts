@@ -6,7 +6,7 @@ import { withTr } from 'src/components/common/TableView/withTr';
 import { getIsTarget } from 'src/modules/Providers/utils/helpers/getIsTarget';
 import { validateK8sName } from 'src/modules/Providers/utils/validators/common';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import type {
   IoK8sApimachineryPkgApisMetaV1ObjectMeta,
   OVirtNicProfile,
@@ -227,7 +227,7 @@ export const getObjectRef = (
 
 export const resourceFieldsForType = (
   type: ProviderType,
-): [ResourceFieldFactory, FC<RowProps<VmData>>] => {
+): [ResourceField[], FC<RowProps<VmData>>] => {
   switch (type) {
     case 'openshift':
       return [openShiftVmFieldsMetadataFactory, withTr(OpenShiftVirtualMachinesCells)];
@@ -240,7 +240,7 @@ export const resourceFieldsForType = (
     case 'vsphere':
       return [vSphereVmFieldsMetadataFactory, withTr(VSphereVirtualMachinesCells)];
     default:
-      return [() => [], DefaultRow];
+      return [[], DefaultRow];
   }
 };
 

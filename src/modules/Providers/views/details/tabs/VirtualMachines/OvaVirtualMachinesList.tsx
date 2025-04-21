@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import { concernFilter } from './utils/filters/concernFilter';
 import { OvaVirtualMachinesCells } from './OvaVirtualMachinesRow';
 import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
-export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const ovaVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -21,7 +21,7 @@ export const ovaVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    filter: concernFilter(t),
+    filter: concernFilter(),
     isVisible: true,
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
@@ -46,7 +46,7 @@ export const OvaVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) 
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OvaVirtualMachinesCells}
-    fieldsMetadataFactory={ovaVmFieldsMetadataFactory}
+    fieldsMetadata={ovaVmFieldsMetadataFactory}
     pageId="OvaVirtualMachinesList"
   />
 );

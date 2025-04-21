@@ -37,7 +37,7 @@ export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
 
   switch (phase) {
     case 'Critical':
-      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} t={t} />;
+      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} />;
     case 'Not Ready':
     case 'Ready':
     default:
@@ -45,7 +45,8 @@ export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
   }
 };
 
-const ErrorStatusCell: FC<CellProps & { t }> = ({ data, fields, t }) => {
+const ErrorStatusCell: FC<CellProps> = ({ data, fields }) => {
+  const { t } = useForkliftTranslation();
   const { obj: StorageMap } = data;
   const phase = getResourceFieldValue(data, 'phase', fields) as Phase;
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');

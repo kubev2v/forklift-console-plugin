@@ -46,7 +46,7 @@ export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
   switch (phase) {
     case 'ConnectionFailed':
     case 'ValidationFailed':
-      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} t={t} />;
+      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} />;
     case 'Ready':
     case 'Staging':
     default:
@@ -61,7 +61,8 @@ export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
  * @param {Object} props.fields - The fields object for the cell.
  * @returns {JSX.Element} The JSX element representing the error status cell.
  */
-const ErrorStatusCell: FC<CellProps & { t }> = ({ data, fields, t }) => {
+const ErrorStatusCell: FC<CellProps> = ({ data, fields }) => {
+  const { t } = useForkliftTranslation();
   const { provider } = data;
   const phase = getResourceFieldValue(data, 'phase', fields) as Phase;
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
