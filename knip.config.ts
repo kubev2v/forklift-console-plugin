@@ -26,5 +26,5 @@ export default {
   ],
   ignore: ['i18next-parser.config.js', 'testing/**'],
   ignoreBinaries: ['kubectl'],
-  ignoreDependencies: ['@testing-library/cypress', 'ts-node'],
+  ignoreDependencies: ['ts-node'],
 } satisfies KnipConfig;
