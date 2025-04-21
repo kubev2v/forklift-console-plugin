@@ -9,6 +9,7 @@
   "description": "",
   "devDependencies": {
     "@testing-library/cypress": "^10.0.3",
-    "cypress": "^14.1.0"
+    "cypress": "^14.1.0",
+    "typescript": "^5.8.2"
   }
 }
