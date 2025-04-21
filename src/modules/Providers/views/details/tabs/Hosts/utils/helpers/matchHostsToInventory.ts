@@ -46,7 +46,7 @@ export const matchHostsToInventory = (
   // Now iterate through the inventories and try to find a matching host and network adapter for each
   return inventories.map((inventory) => {
     const host = hostMap.get(inventory.id);
-    let networkAdapter: NetworkAdapters | undefined = undefined;
+    let networkAdapter: NetworkAdapters | undefined;
     if (host?.spec?.ipAddress && inventory.networkAdapters) {
       networkAdapter = inventory.networkAdapters.find(
         (adapter) => adapter.ipAddress === host.spec?.ipAddress,

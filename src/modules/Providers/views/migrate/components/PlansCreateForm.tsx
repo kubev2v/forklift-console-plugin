@@ -1,4 +1,5 @@
 import type { FormEvent, ReactNode } from 'react';
+import type { TFunction } from 'react-i18next';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import SectionHeading from 'src/components/headers/SectionHeading';
@@ -44,7 +45,7 @@ import { MappingListHeader } from './MappingListHeader';
 import { StateAlerts } from './StateAlerts';
 
 const buildNetworkMessages = (
-  t: (key: string) => string,
+  t: TFunction,
 ): Record<NetworkAlerts, { title: string; body: string; blocker?: boolean }> => ({
   MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING: {
     blocker: true,
@@ -81,7 +82,7 @@ const buildNetworkMessages = (
   },
 });
 const buildStorageMessages = (
-  t: (key: string) => string,
+  t: TFunction,
 ): Record<StorageAlerts, { title: string; body: string; blocker?: boolean }> => ({
   STORAGE_MAP_NAME_REGENERATED: {
     body: t('New name was generated for the Storage Map due to naming conflict.'),

@@ -1,4 +1,5 @@
 import type { ChangeEvent, MouseEvent, ReactNode } from 'react';
+import type { TFunction } from 'react-i18next';
 
 import type { SelectOptionObject } from '@patternfly/react-core/deprecated';
 export type EnumGroup = {
@@ -57,7 +58,7 @@ export type ResourceField = {
   compareFn?: (a: any, b: any, locale: string) => number;
 };
 
-export type ResourceFieldFactory = (t: (resource: string) => string) => ResourceField[];
+export type ResourceFieldFactory = (t: TFunction) => ResourceField[];
 
 export type GlobalActionToolbarProps<T> = {
   // data currently visible on the screen (i.e. adjusted by paging and filtering)

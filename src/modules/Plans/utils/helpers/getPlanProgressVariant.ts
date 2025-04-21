@@ -3,7 +3,7 @@ import { ProgressVariant } from '@patternfly/react-core';
 import { PlanPhase } from '../types/PlanPhase';
 
 export const getPlanProgressVariant = (phase: PlanPhase): ProgressVariant | undefined => {
-  let progressVariant = undefined;
+  let progressVariant;
 
   switch (phase) {
     case PlanPhase.Error:

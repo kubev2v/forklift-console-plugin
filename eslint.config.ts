@@ -161,7 +161,6 @@ export default [
         },
       ],
       'no-ternary': 'off',
-      'no-undef-init': 'off',
       'no-undefined': 'off',
       'no-unused-vars': 'off',
       'no-warning-comments': 'off',
