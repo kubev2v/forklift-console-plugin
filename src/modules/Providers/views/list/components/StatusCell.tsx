@@ -9,6 +9,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
+import { t } from '@utils/i18n';
 
 import type { CellProps } from './CellProps';
 
@@ -22,14 +23,10 @@ const statusIcons = {
 };
 
 const phaseLabels = {
-  // t('Connection Failed')
-  ConnectionFailed: 'Connection Failed',
-  // t('Ready')
-  Ready: 'Ready',
-  // t('Staging')
-  Staging: 'Staging',
-  // t('Validation Failed')
-  ValidationFailed: 'Validation Failed',
+  ConnectionFailed: t('Connection Failed'),
+  Ready: t('Ready'),
+  Staging: t('Staging'),
+  ValidationFailed: t('Validation Failed'),
 };
 
 /**

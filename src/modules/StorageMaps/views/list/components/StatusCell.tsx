@@ -9,6 +9,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { StorageMapModelRef } from '@kubev2v/types';
 import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
+import { t } from '@utils/i18n';
 
 import type { CellProps } from './CellProps';
 
@@ -21,12 +22,9 @@ const statusIcons = {
 };
 
 const phaseLabels = {
-  // t('Critical')
-  Critical: 'Critical',
-  // t('Not Ready')
-  'Not Ready': 'Not Ready',
-  // t('Ready')
-  Ready: 'Ready',
+  Critical: t('Critical'),
+  'Not Ready': t('Not Ready'),
+  Ready: t('Ready'),
 };
 
 export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
