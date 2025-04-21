@@ -9,8 +9,25 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
+import { t } from '@utils/i18n';
 
 import type { CellProps } from './CellProps';
+
+type Phase = 'ConnectionFailed' | 'Ready' | 'Staging' | 'ValidationFailed';
+
+const statusIcons = {
+  ConnectionFailed: <ExclamationCircleIcon color="#C9190B" />,
+  Ready: <CheckCircleIcon color="#3E8635" />,
+  Staging: <Spinner size="sm" />,
+  ValidationFailed: <ExclamationCircleIcon color="#C9190B" />,
+};
+
+const phaseLabels = {
+  ConnectionFailed: t('Connection Failed'),
+  Ready: t('Ready'),
+  Staging: t('Staging'),
+  ValidationFailed: t('Validation Failed'),
+};
 
 /**
  * StatusCell component, used for displaying the status of a resource.
@@ -20,18 +37,15 @@ import type { CellProps } from './CellProps';
 export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
   const { t } = useForkliftTranslation();
 
-  const phase = getResourceFieldValue(data, 'phase', fields);
+  const phase = getResourceFieldValue(data, 'phase', fields) as Phase;
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
 
   switch (phase) {
     case 'ConnectionFailed':
     case 'ValidationFailed':
-      return ErrorStatusCell({
-        data,
-        fieldId,
-        fields,
-        t,
-      });
+      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} />;
+    case 'Ready':
+    case 'Staging':
     default:
       return <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>;
   }
@@ -44,9 +58,10 @@ export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
  * @param {Object} props.fields - The fields object for the cell.
  * @returns {JSX.Element} The JSX element representing the error status cell.
  */
-const ErrorStatusCell: FC<CellProps & { t }> = ({ data, fields, t }) => {
+const ErrorStatusCell: FC<CellProps> = ({ data, fields }) => {
+  const { t } = useForkliftTranslation();
   const { provider } = data;
-  const phase = getResourceFieldValue(data, 'phase', fields);
+  const phase = getResourceFieldValue(data, 'phase', fields) as Phase;
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
   const providerURL = getResourceUrl({
     name: provider?.metadata?.name,
@@ -55,7 +70,7 @@ const ErrorStatusCell: FC<CellProps & { t }> = ({ data, fields, t }) => {
   });
 
   // Find the error message from the status conditions
-  const bodyContent = provider?.status?.conditions.find(
+  const bodyContent = provider?.status?.conditions?.find(
     (condition) => condition?.category === 'Critical',
   )?.message;
 
@@ -86,22 +101,4 @@ const ErrorStatusCell: FC<CellProps & { t }> = ({ data, fields, t }) => {
       </Button>
     </Popover>
   );
-};
-
-const statusIcons = {
-  ConnectionFailed: <ExclamationCircleIcon color="#C9190B" />,
-  Ready: <CheckCircleIcon color="#3E8635" />,
-  Staging: <Spinner size="sm" />,
-  ValidationFailed: <ExclamationCircleIcon color="#C9190B" />,
-};
-
-const phaseLabels = {
-  // t('Connection Failed')
-  ConnectionFailed: 'Connection Failed',
-  // t('Ready')
-  Ready: 'Ready',
-  // t('Staging')
-  Staging: 'Staging',
-  // t('Validation Failed')
-  ValidationFailed: 'Validation Failed',
 };

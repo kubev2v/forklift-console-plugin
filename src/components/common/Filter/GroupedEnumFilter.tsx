@@ -78,7 +78,7 @@ export const GroupedEnumFilter = ({
     }
 
     onSelectedEnumIdsChange(
-      selectedEnumIds.filter((id) => id2enum[id] && id !== id),
+      selectedEnumIds.filter((enumId) => id2enum[enumId] && id !== enumId),
       id2enum[id].resourceFieldId,
     );
   };

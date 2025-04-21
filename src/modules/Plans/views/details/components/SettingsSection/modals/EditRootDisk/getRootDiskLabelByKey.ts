@@ -1,3 +1,5 @@
+import { t } from '@utils/i18n';
+
 /**
  * Type definition for DiskOption.
  * @typedef {Object} DiskOption
@@ -11,10 +13,9 @@ type DiskOption = {
 
 /**
  * Generates an array of disk options.
- * @param {Function} [t=(text: string) => text] - Translation function.
  * @returns {DiskOption[]} Array of disk options.
  */
-export const diskOptions = (t = (text: string) => text): DiskOption[] => [
+export const diskOptions = (): DiskOption[] => [
   { description: t('Boot from first root device'), key: '' },
   { description: t('Boot from the first hard drive'), key: '/dev/sda' },
   {
@@ -53,6 +54,7 @@ export const getRootDiskLabelByKey = (key_: string | number): string => {
   const key = key_.toString();
 
   if (key.startsWith('/dev/sd') && key.length >= 8) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     const diskLetter = key[7];
     const partitionNumber = key.length > 8 ? key.slice(8) : '';
 

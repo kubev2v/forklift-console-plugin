@@ -1,19 +1,19 @@
 import type { FC } from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
 import type { VSphereVM } from '@kubev2v/types';
+import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
 import { concernFilter } from './utils/filters/concernFilter';
-import { VsphereHostFilter } from './utils/filters/VsphereHostFilter';
+import { vsphereHostFilter } from './utils/filters/VsphereHostFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
 import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
-export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const vSphereVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -27,7 +27,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    filter: concernFilter(t),
+    filter: concernFilter(),
     isVisible: true,
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
@@ -35,7 +35,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    filter: VsphereHostFilter(t),
+    filter: vsphereHostFilter(),
     isIdentity: false,
     isVisible: true,
     jsonPath: '$.hostName',
@@ -71,7 +71,7 @@ export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     filter: {
       placeholderLabel: t('Filter by power state'),
       type: 'enum',
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+      values: enumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
     },
     isIdentity: false,
     isVisible: true,
@@ -113,7 +113,7 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (pro
       {...props}
       obj={{ ...obj, vmData: newVMData }}
       cellMapper={VSphereVirtualMachinesCells}
-      fieldsMetadataFactory={vSphereVmFieldsMetadataFactory}
+      fieldsMetadata={vSphereVmFieldsMetadataFactory}
       pageId="VSphereVirtualMachinesList"
     />
   );

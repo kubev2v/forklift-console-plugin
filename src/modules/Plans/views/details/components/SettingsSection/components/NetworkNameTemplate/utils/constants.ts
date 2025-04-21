@@ -1,4 +1,6 @@
-export const getNetworkNameTemplateAllowedVariables = (t: (string) => string) => [
+import { t } from '@utils/i18n';
+
+export const getNetworkNameTemplateAllowedVariables = () => [
   t(
     '- .NetworkName: If target network is multus, name of the Multus network attachment definition, empty otherwise.',
   ),

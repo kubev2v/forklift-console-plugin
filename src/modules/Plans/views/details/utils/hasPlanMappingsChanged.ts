@@ -20,15 +20,15 @@ const hasPlanMappingsNetworkChanged = (
   }
 
   // Compare each mapping entry
-  for (const index in currPlanNetworkMaps) {
+  for (let i = 0; i < currPlanNetworkMaps.length; i += 1) {
+    const currMap = currPlanNetworkMaps[i];
+    const nextMap = nextPlanNetworkMaps[i];
+
     if (
-      currPlanNetworkMaps[index].source?.id !== nextPlanNetworkMaps[index].source?.id ||
-      currPlanNetworkMaps[index].destination?.name !==
-        nextPlanNetworkMaps[index].destination?.name ||
-      currPlanNetworkMaps[index].destination?.type !==
-        nextPlanNetworkMaps[index].destination?.type ||
-      currPlanNetworkMaps[index].destination?.namespace !==
-        nextPlanNetworkMaps[index].destination?.namespace
+      currMap.source?.id !== nextMap.source?.id ||
+      currMap.destination?.name !== nextMap.destination?.name ||
+      currMap.destination?.type !== nextMap.destination?.type ||
+      currMap.destination?.namespace !== nextMap.destination?.namespace
     ) {
       return true;
     }
@@ -58,11 +58,13 @@ const hasPlanMappingsStorageChanged = (
   }
 
   // Compare each mapping entry
-  for (const index in currPlanStorageMaps) {
+  for (let i = 0; i < currPlanStorageMaps.length; i += 1) {
+    const currMap = currPlanStorageMaps[i];
+    const nextMap = nextPlanStorageMaps[i];
+
     if (
-      currPlanStorageMaps[index].source?.id !== nextPlanStorageMaps[index].source?.id ||
-      currPlanStorageMaps[index].destination?.storageClass !==
-        nextPlanStorageMaps[index].destination?.storageClass
+      currMap.source?.id !== nextMap.source?.id ||
+      currMap.destination?.storageClass !== nextMap.destination?.storageClass
     ) {
       return true;
     }

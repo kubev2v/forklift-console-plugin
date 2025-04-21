@@ -1,6 +1,5 @@
 import type { FC, ReactNode } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   getGroupVersionKindForResource,
@@ -12,6 +11,7 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import { Breadcrumb, BreadcrumbItem, Split, SplitItem } from '@patternfly/react-core';
+import { t } from '@utils/i18n';
 
 import { getResourceUrl } from '../../helpers/getResourceUrl';
 
@@ -68,9 +68,7 @@ type PageHeadingsProps = {
 };
 
 const BreadCrumbs: FC<BreadCrumbsProps> = ({ model, namespace }) => {
-  const { t } = useForkliftTranslation();
-
-  const breadcrumbs = breadcrumbsForModel(t, model, namespace);
+  const breadcrumbs = breadcrumbsForModel(model, namespace);
 
   return (
     <Breadcrumb className="co-breadcrumb">
@@ -102,7 +100,7 @@ type BreadCrumbsProps = {
   namespace?: string;
 };
 
-const breadcrumbsForModel = (t, model: K8sModel, namespace: string) => {
+const breadcrumbsForModel = (model: K8sModel, namespace: string) => {
   const groupVersionKind: K8sGroupVersionKind = {
     group: model.apiGroup,
     kind: model.kind,

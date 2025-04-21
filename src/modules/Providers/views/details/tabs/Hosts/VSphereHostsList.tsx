@@ -8,9 +8,9 @@ import {
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
 import { HostModelGroupVersionKind, type V1beta1Host, type VSphereHost } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { t } from '@utils/i18n';
 
 import { SelectNetworkButton } from './components/SelectNetworkButton';
 import {
@@ -20,7 +20,7 @@ import {
 import type { ProviderHostsProps } from './ProviderHosts';
 import { VSphereHostsCells } from './VSphereHostsRow';
 
-const hostsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+const hostsFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -98,7 +98,7 @@ export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
   const props: PageWithSelectionProps = {
     CellMapper: VSphereHostsCells,
     dataSource: [hostsData || [], !loading, error],
-    fieldsMetadata: hostsFieldsMetadataFactory(t),
+    fieldsMetadata: hostsFieldsMetadataFactory,
     namespace,
     page: 1,
     title: t('Hosts'),

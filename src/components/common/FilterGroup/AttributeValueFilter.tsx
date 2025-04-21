@@ -68,7 +68,7 @@ export const AttributeValueFilter = ({
           role="menu"
           aria-label={'Select Filter'}
           isOpen={isOpen}
-          selected={currentFilter && currentFilter.label}
+          selected={currentFilter?.label}
           onSelect={onSelect}
           onOpenChange={(nextOpen: boolean) => {
             setIsOpen(nextOpen);

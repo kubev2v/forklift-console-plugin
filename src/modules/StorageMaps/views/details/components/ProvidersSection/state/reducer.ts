@@ -3,11 +3,11 @@ import { deepCopy } from 'src/utils/deepCopy';
 import type { V1beta1Provider, V1beta1StorageMap } from '@kubev2v/types';
 
 export type ProvidersSectionState = {
-  StorageMap: V1beta1StorageMap | null;
-  sourceProviderMode: 'view' | 'edit';
-  targetProviderMode: 'view' | 'edit';
-  hasChanges: boolean;
-  updating: boolean;
+  StorageMap?: V1beta1StorageMap;
+  sourceProviderMode?: 'view' | 'edit';
+  targetProviderMode?: 'view' | 'edit';
+  hasChanges?: boolean;
+  updating?: boolean;
 };
 
 type ProvidersAction =
@@ -22,29 +22,49 @@ export const providersSectionReducer = (
   state: ProvidersSectionState,
   action: ProvidersAction,
 ): ProvidersSectionState => {
-  let newState: ProvidersSectionState;
-
   switch (action.type) {
     case 'SET_SOURCE_PROVIDER':
-      newState = { ...state, hasChanges: true };
-      newState.StorageMap.spec.provider.source = {
-        apiVersion: action.payload?.apiVersion,
-        kind: action.payload?.kind,
-        name: action.payload?.metadata?.name,
-        namespace: action.payload?.metadata?.namespace,
-        uid: action.payload?.metadata?.uid,
-      };
-      return newState;
+      return {
+        ...state,
+        hasChanges: true,
+        StorageMap: {
+          ...state.StorageMap,
+          spec: {
+            ...state.StorageMap?.spec,
+            provider: {
+              ...state.StorageMap?.spec?.provider,
+              source: {
+                apiVersion: action.payload?.apiVersion,
+                kind: action.payload?.kind,
+                name: action.payload?.metadata?.name,
+                namespace: action.payload?.metadata?.namespace,
+                uid: action.payload?.metadata?.uid,
+              },
+            },
+          },
+        },
+      } as Partial<ProvidersSectionState>;
     case 'SET_TARGET_PROVIDER':
-      newState = { ...state, hasChanges: true };
-      newState.StorageMap.spec.provider.destination = {
-        apiVersion: action.payload?.apiVersion,
-        kind: action.payload?.kind,
-        name: action.payload?.metadata?.name,
-        namespace: action.payload?.metadata?.namespace,
-        uid: action.payload?.metadata?.uid,
-      };
-      return newState;
+      return {
+        ...state,
+        hasChanges: true,
+        StorageMap: {
+          ...state.StorageMap,
+          spec: {
+            ...state.StorageMap?.spec,
+            provider: {
+              ...state.StorageMap?.spec?.provider,
+              destination: {
+                apiVersion: action.payload?.apiVersion,
+                kind: action.payload?.kind,
+                name: action.payload?.metadata?.name,
+                namespace: action.payload?.metadata?.namespace,
+                uid: action.payload?.metadata?.uid,
+              },
+            },
+          },
+        },
+      } as Partial<ProvidersSectionState>;
     case 'SET_SOURCE_PROVIDER_MODE':
       return { ...state, sourceProviderMode: action.payload };
     case 'SET_TARGET_PROVIDER_MODE':

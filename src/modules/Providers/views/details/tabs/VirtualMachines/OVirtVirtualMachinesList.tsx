@@ -1,17 +1,17 @@
 import type { FC } from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
 import { concernFilter } from './utils/filters/concernFilter';
-import { OvirtHostFiler } from './utils/filters/OvirtHostFilter';
+import { ovirtHostFilter } from './utils/filters/OvirtHostFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
 import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
-export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const oVirtVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -25,7 +25,7 @@ export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    filter: concernFilter(t),
+    filter: concernFilter(),
     isVisible: true,
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
@@ -45,7 +45,7 @@ export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    filter: OvirtHostFiler(t),
+    filter: ovirtHostFilter(),
     isIdentity: false,
     isVisible: true,
     jsonPath: '$.vm.host',
@@ -69,7 +69,7 @@ export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     filter: {
       placeholderLabel: t('Filter by status'),
       type: 'enum',
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+      values: enumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
     },
     isIdentity: false,
     isVisible: true,
@@ -92,7 +92,7 @@ export const OVirtVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OVirtVirtualMachinesCells}
-    fieldsMetadataFactory={oVirtVmFieldsMetadataFactory}
+    fieldsMetadata={oVirtVmFieldsMetadataFactory}
     pageId="OVirtVirtualMachinesList"
   />
 );

@@ -1,5 +1,4 @@
 export const EMPTY_MSG = '-';
-export const DEFAULT = 'default';
 
 export enum Namespace {
   AllProjects = '#ALL_NS#',

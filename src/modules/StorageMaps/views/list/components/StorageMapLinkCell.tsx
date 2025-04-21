@@ -7,7 +7,7 @@ import type { CellProps } from './CellProps';
 
 export const StorageMapLinkCell: FC<CellProps> = ({ data }) => {
   const { obj: StorageMap } = data;
-  const { name, namespace } = StorageMap?.metadata || {};
+  const { name, namespace } = StorageMap?.metadata ?? {};
 
   return (
     <TableLinkCell

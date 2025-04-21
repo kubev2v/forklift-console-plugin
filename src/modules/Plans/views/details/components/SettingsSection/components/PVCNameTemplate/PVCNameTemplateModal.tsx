@@ -24,7 +24,7 @@ const PVCNameTemplateModal: FC<SettingsEditModalProps> = ({ jsonPath, resource, 
           bodyText={t(
             'PVC name template is a template for generating persistent volume claims (PVC) names for VM disks.',
           )}
-          allowedVariables={getPVCNameTemplateAllowedVariables(t)}
+          allowedVariables={getPVCNameTemplateAllowedVariables()}
         />
       }
       helperText={<NameTemplateModalHelper examples={pvcNameTemplateHelperExamples} />}

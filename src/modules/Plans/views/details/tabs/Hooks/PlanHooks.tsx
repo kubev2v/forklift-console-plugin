@@ -49,7 +49,7 @@ export const PlanHooks: FC<{ name: string; namespace: string }> = ({ name, names
 
   // Handle user clicking "save"
   const onUpdate = async () => {
-    onUpdatePlanHooks({ dispatch, plan, postHookResource, preHookResource, state });
+    await onUpdatePlanHooks({ dispatch, plan, postHookResource, preHookResource, state });
   };
 
   const onClick = () => {

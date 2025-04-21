@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
@@ -10,7 +10,7 @@ import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { OpenStackVirtualMachinesCells } from './OpenStackVirtualMachinesRow';
 import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
-export const openStackVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const openStackVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -24,7 +24,7 @@ export const openStackVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     sortable: true,
   },
   {
-    filter: concernFilter(t),
+    filter: concernFilter(),
     isVisible: true,
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
@@ -59,7 +59,7 @@ export const openStackVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
     filter: {
       placeholderLabel: t('Filter by status'),
       type: 'enum',
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+      values: enumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
     },
     isIdentity: false,
     isVisible: true,
@@ -110,7 +110,7 @@ export const OpenStackVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (p
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OpenStackVirtualMachinesCells}
-    fieldsMetadataFactory={openStackVmFieldsMetadataFactory}
+    fieldsMetadata={openStackVmFieldsMetadataFactory}
     pageId="OpenStackVirtualMachinesList"
   />
 );

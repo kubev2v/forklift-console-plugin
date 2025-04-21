@@ -11,7 +11,7 @@ import {
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import type { Concern } from '@kubev2v/types';
 
 import { ConcernsTable } from './ConcernsTable';
@@ -25,7 +25,7 @@ type ProviderVirtualMachinesListProps = {
   loaded?: boolean;
   loadError?: unknown;
   cellMapper: FC<RowProps<VmData>>;
-  fieldsMetadataFactory: ResourceFieldFactory;
+  fieldsMetadata: ResourceField[];
   pageId: string;
   onSelect?: (selectedVMs: VmData[]) => void;
   initialSelectedIds?: string[];
@@ -39,7 +39,7 @@ export const toId = (item: VmData) => item.vm.id;
 export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
   cellMapper,
   className,
-  fieldsMetadataFactory,
+  fieldsMetadata,
   initialSelectedIds,
   obj,
   onSelect,
@@ -80,7 +80,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       data-testid="vm-list"
       dataSource={[vmData || [], !vmDataLoading, null]}
       CellMapper={cellMapper}
-      fieldsMetadata={fieldsMetadataFactory(t)}
+      fieldsMetadata={fieldsMetadata}
       namespace={obj?.provider?.metadata?.namespace}
       title={title ?? t('Virtual Machines')}
       userSettings={userSettings}

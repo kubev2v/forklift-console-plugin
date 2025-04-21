@@ -1,6 +1,6 @@
 import { validateNFSMount, type ValidationMsg } from '../../common';
 
-export const validateOvaNfsPath = (url: string | number): ValidationMsg => {
+export const validateOvaNfsPath = (url?: string | number): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (url === undefined) {
     return {

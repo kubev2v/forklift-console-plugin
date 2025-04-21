@@ -34,7 +34,7 @@ export const FilterFromDef = ({
     if (!resourceFieldId && groupSelectedIds.length > 0) {
       return Object.entries(selectedFilters).reduce((acc, [selectedId, selectedValues]) => {
         if (groupSelectedIds.includes(selectedId)) {
-          acc = acc.length > 0 ? acc.concat(selectedValues) : selectedValues;
+          return acc.length > 0 ? acc.concat(selectedValues) : selectedValues;
         }
 
         return acc;

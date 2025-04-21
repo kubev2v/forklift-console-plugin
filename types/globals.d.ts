@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 declare module '*.svg' {
   export default ReactComponent;
 }
@@ -17,7 +18,8 @@ declare module '*.json' {
 }
 
 // Reference: https://github.com/openshift/console/blob/c126b66e62655eec01683b7419a6fbe835bc9ee1/frontend/%40types/console/index.d.ts#L15
-declare type Window = {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+interface Window {
   SERVER_FLAGS: {
     copiedCSVsDisabled: boolean;
     alertManagerBaseURL: string;
@@ -61,11 +63,29 @@ declare type Window = {
     k8sMode: string;
     capabilities: Record<string, string>[];
   };
-};
+}
 
 declare module 'eslint-plugin-import' {
   const flatConfigs: {
     recommended: any;
   };
   export { flatConfigs };
+}
+
+type LinkifyProps = {
+  children: React.ReactNode;
+  componentDecorator?: (
+    decoratedHref: string,
+    decoratedText: string,
+    key: number,
+  ) => React.ReactNode;
+  hrefDecorator?: (href: string) => string;
+  matchDecorator?: (text: string) => object[];
+  textDecorator?: (text: string) => string;
+};
+
+declare module 'react-linkify' {
+  import { Component } from 'react';
+
+  export default class Linkify extends Component<LinkifyProps> {}
 }

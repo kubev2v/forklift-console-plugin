@@ -54,7 +54,7 @@ export const ConcernsTable: FC<RowProps<VmData>> = ({ resourceData }) => {
                     color={getCategoryColor(concern.category)}
                     icon={getCategoryIcon(concern.category)}
                   >
-                    {getCategoryTitle(concern.category, t)}
+                    {getCategoryTitle(concern.category)}
                   </Label>
                 </Td>
                 <Td>{concern?.assessment || '-'}</Td>

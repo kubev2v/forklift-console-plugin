@@ -49,7 +49,7 @@ type DropdownRendererProps = {
 const RootDiskInputFactory: () => ModalInputComponentType = () => {
   const DropdownRenderer: FC<DropdownRendererProps> = ({ onChange, value }) => {
     const { t } = useForkliftTranslation();
-    const options = diskOptions(t);
+    const options = diskOptions();
 
     const dropdownItems = options.map((option) => ({
       children: (

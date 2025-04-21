@@ -1,17 +1,17 @@
 import type { FC } from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   NetworkMapModel,
   NetworkMapModelGroupVersionKind,
   type V1beta1NetworkMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { t } from '@utils/i18n';
 
 import NetworkMapsAddButton from '../../components/NetworkMapsAddButton';
 import NetworkMapsEmptyState from '../../components/NetworkMapsEmptyState';
@@ -23,7 +23,7 @@ import NetworkMapRow from './NetworkMapRow';
 
 import './NetworkMapsListPage.style.css';
 
-export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const fieldsMetadata = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -53,7 +53,7 @@ export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
       placeholderLabel: t('Status'),
       primary: true,
       type: 'enum',
-      values: EnumToTuple(NETWORK_MAP_STATUS),
+      values: enumToTuple(NETWORK_MAP_STATUS),
     },
     isVisible: true,
     jsonPath: getNetworkMapPhase,
@@ -151,7 +151,7 @@ const NetworkMapsListPage: FC<{
       }
       dataSource={[data || [], networkMapsLoaded, networkMapsLoadError]}
       RowMapper={NetworkMapRow}
-      fieldsMetadata={fieldsMetadataFactory(t)}
+      fieldsMetadata={fieldsMetadata}
       namespace={namespace}
       title={t('NetworkMaps')}
       userSettings={userSettings}

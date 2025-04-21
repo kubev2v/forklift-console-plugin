@@ -7,20 +7,21 @@ import {
 import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceFieldFactory } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import type {
   V1beta1PlanSpecVms,
   V1beta1PlanStatusConditions,
   V1beta1PlanStatusMigrationVms,
   V1beta1Provider,
 } from '@kubev2v/types';
+import { t } from '@utils/i18n';
 
 import { PlanVMsDeleteButton } from '../components/PlanVMsDeleteButton';
 import type { VMData } from '../types/VMData';
 
 import { PlanVirtualMachinesRow } from './PlanVirtualMachinesRow';
 
-const fieldsMetadataFactory: (isVsphere: boolean) => ResourceFieldFactory = (isVsphere) => (t) => [
+const fieldsMetadata: (isVsphere: boolean) => ResourceField[] = (isVsphere) => [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -115,7 +116,7 @@ export const PlanVirtualMachinesList: FC<{
       title={t('Virtual Machines')}
       dataSource={vmDataSource}
       CellMapper={PlanVirtualMachinesRow}
-      fieldsMetadata={fieldsMetadataFactory(isVsphere)(t)}
+      fieldsMetadata={fieldsMetadata(isVsphere)}
       userSettings={userSettings}
       namespace={''}
       page={1}
