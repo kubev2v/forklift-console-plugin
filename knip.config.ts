@@ -25,6 +25,6 @@ export default {
     'src/modules/StorageMaps/yamlTemplates/defaultYamlTemplate.ts',
   ],
   ignore: ['i18next-parser.config.js', 'testing/**'],
-  ignoreBinaries: ['kubectl'],
+  ignoreBinaries: ['kubectl', 'test:e2e'],
   ignoreDependencies: ['ts-node'],
 } satisfies KnipConfig;

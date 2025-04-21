@@ -4,5 +4,6 @@
     "baseUrl": ".",
     "types": ["cypress", "@testing-library/cypress"]
   },
-  "include": ["**/*.*.ts", "**/*.ts", "./**/*.ts", "./**/*.jsx", "./**/*.js"]
+  "include": ["**/*.*.ts", "**/*.ts", "./**/*.ts", "./**/*.jsx", "./**/*.js"],
+  "exclude": ["node_modules", "dist", "locales", "docs", "ci"]
 }

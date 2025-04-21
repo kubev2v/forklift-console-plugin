@@ -2,14 +2,13 @@
   "name": "cypress",
   "version": "1.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:e2e": "cypress run --browser chrome --headed"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@testing-library/cypress": "^10.0.3",
-    "cypress": "^14.1.0",
-    "typescript": "^5.7.3"
+    "cypress": "^14.1.0"
   }
 }
