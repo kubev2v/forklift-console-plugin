@@ -1,25 +1,23 @@
-import React from 'react';
-import {
-  EditModal,
+import type { FC, FormEvent } from 'react';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
+import type {
   EditModalProps,
   ModalInputComponentType,
   OnConfirmHookType,
-} from 'src/modules/Providers/modals';
+} from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Modify, PlanModel, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { type Modify, PlanModel, type V1beta1Plan, type V1beta1Provider } from '@kubev2v/types';
+import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Switch } from '@patternfly/react-core';
 
-const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
+const onConfirm: OnConfirmHookType = async ({ model, newValue, resource }) => {
   const plan = resource as V1beta1Plan;
 
   const targetWarm = plan?.spec?.warm;
   const op = targetWarm ? 'replace' : 'add';
 
   const obj = await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
@@ -27,19 +25,21 @@ const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
         value: newValue === 'true' || undefined,
       },
     ],
+    model,
+    resource,
   });
 
   return obj;
 };
 
-interface SwitchRendererProps {
+type SwitchRendererProps = {
   value: string | number;
   onChange: (string) => void;
-}
+};
 
 const WarmInputFactory: () => ModalInputComponentType = () => {
-  const SwitchRenderer: React.FC<SwitchRendererProps> = ({ value, onChange }) => {
-    const onChangeInternal: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const SwitchRenderer: FC<SwitchRendererProps> = ({ onChange, value }) => {
+    const onChangeInternal: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
       checked,
     ) => {
       onChange(checked ? 'true' : 'false');
@@ -51,7 +51,9 @@ const WarmInputFactory: () => ModalInputComponentType = () => {
         label="Warm migration, most of the data is copied during the precopy stage while the source virtual machines (VMs) are running."
         labelOff="Cold migration, the source virtual machines are shut down while the data is copied."
         isChecked={value === 'true'}
-        onChange={(e, v) => onChangeInternal(v, e)}
+        onChange={(e, value) => {
+          onChangeInternal(value, e);
+        }}
       />
     );
   };
@@ -59,7 +61,7 @@ const WarmInputFactory: () => ModalInputComponentType = () => {
   return SwitchRenderer;
 };
 
-const EditPlanWarm_: React.FC<EditPlanWarmProps> = (props) => {
+const EditPlanWarm_: FC<EditPlanWarmProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -80,7 +82,7 @@ const EditPlanWarm_: React.FC<EditPlanWarmProps> = (props) => {
   );
 };
 
-export type EditPlanWarmProps = Modify<
+type EditPlanWarmProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;
@@ -92,6 +94,6 @@ export type EditPlanWarmProps = Modify<
   }
 >;
 
-export const EditPlanWarm: React.FC<EditPlanWarmProps> = (props) => {
+export const EditPlanWarm: FC<EditPlanWarmProps> = (props) => {
   return <EditPlanWarm_ {...props} />;
 };

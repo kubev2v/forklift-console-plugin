@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
 
-import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base/types';
+import type { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base/types';
 
-import { getResourceFieldValue } from '../FilterGroup';
-import { localeCompare, ResourceField } from '../utils';
-import { SortType } from './types';
+import { getResourceFieldValue } from '../FilterGroup/matchers';
+import { localeCompare } from '../utils/localCompare';
+import type { ResourceField } from '../utils/types';
+
+import type { SortType } from './types';
 
 /**
  * Compares all types by converting them to string.
@@ -12,7 +14,6 @@ import { SortType } from './types';
  * @see localeCompare
  * @param locale to be used by string compareFn
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const universalComparator = (a: any, b: any, locale: string) => {
   return localeCompare(String(a ?? ''), String(b ?? ''), locale);
 };
@@ -27,12 +28,12 @@ export const universalComparator = (a: any, b: any, locale: string) => {
  * @param fieldComparator (optional) custom field compareFn. Defaults to universal string based compareFn.
  * @returns compareFn function
  */
-export function compareWith(
+export const compareWith = (
   currentSort: SortType,
   locale: string,
   fieldComparator: (a, b, locale: string) => number,
   fields: ResourceField[],
-): (a, b) => number {
+): ((a, b) => number) => {
   return (a, b) => {
     if (!currentSort?.resourceFieldId) {
       return 0;
@@ -45,7 +46,7 @@ export function compareWith(
     );
     return currentSort.isAsc ? compareValue : -compareValue;
   };
-}
+};
 
 /**
  * Hook for maintaining sort state. Supported features:
@@ -67,8 +68,8 @@ export const useSort = (
   const [activeSort, setActiveSort] = useState<SortType>({
     // when no other order is define, default to ascending order
     isAsc: true,
-    resourceFieldId: firstField?.resourceFieldId,
     label: firstField?.label,
+    resourceFieldId: firstField?.resourceFieldId,
   });
 
   const compareFn = useMemo(
@@ -90,9 +91,9 @@ export const useSort = (
  * @see ThSortType
  */
 export const buildSort = ({
+  activeSort,
   columnIndex,
   resourceFields,
-  activeSort,
   setActiveSort,
 }: {
   columnIndex: number;
@@ -100,16 +101,7 @@ export const buildSort = ({
   activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
 }): ThSortType => ({
-  sortBy: {
-    index:
-      resourceFields.find(
-        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
-      ) &&
-      resourceFields.findIndex(
-        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
-      ),
-    direction: activeSort.isAsc ? 'asc' : 'desc',
-  },
+  columnIndex,
   onSort: (_event, index, direction) => {
     resourceFields[index]?.resourceFieldId &&
       setActiveSort({
@@ -117,5 +109,14 @@ export const buildSort = ({
         ...resourceFields[index],
       });
   },
-  columnIndex,
+  sortBy: {
+    direction: activeSort.isAsc ? 'asc' : 'desc',
+    index:
+      resourceFields.find(
+        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
+      ) &&
+      resourceFields.findIndex(
+        ({ resourceFieldId }) => resourceFieldId === activeSort.resourceFieldId,
+      ),
+  },
 });

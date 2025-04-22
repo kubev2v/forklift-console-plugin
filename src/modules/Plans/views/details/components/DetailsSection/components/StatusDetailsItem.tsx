@@ -1,18 +1,18 @@
-import React from 'react';
-import { PlanStatusCell } from 'src/modules/Plans/views/list';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import PlanStatus from 'src/plans/list/components/PlanRowFields/PlanStatus/PlanStatus';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanDetailsItemProps } from './PlanDetailsItemProps';
+import type { PlanDetailsItemProps } from './PlanDetailsItemProps';
 
-export const StatusDetailsItem: React.FC<PlanDetailsItemProps> = ({ resource }) => {
+export const StatusDetailsItem: FC<PlanDetailsItemProps> = ({ resource: plan }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <DetailsItem
       title={t('Status')}
       helpContent={t('Migration plan state information and progress')}
-      content={<PlanStatusCell data={{ obj: resource }} fieldId={''} fields={[]} />}
+      content={<PlanStatus plan={plan} />}
     />
   );
 };

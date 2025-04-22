@@ -1,24 +1,20 @@
-import React from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { FC } from 'react';
+import type { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { StorageMapActionsDropdown } from '../../actions';
-import { StorageMapData } from '../../utils';
-import {
-  CellProps,
-  NamespaceCell,
-  PlanCell,
-  ProviderLinkCell,
-  StatusCell,
-  StorageMapLinkCell,
-} from './components';
+import { StorageMapActionsDropdown } from '../../actions/StorageMapActionsDropdown';
+import type { StorageMapData } from '../../utils/types/StorageMapData';
 
-export const ProviderRow: React.FC<RowProps<StorageMapData>> = ({
-  resourceFields,
-  resourceData,
-}) => {
+import type { CellProps } from './components/CellProps';
+import { NamespaceCell } from './components/NamespaceCell';
+import { PlanCell } from './components/PlanCell';
+import { ProviderLinkCell } from './components/ProviderLinkCell';
+import { StatusCell } from './components/StatusCell';
+import { StorageMapLinkCell } from './components/StorageMapLinkCell';
+
+const ProviderRow: FC<RowProps<StorageMapData>> = ({ resourceData, resourceFields }) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>
@@ -39,20 +35,20 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const cellRenderers: Record<string, React.FC<CellProps>> = {
-  ['name']: StorageMapLinkCell,
-  ['namespace']: NamespaceCell,
-  ['owner']: PlanCell,
-  ['phase']: StatusCell,
-  ['destination']: ProviderLinkCell,
-  ['source']: ProviderLinkCell,
-  ['actions']: (props) => StorageMapActionsDropdown({ isKebab: true, ...props }),
+const cellRenderers: Record<string, FC<CellProps>> = {
+  actions: (props) => <StorageMapActionsDropdown isKebab {...props} />,
+  destination: ProviderLinkCell,
+  name: StorageMapLinkCell,
+  namespace: NamespaceCell,
+  owner: PlanCell,
+  phase: StatusCell,
+  source: ProviderLinkCell,
 };
 
-interface RenderTdProps {
+type RenderTdProps = {
   resourceData: StorageMapData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-}
+};
 
 export default ProviderRow;

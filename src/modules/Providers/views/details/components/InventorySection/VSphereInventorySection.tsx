@@ -1,56 +1,54 @@
-import React from 'react';
+import type { FC } from 'react';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
-import { DetailsItem } from '../../../../utils';
-import { InventoryProps } from './InventorySection';
+import type { InventoryProps } from './InventorySection';
 
-export const VSphereInventorySection: React.FC<InventoryProps> = ({ data }) => {
+export const VSphereInventorySection: FC<InventoryProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
-  const { provider, inventory } = data;
+  const { inventory, provider } = data;
 
   if (!provider || !inventory) {
     return <span className="text-muted">{t('No inventory data available.')}</span>;
   }
 
   const inventoryItems = {
-    product: {
-      title: t('Product'),
-      helpContent: t('vSphere product name'),
-    },
-    empty: {},
-    vmCount: {
-      title: t('Virtual machines'),
-      helpContent: t('Number of virtual machines in cluster'),
-    },
-    networkCount: {
-      title: t('Network interfaces'),
-      helpContent: t('Number of network interfaces in provider cluster'),
+    clusterCount: {
+      helpContent: t('Number of cluster in provider'),
+      title: t('Clusters'),
     },
     datacenterCount: {
-      title: t('Data centers'),
       helpContent: t('Number of data centers in provider'),
+      title: t('Data centers'),
     },
     datastoreCount: {
-      title: t('Data stores'),
       helpContent: t('Number of data stores in provider'),
+      title: t('Data stores'),
     },
-    clusterCount: {
-      title: t('Clusters'),
-      helpContent: t('Number of cluster in provider'),
-    },
+    empty: {},
     hostCount: {
-      title: t('Hosts'),
       helpContent: t('Number of hosts in provider clusters'),
+      title: t('Hosts'),
+    },
+    networkCount: {
+      helpContent: t('Number of network interfaces in provider cluster'),
+      title: t('Network interfaces'),
+    },
+    product: {
+      helpContent: t('vSphere product name'),
+      title: t('Product'),
+    },
+    vmCount: {
+      helpContent: t('Number of virtual machines in cluster'),
+      title: t('Virtual machines'),
     },
   };
 
   const items = [];
 
-  for (const key in inventoryItems) {
-    const item = inventoryItems?.[key];
-
+  Object.entries(inventoryItems).forEach(([key, item]) => {
     if (item) {
       const isEmpty = key === 'empty';
       const inventoryValue = inventory[key] || '-';
@@ -61,19 +59,19 @@ export const VSphereInventorySection: React.FC<InventoryProps> = ({ data }) => {
           title={item.title}
           content={value}
           helpContent={item.helpContent}
-          crumbs={['Inventory', 'providers', `${provider.spec.type}`, '[UID]', key]}
+          crumbs={['Inventory', 'providers', provider.spec.type, '[UID]', key]}
         />,
       );
     }
-  }
+  });
 
   return (
     <DescriptionList
       isHorizontal
       horizontalTermWidthModifier={{
         default: '12ch',
-        sm: '15ch',
         md: '20ch',
+        sm: '15ch',
       }}
       columnModifier={{
         default: '2Col',

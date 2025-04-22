@@ -1,5 +1,5 @@
-import React from 'react';
-import { SectionHeading } from 'src/components/headers/SectionHeading';
+import type { FC } from 'react';
+import SectionHeading from 'src/components/headers/SectionHeading';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -9,33 +9,30 @@ import {
   PlanModelGroupVersionKind,
   ProviderModelGroupVersionKind,
   StorageMapModelGroupVersionKind,
-  V1beta1NetworkMap,
-  V1beta1Plan,
-  V1beta1Provider,
-  V1beta1StorageMap,
+  type V1beta1NetworkMap,
+  type V1beta1Plan,
+  type V1beta1Provider,
+  type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
 
 import { PlanMappingsSection } from './PlanMappingsSection';
 
-export type PlanMappingsInitSectionProps = {
+type PlanMappingsInitSectionProps = {
   plan: V1beta1Plan;
   loaded: boolean;
   loadError: unknown;
 };
 
-export const PlanMappings: React.FC<{ name: string; namespace: string }> = ({
-  name,
-  namespace,
-}) => {
+export const PlanMappings: FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   return (
@@ -50,16 +47,16 @@ export const PlanMappings: React.FC<{ name: string; namespace: string }> = ({
   );
 };
 
-const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) => {
+const PlanMappingsInitSection: FC<PlanMappingsInitSectionProps> = (props) => {
   const { t } = useForkliftTranslation();
   const { plan } = props;
 
   // Retrieve all k8s Providers
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace: plan?.metadata?.namespace,
+    namespaced: true,
   });
 
   // Retrieve all k8s Network Mappings
@@ -67,9 +64,9 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     V1beta1NetworkMap[]
   >({
     groupVersionKind: NetworkMapModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace: plan?.metadata?.namespace,
+    namespaced: true,
   });
 
   // Retrieve all k8s Storage Mappings
@@ -77,9 +74,9 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     V1beta1StorageMap[]
   >({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace: plan?.metadata?.namespace,
+    namespaced: true,
   });
 
   const planNetworkMaps = networkMaps
@@ -89,10 +86,12 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     ? storageMaps.find((storage) => storage?.metadata?.name === plan.spec.map?.storage?.name)
     : null;
   const sourceProvider: V1beta1Provider = providers
-    ? providers.find((p) => p?.metadata?.name === plan?.spec?.provider?.source?.name)
+    ? providers.find((provider) => provider?.metadata?.name === plan?.spec?.provider?.source?.name)
     : null;
   const targetProvider = providers
-    ? providers.find((p) => p?.metadata?.name === plan?.spec?.provider?.destination?.name)
+    ? providers.find(
+        (provider) => provider?.metadata?.name === plan?.spec?.provider?.destination?.name,
+      )
     : null;
 
   // Retrieve source and target providers Mappings from the inventory
@@ -141,7 +140,7 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
     );
   }
 
-  if (networkMaps.length == 0 || storageMaps.length == 0)
+  if (networkMaps.length === 0 || storageMaps.length === 0)
     return (
       <div>
         <span className="text-muted">{t('No Mapping found.')}</span>
@@ -152,12 +151,12 @@ const PlanMappingsInitSection: React.FC<PlanMappingsInitSectionProps> = (props) 
   // some editing options missing.
   const alerts = [];
 
-  if (targetStorages.length == 0) {
+  if (targetStorages.length === 0) {
     // Note: target network can't be missing, we always have Pod network.
     alerts.push('Missing target storage inventory.');
   }
 
-  if (sourceStorages.length == 0 || sourceNetworks.length == 0) {
+  if (sourceStorages.length === 0 || sourceNetworks.length === 0) {
     alerts.push('Missing storage inventory.');
   }
 

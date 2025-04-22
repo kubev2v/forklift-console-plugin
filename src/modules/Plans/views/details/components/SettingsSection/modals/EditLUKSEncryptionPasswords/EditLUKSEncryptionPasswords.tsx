@@ -1,38 +1,47 @@
-import React, { useEffect } from 'react';
-import { InputList, LazyTextInput } from 'src/components';
-import { EditModal, EditModalProps, ModalInputComponentType } from 'src/modules/Providers/modals';
+import { type FC, useEffect } from 'react';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
+import type {
+  EditModalProps,
+  ModalInputComponentType,
+} from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { InputList } from '@components/InputList/InputList';
+import { LazyTextInput } from '@components/InputList/LazyTextInput';
 import {
-  IoK8sApiCoreV1Secret,
-  Modify,
+  type IoK8sApiCoreV1Secret,
+  type Modify,
   PlanModel,
-  V1beta1Plan,
-  V1beta1Provider,
+  type V1beta1Plan,
+  type V1beta1Provider,
 } from '@kubev2v/types';
-import { K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { editLUKSModalAlert } from './editLUKSModalAlert';
 import { editLUKSModalBody } from './editLUKSModalBody';
 import { onLUKSEncryptionPasswordsConfirm } from './onLUKSEncryptionPasswordsConfirm';
 
-interface SecretRendererProps {
+type SecretRendererProps = {
   value: string | number;
   onChange: (string) => void;
-}
+};
 
 const EditPassphraseFactory: (initialValue: string) => ModalInputComponentType = (initialValue) => {
-  const SecretRenderer: React.FC<SecretRendererProps> = ({ onChange }) => {
+  const SecretRenderer: FC<SecretRendererProps> = ({ onChange }) => {
     const { t } = useForkliftTranslation();
     const items = initialValue && JSON.parse(initialValue);
 
     // Init component internal value
-    useEffect(() => onChange(initialValue), [initialValue]);
+    useEffect(() => {
+      onChange(initialValue);
+    }, [initialValue]);
 
     return (
       <InputList
         items={items}
-        onChange={(list) => onChange(JSON.stringify(list))}
+        onChange={(list) => {
+          onChange(JSON.stringify(list));
+        }}
         InputRow={LazyTextInput}
         addButtonText={t('Add passphrase')}
       />
@@ -42,7 +51,7 @@ const EditPassphraseFactory: (initialValue: string) => ModalInputComponentType =
   return SecretRenderer;
 };
 
-export type EditLUKSEncryptionPasswordsProps = Modify<
+type EditLUKSEncryptionPasswordsProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;
@@ -54,7 +63,7 @@ export type EditLUKSEncryptionPasswordsProps = Modify<
   }
 >;
 
-export const EditLUKSEncryptionPasswords: React.FC<EditLUKSEncryptionPasswordsProps> = (props) => {
+export const EditLUKSEncryptionPasswords: FC<EditLUKSEncryptionPasswordsProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const plan = props.resource;

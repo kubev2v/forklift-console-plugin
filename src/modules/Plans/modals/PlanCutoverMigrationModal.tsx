@@ -1,9 +1,10 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
-import { useToggle } from 'src/modules/Providers/hooks';
-import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
+import { type FC, type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
+import useToggle from 'src/modules/Providers/hooks/useToggle';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { MigrationModel, V1beta1Migration, V1beta1Plan } from '@kubev2v/types';
+import { MigrationModel, type V1beta1Migration, type V1beta1Plan } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -28,20 +29,20 @@ import './PlanCutoverMigrationModal.style.css';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-interface PlanCutoverMigrationModalProps {
+type PlanCutoverMigrationModalProps = {
   resource: V1beta1Plan;
   title?: string;
-}
+};
 
 /**
  * A generic delete modal component
  * @component
  * @param {DeleteModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps> = ({
-  title,
+export const PlanCutoverMigrationModal: FC<PlanCutoverMigrationModalProps> = ({
   resource,
+  title,
 }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
@@ -64,12 +65,12 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     setTime(formatDateTo12Hours(new Date(migrationCutoverDate)));
   }, [lastMigration]);
 
-  const onDateChange: (
-    event: React.FormEvent<HTMLInputElement>,
-    value: string,
-    date?: Date,
-  ) => void = (_event, value, date) => {
-    setIsDateValid(!!date);
+  const onDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
+    _event,
+    value,
+    date,
+  ) => {
+    setIsDateValid(Boolean(date));
     if (!date) return;
 
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
@@ -84,7 +85,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
   };
 
   const onTimeChange: (
-    event: React.FormEvent<HTMLInputElement>,
+    event: FormEvent<HTMLInputElement>,
     timeInput: string,
     hour?: number,
     minute?: number,
@@ -92,7 +93,7 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
     isTimeValid?: boolean,
   ) => void = (_event, timeInput, hour, minute, _seconds, isTimeValid) => {
     setTime(timeInput);
-    setIsTimeValid(isTimeValid && !!timeInput);
+    setIsTimeValid(isTimeValid && Boolean(timeInput));
 
     if (!isTimeValid) return;
 
@@ -193,12 +194,10 @@ export const PlanCutoverMigrationModal: React.FC<PlanCutoverMigrationModalProps>
   );
 };
 
-async function patchMigrationCutover(migration: V1beta1Migration, cutover: string) {
+const patchMigrationCutover = async (migration: V1beta1Migration, cutover: string) => {
   const op = migration?.spec?.cutover ? 'replace' : 'add';
 
   await k8sPatch({
-    model: MigrationModel,
-    resource: migration,
     data: [
       {
         op,
@@ -206,5 +205,7 @@ async function patchMigrationCutover(migration: V1beta1Migration, cutover: strin
         value: cutover,
       },
     ],
+    model: MigrationModel,
+    resource: migration,
   });
-}
+};

@@ -1,9 +1,10 @@
-import React from 'react';
+import type { FC } from 'react';
 
-import { Modify, V1beta1Provider } from '@kubev2v/types';
-import { K8sModel } from '@openshift-console/dynamic-plugin-sdk/lib/api/core-api';
+import type { Modify, V1beta1Provider } from '@kubev2v/types';
+import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk/lib/api/core-api';
 
-import { EditModalProps } from '../EditModal';
+import type { EditModalProps } from '../EditModal/types';
+
 import { OpenshiftEditUIModal } from './OpenshiftEditUIModal';
 import { OpenstackEditUIModal } from './OpenstackEditUIModal';
 import { OvirtEditUIModal } from './OvirtEditUIModal';
@@ -21,7 +22,7 @@ export type EditProviderUIModalProps = Modify<
   }
 >;
 
-export const EditProviderUIModal: React.FC<EditProviderUIModalProps> = (props) => {
+export const EditProviderUIModal: FC<EditProviderUIModalProps> = (props) => {
   switch (props.resource?.spec?.type) {
     case 'vsphere':
       return <VSphereEditUIModal {...props} />;

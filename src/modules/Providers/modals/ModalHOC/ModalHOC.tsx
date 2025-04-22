@@ -1,6 +1,14 @@
-import React, { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
+import {
+  createContext,
+  type FC,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
-import { useToggle } from '../../hooks';
+import useToggle from '../../hooks/useToggle';
 
 /**
  * A provider component that wraps its children with the modal context.
@@ -20,7 +28,7 @@ import { useToggle } from '../../hooks';
  * @param {ReactNode} props.children - The children components to be wrapped.
  * @returns {JSX.Element} The JSX element representing the ModalProvider.
  */
-export const ModalHOC: React.FC<ModalHOCProps> = ({ children }) => {
+export const ModalHOC: FC<ModalHOCProps> = ({ children }) => {
   const [modalComponent, setModalComponent] = useState<ReactNode | null>(null);
   const [isModalOpen, toggleModal] = useToggle();
 
@@ -62,14 +70,14 @@ export const useModal = (): ModalContextType => {
   return context;
 };
 
-export interface ModalContextType {
+type ModalContextType = {
   showModal: (modal: ReactNode) => void;
   toggleModal: () => void;
-}
+};
 
-export interface ModalHOCProps {
+type ModalHOCProps = {
   children: ReactNode;
-}
+};
 
 // Creating the context.
 const ModalContext = createContext<ModalContextType | undefined>(undefined);

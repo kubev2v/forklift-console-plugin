@@ -1,8 +1,6 @@
-import { TFunction } from 'react-i18next';
+import { t } from '@utils/i18n';
 
-export const getPVCNameTemplateAllowedVariables = (
-  t: TFunction<'plugin__forklift-console-plugin', undefined>,
-) => [
+export const getPVCNameTemplateAllowedVariables = () => [
   t('- .VmName: name of the VM'),
   t('- .PlanName: name of the migration plan'),
   t('- .DiskIndex: initial volume index of the disk'),

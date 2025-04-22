@@ -1,15 +1,16 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { patchProviderUI } from './utils/patchProviderUI';
-import { validateVSphereUILink } from '../../utils/validators';
-import { EditModal } from '../EditModal';
-import { EditProviderUIModalProps } from './EditProviderUIModal';
+import { validateVSphereUILink } from '../../utils/validators/provider/vsphere/validateVSphereUILink';
+import { EditModal } from '../EditModal/EditModal';
 
-export const VSphereEditUIModal: React.FC<EditProviderUIModalProps> = (props) => {
+import { patchProviderUI } from './utils/patchProviderUI';
+import type { EditProviderUIModalProps } from './EditProviderUIModal';
+
+export const VSphereEditUIModal: FC<EditProviderUIModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const ModalBody = (

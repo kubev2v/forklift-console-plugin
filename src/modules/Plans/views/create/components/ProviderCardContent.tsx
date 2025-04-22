@@ -1,11 +1,8 @@
-import React from 'react';
+import type { FC } from 'react';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 
-export const ProviderCardContent: React.FC<ProviderCardContentProps> = ({
-  provider,
-  typeLabel,
-}) => {
+export const ProviderCardContent: FC<ProviderCardContentProps> = ({ provider, typeLabel }) => {
   return (
     <ul className="forklift-create-card--list">
       <li>
@@ -26,7 +23,7 @@ export const ProviderCardContent: React.FC<ProviderCardContentProps> = ({
   );
 };
 
-export type ProviderCardContentProps = {
+type ProviderCardContentProps = {
   provider: V1beta1Provider;
   typeLabel?: string;
 };

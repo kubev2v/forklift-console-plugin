@@ -1,24 +1,20 @@
-import React from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { FC } from 'react';
+import type { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceField } from '@components/common/utils/types';
+import type { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 
-import { NetworkMapActionsDropdown } from '../../actions';
-import { NetworkMapData } from '../../utils';
-import {
-  CellProps,
-  NamespaceCell,
-  NetworkMapLinkCell,
-  PlanCell,
-  ProviderLinkCell,
-  StatusCell,
-} from './components';
+import { NetworkMapActionsDropdown } from '../../actions/NetworkMapActionsDropdown';
+import type { NetworkMapData } from '../../utils/types/NetworkMapData';
 
-export const ProviderRow: React.FC<RowProps<NetworkMapData>> = ({
-  resourceFields,
-  resourceData,
-}) => {
+import type { CellProps } from './components/CellProps';
+import { NamespaceCell } from './components/NamespaceCell';
+import { NetworkMapLinkCell } from './components/NetworkMapLinkCell';
+import { PlanCell } from './components/PlanCell';
+import { ProviderLinkCell } from './components/ProviderLinkCell';
+import { StatusCell } from './components/StatusCell';
+
+const ProviderRow: FC<RowProps<NetworkMapData>> = ({ resourceData, resourceFields }) => {
   return (
     <Tr>
       {resourceFields.map(({ resourceFieldId }) =>
@@ -39,20 +35,20 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const cellRenderers: Record<string, React.FC<CellProps>> = {
-  ['name']: NetworkMapLinkCell,
-  ['namespace']: NamespaceCell,
-  ['owner']: PlanCell,
-  ['phase']: StatusCell,
-  ['destination']: ProviderLinkCell,
-  ['source']: ProviderLinkCell,
-  ['actions']: (props) => NetworkMapActionsDropdown({ isKebab: true, ...props }),
+const cellRenderers: Record<string, FC<CellProps>> = {
+  actions: (props) => <NetworkMapActionsDropdown isKebab {...props} />,
+  destination: ProviderLinkCell,
+  name: NetworkMapLinkCell,
+  namespace: NamespaceCell,
+  owner: PlanCell,
+  phase: StatusCell,
+  source: ProviderLinkCell,
 };
 
-interface RenderTdProps {
+type RenderTdProps = {
   resourceData: NetworkMapData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-}
+};
 
 export default ProviderRow;

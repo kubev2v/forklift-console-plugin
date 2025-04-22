@@ -1,4 +1,4 @@
-import { IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -8,13 +8,11 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
  * @param {{ name: string; uid: string }} ownerRef - The owner reference to be added to the secret.
  * @returns {Promise<void>} A promise that resolves when the patch operation is complete.
  */
-export async function patchHostSecretOwner(
+export const patchHostSecretOwner = async (
   secret: IoK8sApiCoreV1Secret,
   ownerRef: { name: string; uid: string },
-) {
+) => {
   const patchedSecret = await k8sPatch({
-    model: SecretModel,
-    resource: secret,
     data: [
       {
         op: 'replace',
@@ -29,7 +27,9 @@ export async function patchHostSecretOwner(
         ],
       },
     ],
+    model: SecretModel,
+    resource: secret,
   });
 
   return patchedSecret;
-}
+};

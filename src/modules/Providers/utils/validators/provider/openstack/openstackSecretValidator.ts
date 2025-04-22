@@ -1,13 +1,17 @@
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
-import { missingKeysInSecretData, safeBase64Decode } from '../../../helpers';
-import { ValidationMsg } from '../../common';
+import { missingKeysInSecretData } from '../../../helpers/missingKeysInSecretData';
+import { safeBase64Decode } from '../../../helpers/safeBase64Decode';
+import type { ValidationMsg } from '../../common';
+
 import { openstackSecretFieldValidator } from './openstackSecretFieldValidator';
 
-export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
-  const authType = safeBase64Decode(secret?.data?.['authType']) || 'password';
+export const openstackSecretValidator = (secret: IoK8sApiCoreV1Secret): ValidationMsg => {
+  const authType = safeBase64Decode(secret?.data?.authType) || 'password';
 
+  // eslint-disable-next-line no-useless-assignment
   let requiredFields = [];
+  // eslint-disable-next-line no-useless-assignment
   let validateFields = [];
 
   // guess authenticationType based on authType and username
@@ -24,7 +28,7 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
       ];
       break;
     case 'token':
-      if (secret?.data?.['username']) {
+      if (secret?.data?.username) {
         requiredFields = ['token', 'username', 'regionName', 'projectName', 'domainName'];
         validateFields = [
           'token',
@@ -40,7 +44,7 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
       }
       break;
     case 'applicationcredential':
-      if (secret?.data?.['username']) {
+      if (secret?.data?.username) {
         requiredFields = [
           'applicationCredentialName',
           'applicationCredentialSecret',
@@ -75,17 +79,17 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
       }
       break;
     default:
-      return { type: 'error', msg: 'invalid authType' };
+      return { msg: 'invalid authType', type: 'error' };
   }
 
   const missingRequiredFields = missingKeysInSecretData(secret, requiredFields);
 
   if (missingRequiredFields.length > 0) {
-    return { type: 'error', msg: `missing required fields [${missingRequiredFields.join(', ')}]` };
+    return { msg: `missing required fields [${missingRequiredFields.join(', ')}]`, type: 'error' };
   }
 
   // Add ca cert validation if not insecureSkipVerify
-  const insecureSkipVerify = safeBase64Decode(secret?.data?.['insecureSkipVerify']);
+  const insecureSkipVerify = safeBase64Decode(secret?.data?.insecureSkipVerify);
   if (insecureSkipVerify !== 'true') {
     validateFields.push('cacert');
   }
@@ -101,4 +105,4 @@ export function openstackSecretValidator(secret: IoK8sApiCoreV1Secret): Validati
   }
 
   return { type: 'default' };
-}
+};

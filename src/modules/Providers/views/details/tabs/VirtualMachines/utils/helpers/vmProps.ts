@@ -1,4 +1,4 @@
-import { ProviderVirtualMachine } from '@kubev2v/types';
+import type { ProviderVirtualMachine } from '@kubev2v/types';
 
 export const getVmTemplate = (vm: ProviderVirtualMachine): string | undefined =>
   vm?.providerType === 'openshift'

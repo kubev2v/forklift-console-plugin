@@ -1,30 +1,31 @@
-import React, { ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   getGroupVersionKindForResource,
-  K8sGroupVersionKind,
-  K8sModel,
-  K8sResourceCommon,
+  type K8sGroupVersionKind,
+  type K8sModel,
+  type K8sResourceCommon,
   ResourceIcon,
   ResourceStatus,
 } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import { Breadcrumb, BreadcrumbItem, Split, SplitItem } from '@patternfly/react-core';
+import { t } from '@utils/i18n';
+
+import { getResourceUrl } from '../../helpers/getResourceUrl';
 
 import './PageHeadings.style.css';
 
-export const PageHeadings: React.FC<PageHeadingsProps> = ({
+export const PageHeadings: FC<PageHeadingsProps> = ({
+  actions,
+  children,
   model,
   namespace,
   obj: data,
-  children,
-  actions,
   status: status_,
 }) => {
-  const status = status_ ?? data?.['status']?.phase;
+  const status = status_ ?? data?.status?.phase;
   const groupVersionKind = data?.kind && getGroupVersionKindForResource(data);
 
   return (
@@ -56,20 +57,18 @@ export const PageHeadings: React.FC<PageHeadingsProps> = ({
   );
 };
 
-export interface PageHeadingsProps {
+type PageHeadingsProps = {
   model: K8sModel;
   namespace?: string;
   obj?: K8sResourceCommon;
   title?: ReactNode;
   actions?: ReactNode;
   status?: string;
-  children?: React.ReactNode;
-}
+  children?: ReactNode;
+};
 
-const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ model, namespace }) => {
-  const { t } = useForkliftTranslation();
-
-  const breadcrumbs = breadcrumbsForModel(t, model, namespace);
+const BreadCrumbs: FC<BreadCrumbsProps> = ({ model, namespace }) => {
+  const breadcrumbs = breadcrumbsForModel(model, namespace);
 
   return (
     <Breadcrumb className="co-breadcrumb">
@@ -101,17 +100,17 @@ type BreadCrumbsProps = {
   namespace?: string;
 };
 
-const breadcrumbsForModel = (t, model: K8sModel, namespace: string) => {
+const breadcrumbsForModel = (model: K8sModel, namespace: string) => {
   const groupVersionKind: K8sGroupVersionKind = {
     group: model.apiGroup,
-    version: model.apiVersion,
     kind: model.kind,
+    version: model.apiVersion,
   };
 
   return [
     {
-      name: `${model.labelPlural}`,
-      path: `${getResourceUrl({ groupVersionKind, namespace })}`,
+      name: model.labelPlural,
+      path: getResourceUrl({ groupVersionKind, namespace }),
     },
     {
       name: t('{{name}} Details', { name: model.label }),

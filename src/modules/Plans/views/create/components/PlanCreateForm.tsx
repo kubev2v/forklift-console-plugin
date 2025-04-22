@@ -1,19 +1,22 @@
-import React, { useCallback, useMemo } from 'react';
-import { ProjectNameSelect, useProjectNameSelectOptions } from 'src/components/common';
+import { type Dispatch, type FC, useCallback, useMemo } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { SelectableCard } from 'src/modules/Providers/utils/components/Gallery/SelectableCard';
 import { SelectableGallery } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
-import { VmData } from 'src/modules/Providers/views';
-import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
+import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext';
 import {
-  PageAction,
+  type PageAction,
   setPlanName,
   setProjectName as setProjectNameAction,
 } from 'src/modules/Providers/views/migrate/reducer/actions';
-import { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
+import type { CreateVmMigrationPageState } from 'src/modules/Providers/views/migrate/types';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import {
+  ProjectNameSelect,
+  useProjectNameSelectOptions,
+} from '@components/common/ProjectNameSelect';
+import type { V1beta1Provider } from '@kubev2v/types';
 import {
   Flex,
   FlexItem,
@@ -25,19 +28,20 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 
+import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
+
 import { PlanNameTextField } from './PlanName/PlanNameTextField';
-import { PlanCreatePageState } from '../states';
 import { ChipsToolbarProviders } from './ChipsToolbarProviders';
 import { createProviderCardItems } from './createProviderCardItems';
 import { FiltersToolbarProviders } from './FiltersToolbarProviders';
 import { ProviderCardEmptyState } from './ProvidersEmptyState';
 
-export type PlanCreateFormProps = {
+type PlanCreateFormProps = {
   providers: V1beta1Provider[];
   filterState: PlanCreatePageState;
   state: CreateVmMigrationPageState;
   projectName: string;
-  filterDispatch: React.Dispatch<{
+  filterDispatch: Dispatch<{
     type: string;
     payload?: string | string[] | VmData[];
   }>;
@@ -48,17 +52,17 @@ export type PlanCreateFormProps = {
  * PlanCreateForm component is responsible for rendering the form to create a migration plan.
  * It allows users to select a source provider from a gallery of available providers.
  */
-export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
-  providers,
-  filterState,
-  state,
-  projectName,
-  filterDispatch,
+const PlanCreateForm: FC<PlanCreateFormProps> = ({
   dispatch,
+  filterDispatch,
+  filterState,
+  projectName,
+  providers,
+  state,
 }) => {
   const { t } = useForkliftTranslation();
   const { data, setData } = useCreateVmMigrationData();
-  const projectNameOptions = useProjectNameSelectOptions(projectName);
+  const [projectNameOptions] = useProjectNameSelectOptions(projectName);
   const providerCardItems = useMemo(
     () =>
       createProviderCardItems(
@@ -70,7 +74,7 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
   const selectedProviderCardItem = providerCardItems[selectedProviderId];
 
   const onProviderChange = useCallback((id: string) => {
-    filterDispatch({ type: 'SELECT_PROVIDER', payload: id || '' });
+    filterDispatch({ payload: id || '', type: 'SELECT_PROVIDER' });
   }, []);
 
   return (
@@ -132,7 +136,9 @@ export const PlanCreateForm: React.FC<PlanCreateFormProps> = ({
                   <SelectableCard
                     title={selectedProviderCardItem.title}
                     titleLogo={selectedProviderCardItem.logo}
-                    onChange={() => onProviderChange('')}
+                    onChange={() => {
+                      onProviderChange('');
+                    }}
                     isSelected
                     isCompact
                     content={

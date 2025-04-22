@@ -1,26 +1,26 @@
-import React from 'react';
+import { type FC, Suspense } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1ForkliftController } from '@kubev2v/types';
+import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
-interface ForkliftControllerYAMLTabProps {
+type ForkliftControllerYAMLTabProps = {
   obj: V1beta1ForkliftController;
   ns?: string;
   name?: string;
   loaded?: boolean;
   loadError?: unknown;
-}
+};
 
-export const ForkliftControllerYAMLTab: React.FC<ForkliftControllerYAMLTabProps> = ({
-  obj,
+const ForkliftControllerYAMLTab: FC<ForkliftControllerYAMLTabProps> = ({
   loaded,
   loadError,
+  obj,
 }) => {
   const { t } = useForkliftTranslation();
   return (
-    <React.Suspense
+    <Suspense
       fallback={
         <Bullseye>
           <Loading />
@@ -30,11 +30,11 @@ export const ForkliftControllerYAMLTab: React.FC<ForkliftControllerYAMLTabProps>
       {obj && loaded && !loadError && (
         <ResourceYAMLEditor header={t('Provider YAML')} initialResource={obj} />
       )}
-    </React.Suspense>
+    </Suspense>
   );
 };
 
-const Loading: React.FC = () => (
+const Loading: FC = () => (
   <div
     className="co-m-loader co-an-fade-in-out"
     data-testid="loading-indicator-forklift-controller-yaml"

@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-import { getInventoryApiUrl, hasObjectChangedInGivenFields } from '../utils/helpers';
-import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils';
+import { getInventoryApiUrl } from '../utils/helpers/getApiUrl';
+import { hasObjectChangedInGivenFields } from '../utils/helpers/hasObjectChangedInGivenFields';
+
+import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils/constants';
 
 /**
  * @typedef {Object} UseProviderInventoryParams
@@ -17,14 +19,14 @@ import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from './utils';
  * @property {number} [cacheExpiryDuration] - Duration in milliseconds till the cache remains valid.
  * @param {boolean} [disabled] - Prevent query execution.
  */
-export interface UseProviderInventoryParams {
-  provider: V1beta1Provider;
+export type UseProviderInventoryParams = {
+  provider: V1beta1Provider | undefined;
   subPath?: string;
   fieldsToAvoidComparing?: string[];
   interval?: number;
   fetchTimeout?: number;
   disabled?: boolean;
-}
+};
 
 /**
  * @typedef {Object} UseProviderInventoryResult
@@ -33,11 +35,11 @@ export interface UseProviderInventoryParams {
  * @property {boolean} loading - Whether the inventory fetch is in progress.
  * @property {Error | null} error - The error occurred during inventory fetch.
  */
-interface UseProviderInventoryResult<T> {
+type UseProviderInventoryResult<T> = {
   inventory: T | null;
   loading: boolean;
   error: Error | null;
-}
+};
 
 /**
  * A React hook to fetch and cache inventory data from a provider.
@@ -57,19 +59,19 @@ interface UseProviderInventoryResult<T> {
  *
  * @template T Type of the inventory data
  */
-export const useProviderInventory = <T>({
-  provider,
-  subPath = '',
+const useProviderInventory = <T>({
+  disabled = false,
+  fetchTimeout,
   fieldsToAvoidComparing = DEFAULT_FIELDS_TO_AVOID_COMPARING,
   interval = 20000,
-  fetchTimeout,
-  disabled = false,
+  provider,
+  subPath = '',
 }: UseProviderInventoryParams): UseProviderInventoryResult<T> => {
   const [inventory, setInventory] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const oldDataRef = useRef(null);
-  const oldErrorRef = useRef(null);
+  const oldDataRef = useRef<{ inventory: T | null } | null>(null);
+  const oldErrorRef = useRef<{ error: string } | null>(null);
 
   // we only use type and uid in this context
   const stableProvider = useMemo(() => provider, [provider?.spec?.type, provider?.metadata?.uid]);
@@ -92,7 +94,7 @@ export const useProviderInventory = <T>({
       try {
         const newInventory = await consoleFetchJSON(
           getInventoryApiUrl(
-            `providers/${provider.spec.type}/${provider.metadata.uid}${
+            `providers/${provider?.spec?.type}/${provider?.metadata?.uid}${
               subPath ? `/${subPath}` : ''
             }`,
           ),
@@ -102,18 +104,26 @@ export const useProviderInventory = <T>({
         );
 
         updateInventoryIfChanged(newInventory, fieldsToAvoidComparing);
-        handleError(null);
+        setError(null);
       } catch (e) {
-        handleError(e);
+        updateInventoryIfChanged(null, []);
+
+        if (e instanceof Error) {
+          handleError(e);
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    (async () => {
+      await fetchData();
+    })();
 
     const intervalId = setInterval(fetchData, interval);
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [stableProvider, subPath, interval, disabled]);
 
   /**
@@ -124,21 +134,21 @@ export const useProviderInventory = <T>({
    * @param {Error} e The error object to handle
    * @returns {void}
    */
-  function handleError(e: Error): void {
+  const handleError = (e: Error): void => {
     if (e?.toString() !== oldErrorRef.current?.error) {
       setError(e);
       oldErrorRef.current = { error: e?.toString() };
     }
-  }
+  };
 
   /**
    * Checks if provider object is valid.
    * @param {V1beta1Provider} provider - The provider object to be validated.
    * @returns {boolean} - True if the provider object is valid, false otherwise.
    */
-  function isValidProvider(provider: V1beta1Provider): boolean {
+  const isValidProvider = (provider: V1beta1Provider): boolean => {
     return provider?.spec?.type !== undefined && provider?.metadata?.uid !== undefined;
-  }
+  };
 
   /**
    * Checks if the inventory data has changed and updates the inventory state if it has.
@@ -146,22 +156,22 @@ export const useProviderInventory = <T>({
    * @param {T} newInventory - The new inventory data.
    * @param {string[]} fieldsToAvoidComparing - The fields to ignore comparing when checking if the inventory data has changed.
    */
-  function updateInventoryIfChanged(newInventory: T, fieldsToAvoidComparing: string[]): void {
+  const updateInventoryIfChanged = (newInventory: T, fieldsToAvoidComparing: string[]): void => {
     const needReRender = hasObjectChangedInGivenFields({
-      oldObject: oldDataRef.current?.inventory,
+      fieldsToAvoidComparing,
       newObject: newInventory,
-      fieldsToAvoidComparing: fieldsToAvoidComparing,
+      oldObject: oldDataRef.current?.inventory,
     });
 
     if (needReRender) {
       setInventory(newInventory);
       oldDataRef.current = { inventory: newInventory };
     }
-  }
+  };
 
   return disabled
-    ? { inventory: null, loading: false, error: null }
-    : { inventory, loading, error };
+    ? { error: null, inventory: null, loading: false }
+    : { error, inventory, loading };
 };
 
 export default useProviderInventory;

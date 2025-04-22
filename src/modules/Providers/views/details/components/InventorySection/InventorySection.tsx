@@ -1,5 +1,5 @@
-import React from 'react';
-import { ProviderData } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
 import { OpenshiftInventorySection } from './OpenshiftInventorySection';
 import { OpenstackInventorySection } from './OpenstackInventorySection';
@@ -7,7 +7,7 @@ import { OVAInventorySection } from './OVAInventorySection';
 import { OvirtInventorySection } from './OvirtInventorySection';
 import { VSphereInventorySection } from './VSphereInventorySection';
 
-export const InventorySection: React.FC<InventoryProps> = (props) => {
+export const InventorySection: FC<InventoryProps> = (props) => {
   const { provider } = props.data;
 
   switch (provider?.spec?.type) {

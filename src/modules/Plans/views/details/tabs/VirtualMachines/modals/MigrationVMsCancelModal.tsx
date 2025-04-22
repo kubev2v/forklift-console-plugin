@@ -1,20 +1,21 @@
-import React, { ReactNode, useCallback, useState } from 'react';
-import { useToggle } from 'src/modules/Providers/hooks';
-import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
+import useToggle from 'src/modules/Providers/hooks/useToggle';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { MigrationModel, V1beta1Migration } from '@kubev2v/types';
+import { MigrationModel, type V1beta1Migration } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
 
 import './PlanVMsDeleteModal.style.css';
 
-export interface MigrationVMsCancelModalProps {
+type MigrationVMsCancelModalProps = {
   migration: V1beta1Migration;
   selected: string[];
-}
+};
 
-export const MigrationVMsCancelModal: React.FC<MigrationVMsCancelModalProps> = ({
+export const MigrationVMsCancelModal: FC<MigrationVMsCancelModalProps> = ({
   migration,
   selected,
 }) => {
@@ -24,7 +25,7 @@ export const MigrationVMsCancelModal: React.FC<MigrationVMsCancelModalProps> = (
   const [isLoading, toggleIsLoading] = useToggle();
 
   const vms = migration?.spec?.cancel || [];
-  selected.forEach((id) => vms.push({ id: id }));
+  selected.forEach((id) => vms.push({ id }));
 
   const handleSave = useCallback(async () => {
     toggleIsLoading();
@@ -33,10 +34,10 @@ export const MigrationVMsCancelModal: React.FC<MigrationVMsCancelModalProps> = (
       const op = migration?.spec?.cancel ? 'replace' : 'add';
 
       await k8sPatch({
-        model: MigrationModel,
-        resource: migration,
-        path: '',
         data: [{ op, path: '/spec/cancel', value: vms }],
+        model: MigrationModel,
+        path: '',
+        resource: migration,
       });
 
       toggleModal();

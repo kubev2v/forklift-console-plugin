@@ -1,16 +1,15 @@
-import React from 'react';
-import { TableCell } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import type { FC } from 'react';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
 import { Label } from '@patternfly/react-core';
 
-import { getOpenShiftFeatureMap } from '../utils';
+import { getOpenShiftFeatureMap } from '../utils/helpers/getOpenShiftFeatureMap';
 import { toVmFeatureEnum } from '../utils/helpers/toVmFeatureEnum';
-import { VMCellProps } from './VMCellProps';
 
-export const VmFeaturesCell: React.FC<VMCellProps> = ({ data }) => {
-  const { t } = useForkliftTranslation();
-  const featureToLabel = toVmFeatureEnum(t);
+import type { VMCellProps } from './VMCellProps';
+
+export const VmFeaturesCell: FC<VMCellProps> = ({ data }) => {
+  const featureToLabel = toVmFeatureEnum();
   return (
     <TableCell>
       {Object.entries(getOpenShiftFeatureMap(data?.vm))

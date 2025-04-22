@@ -1,9 +1,10 @@
-import React, { FormEvent, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 
 import { DatePicker, InputGroup, ToolbarFilter } from '@patternfly/react-core';
 
-import { changeFormatToISODate, isValidDate, parseISOtoJSDate, toISODate } from '../utils';
-import { FilterTypeProps } from './types';
+import { changeFormatToISODate, isValidDate, parseISOtoJSDate, toISODate } from '../utils/dates';
+
+import type { FilterTypeProps } from './types';
 
 /**
  * This Filter type enables selecting a single date (a day).
@@ -16,20 +17,21 @@ import { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/DateFilter.tsx)
  */
 export const DateFilter = ({
-  selectedFilters = [],
-  onFilterUpdate,
-  title,
   filterId,
+  onFilterUpdate,
   placeholderLabel,
+  selectedFilters = [],
   showFilter = true,
+  title,
 }: FilterTypeProps) => {
-  const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(Boolean) ?? [];
+  const isString = (value: string | undefined): value is string => value !== undefined;
+  const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(isString) ?? [];
 
   // internal state - stored as ISO date string (no time)
   const [date, setDate] = useState(toISODate(new Date()));
 
-  const clearSingleDate = (option) => {
-    onFilterUpdate([...validFilters.filter((d) => d !== option)]);
+  const clearSingleDate = (option: string) => {
+    onFilterUpdate([...validFilters.filter((filter) => filter !== option)]);
   };
 
   const onDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
@@ -42,7 +44,9 @@ export const DateFilter = ({
     if (value?.length === 10 && isValidDate(value)) {
       const targetDate = changeFormatToISODate(value);
       setDate(targetDate);
-      onFilterUpdate([...validFilters.filter((d) => d !== targetDate), targetDate]);
+      if (targetDate) {
+        onFilterUpdate([...validFilters.filter((filter) => filter !== targetDate), targetDate]);
+      }
     }
   };
 
@@ -50,9 +54,11 @@ export const DateFilter = ({
     <ToolbarFilter
       key={filterId}
       chips={validFilters}
-      deleteChip={(category, option) => clearSingleDate(option)}
+      deleteChip={(_category, option) => {
+        clearSingleDate(option as string);
+      }}
       deleteChipGroup={() => onFilterUpdate([])}
-      categoryName={title}
+      categoryName={title ?? ''}
       showToolbarItem={showFilter}
     >
       <InputGroup>

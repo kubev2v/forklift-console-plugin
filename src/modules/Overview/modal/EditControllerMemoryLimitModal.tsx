@@ -1,19 +1,20 @@
-import React from 'react';
-import { EditModal, ModalInputComponentType } from 'src/modules/Providers/modals';
+import type { FC } from 'react';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
+import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { EditSettingsModalProps } from './EditSettingsModalProps';
+import type { EditSettingsModalProps } from './EditSettingsModalProps';
 import SettingsSelectInput from './SettingsSelectInput';
 
 // Define the options
 const options = [
-  { key: '200Mi', name: '200Mi', description: 'Low memory limit' },
-  { key: '800Mi', name: '800Mi', description: 'Moderate memory limit' },
-  { key: '2000Mi', name: '2000Mi', description: 'High memory limit' },
-  { key: '8000Mi', name: '8000Mi', description: 'Very high memory limit' },
+  { description: 'Low memory limit', key: '200Mi', name: '200Mi' },
+  { description: 'Moderate memory limit', key: '800Mi', name: '800Mi' },
+  { description: 'High memory limit', key: '2000Mi', name: '2000Mi' },
+  { description: 'Very high memory limit', key: '8000Mi', name: '8000Mi' },
 ];
 
 /**
@@ -27,7 +28,7 @@ const ControllerMemoryLimitSelect: ModalInputComponentType = (props) => {
   return <SettingsSelectInput {...props} options={options} />;
 };
 
-export const EditControllerMemoryLimitModal: React.FC<EditSettingsModalProps> = (props) => {
+export const EditControllerMemoryLimitModal: FC<EditSettingsModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (

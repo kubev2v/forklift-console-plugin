@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   DataList,
   DataListAction,
@@ -10,8 +8,8 @@ import {
 } from '@patternfly/react-core';
 
 export const MappingListHeader = ({
-  sourceHeading,
   destinationHeading,
+  sourceHeading,
 }: {
   sourceHeading: string;
   destinationHeading: string;

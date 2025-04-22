@@ -1,29 +1,27 @@
-import React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, PlanModelGroupVersionKind, V1beta1Plan } from '@kubev2v/types';
+import Suspend from '@components/Suspend';
+import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-import {
-  ConditionsSection,
-  DetailsSection,
-  MigrationsSection,
-  ProvidersSection,
-  SettingsSection,
-  Suspend,
-} from '../../components';
+import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
+import { DetailsSection } from '../../components/DetailsSection/DetailsSection';
+import { MigrationsSection } from '../../components/MigrationsSection/MigrationsSection';
+import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSection';
+import { SettingsSection } from '../../components/SettingsSection/SettingsSection';
 
-export const PlanDetails: React.FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
+export const PlanDetails: FC<{ name: string; namespace: string }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({

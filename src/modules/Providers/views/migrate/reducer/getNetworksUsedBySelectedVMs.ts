@@ -1,6 +1,7 @@
-import { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
+import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
 
-import { VmData } from '../../details';
+import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+
 import { POD_NETWORK } from './actions';
 
 // based on packages legacy/src/Plans/components/Wizard/helpers.tsx
@@ -18,14 +19,7 @@ export const getNetworksUsedBySelectedVms = (
   );
 };
 
-export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicProfile[]) =>
-  toNetworksOrProfiles(vm).map((network) =>
-    vm.providerType === 'ovirt' && nicProfiles
-      ? nicProfiles.find((nicProfile) => nicProfile?.id === network)?.network
-      : network,
-  );
-
-export const toNetworksOrProfiles = (vm) => {
+const toNetworksOrProfiles = (vm: ProviderVirtualMachine): unknown[] => {
   switch (vm.providerType) {
     case 'vsphere': {
       return vm?.networks?.map((network) => network?.id) ?? [];
@@ -50,3 +44,10 @@ export const toNetworksOrProfiles = (vm) => {
       return [];
   }
 };
+
+export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicProfile[]) =>
+  toNetworksOrProfiles(vm).map((network) =>
+    vm.providerType === 'ovirt' && nicProfiles
+      ? nicProfiles.find((nicProfile) => nicProfile?.id === network)?.network
+      : network,
+  );

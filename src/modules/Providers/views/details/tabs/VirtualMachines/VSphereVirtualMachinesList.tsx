@@ -1,85 +1,88 @@
-import React from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import type { FC } from 'react';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
-import { VSphereVM } from '@kubev2v/types';
+import type { VSphereVM } from '@kubev2v/types';
+import { t } from '@utils/i18n';
 
-import { concernFilter, VsphereHostFilter } from './utils/filters';
-import { ProviderVirtualMachinesList, VmData } from './components';
-import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
-import { getVmPowerState, useVSphereInventoryVms } from './utils';
+import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import type { VmData } from './components/VMCellProps';
+import { concernFilter } from './utils/filters/concernFilter';
+import { vsphereHostFilter } from './utils/filters/VsphereHostFilter';
+import { getVmPowerState } from './utils/helpers/getVmPowerState';
+import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
+import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
-export const vSphereVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const vSphereVmFieldsMetadataFactory = [
   {
-    resourceFieldId: 'name',
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: 'freetext',
+    },
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
     jsonPath: '$.name',
     label: t('Name'),
-    isVisible: true,
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by name'),
-    },
+    resourceFieldId: 'name',
     sortable: true,
   },
   {
-    resourceFieldId: 'concerns',
+    filter: concernFilter(),
+    isVisible: true,
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
-    isVisible: true,
+    resourceFieldId: 'concerns',
     sortable: true,
-    filter: concernFilter(t),
   },
   {
-    resourceFieldId: 'host',
+    filter: vsphereHostFilter(),
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.hostName',
     label: t('Host'),
-    isVisible: true,
-    isIdentity: false,
+    resourceFieldId: 'host',
     sortable: true,
-    filter: VsphereHostFilter(t),
   },
   {
-    resourceFieldId: 'folder',
+    filter: {
+      placeholderLabel: t('Filter by folder'),
+      type: 'freetext',
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.folderName',
     label: t('Folder'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by folder'),
-    },
+    resourceFieldId: 'folder',
     sortable: true,
   },
   {
-    resourceFieldId: 'path',
+    filter: {
+      placeholderLabel: t('Filter by path'),
+      type: 'freetext',
+    },
+    isIdentity: false,
+    isVisible: false,
     jsonPath: '$.vm.path',
     label: t('Path'),
-    isVisible: false,
-    isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by path'),
-    },
+    resourceFieldId: 'path',
     sortable: true,
   },
   {
-    resourceFieldId: 'powerState',
+    filter: {
+      placeholderLabel: t('Filter by power state'),
+      type: 'enum',
+      values: enumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Power state'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'enum',
-      placeholderLabel: t('Filter by power state'),
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
-    },
+    resourceFieldId: 'powerState',
     sortable: true,
   },
 ];
 
-export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = (props) => {
+export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => {
   const { obj } = props;
   const [hostsDict, foldersDict] = useVSphereInventoryVms({ provider: obj.provider }, true, null);
   const { vmData } = obj;
@@ -110,7 +113,7 @@ export const VSphereVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> 
       {...props}
       obj={{ ...obj, vmData: newVMData }}
       cellMapper={VSphereVirtualMachinesCells}
-      fieldsMetadataFactory={vSphereVmFieldsMetadataFactory}
+      fieldsMetadata={vSphereVmFieldsMetadataFactory}
       pageId="VSphereVirtualMachinesList"
     />
   );

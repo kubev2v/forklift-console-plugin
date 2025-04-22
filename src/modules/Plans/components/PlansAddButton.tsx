@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import type { FC } from 'react';
 import { useHistory } from 'react-router';
-import { getResourceUrl } from 'src/modules/Providers/utils';
-import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -11,18 +11,19 @@ import { Button, Tooltip } from '@patternfly/react-core';
 type PlansAddButtonProps = {
   namespace?: string;
   dataTestId?: string;
+  canCreate?: boolean;
 };
 
-export const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId }) => {
+const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namespace }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
   const { setData } = useCreateVmMigrationData();
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
   const plansListURL = getResourceUrl({
-    reference: PlanModelRef,
     namespace,
     namespaced: namespace !== undefined,
+    reference: PlanModelRef,
   });
 
   const onClick = () => {
@@ -38,12 +39,15 @@ export const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId 
       variant="primary"
       isAriaDisabled={!hasSufficientProviders}
       onClick={onClick}
+      isDisabled={!canCreate}
     >
       {t('Create Plan')}
     </Button>
   );
 
-  return !hasSufficientProviders ? (
+  if (hasSufficientProviders) return button;
+
+  return (
     <Tooltip
       content={
         namespace
@@ -56,8 +60,6 @@ export const PlansAddButton: FC<PlansAddButtonProps> = ({ namespace, dataTestId 
     >
       {button}
     </Tooltip>
-  ) : (
-    button
   );
 };
 

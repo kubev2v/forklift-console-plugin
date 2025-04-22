@@ -14,11 +14,11 @@ import { useState } from 'react';
  * // To toggle the isOpen state
  * toggleIsOpen();
  */
-export const useToggle = (initialValue = false): [boolean, () => void] => {
+const useToggle = (initialValue = false): [boolean, () => void] => {
   const [value, setIsOpen] = useState(initialValue);
 
   const toggle = () => {
-    setIsOpen((v) => !v);
+    setIsOpen((open) => !open);
   };
 
   return [value, toggle];

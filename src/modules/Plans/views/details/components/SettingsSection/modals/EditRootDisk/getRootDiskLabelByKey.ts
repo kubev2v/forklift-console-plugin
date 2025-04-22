@@ -1,38 +1,39 @@
+import { t } from '@utils/i18n';
+
 /**
  * Type definition for DiskOption.
  * @typedef {Object} DiskOption
  * @property {string} key - The key representing the disk option.
  * @property {string} description - The description of the disk option.
  */
-export type DiskOption = {
+type DiskOption = {
   key: string;
   description: string;
 };
 
 /**
  * Generates an array of disk options.
- * @param {Function} [t=(text: string) => text] - Translation function.
  * @returns {DiskOption[]} Array of disk options.
  */
-export const diskOptions = (t = (text: string) => text): DiskOption[] => [
-  { key: '', description: t('Boot from first root device') },
-  { key: '/dev/sda', description: t('Boot from the first hard drive') },
+export const diskOptions = (): DiskOption[] => [
+  { description: t('Boot from first root device'), key: '' },
+  { description: t('Boot from the first hard drive'), key: '/dev/sda' },
   {
-    key: '/dev/sda1',
     description: t('Boot from the first partition on the first hard drive'),
+    key: '/dev/sda1',
   },
   {
-    key: '/dev/sda2',
     description: t('Boot from the second partition on the first hard drive'),
+    key: '/dev/sda2',
   },
-  { key: '/dev/sdb', description: t('Boot from the second hard drive') },
+  { description: t('Boot from the second hard drive'), key: '/dev/sdb' },
   {
-    key: '/dev/sdb1',
     description: t('Boot from the first partition on the second hard drive'),
+    key: '/dev/sdb1',
   },
   {
-    key: '/dev/sdb2',
     description: t('Boot from the second partition on the second hard drive'),
+    key: '/dev/sdb2',
   },
 ];
 
@@ -53,6 +54,7 @@ export const getRootDiskLabelByKey = (key_: string | number): string => {
   const key = key_.toString();
 
   if (key.startsWith('/dev/sd') && key.length >= 8) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     const diskLetter = key[7];
     const partitionNumber = key.length > 8 ? key.slice(8) : '';
 
@@ -77,8 +79,7 @@ export const getRootDiskLabelByKey = (key_: string | number): string => {
     const partitionPosition = partitionNumber ? `${partitionNumber} partition` : '';
 
     return `${diskPosition} HD${partitionPosition ? ` ${partitionPosition}` : ''} (${key})`;
-  } else {
-    // If format is unrecognized, just return the key as label
-    return key;
   }
+  // If format is unrecognized, just return the key as label
+  return key;
 };

@@ -1,15 +1,15 @@
-import React from 'react';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 
-import { StorageDetailsItemProps } from './StorageDetailsItemProps';
+import type { StorageDetailsItemProps } from './StorageDetailsItemProps';
 
-export const NamespaceDetailsItem: React.FC<StorageDetailsItemProps> = ({
-  resource,
-  moreInfoLink,
+export const NamespaceDetailsItem: FC<StorageDetailsItemProps> = ({
   helpContent,
+  moreInfoLink,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -27,7 +27,7 @@ export const NamespaceDetailsItem: React.FC<StorageDetailsItemProps> = ({
       title={t('Namespace')}
       content={
         <ResourceLink
-          groupVersionKind={{ version: 'v1', kind: 'Namespace' }}
+          groupVersionKind={{ kind: 'Namespace', version: 'v1' }}
           name={resource?.metadata?.namespace}
           namespace={resource?.metadata?.namespace}
         />

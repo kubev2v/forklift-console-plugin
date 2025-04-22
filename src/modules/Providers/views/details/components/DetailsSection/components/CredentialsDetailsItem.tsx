@@ -1,23 +1,24 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef } from '@kubev2v/types';
 
-import { DetailsItem, getResourceUrl } from '../../../../../utils';
-import { ProviderDetailsItemProps } from './ProviderDetailsItem';
+import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
-export const CredentialsDetailsItem: React.FC<ProviderDetailsItemProps> = ({
-  resource: provider,
-  moreInfoLink,
+export const CredentialsDetailsItem: FC<ProviderDetailsItemProps> = ({
   helpContent,
+  moreInfoLink,
+  resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
 
   const providerURL = getResourceUrl({
-    reference: ProviderModelRef,
     name: provider?.metadata?.name,
     namespace: provider?.metadata?.namespace,
+    reference: ProviderModelRef,
   });
 
   const defaultHelpContent = t(

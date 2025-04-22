@@ -1,96 +1,98 @@
-import React from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import type { FC } from 'react';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
+import { t } from '@utils/i18n';
 
-import { concernFilter, OvirtHostFiler } from './utils/filters';
-import { ProviderVirtualMachinesList, VmData } from './components';
+import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import type { VmData } from './components/VMCellProps';
+import { concernFilter } from './utils/filters/concernFilter';
+import { ovirtHostFilter } from './utils/filters/OvirtHostFilter';
+import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
-import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
-import { getVmPowerState } from './utils';
+import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
-export const oVirtVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const oVirtVmFieldsMetadataFactory = [
   {
-    resourceFieldId: 'name',
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: 'freetext',
+    },
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
     jsonPath: '$.name',
     label: t('Name'),
-    isVisible: true,
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by name'),
-    },
+    resourceFieldId: 'name',
     sortable: true,
   },
   {
-    resourceFieldId: 'concerns',
+    filter: concernFilter(),
+    isVisible: true,
     jsonPath: '$.vm.concerns',
     label: t('Concerns'),
-    isVisible: true,
+    resourceFieldId: 'concerns',
     sortable: true,
-    filter: concernFilter(t),
   },
   {
-    resourceFieldId: 'cluster',
+    filter: {
+      placeholderLabel: t('Filter by cluster'),
+      type: 'freetext',
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.vm.cluster',
     label: t('Cluster'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by cluster'),
-    },
+    resourceFieldId: 'cluster',
     sortable: true,
   },
   {
-    resourceFieldId: 'host',
+    filter: ovirtHostFilter(),
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.vm.host',
     label: t('Host'),
-    isVisible: true,
-    isIdentity: false,
+    resourceFieldId: 'host',
     sortable: true,
-    filter: OvirtHostFiler(t),
   },
   {
-    resourceFieldId: 'path',
+    filter: {
+      placeholderLabel: t('Filter by path'),
+      type: 'freetext',
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.vm.path',
     label: t('Path'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by path'),
-    },
+    resourceFieldId: 'path',
     sortable: true,
   },
   {
-    resourceFieldId: 'status',
+    filter: {
+      placeholderLabel: t('Filter by status'),
+      type: 'enum',
+      values: enumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Status'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'enum',
-      placeholderLabel: t('Filter by status'),
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
-    },
+    resourceFieldId: 'status',
     sortable: true,
   },
   {
-    resourceFieldId: 'description',
+    isIdentity: false,
+    isVisible: true,
     jsonPath: '$.vm.description',
     label: t('Description'),
-    isVisible: true,
-    isIdentity: false,
+    resourceFieldId: 'description',
     sortable: false,
   },
 ];
 
-export const OVirtVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = (props) => (
+export const OVirtVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => (
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OVirtVirtualMachinesCells}
-    fieldsMetadataFactory={oVirtVmFieldsMetadataFactory}
+    fieldsMetadata={oVirtVmFieldsMetadataFactory}
     pageId="OVirtVirtualMachinesList"
   />
 );

@@ -1,29 +1,35 @@
-import React, { FC, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { type FC, useState } from 'react';
+import { FormProvider } from 'react-hook-form';
 
-import { Form, Title, Wizard, WizardStep, WizardStepType } from '@patternfly/react-core';
+import { Form, Title, Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { GeneralInformationForm } from './steps/GeneralInformationForm';
+import { GeneralInformationStep } from './steps/general-information/GeneralInformationStep';
+import { VirtualMachinesStep } from './steps/virtual-machines/VirtualMachinesStep';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import { CreatePlanWizardFooter } from './CreatePlanWizardFooter';
-
-import './CreatePlanWizard.style.scss';
+import { useCreatePlanForm, useDefaultFormValues } from './hooks';
 
 export const CreatePlanWizard: FC = () => {
   const { t } = useForkliftTranslation();
-  const form = useForm({ mode: 'onChange' });
+  const defaultValues = useDefaultFormValues();
+  const form = useCreatePlanForm({
+    defaultValues,
+    mode: 'onChange',
+  });
   const [currentStep, setCurrentStep] = useState<WizardStepType>(firstStep);
   const { formState, watch } = form;
   const formValues = watch();
 
-  const onSubmit = () => console.log('SUBMITTED: ', formValues);
+  // TODO, Normalize wizard data object and submit
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const onSubmit = () => {};
 
   const getStepProps = (id: PlanWizardStepId) => ({
     id,
-    name: planStepNames[id],
     isDisabled: currentStep?.index < planStepOrder[id] && !isEmpty(formState?.errors),
+    name: planStepNames[id],
   });
 
   return (
@@ -32,21 +38,21 @@ export const CreatePlanWizard: FC = () => {
         isVisitRequired
         title={t('Create migration plan')}
         footer={<CreatePlanWizardFooter />}
-        onStepChange={(_event, currentStep) => setCurrentStep(currentStep)}
+        onStepChange={(_event, step) => {
+          setCurrentStep(step);
+        }}
       >
         <WizardStep
-          {...getStepProps(PlanWizardStepId.BasicSetUp)}
+          {...getStepProps(PlanWizardStepId.BasicSetup)}
           steps={[
             <WizardStep key={PlanWizardStepId.General} {...getStepProps(PlanWizardStepId.General)}>
-              <GeneralInformationForm />
+              <GeneralInformationStep />
             </WizardStep>,
             <WizardStep
               key={PlanWizardStepId.VirtualMachines}
               {...getStepProps(PlanWizardStepId.VirtualMachines)}
             >
-              <Form>
-                <Title headingLevel="h2">{t('Virtual machines')}</Title>
-              </Form>
+              <VirtualMachinesStep />
             </WizardStep>,
             <WizardStep
               key={PlanWizardStepId.NetworkMapping}
@@ -76,7 +82,7 @@ export const CreatePlanWizard: FC = () => {
         />
 
         <WizardStep
-          {...getStepProps(PlanWizardStepId.AdditionalSetUp)}
+          {...getStepProps(PlanWizardStepId.AdditionalSetup)}
           steps={[
             <WizardStep
               key={PlanWizardStepId.OtherSettings}
@@ -104,5 +110,3 @@ export const CreatePlanWizard: FC = () => {
     </FormProvider>
   );
 };
-
-export default CreatePlanWizard;

@@ -1,17 +1,17 @@
-import React from 'react';
+import type { ChangeEvent, MouseEvent, ReactNode } from 'react';
 
-import { SelectOptionObject } from '@patternfly/react-core/deprecated';
-export interface EnumGroup {
+import type { SelectOptionObject } from '@patternfly/react-core/deprecated';
+export type EnumGroup = {
   groupId: string;
   label: string;
-}
+};
 
-export interface EnumValue {
+export type EnumValue = {
   id: string;
   groupId?: string;
   label: string;
   resourceFieldId?: string;
-}
+};
 
 export enum FilterDefType {
   FreeText = 'freetext',
@@ -21,7 +21,7 @@ export enum FilterDefType {
   Slider = 'slider',
 }
 
-export interface FilterDef {
+export type FilterDef = {
   type: string;
   placeholderLabel?: string;
   values?: EnumValue[];
@@ -32,15 +32,15 @@ export interface FilterDef {
   // override default behavior if there are no filters provided by the user
   // by default missing/empty filters result in positive match (vacuous truth)
   defaultValues?: string[];
-  helperText?: string | React.ReactNode;
+  helperText?: string | ReactNode;
   dynamicFilter?: (items: unknown[]) => Partial<FilterDef>;
   isHidden?: boolean;
   showFilterIcon?: boolean;
-}
+};
 
 type OpenApiJsonPath = string | ((resourceData: unknown) => unknown);
 
-export interface ResourceField {
+export type ResourceField = {
   resourceFieldId: string | null;
   jsonPath?: OpenApiJsonPath;
   label: string | null;
@@ -54,44 +54,22 @@ export interface ResourceField {
   filter?: FilterDef;
   // if true then the field filters state should persist between sessions
   isPersistent?: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   compareFn?: (a: any, b: any, locale: string) => number;
-}
+};
 
-export type ResourceFieldPartialFactory = { (t: (string) => string): Partial<ResourceField> };
-export type ResourceFieldFactory = { (t: (string) => string): ResourceField[] };
-
-export const K8sConditionStatusValues = ['True', 'False', 'Unknown'] as const;
-export type K8sConditionStatus = (typeof K8sConditionStatusValues)[number];
-
-export interface GlobalActionToolbarProps<T> {
+export type GlobalActionToolbarProps<T> = {
   // data currently visible on the screen (i.e. adjusted by paging and filtering)
   dataOnScreen: T[];
-}
-
-/**
- * @typedef {Object} ToggleEventType
- * @description Represents the possible event types that can be used for toggling actions.
- *
- * @property {Event} Event - A standard DOM event.
- * @property {React.KeyboardEvent<Element>} React.KeyboardEvent - A React-specific keyboard event.
- * @property {React.MouseEvent<Element, MouseEvent>} React.MouseEvent - A React-specific mouse event.
- * @property {React.ChangeEvent<Element>} React.ChangeEvent - A React-specific change event.
- */
-export type ToggleEventType =
-  | Event
-  | React.KeyboardEvent<Element>
-  | React.MouseEvent<Element, MouseEvent>
-  | React.ChangeEvent<Element>;
+};
 
 /**
  * @typedef {Object} SelectEventType
  * @description Represents the possible event types that can be used for select actions.
  *
- * @property {React.MouseEvent<Element, MouseEvent>} React.MouseEvent - A React-specific mouse event.
- * @property {React.ChangeEvent<Element>} React.ChangeEvent - A React-specific change event.
+ * @property {MouseEvent<Element, MouseEvent>} MouseEvent - A React-specific mouse event.
+ * @property {ChangeEvent<Element>} ChangeEvent - A React-specific change event.
  */
-export type SelectEventType = React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>;
+export type SelectEventType = MouseEvent | ChangeEvent;
 
 /**
  * @typedef {Object} SelectValueType

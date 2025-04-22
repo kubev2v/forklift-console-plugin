@@ -1,17 +1,19 @@
-import React from 'react';
+import type { FC } from 'react';
 import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
-import { getResourceUrl, TableIconCell } from 'src/modules/Providers/utils';
+import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModelRef } from '@kubev2v/types';
 import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
+import { t } from '@utils/i18n';
 
-import { CellProps } from './CellProps';
+import type { CellProps } from './CellProps';
 
-export const StatusCell: React.FC<CellProps> = ({ data, fields, fieldId }) => {
+export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
   const { t } = useForkliftTranslation();
 
   const phase = getResourceFieldValue(data, 'phase', fields);
@@ -19,25 +21,22 @@ export const StatusCell: React.FC<CellProps> = ({ data, fields, fieldId }) => {
 
   switch (phase) {
     case 'Critical':
-      return ErrorStatusCell({
-        t,
-        data,
-        fields,
-        fieldId,
-      });
+      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} />;
     default:
       return <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>;
   }
 };
 
-export const ErrorStatusCell: React.FC<CellProps & { t }> = ({ t, data, fields }) => {
+const ErrorStatusCell: FC<CellProps> = ({ data, fields }) => {
+  const { t } = useForkliftTranslation();
+
   const { obj: networkMap } = data;
   const phase = getResourceFieldValue(data, 'phase', fields);
   const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
   const networkMapURL = getResourceUrl({
-    reference: NetworkMapModelRef,
     name: networkMap?.metadata?.name,
     namespace: networkMap?.metadata?.namespace,
+    reference: NetworkMapModelRef,
   });
 
   // Find the error message from the status conditions
@@ -74,16 +73,13 @@ export const ErrorStatusCell: React.FC<CellProps & { t }> = ({ t, data, fields }
 };
 
 const statusIcons = {
-  Ready: <CheckCircleIcon color="#3E8635" />,
-  'Not Ready': <Spinner size="sm" />,
   Critical: <ExclamationCircleIcon color="#C9190B" />,
+  'Not Ready': <Spinner size="sm" />,
+  Ready: <CheckCircleIcon color="#3E8635" />,
 };
 
 const phaseLabels = {
-  // t('Ready')
-  Ready: 'Ready',
-  // t('Not Ready')
-  'Not Ready': 'Not Ready',
-  // t('Critical')
-  Critical: 'Critical',
+  Critical: t('Critical'),
+  'Not Ready': t('Not Ready'),
+  Ready: t('Ready'),
 };

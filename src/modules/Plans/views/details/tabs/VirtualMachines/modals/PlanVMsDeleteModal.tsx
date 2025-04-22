@@ -1,20 +1,21 @@
-import React, { ReactNode, useCallback, useState } from 'react';
-import { useToggle } from 'src/modules/Providers/hooks';
-import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
+import useToggle from 'src/modules/Providers/hooks/useToggle';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, V1beta1Plan } from '@kubev2v/types';
+import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
 
 import './PlanVMsDeleteModal.style.css';
 
-export interface PlanVMsDeleteModalProps {
+type PlanVMsDeleteModalProps = {
   plan: V1beta1Plan;
   selected: string[];
-}
+};
 
-export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, selected }) => {
+export const PlanVMsDeleteModal: FC<PlanVMsDeleteModalProps> = ({ plan, selected }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
@@ -29,10 +30,10 @@ export const PlanVMsDeleteModal: React.FC<PlanVMsDeleteModalProps> = ({ plan, se
       const op = plan?.spec?.vms ? 'replace' : 'add';
 
       await k8sPatch({
-        model: PlanModel,
-        resource: plan,
-        path: '',
         data: [{ op, path: '/spec/vms', value: vms }],
+        model: PlanModel,
+        path: '',
+        resource: plan,
       });
 
       toggleModal();

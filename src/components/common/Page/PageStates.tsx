@@ -1,4 +1,4 @@
-import React, { ComponentType } from 'react';
+import type { ComponentType } from 'react';
 
 import {
   Button,
@@ -11,8 +11,8 @@ import {
   Spinner,
   Title,
 } from '@patternfly/react-core';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
-import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import { SearchIcon } from '@patternfly/react-icons';
 
 /**
  * The page basic states.
@@ -20,10 +20,10 @@ import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Page/PageStates.tsx)
  */
-export const BaseState = ({
-  title,
-  icon,
+const BaseState = ({
   color,
+  icon,
+  title,
 }: {
   title?: string;
   icon?: ComponentType<unknown>;
@@ -58,9 +58,9 @@ export const NoResultsFound = ({ title }: { title: string }) => (
  */
 export const NoResultsMatchFilter = ({
   clearAllFilters,
-  title = 'No results found',
-  description = 'No results match the filter criteria. Clear all filters and try again.',
   clearAllLabel = 'Clear all filters',
+  description = 'No results match the filter criteria. Clear all filters and try again.',
+  title = 'No results found',
 }: {
   clearAllFilters: () => void;
   title?: string;

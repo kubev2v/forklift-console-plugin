@@ -1,14 +1,16 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useToggle } from 'src/modules/Providers/hooks';
-import { AlertMessageForModals, useModal } from 'src/modules/Providers/modals';
+import useToggle from 'src/modules/Providers/hooks/useToggle';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, V1beta1Plan } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { getPlanPhase, PlanPhase } from '../utils';
+import { getPlanPhase } from '../utils/helpers/getPlanPhase';
+import { PlanPhase } from '../utils/types/PlanPhase';
 
 /**
  * Props for the DeleteModal component
@@ -18,20 +20,20 @@ import { getPlanPhase, PlanPhase } from '../utils';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-interface ArchiveModalProps {
+type ArchiveModalProps = {
   resource: V1beta1Plan;
   model: K8sModel;
   title?: string;
   redirectTo?: string;
-}
+};
 
 /**
  * A generic delete modal component
  * @component
  * @param {ArchiveModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, redirectTo }) => {
+export const ArchiveModal: FC<ArchiveModalProps> = ({ redirectTo, resource, title }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
@@ -47,10 +49,10 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
       const op = resource?.spec?.archived ? 'replace' : 'add';
 
       await k8sPatch({
-        model: PlanModel,
-        resource,
-        path: '',
         data: [{ op, path: '/spec/archived', value: true }],
+        model: PlanModel,
+        path: '',
+        resource,
       });
 
       if (redirectTo) {
@@ -65,7 +67,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
     }
   }, [resource, navigate]);
 
-  const phase = getPlanPhase({ obj: resource });
+  const phase = getPlanPhase({ plan: resource });
 
   const actions = [
     <Button
@@ -81,7 +83,7 @@ export const ArchiveModal: React.FC<ArchiveModalProps> = ({ title, resource, red
     </Button>,
   ];
 
-  const IsExecutingAlert: React.FC = () => (
+  const IsExecutingAlert: FC = () => (
     <Alert
       isInline
       variant="danger"

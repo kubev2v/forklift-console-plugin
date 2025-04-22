@@ -1,16 +1,14 @@
-import React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { OpenshiftVM, V1VirtualMachine } from '@kubev2v/types';
+import type { OpenshiftVM, V1VirtualMachine } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { AlignedDecimal } from './AlignedDecimal';
 
-export const OpenshiftPlanResources: React.FC<{ planInventory: OpenshiftVM[] }> = ({
-  planInventory,
-}) => {
+export const OpenshiftPlanResources: FC<{ planInventory: OpenshiftVM[] }> = ({ planInventory }) => {
   const { t } = useForkliftTranslation();
 
   const planInventoryRunning = planInventory?.filter((vm) => vm?.object?.spec?.running);
@@ -107,47 +105,47 @@ export const OpenshiftPlanResources: React.FC<{ planInventory: OpenshiftVM[] }> 
 
 const getK8sCPU = (vm: V1VirtualMachine) => vm?.spec?.template?.spec?.domain?.cpu?.cores || '0';
 const getK8sVMMemory = (vm: V1VirtualMachine) =>
-  vm?.spec?.template?.spec?.domain?.resources.requests?.['memory'] || '0Mi';
+  vm?.spec?.template?.spec?.domain?.resources.requests?.memory || '0Mi';
 
-function k8sMemoryToBytes(memoryString) {
+/* eslint-disable id-length */
+export const k8sMemoryToBytes = (memoryString: string) => {
   const units = {
-    // Binary SI units (powers of 2)
-    KI: 2 ** 10,
-    MI: 2 ** 20,
-    GI: 2 ** 30,
-    TI: 2 ** 40,
-    PI: 2 ** 50,
+    E: 10 ** 18,
     EI: 2 ** 60,
+    G: 10 ** 9,
+    GI: 2 ** 30,
     // Decimal SI units (powers of 10)
     K: 10 ** 3,
+    // Binary SI units (powers of 2)
+    KI: 2 ** 10,
     M: 10 ** 6,
-    G: 10 ** 9,
-    T: 10 ** 12,
+    MI: 2 ** 20,
     P: 10 ** 15,
-    E: 10 ** 18,
+    PI: 2 ** 50,
+    T: 10 ** 12,
+    TI: 2 ** 40,
   };
 
   // Enhance the regex to include both binary and decimal SI units
-  const regex = /^(\d+)(Ki|Mi|Gi|Ti|Pi|Ei|K|M|G|T|P|E)?$/i;
-  const match = memoryString.match(regex);
+  const regex = /^(?<group1>\d+)(?<group2>Ki|Mi|Gi|Ti|Pi|Ei|K|M|G|T|P|E)?$/iu;
+  const match = regex.exec(memoryString);
 
   if (match) {
     const value = parseInt(match[1], 10);
-    const unit = match[2];
+    const [, , unit] = match;
 
     if (unit) {
       // Normalize unit to handle case-insensitivity
       const normalizedUnit = unit.toUpperCase();
-      return value * (units[normalizedUnit] || 1);
+      return value * (units[normalizedUnit] ?? 1);
     }
     // Assuming plain bytes if no unit is specified
     return value;
-  } else {
-    throw new Error('Invalid memory string format');
   }
-}
+  throw new Error('Invalid memory string format');
+};
 
-function k8sCpuToCores(cpuString) {
+const k8sCpuToCores = (cpuString) => {
   if (cpuString === undefined) {
     return undefined;
   }
@@ -160,8 +158,7 @@ function k8sCpuToCores(cpuString) {
     // Remove the "m" and convert to millicores, then to cores.
     const millicores = parseInt(cpuString.slice(0, -1), 10);
     return millicores / 1000.0; // Convert millicores to cores
-  } else {
-    // Directly parse the string as a float representing cores.
-    return parseFloat(cpuString);
   }
-}
+  // Directly parse the string as a float representing cores.
+  return parseFloat(cpuString);
+};

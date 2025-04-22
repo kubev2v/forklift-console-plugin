@@ -1,13 +1,14 @@
-import React from 'react';
-import { DetailsItem, OwnerReferencesItem } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import { OwnerReferencesItem } from 'src/modules/Providers/utils/components/DetailsPage/OwnerReferencesItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { StorageDetailsItemProps } from './StorageDetailsItemProps';
+import type { StorageDetailsItemProps } from './StorageDetailsItemProps';
 
-export const OwnerDetailsItem: React.FC<StorageDetailsItemProps> = ({
-  resource,
-  moreInfoLink,
+export const OwnerDetailsItem: FC<StorageDetailsItemProps> = ({
   helpContent,
+  moreInfoLink,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
 

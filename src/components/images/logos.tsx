@@ -1,5 +1,3 @@
-import React from 'react';
-
 import openshiftImg from './resources/openshift.svg';
 import openstackImg from './resources/openstack.svg';
 import redhatImg from './resources/redhat.svg';

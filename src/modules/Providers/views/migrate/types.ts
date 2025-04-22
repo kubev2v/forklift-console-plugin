@@ -1,8 +1,8 @@
-import { FC } from 'react';
-import { RowProps } from 'src/components/common/TableView/types';
+import type { FC } from 'react';
+import type { RowProps } from 'src/components/common/TableView/types';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
-import {
+import type { ResourceField } from '@components/common/utils/types';
+import type {
   OpenShiftNamespace,
   OpenshiftResource,
   OpenShiftStorageClass,
@@ -15,13 +15,14 @@ import {
   V1beta1StorageMap,
 } from '@kubev2v/types';
 
-import { CreateVmMigration } from './reducer/actions';
-import { InventoryNetwork } from '../../hooks/useNetworks';
-import { InventoryStorage } from '../../hooks/useStorages';
-import { Validation } from '../../utils';
-import { VmData } from '../details';
+import type { InventoryNetwork } from '../../hooks/useNetworks';
+import type { InventoryStorage } from '../../hooks/useStorages';
+import type { Validation } from '../../utils/types/Validation';
+import type { VmData } from '../details/tabs/VirtualMachines/components/VMCellProps';
 
-export interface CreateVmMigrationPageState {
+import type { CreateVmMigration } from './reducer/actions';
+
+export type CreateVmMigrationPageState = {
   underConstruction: {
     plan: V1beta1Plan;
     projectName: string;
@@ -64,12 +65,12 @@ export interface CreateVmMigrationPageState {
   calculatedOnce: {
     // calculated on start (exception:for ovirt/openstack we need to fetch disks)
     storageIdsUsedBySelectedVms: string[];
-    sourceStorageLabelToId: { [label: string]: string };
+    sourceStorageLabelToId: Record<string, string>;
     // calculated on start (exception:for ovirt we need to fetch nic profiles)
     networkIdsUsedBySelectedVms: string[];
-    sourceNetworkLabelToId: { [label: string]: string };
+    sourceNetworkLabelToId: Record<string, string>;
     // calculated on start
-    vmFieldsFactory: [ResourceFieldFactory, FC<RowProps<VmData>>];
+    vmFieldsFactory: [ResourceField[], FC<RowProps<VmData>>];
     // for OpenShift source providers
     namespacesUsedBySelectedVms: string[];
   };
@@ -97,23 +98,23 @@ export interface CreateVmMigrationPageState {
   flow: {
     editingDone: boolean;
     apiError?: Error;
-    initialLoading: { [keys in CreateVmMigration]?: boolean };
+    initialLoading: Partial<Record<CreateVmMigration, boolean>>;
   };
-}
-export interface MappingSource {
+};
+export type MappingSource = {
   // read-only
   label: string;
   usedBySelectedVms: boolean;
   // mutated via UI
   isMapped: boolean;
-}
+};
 
-export interface Mapping {
+export type Mapping = {
   source: string;
   destination: string;
-}
+};
 
-export const NET_MAP_NAME_REGENERATED = 'NET_MAP_NAME_REGENERATED';
+type NET_MAP_NAME_REGENERATED = 'NET_MAP_NAME_REGENERATED';
 export const NETWORK_MAPPING_REGENERATED = 'NETWORK_MAPPING_REGENERATED';
 export const NETWORK_MAPPING_EMPTY = 'NETWORK_MAPPING_EMPTY';
 export const OVIRT_NICS_WITH_EMPTY_PROFILE = 'OVIRT_NICS_WITH_EMPTY_PROFILE';
@@ -122,12 +123,12 @@ export const UNMAPPED_NETWORKS = 'UNMAPPED_NETWORKS';
 export const MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING = 'MULTIPLE_NICS_MAPPED_TO_POD_NETWORKING';
 
 export const STORAGE_MAPPING_REGENERATED = 'STORAGE_MAPPING_REGENERATED';
-export const STORAGE_MAP_NAME_REGENERATED = 'STORAGE_MAP_NAME_REGENERATED';
+type STORAGE_MAP_NAME_REGENERATED = 'STORAGE_MAP_NAME_REGENERATED';
 export const UNMAPPED_STORAGES = 'UNMAPPED_STORAGES';
 export const STORAGE_MAPPING_EMPTY = 'STORAGE_MAPPING_EMPTY';
 
 export type NetworkAlerts =
-  | typeof NET_MAP_NAME_REGENERATED
+  | NET_MAP_NAME_REGENERATED
   | typeof NETWORK_MAPPING_REGENERATED
   | typeof NETWORK_MAPPING_EMPTY
   | typeof UNMAPPED_NETWORKS
@@ -137,6 +138,6 @@ export type NetworkAlerts =
 
 export type StorageAlerts =
   | typeof STORAGE_MAPPING_REGENERATED
-  | typeof STORAGE_MAP_NAME_REGENERATED
+  | STORAGE_MAP_NAME_REGENERATED
   | typeof STORAGE_MAPPING_EMPTY
   | typeof UNMAPPED_STORAGES;

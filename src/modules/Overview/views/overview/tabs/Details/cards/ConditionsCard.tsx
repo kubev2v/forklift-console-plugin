@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
-import { ConditionsSection } from 'src/modules/Providers/views';
+import type { FC } from 'react';
+import { ConditionsSection } from 'src/modules/Providers/views/details/components/ConditionsSection/ConditionsSection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1ForkliftController } from '@kubev2v/types';
+import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
 type ConditionsCardProps = {
@@ -11,14 +11,14 @@ type ConditionsCardProps = {
   loadError?: unknown;
 };
 
-export const ConditionsCard: FC<ConditionsCardProps> = ({ obj }) => {
+const ConditionsCard: FC<ConditionsCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <Card>
       <CardTitle className="forklift-title">{t('Conditions')}</CardTitle>
       <CardBody>
-        <ConditionsSection conditions={obj?.status?.['conditions']} />
+        <ConditionsSection conditions={obj?.status?.conditions} />
       </CardBody>
     </Card>
   );

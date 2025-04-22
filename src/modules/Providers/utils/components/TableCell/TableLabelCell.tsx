@@ -1,8 +1,8 @@
-import React, { ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { Label } from '@patternfly/react-core';
 
-import { TableCell, TableCellProps } from './TableCell';
+import { TableCell, type TableCellProps } from './TableCell';
 
 /**
  * A component that displays a table cell, with an optional label.
@@ -10,10 +10,10 @@ import { TableCell, TableCellProps } from './TableCell';
  * @param {TableLabelCellProps} props - The props for the component.
  * @returns {ReactElement} The rendered TableLabelCell component.
  */
-export const TableLabelCell: React.FC<TableLabelCellProps> = ({
+export const TableLabelCell: FC<TableLabelCellProps> = ({
   children,
-  isWrap = false,
   hasLabel = false,
+  isWrap = false,
   label,
   labelColor = 'grey',
 }) => {
@@ -38,7 +38,7 @@ export const TableLabelCell: React.FC<TableLabelCellProps> = ({
       {hasLabel &&
         labels.map((_, i) => (
           <Label
-            key={labels[i].toString()}
+            key={i}
             isCompact
             color={labelColors[i]}
             className="forklift-table__flex-cell-label"
@@ -51,9 +51,9 @@ export const TableLabelCell: React.FC<TableLabelCellProps> = ({
 };
 
 type Colors = 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey';
-export interface TableLabelCellProps extends TableCellProps {
+export type TableLabelCellProps = {
   hasLabel?: boolean;
   label?: ReactNode | ReactNode[];
   labelColor?: Colors | Colors[];
   isWrap?: boolean;
-}
+} & TableCellProps;

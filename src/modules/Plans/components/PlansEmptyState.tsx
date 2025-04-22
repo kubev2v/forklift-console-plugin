@@ -1,9 +1,9 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -16,7 +16,7 @@ import PlansAddButton from './PlansAddButton';
 const HELP_LINK_HREF =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
 
-const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
+const PlansEmptyState: FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
   const hasSufficientProviders = useHasSufficientProviders(namespace);
@@ -27,9 +27,9 @@ const PlansEmptyState: React.FC<{ namespace: string }> = ({ namespace }) => {
   });
 
   const ProvidersListURL = getResourceUrl({
-    reference: ProviderModelRef,
-    namespace: namespace,
+    namespace,
     namespaced: namespace !== undefined,
+    reference: ProviderModelRef,
   });
 
   return (

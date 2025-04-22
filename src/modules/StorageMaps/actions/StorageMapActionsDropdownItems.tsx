@@ -1,13 +1,13 @@
-import React from 'react';
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
-import { DeleteModal, useModal } from 'src/modules/Providers/modals';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import { DeleteModal } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModel, StorageMapModelRef } from '@kubev2v/types';
 import { DropdownItem } from '@patternfly/react-core';
 
-import { StorageMapData } from '../utils';
+import type { StorageMapData } from '../utils/types/StorageMapData';
 
 export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
@@ -16,19 +16,19 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   const { obj: StorageMap } = data;
 
   const StorageMapURL = getResourceUrl({
-    reference: StorageMapModelRef,
     name: StorageMap?.metadata?.name,
     namespace: StorageMap?.metadata?.namespace,
+    reference: StorageMapModelRef,
   });
 
   const onClick = () => {
-    showModal(<DeleteModal resource={StorageMap} model={StorageMapModel} />);
+    showModal(<DeleteModal resource={StorageMap!} model={StorageMapModel} />);
   };
 
   return [
     <DropdownItemLink
       value={0}
-      key="EditStorageMapping"
+      itemKey="EditStorageMapping"
       href={StorageMapURL}
       description={t('Edit StorageMap')}
     />,
@@ -44,6 +44,6 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   ];
 };
 
-interface StorageMapActionsDropdownItemsProps {
+type StorageMapActionsDropdownItemsProps = {
   data: StorageMapData;
-}
+};

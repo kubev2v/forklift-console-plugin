@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
+import type { FC } from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { getOperatorPhase } from 'src/modules/Overview/utils/helpers/getOperatorPhase';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1ForkliftController } from '@kubev2v/types';
+import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Card,
@@ -23,7 +23,7 @@ type OperatorCardProps = {
   loadError?: unknown;
 };
 
-export const OperatorCard: FC<OperatorCardProps> = ({ obj }) => {
+const OperatorCard: FC<OperatorCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const phaseObj = getOperatorPhase(obj);
 
@@ -40,7 +40,7 @@ export const OperatorCard: FC<OperatorCardProps> = ({ obj }) => {
             title={t('Namespace')}
             content={
               <ResourceLink
-                groupVersionKind={{ version: 'v1', kind: 'Namespace' }}
+                groupVersionKind={{ kind: 'Namespace', version: 'v1' }}
                 name={obj?.metadata?.namespace}
                 namespace={obj?.metadata?.namespace}
               />

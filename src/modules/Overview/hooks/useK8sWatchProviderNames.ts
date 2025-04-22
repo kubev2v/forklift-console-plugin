@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { ForkliftControllerModelGroupVersionKind, V1beta1ForkliftController } from '@kubev2v/types';
+import {
+  ForkliftControllerModelGroupVersionKind,
+  type V1beta1ForkliftController,
+} from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -24,8 +27,8 @@ export const useK8sWatchForkliftController = (): K8sForkliftControllerWatchResul
 
   const [controllers, loaded, loadError] = useK8sWatchResource<V1beta1ForkliftController[]>({
     groupVersionKind: ForkliftControllerModelGroupVersionKind,
-    namespaced: true,
     isList: true,
+    namespaced: true,
   });
 
   useEffect(() => {
@@ -44,8 +47,8 @@ export const useK8sWatchForkliftController = (): K8sForkliftControllerWatchResul
   const handleLoadedForkliftControllers = (controllers: V1beta1ForkliftController[] | null) => {
     setLoaded(true);
 
-    const controller = (controllers || [])[0];
-    setController(controller);
+    const [firstController] = controllers ?? [];
+    setController(firstController);
   };
 
   return [controller, controllerLoaded, controllerLoadError];

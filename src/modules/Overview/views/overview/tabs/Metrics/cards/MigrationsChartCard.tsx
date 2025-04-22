@@ -1,7 +1,7 @@
-import React, { FC, Ref, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { MigrationModelGroupVersionKind, V1beta1Migration } from '@kubev2v/types';
+import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Chart, ChartAxis, ChartBar, ChartGroup, ChartTooltip } from '@patternfly/react-charts';
 import {
@@ -14,19 +14,20 @@ import {
   DropdownList,
   Flex,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
 } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
-import chart_color_blue_200 from '@patternfly/react-tokens/dist/esm/chart_color_blue_200';
-import chart_color_green_400 from '@patternfly/react-tokens/dist/esm/chart_color_green_400';
-import chart_color_red_100 from '@patternfly/react-tokens/dist/esm/chart_color_red_100';
+import chartColorBlue200 from '@patternfly/react-tokens/dist/esm/chart_color_blue_200';
+import chartColorGreen400 from '@patternfly/react-tokens/dist/esm/chart_color_green_400';
+import chartColorRed100 from '@patternfly/react-tokens/dist/esm/chart_color_red_100';
 
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
-import { MigrationDataPoint, toDataPoints } from '../utils/toDataPointsHelper';
-import { MigrationsCardProps } from './MigrationsCard';
+import { type MigrationDataPoint, toDataPoints } from '../utils/toDataPointsHelper';
 
-const toStartedMigration = (m: V1beta1Migration): string => m.status.started;
-const toFinishedMigration = (m: V1beta1Migration): string => m.status.completed;
+import type { MigrationsCardProps } from './MigrationsCard';
+
+const toStartedMigration = (migration: V1beta1Migration): string => migration.status.started;
+const toFinishedMigration = (migration: V1beta1Migration): string => migration.status.completed;
 const toDataPointsForMigrations = (
   allMigrations: V1beta1Migration[],
   toTimestamp: (m: V1beta1Migration) => string,
@@ -44,44 +45,47 @@ export const MigrationsChartCard: FC<MigrationsCardProps> = () => {
   const onToggleClick = () => {
     setIsDropdownOpened((isDropdownOpened) => !isDropdownOpened);
   };
-  const onSelect = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    _value: string | number | undefined,
-  ) => {
+  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
     setIsDropdownOpened(false);
   };
 
   const [migrations] = useK8sWatchResource<V1beta1Migration[]>({
     groupVersionKind: MigrationModelGroupVersionKind,
-    namespaced: true,
     isList: true,
+    namespaced: true,
   });
   const migrationsDataPoints: {
     running: MigrationDataPoint[];
     failed: MigrationDataPoint[];
     succeeded: MigrationDataPoint[];
   } = {
-    running: toDataPointsForMigrations(
-      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Running')),
-      toStartedMigration,
-      selectedTimeRange,
-    ),
     failed: toDataPointsForMigrations(
-      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Failed')),
+      migrations.filter((migration) =>
+        migration?.status?.conditions?.find((it) => it?.type === 'Failed'),
+      ),
       toFinishedMigration,
       selectedTimeRange,
     ),
+    running: toDataPointsForMigrations(
+      migrations.filter((migration) =>
+        migration?.status?.conditions?.find((it) => it?.type === 'Running'),
+      ),
+      toStartedMigration,
+      selectedTimeRange,
+    ),
     succeeded: toDataPointsForMigrations(
-      migrations.filter((m) => m?.status?.conditions?.find((it) => it?.type === 'Succeeded')),
+      migrations.filter((migration) =>
+        migration?.status?.conditions?.find((it) => it?.type === 'Succeeded'),
+      ),
       toFinishedMigration,
       selectedTimeRange,
     ),
   };
 
   const maxMigrationValue = Math.max(
-    ...migrationsDataPoints.running.map((m) => m.value),
-    ...migrationsDataPoints.failed.map((m) => m.value),
-    ...migrationsDataPoints.succeeded.map((m) => m.value),
+    ...migrationsDataPoints.running.map((migration) => migration.value),
+    ...migrationsDataPoints.failed.map((migration) => migration.value),
+    ...migrationsDataPoints.succeeded.map((migration) => migration.value),
   );
 
   const handleTimeRangeSelectedFactory = (timeRange: TimeRangeOptions) => () => {
@@ -146,17 +150,13 @@ export const MigrationsChartCard: FC<MigrationsCardProps> = () => {
         <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
           <Chart
             ariaDesc="Bar chart with migration statistics"
-            colorScale={[
-              chart_color_blue_200.var,
-              chart_color_red_100.var,
-              chart_color_green_400.var,
-            ]}
+            colorScale={[chartColorBlue200.var, chartColorRed100.var, chartColorGreen400.var]}
             domainPadding={{ x: [30, 25] }}
             maxDomain={{ y: maxMigrationValue ? undefined : 5 }}
             legendData={[
-              { name: t('Running'), symbol: { fill: chart_color_blue_200.var } },
-              { name: t('Failed'), symbol: { fill: chart_color_red_100.var } },
-              { name: t('Succeeded'), symbol: { fill: chart_color_green_400.var } },
+              { name: t('Running'), symbol: { fill: chartColorBlue200.var } },
+              { name: t('Failed'), symbol: { fill: chartColorRed100.var } },
+              { name: t('Succeeded'), symbol: { fill: chartColorGreen400.var } },
             ]}
             legendPosition="bottom"
             height={400}
@@ -173,28 +173,28 @@ export const MigrationsChartCard: FC<MigrationsCardProps> = () => {
             <ChartGroup offset={11} horizontal={false}>
               <ChartBar
                 data={migrationsDataPoints.running.map(({ dateLabel, value }) => ({
+                  label: t('{{dateLabel}} Running: {{value}}', { dateLabel, value }),
+                  name: t('Running'),
                   x: dateLabel,
                   y: value,
-                  name: t('Running'),
-                  label: t('{{dateLabel}} Running: {{value}}', { dateLabel, value }),
                 }))}
                 labelComponent={<ChartTooltip constrainToVisibleArea />}
               />
               <ChartBar
                 data={migrationsDataPoints.failed.map(({ dateLabel, value }) => ({
+                  label: t('{{dateLabel}} Failed: {{value}}', { dateLabel, value }),
+                  name: t('Failed'),
                   x: dateLabel,
                   y: value,
-                  name: t('Failed'),
-                  label: t('{{dateLabel}} Failed: {{value}}', { dateLabel, value }),
                 }))}
                 labelComponent={<ChartTooltip constrainToVisibleArea />}
               />
               <ChartBar
                 data={migrationsDataPoints.succeeded.map(({ dateLabel, value }) => ({
+                  label: t('{{dateLabel}} Succeeded: {{value}}', { dateLabel, value }),
+                  name: 'Succeeded',
                   x: dateLabel,
                   y: value,
-                  name: 'Succeeded',
-                  label: t('{{dateLabel}} Succeeded: {{value}}', { dateLabel, value }),
                 }))}
                 labelComponent={<ChartTooltip constrainToVisibleArea />}
               />

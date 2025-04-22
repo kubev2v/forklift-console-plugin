@@ -1,7 +1,7 @@
-import * as React from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { Button } from '@patternfly/react-core';
-import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
 /**
  * External Links are icon with an optional label/content, but have no background or border. Use
@@ -11,12 +11,12 @@ import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/ExternalLink/ExternalLink.tsx)
  */
-export const ExternalLink: React.FC<ExternalLinkProps> = ({
+export const ExternalLink: FC<ExternalLinkProps> = ({
   children,
-  href,
-  text = null,
-  isInline = false,
   hideIcon = false,
+  href,
+  isInline = false,
+  text = null,
 }) => (
   <Button
     variant="link"
@@ -45,7 +45,7 @@ type ExternalLinkProps = {
   /**
    * Content rendered inside the button.
    */
-  children?: React.ReactNode;
+  children?: ReactNode;
 
   /**
    * Adds inline styling to an external link button

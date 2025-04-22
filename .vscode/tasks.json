@@ -18,7 +18,7 @@
         "showReuseMessage": false,
         "clear": false,
         "focus": true
-      },
+      }
     },
     {
       "label": "Run bridge",
@@ -49,7 +49,7 @@
         "showReuseMessage": false,
         "clear": false,
         "focus": true
-      },
+      }
     }
   ]
 }

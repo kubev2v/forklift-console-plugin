@@ -1,18 +1,18 @@
-import React, { ReactNode } from 'react';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
-import { useModal } from 'src/modules/Providers/modals';
+import type { FC, ReactNode } from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
+import type { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
 import { Modal, ModalVariant } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-export interface PipelineTasksModalProps {
+type PipelineTasksModalProps = {
   name: string;
   tasks: V1beta1PlanStatusMigrationVmsPipeline[];
-}
+};
 
-export const PipelineTasksModal: React.FC<PipelineTasksModalProps> = ({ name, tasks }) => {
+export const PipelineTasksModal: FC<PipelineTasksModalProps> = ({ name, tasks }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
 
@@ -53,7 +53,7 @@ export const PipelineTasksModal: React.FC<PipelineTasksModalProps> = ({ name, ta
 };
 
 const getTaskProgress = (task): ReactNode => {
-  if (!task || !task?.progress) {
+  if (!task?.progress) {
     return '- / -';
   }
 

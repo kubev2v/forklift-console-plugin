@@ -1,19 +1,20 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   k8sDelete,
-  K8sGroupVersionKind,
-  K8sModel,
-  K8sResourceCommon,
+  type K8sGroupVersionKind,
+  type K8sModel,
+  type K8sResourceCommon,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { useToggle } from '../../hooks';
-import { getResourceUrl } from '../../utils/helpers';
-import { AlertMessageForModals, ItemIsOwnedAlert } from '../components';
-import { useModal } from '../ModalHOC';
+import useToggle from '../../hooks/useToggle';
+import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
+import { AlertMessageForModals } from '../components/AlertMessageForModals';
+import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
+import { useModal } from '../ModalHOC/ModalHOC';
 
 /**
  * Props for the DeleteModal component
@@ -23,20 +24,20 @@ import { useModal } from '../ModalHOC';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-interface DeleteModalProps {
+type DeleteModalProps = {
   resource: K8sResourceCommon;
   model: K8sModel;
   title?: string;
   redirectTo?: string;
-}
+};
 
 /**
  * A generic delete modal component
  * @component
  * @param {DeleteModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model, redirectTo }) => {
+export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource, title }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
@@ -48,13 +49,13 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({ title, resource, model
   const owner = resource?.metadata?.ownerReferences?.[0];
   const groupVersionKind: K8sGroupVersionKind = {
     group: model.apiGroup,
-    version: model.apiVersion,
     kind: model.kind,
+    version: model.apiVersion,
   };
 
   const onDelete = useCallback(async () => {
     const isOnResourcePage = () => {
-      const re = new RegExp(`/${name}(/|$)`);
+      const re = new RegExp(`/${name}(/|$)`, 'u');
       return re.test(window.location.pathname);
     };
 

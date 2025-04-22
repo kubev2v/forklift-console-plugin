@@ -1,29 +1,29 @@
-import React from 'react';
+import type { Dispatch, FunctionComponent } from 'react';
 
 import { Chip, ChipGroup, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 
-import { PlanCreatePageState } from '../states';
+import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
 
-export interface ChipsToolbarProvidersProps {
+type ChipsToolbarProvidersProps = {
   filterState: PlanCreatePageState;
-  filterDispatch: React.Dispatch<{
+  filterDispatch: Dispatch<{
     type: string;
     payload?: string | string[];
   }>;
-}
+};
 
-export const ChipsToolbarProviders: React.FunctionComponent<ChipsToolbarProvidersProps> = ({
-  filterState,
+export const ChipsToolbarProviders: FunctionComponent<ChipsToolbarProvidersProps> = ({
   filterDispatch,
+  filterState,
 }) => {
   const deleteNameFilter = (_) => {
-    filterDispatch({ type: 'SET_NAME_FILTER', payload: '' });
+    filterDispatch({ payload: '', type: 'SET_NAME_FILTER' });
   };
 
   const deleteTypeFilter = (type: string) => {
     filterDispatch({
-      type: 'UPDATE_TYPE_FILTERS',
       payload: filterState.typeFilters.filter((t) => t !== type),
+      type: 'UPDATE_TYPE_FILTERS',
     });
   };
 
@@ -36,7 +36,12 @@ export const ChipsToolbarProviders: React.FunctionComponent<ChipsToolbarProvider
         {name && (
           <ToolbarItem>
             <ChipGroup categoryName="Name">
-              <Chip key={name} onClick={() => deleteNameFilter(name)}>
+              <Chip
+                key={name}
+                onClick={() => {
+                  deleteNameFilter(name);
+                }}
+              >
                 {name}
               </Chip>
             </ChipGroup>
@@ -46,7 +51,12 @@ export const ChipsToolbarProviders: React.FunctionComponent<ChipsToolbarProvider
           <ToolbarItem>
             <ChipGroup categoryName="Types">
               {types.map((type, index) => (
-                <Chip key={index} onClick={() => deleteTypeFilter(type)}>
+                <Chip
+                  key={index}
+                  onClick={() => {
+                    deleteTypeFilter(type);
+                  }}
+                >
                   {type}
                 </Chip>
               ))}

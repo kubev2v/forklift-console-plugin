@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 import { calculateCidrNotation } from '../calculateCidrNotation';
 
 const IPV4_ADDRESS = '192.168.1.1'; // NOSONAR

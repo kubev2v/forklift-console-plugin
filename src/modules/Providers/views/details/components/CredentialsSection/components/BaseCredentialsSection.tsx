@@ -1,9 +1,9 @@
-import React, { useReducer, useState } from 'react';
-import { AlertMessageForModals } from 'src/modules/Providers/modals';
-import { ValidationMsg } from 'src/modules/Providers/utils';
+import { type FC, useReducer, useState } from 'react';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import type { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import { useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -13,56 +13,59 @@ import {
   HelperText,
   HelperTextItem,
 } from '@patternfly/react-core';
-import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
-import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
-import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
+import { EyeIcon } from '@patternfly/react-icons';
+import { EyeSlashIcon } from '@patternfly/react-icons';
+import { PencilAltIcon as Pencil } from '@patternfly/react-icons';
 
-import { patchSecretData } from './edit';
-import { baseCredentialsSectionReducerFactory, BaseCredentialsSectionState } from './state';
+import { patchSecretData } from './edit/patchSecretData';
+import {
+  baseCredentialsSectionReducerFactory,
+  type BaseCredentialsSectionState,
+} from './state/reducer';
 
 import './BaseCredentialsSection.style.css';
 
-export interface ListComponentProps {
+export type ListComponentProps = {
   secret: IoK8sApiCoreV1Secret;
   reveal: boolean;
-}
+};
 
-export interface EditComponentProps {
+export type EditComponentProps = {
   secret: IoK8sApiCoreV1Secret;
   onChange: (newValue: IoK8sApiCoreV1Secret) => void;
-}
+};
 
 export type BaseCredentialsSectionProps = {
   secret: IoK8sApiCoreV1Secret;
   validator: (provider: V1beta1Provider, secret: IoK8sApiCoreV1Secret) => ValidationMsg;
-  ListComponent: React.FC<ListComponentProps>;
-  EditComponent: React.FC<EditComponentProps>;
+  ListComponent: FC<ListComponentProps>;
+  EditComponent: FC<EditComponentProps>;
 };
 
-export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
+export const BaseCredentialsSection: FC<BaseCredentialsSectionProps> = ({
+  EditComponent,
+  ListComponent,
   secret,
   validator,
-  ListComponent,
-  EditComponent,
 }) => {
   const { t } = useForkliftTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   const [canPatch] = useAccessReview({
     group: '',
+    name: secret.metadata.name,
+    namespace: secret.metadata.namespace,
     resource: 'secrets',
     verb: 'patch',
-    namespace: secret.metadata.namespace,
-    name: secret.metadata.name,
   });
 
   const initialState: BaseCredentialsSectionState = {
-    reveal: false,
-    edit: false,
-    newSecret: secret,
+    alertMessage: null,
     dataChanged: false,
     dataError: { type: 'default' },
-    alertMessage: null,
+    edit: false,
+    newSecret: secret,
+    reveal: false,
   };
 
   const [state, dispatch] = useReducer(
@@ -75,35 +78,35 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
   }
 
   // toggle between view and edit mode
-  function toggleEdit() {
+  const toggleEdit = () => {
     dispatch({ type: 'TOGGLE_EDIT' });
-  }
+  };
 
   // toggle secrets visible and hidden in view mode
-  function toggleReveal() {
+  const toggleReveal = () => {
     dispatch({ type: 'TOGGLE_REVEAL' });
-  }
+  };
 
   // mark data as unchanged, i.e. current staged secret data is equal to saved secret data
-  function resetDataChanged() {
+  const resetDataChanged = () => {
     dispatch({ type: 'RESET_DATA_CHANGED' });
-  }
+  };
 
   // Handle user edits
-  function onNewSecretChange(newValue: IoK8sApiCoreV1Secret) {
+  const onNewSecretChange = (newValue: IoK8sApiCoreV1Secret) => {
     // update staged secret with new value
-    dispatch({ type: 'SET_NEW_SECRET', payload: newValue });
-  }
+    dispatch({ payload: newValue, type: 'SET_NEW_SECRET' });
+  };
 
   // Handle user clicking "cancel"
-  function onCancel() {
+  const onCancel = () => {
     // clear changes and return to view mode
-    dispatch({ type: 'SET_NEW_SECRET', payload: secret });
+    dispatch({ payload: secret, type: 'SET_NEW_SECRET' });
     toggleEdit();
-  }
+  };
 
   // Handle user clicking "save"
-  async function onUpdate() {
+  const onUpdate = async () => {
     setIsLoading(true);
 
     try {
@@ -114,17 +117,16 @@ export const BaseCredentialsSection: React.FC<BaseCredentialsSectionProps> = ({
 
       setIsLoading(false);
       toggleEdit();
-    } catch (err) {
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : err?.toString();
       dispatch({
+        payload: <AlertMessageForModals title={t('Error')} message={errorMessage} />,
         type: 'SET_ALERT_MESSAGE',
-        payload: (
-          <AlertMessageForModals title={t('Error')} message={err.message || err.toString()} />
-        ),
       });
 
       setIsLoading(false);
     }
-  }
+  };
 
   return state.edit ? (
     <>

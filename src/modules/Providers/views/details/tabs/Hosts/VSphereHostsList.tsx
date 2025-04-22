@@ -1,58 +1,61 @@
-import React, { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
-  GlobalActionWithSelection,
+  type GlobalActionWithSelection,
   StandardPageWithSelection,
-  StandardPageWithSelectionProps,
+  type StandardPageWithSelectionProps,
 } from 'src/components/page/StandardPageWithSelection';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
+import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
-import { HostModelGroupVersionKind, V1beta1Host, VSphereHost } from '@kubev2v/types';
+import { HostModelGroupVersionKind, type V1beta1Host, type VSphereHost } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { t } from '@utils/i18n';
 
-import { InventoryHostPair, matchHostsToInventory } from './utils/helpers';
-import { SelectNetworkButton } from './components';
-import { ProviderHostsProps } from './ProviderHosts';
+import { SelectNetworkButton } from './components/SelectNetworkButton';
+import {
+  type InventoryHostPair,
+  matchHostsToInventory,
+} from './utils/helpers/matchHostsToInventory';
+import type { ProviderHostsProps } from './ProviderHosts';
 import { VSphereHostsCells } from './VSphereHostsRow';
 
-export const hostsFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+const hostsFieldsMetadataFactory = [
   {
-    resourceFieldId: 'name',
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: 'freetext',
+    },
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
     jsonPath: '$.inventory.name',
     label: t('Name'),
-    isVisible: true,
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by name'),
-    },
+    resourceFieldId: 'name',
     sortable: true,
   },
   {
-    resourceFieldId: 'network',
+    filter: {
+      placeholderLabel: t('Filter by network'),
+      type: 'freetext',
+    },
+    isVisible: true,
     jsonPath: '$.networkAdapter.name',
     label: t('Network for data transfer'),
-    isVisible: true,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by network'),
-    },
+    resourceFieldId: 'network',
     sortable: true,
   },
   {
-    resourceFieldId: 'linkSpeed',
+    isVisible: true,
     jsonPath: '$.networkAdapter.linkSpeed',
     label: t('Bandwidth'),
-    isVisible: true,
+    resourceFieldId: 'linkSpeed',
     sortable: true,
   },
   {
-    resourceFieldId: 'mtu',
+    isVisible: true,
     jsonPath: '$.networkAdapter.mtu',
     label: t('MTU'),
-    isVisible: true,
+    resourceFieldId: 'mtu',
     sortable: true,
   },
 ];
@@ -64,16 +67,16 @@ type PageGlobalActions = FC<GlobalActionWithSelection<InventoryHostPair>>[];
 export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
 
-  const { provider, permissions } = obj;
+  const { permissions, provider } = obj;
   const { namespace } = provider?.metadata || {};
 
   const [selectedIds, setSelectedIds] = useState([]);
   const userSettings = loadUserSettings({ pageId: 'ProviderHosts' });
 
   const {
+    error,
     inventory: hostsInventory,
     loading,
-    error,
   } = useProviderInventory<VSphereHost[]>({
     provider,
     subPath: 'hosts?detail=4',
@@ -81,9 +84,9 @@ export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
 
   const [hosts] = useK8sWatchResource<V1beta1Host[]>({
     groupVersionKind: HostModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace,
+    namespaced: true,
   });
 
   const hostsData = matchHostsToInventory(hostsInventory, hosts, provider);
@@ -93,23 +96,23 @@ export const VSphereHostsList: FC<ProviderHostsProps> = ({ obj }) => {
   ];
 
   const props: PageWithSelectionProps = {
-    dataSource: [hostsData || [], !loading, error],
     CellMapper: VSphereHostsCells,
-    fieldsMetadata: hostsFieldsMetadataFactory(t),
-    namespace: namespace,
-    title: t('Hosts'),
-    userSettings: userSettings,
+    dataSource: [hostsData || [], !loading, error],
+    fieldsMetadata: hostsFieldsMetadataFactory,
+    namespace,
     page: 1,
+    title: t('Hosts'),
+    userSettings,
   };
 
   const extendedProps: PageWithSelectionProps = permissions?.canPatch
     ? {
         ...props,
-        toId: (item: InventoryHostPair) => item.inventory.id,
         canSelect: (item: InventoryHostPair) => item?.inventory?.networkAdapters?.length > 0,
-        onSelect: setSelectedIds,
-        selectedIds: selectedIds,
         GlobalActionToolbarItems: actions,
+        onSelect: setSelectedIds,
+        selectedIds,
+        toId: (item: InventoryHostPair) => item.inventory.id,
       }
     : props;
 

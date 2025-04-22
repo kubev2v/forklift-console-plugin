@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "types": ["node"],
+    "types": ["node", "jest"],
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     /* Bundler mode */
@@ -35,7 +35,8 @@
       "src/*": ["./src/*"]
     }
   },
-  "include": ["./src/**/*", "*.js", "*.ts", "./testing/cypress.config.cjs", ".prettierrc.mjs"],
+  "include": ["**/*.*.ts", "**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js", "prettier.config.mjs"],
+  "exclude": ["node_modules", "dist", "locales", "docs", "ci", "testing"],
   "ts-node": {
     "files": true,
     "compilerOptions": {

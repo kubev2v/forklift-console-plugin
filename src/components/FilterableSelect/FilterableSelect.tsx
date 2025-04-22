@@ -1,25 +1,35 @@
-import React, { ReactNode } from 'react';
+import {
+  type FormEvent,
+  type FunctionComponent,
+  type KeyboardEventHandler,
+  type MouseEvent,
+  type ReactNode,
+  type Ref,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   Button,
   Divider,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
-  SelectOptionProps,
+  type SelectOptionProps,
   Text,
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
 } from '@patternfly/react-core';
-import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
+import { TimesIcon } from '@patternfly/react-icons';
 
 /**
  * Props for the FilterableSelect component.
  */
-export interface FilterableSelectProps {
+type FilterableSelectProps = {
   /** Array of options to display in the select dropdown */
   selectOptions: SelectOptionProps[];
   /** The currently selected value */
@@ -40,7 +50,7 @@ export interface FilterableSelectProps {
   isPlain?: boolean;
   /** Indicates if the menu should be scrollable */
   isScrollable?: boolean;
-}
+};
 
 /**
  * A filterable select component that allows users to select from a list of options,
@@ -49,36 +59,35 @@ export interface FilterableSelectProps {
  * @param {FilterableSelectProps} props The props for the FilterableSelect component.
  * @returns {JSX.Element} The rendered FilterableSelect component.
  */
-export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = ({
-  selectOptions: initialSelectOptions,
-  value,
-  onSelect: onSelect,
+export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
   canCreate,
-  placeholder = 'Select item',
-  noResultFoundLabel = 'No results found',
   createNewOptionLabel = 'Create new option:',
   isDisabled = false,
   isPlain = false,
   isScrollable = false,
+  noResultFoundLabel = 'No results found',
+  onSelect,
+  placeholder = 'Select item',
+  selectOptions: initialSelectOptions,
+  value,
 }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState<string>(value);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<string>(value);
   /**
    * inputValue: The current value displayed in the input field.
    * This is the value the user types in.
    */
-  const [inputValue, setInputValue] = React.useState<string>(value);
+  const [inputValue, setInputValue] = useState<string>(value);
   /**
    * filterValue: The value used to filter the options.
    * This is typically synchronized with inputValue, but they can be different if needed.
    */
-  const [filterValue, setFilterValue] = React.useState<string>('');
-  const [selectOptions, setSelectOptions] =
-    React.useState<SelectOptionProps[]>(initialSelectOptions);
-  const [focusedItemIndex, setFocusedItemIndex] = React.useState<number | null>(null);
+  const [filterValue, setFilterValue] = useState<string>('');
+  const [selectOptions, setSelectOptions] = useState<SelectOptionProps[]>(initialSelectOptions);
+  const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
 
-  const menuRef = React.useRef<HTMLDivElement>(null);
-  const textInputRef = React.useRef<HTMLInputElement>();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const textInputRef = useRef<HTMLInputElement>();
 
   /**
    * Sets the selected item and triggers the onSelect callback.
@@ -96,7 +105,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
   /**
    * Updates the select options based on the filter value.
    */
-  React.useEffect(() => {
+  useEffect(() => {
     let newSelectOptions: SelectOptionProps[] = initialSelectOptions;
 
     // Filter menu items based on the text input value when one exists
@@ -107,7 +116,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
 
       // When no options are found after filtering, display 'No results found'
       if (!newSelectOptions.length) {
-        newSelectOptions = [{ isDisabled: true, children: noResultFoundLabel }];
+        newSelectOptions = [{ children: noResultFoundLabel, isDisabled: true }];
       }
     }
 
@@ -124,13 +133,10 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
   /**
    * Handles item selection from the dropdown.
    *
-   * @param {React.MouseEvent<Element, MouseEvent> | undefined} _event The click event.
+   * @param {MouseEvent<Element, MouseEvent> | undefined} _event The click event.
    * @param {string | number | undefined} itemId The id of the selected item.
    */
-  const onItemSelect = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    itemId: string | number | undefined,
-  ) => {
+  const onItemSelect = (_event: MouseEvent | undefined, itemId: string | number | undefined) => {
     if (itemId !== undefined) {
       setInputValue(itemId as string);
       setFilterValue(itemId as string);
@@ -143,10 +149,10 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
   /**
    * Handles changes in the text input.
    *
-   * @param {React.FormEvent<HTMLInputElement>} _event The input event.
+   * @param {FormEvent<HTMLInputElement>} _event The input event.
    * @param {string} value The new input value.
    */
-  const onTextInputChange: (event: React.FormEvent<HTMLInputElement>, value: string) => void = (
+  const onTextInputChange: (event: FormEvent<HTMLInputElement>, value: string) => void = (
     _event,
     value,
   ) => {
@@ -188,9 +194,9 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
   /**
    * Handles keydown events in the text input.
    *
-   * @param {React.KeyboardEvent<HTMLInputElement>} event The keyboard event.
+   * @param {KeyboardEventHandler<HTMLDivElement>} event The keyboard event.
    */
-  const onInputKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
+  const onInputKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
     const enabledMenuItems = selectOptions.filter((menuItem) => !menuItem.isDisabled);
     const [firstMenuItem] = enabledMenuItems;
     const focusedItem = focusedItemIndex ? enabledMenuItems[focusedItemIndex] : firstMenuItem;
@@ -225,10 +231,10 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
   /**
    * Renders the toggle component for the dropdown.
    *
-   * @param {React.Ref<any>} toggleRef The reference to the toggle component.
+   * @param {Ref<any>} toggleRef The reference to the toggle component.
    * @returns {JSX.Element} The rendered toggle component.
    */
-  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle
       ref={toggleRef}
       variant="typeahead"
@@ -250,7 +256,7 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
         />
 
         <TextInputGroupUtilities>
-          {!!inputValue && (
+          {Boolean(inputValue) && (
             <Button
               variant="plain"
               onClick={() => {
@@ -291,7 +297,9 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
             key={option.itemId}
             isFocused={focusedItemIndex === index}
             className={option.className}
-            onClick={() => setSelected(option.itemId)}
+            onClick={() => {
+              setSelected(option.itemId);
+            }}
             {...option}
             ref={null}
           />
@@ -302,7 +310,9 @@ export const FilterableSelect: React.FunctionComponent<FilterableSelectProps> = 
             <SelectOption
               itemId={filterValue}
               key={filterValue}
-              onClick={() => setSelected(filterValue)}
+              onClick={() => {
+                setSelected(filterValue);
+              }}
               ref={null}
             >
               <>

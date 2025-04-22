@@ -1,14 +1,14 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ClipboardCopy, Switch, TextInput, Tooltip } from '@patternfly/react-core';
 
-import { Field } from './components/list/Fields';
+import type { Field } from './components/list/Fields';
 
-export interface ShowFieldWithClipboardCopyProps {
+type ShowFieldWithClipboardCopyProps = {
   value: string;
   field?: Field;
-}
+};
 
 /**
  * Displays a field with its value. If the value is empty, shows a disabled text input with a tooltip indicating the field is missing.
@@ -17,10 +17,7 @@ export interface ShowFieldWithClipboardCopyProps {
  * @property {string} value - The value of the field to display.
  * @property {object} field - Object containing details about the field such as label and display type.
  */
-export const FieldWithClipboardCopy: React.FC<ShowFieldWithClipboardCopyProps> = ({
-  field,
-  value,
-}) => {
+export const FieldWithClipboardCopy: FC<ShowFieldWithClipboardCopyProps> = ({ field, value }) => {
   const { t } = useForkliftTranslation();
 
   // Render tooltip for missing value

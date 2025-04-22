@@ -1,8 +1,8 @@
 import { ProgressVariant } from '@patternfly/react-core';
 
-import { PlanPhase } from '../types';
+import { PlanPhase } from '../types/PlanPhase';
 
-export const getPlanProgressVariant = (phase: PlanPhase): ProgressVariant => {
+export const getPlanProgressVariant = (phase: PlanPhase): ProgressVariant | undefined => {
   let progressVariant;
 
   switch (phase) {
@@ -18,6 +18,8 @@ export const getPlanProgressVariant = (phase: PlanPhase): ProgressVariant => {
       break;
     case PlanPhase.Succeeded:
       progressVariant = ProgressVariant.success;
+      break;
+    default:
       break;
   }
 

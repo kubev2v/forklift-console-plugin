@@ -1,6 +1,6 @@
 import { getDefaultNamespace } from 'src/utils/namespaces';
 
-import {
+import type {
   OpenShiftNamespace,
   OpenShiftNetworkAttachmentDefinition,
   OpenShiftStorageClass,
@@ -13,11 +13,12 @@ import {
   V1beta1StorageMap,
 } from '@kubev2v/types';
 
-import { InventoryNetwork } from '../../../hooks/useNetworks';
-import { InventoryStorage } from '../../../hooks/useStorages';
-import { VmData } from '../../details';
-import { Mapping, NetworkAlerts, StorageAlerts } from '../types';
-import { InitialStateParameters } from './createInitialState';
+import type { InventoryNetwork } from '../../../hooks/useNetworks';
+import type { InventoryStorage } from '../../../hooks/useStorages';
+import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+import type { Mapping, NetworkAlerts, StorageAlerts } from '../types';
+
+import type { InitialStateParameters } from './createInitialState';
 
 export const POD_NETWORK = 'Pod Networking';
 export const DEFAULT_NAMESPACE = getDefaultNamespace();
@@ -27,7 +28,7 @@ export const SET_NAME = 'SET_NAME';
 export const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
 export const SET_SOURCE_PROVIDER = 'SET_SOURCE_PROVIDER';
 export const SET_SELECTED_VMS = 'SET_SELECTED_VMS';
-export const SET_DESCRIPTION = 'SET_DESCRIPTION';
+type SET_DESCRIPTION = 'SET_DESCRIPTION';
 export const SET_TARGET_PROVIDER = 'SET_TARGET_PROVIDER';
 export const SET_TARGET_NAMESPACE = 'SET_TARGET_NAMESPACE';
 export const SET_AVAILABLE_PROVIDERS = 'SET_AVAILABLE_PROVIDERS';
@@ -57,7 +58,7 @@ export type CreateVmMigration =
   | typeof SET_PROJECT_NAME
   | typeof SET_SOURCE_PROVIDER
   | typeof SET_SELECTED_VMS
-  | typeof SET_DESCRIPTION
+  | SET_DESCRIPTION
   | typeof SET_TARGET_PROVIDER
   | typeof SET_TARGET_NAMESPACE
   | typeof SET_AVAILABLE_PROVIDERS
@@ -82,20 +83,20 @@ export type CreateVmMigration =
   | typeof REMOVE_ALERT
   | typeof INIT;
 
-export interface PageAction<S, T> {
+export type PageAction<S, T> = {
   type: S;
   payload: T;
-}
+};
 
 // action payload types
 
-export interface PlanName {
+export type PlanName = {
   name: string;
-}
+};
 
-export interface ProjectName {
+export type ProjectName = {
   name: string;
-}
+};
 
 export type SourceProvider = {
   sourceProvider: V1beta1Provider;
@@ -106,152 +107,141 @@ export type SelectedVms = {
   sourceProvider: V1beta1Provider;
 };
 
-export interface PlanDescription {
-  description: string;
-}
-
-export interface PlanTargetProvider {
+export type PlanTargetProvider = {
   targetProviderName: string;
-}
+};
 
-export interface PlanTargetNamespace {
+export type PlanTargetNamespace = {
   targetNamespace: string;
-}
+};
 
-export interface PlanAvailableProviders {
+export type PlanAvailableProviders = {
   availableProviders: V1beta1Provider[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanExistingPlans {
+export type PlanExistingPlans = {
   existingPlans: V1beta1Plan[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanExistingNetMaps {
+export type PlanExistingNetMaps = {
   existingNetMaps: V1beta1NetworkMap[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanExistingStorageMaps {
+export type PlanExistingStorageMaps = {
   existingStorageMaps: V1beta1StorageMap[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanAvailableTargetNamespaces {
+export type PlanAvailableTargetNamespaces = {
   availableTargetNamespaces: OpenShiftNamespace[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanAvailableTargetNetworks {
+export type PlanAvailableTargetNetworks = {
   availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanAvailableSourceNetworks {
+export type PlanAvailableSourceNetworks = {
   availableSourceNetworks: InventoryNetwork[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanAvailableTargetStorages {
+export type PlanAvailableTargetStorages = {
   availableTargetStorages: OpenShiftStorageClass[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanAvailableSourceStorages {
+export type PlanAvailableSourceStorages = {
   availableSourceStorages: InventoryStorage[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanNicProfiles {
+export type PlanNicProfiles = {
   nicProfiles: OVirtNicProfile[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanDisks {
+export type PlanDisks = {
   disks: (OVirtDisk | OpenstackVolume)[];
   loading: boolean;
   error?: Error;
-}
+};
 
-export interface PlanError {
+export type PlanError = {
   error: Error;
-}
+};
 
-export interface PlanAlert {
+export type PlanAlert = {
   alertKey: NetworkAlerts | StorageAlerts;
-}
+};
 
-export interface PlanMapping {
+export type PlanMapping = {
   current: Mapping;
   next: Mapping;
-}
+};
 
 // action creators
 
 export const setPlanTargetProvider = (
   targetProviderName: string,
 ): PageAction<CreateVmMigration, PlanTargetProvider> => ({
-  type: 'SET_TARGET_PROVIDER',
   payload: { targetProviderName },
+  type: 'SET_TARGET_PROVIDER',
 });
 
 export const setPlanTargetNamespace = (
   targetNamespace: string,
 ): PageAction<CreateVmMigration, PlanTargetNamespace> => ({
-  type: 'SET_TARGET_NAMESPACE',
   payload: { targetNamespace },
-});
-
-export const setPlanDescription = (
-  description: string,
-): PageAction<CreateVmMigration, PlanDescription> => ({
-  type: 'SET_DESCRIPTION',
-  payload: { description },
+  type: 'SET_TARGET_NAMESPACE',
 });
 
 export const setPlanName = (name: string): PageAction<CreateVmMigration, PlanName> => ({
-  type: 'SET_NAME',
   payload: {
     name,
   },
+  type: 'SET_NAME',
 });
 
 export const setProjectName = (name: string): PageAction<CreateVmMigration, ProjectName> => ({
-  type: 'SET_PROJECT_NAME',
   payload: {
     name,
   },
+  type: 'SET_PROJECT_NAME',
 });
 
 export const setSourceProvider = (
   sourceProvider: V1beta1Provider,
 ): PageAction<CreateVmMigration, SourceProvider> => ({
-  type: 'SET_SOURCE_PROVIDER',
   payload: {
     sourceProvider,
   },
+  type: 'SET_SOURCE_PROVIDER',
 });
 
 export const setSelectedVms = (
   vms: VmData[],
   sourceProvider: V1beta1Provider,
 ): PageAction<CreateVmMigration, SelectedVms> => ({
-  type: 'SET_SELECTED_VMS',
   payload: {
-    vms,
     sourceProvider,
+    vms,
   },
+  type: 'SET_SELECTED_VMS',
 });
 
 export const setAvailableProviders = (
@@ -259,12 +249,12 @@ export const setAvailableProviders = (
   loaded?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableProviders> => ({
-  type: 'SET_AVAILABLE_PROVIDERS',
   payload: {
     availableProviders: Array.isArray(availableProviders) ? availableProviders : [],
-    loading: !loaded,
     error,
+    loading: !loaded,
   },
+  type: 'SET_AVAILABLE_PROVIDERS',
 });
 
 export const setExistingPlans = (
@@ -272,12 +262,12 @@ export const setExistingPlans = (
   loaded?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanExistingPlans> => ({
-  type: 'SET_EXISTING_PLANS',
   payload: {
+    error,
     existingPlans: Array.isArray(existingPlans) ? existingPlans : [],
     loading: !loaded,
-    error,
   },
+  type: 'SET_EXISTING_PLANS',
 });
 
 export const setExistingNetMaps = (
@@ -285,12 +275,12 @@ export const setExistingNetMaps = (
   loaded?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanExistingNetMaps> => ({
-  type: 'SET_EXISTING_NET_MAPS',
   payload: {
+    error,
     existingNetMaps: Array.isArray(existingNetMaps) ? existingNetMaps : [],
     loading: !loaded,
-    error,
   },
+  type: 'SET_EXISTING_NET_MAPS',
 });
 
 export const setExistingStorageMaps = (
@@ -298,12 +288,12 @@ export const setExistingStorageMaps = (
   loaded?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanExistingStorageMaps> => ({
-  type: 'SET_EXISTING_STORAGE_MAPS',
   payload: {
+    error,
     existingStorageMaps: Array.isArray(existingStorageMaps) ? existingStorageMaps : [],
     loading: !loaded,
-    error,
   },
+  type: 'SET_EXISTING_STORAGE_MAPS',
 });
 
 export const setAvailableTargetNamespaces = (
@@ -311,50 +301,50 @@ export const setAvailableTargetNamespaces = (
   loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableTargetNamespaces> => ({
+  payload: { availableTargetNamespaces, error, loading },
   type: 'SET_AVAILABLE_TARGET_NAMESPACES',
-  payload: { availableTargetNamespaces, loading, error },
 });
 
 export const replaceStorageMapping = ({
   current,
   next,
 }: PlanMapping): PageAction<CreateVmMigration, PlanMapping> => ({
-  type: 'REPLACE_STORAGE_MAPPING',
   payload: { current, next },
+  type: 'REPLACE_STORAGE_MAPPING',
 });
 
 export const addStorageMapping = (): PageAction<CreateVmMigration, unknown> => ({
-  type: 'ADD_STORAGE_MAPPING',
   payload: {},
+  type: 'ADD_STORAGE_MAPPING',
 });
 
 export const deleteStorageMapping = ({
-  source,
   destination,
+  source,
 }: Mapping): PageAction<CreateVmMigration, Mapping> => ({
+  payload: { destination, source },
   type: 'DELETE_STORAGE_MAPPING',
-  payload: { source, destination },
 });
 
 export const addNetworkMapping = (): PageAction<CreateVmMigration, unknown> => ({
-  type: 'ADD_NETWORK_MAPPING',
   payload: {},
+  type: 'ADD_NETWORK_MAPPING',
 });
 
 export const replaceNetworkMapping = ({
   current,
   next,
 }: PlanMapping): PageAction<CreateVmMigration, PlanMapping> => ({
-  type: 'REPLACE_NETWORK_MAPPING',
   payload: { current, next },
+  type: 'REPLACE_NETWORK_MAPPING',
 });
 
 export const deleteNetworkMapping = ({
-  source,
   destination,
+  source,
 }: Mapping): PageAction<CreateVmMigration, Mapping> => ({
+  payload: { destination, source },
   type: 'DELETE_NETWORK_MAPPING',
-  payload: { source, destination },
 });
 
 export const setAvailableTargetNetworks = (
@@ -362,8 +352,8 @@ export const setAvailableTargetNetworks = (
   loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableTargetNetworks> => ({
+  payload: { availableTargetNetworks, error, loading },
   type: 'SET_AVAILABLE_TARGET_NETWORKS',
-  payload: { availableTargetNetworks, loading, error },
 });
 
 export const setAvailableSourceNetworks = (
@@ -371,8 +361,8 @@ export const setAvailableSourceNetworks = (
   loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableSourceNetworks> => ({
+  payload: { availableSourceNetworks, error, loading },
   type: 'SET_AVAILABLE_SOURCE_NETWORKS',
-  payload: { availableSourceNetworks, loading, error },
 });
 
 export const setAvailableSourceStorages = (
@@ -380,12 +370,12 @@ export const setAvailableSourceStorages = (
   loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableSourceStorages> => ({
-  type: 'SET_AVAILABLE_SOURCE_STORAGES',
   payload: {
     availableSourceStorages,
-    loading,
     error,
+    loading,
   },
+  type: 'SET_AVAILABLE_SOURCE_STORAGES',
 });
 
 export const setAvailableTargetStorages = (
@@ -393,8 +383,8 @@ export const setAvailableTargetStorages = (
   loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanAvailableTargetStorages> => ({
+  payload: { availableTargetStorages, error, loading },
   type: 'SET_AVAILABLE_TARGET_STORAGES',
-  payload: { availableTargetStorages, loading, error },
 });
 
 export const setNicProfiles = (
@@ -402,8 +392,8 @@ export const setNicProfiles = (
   nicProfilesLoading?: boolean,
   nicProfilesError?: Error,
 ): PageAction<CreateVmMigration, PlanNicProfiles> => ({
+  payload: { error: nicProfilesError, loading: nicProfilesLoading, nicProfiles },
   type: 'SET_NICK_PROFILES',
-  payload: { nicProfiles: nicProfiles, loading: nicProfilesLoading, error: nicProfilesError },
 });
 
 export const setDisks = (
@@ -411,25 +401,25 @@ export const setDisks = (
   loading?: boolean,
   error?: Error,
 ): PageAction<CreateVmMigration, PlanDisks> => ({
+  payload: { disks, error, loading },
   type: 'SET_DISKS',
-  payload: { disks, loading, error },
 });
 
 export const startCreate = (): PageAction<CreateVmMigration, unknown> => ({
-  type: 'START_CREATE',
   payload: {},
+  type: 'START_CREATE',
 });
 
 export const setAPiError = (error: Error): PageAction<CreateVmMigration, PlanError> => ({
-  type: 'SET_API_ERROR',
   payload: { error },
+  type: 'SET_API_ERROR',
 });
 
 export const removeAlert = (
   alertKey: NetworkAlerts | StorageAlerts,
 ): PageAction<CreateVmMigration, PlanAlert> => ({
-  type: 'REMOVE_ALERT',
   payload: { alertKey },
+  type: 'REMOVE_ALERT',
 });
 
 export const initState = (
@@ -439,12 +429,12 @@ export const initState = (
   sourceProvider: V1beta1Provider,
   selectedVms: VmData[],
 ): PageAction<CreateVmMigration, InitialStateParameters> => ({
-  type: 'INIT',
   payload: {
     namespace,
     planName,
     projectName,
-    sourceProvider,
     selectedVms,
+    sourceProvider,
   },
+  type: 'INIT',
 });

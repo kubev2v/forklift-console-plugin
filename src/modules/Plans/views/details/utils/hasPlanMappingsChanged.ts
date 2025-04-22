@@ -1,9 +1,9 @@
-import { V1beta1NetworkMapSpecMap, V1beta1StorageMapSpecMap } from '@kubev2v/types';
+import type { V1beta1NetworkMapSpecMap, V1beta1StorageMapSpecMap } from '@kubev2v/types';
 
-function hasPlanMappingsNetworkChanged(
+const hasPlanMappingsNetworkChanged = (
   currPlanNetworkMaps: V1beta1NetworkMapSpecMap[],
   nextPlanNetworkMaps: V1beta1NetworkMapSpecMap[],
-): boolean {
+): boolean => {
   // Both mappings don't have mapped entities
   if (!currPlanNetworkMaps && !nextPlanNetworkMaps) {
     return false;
@@ -20,15 +20,15 @@ function hasPlanMappingsNetworkChanged(
   }
 
   // Compare each mapping entry
-  for (const index in currPlanNetworkMaps) {
+  for (let i = 0; i < currPlanNetworkMaps.length; i += 1) {
+    const currMap = currPlanNetworkMaps[i];
+    const nextMap = nextPlanNetworkMaps[i];
+
     if (
-      currPlanNetworkMaps[index].source?.id !== nextPlanNetworkMaps[index].source?.id ||
-      currPlanNetworkMaps[index].destination?.name !==
-        nextPlanNetworkMaps[index].destination?.name ||
-      currPlanNetworkMaps[index].destination?.type !==
-        nextPlanNetworkMaps[index].destination?.type ||
-      currPlanNetworkMaps[index].destination?.namespace !==
-        nextPlanNetworkMaps[index].destination?.namespace
+      currMap.source?.id !== nextMap.source?.id ||
+      currMap.destination?.name !== nextMap.destination?.name ||
+      currMap.destination?.type !== nextMap.destination?.type ||
+      currMap.destination?.namespace !== nextMap.destination?.namespace
     ) {
       return true;
     }
@@ -36,12 +36,12 @@ function hasPlanMappingsNetworkChanged(
 
   // No differences found
   return false;
-}
+};
 
-function hasPlanMappingsStorageChanged(
+const hasPlanMappingsStorageChanged = (
   currPlanStorageMaps: V1beta1StorageMapSpecMap[],
   nextPlanStorageMaps: V1beta1StorageMapSpecMap[],
-): boolean {
+): boolean => {
   // Both mappings don't have mapped entities
   if (!currPlanStorageMaps && !nextPlanStorageMaps) {
     return false;
@@ -58,11 +58,13 @@ function hasPlanMappingsStorageChanged(
   }
 
   // Compare each mapping entry
-  for (const index in currPlanStorageMaps) {
+  for (let i = 0; i < currPlanStorageMaps.length; i += 1) {
+    const currMap = currPlanStorageMaps[i];
+    const nextMap = nextPlanStorageMaps[i];
+
     if (
-      currPlanStorageMaps[index].source?.id !== nextPlanStorageMaps[index].source?.id ||
-      currPlanStorageMaps[index].destination?.storageClass !==
-        nextPlanStorageMaps[index].destination?.storageClass
+      currMap.source?.id !== nextMap.source?.id ||
+      currMap.destination?.storageClass !== nextMap.destination?.storageClass
     ) {
       return true;
     }
@@ -70,7 +72,7 @@ function hasPlanMappingsStorageChanged(
 
   // No differences found
   return false;
-}
+};
 
 /**
  * Compares the plan's network and storage mappings between two versions.
@@ -82,14 +84,14 @@ function hasPlanMappingsStorageChanged(
  *
  * @returns {boolean} Returns true if any of the data mappings have changed, otherwise returns false.
  */
-export function hasPlanMappingsChanged(
+export const hasPlanMappingsChanged = (
   currPlanNetworkMaps: V1beta1NetworkMapSpecMap[],
   currPlanStorageMaps: V1beta1StorageMapSpecMap[],
   nextPlanNetworkMaps: V1beta1NetworkMapSpecMap[],
   nextPlanStorageMaps: V1beta1StorageMapSpecMap[],
-): boolean {
+): boolean => {
   return (
     hasPlanMappingsNetworkChanged(currPlanNetworkMaps, nextPlanNetworkMaps) ||
     hasPlanMappingsStorageChanged(currPlanStorageMaps, nextPlanStorageMaps)
   );
-}
+};

@@ -2,7 +2,7 @@ import type { FC, JSX, ReactNode } from 'react';
 
 import type { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
-import type { ValidationMsg } from '../../utils';
+import type { ValidationMsg } from '../../utils/validators/common';
 
 import './EditModal.style.css';
 

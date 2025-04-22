@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { DateTime } from 'luxon';
 
 import {
   DatePicker,
   InputGroup,
   isValidDate as isValidJSDate,
+  type ToolbarChip,
   ToolbarFilter,
   Tooltip,
 } from '@patternfly/react-core';
@@ -16,8 +17,9 @@ import {
   parseISOtoJSDate,
   toISODate,
   toISODateInterval,
-} from '../utils';
-import { FilterTypeProps } from './types';
+} from '../utils/dates';
+
+import type { FilterTypeProps } from './types';
 
 /**
  * This Filter type enables selecting an closed date range.
@@ -31,13 +33,13 @@ import { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/DateRangeFilter.tsx)
  */
 export const DateRangeFilter = ({
-  selectedFilters = [],
-  onFilterUpdate,
-  title,
   filterId,
-  placeholderLabel,
-  showFilter = true,
   helperText,
+  onFilterUpdate,
+  placeholderLabel,
+  selectedFilters = [],
+  showFilter = true,
+  title,
 }: FilterTypeProps) => {
   const validFilters = selectedFilters?.filter(isValidInterval) ?? [];
 
@@ -55,15 +57,15 @@ export const DateRangeFilter = ({
       ),
     };
   };
-  const optionToRange = (option): string => option?.key;
+  const optionToRange = (option: ToolbarChip): string => option?.key;
 
-  const clearSingleRange = (option) => {
+  const clearSingleRange = (option: ToolbarChip) => {
     const target = optionToRange(option);
     onFilterUpdate([...validFilters.filter((range) => range !== target)]);
   };
 
   const onFromDateChange: (
-    event: React.FormEvent<HTMLInputElement>,
+    event: FormEvent<HTMLInputElement>,
     value: string,
     date?: Date,
   ) => void = (_event, value) => {
@@ -74,11 +76,10 @@ export const DateRangeFilter = ({
     }
   };
 
-  const onToDateChange: (
-    event: React.FormEvent<HTMLInputElement>,
-    value: string,
-    date?: Date,
-  ) => void = (_event, value) => {
+  const onToDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
+    _event,
+    value,
+  ) => {
     //see DateFilter onDateChange
     if (value?.length === 10 && isValidDate(value)) {
       const newTo = parseISOtoJSDate(value);
@@ -94,9 +95,11 @@ export const DateRangeFilter = ({
     <ToolbarFilter
       key={filterId}
       chips={validFilters.map(rangeToOption)}
-      deleteChip={(category, option) => clearSingleRange(option)}
+      deleteChip={(category, option) => {
+        clearSingleRange(option as ToolbarChip);
+      }}
       deleteChipGroup={() => onFilterUpdate([])}
-      categoryName={title}
+      categoryName={title as unknown as string}
       showToolbarItem={showFilter}
     >
       <InputGroup>

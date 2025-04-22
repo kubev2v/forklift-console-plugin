@@ -1,4 +1,4 @@
-import React, { ComponentType, ReactNode } from 'react';
+import type { ComponentType, FC, ReactNode } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -19,17 +19,13 @@ import {
 const HELP_LINK_HREF =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
 
-interface ProvidersEmptyStateProps {
+type ProvidersEmptyStateProps = {
   AddButton: ReactNode;
   title: ReactNode;
   Icon: ComponentType;
-}
+};
 
-export const ProvidersEmptyState: React.FC<ProvidersEmptyStateProps> = ({
-  AddButton,
-  title,
-  Icon,
-}) => {
+const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ AddButton, Icon, title }) => {
   const { t } = useForkliftTranslation();
 
   return (

@@ -1,37 +1,38 @@
-import React, { FC, ReactNode } from 'react';
-import { useForkliftTranslation } from 'src/utils';
+import type { FC, ReactNode } from 'react';
 
 import {
-  K8sResourceKind,
+  type K8sResourceKind,
   useFlag,
   useK8sWatchResource,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { Popover } from '@patternfly/react-core';
-import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+import { HelpIcon } from '@patternfly/react-icons';
+import { isEmpty } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { FormGroupWithHelpText } from './FormGroupWithHelpText/FormGroupWithHelpText';
-import { TypeaheadSelect, TypeaheadSelectOption } from './TypeaheadSelect/TypeaheadSelect';
+import { TypeaheadSelect, type TypeaheadSelectOption } from './TypeaheadSelect/TypeaheadSelect';
 
-interface ProjectNameSelectProps {
+type ProjectNameSelectProps = {
   value: string | undefined;
   options: TypeaheadSelectOption[];
   onSelect: (value: string) => void;
   isDisabled?: boolean;
   popoverHelpContent?: ReactNode;
-}
+};
 
 export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
-  value,
-  options,
   isDisabled,
-  popoverHelpContent,
   onSelect,
+  options,
+  popoverHelpContent,
+  value,
 }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <FormGroupWithHelpText
-      label={t('Project new')}
+      label={t('Project')}
       isRequired
       fieldId="project"
       labelIcon={
@@ -43,30 +44,40 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({
       }
     >
       <TypeaheadSelect
+        isScrollable
         id="project-name-select"
         selectOptions={options}
         selected={value}
-        onSelect={(_, value) => onSelect(String(value))}
-        onClearSelection={() => onSelect('')}
+        onSelect={(_, value) => {
+          onSelect(String(value));
+        }}
+        onClearSelection={() => {
+          onSelect('');
+        }}
         isDisabled={isDisabled}
       />
     </FormGroupWithHelpText>
   );
 };
 
-export const useProjectNameSelectOptions = (defaultProject: string): TypeaheadSelectOption[] => {
+export const useProjectNameSelectOptions = (
+  defaultProject?: string,
+): [TypeaheadSelectOption[], boolean, Error | undefined] => {
   const isUseProjects = useFlag('OPENSHIFT'); // OCP or Kind installations
 
   const [projects, projectsLoaded, projectsLoadError] = useK8sWatchResource<K8sResourceKind[]>({
-    kind: isUseProjects ? 'Project' : 'Namespace',
     isList: true,
+    kind: isUseProjects ? 'Project' : 'Namespace',
   });
+  const defaultOptions = defaultProject ? [{ content: defaultProject, value: defaultProject }] : [];
+  const selectOptions =
+    isEmpty(projects) || !projectsLoaded || projectsLoadError
+      ? // In case of an error or an empty list, returns the active namespace
+        defaultOptions
+      : projects.map((project) => ({
+          content: project.metadata?.name ?? '',
+          value: project.metadata?.name ?? '',
+        }));
 
-  return projects.length === 0 || !projectsLoaded || projectsLoadError
-    ? // In case of an error or an empty list, returns the active namespace
-      [{ value: defaultProject, content: defaultProject }]
-    : projects.map((project) => ({
-        value: project.metadata?.name,
-        content: project.metadata?.name,
-      }));
+  return [selectOptions, projectsLoaded, projectsLoadError];
 };

@@ -1,33 +1,32 @@
-import React, { Ref } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals';
+import { type FC, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Dropdown, DropdownList, MenuToggle, MenuToggleElement } from '@patternfly/react-core';
+import type { V1beta1Plan } from '@kubev2v/types';
+import { Dropdown, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
-import { CellProps } from '../views/list/components';
-import { PlanActionsDropdownItems } from './PlanActionsDropdownItems';
+import PlanActionsDropdownItems from './PlanActionsDropdownItems';
 
 import './PlanActionsDropdown.style.css';
 
-const PlanActionsKebabDropdown_: React.FC<PlanActionsDropdownProps> = ({ data, isKebab }) => {
+type PlanActionsDropdownProps = {
+  isKebab?: boolean;
+  plan: V1beta1Plan;
+};
+
+const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isKebab, plan }) => {
   const { t } = useForkliftTranslation();
 
-  // Hook for managing the open/close state of the dropdown
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
+    setIsOpen((open) => !open);
   };
 
-  const onSelect = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    _value: string | number | undefined,
-  ) => {
+  const onSelect = () => {
     setIsOpen(false);
   };
 
-  // Returning the Dropdown component from PatternFly library
   return (
     <Dropdown
       className={isKebab ? undefined : 'forklift-dropdown'}
@@ -49,17 +48,9 @@ const PlanActionsKebabDropdown_: React.FC<PlanActionsDropdownProps> = ({ data, i
         position: 'right',
       }}
     >
-      <DropdownList>{PlanActionsDropdownItems({ data })}</DropdownList>
+      <PlanActionsDropdownItems plan={plan} />
     </Dropdown>
   );
 };
 
-export const PlanActionsDropdown: React.FC<PlanActionsDropdownProps> = (props) => (
-  <ModalHOC>
-    <PlanActionsKebabDropdown_ {...props} />
-  </ModalHOC>
-);
-
-export interface PlanActionsDropdownProps extends CellProps {
-  isKebab?: boolean;
-}
+export default PlanActionsDropdown;

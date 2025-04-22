@@ -1,19 +1,19 @@
-import React from 'react';
-import { ovirtSecretValidator } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { ovirtSecretValidator } from 'src/modules/Providers/utils/validators/provider/ovirt/ovirtSecretValidator';
 
 import {
   BaseCredentialsSection,
-  BaseCredentialsSectionProps,
+  type BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { OvirtCredentialsEdit } from './components/edit/OvirtCredentialsEdit';
 import { OvirtCredentialsList } from './components/list/OvirtCredentialsList';
 
-export type OvirtCredentialsSectionProps = Omit<
+type OvirtCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
   'ListComponent' | 'EditComponent' | 'validator'
 >;
 
-export const OvirtCredentialsSection: React.FC<OvirtCredentialsSectionProps> = (props) => (
+export const OvirtCredentialsSection: FC<OvirtCredentialsSectionProps> = (props) => (
   <BaseCredentialsSection
     {...props}
     validator={ovirtSecretValidator}

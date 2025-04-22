@@ -1,39 +1,40 @@
-import React, { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import { Td, Th } from '@patternfly/react-table';
 
 import { DefaultHeader } from '../common/TableView/DefaultHeader';
-import { RowProps, TableViewHeaderProps } from '../common/TableView/types';
+import type { RowProps, TableViewHeaderProps } from '../common/TableView/types';
 import { withTr } from '../common/TableView/withTr';
-import { GlobalActionToolbarProps } from '../common/utils/types';
-import StandardPage, { StandardPageProps } from './StandardPage';
+import type { GlobalActionToolbarProps } from '../common/utils/types';
 
-export function withRowSelection<T>({
-  CellMapper,
-  isSelected,
-  isExpanded,
-  toggleSelectFor,
-  toggleExpandFor,
+import StandardPage, { type StandardPageProps } from './StandardPage';
+
+const withRowSelection = <T,>({
   canSelect,
-}) {
+  CellMapper,
+  isExpanded,
+  isSelected,
+  toggleExpandFor,
+  toggleSelectFor,
+}) => {
   const Enhanced = (props: RowProps<T>) => (
     <>
       {isExpanded && (
         <Td
           expand={{
-            rowIndex: props.resourceIndex,
             isExpanded: isExpanded(props.resourceData),
             onToggle: () => toggleExpandFor([props.resourceData]),
+            rowIndex: props.resourceIndex,
           }}
         />
       )}
       {isSelected && (
         <Td
           select={{
-            rowIndex: props.resourceIndex,
-            onSelect: () => toggleSelectFor([props.resourceData]),
-            isSelected: isSelected(props.resourceData),
             isDisabled: !canSelect(props.resourceData),
+            isSelected: isSelected(props.resourceData),
+            onSelect: () => toggleSelectFor([props.resourceData]),
+            rowIndex: props.resourceIndex,
           }}
         />
       )}
@@ -42,15 +43,15 @@ export function withRowSelection<T>({
   );
   Enhanced.displayName = `${CellMapper.displayName || 'CellMapper'}WithSelection`;
   return Enhanced;
-}
+};
 
-export function withHeaderSelection<T>({
-  HeaderMapper,
-  isSelected,
-  isExpanded,
-  toggleSelectFor,
+const withHeaderSelection = <T,>({
   canSelect,
-}) {
+  HeaderMapper,
+  isExpanded,
+  isSelected,
+  toggleSelectFor,
+}) => {
   const Enhanced = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
     const selectableItems = dataOnScreen.filter(canSelect);
     const allSelected = selectableItems.length > 0 && selectableItems.every(isSelected);
@@ -61,9 +62,9 @@ export function withHeaderSelection<T>({
         {isSelected && (
           <Th
             select={{
-              onSelect: () => toggleSelectFor(selectableItems),
-              isSelected: allSelected,
               isHeaderSelectDisabled: !selectableItems?.length, // Disable if no selectable items
+              isSelected: allSelected,
+              onSelect: () => toggleSelectFor(selectableItems),
             }}
           />
         )}
@@ -73,9 +74,9 @@ export function withHeaderSelection<T>({
   };
   Enhanced.displayName = `${HeaderMapper.displayName || 'HeaderMapper'}WithSelection`;
   return Enhanced;
-}
+};
 
-export interface IdBasedSelectionProps<T> {
+type IdBasedSelectionProps<T> = {
   /**
    * @returns string that can be used as an unique identifier
    */
@@ -105,7 +106,7 @@ export interface IdBasedSelectionProps<T> {
    * Expanded ids
    */
   expandedIds?: string[];
-}
+};
 
 export type GlobalActionWithSelection<T> = GlobalActionToolbarProps<T> & {
   selectedIds: string[];
@@ -117,14 +118,14 @@ export type GlobalActionWithSelection<T> = GlobalActionToolbarProps<T> & {
  * 1. IDs provided with toId() function are unique and constant in time
  * 2. check box status at row level does not depend from other rows and  can be calculated from the item via canSelect() function
  */
-export function withIdBasedSelection<T>({
-  toId,
+const withIdBasedSelection = <T,>({
   canSelect,
-  onSelect,
-  onExpand,
-  selectedIds: initialSelectedIds,
   expandedIds: initialExpandedIds,
-}: IdBasedSelectionProps<T>) {
+  onExpand,
+  onSelect,
+  selectedIds: initialSelectedIds,
+  toId,
+}: IdBasedSelectionProps<T>) => {
   const Enhanced = (props: StandardPageProps<T>) => {
     const [selectedIds, setSelectedIds] = useState(initialSelectedIds);
     const [expandedIds, setExpandedIds] = useState(initialExpandedIds);
@@ -167,21 +168,21 @@ export function withIdBasedSelection<T>({
 
     const RowMapper = withTr(
       withRowSelection({
-        CellMapper: CellMapper,
         canSelect,
-        isSelected,
+        CellMapper,
         isExpanded,
-        toggleSelectFor,
+        isSelected,
         toggleExpandFor,
+        toggleSelectFor,
       }),
       ExpandedComponent,
     );
 
     const HeaderMapper = withHeaderSelection({
-      HeaderMapper: props.HeaderMapper ?? DefaultHeader,
       canSelect,
-      isSelected,
+      HeaderMapper: props.HeaderMapper ?? DefaultHeader,
       isExpanded,
+      isSelected,
       toggleSelectFor,
     });
 
@@ -205,7 +206,7 @@ export function withIdBasedSelection<T>({
   };
   Enhanced.displayName = 'StandardPageWithSelection';
   return Enhanced;
-}
+};
 
 /**
  * Properties for the `StandardPageWithSelection` component.
@@ -222,14 +223,14 @@ export function withIdBasedSelection<T>({
  *
  * @template T - The type of the items being displayed in the table.
  */
-export interface StandardPageWithSelectionProps<T> extends StandardPageProps<T> {
+export type StandardPageWithSelectionProps<T> = {
   toId?: (item: T) => string;
   canSelect?: (item: T) => boolean;
   onSelect?: (selectedIds: string[]) => void;
   selectedIds?: string[];
   onExpand?: (expandedIds: string[]) => void;
   expandedIds?: string[];
-}
+} & StandardPageProps<T>;
 
 /**
  * Renders a standard page with selection capabilities.
@@ -256,14 +257,14 @@ export interface StandardPageWithSelectionProps<T> extends StandardPageProps<T> 
  *   // ...other props
  * />
  */
-export function StandardPageWithSelection<T>(props: StandardPageWithSelectionProps<T>) {
+export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionProps<T>) => {
   const {
-    toId,
     canSelect = () => true,
+    expandedIds,
+    onExpand,
     onSelect,
     selectedIds,
-    onExpand,
-    expandedIds,
+    toId,
     ...rest
   } = props;
 
@@ -276,13 +277,13 @@ export function StandardPageWithSelection<T>(props: StandardPageWithSelectionPro
   }
 
   const EnhancedStandardPage = withIdBasedSelection<T>({
-    toId,
     canSelect,
+    expandedIds,
+    onExpand,
     onSelect,
     selectedIds,
-    onExpand,
-    expandedIds,
+    toId,
   });
 
   return onSelect ? <EnhancedStandardPage {...rest} /> : <StandardPage {...rest} />;
-}
+};

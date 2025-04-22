@@ -1,19 +1,19 @@
-import React from 'react';
-import { isPlanEditable } from 'src/modules/Plans/utils';
-import { useModal } from 'src/modules/Providers/modals';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 
-import { PlanDetailsItemProps } from '../../DetailsSection';
-import { EditPlanWarm } from '../modals';
+import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import { EditPlanWarm } from '../modals/EditPlanWarm/EditPlanWarm';
 
-export const WarmDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  resource,
+export const WarmDetailsItem: FC<PlanDetailsItemProps> = ({
   canPatch,
-  helpContent,
   destinationProvider,
+  helpContent,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -40,8 +40,9 @@ export const WarmDetailsItem: React.FC<PlanDetailsItemProps> = ({
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() =>
-          showModal(<EditPlanWarm resource={resource} destinationProvider={destinationProvider} />))
+        (() => {
+          showModal(<EditPlanWarm resource={resource} destinationProvider={destinationProvider} />);
+        })
       }
     />
   );

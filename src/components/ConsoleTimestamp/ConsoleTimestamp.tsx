@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { Timestamp, TimestampTooltipVariant } from '@patternfly/react-core';
 import { GlobeAmericasIcon } from '@patternfly/react-icons';
 
@@ -13,7 +11,7 @@ import { GlobeAmericasIcon } from '@patternfly/react-icons';
  */
 import './ConsoleTimestamp.style.css';
 
-export type TimestampProps = {
+type TimestampProps = {
   timestamp: string | number | Date;
   className?: string;
 };
@@ -41,11 +39,11 @@ export const ConsoleTimestamp = (props: TimestampProps) => {
         className="forklift-table__console-timestamp"
         date={currentDate}
         customFormat={{
-          year: 'numeric',
-          month: 'short',
           day: 'numeric',
           hour: 'numeric',
           minute: 'numeric',
+          month: 'short',
+          year: 'numeric',
         }}
         tooltip={{ variant: TimestampTooltipVariant.default }}
       />

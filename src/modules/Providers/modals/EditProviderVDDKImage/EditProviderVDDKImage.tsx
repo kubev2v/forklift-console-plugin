@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import { type FC, type FormEvent, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Modify, ProviderModel, V1beta1Provider } from '@kubev2v/types';
-import { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { type Modify, ProviderModel, type V1beta1Provider } from '@kubev2v/types';
+import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Checkbox, TextInput } from '@patternfly/react-core';
 
-import { VDDKHelperTextShort } from '../../utils/components/VDDKHelperText';
-import { validateVDDKImage } from '../../utils/validators';
-import { EditModal, EditModalProps } from '../EditModal';
+import { VDDKHelperTextShort } from '../../utils/components/VDDKHelperText/VDDKHelperText';
+import { validateVDDKImage } from '../../utils/validators/provider/vsphere/validateVDDKImage';
+import { EditModal } from '../EditModal/EditModal';
+import type { EditModalProps } from '../EditModal/types';
+
 import { onEmptyVddkConfirm } from './onEmptyVddkConfirm';
 import { onNoneEmptyVddkConfirm } from './onNoneEmptyVddkConfirm';
 
-export type EditProviderVDDKImageProps = Modify<
+type EditProviderVDDKImageProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Provider;
@@ -22,7 +24,7 @@ export type EditProviderVDDKImageProps = Modify<
   }
 >;
 
-export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (props) => {
+export const EditProviderVDDKImage: FC<EditProviderVDDKImageProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const provider = props.resource;
@@ -34,9 +36,7 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
 
   const isEmptyImage = emptyImage === 'yes';
 
-  const onChange: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
-    checked,
-  ) => {
+  const onChange: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (checked) => {
     if (checked) {
       setEmptyImage('yes');
     } else {
@@ -52,7 +52,9 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
           'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
         )}
         isChecked={isEmptyImage}
-        onChange={(e, v) => onChange(v, e)}
+        onChange={(event, value) => {
+          onChange(value, event);
+        }}
         id="emptyVddkInitImage"
         name="emptyVddkInitImage"
       />
@@ -78,7 +80,7 @@ export const EditProviderVDDKImage: React.FC<EditProviderVDDKImageProps> = (prop
 const VddkTextInput = undefined;
 
 // EmptyVddkTextInput is a mock input item for the empty vddk image string
-const EmptyVddkTextInput: React.FC = () => (
+const EmptyVddkTextInput: FC = () => (
   <TextInput
     spellCheck="false"
     id="modal-with-form-form-field"

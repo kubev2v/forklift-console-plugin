@@ -1,21 +1,21 @@
-import React from 'react';
-import { ProviderData } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
-import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
+import {BellIcon} from '@patternfly/react-icons';
 
+import type { VmData } from './components/VMCellProps';
 import { useInventoryVms } from './utils/hooks/useInventoryVms';
-import { VmData } from './components';
 import { OpenShiftVirtualMachinesList } from './OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from './OpenStackVirtualMachinesList';
 import { OvaVirtualMachinesList } from './OvaVirtualMachinesList';
 import { OVirtVirtualMachinesList } from './OVirtVirtualMachinesList';
 import { VSphereVirtualMachinesList } from './VSphereVirtualMachinesList';
 
-export interface ProviderVirtualMachinesProps {
+export type ProviderVirtualMachinesProps = {
   title?: string;
   obj: ProviderData;
   loaded?: boolean;
@@ -25,9 +25,9 @@ export interface ProviderVirtualMachinesProps {
   showActions: boolean;
   className?: string;
   selectedCountLabel?: (selectedIdCount: number) => string;
-}
+};
 
-export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string }> = ({
+export const ProviderVirtualMachines: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {
@@ -35,9 +35,9 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
 
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const [vmData, vmDataLoading] = useInventoryVms({ provider }, providerLoaded, providerLoadError);
@@ -71,9 +71,7 @@ export const ProviderVirtualMachines: React.FC<{ name: string; namespace: string
   );
 };
 
-export const ProviderVirtualMachinesListWrapper: React.FC<ProviderVirtualMachinesProps> = (
-  props,
-) => {
+export const ProviderVirtualMachinesListWrapper: FC<ProviderVirtualMachinesProps> = (props) => {
   switch (props.obj?.provider?.spec?.type) {
     case 'openshift':
       return <OpenShiftVirtualMachinesList {...props} />;

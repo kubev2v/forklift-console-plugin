@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -21,9 +21,9 @@ export const useK8sWatchProviderNames = ({ namespace }): K8sProvidersWatchResult
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace,
+    namespaced: true,
   });
 
   useEffect(() => {
@@ -42,8 +42,8 @@ export const useK8sWatchProviderNames = ({ namespace }): K8sProvidersWatchResult
   const handleLoadedProviders = (providers: V1beta1Provider[] | null) => {
     setLoaded(true);
 
-    const names = (providers || []).map((p) => p.metadata.name);
-    setNames(names.filter((n) => n));
+    const names = (providers || []).map((provider) => provider.metadata.name);
+    setNames(names.filter((name) => name));
   };
 
   return [names, namesLoaded, namesLoadError];

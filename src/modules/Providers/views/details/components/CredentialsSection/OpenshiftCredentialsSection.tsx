@@ -1,19 +1,19 @@
-import React from 'react';
-import { openshiftSecretValidator } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { openshiftSecretValidator } from 'src/modules/Providers/utils/validators/provider/openshift/openshiftSecretValidator';
 
 import {
   BaseCredentialsSection,
-  BaseCredentialsSectionProps,
+  type BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { OpenshiftCredentialsEdit } from './components/edit/OpenshiftCredentialsEdit';
 import { OpenshiftCredentialsList } from './components/list/OpenshiftCredentialsList';
 
-export type OpenshiftCredentialsSectionProps = Omit<
+type OpenshiftCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
   'ListComponent' | 'EditComponent' | 'validator'
 >;
 
-export const OpenshiftCredentialsSection: React.FC<OpenshiftCredentialsSectionProps> = (props) => {
+export const OpenshiftCredentialsSection: FC<OpenshiftCredentialsSectionProps> = (props) => {
   return (
     <BaseCredentialsSection
       {...props}

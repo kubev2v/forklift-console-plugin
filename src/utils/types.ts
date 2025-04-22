@@ -1,15 +1,14 @@
-export const ProviderStatusValues = [
-  'ValidationFailed',
-  'ConnectionFailed',
-  'Ready',
-  'Staging',
-  'Unknown',
-] as const;
-export type ProviderStatus = (typeof ProviderStatusValues)[number];
+export enum ProviderStatus {
+  ValidationFailed = 'ValidationFailed',
+  ConnectionFailed = 'ConnectionFailed',
+  Ready = 'Ready',
+  Staging = 'Staging',
+  Unknown = 'Unknown',
+}
 
-export interface VmFeatures {
+export type VmFeatures = {
   numa?: boolean;
   gpusHostDevices?: boolean;
   persistentTpmEfi?: boolean;
   dedicatedCpu?: boolean;
-}
+};

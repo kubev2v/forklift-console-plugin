@@ -1,21 +1,21 @@
-import React from 'react';
-import { isPlanEditable } from 'src/modules/Plans/utils';
-import { useModal } from 'src/modules/Providers/modals';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label, Tooltip } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
-import { PlanDetailsItemProps } from '../../DetailsSection';
-import { VIRT_V2V_HELP_LINK } from '../modals';
-import { getRootDiskLabelByKey } from '../modals/EditRootDisk';
+import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import { VIRT_V2V_HELP_LINK } from '../modals/EditLUKSEncryptionPasswords/editLUKSModalBody';
 import { EditRootDisk } from '../modals/EditRootDisk/EditRootDisk';
+import { getRootDiskLabelByKey } from '../modals/EditRootDisk/getRootDiskLabelByKey';
 
-export const RootDiskDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  resource,
+export const RootDiskDetailsItem: FC<PlanDetailsItemProps> = ({
   canPatch,
   helpContent,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -34,7 +34,9 @@ export const RootDiskDetailsItem: React.FC<PlanDetailsItemProps> = ({
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() => showModal(<EditRootDisk resource={resource} />))
+        (() => {
+          showModal(<EditRootDisk resource={resource} />);
+        })
       }
     />
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
@@ -10,11 +10,11 @@ import { HelperText, HelperTextItem } from '@patternfly/react-core';
  * @param {string} props.text - The text to display as the section heading.
  * @param {string} props.helpText - The text to display as the section description help text.
  *
- * @returns {React.ReactElement} The rendered JSX element.
+ * @returns {ReactElement} The rendered JSX element.
  */
-export const EditProviderSectionHeading: React.FC<EditProviderSectionHeadingProps> = ({
-  text,
+export const EditProviderSectionHeading: FC<EditProviderSectionHeadingProps> = ({
   helpText,
+  text,
 }) => (
   <>
     <SectionHeading text={text} className="forklift-create-provider-edit-section-header" />
@@ -27,7 +27,7 @@ export const EditProviderSectionHeading: React.FC<EditProviderSectionHeadingProp
   </>
 );
 
-export type EditProviderSectionHeadingProps = {
+type EditProviderSectionHeadingProps = {
   text: string;
   helpText?: string;
 };

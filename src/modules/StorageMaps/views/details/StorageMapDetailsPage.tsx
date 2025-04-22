@@ -1,14 +1,15 @@
-import React, { memo } from 'react';
+import { type FC, memo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 import { StorageMapPageHeadings } from './components/DetailsSection/components/StorageMapPageHeadings';
-import { StorageMapDetailsTab, StorageMapYAMLTab } from './tabs';
+import { StorageMapDetailsTab } from './tabs/Details/StorageMapDetailsTab';
+import { StorageMapYAMLTab } from './tabs/YAML/StorageMapYAMLTab';
 
 import './StorageMapDetailsPage.style.css';
 
-const StorageMapDetailsPageInternal: React.FC<{
+const StorageMapDetailsPageInternal: FC<{
   name: string;
   namespace: string;
 }> = ({ name, namespace }) => {
@@ -16,14 +17,14 @@ const StorageMapDetailsPageInternal: React.FC<{
 
   const pages = [
     {
+      component: () => <StorageMapDetailsTab name={name} namespace={namespace} />,
       href: '',
       name: t('Details'),
-      component: () => <StorageMapDetailsTab name={name} namespace={namespace} />,
     },
     {
+      component: () => <StorageMapYAMLTab name={name} namespace={namespace} />,
       href: 'yaml',
       name: t('YAML'),
-      component: () => <StorageMapYAMLTab name={name} namespace={namespace} />,
     },
   ];
 
@@ -36,10 +37,7 @@ const StorageMapDetailsPageInternal: React.FC<{
 };
 const StorageMapDetailsPageInternalMemo = memo(StorageMapDetailsPageInternal);
 
-export const StorageMapDetailsPage: React.FC<StorageMapDetailsPageProps> = ({
-  name,
-  namespace,
-}) => {
+const StorageMapDetailsPage: FC<StorageMapDetailsPageProps> = ({ name, namespace }) => {
   return <StorageMapDetailsPageInternalMemo name={name} namespace={namespace} />;
 };
 StorageMapDetailsPage.displayName = 'StorageMapDetailsPage';

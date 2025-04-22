@@ -1,26 +1,24 @@
-import React from 'react';
+import type { FC } from 'react';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
-import { DetailsItem } from '../../../../utils';
-import {
-  CreatedAtDetailsItem,
-  CredentialsDetailsItem,
-  ExternalManagementLinkDetailsItem,
-  NameDetailsItem,
-  NamespaceDetailsItem,
-  OwnerDetailsItem,
-  TypeDetailsItem,
-  URLDetailsItem,
-} from './components';
-import { DetailsSectionProps } from './DetailsSection';
-import { getOvirtProviderWebUILink } from './utils';
+import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';
+import { CredentialsDetailsItem } from './components/CredentialsDetailsItem';
+import { ExternalManagementLinkDetailsItem } from './components/ExternalManagementLinkDetailsItem';
+import { NameDetailsItem } from './components/NamDetailsItem';
+import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
+import { OwnerDetailsItem } from './components/OwnerDetailsItem';
+import { TypeDetailsItem } from './components/TypeDetailsItem';
+import { URLDetailsItem } from './components/URLDetailsItem';
+import { getOvirtProviderWebUILink } from './utils/getOvirtProviderWebUILink';
+import type { DetailsSectionProps } from './DetailsSection';
 
-export const OvirtDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
+export const OvirtDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
-  const { provider, permissions } = data;
+  const { permissions, provider } = data;
   const webUILink = getOvirtProviderWebUILink(provider);
 
   return (

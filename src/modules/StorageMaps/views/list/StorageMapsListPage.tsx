@@ -1,106 +1,109 @@
-import React from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import type { FC } from 'react';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
 import {
   StorageMapModel,
   StorageMapModelGroupVersionKind,
-  V1beta1StorageMap,
+  type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { t } from '@utils/i18n';
 
-import { StorageMapsAddButton } from '../../components';
+import StorageMapsAddButton from '../../components/StorageMapsAddButton';
 import StorageMapsEmptyState from '../../components/StorageMapsEmptyState';
-import { getStorageMapPhase, STORAGE_MAP_STATUS, StorageMapData } from '../../utils';
+import { STORAGE_MAP_STATUS } from '../../utils/constants/storage-map-status';
+import { getStorageMapPhase } from '../../utils/helpers/getStorageMapPhase';
+import type { StorageMapData } from '../../utils/types/StorageMapData';
+
 import StorageMapRow from './StorageMapRow';
 
 import './StorageMapsListPage.style.css';
 
-export const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const fieldsMetadata = [
   {
-    resourceFieldId: 'name',
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: 'freetext',
+    },
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
     jsonPath: '$.obj.metadata.name',
     label: t('Name'),
-    isVisible: true,
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by name'),
-    },
+    resourceFieldId: 'name',
     sortable: true,
   },
   {
-    resourceFieldId: 'namespace',
+    filter: {
+      placeholderLabel: t('Filter by namespace'),
+      type: 'freetext',
+    },
+    isIdentity: true,
+    isVisible: true,
     jsonPath: '$.obj.metadata.namespace',
     label: t('Namespace'),
-    isVisible: true,
-    isIdentity: true,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by namespace'),
-    },
+    resourceFieldId: 'namespace',
     sortable: true,
   },
   {
-    resourceFieldId: 'phase',
+    filter: {
+      placeholderLabel: t('Status'),
+      primary: true,
+      type: 'enum',
+      values: enumToTuple(STORAGE_MAP_STATUS),
+    },
+    isVisible: true,
     jsonPath: getStorageMapPhase,
     label: t('Status'),
-    isVisible: true,
-    filter: {
-      type: 'enum',
-      primary: true,
-      placeholderLabel: t('Status'),
-      values: EnumToTuple(STORAGE_MAP_STATUS),
-    },
+    resourceFieldId: 'phase',
     sortable: true,
   },
   {
-    resourceFieldId: 'source',
+    filter: {
+      placeholderLabel: t('Filter by source'),
+      type: 'freetext',
+    },
+    isVisible: true,
     jsonPath: '$.obj.spec.provider.source.name',
     label: t('Source provider'),
-    isVisible: true,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by source'),
-    },
+    resourceFieldId: 'source',
     sortable: true,
   },
   {
-    resourceFieldId: 'destination',
+    filter: {
+      placeholderLabel: t('Filter by target'),
+      type: 'freetext',
+    },
+    isVisible: true,
     jsonPath: '$.obj.spec.provider.destination.name',
     label: t('Target provider'),
-    isVisible: true,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by target'),
-    },
+    resourceFieldId: 'destination',
     sortable: true,
   },
   {
-    resourceFieldId: 'owner',
+    filter: {
+      placeholderLabel: t('Filter by namespace'),
+      type: 'freetext',
+    },
+    isVisible: true,
     jsonPath: '$.obj.metadata.ownerReferences[0].name',
     label: t('Owner'),
-    isVisible: true,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by namespace'),
-    },
+    resourceFieldId: 'owner',
     sortable: true,
   },
   {
-    resourceFieldId: 'actions',
-    label: '',
     isAction: true,
     isVisible: true,
+    label: '',
+    resourceFieldId: 'actions',
     sortable: false,
   },
 ];
 
-const StorageMapsListPage: React.FC<{
+const StorageMapsListPage: FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
@@ -111,9 +114,9 @@ const StorageMapsListPage: React.FC<{
     V1beta1StorageMap[]
   >({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace,
+    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({
@@ -148,7 +151,7 @@ const StorageMapsListPage: React.FC<{
       }
       dataSource={[data || [], StorageMapsLoaded, StorageMapsLoadError]}
       RowMapper={StorageMapRow}
-      fieldsMetadata={fieldsMetadataFactory(t)}
+      fieldsMetadata={fieldsMetadata}
       namespace={namespace}
       title={t('StorageMaps')}
       userSettings={userSettings}
@@ -158,12 +161,12 @@ const StorageMapsListPage: React.FC<{
   );
 };
 
-interface EmptyStateProps {
+type EmptyStateProps = {
   AddButton: JSX.Element;
   namespace?: string;
-}
+};
 
-const EmptyState_: React.FC<EmptyStateProps> = ({ namespace }) => {
+const EmptyState_: FC<EmptyStateProps> = ({ namespace }) => {
   return <StorageMapsEmptyState namespace={namespace} />;
 };
 

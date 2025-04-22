@@ -1,14 +1,14 @@
-import { OpenApiJsonPath } from 'src/modules';
+import type { OpenApiJsonPath } from 'src/modules/Providers/modals/EditModal/types';
 
-export const safeBoolean = (value): boolean => {
+export const safeBoolean = (value: unknown): boolean => {
   if (typeof value === 'boolean') return value;
   if (value === 'true') return true;
   if (value === 'false') return false;
-  return value;
+  return Boolean(value);
 };
 
 // Normalize jsonPath to always be an array of strings
-export const normalizePath = (obj: object, path: OpenApiJsonPath): string[] => {
+const normalizePath = (obj: object, path: OpenApiJsonPath): string[] => {
   if (typeof path === 'function') {
     const resolvedPath = path(obj);
     if (typeof resolvedPath === 'string') return resolvedPath.split('.');
@@ -47,5 +47,5 @@ export const unsetObjectValueByPath = (obj: object, path: OpenApiJsonPath) => {
   }
 };
 
-export const isEmpty = (value: object | Array<unknown> | undefined): boolean =>
-  Array.isArray(value) ? value.length === 0 : Object.keys(value || {}).length === 0;
+export const isEmpty = (value: object | unknown[] | undefined | null): boolean =>
+  Array.isArray(value) ? value.length === 0 : Object.keys(value ?? {}).length === 0;

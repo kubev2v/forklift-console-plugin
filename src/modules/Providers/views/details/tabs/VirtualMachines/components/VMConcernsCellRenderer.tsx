@@ -1,17 +1,19 @@
-import React from 'react';
-import { TableCell, TableEmptyCell } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Concern } from '@kubev2v/types';
+import type { Concern } from '@kubev2v/types';
 import { Button, Flex, FlexItem, Label, Popover, Stack, StackItem } from '@patternfly/react-core';
 
 import {
   getCategoryColor,
   getCategoryIcon,
   getCategoryTitle,
-  groupConcernsByCategory,
-} from '../utils';
-import { VMCellProps } from './VMCellProps';
+} from '../utils/helpers/getCategoryTitle';
+import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategory';
+
+import type { VMCellProps } from './VMCellProps';
 
 /**
  * Renders a table cell containing concerns grouped by category.
@@ -19,7 +21,7 @@ import { VMCellProps } from './VMCellProps';
  * @param {VMCellProps} props - The properties of the VMConcernsCellRenderer component.
  * @returns {ReactElement} The rendered table cell.
  */
-export const VMConcernsCellRenderer: React.FC<VMCellProps> = ({ data }) => {
+export const VMConcernsCellRenderer: FC<VMCellProps> = ({ data }) => {
   if (data?.vm?.providerType === 'openshift') {
     return <TableEmptyCell />;
   }
@@ -47,7 +49,7 @@ export const VMConcernsCellRenderer: React.FC<VMCellProps> = ({ data }) => {
  * @param {Concern[]} props.concerns - The list of concerns for the category.
  * @returns {ReactElement} The rendered popover.
  */
-const ConcernPopover: React.FC<{
+const ConcernPopover: FC<{
   category: string;
   concerns: Concern[];
 }> = ({ category, concerns }) => {
@@ -58,7 +60,7 @@ const ConcernPopover: React.FC<{
   return (
     <Popover
       aria-label={`${category} popover`}
-      headerContent={<div>{getCategoryTitle(category, t)}</div>}
+      headerContent={<div>{getCategoryTitle(category)}</div>}
       bodyContent={<ConcernList concerns={concerns} />}
       footerContent={t('Total: {{length}}', { length: concerns.length })}
     >
@@ -78,11 +80,11 @@ const ConcernPopover: React.FC<{
  * @param {Concern[]} props.concerns - The list of concerns to render.
  * @returns {ReactElement} The rendered list of concerns.
  */
-const ConcernList: React.FC<{ concerns: Concern[] }> = ({ concerns }) => (
+const ConcernList: FC<{ concerns: Concern[] }> = ({ concerns }) => (
   <Stack>
-    {concerns.map((c) => (
-      <StackItem key={c.category}>
-        {getCategoryIcon(c.category)} {c.label}
+    {concerns.map((concern) => (
+      <StackItem key={concern.category}>
+        {getCategoryIcon(concern.category)} {concern.label}
       </StackItem>
     ))}
   </Stack>

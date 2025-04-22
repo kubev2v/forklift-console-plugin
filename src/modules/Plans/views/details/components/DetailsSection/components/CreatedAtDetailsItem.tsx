@@ -1,14 +1,14 @@
-import React from 'react';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanDetailsItemProps } from './PlanDetailsItemProps';
+import type { PlanDetailsItemProps } from './PlanDetailsItemProps';
 
-export const CreatedAtDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  resource,
-  moreInfoLink,
+export const CreatedAtDetailsItem: FC<PlanDetailsItemProps> = ({
   helpContent,
+  moreInfoLink,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
 

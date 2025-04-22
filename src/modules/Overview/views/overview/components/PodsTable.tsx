@@ -1,23 +1,23 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import StatusIcon from 'src/components/status/StatusIcon';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { IoK8sApiCoreV1Pod } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Pod } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Split, SplitItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-export const PodsTable: React.FC<PodsTableProps> = ({ pods, showOwner }) => {
+export const PodsTable: FC<PodsTableProps> = ({ pods, showOwner }) => {
   const { t } = useForkliftTranslation();
 
   const getPodLogsLink = (pod: IoK8sApiCoreV1Pod) =>
     getResourceUrl({
-      reference: 'pods',
-      namespace: pod.metadata.namespace,
       name: pod.metadata.name,
+      namespace: pod.metadata.namespace,
+      reference: 'pods',
     });
 
   if (!pods) {
@@ -87,7 +87,7 @@ const getStatusLabel = (phase: string) => {
   );
 };
 
-export type PodsTableProps = {
+type PodsTableProps = {
   pods: IoK8sApiCoreV1Pod[];
   showOwner?: boolean;
 };

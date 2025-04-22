@@ -1,13 +1,15 @@
-import React from 'react';
-import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp';
-import { getMigrationVmsCounts, getPlanProgressVariant, PlanPhase } from 'src/modules/Plans/utils';
+import type { FC } from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import { getMigrationPhase } from 'src/modules/Plans/utils/helpers/getMigrationPhase';
+import { getMigrationVmsCounts } from 'src/modules/Plans/utils/helpers/getMigrationVmsCounts';
+import { getPlanProgressVariant } from 'src/modules/Plans/utils/helpers/getPlanProgressVariant';
+import { PlanPhase } from 'src/modules/Plans/utils/types/PlanPhase';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   MigrationModelGroupVersionKind,
   PlanModelGroupVersionKind,
-  V1beta1Migration,
+  type V1beta1Migration,
 } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import {
@@ -19,7 +21,7 @@ import {
 } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, showOwner }) => {
+export const MigrationsTable: FC<MigrationTableProps> = ({ migrations, showOwner }) => {
   const { t } = useForkliftTranslation();
 
   if (!migrations || migrations.length < 1) {
@@ -82,7 +84,7 @@ export const MigrationsTable: React.FC<MigrationTableProps> = ({ migrations, sho
   );
 };
 
-const VMsLabel: React.FC<{ migration: V1beta1Migration }> = ({ migration }) => {
+const VMsLabel: FC<{ migration: V1beta1Migration }> = ({ migration }) => {
   const { t } = useForkliftTranslation();
 
   const phase = getMigrationPhase(migration);
@@ -118,7 +120,7 @@ const sortMigrationsByStartedAtDate = (migrations: V1beta1Migration[]) => {
   });
 };
 
-export type MigrationTableProps = {
+type MigrationTableProps = {
   migrations: V1beta1Migration[];
   showOwner?: boolean;
 };

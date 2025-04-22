@@ -1,6 +1,6 @@
-import { VmFeatures } from 'src/utils/types';
+import type { VmFeatures } from 'src/utils/types';
 
-import { ProviderVirtualMachine, V1DomainSpec } from '@kubev2v/types';
+import type { ProviderVirtualMachine, V1DomainSpec } from '@kubev2v/types';
 
 export const getOpenShiftFeatureMap = (vm: ProviderVirtualMachine): VmFeatures => {
   if (vm.providerType !== 'openshift') {
@@ -12,10 +12,11 @@ export const getOpenShiftFeatureMap = (vm: ProviderVirtualMachine): VmFeatures =
   }
 
   return {
-    numa: !!domain.cpu?.numa,
-    gpusHostDevices: !!domain.devices?.gpus?.length || !!domain?.devices?.hostDevices?.length,
+    dedicatedCpu: Boolean(domain?.cpu?.dedicatedCpuPlacement),
+    gpusHostDevices:
+      Boolean(domain.devices?.gpus?.length) || Boolean(domain?.devices?.hostDevices?.length),
+    numa: Boolean(domain.cpu?.numa),
     persistentTpmEfi:
-      !!domain?.devices?.tpm?.persistent || domain?.firmware?.bootloader?.efi?.persistent,
-    dedicatedCpu: !!domain?.cpu?.dedicatedCpuPlacement,
+      Boolean(domain?.devices?.tpm?.persistent) || domain?.firmware?.bootloader?.efi?.persistent,
   };
 };

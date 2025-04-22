@@ -1,28 +1,28 @@
-import React, { FC, Ref, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
-  Modify,
-  OpenShiftNetworkAttachmentDefinition,
+  type Modify,
+  type OpenShiftNetworkAttachmentDefinition,
   ProviderModel,
-  V1beta1Provider,
+  type V1beta1Provider,
 } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Dropdown,
   DropdownItem,
   DropdownList,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
 } from '@patternfly/react-core';
 
-import { useProviderInventory } from '../../hooks';
-import {
-  EditModal,
+import useProviderInventory from '../../hooks/useProviderInventory';
+import { EditModal } from '../EditModal/EditModal';
+import type {
   EditModalProps,
   ModalInputComponentType,
   OnConfirmHookType,
-} from '../EditModal';
+} from '../EditModal/types';
 
 /**
  * Handles the confirmation action for editing a resource annotations.
@@ -34,7 +34,7 @@ import {
  * @param {any} options.newValue - The new value for the 'forklift.konveyor.io/defaultTransferNetwork' annotation.
  * @returns {Promise<Object>} - The modified resource.
  */
-const onConfirm: OnConfirmHookType = async ({ resource, model, newValue: value }) => {
+const onConfirm: OnConfirmHookType = async ({ model, newValue: value, resource }) => {
   const currentAnnotations = resource?.metadata?.annotations;
   const newAnnotations = {
     ...currentAnnotations,
@@ -44,8 +44,6 @@ const onConfirm: OnConfirmHookType = async ({ resource, model, newValue: value }
   const op = resource?.metadata?.annotations ? 'replace' : 'add';
 
   const obj = await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
@@ -53,20 +51,22 @@ const onConfirm: OnConfirmHookType = async ({ resource, model, newValue: value }
         value: newAnnotations,
       },
     ],
+    model,
+    resource,
   });
 
   return obj;
 };
 
-interface DropdownRendererProps {
+type DropdownRendererProps = {
   value: string | number;
   onChange: (string) => void;
-}
+};
 
 const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType = ({
   resource: provider,
 }) => {
-  const DropdownRenderer: FC<DropdownRendererProps> = ({ value, onChange }) => {
+  const DropdownRenderer: FC<DropdownRendererProps> = ({ onChange, value }) => {
     // Hook for managing the open/close state of the dropdown
     const [isOpen, setIsOpen] = useState(false);
 
@@ -74,10 +74,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
       setIsOpen((isOpen) => !isOpen);
     };
 
-    const onSelect = (
-      _event: React.MouseEvent<Element, MouseEvent> | undefined,
-      _value: string | number | undefined,
-    ) => {
+    const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
       setIsOpen(false);
     };
 
@@ -93,18 +90,22 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
         value={0}
         key="Pod network"
         description={'Default pod network'}
-        onClick={() => onChange('')}
+        onClick={() => {
+          onChange('');
+        }}
       >
         {'Pod network'}
       </DropdownItem>,
-      ...(networks || []).map((n) => (
+      ...(networks || []).map((network) => (
         <DropdownItem
           value={1}
-          key={n.name}
-          description={n.namespace}
-          onClick={() => onChange(`${n.namespace}/${n.name}`)}
+          key={network.name}
+          description={network.namespace}
+          onClick={() => {
+            onChange(`${network.namespace}/${network.name}`);
+          }}
         >
-          {n.name}
+          {network.name}
         </DropdownItem>
       )),
     ];
@@ -138,7 +139,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
   return DropdownRenderer;
 };
 
-const EditProviderDefaultTransferNetwork_: React.FC<EditProviderDefaultTransferNetworkProps> = (
+const EditProviderDefaultTransferNetwork_: FC<EditProviderDefaultTransferNetworkProps> = (
   props,
 ) => {
   const { t } = useForkliftTranslation();
@@ -168,16 +169,17 @@ const EditProviderDefaultTransferNetwork_: React.FC<EditProviderDefaultTransferN
  * @param {string} value - The input string from which the network name is to be extracted.
  * @returns {string} The network name extracted from the input string.
  */
-function getNetworkName(value: string | number): string {
+const getNetworkName = (value: string | number): string => {
   if (!value || typeof value !== 'string') {
     return 'Pod network';
   }
 
   const parts = value.split('/');
-  return parts[parts.length - 1];
-}
 
-export type EditProviderDefaultTransferNetworkProps = Modify<
+  return parts[parts.length - 1];
+};
+
+type EditProviderDefaultTransferNetworkProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Provider;
@@ -188,9 +190,9 @@ export type EditProviderDefaultTransferNetworkProps = Modify<
   }
 >;
 
-export const EditProviderDefaultTransferNetwork: React.FC<
-  EditProviderDefaultTransferNetworkProps
-> = (props) => {
+export const EditProviderDefaultTransferNetwork: FC<EditProviderDefaultTransferNetworkProps> = (
+  props,
+) => {
   if (props.resource?.spec?.type !== 'openshift') {
     return <></>;
   }

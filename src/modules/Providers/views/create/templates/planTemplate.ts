@@ -1,4 +1,4 @@
-import { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@kubev2v/types';
 
 export const planTemplate: V1beta1Plan = {
   apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -12,8 +12,8 @@ export const planTemplate: V1beta1Plan = {
       network: undefined,
       storage: undefined,
     },
-    targetNamespace: '',
     provider: undefined,
+    targetNamespace: '',
     vms: [],
   },
 };

@@ -1,19 +1,19 @@
-import React, { useCallback, useReducer } from 'react';
+import { type FC, type FormEvent, useCallback, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { validateOvirtURL } from 'src/modules/Providers/utils';
+import { validateOvirtURL } from 'src/modules/Providers/utils/validators/provider/ovirt/validateOvirtURL';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 import { Form, TextInput } from '@patternfly/react-core';
 
-export interface OvirtProviderCreateFormProps {
+type OvirtProviderCreateFormProps = {
   provider: V1beta1Provider;
   onChange: (newValue: V1beta1Provider) => void;
-}
+};
 
-export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = ({
-  provider,
+export const OvirtProviderCreateForm: FC<OvirtProviderCreateFormProps> = ({
   onChange,
+  provider,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -50,8 +50,8 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
       const validationState = validateOvirtURL(trimmedValue);
 
       dispatch({
-        type: 'SET_FIELD_VALIDATED',
         payload: { field: 'url', validationState },
+        type: 'SET_FIELD_VALIDATED',
       });
 
       onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
@@ -59,9 +59,7 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
     [provider],
   );
 
-  const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeUrl: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('url', value);
   };
 
@@ -83,7 +81,9 @@ export const OvirtProviderCreateForm: React.FC<OvirtProviderCreateFormProps> = (
           name="url"
           value={url || ''}
           validated={state.validation.url.type}
-          onChange={(e, v) => onChangeUrl(v, e)}
+          onChange={(e, value) => {
+            onChangeUrl(value, e);
+          }}
         />
       </FormGroupWithHelpText>
     </Form>

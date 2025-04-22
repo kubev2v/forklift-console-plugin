@@ -1,16 +1,16 @@
-import React, { useReducer } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import { type FC, useEffect, useReducer } from 'react';
 import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
-import { Mapping } from 'src/modules/Providers/views/migrate/types';
+import type { Mapping } from 'src/modules/Providers/views/migrate/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import Suspend from '@components/Suspend';
 import {
   ProviderModelGroupVersionKind,
   StorageMapModel,
-  V1beta1Provider,
-  V1beta1StorageMap,
-  V1beta1StorageMapSpecMap,
+  type V1beta1Provider,
+  type V1beta1StorageMap,
+  type V1beta1StorageMapSpecMap,
 } from '@kubev2v/types';
 import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
@@ -21,84 +21,93 @@ import {
   Spinner,
 } from '@patternfly/react-core';
 
-import { mapsSectionReducer, MapsSectionState } from './state/reducer';
+import { mapsSectionReducer, type MapsSectionState } from './state/reducer';
 
 const initialState: MapsSectionState = {
-  StorageMap: null,
   hasChanges: false,
+  StorageMap: null,
   updating: false,
 };
 
-export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
+export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const [state, dispatch] = useReducer(mapsSectionReducer, initialState);
 
   // Initialize the state with the prop obj
-  React.useEffect(() => {
-    dispatch({ type: 'INIT', payload: obj });
+  useEffect(() => {
+    dispatch({ payload: obj, type: 'INIT' });
   }, [obj]);
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace: obj.metadata.namespace,
+    namespaced: true,
   });
 
   const sourceProvider = providers.find(
-    (p) =>
-      p?.metadata?.uid === obj?.spec?.provider?.source?.uid ||
-      p?.metadata?.name === obj?.spec?.provider?.source?.name,
+    (provider) =>
+      provider?.metadata?.uid === obj?.spec?.provider?.source?.uid ||
+      provider?.metadata?.name === obj?.spec?.provider?.source?.name,
   );
   const [sourceStorages] = useSourceStorages(sourceProvider);
 
   const destinationProvider = providers.find(
-    (p) =>
-      p?.metadata?.uid === obj?.spec?.provider?.destination?.uid ||
-      p?.metadata?.name === obj?.spec?.provider?.destination?.name,
+    (provider) =>
+      provider?.metadata?.uid === obj?.spec?.provider?.destination?.uid ||
+      provider?.metadata?.name === obj?.spec?.provider?.destination?.name,
   );
   const [destinationStorages] = useOpenShiftStorages(destinationProvider);
 
   const onUpdate = async () => {
-    dispatch({ type: 'SET_UPDATING', payload: true });
-    await k8sUpdate({ model: StorageMapModel, data: state.StorageMap });
-    dispatch({ type: 'SET_UPDATING', payload: false });
+    dispatch({ payload: true, type: 'SET_UPDATING' });
+    await k8sUpdate({ data: state.StorageMap, model: StorageMapModel });
+    dispatch({ payload: false, type: 'SET_UPDATING' });
   };
 
   const isStorageMapped = (StorageMapID: string) => {
-    return state.StorageMap.spec.map.find((m) => StorageMapID === m?.source?.id) !== undefined;
+    return state.StorageMap.spec.map.find((map) => StorageMapID === map?.source?.id) !== undefined;
   };
 
-  const availableSources = sourceStorages?.filter((n) => !isStorageMapped(n?.id));
+  const availableSources = sourceStorages?.filter(
+    (sourceStorage) => !isStorageMapped(sourceStorage?.id),
+  );
 
-  const getInventoryStorageName = (id: string) => sourceStorages?.find((s) => s.id === id)?.name;
+  const getInventoryStorageName = (id: string) =>
+    sourceStorages?.find((sourceStorage) => sourceStorage.id === id)?.name;
 
   const onAdd = () =>
     availableSources.length > 0 &&
     dispatch({
-      type: 'SET_MAP',
       payload: [
-        ...(state.StorageMap?.spec?.map || []),
+        ...(state.StorageMap?.spec?.map ?? []),
         sourceProvider?.spec?.type === 'openshift'
           ? {
-              source: { name: availableSources?.[0]?.name },
               destination: { storageClass: destinationStorages?.[0].name },
+              source: { name: availableSources?.[0]?.name },
             }
           : {
-              source: { id: availableSources?.[0]?.id },
               destination: { storageClass: destinationStorages?.[0].name },
+              source: { id: availableSources?.[0]?.id },
             },
       ],
+      type: 'SET_MAP',
     });
 
   const onReplace = ({ current, next }) => {
     const currentDestinationStorage = destinationStorages.find(
-      (n) => n.name == current.destination,
+      (destinationStorage) => destinationStorage.name === current.destination,
     );
-    const currentSourceStorage = sourceStorages?.find((n) => n?.name === current.source);
+    const currentSourceStorage = sourceStorages?.find(
+      (sourceStorage) => sourceStorage?.name === current.source,
+    );
 
-    const nextDestinationStorage = destinationStorages.find((n) => n.name == next.destination);
-    const nextSourceStorage = sourceStorages?.find((n) => n?.name === next.source);
+    const nextDestinationStorage = destinationStorages.find(
+      (destinationStorage) => destinationStorage.name === next.destination,
+    );
+    const nextSourceStorage = sourceStorages?.find(
+      (sourceStorage) => sourceStorage?.name === next.source,
+    );
 
     // sanity check, names may not be valid
     if (!nextSourceStorage || !nextDestinationStorage) {
@@ -108,12 +117,12 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     const nextMap: V1beta1StorageMapSpecMap =
       sourceProvider?.spec?.type === 'openshift'
         ? {
-            source: { name: nextSourceStorage.name },
             destination: { storageClass: nextDestinationStorage.name },
+            source: { name: nextSourceStorage.name },
           }
         : {
-            source: { id: nextSourceStorage.id },
             destination: { storageClass: nextDestinationStorage.name },
+            source: { id: nextSourceStorage.id },
           };
 
     const payload = state?.StorageMap?.spec?.map?.map((map) => {
@@ -124,17 +133,18 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
     });
 
     dispatch({
+      payload: payload ?? [],
       type: 'SET_MAP',
-      payload: payload || [],
     });
   };
 
   const onDelete = (current: Mapping) => {
-    const references = storageNameToIDReference(state?.StorageMap?.status?.references || []);
-    const currentSourceStorage = sourceStorages?.find((n) => n.name === current.source);
+    const references = storageNameToIDReference(state?.StorageMap?.status?.references ?? []);
+    const currentSourceStorage = sourceStorages?.find(
+      (sourceStorage) => sourceStorage.name === current.source,
+    );
 
     dispatch({
-      type: 'SET_MAP',
       payload: [
         ...(state?.StorageMap?.spec?.map.filter(
           (map) =>
@@ -144,13 +154,14 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
                 map?.source?.id === references[current.source]) &&
               map.destination?.storageClass === current.destination
             ),
-        ) || []),
+        ) ?? []),
       ],
+      type: 'SET_MAP',
     });
   };
 
   const onClick = () => {
-    dispatch({ type: 'INIT', payload: obj });
+    dispatch({ payload: obj, type: 'INIT' });
   };
 
   return (
@@ -183,15 +194,17 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
           addMapping={onAdd}
           replaceMapping={onReplace}
           deleteMapping={onDelete}
-          availableDestinations={[...destinationStorages.map((s) => s?.name)]}
-          sources={sourceStorages.map((n) => ({
-            label: n.name,
+          availableDestinations={[
+            ...destinationStorages.map((destinationStorage) => destinationStorage?.name),
+          ]}
+          sources={sourceStorages.map((sourceStorage) => ({
+            isMapped: isStorageMapped(sourceStorage?.id),
+            label: sourceStorage.name,
             usedBySelectedVms: false,
-            isMapped: isStorageMapped(n?.id),
           }))}
-          mappings={state?.StorageMap?.spec?.map.map((m) => ({
-            source: getInventoryStorageName(m.source.id) || m.source?.name,
-            destination: m.destination.storageClass,
+          mappings={state?.StorageMap?.spec?.map.map((storageMap) => ({
+            destination: storageMap.destination.storageClass,
+            source: getInventoryStorageName(storageMap.source.id) ?? storageMap.source?.name,
           }))}
           generalSourcesLabel={t('Other storages present on the source provider ')}
           usedSourcesLabel={t('Storages used by the selected VMs')}
@@ -203,15 +216,17 @@ export const MapsSection: React.FC<MapsSectionProps> = ({ obj }) => {
   );
 };
 
-export type MapsSectionProps = {
+type MapsSectionProps = {
   obj: V1beta1StorageMap;
 };
 
-function storageNameToIDReference(array: { id?: string; name?: string }[]): Record<string, string> {
-  return array.reduce((accumulator, current) => {
+const storageNameToIDReference = (
+  array: { id?: string; name?: string }[],
+): Record<string, string> => {
+  return array.reduce<Record<string, string>>((accumulator, current) => {
     if (current?.id && current?.name) {
       accumulator[current.name] = current.id;
     }
     return accumulator;
-  }, {} as Record<string, string>);
-}
+  }, {});
+};

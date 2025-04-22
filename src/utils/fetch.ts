@@ -1,19 +1,19 @@
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import {
   useK8sWatchResource,
-  WatchK8sResource,
-  WatchK8sResult,
+  type WatchK8sResource,
+  type WatchK8sResult,
 } from '@openshift-console/dynamic-plugin-sdk';
 
-export const useProviders = ({ namespace }: WatchK8sResource): WatchK8sResult<V1beta1Provider[]> =>
+const useProviders = ({ namespace }: WatchK8sResource): WatchK8sResult<V1beta1Provider[]> =>
   useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace,
+    namespaced: true,
   });
 
-export const useHasSourceAndTargetProviders = (
+const useHasSourceAndTargetProviders = (
   namespace?: string,
 ): [boolean, boolean, boolean, unknown] => {
   const [providers, providersLoaded, providersError] = useProviders({
@@ -21,7 +21,7 @@ export const useHasSourceAndTargetProviders = (
   });
 
   const hasSourceProviders = providers.length > 0;
-  const hasTargetProviders = providers.some((p) => p?.spec?.type === 'openshift');
+  const hasTargetProviders = providers.some((provider) => provider?.spec?.type === 'openshift');
 
   return [hasSourceProviders, hasTargetProviders, providersLoaded, providersError];
 };

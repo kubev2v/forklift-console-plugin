@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import type { FC } from 'react';
 
 import { PageSection, PageSectionTypes, PageSectionVariants, Title } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { CreatePlanWizard } from './CreatePlanWizard';
 
-export const PlanCreatePage: FC = () => {
+const PlanCreatePage: FC = () => {
   const { t } = useForkliftTranslation();
 
   return (

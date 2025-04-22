@@ -1,19 +1,15 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 
-import { Popover, PopoverProps } from '@patternfly/react-core';
-import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+import { Popover, type PopoverProps } from '@patternfly/react-core';
+import { HelpIcon } from '@patternfly/react-icons';
 
-interface HelpIconPopoverProps {
-  children: React.ReactNode;
+type HelpIconPopoverProps = {
+  children: ReactNode;
   header?: string;
   popoverProps?: Omit<PopoverProps, 'bodyContent' | 'titleContent'>;
-}
+};
 
-export const HelpIconPopover: React.FC<HelpIconPopoverProps> = ({
-  children,
-  header,
-  popoverProps,
-}) => (
+export const HelpIconPopover: FC<HelpIconPopoverProps> = ({ children, header, popoverProps }) => (
   <Popover position="right" bodyContent={children} headerContent={header} {...popoverProps}>
     <button type="button" className="pf-c-form__group-label-help">
       <HelpIcon />

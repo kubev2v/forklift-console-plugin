@@ -1,29 +1,29 @@
 import { useMemo, useState } from 'react';
 
-import { PaginationSettings } from './types';
+import type { PaginationSettings } from './types';
 
 // first option in the default "per page" dropdown
 export const DEFAULT_PER_PAGE = 10;
 
-export interface PaginationHookProps {
+type PaginationHookProps = {
   filteredDataLength: number;
   userSettings?: PaginationSettings;
-}
+};
 
-export interface PaginationHookResult {
+type PaginationHookResult = {
   itemsPerPage: number;
   lastPage: number;
   setPerPage: (perPage: number) => void;
-}
+};
 
-export function usePagination({
+export const usePagination = ({
   filteredDataLength,
   userSettings,
-}: PaginationHookProps): PaginationHookResult {
+}: PaginationHookProps): PaginationHookResult => {
   const {
+    clear: clearSavedPerPage = () => undefined,
     perPage: defaultPerPage = DEFAULT_PER_PAGE,
     save: savePerPage = () => undefined,
-    clear: clearSavedPerPage = () => undefined,
   } = userSettings || {};
   const [perPage, setPerPage] = useState(defaultPerPage);
 
@@ -46,4 +46,4 @@ export function usePagination({
     lastPage,
     setPerPage: setPerPageInStateAndSettings,
   };
-}
+};

@@ -1,16 +1,16 @@
-import React, { FC } from 'react';
-import { useModal } from 'src/modules/Providers/modals';
+import type { ChangeEvent, FC } from 'react';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, FileUpload, FileUploadProps, Flex, FlexItem } from '@patternfly/react-core';
+import { Button, FileUpload, type FileUploadProps, Flex, FlexItem } from '@patternfly/react-core';
 
 import { FetchCertificateModal } from './FetchCertificateModal';
 
 import './CertificateUpload.style.css';
 
-export interface CertificateUploadProps extends FileUploadProps {
+type CertificateUploadProps = {
   url?: string;
-}
+} & FileUploadProps;
 
 /**
  * Provide the certificate using following paths:
@@ -19,27 +19,33 @@ export interface CertificateUploadProps extends FileUploadProps {
  * 3. fetch from the specified URL (via tls-certificate endpoint) end verify
  */
 export const CertificateUpload: FC<CertificateUploadProps> = ({
-  id,
-  url,
-  value,
-  filenamePlaceholder,
   browseButtonText,
-  validated,
+  filenamePlaceholder,
+  id,
+  isDisabled,
+  onClearClick,
   onDataChange,
   onTextChange,
-  onClearClick,
-  isDisabled,
   type,
+  url,
+  validated,
+  value,
 }) => {
   const { showModal } = useModal();
   const { t } = useForkliftTranslation();
   const isText = !type || type === 'text';
   const onClick = () => {
+    const syntheticEvent = {
+      target: { value },
+    } as ChangeEvent<HTMLTextAreaElement>;
+
     showModal(
       <FetchCertificateModal
-        url={url}
-        handleSave={(v) => onTextChange(null, v)}
-        existingCert={value ? String(value) : undefined}
+        url={url ?? ''}
+        handleSave={(value) => {
+          onTextChange?.(syntheticEvent, value);
+        }}
+        existingCert={(value as string) ?? ''}
       />,
     );
   };

@@ -1,26 +1,26 @@
-import React from 'react';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
-import { PageHeadings } from 'src/modules/Providers/utils';
-import { StorageMapActionsDropdown } from 'src/modules/StorageMaps/actions';
-import { StorageMapCriticalConditions } from 'src/modules/StorageMaps/components';
+import type { FC } from 'react';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import { StorageMapActionsDropdown } from 'src/modules/StorageMaps/actions/StorageMapActionsDropdown';
+import StorageMapCriticalConditions from 'src/modules/StorageMaps/components/StorageMapCriticalConditions';
 
 import {
   StorageMapModel,
   StorageMapModelGroupVersionKind,
-  V1beta1StorageMap,
+  type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-export const StorageMapPageHeadings: React.FC<{ name: string; namespace: string }> = ({
+export const StorageMapPageHeadings: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1StorageMap>({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const permissions = useGetDeleteAndEditAccessReview({

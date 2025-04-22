@@ -1,14 +1,12 @@
-import React from 'react';
-import {
-  ProviderVirtualMachinesListWrapper,
-  useInventoryVms,
-  VmData,
-} from 'src/modules/Providers/views';
+import type { FC } from 'react';
+import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import { ProviderVirtualMachinesListWrapper } from 'src/modules/Providers/views/details/tabs/VirtualMachines/ProviderVirtualMachines';
+import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-export const ProviderVirtualMachinesList: React.FC<{
+export const ProviderVirtualMachinesList: FC<{
   title: string;
   name: string;
   namespace: string;
@@ -18,24 +16,24 @@ export const ProviderVirtualMachinesList: React.FC<{
   className?: string;
   selectedCountLabel?: (selectedIdCount: number) => string;
 }> = ({
-  title,
+  className,
+  initialSelectedIds,
   name,
   namespace,
   onSelect,
-  initialSelectedIds,
-  showActions,
-  className,
   selectedCountLabel,
+  showActions,
+  title,
 }) => {
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const [vmData, vmDataLoading] = useInventoryVms({ provider }, providerLoaded, providerLoadError);
-  const obj = { provider, vmData, vmDataLoading: vmDataLoading };
+  const obj = { provider, vmData, vmDataLoading };
 
   return (
     <ProviderVirtualMachinesListWrapper

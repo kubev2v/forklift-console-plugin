@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import { Spinner } from '@patternfly/react-core';
 import {
@@ -9,15 +9,15 @@ import {
   MinusCircleIcon,
   PlusCircleIcon,
 } from '@patternfly/react-icons';
-import { BanIcon } from '@patternfly/react-icons/dist/esm/icons/ban-icon';
-import { ClipboardListIcon } from '@patternfly/react-icons/dist/esm/icons/clipboard-list-icon';
-import { HourglassHalfIcon } from '@patternfly/react-icons/dist/esm/icons/hourglass-half-icon';
-import { HourglassStartIcon } from '@patternfly/react-icons/dist/esm/icons/hourglass-start-icon';
-import { NotStartedIcon } from '@patternfly/react-icons/dist/esm/icons/not-started-icon';
-import { SyncAltIcon } from '@patternfly/react-icons/dist/esm/icons/sync-alt-icon';
-import { UnknownIcon } from '@patternfly/react-icons/dist/esm/icons/unknown-icon';
+import { BanIcon } from '@patternfly/react-icons';
+import { ClipboardListIcon } from '@patternfly/react-icons';
+import { HourglassHalfIcon } from '@patternfly/react-icons';
+import { HourglassStartIcon } from '@patternfly/react-icons';
+import { NotStartedIcon } from '@patternfly/react-icons';
+import { SyncAltIcon } from '@patternfly/react-icons';
+import { UnknownIcon } from '@patternfly/react-icons';
 
-export const StatusIcon: React.FC<{ phase: string }> = ({ phase }) => {
+const StatusIcon: FC<{ phase: string }> = ({ phase }) => {
   switch (phase) {
     case 'New':
       return <HourglassStartIcon />;

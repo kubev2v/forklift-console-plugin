@@ -1,20 +1,18 @@
-import React from 'react';
+import type { FC } from 'react';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
-import { DetailsItem } from '../../../../utils';
-import {
-  CreatedAtDetailsItem,
-  NameDetailsItem,
-  NamespaceDetailsItem,
-  OwnerDetailsItem,
-  TypeDetailsItem,
-  URLDetailsItem,
-} from './components';
-import { DetailsSectionProps } from './DetailsSection';
+import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';
+import { NameDetailsItem } from './components/NamDetailsItem';
+import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
+import { OwnerDetailsItem } from './components/OwnerDetailsItem';
+import { TypeDetailsItem } from './components/TypeDetailsItem';
+import { URLDetailsItem } from './components/URLDetailsItem';
+import type { DetailsSectionProps } from './DetailsSection';
 
-export const OVADetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
+export const OVADetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
   const { provider } = data;

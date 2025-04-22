@@ -1,8 +1,8 @@
-import * as React from 'react';
+import { useState } from 'react';
 
-export type MappedSearchParams = Record<string, string>;
+type MappedSearchParams = Record<string, string>;
 
-export type SetURLSearchParams = (params: MappedSearchParams) => void;
+type SetURLSearchParams = (params: MappedSearchParams) => void;
 
 /**
  * Take a url string and convert it to a search params map.  If a key occurs multiple
@@ -22,9 +22,9 @@ export const toMap = (search: string): MappedSearchParams => {
  *          search params setter method
  */
 export const useSearchParams = (): [MappedSearchParams, SetURLSearchParams] => {
-  const [searchParams, internalSetSearchParams] = React.useState(toMap(location.search));
+  const [searchParams, internalSetSearchParams] = useState(toMap(location.search));
 
-  const removeUndefinedKeys = (obj: { [k: string]: string }): { [k: string]: string } =>
+  const removeUndefinedKeys = (obj: Record<string, string>): Record<string, string> =>
     Object.fromEntries(Object.entries(obj).filter(([, value]) => value !== undefined));
 
   /**

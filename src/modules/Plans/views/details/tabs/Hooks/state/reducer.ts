@@ -1,17 +1,18 @@
+import type { ReactNode } from 'react';
 import { Base64 } from 'js-base64';
-import { deepCopy } from 'src/utils';
+import { deepCopy } from 'src/utils/deepCopy';
 
-import { V1beta1Hook } from '@kubev2v/types';
+import type { V1beta1Hook } from '@kubev2v/types';
 
-export interface FormState {
+export type FormState = {
   preHookSet: boolean;
   postHookSet: boolean;
   preHook: V1beta1Hook;
   postHook: V1beta1Hook;
   hasChanges: boolean;
   isLoading: boolean;
-  alertMessage: React.ReactNode;
-}
+  alertMessage: ReactNode;
+};
 
 export type FormAction =
   | { type: 'PRE_HOOK_SET'; payload: boolean }
@@ -21,10 +22,10 @@ export type FormAction =
   | { type: 'POST_HOOK_IMAGE'; payload: string }
   | { type: 'POST_HOOK_PLAYBOOK'; payload: string }
   | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ALERT_MESSAGE'; payload: React.ReactNode }
+  | { type: 'SET_ALERT_MESSAGE'; payload: ReactNode }
   | { type: 'INIT'; payload: FormState };
 
-export function formReducer(state: FormState, action: FormAction): FormState {
+export const formReducer = (state: FormState, action: FormAction): FormState => {
   let newState: FormState;
 
   switch (action.type) {
@@ -62,4 +63,4 @@ export function formReducer(state: FormState, action: FormAction): FormState {
     default:
       return state;
   }
-}
+};

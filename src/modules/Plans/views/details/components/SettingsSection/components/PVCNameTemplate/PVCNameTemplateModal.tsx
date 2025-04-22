@@ -1,16 +1,17 @@
-import React, { FC } from 'react';
-import { useForkliftTranslation } from 'src/utils';
+import type { FC } from 'react';
+import { useForkliftTranslation } from 'src/utils/i18n';
+
+import type { SettingsEditModalProps } from '../../utils/types';
+import NameTemplateModalBody from '../NameTemplate/NameTemplateModal/components/NameTemplateModalBody/NameTemplateModalBody';
+import NameTemplateModalHelper from '../NameTemplate/NameTemplateModal/components/NameTemplateModalHelper/NameTemplateModalHelper';
+import NameTemplateModal from '../NameTemplate/NameTemplateModal/NameTemplateModal';
 
 import {
   getPVCNameTemplateAllowedVariables,
   pvcNameTemplateHelperExamples,
 } from './utils/constants';
-import { SettingsEditModalProps } from '../../utils/types';
-import NameTemplateModalBody from '../NameTemplate/NameTemplateModal/components/NameTemplateModalBody/NameTemplateModalBody';
-import NameTemplateModalHelper from '../NameTemplate/NameTemplateModal/components/NameTemplateModalHelper/NameTemplateModalHelper';
-import NameTemplateModal from '../NameTemplate/NameTemplateModal/NameTemplateModal';
 
-const PVCNameTemplateModal: FC<SettingsEditModalProps> = ({ title, jsonPath, resource }) => {
+const PVCNameTemplateModal: FC<SettingsEditModalProps> = ({ jsonPath, resource, title }) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -23,7 +24,7 @@ const PVCNameTemplateModal: FC<SettingsEditModalProps> = ({ title, jsonPath, res
           bodyText={t(
             'PVC name template is a template for generating persistent volume claims (PVC) names for VM disks.',
           )}
-          allowedVariables={getPVCNameTemplateAllowedVariables(t)}
+          allowedVariables={getPVCNameTemplateAllowedVariables()}
         />
       }
       helperText={<NameTemplateModalHelper examples={pvcNameTemplateHelperExamples} />}

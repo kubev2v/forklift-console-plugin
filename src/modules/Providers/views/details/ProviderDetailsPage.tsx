@@ -1,10 +1,10 @@
-import React, { memo } from 'react';
+import { type FC, memo } from 'react';
 import { LoadingDots } from 'src/components/common/LoadingDots/LoadingDots';
 import { ErrorState } from 'src/components/common/Page/PageStates';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelGroupVersionKind, V1beta1Provider } from '@kubev2v/types';
-import { K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
+import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { OpenshiftProviderDetailsPage } from './OpenshiftProviderDetailsPage';
 import { OpenStackProviderDetailsPage } from './OpenStackProviderDetailsPage';
@@ -14,12 +14,12 @@ import { VSphereProviderDetailsPage } from './VSphereProviderDetailsPage';
 
 import './ProviderDetailsPage.style.css';
 
-export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
+const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const [provider, loaded, error] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
   return (
     <ProviderDetailsPage_
@@ -33,13 +33,13 @@ export const ProviderDetailsPage: React.FC<ProviderDetailsPageProps> = ({ name, 
 };
 ProviderDetailsPage.displayName = 'ProviderDetails';
 
-const ProviderDetailsPageInternal: React.FC<{
+const ProviderDetailsPageInternal: FC<{
   name: string;
   namespace: string;
   type: string;
   loaded: boolean;
   error: unknown;
-}> = ({ type, name, namespace, error, loaded }) => {
+}> = ({ error, loaded, name, namespace, type }) => {
   const { t } = useForkliftTranslation();
   // status checked in the order used in the Console's StatusBox component
   if (error) {
@@ -69,7 +69,6 @@ const ProviderDetailsPageInternal: React.FC<{
 const ProviderDetailsPage_ = memo(ProviderDetailsPageInternal);
 
 // API provides no typing info for the error prop
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LoadError = ({ error }: { error: any }) => {
   const { t } = useForkliftTranslation();
   const status = error?.response?.status;

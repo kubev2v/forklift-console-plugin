@@ -1,9 +1,8 @@
-import React from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
-import { ForkliftTrans } from 'src/utils';
+import { ForkliftTrans } from 'src/utils/i18n';
 
 export const VIRT_V2V_HELP_LINK =
-  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-vms-web-console_mtv#creating-migration-plans-ui';
+  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-migration-plan-2-8_cnv';
 
 export const editLUKSModalBody = (
   <>

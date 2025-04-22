@@ -1,56 +1,56 @@
-import React from 'react';
-import { FilterableSelect } from 'src/components';
-import { useProviderInventory } from 'src/modules/Providers/hooks';
-import {
-  EditModal,
+import type { FC } from 'react';
+import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
+import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
+import type {
   EditModalProps,
   ModalInputComponentType,
   OnConfirmHookType,
-} from 'src/modules/Providers/modals';
+} from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
 import {
-  Modify,
-  OpenShiftNetworkAttachmentDefinition,
+  type Modify,
+  type OpenShiftNetworkAttachmentDefinition,
   PlanModel,
-  V1beta1Plan,
-  V1beta1Provider,
+  type V1beta1Plan,
+  type V1beta1Provider,
 } from '@kubev2v/types';
-import { K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Text } from '@patternfly/react-core';
 
-const onConfirm: OnConfirmHookType = async ({ resource, model, newValue }) => {
+const onConfirm: OnConfirmHookType = async ({ model, newValue, resource }) => {
   const plan = resource as V1beta1Plan;
 
   const targetNamespace = plan?.spec?.targetNamespace;
   const op = targetNamespace ? 'replace' : 'add';
 
   const obj = await k8sPatch({
-    model: model,
-    resource: resource,
     data: [
       {
         op,
         path: '/spec/targetNamespace',
-        value: newValue || undefined,
+        value: newValue ?? undefined,
       },
     ],
+    model,
+    resource,
   });
 
   return obj;
 };
 
-interface DropdownRendererProps {
+type DropdownRendererProps = {
   value: string | number;
-  onChange: (string) => void;
-}
+  onChange: (val: string) => void;
+};
 
 const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType = ({
   resource,
 }) => {
   const provider = resource as V1beta1Provider;
 
-  const DropdownRenderer: React.FC<DropdownRendererProps> = ({ value, onChange }) => {
+  const DropdownRenderer: FC<DropdownRendererProps> = ({ onChange, value }) => {
     const { t } = useForkliftTranslation();
 
     const { inventory: namespaces } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
@@ -58,11 +58,13 @@ const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType 
       subPath: 'namespaces?detail=4',
     });
 
-    const options: string[] = (namespaces || []).map((n) => n?.object?.metadata?.name);
+    const options: string[] = (namespaces || []).map(
+      (namespace) => namespace?.object?.metadata?.name,
+    );
 
-    const dropdownItems = (options || []).map((n) => ({
-      itemId: n,
-      children: <Text>{n}</Text>,
+    const dropdownItems = (options || []).map((item) => ({
+      children: <Text>{item}</Text>,
+      itemId: item,
     }));
 
     return (
@@ -79,7 +81,7 @@ const OpenshiftNamespaceInputFactory: ({ resource }) => ModalInputComponentType 
   return DropdownRenderer;
 };
 
-const EditPlanTargetNamespace_: React.FC<EditPlanTargetNamespaceProps> = (props) => {
+const EditPlanTargetNamespace_: FC<EditPlanTargetNamespaceProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -98,7 +100,7 @@ const EditPlanTargetNamespace_: React.FC<EditPlanTargetNamespaceProps> = (props)
   );
 };
 
-export type EditPlanTargetNamespaceProps = Modify<
+type EditPlanTargetNamespaceProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Plan;
@@ -110,6 +112,6 @@ export type EditPlanTargetNamespaceProps = Modify<
   }
 >;
 
-export const EditPlanTargetNamespace: React.FC<EditPlanTargetNamespaceProps> = (props) => {
+export const EditPlanTargetNamespace: FC<EditPlanTargetNamespaceProps> = (props) => {
   return <EditPlanTargetNamespace_ {...props} />;
 };

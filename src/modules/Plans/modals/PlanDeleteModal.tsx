@@ -1,15 +1,22 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useToggle } from 'src/modules/Providers/hooks';
-import { AlertMessageForModals, ItemIsOwnedAlert, useModal } from 'src/modules/Providers/modals';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import useToggle from 'src/modules/Providers/hooks/useToggle';
+import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { ItemIsOwnedAlert } from 'src/modules/Providers/modals/components/ItemIsOwnedAlert';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1Plan } from '@kubev2v/types';
-import { k8sDelete, K8sGroupVersionKind, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import type { V1beta1Plan } from '@kubev2v/types';
+import {
+  k8sDelete,
+  type K8sGroupVersionKind,
+  type K8sModel,
+} from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Button, Modal, ModalVariant } from '@patternfly/react-core';
 
-import { getPlanPhase, PlanPhase } from '../utils';
+import { getPlanPhase } from '../utils/helpers/getPlanPhase';
+import { PlanPhase } from '../utils/types/PlanPhase';
 
 /**
  * Props for the DeleteModal component
@@ -19,24 +26,24 @@ import { getPlanPhase, PlanPhase } from '../utils';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-interface PlanDeleteModalProps {
+type PlanDeleteModalProps = {
   resource: V1beta1Plan;
   model: K8sModel;
   title?: string;
   redirectTo?: string;
-}
+};
 
 /**
  * A generic delete modal component
  * @component
  * @param {DeleteModalProps} props - Props for DeleteModal
- * @returns {React.Element} The DeleteModal component
+ * @returns {Element} The DeleteModal component
  */
-export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
-  title,
-  resource,
+export const PlanDeleteModal: FC<PlanDeleteModalProps> = ({
   model,
   redirectTo,
+  resource,
+  title,
 }) => {
   const { t } = useForkliftTranslation();
   const { toggleModal } = useModal();
@@ -49,13 +56,13 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
   const owner = resource?.metadata?.ownerReferences?.[0];
   const groupVersionKind: K8sGroupVersionKind = {
     group: model.apiGroup,
-    version: model.apiVersion,
     kind: model.kind,
+    version: model.apiVersion,
   };
 
   const onDelete = useCallback(async () => {
     const isOnResourcePage = () => {
-      const re = new RegExp(`/${name}(/|$)`);
+      const re = new RegExp(`/${name}(/|$)`, 'u');
       return re.test(window.location.pathname);
     };
 
@@ -86,9 +93,9 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
     </Button>,
   ];
 
-  const phase = getPlanPhase({ obj: resource });
+  const phase = getPlanPhase({ plan: resource });
 
-  const IsExecutingAlert: React.FC = () => (
+  const IsExecutingAlert: FC = () => (
     <Alert
       isInline
       variant="danger"
@@ -96,7 +103,7 @@ export const PlanDeleteModal: React.FC<PlanDeleteModalProps> = ({
       className="forklift-delete-modal__alert"
     />
   );
-  const IsNotArchivedAlert: React.FC = () => (
+  const IsNotArchivedAlert: FC = () => (
     <Alert
       isInline
       variant="info"

@@ -1,22 +1,22 @@
-import { Mapping, MappingSource } from '../types';
+import type { Mapping, MappingSource } from '../types';
 
 export const addMapping = (sources: MappingSource[], targets: string[], mappings: Mapping[]) => {
   const firstUsedByVms = sources.find(
-    ({ usedBySelectedVms, isMapped }) => usedBySelectedVms && !isMapped,
+    ({ isMapped, usedBySelectedVms }) => usedBySelectedVms && !isMapped,
   );
   const firstGeneral = sources.find(
-    ({ usedBySelectedVms, isMapped }) => !usedBySelectedVms && !isMapped,
+    ({ isMapped, usedBySelectedVms }) => !usedBySelectedVms && !isMapped,
   );
-  const nextSource = firstUsedByVms || firstGeneral;
-  const nextDest = targets[0];
+  const nextSource = firstUsedByVms ?? firstGeneral;
+  const [nextDest] = targets;
 
   return nextDest && nextSource
     ? {
-        sources: sources.map((m) => ({
-          ...m,
-          isMapped: m.label === nextSource.label ? true : m.isMapped,
+        mappings: [...mappings, { destination: nextDest, source: nextSource.label }],
+        sources: sources.map((source) => ({
+          ...source,
+          isMapped: source.label === nextSource.label ? true : source.isMapped,
         })),
-        mappings: [...mappings, { source: nextSource.label, destination: nextDest }],
       }
     : {};
 };
@@ -26,15 +26,15 @@ export const deleteMapping = (
   selectedSource: string,
   mappings: Mapping[],
 ) => {
-  const currentSource = sources.find(({ label, isMapped }) => label === selectedSource && isMapped);
+  const currentSource = sources.find(({ isMapped, label }) => label === selectedSource && isMapped);
 
   return currentSource
     ? {
-        sources: sources.map((m) => ({
-          ...m,
-          isMapped: m.label === selectedSource ? false : m.isMapped,
-        })),
         mappings: mappings.filter(({ source }) => source !== currentSource.label),
+        sources: sources.map((source) => ({
+          ...source,
+          isMapped: source.label === selectedSource ? false : source.isMapped,
+        })),
       }
     : {};
 };
@@ -46,7 +46,7 @@ export const replaceMapping = (
   targets: string[],
   mappings: Mapping[],
 ) => {
-  const currentSource = sources.find(({ label, isMapped }) => label === current.source && isMapped);
+  const currentSource = sources.find(({ isMapped, label }) => label === current.source && isMapped);
   const nextSource = sources.find(({ label }) => label === next.source);
   const nextDest = targets.find((label) => label === next.destination);
   const sourceChanged = currentSource?.label !== nextSource?.label;
@@ -57,17 +57,17 @@ export const replaceMapping = (
   }
 
   const updatedSources = sourceChanged
-    ? sources.map((m) => ({
-        ...m,
-        isMapped: [currentSource.label, nextSource.label].includes(m.label)
-          ? !m.isMapped
-          : m.isMapped,
+    ? sources.map((source) => ({
+        ...source,
+        isMapped: [currentSource.label, nextSource.label].includes(source.label)
+          ? !source.isMapped
+          : source.isMapped,
       }))
     : undefined;
 
   return {
-    sources: updatedSources,
     mappings: updateMappingsIfNeeded(mappings, current.source, next),
+    sources: updatedSources,
   };
 };
 

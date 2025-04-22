@@ -1,24 +1,25 @@
 import { Base64 } from 'js-base64';
 
-import { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
-import { missingKeysInSecretData } from '../../../helpers';
-import { ValidationMsg } from '../../common';
+import { missingKeysInSecretData } from '../../../helpers/missingKeysInSecretData';
+import type { ValidationMsg } from '../../common';
+
 import { esxiSecretFieldValidator } from './esxiSecretFieldValidator';
 
-export function esxiSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg {
+export const esxiSecretValidator = (secret: IoK8sApiCoreV1Secret): ValidationMsg => {
   const requiredFields = ['user', 'password'];
   const validateFields = ['user', 'password', 'insecureSkipVerify'];
 
   // Add ca cert validation if not insecureSkipVerify
-  const insecureSkipVerify = Base64.decode(secret?.data?.['insecureSkipVerify'] || '');
+  const insecureSkipVerify = Base64.decode(secret?.data?.insecureSkipVerify || '');
   if (insecureSkipVerify !== 'true') {
     validateFields.push('cacert');
   }
 
   const missingRequiredFields = missingKeysInSecretData(secret, requiredFields);
   if (missingRequiredFields.length > 0) {
-    return { type: 'error', msg: `missing required fields [${missingRequiredFields.join(', ')}]` };
+    return { msg: `missing required fields [${missingRequiredFields.join(', ')}]`, type: 'error' };
   }
 
   for (const id of validateFields) {
@@ -32,4 +33,4 @@ export function esxiSecretValidator(secret: IoK8sApiCoreV1Secret): ValidationMsg
   }
 
   return { type: 'default' };
-}
+};

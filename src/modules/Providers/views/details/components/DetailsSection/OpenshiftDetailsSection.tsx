@@ -1,27 +1,25 @@
-import React from 'react';
+import type { FC } from 'react';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
-import { DetailsItem } from '../../../../utils';
-import {
-  CreatedAtDetailsItem,
-  CredentialsDetailsItem,
-  ExternalManagementLinkDetailsItem,
-  NameDetailsItem,
-  NamespaceDetailsItem,
-  OwnerDetailsItem,
-  TransferNetworkDetailsItem,
-  TypeDetailsItem,
-  URLDetailsItem,
-} from './components';
-import { DetailsSectionProps } from './DetailsSection';
-import { getOpenshiftProviderWebUILink } from './utils';
+import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';
+import { CredentialsDetailsItem } from './components/CredentialsDetailsItem';
+import { ExternalManagementLinkDetailsItem } from './components/ExternalManagementLinkDetailsItem';
+import { NameDetailsItem } from './components/NamDetailsItem';
+import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
+import { OwnerDetailsItem } from './components/OwnerDetailsItem';
+import { TransferNetworkDetailsItem } from './components/TransferNetworkDetailsItem';
+import { TypeDetailsItem } from './components/TypeDetailsItem';
+import { URLDetailsItem } from './components/URLDetailsItem';
+import { getOpenshiftProviderWebUILink } from './utils/getOpenshiftProviderWebUILink';
+import type { DetailsSectionProps } from './DetailsSection';
 
-export const OpenshiftDetailsSection: React.FC<DetailsSectionProps> = ({ data }) => {
+export const OpenshiftDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
-  const { provider, permissions } = data;
+  const { permissions, provider } = data;
   const webUILink = getOpenshiftProviderWebUILink(provider);
 
   return (

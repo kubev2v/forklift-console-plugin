@@ -1,18 +1,18 @@
-import React from 'react';
+import type { Dispatch, FC } from 'react';
 import { LoadingDots } from 'src/components/common/LoadingDots/LoadingDots';
 
 import { Alert } from '@patternfly/react-core';
 
 import { PlansCreateForm } from './components/PlansCreateForm';
-import { CreateVmMigration, PageAction } from './reducer/actions';
+import type { CreateVmMigration, PageAction } from './reducer/actions';
 import { isDone } from './reducer/helpers';
-import { CreateVmMigrationPageState } from './types';
+import type { CreateVmMigrationPageState } from './types';
 
-const ProvidersCreateVmMigrationPage: React.FC<{
+const ProvidersCreateVmMigrationPage: FC<{
   state: CreateVmMigrationPageState;
-  dispatch: React.Dispatch<PageAction<CreateVmMigration, unknown>>;
+  dispatch: Dispatch<PageAction<CreateVmMigration, unknown>>;
   emptyContext: boolean;
-}> = ({ state, dispatch, emptyContext }) => {
+}> = ({ dispatch, emptyContext, state }) => {
   if (emptyContext) {
     // display empty node and wait for redirect triggered from useEffect
     // the redirect should be triggered right after the first render()

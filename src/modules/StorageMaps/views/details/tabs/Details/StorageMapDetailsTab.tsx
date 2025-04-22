@@ -1,28 +1,31 @@
-import React from 'react';
-import { SectionHeading } from 'src/components/headers/SectionHeading';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import type { FC } from 'react';
+import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { StorageMapModelGroupVersionKind, V1beta1StorageMap } from '@kubev2v/types';
+import Suspend from '@components/Suspend';
+import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
-import { ConditionsSection, DetailsSection, MapsSection, ProvidersSection } from '../../components';
+import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
+import { DetailsSection } from '../../components/DetailsSection/DetailsSection';
+import { MapsSection } from '../../components/MapsSection/MapsSection';
+import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSection';
 
-interface StorageMapDetailsTabProps {
+type StorageMapDetailsTabProps = {
   name: string;
   namespace: string;
-}
+};
 
-export const StorageMapDetailsTab: React.FC<StorageMapDetailsTabProps> = ({ name, namespace }) => {
+export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const [obj, loaded, loadError] = useK8sWatchResource<V1beta1StorageMap>({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    namespaced: true,
     isList: false,
-    namespace,
     name,
+    namespace,
+    namespaced: true,
   });
 
   return (

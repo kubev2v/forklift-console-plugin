@@ -1,17 +1,15 @@
-import React, { FC } from 'react';
-import {
-  EditControllerCPULimitModal,
-  EditControllerMemoryLimitModal,
-  EditInventoryMemoryLimitModal,
-  EditMaxVMInFlightModal,
-  EditPreCopyIntervalModal,
-  EditSnapshotPoolingIntervalModal,
-} from 'src/modules/Overview/modal';
-import { ModalHOC, useModal } from 'src/modules/Providers/modals';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { EditControllerCPULimitModal } from 'src/modules/Overview/modal/EditControllerCPULimitModal';
+import { EditControllerMemoryLimitModal } from 'src/modules/Overview/modal/EditControllerMemoryLimitModal';
+import { EditInventoryMemoryLimitModal } from 'src/modules/Overview/modal/EditInventoryMemoryLimitModal';
+import { EditMaxVMInFlightModal } from 'src/modules/Overview/modal/EditMaxVMInFlightModal';
+import { EditPreCopyIntervalModal } from 'src/modules/Overview/modal/EditPreCopyIntervalModal';
+import { EditSnapshotPoolingIntervalModal } from 'src/modules/Overview/modal/EditSnapshotPoolingIntervalModal';
+import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1ForkliftController } from '@kubev2v/types';
+import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { Card, CardBody, CardTitle, DescriptionList, Text } from '@patternfly/react-core';
 
 type SettingsCardProps = {
@@ -37,12 +35,10 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
             title={'Max concurrent virtual machine migrations'}
             showHelpIconNextToTitle={true}
             content={
-              obj?.spec?.['controller_max_vm_inflight'] || (
-                <span className="text-muted">{'20'}</span>
-              )
+              obj?.spec?.controller_max_vm_inflight || <span className="text-muted">{'20'}</span>
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#max-concurrent-vms_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#max-concurrent-vms_mtv'
             }
             helpContent={
               <ForkliftTrans>
@@ -55,19 +51,21 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               </ForkliftTrans>
             }
             crumbs={['spec', 'controller_max_vm_inflight']}
-            onEdit={() => showModal(<EditMaxVMInFlightModal resource={obj} />)}
+            onEdit={() => {
+              showModal(<EditMaxVMInFlightModal resource={obj} />);
+            }}
           />
 
           <DetailsItem
             title={'Controller main container CPU limit'}
             showHelpIconNextToTitle={true}
             content={
-              obj?.spec?.['controller_container_limits_cpu'] || (
+              obj?.spec?.controller_container_limits_cpu || (
                 <span className="text-muted">{'500m'}</span>
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -77,19 +75,21 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               </Text>
             }
             crumbs={['spec', 'controller_container_limits_cpu']}
-            onEdit={() => showModal(<EditControllerCPULimitModal resource={obj} />)}
+            onEdit={() => {
+              showModal(<EditControllerCPULimitModal resource={obj} />);
+            }}
           />
 
           <DetailsItem
             title={'Controller main container Memory limit'}
             showHelpIconNextToTitle={true}
             content={
-              obj?.spec?.['controller_container_limits_memory'] || (
+              obj?.spec?.controller_container_limits_memory || (
                 <span className="text-muted">{'800Mi'}</span>
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -99,19 +99,21 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               </Text>
             }
             crumbs={['spec', 'controller_container_limits_memory']}
-            onEdit={() => showModal(<EditControllerMemoryLimitModal resource={obj} />)}
+            onEdit={() => {
+              showModal(<EditControllerMemoryLimitModal resource={obj} />);
+            }}
           />
 
           <DetailsItem
             title={'Controller inventory container memory limit'}
             showHelpIconNextToTitle={true}
             content={
-              obj?.spec?.['inventory_container_limits_memory'] || (
+              obj?.spec?.inventory_container_limits_memory || (
                 <span className="text-muted">{'1000Mi'}</span>
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -121,19 +123,19 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               </Text>
             }
             crumbs={['spec', 'inventory_container_limits_memory']}
-            onEdit={() => showModal(<EditInventoryMemoryLimitModal resource={obj} />)}
+            onEdit={() => {
+              showModal(<EditInventoryMemoryLimitModal resource={obj} />);
+            }}
           />
 
           <DetailsItem
             title={'Precopy interval (minutes)'}
             showHelpIconNextToTitle={true}
             content={
-              obj?.spec?.['controller_precopy_interval'] || (
-                <span className="text-muted">{'60'}</span>
-              )
+              obj?.spec?.controller_precopy_interval || <span className="text-muted">{'60'}</span>
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -143,19 +145,21 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               </Text>
             }
             crumbs={['spec', 'controller_precopy_interval']}
-            onEdit={() => showModal(<EditPreCopyIntervalModal resource={obj} />)}
+            onEdit={() => {
+              showModal(<EditPreCopyIntervalModal resource={obj} />);
+            }}
           />
 
           <DetailsItem
             title={'Snapshot polling interval (seconds)'}
             showHelpIconNextToTitle={true}
             content={
-              obj?.spec?.['controller_snapshot_status_check_rate_seconds'] || (
+              obj?.spec?.controller_snapshot_status_check_rate_seconds || (
                 <span className="text-muted">{'10'}</span>
               )
             }
             moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
+              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
             }
             helpContent={
               <Text>
@@ -165,7 +169,9 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
               </Text>
             }
             crumbs={['spec', 'controller_snapshot_status_check_rate_seconds']}
-            onEdit={() => showModal(<EditSnapshotPoolingIntervalModal resource={obj} />)}
+            onEdit={() => {
+              showModal(<EditSnapshotPoolingIntervalModal resource={obj} />);
+            }}
           />
         </DescriptionList>
       </CardBody>
@@ -173,7 +179,7 @@ const SettingsCard_: FC<SettingsCardProps> = ({ obj }) => {
   );
 };
 
-export const SettingsCard: React.FC<SettingsCardProps> = (props) => (
+const SettingsCard: FC<SettingsCardProps> = (props) => (
   <ModalHOC>
     <SettingsCard_ {...props} />
   </ModalHOC>

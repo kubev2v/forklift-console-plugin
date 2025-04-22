@@ -2,27 +2,27 @@ import { Base64 } from 'js-base64';
 
 import {
   HostModel,
-  IoK8sApiCoreV1Secret,
-  NetworkAdapters,
+  type IoK8sApiCoreV1Secret,
+  type NetworkAdapters,
   SecretModel,
-  V1beta1Host,
-  V1beta1Provider,
-  VSphereHost,
+  type V1beta1Host,
+  type V1beta1Provider,
+  type VSphereHost,
 } from '@kubev2v/types';
 import { k8sGet, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 import { createHost } from './createHost';
 import { createHostSecret } from './createHostSecret';
-import { InventoryHostPair } from './matchHostsToInventory';
+import type { InventoryHostPair } from './matchHostsToInventory';
 import { patchHostSecretOwner } from './patchHostSecretOwner';
 
-interface OnSaveHostParams {
+type OnSaveHostParams = {
   provider: V1beta1Provider;
   hostPairs: InventoryHostPair[];
   network: NetworkAdapters;
-  user: string;
-  password: string;
-}
+  user?: string;
+  password?: string;
+};
 
 /**
  * Saves hosts data, including associated secrets, for a given set of host+secret pairs.
@@ -32,11 +32,11 @@ interface OnSaveHostParams {
  * @param {Params} params - The parameters for saving the host.
  */
 export const onSaveHost = async ({
-  provider,
   hostPairs,
   network,
-  user,
   password,
+  provider,
+  user,
 }: OnSaveHostParams) => {
   // user and password can be undefined for ESXi provider
   // Base64.encode will not handle undefined values
@@ -45,7 +45,7 @@ export const onSaveHost = async ({
 
   const encodedProvider = Base64.encode(provider.metadata.name);
 
-  for (const hostPair of hostPairs) {
+  const promises = hostPairs.map(async (hostPair) => {
     // Look for the same network name in each host
     const hostNetwork = hostPair.inventory.networkAdapters.find(
       ({ name }) => name === network.name,
@@ -57,7 +57,7 @@ export const onSaveHost = async ({
 
     const encodedIpAddress = Base64.encode(hostNetwork.ipAddress);
 
-    await processHostSecretPair(
+    return processHostSecretPair(
       provider,
       hostPair,
       hostNetwork.ipAddress,
@@ -66,7 +66,8 @@ export const onSaveHost = async ({
       encodedProvider,
       encodedIpAddress,
     );
-  }
+  });
+  await Promise.all(promises);
 };
 
 /**
@@ -81,7 +82,7 @@ export const onSaveHost = async ({
  * @param {string} encodedProvider - The Base64 encoded provider.
  * @param {string} encodedIpAddress - The Base64 encoded IP address.
  */
-async function processHostSecretPair(
+const processHostSecretPair = async (
   provider,
   hostPair,
   ipAddress,
@@ -89,7 +90,7 @@ async function processHostSecretPair(
   encodedPassword,
   encodedProvider,
   encodedIpAddress,
-) {
+) => {
   const { host, inventory }: { host: V1beta1Host; inventory: VSphereHost } = hostPair;
 
   if (host?.metadata?.name) {
@@ -105,21 +106,21 @@ async function processHostSecretPair(
 
     // Create a Secret
     const secretData = {
-      kind: 'Secret',
       apiVersion: 'v1',
-      metadata: {
-        generateName: `${provider.metadata.name}-${inventory.id}-`,
-        namespace: provider.metadata.namespace,
-        labels: {
-          createdForResourceType: 'hosts',
-          createdForResource: inventory.id,
-        },
-      },
       data: {
         ip: encodedIpAddress,
         password: encodedPassword,
         provider: encodedProvider,
         user: encodedUser,
+      },
+      kind: 'Secret',
+      metadata: {
+        generateName: `${provider.metadata.name}-${inventory.id}-`,
+        labels: {
+          createdForResource: inventory.id,
+          createdForResourceType: 'hosts',
+        },
+        namespace: provider.metadata.namespace,
       },
       type: 'Opaque',
     };
@@ -143,7 +144,7 @@ async function processHostSecretPair(
       },
       spec: {
         id: inventory.id,
-        ipAddress: ipAddress,
+        ipAddress,
         provider: {
           name: provider.metadata.name,
           namespace: provider.metadata.namespace,
@@ -163,17 +164,15 @@ async function processHostSecretPair(
     };
     await patchHostSecretOwner(createdSecret, ownerRef);
   }
-}
+};
 
-async function getSecret(name: string, namespace: string) {
+const getSecret = async (name: string, namespace: string) => {
   const secret = await k8sGet<IoK8sApiCoreV1Secret>({ model: SecretModel, name, ns: namespace });
   return secret;
-}
+};
 
-async function patchHost(host: V1beta1Host, ipAddress: string) {
+const patchHost = async (host: V1beta1Host, ipAddress: string) => {
   await k8sPatch({
-    model: HostModel,
-    resource: host,
     data: [
       {
         op: 'replace',
@@ -181,18 +180,18 @@ async function patchHost(host: V1beta1Host, ipAddress: string) {
         value: ipAddress,
       },
     ],
+    model: HostModel,
+    resource: host,
   });
-}
+};
 
-async function patchSecret(
+const patchSecret = async (
   secretData: IoK8sApiCoreV1Secret,
   encodedIpAddress: string,
   encodedUser: string,
   encodedPassword: string,
-) {
+) => {
   await k8sPatch({
-    model: SecretModel,
-    resource: secretData,
     data: [
       {
         op: 'replace',
@@ -210,5 +209,7 @@ async function patchSecret(
         value: encodedPassword,
       },
     ],
+    model: SecretModel,
+    resource: secretData,
   });
-}
+};

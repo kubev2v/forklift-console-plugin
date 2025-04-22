@@ -1,25 +1,25 @@
-import React, { FC } from 'react';
-import { Suspend } from 'src/modules/Plans/views/details/components';
+import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@kubev2v/types';
+import Suspend from '@components/Suspend';
+import type { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
-import { PodsTable } from '../../../components';
+import { PodsTable } from '../../../components/PodsTable';
 
 type ControllerCardProps = {
   obj?: V1beta1ForkliftController;
 };
 
-export const ControllerCard: FC<ControllerCardProps> = ({ obj }) => {
+const ControllerCard: FC<ControllerCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
 
   const [pods, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
-    kind: 'Pod',
-    namespaced: true,
     isList: true,
+    kind: 'Pod',
     namespace: obj?.metadata?.namespace,
+    namespaced: true,
     selector: { matchLabels: { app: 'forklift' } },
   });
 

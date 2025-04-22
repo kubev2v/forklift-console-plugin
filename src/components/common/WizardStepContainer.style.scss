@@ -1,0 +1,18 @@
+.wizard-step-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pf-v5-global--spacer--lg);
+
+  > * {
+    width: 100%;
+  }
+
+  .pf-v5-c-page__main-section {
+    padding: 0;
+  }
+
+  &--form {
+    @extend .wizard-step-container;
+    width: 66%;
+  }
+}

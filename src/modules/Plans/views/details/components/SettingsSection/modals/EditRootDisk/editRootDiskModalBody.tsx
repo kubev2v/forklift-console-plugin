@@ -1,8 +1,7 @@
-import React from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
-import { ForkliftTrans } from 'src/utils';
+import { ForkliftTrans } from 'src/utils/i18n';
 
-import { VIRT_V2V_HELP_LINK } from '../EditLUKSEncryptionPasswords';
+import { VIRT_V2V_HELP_LINK } from '../EditLUKSEncryptionPasswords/editLUKSModalBody';
 
 export const editRootDiskModalBody = (
   <>

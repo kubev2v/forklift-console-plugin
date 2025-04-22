@@ -1,17 +1,17 @@
-import React, { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
-  GlobalActionWithSelection,
+  type GlobalActionWithSelection,
   StandardPageWithSelection,
-  StandardPageWithSelectionProps,
+  type StandardPageWithSelectionProps,
 } from 'src/components/page/StandardPageWithSelection';
 import { TableSortContextProvider } from 'src/components/TableSortContext';
 import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
-import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils';
+import { isPlanArchived, isPlanExecuting } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
-import {
+import type {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1PersistentVolumeClaim,
   IoK8sApiCoreV1Pod,
@@ -21,9 +21,12 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
+import { t } from '@utils/i18n';
 
-import { MigrationVMsCancelButton, PlanVMsDeleteButton } from '../components';
-import { PlanData, VMData } from '../types';
+import { MigrationVMsCancelButton } from '../components/MigrationVMsCancelButton';
+import { PlanVMsDeleteButton } from '../components/PlanVMsDeleteButton';
+import type { VMData } from '../types/VMData';
+
 import { MigrationVirtualMachinesRow } from './MigrationVirtualMachinesRow';
 import { MigrationVirtualMachinesRowExtended } from './MigrationVirtualMachinesRowExtended';
 
@@ -37,9 +40,11 @@ const vmStatuses = [
 ];
 
 const getVMMigrationStatus = (obj: VMData) => {
-  const isError = obj.statusVM?.conditions?.find((c) => c.type === 'Failed' && c.status === 'True');
+  const isError = obj.statusVM?.conditions?.find(
+    (condition) => condition.type === 'Failed' && condition.status === 'True',
+  );
   const isSuccess = obj.statusVM?.conditions?.find(
-    (c) => c.type === 'Succeeded' && c.status === 'True',
+    (condition) => condition.type === 'Succeeded' && condition.status === 'True',
   );
   const isWaiting = obj.statusVM?.phase === 'CopyingPaused';
   const isRunning = obj.statusVM?.completed === undefined;
@@ -68,27 +73,39 @@ const getVMMigrationStatus = (obj: VMData) => {
   return 'Unknown';
 };
 
-const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
+const fieldsMetadata = [
   {
-    resourceFieldId: 'name',
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: 'freetext',
+    },
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
     jsonPath: '$.specVM.name',
     label: t('Name'),
-    isVisible: true,
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by name'),
-    },
+    resourceFieldId: 'name',
     sortable: true,
   },
   {
-    resourceFieldId: 'migrationStarted',
+    filter: {
+      helperText: (
+        <HelperText className="forklift-date-range-helper-text">
+          <HelperTextItem variant="indeterminate">
+            {t('Dates are compared in UTC. End of the interval is included.')}
+          </HelperTextItem>
+        </HelperText>
+      ),
+      placeholderLabel: 'YYYY-MM-DD',
+      type: 'dateRange',
+    },
+    isVisible: true,
     jsonPath: '$.statusVM.started',
     label: t('Started at'),
-    isVisible: true,
+    resourceFieldId: 'migrationStarted',
+    sortable: true,
+  },
+  {
     filter: {
-      type: 'dateRange',
-      placeholderLabel: 'YYYY-MM-DD',
       helperText: (
         <HelperText className="forklift-date-range-helper-text">
           <HelperTextItem variant="indeterminate">
@@ -96,63 +113,51 @@ const fieldsMetadataFactory: ResourceFieldFactory = (t) => [
           </HelperTextItem>
         </HelperText>
       ),
+      placeholderLabel: 'YYYY-MM-DD',
+      type: 'dateRange',
     },
-    sortable: true,
-  },
-  {
-    resourceFieldId: 'migrationCompleted',
+    isVisible: true,
     jsonPath: '$.statusVM.completed',
     label: t('Completed at'),
-    isVisible: true,
-    filter: {
-      type: 'dateRange',
-      placeholderLabel: 'YYYY-MM-DD',
-      helperText: (
-        <HelperText className="forklift-date-range-helper-text">
-          <HelperTextItem variant="indeterminate">
-            {t('Dates are compared in UTC. End of the interval is included.')}
-          </HelperTextItem>
-        </HelperText>
-      ),
-    },
+    resourceFieldId: 'migrationCompleted',
     sortable: true,
   },
   {
-    resourceFieldId: 'transfer',
+    isVisible: true,
     jsonPath: (obj: VMData) => {
-      const diskTransfer = obj.statusVM?.pipeline.find((p) => p.name === 'DiskTransfer');
+      const diskTransfer = obj.statusVM?.pipeline.find((pipe) => pipe.name === 'DiskTransfer');
 
-      return diskTransfer && diskTransfer?.progress?.total
+      return diskTransfer?.progress?.total
         ? diskTransfer?.progress?.completed / diskTransfer?.progress?.total
         : 0;
     },
     label: t('Disk transfer'),
-    isVisible: true,
+    resourceFieldId: 'transfer',
   },
   {
-    resourceFieldId: 'diskCounter',
+    isVisible: true,
     jsonPath: (obj: VMData) => {
-      const diskTransfer = obj.statusVM?.pipeline.find((p) => p.name === 'DiskTransfer');
+      const diskTransfer = obj.statusVM?.pipeline.find((pipe) => pipe.name === 'DiskTransfer');
 
-      return diskTransfer && diskTransfer?.progress?.total
+      return diskTransfer?.progress?.total
         ? diskTransfer?.progress?.completed / diskTransfer?.progress?.total
         : 0;
     },
     label: t('Disk counter'),
-    isVisible: true,
+    resourceFieldId: 'diskCounter',
   },
   {
-    resourceFieldId: 'status',
-    jsonPath: getVMMigrationStatus,
-    label: t('Pipeline status'),
-    isVisible: true,
-    sortable: true,
     filter: {
-      type: 'enum',
-      primary: true,
       placeholderLabel: t('Pipeline status'),
+      primary: true,
+      type: 'enum',
       values: vmStatuses,
     },
+    isVisible: true,
+    jsonPath: getVMMigrationStatus,
+    label: t('Pipeline status'),
+    resourceFieldId: 'status',
+    sortable: true,
   },
 ];
 
@@ -160,76 +165,76 @@ const PageWithSelection = StandardPageWithSelection<VMData>;
 type PageWithSelectionProps = StandardPageWithSelectionProps<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
-export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => {
+export const MigrationVirtualMachinesList: FC<{ planData: PlanData }> = ({ planData }) => {
   const { t } = useForkliftTranslation();
-  const { plan } = obj;
+  const { plan } = planData;
 
   const [lastMigration] = usePlanMigration(plan);
 
   const [pods, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
-    kind: 'Pod',
-    namespaced: true,
     isList: true,
+    kind: 'Pod',
     namespace: plan?.spec?.targetNamespace,
+    namespaced: true,
     selector: { matchLabels: { plan: plan?.metadata?.uid } },
   });
 
   const podsDict: Record<string, IoK8sApiCoreV1Pod[]> = {};
-  (pods && loaded && !loadError ? pods : []).forEach((p) =>
-    podsDict[p.metadata.labels.vmID]
-      ? podsDict[p.metadata.labels.vmID].push(p)
-      : (podsDict[p.metadata.labels.vmID] = [p]),
+  (pods && loaded && !loadError ? pods : []).forEach((pod) =>
+    podsDict[pod.metadata.labels.vmID]
+      ? podsDict[pod.metadata.labels.vmID].push(pod)
+      : (podsDict[pod.metadata.labels.vmID] = [pod]),
   );
 
   const [jobs, jobsLoaded, jobsLoadError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
-    groupVersionKind: { kind: 'Job', group: 'batch', version: 'v1' },
-    namespaced: true,
+    groupVersionKind: { group: 'batch', kind: 'Job', version: 'v1' },
     isList: true,
     namespace: plan?.spec?.targetNamespace,
+    namespaced: true,
     selector: { matchLabels: { plan: plan?.metadata?.uid } },
   });
 
   const jobsDict: Record<string, IoK8sApiBatchV1Job[]> = {};
-  (jobs && jobsLoaded && !jobsLoadError ? jobs : []).forEach((j) =>
-    jobsDict[j.metadata.labels.vmID]
-      ? jobsDict[j.metadata.labels.vmID].push(j)
-      : (jobsDict[j.metadata.labels.vmID] = [j]),
+  (jobs && jobsLoaded && !jobsLoadError ? jobs : []).forEach((job) =>
+    jobsDict[job.metadata.labels.vmID]
+      ? jobsDict[job.metadata.labels.vmID].push(job)
+      : (jobsDict[job.metadata.labels.vmID] = [job]),
   );
 
   const [pvcs, pvcsLoaded, pvcsLoadError] = useK8sWatchResource<
     IoK8sApiCoreV1PersistentVolumeClaim[]
   >({
     groupVersionKind: { kind: 'PersistentVolumeClaim', version: 'v1' },
-    namespaced: true,
     isList: true,
     namespace: plan?.spec?.targetNamespace,
+    namespaced: true,
     selector: { matchLabels: { plan: plan?.metadata?.uid } },
   });
 
   const pvcsDict: Record<string, IoK8sApiCoreV1PersistentVolumeClaim[]> = {};
-  (pvcs && pvcsLoaded && !pvcsLoadError ? pvcs : []).forEach((p) =>
-    pvcsDict[p.metadata.labels.vmID]
-      ? pvcsDict[p.metadata.labels.vmID].push(p)
-      : (pvcsDict[p.metadata.labels.vmID] = [p]),
+  (pvcs && pvcsLoaded && !pvcsLoadError ? pvcs : []).forEach((pvc) =>
+    pvcsDict[pvc.metadata.labels.vmID]
+      ? pvcsDict[pvc.metadata.labels.vmID].push(pvc)
+      : (pvcsDict[pvc.metadata.labels.vmID] = [pvc]),
   );
 
   const [dvs, dvsLoaded, dvsLoadError] = useK8sWatchResource<V1beta1DataVolume[]>({
     groupVersionKind: {
-      version: 'v1beta1',
-      kind: 'DataVolume',
       group: 'cdi.kubevirt.io',
+      kind: 'DataVolume',
+      version: 'v1beta1',
     },
-    namespaced: true,
     isList: true,
     namespace: plan?.spec?.targetNamespace,
+    namespaced: true,
     selector: { matchLabels: { plan: plan?.metadata?.uid } },
   });
 
   const dvsDict: Record<string, V1beta1DataVolume[]> = {};
-  (dvs && dvsLoaded && !dvsLoadError ? dvs : []).forEach((p) =>
-    dvsDict[p.metadata.labels.vmID]
-      ? dvsDict[p.metadata.labels.vmID].push(p)
-      : (dvsDict[p.metadata.labels.vmID] = [p]),
+  (dvs && dvsLoaded && !dvsLoadError ? dvs : []).forEach((dataVolume) =>
+    dvsDict[dataVolume.metadata.labels.vmID]
+      ? dvsDict[dataVolume.metadata.labels.vmID].push(dataVolume)
+      : (dvsDict[dataVolume.metadata.labels.vmID] = [dataVolume]),
   );
 
   const [expandedIds, setExpandedIds] = useState([]);
@@ -241,15 +246,15 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
     plan?.status?.migration?.vms || [];
 
   const vmDict: Record<string, V1beta1PlanStatusMigrationVms> = {};
-  migrationVirtualMachines.forEach((m) => (vmDict[m.id] = m));
+  migrationVirtualMachines.forEach((migration) => (vmDict[migration.id] = migration));
 
-  const vmData: VMData[] = virtualMachines.map((m) => ({
-    specVM: m,
-    statusVM: vmDict[m.id],
-    pods: podsDict[m.id],
-    jobs: jobsDict[m.id],
-    pvcs: pvcsDict[m.id],
-    dvs: dvsDict[m.id],
+  const vmData: VMData[] = virtualMachines.map((vmSpec) => ({
+    dvs: dvsDict[vmSpec.id],
+    jobs: jobsDict[vmSpec.id],
+    pods: podsDict[vmSpec.id],
+    pvcs: pvcsDict[vmSpec.id],
+    specVM: vmSpec,
+    statusVM: vmDict[vmSpec.id],
     targetNamespace: plan?.spec?.targetNamespace,
   }));
 
@@ -276,27 +281,26 @@ export const MigrationVirtualMachinesList: FC<{ obj: PlanData }> = ({ obj }) => 
   const canSelectWhenNotExecuting = (item: VMData) =>
     (item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined) && !isExecuting;
 
-  const fieldsMetadata = fieldsMetadataFactory(t);
   const props: PageWithSelectionProps = {
-    fieldsMetadata,
-    dataSource: [vmData || [], true, undefined],
     CellMapper: MigrationVirtualMachinesRow,
+    dataSource: [vmData || [], true, undefined],
     ExpandedComponent: MigrationVirtualMachinesRowExtended,
-    title: t('Virtual Machines'),
-    userSettings: userSettings,
+    fieldsMetadata,
     namespace: '',
     page: 1,
+    title: t('Virtual Machines'),
+    userSettings,
   };
 
   const extendedProps = {
     ...props,
-    toId: (item: VMData) => item?.specVM?.id,
     canSelect: (item: VMData) => canSelectWhenExecuting(item) || canSelectWhenNotExecuting(item),
+    expandedIds,
+    GlobalActionToolbarItems: actions,
+    onExpand: setExpandedIds,
     onSelect: () => undefined,
     selectedIds: [],
-    onExpand: setExpandedIds,
-    expandedIds: expandedIds,
-    GlobalActionToolbarItems: actions,
+    toId: (item: VMData) => item?.specVM?.id,
   };
 
   return (

@@ -1,22 +1,22 @@
-import React from 'react';
-import { PlanActionsDropdown } from 'src/modules/Plans/actions';
-import { getPlanPhase, PlanPhase } from 'src/modules/Plans/utils';
+import type { FC, ReactElement } from 'react';
+import PlanActionsDropdown from 'src/modules/Plans/actions/PlanActionsDropdown';
+import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { PlanConditionType } from 'src/modules/Plans/utils/types/PlanCondition';
-import { useGetDeleteAndEditAccessReview } from 'src/modules/Providers/hooks';
+import { PlanPhase } from 'src/modules/Plans/utils/types/PlanPhase';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
-import { PageHeadings } from 'src/modules/Providers/utils';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils';
+import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   NetworkMapModelGroupVersionKind,
   PlanModel,
   PlanModelGroupVersionKind,
   StorageMapModelGroupVersionKind,
-  V1beta1NetworkMap,
-  V1beta1Plan,
-  V1beta1StorageMap,
+  type V1beta1NetworkMap,
+  type V1beta1Plan,
+  type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Level, List, ListItem, PageSection } from '@patternfly/react-core';
@@ -24,45 +24,37 @@ import { Level, List, ListItem, PageSection } from '@patternfly/react-core';
 import PlanCriticalCondition from './PlanCriticalCondition';
 import PlanWarningCondition from './PlanWarningCondition';
 
-export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = ({
-  name,
-  namespace,
-}) => {
-  const { t } = useForkliftTranslation();
+type PlanPageHeadingsProps = {
+  name: string;
+  namespace: string;
+};
 
+const PlanPageHeadings: FC<PlanPageHeadingsProps> = ({ name, namespace }) => {
+  const { t } = useForkliftTranslation();
   const [plan, planLoaded, planError] = useK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
-
   const [netMaps, netMapsLoaded, netMapsError] = useK8sWatchResource<V1beta1NetworkMap[]>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace,
+    namespaced: true,
   });
-
   const [storageMaps] = useK8sWatchResource<V1beta1StorageMap[]>({
     groupVersionKind: StorageMapModelGroupVersionKind,
-    namespaced: true,
     isList: true,
     namespace: plan?.metadata?.namespace,
-  });
-
-  const permissions = useGetDeleteAndEditAccessReview({
-    model: PlanModel,
-    namespace,
+    namespaced: true,
   });
 
   const [sourceProvider] = usePlanProviders(plan, namespace);
   const [sourceStorages] = useSourceStorages(sourceProvider);
   const [sourceNetworks] = useSourceNetworks(sourceProvider);
-
-  const alerts = [];
-
-  const planStatus = getPlanPhase({ obj: plan });
+  const alerts: ReactElement[] = [];
+  const planStatus = getPlanPhase({ plan });
 
   const criticalCondition =
     planLoaded &&
@@ -83,7 +75,7 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     const isMapToPod =
       planNetMaps?.spec?.map.find((map) => map.destination.type === 'pod') !== undefined;
 
-    return isPreserveStaticIPs && isMapToPod;
+    return Boolean(isPreserveStaticIPs && isMapToPod);
   };
 
   const handleAlerts = () => {
@@ -94,12 +86,11 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
 
     if (criticalCondition) {
       const planStorageMaps = storageMaps?.find(
-        (storage) => storage?.metadata?.name === plan.spec.map?.storage?.name,
+        (storage) => storage?.metadata?.name === plan?.spec?.map?.storage?.name,
       );
       const planNetworkMaps = netMaps?.find(
         (net) => net?.metadata?.name === plan?.spec?.map?.network?.name,
       );
-
       const missingStorageMaps = sourceStorages.filter(
         (sourceStorage) =>
           !planStorageMaps?.spec?.map.some(
@@ -112,7 +103,6 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
             (planNetworkMap) => planNetworkMap.source.name === sourceNetwork.name,
           ),
       );
-
       alerts.push(
         <PlanCriticalCondition
           plan={plan}
@@ -121,12 +111,14 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
         >
           {[...missingStorageMaps, ...missingNetworkMaps].length > 0 && (
             <List>
-              {criticalCondition.type === PlanConditionType.VMStorageNotMapped &&
+              {(criticalCondition.type as PlanConditionType) ===
+                PlanConditionType.VMStorageNotMapped &&
                 missingStorageMaps.map((storageMap) => (
                   <ListItem key={storageMap.name}>{storageMap.name}</ListItem>
                 ))}
 
-              {criticalCondition.type === PlanConditionType.VMNetworksNotMapped &&
+              {(criticalCondition.type as PlanConditionType) ===
+                PlanConditionType.VMNetworksNotMapped &&
                 missingNetworkMaps.map((networkMap) => (
                   <ListItem key={networkMap.name}>{networkMap.name}</ListItem>
                 ))}
@@ -158,12 +150,6 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     }
   };
 
-  const actions = (
-    <Level hasGutter>
-      <PlanActionsDropdown data={{ obj: plan, permissions }} fieldId={''} fields={[]} />
-    </Level>
-  );
-
   handleAlerts();
 
   return (
@@ -172,10 +158,14 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
         model={PlanModel}
         obj={plan}
         namespace={namespace}
-        actions={actions}
+        actions={
+          <Level hasGutter>
+            <PlanActionsDropdown plan={plan} />
+          </Level>
+        }
         status={planStatus}
       >
-        {alerts && alerts.length > 0 && (
+        {alerts.length > 0 && (
           <PageSection variant="light" className="forklift-page-headings-alerts">
             {alerts}
           </PageSection>
@@ -184,3 +174,5 @@ export const PlanPageHeadings: React.FC<{ name: string; namespace: string }> = (
     </>
   );
 };
+
+export default PlanPageHeadings;

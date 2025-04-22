@@ -1,21 +1,19 @@
-import React from 'react';
+import type { FC } from 'react';
 
-import { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 
-import {
-  CreatedAtDetailsItem,
-  NameDetailsItem,
-  NamespaceDetailsItem,
-  OwnerDetailsItem,
-  StatusDetailsItem,
-} from './components';
+import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';
+import { NameDetailsItem } from './components/NameDetailsItem';
+import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
+import { OwnerDetailsItem } from './components/OwnerDetailsItem';
+import { StatusDetailsItem } from './components/StatusDetailsItem';
 
-export type DetailsSectionProps = {
+type DetailsSectionProps = {
   obj: V1beta1Plan;
 };
 
-export const DetailsSection: React.FC<DetailsSectionProps> = ({ obj }) => {
+export const DetailsSection: FC<DetailsSectionProps> = ({ obj }) => {
   return (
     <DescriptionList
       className="forklift-page-section--details-status"

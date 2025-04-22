@@ -26,7 +26,7 @@ export const getServicesApiUrl = (relativePath = ''): string => {
  * @param {string} relativePath - An optional relative path to append to the URL
  * @returns {string} - The API URL
  */
-export const getApiUrl = (relativePath = ''): string => {
+const getApiUrl = (relativePath = ''): string => {
   const pluginPath = `/api/proxy/plugin/${process.env.PLUGIN_NAME}`;
   return `${pluginPath}/${relativePath}`;
 };

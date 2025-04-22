@@ -1,32 +1,29 @@
-import React, { useCallback, useReducer } from 'react';
+import { type FC, type FormEvent, type MouseEvent, useCallback, useReducer } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import {
-  validateEsxiURL,
-  validateVDDKImage,
   VDDKHelperText,
   VDDKHelperTextShort,
-} from 'src/modules/Providers/utils';
+} from 'src/modules/Providers/utils/components/VDDKHelperText/VDDKHelperText';
+import { validateEsxiURL } from 'src/modules/Providers/utils/validators/provider/vsphere/validateEsxiURL';
+import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 import { Alert, Checkbox, Form, Popover, Radio, TextInput } from '@patternfly/react-core';
-import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
-export interface EsxiProviderCreateFormProps {
+import { HelpIcon } from '@patternfly/react-icons';
+type EsxiProviderCreateFormProps = {
   provider: V1beta1Provider;
   onChange: (newValue: V1beta1Provider) => void;
-}
+};
 
-export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
-  provider,
-  onChange,
-}) => {
+export const EsxiProviderCreateForm: FC<EsxiProviderCreateFormProps> = ({ onChange, provider }) => {
   const { t } = useForkliftTranslation();
 
   const url = provider?.spec?.url;
   const emptyVddkInitImage =
     provider?.metadata?.annotations?.['forklift.konveyor.io/empty-vddk-init-image'];
-  const vddkInitImage = provider?.spec?.settings?.['vddkInitImage'];
-  const sdkEndpoint = provider?.spec?.settings?.['sdkEndpoint'];
+  const vddkInitImage = provider?.spec?.settings?.vddkInitImage;
+  const sdkEndpoint = provider?.spec?.settings?.sdkEndpoint;
 
   const initialState = {
     validation: {
@@ -56,12 +53,12 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
     (id, value) => {
       const trimmedValue = value?.trim();
 
-      if (id == 'emptyVddkInitImage') {
+      if (id === 'emptyVddkInitImage') {
         const validationState = validateVDDKImage(undefined);
 
         dispatch({
-          type: 'SET_FIELD_VALIDATED',
           payload: { field: 'vddkInitImage', validationState },
+          type: 'SET_FIELD_VALIDATED',
         });
 
         onChange({
@@ -83,12 +80,12 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
         });
       }
 
-      if (id == 'vddkInitImage') {
+      if (id === 'vddkInitImage') {
         const validationState = validateVDDKImage(trimmedValue);
 
         dispatch({
-          type: 'SET_FIELD_VALIDATED',
           payload: { field: 'vddkInitImage', validationState },
+          type: 'SET_FIELD_VALIDATED',
         });
 
         onChange({
@@ -103,7 +100,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
         });
       }
 
-      if (id == 'sdkEndpoint') {
+      if (id === 'sdkEndpoint') {
         const sdkEndpoint = trimmedValue || undefined;
 
         onChange({
@@ -112,7 +109,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
             ...provider?.spec,
             settings: {
               ...(provider?.spec?.settings as object),
-              sdkEndpoint: sdkEndpoint,
+              sdkEndpoint,
             },
           },
         });
@@ -122,7 +119,7 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
         // Validate URL - VCenter of ESXi
         const validationState = validateEsxiURL(trimmedValue);
 
-        dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: 'url', validationState } });
+        dispatch({ payload: { field: 'url', validationState }, type: 'SET_FIELD_VALIDATED' });
 
         onChange({ ...provider, spec: { ...provider.spec, url: trimmedValue } });
       }
@@ -130,25 +127,21 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
     [provider],
   );
 
-  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
+  const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
-  const onChangeUrl: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeUrl: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('url', value);
   };
 
-  const onChangEmptyVddk: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangEmptyVddk: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
     checked,
   ) => {
     handleChange('emptyVddkInitImage', checked ? 'yes' : undefined);
   };
 
-  const onChangeVddk: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeVddk: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('vddkInitImage', value);
   };
 
@@ -165,14 +158,18 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
           label="vCenter"
           id="sdkEndpoint-vcenter"
           isChecked={!sdkEndpoint || sdkEndpoint === 'vcenter'}
-          onChange={() => handleChange('sdkEndpoint', 'vcenter')}
+          onChange={() => {
+            handleChange('sdkEndpoint', 'vcenter');
+          }}
         />
         <Radio
           name="sdkEndpoint"
           label="ESXi"
           id="sdkEndpoint-esxi"
           isChecked={sdkEndpoint === 'esxi'}
-          onChange={() => handleChange('sdkEndpoint', 'esxi')}
+          onChange={() => {
+            handleChange('sdkEndpoint', 'esxi');
+          }}
         />
       </FormGroupWithHelpText>
 
@@ -192,7 +189,9 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
           name="url"
           value={url}
           validated={state.validation.url.type}
-          onChange={(e, v) => onChangeUrl(v, e)}
+          onChange={(e, value) => {
+            onChangeUrl(value, e);
+          }}
         />
       </FormGroupWithHelpText>
 
@@ -221,7 +220,9 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
               'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
             )}
             isChecked={emptyVddkInitImage === 'yes'}
-            onChange={(e, v) => onChangEmptyVddk(v, e)}
+            onChange={(e, value) => {
+              onChangEmptyVddk(value, e);
+            }}
             id="emptyVddkInitImage"
             name="emptyVddkInitImage"
           />
@@ -237,7 +238,9 @@ export const EsxiProviderCreateForm: React.FC<EsxiProviderCreateFormProps> = ({
             validated={
               emptyVddkInitImage === 'yes' ? 'default' : state.validation.vddkInitImage.type
             }
-            onChange={(e, v) => onChangeVddk(v, e)}
+            onChange={(e, value) => {
+              onChangeVddk(value, e);
+            }}
           />
         </div>
       </FormGroupWithHelpText>

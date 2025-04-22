@@ -1,10 +1,12 @@
-import React, { ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
 import { Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
 
-import { ResourceField, UID } from '../utils';
-import { RowProps, SortType, TableViewHeaderProps } from './types';
+import { UID } from '../utils/constants';
+import type { ResourceField } from '../utils/types';
+
+import type { RowProps, SortType, TableViewHeaderProps } from './types';
 
 /**
  * Displays provided list of entities as table.
@@ -19,20 +21,20 @@ import { RowProps, SortType, TableViewHeaderProps } from './types';
  *
  * @see useSort
  */
-export function TableView<T>({
+export const TableView = <T,>({
+  activeSort,
+  'aria-label': ariaLabel,
+  children,
+  currentNamespace,
+  entities,
+  expandedIds,
+  Header,
+  Row,
+  setActiveSort,
+  toId,
   uidFieldId = UID,
   visibleColumns,
-  entities,
-  'aria-label': ariaLabel,
-  Row,
-  children,
-  activeSort,
-  setActiveSort,
-  currentNamespace,
-  Header,
-  toId,
-  expandedIds,
-}: TableViewProps<T>) {
+}: TableViewProps<T>) => {
   const hasChildren = children.filter(Boolean).length > 0;
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
 
@@ -40,7 +42,7 @@ export function TableView<T>({
     <Table aria-label={ariaLabel} variant="compact" isStickyHeader>
       <Thead>
         <Tr>
-          <Header {...{ activeSort, setActiveSort, visibleColumns, dataOnScreen: entities }} />
+          <Header {...{ activeSort, dataOnScreen: entities, setActiveSort, visibleColumns }} />
         </Tr>
       </Thead>
       <Tbody>
@@ -66,9 +68,9 @@ export function TableView<T>({
       </Tbody>
     </Table>
   );
-}
+};
 
-interface TableViewProps<T> {
+type TableViewProps<T> = {
   /**
    * List of visible columns and their properties
    */
@@ -85,7 +87,7 @@ interface TableViewProps<T> {
   /**
    * Maps entities to table rows.
    */
-  Row: React.FC<RowProps<T>>;
+  Row: FC<RowProps<T>>;
   /**
    * Nodes to be displayed instead of the entities.
    * Extension point to handle empty state and related cases.
@@ -108,7 +110,7 @@ interface TableViewProps<T> {
   /**
    * Maps resourceFields to header rows.
    */
-  Header: React.FC<TableViewHeaderProps<T>>;
+  Header: FC<TableViewHeaderProps<T>>;
 
   /**
    * @returns string that can be used as an unique identifier
@@ -139,4 +141,4 @@ interface TableViewProps<T> {
    * Expanded ids
    */
   expandedIds?: string[];
-}
+};

@@ -1,8 +1,9 @@
-import React, { useCallback, useReducer } from 'react';
+import { type FC, type FormEvent, type MouseEvent, useCallback, useReducer } from 'react';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { openshiftSecretFieldValidator, safeBase64Decode } from 'src/modules/Providers/utils';
-import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload';
+import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload/CertificateUpload';
+import { safeBase64Decode } from 'src/modules/Providers/utils/helpers/safeBase64Decode';
+import { openshiftSecretFieldValidator } from 'src/modules/Providers/utils/validators/provider/openshift/openshiftSecretFieldValidator';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -14,13 +15,13 @@ import {
   Switch,
   TextInput,
 } from '@patternfly/react-core';
-import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
-import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
-import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+import { EyeIcon } from '@patternfly/react-icons';
+import { EyeSlashIcon } from '@patternfly/react-icons';
+import { HelpIcon } from '@patternfly/react-icons';
 
-import { EditComponentProps } from '../BaseCredentialsSection';
+import type { EditComponentProps } from '../BaseCredentialsSection';
 
-export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret, onChange }) => {
+export const OpenshiftCredentialsEdit: FC<EditComponentProps> = ({ onChange, secret }) => {
   const { t } = useForkliftTranslation();
 
   const url = safeBase64Decode(secret?.data?.url);
@@ -55,9 +56,9 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
   const initialState = {
     passwordHidden: true,
     validation: {
-      token: openshiftSecretFieldValidator('token', token),
-      insecureSkipVerify: openshiftSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
       cacert: openshiftSecretFieldValidator('cacert', cacert),
+      insecureSkipVerify: openshiftSecretFieldValidator('insecureSkipVerify', insecureSkipVerify),
+      token: openshiftSecretFieldValidator('token', token),
     },
   };
 
@@ -84,7 +85,7 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
   const handleChange = useCallback(
     (id, value) => {
       const validationState = openshiftSecretFieldValidator(id, value);
-      dispatch({ type: 'SET_FIELD_VALIDATED', payload: { field: id, validationState } });
+      dispatch({ payload: { field: id, validationState }, type: 'SET_FIELD_VALIDATED' });
 
       // don't trim fields that allow spaces
       const encodedValue = ['cacert'].includes(id)
@@ -96,14 +97,11 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     [secret],
   );
 
-  // Handle password hide/reveal click
-  function togglePasswordHidden() {
+  const togglePasswordHidden = () => {
     dispatch({ type: 'TOGGLE_PASSWORD_HIDDEN' });
-  }
+  };
 
-  const onClickEventPreventDef: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (
-    event,
-  ) => {
+  const onClickEventPreventDef: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -111,13 +109,11 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
     togglePasswordHidden();
   };
 
-  const onChangeToken: (value: string, event: React.FormEvent<HTMLInputElement>) => void = (
-    value,
-  ) => {
+  const onChangeToken: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleChange('token', value);
   };
 
-  const onChangeInsecure: (checked: boolean, event: React.FormEvent<HTMLInputElement>) => void = (
+  const onChangeInsecure: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (
     checked,
   ) => {
     handleChange('insecureSkipVerify', checked ? 'true' : 'false');
@@ -148,7 +144,9 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
             isRequired
             type={state.passwordHidden ? 'password' : 'text'}
             aria-label="Token input"
-            onChange={(e, v) => onChangeToken(v, e)}
+            onChange={(e, value) => {
+              onChangeToken(value, e);
+            }}
             value={token}
             validated={state.validation.token.type}
           />
@@ -192,7 +190,9 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           label={t('Skip certificate validation')}
           isChecked={insecureSkipVerify === 'true'}
           hasCheckIcon
-          onChange={(e, v) => onChangeInsecure(v, e)}
+          onChange={(e, value) => {
+            onChangeInsecure(value, e);
+          }}
         />
       </FormGroupWithHelpText>
 
@@ -224,9 +224,15 @@ export const OpenshiftCredentialsEdit: React.FC<EditComponentProps> = ({ secret,
           filenamePlaceholder="Drag and drop a file or upload one"
           value={cacert}
           validated={state.validation.cacert.type}
-          onDataChange={(_e, v) => onDataChange(v)}
-          onTextChange={(_e, v) => onTextChange(v)}
-          onClearClick={() => handleChange('cacert', '')}
+          onDataChange={(_e, value) => {
+            onDataChange(value);
+          }}
+          onTextChange={(_e, value) => {
+            onTextChange(value);
+          }}
+          onClearClick={() => {
+            handleChange('cacert', '');
+          }}
           browseButtonText="Upload"
           url={url}
           isDisabled={insecureSkipVerify === 'true'}

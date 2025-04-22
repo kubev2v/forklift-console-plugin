@@ -1,6 +1,6 @@
-import React from 'react';
-import { TableCell } from 'src/modules/Providers/utils';
-import { useForkliftTranslation } from 'src/utils';
+import type { FC } from 'react';
+import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, HelperText, HelperTextItem, Popover } from '@patternfly/react-core';
 import {
@@ -9,9 +9,10 @@ import {
   ExclamationTriangleIcon,
 } from '@patternfly/react-icons';
 
-import { calculateCidrNotation } from '../utils';
+import { calculateCidrNotation } from '../utils/helpers/calculateCidrNotation';
 import { determineHostStatus } from '../utils/helpers/determineHostStatus';
-import { HostCellProps } from './HostCellProps';
+
+import type { HostCellProps } from './HostCellProps';
 
 const statusIcons = {
   error: <ExclamationCircleIcon color="#C9190B" />,
@@ -20,7 +21,7 @@ const statusIcons = {
 };
 
 // Define cell renderer for 'network'
-export const NetworkCellRenderer: React.FC<HostCellProps> = (props) => {
+export const NetworkCellRenderer: FC<HostCellProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const host = props?.data?.host;

@@ -1,4 +1,4 @@
-import { IoK8sApiCoreV1Secret, ProviderModel, V1beta1Provider } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, ProviderModel, type V1beta1Provider } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
@@ -20,7 +20,10 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
  *  .then(newProvider => console.log(newProvider))
  *  .catch(err => console.error(err));
  */
-export async function createProvider(provider: V1beta1Provider, secret: IoK8sApiCoreV1Secret) {
+export const createProvider = async (
+  provider: V1beta1Provider,
+  secret: IoK8sApiCoreV1Secret,
+): Promise<object> => {
   // Sanity check, don't try to create empty provider
   if (!provider) {
     return;
@@ -53,14 +56,14 @@ export async function createProvider(provider: V1beta1Provider, secret: IoK8sApi
   const emptyVddkInitImage =
     provider?.metadata?.annotations?.['forklift.konveyor.io/empty-vddk-init-image'];
 
-  if (emptyVddkInitImage === 'yes' && provider?.spec?.settings?.['vddkInitImage']) {
-    provider.spec.settings['vddkInitImage'] = undefined;
+  if (emptyVddkInitImage === 'yes' && provider?.spec?.settings?.vddkInitImage) {
+    provider.spec.settings.vddkInitImage = undefined;
   }
 
   const obj = await k8sCreate({
-    model: ProviderModel,
     data: newProvider,
+    model: ProviderModel,
   });
 
   return obj;
-}
+};

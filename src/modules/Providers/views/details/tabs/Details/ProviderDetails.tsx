@@ -1,40 +1,40 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { SectionHeading } from 'src/components/headers/SectionHeading';
-import { Loading } from 'src/modules/Plans/views/details';
-import { useGetDeleteAndEditAccessReview, useProviderInventory } from 'src/modules/Providers/hooks';
-import { getResourceUrl, ProviderData } from 'src/modules/Providers/utils';
+import SectionHeading from 'src/components/headers/SectionHeading';
+import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import Loading from '@components/Loading';
 import {
-  ProviderInventory,
+  type ProviderInventory,
   ProviderModel,
   ProviderModelGroupVersionKind,
   ProviderModelRef,
-  V1beta1Provider,
+  type V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Bullseye, PageSection } from '@patternfly/react-core';
-import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
+import { BellIcon } from '@patternfly/react-icons';
 
-import {
-  ConditionsSection,
-  DetailsSection,
-  InventorySection,
-  SecretsSection,
-} from '../../components';
+import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
+import { DetailsSection } from '../../components/DetailsSection/DetailsSection';
+import { InventorySection } from '../../components/InventorySection/InventorySection';
+import { SecretsSection } from '../../components/SecretsSection/SecretsSection';
 
-interface ProviderDetailsProps {
+type ProviderDetailsProps = {
   obj: ProviderData;
   ns?: string;
   name?: string;
   loaded?: boolean;
   loadError?: unknown;
-}
+};
 
-export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, loadError }) => {
+const ProviderDetails: FC<ProviderDetailsProps> = ({ loaded, loadError, obj }) => {
   const { t } = useForkliftTranslation();
-  const { provider, inventory } = obj;
+  const { inventory, provider } = obj;
 
   if (!loaded || loadError || !provider?.metadata?.name) {
     return (
@@ -45,9 +45,9 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
   }
 
   const providerURL = getResourceUrl({
-    reference: ProviderModelRef,
     name: provider?.metadata?.name,
     namespace: provider?.metadata?.namespace,
+    reference: ProviderModelRef,
   });
 
   return (
@@ -94,21 +94,21 @@ export const ProviderDetails: React.FC<ProviderDetailsProps> = ({ obj, loaded, l
   );
 };
 
-export const ProviderDetailsWrapper: React.FC<{ name: string; namespace: string }> = ({
+export const ProviderDetailsWrapper: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {
   const [provider, providerLoaded, providerLoadError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
-    namespaced: true,
     name,
     namespace,
+    namespaced: true,
   });
 
   const { inventory } = useProviderInventory<ProviderInventory>({ provider });
   const permissions = useGetDeleteAndEditAccessReview({ model: ProviderModel, namespace });
 
-  const data = { provider, inventory, permissions };
+  const data = { inventory, permissions, provider };
 
   return <ProviderDetails obj={data} loaded={providerLoaded} loadError={providerLoadError} />;
 };

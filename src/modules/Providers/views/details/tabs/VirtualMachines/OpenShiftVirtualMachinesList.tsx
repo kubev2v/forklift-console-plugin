@@ -1,84 +1,86 @@
-import React from 'react';
-import { EnumToTuple } from 'src/components/common/FilterGroup/helpers';
+import type { FC } from 'react';
+import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
+import { t } from '@utils/i18n';
 
+import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import type { VmData } from './components/VMCellProps';
+import { getOpenShiftFeatureMap } from './utils/helpers/getOpenShiftFeatureMap';
+import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
-import { ProviderVirtualMachinesList, VmData } from './components';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
-import { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
-import { getOpenShiftFeatureMap, getVmPowerState } from './utils';
+import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
-export const openShiftVmFieldsMetadataFactory: ResourceFieldFactory = (t) => [
+export const openShiftVmFieldsMetadataFactory = [
   {
-    resourceFieldId: 'name',
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: 'freetext',
+    },
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
     jsonPath: '$.name',
     label: t('Name'),
-    isVisible: true,
-    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by name'),
-    },
+    resourceFieldId: 'name',
     sortable: true,
   },
   {
-    resourceFieldId: 'possibly_remote_namespace',
+    filter: {
+      placeholderLabel: t('Filter by namespace'),
+      type: 'freetext',
+    },
+    isIdentity: true,
+    isVisible: true,
     jsonPath: '$.vm.object.metadata.namespace',
     label: t('Namespace'),
-    isVisible: true,
-    isIdentity: true,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by namespace'),
-    },
+    resourceFieldId: 'possiblyRemoteNamespace',
     sortable: true,
   },
   {
-    resourceFieldId: 'status',
+    filter: {
+      placeholderLabel: t('Filter by status'),
+      type: 'enum',
+      values: enumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: (data: VmData) => getVmPowerState(data?.vm),
     label: t('Status'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'enum',
-      placeholderLabel: t('Filter by status'),
-      values: EnumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),
-    },
+    resourceFieldId: 'status',
     sortable: true,
   },
   {
-    resourceFieldId: 'features',
+    filter: {
+      placeholderLabel: t('Filter by features'),
+      type: 'features',
+      values: enumToTuple(toVmFeatureEnum()),
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: (data: VmData) => getOpenShiftFeatureMap(data?.vm),
     label: t('Features'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'features',
-      placeholderLabel: t('Filter by features'),
-      values: EnumToTuple(toVmFeatureEnum(t)),
-    },
+    resourceFieldId: 'features',
     sortable: true,
   },
   {
-    resourceFieldId: 'template',
+    filter: {
+      placeholderLabel: t('Filter by template'),
+      type: 'freetext',
+    },
+    isIdentity: false,
+    isVisible: true,
     jsonPath: "$.vm.object.metadata.labels['vm.kubevirt.io/template']",
     label: t('Template'),
-    isVisible: true,
-    isIdentity: false,
-    filter: {
-      type: 'freetext',
-      placeholderLabel: t('Filter by template'),
-    },
+    resourceFieldId: 'template',
     sortable: true,
   },
 ];
 
-export const OpenShiftVirtualMachinesList: React.FC<ProviderVirtualMachinesProps> = (props) => (
+export const OpenShiftVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => (
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OpenShiftVirtualMachinesCells}
-    fieldsMetadataFactory={openShiftVmFieldsMetadataFactory}
+    fieldsMetadata={openShiftVmFieldsMetadataFactory}
     pageId="OpenShiftVirtualMachinesList"
   />
 );

@@ -1,34 +1,35 @@
 import { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { produce } from 'immer';
-import { deepCopy } from 'src/utils';
+import { deepCopy } from 'src/utils/deepCopy';
 
 import {
   NetworkMapModel,
   PlanModel,
   PlanModelRef,
   StorageMapModel,
-  V1beta1NetworkMap,
-  V1beta1Plan,
-  V1beta1StorageMap,
+  type V1beta1NetworkMap,
+  type V1beta1Plan,
+  type V1beta1StorageMap,
 } from '@kubev2v/types';
-import { k8sCreate, K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { k8sCreate, type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+
+import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
 
 import { setAPiError } from './reducer/actions';
-import { getObjectRef } from './reducer/helpers';
-import { getResourceUrl } from '../../utils';
-import { CreateVmMigrationPageState } from './types';
+import { getObjectRef, type ObjectRef } from './reducer/helpers';
+import type { CreateVmMigrationPageState } from './types';
 
-const createStorage = (storageMap: V1beta1StorageMap) =>
+const createStorage = async (storageMap: V1beta1StorageMap) =>
   k8sCreate({
-    model: StorageMapModel,
     data: storageMap,
+    model: StorageMapModel,
   });
 
-const createNetwork = (netMap: V1beta1NetworkMap) => {
+const createNetwork = async (netMap: V1beta1NetworkMap) => {
   return k8sCreate({
-    model: NetworkMapModel,
     data: updateNetworkMapDestination(netMap),
+    model: NetworkMapModel,
   });
 };
 
@@ -38,22 +39,24 @@ const createPlan = async (
   storageMap: V1beta1StorageMap,
 ) => {
   const createdPlan = await k8sCreate({
-    model: PlanModel,
     data: plan,
+    model: PlanModel,
   });
   const ownerReferences = [getObjectRef(createdPlan)];
   return [ownerReferences, netMap, storageMap];
 };
 
-const addOwnerRef = async (model: K8sModel, resource, ownerReferences) => {
+const addOwnerRef = async (
+  model: K8sModel,
+  resource: V1beta1NetworkMap | V1beta1StorageMap,
+  ownerReferences: ObjectRef[],
+) => {
   const cleanOwnerReferences = ownerReferences.map((ref) => ({
     ...ref,
     namespace: undefined,
   }));
 
-  return await k8sPatch({
-    model,
-    resource,
+  return k8sPatch({
     data: [
       {
         op: 'add',
@@ -61,6 +64,8 @@ const addOwnerRef = async (model: K8sModel, resource, ownerReferences) => {
         value: cleanOwnerReferences,
       },
     ],
+    model,
+    resource,
   });
 };
 
@@ -77,27 +82,35 @@ export const useSaveEffect = (state: CreateVmMigrationPageState, dispatch) => {
   useEffect(() => {
     const {
       flow,
-      underConstruction: { plan, netMap, storageMap },
+      underConstruction: { netMap, plan, storageMap },
     } = state;
     if (!flow.editingDone || !mounted.current) {
       return;
     }
 
     Promise.all([createStorage(storageMap), createNetwork(netMap)])
-      .then(([storageMap, netMap]) =>
+      .then(async ([resolvedStorageMap, resolvedNetMap]) =>
         createPlan(
           produce(plan, (draft) => {
-            draft.spec.map.network = getObjectRef(netMap);
-            draft.spec.map.storage = getObjectRef(storageMap);
+            draft.spec.map.network = getObjectRef(resolvedNetMap);
+            draft.spec.map.storage = getObjectRef(resolvedStorageMap);
           }),
           netMap,
           storageMap,
         ),
       )
-      .then(([ownerReferences, netMap, storageMap]) =>
+      .then(async ([ownerReferences, resolvedNetMap, resolvedStorageMap]) =>
         Promise.all([
-          addOwnerRef(StorageMapModel, storageMap, ownerReferences),
-          addOwnerRef(NetworkMapModel, netMap, ownerReferences),
+          addOwnerRef(
+            StorageMapModel,
+            resolvedStorageMap as V1beta1StorageMap,
+            ownerReferences as ObjectRef[],
+          ),
+          addOwnerRef(
+            NetworkMapModel,
+            resolvedNetMap as V1beta1NetworkMap,
+            ownerReferences as ObjectRef[],
+          ),
         ]),
       )
       .then(
@@ -105,9 +118,9 @@ export const useSaveEffect = (state: CreateVmMigrationPageState, dispatch) => {
           mounted.current &&
           history.push(
             getResourceUrl({
-              reference: PlanModelRef,
-              namespace: plan.metadata.namespace,
               name: plan.metadata.name,
+              namespace: plan.metadata.namespace,
+              reference: PlanModelRef,
             }),
           ),
       )
@@ -123,15 +136,15 @@ export const useSaveEffect = (state: CreateVmMigrationPageState, dispatch) => {
  * @param {NetworkMap} networkMap - The network map object to update.
  * @returns {NetworkMap} The updated network map object.
  */
-export function updateNetworkMapDestination(networkMap: V1beta1NetworkMap): V1beta1NetworkMap {
+export const updateNetworkMapDestination = (networkMap: V1beta1NetworkMap): V1beta1NetworkMap => {
   const networkMapCopy = deepCopy(networkMap);
 
   networkMapCopy.spec.map?.forEach((entry) => {
-    const parts = entry?.destination?.name?.split('/');
-    if (parts?.length === 2) {
-      entry.destination.namespace = parts[0];
-      entry.destination.name = parts[1];
+    const [namespace, name] = entry?.destination?.name?.split('/') ?? [];
+    if (namespace && name) {
+      entry.destination.namespace = namespace;
+      entry.destination.name = name;
     }
   });
   return networkMapCopy;
-}
+};

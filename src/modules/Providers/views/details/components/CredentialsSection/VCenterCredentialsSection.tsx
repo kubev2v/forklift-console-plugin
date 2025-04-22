@@ -1,20 +1,20 @@
-import React from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals';
-import { vcenterSecretValidator } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { vcenterSecretValidator } from 'src/modules/Providers/utils/validators/provider/vsphere/vcenterSecretValidator';
 
 import {
   BaseCredentialsSection,
-  BaseCredentialsSectionProps,
+  type BaseCredentialsSectionProps,
 } from './components/BaseCredentialsSection';
 import { VCenterCredentialsEdit } from './components/edit/VCenterCredentialsEdit';
 import { VCenterCredentialsList } from './components/list/VCenterCredentialsList';
 
-export type VCenterCredentialsSectionProps = Omit<
+type VCenterCredentialsSectionProps = Omit<
   BaseCredentialsSectionProps,
   'ListComponent' | 'EditComponent' | 'validator'
 >;
 
-export const VCenterCredentialsSection: React.FC<VCenterCredentialsSectionProps> = (props) => (
+export const VCenterCredentialsSection: FC<VCenterCredentialsSectionProps> = (props) => (
   <ModalHOC>
     <BaseCredentialsSection
       {...props}

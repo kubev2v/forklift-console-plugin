@@ -1,9 +1,9 @@
-import React from 'react';
-import { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
+import type { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 
-import { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
 
 import providerTypes from '../constanats/providerTypes';
+
 import { ProviderCardContent } from './ProviderCardContent';
 import { ProviderCardTitle } from './providerCardTitle';
 
@@ -22,9 +22,9 @@ export const createProviderCardItems = (
     const typeObj = providerTypes[provider.spec.type];
 
     providerCardItems[provider.metadata.uid] = {
-      title: <ProviderCardTitle provider={provider} />,
-      logo: typeObj.logo,
       content: <ProviderCardContent provider={provider} typeLabel={typeObj.title} />,
+      logo: typeObj.logo,
+      title: <ProviderCardTitle provider={provider} />,
     };
   });
 

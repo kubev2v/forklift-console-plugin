@@ -1,10 +1,10 @@
 import {
   NetworkMapModel,
   StorageMapModel,
-  V1beta1NetworkMap,
-  V1beta1NetworkMapSpecMap,
-  V1beta1StorageMap,
-  V1beta1StorageMapSpecMap,
+  type V1beta1NetworkMap,
+  type V1beta1NetworkMapSpecMap,
+  type V1beta1StorageMap,
+  type V1beta1StorageMapSpecMap,
 } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -17,15 +17,13 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
  * @param {updatedStorage} V1beta1StorageMapSpecMap[] - The V1beta1StorageMapSpecMap array, containing the updated data.
  * @returns {Promise<void>} A promise that resolves when the patch operation is complete.
  */
-export async function patchPlanMappingsData(
+export const patchPlanMappingsData = async (
   planNetworkMaps: V1beta1NetworkMap,
   planStorageMaps: V1beta1StorageMap,
   updatedNetwork: V1beta1NetworkMapSpecMap[],
   updatedStorage: V1beta1StorageMapSpecMap[],
-) {
+) => {
   await k8sPatch({
-    model: NetworkMapModel,
-    resource: planNetworkMaps,
     data: [
       {
         op: 'replace',
@@ -33,11 +31,11 @@ export async function patchPlanMappingsData(
         value: updateNetworkMapSpecMapDestination(updatedNetwork),
       },
     ],
+    model: NetworkMapModel,
+    resource: planNetworkMaps,
   });
 
   await k8sPatch({
-    model: StorageMapModel,
-    resource: planStorageMaps,
     data: [
       {
         op: 'replace',
@@ -45,8 +43,10 @@ export async function patchPlanMappingsData(
         value: updatedStorage,
       },
     ],
+    model: StorageMapModel,
+    resource: planStorageMaps,
   });
-}
+};
 
 /**
  * Updates the destination name and namespace in the network map entries.
@@ -56,15 +56,15 @@ export async function patchPlanMappingsData(
  * @param {NetworkMap} networkMap - The network map object to update.
  * @returns {NetworkMap} The updated network map object.
  */
-export function updateNetworkMapSpecMapDestination(
+const updateNetworkMapSpecMapDestination = (
   networkMaps: V1beta1NetworkMapSpecMap[],
-): V1beta1NetworkMapSpecMap[] {
+): V1beta1NetworkMapSpecMap[] => {
   networkMaps?.forEach((entry) => {
-    const parts = entry?.destination?.name?.split('/');
-    if (parts?.length === 2) {
-      entry.destination.namespace = parts[0];
-      entry.destination.name = parts[1];
+    const [namespace, name] = entry?.destination?.name?.split('/') ?? [];
+    if (namespace && name) {
+      entry.destination.namespace = namespace;
+      entry.destination.name = name;
     }
   });
   return networkMaps;
-}
+};

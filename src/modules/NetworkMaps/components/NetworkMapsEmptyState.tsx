@@ -1,31 +1,31 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import ForkliftEmptyState from 'src/components/empty-states/ForkliftEmptyState';
 import automationIcon from 'src/components/empty-states/images/automation.svg';
-import { getResourceUrl } from 'src/modules/Providers/utils';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 
-import { NetworkMapsAddButton } from './NetworkMapsAddButton';
+import NetworkMapsAddButton from './NetworkMapsAddButton';
 
 const HELP_LINK_HREF =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
 
 const AutomationIcon = () => <img src={automationIcon} className="forklift-empty-state__icon" />;
 
-const EmptyStatePlans: React.FC<{ namespace: string }> = ({ namespace }) => {
+const EmptyStatePlans: FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
   const ProvidersListURL = getResourceUrl({
-    reference: ProviderModelRef,
-    namespace: namespace,
+    namespace,
     namespaced: namespace !== undefined,
+    reference: ProviderModelRef,
   });
 
   return (

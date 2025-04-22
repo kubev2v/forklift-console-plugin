@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 
 import { useSearchParams } from '../hooks/useSearchParams';
-import { UserSettings } from '../Page';
-import { ResourceField } from '../utils';
-import { GlobalFilters } from './types';
+import type { UserSettings } from '../Page/types';
+import type { ResourceField } from '../utils/types';
+
+import type { GlobalFilters } from './types';
 
 /**
  * Safely parses a JSON string.
@@ -13,7 +14,7 @@ import { GlobalFilters } from './types';
 const safeParse = (str: string) => {
   try {
     return JSON.parse(str);
-  } catch (e) {
+  } catch (_e) {
     return undefined;
   }
 };
@@ -24,18 +25,18 @@ const safeParse = (str: string) => {
  * @param {Object} searchParams - The search parameters to filter and validate.
  * @returns {Object} - An object with valid filters.
  */
-function getValidFilters(fields, searchParams) {
+const getValidFilters = (fields, searchParams) => {
   const validFilters = fields
     .map(({ resourceFieldId }) => {
       const params = safeParse(searchParams[`${resourceFieldId}`]);
-      return { resourceFieldId, params };
+      return { params, resourceFieldId };
     })
     // Valid filter values are arrays
     .filter(({ params }) => Array.isArray(params) && params.length)
-    .map(({ resourceFieldId, params }) => [resourceFieldId, params]);
+    .map(({ params, resourceFieldId }) => [resourceFieldId, params]);
 
   return Object.fromEntries(validFilters);
-}
+};
 
 /**
  * Converts filters to search parameters.
@@ -43,16 +44,16 @@ function getValidFilters(fields, searchParams) {
  * @param {Object} filters - The filters to convert.
  * @returns {Object} - The search parameters.
  */
-function convertFiltersToSearchParams(fields, filters) {
+const convertFiltersToSearchParams = (fields, filters) => {
   const searchParams = fields
-    .map(({ resourceFieldId }) => ({ resourceFieldId, filters: filters[resourceFieldId] }))
-    .map(({ resourceFieldId, filters }) => [
+    .map(({ resourceFieldId }) => ({ filters: filters[resourceFieldId], resourceFieldId }))
+    .map(({ filters, resourceFieldId }) => [
       resourceFieldId,
       Array.isArray(filters) && filters.length ? JSON.stringify(filters) : undefined,
     ]);
 
   return Object.fromEntries(searchParams);
-}
+};
 
 /**
  * Sets the state and updates the URL search parameters.
@@ -61,8 +62,15 @@ function convertFiltersToSearchParams(fields, filters) {
  * @param {Array} fields - The fields containing resourceFieldId.
  * @returns {Function} - The function to set state and update URL.
  */
-function createSetStateAndUrl(setSelectedFilters, updateSearchParams, updateUserSettings, fields) {
-  const persistentFieldIds = fields.filter((f) => f?.isPersistent).map((f) => f.resourceFieldId);
+const createSetStateAndUrl = (
+  setSelectedFilters,
+  updateSearchParams,
+  updateUserSettings,
+  fields,
+) => {
+  const persistentFieldIds = fields
+    .filter((field) => field?.isPersistent)
+    .map((field) => field.resourceFieldId);
 
   return (filters) => {
     if (updateUserSettings) {
@@ -75,7 +83,7 @@ function createSetStateAndUrl(setSelectedFilters, updateSearchParams, updateUser
     setSelectedFilters(filters);
     updateSearchParams(convertFiltersToSearchParams(fields, filters));
   };
-}
+};
 
 /**
  * Init and maintain a set of filters on the search part of the URL.
@@ -94,9 +102,11 @@ export const useUrlFilters = ({
   fields: ResourceField[];
   userSettings?: UserSettings;
 }): [GlobalFilters, (filters: GlobalFilters) => void] => {
-  const persistentFieldIds = fields.filter((f) => f?.isPersistent).map((f) => f.resourceFieldId);
+  const persistentFieldIds = fields
+    .filter((field) => field?.isPersistent)
+    .map((field) => field.resourceFieldId);
   const persistentFilters = Object.fromEntries(
-    Object.entries(userSettings?.filters.data || {}).filter(([key]) =>
+    Object.entries(userSettings?.filters?.data ?? {}).filter(([key]) =>
       persistentFieldIds.includes(key),
     ),
   );
@@ -106,7 +116,7 @@ export const useUrlFilters = ({
     ...persistentFilters,
     ...getValidFilters(fields, searchParams),
   }));
-  const updateUserSettings = userSettings?.filters.save;
+  const updateUserSettings = userSettings?.filters?.save;
 
   const setStateAndUrl = useMemo(
     () => createSetStateAndUrl(setSelectedFilters, updateSearchParams, updateUserSettings, fields),

@@ -1,3 +1,5 @@
+/* eslint-disable @cspell/spellchecker */
+
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -13,6 +15,8 @@ import tseslint from 'typescript-eslint';
 
 import cspellConfigs from '@cspell/eslint-plugin/configs';
 import eslint from '@eslint/js';
+
+import disabledRules from './eslint-rules-disabled';
 
 const fileName = fileURLToPath(import.meta.url);
 const dirName = dirname(fileName);
@@ -32,11 +36,11 @@ export default [
       'yarn.lock',
       'package-lock.json',
       '**/generated/**',
+      'testing/cypress.config.ts',
     ],
   },
   eslint.configs.all,
   ...tseslint.configs.all,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   importPlugin.flatConfigs.recommended,
   cspellConfigs.recommended,
   {
@@ -44,6 +48,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
+        process: 'readonly',
       },
       parser: tseslint.parser,
       parserOptions: {
@@ -51,9 +56,7 @@ export default [
           jsx: true,
         },
         ecmaVersion: 'latest',
-        projectService: {
-          defaultProject: 'tsconfig.json',
-        },
+        project: 'tsconfig.eslint.json',
         sourceType: 'module',
         tsconfigRootDir: import.meta.dirname,
       },
@@ -114,6 +117,7 @@ export default [
         'error',
         {
           argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
         },
       ],
@@ -122,8 +126,9 @@ export default [
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
       'arrow-body-style': 'off',
       camelcase: ['error', { allow: ['required_'] }],
+      'capitalized-comments': 'off',
       complexity: 'off',
-      'id-length': ['error', { exceptions: ['t'] }],
+      'id-length': ['error', { exceptions: ['t', 'e', 'x', 'y', 'a', 'b', '_', 'i'] }],
       'import/named': 'error',
       'import/no-duplicates': ['error', { 'prefer-inline': true }],
       'import/no-named-as-default-member': 'off',
@@ -131,13 +136,31 @@ export default [
       'import/order': 'off',
       'max-lines-per-function': ['error', 150],
       'max-statements': 'off',
+      'new-cap': [
+        'error',
+        { capIsNewExceptionPattern: 'Factory$', capIsNewExceptions: ['ImmutableMap'] },
+      ],
       'no-alert': 'off',
       'no-console': 'error',
       'no-duplicate-imports': 'off',
       'no-inline-comments': 'off',
       'no-magic-numbers': 'off',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              importNames: ['default', '*'],
+              message:
+                "Do not import React using default or star import. Import specific exports instead (e.g., `import { useState } from 'react'`).",
+              name: 'react',
+            },
+          ],
+        },
+      ],
       'no-ternary': 'off',
       'no-undefined': 'off',
+      'no-unused-vars': 'off',
       'no-warning-comments': 'off',
       'one-var': 'off',
       'perfectionist/sort-classes': [
@@ -205,4 +228,5 @@ export default [
     },
   },
   prettier,
+  ...(process.env.HUSKY_LINT_STAGED ? [] : [disabledRules]),
 ];

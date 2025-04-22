@@ -1,14 +1,15 @@
-import React, { memo } from 'react';
+import { type FC, memo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HorizontalNav, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 import { NetworkMapPageHeadings } from './components/DetailsSection/components/NetworkMapPageHeadings';
-import { NetworkMapDetailsTab, NetworkMapYAMLTab } from './tabs';
+import { NetworkMapDetailsTab } from './tabs/Details/NetworkMapDetailsTab';
+import NetworkMapYAMLTab from './tabs/YAML/NetworkMapYAMLTab';
 
 import './NetworkMapDetailsPage.style.css';
 
-const NetworkMapDetailsPageInternal: React.FC<{
+const NetworkMapDetailsPageInternal: FC<{
   name: string;
   namespace: string;
 }> = ({ name, namespace }) => {
@@ -16,14 +17,14 @@ const NetworkMapDetailsPageInternal: React.FC<{
 
   const pages = [
     {
+      component: () => <NetworkMapDetailsTab name={name} namespace={namespace} />,
       href: '',
       name: t('Details'),
-      component: () => <NetworkMapDetailsTab name={name} namespace={namespace} />,
     },
     {
+      component: () => <NetworkMapYAMLTab name={name} namespace={namespace} />,
       href: 'yaml',
       name: t('YAML'),
-      component: () => <NetworkMapYAMLTab name={name} namespace={namespace} />,
     },
   ];
 
@@ -36,10 +37,7 @@ const NetworkMapDetailsPageInternal: React.FC<{
 };
 const NetworkMapDetailsPageInternalMemo = memo(NetworkMapDetailsPageInternal);
 
-export const NetworkMapDetailsPage: React.FC<NetworkMapDetailsPageProps> = ({
-  name,
-  namespace,
-}) => {
+const NetworkMapDetailsPage: FC<NetworkMapDetailsPageProps> = ({ name, namespace }) => {
   return <NetworkMapDetailsPageInternalMemo name={name} namespace={namespace} />;
 };
 NetworkMapDetailsPage.displayName = 'NetworkMapDetailsPage';

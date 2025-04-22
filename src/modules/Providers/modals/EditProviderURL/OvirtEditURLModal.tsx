@@ -1,15 +1,16 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
-import { patchProviderURL } from './utils/patchProviderURL';
-import { validateOvirtURL } from '../../utils/validators';
-import { EditModal } from '../EditModal';
-import { EditProviderURLModalProps } from './EditProviderURLModal';
+import { validateOvirtURL } from '../../utils/validators/provider/ovirt/validateOvirtURL';
+import { EditModal } from '../EditModal/EditModal';
 
-export const OvirtEditURLModal: React.FC<EditProviderURLModalProps> = (props) => {
+import { patchProviderURL } from './utils/patchProviderURL';
+import type { EditProviderURLModalProps } from './EditProviderURLModal';
+
+export const OvirtEditURLModal: FC<EditProviderURLModalProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const ModalBody = (

@@ -1,7 +1,7 @@
-import React from 'react';
-import { useForkliftTranslation } from 'src/utils';
+import type { FC } from 'react';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
-export type AlignedDecimalProps = {
+type AlignedDecimalProps = {
   /**
    * The number to align.
    */
@@ -16,15 +16,15 @@ export type AlignedDecimalProps = {
   fractionalPrecision?: number;
 };
 
-export const AlignedDecimal: React.FC<AlignedDecimalProps> = ({
-  value,
-  unit = '',
+export const AlignedDecimal: FC<AlignedDecimalProps> = ({
   fractionalPrecision = 2,
+  unit = '',
+  value,
 }) => {
   const { t } = useForkliftTranslation();
 
   const [integerPart, fractionalPart] = value.toFixed(fractionalPrecision).split('.');
-  const formattedFractionalPart = fractionalPrecision === 0 ? ' ' : '.' + fractionalPart;
+  const formattedFractionalPart = fractionalPrecision === 0 ? ' ' : `.${fractionalPart}`;
 
   return (
     <div>

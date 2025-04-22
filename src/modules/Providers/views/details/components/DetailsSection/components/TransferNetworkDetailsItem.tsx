@@ -1,21 +1,22 @@
-import React from 'react';
-import { EditProviderDefaultTransferNetwork, useModal } from 'src/modules/Providers/modals';
+import type { FC } from 'react';
+import { EditProviderDefaultTransferNetwork } from 'src/modules/Providers/modals/EditProviderDefaultTransferNetwork/EditProviderDefaultTransferNetwork';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { DetailsItem } from '../../../../../utils';
-import { ProviderDetailsItemProps } from './ProviderDetailsItem';
+import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
-export const TransferNetworkDetailsItem: React.FC<ProviderDetailsItemProps> = ({
-  resource: provider,
+export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
   canPatch,
-  moreInfoLink,
   helpContent,
+  moreInfoLink,
+  resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
   const defaultMoreInfoLink =
-    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#selecting-migration-network-for-virt-provider_mtv';
+    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-virt_cnv#selecting-migration-network-for-virt-provider_dest_cnv';
   const defaultHelpContent = t(
     `You can select a default migration network for an OpenShift Virtualization provider in the
     Red Hat OpenShift web console to improve performance. The default migration network is used to
@@ -40,7 +41,10 @@ export const TransferNetworkDetailsItem: React.FC<ProviderDetailsItemProps> = ({
         'forklift.konveyor.io/defaultTransferNetwork',
       ]}
       onEdit={
-        canPatch && (() => showModal(<EditProviderDefaultTransferNetwork resource={provider} />))
+        canPatch &&
+        (() => {
+          showModal(<EditProviderDefaultTransferNetwork resource={provider} />);
+        })
       }
     />
   );

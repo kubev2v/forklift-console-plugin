@@ -1,19 +1,19 @@
-import React from 'react';
-import { isPlanEditable } from 'src/modules/Plans/utils';
-import { useModal } from 'src/modules/Providers/modals';
-import { DetailsItem } from 'src/modules/Providers/utils';
+import type { FC } from 'react';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 
-import { PlanDetailsItemProps } from '../../DetailsSection';
-import { EditPlanPreserveClusterCpuModel } from '../modals';
+import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
+import { EditPlanPreserveClusterCpuModel } from '../modals/EditPlanPreserveClusterCpuModel/EditPlanPreserveClusterCpuModel';
 
-export const PreserveClusterCpuModelDetailsItem: React.FC<PlanDetailsItemProps> = ({
-  resource,
+export const PreserveClusterCpuModelDetailsItem: FC<PlanDetailsItemProps> = ({
   canPatch,
-  helpContent,
   destinationProvider,
+  helpContent,
+  resource,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -42,13 +42,14 @@ export const PreserveClusterCpuModelDetailsItem: React.FC<PlanDetailsItemProps> 
       onEdit={
         canPatch &&
         isPlanEditable(resource) &&
-        (() =>
+        (() => {
           showModal(
             <EditPlanPreserveClusterCpuModel
               resource={resource}
               destinationProvider={destinationProvider}
             />,
-          ))
+          );
+        })
       }
     />
   );

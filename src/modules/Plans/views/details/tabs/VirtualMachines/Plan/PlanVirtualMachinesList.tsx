@@ -1,66 +1,68 @@
-import React, { FC } from 'react';
+import type { FC } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import {
-  GlobalActionWithSelection,
+  type GlobalActionWithSelection,
   StandardPageWithSelection,
 } from 'src/components/page/StandardPageWithSelection';
+import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ResourceFieldFactory } from '@components/common/utils/types';
-import {
+import type { ResourceField } from '@components/common/utils/types';
+import type {
   V1beta1PlanSpecVms,
   V1beta1PlanStatusConditions,
   V1beta1PlanStatusMigrationVms,
   V1beta1Provider,
 } from '@kubev2v/types';
+import { t } from '@utils/i18n';
 
-import { PlanVMsDeleteButton } from '../components';
-import { PlanData, VMData } from '../types';
+import { PlanVMsDeleteButton } from '../components/PlanVMsDeleteButton';
+import type { VMData } from '../types/VMData';
+
 import { PlanVirtualMachinesRow } from './PlanVirtualMachinesRow';
 
-const fieldsMetadataFactory: (isVsphere: boolean) => ResourceFieldFactory = (isVsphere) => (t) =>
-  [
-    {
-      resourceFieldId: 'name',
-      jsonPath: '$.specVM.name',
-      label: t('Name'),
-      isVisible: true,
-      isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
-      filter: {
-        type: 'freetext',
-        placeholderLabel: t('Filter by name'),
-      },
-      sortable: true,
+const fieldsMetadata: (isVsphere: boolean) => ResourceField[] = (isVsphere) => [
+  {
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: 'freetext',
     },
-    {
-      resourceFieldId: 'conditions',
-      jsonPath: (obj: VMData) => {
-        return obj?.conditions?.[0]?.category;
-      },
-      label: t('Conditions'),
-      isVisible: true,
-      sortable: true,
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
+    jsonPath: '$.specVM.name',
+    label: t('Name'),
+    resourceFieldId: 'name',
+    sortable: true,
+  },
+  {
+    isVisible: true,
+    jsonPath: (obj: VMData) => {
+      return obj?.conditions?.[0]?.category;
     },
-    {
-      resourceFieldId: 'actions',
-      label: '',
-      isAction: true,
-      isVisible: true,
-      sortable: false,
-      isHidden: !isVsphere,
-    },
-  ];
+    label: t('Conditions'),
+    resourceFieldId: 'conditions',
+    sortable: true,
+  },
+  {
+    isAction: true,
+    isHidden: !isVsphere,
+    isVisible: true,
+    label: '',
+    resourceFieldId: 'actions',
+    sortable: false,
+  },
+];
 
 const PageWithSelection = StandardPageWithSelection<VMData>;
 type PageGlobalActions = FC<GlobalActionWithSelection<VMData>>[];
 
 export const PlanVirtualMachinesList: FC<{
-  obj: PlanData;
+  planData: PlanData;
   sourceProvider?: V1beta1Provider;
-}> = ({ obj, sourceProvider }) => {
+}> = ({ planData, sourceProvider }) => {
   const { t } = useForkliftTranslation();
 
-  const { plan } = obj;
+  const { plan } = planData;
 
   const userSettings = loadUserSettings({ pageId: 'PlanVirtualMachines' });
 
@@ -69,27 +71,31 @@ export const PlanVirtualMachinesList: FC<{
     plan?.status?.migration?.vms || [];
 
   const vmDict: Record<string, V1beta1PlanStatusMigrationVms> = {};
-  migrationVirtualMachines.forEach((m) => (vmDict[m.id] = m));
+  migrationVirtualMachines.forEach((migration) => (vmDict[migration.id] = migration));
 
-  const conditions = plan?.status?.conditions?.filter((c) => c?.items && c.items.length > 0);
+  const conditions = plan?.status?.conditions?.filter(
+    (condition) => condition?.items && condition.items.length > 0,
+  );
   const conditionsDict: Record<string, V1beta1PlanStatusConditions[]> = {};
-  conditions?.forEach((c) => {
-    c.items.forEach((i) => {
+  conditions?.forEach((condition) => {
+    condition.items.forEach((i) => {
       const { id: vmID } = extractIdAndNameFromConditionItem(i);
-      conditionsDict[vmID] ? conditionsDict[vmID].push(c) : (conditionsDict[vmID] = [c]);
+      conditionsDict[vmID]
+        ? conditionsDict[vmID].push(condition)
+        : (conditionsDict[vmID] = [condition]);
     });
   });
 
   const vmData: VMData[] = virtualMachines.map((vm, index) => ({
+    conditions: conditionsDict[vm.id],
+    dvs: [],
+    jobs: [],
+    planData,
+    pods: [],
+    pvcs: [],
     specVM: vm,
     statusVM: vmDict[vm.id],
-    pods: [],
-    jobs: [],
-    pvcs: [],
-    dvs: [],
-    conditions: conditionsDict[vm.id],
     targetNamespace: plan?.spec?.targetNamespace,
-    planData: obj,
     vmIndex: index,
   }));
   const vmDataSource: [VMData[], boolean, unknown] = [vmData || [], true, undefined];
@@ -110,7 +116,7 @@ export const PlanVirtualMachinesList: FC<{
       title={t('Virtual Machines')}
       dataSource={vmDataSource}
       CellMapper={PlanVirtualMachinesRow}
-      fieldsMetadata={fieldsMetadataFactory(isVsphere)(t)}
+      fieldsMetadata={fieldsMetadata(isVsphere)}
       userSettings={userSettings}
       namespace={''}
       page={1}
@@ -132,16 +138,16 @@ export const PlanVirtualMachinesList: FC<{
  * @param {string} input - The string containing the condition item details.
  * @returns {{ id: string; name: string }} An object containing the extracted ID and name.
  */
-function extractIdAndNameFromConditionItem(input: string): { id: string; name: string } {
-  const idMatch = /id:([^ ]+)/.exec(input);
-  const nameMatch = /name:'([^']+)'/.exec(input);
+const extractIdAndNameFromConditionItem = (input: string): { id: string; name: string } => {
+  const idMatch = /id:(?<id>[^ ]+)/u.exec(input);
+  const nameMatch = /name:'(?<name>[^']+)'/u.exec(input);
 
   if (!idMatch || !nameMatch) {
     return { id: '', name: '' };
   }
 
   return {
-    id: idMatch[1],
-    name: nameMatch[1],
+    id: idMatch.groups?.id ?? '',
+    name: nameMatch?.groups?.name ?? '',
   };
-}
+};

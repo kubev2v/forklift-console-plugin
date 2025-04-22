@@ -1,4 +1,6 @@
-import { EnumGroup, EnumValue } from '../utils';
+import type { ReactNode } from 'react';
+
+import type { EnumGroup, EnumValue } from '../utils/types';
 
 /**
  * Components implementing this interface may be added to complex filters.
@@ -6,13 +8,13 @@ import { EnumGroup, EnumValue } from '../utils';
  * @see PrimaryFilters
  * @see AttributeValueFilter
  */
-export interface FilterTypeProps {
+export type FilterTypeProps = {
   filterId: string;
   /**
    * Filter apply handler. Implementation of filter values is filter specific.
    * @param values list of selected filter values
    */
-  onFilterUpdate(values: string[], resourceFieldId?: string);
+  onFilterUpdate: (values: string[], resourceFieldId?: string) => unknown;
   /**
    * A text located inside the filter field or next to it.
    */
@@ -42,13 +44,9 @@ export interface FilterTypeProps {
    */
   resolvedLanguage: string;
   /** Text that explains how to use the filter. */
-  helperText?: string | React.ReactNode;
+  helperText?: string | ReactNode;
   /** Toggles visibility of FilterIcon within the Select input field. */
   showFilterIcon?: boolean;
   /** Used for grouped enum filters that deal with groups pointing to different resources. */
   hasMultipleResources?: boolean;
-}
-
-export interface InlineFilter {
-  hasInlineFilter?: boolean;
-}
+};

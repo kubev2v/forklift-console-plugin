@@ -1,14 +1,16 @@
-import { useMemo, useState } from 'react';
+import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
 
-import { NAMESPACE, ResourceField } from '../utils';
-import { FieldSettings } from './types';
+import { NAMESPACE } from '../utils/constants';
+import type { ResourceField } from '../utils/types';
+
+import type { FieldSettings } from './types';
 
 const sameOrderAndVisibility = (a: ResourceField[], b: ResourceField[]): boolean => {
   if (a.length !== b.length) {
     return false;
   }
 
-  for (let i = 0; i < a.length; i++) {
+  for (let i = 0; i < a.length; i += 1) {
     if (
       a[i]?.resourceFieldId !== b[i]?.resourceFieldId ||
       Boolean(a[i]?.isVisible) !== Boolean(b[i]?.isVisible)
@@ -36,15 +38,15 @@ export const useFields = (
   currentNamespace: string,
   defaultFields: ResourceField[],
   userSettings?: FieldSettings,
-): [ResourceField[], React.Dispatch<React.SetStateAction<ResourceField[]>>] => {
+): [ResourceField[], Dispatch<SetStateAction<ResourceField[]>>] => {
   const {
+    clear: clearSettings = () => undefined,
     data: fieldsFromSettings = [],
     save: saveFieldsInSettings = () => undefined,
-    clear: clearSettings = () => undefined,
   } = userSettings || {};
 
   const [fields, setFields] = useState<ResourceField[]>(() => {
-    const supportedIds: { [id: string]: ResourceField } = defaultFields.reduce(
+    const supportedIds: Record<string, ResourceField> = defaultFields.reduce(
       (acc, it) => ({ ...acc, [it.resourceFieldId]: it }),
       {},
     );
@@ -59,7 +61,7 @@ export const useFields = (
         .filter((it) => idsToBeVisited.delete(it.resourceFieldId))
         // ignore unsupported fields
         .filter(({ resourceFieldId }) => supportedIds[resourceFieldId])
-        .map(({ resourceFieldId, isVisible }) => ({
+        .map(({ isVisible, resourceFieldId }) => ({
           ...supportedIds[resourceFieldId],
           // keep the invariant that identity resourceFields are always visible
           isVisible: isVisible || supportedIds[resourceFieldId].isIdentity,
@@ -75,7 +77,7 @@ export const useFields = (
 
   const namespaceAwareFields: ResourceField[] = useMemo(
     () =>
-      fields.map(({ resourceFieldId, isVisible = false, ...rest }) => ({
+      fields.map(({ isVisible = false, resourceFieldId, ...rest }) => ({
         resourceFieldId,
         ...rest,
         isVisible: resourceFieldId === NAMESPACE ? !currentNamespace : isVisible,
@@ -91,7 +93,7 @@ export const useFields = (
         clearSettings();
       } else {
         saveFieldsInSettings(
-          fields.map(({ resourceFieldId, isVisible }) => ({ resourceFieldId, isVisible })),
+          fields.map(({ isVisible, resourceFieldId }) => ({ isVisible, resourceFieldId })),
         );
       }
     },

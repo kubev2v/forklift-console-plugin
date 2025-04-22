@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import type { FC, MouseEvent, ReactNode } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 
 import {
@@ -15,10 +15,10 @@ import {
   Popover,
   Truncate,
 } from '@patternfly/react-core';
-import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
-import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
+import { HelpIcon } from '@patternfly/react-icons';
+import { PencilAltIcon as Pencil } from '@patternfly/react-icons';
 
-import { ensureArray } from '../../helpers';
+import { ensureArray } from '../../helpers/ensureArray';
 
 /**
  * Component for displaying a details item.
@@ -27,16 +27,16 @@ import { ensureArray } from '../../helpers';
  * @component
  * @param {DetailsItemProps} props - The props of the details item.
  */
-export const DetailsItem: React.FC<DetailsItemProps> = ({
-  title,
+export const DetailsItem: FC<DetailsItemProps> = ({
+  canEdit,
+  content,
+  crumbs,
   helpContent,
-  showHelpIconNextToTitle,
   moreInfoLabel,
   moreInfoLink,
-  crumbs,
-  content,
   onEdit,
-  canEdit,
+  showHelpIconNextToTitle,
+  title,
 }) => {
   const contents = ensureArray(content);
   const onEdits = ensureArray(onEdit);
@@ -54,7 +54,7 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
       <DescriptionListDescription>
         {contents?.map((value: ReactNode, index) => (
           <ContentField
-            key={'content-field-' + index}
+            key={`content-field-${index}`}
             content={value}
             onEdit={onEdits ? (onEdits[index] as () => void) : null}
             canEdit={canEdit}
@@ -70,14 +70,14 @@ export const DetailsItem: React.FC<DetailsItemProps> = ({
  *
  * @component
  */
-export const DisplayTitle: React.FC<{
+const DisplayTitle: FC<{
   title: string;
   helpContent: ReactNode;
   showHelpIconNextToTitle: boolean;
   moreInfoLabel?: string;
   moreInfoLink?: string;
   crumbs?: string[];
-}> = ({ title, helpContent, showHelpIconNextToTitle, moreInfoLabel, moreInfoLink, crumbs }) =>
+}> = ({ crumbs, helpContent, moreInfoLabel, moreInfoLink, showHelpIconNextToTitle, title }) =>
   helpContent ? (
     <DescriptionTitleWithHelp
       title={title}
@@ -96,7 +96,7 @@ export const DisplayTitle: React.FC<{
  *
  * @component
  */
-export const DescriptionTitleWithHelp: React.FC<{
+const DescriptionTitleWithHelp: FC<{
   title: string;
   helpContent: ReactNode;
   showHelpIconNextToTitle: boolean;
@@ -104,14 +104,14 @@ export const DescriptionTitleWithHelp: React.FC<{
   moreInfoLink?: string;
   crumbs?: string[];
 }> = ({
-  title,
-  helpContent,
-  showHelpIconNextToTitle = false,
   crumbs,
+  helpContent,
   moreInfoLabel = 'More info:',
   moreInfoLink,
+  showHelpIconNextToTitle = false,
+  title,
 }) => {
-  const onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
+  const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
@@ -136,8 +136,8 @@ export const DescriptionTitleWithHelp: React.FC<{
             {crumbs && crumbs.length > 0 && (
               <FlexItem>
                 <Breadcrumb>
-                  {crumbs.map((c) => (
-                    <BreadcrumbItem key={c}>{c}</BreadcrumbItem>
+                  {crumbs.map((crumb) => (
+                    <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>
                   ))}
                 </Breadcrumb>
               </FlexItem>
@@ -162,7 +162,7 @@ export const DescriptionTitleWithHelp: React.FC<{
  *
  * @component
  */
-export const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
+const DescriptionTitle: FC<{ title: string }> = ({ title }) => (
   <DescriptionListTerm> {title} </DescriptionListTerm>
 );
 
@@ -176,11 +176,11 @@ export const DescriptionTitle: React.FC<{ title: string }> = ({ title }) => (
  * @param {Function} onEdit - Function to be called when the button is clicked.
  */
 
-export const ContentField: React.FC<{
+const ContentField: FC<{
   content: ReactNode;
   onEdit: () => void;
   canEdit?: boolean;
-}> = ({ content, onEdit, canEdit = true }) =>
+}> = ({ canEdit = true, content, onEdit }) =>
   canEdit && onEdit ? (
     <DescriptionListDescription>
       <Flex alignItems={{ default: 'alignItemsCenter' }}>
@@ -209,7 +209,7 @@ export const ContentField: React.FC<{
  * @property {Function | Function[]} onEdit - Array of functions per content field to be called when the edit button is clicked or null if the field is non editable.
  * @property {boolean} [showEditButton] - If true, show the edit button next to the content field, when missing falling back to onEdit existence.
  */
-export type DetailsItemProps = {
+type DetailsItemProps = {
   title: string;
   helpContent?: ReactNode;
   showHelpIconNextToTitle?: boolean;

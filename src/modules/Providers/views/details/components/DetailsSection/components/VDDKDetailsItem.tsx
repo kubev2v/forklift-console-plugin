@@ -1,24 +1,25 @@
-import React from 'react';
-import { EditProviderVDDKImage, useModal } from 'src/modules/Providers/modals';
+import type { FC } from 'react';
+import { EditProviderVDDKImage } from 'src/modules/Providers/modals/EditProviderVDDKImage/EditProviderVDDKImage';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
-import { DetailsItem } from '../../../../../utils';
-import { ProviderDetailsItemProps } from './ProviderDetailsItem';
+import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
-export const VDDKDetailsItem: React.FC<ProviderDetailsItemProps> = ({
-  resource: provider,
+export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
   canPatch,
-  moreInfoLink,
   helpContent,
+  moreInfoLink,
+  resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
   const defaultMoreInfoLink =
-    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
+    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
   const defaultHelpContent = (
     <ForkliftTrans>
       Virtual Disk Development Kit (VDDK) container init image path. The path must be empty or a
@@ -34,7 +35,7 @@ export const VDDKDetailsItem: React.FC<ProviderDetailsItemProps> = ({
     <DetailsItem
       title={t('VDDK init image')}
       content={
-        provider?.spec?.settings?.['vddkInitImage'] || (
+        provider?.spec?.settings?.vddkInitImage || (
           <Label isCompact color={'orange'}>
             <ExclamationTriangleIcon color="#F0AB00" />
             <span className="forklift-section-provider-empty-vddk-label-text">{t('Empty')}</span>
@@ -44,7 +45,12 @@ export const VDDKDetailsItem: React.FC<ProviderDetailsItemProps> = ({
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'settings', 'vddkInitImage']}
-      onEdit={canPatch && (() => showModal(<EditProviderVDDKImage resource={provider} />))}
+      onEdit={
+        canPatch &&
+        (() => {
+          showModal(<EditProviderVDDKImage resource={provider} />);
+        })
+      }
     />
   );
 };
