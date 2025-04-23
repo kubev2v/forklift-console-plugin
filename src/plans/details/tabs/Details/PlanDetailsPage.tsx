@@ -9,7 +9,7 @@ import type { PlanPageProps } from '../../utils/types';
 import DetailsSection from './components/DetailsSection/DetailsSection';
 import SettingsSection from './components/SettingsSection/SettingsSection';
 
-const PlanDetailsPage: FC<PlanPageProps> = ({ obj: plan }) => {
+const PlanDetailsPage: FC<PlanPageProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
 
   return (

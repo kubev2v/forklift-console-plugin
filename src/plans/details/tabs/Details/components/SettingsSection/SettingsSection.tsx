@@ -6,15 +6,18 @@ import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 
-import WarmDetailsItem from './components/WarmDetailItem';
-import usePlanProviders from './hooks/usePlanProviders';
+import TargetNamespaceDetailsItem from './components/PlanTargetNamespace/TargetNamespaceDetailItem';
+import TransferNetworkDetailsItem from './components/PlanTransferNetwork/TransferNetworkDetailItem';
+import WarmDetailsItem from './components/PlanWarm/WarmDetailItem';
+import PreserveClusterCpuModelDetailsItem from './components/PreserveClusterCpuModel/PreserveClusterCpuModelDetailItem';
+import usePlanSourceProvider from './hooks/usePlanSourceProvider';
 
 type SettingsSectionProps = {
   plan: V1beta1Plan;
 };
 
 const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
-  const { sourceProvider } = usePlanProviders(plan);
+  const { sourceProvider } = usePlanSourceProvider(plan);
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
@@ -32,21 +35,17 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
       >
         <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
 
-        {/* <TransferNetworkDetailsItem
-          resource={plan}
+        <TransferNetworkDetailsItem plan={plan} canPatch={canPatch} />
+
+        <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
+
+        <PreserveClusterCpuModelDetailsItem
+          plan={plan}
           canPatch={canPatch}
-          destinationProvider={destinationProvider}
+          shouldRender={isOvirt}
         />
 
-        <TargetNamespaceDetailsItem
-          resource={plan}
-          canPatch={canPatch}
-          destinationProvider={destinationProvider}
-        />
-
-        {isOvirt && <PreserveClusterCpuModelDetailsItem resource={plan} canPatch={canPatch} />}
-
-        {isVsphere && <PreserveStaticIPsDetailsItem resource={plan} canPatch={canPatch} />}
+        {/*{isVsphere && <PreserveStaticIPsDetailsItem resource={plan} canPatch={canPatch} />}
 
         {isVsphere && <SetLUKSEncryptionPasswordsDetailsItem resource={plan} canPatch={canPatch} />}
 
