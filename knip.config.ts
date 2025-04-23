@@ -24,7 +24,7 @@ export default {
     'src/modules/StorageMaps/views/details/StorageMapDetailsPage.tsx',
     'src/modules/StorageMaps/yamlTemplates/defaultYamlTemplate.ts',
   ],
-  ignore: ['i18next-parser.config.js', 'testing/**'],
+  ignore: ['i18next-parser.config.js', 'testing/**', 'eslint.ide.config.ts'],
   ignoreBinaries: ['kubectl', 'test:e2e'],
   ignoreDependencies: ['ts-node'],
 } satisfies KnipConfig;

@@ -8734,7 +8734,7 @@ terminal-link@^3.0.0:
     ansi-escapes "^5.0.0"
     supports-hyperlinks "^2.2.0"
 
-terser-webpack-plugin@^5.3.10, terser-webpack-plugin@^5.3.11:
+terser-webpack-plugin@^5.3.11:
   version "5.3.14"
   resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-5.3.14.tgz#9031d48e57ab27567f02ace85c7d690db66c3e06"
   integrity sha512-vkZjpUjb6OMS7dhV+tILUW6BhpDR7P2L/aQSAv+Uwk+m8KATX9EccViHTJR2qDtACKPIYndLGCyl3FMo+r2LMw==
@@ -9919,11 +9919,6 @@ yargs@^17.3.1, yargs@^17.7.2:
     string-width "^4.2.3"
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
-
-yarn@^1.22.22:
-  version "1.22.22"
-  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.22.tgz#ac34549e6aa8e7ead463a7407e1c7390f61a6610"
-  integrity sha512-prL3kGtyG7o9Z9Sv8IPfBNrWTDmXB4Qbes8A9rEzt6wkJV8mUvoirjU0Mp3GGAU06Y0XQyA3/2/RQFVuK7MTfg==
 
 yn@3.1.1:
   version "3.1.1"

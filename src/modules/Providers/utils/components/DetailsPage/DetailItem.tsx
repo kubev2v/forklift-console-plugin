@@ -15,81 +15,9 @@ import {
   Popover,
   Truncate,
 } from '@patternfly/react-core';
-import { HelpIcon } from '@patternfly/react-icons';
-import { PencilAltIcon as Pencil } from '@patternfly/react-icons';
+import { HelpIcon, PencilAltIcon as Pencil } from '@patternfly/react-icons';
 
 import { ensureArray } from '../../helpers/ensureArray';
-
-/**
- * Component for displaying a details item.
- * It can optionally include a help text popover, breadcrumbs, and an edit button.
- *
- * @component
- * @param {DetailsItemProps} props - The props of the details item.
- */
-export const DetailsItem: FC<DetailsItemProps> = ({
-  canEdit,
-  content,
-  crumbs,
-  helpContent,
-  moreInfoLabel,
-  moreInfoLink,
-  onEdit,
-  showHelpIconNextToTitle,
-  title,
-}) => {
-  const contents = ensureArray(content);
-  const onEdits = ensureArray(onEdit);
-
-  return (
-    <DescriptionListGroup>
-      <DisplayTitle
-        title={title}
-        helpContent={helpContent}
-        showHelpIconNextToTitle={showHelpIconNextToTitle}
-        moreInfoLabel={moreInfoLabel}
-        moreInfoLink={moreInfoLink}
-        crumbs={crumbs}
-      />
-      <DescriptionListDescription>
-        {contents?.map((value: ReactNode, index) => (
-          <ContentField
-            key={`content-field-${index}`}
-            content={value}
-            onEdit={onEdits ? (onEdits[index] as () => void) : null}
-            canEdit={canEdit}
-          />
-        ))}
-      </DescriptionListDescription>
-    </DescriptionListGroup>
-  );
-};
-
-/**
- * Component for displaying an item's title
- *
- * @component
- */
-const DisplayTitle: FC<{
-  title: string;
-  helpContent: ReactNode;
-  showHelpIconNextToTitle: boolean;
-  moreInfoLabel?: string;
-  moreInfoLink?: string;
-  crumbs?: string[];
-}> = ({ crumbs, helpContent, moreInfoLabel, moreInfoLink, showHelpIconNextToTitle, title }) =>
-  helpContent ? (
-    <DescriptionTitleWithHelp
-      title={title}
-      helpContent={helpContent}
-      showHelpIconNextToTitle={showHelpIconNextToTitle}
-      moreInfoLabel={moreInfoLabel}
-      moreInfoLink={moreInfoLink}
-      crumbs={crumbs}
-    />
-  ) : (
-    <DescriptionTitle title={title} />
-  );
 
 /**
  * Component for displaying title with help text in a popover.
@@ -167,6 +95,32 @@ const DescriptionTitle: FC<{ title: string }> = ({ title }) => (
 );
 
 /**
+ * Component for displaying an item's title
+ *
+ * @component
+ */
+const DisplayTitle: FC<{
+  title: string;
+  helpContent: ReactNode;
+  showHelpIconNextToTitle: boolean;
+  moreInfoLabel?: string;
+  moreInfoLink?: string;
+  crumbs?: string[];
+}> = ({ crumbs, helpContent, moreInfoLabel, moreInfoLink, showHelpIconNextToTitle, title }) =>
+  helpContent ? (
+    <DescriptionTitleWithHelp
+      title={title}
+      helpContent={helpContent}
+      showHelpIconNextToTitle={showHelpIconNextToTitle}
+      moreInfoLabel={moreInfoLabel}
+      moreInfoLink={moreInfoLink}
+      crumbs={crumbs}
+    />
+  ) : (
+    <DescriptionTitle title={title} />
+  );
+
+/**
  * Component for displaying an editable or non editable content field with the following format:
  * The content field's element and if editable, next to that appears a press-able inline
  * link edit button with the pencil icon, for triggering the onEdit callback.
@@ -187,7 +141,7 @@ const ContentField: FC<{
         <FlexItem spacer={{ default: 'spacerNone' }}>{content}</FlexItem>
         <FlexItem spacer={{ default: 'spacerNone' }}>
           <Button variant="link" isInline onClick={onEdit}>
-            <Pencil className="forklift-page-details-edit-pencil" />
+            <Pencil className="pf-u-ml-sm" />
           </Button>
         </FlexItem>
       </Flex>
@@ -195,6 +149,14 @@ const ContentField: FC<{
   ) : (
     <DescriptionListDescription>{content}</DescriptionListDescription>
   );
+
+/**
+ * Component for displaying a details item.
+ * It can optionally include a help text popover, breadcrumbs, and an edit button.
+ *
+ * @component
+ * @param {DetailsItemProps} props - The props of the details item.
+ */
 
 /**
  * Type for the props of the DetailsItem component.
@@ -219,4 +181,42 @@ type DetailsItemProps = {
   content: ReactNode | ReactNode[];
   onEdit?: (() => void) | (() => void)[];
   canEdit?: boolean;
+};
+
+export const DetailsItem: FC<DetailsItemProps> = ({
+  canEdit,
+  content,
+  crumbs,
+  helpContent,
+  moreInfoLabel,
+  moreInfoLink,
+  onEdit,
+  showHelpIconNextToTitle,
+  title,
+}) => {
+  const contents = ensureArray(content);
+  const onEdits = ensureArray(onEdit);
+
+  return (
+    <DescriptionListGroup>
+      <DisplayTitle
+        title={title}
+        helpContent={helpContent}
+        showHelpIconNextToTitle={showHelpIconNextToTitle!}
+        moreInfoLabel={moreInfoLabel}
+        moreInfoLink={moreInfoLink}
+        crumbs={crumbs}
+      />
+      <DescriptionListDescription>
+        {contents?.map((value, index) => (
+          <ContentField
+            key={`content-field-${index}`}
+            content={value as ReactNode}
+            onEdit={onEdits?.[index] as () => void}
+            canEdit={canEdit}
+          />
+        ))}
+      </DescriptionListDescription>
+    </DescriptionListGroup>
+  );
 };
