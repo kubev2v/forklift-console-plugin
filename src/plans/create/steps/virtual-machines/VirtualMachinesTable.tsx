@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { ControllerRenderProps } from 'react-hook-form';
+import { type ControllerRenderProps, useWatch } from 'react-hook-form';
 import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import { OpenShiftVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/OpenStackVirtualMachinesList';
@@ -10,18 +10,19 @@ import { VSphereVirtualMachinesList } from 'src/modules/Providers/views/details/
 
 import type { ProviderVirtualMachine } from '@kubev2v/types';
 
-import { type CreatePlanFormValues, ProviderType } from '../../constants';
-import { useCreatePlanFieldWatch } from '../../hooks';
+import { type CreatePlanFormData, ProviderType } from '../../constants';
+import { useCreatePlanFormContext } from '../../hooks';
 import { GeneralFormFieldId } from '../general-information/constants';
 
 import type { VmFormFieldId } from './constants';
 
 type VirtualMachinesTableProps = {
-  field: ControllerRenderProps<CreatePlanFormValues, VmFormFieldId>;
+  field: ControllerRenderProps<CreatePlanFormData, VmFormFieldId>;
 };
 
-export const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({ field }) => {
-  const sourceProvider = useCreatePlanFieldWatch(GeneralFormFieldId.SourceProvider);
+const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({ field }) => {
+  const { control } = useCreatePlanFormContext();
+  const sourceProvider = useWatch({ control, name: GeneralFormFieldId.SourceProvider });
   const [vmData, vmDataLoading] = useInventoryVms({ provider: sourceProvider }, true, false);
 
   const tableProps = {
@@ -58,3 +59,5 @@ export const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({ field }) =
       return <></>;
   }
 };
+
+export default VirtualMachinesTable;

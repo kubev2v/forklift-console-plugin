@@ -4,6 +4,7 @@ export enum Namespace {
   AllProjects = '#ALL_NS#',
   KonveyorForklift = 'konveyor-forklift',
   OpenshiftMtv = 'openshift-mtv',
+  Default = 'default',
 }
 
 export const ALL_PROJECTS_KEY = '#ALL_NS#';

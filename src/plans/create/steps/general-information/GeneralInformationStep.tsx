@@ -1,26 +1,33 @@
 import type { FC } from 'react';
-import ProviderSelect from 'src/plans/components/ProviderSelect';
+import { Controller, useWatch } from 'react-hook-form';
 
-import ControlledFormGroup from '@components/common/ControlledFormGroup';
+import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Form, FormSection, MenuToggleStatus, TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFieldWatch, useCreatePlanFormContext } from '../../hooks';
+import ProviderSelect from '../../../components/ProviderSelect';
+import { useCreatePlanFormContext } from '../../hooks';
+import { NetworkMapFieldId } from '../network-mappings/constants';
+import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
-import { PlanProjectField } from './PlanProjectField';
-import { TargetProjectField } from './TargetProjectField';
+import PlanProjectField from './PlanProjectField';
+import TargetProjectField from './TargetProjectField';
 
-export const GeneralInformationStep: FC = () => {
+const GeneralInformationStep: FC = () => {
   const { t } = useForkliftTranslation();
   const {
+    control,
     formState: { errors },
     setValue,
+    unregister,
   } = useCreatePlanFormContext();
-  const planProject = useCreatePlanFieldWatch(GeneralFormFieldId.PlanProject);
-  const targetProject = useCreatePlanFieldWatch(GeneralFormFieldId.TargetProject);
+  const [planProject, targetProject] = useWatch({
+    control,
+    name: [GeneralFormFieldId.PlanProject, GeneralFormFieldId.TargetProject],
+  });
 
   return (
     <WizardStepContainer title={t('General')}>
@@ -28,20 +35,23 @@ export const GeneralInformationStep: FC = () => {
         <FormSection title={t('Plan information')} titleElement="h3">
           <p>{t('Name your plan and choose the project you would like it to be created in.')}</p>
 
-          <ControlledFormGroup
+          <FormGroupWithErrorText
             isRequired
             fieldId={GeneralFormFieldId.PlanName}
             label={generalFormFieldLabels[GeneralFormFieldId.PlanName]}
-            controller={{
-              render: ({ field }) => (
+          >
+            <Controller
+              name={GeneralFormFieldId.PlanName}
+              control={control}
+              render={({ field }) => (
                 <TextInput
                   {...field}
                   validated={getInputValidated(Boolean(errors[GeneralFormFieldId.PlanName]))}
                 />
-              ),
-              rules: { required: t('Plan name is required.') },
-            }}
-          />
+              )}
+              rules={{ required: t('Plan name is required.') }}
+            />
+          </FormGroupWithErrorText>
 
           <PlanProjectField />
         </FormSection>
@@ -53,12 +63,15 @@ export const GeneralInformationStep: FC = () => {
             )}
           </p>
 
-          <ControlledFormGroup
+          <FormGroupWithErrorText
             isRequired
             fieldId={GeneralFormFieldId.SourceProvider}
             label={generalFormFieldLabels[GeneralFormFieldId.SourceProvider]}
-            controller={{
-              render: ({ field }) => (
+          >
+            <Controller
+              name={GeneralFormFieldId.SourceProvider}
+              control={control}
+              render={({ field }) => (
                 <ProviderSelect
                   placeholder={t('Select source provider')}
                   id={GeneralFormFieldId.SourceProvider}
@@ -66,20 +79,24 @@ export const GeneralInformationStep: FC = () => {
                   value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
+                    unregister([VmFormFieldId.Vms, NetworkMapFieldId.NetworkMappings]);
                   }}
                   status={errors[GeneralFormFieldId.SourceProvider] && MenuToggleStatus.danger}
                 />
-              ),
-              rules: { required: t('Source provider is required.') },
-            }}
-          />
+              )}
+              rules={{ required: t('Source provider is required.') }}
+            />
+          </FormGroupWithErrorText>
 
-          <ControlledFormGroup
+          <FormGroupWithErrorText
             isRequired
             fieldId={GeneralFormFieldId.TargetProvider}
             label={generalFormFieldLabels[GeneralFormFieldId.TargetProvider]}
-            controller={{
-              render: ({ field }) => (
+          >
+            <Controller
+              name={GeneralFormFieldId.TargetProvider}
+              control={control}
+              render={({ field }) => (
                 <ProviderSelect
                   isTarget
                   placeholder={t('Select target provider')}
@@ -95,10 +112,10 @@ export const GeneralInformationStep: FC = () => {
                   }}
                   status={errors[GeneralFormFieldId.TargetProvider] && MenuToggleStatus.danger}
                 />
-              ),
-              rules: { required: t('Target provider is required.') },
-            }}
-          />
+              )}
+              rules={{ required: t('Target provider is required.') }}
+            />
+          </FormGroupWithErrorText>
 
           <TargetProjectField />
         </FormSection>
@@ -106,3 +123,5 @@ export const GeneralInformationStep: FC = () => {
     </WizardStepContainer>
   );
 };
+
+export default GeneralInformationStep;

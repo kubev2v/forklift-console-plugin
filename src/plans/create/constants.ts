@@ -1,8 +1,11 @@
+import type { FieldValues } from 'react-hook-form';
+
 import type { ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
 import type { WizardStepType } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
 import type { GeneralFormFieldId } from './steps/general-information/constants';
+import type { NetworkMapFieldId, NetworkMapping } from './steps/network-mappings/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
 export enum PlanWizardStepId {
@@ -51,13 +54,14 @@ export const firstStep: WizardStepType = {
   parentId: PlanWizardStepId.BasicSetup,
 };
 
-export type CreatePlanFormValues = {
+export type CreatePlanFormData = FieldValues & {
   [GeneralFormFieldId.PlanName]: string;
   [GeneralFormFieldId.PlanProject]: string;
   [GeneralFormFieldId.SourceProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProject]: string;
-  [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine[]>;
+  [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine>;
+  [NetworkMapFieldId.NetworkMappings]: NetworkMapping[];
 };
 
 export enum ProviderType {

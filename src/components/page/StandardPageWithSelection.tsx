@@ -1,13 +1,19 @@
-import { type FC, useState } from 'react';
+import { type ComponentProps, type FC, useCallback, useState } from 'react';
 
+import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import { Td, Th } from '@patternfly/react-table';
+import { isEmpty } from '@utils/helpers';
 
 import { DefaultHeader } from '../common/TableView/DefaultHeader';
 import type { RowProps, TableViewHeaderProps } from '../common/TableView/types';
 import { withTr } from '../common/TableView/withTr';
-import type { GlobalActionToolbarProps } from '../common/utils/types';
 
 import StandardPage, { type StandardPageProps } from './StandardPage';
+import type {
+  IdBasedSelectionProps,
+  WithHeaderSelectionProps,
+  WithRowSelectionProps,
+} from './types';
 
 const withRowSelection = <T,>({
   canSelect,
@@ -16,14 +22,16 @@ const withRowSelection = <T,>({
   isSelected,
   toggleExpandFor,
   toggleSelectFor,
-}) => {
+}: WithRowSelectionProps<T>) => {
   const Enhanced = (props: RowProps<T>) => (
     <>
       {isExpanded && (
         <Td
           expand={{
-            isExpanded: isExpanded(props.resourceData),
-            onToggle: () => toggleExpandFor([props.resourceData]),
+            isExpanded: isExpanded(props.resourceData) ?? false,
+            onToggle: () => {
+              toggleExpandFor([props.resourceData]);
+            },
             rowIndex: props.resourceIndex,
           }}
         />
@@ -31,17 +39,19 @@ const withRowSelection = <T,>({
       {isSelected && (
         <Td
           select={{
-            isDisabled: !canSelect(props.resourceData),
-            isSelected: isSelected(props.resourceData),
-            onSelect: () => toggleSelectFor([props.resourceData]),
+            isDisabled: !canSelect?.(props.resourceData),
+            isSelected: isSelected(props.resourceData) ?? false,
+            onSelect: () => {
+              toggleSelectFor([props.resourceData]);
+            },
             rowIndex: props.resourceIndex,
           }}
         />
       )}
-      <CellMapper {...props} />
+      {CellMapper && <CellMapper {...props} />}
     </>
   );
-  Enhanced.displayName = `${CellMapper.displayName || 'CellMapper'}WithSelection`;
+  Enhanced.displayName = `${CellMapper?.displayName ?? 'CellMapper'}WithSelection`;
   return Enhanced;
 };
 
@@ -51,65 +61,33 @@ const withHeaderSelection = <T,>({
   isExpanded,
   isSelected,
   toggleSelectFor,
-}) => {
+}: WithHeaderSelectionProps<T>) => {
   const Enhanced = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
-    const selectableItems = dataOnScreen.filter(canSelect);
-    const allSelected = selectableItems.length > 0 && selectableItems.every(isSelected);
+    const selectableItems = canSelect && dataOnScreen ? dataOnScreen?.filter(canSelect) : [];
+    const allSelected =
+      !isEmpty(selectableItems) &&
+      selectableItems.every((item) => (isSelected ? isSelected(item) : false));
 
     return (
       <>
         {isExpanded && <Th />}
-        {isSelected && (
+        {isSelected && !isEmpty(selectableItems) && (
           <Th
             select={{
               isHeaderSelectDisabled: !selectableItems?.length, // Disable if no selectable items
               isSelected: allSelected,
-              onSelect: () => toggleSelectFor(selectableItems),
+              onSelect: () => {
+                toggleSelectFor(selectableItems);
+              },
             }}
           />
         )}
-        <HeaderMapper {...{ ...other, dataOnScreen }} />
+        {HeaderMapper && <HeaderMapper {...{ ...other, dataOnScreen }} />}
       </>
     );
   };
-  Enhanced.displayName = `${HeaderMapper.displayName || 'HeaderMapper'}WithSelection`;
+  Enhanced.displayName = `${HeaderMapper?.displayName ?? 'HeaderMapper'}WithSelection`;
   return Enhanced;
-};
-
-type IdBasedSelectionProps<T> = {
-  /**
-   * @returns string that can be used as an unique identifier
-   */
-  toId?: (item: T) => string;
-
-  /**
-   * @returns true if items can be selected, false otherwise
-   */
-  canSelect?: (item: T) => boolean;
-
-  /**
-   * onSelect is called when selection changes
-   */
-  onSelect?: (selectedIds: string[]) => void;
-
-  /**
-   * Selected ids
-   */
-  selectedIds?: string[];
-
-  /**
-   * onExpand is called when expand changes
-   */
-  onExpand?: (expandedIds: string[]) => void;
-
-  /**
-   * Expanded ids
-   */
-  expandedIds?: string[];
-};
-
-export type GlobalActionWithSelection<T> = GlobalActionToolbarProps<T> & {
-  selectedIds: string[];
 };
 
 /**
@@ -129,17 +107,18 @@ const withIdBasedSelection = <T,>({
   const Enhanced = (props: StandardPageProps<T>) => {
     const [selectedIds, setSelectedIds] = useState(initialSelectedIds);
     const [expandedIds, setExpandedIds] = useState(initialExpandedIds);
+    const itemToId = useCallback((item: T) => (toId ? toId(item) : ''), []);
 
     const isSelected =
-      onSelect || selectedIds ? (item: T) => selectedIds.includes(toId(item)) : undefined;
+      onSelect || selectedIds ? (item: T) => selectedIds?.includes(itemToId(item)) : undefined;
     const isExpanded =
-      onExpand || expandedIds ? (item: T) => expandedIds.includes(toId(item)) : undefined;
+      onExpand || expandedIds ? (item: T) => expandedIds?.includes(itemToId(item)) : undefined;
 
     const toggleSelectFor = (items: T[]) => {
-      const ids = items.map(toId);
+      const ids = items.map(itemToId);
       const allSelected = ids.every((id) => selectedIds?.includes(id));
       const newSelectedIds = [
-        ...(selectedIds || []).filter((it) => !ids.includes(it)),
+        ...(selectedIds ?? []).filter((it) => !ids.includes(it)),
         ...(allSelected ? [] : ids),
       ];
 
@@ -151,10 +130,10 @@ const withIdBasedSelection = <T,>({
     };
 
     const toggleExpandFor = (items: T[]) => {
-      const ids = items.map(toId);
+      const ids = items.map(itemToId);
       const allExpanded = ids.every((id) => expandedIds?.includes(id));
       const newExpandedIds = [
-        ...(expandedIds || []).filter((it) => !ids.includes(it)),
+        ...(expandedIds ?? []).filter((it) => !ids.includes(it)),
         ...(allExpanded ? [] : ids),
       ];
 
@@ -195,9 +174,12 @@ const withIdBasedSelection = <T,>({
         RowMapper={RowMapper}
         HeaderMapper={HeaderMapper}
         GlobalActionToolbarItems={props.GlobalActionToolbarItems?.map(
-          (Action: FC<GlobalActionWithSelection<T>>) => {
-            const ActionWithSelection = (props) => <Action {...{ ...props, selectedIds }} />;
-            ActionWithSelection.displayName = `${Action.displayName || 'Action'}WithSelection`;
+          (Action: FC<GlobalActionToolbarProps<T>>) => {
+            const ActionWithSelection = (actionProps: ComponentProps<typeof Action>) => (
+              <Action {...actionProps} selectedIds={selectedIds} />
+            );
+            ActionWithSelection.displayName = `${Action.displayName ?? 'Action'}WithSelection`;
+
             return ActionWithSelection;
           },
         )}
@@ -254,7 +236,6 @@ export type StandardPageWithSelectionProps<T> = {
  *   canSelect={item => item.status !== 'archived'}
  *   onSelect={selectedIds => console.log('Selected IDs:', selectedIds)}
  *   selectedIds={['1', '2']}
- *   // ...other props
  * />
  */
 export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionProps<T>) => {

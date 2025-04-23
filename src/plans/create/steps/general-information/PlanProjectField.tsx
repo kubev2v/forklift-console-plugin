@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import { useWatch } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 
-import ControlledFormGroup from '@components/common/ControlledFormGroup';
+import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
 import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { MenuToggleStatus } from '@patternfly/react-core';
@@ -11,15 +11,16 @@ import { useCreatePlanFormContext } from '../../hooks';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 
-export const PlanProjectField: FC = () => {
+const PlanProjectField: FC = () => {
   const { t } = useForkliftTranslation();
   const {
+    control,
     formState: { errors },
     setValue,
   } = useCreatePlanFormContext();
   const [targetProject, targetProvider, sourceProvider] = useWatch({
+    control,
     name: [
-      GeneralFormFieldId.PlanProject,
       GeneralFormFieldId.TargetProject,
       GeneralFormFieldId.TargetProvider,
       GeneralFormFieldId.SourceProvider,
@@ -28,12 +29,15 @@ export const PlanProjectField: FC = () => {
   const [projectOptions] = useProjectNameSelectOptions();
 
   return (
-    <ControlledFormGroup
+    <FormGroupWithErrorText
       isRequired
       fieldId={GeneralFormFieldId.PlanProject}
       label={generalFormFieldLabels[GeneralFormFieldId.PlanProject]}
-      controller={{
-        render: ({ field }) => (
+    >
+      <Controller
+        name={GeneralFormFieldId.PlanProject}
+        control={control}
+        render={({ field }) => (
           <div ref={field.ref}>
             <TypeaheadSelect
               isScrollable
@@ -62,9 +66,11 @@ export const PlanProjectField: FC = () => {
               }}
             />
           </div>
-        ),
-        rules: { required: t('Plan project is required.') },
-      }}
-    />
+        )}
+        rules={{ required: t('Plan project is required.') }}
+      />
+    </FormGroupWithErrorText>
   );
 };
+
+export default PlanProjectField;

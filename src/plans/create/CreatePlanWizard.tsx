@@ -5,13 +5,16 @@ import { Form, Title, Wizard, WizardStep, type WizardStepType } from '@patternfl
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { GeneralInformationStep } from './steps/general-information/GeneralInformationStep';
-import { VirtualMachinesStep } from './steps/virtual-machines/VirtualMachinesStep';
+import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
+import NetworkMappingsStep from './steps/network-mappings/NetworkMappingsStep';
+import VirtualMachinesStep from './steps/virtual-machines/VirtualMachinesStep';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
-import { CreatePlanWizardFooter } from './CreatePlanWizardFooter';
+import CreatePlanWizardFooter from './CreatePlanWizardFooter';
 import { useCreatePlanForm, useDefaultFormValues } from './hooks';
 
-export const CreatePlanWizard: FC = () => {
+import './CreatePlanWizard.style.scss';
+
+const CreatePlanWizard: FC = () => {
   const { t } = useForkliftTranslation();
   const defaultValues = useDefaultFormValues();
   const form = useCreatePlanForm({
@@ -41,6 +44,7 @@ export const CreatePlanWizard: FC = () => {
         onStepChange={(_event, step) => {
           setCurrentStep(step);
         }}
+        className="create-plan-wizard"
       >
         <WizardStep
           {...getStepProps(PlanWizardStepId.BasicSetup)}
@@ -58,9 +62,7 @@ export const CreatePlanWizard: FC = () => {
               key={PlanWizardStepId.NetworkMapping}
               {...getStepProps(PlanWizardStepId.NetworkMapping)}
             >
-              <Form>
-                <Title headingLevel="h2">{t('Network mappings')}</Title>
-              </Form>
+              <NetworkMappingsStep />
             </WizardStep>,
             <WizardStep
               key={PlanWizardStepId.StorageMapping}
@@ -110,3 +112,5 @@ export const CreatePlanWizard: FC = () => {
     </FormProvider>
   );
 };
+
+export default CreatePlanWizard;

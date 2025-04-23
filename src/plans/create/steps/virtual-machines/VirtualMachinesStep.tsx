@@ -10,15 +10,15 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks';
 
 import { VmFormFieldId } from './constants';
-import { VirtualMachinesTable } from './VirtualMachinesTable';
+import VirtualMachinesTable from './VirtualMachinesTable';
 
-export const VirtualMachinesStep: FC = () => {
+const VirtualMachinesStep: FC = () => {
   const { t } = useForkliftTranslation();
   const { control, getFieldState } = useCreatePlanFormContext();
   const { error } = getFieldState(VmFormFieldId.Vms);
 
   const validate = useCallback(
-    (value: Record<string, ProviderVirtualMachine[]>) => {
+    (value: Record<string, ProviderVirtualMachine>) => {
       if (isEmpty(value) || Object.keys(value).length === 0) {
         return t('Must select at least 1 VM.');
       }
@@ -49,3 +49,5 @@ export const VirtualMachinesStep: FC = () => {
     </WizardStepContainer>
   );
 };
+
+export default VirtualMachinesStep;

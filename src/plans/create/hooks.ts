@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useForm, useFormContext, type UseFormProps, useWatch } from 'react-hook-form';
+import { useForm, useFormContext, type UseFormProps } from 'react-hook-form';
 
 import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
@@ -7,9 +7,9 @@ import { ALL_PROJECTS_KEY } from '@utils/constants';
 import { getDefaultNamespace } from '@utils/namespaces';
 
 import { GeneralFormFieldId } from './steps/general-information/constants';
-import type { CreatePlanFormValues } from './constants';
+import type { CreatePlanFormData } from './constants';
 
-export const useDefaultFormValues = (): CreatePlanFormValues => {
+export const useDefaultFormValues = (): Partial<CreatePlanFormData> => {
   const [activeNamespace] = useActiveNamespace();
   const defaultNamespace = getDefaultNamespace();
   const [projectOptions] = useProjectNameSelectOptions();
@@ -25,18 +25,11 @@ export const useDefaultFormValues = (): CreatePlanFormValues => {
   }, [activeNamespace, defaultNamespace, projectOptions]);
 
   return {
-    [GeneralFormFieldId.PlanName]: '',
     [GeneralFormFieldId.PlanProject]: initialPlanProject,
-    [GeneralFormFieldId.SourceProvider]: undefined,
-    [GeneralFormFieldId.TargetProject]: '',
-    [GeneralFormFieldId.TargetProvider]: undefined,
   };
 };
 
-export const useCreatePlanForm = (props: UseFormProps<CreatePlanFormValues>) =>
-  useForm<CreatePlanFormValues>(props);
+export const useCreatePlanForm = (props: UseFormProps<CreatePlanFormData>) =>
+  useForm<CreatePlanFormData>(props);
 
-export const useCreatePlanFormContext = () => useFormContext<CreatePlanFormValues>();
-
-export const useCreatePlanFieldWatch = <T extends keyof CreatePlanFormValues>(fieldId: T) =>
-  useWatch<CreatePlanFormValues, T>({ name: fieldId });
+export const useCreatePlanFormContext = () => useFormContext<CreatePlanFormData>();
