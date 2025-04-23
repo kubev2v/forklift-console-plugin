@@ -1,22 +1,19 @@
 import type { FC } from 'react';
 import { useHistory } from 'react-router';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef } from '@kubev2v/types';
-import { Button, type ButtonProps, ButtonVariant } from '@patternfly/react-core';
+import { Button, ButtonVariant } from '@patternfly/react-core';
+
+import { getResourceUrl } from '../../../modules/Providers/utils/helpers/getResourceUrl';
+import { useForkliftTranslation } from '../../../utils/i18n';
 
 type ProvidersAddButtonProps = {
   namespace?: string;
   dataTestId?: string;
-  buttonProps?: ButtonProps;
+  canCreate?: boolean;
 };
 
-const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({
-  buttonProps,
-  dataTestId,
-  namespace,
-}) => {
+const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, dataTestId, namespace }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
 
@@ -35,9 +32,9 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({
       data-testid={dataTestId}
       variant={ButtonVariant.primary}
       onClick={onClick}
-      {...buttonProps}
+      isDisabled={!canCreate}
     >
-      {t('Create Provider (old)')}
+      {t('Create Provider')}
     </Button>
   );
 };

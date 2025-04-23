@@ -166,7 +166,7 @@ export const fieldsMetadata = [
   },
 ];
 
-const ProvidersListPage: FC<{
+const ProvidersListPageOld: FC<{
   namespace: string;
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
@@ -212,7 +212,7 @@ const ProvidersListPage: FC<{
       RowMapper={ProviderRow}
       fieldsMetadata={fieldsMetadata}
       namespace={namespace}
-      title={t('Providers')}
+      title={t('Providers (old)')}
       userSettings={userSettings}
       alerts={
         !inventoryLoading && inventoryError
@@ -254,4 +254,4 @@ const EmptyState_: FC<EmptyStateProps> = ({ AddButton, namespace }) => {
   );
 };
 
-export default ProvidersListPage;
+export default ProvidersListPageOld;

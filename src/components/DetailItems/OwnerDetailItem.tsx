@@ -3,7 +3,7 @@ import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/
 import { OwnerReferencesItem } from 'src/modules/Providers/utils/components/DetailsPage/OwnerReferencesItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { moreInfoOwnerDetailItem } from '@utils/links';
+import { MORE_INFO_OWNER_DETAIL_ITEM } from '@utils/links';
 
 import type { ResourceDetailsItemProps } from './utils/types';
 
@@ -25,7 +25,7 @@ const OwnerDetailsItem: FC<ResourceDetailsItemProps> = ({
     <DetailsItem
       title={t('Owner')}
       content={<OwnerReferencesItem resource={resource} />}
-      moreInfoLink={moreInfoLink ?? moreInfoOwnerDetailItem}
+      moreInfoLink={moreInfoLink ?? MORE_INFO_OWNER_DETAIL_ITEM}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['metadata', 'ownerReferences']}
     />
