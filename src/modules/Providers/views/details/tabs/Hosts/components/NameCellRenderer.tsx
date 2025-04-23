@@ -4,7 +4,7 @@ import { TableCell } from 'src/modules/Providers/utils/components/TableCell/Tabl
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { HostModelRef } from '@kubev2v/types';
-import {ExternalLinkAltIcon} from '@patternfly/react-icons';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
 import type { HostCellProps } from './HostCellProps';
 

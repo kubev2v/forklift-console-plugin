@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 /* eslint-disable @cspell/spellchecker */
 
 import { dirname, join } from 'path';

@@ -5,7 +5,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
-import {BellIcon} from '@patternfly/react-icons';
+import { BellIcon } from '@patternfly/react-icons';
 
 import type { VmData } from './components/VMCellProps';
 import { useInventoryVms } from './utils/hooks/useInventoryVms';

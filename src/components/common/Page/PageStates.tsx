@@ -11,8 +11,7 @@ import {
   Spinner,
   Title,
 } from '@patternfly/react-core';
-import { ExclamationCircleIcon } from '@patternfly/react-icons';
-import { SearchIcon } from '@patternfly/react-icons';
+import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
 
 /**
  * The page basic states.

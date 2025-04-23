@@ -15,9 +15,7 @@ import {
   Switch,
   TextInput,
 } from '@patternfly/react-core';
-import { EyeIcon } from '@patternfly/react-icons';
-import { EyeSlashIcon } from '@patternfly/react-icons';
-import { HelpIcon } from '@patternfly/react-icons';
+import { EyeIcon, EyeSlashIcon, HelpIcon } from '@patternfly/react-icons';
 
 import type { EditComponentProps } from '../BaseCredentialsSection';
 

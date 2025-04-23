@@ -2,20 +2,20 @@ import type { FC } from 'react';
 
 import { Spinner } from '@patternfly/react-core';
 import {
+  BanIcon,
   CheckCircleIcon,
+  ClipboardListIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
+  HourglassHalfIcon,
+  HourglassStartIcon,
   InfoCircleIcon,
   MinusCircleIcon,
+  NotStartedIcon,
   PlusCircleIcon,
+  SyncAltIcon,
+  UnknownIcon,
 } from '@patternfly/react-icons';
-import { BanIcon } from '@patternfly/react-icons';
-import { ClipboardListIcon } from '@patternfly/react-icons';
-import { HourglassHalfIcon } from '@patternfly/react-icons';
-import { HourglassStartIcon } from '@patternfly/react-icons';
-import { NotStartedIcon } from '@patternfly/react-icons';
-import { SyncAltIcon } from '@patternfly/react-icons';
-import { UnknownIcon } from '@patternfly/react-icons';
 
 const StatusIcon: FC<{ phase: string }> = ({ phase }) => {
   switch (phase) {

@@ -13,9 +13,7 @@ import {
   HelperText,
   HelperTextItem,
 } from '@patternfly/react-core';
-import { EyeIcon } from '@patternfly/react-icons';
-import { EyeSlashIcon } from '@patternfly/react-icons';
-import { PencilAltIcon as Pencil } from '@patternfly/react-icons';
+import { EyeIcon, EyeSlashIcon, PencilAltIcon as Pencil } from '@patternfly/react-icons';
 
 import { patchSecretData } from './edit/patchSecretData';
 import {
