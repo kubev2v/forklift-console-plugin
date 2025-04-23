@@ -26,6 +26,7 @@ export const TableView = <T,>({
   'aria-label': ariaLabel,
   children,
   currentNamespace,
+  emptyStateColSpan = '100%',
   entities,
   expandedIds,
   Header,
@@ -48,7 +49,7 @@ export const TableView = <T,>({
       <Tbody>
         {hasChildren && (
           <Tr>
-            <Td colSpan={visibleColumns.length || 1}>
+            <Td colSpan={emptyStateColSpan as number}>
               <Bullseye>{children}</Bullseye>
             </Td>
           </Tr>
@@ -141,4 +142,9 @@ type TableViewProps<T> = {
    * Expanded ids
    */
   expandedIds?: string[];
+
+  /**
+   * colSpan of empty state
+   */
+  emptyStateColSpan?: number | string;
 };

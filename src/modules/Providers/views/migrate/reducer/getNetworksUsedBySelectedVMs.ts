@@ -4,6 +4,52 @@ import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCel
 
 import { POD_NETWORK } from './actions';
 
+const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
+  switch (vm.providerType) {
+    case 'vsphere': {
+      return vm?.networks?.map((network) => network?.id) ?? [];
+    }
+    case 'openstack': {
+      return Object.keys(vm?.addresses ?? {});
+    }
+    case 'ovirt': {
+      return vm?.nics?.map((nic) => nic?.profile) ?? [];
+    }
+    case 'openshift': {
+      return (vm?.object?.spec?.template?.spec?.networks ?? []).reduce((acc: string[], network) => {
+        const networkName = network?.multus?.networkName;
+
+        if (network?.pod) {
+          acc.push(POD_NETWORK);
+        } else if (networkName) {
+          acc.push(networkName);
+        }
+
+        return acc;
+      }, []);
+    }
+    case 'ova': {
+      return vm?.Networks?.map((network) => network.name) ?? [];
+    }
+    default:
+      return [];
+  }
+};
+
+export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicProfile[]): string[] =>
+  toNetworksOrProfiles(vm).reduce((acc: string[], network) => {
+    const nicProfileNetwork = nicProfiles?.find(
+      (nicProfile) => nicProfile?.id === network,
+    )?.network;
+    if (vm.providerType === 'ovirt' && nicProfileNetwork) {
+      acc.push(nicProfileNetwork);
+    } else {
+      acc.push(network);
+    }
+
+    return acc;
+  }, []);
+
 // based on packages legacy/src/Plans/components/Wizard/helpers.tsx
 export const getNetworksUsedBySelectedVms = (
   selectedVMs: VmData[],
@@ -18,36 +64,3 @@ export const getNetworksUsedBySelectedVms = (
     ),
   );
 };
-
-const toNetworksOrProfiles = (vm: ProviderVirtualMachine): unknown[] => {
-  switch (vm.providerType) {
-    case 'vsphere': {
-      return vm?.networks?.map((network) => network?.id) ?? [];
-    }
-    case 'openstack': {
-      return Object.keys(vm?.addresses ?? {});
-    }
-    case 'ovirt': {
-      return vm?.nics?.map((nic) => nic?.profile) ?? [];
-    }
-    case 'openshift': {
-      return (
-        vm?.object?.spec?.template?.spec?.networks?.map((network) =>
-          network?.pod ? POD_NETWORK : network?.multus?.networkName,
-        ) ?? []
-      );
-    }
-    case 'ova': {
-      return vm?.networks?.map((network) => Object.values(network)[0]) ?? [];
-    }
-    default:
-      return [];
-  }
-};
-
-export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicProfile[]) =>
-  toNetworksOrProfiles(vm).map((network) =>
-    vm.providerType === 'ovirt' && nicProfiles
-      ? nicProfiles.find((nicProfile) => nicProfile?.id === network)?.network
-      : network,
-  );
