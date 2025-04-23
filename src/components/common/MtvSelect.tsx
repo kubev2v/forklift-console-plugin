@@ -8,7 +8,7 @@ import {
   type SelectProps,
 } from '@patternfly/react-core';
 
-type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'children'> & {
+type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'children' | 'className'> & {
   id: string;
   value: string;
   status?: MenuToggleStatus;
@@ -18,6 +18,7 @@ type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'children'> & {
 
 const MtvSelect: FC<MtvSelectProps> = ({
   children,
+  className,
   id,
   isDisabled,
   onSelect,
@@ -30,9 +31,11 @@ const MtvSelect: FC<MtvSelectProps> = ({
   return (
     <Select
       isScrollable
+      shouldFocusToggleOnSelect
       id={id}
       isOpen={isOpen}
       selected={value}
+      className={className}
       toggle={(ref) => (
         <MenuToggle
           isFullWidth
@@ -49,8 +52,8 @@ const MtvSelect: FC<MtvSelectProps> = ({
         </MenuToggle>
       )}
       onOpenChange={setIsOpen}
-      onSelect={(event, value) => {
-        onSelect?.(event, value);
+      onSelect={(event, selectedValue) => {
+        onSelect?.(event, selectedValue);
         setIsOpen(false);
       }}
     >

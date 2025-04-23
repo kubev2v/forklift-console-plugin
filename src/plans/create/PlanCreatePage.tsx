@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { PageSection, PageSectionTypes, PageSectionVariants, Title } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { CreatePlanWizard } from './CreatePlanWizard';
+import CreatePlanWizard from './CreatePlanWizard';
 
 const PlanCreatePage: FC = () => {
   const { t } = useForkliftTranslation();

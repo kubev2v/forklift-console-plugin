@@ -54,12 +54,13 @@ export type ResourceField = {
   filter?: FilterDef;
   // if true then the field filters state should persist between sessions
   isPersistent?: boolean;
-  compareFn?: (a: any, b: any, locale: string) => number;
+  compareFn?: (a: string, b: string, locale: string) => number;
 };
 
 export type GlobalActionToolbarProps<T> = {
   // data currently visible on the screen (i.e. adjusted by paging and filtering)
   dataOnScreen: T[];
+  selectedIds?: string[];
 };
 
 /**

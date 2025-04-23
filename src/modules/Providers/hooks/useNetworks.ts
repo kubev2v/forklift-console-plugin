@@ -7,6 +7,7 @@ import type {
   OVirtNetwork,
   ProviderType,
   V1beta1Provider,
+  V1NetworkAttachmentDefinition,
   VSphereNetwork,
 } from '@kubev2v/types';
 
@@ -24,15 +25,17 @@ const podNetwork: InventoryNetwork = {
 };
 
 export type InventoryNetwork =
-  | OpenShiftNetworkAttachmentDefinition
+  | (Omit<OpenShiftNetworkAttachmentDefinition, 'object'> & {
+      object: V1NetworkAttachmentDefinition | undefined;
+    })
   | OpenstackNetwork
   | OVirtNetwork
   | VSphereNetwork
   | OvaNetwork;
 
 export const useSourceNetworks = (
-  provider: V1beta1Provider,
-): [InventoryNetwork[], boolean, Error] => {
+  provider: V1beta1Provider | undefined,
+): [InventoryNetwork[], boolean, Error | null] => {
   const providerType: ProviderType = provider?.spec?.type as ProviderType;
   const {
     error,
@@ -54,14 +57,14 @@ export const useSourceNetworks = (
     }
 
     return networksList;
-  }, [networks]);
+  }, [networks, provider?.spec?.type, providerType]);
 
   return [typedNetworks, loading, error];
 };
 
 export const useOpenShiftNetworks = (
-  provider: V1beta1Provider,
-): [OpenShiftNetworkAttachmentDefinition[], boolean, Error] => {
+  provider: V1beta1Provider | undefined,
+): [OpenShiftNetworkAttachmentDefinition[], boolean, Error | null] => {
   const isOpenShift = provider?.spec?.type === 'openshift';
   const {
     error,
