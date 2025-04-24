@@ -313,9 +313,13 @@ const StandardPageInner = <T,>({
   };
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
 
-  const supportedMatchers = extraSupportedMatchers
-    ? reduceValueFilters(extraSupportedMatchers, defaultValueMatchers)
-    : defaultValueMatchers;
+  const supportedMatchers = useMemo(
+    () =>
+      extraSupportedMatchers
+        ? reduceValueFilters(extraSupportedMatchers, defaultValueMatchers)
+        : defaultValueMatchers,
+    [extraSupportedMatchers],
+  );
   const supportedFilters = extraSupportedFilters
     ? { ...defaultSupportedFilters, ...extraSupportedFilters }
     : defaultSupportedFilters;
