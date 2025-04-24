@@ -5,7 +5,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, PageSection } from '@patternfly/react-core';
-import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
+import { BellIcon } from '@patternfly/react-icons';
 
 import type { VmData } from './components/VMCellProps';
 import { useInventoryVms } from './utils/hooks/useInventoryVms';
@@ -14,6 +14,25 @@ import { OpenStackVirtualMachinesList } from './OpenStackVirtualMachinesList';
 import { OvaVirtualMachinesList } from './OvaVirtualMachinesList';
 import { OVirtVirtualMachinesList } from './OVirtVirtualMachinesList';
 import { VSphereVirtualMachinesList } from './VSphereVirtualMachinesList';
+
+export const ProviderVirtualMachinesListWrapper: FC<ProviderVirtualMachinesProps> = (props) => {
+  switch (props.obj?.provider?.spec?.type) {
+    case 'openshift':
+      return <OpenShiftVirtualMachinesList {...props} />;
+    case 'openstack':
+      return <OpenStackVirtualMachinesList {...props} />;
+    case 'ovirt':
+      return <OVirtVirtualMachinesList {...props} />;
+    case 'vsphere':
+      return <VSphereVirtualMachinesList {...props} />;
+    case 'ova':
+      return <OvaVirtualMachinesList {...props} />;
+    case undefined:
+    default:
+      // unsupported provider or loading errors will be handled by parent page
+      return <></>;
+  }
+};
 
 export type ProviderVirtualMachinesProps = {
   title?: string;
@@ -24,7 +43,6 @@ export type ProviderVirtualMachinesProps = {
   initialSelectedIds?: string[];
   showActions: boolean;
   className?: string;
-  selectedCountLabel?: (selectedIdCount: number) => string;
 };
 
 export const ProviderVirtualMachines: FC<{ name: string; namespace: string }> = ({
@@ -69,22 +87,4 @@ export const ProviderVirtualMachines: FC<{ name: string; namespace: string }> = 
       />
     </>
   );
-};
-
-export const ProviderVirtualMachinesListWrapper: FC<ProviderVirtualMachinesProps> = (props) => {
-  switch (props.obj?.provider?.spec?.type) {
-    case 'openshift':
-      return <OpenShiftVirtualMachinesList {...props} />;
-    case 'openstack':
-      return <OpenStackVirtualMachinesList {...props} />;
-    case 'ovirt':
-      return <OVirtVirtualMachinesList {...props} />;
-    case 'vsphere':
-      return <VSphereVirtualMachinesList {...props} />;
-    case 'ova':
-      return <OvaVirtualMachinesList {...props} />;
-    default:
-      // unsupported provider or loading errors will be handled by parent page
-      return <></>;
-  }
 };
