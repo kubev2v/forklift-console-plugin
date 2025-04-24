@@ -7,11 +7,11 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { Label } from '@patternfly/react-core';
 import { getPlanPreserveClusterCpuModel } from '@utils/crds/plans/selectors';
 
-import type { SettingsDetailsItemProps } from '../../utils/types';
+import type { EditableDetailsItemProps } from '../../../utils/types';
 
 import EditPlanPreserveClusterCpuModel from './EditPlanPreserveClusterCpuModel';
 
-const PreserveClusterCpuModelDetailsItem: FC<SettingsDetailsItemProps> = ({
+const PreserveClusterCpuModelDetailsItem: FC<EditableDetailsItemProps> = ({
   canPatch,
   plan,
   shouldRender,
@@ -27,7 +27,7 @@ const PreserveClusterCpuModelDetailsItem: FC<SettingsDetailsItemProps> = ({
     <DetailsItem
       title={t('Preserve CPU model')}
       content={
-        <Label isCompact color={preserveClusterCpuModel ? 'green' : 'blue'}>
+        <Label isCompact color="grey">
           {preserveClusterCpuModel ? t('Preserve CPU model') : t('Use system default')}
         </Label>
       }
