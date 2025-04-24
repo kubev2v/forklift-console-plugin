@@ -8,8 +8,9 @@ import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import ProviderSelect from '../../../components/ProviderSelect';
+import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks';
-import { NetworkMapFieldId } from '../network-mappings/constants';
+import { NetworkMapFieldId } from '../network-map/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
@@ -30,7 +31,7 @@ const GeneralInformationStep: FC = () => {
   });
 
   return (
-    <WizardStepContainer title={t('General')}>
+    <WizardStepContainer title={planStepNames[PlanWizardStepId.General]}>
       <Form>
         <FormSection title={t('Plan information')} titleElement="h3">
           <p>{t('Name your plan and choose the project you would like it to be created in.')}</p>

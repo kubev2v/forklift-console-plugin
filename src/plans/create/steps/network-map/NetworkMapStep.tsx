@@ -8,6 +8,7 @@ import { Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks';
 import { GeneralFormFieldId } from '../general-information/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
@@ -16,26 +17,27 @@ import { defaultNetMapping, NetworkMapFieldId } from './constants';
 import NetworkMapFieldTable from './NetworkMapFieldTable';
 import { getSourceNetworkLabels } from './utils';
 
-const NetworkMappingsStep = () => {
+const NetworkMapStep = () => {
   const { t } = useForkliftTranslation();
   const { control, getFieldState, setValue } = useCreatePlanFormContext();
-  const { error: netMappingsError } = getFieldState(NetworkMapFieldId.NetworkMappings);
-  const [targetProject, sourceProvider, targetProvider, vms, netMappings] = useWatch({
+  const { error: networkMapError } = getFieldState(NetworkMapFieldId.NetworkMap);
+  const [targetProject, sourceProvider, targetProvider, vms, networkMap] = useWatch({
     control,
     name: [
       GeneralFormFieldId.TargetProject,
       GeneralFormFieldId.SourceProvider,
       GeneralFormFieldId.TargetProvider,
       VmFormFieldId.Vms,
-      NetworkMapFieldId.NetworkMappings,
+      NetworkMapFieldId.NetworkMap,
     ],
   });
-  const isNetMappingsEmpty = isEmpty(netMappings);
 
   const [availableSourceNetworks, sourceNetworksLoading, sourceNetworksError] =
     useSourceNetworks(sourceProvider);
   const [availableTargetNetworks, targetNetworksLoading, targetNetworksError] =
     useOpenShiftNetworks(targetProvider);
+  const isNetMapEmpty = isEmpty(networkMap);
+  const isLoading = sourceNetworksLoading || targetNetworksLoading;
 
   const { other: otherSourceLabels, used: usedSourceLabels } = getSourceNetworkLabels(
     sourceProvider,
@@ -43,24 +45,24 @@ const NetworkMappingsStep = () => {
     Object.values(vms),
   );
 
-  // When the network mappings are empty, default to source network values used by VMs,
+  // When the network map is empty, default to source network values used by VMs,
   // otherwise set empty inputs for the field array to force an empty field table row.
   useEffect(() => {
-    if (!sourceNetworksLoading && isNetMappingsEmpty) {
+    if (!isLoading && isNetMapEmpty) {
       if (isEmpty(usedSourceLabels)) {
-        setValue(NetworkMapFieldId.NetworkMappings, [defaultNetMapping]);
+        setValue(NetworkMapFieldId.NetworkMap, [defaultNetMapping]);
         return;
       }
 
       setValue(
-        NetworkMapFieldId.NetworkMappings,
+        NetworkMapFieldId.NetworkMap,
         usedSourceLabels.map((label) => ({
           [NetworkMapFieldId.SourceNetwork]: label,
           [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
         })),
       );
     }
-  }, [sourceNetworksLoading, isNetMappingsEmpty, usedSourceLabels, setValue]);
+  }, [isLoading, isNetMapEmpty, usedSourceLabels, setValue]);
 
   const targetNetworks = useMemo(
     () =>
@@ -81,10 +83,10 @@ const NetworkMappingsStep = () => {
   );
 
   return (
-    <WizardStepContainer title={t('Network mappings')}>
+    <WizardStepContainer title={planStepNames[PlanWizardStepId.NetworkMap]}>
       <Stack hasGutter>
-        {netMappingsError?.root && (
-          <Alert variant={AlertVariant.danger} isInline title={netMappingsError.root.message} />
+        {networkMapError?.root && (
+          <Alert variant={AlertVariant.danger} isInline title={networkMapError.root.message} />
         )}
 
         {isEmpty(usedSourceLabels) && !sourceNetworksLoading && (
@@ -99,7 +101,7 @@ const NetworkMappingsStep = () => {
           targetNetworks={targetNetworks}
           usedSourceLabels={usedSourceLabels}
           otherSourceLabels={otherSourceLabels}
-          isLoading={sourceNetworksLoading || targetNetworksLoading}
+          isLoading={isLoading}
           loadError={sourceNetworksError ?? targetNetworksError}
         />
       </Stack>
@@ -107,4 +109,4 @@ const NetworkMappingsStep = () => {
   );
 };
 
-export default NetworkMappingsStep;
+export default NetworkMapStep;
