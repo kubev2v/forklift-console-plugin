@@ -7,8 +7,8 @@ import {
 import { networkMapTemplate } from '../../create/templates/networkMapTemplate';
 import { planTemplate } from '../../create/templates/planTemplate';
 import { storageMapTemplate } from '../../create/templates/storageMapTemplate';
-import { toId } from '../../details/tabs/VirtualMachines/components/ProviderVirtualMachinesList';
 import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
+import { getVmId } from '../../details/tabs/VirtualMachines/utils/helpers/vmProps';
 import {
   type CreateVmMigrationPageState,
   MULTIPLE_NICS_ON_THE_SAME_NETWORK,
@@ -137,7 +137,7 @@ export const createInitialState = ({
           },
           targetNamespace: namespace,
           vms: selectedVms.map((data) => ({
-            id: toId(data),
+            id: getVmId(data),
             name: data.name,
             namespace: data.namespace,
           })),
