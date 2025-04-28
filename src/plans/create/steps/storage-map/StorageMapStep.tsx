@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useWatch } from 'react-hook-form';
-import { useOpenShiftStorages, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
+import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Alert, AlertVariant, Stack } from '@patternfly/react-core';
@@ -12,8 +12,9 @@ import { useCreatePlanFormContext } from '../../hooks';
 import { GeneralFormFieldId } from '../general-information/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
-import { defaultStorageMapping, StorageMapFieldId, type TargetStorage } from './constants';
+import { defaultStorageMapping, StorageMapFieldId } from './constants';
 import StorageMapFieldTable from './StorageMapFieldTable';
+import useTargetStorages from './useTargetStorages';
 import { getSourceStorageLabels } from './utils';
 
 const StorageMapStep = () => {
@@ -33,8 +34,10 @@ const StorageMapStep = () => {
 
   const [availableSourceStorages, sourceStoragesLoading, sourceStoragesError] =
     useSourceStorages(sourceProvider);
-  const [availableTargetStorages, targetStoragesLoading, targetStoragesError] =
-    useOpenShiftStorages(targetProvider);
+  const [targetStorages, targetStoragesLoading, targetStoragesError] = useTargetStorages(
+    targetProvider,
+    targetProject,
+  );
   const isStorageMapEmpty = isEmpty(storageMap);
   const isLoading = sourceStoragesLoading || targetStoragesLoading;
 
@@ -42,31 +45,6 @@ const StorageMapStep = () => {
     sourceProvider,
     availableSourceStorages,
     Object.values(vms),
-  );
-
-  const targetStorages = useMemo(
-    () =>
-      availableTargetStorages?.reduce((acc: TargetStorage[], storage) => {
-        if (storage.namespace === targetProject || !storage.namespace) {
-          const isDefault =
-            storage?.object?.metadata?.annotations?.[
-              'storageclass.kubernetes.io/is-default-class'
-            ] === 'true';
-          const targetStorage: TargetStorage = {
-            id: storage.uid,
-            isDefault,
-            name: storage.name,
-          };
-
-          if (isDefault) {
-            return [targetStorage, ...acc];
-          }
-          return [...acc, targetStorage];
-        }
-
-        return acc;
-      }, []),
-    [availableTargetStorages, targetProject],
   );
   const defaultTargetStorageName = targetStorages?.[0]?.name;
 

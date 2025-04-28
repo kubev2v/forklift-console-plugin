@@ -2,8 +2,10 @@ import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { mapSourceStoragesToLabels } from 'src/modules/Providers/views/migrate/reducer/mapSourceToLabels';
 
 import type {
+  OpenstackVM,
   OpenstackVolume,
   OVirtDisk,
+  OVirtVM,
   ProviderVirtualMachine,
   V1beta1Provider,
 } from '@kubev2v/types';
@@ -16,6 +18,31 @@ type StorageMappingId = `${StorageMapFieldId.StorageMap}.${number}.${keyof Stora
 
 export const getStorageMapFieldId = (id: keyof StorageMapping, index: number): StorageMappingId =>
   `${StorageMapFieldId.StorageMap}.${index}.${id}`;
+
+const getOpenstackVolumeTypeIds = (vm: OpenstackVM, disks: (OVirtDisk | OpenstackVolume)[]) => {
+  const vmDisks =
+    vm.attachedVolumes?.map((av) =>
+      (disks as OpenstackVolume[])?.find((disk) => disk.id === av.ID),
+    ) ?? [];
+  const volumeTypeIds: string[] = vmDisks ? vmDisks.map((disk) => disk?.volumeType ?? '') : [];
+
+  if (vm?.imageID) {
+    volumeTypeIds.push('glance');
+  }
+
+  return volumeTypeIds;
+};
+
+const getOvirtStorageDomainIds = (vm: OVirtVM, disks: (OVirtDisk | OpenstackVolume)[]) => {
+  const vmDisks = vm.diskAttachments?.map((da) =>
+    (disks as OVirtDisk[]).find((disk) => disk.id === da.disk),
+  );
+  const storageDomainIds: string[] = vmDisks
+    ? vmDisks.map((disk) => disk?.storageDomain ?? '')
+    : [];
+
+  return storageDomainIds;
+};
 
 const getStoragesUsedBySelectedVms = (
   sourceStorageLabelToId: Record<string, string>,
@@ -30,29 +57,10 @@ const getStoragesUsedBySelectedVms = (
             return vm.disks?.map((disk) => disk?.datastore?.id);
           }
           case 'openstack': {
-            const vmDisks =
-              vm.attachedVolumes?.map((av) =>
-                (disks as OpenstackVolume[]).find((disk) => disk.id === av.ID),
-              ) ?? [];
-            const volumeTypeIds: string[] = vmDisks
-              ? vmDisks.map((disk) => disk?.volumeType ?? '')
-              : [];
-
-            if (vm?.imageID) {
-              volumeTypeIds.push('glance');
-            }
-
-            return volumeTypeIds;
+            return getOpenstackVolumeTypeIds(vm, disks);
           }
           case 'ovirt': {
-            const vmDisks = vm.diskAttachments?.map((da) =>
-              (disks as OVirtDisk[]).find((disk) => disk.id === da.disk),
-            );
-            const storageDomainIds: string[] = vmDisks
-              ? vmDisks.map((disk) => disk?.storageDomain ?? '')
-              : [];
-
-            return storageDomainIds;
+            return getOvirtStorageDomainIds(vm, disks);
           }
           case 'ova': {
             return [Object.values(sourceStorageLabelToId)[0]];

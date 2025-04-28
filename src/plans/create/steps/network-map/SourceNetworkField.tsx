@@ -1,5 +1,6 @@
-import { type FC, useMemo } from 'react';
+import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
+import EmptyCategorySelectOption from 'src/plans/components/EmptyCategorySelectOption';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import Select from '@components/common/MtvSelect';
@@ -21,10 +22,6 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({ fieldId, otherLabels,
   const { t } = useForkliftTranslation();
   const { control, trigger } = useCreatePlanFormContext();
   const networkMappings = useWatch({ control, name: NetworkMapFieldId.NetworkMap });
-  const noNetworkOption = useMemo(
-    () => <SelectOption isDisabled={true}>{t('No networks in this category')}</SelectOption>,
-    [t],
-  );
 
   return (
     <FormGroupWithErrorText isRequired fieldId={fieldId}>
@@ -43,39 +40,43 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({ fieldId, otherLabels,
           >
             <SelectGroup label={t('Networks used by the selected VMs')}>
               <SelectList>
-                {isEmpty(usedLabels)
-                  ? noNetworkOption
-                  : usedLabels.map((usedNetworkLabel) => (
-                      <SelectOption
-                        key={usedNetworkLabel}
-                        value={usedNetworkLabel}
-                        isDisabled={networkMappings.some(
-                          (mapping: NetworkMapping) =>
-                            mapping[NetworkMapFieldId.SourceNetwork] === usedNetworkLabel,
-                        )}
-                      >
-                        {usedNetworkLabel}
-                      </SelectOption>
-                    ))}
+                {isEmpty(usedLabels) ? (
+                  <EmptyCategorySelectOption resourceName="networks" />
+                ) : (
+                  usedLabels.map((usedNetworkLabel) => (
+                    <SelectOption
+                      key={usedNetworkLabel}
+                      value={usedNetworkLabel}
+                      isDisabled={networkMappings.some(
+                        (mapping: NetworkMapping) =>
+                          mapping[NetworkMapFieldId.SourceNetwork] === usedNetworkLabel,
+                      )}
+                    >
+                      {usedNetworkLabel}
+                    </SelectOption>
+                  ))
+                )}
               </SelectList>
             </SelectGroup>
 
             <SelectGroup label={t('Other networks present on the source provider')}>
               <SelectList>
-                {isEmpty(otherLabels)
-                  ? noNetworkOption
-                  : otherLabels?.map((otherNetworkLabel) => (
-                      <SelectOption
-                        key={otherNetworkLabel}
-                        value={otherNetworkLabel}
-                        isDisabled={networkMappings.some(
-                          (mapping: NetworkMapping) =>
-                            mapping[NetworkMapFieldId.SourceNetwork] === otherNetworkLabel,
-                        )}
-                      >
-                        {otherNetworkLabel}
-                      </SelectOption>
-                    ))}
+                {isEmpty(otherLabels) ? (
+                  <EmptyCategorySelectOption resourceName="networks" />
+                ) : (
+                  otherLabels?.map((otherNetworkLabel) => (
+                    <SelectOption
+                      key={otherNetworkLabel}
+                      value={otherNetworkLabel}
+                      isDisabled={networkMappings.some(
+                        (mapping: NetworkMapping) =>
+                          mapping[NetworkMapFieldId.SourceNetwork] === otherNetworkLabel,
+                      )}
+                    >
+                      {otherNetworkLabel}
+                    </SelectOption>
+                  ))
+                )}
               </SelectList>
             </SelectGroup>
           </Select>

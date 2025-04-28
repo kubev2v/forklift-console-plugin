@@ -1,5 +1,6 @@
-import { type FC, useMemo } from 'react';
+import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
+import EmptyCategorySelectOption from 'src/plans/components/EmptyCategorySelectOption';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import Select from '@components/common/MtvSelect';
@@ -21,10 +22,6 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, otherLabels,
   const { control, trigger } = useCreatePlanFormContext();
   const { t } = useForkliftTranslation();
   const storageMappings = useWatch({ control, name: StorageMapFieldId.StorageMap });
-  const noStorageOption = useMemo(
-    () => <SelectOption isDisabled={true}>{t('No storages in this category')}</SelectOption>,
-    [t],
-  );
 
   return (
     <FormGroupWithErrorText isRequired fieldId={fieldId}>
@@ -43,39 +40,43 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, otherLabels,
           >
             <SelectGroup label={t('Storages used by the selected VMs')}>
               <SelectList>
-                {isEmpty(usedLabels)
-                  ? noStorageOption
-                  : usedLabels.map((usedStorageLabel) => (
-                      <SelectOption
-                        key={usedStorageLabel}
-                        value={usedStorageLabel}
-                        isDisabled={storageMappings.some(
-                          (mapping: StorageMapping) =>
-                            mapping[StorageMapFieldId.SourceStorage] === usedStorageLabel,
-                        )}
-                      >
-                        {usedStorageLabel}
-                      </SelectOption>
-                    ))}
+                {isEmpty(usedLabels) ? (
+                  <EmptyCategorySelectOption resourceName="storages" />
+                ) : (
+                  usedLabels.map((usedStorageLabel) => (
+                    <SelectOption
+                      key={usedStorageLabel}
+                      value={usedStorageLabel}
+                      isDisabled={storageMappings.some(
+                        (mapping: StorageMapping) =>
+                          mapping[StorageMapFieldId.SourceStorage] === usedStorageLabel,
+                      )}
+                    >
+                      {usedStorageLabel}
+                    </SelectOption>
+                  ))
+                )}
               </SelectList>
             </SelectGroup>
 
             <SelectGroup label={t('Other storages present on the source provider')}>
               <SelectList>
-                {isEmpty(otherLabels)
-                  ? noStorageOption
-                  : otherLabels?.map((otherStorageLabel) => (
-                      <SelectOption
-                        key={otherStorageLabel}
-                        value={otherStorageLabel}
-                        isDisabled={storageMappings.some(
-                          (mapping: StorageMapping) =>
-                            mapping[StorageMapFieldId.SourceStorage] === otherStorageLabel,
-                        )}
-                      >
-                        {otherStorageLabel}
-                      </SelectOption>
-                    ))}
+                {isEmpty(otherLabels) ? (
+                  <EmptyCategorySelectOption resourceName="storages" />
+                ) : (
+                  otherLabels?.map((otherStorageLabel) => (
+                    <SelectOption
+                      key={otherStorageLabel}
+                      value={otherStorageLabel}
+                      isDisabled={storageMappings.some(
+                        (mapping: StorageMapping) =>
+                          mapping[StorageMapFieldId.SourceStorage] === otherStorageLabel,
+                      )}
+                    >
+                      {otherStorageLabel}
+                    </SelectOption>
+                  ))
+                )}
               </SelectList>
             </SelectGroup>
           </Select>
