@@ -11,7 +11,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel } from '@kubev2v/types';
 import { Button, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
-import StartIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
+import { PlayIcon as StartIcon } from '@patternfly/react-icons';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 
 import type { PlanFieldProps } from '../utils/types';

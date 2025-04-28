@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 
 import { Button } from '@patternfly/react-core';
-import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
 /**
  * External Links are icon with an optional label/content, but have no background or border. Use

@@ -12,7 +12,7 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, Form, Modal, ModalVariant, Popover, TextInput } from '@patternfly/react-core';
-import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+import { HelpIcon } from '@patternfly/react-icons';
 
 import useToggle from '../../hooks/useToggle';
 import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';

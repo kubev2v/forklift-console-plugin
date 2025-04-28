@@ -15,8 +15,7 @@ import {
   Popover,
   Truncate,
 } from '@patternfly/react-core';
-import { HelpIcon } from '@patternfly/react-icons/dist/esm/icons/help-icon';
-import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
+import { HelpIcon, PencilAltIcon as Pencil } from '@patternfly/react-icons';
 
 import { ensureArray } from '../../helpers/ensureArray';
 

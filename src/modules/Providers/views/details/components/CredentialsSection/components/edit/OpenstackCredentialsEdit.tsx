@@ -7,7 +7,7 @@ import { openstackSecretFieldValidator } from 'src/modules/Providers/utils/valid
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Divider, Form, Popover, Radio, Switch } from '@patternfly/react-core';
-import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+import { HelpIcon } from '@patternfly/react-icons';
 
 import type { EditComponentProps } from '../BaseCredentialsSection';
 

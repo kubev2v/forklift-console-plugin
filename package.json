@@ -15,6 +15,7 @@
     "clean": "rm -rf ./dist ./coverage",
     "clean:all": "yarn run clean && rm -rf ./node_modules ./tmp",
     "build": "NODE_ENV=production webpack",
+    "build:analyze": "ANALYZE_BUNDLE=true NODE_ENV=production webpack",
     "start": "NODE_ENV=development webpack serve --progress",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.js",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
@@ -80,6 +81,7 @@
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
     "@types/react-router": "^5.1.20",
+    "@types/webpack-bundle-analyzer": "^4.7.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^7.1.2",
     "eslint": "^9.23.0",
@@ -115,6 +117,7 @@
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.28.0",
     "webpack": "5.98.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
   }
