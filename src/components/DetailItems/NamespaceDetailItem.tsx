@@ -4,7 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace } from '@utils/crds/common/selectors';
-import { moreInfoNamespaceDetailItem } from '@utils/links';
+import { MORE_INFO_NAMESPACE_DETAIL_ITEM } from '@utils/links';
 
 import type { ResourceDetailsItemProps } from './utils/types';
 
@@ -33,7 +33,7 @@ const NamespaceDetailsItem: FC<ResourceDetailsItemProps> = ({
           namespace={namespace}
         />
       }
-      moreInfoLink={moreInfoLink ?? moreInfoNamespaceDetailItem}
+      moreInfoLink={moreInfoLink ?? MORE_INFO_NAMESPACE_DETAIL_ITEM}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['metadata', 'namespace']}
     />

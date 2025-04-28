@@ -4,19 +4,35 @@ import { GroupedEnumFilter } from 'src/components/common/Filter/GroupedEnumFilte
 import type { ValueMatcher } from 'src/components/common/FilterGroup/types';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import type { RowProps } from 'src/components/common/TableView/types';
-import {
-  type GlobalActionWithSelection,
-  StandardPageWithSelection,
-} from 'src/components/page/StandardPageWithSelection';
+import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceField } from '@components/common/utils/types';
+import type { GlobalActionToolbarProps, ResourceField } from '@components/common/utils/types';
 import type { Concern } from '@kubev2v/types';
+
+import { getVmId } from '../utils/helpers/vmProps';
 
 import { ConcernsTable } from './ConcernsTable';
 import { MigrationAction } from './MigrationAction';
 import type { VmData } from './VMCellProps';
+
+const concernsMatcher: ValueMatcher<Concern[]> = {
+  filterType: 'concerns',
+  matchValue: (concerns) => (filter: string) =>
+    Array.isArray(concerns) &&
+    concerns.some(({ category, label }) => category === filter || label === filter),
+};
+
+const featuresMatcher: ValueMatcher<Record<string, boolean>> = {
+  filterType: 'features',
+  matchValue: (features) => (filter: string) => Boolean(features?.[filter]),
+};
+
+const hostMatcher: ValueMatcher<string> = {
+  filterType: 'host',
+  matchValue: (value) => (filter: string) => value === filter,
+};
 
 type ProviderVirtualMachinesListProps = {
   title?: string;
@@ -27,24 +43,20 @@ type ProviderVirtualMachinesListProps = {
   cellMapper: FC<RowProps<VmData>>;
   fieldsMetadata: ResourceField[];
   pageId: string;
-  onSelect?: (selectedVMs: VmData[]) => void;
+  onSelect?: (selectedVMs: VmData[] | undefined) => void;
   initialSelectedIds?: string[];
   showActions: boolean;
   className?: string;
-  selectedCountLabel?: (selectedIdCount: number) => string;
 };
-
-export const toId = (item: VmData) => item.vm.id;
 
 export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
   cellMapper,
   className,
   fieldsMetadata,
-  initialSelectedIds,
+  initialSelectedIds = [],
   obj,
   onSelect,
   pageId,
-  selectedCountLabel,
   showActions,
   title,
 }) => {
@@ -52,24 +64,29 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
 
   const userSettings = loadUserSettings({ pageId });
 
-  const initialSelectedIds_ = initialSelectedIds || [];
-  const initialExpandedIds_ = [];
+  const initialExpandedIds: string[] = [];
   const { vmData, vmDataLoading } = obj;
 
-  const actions: FC<GlobalActionWithSelection<VmData>>[] = [
+  const actions: FC<GlobalActionToolbarProps<VmData>>[] = [
     ({ selectedIds }) => (
       <MigrationAction
-        {...{
-          provider: obj?.provider,
-          selectedVms: vmData.filter((data) => selectedIds.includes(toId(data))),
-        }}
+        provider={obj?.provider}
+        selectedVms={
+          vmData?.reduce((acc: VmData[], data) => {
+            if (selectedIds?.includes(getVmId(data))) {
+              acc.push(data);
+            }
+
+            return acc;
+          }, []) ?? []
+        }
       />
     ),
   ];
 
   const onSelectedIds = (selectedIds: string[]) => {
     if (onSelect) {
-      const selectedVms = vmData.filter((data) => selectedIds.includes(toId(data)));
+      const selectedVms = vmData?.filter((data) => selectedIds.includes(getVmId(data)));
       onSelect(selectedVms);
     }
   };
@@ -78,10 +95,10 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
     <StandardPageWithSelection
       className={className}
       data-testid="vm-list"
-      dataSource={[vmData || [], !vmDataLoading, null]}
+      dataSource={[vmData ?? [], !vmDataLoading, null]}
       CellMapper={cellMapper}
       fieldsMetadata={fieldsMetadata}
-      namespace={obj?.provider?.metadata?.namespace}
+      namespace={obj?.provider?.metadata?.namespace ?? ''}
       title={title ?? t('Virtual Machines')}
       userSettings={userSettings}
       extraSupportedFilters={{
@@ -91,31 +108,12 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       }}
       extraSupportedMatchers={[concernsMatcher, hostMatcher, featuresMatcher]}
       GlobalActionToolbarItems={showActions ? actions : undefined}
-      toId={toId}
+      toId={getVmId}
       onSelect={onSelectedIds}
-      selectedIds={initialSelectedIds_}
+      selectedIds={initialSelectedIds}
       page={1}
-      expandedIds={initialExpandedIds_}
+      expandedIds={initialExpandedIds}
       ExpandedComponent={ConcernsTable}
-      selectedCountLabel={selectedCountLabel}
     />
   );
-};
-
-const concernsMatcher: ValueMatcher = {
-  filterType: 'concerns',
-  matchValue: (concerns: Concern[]) => (filter: string) =>
-    Array.isArray(concerns) &&
-    concerns.some(({ category, label }) => category === filter || label === filter),
-};
-
-const featuresMatcher: ValueMatcher = {
-  filterType: 'features',
-  matchValue: (features: Record<string, boolean>) => (filter: string) =>
-    Boolean(features?.[filter]),
-};
-
-const hostMatcher: ValueMatcher = {
-  filterType: 'host',
-  matchValue: (value: string) => (filter: string) => value === filter,
 };

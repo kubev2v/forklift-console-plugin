@@ -37,7 +37,7 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({
       onClick={onClick}
       {...buttonProps}
     >
-      {t('Create Provider')}
+      {t('Create Provider (old)')}
     </Button>
   );
 };

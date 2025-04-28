@@ -1,11 +1,11 @@
 import { t } from '@utils/i18n';
 
 export enum GeneralFormFieldId {
-  PlanName = 'plan-name',
-  PlanProject = 'plan-project',
-  SourceProvider = 'source-provider',
-  TargetProvider = 'target-provider',
-  TargetProject = 'target-project',
+  PlanName = 'planName',
+  PlanProject = 'planProject',
+  SourceProvider = 'sourceProvider',
+  TargetProvider = 'targetProvider',
+  TargetProject = 'targetProject',
 }
 
 export const generalFormFieldLabels: Record<GeneralFormFieldId, ReturnType<typeof t>> = {

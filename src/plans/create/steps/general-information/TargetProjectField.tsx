@@ -1,21 +1,23 @@
 import { type FC, useMemo } from 'react';
+import { Controller, useWatch } from 'react-hook-form';
 import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
 
-import ControlledFormGroup from '@components/common/ControlledFormGroup';
+import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFieldWatch, useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 
-export const TargetProjectField: FC = () => {
+const TargetProjectField: FC = () => {
   const { t } = useForkliftTranslation();
   const {
+    control,
     formState: { errors },
   } = useCreatePlanFormContext();
-  const targetProvider = useCreatePlanFieldWatch(GeneralFormFieldId.TargetProvider);
+  const targetProvider = useWatch({ control, name: GeneralFormFieldId.TargetProvider });
   const [targetProviderProjects] = useProviderNamespaces(targetProvider);
 
   const targetProviderOptions = useMemo(
@@ -28,12 +30,15 @@ export const TargetProjectField: FC = () => {
   );
 
   return (
-    <ControlledFormGroup
+    <FormGroupWithErrorText
       isRequired
       fieldId={GeneralFormFieldId.TargetProject}
       label={generalFormFieldLabels[GeneralFormFieldId.TargetProject]}
-      controller={{
-        render: ({ field }) => (
+    >
+      <Controller
+        name={GeneralFormFieldId.TargetProject}
+        control={control}
+        render={({ field }) => (
           <div ref={field.ref}>
             <TypeaheadSelect
               isScrollable
@@ -57,9 +62,11 @@ export const TargetProjectField: FC = () => {
               }}
             />
           </div>
-        ),
-        rules: { required: t('Target project is required.') },
-      }}
-    />
+        )}
+        rules={{ required: t('Target project is required.') }}
+      />
+    </FormGroupWithErrorText>
   );
 };
+
+export default TargetProjectField;

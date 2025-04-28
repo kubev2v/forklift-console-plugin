@@ -3,7 +3,7 @@ import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getName } from '@utils/crds/common/selectors';
-import { moreInfoNameDetailItem } from '@utils/links';
+import { MORE_INFO_NAME_DETAIL_ITEM } from '@utils/links';
 
 import type { ResourceDetailsItemProps } from './utils/types';
 
@@ -18,7 +18,7 @@ const NameDetailsItem: FC<ResourceDetailsItemProps> = ({ helpContent, moreInfoLi
     <DetailsItem
       title={t('Name')}
       content={getName(resource)}
-      moreInfoLink={moreInfoLink ?? moreInfoNameDetailItem}
+      moreInfoLink={moreInfoLink ?? MORE_INFO_NAME_DETAIL_ITEM}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['metadata', 'name']}
     />

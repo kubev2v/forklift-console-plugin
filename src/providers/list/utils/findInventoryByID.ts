@@ -1,5 +1,7 @@
 import type { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
 
+import type { PROVIDER_TYPES } from './constants';
+
 /**
  * Finds an inventory by its unique identifier.
  *
@@ -8,15 +10,15 @@ import type { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
  * @returns {ProviderInventory} - The inventory if found, undefined otherwise.
  */
 export const findInventoryByID = (
-  inventory: ProvidersInventoryList,
-  uid: string,
-): ProviderInventory => {
+  inventory: ProvidersInventoryList | null,
+  uid: string | undefined,
+): ProviderInventory | undefined => {
   if (!inventory || !uid) {
     return undefined;
   }
 
   const providers = Object.keys(inventory).reduce<ProviderInventory[]>((flatInventory, key) => {
-    return flatInventory.concat(inventory[key] || []);
+    return flatInventory.concat(inventory[key as keyof typeof PROVIDER_TYPES] ?? []);
   }, []);
 
   return providers.find((provider) => provider.uid === uid);

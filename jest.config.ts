@@ -5,6 +5,7 @@ const moduleNameMapper = {
   '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
   '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
   '^@components/(.*)$': '<rootDir>/src/components/$1',
+  '^@utils/(.*)$': '<rootDir>/src/utils/$1',
   'react-i18next': '<rootDir>/src/__mocks__/react-i18next.tsx',
 };
 

@@ -18,7 +18,7 @@ import { useCreatePlanFormContext } from './hooks';
 
 type CreatePlanWizardFooterProps = Partial<Pick<WizardFooterProps, 'nextButtonText' | 'onNext'>>;
 
-export const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
+const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   nextButtonText,
   onNext: onSubmit,
 }) => {
@@ -87,3 +87,5 @@ export const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
     </WizardFooterWrapper>
   );
 };
+
+export default CreatePlanWizardFooter;

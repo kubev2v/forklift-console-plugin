@@ -1,12 +1,15 @@
 // General detail item links
-export const moreInfoOwnerDetailItem =
+export const MORE_INFO_OWNER_DETAIL_ITEM =
   'https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/';
 
-export const moreInfoNamespaceDetailItem =
+export const MORE_INFO_NAMESPACE_DETAIL_ITEM =
   'https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces';
 
-export const moreInfoNameDetailItem =
+export const MORE_INFO_NAME_DETAIL_ITEM =
   'https://kubernetes.io/docs/concepts/overview/working-with-objects/names';
 
-export const moreInfoCreatedAtDetailItem =
+export const MORE_INFO_CREATED_AT_DETAIL_ITEM =
   'https://kubernetes.io/docs/reference/using-api/api-concepts';
+
+export const DOC_MAIN_HELP_LINK =
+  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';

@@ -1,6 +1,6 @@
-import type { ComponentType, FC, ReactNode } from 'react';
-import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
+import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { DOC_MAIN_HELP_LINK } from 'src/utils/links';
 
 import {
   Bullseye,
@@ -15,34 +15,43 @@ import {
   TextListItem,
   Title,
 } from '@patternfly/react-core';
+import { PlusCircleIcon } from '@patternfly/react-icons';
 
-const HELP_LINK_HREF =
-  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
+import { ExternalLink } from '../../../components/common/ExternalLink/ExternalLink';
+
+import ProvidersAddButton from './ProvidersAddButton';
+
+import './ProvidersEmptyState.style.scss';
 
 type ProvidersEmptyStateProps = {
-  AddButton: ReactNode;
-  title: ReactNode;
-  Icon: ComponentType;
+  namespace?: string;
+  canCreate?: boolean | undefined;
 };
 
-const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ AddButton, Icon, title }) => {
+const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespace }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <EmptyState>
-      <EmptyStateBody style={{ textAlign: 'left' }}>
+      <EmptyStateBody className="providers-empty-state-section">
         <Level hasGutter>
-          <LevelItem>{Icon && <EmptyStateIcon icon={Icon} />}</LevelItem>
+          <LevelItem>{<EmptyStateIcon icon={PlusCircleIcon} />}</LevelItem>
           <LevelItem>
             <Bullseye>
               <TextContent>
                 <Title headingLevel="h4" size="lg">
-                  {title}
+                  {namespace ? (
+                    <ForkliftTrans>
+                      No Providers found in namespace <strong>{namespace}</strong>.
+                    </ForkliftTrans>
+                  ) : (
+                    t('No providers found')
+                  )}
                 </Title>
                 <Text>
                   <ForkliftTrans>
                     Migrating virtualization workloads is a multi-step process.{' '}
-                    <ExternalLink href={HELP_LINK_HREF} isInline>
+                    <ExternalLink href={DOC_MAIN_HELP_LINK} isInline>
                       Learn more
                     </ExternalLink>
                     .
@@ -69,8 +78,11 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ AddButton, Icon, ti
           </LevelItem>
         </Level>
       </EmptyStateBody>
-
-      {AddButton}
+      <ProvidersAddButton
+        dataTestId="add-provider-button-empty-state"
+        namespace={namespace}
+        canCreate={canCreate}
+      />
     </EmptyState>
   );
 };

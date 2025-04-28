@@ -1,7 +1,5 @@
 import type { ProviderType } from '@kubev2v/types';
 
-import type { ProviderStatus } from './types';
-
 export const PROVIDERS: Record<ProviderType, string> =
   process.env.BRAND_TYPE === 'RedHat'
     ? {
@@ -18,11 +16,3 @@ export const PROVIDERS: Record<ProviderType, string> =
         ovirt: 'oVirt',
         vsphere: 'VMware',
       };
-
-export const PROVIDER_STATUS: Record<ProviderStatus, string> = {
-  ConnectionFailed: 'Connection Failed',
-  Ready: 'Ready',
-  Staging: 'Staging',
-  Unknown: 'Unknown',
-  ValidationFailed: 'Validation Failed',
-};
