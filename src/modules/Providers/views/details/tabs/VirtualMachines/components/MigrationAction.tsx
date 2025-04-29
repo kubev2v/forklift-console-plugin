@@ -11,7 +11,7 @@ import type { VmData } from './VMCellProps';
 
 export const MigrationAction: FC<{
   selectedVms: VmData[];
-  provider: V1beta1Provider;
+  provider: V1beta1Provider | undefined;
   className?: string;
 }> = ({ className, provider, selectedVms }) => {
   const { t } = useForkliftTranslation();
@@ -23,7 +23,7 @@ export const MigrationAction: FC<{
   const { setData } = useCreateVmMigrationData();
 
   const onClick = () => {
-    setData({ projectName: provider?.metadata?.namespace, provider, selectedVms });
+    setData?.({ projectName: provider?.metadata?.namespace, provider, selectedVms });
     history.push(`${planListURL}/~new`);
   };
 

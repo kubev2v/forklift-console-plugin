@@ -11,7 +11,7 @@ export type WithRowSelectionProps<T> = WithSelectionProps<T> & {
   toggleExpandFor: (item: T[]) => void;
 };
 
-export type WithHeaderSelectionProps<T> = WithSelectionProps<T> & {
+export type WithHeaderSelectionProps<T> = Pick<WithSelectionProps<T>, 'isExpanded'> & {
   HeaderMapper: StandardPageProps<T>['HeaderMapper'];
 };
 

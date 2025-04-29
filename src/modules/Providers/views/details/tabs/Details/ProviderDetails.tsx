@@ -17,7 +17,7 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, Bullseye, PageSection } from '@patternfly/react-core';
-import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
+import { BellIcon } from '@patternfly/react-icons';
 
 import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
 import { DetailsSection } from '../../components/DetailsSection/DetailsSection';

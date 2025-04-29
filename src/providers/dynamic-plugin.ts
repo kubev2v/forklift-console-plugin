@@ -11,12 +11,13 @@ export const extensions: EncodedExtension[] = [
   {
     properties: {
       dataAttributes: {
-        'data-quickstart-id': 'qs-nav-providers-new',
-        'data-testid': 'providers-nav-item-new',
+        'data-quickstart-id': 'qs-nav-providers',
+        'data-testid': 'providers-nav-item',
       },
-      id: 'providers-ng-new',
+      id: 'providers-ng',
+      insertAfter: ['forkliftSettings', 'importSeparator'],
       model: ProviderModelGroupVersionKind,
-      name: '%plugin__forklift-console-plugin~Providers (new)%',
+      name: '%plugin__forklift-console-plugin~Providers%',
       perspective: 'admin',
       section: 'migration',
     },

@@ -10,7 +10,6 @@ type ProviderVirtualMachinesListProps = {
   onSelect: (selectedVms: VmData[]) => void;
   initialSelectedIds: string[];
   showActions: boolean;
-  selectedCountLabel?: (selectedIdCount: number) => string;
 };
 
 export const MemoizedProviderVirtualMachinesList = memo(
@@ -19,7 +18,6 @@ export const MemoizedProviderVirtualMachinesList = memo(
     name,
     namespace,
     onSelect,
-    selectedCountLabel,
     showActions,
     title,
   }: ProviderVirtualMachinesListProps) => {
@@ -31,7 +29,6 @@ export const MemoizedProviderVirtualMachinesList = memo(
         onSelect={onSelect}
         initialSelectedIds={initialSelectedIds}
         showActions={showActions}
-        selectedCountLabel={selectedCountLabel}
       />
     );
   },
