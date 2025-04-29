@@ -7,11 +7,11 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { Label } from '@patternfly/react-core';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 
-import type { SettingsDetailsItemProps } from '../../utils/types';
+import type { EditableDetailsItemProps } from '../../../utils/types';
 
 import EditPlanWarm from './EditPlanWarm';
 
-const WarmDetailsItem: FC<SettingsDetailsItemProps> = ({ canPatch, plan, shouldRender }) => {
+const WarmDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldRender }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 

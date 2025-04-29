@@ -6,22 +6,26 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getPlanTransferNetwork } from '@utils/crds/plans/selectors';
 
-import type { SettingsDetailsItemProps } from '../../utils/types';
+import type { EditableDetailsItemProps } from '../../../utils/types';
 
 import { PROVIDER_DEFAULTS } from './utils/constants';
-import { transferNetworkToName } from './utils/utils';
+import { getNetworkName } from './utils/utils';
 import EditPlanTransferNetwork from './EditPlanTransferNetwork';
 
-const TransferNetworkDetailItem: FC<SettingsDetailsItemProps> = ({ canPatch, plan }) => {
+const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
+
+  const networkName = getNetworkName(getPlanTransferNetwork(plan)!);
 
   return (
     <DetailsItem
       title={t('Transfer Network')}
       content={
-        transferNetworkToName(getPlanTransferNetwork(plan)) ?? (
+        networkName === PROVIDER_DEFAULTS ? (
           <span className="text-muted">{PROVIDER_DEFAULTS}</span>
+        ) : (
+          networkName
         )
       }
       helpContent={t(

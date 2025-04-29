@@ -6,12 +6,12 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 
-import type { SettingsDetailsItemProps } from '../../utils/types';
-import { PROVIDER_DEFAULTS } from '../PlanTransferNetwork/utils/constants';
+import { PROVIDER_DEFAULTS } from '../../../SettingsSection/components/PlanTransferNetwork/utils/constants';
+import type { EditableDetailsItemProps } from '../../../utils/types';
 
 import EditPlanTargetNamespace from './EditPlanTargetNamespace';
 
-const TargetNamespaceDetailsItem: FC<SettingsDetailsItemProps> = ({ canPatch, plan }) => {
+const TargetNamespaceDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
@@ -22,7 +22,7 @@ const TargetNamespaceDetailsItem: FC<SettingsDetailsItemProps> = ({ canPatch, pl
         getPlanTargetNamespace(plan) ?? <span className="text-muted">{PROVIDER_DEFAULTS}</span>
       }
       helpContent={t('Target namespace.')}
-      crumbs={['spec', 'targetNamespace ']}
+      crumbs={['spec', 'targetNamespace']}
       onEdit={() => {
         showModal(<EditPlanTargetNamespace resource={plan} />);
       }}

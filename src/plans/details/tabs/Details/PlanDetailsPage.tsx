@@ -7,6 +7,7 @@ import { Divider, PageSection, PageSectionVariants } from '@patternfly/react-cor
 import type { PlanPageProps } from '../../utils/types';
 
 import DetailsSection from './components/DetailsSection/DetailsSection';
+import ProvidersSection from './components/ProvidersSection/ProvidersSection';
 import SettingsSection from './components/SettingsSection/SettingsSection';
 
 const PlanDetailsPage: FC<PlanPageProps> = ({ plan }) => {
@@ -20,13 +21,13 @@ const PlanDetailsPage: FC<PlanPageProps> = ({ plan }) => {
       </PageSection>
       <Divider />
       <PageSection variant={PageSectionVariants.light}>
-        <SectionHeading text={t('Settings')} />
-        <SettingsSection plan={plan} />
+        <SectionHeading text={t('Providers')} />
+        <ProvidersSection plan={plan} />
       </PageSection>
       <Divider />
       <PageSection variant={PageSectionVariants.light}>
-        <SectionHeading text={t('Providers')} />
-        {/* <ProvidersSection obj={plan} /> */}
+        <SectionHeading text={t('Settings')} />
+        <SettingsSection plan={plan} />
       </PageSection>
       <Divider />
       <PageSection variant={PageSectionVariants.light}>

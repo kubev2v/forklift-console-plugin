@@ -6,8 +6,8 @@ import { Stack } from '@patternfly/react-core';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import usePlanDestinationProvider from '../../hooks/usePlanDestinationProvider';
-import type { EditPlanProps } from '../../utils/types';
+import usePlanDestinationProvider from '../../../hooks/usePlanDestinationProvider';
+import type { EditPlanProps } from '../../../SettingsSection/utils/types';
 
 import { onConfirmTargetNamespace } from './utils/utils';
 import TargetNamespaceSelect from './TargetNamespaceSelect';

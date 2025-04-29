@@ -5,7 +5,7 @@ import { FormGroup, Stack } from '@patternfly/react-core';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { EditPlanProps } from '../../utils/types';
+import type { EditPlanProps } from '../../../SettingsSection/utils/types';
 
 import { onConfirmWarm } from './utils/utils';
 import WarmSwitch from './WarmSwitch';
