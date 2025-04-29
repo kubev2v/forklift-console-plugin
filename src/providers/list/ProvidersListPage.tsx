@@ -8,11 +8,11 @@ import StandardPage from '../../components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from '../../modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import type { ProviderData } from '../../modules/Providers/utils/types/ProviderData';
 import InventoryNotReachable from '../../modules/Providers/views/list/components/InventoryNotReachable';
-import ProviderRow from '../../modules/Providers/views/list/ProviderRow';
 import { useForkliftTranslation } from '../../utils/i18n';
 import ProvidersAddButton from '../list/components/ProvidersAddButton';
 import { findInventoryByID } from '../list/utils/findInventoryByID';
 
+import ProviderRow from './components/ProviderRow';
 import ProvidersEmptyState from './components/ProvidersEmptyState';
 import useProvidersInventoryList from './hooks/useProvidersInventoryList';
 import { providerFields } from './utils/providerFields';
