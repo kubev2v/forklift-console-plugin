@@ -1,7 +1,7 @@
 import { t } from '@utils/i18n';
 
 export enum NetworkMapFieldId {
-  NetworkMappings = 'networkMappings',
+  NetworkMap = 'networkMap',
   SourceNetwork = 'sourceNetwork',
   TargetNetwork = 'targetNetwork',
 }
