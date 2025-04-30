@@ -2,6 +2,7 @@ import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
+import { CRITICAL } from 'src/plans/details/utils/constants';
 
 import {
   NetworkMapModelGroupVersionKind,
@@ -12,8 +13,6 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace } from '@utils/crds/common/selectors';
-
-import { CRITICAL } from '../utils/constants';
 
 const usePlanAlerts = (plan: V1beta1Plan) => {
   const namespace = getNamespace(plan);

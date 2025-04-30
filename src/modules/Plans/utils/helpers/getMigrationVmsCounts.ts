@@ -8,13 +8,15 @@ const emptyCount = {
   total: 0,
 };
 
-export const getMigrationVmsCounts = (vms: V1beta1PlanStatusMigrationVms[]): MigrationVmsCounts => {
+export const getMigrationVmsCounts = (
+  vms: V1beta1PlanStatusMigrationVms[] | undefined,
+): MigrationVmsCounts => {
   if (!vms || vms.length < 1) {
     return emptyCount;
   }
 
   const vmsCanceled = vms.filter((vm) =>
-    (vm?.conditions || []).find(
+    (vm?.conditions ?? []).find(
       (condition) => condition.type === 'Canceled' && condition.status === 'True',
     ),
   );

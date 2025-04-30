@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import providerTypes from 'src/modules/Plans/views/create/constanats/providerTypes';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { providerTypeIcons } from 'src/plans/details/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ProviderIconLink from '@components/ProviderIconLink';
@@ -10,8 +10,8 @@ import { ProviderModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types'
 import { DescriptionList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 
+import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 import usePlanDestinationProvider from '../hooks/usePlanDestinationProvider';
-import usePlanSourceProvider from '../hooks/usePlanSourceProvider';
 
 type ProvidersSectionProps = {
   plan: V1beta1Plan;
@@ -54,7 +54,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
                 name: sourceProviderName,
                 namespace: getNamespace(sourceProvider),
               })}
-              providerIcon={providerTypes[sourceProviderType as keyof typeof providerTypes]?.logo}
+              providerIcon={providerTypeIcons[sourceProviderType as keyof typeof providerTypeIcons]}
               providerName={sourceProviderName}
             />
           }
@@ -72,7 +72,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
                 namespace: getNamespace(destinationProvider),
               })}
               providerIcon={
-                providerTypes[destinationProviderType as keyof typeof providerTypes]?.logo
+                providerTypeIcons[destinationProviderType as keyof typeof providerTypeIcons]
               }
               providerName={destinationProviderName}
             />
