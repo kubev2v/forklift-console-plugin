@@ -6,7 +6,8 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
-import NetworkMappingsStep from './steps/network-mappings/NetworkMappingsStep';
+import NetworkMapStep from './steps/network-map/NetworkMapStep';
+import StorageMapStep from './steps/storage-map/StorageMapStep';
 import VirtualMachinesStep from './steps/virtual-machines/VirtualMachinesStep';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import CreatePlanWizardFooter from './CreatePlanWizardFooter';
@@ -59,18 +60,16 @@ const CreatePlanWizard: FC = () => {
               <VirtualMachinesStep />
             </WizardStep>,
             <WizardStep
-              key={PlanWizardStepId.NetworkMapping}
-              {...getStepProps(PlanWizardStepId.NetworkMapping)}
+              key={PlanWizardStepId.NetworkMap}
+              {...getStepProps(PlanWizardStepId.NetworkMap)}
             >
-              <NetworkMappingsStep />
+              <NetworkMapStep />
             </WizardStep>,
             <WizardStep
-              key={PlanWizardStepId.StorageMapping}
-              {...getStepProps(PlanWizardStepId.StorageMapping)}
+              key={PlanWizardStepId.StorageMap}
+              {...getStepProps(PlanWizardStepId.StorageMap)}
             >
-              <Form>
-                <Title headingLevel="h2">{t('Storage mappings')}</Title>
-              </Form>
+              <StorageMapStep />
             </WizardStep>,
             <WizardStep
               key={PlanWizardStepId.MigrationType}

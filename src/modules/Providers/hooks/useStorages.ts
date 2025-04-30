@@ -40,8 +40,8 @@ export type InventoryStorage =
   | TypedOvaResource;
 
 export const useSourceStorages = (
-  provider: V1beta1Provider,
-): [InventoryStorage[], boolean, Error] => {
+  provider: V1beta1Provider | undefined,
+): [InventoryStorage[], boolean, Error | null] => {
   const providerType: ProviderType = provider?.spec?.type as ProviderType;
   const {
     error,
@@ -63,14 +63,14 @@ export const useSourceStorages = (
     }
 
     return storageList;
-  }, [storages]);
+  }, [providerType, storages]);
 
   return [typedStorages, loading, error];
 };
 
 export const useOpenShiftStorages = (
-  provider: V1beta1Provider,
-): [OpenShiftStorageClass[], boolean, Error] => {
+  provider: V1beta1Provider | undefined,
+): [OpenShiftStorageClass[], boolean, Error | null] => {
   const providerType: ProviderType = provider?.spec?.type as ProviderType;
   const {
     error,
