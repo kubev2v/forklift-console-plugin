@@ -16,12 +16,14 @@ export type ProviderHostsProps = {
   loadError?: unknown;
 };
 
+// eslint-disable-next-line no-underscore-dangle
 const ProviderHosts_: FC<ProviderHostsProps> = (props) => {
   const { provider } = props.obj;
 
   switch (provider?.spec?.type) {
     case 'vsphere':
       return <VSphereHostsList {...props} />;
+    case undefined:
     default:
       return <></>;
   }
@@ -33,7 +35,7 @@ const ProviderHosts: FC<ProviderHostsProps> = (props) => (
   </ModalHOC>
 );
 
-export const ProviderHostsWrapper: FC<{ name: string; namespace: string }> = ({
+export const ProviderHostsTabPage: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

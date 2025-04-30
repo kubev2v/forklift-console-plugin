@@ -1,0 +1,8 @@
+.forklift-page-section {
+  border-top: 1px solid var(--pf-global--BorderColor--100);
+}
+
+.forklift-page-section--info {
+  border-bottom: 0;
+  padding-bottom: 0;
+}

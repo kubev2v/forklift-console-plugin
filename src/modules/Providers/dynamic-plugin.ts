@@ -9,7 +9,7 @@ import type {
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
-  ProviderDetailsPage: './modules/Providers/views/details/ProviderDetailsPage',
+  ProviderDetailsPage: './providers/details/ProviderDetailsPage',
   ProvidersCreatePage: './modules/Providers/views/create/ProvidersCreatePage',
   ProvidersCreateVmMigrationContext:
     './modules/Providers/views/migrate/ProvidersCreateVmMigrationContext',

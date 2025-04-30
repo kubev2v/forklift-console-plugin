@@ -11,6 +11,9 @@ export const MORE_INFO_NAME_DETAIL_ITEM =
 export const MORE_INFO_CREATED_AT_DETAIL_ITEM =
   'https://kubernetes.io/docs/reference/using-api/api-concepts';
 
+export const MORE_INFO_SECRET_DETAIL_ITEM =
+  'https://kubernetes.io/docs/concepts/configuration/secret/';
+
 export const DOC_MAIN_HELP_LINK =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
 

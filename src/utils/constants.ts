@@ -16,3 +16,5 @@ export enum ServerBranding {
 export const taskStatuses = {
   completed: 'Completed',
 };
+
+export const EMPTY_CELL_CONTENT = '-';

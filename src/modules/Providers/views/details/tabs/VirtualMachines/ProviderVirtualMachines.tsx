@@ -45,7 +45,7 @@ export type ProviderVirtualMachinesProps = {
   className?: string;
 };
 
-export const ProviderVirtualMachines: FC<{ name: string; namespace: string }> = ({
+export const ProviderVirtualMachinesTabPage: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {
