@@ -10,7 +10,9 @@ import { useForkliftTranslation } from '@utils/i18n';
 import ProviderSelect from '../../../components/ProviderSelect';
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks';
+import { MigrationTypeFieldId } from '../migration-type/constants';
 import { NetworkMapFieldId } from '../network-map/constants';
+import { StorageMapFieldId } from '../storage-map/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
@@ -80,7 +82,12 @@ const GeneralInformationStep: FC = () => {
                   value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
-                    unregister([VmFormFieldId.Vms, NetworkMapFieldId.NetworkMappings]);
+                    unregister([
+                      VmFormFieldId.Vms,
+                      NetworkMapFieldId.NetworkMap,
+                      StorageMapFieldId.StorageMap,
+                      MigrationTypeFieldId.MigrationType,
+                    ]);
                   }}
                   status={errors[GeneralFormFieldId.SourceProvider] && MenuToggleStatus.danger}
                 />

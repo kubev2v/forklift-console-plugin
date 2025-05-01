@@ -4,8 +4,8 @@ import { type FieldPath, useFieldArray } from 'react-hook-form';
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { CreatePlanFormData } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks';
+import type { CreatePlanFormData } from '../../types';
 
 import {
   StorageMapFieldId,
