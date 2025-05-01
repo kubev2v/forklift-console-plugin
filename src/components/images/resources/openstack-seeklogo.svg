@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   viewBox="0 0 116.62 116.62001"
+   id="svg46"
+   width="116.62"
+   height="116.62"
+   sodipodi:docname="OpenStack®_Logo_2016_square.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata9">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs50">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath827">
+      <use
+         x="0"
+         y="0"
+         xlink:href="#g823"
+         id="use829"
+         width="100%"
+         height="100%" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     id="namedview48"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="5.8687351"
+     inkscape:cx="65.05636"
+     inkscape:cy="55.295238"
+     inkscape:window-x="0"
+     inkscape:window-y="50"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg46" />
+  <g
+     id="g825"
+     clip-path="url(#clipPath827)"
+     transform="translate(-0.01373653,-1.263341)">
+    <g
+       inkscape:label="Clip"
+       id="g823">
+      <path
+         d="M 105.4,2.8801929 H 10.8 c -5.94,0 -10.8,4.86 -10.8,10.8000001 v 25.4 h 26.2 v -4.16 c 0,-3.23 2.62,-5.84 5.84,-5.84 h 52.1 c 3.23,0 5.84,2.62 5.84,5.84 v 4.16 h 26.2 v -25.4 c 0,-5.9400001 -4.86,-10.8000001 -10.8,-10.8000001 z"
+         id="path34"
+         inkscape:connector-curvature="0"
+         style="fill:#ed1844;fill-rule:evenodd" />
+      <path
+         d="m 90.4,84.579998 c 0,3.23 -2.62,5.84 -5.84,5.84 h -52.1 c -3.23,0 -5.84,-2.62 -5.84,-5.84 v -4.16 H 0.42 v 25.399992 c 0,5.94 4.86,10.8 10.8,10.8 h 94.6 c 5.94,0 10.8,-4.86 10.8,-10.8 V 80.419998 h -26.2 z"
+         id="path36"
+         inkscape:connector-curvature="0"
+         style="fill:#ed1844;fill-rule:evenodd" />
+      <polygon
+         transform="translate(-168.6,2.8799929)"
+         points="195,70 195,43.8 169,43.8 169,70 "
+         id="polygon40"
+         style="fill:#ed1844;fill-rule:evenodd" />
+      <polygon
+         transform="translate(-168.6,2.8799929)"
+         points="285,70 285,43.8 259,43.8 259,70 "
+         id="polygon42"
+         style="fill:#ed1844;fill-rule:evenodd" />
+    </g>
+  </g>
+</svg>

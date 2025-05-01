@@ -13,7 +13,8 @@ import HeaderTitle from './components/HeaderTitle';
 import OperatorStatus from './components/OperatorStatus';
 import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
 import ForkliftControllerDetailsTab from './tabs/Details/ForkliftControllerDetailsTab';
-import ForkliftControllerMetricsTab from './tabs/Metrics/ForkliftControllerMetricsTab';
+import ForkliftControllerHealthTab from './tabs/Health/ForkliftControllerHealthTab';
+import ForkliftControllerSettingsTab from './tabs/Settings/ForkliftControllerSettingsTab';
 import ForkliftControllerYAMLTab from './tabs/YAML/ForkliftControllerYAMLTab';
 
 import './OverviewPage.style.css';
@@ -33,9 +34,14 @@ const OverviewPage: FC<OverviewPageProps> = () => {
       name: t('YAML'),
     },
     {
-      component: ForkliftControllerMetricsTabWrapper,
-      href: 'metrics',
-      name: t('Metrics'),
+      component: ForkliftControllerHealthTabWrapper,
+      href: 'health',
+      name: t('Health'),
+    },
+    {
+      component: ForkliftControllerSettingsTabWrapper,
+      href: 'settings',
+      name: t('Settings'),
     },
   ];
 
@@ -96,12 +102,20 @@ const ForkliftControllerYAMLTabWrapper: FC = () => {
   );
 };
 
-const ForkliftControllerMetricsTabWrapper: FC = () => {
+const ForkliftControllerHealthTabWrapper: FC = () => {
   const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
 
   return (
-    <ForkliftControllerMetricsTab obj={forkliftController} loaded={loaded} loadError={loadError} />
+    <ForkliftControllerHealthTab obj={forkliftController} loaded={loaded} loadError={loadError} />
   );
 };
+
+const ForkliftControllerSettingsTabWrapper: FC = () => {
+  const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
+
+  return (
+    <ForkliftControllerSettingsTab obj={forkliftController} loaded={loaded} loadError={loadError} />
+  );
+}
 
 export default OverviewPage;
