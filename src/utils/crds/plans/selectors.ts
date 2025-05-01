@@ -33,3 +33,7 @@ export const getPlanTargetNamespace = (plan: V1beta1Plan) => plan?.spec?.targetN
 
 export const getPlanPreserveClusterCpuModel = (plan: V1beta1Plan) =>
   plan?.spec?.preserveClusterCpuModel;
+
+export const getLUKSSecretName = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.luks?.name;
+
+export const getRootDisk = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.rootDisk;

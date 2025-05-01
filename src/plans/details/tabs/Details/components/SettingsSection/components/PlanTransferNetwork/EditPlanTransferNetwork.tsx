@@ -7,7 +7,7 @@ import { Stack } from '@patternfly/react-core';
 import { getPlanTransferNetwork } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import usePlanDestinationProvider from '../../hooks/usePlanDestinationProvider';
+import usePlanDestinationProvider from '../../../hooks/usePlanDestinationProvider';
 import type { EditPlanProps } from '../../utils/types';
 
 import { onConfirmTransferNetwork } from './utils/utils';

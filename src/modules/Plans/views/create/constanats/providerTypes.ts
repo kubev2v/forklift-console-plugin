@@ -10,6 +10,7 @@ const providerTypes = {
     title: 'OpenStack',
   },
   ova: {
+    logo: null,
     title: 'Open Virtual Appliance (OVA)',
   },
   ovirt: {

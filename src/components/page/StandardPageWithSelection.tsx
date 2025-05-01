@@ -1,9 +1,9 @@
 import { type ComponentProps, type FC, useCallback, useState } from 'react';
 
+import DefaultSelectHeader from '@components/common/TableView/DefaultSelectHeader';
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import { Td, Th } from '@patternfly/react-table';
 
-import { DefaultHeader } from '../common/TableView/DefaultHeader';
 import type { RowProps, TableViewHeaderProps } from '../common/TableView/types';
 import { withTr } from '../common/TableView/withTr';
 
@@ -135,7 +135,7 @@ const withIdBasedSelection = <T,>({
     );
 
     const HeaderMapper = withHeaderSelection({
-      HeaderMapper: props.HeaderMapper ?? DefaultHeader,
+      HeaderMapper: props.HeaderMapper ?? DefaultSelectHeader,
       isExpanded,
     });
 
