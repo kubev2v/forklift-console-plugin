@@ -1,4 +1,7 @@
-import { type FC, type FormEvent, useReducer } from 'react';
+/* eslint-disable max-lines-per-function */
+import { type FC, type FormEvent, useEffect, useReducer } from 'react';
+import { useHistory } from 'react-router';
+import { useLocation } from 'react-router-dom-v5-compat';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -34,6 +37,7 @@ export type ProvidersCreateFormProps = {
   providerNames?: string[];
   projectName?: string;
   onProjectNameChange?: (value: string) => void;
+  providerNamesLoaded?: boolean;
 };
 
 const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
@@ -44,9 +48,31 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
   onProjectNameChange,
   projectName,
   providerNames = [],
+  providerNamesLoaded,
 }) => {
   const { t } = useForkliftTranslation();
   const [projectNameOptions] = useProjectNameSelectOptions(projectName);
+
+  // Retrieve providerType from React Router's state
+  const location = useLocation();
+  const history = useHistory();
+  const queryParams = new URLSearchParams(location.search);
+  const providerType = queryParams.get('providerType');
+
+  useEffect(() => {
+    if (!providerNamesLoaded) return;
+    if (providerType && providerType !== newProvider?.spec?.type) {
+      onNewProviderChange({
+        ...newProvider,
+        spec: { ...newProvider?.spec, type: providerType as ProviderType },
+      });
+      queryParams.delete('providerType');
+      history.replace({
+        pathname: location.pathname,
+        search: queryParams.toString(),
+      });
+    }
+  }, [providerType, newProvider, providerNamesLoaded]);
 
   const initialState = {
     validation: {

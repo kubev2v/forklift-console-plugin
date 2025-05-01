@@ -1,4 +1,10 @@
-import { openshiftLogo, openstackLogo, redhatLogo, vmLogo } from 'src/components/images/logos';
+import {
+  openshiftLogo,
+  openstackLogo,
+  ovaLogo,
+  redhatLogo,
+  vmLogo,
+} from 'src/components/images/logos';
 import type { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 
 export const providerCardItems: Record<string, SelectableGalleryItem> = {
@@ -15,7 +21,8 @@ export const providerCardItems: Record<string, SelectableGalleryItem> = {
   },
   ova: {
     content: 'An OVA file is a virtual appliance used by virtualization applications.',
-    title: 'Open Virtual Appliance (OVA)',
+    logo: ovaLogo,
+    title: 'Open Virtual Appliance',
   },
   ovirt: {
     content: 'Red Hat Virtualization (RHV) is a virtualization platform from Red Hat.',

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
 import { type FC, type MouseEvent, type Ref, useLayoutEffect, useRef, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -30,10 +31,8 @@ import {
   type MenuToggleElement,
 } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
-import chartColorBlue200 from '@patternfly/react-tokens/dist/esm/chart_color_blue_200';
-import chartColorGreen400 from '@patternfly/react-tokens/dist/esm/chart_color_green_400';
-import chartColorRed100 from '@patternfly/react-tokens/dist/esm/chart_color_red_100';
 
+import { ChartColors } from '../utils/colors';
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
 import { type MigrationDataPoint, toDataPoints } from '../utils/toDataPointsHelper';
 
@@ -194,9 +193,9 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
   );
 
   const legendData = [
-    { name: t('Running'), symbol: { fill: chartColorBlue200.var } },
-    { name: t('Failed'), symbol: { fill: chartColorRed100.var } },
-    { name: t('Succeeded'), symbol: { fill: chartColorGreen400.var } },
+    { name: t('Running'), symbol: { fill: ChartColors.Running } },
+    { name: t('Failed'), symbol: { fill: ChartColors.Failure } },
+    { name: t('Succeeded'), symbol: { fill: ChartColors.Success } },
   ];
 
   return (
@@ -252,7 +251,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
                   x: dateLabel,
                   y: value,
                 }))}
-                colorScale={[chartColorGreen400.var]}
+                colorScale={[ChartColors.Success]}
               />
               <ChartScatter
                 data={VmMigrationsDataPoints.succeeded.map(({ dateLabel, value }) => ({
@@ -262,7 +261,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
                 }))}
                 size={3}
                 symbol="circle"
-                colorScale={[chartColorGreen400.var]}
+                colorScale={[ChartColors.Success]}
               />
               <ChartArea
                 data={VmMigrationsDataPoints.failed.map(({ dateLabel, value }) => ({
@@ -271,7 +270,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
                   x: dateLabel,
                   y: value,
                 }))}
-                colorScale={[chartColorRed100.var]}
+                colorScale={[ChartColors.Failure]}
               />
               <ChartScatter
                 data={VmMigrationsDataPoints.failed.map(({ dateLabel, value }) => ({
@@ -281,7 +280,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
                 }))}
                 size={3}
                 symbol="circle"
-                colorScale={[chartColorRed100.var]}
+                colorScale={[ChartColors.Failure]}
               />
               <ChartArea
                 data={VmMigrationsDataPoints.running.map(({ dateLabel, value }) => ({
@@ -290,7 +289,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
                   x: dateLabel,
                   y: value,
                 }))}
-                colorScale={[chartColorBlue200.var]}
+                colorScale={[ChartColors.Running]}
               />
               <ChartScatter
                 data={VmMigrationsDataPoints.running.map(({ dateLabel, value }) => ({
@@ -300,7 +299,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
                 }))}
                 size={3}
                 symbol="circle"
-                colorScale={[chartColorBlue200.var]}
+                colorScale={[ChartColors.Running]}
               />
             </ChartGroup>
           </Chart>

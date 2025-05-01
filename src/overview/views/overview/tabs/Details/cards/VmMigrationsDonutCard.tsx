@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import type { FC } from 'react';
 import useMigrationCounts from 'src/modules/Overview/hooks/useMigrationCounts';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -6,11 +5,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { ChartDonut } from '@patternfly/react-charts';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
-import {
-  global_danger_color_100,
-  global_info_color_100,
-  global_success_color_100,
-} from '@patternfly/react-tokens';
+
+import { ChartColors } from '../utils/colors';
 
 type VmMigrationsDonutCardProps = {
   obj?: V1beta1ForkliftController;
@@ -31,15 +27,17 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
             ariaDesc="Donut chart with VM migration statistics"
             ariaTitle="Virtual Machine Migrations"
             colorScale={[
-              global_info_color_100.value, // Blue for "Running"
-              global_danger_color_100.value, // Red for "Failed"
-              global_success_color_100.value, // Green for "Succeeded"
+              ChartColors.Running,
+              ChartColors.Failure,
+              ChartColors.Success,
+              ChartColors.Canceled,
             ]}
             constrainToVisibleArea
             data={[
               { x: t('Running'), y: vmCount.Running },
               { x: t('Failed'), y: vmCount.Failed },
               { x: t('Succeeded'), y: vmCount.Succeeded },
+              { x: t('Canceled'), y: vmCount.Canceled },
             ]}
             labels={({ datum }) => `${datum.x}: ${datum.y}`}
             title={`${vmCount.Total}`}

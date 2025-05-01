@@ -15,6 +15,8 @@ import {
   global_success_color_100,
 } from '@patternfly/react-tokens';
 
+import { ChartColors } from '../utils/colors';
+
 type MigrationPlansDonutCardProps = {
   obj?: V1beta1ForkliftController;
   loaded?: boolean;
@@ -43,15 +45,17 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
             ariaDesc="Donut chart with migration plans statistics"
             ariaTitle="Migration plans"
             colorScale={[
-              global_info_color_100.value, // Blue for "Running"
-              global_danger_color_100.value, // Red for "Failed"
-              global_success_color_100.value, // Green for "Succeeded"
+              ChartColors.Running,
+              ChartColors.Failure,
+              ChartColors.Success,
+              ChartColors.Canceled,
             ]}
             constrainToVisibleArea
             data={[
               { x: t('Running'), y: count.Running },
               { x: t('Failed'), y: count.Failed },
               { x: t('Succeeded'), y: count.Succeeded },
+              { x: t('Canceled'), y: count.Canceled },
             ]}
             labels={({ datum }) => `${datum.x}: ${datum.y}`}
             title={`${count.Total}`}

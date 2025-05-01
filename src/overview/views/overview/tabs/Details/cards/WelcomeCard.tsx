@@ -1,13 +1,17 @@
-import { type FC, type Ref, useState } from 'react';
+import { type FC, type Ref, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import ovaIcon from 'src/components/images/resources/open-virtual-appliance.png';
 import openShiftVirtualizationIcon from 'src/components/images/resources/openshift-virtualization.svg';
 import openStackIcon from 'src/components/images/resources/openstack2.svg';
 import redHatIcon from 'src/components/images/resources/redhat.svg';
 import vmwareIcon from 'src/components/images/resources/vmware-light.svg';
+import providerTypes from 'src/modules/Plans/views/create/constanats/providerTypes';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1ForkliftController } from '@kubev2v/types';
+import { ProviderModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
+import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Card,
   CardBody,
@@ -57,6 +61,17 @@ const hideFromViewDropdownOption = (onHide: () => void, t) => {
 
 const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
   const { t } = useForkliftTranslation();
+  const [activeNamespace] = useActiveNamespace();
+  const navigate = useNavigate();
+
+  const providersListUrl = useMemo(() => {
+    return getResourceUrl({
+      namespace: activeNamespace,
+      namespaced: true,
+      reference: ProviderModelRef,
+    });
+  }, [activeNamespace]);
+  const providersCreateUrl = `${providersListUrl}/~new`;
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const actionDropdownItems = [hideFromViewDropdownOption(onHide, t)];
   const onToggle = () => {
@@ -82,6 +97,13 @@ const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
       <DropdownList>{actionDropdownItems}</DropdownList>
     </Dropdown>
   );
+
+  type ProviderType = keyof typeof providerTypes;
+  const navigateToProvider = (type: ProviderType) => {
+    navigate(`${providersCreateUrl}?providerType=${type}`, {
+      state: { providerType: type },
+    });
+  };
 
   return (
     <Card>
@@ -109,29 +131,39 @@ const OverviewCard: FC<OverviewCardProps> = ({ onHide }) => {
             </Text>
             <div className="welcome-tiles">
               <Tile
-                title="vSphere"
+                title={providerTypes.vsphere.title}
                 icon={<img src={vmwareIcon} className="tile-icon-center" />}
-                onClick={() => {}}
+                onClick={() => {
+                  navigateToProvider(providerTypes.vsphere.key as ProviderType);
+                }}
               />
               <Tile
-                title="Open Virtual Appliance"
+                title={providerTypes.ova.title}
                 icon={<img src={ovaIcon} className="tile-icon-center" />}
-                onClick={() => {}}
+                onClick={() => {
+                  navigateToProvider(providerTypes.ova.key as ProviderType);
+                }}
               />
               <Tile
-                title="OpenStack"
+                title={providerTypes.openstack.title}
                 icon={<img src={openStackIcon} className="tile-icon-center" />}
-                onClick={() => {}}
+                onClick={() => {
+                  navigateToProvider(providerTypes.openstack.key as ProviderType);
+                }}
               />
               <Tile
-                title="Red Hat Virtualization"
+                title={providerTypes.ovirt.title}
                 icon={<img src={redHatIcon} className="tile-icon-center" />}
-                onClick={() => {}}
+                onClick={() => {
+                  navigateToProvider(providerTypes.ovirt.key as ProviderType);
+                }}
               />
               <Tile
-                title="OpenShift Virtualization"
+                title={providerTypes.openshift.title}
                 icon={<img src={openShiftVirtualizationIcon} className="tile-icon-center" />}
-                onClick={() => {}}
+                onClick={() => {
+                  navigateToProvider(providerTypes.openshift.key as ProviderType);
+                }}
               />
             </div>
           </CardFooter>

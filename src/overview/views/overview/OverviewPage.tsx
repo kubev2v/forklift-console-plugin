@@ -7,10 +7,8 @@ import { PageSection } from '@patternfly/react-core';
 
 import { useK8sWatchForkliftController } from '../../hooks/useK8sWatchProviderNames';
 import { useProvidersInventoryIsLive } from '../../hooks/useProvidersInventoryIsLive';
-import { getOperatorPhase } from '../../utils/helpers/getOperatorPhase';
 
 import HeaderTitle from './components/HeaderTitle';
-import OperatorStatus from './components/OperatorStatus';
 import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
 import ForkliftControllerDetailsTab from './tabs/Details/ForkliftControllerDetailsTab';
 import ForkliftControllerHealthTab from './tabs/Health/ForkliftControllerHealthTab';
@@ -63,18 +61,14 @@ type OverviewPageProps = {
 };
 
 const HeaderTitleWrapper: FC = () => {
-  const [forkliftController] = useK8sWatchForkliftController();
   const { loadError: inventoryLivelinessError } = useProvidersInventoryIsLive({});
 
   const { t } = useForkliftTranslation();
-
-  const phaseObj = getOperatorPhase(forkliftController);
 
   return (
     <>
       <HeaderTitle
         title={t('Migration Toolkit for Virtualization')}
-        // status={<OperatorStatus status={phaseObj.phase} />}
         badge={<ShowWelcomeCardButton />}
       />
       {inventoryLivelinessError && (
