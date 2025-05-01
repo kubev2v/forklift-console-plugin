@@ -4,14 +4,13 @@ import { getResourceFieldValue } from 'src/components/common/FilterGroup/matcher
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import { TableLabelCell } from 'src/modules/Providers/utils/components/TableCell/TableLabelCell';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import type { CellProps } from 'src/modules/Providers/views/list/components/CellProps';
 
 import { ProviderModelRef } from '@kubev2v/types';
-import { NetworkIcon } from '@patternfly/react-icons';
+import { OutlinedHddIcon } from '@patternfly/react-icons';
 
-import type { CellProps } from './CellProps';
-
-export const OpenshiftNetworkCell: FC<CellProps> = ({ data, fieldId, fields }: CellProps) => {
-  const { inventory, provider } = data;
+const VSphereHostCell: FC<CellProps> = ({ data: providerData, fieldId, fields }: CellProps) => {
+  const { inventory, provider } = providerData;
   const value = getResourceFieldValue({ ...provider, inventory }, fieldId, fields);
   const providerURL = getResourceUrl({
     name: provider?.metadata?.name,
@@ -25,9 +24,11 @@ export const OpenshiftNetworkCell: FC<CellProps> = ({ data, fieldId, fields }: C
 
   return (
     <TableLabelCell>
-      <Link to={`${providerURL}/networks`}>
-        <NetworkIcon /> {value}
+      <Link to={`${providerURL}/hosts`}>
+        <OutlinedHddIcon /> {value}
       </Link>
     </TableLabelCell>
   );
 };
+
+export default VSphereHostCell;
