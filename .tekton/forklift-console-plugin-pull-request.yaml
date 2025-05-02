@@ -27,11 +27,13 @@ spec:
     - name: image-expires-after
       value: 5d
     - name: dockerfile
-      value: build/Containerfile
+      value: build/Containerfile-downstream
     - name: path-context
       value: .
     - name: build-source-image
       value: 'true'
+    - name: prefetch-input
+      value: '[{"type": "yarn", "path": "."}, {"type": "npm", "path": ".konflux"}]'
   pipelineSpec:
     description: |
       This pipeline is ideal for building container images from a Containerfile while maintaining trust after pipeline customization.
@@ -81,7 +83,7 @@ spec:
         description: Skip checks against built image
         name: skip-checks
         type: string
-      - default: 'false'
+      - default: 'true'
         description: Execute the build with network isolation
         name: hermetic
         type: string
@@ -227,7 +229,7 @@ spec:
             - name: name
               value: buildah-oci-ta
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-buildah-oci-ta:0.4@sha256:0d6b3c8a075bbf10ec4b7ee9b9312db7c4d91846396d6f16ddc1277549713cff
+              value: quay.io/konflux-ci/tekton-catalog/task-buildah-oci-ta:0.4@sha256:161554446f481f89e35bfa6a87ec5f76154d678dd5fd33eaa16bd7eb4d1e8d37
             - name: kind
               value: task
           resolver: bundles
