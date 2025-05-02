@@ -716,6 +716,8 @@
   "Warm migration, most of the data is copied during the precopy stage while the source virtual machines (VMs) are running.": "Warm migration, most of the data is copied during the precopy stage while the source virtual machines (VMs) are running.",
   "Warning": "Warning",
   "Warning concerns": "Warning concerns",
+  "Warning: not all virtual machines are configures using the same LUKS secret": "Warning: not all virtual machines are configures using the same LUKS secret",
+  "Warning: not all virtual machines are configures using the same root disk number,": "Warning: not all virtual machines are configures using the same root disk number,",
   "Welcome!": "Welcome!",
   "Whether this is a warm migration": "Whether this is a warm migration",
   "Whether this is a warm migration.": "Whether this is a warm migration.",
