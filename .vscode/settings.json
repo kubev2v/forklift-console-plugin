@@ -1,9 +1,4 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.options": {
-    "overrideConfigFile": "eslint.ide.config.ts"
-  },
-  "cSpell.words": [
-    "kubev"
-  ]
+  "eslint.options": { "overrideConfigFile": "eslint.ide.config.ts" }
 }
