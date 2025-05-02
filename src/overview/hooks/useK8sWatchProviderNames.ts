@@ -31,25 +31,26 @@ export const useK8sWatchForkliftController = (): K8sForkliftControllerWatchResul
     namespaced: true,
   });
 
-  useEffect(() => {
-    if (loaded && loadError) {
-      handleLoadError(loadError);
-    } else if (loaded) {
-      handleLoadedForkliftControllers(controllers);
-    }
-  }, [controllers, loaded, loadError]);
-
   const handleLoadError = (error: Error | null) => {
     setLoadError(error);
     setLoaded(true);
   };
 
-  const handleLoadedForkliftControllers = (controllers: V1beta1ForkliftController[] | null) => {
+  const handleLoadedForkliftControllers = () => {
     setLoaded(true);
 
     const [firstController] = controllers ?? [];
     setController(firstController);
   };
+
+  useEffect(() => {
+    if (loaded && loadError) {
+      handleLoadError(loadError as Error);
+    } else if (loaded) {
+      handleLoadedForkliftControllers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controllers, loaded, loadError]);
 
   return [controller, controllerLoaded, controllerLoadError];
 };

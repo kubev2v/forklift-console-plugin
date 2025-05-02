@@ -2,8 +2,8 @@ import type { KnipConfig } from 'knip';
 
 export default {
   entry: [
-    'src/modules/Overview/views/overview/OverviewPage.tsx',
-    'src/modules/Overview/hooks/OverviewContextProvider.tsx',
+    'src/overview/OverviewPage.tsx',
+    'src/overview/hooks/OverviewContextProvider.tsx',
 
     'src/modules/Providers/views/list/ProvidersListPageOld.tsx',
     'src/modules/Providers/views/details/ProviderDetailsPage.tsx',

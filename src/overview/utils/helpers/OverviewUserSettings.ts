@@ -9,26 +9,29 @@ type OverviewUserSettings = {
 };
 
 type WelcomeSettings = {
-  hideWelcome: boolean;
+  hideWelcome?: boolean;
   save: (showWelcome: boolean) => void;
   clear: () => void;
 };
 
-const parseOrClean = (key) => {
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+const parseOrClean = <T>(key: string): T | object => {
   try {
-    return JSON.parse(loadFromLocalStorage(key)) ?? {};
+    const storedValue = loadFromLocalStorage(key) ?? '';
+    return JSON.parse(storedValue) as T;
   } catch (_e) {
     removeFromLocalStorage(key);
+    // eslint-disable-next-line no-console
     console.error(`Removed invalid key [${key}] from local storage`);
   }
-  return {};
+  return {} as T;
 };
 
 const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string, unknown>>) => {
-  if (!Object.keys(rest).length) {
-    removeFromLocalStorage(key);
-  } else {
+  if (Object.keys(rest).length > 0) {
     saveToLocalStorage(key, JSON.stringify({ ...rest }));
+  } else {
+    removeFromLocalStorage(key);
   }
 };
 
@@ -40,19 +43,18 @@ const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string
  *
  * @param userSettingsKeySuffix - The key name together with PLUGIN_NAME used to load/save data.
  */
-export const loadUserSettings = ({ userSettingsKeySuffix }): OverviewUserSettings => {
+export const loadUserSettings = (userSettingsKeySuffix: string): OverviewUserSettings => {
   const key = `${process.env.PLUGIN_NAME}/${userSettingsKeySuffix}`;
-  const { hideWelcome } = parseOrClean(key);
+  const { hideWelcome, ...rest } = parseOrClean<WelcomeSettings>(key) as WelcomeSettings;
 
   return {
     welcome: {
       clear: () => {
-        const { hideWelcome, ...rest } = parseOrClean(key);
-        saveRestOrRemoveKey(key, { hideWelcome, rest });
+        saveRestOrRemoveKey(key, { hideWelcome: { hideWelcome }, rest });
       },
       hideWelcome: typeof hideWelcome === 'boolean' ? hideWelcome : undefined,
-      save: (hideWelcome) => {
-        saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), hideWelcome }));
+      save: (hide) => {
+        saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), hideWelcome: hide }));
       },
     },
   };

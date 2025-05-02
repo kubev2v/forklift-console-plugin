@@ -2,7 +2,7 @@ import ovaImg from './resources/open-virtual-appliance.png';
 import openshiftImg from './resources/openshift-virtualization.svg';
 import openstackImg from './resources/openstack.svg';
 import redhatImg from './resources/redhat.svg';
-import vmImg from './resources/vmware-light.svg';
+import vmImg from './resources/vm.svg';
 
 export const openshiftLogo = (
   <img

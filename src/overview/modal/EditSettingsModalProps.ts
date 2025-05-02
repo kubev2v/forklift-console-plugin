@@ -6,7 +6,7 @@ import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 export type EditSettingsModalProps = Modify<
   EditModalProps,
   {
-    resource: V1beta1ForkliftController;
+    resource?: V1beta1ForkliftController;
     title?: string;
     label?: string;
     model?: K8sModel;

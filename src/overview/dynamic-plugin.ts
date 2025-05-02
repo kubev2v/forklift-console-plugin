@@ -8,7 +8,7 @@ import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plug
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   OverviewContextProvider: './overview/hooks/OverviewContextProvider',
-  OverviewPage: './overview/views/overview/OverviewPage',
+  OverviewPage: './overview/OverviewPage',
 };
 
 export const extensions: EncodedExtension[] = [

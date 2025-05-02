@@ -1,7 +1,6 @@
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 import { exposedModules as networkMapModules } from './src/modules/NetworkMaps/dynamic-plugin';
-// import { exposedModules as overviewModulesOld } from './src/modules/Overview/dynamic-plugin';
 import { exposedModules as planModules } from './src/modules/Plans/dynamic-plugin';
 import { exposedModules as providerModulesOld } from './src/modules/Providers/dynamic-plugin';
 import { exposedModules as storageMapModules } from './src/modules/StorageMaps/dynamic-plugin';
@@ -18,7 +17,6 @@ const pluginMetadata: ConsolePluginBuildMetadata = {
   displayName: 'OpenShift Console Plugin For Forklift',
   exposedModules: {
     ...overviewModules,
-    // ...overviewModulesOld,
     ...providerModules,
     ...providerModulesOld,
     ...planModules,

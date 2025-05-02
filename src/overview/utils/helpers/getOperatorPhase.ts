@@ -6,29 +6,30 @@ import type { K8sResourceCondition, V1beta1ForkliftController } from '@kubev2v/t
  * @return {Object} A dictionary with the phase as the key and the message as the value.
  */
 export const getOperatorPhase = (
-  obj: V1beta1ForkliftController,
+  obj?: V1beta1ForkliftController,
 ): {
   phase?: string;
   message?: string;
 } => {
-  let phase: string;
-  let message: string;
+  let phase = '';
+  let message = '';
 
-  const status: { conditions?: K8sResourceCondition[] } = obj?.status || {};
+  const status: { conditions?: K8sResourceCondition[] } = obj?.status ?? {};
 
   // Define an array of valid types
-  const validTypes = ['Successful', 'Failure', 'Running'];
+  const validTypes = ['Successful', 'Failure', 'Running'] as const;
+  type ValidType = (typeof validTypes)[number];
 
   // Prepare an empty map to store found condition types and their associated messages
-  const foundConditions: Record<string, string> = {};
+  const foundConditions: Partial<Record<ValidType, string>> = {};
 
   // Check if conditions exist in status
   if ('conditions' in status) {
-    for (const condition of status?.conditions || []) {
+    for (const condition of status?.conditions ?? []) {
       // Check if the type of condition is valid and its status is 'True'
-      if (validTypes.includes(condition.type) && condition.status === 'True') {
+      if (validTypes.includes(condition.type as ValidType) && condition.status === 'True') {
         // Store the found condition type and its associated message
-        foundConditions[condition.type] = condition.message;
+        foundConditions[condition.type as ValidType] = condition.message ?? '';
       }
     }
   }
@@ -37,7 +38,7 @@ export const getOperatorPhase = (
   for (const type of validTypes) {
     if (type in foundConditions) {
       phase = type;
-      message = foundConditions[type];
+      message = foundConditions[type] ?? '';
       break;
     }
   }

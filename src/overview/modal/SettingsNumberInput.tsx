@@ -23,8 +23,8 @@ const SettingsNumberInput: FC<SettingsSelectInputProps> = ({ onChange, value: va
   };
 
   const onUserChange: (event: FormEvent<HTMLInputElement>) => void = (event) => {
-    const { value } = event.target as HTMLInputElement;
-    const newValue = value === '' ? value : Number(value);
+    const { value: inputValue } = event.target as HTMLInputElement;
+    const newValue = inputValue === '' ? inputValue : Number(inputValue);
     setNewValue(newValue || 0);
   };
 
