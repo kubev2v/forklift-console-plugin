@@ -6,11 +6,17 @@ import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 
-import TargetNamespaceDetailsItem from './components/PlanTargetNamespace/TargetNamespaceDetailItem';
-import TransferNetworkDetailsItem from './components/PlanTransferNetwork/TransferNetworkDetailItem';
-import WarmDetailsItem from './components/PlanWarm/WarmDetailItem';
-import PreserveClusterCpuModelDetailsItem from './components/PreserveClusterCpuModel/PreserveClusterCpuModelDetailItem';
-import usePlanSourceProvider from './hooks/usePlanSourceProvider';
+import usePlanSourceProvider from '../hooks/usePlanSourceProvider';
+
+import NetworkNameTemplateDetailsItem from './components/NetworkNameTemplate/NetworkNameTemplateDetailsItem';
+import SharedDisksDetailsItem from './components/PlanMigrateSharedDisks/MigrateSharedDisksDetailsItem';
+import TransferNetworkDetailsItem from './components/PlanTransferNetwork/TransferNetworkDetailsItem';
+import PreserveClusterCpuModelDetailsItem from './components/PreserveClusterCpuModel/PreserveClusterCpuModelDetailsItem';
+import PreserveStaticIPsDetailsItem from './components/PreserveStaticIPs/PreserveStaticIPsDetailsItem';
+import PVCNameTemplateDetailsItem from './components/PVCNameTemplate/PVCNameTemplateDetailsItem';
+import RootDiskDetailsItem from './components/RootDisk/RootDiskDetailsItem';
+import SetLUKSEncryptionPasswordsDetailsItem from './components/SetLUKSEncryptionPasswords/SetLUKSEncryptionPasswordsDetailsItem';
+import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
 
 type SettingsSectionProps = {
   plan: V1beta1Plan;
@@ -33,31 +39,23 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
           default: '2Col',
         }}
       >
-        <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
-
+        <SetLUKSEncryptionPasswordsDetailsItem
+          plan={plan}
+          canPatch={canPatch}
+          shouldRender={isVsphere}
+        />
+        <RootDiskDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+        <SharedDisksDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+        <VolumeNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <TransferNetworkDetailsItem plan={plan} canPatch={canPatch} />
-
-        <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
-
+        <PVCNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+        <PreserveStaticIPsDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+        <NetworkNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <PreserveClusterCpuModelDetailsItem
           plan={plan}
           canPatch={canPatch}
           shouldRender={isOvirt}
         />
-
-        {/*{isVsphere && <PreserveStaticIPsDetailsItem resource={plan} canPatch={canPatch} />}
-
-        {isVsphere && <SetLUKSEncryptionPasswordsDetailsItem resource={plan} canPatch={canPatch} />}
-
-        {isVsphere && <RootDiskDetailsItem resource={plan} canPatch={canPatch} />}
-
-        {isVsphere && <SharedDisksDetailsItem resource={plan} canPatch={canPatch} />}
-
-        {isVsphere && <PVCNameTemplateDetailsItem resource={plan} canPatch={canPatch} />}
-
-        {isVsphere && <VolumeNameTemplateDetailsItem resource={plan} canPatch={canPatch} />}
-
-        {isVsphere && <NetworkNameTemplateDetailsItem resource={plan} canPatch={canPatch} />} */}
       </DescriptionList>
     </ModalHOC>
   );

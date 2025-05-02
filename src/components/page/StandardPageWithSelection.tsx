@@ -1,10 +1,9 @@
 import { type ComponentProps, type FC, useCallback, useState } from 'react';
 
+import DefaultSelectHeader from '@components/common/TableView/DefaultSelectHeader';
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import { Td, Th } from '@patternfly/react-table';
-import { isEmpty } from '@utils/helpers';
 
-import { DefaultHeader } from '../common/TableView/DefaultHeader';
 import type { RowProps, TableViewHeaderProps } from '../common/TableView/types';
 import { withTr } from '../common/TableView/withTr';
 
@@ -51,42 +50,20 @@ const withRowSelection = <T,>({
       {CellMapper && <CellMapper {...props} />}
     </>
   );
-  Enhanced.displayName = `${CellMapper?.displayName ?? 'CellMapper'}WithSelection`;
+
   return Enhanced;
 };
 
-const withHeaderSelection = <T,>({
-  canSelect,
-  HeaderMapper,
-  isExpanded,
-  isSelected,
-  toggleSelectFor,
-}: WithHeaderSelectionProps<T>) => {
+const withHeaderSelection = <T,>({ HeaderMapper, isExpanded }: WithHeaderSelectionProps<T>) => {
   const Enhanced = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
-    const selectableItems = canSelect && dataOnScreen ? dataOnScreen?.filter(canSelect) : [];
-    const allSelected =
-      !isEmpty(selectableItems) &&
-      selectableItems.every((item) => (isSelected ? isSelected(item) : false));
-
     return (
       <>
         {isExpanded && <Th />}
-        {isSelected && !isEmpty(selectableItems) && (
-          <Th
-            select={{
-              isHeaderSelectDisabled: !selectableItems?.length, // Disable if no selectable items
-              isSelected: allSelected,
-              onSelect: () => {
-                toggleSelectFor(selectableItems);
-              },
-            }}
-          />
-        )}
         {HeaderMapper && <HeaderMapper {...{ ...other, dataOnScreen }} />}
       </>
     );
   };
-  Enhanced.displayName = `${HeaderMapper?.displayName ?? 'HeaderMapper'}WithSelection`;
+
   return Enhanced;
 };
 
@@ -158,11 +135,8 @@ const withIdBasedSelection = <T,>({
     );
 
     const HeaderMapper = withHeaderSelection({
-      canSelect,
-      HeaderMapper: props.HeaderMapper ?? DefaultHeader,
+      HeaderMapper: props.HeaderMapper ?? DefaultSelectHeader,
       isExpanded,
-      isSelected,
-      toggleSelectFor,
     });
 
     return (
@@ -170,6 +144,7 @@ const withIdBasedSelection = <T,>({
         {...rest}
         expandedIds={expandedIds}
         selectedIds={selectedIds}
+        onSelect={setSelectedIds}
         toId={toId}
         RowMapper={RowMapper}
         HeaderMapper={HeaderMapper}

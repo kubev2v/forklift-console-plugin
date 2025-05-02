@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 
 import { Popover, type PopoverProps } from '@patternfly/react-core';
-import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+import { HelpIcon } from '@patternfly/react-icons';
 
 type HelpIconPopoverProps = {
   children: ReactNode;

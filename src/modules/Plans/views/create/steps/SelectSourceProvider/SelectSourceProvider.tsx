@@ -41,9 +41,9 @@ export const SelectSourceProvider: FC<{
 
   const filteredProviders = readyProviders.filter(
     (provider) =>
-      provider.metadata.name.toLowerCase().includes(filterState.nameFilter.toLowerCase()) &&
+      provider.metadata?.name?.toLowerCase().includes(filterState.nameFilter.toLowerCase()) &&
       (filterState.typeFilters.length === 0 ||
-        filterState.typeFilters.includes(provider.spec.type)),
+        filterState.typeFilters.includes(provider.spec?.type ?? '')),
   );
 
   const selectedProviderName = selectedProvider?.metadata?.name;
@@ -77,9 +77,6 @@ export const SelectSourceProvider: FC<{
             }}
             initialSelectedIds={filterState.selectedVMs.map((vm) => vm.vm.id)}
             showActions={false}
-            selectedCountLabel={(selectedIdCount) =>
-              t('{{vmCount}} VMs selected', { vmCount: selectedIdCount })
-            }
           />
         </>
       )}

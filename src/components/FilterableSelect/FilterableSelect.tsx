@@ -24,7 +24,7 @@ import {
   TextInputGroupMain,
   TextInputGroupUtilities,
 } from '@patternfly/react-core';
-import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
+import { TimesIcon } from '@patternfly/react-icons';
 
 /**
  * Props for the FilterableSelect component.

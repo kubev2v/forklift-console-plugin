@@ -7,6 +7,7 @@ import { Alert, AlertVariant, Stack } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks';
 
 import { VmFormFieldId } from './constants';
@@ -29,7 +30,7 @@ const VirtualMachinesStep: FC = () => {
   );
 
   return (
-    <WizardStepContainer title={t('Virtual machines')} isFullWidth>
+    <WizardStepContainer title={planStepNames[PlanWizardStepId.VirtualMachines]} isFullWidth>
       <Stack hasGutter>
         <p>
           {t(

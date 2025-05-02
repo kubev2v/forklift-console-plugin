@@ -31,7 +31,7 @@ import {
   HelperText,
   HelperTextItem,
 } from '@patternfly/react-core';
-import Pencil from '@patternfly/react-icons/dist/esm/icons/pencil-alt-icon';
+import { PencilAltIcon as Pencil } from '@patternfly/react-icons';
 
 import { MappingList } from '../../components/MappingList';
 import type { Mapping } from '../../components/MappingListItem';

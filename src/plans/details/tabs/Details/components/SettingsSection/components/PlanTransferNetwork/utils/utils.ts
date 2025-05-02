@@ -5,12 +5,9 @@ import { getPlanTransferNetwork } from '@utils/crds/plans/selectors';
 
 import { PROVIDER_DEFAULTS } from './constants';
 
-export const transferNetworkToName = (network: V1beta1PlanSpecTransferNetwork | undefined) =>
-  `${network?.namespace}/${network?.name}`;
-
 export const getNetworkName = (value: V1beta1PlanSpecTransferNetwork | null): string => {
   if (!value || typeof value === 'string') return PROVIDER_DEFAULTS;
-  return transferNetworkToName(value);
+  return `${value?.namespace}/${value?.name}`;
 };
 
 export const onConfirmTransferNetwork = async ({

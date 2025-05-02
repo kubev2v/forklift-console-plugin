@@ -6,8 +6,7 @@ import { openstackSecretFieldValidator } from 'src/modules/Providers/utils/valid
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, InputGroup, TextInput } from '@patternfly/react-core';
-import EyeIcon from '@patternfly/react-icons/dist/esm/icons/eye-icon';
-import EyeSlashIcon from '@patternfly/react-icons/dist/esm/icons/eye-slash-icon';
+import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 
 import type { EditComponentProps } from '../../BaseCredentialsSection';
 

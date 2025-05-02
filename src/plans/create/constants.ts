@@ -5,15 +5,16 @@ import type { WizardStepType } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
 import type { GeneralFormFieldId } from './steps/general-information/constants';
-import type { NetworkMapFieldId, NetworkMapping } from './steps/network-mappings/constants';
+import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
+import type { StorageMapFieldId, StorageMapping } from './steps/storage-map/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
 export enum PlanWizardStepId {
   BasicSetup = 'basic-setup',
   General = 'general',
   VirtualMachines = 'virtual-machines',
-  NetworkMapping = 'network-mapping',
-  StorageMapping = 'storage-mapping',
+  NetworkMap = 'network-map',
+  StorageMap = 'storage-map',
   MigrationType = 'migration-type',
   AdditionalSetup = 'additional-setup',
   OtherSettings = 'other-settings',
@@ -27,10 +28,10 @@ export const planStepNames: Record<PlanWizardStepId, ReturnType<typeof t>> = {
   [PlanWizardStepId.General]: t('General'),
   [PlanWizardStepId.Hooks]: t('Hooks (optional)'),
   [PlanWizardStepId.MigrationType]: t('Migration type'),
-  [PlanWizardStepId.NetworkMapping]: t('Network mapping'),
+  [PlanWizardStepId.NetworkMap]: t('Network map'),
   [PlanWizardStepId.OtherSettings]: t('Other settings (optional)'),
   [PlanWizardStepId.ReviewAndCreate]: t('Review and create'),
-  [PlanWizardStepId.StorageMapping]: t('Storage mapping'),
+  [PlanWizardStepId.StorageMap]: t('Storage map'),
   [PlanWizardStepId.VirtualMachines]: t('Virtual machines'),
 };
 
@@ -40,10 +41,10 @@ export const planStepOrder: Record<PlanWizardStepId, number> = {
   [PlanWizardStepId.General]: 2,
   [PlanWizardStepId.Hooks]: 9,
   [PlanWizardStepId.MigrationType]: 6,
-  [PlanWizardStepId.NetworkMapping]: 4,
+  [PlanWizardStepId.NetworkMap]: 4,
   [PlanWizardStepId.OtherSettings]: 8,
   [PlanWizardStepId.ReviewAndCreate]: 10,
-  [PlanWizardStepId.StorageMapping]: 5,
+  [PlanWizardStepId.StorageMap]: 5,
   [PlanWizardStepId.VirtualMachines]: 3,
 };
 
@@ -61,7 +62,8 @@ export type CreatePlanFormData = FieldValues & {
   [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProject]: string;
   [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine>;
-  [NetworkMapFieldId.NetworkMappings]: NetworkMapping[];
+  [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
+  [StorageMapFieldId.StorageMap]: StorageMapping[];
 };
 
 export enum ProviderType {

@@ -5,7 +5,12 @@ import CopyPlugin from 'copy-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
-import { type Configuration as WebpackConfiguration, EnvironmentPlugin } from 'webpack';
+import {
+  type Configuration as WebpackConfiguration,
+  EnvironmentPlugin,
+  type WebpackPluginInstance,
+} from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import type { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
 import { ConsoleRemotePlugin } from '@openshift-console/dynamic-plugin-sdk-webpack';
@@ -17,6 +22,8 @@ import pluginMetadata from './plugin-metadata';
 type Configuration = {
   devServer?: WebpackDevServerConfiguration;
 } & WebpackConfiguration;
+
+const isAnalyzeBundle = process.env.ANALYZE_BUNDLE === 'true';
 
 const config: Configuration = {
   context: path.resolve(__dirname, 'src'),
@@ -109,6 +116,15 @@ const config: Configuration = {
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),
     new EnvironmentPlugin(ENVIRONMENT_DEFAULTS),
+    ...(isAnalyzeBundle
+      ? [
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            openAnalyzer: true,
+            reportFilename: 'report.html',
+          }) as unknown as WebpackPluginInstance,
+        ]
+      : []),
   ],
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],

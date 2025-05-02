@@ -1,0 +1,13 @@
+.field-builder-table {
+  .pf-v5-c-table {
+    .pf-v5-c-table__th {
+      :first-child {
+        padding-inline-start: 0;
+      }
+
+      :last-child {
+        padding-inline-end: 0;
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { isProviderLocalOpenshift } from 'src/utils/resources';
 
 import type { ProviderType } from '@kubev2v/types';
 
-import { toId } from '../../details/tabs/VirtualMachines/components/ProviderVirtualMachinesList';
+import { getVmId } from '../../details/tabs/VirtualMachines/utils/helpers/vmProps';
 import {
   type CreateVmMigrationPageState,
   type Mapping,
@@ -447,7 +447,7 @@ const handlers: Record<
     const hasVmNicWithEmptyProfile = hasNicWithEmptyProfile(sourceProvider, vms);
 
     draft.underConstruction.plan.spec.vms = vms.map((data) => ({
-      id: toId(data),
+      id: getVmId(data),
       name: data.name,
       namespace: data.namespace,
     }));

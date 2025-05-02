@@ -10,7 +10,7 @@ import {
   EmptyStateHeader,
   EmptyStateIcon,
 } from '@patternfly/react-core';
-import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
+import { SearchIcon } from '@patternfly/react-icons';
 
 type ProviderCardEmptyStateProps = {
   projectName: string;
