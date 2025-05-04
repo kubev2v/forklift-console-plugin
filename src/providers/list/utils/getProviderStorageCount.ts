@@ -24,7 +24,7 @@ export const getProviderStorageCount = (provider: ProviderData) => {
       return (inventory as OVirtProvider).storageDomainCount;
     case undefined:
     default: {
-      return 0;
+      return undefined;
     }
   }
 };
