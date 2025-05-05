@@ -9,6 +9,7 @@ import { GeneralFormFieldId } from './steps/general-information/constants';
 import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
 import MigrationTypeStep from './steps/migration-type/MigrationTypeStep';
 import NetworkMapStep from './steps/network-map/NetworkMapStep';
+import OtherSettingsStep from './steps/other-settings/OtherSettingsStep';
 import StorageMapStep from './steps/storage-map/StorageMapStep';
 import VirtualMachinesStep from './steps/virtual-machines/VirtualMachinesStep';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
@@ -92,9 +93,7 @@ const CreatePlanWizard: FC = () => {
               key={PlanWizardStepId.OtherSettings}
               {...getStepProps(PlanWizardStepId.OtherSettings)}
             >
-              <Form>
-                <Title headingLevel="h2">{t('Other settings')}</Title>
-              </Form>
+              <OtherSettingsStep />
             </WizardStep>,
             <WizardStep key={PlanWizardStepId.Hooks} {...getStepProps(PlanWizardStepId.Hooks)}>
               <Form>

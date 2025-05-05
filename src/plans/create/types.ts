@@ -12,6 +12,7 @@ import type {
 import type { GeneralFormFieldId } from './steps/general-information/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
+import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
 import type { StorageMapFieldId, StorageMapping } from './steps/storage-map/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
@@ -48,4 +49,7 @@ export type CreatePlanFormData = FieldValues & {
   [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
   [StorageMapFieldId.StorageMap]: StorageMapping[];
   [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
+  [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
+  [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
+  [OtherSettingsFormFieldId.SharedDisks]: boolean;
 };

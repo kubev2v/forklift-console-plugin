@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
+import HelpIconWithLabel from 'src/plans/components/HelpIconWithLabel';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
-import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import WizardStepContainer from '@components/common/WizardStepContainer';
-import { Alert, Flex, FlexItem, Radio, Stack, StackItem } from '@patternfly/react-core';
+import { Alert, Flex, Radio, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { CBT_HELP_LINK, WARM_MIGRATION_HELP_LINK } from '@utils/links';
@@ -56,32 +56,21 @@ const MigrationTypeStep: FC = () => {
                 id={MigrationTypeValue.Warm}
                 name={MigrationTypeValue.Warm}
                 label={
-                  <Flex
-                    alignItems={{ default: 'alignItemsCenter' }}
-                    spaceItems={{ default: 'spaceItemsNone' }}
-                  >
-                    <FlexItem>{migrationTypeLabels[MigrationTypeValue.Warm]}</FlexItem>
+                  <HelpIconWithLabel label={migrationTypeLabels[MigrationTypeValue.Warm]}>
+                    <Stack hasGutter>
+                      <StackItem>
+                        {t(
+                          'This type of migration reduces downtime by copying most of the VM data during a precopy stage while the VMs are running. During the cutover stage, the VMs are stopped and the rest of the data is copied. This is different from a live migration, where there is zero downtime.',
+                        )}
+                      </StackItem>
 
-                    <HelpIconPopover
-                      onClick={(e) => {
-                        e.preventDefault();
-                      }}
-                    >
-                      <Stack hasGutter>
-                        <StackItem>
-                          {t(
-                            'This type of migration reduces downtime by copying most of the VM data during a precopy stage while the VMs are running. During the cutover stage, the VMs are stopped and the rest of the data is copied. This is different from a live migration, where there is zero downtime.',
-                          )}
-                        </StackItem>
-
-                        <StackItem>
-                          <ExternalLink isInline href={WARM_MIGRATION_HELP_LINK}>
-                            {t('Learn more')}
-                          </ExternalLink>
-                        </StackItem>
-                      </Stack>
-                    </HelpIconPopover>
-                  </Flex>
+                      <StackItem>
+                        <ExternalLink isInline href={WARM_MIGRATION_HELP_LINK}>
+                          {t('Learn more')}
+                        </ExternalLink>
+                      </StackItem>
+                    </Stack>
+                  </HelpIconWithLabel>
                 }
                 description={t(
                   'A warm migration migrates an active virtual machine (VM) from one host to another with minimal downtime.  This is not live migration.',
