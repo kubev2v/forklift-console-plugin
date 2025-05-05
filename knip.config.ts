@@ -5,10 +5,10 @@ export default {
     'src/modules/Overview/views/overview/OverviewPage.tsx',
     'src/modules/Overview/hooks/OverviewContextProvider.tsx',
 
-    'src/modules/Providers/views/details/ProviderDetailsPage.tsx',
     'src/modules/Providers/views/create/ProvidersCreatePage.tsx',
     'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext.tsx',
     'src/providers/list/ProvidersListPage.tsx',
+    'src/providers/details/ProviderDetailsPage.tsx',
     'src/utils/types.ts',
 
     'src/modules/Plans/views/create/PlanCreatePage.tsx',

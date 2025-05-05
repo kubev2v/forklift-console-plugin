@@ -1,0 +1,63 @@
+import type { FC } from 'react';
+import { LoadingDots } from 'src/components/common/LoadingDots/LoadingDots';
+import { ErrorState } from 'src/components/common/Page/PageStates';
+import { useForkliftTranslation } from 'src/utils/i18n';
+
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
+import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+
+import OpenshiftProviderDetailsPage from './OpenshiftProviderDetailsPage';
+import OpenStackProviderDetailsPage from './OpenStackProviderDetailsPage';
+import OvaProviderDetailsPage from './OvaProviderDetailsPage';
+import OVirtProviderDetailsPage from './OVirtProviderDetailsPage';
+import VSphereProviderDetailsPage from './VSphereProviderDetailsPage';
+
+import './ProviderDetailsPage.style.css';
+
+type ProviderDetailsPageProps = {
+  kind: string;
+  kindObj: K8sModel;
+  name: string;
+  namespace?: string;
+};
+
+const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
+  const { t } = useForkliftTranslation();
+
+  const [provider, loaded, error] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    name,
+    namespace,
+    namespaced: true,
+  });
+
+  if (error) {
+    return <ErrorState title={t('Unable to retrieve data.')} />;
+  }
+
+  if (!loaded) {
+    return <LoadingDots />;
+  }
+
+  switch (provider?.spec?.type) {
+    case 'openshift':
+      return (
+        <OpenshiftProviderDetailsPage name={name} namespace={namespace!} provider={provider} />
+      );
+    case 'openstack':
+      return (
+        <OpenStackProviderDetailsPage name={name} namespace={namespace!} provider={provider} />
+      );
+    case 'ovirt':
+      return <OVirtProviderDetailsPage name={name} namespace={namespace!} provider={provider} />;
+    case 'vsphere':
+      return <VSphereProviderDetailsPage name={name} namespace={namespace!} provider={provider} />;
+    case 'ova':
+      return <OvaProviderDetailsPage name={name} namespace={namespace!} provider={provider} />;
+    case undefined:
+    default:
+      return <ErrorState title={t('Unsupported provider type')} />;
+  }
+};
+
+export default ProviderDetailsPage;

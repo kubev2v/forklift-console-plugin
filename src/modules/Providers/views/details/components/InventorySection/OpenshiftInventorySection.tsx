@@ -1,12 +1,11 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import type { InventorySectionProps } from 'src/providers/details/tabs/Details/components/InventorySection/InventorySection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionList } from '@patternfly/react-core';
 
-import type { InventoryProps } from './InventorySection';
-
-export const OpenshiftInventorySection: FC<InventoryProps> = ({ data }) => {
+export const OpenshiftInventorySection: FC<InventorySectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { inventory, provider } = data;
 
@@ -33,7 +32,7 @@ export const OpenshiftInventorySection: FC<InventoryProps> = ({ data }) => {
 
   Object.entries(inventoryItems).forEach(([key, item]) => {
     if (item) {
-      const value = inventory[key] || '-';
+      const value = inventory[key] ?? '-';
       items.push(
         <DetailsItem
           title={item.title}
