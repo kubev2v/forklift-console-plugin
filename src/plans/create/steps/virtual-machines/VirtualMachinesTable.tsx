@@ -10,8 +10,8 @@ import { VSphereVirtualMachinesList } from 'src/modules/Providers/views/details/
 
 import type { ProviderVirtualMachine } from '@kubev2v/types';
 
-import { type CreatePlanFormData, ProviderType } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks';
+import { type CreatePlanFormData, ProviderType } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 
 import type { VmFormFieldId } from './constants';

@@ -7,7 +7,7 @@ import { ALL_PROJECTS_KEY } from '@utils/constants';
 import { getDefaultNamespace } from '@utils/namespaces';
 
 import { GeneralFormFieldId } from './steps/general-information/constants';
-import type { CreatePlanFormData } from './constants';
+import type { CreatePlanFormData } from './types';
 
 export const useDefaultFormValues = (): Partial<CreatePlanFormData> => {
   const [activeNamespace] = useActiveNamespace();
