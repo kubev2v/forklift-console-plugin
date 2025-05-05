@@ -7,24 +7,32 @@ type ProviderIconLinkProps = {
   providerName?: string;
   href: string;
   providerIcon: ReactNode;
+  className?: string;
 };
 
-const ProviderIconLink: FC<ProviderIconLinkProps> = ({ href, providerIcon, providerName }) => {
+const ProviderIconLink: FC<ProviderIconLinkProps> = ({
+  className,
+  href,
+  providerIcon,
+  providerName,
+}) => {
   const navigate = useNavigate();
   return (
-    <Button
-      type="button"
-      isInline
-      variant={ButtonVariant.link}
-      onClick={() => {
-        navigate(href);
-      }}
-    >
-      <Split>
-        <SplitItem className="pf-u-pr-xs">{providerIcon}</SplitItem>
-        <SplitItem>{providerName}</SplitItem>
-      </Split>
-    </Button>
+    <Split className={className}>
+      <SplitItem className="pf-u-pr-xs">{providerIcon}</SplitItem>
+      <SplitItem>
+        <Button
+          type="button"
+          isInline
+          variant={ButtonVariant.link}
+          onClick={() => {
+            navigate(href);
+          }}
+        >
+          {providerName}
+        </Button>
+      </SplitItem>
+    </Split>
   );
 };
 

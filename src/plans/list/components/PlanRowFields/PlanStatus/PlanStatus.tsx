@@ -10,10 +10,11 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel } from '@kubev2v/types';
-import { Button, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
+import { Button, ButtonVariant, Flex, FlexItem, Split } from '@patternfly/react-core';
 import { PlayIcon as StartIcon } from '@patternfly/react-icons';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 
+import PlanVirtualMachines from '../PlanVirtualMachines/PlanVirtualMachines';
 import type { PlanFieldProps } from '../utils/types';
 
 import PlanVirtualMachineStatuses from './components/PlanVirtualMachineStatuses';
@@ -22,7 +23,11 @@ import usePipelineTaskProgress from './hooks/usePipelineTaskProgress';
 
 import './PlanStatus.style.scss';
 
-const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
+type PlanStatusProps = PlanFieldProps & {
+  isPlanRow?: boolean;
+};
+
+const PlanStatus: FC<PlanStatusProps> = ({ isPlanRow, plan }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
   const [isButtonEnabled, setIsButtonEnabled] = useState(true);
@@ -31,23 +36,27 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
 
   if (phase === PlanPhase.Ready) {
     return (
-      <Button
-        variant={ButtonVariant.secondary}
-        icon={<StartIcon />}
-        isDisabled={!isButtonEnabled}
-        onClick={() => {
-          showModal(
-            <PlanStartMigrationModal
-              resource={plan}
-              model={PlanModel}
-              title={t('Start')}
-              setButtonEnabledOnChange={setIsButtonEnabled}
-            />,
-          );
-        }}
-      >
-        {t('Start')}
-      </Button>
+      <Split hasGutter>
+        <Button
+          variant={ButtonVariant.secondary}
+          icon={<StartIcon />}
+          isDisabled={!isButtonEnabled}
+          onClick={() => {
+            showModal(
+              <PlanStartMigrationModal
+                resource={plan}
+                model={PlanModel}
+                title={t('Start')}
+                setButtonEnabledOnChange={setIsButtonEnabled}
+              />,
+            );
+          }}
+          isInline
+        >
+          {t('Start')}
+        </Button>
+        {!isPlanRow && <PlanVirtualMachines plan={plan} />}
+      </Split>
     );
   }
 

@@ -144,7 +144,10 @@ const withIdBasedSelection = <T,>({
         {...rest}
         expandedIds={expandedIds}
         selectedIds={selectedIds}
-        onSelect={setSelectedIds}
+        onSelect={(ids) => {
+          setSelectedIds(ids);
+          onSelect?.(ids);
+        }}
         toId={toId}
         RowMapper={RowMapper}
         HeaderMapper={HeaderMapper}
@@ -241,5 +244,9 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
     toId,
   });
 
-  return onSelect ? <EnhancedStandardPage {...rest} /> : <StandardPage {...rest} />;
+  return onSelect ? (
+    <EnhancedStandardPage onSelect={onSelect} {...rest} />
+  ) : (
+    <StandardPage {...rest} />
+  );
 };

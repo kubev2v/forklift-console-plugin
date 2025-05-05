@@ -6,7 +6,7 @@ import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 
-import usePlanSourceProvider from '../hooks/usePlanSourceProvider';
+import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 
 import NetworkNameTemplateDetailsItem from './components/NetworkNameTemplate/NetworkNameTemplateDetailsItem';
 import SharedDisksDetailsItem from './components/PlanMigrateSharedDisks/MigrateSharedDisksDetailsItem';

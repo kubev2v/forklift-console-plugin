@@ -44,7 +44,7 @@ const StorageMapStep = () => {
   const { other: otherSourceLabels, used: usedSourceLabels } = getSourceStorageLabels(
     sourceProvider,
     availableSourceStorages,
-    Object.values(vms),
+    Object.values(vms ?? {}),
   );
   const defaultTargetStorageName = targetStorages?.[0]?.name;
 
