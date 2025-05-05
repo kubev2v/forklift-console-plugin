@@ -5,10 +5,10 @@ import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
 import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
 import { EditLUKSEncryptionPasswords } from '../modals/EditLUKSEncryptionPasswords/EditLUKSEncryptionPasswords';
-import { VIRT_V2V_HELP_LINK } from '../modals/EditLUKSEncryptionPasswords/editLUKSModalBody';
 
 export const SetLUKSEncryptionPasswordsDetailsItem: FC<PlanDetailsItemProps> = ({
   canPatch,

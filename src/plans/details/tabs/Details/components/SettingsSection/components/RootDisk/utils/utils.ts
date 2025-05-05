@@ -4,7 +4,7 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { t } from '@utils/i18n';
 
-export const diskOptions = () => [
+export const diskOptions = [
   {
     description: t('Boot from first root device'),
     key: '',

@@ -7,6 +7,7 @@ import { ALL_PROJECTS_KEY } from '@utils/constants';
 import { getDefaultNamespace } from '@utils/namespaces';
 
 import { GeneralFormFieldId } from './steps/general-information/constants';
+import { OtherSettingsFormFieldId } from './steps/other-settings/constants';
 import type { CreatePlanFormData } from './types';
 
 export const useDefaultFormValues = (): Partial<CreatePlanFormData> => {
@@ -26,6 +27,7 @@ export const useDefaultFormValues = (): Partial<CreatePlanFormData> => {
 
   return {
     [GeneralFormFieldId.PlanProject]: initialPlanProject,
+    [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [{ value: '' }],
   };
 };
 

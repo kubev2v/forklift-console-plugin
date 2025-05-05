@@ -13,7 +13,7 @@ type HelpIconPopoverProps = {
 
 export const HelpIconPopover: FC<HelpIconPopoverProps> = ({
   children,
-  className = 'pf-c-form__group-label-help pf-v5-u-ml-sm',
+  className = `pf-c-form__group-label-help pf-v5-u-ml-sm`,
   header,
   onClick,
   popoverProps,

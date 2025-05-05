@@ -47,6 +47,7 @@
     "@patternfly/react-icons": "^5.1.1",
     "@patternfly/react-table": "^5.1.1",
     "@patternfly/react-tokens": "^5.1.1",
+    "classnames": "^2.5.1",
     "immer": "^10.1.1",
     "immutable": "^5.1.1",
     "js-base64": "^3.7.7",
