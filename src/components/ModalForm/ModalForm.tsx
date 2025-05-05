@@ -49,6 +49,7 @@ const ModalForm: FC<ModalFormProps> = ({
       toggleModal();
     } catch (e) {
       setError((e as Error)?.message ?? e?.toString());
+    } finally {
       setIsLoading(false);
     }
   }, [onConfirm, toggleModal]);

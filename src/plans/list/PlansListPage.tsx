@@ -39,7 +39,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
 
   return (
     <StandardPage
-      data-testid="network-maps-list"
+      data-testid="plans-list"
       addButton={
         <PlansAddButton
           dataTestId="add-network-map-button"

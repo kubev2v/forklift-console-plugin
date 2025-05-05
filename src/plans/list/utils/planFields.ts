@@ -1,10 +1,10 @@
 import { createElement } from 'react';
-import DatesComparedHelperText from 'src/modules/Plans/components/DatesComparedHelperText/DatesComparedHelperText';
 import { migrationTypes } from 'src/modules/Plans/utils/constants/migrationTypes';
 import { planPhases } from 'src/modules/Plans/utils/constants/planPhases';
 import { getMigrationType } from 'src/modules/Plans/utils/helpers/getMigrationType';
 import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
+import DatesComparedHelperText from 'src/plans/details/components/DatesComparedHelperText';
 
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import type { V1beta1Plan } from '@kubev2v/types';

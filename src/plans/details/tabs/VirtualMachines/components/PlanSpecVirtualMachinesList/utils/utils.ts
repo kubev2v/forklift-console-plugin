@@ -1,0 +1,86 @@
+import { FilterDefType, type ResourceField } from '@components/common/utils/types';
+import type { V1beta1Plan, V1beta1PlanStatusConditions } from '@kubev2v/types';
+import { t } from '@utils/i18n';
+
+import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
+
+/**
+ * Extracts the ID and name from a condition item string.
+ *
+ * This function parses a string containing condition item details and extracts the ID and name.
+ * The string format expected is something like "id:<some_id> name:'<some_name>'".
+ *
+ * @param {string} input - The string containing the condition item details.
+ * @returns {{ id: string; name: string }} An object containing the extracted ID and name.
+ */
+const extractIdAndNameFromConditionItem = (input: string): { id: string; name: string } => {
+  const idMatch = /id:(?<id>[^ ]+)/u.exec(input);
+  const nameMatch = /name:'(?<name>[^']+)'/u.exec(input);
+
+  if (!idMatch || !nameMatch) {
+    return { id: '', name: '' };
+  }
+
+  return {
+    id: idMatch.groups?.id ?? '',
+    name: nameMatch?.groups?.name ?? '',
+  };
+};
+
+export const getSpecVirtualMachineFields: (isVsphere: boolean) => ResourceField[] = (isVsphere) => [
+  {
+    filter: {
+      placeholderLabel: t('Filter by name'),
+      type: FilterDefType.FreeText,
+    },
+    isIdentity: true, // Name is sufficient ID when Namespace is pre-selected
+    isVisible: true,
+    jsonPath: '$.specVM.name',
+    label: t('Name'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Name,
+    sortable: true,
+  },
+  {
+    isVisible: true,
+    jsonPath: (obj: unknown) => (obj as SpecVirtualMachinePageData)?.conditions?.[0]?.category,
+    label: t('Conditions'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Conditions,
+    sortable: true,
+  },
+  {
+    isAction: true,
+    isHidden: !isVsphere,
+    isVisible: true,
+    label: '',
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Actions,
+    sortable: false,
+  },
+];
+
+export const getPlanConditionsDict = (
+  plan: V1beta1Plan,
+): Record<string, V1beta1PlanStatusConditions[]> => {
+  const conditions = plan?.status?.conditions?.filter(
+    (condition) => condition?.items && condition.items.length > 0,
+  );
+  const conditionsDict = conditions?.reduce<Record<string, V1beta1PlanStatusConditions[]>>(
+    (dict, condition) => {
+      condition.items?.forEach((item) => {
+        const { id: vmID } = extractIdAndNameFromConditionItem(item);
+        if (vmID) {
+          if (!dict[vmID]) dict[vmID] = [];
+
+          dict[vmID].push(condition);
+        }
+      });
+      return dict;
+    },
+    {},
+  );
+  return conditionsDict ?? {};
+};
+
+export const vmDataToId = (item: SpecVirtualMachinePageData) => item?.specVM?.id ?? '';
+
+export const canSelect = (item: SpecVirtualMachinePageData) =>
+  item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined;
