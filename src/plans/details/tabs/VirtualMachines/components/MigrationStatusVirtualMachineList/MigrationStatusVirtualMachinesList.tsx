@@ -3,8 +3,6 @@ import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import { TableSortContextProvider } from 'src/components/TableSortContext';
 import { isPlanExecuting } from 'src/modules/Plans/utils/helpers/getPlanPhase';
-import { MigrationVirtualMachinesRow } from 'src/modules/Plans/views/details/tabs/VirtualMachines/Migration/MigrationVirtualMachinesRow';
-import { MigrationVirtualMachinesRowExtended } from 'src/modules/Plans/views/details/tabs/VirtualMachines/Migration/MigrationVirtualMachinesRowExtended';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { INITIAL_PAGE } from '@components/page/utils/constants';
@@ -12,10 +10,12 @@ import type { V1beta1Plan } from '@kubev2v/types';
 
 import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
 
+import MigrationStatusExpandedPage from './components/MigrationStatusExpandedPage/MigrationStatusExpandedPage';
 import { useMigrationResources } from './hooks/useMigrationResources';
 import { useMigrationVirtualMachineActions } from './hooks/useMigrationVirtualMachineActions';
 import { planMigrationVirtualMachinesFields } from './utils/constants';
 import type { MigrationStatusVirtualMachinePageData } from './utils/types';
+import MigrationStatusVirtualMachinesRow from './MigrationStatusVirtualMachinesRow';
 
 type MigrationStatusVirtualMachinesListProps = {
   plan: V1beta1Plan;
@@ -44,9 +44,9 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
         canSelect={(item: MigrationStatusVirtualMachinePageData) =>
           canSelectWhenExecuting(item) ?? canSelectWhenNotExecuting(item)
         }
-        CellMapper={MigrationVirtualMachinesRow}
+        CellMapper={MigrationStatusVirtualMachinesRow}
         dataSource={[migrationListData ?? [], true, undefined]}
-        ExpandedComponent={MigrationVirtualMachinesRowExtended}
+        ExpandedComponent={MigrationStatusExpandedPage}
         expandedIds={expandedIds}
         fieldsMetadata={planMigrationVirtualMachinesFields}
         GlobalActionToolbarItems={actions}

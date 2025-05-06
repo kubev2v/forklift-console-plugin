@@ -16,6 +16,7 @@ export type MigrationStatusVirtualMachinePageData = {
   specVM: V1beta1PlanSpecVms;
   statusVM?: V1beta1PlanStatusMigrationVms;
   targetNamespace: string;
+  isWarm: boolean;
 };
 
 export enum MigrationStatusVirtualMachinesTableResourceId {

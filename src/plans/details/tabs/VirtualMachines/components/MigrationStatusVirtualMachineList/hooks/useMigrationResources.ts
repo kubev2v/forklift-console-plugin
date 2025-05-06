@@ -8,8 +8,18 @@ import type {
   V1beta1Plan,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  DataVolumeModelGroupVersionKind,
+  JobModelGroupVersionKind,
+  PersistentVolumeClaimModelGroupVersionKind,
+  PodModelGroupVersionKind,
+} from '@utils/crds/common/models';
 import { getNamespace, getUID } from '@utils/crds/common/selectors';
-import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import {
+  getPlanIsWarm,
+  getPlanTargetNamespace,
+  getPlanVirtualMachines,
+} from '@utils/crds/plans/selectors';
 
 import { getPlanVirtualMachinesDict } from '../../utils/utils';
 import type { MigrationStatusVirtualMachinePageData } from '../utils/types';
@@ -24,30 +34,31 @@ type MigrationResources = {
 export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => {
   const watchOptions = {
     isList: true,
-    namespace: getNamespace(plan),
+    namespace: getPlanTargetNamespace(plan),
     namespaced: true,
     selector: { matchLabels: { plan: getUID(plan)! } },
   };
 
   const [pods = [], podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
-    groupVersionKind: { kind: 'Pod', version: 'v1' },
     ...watchOptions,
+    groupVersionKind: PodModelGroupVersionKind,
+    namespace: getNamespace(plan),
   });
 
   const [jobs = [], jobsLoaded, jobsError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
-    groupVersionKind: { group: 'batch', kind: 'Job', version: 'v1' },
+    groupVersionKind: JobModelGroupVersionKind,
     ...watchOptions,
   });
 
   const [pvcs = [], pvcsLoaded, pvcsError] = useK8sWatchResource<
     IoK8sApiCoreV1PersistentVolumeClaim[]
   >({
-    groupVersionKind: { kind: 'PersistentVolumeClaim', version: 'v1' },
+    groupVersionKind: PersistentVolumeClaimModelGroupVersionKind,
     ...watchOptions,
   });
 
   const [dvs = [], dvsLoaded, dvsError] = useK8sWatchResource<V1beta1DataVolume[]>({
-    groupVersionKind: { group: 'cdi.kubevirt.io', kind: 'DataVolume', version: 'v1beta1' },
+    groupVersionKind: DataVolumeModelGroupVersionKind,
     ...watchOptions,
   });
 
@@ -73,16 +84,17 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
   const vmDict = getPlanVirtualMachinesDict(plan);
 
   const migrationListData = useMemo(() => {
-    return virtualMachines.map((vmSpec) => ({
-      dvs: dvsDict[vmSpec.id!],
-      jobs: jobsDict[vmSpec.id!],
-      pods: podsDict[vmSpec.id!],
-      pvcs: pvcsDict[vmSpec.id!],
-      specVM: vmSpec,
-      statusVM: vmDict[vmSpec.id!],
-      targetNamespace: plan?.spec?.targetNamespace,
+    return virtualMachines.map((specVM) => ({
+      dvs: dvsDict[specVM.id!],
+      isWarm: getPlanIsWarm(plan),
+      jobs: jobsDict[specVM.id!],
+      pods: podsDict[specVM.id!],
+      pvcs: pvcsDict[specVM.id!],
+      specVM,
+      statusVM: vmDict[specVM.id!],
+      targetNamespace: getPlanTargetNamespace(plan),
     })) as MigrationStatusVirtualMachinePageData[];
-  }, [virtualMachines, dvsDict, jobsDict, podsDict, pvcsDict, vmDict, plan?.spec?.targetNamespace]);
+  }, [virtualMachines, dvsDict, jobsDict, podsDict, pvcsDict, vmDict, plan]);
 
   return {
     error: podsError ?? jobsError ?? pvcsError ?? dvsError,

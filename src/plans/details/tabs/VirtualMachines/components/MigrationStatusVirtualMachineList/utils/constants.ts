@@ -30,6 +30,31 @@ export const planMigrationVirtualMachinesFields: ResourceField[] = [
   },
   {
     filter: {
+      placeholderLabel: t('Pipeline status'),
+      primary: true,
+      type: FilterDefType.Enum,
+      values: vmStatuses,
+    },
+    isVisible: true,
+    jsonPath: getVMMigrationStatus,
+    label: t('Pipeline status'),
+    resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.Status,
+    sortable: true,
+  },
+  {
+    isVisible: true,
+    jsonPath: getVMDiskProgress,
+    label: t('Disk transfer'),
+    resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.Transfer,
+  },
+  {
+    isVisible: true,
+    jsonPath: getVMDiskProgress,
+    label: t('Disk counter'),
+    resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.DiskCounter,
+  },
+  {
+    filter: {
       helperText: createElement(DatesComparedHelperText),
       placeholderLabel: 'YYYY-MM-DD',
       type: FilterDefType.DateRange,
@@ -50,31 +75,6 @@ export const planMigrationVirtualMachinesFields: ResourceField[] = [
     jsonPath: '$.statusVM.completed',
     label: t('Completed at'),
     resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.MigrationCompleted,
-    sortable: true,
-  },
-  {
-    isVisible: true,
-    jsonPath: getVMDiskProgress,
-    label: t('Disk transfer'),
-    resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.Transfer,
-  },
-  {
-    isVisible: true,
-    jsonPath: getVMDiskProgress,
-    label: t('Disk counter'),
-    resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.DiskCounter,
-  },
-  {
-    filter: {
-      placeholderLabel: t('Pipeline status'),
-      primary: true,
-      type: FilterDefType.Enum,
-      values: vmStatuses,
-    },
-    isVisible: true,
-    jsonPath: getVMMigrationStatus,
-    label: t('Pipeline status'),
-    resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.Status,
     sortable: true,
   },
 ];
