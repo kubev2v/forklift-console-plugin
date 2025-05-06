@@ -78,6 +78,7 @@
   "All networks detected on the selected VMs require a mapping.": "All networks detected on the selected VMs require a mapping.",
   "All storages detected on the selected VMs require a mapping.": "All storages detected on the selected VMs require a mapping.",
   "All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.": "All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.",
+  "Ansible playbook": "Ansible playbook",
   "Application credential ID": "Application credential ID",
   "Application credential name": "Application credential name",
   "Application credential secret": "Application credential secret",
@@ -275,8 +276,10 @@
   "Hide from view": "Hide from view",
   "Hide values": "Hide values",
   "Hide variables": "Hide variables",
+  "Hook runner image": "Hook runner image",
   "Hooks": "Hooks",
   "Hooks (optional)": "Hooks (optional)",
+  "Hooks are contained in Ansible playbooks that can be run before or after the migration.": "Hooks are contained in Ansible playbooks that can be run before or after the migration.",
   "Host": "Host",
   "Host cluster": "Host cluster",
   "Hosts": "Hosts",
@@ -285,6 +288,7 @@
   "If true, the provider's CA certificate won't be validated.": "If true, the provider's CA certificate won't be validated.",
   "If true, the provider's TLS certificate won't be validated.": "If true, the provider's TLS certificate won't be validated.",
   "If virtual machines are using shared disks, the shared disks will migrate only once by default.": "If virtual machines are using shared disks, the shared disks will migrate only once by default.",
+  "If you specify a playbook, the image must be hook-runner.": "If you specify a playbook, the image must be hook-runner.",
   "If your VMs use static IPs, click the Mappings tab of your plan, and choose a different target network mapping.<1></1>If your VMs do not use static IPs, you can ignore this message.": "If your VMs use static IPs, click the Mappings tab of your plan, and choose a different target network mapping.<1></1>If your VMs do not use static IPs, you can ignore this message.",
   "If your VMs use static IPs, click the Mappings tab of your plan, and choose a different target network mapping.<1></1>If your VMs don't use static IPs, you can ignore this message.": "If your VMs use static IPs, click the Mappings tab of your plan, and choose a different target network mapping.<1></1>If your VMs don't use static IPs, you can ignore this message.",
   "Image": "Image",
@@ -764,5 +768,6 @@
   "You can select a migration network. If you do not select a migration network,\n        the default migration network is set to the providers default transfer network.": "You can select a migration network. If you do not select a migration network,\n        the default migration network is set to the providers default transfer network.",
   "You can select a migration network. If you do not select a migration network, the default migration network is set to the providers default transfer network.": "You can select a migration network. If you do not select a migration network, the default migration network is set to the providers default transfer network.",
   "You can select a migration target namespace for the migration virtual machines.": "You can select a migration target namespace for the migration virtual machines.",
+  "You can use a custom hook-runner image or specify a custom image, for example quay.io/konveyor/hook-runner.": "You can use a custom hook-runner image or specify a custom image, for example quay.io/konveyor/hook-runner.",
   "Your migration plan preserves the static IPs of VMs and uses Pod Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Pod Networking migrations.": "Your migration plan preserves the static IPs of VMs and uses Pod Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Pod Networking migrations."
 }
