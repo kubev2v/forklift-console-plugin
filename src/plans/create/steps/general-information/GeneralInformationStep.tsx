@@ -35,7 +35,7 @@ const GeneralInformationStep: FC = () => {
   return (
     <WizardStepContainer title={planStepNames[PlanWizardStepId.General]}>
       <Form>
-        <FormSection title={t('Plan information')} titleElement="h3">
+        <FormSection title={t('Plan information')}>
           <p>{t('Name your plan and choose the project you would like it to be created in.')}</p>
 
           <FormGroupWithErrorText
@@ -59,7 +59,7 @@ const GeneralInformationStep: FC = () => {
           <PlanProjectField />
         </FormSection>
 
-        <FormSection title={t('Source and target providers')} titleElement="h3">
+        <FormSection title={t('Source and target providers')}>
           <p>
             {t(
               'Select the provider you would like to migrate your virtual machines from (source provider) and the provider you want to migrate your virtual machines to (target provider).',
