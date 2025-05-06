@@ -3,11 +3,12 @@ kind: PipelineRun
 metadata:
   annotations:
     build.appstudio.openshift.io/repo: https://github.com/kubev2v/forklift-console-plugin?rev={{revision}}
-    build.appstudio.redhat.com/commit_sha: '{{revision}}'
-    build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
-    build.appstudio.redhat.com/target_branch: '{{target_branch}}'
-    pipelinesascode.tekton.dev/max-keep-runs: '3'
-    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch
+    build.appstudio.redhat.com/commit_sha: "{{revision}}"
+    build.appstudio.redhat.com/pull_request_number: "{{pull_request_number}}"
+    build.appstudio.redhat.com/target_branch: "{{target_branch}}"
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-cel-expression:
+      event == "pull_request" && target_branch
       == "main"
   creationTimestamp: null
   labels:
@@ -19,9 +20,9 @@ metadata:
 spec:
   params:
     - name: git-url
-      value: '{{source_url}}'
+      value: "{{source_url}}"
     - name: revision
-      value: '{{revision}}'
+      value: "{{revision}}"
     - name: output-image
       value: quay.io/redhat-user-workloads/rh-mtv-1-tenant/forklift-operator/forklift-console-plugin:on-pr-{{revision}}
     - name: image-expires-after
@@ -31,9 +32,16 @@ spec:
     - name: path-context
       value: .
     - name: build-source-image
-      value: 'true'
+      value: "true"
     - name: prefetch-input
       value: '[{"type": "yarn", "path": "."}, {"type": "npm", "path": ".konflux"}]'
+  taskRunSpecs:
+    - pipelineTaskName: build-container
+      computeResources:
+        requests:
+          memory: 10Gi
+        limits:
+          memory: 10Gi
   pipelineSpec:
     description: |
       This pipeline is ideal for building container images from a Containerfile while maintaining trust after pipeline customization.
@@ -58,7 +66,7 @@ spec:
       - description: Source Repository URL
         name: git-url
         type: string
-      - default: ''
+      - default: ""
         description: Revision of the Source Repository
         name: revision
         type: string
@@ -66,40 +74,43 @@ spec:
         name: output-image
         type: string
       - default: .
-        description: Path to the source code of an application's component from where
+        description:
+          Path to the source code of an application's component from where
           to build image.
         name: path-context
         type: string
       - default: Dockerfile
-        description: Path to the Dockerfile inside the context specified by parameter
+        description:
+          Path to the Dockerfile inside the context specified by parameter
           path-context
         name: dockerfile
         type: string
-      - default: 'false'
+      - default: "false"
         description: Force rebuild image
         name: rebuild
         type: string
-      - default: 'false'
+      - default: "false"
         description: Skip checks against built image
         name: skip-checks
         type: string
-      - default: 'true'
+      - default: "true"
         description: Execute the build with network isolation
         name: hermetic
         type: string
-      - default: ''
+      - default: ""
         description: Build dependencies to be prefetched by Cachi2
         name: prefetch-input
         type: string
-      - default: ''
-        description: Image tag expiration time, time values could be something like
+      - default: ""
+        description:
+          Image tag expiration time, time values could be something like
           1h, 2d, 3w for hours, days, and weeks, respectively.
         name: image-expires-after
-      - default: 'false'
+      - default: "false"
         description: Build a source image.
         name: build-source-image
         type: string
-      - default: 'false'
+      - default: "false"
         description: Add built image into an OCI image index
         name: build-image-index
         type: string
@@ -107,21 +118,21 @@ spec:
         description: Array of --build-arg values ("arg=value" strings) for buildah
         name: build-args
         type: array
-      - default: ''
+      - default: ""
         description: Path to a file with build arguments for buildah, see https://www.mankier.com/1/buildah-build#--build-arg-file
         name: build-args-file
         type: string
     results:
-      - description: ''
+      - description: ""
         name: IMAGE_URL
         value: $(tasks.build-image-index.results.IMAGE_URL)
-      - description: ''
+      - description: ""
         name: IMAGE_DIGEST
         value: $(tasks.build-image-index.results.IMAGE_DIGEST)
-      - description: ''
+      - description: ""
         name: CHAINS-GIT_URL
         value: $(tasks.clone-repository.results.url)
-      - description: ''
+      - description: ""
         name: CHAINS-GIT_COMMIT
         value: $(tasks.clone-repository.results.commit)
     tasks:
@@ -167,7 +178,7 @@ spec:
           - input: $(tasks.init.results.build)
             operator: in
             values:
-              - 'true'
+              - "true"
         workspaces:
           - name: basic-auth
             workspace: git-auth
@@ -237,7 +248,7 @@ spec:
           - input: $(tasks.init.results.build)
             operator: in
             values:
-              - 'true'
+              - "true"
       - name: build-image-index
         params:
           - name: IMAGE
@@ -266,7 +277,7 @@ spec:
           - input: $(tasks.init.results.build)
             operator: in
             values:
-              - 'true'
+              - "true"
       - name: build-source-image
         params:
           - name: BINARY_IMAGE
@@ -290,11 +301,11 @@ spec:
           - input: $(tasks.init.results.build)
             operator: in
             values:
-              - 'true'
+              - "true"
           - input: $(params.build-source-image)
             operator: in
             values:
-              - 'true'
+              - "true"
       - name: deprecated-base-image-check
         params:
           - name: IMAGE_URL
@@ -316,7 +327,7 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
       - name: clair-scan
         params:
           - name: image-digest
@@ -338,7 +349,7 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
       - name: ecosystem-cert-preflight-checks
         params:
           - name: image-url
@@ -358,7 +369,7 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
       - name: sast-snyk-check
         params:
           - name: image-digest
@@ -384,7 +395,7 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
       - name: clamav-scan
         params:
           - name: image-digest
@@ -406,7 +417,7 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
       - name: apply-tags
         params:
           - name: IMAGE
@@ -466,7 +477,7 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
     workspaces:
       - name: git-auth
         optional: true
@@ -476,5 +487,5 @@ spec:
   workspaces:
     - name: git-auth
       secret:
-        secretName: '{{ git_auth_secret }}'
+        secretName: "{{ git_auth_secret }}"
 status: {}

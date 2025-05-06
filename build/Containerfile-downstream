@@ -1,6 +1,5 @@
 # Builder container
 FROM registry.redhat.io/rhel9/nodejs-18:9.5-1745988698 AS build
-# FROM quay.io/konflux-ci/yarn4-nodejs22-ubi9-minimal AS build
 
 # VERSION default value should match the forklift-console-plugin package version
 # The VERSION value can be customize during build by using --build-arg:
