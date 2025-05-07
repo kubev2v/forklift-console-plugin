@@ -20,28 +20,34 @@ import type { FilterRenderer, ValueMatcher } from './types';
  * @param resourceFields the resourceData fields table
  * @returns the value of the fields based on the field jsonPath
  */
-export const getResourceFieldValue = (
-  resourceData: unknown,
-  resourceFieldId: string,
+export const getResourceFieldValue = <
+  T extends Record<string, object | string | ((resourceData: unknown) => unknown)>,
+>(
+  resourceData: T,
+  resourceFieldId: keyof T,
   resourceFields: ResourceField[],
-) => {
-  const field = resourceFields.find((field) => field.resourceFieldId === resourceFieldId);
-  if (typeof resourceData !== 'object' || !field) {
+): T[keyof T] | undefined => {
+  const field = resourceFields.find(
+    (fieldSearched) => fieldSearched.resourceFieldId === resourceFieldId,
+  );
+
+  if (!resourceData || typeof resourceData !== 'object' || !field) {
     return undefined;
   }
 
   if (!field.jsonPath) {
-    return resourceData?.[resourceFieldId];
+    return resourceData[resourceFieldId];
   }
 
-  switch (typeof field.jsonPath) {
-    case 'string':
-      return jsonpath.query(resourceData, field.jsonPath)?.[0];
-    case 'function':
-      return field.jsonPath(resourceData);
-    default:
-      return undefined;
+  if (typeof field.jsonPath === 'string') {
+    return jsonpath.query(resourceData, field.jsonPath)?.[0] as T[keyof T];
   }
+
+  if (typeof field.jsonPath === 'function') {
+    return field.jsonPath(resourceData) as T[keyof T];
+  }
+
+  return undefined;
 };
 
 /**
@@ -69,7 +75,7 @@ export const createMatcher =
       .filter(({ filter }) => filter?.type === filterType)
       .filter(
         ({ filter, resourceFieldId }) =>
-          (resourceFieldId && selectedFilters[resourceFieldId]?.length) || filter?.defaultValues,
+          (resourceFieldId && selectedFilters[resourceFieldId]?.length) ?? filter?.defaultValues,
       )
       .map(({ filter, resourceFieldId }) => ({
         filters:
@@ -86,7 +92,8 @@ export const createMatcher =
  */
 export const freetextMatcher = {
   filterType: 'freetext',
-  matchValue: (value: string) => (filter: string) => value?.includes(filter?.trim()),
+  matchValue: (value: string) => (filter: string) =>
+    value?.toLowerCase()?.includes(filter?.toLowerCase()?.trim()),
 };
 
 /**
