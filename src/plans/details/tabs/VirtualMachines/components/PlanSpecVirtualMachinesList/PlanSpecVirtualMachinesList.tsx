@@ -12,6 +12,7 @@ import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
 
 import { useSpecVirtualMachinesActions } from './hooks/useSpecVirtualMachinesActions';
 import { useSpecVirtualMachinesListData } from './hooks/useSpecVirtualMachinesListData';
+import type { SpecVirtualMachinePageData } from './utils/types';
 import { canSelect, getSpecVirtualMachineFields, vmDataToId } from './utils/utils';
 import PlanSpecVirtualMachinesRow from './PlanSpecVirtualMachinesRow';
 
@@ -19,7 +20,7 @@ type PlanVirtualMachinesListProps = {
   plan: V1beta1Plan;
 };
 
-const PlanVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan }) => {
+const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
 
   const userSettings = loadUserSettings({ pageId: PLAN_VIRTUAL_MACHINES_LIST_ID });
@@ -31,7 +32,7 @@ const PlanVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan }) => 
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
 
   return (
-    <StandardPageWithSelection
+    <StandardPageWithSelection<SpecVirtualMachinePageData>
       title={t('Virtual Machines')}
       data-testid="plan-spec-virtual-machines-list"
       dataSource={[specVirtualMachinesListData ?? [], true, undefined]}
@@ -49,4 +50,4 @@ const PlanVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan }) => 
   );
 };
 
-export default PlanVirtualMachinesList;
+export default PlanSpecVirtualMachinesList;

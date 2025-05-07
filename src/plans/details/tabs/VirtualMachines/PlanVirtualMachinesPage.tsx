@@ -6,22 +6,21 @@ import {
 } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
+import { DrawerProvider } from '@components/DrawerContext/DrawerProvider';
+
 import type { PlanPageProps } from '../../utils/types';
 
 import MigrationStatusVirtualMachinesList from './components/MigrationStatusVirtualMachineList/MigrationStatusVirtualMachinesList';
 import PlanSpecVirtualMachinesList from './components/PlanSpecVirtualMachinesList/PlanSpecVirtualMachinesList';
 
-type PlanVirtualMachinesPageProps = {
-  loaded: boolean;
-  loadError: Error;
-} & PlanPageProps;
-
-const PlanVirtualMachinesPage: FC<PlanVirtualMachinesPageProps> = ({ plan }) => {
+const PlanVirtualMachinesPage: FC<PlanPageProps> = ({ plan }) => {
   if (isPlanExecuting(plan) || isPlanSucceeded(plan) || canPlanReStart(plan)) {
     return (
-      <ModalHOC>
-        <MigrationStatusVirtualMachinesList plan={plan} />
-      </ModalHOC>
+      <DrawerProvider>
+        <ModalHOC>
+          <MigrationStatusVirtualMachinesList plan={plan} />
+        </ModalHOC>
+      </DrawerProvider>
     );
   }
 
