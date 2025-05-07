@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
   ForkliftControllerModelGroupVersionKind,
@@ -31,26 +31,27 @@ export const useK8sWatchForkliftController = (): K8sForkliftControllerWatchResul
     namespaced: true,
   });
 
-  const handleLoadError = (error: Error | null) => {
+  const handleLoadError = useCallback((error: Error | null) => {
     setLoadError(error);
     setLoaded(true);
-  };
+  }, []);
 
-  const handleLoadedForkliftControllers = () => {
+  const handleLoadedForkliftControllers = useCallback(() => {
     setLoaded(true);
 
     const [firstController] = controllers ?? [];
     setController(firstController);
-  };
+  }, [controllers]);
 
   useEffect(() => {
-    if (loaded && loadError) {
-      handleLoadError(loadError as Error);
-    } else if (loaded) {
-      handleLoadedForkliftControllers();
+    if (!loaded) {
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [controllers, loaded, loadError]);
+    if (loadError) {
+      handleLoadError(loadError as Error);
+    }
+    handleLoadedForkliftControllers();
+  }, [controllers, loaded, loadError, handleLoadError, handleLoadedForkliftControllers]);
 
   return [controller, controllerLoaded, controllerLoadError];
 };

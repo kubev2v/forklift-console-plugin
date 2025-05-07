@@ -3,6 +3,7 @@ import {
   removeFromLocalStorage,
   saveToLocalStorage,
 } from '@components/common/utils/localStorage';
+import { MTVConsole } from '@utils/console';
 
 type OverviewUserSettings = {
   welcome?: WelcomeSettings;
@@ -21,8 +22,7 @@ const parseOrClean = <T>(key: string): T | object => {
     return JSON.parse(storedValue) as T;
   } catch (_e) {
     removeFromLocalStorage(key);
-    // eslint-disable-next-line no-console
-    console.error(`Removed invalid key [${key}] from local storage`);
+    MTVConsole.error(`Removed invalid key [${key}] from local storage`);
   }
   return {} as T;
 };

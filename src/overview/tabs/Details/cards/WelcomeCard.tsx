@@ -1,14 +1,15 @@
-import { type FC, type Ref, useMemo, useState } from 'react';
+import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import ovaIcon from 'src/components/images/resources/open-virtual-appliance.png';
 import openShiftVirtualizationIcon from 'src/components/images/resources/openshift-virtualization.svg';
 import openStackIcon from 'src/components/images/resources/openstack2.svg';
 import redHatIcon from 'src/components/images/resources/redhat.svg';
-import vmwareIcon from 'src/components/images/resources/vmware-dark.svg';
+import vmwareIconDark from 'src/components/images/resources/vmware-dark.svg';
 import vmwareIconLight from 'src/components/images/resources/vmware-light.svg';
 import providerTypes from 'src/modules/Plans/views/create/constanats/providerTypes';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import HeaderActions from 'src/overview/components/HeaderActions';
 import HideFromViewDropdownOption from 'src/overview/components/HideFromViewDropdownOption';
 import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
@@ -21,16 +22,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  Dropdown,
-  DropdownList,
-  MenuToggle,
-  type MenuToggleElement,
   Split,
   SplitItem,
   Text,
   Tile,
 } from '@patternfly/react-core';
-import { EllipsisVIcon } from '@patternfly/react-icons';
 
 type WelcomeCardProps = {
   obj?: V1beta1ForkliftController;
@@ -44,6 +40,7 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
   const [activeNamespace] = useActiveNamespace();
   const navigate = useNavigate();
   const isDarkTheme = useIsDarkTheme();
+  const providerItems = providerTypes(isDarkTheme);
 
   const providersListUrl = useMemo(() => {
     return getResourceUrl({
@@ -53,36 +50,11 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
     });
   }, [activeNamespace]);
   const providersCreateUrl = `${providersListUrl}/~new`;
-  const [menuIsOpen, setMenuIsOpen] = useState(false);
   const actionDropdownItems = [<HideFromViewDropdownOption onHide={onHide} />];
-  const onToggle = () => {
-    setMenuIsOpen((open) => !open);
-  };
 
-  const headerActions = (
-    <Dropdown
-      isOpen={menuIsOpen}
-      onOpenChange={(isOpen: boolean) => {
-        setMenuIsOpen(isOpen);
-      }}
-      toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle ref={toggleRef} onClick={onToggle} isExpanded={menuIsOpen} variant={'plain'}>
-          {<EllipsisVIcon />}
-        </MenuToggle>
-      )}
-      shouldFocusFirstItemOnOpen={false}
-      popperProps={{
-        position: 'right',
-      }}
-    >
-      <DropdownList>{actionDropdownItems}</DropdownList>
-    </Dropdown>
-  );
-
-  type ProviderType = keyof typeof providerTypes;
-  const navigateToProvider = (type: ProviderType) => {
+  const navigateToProvider = (type: string) => {
     navigate(`${providersCreateUrl}?providerType=${type}`, {
-      state: { providerType: type },
+      state: { providerType: type as keyof typeof providerItems },
     });
   };
 
@@ -93,7 +65,7 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
           <img src={migrationIcon} className="forklift-welcome__icon" />
         </SplitItem>
         <SplitItem className="forklift-welcome__flex-text">
-          <CardHeader actions={{ actions: headerActions }}>
+          <CardHeader actions={{ actions: <HeaderActions actions={actionDropdownItems} /> }}>
             <CardTitle>{t('Welcome!')}</CardTitle>
           </CardHeader>
           <CardBody className="forklift-welcome__body">
@@ -113,38 +85,38 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
             <div className="forklift-welcome__tiles">
               <Tile
                 className="vmware-tile"
-                title={providerTypes.vsphere.title}
-                icon={<img src={isDarkTheme ? vmwareIconLight : vmwareIcon} />}
+                title={providerItems.vsphere.title}
+                icon={<img src={isDarkTheme ? vmwareIconLight : vmwareIconDark} />}
                 onClick={() => {
-                  navigateToProvider(providerTypes.vsphere.key as ProviderType);
+                  navigateToProvider(providerItems.vsphere.key);
                 }}
               />
               <Tile
-                title={providerTypes.ova.title}
+                title={providerItems.ova.title}
                 icon={<img src={ovaIcon} />}
                 onClick={() => {
-                  navigateToProvider(providerTypes.ova.key as ProviderType);
+                  navigateToProvider(providerItems.ova.key);
                 }}
               />
               <Tile
-                title={providerTypes.openstack.title}
+                title={providerItems.openstack.title}
                 icon={<img src={openStackIcon} />}
                 onClick={() => {
-                  navigateToProvider(providerTypes.openstack.key as ProviderType);
+                  navigateToProvider(providerItems.openstack.key);
                 }}
               />
               <Tile
-                title={providerTypes.ovirt.title}
+                title={providerItems.ovirt.title}
                 icon={<img src={redHatIcon} />}
                 onClick={() => {
-                  navigateToProvider(providerTypes.ovirt.key as ProviderType);
+                  navigateToProvider(providerItems.ovirt.key);
                 }}
               />
               <Tile
-                title={providerTypes.openshift.title}
+                title={providerItems.openshift.title}
                 icon={<img src={openShiftVirtualizationIcon} />}
                 onClick={() => {
-                  navigateToProvider(providerTypes.openshift.key as ProviderType);
+                  navigateToProvider(providerItems.openshift.key);
                 }}
               />
             </div>

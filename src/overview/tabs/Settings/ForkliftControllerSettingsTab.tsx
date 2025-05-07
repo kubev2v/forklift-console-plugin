@@ -1,21 +1,13 @@
 import type { FC } from 'react';
-
-import type { V1beta1ForkliftController } from '@kubev2v/types';
+import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
 
 import SettingsCard from './cards/SettingsCard';
 
-type ForkliftControllerSettingsTabProps = {
-  obj?: V1beta1ForkliftController;
-  ns?: string;
-  name?: string;
-  loaded?: boolean;
-  loadError?: unknown;
-};
-
-const ForkliftControllerSettingsTab: FC<ForkliftControllerSettingsTabProps> = ({ obj }) => {
+const ForkliftControllerSettingsTab: FC = () => {
+  const [forkliftController] = useK8sWatchForkliftController();
   return (
     <div className="co-dashboard-body">
-      <SettingsCard obj={obj} />
+      <SettingsCard obj={forkliftController} />
     </div>
   );
 };

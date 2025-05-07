@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC, type KeyboardEvent, type MouseEvent, useState } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import StatusIcon from 'src/components/status/StatusIcon';
@@ -7,19 +7,10 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Pod } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { HelperText, HelperTextItem, Pagination, Split, SplitItem } from '@patternfly/react-core';
+import { HelperText, HelperTextItem, Pagination } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-
-const getStatusLabel = (phase: string) => {
-  return (
-    <Split>
-      <SplitItem className="forklift-overview__controller-card__status-icon">
-        <StatusIcon phase={phase} />
-      </SplitItem>
-      <SplitItem>{phase}</SplitItem>
-    </Split>
-  );
-};
+import { getKind, getName, getNamespace, getOwnerReferences } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
 
 type PodsTableProps = {
   pods: IoK8sApiCoreV1Pod[];
@@ -46,13 +37,12 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
   const endIndex = startIndex + perPage;
   const paginatedPods = limitedPods.slice(startIndex, endIndex);
 
-  // Handlers for pagination
-  const onSetPage = (_event: React.MouseEvent | React.KeyboardEvent | MouseEvent, page: number) => {
+  const onSetPage = (_event: MouseEvent | KeyboardEvent | globalThis.MouseEvent, page: number) => {
     setCurrentPage(page);
   };
 
   const onPerPageSelect = (
-    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    _event: MouseEvent | KeyboardEvent | globalThis.MouseEvent,
     selectedPerPage: number,
   ) => {
     setPerPage(selectedPerPage);
@@ -66,7 +56,7 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
       reference: 'pods',
     });
 
-  if (!limitedPods || limitedPods.length === 0) {
+  if (!limitedPods || isEmpty(limitedPods)) {
     return (
       <HelperText>
         <HelperTextItem>{t('Pods not found')}</HelperTextItem>
@@ -78,52 +68,54 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
     <>
       {limitedPods.length > 10 && (
         <Pagination
-          itemCount={limitedPods.length} // Total number of pods
-          perPage={perPage} // Items per page
-          page={currentPage} // Current page
-          onSetPage={onSetPage} // Handler for page change
-          onPerPageSelect={onPerPageSelect} // Handler for items per page change
-          variant="top" // Position of the pagination controls
+          itemCount={limitedPods.length}
+          perPage={perPage}
+          page={currentPage}
+          onSetPage={onSetPage}
+          onPerPageSelect={onPerPageSelect}
+          variant="top"
         />
       )}
       <Table aria-label="Expandable table" variant="compact">
         <Thead>
           <Tr>
-            <Th width={20}>{t('Pod')}</Th>
-            {showOwner && <Th width={20}>{t('Owner')}</Th>}
-            <Th width={10}>{t('Status')}</Th>
-            <Th width={10}>{t('Logs')}</Th>
-            <Th width={20}>{t('Created at')}</Th>
+            <Th modifier="fitContent">{t('Pod')}</Th>
+            {showOwner && <Th modifier="fitContent">{t('Owner')}</Th>}
+            <Th modifier="fitContent">{t('Status')}</Th>
+            <Th modifier="fitContent">{t('Logs')}</Th>
+            <Th modifier="fitContent">{t('Created at')}</Th>
           </Tr>
         </Thead>
         <Tbody>
           {paginatedPods.map((pod) => (
             <Tr key={pod?.metadata?.uid}>
-              <Td>
+              <Td modifier="fitContent">
                 <ResourceLink
-                  kind={pod?.kind}
-                  name={pod?.metadata?.name}
-                  namespace={pod?.metadata?.namespace}
+                  kind={getKind(pod)}
+                  name={getName(pod)}
+                  namespace={getNamespace(pod)}
                 />
               </Td>
               {showOwner && (
-                <Td>
-                  {pod?.metadata?.ownerReferences?.[0] ? (
+                <Td modifier="fitContent">
+                  {getOwnerReferences(pod)?.[0] ? (
                     <ResourceLink
-                      kind={pod?.metadata?.ownerReferences?.[0]?.kind}
-                      name={pod?.metadata?.ownerReferences?.[0]?.name}
-                      namespace={pod?.metadata?.namespace}
+                      kind={getOwnerReferences(pod)?.[0]?.kind}
+                      name={getOwnerReferences(pod)?.[0]?.name}
+                      namespace={getNamespace(pod)}
                     />
                   ) : (
                     ''
                   )}
                 </Td>
               )}
-              <Td>{pod?.status?.phase ? getStatusLabel(pod?.status?.phase) : ''}</Td>
-              <Td>
+              <Td modifier="fitContent">
+                {pod?.status?.phase ? <StatusIcon phase={pod?.status?.phase} /> : ''}
+              </Td>
+              <Td modifier="fitContent">
                 <Link to={`${getPodLogsLink(pod)}/logs`}>{t('Logs')}</Link>
               </Td>
-              <Td>
+              <Td modifier="fitContent">
                 <ConsoleTimestamp timestamp={pod?.metadata?.creationTimestamp ?? ''} />
               </Td>
             </Tr>
@@ -137,7 +129,7 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
           page={currentPage}
           onSetPage={onSetPage}
           onPerPageSelect={onPerPageSelect}
-          variant="bottom" // Position of the pagination controls
+          variant="bottom"
         />
       )}
     </>

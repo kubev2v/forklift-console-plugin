@@ -1,24 +1,13 @@
 import { type FC, Suspense } from 'react';
 import Loading from 'src/overview/components/Loading';
+import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
-type ForkliftControllerYAMLTabProps = {
-  obj?: V1beta1ForkliftController;
-  ns?: string;
-  name?: string;
-  loaded?: boolean;
-  loadError?: unknown;
-};
-
-const ForkliftControllerYAMLTab: FC<ForkliftControllerYAMLTabProps> = ({
-  loaded,
-  loadError,
-  obj,
-}) => {
+const ForkliftControllerYAMLTab: FC = () => {
+  const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
   const { t } = useForkliftTranslation();
   return (
     <Suspense
@@ -28,8 +17,8 @@ const ForkliftControllerYAMLTab: FC<ForkliftControllerYAMLTabProps> = ({
         </Bullseye>
       }
     >
-      {obj && loaded && !loadError && (
-        <ResourceYAMLEditor header={t('Provider YAML')} initialResource={obj} />
+      {forkliftController && loaded && !loadError && (
+        <ResourceYAMLEditor header={t('Provider YAML')} initialResource={forkliftController} />
       )}
     </Suspense>
   );

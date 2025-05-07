@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useCreateOverviewContext } from 'src/overview/hooks/OverviewContextProvider';
+import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
 
-import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { Flex, FlexItem } from '@patternfly/react-core';
 
 import ControllerCard from '../Health/cards/ControllerCard';
@@ -13,26 +13,19 @@ import WelcomeCard from './cards/WelcomeCard';
 
 import '@patternfly/patternfly/patternfly-charts-theme-dark.css';
 
-type ForkliftControllerDetailsTabProps = {
-  obj?: V1beta1ForkliftController;
-  ns?: string;
-  name?: string;
-  loaded?: boolean;
-  loadError?: unknown;
-};
-
-const ForkliftControllerDetailsTab: FC<ForkliftControllerDetailsTabProps> = ({ obj }) => {
+const ForkliftControllerDetailsTab: FC = () => {
+  const [forkliftController] = useK8sWatchForkliftController();
   // Set and use context data for the overview page state
   const { setData } = useCreateOverviewContext();
   const { data: { hideWelcomeCardByContext } = {} } = useCreateOverviewContext();
 
   return (
     <div className="co-dashboard-body">
-      <Flex direction={{ default: 'column' }}>
+      <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
         {hideWelcomeCardByContext ? null : (
           <FlexItem>
             <WelcomeCard
-              obj={obj}
+              obj={forkliftController}
               onHide={() => {
                 setData({ hideWelcomeCardByContext: true });
               }}
@@ -41,23 +34,23 @@ const ForkliftControllerDetailsTab: FC<ForkliftControllerDetailsTabProps> = ({ o
         )}
 
         <FlexItem>
-          <Flex direction={{ default: 'row' }} spaceItems={{ default: 'spaceItemsSm' }}>
+          <Flex direction={{ default: 'row' }}>
             <FlexItem>
-              <VmMigrationsDonutCard obj={obj} />
+              <VmMigrationsDonutCard obj={forkliftController} />
             </FlexItem>
             <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__vms">
-              <VmMigrationsHistoryCard obj={obj} />
+              <VmMigrationsHistoryCard obj={forkliftController} />
             </FlexItem>
           </Flex>
         </FlexItem>
 
         <FlexItem>
-          <Flex direction={{ default: 'row' }} spaceItems={{ default: 'spaceItemsSm' }}>
+          <Flex direction={{ default: 'row' }}>
             <FlexItem>
-              <MigrationPlansDonutCard obj={obj} />
+              <MigrationPlansDonutCard obj={forkliftController} />
             </FlexItem>
             <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__pods">
-              <ControllerCard obj={obj} limit={5} />
+              <ControllerCard obj={forkliftController} limit={5} />
             </FlexItem>
           </Flex>
         </FlexItem>

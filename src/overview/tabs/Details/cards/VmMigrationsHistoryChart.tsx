@@ -69,7 +69,7 @@ const VmMigrationsHistoryChart = ({
         containerComponent={
           <ChartVoronoiContainer
             labels={({ datum }: { datum: ChartDatumWithName }) =>
-              datum.name.includes('scatter')
+              datum.y === 0 || datum.name.includes('scatter')
                 ? (undefined as unknown as string)
                 : `${datum.x} - ${datum.name ?? 'Unknown'}: ${datum.y ?? 0}`
             }

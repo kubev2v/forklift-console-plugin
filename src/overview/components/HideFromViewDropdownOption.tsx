@@ -4,7 +4,11 @@ import { t } from '@utils/i18n';
 const HideFromViewDropdownOption = ({ onHide }: { onHide: () => void }) => {
   const hasHideAction = Boolean(onHide);
 
-  return hasHideAction ? (
+  if (!hasHideAction) {
+    return <DropdownItem />;
+  }
+
+  return (
     <DropdownItem
       value={0}
       key="action"
@@ -18,8 +22,6 @@ const HideFromViewDropdownOption = ({ onHide }: { onHide: () => void }) => {
     >
       {t('Hide from view')}
     </DropdownItem>
-  ) : (
-    <DropdownItem />
   );
 };
 

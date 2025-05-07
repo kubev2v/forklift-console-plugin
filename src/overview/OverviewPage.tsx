@@ -7,7 +7,6 @@ import { PageSection } from '@patternfly/react-core';
 
 import HeaderTitle from './components/HeaderTitle';
 import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
-import { useK8sWatchForkliftController } from './hooks/useK8sWatchProviderNames';
 import { useProvidersInventoryIsLive } from './hooks/useProvidersInventoryIsLive';
 import ForkliftControllerDetailsTab from './tabs/Details/ForkliftControllerDetailsTab';
 import ForkliftControllerHealthTab from './tabs/Health/ForkliftControllerHealthTab';
@@ -44,59 +43,27 @@ const HeaderTitleWrapper: FC = () => {
   );
 };
 
-const ForkliftControllerDetailsTabWrapper: FC = () => {
-  const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
-
-  return (
-    <ForkliftControllerDetailsTab obj={forkliftController} loaded={loaded} loadError={loadError} />
-  );
-};
-
-const ForkliftControllerYAMLTabWrapper: FC = () => {
-  const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
-
-  return (
-    <ForkliftControllerYAMLTab obj={forkliftController} loaded={loaded} loadError={loadError} />
-  );
-};
-
-const ForkliftControllerHealthTabWrapper: FC = () => {
-  const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
-
-  return (
-    <ForkliftControllerHealthTab obj={forkliftController} loaded={loaded} loadError={loadError} />
-  );
-};
-
-const ForkliftControllerSettingsTabWrapper: FC = () => {
-  const [forkliftController, loaded, loadError] = useK8sWatchForkliftController();
-
-  return (
-    <ForkliftControllerSettingsTab obj={forkliftController} loaded={loaded} loadError={loadError} />
-  );
-};
-
 const OverviewPage: FC<OverviewPageProps> = () => {
   const { t } = useForkliftTranslation();
 
   const pages = [
     {
-      component: ForkliftControllerDetailsTabWrapper,
+      component: ForkliftControllerDetailsTab,
       href: '',
       name: t('Overview'),
     },
     {
-      component: ForkliftControllerYAMLTabWrapper,
+      component: ForkliftControllerYAMLTab,
       href: 'yaml',
       name: t('YAML'),
     },
     {
-      component: ForkliftControllerHealthTabWrapper,
+      component: ForkliftControllerHealthTab,
       href: 'health',
       name: t('Health'),
     },
     {
-      component: ForkliftControllerSettingsTabWrapper,
+      component: ForkliftControllerSettingsTab,
       href: 'settings',
       name: t('Settings'),
     },

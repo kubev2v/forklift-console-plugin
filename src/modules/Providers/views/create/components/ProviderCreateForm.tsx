@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import { type FC, type FormEvent, useEffect, useReducer } from 'react';
 import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom-v5-compat';
@@ -24,6 +23,7 @@ import {
   TextInput,
   Tooltip,
 } from '@patternfly/react-core';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
 import { EditProvider } from './EditProvider';
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
@@ -52,6 +52,8 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const [projectNameOptions] = useProjectNameSelectOptions(projectName);
+  const isDarkTheme = useIsDarkTheme();
+  const providerItems = providerCardItems(isDarkTheme);
 
   // Retrieve providerType from React Router's state
   const location = useLocation();
@@ -153,8 +155,8 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
               <Flex>
                 <FlexItem className="forklift--create-provider-edit-card-selected">
                   <SelectableCard
-                    title={providerCardItems[newProvider?.spec?.type]?.title}
-                    titleLogo={providerCardItems[newProvider?.spec?.type]?.logo}
+                    title={providerItems[newProvider?.spec?.type]?.title}
+                    titleLogo={providerItems[newProvider?.spec?.type]?.logo}
                     onChange={() => {
                       handleTypeChange(null);
                     }}
@@ -179,7 +181,7 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
             ) : (
               <SelectableGallery
                 selectedID={newProvider?.spec?.type}
-                items={providerCardItems}
+                items={providerItems}
                 onChange={handleTypeChange}
               />
             )}

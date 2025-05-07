@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import type { FC } from 'react';
 import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
@@ -12,6 +11,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { Card, CardBody, CardTitle, DescriptionList, Text } from '@patternfly/react-core';
+import { MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS, MTV_SETTINGS } from '@utils/links';
 
 type SettingsCardProps = {
   obj?: V1beta1ForkliftController;
@@ -31,6 +31,7 @@ type ForkliftControllerSpec = {
 const SettingsCardInner: FC<SettingsCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
+  const controllerSpec = obj?.spec as ForkliftControllerSpec;
 
   return (
     <Card>
@@ -42,16 +43,14 @@ const SettingsCardInner: FC<SettingsCardProps> = ({ obj }) => {
           }}
         >
           <DetailsItem
-            title={'Max concurrent virtual machine migrations'}
+            title={t('Max concurrent virtual machine migrations')}
             showHelpIconNextToTitle={true}
             content={
-              (obj?.spec as ForkliftControllerSpec)?.controller_max_vm_inflight ?? (
+              controllerSpec?.controller_max_vm_inflight ?? (
                 <span className="text-muted">{'20'}</span>
               )
             }
-            moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#max-concurrent-vms_mtv'
-            }
+            moreInfoLink={MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS}
             helpContent={
               <ForkliftTrans>
                 Sets the maximum number of virtual machines or disks that can be migrated
@@ -67,18 +66,15 @@ const SettingsCardInner: FC<SettingsCardProps> = ({ obj }) => {
               showModal(<EditMaxVMInFlightModal resource={obj} />);
             }}
           />
-
           <DetailsItem
-            title={'Controller main container CPU limit'}
+            title={t('Controller main container CPU limit')}
             showHelpIconNextToTitle={true}
             content={
-              (obj?.spec as ForkliftControllerSpec)?.controller_container_limits_cpu ?? (
+              controllerSpec?.controller_container_limits_cpu ?? (
                 <span className="text-muted">{'500m'}</span>
               )
             }
-            moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
-            }
+            moreInfoLink={MTV_SETTINGS}
             helpContent={
               <Text>
                 {t(
@@ -91,18 +87,15 @@ const SettingsCardInner: FC<SettingsCardProps> = ({ obj }) => {
               showModal(<EditControllerCPULimitModal resource={obj} />);
             }}
           />
-
           <DetailsItem
-            title={'Controller main container Memory limit'}
+            title={t('Controller main container Memory limit')}
             showHelpIconNextToTitle={true}
             content={
-              (obj?.spec as ForkliftControllerSpec)?.controller_container_limits_memory ?? (
+              controllerSpec?.controller_container_limits_memory ?? (
                 <span className="text-muted">{'800Mi'}</span>
               )
             }
-            moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
-            }
+            moreInfoLink={MTV_SETTINGS}
             helpContent={
               <Text>
                 {t(
@@ -115,18 +108,15 @@ const SettingsCardInner: FC<SettingsCardProps> = ({ obj }) => {
               showModal(<EditControllerMemoryLimitModal resource={obj} />);
             }}
           />
-
           <DetailsItem
-            title={'Controller inventory container memory limit'}
+            title={t('Controller inventory container memory limit')}
             showHelpIconNextToTitle={true}
             content={
-              (obj?.spec as ForkliftControllerSpec)?.inventory_container_limits_memory ?? (
+              controllerSpec?.inventory_container_limits_memory ?? (
                 <span className="text-muted">{'1000Mi'}</span>
               )
             }
-            moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
-            }
+            moreInfoLink={MTV_SETTINGS}
             helpContent={
               <Text>
                 {t(
@@ -139,18 +129,15 @@ const SettingsCardInner: FC<SettingsCardProps> = ({ obj }) => {
               showModal(<EditInventoryMemoryLimitModal resource={obj} />);
             }}
           />
-
           <DetailsItem
-            title={'Precopy interval (minutes)'}
+            title={t('Precopy interval (minutes)')}
             showHelpIconNextToTitle={true}
             content={
-              (obj?.spec as ForkliftControllerSpec)?.controller_precopy_interval ?? (
+              controllerSpec?.controller_precopy_interval ?? (
                 <span className="text-muted">{'60'}</span>
               )
             }
-            moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
-            }
+            moreInfoLink={MTV_SETTINGS}
             helpContent={
               <Text>
                 {t(
@@ -163,19 +150,15 @@ const SettingsCardInner: FC<SettingsCardProps> = ({ obj }) => {
               showModal(<EditPreCopyIntervalModal resource={obj} />);
             }}
           />
-
           <DetailsItem
-            title={'Snapshot polling interval (seconds)'}
+            title={t('Snapshot polling interval (seconds)')}
             showHelpIconNextToTitle={true}
             content={
-              (obj?.spec as ForkliftControllerSpec)
-                ?.controller_snapshot_status_check_rate_seconds ?? (
+              controllerSpec?.controller_snapshot_status_check_rate_seconds ?? (
                 <span className="text-muted">{'10'}</span>
               )
             }
-            moreInfoLink={
-              'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv'
-            }
+            moreInfoLink={MTV_SETTINGS}
             helpContent={
               <Text>
                 {t(

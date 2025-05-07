@@ -3,10 +3,11 @@ import {
   openstackLogo,
   ovaLogo,
   redhatLogo,
-  vmLogo,
+  vmLogoDark,
+  vmLogoLight,
 } from 'src/components/images/logos';
 
-const providerTypes = {
+const providerTypes = (isDarkTheme: boolean) => ({
   openshift: {
     key: 'openshift',
     logo: openshiftLogo,
@@ -29,9 +30,9 @@ const providerTypes = {
   },
   vsphere: {
     key: 'vsphere',
-    logo: vmLogo,
-    title: 'vSphere',
+    logo: isDarkTheme ? vmLogoLight : vmLogoDark,
+    title: 'VMware',
   },
-};
+});
 
 export default providerTypes;

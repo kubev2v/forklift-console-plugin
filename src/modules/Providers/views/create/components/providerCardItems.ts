@@ -3,11 +3,14 @@ import {
   openstackLogo,
   ovaLogo,
   redhatLogo,
-  vmLogo,
+  vmLogoDark,
+  vmLogoLight,
 } from 'src/components/images/logos';
 import type { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 
-export const providerCardItems: Record<string, SelectableGalleryItem> = {
+export const providerCardItems: (isDarkTheme: boolean) => Record<string, SelectableGalleryItem> = (
+  isDarkTheme,
+) => ({
   openshift: {
     content:
       'Red Hat OpenShift Virtualization runs and manages virtual machines in Red Hat OpenShift.',
@@ -31,7 +34,7 @@ export const providerCardItems: Record<string, SelectableGalleryItem> = {
   },
   vsphere: {
     content: "VMware vSphere is VMware's cloud computing virtualization platform.",
-    logo: vmLogo,
-    title: 'vSphere',
+    logo: isDarkTheme ? vmLogoLight : vmLogoDark,
+    title: 'VMware',
   },
-};
+});

@@ -2,7 +2,8 @@ import ovaImg from './resources/open-virtual-appliance.png';
 import openshiftImg from './resources/openshift-virtualization.svg';
 import openstackImg from './resources/openstack.svg';
 import redhatImg from './resources/redhat.svg';
-import vmImg from './resources/vm.svg';
+import vmwareIconDark from './resources/vmware-dark.svg';
+import vmwareIconLight from './resources/vmware-light.svg';
 
 export const openshiftLogo = (
   <img
@@ -22,10 +23,19 @@ export const openstackLogo = (
   />
 );
 
-export const vmLogo = (
+export const vmLogoLight = (
   <img
     className="forklift--create-provider-edit-card-title-logo"
-    src={vmImg}
+    src={vmwareIconLight}
+    alt="PatternFly logo"
+    width="27px"
+  />
+);
+
+export const vmLogoDark = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={vmwareIconDark}
     alt="PatternFly logo"
     width="27px"
   />
