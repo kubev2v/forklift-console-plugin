@@ -4,12 +4,12 @@ import { ProviderActionsDropdown } from 'src/modules/Providers/actions/ProviderA
 import { NamespaceCell } from 'src/modules/Providers/views/list/components/NamespaceCell';
 import { ProviderLinkCell } from 'src/modules/Providers/views/list/components/ProviderLinkCell';
 import { StatusCell } from 'src/modules/Providers/views/list/components/StatusCell';
-import { VirtualMachinesCell } from 'src/modules/Providers/views/list/components/VirtualMachinesCell';
+import InventoryCell from 'src/providers/components/InventoryCell';
+import { VirtualMachinesCell } from 'src/providers/components/VirtualMachinesCell';
+import type { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
 
-import type { ProvidersTableResourceFieldId } from '../../utils/constants';
-import InventoryCell from '../InventoryCell';
 import { TypeCell } from '../TypeCell';
 import { URLCell } from '../URLCell';
 
@@ -21,7 +21,7 @@ export enum ProvidersInventoryFields {
   ClusterCount = 'clusterCount',
 }
 
-export const ProviderDataCellRenderers: Record<ProvidersTableResourceFieldId, FC<CellProps>> = {
+export const ProviderDataCellRenderers: Record<ProvidersResourceFieldId, FC<CellProps>> = {
   actions: (props) => <ProviderActionsDropdown isKebab {...props} />,
   clusterCount: (props) => <InventoryCell icon=<></> {...props} />,
   hostCount: (props) => <InventoryCell icon=<OutlinedHddIcon /> {...props} />,

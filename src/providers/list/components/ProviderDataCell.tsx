@@ -1,11 +1,10 @@
 import { type FC, useMemo } from 'react';
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import type { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
-
-import type { ProvidersTableResourceFieldId } from '../utils/constants';
 
 import { ProviderDataCellRenderers, ProvidersInventoryFields } from './utils/constants';
 
@@ -33,7 +32,7 @@ const ProviderDataCell: FC<ProviderDataCellProps> = ({
   if (isEmptyCell) return <TableEmptyCell />;
 
   const DataCellRenderer =
-    ProviderDataCellRenderers?.[resourceFieldId! as ProvidersTableResourceFieldId];
+    ProviderDataCellRenderers?.[resourceFieldId! as ProvidersResourceFieldId];
 
   return (
     <Td key={resourceFieldId} dataLabel={resourceFieldId!}>

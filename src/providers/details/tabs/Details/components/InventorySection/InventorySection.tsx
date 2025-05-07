@@ -1,17 +1,25 @@
 import type { FC } from 'react';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
-import { OpenshiftInventorySection } from 'src/modules/Providers/views/details/components/InventorySection/OpenshiftInventorySection';
-import { OpenstackInventorySection } from 'src/modules/Providers/views/details/components/InventorySection/OpenstackInventorySection';
-import { OVAInventorySection } from 'src/modules/Providers/views/details/components/InventorySection/OVAInventorySection';
-import { OvirtInventorySection } from 'src/modules/Providers/views/details/components/InventorySection/OvirtInventorySection';
-import { VSphereInventorySection } from 'src/modules/Providers/views/details/components/InventorySection/VSphereInventorySection';
+
+import { useForkliftTranslation } from '@utils/i18n';
+
+import OpenshiftInventorySection from './OpenshiftInventorySection';
+import OpenstackInventorySection from './OpenstackInventorySection';
+import OVAInventorySection from './OVAInventorySection';
+import OvirtInventorySection from './OvirtInventorySection';
+import VSphereInventorySection from './VSphereInventorySection';
 
 export type InventorySectionProps = {
   data: ProviderData;
 };
 
 const InventorySection: FC<InventorySectionProps> = ({ data }) => {
-  const { provider } = data;
+  const { t } = useForkliftTranslation();
+
+  const { inventory, provider } = data;
+  if (!provider || !inventory) {
+    return <span className="text-muted">{t('No inventory data available.')}</span>;
+  }
 
   switch (provider?.spec?.type) {
     case 'ovirt':

@@ -1,3 +1,5 @@
+import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
+
 import type { ProviderType } from '@kubev2v/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -8,7 +10,6 @@ import type { ProviderData } from '../../../modules/Providers/utils/types/Provid
 import { PROVIDERS } from '../../../utils/enums';
 import { ProviderStatus } from '../../../utils/types';
 
-import { ProvidersTableResourceFieldId } from './constants';
 import { getProviderStorageCount } from './getProviderStorageCount';
 
 export const providerFields = (): ResourceField[] => {
@@ -24,7 +25,7 @@ export const providerFields = (): ResourceField[] => {
       isVisible: true,
       jsonPath: '$.provider.metadata.name',
       label: t('Name'),
-      resourceFieldId: ProvidersTableResourceFieldId.Name,
+      resourceFieldId: ProvidersResourceFieldId.Name,
       sortable: true,
     },
     {
@@ -36,7 +37,7 @@ export const providerFields = (): ResourceField[] => {
       isVisible: true,
       jsonPath: '$.provider.metadata.namespace',
       label: t('Namespace'),
-      resourceFieldId: ProvidersTableResourceFieldId.Namespace,
+      resourceFieldId: ProvidersResourceFieldId.Namespace,
       sortable: true,
     },
     {
@@ -49,7 +50,7 @@ export const providerFields = (): ResourceField[] => {
       isVisible: true,
       jsonPath: '$.provider.status.phase',
       label: t('Status'),
-      resourceFieldId: ProvidersTableResourceFieldId.Phase,
+      resourceFieldId: ProvidersResourceFieldId.Phase,
       sortable: true,
     },
     {
@@ -60,7 +61,7 @@ export const providerFields = (): ResourceField[] => {
       isVisible: true,
       jsonPath: '$.provider.spec.url',
       label: t('Endpoint'),
-      resourceFieldId: ProvidersTableResourceFieldId.Url,
+      resourceFieldId: ProvidersResourceFieldId.Url,
       sortable: true,
     },
     {
@@ -81,49 +82,49 @@ export const providerFields = (): ResourceField[] => {
       isVisible: true,
       jsonPath: '$.provider.spec.type',
       label: t('Type'),
-      resourceFieldId: ProvidersTableResourceFieldId.Type,
+      resourceFieldId: ProvidersResourceFieldId.Type,
       sortable: true,
     },
     {
       isVisible: true,
       jsonPath: '$.inventory.vmCount',
       label: t('VMs'),
-      resourceFieldId: ProvidersTableResourceFieldId.VmCount,
+      resourceFieldId: ProvidersResourceFieldId.VmCount,
       sortable: true,
     },
     {
       isVisible: true,
       jsonPath: '$.inventory.networkCount',
       label: t('Networks'),
-      resourceFieldId: ProvidersTableResourceFieldId.NetworkCount,
+      resourceFieldId: ProvidersResourceFieldId.NetworkCount,
       sortable: true,
     },
     {
       isVisible: false,
       jsonPath: '$.inventory.clusterCount',
       label: t('Clusters'),
-      resourceFieldId: ProvidersTableResourceFieldId.ClusterCount,
+      resourceFieldId: ProvidersResourceFieldId.ClusterCount,
       sortable: true,
     },
     {
       isVisible: true,
       jsonPath: '$.inventory.hostCount',
       label: t('Hosts'),
-      resourceFieldId: ProvidersTableResourceFieldId.HostCount,
+      resourceFieldId: ProvidersResourceFieldId.HostCount,
       sortable: true,
     },
     {
       isVisible: false,
       jsonPath: (provider) => getProviderStorageCount(provider as ProviderData),
       label: t('Storage'),
-      resourceFieldId: ProvidersTableResourceFieldId.StorageCount,
+      resourceFieldId: ProvidersResourceFieldId.StorageCount,
       sortable: true,
     },
     {
       isAction: true,
       isVisible: true,
       label: '',
-      resourceFieldId: ProvidersTableResourceFieldId.Actions,
+      resourceFieldId: ProvidersResourceFieldId.Actions,
       sortable: false,
     },
   ];
