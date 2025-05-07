@@ -4,6 +4,7 @@ import {
   saveToLocalStorage,
 } from '@components/common/utils/localStorage';
 import { MTVConsole } from '@utils/console';
+import { isEmpty } from '@utils/helpers';
 
 type OverviewUserSettings = {
   welcome?: WelcomeSettings;
@@ -28,11 +29,11 @@ const parseOrClean = <T>(key: string): T | object => {
 };
 
 const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string, unknown>>) => {
-  if (Object.keys(rest).length > 0) {
-    saveToLocalStorage(key, JSON.stringify({ ...rest }));
-  } else {
+  if (isEmpty(Object.keys(rest))) {
     removeFromLocalStorage(key);
+    return;
   }
+  saveToLocalStorage(key, JSON.stringify({ ...rest }));
 };
 
 /**
