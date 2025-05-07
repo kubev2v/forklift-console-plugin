@@ -17,7 +17,7 @@ type WelcomeSettings = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-const parseOrClean = <T>(key: string): T | object => {
+const parseOrClean = <T>(key: string): T => {
   try {
     const storedValue = loadFromLocalStorage(key) ?? '';
     return JSON.parse(storedValue) as T;
@@ -46,7 +46,7 @@ const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string
  */
 export const loadUserSettings = (userSettingsKeySuffix: string): OverviewUserSettings => {
   const key = `${process.env.PLUGIN_NAME}/${userSettingsKeySuffix}`;
-  const { hideWelcome, ...rest } = parseOrClean<WelcomeSettings>(key) as WelcomeSettings;
+  const { hideWelcome, ...rest } = parseOrClean<WelcomeSettings>(key);
 
   return {
     welcome: {

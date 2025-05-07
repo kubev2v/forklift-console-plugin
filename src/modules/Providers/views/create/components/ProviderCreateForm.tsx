@@ -1,6 +1,5 @@
 import { type FC, type FormEvent, useEffect, useReducer } from 'react';
-import { useHistory } from 'react-router';
-import { useLocation } from 'react-router-dom-v5-compat';
+import { useSearchParams } from 'react-router-dom-v5-compat';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -54,12 +53,8 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
   const [projectNameOptions] = useProjectNameSelectOptions(projectName);
   const isDarkTheme = useIsDarkTheme();
   const providerItems = providerCardItems(isDarkTheme);
-
-  // Retrieve providerType from React Router's state
-  const location = useLocation();
-  const history = useHistory();
-  const queryParams = new URLSearchParams(location.search);
-  const providerType = queryParams.get('providerType');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const providerType = searchParams.get('providerType');
 
   useEffect(() => {
     if (!providerNamesLoaded) return;
@@ -68,11 +63,8 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
         ...newProvider,
         spec: { ...newProvider?.spec, type: providerType as ProviderType },
       });
-      queryParams.delete('providerType');
-      history.replace({
-        pathname: location.pathname,
-        search: queryParams.toString(),
-      });
+      searchParams.delete('providerType');
+      setSearchParams(searchParams);
     }
   }, [providerType, newProvider, providerNamesLoaded]);
 

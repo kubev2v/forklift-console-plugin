@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
+import { useResizeObserver } from 'src/overview/hooks/useResizeObserver';
 
 import {
   Chart,
@@ -29,27 +30,8 @@ const VmMigrationsHistoryChart = ({
 }) => {
   const { t } = useForkliftTranslation();
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const [chartDimensions, setChartDimensions] = useState({ height: 400, width: 800 });
+  const chartDimensions = useResizeObserver(chartContainerRef);
   const { failed, running, succeeded } = vmMigrationsDataPoints;
-
-  const handleResize = () => {
-    if (chartContainerRef.current?.clientHeight) {
-      const { clientHeight: height, clientWidth: width } = chartContainerRef.current;
-      setChartDimensions({ height, width });
-    }
-  };
-
-  useLayoutEffect(() => {
-    if (chartContainerRef.current) {
-      const resizeObserver = getResizeObserver(chartContainerRef.current, handleResize, true);
-      handleResize();
-
-      return () => {
-        resizeObserver();
-      };
-    }
-    return undefined;
-  }, []);
 
   const maxVmMigrationValue = Math.max(
     ...running.map((migration) => migration.value),
