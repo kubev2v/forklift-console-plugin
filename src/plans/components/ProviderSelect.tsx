@@ -14,7 +14,7 @@ import { isEmpty } from '@utils/helpers';
 import { ForkliftTrans } from '@utils/i18n';
 import { ProviderStatus } from '@utils/types';
 
-import { ProviderType } from '../create/constants';
+import { ProviderType } from '../create/types';
 
 type ProviderSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
   id: string;

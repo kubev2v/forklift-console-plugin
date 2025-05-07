@@ -1,0 +1,55 @@
+# Builder container
+FROM registry.redhat.io/rhel9/nodejs-18:9.5-1745988698 AS build
+
+# VERSION default value should match the forklift-console-plugin package version
+# The VERSION value can be customize during build by using --build-arg:
+#    podman build \
+#      -t quay.io/kubev2v/forklift-console-plugin \
+#      -f ./build/Containerfile \
+#      --build-arg VERSION=1.2.3 .
+ARG VERSION=2.9.0
+ENV VERSION=${VERSION}
+
+# Copy app source
+COPY . /opt/app-root/src/app
+WORKDIR /opt/app-root/src/app
+
+# Run install as supper tux
+USER 0
+WORKDIR /opt/app-root/src/app/.konflux/
+RUN command -v yarn || npm i
+RUN mv node_modules/yarn/bin/* /usr/local/bin
+RUN mv node_modules/yarn/lib/* /usr/local/lib
+
+WORKDIR /opt/app-root/src/app/
+RUN yarn install --frozen-lockfile --ignore-engines --offline && yarn build
+
+# Web server container
+FROM registry.redhat.io/rhel9/nginx-122:9.5-1745931244
+
+# Use none-root user
+USER 1001
+
+# Set nginx configuration
+# COPY nginx.conf /etc/nginx/nginx.conf
+
+# When using ubi9/nginx-120 defaults:
+#  listen       8080 default_server;
+#  root         /opt/app-root/src;
+
+COPY --from=build /opt/app-root/src/app/dist /opt/app-root/src
+
+# Run the server
+CMD nginx -g "daemon off;"
+
+
+LABEL \
+        com.redhat.component="mtv-console-plugin-container" \
+        version="$VERSION" \
+        name="migration-toolkit-virtualization/mtv-console-plugin-rhel9" \
+        license="Apache License 2.0" \
+        io.k8s.display-name="Migration Toolkit for Virtualization" \
+        io.k8s.description="Migration Toolkit for Virtualization - User Console Plugin Interface" \
+        io.openshift.tags="migration,mtv,forklift" \
+        summary="Migration Toolkit for Virtualization - User Console Plugin Interface" \
+        maintainer="Migration Toolkit for Virtualization Team <migtoolkit-virt@redhat.com>"

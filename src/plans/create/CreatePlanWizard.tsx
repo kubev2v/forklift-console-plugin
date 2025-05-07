@@ -1,17 +1,22 @@
 import { type FC, useState } from 'react';
-import { FormProvider } from 'react-hook-form';
+import { FormProvider, useWatch } from 'react-hook-form';
 
-import { Form, Title, Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
+import { Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { GeneralFormFieldId } from './steps/general-information/constants';
 import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
+import HooksStep from './steps/hooks/HooksStep';
+import MigrationTypeStep from './steps/migration-type/MigrationTypeStep';
 import NetworkMapStep from './steps/network-map/NetworkMapStep';
+import OtherSettingsStep from './steps/other-settings/OtherSettingsStep';
 import StorageMapStep from './steps/storage-map/StorageMapStep';
 import VirtualMachinesStep from './steps/virtual-machines/VirtualMachinesStep';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import CreatePlanWizardFooter from './CreatePlanWizardFooter';
 import { useCreatePlanForm, useDefaultFormValues } from './hooks';
+import { hasWarmMigrationProviderType } from './utils';
 
 import './CreatePlanWizard.style.scss';
 
@@ -23,8 +28,9 @@ const CreatePlanWizard: FC = () => {
     mode: 'onChange',
   });
   const [currentStep, setCurrentStep] = useState<WizardStepType>(firstStep);
-  const { formState, watch } = form;
+  const { control, formState, watch } = form;
   const formValues = watch();
+  const sourceProvider = useWatch({ control, name: GeneralFormFieldId.SourceProvider });
 
   // TODO, Normalize wizard data object and submit
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -74,10 +80,9 @@ const CreatePlanWizard: FC = () => {
             <WizardStep
               key={PlanWizardStepId.MigrationType}
               {...getStepProps(PlanWizardStepId.MigrationType)}
+              isHidden={!hasWarmMigrationProviderType(sourceProvider)}
             >
-              <Form>
-                <Title headingLevel="h2">{t('Migration type')}</Title>
-              </Form>
+              <MigrationTypeStep />
             </WizardStep>,
           ]}
         />
@@ -89,14 +94,10 @@ const CreatePlanWizard: FC = () => {
               key={PlanWizardStepId.OtherSettings}
               {...getStepProps(PlanWizardStepId.OtherSettings)}
             >
-              <Form>
-                <Title headingLevel="h2">{t('Other settings')}</Title>
-              </Form>
+              <OtherSettingsStep />
             </WizardStep>,
             <WizardStep key={PlanWizardStepId.Hooks} {...getStepProps(PlanWizardStepId.Hooks)}>
-              <Form>
-                <Title headingLevel="h2">{t('Hooks')}</Title>
-              </Form>
+              <HooksStep />
             </WizardStep>,
           ]}
         />

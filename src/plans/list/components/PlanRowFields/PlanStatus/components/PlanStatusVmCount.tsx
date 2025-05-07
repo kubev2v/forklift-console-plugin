@@ -1,6 +1,5 @@
 import { type FC, useMemo } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Flex, FlexItem, Icon, Tooltip } from '@patternfly/react-core';
 
@@ -21,12 +20,10 @@ const PlanStatusVmCount: FC<PlanStatusVmCountProps> = ({
   status,
   tooltipLabel,
 }) => {
-  const { t } = useForkliftTranslation();
-
   const statusIcon = useMemo(() => getVirtualMachineStatusIcon(status), [status]);
 
   return (
-    <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
+    <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsXs' }}>
       <FlexItem>
         <Tooltip content={tooltipLabel}>
           <Icon {...(status !== MIGRATION_STATUSES_ICON_TYPE.CANCELED && { status })}>
@@ -36,7 +33,7 @@ const PlanStatusVmCount: FC<PlanStatusVmCountProps> = ({
       </FlexItem>
 
       <FlexItem>
-        <Link to={linkPath}>{t('{{total}} VM', { count, total: count })}</Link>
+        <Link to={linkPath}>{count}</Link>
       </FlexItem>
     </Flex>
   );

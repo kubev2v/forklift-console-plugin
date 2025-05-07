@@ -2,9 +2,9 @@ import type { FC } from 'react';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import PlanWarmLabel from 'src/plans/details/components/PlanWarmLabel';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Label } from '@patternfly/react-core';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -21,11 +21,7 @@ const WarmDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldR
   return (
     <DetailsItem
       title={t('Migration type')}
-      content={
-        <Label isCompact color={isWarm ? 'orange' : 'blue'}>
-          {isWarm ? t('warm') : t('cold')}
-        </Label>
-      }
+      content={<PlanWarmLabel isWarm={isWarm} />}
       helpContent={t('Whether this is a warm migration.')}
       crumbs={['spec', 'warm']}
       onEdit={() => {

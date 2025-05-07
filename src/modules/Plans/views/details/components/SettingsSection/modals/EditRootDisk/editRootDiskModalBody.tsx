@@ -1,7 +1,7 @@
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans } from 'src/utils/i18n';
 
-import { VIRT_V2V_HELP_LINK } from '../EditLUKSEncryptionPasswords/editLUKSModalBody';
+import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
 export const editRootDiskModalBody = (
   <>

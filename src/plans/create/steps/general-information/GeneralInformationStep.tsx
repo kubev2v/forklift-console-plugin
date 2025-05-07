@@ -10,7 +10,9 @@ import { useForkliftTranslation } from '@utils/i18n';
 import ProviderSelect from '../../../components/ProviderSelect';
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks';
+import { MigrationTypeFieldId } from '../migration-type/constants';
 import { NetworkMapFieldId } from '../network-map/constants';
+import { StorageMapFieldId } from '../storage-map/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
@@ -33,7 +35,7 @@ const GeneralInformationStep: FC = () => {
   return (
     <WizardStepContainer title={planStepNames[PlanWizardStepId.General]}>
       <Form>
-        <FormSection title={t('Plan information')} titleElement="h3">
+        <FormSection title={t('Plan information')}>
           <p>{t('Name your plan and choose the project you would like it to be created in.')}</p>
 
           <FormGroupWithErrorText
@@ -57,7 +59,7 @@ const GeneralInformationStep: FC = () => {
           <PlanProjectField />
         </FormSection>
 
-        <FormSection title={t('Source and target providers')} titleElement="h3">
+        <FormSection title={t('Source and target providers')}>
           <p>
             {t(
               'Select the provider you would like to migrate your virtual machines from (source provider) and the provider you want to migrate your virtual machines to (target provider).',
@@ -80,7 +82,12 @@ const GeneralInformationStep: FC = () => {
                   value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
-                    unregister([VmFormFieldId.Vms, NetworkMapFieldId.NetworkMappings]);
+                    unregister([
+                      VmFormFieldId.Vms,
+                      NetworkMapFieldId.NetworkMap,
+                      StorageMapFieldId.StorageMap,
+                      MigrationTypeFieldId.MigrationType,
+                    ]);
                   }}
                   status={errors[GeneralFormFieldId.SourceProvider] && MenuToggleStatus.danger}
                 />

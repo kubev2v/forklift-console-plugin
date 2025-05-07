@@ -1,11 +1,14 @@
 import type { FC, ReactNode } from 'react';
 
+import { Text, type TextProps } from '@patternfly/react-core';
+
 type SectionHeadingProps = {
   text: ReactNode;
   className?: string;
   id?: string;
   'data-testid'?: string;
   children?: ReactNode;
+  textComponent?: TextProps['component'];
 };
 
 /**
@@ -20,11 +23,17 @@ const SectionHeading: FC<SectionHeadingProps> = ({
   'data-testid': dataTestid,
   id,
   text,
+  textComponent = 'h2',
 }) => (
-  <h2 className={`co-section-heading ${className || ''}`} data-testid={dataTestid} id={id}>
+  <Text
+    component={textComponent}
+    className={`co-section-heading ${className ?? ''}`}
+    data-testid={dataTestid}
+    id={id}
+  >
     <span>{text}</span>
     {children}
-  </h2>
+  </Text>
 );
 
 export default SectionHeading;

@@ -26,6 +26,7 @@ type ProviderNetworksProps = {
   loadError?: unknown;
 };
 
+// eslint-disable-next-line no-underscore-dangle
 const ProviderNetworks_: FC<ProviderNetworksProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
@@ -40,7 +41,7 @@ const ProviderNetworks_: FC<ProviderNetworksProps> = ({ obj }) => {
   const defaultNetwork =
     provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'];
   const networkData = networks?.map((net) => ({
-    config: JSON.parse(net?.object?.spec?.config || '{}') as CnoConfig,
+    config: JSON.parse(net?.object?.spec?.config ?? '{}') as CnoConfig,
     isDefault: `${net.namespace}/${net.name}` === defaultNetwork,
     name: net.name,
     namespace: net.namespace,
@@ -110,7 +111,7 @@ const ProviderNetworks: FC<ProviderNetworksProps> = (props) => (
   </ModalHOC>
 );
 
-export const ProviderNetworksWrapper: FC<{ name: string; namespace: string }> = ({
+export const ProviderNetworksTabPage: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

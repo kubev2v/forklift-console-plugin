@@ -3,3 +3,9 @@
     overflow-x: auto;
   }
 }
+
+.checkbox-form-group {
+  .pf-v5-c-form__group-label {
+    padding-bottom: 0;
+  }
+}

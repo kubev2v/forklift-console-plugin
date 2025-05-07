@@ -9,7 +9,7 @@ import type { IoK8sApiCoreV1Pod } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Pagination } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { getKind, getName, getNamespace, getOwnerReferences } from '@utils/crds/common/selectors';
+import { getKind, getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 
 type PodsTableProps = {
@@ -98,10 +98,10 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
               </Td>
               {showOwner && (
                 <Td modifier="fitContent">
-                  {getOwnerReferences(pod)?.[0] ? (
+                  {getOwnerReference(pod) ? (
                     <ResourceLink
-                      kind={getOwnerReferences(pod)?.[0]?.kind}
-                      name={getOwnerReferences(pod)?.[0]?.name}
+                      kind={getOwnerReference(pod)?.kind}
+                      name={getOwnerReference(pod)?.name}
                       namespace={getNamespace(pod)}
                     />
                   ) : (

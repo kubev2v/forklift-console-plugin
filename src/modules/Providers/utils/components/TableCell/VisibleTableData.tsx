@@ -7,9 +7,15 @@ type VisibleTableDataProps = {
   fieldId: string;
   resourceFields: ResourceField[];
   children: ReactNode;
+  className?: string;
 };
 
-const VisibleTableData: FC<VisibleTableDataProps> = ({ children, fieldId, resourceFields }) => {
+const VisibleTableData: FC<VisibleTableDataProps> = ({
+  children,
+  className,
+  fieldId,
+  resourceFields,
+}) => {
   const isVisible = useMemo(
     () => resourceFields.some((field) => field.resourceFieldId === fieldId),
     [fieldId, resourceFields],
@@ -17,7 +23,11 @@ const VisibleTableData: FC<VisibleTableDataProps> = ({ children, fieldId, resour
 
   if (!isVisible) return null;
 
-  return <Td dataLabel={fieldId}>{children}</Td>;
+  return (
+    <Td className={className} dataLabel={fieldId}>
+      {children}
+    </Td>
+  );
 };
 
 export default VisibleTableData;

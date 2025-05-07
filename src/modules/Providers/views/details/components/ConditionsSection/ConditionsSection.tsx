@@ -57,7 +57,7 @@ export const ConditionsSection: FC<ConditionsProps> = ({ conditions }): ReactEle
                 <ConsoleTimestamp timestamp={condition.lastTransitionTime} />
               </Td>
               <Td>{condition.reason}</Td>
-              <Td modifier="truncate">{condition?.message || '-'}</Td>
+              <Td modifier="truncate">{condition?.message ?? '-'}</Td>
             </Tr>
           ))}
         </Tbody>
@@ -73,5 +73,5 @@ export const ConditionsSection: FC<ConditionsProps> = ({ conditions }): ReactEle
  * @property {K8sResourceCondition[]} conditions - The conditions to be displayed.
  */
 type ConditionsProps = {
-  conditions: K8sResourceCondition[];
+  conditions?: K8sResourceCondition[];
 };

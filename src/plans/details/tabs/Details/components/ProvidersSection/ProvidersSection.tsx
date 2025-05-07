@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import providerTypes from 'src/modules/Plans/views/create/constanats/providerTypes';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { providerTypeIcons } from 'src/plans/details/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ProviderIconLink from '@components/ProviderIconLink';
@@ -11,8 +11,8 @@ import { DescriptionList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
+import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 import usePlanDestinationProvider from '../hooks/usePlanDestinationProvider';
-import usePlanSourceProvider from '../hooks/usePlanSourceProvider';
 
 type ProvidersSectionProps = {
   plan: V1beta1Plan;
@@ -35,7 +35,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
   const destinationProviderName = getName(destinationProvider);
   const destinationProviderType = destinationProvider?.spec?.type;
   const isDarkTheme = useIsDarkTheme();
-  const providerItems = providerTypes(isDarkTheme);
+  const providerIcons = providerTypeIcons(isDarkTheme);
 
   return (
     <Suspend
@@ -57,7 +57,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
                 name: sourceProviderName,
                 namespace: getNamespace(sourceProvider),
               })}
-              providerIcon={providerItems[sourceProviderType as keyof typeof providerItems]?.logo}
+              providerIcon={providerIcons[sourceProviderType as keyof typeof providerIcons]}
               providerName={sourceProviderName}
             />
           }
@@ -74,9 +74,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
                 name: destinationProviderName,
                 namespace: getNamespace(destinationProvider),
               })}
-              providerIcon={
-                providerItems[destinationProviderType as keyof typeof providerItems]?.logo
-              }
+              providerIcon={providerIcons[destinationProviderType as keyof typeof providerIcons]}
               providerName={destinationProviderName}
             />
           }

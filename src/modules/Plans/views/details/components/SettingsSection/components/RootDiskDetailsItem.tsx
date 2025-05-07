@@ -6,49 +6,19 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label, Tooltip } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
 import type { PlanDetailsItemProps } from '../../DetailsSection/components/PlanDetailsItemProps';
-import { VIRT_V2V_HELP_LINK } from '../modals/EditLUKSEncryptionPasswords/editLUKSModalBody';
 import { EditRootDisk } from '../modals/EditRootDisk/EditRootDisk';
 import { getRootDiskLabelByKey } from '../modals/EditRootDisk/getRootDiskLabelByKey';
-
-export const RootDiskDetailsItem: FC<PlanDetailsItemProps> = ({
-  canPatch,
-  helpContent,
-  resource,
-}) => {
-  const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
-
-  const defaultHelpContent = t(`Choose the root filesystem to be converted.`);
-
-  const rootDisk = resource?.spec?.vms?.[0].rootDisk;
-
-  return (
-    <DetailsItem
-      title={t('Root device')}
-      content={getDiskLabel(rootDisk)}
-      helpContent={helpContent ?? defaultHelpContent}
-      moreInfoLink={VIRT_V2V_HELP_LINK}
-      crumbs={['spec', 'vms', 'rootDisk']}
-      onEdit={
-        canPatch &&
-        isPlanEditable(resource) &&
-        (() => {
-          showModal(<EditRootDisk resource={resource} />);
-        })
-      }
-    />
-  );
-};
 
 /**
  * Generates a label component for the given disk key.
  * @param {string} diskKey - The key representing the disk option.
  * @returns {JSX.Element} The label component for the disk.
  */
-const getDiskLabel = (diskKey: string) => {
-  const diskLabel = getRootDiskLabelByKey(diskKey);
+const getDiskLabel = (diskKey: string | undefined) => {
+  const diskLabel = getRootDiskLabelByKey(diskKey ?? '');
 
   // First boot disk, color green
   if (!diskKey) {
@@ -82,5 +52,33 @@ const getDiskLabel = (diskKey: string) => {
         {diskLabel}
       </Label>
     </Tooltip>
+  );
+};
+
+export const RootDiskDetailsItem: FC<PlanDetailsItemProps> = ({
+  canPatch,
+  helpContent,
+  resource,
+}) => {
+  const { t } = useForkliftTranslation();
+  const { showModal } = useModal();
+
+  const defaultHelpContent = t(`Choose the root filesystem to be converted.`);
+
+  const rootDisk = resource?.spec?.vms?.[0].rootDisk;
+
+  return (
+    <DetailsItem
+      title={t('Root device')}
+      content={getDiskLabel(rootDisk)}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={VIRT_V2V_HELP_LINK}
+      crumbs={['spec', 'vms', 'rootDisk']}
+      onEdit={() => {
+        if (canPatch && isPlanEditable(resource)) {
+          showModal(<EditRootDisk resource={resource} />);
+        }
+      }}
+    />
   );
 };

@@ -14,6 +14,14 @@ type ProviderYAMLPageProps = {
   loadError?: unknown;
 };
 
+const Loading: FC = () => (
+  <div className="co-m-loader co-an-fade-in-out" data-testid="loading-indicator-provider-yaml">
+    <div className="co-m-loader-dot__one" />
+    <div className="co-m-loader-dot__two" />
+    <div className="co-m-loader-dot__three" />
+  </div>
+);
+
 const ProviderYAMLPage: FC<ProviderYAMLPageProps> = ({ loaded, loadError, obj }) => {
   const { t } = useForkliftTranslation();
   const { provider } = obj;
@@ -33,15 +41,7 @@ const ProviderYAMLPage: FC<ProviderYAMLPageProps> = ({ loaded, loadError, obj })
   );
 };
 
-const Loading: FC = () => (
-  <div className="co-m-loader co-an-fade-in-out" data-testid="loading-indicator-provider-yaml">
-    <div className="co-m-loader-dot__one" />
-    <div className="co-m-loader-dot__two" />
-    <div className="co-m-loader-dot__three" />
-  </div>
-);
-
-export const ProviderYAMLPageWrapper: FC<{ name: string; namespace: string }> = ({
+export const ProviderYAMLTabPage: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {

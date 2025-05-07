@@ -8,7 +8,7 @@ export const getCreatedAt = (resource: K8sResourceCommon) => resource?.metadata?
 
 export const getUID = (resource: K8sResourceCommon) => resource?.metadata?.uid;
 
-export const getKind = (resource: K8sResourceCommon) => resource?.kind;
+export const getOwnerReference = (resource: K8sResourceCommon) =>
+  resource?.metadata?.ownerReferences?.[0];
 
-export const getOwnerReferences = (resource: K8sResourceCommon) =>
-  resource?.metadata?.ownerReferences;
+export const getKind = (resource: K8sResourceCommon) => resource?.kind;

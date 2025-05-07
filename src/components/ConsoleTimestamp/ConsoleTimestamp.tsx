@@ -1,3 +1,5 @@
+import type { FC } from 'react';
+
 import { Timestamp, TimestampTooltipVariant } from '@patternfly/react-core';
 import { GlobeAmericasIcon } from '@patternfly/react-icons';
 
@@ -12,8 +14,9 @@ import { GlobeAmericasIcon } from '@patternfly/react-icons';
 import './ConsoleTimestamp.style.css';
 
 type TimestampProps = {
-  timestamp: string | number | Date;
+  timestamp: string | number | Date | null;
   className?: string;
+  showGlobalIcon?: boolean;
 };
 
 /**
@@ -24,17 +27,21 @@ type TimestampProps = {
  *   glob icon
  *   custom format
  */
-export const ConsoleTimestamp = (props: TimestampProps) => {
+export const ConsoleTimestamp: FC<TimestampProps> = ({
+  className,
+  showGlobalIcon = true,
+  timestamp,
+}) => {
   // Check for null. If props.timestamp is null, it returns incorrect date and time of Wed Dec 31 1969 19:00:00 GMT-0500 (Eastern Standard Time)
-  if (!props.timestamp) {
+  if (!timestamp) {
     return <div className="co-timestamp">-</div>;
   }
 
-  const currentDate = new Date(props.timestamp);
+  const currentDate = new Date(timestamp);
 
   return (
-    <div className={props.className}>
-      <GlobeAmericasIcon className="co-icon-and-text__icon" />
+    <div className={className}>
+      {showGlobalIcon && <GlobeAmericasIcon className="co-icon-and-text__icon" />}
       <Timestamp
         className="forklift-table__console-timestamp"
         date={currentDate}
