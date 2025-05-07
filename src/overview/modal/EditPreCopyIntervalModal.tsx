@@ -36,8 +36,8 @@ export const EditPreCopyIntervalModal: FC<EditSettingsModalProps> = (props) => {
     <EditModal
       {...props}
       jsonPath={'spec.controller_precopy_interval'}
-      title={props?.title || t('Edit Precopy interval (minutes)')}
-      label={props?.label || t('Precopy interval (minutes)')}
+      title={props?.title ?? t('Edit Precopy interval (minutes)')}
+      label={props?.label ?? t('Precopy interval (minutes)')}
       model={ForkliftControllerModel}
       variant={ModalVariant.small}
       body={t('The interval in minutes for precopy. Default value is 60.')}

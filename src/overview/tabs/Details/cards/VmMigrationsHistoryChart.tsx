@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useResizeObserver } from 'src/overview/hooks/useResizeObserver';
 
 import {
@@ -9,7 +9,6 @@ import {
   ChartScatter,
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
-import { getResizeObserver } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { ChartColors } from '../utils/colors';

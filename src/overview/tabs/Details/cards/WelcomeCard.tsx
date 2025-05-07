@@ -9,7 +9,7 @@ import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { getImages } from '@components/images/logos';
-import { ProviderModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
+import { ProviderModelRef } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Card,
@@ -24,9 +24,6 @@ import {
 } from '@patternfly/react-core';
 
 type WelcomeCardProps = {
-  obj?: V1beta1ForkliftController;
-  loaded?: boolean;
-  loadError?: unknown;
   onHide: () => void;
 };
 
@@ -46,7 +43,7 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
     });
   }, [activeNamespace]);
   const providersCreateUrl = `${providersListUrl}/~new`;
-  const actionDropdownItems = [<HideFromViewDropdownOption onHide={onHide} />];
+  const actionDropdownItems = [<HideFromViewDropdownOption key="hide" onHide={onHide} />];
 
   const navigateToProvider = (type: string) => {
     navigate(`${providersCreateUrl}?providerType=${type}`, {
@@ -58,7 +55,7 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
     <Card>
       <Split>
         <SplitItem className="forklift-welcome__flex-icon">
-          <img src={migrationIcon} className="forklift-welcome__icon" />
+          <img alt="" src={migrationIcon} className="forklift-welcome__icon" />
         </SplitItem>
         <SplitItem className="forklift-welcome__flex-text">
           <CardHeader actions={{ actions: <HeaderActions actions={actionDropdownItems} /> }}>
@@ -82,35 +79,35 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
               <Tile
                 className="vmware-tile"
                 title={providerItems.vsphere.title}
-                icon={<img src={images.vmwareImg} />}
+                icon={<img alt="" src={images.vmwareImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.vsphere.key);
                 }}
               />
               <Tile
                 title={providerItems.ova.title}
-                icon={<img src={images.ovaImg} />}
+                icon={<img alt="" src={images.ovaImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.ova.key);
                 }}
               />
               <Tile
                 title={providerItems.openstack.title}
-                icon={<img src={images.openstackImg} />}
+                icon={<img alt="" src={images.openstackImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.openstack.key);
                 }}
               />
               <Tile
                 title={providerItems.ovirt.title}
-                icon={<img src={images.redhatImg} />}
+                icon={<img alt="" src={images.redhatImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.ovirt.key);
                 }}
               />
               <Tile
                 title={providerItems.openshift.title}
-                icon={<img src={images.openshiftImg} />}
+                icon={<img alt="" src={images.openshiftImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.openshift.key);
                 }}

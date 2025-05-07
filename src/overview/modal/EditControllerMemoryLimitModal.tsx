@@ -35,8 +35,8 @@ export const EditControllerMemoryLimitModal: FC<EditSettingsModalProps> = (props
     <EditModal
       {...props}
       jsonPath={'spec.controller_container_limits_memory'}
-      title={props?.title || t('Edit Controller Memory limit')}
-      label={props?.label || t('Controller Memory limit')}
+      title={props?.title ?? t('Edit Controller Memory limit')}
+      label={props?.label ?? t('Controller Memory limit')}
       model={ForkliftControllerModel}
       variant={ModalVariant.small}
       body={t(

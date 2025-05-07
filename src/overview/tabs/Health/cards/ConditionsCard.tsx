@@ -7,8 +7,6 @@ import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
 type ConditionsCardProps = {
   obj?: V1beta1ForkliftController;
-  loaded?: boolean;
-  loadError?: unknown;
 };
 
 type ConditionsStatus = {

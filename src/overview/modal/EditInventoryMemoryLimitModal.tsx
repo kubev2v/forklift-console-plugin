@@ -35,8 +35,8 @@ export const EditInventoryMemoryLimitModal: FC<EditSettingsModalProps> = (props)
     <EditModal
       {...props}
       jsonPath={'spec.inventory_container_limits_memory'}
-      title={props?.title || t('Edit Inventory Container Memory limit')}
-      label={props?.label || t('Inventory Container Memory limit')}
+      title={props?.title ?? t('Edit Inventory Container Memory limit')}
+      label={props?.label ?? t('Inventory Container Memory limit')}
       model={ForkliftControllerModel}
       variant={ModalVariant.small}
       body={t(

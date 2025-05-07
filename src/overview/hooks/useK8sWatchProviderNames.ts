@@ -22,8 +22,8 @@ type K8sForkliftControllerWatchResult = [
  */
 export const useK8sWatchForkliftController = (): K8sForkliftControllerWatchResult => {
   const [controller, setController] = useState<V1beta1ForkliftController | undefined>(undefined);
-  const [controllerLoaded, setLoaded] = useState(false);
-  const [controllerLoadError, setLoadError] = useState<Error | null>(null);
+  const [controllerLoaded, setControllerLoaded] = useState(false);
+  const [controllerLoadError, setControllerLoadError] = useState<Error | null>(null);
 
   const [controllers, loaded, loadError] = useK8sWatchResource<V1beta1ForkliftController[]>({
     groupVersionKind: ForkliftControllerModelGroupVersionKind,
@@ -32,12 +32,12 @@ export const useK8sWatchForkliftController = (): K8sForkliftControllerWatchResul
   });
 
   const handleLoadError = useCallback((error: Error | null) => {
-    setLoadError(error);
-    setLoaded(true);
+    setControllerLoadError(error);
+    setControllerLoaded(true);
   }, []);
 
   const handleLoadedForkliftControllers = useCallback(() => {
-    setLoaded(true);
+    setControllerLoaded(true);
 
     const [firstController] = controllers ?? [];
     setController(firstController);

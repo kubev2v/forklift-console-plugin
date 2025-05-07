@@ -15,8 +15,6 @@ import { MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS, MTV_SETTINGS } from '@utils/
 
 type SettingsCardProps = {
   obj?: V1beta1ForkliftController;
-  loaded?: boolean;
-  loadError?: unknown;
 };
 
 type ForkliftControllerSpec = {

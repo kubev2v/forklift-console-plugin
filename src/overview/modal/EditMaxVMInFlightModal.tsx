@@ -41,8 +41,8 @@ export const EditMaxVMInFlightModal: FC<EditSettingsModalProps> = (props) => {
       {...props}
       resource={resource}
       jsonPath={'spec.controller_max_vm_inflight'}
-      title={props?.title || t('Edit Maximum concurrent VM migrations')}
-      label={props?.label || t('Maximum concurrent VM or disk migrations')}
+      title={props?.title ?? t('Edit Maximum concurrent VM migrations')}
+      label={props?.label ?? t('Maximum concurrent VM or disk migrations')}
       model={ForkliftControllerModel}
       variant={ModalVariant.small}
       body={t('Maximum number of concurrent VM or disk migrations. Default value is 20.')}

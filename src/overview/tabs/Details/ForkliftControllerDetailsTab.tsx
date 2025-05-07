@@ -25,7 +25,6 @@ const ForkliftControllerDetailsTab: FC = () => {
         {hideWelcomeCardByContext ? null : (
           <FlexItem>
             <WelcomeCard
-              obj={forkliftController}
               onHide={() => {
                 setData({ hideWelcomeCardByContext: true });
               }}

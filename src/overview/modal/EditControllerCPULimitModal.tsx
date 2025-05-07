@@ -35,8 +35,8 @@ export const EditControllerCPULimitModal: FC<EditSettingsModalProps> = (props) =
     <EditModal
       {...props}
       jsonPath={'spec.controller_container_limits_cpu'}
-      title={props?.title || t('Edit Controller CPU limit')}
-      label={props?.label || t('Controller CPU limit')}
+      title={props?.title ?? t('Edit Controller CPU limit')}
+      label={props?.label ?? t('Controller CPU limit')}
       model={ForkliftControllerModel}
       variant={ModalVariant.small}
       body={t(
