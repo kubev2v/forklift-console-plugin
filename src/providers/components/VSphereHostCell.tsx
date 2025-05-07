@@ -4,15 +4,25 @@ import { getResourceFieldValue } from 'src/components/common/FilterGroup/matcher
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import { TableLabelCell } from 'src/modules/Providers/utils/components/TableCell/TableLabelCell';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import type { CellProps } from 'src/modules/Providers/views/list/components/CellProps';
 
 import { ProviderModelRef } from '@kubev2v/types';
-import { VirtualMachineIcon } from '@patternfly/react-icons';
+import { OutlinedHddIcon } from '@patternfly/react-icons';
 
-import type { CellProps } from './CellProps';
+type VSphereHostCellProps = {
+  inventoryValue?: number;
+} & CellProps;
 
-export const VirtualMachinesCell: FC<CellProps> = ({ data, fieldId, fields }: CellProps) => {
-  const { inventory, provider } = data;
-  const value = getResourceFieldValue({ ...provider, inventory }, fieldId, fields);
+const VSphereHostCell: FC<VSphereHostCellProps> = ({
+  data: providerData,
+  fieldId,
+  fields,
+  inventoryValue,
+}: VSphereHostCellProps) => {
+  const { inventory, provider } = providerData;
+  const value = fields?.length
+    ? getResourceFieldValue({ ...provider, inventory }, fieldId, fields)
+    : inventoryValue;
   const providerURL = getResourceUrl({
     name: provider?.metadata?.name,
     namespace: provider?.metadata?.namespace,
@@ -25,9 +35,11 @@ export const VirtualMachinesCell: FC<CellProps> = ({ data, fieldId, fields }: Ce
 
   return (
     <TableLabelCell>
-      <Link to={`${providerURL}/vms`}>
-        <VirtualMachineIcon /> {value}
+      <Link to={`${providerURL}/hosts`}>
+        <OutlinedHddIcon /> {value}
       </Link>
     </TableLabelCell>
   );
 };
+
+export default VSphereHostCell;
