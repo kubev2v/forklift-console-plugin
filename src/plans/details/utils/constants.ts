@@ -1,10 +1,9 @@
 import {
+  getVmwareLogo,
   openshiftLogo,
   openstackLogo,
   ovaLogo,
   redhatLogo,
-  vmLogoDark,
-  vmLogoLight,
 } from 'src/components/images/logos';
 
 export const providerTypeIcons = (isDarkTheme: boolean) => ({
@@ -12,7 +11,7 @@ export const providerTypeIcons = (isDarkTheme: boolean) => ({
   openstack: openstackLogo,
   ova: ovaLogo,
   ovirt: redhatLogo,
-  vsphere: isDarkTheme ? vmLogoLight : vmLogoDark,
+  vsphere: getVmwareLogo(isDarkTheme),
 });
 
 export const CRITICAL = 'Critical';

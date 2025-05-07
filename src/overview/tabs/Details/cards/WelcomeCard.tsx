@@ -1,12 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import migrationIcon from 'src/components/images/resources/migration.svg';
-import ovaIcon from 'src/components/images/resources/open-virtual-appliance.png';
-import openShiftVirtualizationIcon from 'src/components/images/resources/openshift-virtualization.svg';
-import openStackIcon from 'src/components/images/resources/openstack2.svg';
-import redHatIcon from 'src/components/images/resources/redhat.svg';
-import vmwareIconDark from 'src/components/images/resources/vmware-dark.svg';
-import vmwareIconLight from 'src/components/images/resources/vmware-light.svg';
 import providerTypes from 'src/modules/Plans/views/create/constanats/providerTypes';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import HeaderActions from 'src/overview/components/HeaderActions';
@@ -14,6 +8,7 @@ import HideFromViewDropdownOption from 'src/overview/components/HideFromViewDrop
 import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import { getImages } from '@components/images/logos';
 import { ProviderModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
@@ -41,6 +36,7 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
   const navigate = useNavigate();
   const isDarkTheme = useIsDarkTheme();
   const providerItems = providerTypes(isDarkTheme);
+  const images = getImages(isDarkTheme);
 
   const providersListUrl = useMemo(() => {
     return getResourceUrl({
@@ -86,35 +82,35 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
               <Tile
                 className="vmware-tile"
                 title={providerItems.vsphere.title}
-                icon={<img src={isDarkTheme ? vmwareIconLight : vmwareIconDark} />}
+                icon={<img src={images.vmwareImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.vsphere.key);
                 }}
               />
               <Tile
                 title={providerItems.ova.title}
-                icon={<img src={ovaIcon} />}
+                icon={<img src={images.ovaImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.ova.key);
                 }}
               />
               <Tile
                 title={providerItems.openstack.title}
-                icon={<img src={openStackIcon} />}
+                icon={<img src={images.openstackImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.openstack.key);
                 }}
               />
               <Tile
                 title={providerItems.ovirt.title}
-                icon={<img src={redHatIcon} />}
+                icon={<img src={images.redhatImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.ovirt.key);
                 }}
               />
               <Tile
                 title={providerItems.openshift.title}
-                icon={<img src={openShiftVirtualizationIcon} />}
+                icon={<img src={images.openshiftImg} />}
                 onClick={() => {
                   navigateToProvider(providerItems.openshift.key);
                 }}

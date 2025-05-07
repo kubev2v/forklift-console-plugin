@@ -18,6 +18,8 @@ type PodsTableProps = {
   limit?: number;
 };
 
+const PAGINATION_THRESHOLD = 10;
+
 export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
   const { t } = useForkliftTranslation();
 
@@ -66,7 +68,7 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
 
   return (
     <>
-      {limitedPods.length > 10 && (
+      {limitedPods.length > PAGINATION_THRESHOLD && (
         <Pagination
           itemCount={limitedPods.length}
           perPage={perPage}
@@ -122,7 +124,7 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
           ))}
         </Tbody>
       </Table>
-      {limitedPods.length > 10 && (
+      {limitedPods.length > PAGINATION_THRESHOLD && (
         <Pagination
           itemCount={limitedPods.length}
           perPage={perPage}

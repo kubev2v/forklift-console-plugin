@@ -12,8 +12,11 @@ import { getResizeObserver } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { ChartColors } from '../utils/colors';
+import { mapDataPoints } from '../utils/getVmMigrationsDataPoints';
 import type { MigrationDataPoint } from '../utils/toDataPointsHelper';
 import type { ChartDatumWithName } from '../utils/types';
+
+const MAX_DOMAIN_Y = 5;
 
 const VmMigrationsHistoryChart = ({
   vmMigrationsDataPoints,
@@ -27,6 +30,7 @@ const VmMigrationsHistoryChart = ({
   const { t } = useForkliftTranslation();
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [chartDimensions, setChartDimensions] = useState({ height: 400, width: 800 });
+  const { failed, running, succeeded } = vmMigrationsDataPoints;
 
   const handleResize = () => {
     if (chartContainerRef.current?.clientHeight) {
@@ -48,9 +52,9 @@ const VmMigrationsHistoryChart = ({
   }, []);
 
   const maxVmMigrationValue = Math.max(
-    ...vmMigrationsDataPoints.running.map((migration) => migration.value),
-    ...vmMigrationsDataPoints.failed.map((migration) => migration.value),
-    ...vmMigrationsDataPoints.succeeded.map((migration) => migration.value),
+    ...running.map((migration) => migration.value),
+    ...failed.map((migration) => migration.value),
+    ...succeeded.map((migration) => migration.value),
   );
 
   const legendData = [
@@ -59,7 +63,7 @@ const VmMigrationsHistoryChart = ({
     { name: t('Succeeded'), symbol: { fill: ChartColors.Success } },
   ];
 
-  const maxTicks = Math.max(5, Math.ceil(maxVmMigrationValue) + 1);
+  const maxTicks = Math.max(MAX_DOMAIN_Y, Math.ceil(maxVmMigrationValue) + 1);
   const tickValues = Array.from({ length: maxTicks }, (_, i) => i + 1);
 
   return (
@@ -69,16 +73,16 @@ const VmMigrationsHistoryChart = ({
         containerComponent={
           <ChartVoronoiContainer
             labels={({ datum }: { datum: ChartDatumWithName }) =>
-              datum.y === 0 || datum.name.includes('scatter')
+              datum.y === 0 || !datum.name
                 ? (undefined as unknown as string)
-                : `${datum.x} - ${datum.name ?? 'Unknown'}: ${datum.y ?? 0}`
+                : `${datum.x} - ${datum.name}: ${datum.y}`
             }
             constrainToVisibleArea
           />
         }
         legendData={legendData}
         legendPosition="bottom"
-        maxDomain={{ y: maxVmMigrationValue ? undefined : 5 }}
+        maxDomain={{ y: maxVmMigrationValue ? undefined : MAX_DOMAIN_Y }}
         padding={{
           bottom: 55,
           left: 50,
@@ -92,67 +96,28 @@ const VmMigrationsHistoryChart = ({
         <ChartAxis dependentAxis showGrid tickValues={tickValues} />
         <ChartGroup>
           <ChartArea
-            data={
-              vmMigrationsDataPoints.succeeded.map(({ dateLabel, value }) => ({
-                name: t('Succeeded'),
-                x: dateLabel,
-                y: value,
-              })) as ChartDatumWithName[]
-            }
+            data={mapDataPoints(succeeded, t('Succeeded'))}
             colorScale={[ChartColors.Success]}
           />
           <ChartScatter
-            data={
-              vmMigrationsDataPoints.succeeded.map(({ dateLabel, value }) => ({
-                name: 'Succeeded scatter',
-                x: dateLabel,
-                y: value,
-              })) as ChartDatumWithName[]
-            }
+            data={mapDataPoints(succeeded)}
             size={3}
             symbol="circle"
             colorScale={[ChartColors.Success]}
           />
-          <ChartArea
-            data={
-              vmMigrationsDataPoints.failed.map(({ dateLabel, value }) => ({
-                name: t('Failed'),
-                x: dateLabel,
-                y: value,
-              })) as ChartDatumWithName[]
-            }
-            colorScale={[ChartColors.Failure]}
-          />
+          <ChartArea data={mapDataPoints(failed, t('Failed'))} colorScale={[ChartColors.Failure]} />
           <ChartScatter
-            data={
-              vmMigrationsDataPoints.failed.map(({ dateLabel, value }) => ({
-                name: 'Failed scatter',
-                x: dateLabel,
-                y: value,
-              })) as ChartDatumWithName[]
-            }
+            data={mapDataPoints(failed)}
             size={3}
             symbol="circle"
             colorScale={[ChartColors.Failure]}
           />
           <ChartArea
-            data={
-              vmMigrationsDataPoints.running.map(({ dateLabel, value }) => ({
-                name: t('Running'),
-                x: dateLabel,
-                y: value,
-              })) as ChartDatumWithName[]
-            }
+            data={mapDataPoints(running, t('Running'))}
             colorScale={[ChartColors.Running]}
           />
           <ChartScatter
-            data={
-              vmMigrationsDataPoints.running.map(({ dateLabel, value }) => ({
-                name: 'Running scatter',
-                x: dateLabel,
-                y: value,
-              })) as ChartDatumWithName[]
-            }
+            data={mapDataPoints(running)}
             size={3}
             symbol="circle"
             colorScale={[ChartColors.Running]}

@@ -1,10 +1,9 @@
 import {
+  getVmwareLogo,
   openshiftLogo,
   openstackLogo,
   ovaLogo,
   redhatLogo,
-  vmLogoDark,
-  vmLogoLight,
 } from 'src/components/images/logos';
 import type { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 
@@ -34,7 +33,7 @@ export const providerCardItems: (isDarkTheme: boolean) => Record<string, Selecta
   },
   vsphere: {
     content: "VMware vSphere is VMware's cloud computing virtualization platform.",
-    logo: isDarkTheme ? vmLogoLight : vmLogoDark,
+    logo: getVmwareLogo(isDarkTheme),
     title: 'VMware',
   },
 });

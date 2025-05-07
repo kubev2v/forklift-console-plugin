@@ -2,6 +2,7 @@ import type { V1beta1Migration, V1beta1MigrationStatusVms } from '@kubev2v/types
 
 import type { TimeRangeOptions } from './timeRangeOptions';
 import { type MigrationDataPoint, toDataPoints } from './toDataPointsHelper';
+import type { ChartDatumWithName } from './types';
 
 const toStartedVmMigration = (migrationStatus: V1beta1MigrationStatusVms): string =>
   migrationStatus.started ?? '';
@@ -57,3 +58,10 @@ export const getVmMigrationsDataPoints = (
     selectedTimeRange,
   ),
 });
+
+export const mapDataPoints = (dataPoints: MigrationDataPoint[], name = ''): ChartDatumWithName[] =>
+  dataPoints.map(({ dateLabel, value }) => ({
+    name,
+    x: dateLabel,
+    y: value,
+  }));

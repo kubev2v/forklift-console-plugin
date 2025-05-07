@@ -1,10 +1,9 @@
 import {
+  getVmwareLogo,
   openshiftLogo,
   openstackLogo,
   ovaLogo,
   redhatLogo,
-  vmLogoDark,
-  vmLogoLight,
 } from 'src/components/images/logos';
 
 const providerTypes = (isDarkTheme: boolean) => ({
@@ -30,7 +29,7 @@ const providerTypes = (isDarkTheme: boolean) => ({
   },
   vsphere: {
     key: 'vsphere',
-    logo: isDarkTheme ? vmLogoLight : vmLogoDark,
+    logo: getVmwareLogo(isDarkTheme),
     title: 'VMware',
   },
 });
