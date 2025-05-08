@@ -4,7 +4,7 @@ import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditM
 import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ForkliftControllerModel } from '@kubev2v/types';
+import { ForkliftControllerModel, K8sResourceCommon } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
 import type { EditSettingsModalProps } from './EditSettingsModalProps';
@@ -35,6 +35,7 @@ export const EditSnapshotPoolingIntervalModal: FC<EditSettingsModalProps> = (pro
   return (
     <EditModal
       {...props}
+      resource={props.resource as K8sResourceCommon}
       jsonPath={'spec.controller_snapshot_status_check_rate_seconds'}
       title={props?.title ?? t('Edit Snapshot polling interval (seconds)')}
       label={props?.label ?? t('Snapshot polling interval (seconds)')}

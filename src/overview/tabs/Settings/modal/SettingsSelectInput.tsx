@@ -1,11 +1,4 @@
-import {
-  type FC,
-  type MouseEvent as ReactMouseEvent,
-  type Ref,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import { type FC, type MouseEvent, type Ref, useCallback, useMemo, useState } from 'react';
 
 import {
   MenuToggle,
@@ -23,7 +16,7 @@ import {
  */
 type Option = {
   key: number | string;
-  name: number | string;
+  name: string;
   description: string;
 };
 
@@ -36,7 +29,7 @@ type Option = {
 export type SettingsSelectInputProps = {
   value: number | string;
   onChange: (value: number | string) => void;
-  options?: Option[];
+  options: Option[];
 };
 
 /**
@@ -52,14 +45,14 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
   // Build a dictionary mapping option names to keys for efficient lookup
   // This dictionary is re-calculated every time the options prop changes
   const nameToKey = useMemo(() => {
-    return options.reduce((dict, option) => {
+    return options.reduce<Record<string, string | number>>((dict, option) => {
       dict[option.name] = option.key;
       return dict;
     }, {});
   }, [options]);
 
   const keyToName = useMemo(() => {
-    return options.reduce((dict, option) => {
+    return options.reduce<Record<string, string | number>>((dict, option) => {
       dict[option.key] = option.name;
       return dict;
     }, {});
@@ -69,7 +62,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
   const [selected, setSelected] = useState<string | number>(valueLabel);
 
   const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
+    setIsOpen((open) => !open);
   };
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
@@ -87,17 +80,21 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
   };
 
   // Callback function to handle selection in the dropdown menu
-  const onSelect: (event?: ReactMouseEvent, value?: string | number) => void = useCallback(
-    (_event, value: string | number) => {
+  const onSelect = useCallback(
+    (_event?: MouseEvent, selectedValue?: string | number) => {
+      if (selectedValue === undefined) {
+        setIsOpen(false);
+        return;
+      }
       // Use the dictionary to find the key corresponding to the selected name
-      const key = nameToKey[value] || value;
+      const key = nameToKey[selectedValue] || selectedValue;
       onChange(key);
 
       // Toggle the dropdown menu open state
-      setSelected(value as string);
+      setSelected(selectedValue as string);
       setIsOpen(false);
     },
-    [isOpen, nameToKey, onChange], // Dependencies for useCallback
+    [nameToKey, onChange],
   );
 
   // Render the Select component with dynamically created SelectOption children

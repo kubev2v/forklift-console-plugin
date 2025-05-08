@@ -1,7 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import useMigrationCounts from 'src/overview/hooks/useMigrationCounts';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
@@ -9,6 +8,7 @@ import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import { ChartDonut } from '@patternfly/react-charts';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
+import useMigrationCounts from '../hooks/useMigrationCounts';
 import { ChartColors } from '../utils/colors';
 import type { ChartDatum } from '../utils/types';
 

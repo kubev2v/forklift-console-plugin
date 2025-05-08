@@ -1,23 +1,21 @@
-import type { FC } from 'react';
-import { useCreateOverviewContext } from 'src/overview/hooks/OverviewContextProvider';
+import { type FC, useContext } from 'react';
+import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
 import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
 
-import ControllerCard from '../Health/cards/ControllerCard';
+import ControllerCard from '../Health/cards/Controller/ControllerCard';
 
 import MigrationPlansDonutCard from './cards/MigrationPlansDonutCard';
 import VmMigrationsDonutCard from './cards/VmMigrationsDonutCard';
-import VmMigrationsHistoryCard from './cards/VmMigrationsHistoryCard';
-import WelcomeCard from './cards/WelcomeCard';
+import VmMigrationsHistoryCard from './cards/VmMigrationsHistory/VmMigrationsHistoryCard';
+import WelcomeCard from './cards/Welcome/WelcomeCard';
 
 import '@patternfly/patternfly/patternfly-charts-theme-dark.css';
 
-const ForkliftControllerDetailsTab: FC = () => {
+const ForkliftControllerOverviewTab: FC = () => {
   const [forkliftController] = useK8sWatchForkliftController();
-  // Set and use context data for the overview page state
-  const { setData } = useCreateOverviewContext();
-  const { data: { hideWelcomeCardByContext } = {} } = useCreateOverviewContext();
+  const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(CreateOverviewContext);
 
   return (
     <div className="co-dashboard-body">
@@ -58,4 +56,4 @@ const ForkliftControllerDetailsTab: FC = () => {
   );
 };
 
-export default ForkliftControllerDetailsTab;
+export default ForkliftControllerOverviewTab;

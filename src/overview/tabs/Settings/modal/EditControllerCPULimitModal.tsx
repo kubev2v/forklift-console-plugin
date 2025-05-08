@@ -3,7 +3,7 @@ import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ForkliftControllerModel } from '@kubev2v/types';
+import { ForkliftControllerModel, K8sResourceCommon } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
 import type { EditSettingsModalProps } from './EditSettingsModalProps';
@@ -34,6 +34,7 @@ export const EditControllerCPULimitModal: FC<EditSettingsModalProps> = (props) =
   return (
     <EditModal
       {...props}
+      resource={props.resource as K8sResourceCommon}
       jsonPath={'spec.controller_container_limits_cpu'}
       title={props?.title ?? t('Edit Controller CPU limit')}
       label={props?.label ?? t('Controller CPU limit')}

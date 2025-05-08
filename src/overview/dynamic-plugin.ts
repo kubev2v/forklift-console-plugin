@@ -7,8 +7,9 @@ import type {
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
-  OverviewContextProvider: './overview/hooks/OverviewContextProvider',
+  OverviewContext: './overview/hooks/OverviewContext',
   OverviewPage: './overview/OverviewPage',
+  useOverviewContext: './overview/hooks/useOverviewContext',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -47,9 +48,9 @@ export const extensions: EncodedExtension[] = [
   } as EncodedExtension<HrefNavItem>,
   {
     properties: {
-      provider: { $codeRef: 'OverviewContextProvider.CreateOverviewContextProvider' },
+      provider: { $codeRef: 'OverviewContext.CreateOverviewContextProvider' },
       useValueHook: {
-        $codeRef: 'OverviewContextProvider.useOverviewContext',
+        $codeRef: 'useOverviewContext.useOverviewContext',
       },
     },
     type: 'console.context-provider',

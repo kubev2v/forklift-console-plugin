@@ -8,8 +8,8 @@ import { PageSection } from '@patternfly/react-core';
 import HeaderTitle from './components/HeaderTitle';
 import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
 import { useProvidersInventoryIsLive } from './hooks/useProvidersInventoryIsLive';
-import ForkliftControllerDetailsTab from './tabs/Details/ForkliftControllerDetailsTab';
 import ForkliftControllerHealthTab from './tabs/Health/ForkliftControllerHealthTab';
+import ForkliftControllerOverviewTab from './tabs/Overview/ForkliftControllerOverviewTab';
 import ForkliftControllerSettingsTab from './tabs/Settings/ForkliftControllerSettingsTab';
 import ForkliftControllerYAMLTab from './tabs/YAML/ForkliftControllerYAMLTab';
 
@@ -48,7 +48,7 @@ const OverviewPage: FC<OverviewPageProps> = () => {
 
   const pages = [
     {
-      component: ForkliftControllerDetailsTab,
+      component: ForkliftControllerOverviewTab,
       href: '',
       name: t('Overview'),
     },

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
 
 import ConditionsCard from './cards/ConditionsCard';
-import ControllerCard from './cards/ControllerCard';
+import ControllerCard from './cards/Controller/ControllerCard';
 
 const ForkliftControllerHealthTab: FC = () => {
   const [forkliftController] = useK8sWatchForkliftController();

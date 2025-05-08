@@ -7,7 +7,7 @@ import type { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@kubev2v/type
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 
-import { PodsTable } from '../../../components/PodsTable';
+import { PodsTable } from './PodsTable';
 
 type ControllerCardProps = {
   obj?: V1beta1ForkliftController;

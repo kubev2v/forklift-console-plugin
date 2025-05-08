@@ -9,8 +9,8 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 
-import { getVmMigrationsDataPoints } from '../utils/getVmMigrationsDataPoints';
-import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
+import { getVmMigrationsDataPoints } from '../../utils/getVmMigrationsDataPoints';
+import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../../utils/timeRangeOptions';
 
 import HeaderActions from './VmMigrationsHistoryCardHeaderActions';
 import VmMigrationsHistoryChart from './VmMigrationsHistoryChart';

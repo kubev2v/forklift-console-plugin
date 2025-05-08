@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import { useResizeObserver } from 'src/overview/hooks/useResizeObserver';
 
 import {
   Chart,
@@ -11,10 +10,12 @@ import {
 } from '@patternfly/react-charts';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { ChartColors } from '../utils/colors';
-import { mapDataPoints } from '../utils/getVmMigrationsDataPoints';
-import type { MigrationDataPoint } from '../utils/toDataPointsHelper';
-import type { ChartDatumWithName } from '../utils/types';
+import { ChartColors } from '../../utils/colors';
+import { mapDataPoints } from '../../utils/getVmMigrationsDataPoints';
+import type { MigrationDataPoint } from '../../utils/toDataPointsHelper';
+import type { ChartDatumWithName } from '../../utils/types';
+
+import { useResizeObserver } from './useResizeObserver';
 
 const MAX_DOMAIN_Y = 5;
 

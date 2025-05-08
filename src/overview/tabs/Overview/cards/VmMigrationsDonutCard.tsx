@@ -1,11 +1,11 @@
 import type { FC } from 'react';
-import useMigrationCounts from 'src/overview/hooks/useMigrationCounts';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { ChartDonut } from '@patternfly/react-charts';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
+import useMigrationCounts from '../hooks/useMigrationCounts';
 import { ChartColors } from '../utils/colors';
 import type { ChartDatum } from '../utils/types';
 

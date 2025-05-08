@@ -1,15 +1,13 @@
-import type { FC } from 'react';
+import { type FC, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCreateOverviewContext } from 'src/overview/hooks/OverviewContextProvider';
+import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
 
 import { Label } from '@patternfly/react-core';
 
 export const ShowWelcomeCardButton: FC = () => {
   const { t } = useTranslation();
+  const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(CreateOverviewContext);
 
-  // Set and use context data for the overview page state
-  const { setData } = useCreateOverviewContext();
-  const { data: { hideWelcomeCardByContext } = {} } = useCreateOverviewContext();
   const onClick = () => {
     setData({ hideWelcomeCardByContext: false });
   };

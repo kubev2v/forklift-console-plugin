@@ -1,17 +1,18 @@
 import type { FC } from 'react';
 import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
-import { EditControllerCPULimitModal } from 'src/overview/modal/EditControllerCPULimitModal';
-import { EditControllerMemoryLimitModal } from 'src/overview/modal/EditControllerMemoryLimitModal';
-import { EditInventoryMemoryLimitModal } from 'src/overview/modal/EditInventoryMemoryLimitModal';
-import { EditMaxVMInFlightModal } from 'src/overview/modal/EditMaxVMInFlightModal';
-import { EditPreCopyIntervalModal } from 'src/overview/modal/EditPreCopyIntervalModal';
-import { EditSnapshotPoolingIntervalModal } from 'src/overview/modal/EditSnapshotPoolingIntervalModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { Card, CardBody, CardTitle, DescriptionList, Text } from '@patternfly/react-core';
 import { MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS, MTV_SETTINGS } from '@utils/links';
+
+import { EditControllerCPULimitModal } from '../modal/EditControllerCPULimitModal';
+import { EditControllerMemoryLimitModal } from '../modal/EditControllerMemoryLimitModal';
+import { EditInventoryMemoryLimitModal } from '../modal/EditInventoryMemoryLimitModal';
+import { EditMaxVMInFlightModal } from '../modal/EditMaxVMInFlightModal';
+import { EditPreCopyIntervalModal } from '../modal/EditPreCopyIntervalModal';
+import { EditSnapshotPoolingIntervalModal } from '../modal/EditSnapshotPoolingIntervalModal';
 
 type SettingsCardProps = {
   obj?: V1beta1ForkliftController;

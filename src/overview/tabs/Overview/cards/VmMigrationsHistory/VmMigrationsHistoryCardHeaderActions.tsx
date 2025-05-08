@@ -10,7 +10,7 @@ import {
 import { EllipsisVIcon } from '@patternfly/react-icons';
 import { t } from '@utils/i18n';
 
-import { TimeRangeOptions } from '../utils/timeRangeOptions';
+import { TimeRangeOptions } from '../../utils/timeRangeOptions';
 
 const HeaderActions = ({
   setSelectedTimeRange,

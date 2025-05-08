@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { getMigrationCounts } from '../utils/helpers/getMigrationCounts';
-import { getVmCounts } from '../utils/helpers/getVmCounts';
+import { getMigrationCounts } from '../utils/getMigrationCounts';
+import { getVmCounts } from '../utils/getVmCounts';
 
 type MigrationCounts = Record<string, number>;
 

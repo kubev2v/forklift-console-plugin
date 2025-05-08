@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom-v5-compat';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import providerTypes from 'src/modules/Plans/views/create/constanats/providerTypes';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import HeaderActions from 'src/overview/components/HeaderActions';
-import HideFromViewDropdownOption from 'src/overview/components/HideFromViewDropdownOption';
 import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -22,6 +20,9 @@ import {
   Text,
   Tile,
 } from '@patternfly/react-core';
+
+import HeaderActions from './HeaderActions';
+import HideFromViewDropdownOption from './HideFromViewDropdownOption';
 
 type WelcomeCardProps = {
   onHide: () => void;
