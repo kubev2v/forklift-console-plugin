@@ -15,11 +15,13 @@ import { ProviderCardTitle } from './providerCardTitle';
  */
 export const createProviderCardItems = (
   providers: V1beta1Provider[],
+  isDarkTheme: boolean,
 ): Record<string, SelectableGalleryItem> => {
   const providerCardItems = {};
+  const providerItems = providerTypes(isDarkTheme);
 
   (providers || []).forEach((provider) => {
-    const typeObj = providerTypes[provider.spec.type];
+    const typeObj = providerItems[provider.spec.type];
 
     providerCardItems[provider.metadata.uid] = {
       content: <ProviderCardContent provider={provider} typeLabel={typeObj.title} />,

@@ -59,7 +59,7 @@ export type EditModalProps = {
  */
 export type ModalInputComponentType = FC<{
   value: string | number;
-  onChange: (value: string) => void;
+  onChange: (value: string | number) => void;
 }>;
 
 /**

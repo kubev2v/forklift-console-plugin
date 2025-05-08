@@ -49,7 +49,7 @@ const ProvidersCreatePage: FC<{
   const history = useHistory();
   const [isLoading, toggleIsLoading] = useToggle();
   const [activeNamespace, setActiveNamespace] = useActiveNamespace();
-  const [providerNames] = useK8sWatchProviderNames({ namespace });
+  const [providerNames, providerNamesLoaded] = useK8sWatchProviderNames({ namespace });
   const defaultNamespace = getDefaultNamespace();
   const projectName =
     activeNamespace === Namespace.AllProjects ? defaultNamespace : activeNamespace;
@@ -279,6 +279,7 @@ const ProvidersCreatePage: FC<{
             dispatch({ payload: value, type: 'SET_PROJECT_NAME' });
           }}
           providerNames={providerNames}
+          providerNamesLoaded={providerNamesLoaded}
         />
 
         <Divider className="forklift-section-create-deviser" />

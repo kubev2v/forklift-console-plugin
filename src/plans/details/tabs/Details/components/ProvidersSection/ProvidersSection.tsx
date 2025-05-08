@@ -9,6 +9,7 @@ import Suspend from '@components/Suspend';
 import { ProviderModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 import usePlanDestinationProvider from '../hooks/usePlanDestinationProvider';
@@ -33,6 +34,8 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
   const sourceProviderType = sourceProvider?.spec?.type;
   const destinationProviderName = getName(destinationProvider);
   const destinationProviderType = destinationProvider?.spec?.type;
+  const isDarkTheme = useIsDarkTheme();
+  const providerIcons = providerTypeIcons(isDarkTheme);
 
   return (
     <Suspend
@@ -54,7 +57,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
                 name: sourceProviderName,
                 namespace: getNamespace(sourceProvider),
               })}
-              providerIcon={providerTypeIcons[sourceProviderType as keyof typeof providerTypeIcons]}
+              providerIcon={providerIcons[sourceProviderType as keyof typeof providerIcons]}
               providerName={sourceProviderName}
             />
           }
@@ -71,9 +74,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
                 name: destinationProviderName,
                 namespace: getNamespace(destinationProvider),
               })}
-              providerIcon={
-                providerTypeIcons[destinationProviderType as keyof typeof providerTypeIcons]
-              }
+              providerIcon={providerIcons[destinationProviderType as keyof typeof providerIcons]}
               providerName={destinationProviderName}
             />
           }

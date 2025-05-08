@@ -1,11 +1,17 @@
-import { openshiftLogo, openstackLogo, redhatLogo, vmLogo } from 'src/components/images/logos';
+import {
+  getVmwareLogo,
+  openshiftLogo,
+  openstackLogo,
+  ovaLogo,
+  redhatLogo,
+} from 'src/components/images/logos';
 
-export const providerTypeIcons = {
+export const providerTypeIcons = (isDarkTheme: boolean) => ({
   openshift: openshiftLogo,
   openstack: openstackLogo,
-  ova: null,
+  ova: ovaLogo,
   ovirt: redhatLogo,
-  vsphere: vmLogo,
-};
+  vsphere: getVmwareLogo(isDarkTheme),
+});
 
 export const CRITICAL = 'Critical';

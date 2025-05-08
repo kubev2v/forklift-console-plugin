@@ -1,4 +1,5 @@
-import { type FC, type FormEvent, useReducer } from 'react';
+import { type FC, type FormEvent, useEffect, useReducer } from 'react';
+import { useSearchParams } from 'react-router-dom-v5-compat';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -21,6 +22,7 @@ import {
   TextInput,
   Tooltip,
 } from '@patternfly/react-core';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
 import { EditProvider } from './EditProvider';
 import { EditProviderSectionHeading } from './EditProviderSectionHeading';
@@ -34,6 +36,7 @@ export type ProvidersCreateFormProps = {
   providerNames?: string[];
   projectName?: string;
   onProjectNameChange?: (value: string) => void;
+  providerNamesLoaded?: boolean;
 };
 
 const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
@@ -44,9 +47,26 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
   onProjectNameChange,
   projectName,
   providerNames = [],
+  providerNamesLoaded,
 }) => {
   const { t } = useForkliftTranslation();
   const [projectNameOptions] = useProjectNameSelectOptions(projectName);
+  const isDarkTheme = useIsDarkTheme();
+  const providerItems = providerCardItems(isDarkTheme);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const providerType = searchParams.get('providerType');
+
+  useEffect(() => {
+    if (!providerNamesLoaded) return;
+    if (providerType && providerType !== newProvider?.spec?.type) {
+      onNewProviderChange({
+        ...newProvider,
+        spec: { ...newProvider?.spec, type: providerType as ProviderType },
+      });
+      searchParams.delete('providerType');
+      setSearchParams(searchParams);
+    }
+  }, [providerType, newProvider, providerNamesLoaded]);
 
   const initialState = {
     validation: {
@@ -127,8 +147,8 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
               <Flex>
                 <FlexItem className="forklift--create-provider-edit-card-selected">
                   <SelectableCard
-                    title={providerCardItems[newProvider?.spec?.type]?.title}
-                    titleLogo={providerCardItems[newProvider?.spec?.type]?.logo}
+                    title={providerItems[newProvider?.spec?.type]?.title}
+                    titleLogo={providerItems[newProvider?.spec?.type]?.logo}
                     onChange={() => {
                       handleTypeChange(null);
                     }}
@@ -153,7 +173,7 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
             ) : (
               <SelectableGallery
                 selectedID={newProvider?.spec?.type}
-                items={providerCardItems}
+                items={providerItems}
                 onChange={handleTypeChange}
               />
             )}

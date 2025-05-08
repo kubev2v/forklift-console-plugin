@@ -1,10 +1,10 @@
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 import { exposedModules as networkMapModules } from './src/modules/NetworkMaps/dynamic-plugin';
-import { exposedModules as overviewModules } from './src/modules/Overview/dynamic-plugin';
 import { exposedModules as planModules } from './src/modules/Plans/dynamic-plugin';
 import { exposedModules as providerModulesOld } from './src/modules/Providers/dynamic-plugin';
 import { exposedModules as storageMapModules } from './src/modules/StorageMaps/dynamic-plugin';
+import { exposedModules as overviewModules } from './src/overview/dynamic-plugin';
 import { exposedModules as providerModules } from './src/providers/dynamic-plugin';
 import pkg from './package.json';
 

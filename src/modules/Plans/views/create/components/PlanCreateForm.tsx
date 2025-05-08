@@ -27,6 +27,7 @@ import {
   StackItem,
   Tooltip,
 } from '@patternfly/react-core';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
 import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
 
@@ -63,12 +64,14 @@ const PlanCreateForm: FC<PlanCreateFormProps> = ({
   const { t } = useForkliftTranslation();
   const { data, setData } = useCreateVmMigrationData();
   const [projectNameOptions] = useProjectNameSelectOptions(projectName);
+  const isDarkTheme = useIsDarkTheme();
   const providerCardItems = useMemo(
     () =>
       createProviderCardItems(
         providers.filter((provider) => provider.metadata.namespace === projectName),
+        isDarkTheme,
       ),
-    [projectName, providers],
+    [projectName, providers, isDarkTheme],
   );
   const { selectedProviderUID: selectedProviderId } = filterState;
   const selectedProviderCardItem = providerCardItems[selectedProviderId];
