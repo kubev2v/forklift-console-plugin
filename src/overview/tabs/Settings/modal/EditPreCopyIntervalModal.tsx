@@ -4,7 +4,7 @@ import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditM
 import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ForkliftControllerModel, K8sResourceCommon } from '@kubev2v/types';
+import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
 import type { EditSettingsModalProps } from './EditSettingsModalProps';

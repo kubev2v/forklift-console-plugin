@@ -3,7 +3,7 @@ import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ForkliftControllerModel, K8sResourceCommon } from '@kubev2v/types';
+import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
 import { ModalVariant } from '@patternfly/react-core';
 
 import type { EditSettingsModalProps } from './EditSettingsModalProps';
