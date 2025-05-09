@@ -1,11 +1,3 @@
-export enum PROVIDER_TYPES {
-  openshift = 'openshift',
-  openstack = 'openstack',
-  ovirt = 'ovirt',
-  vsphere = 'vsphere',
-  ova = 'ova',
-}
-
 /**
  * List of fields to ignore/skip comparing when checking if an inventory's object has changed and required
  * re-rendering.

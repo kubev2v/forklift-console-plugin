@@ -1,6 +1,6 @@
-import type { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
+import type { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type { PROVIDER_TYPES } from './constants';
+import type { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
 
 /**
  * Finds an inventory by its unique identifier.
