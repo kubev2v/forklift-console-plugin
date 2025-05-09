@@ -1,7 +1,7 @@
 import type { FC } from 'react';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { ProviderPageHeadings } from 'src/modules/Providers/views/details/components/ProviderPageHeadings';
 import { ProviderCredentialsTabPage } from 'src/modules/Providers/views/details/tabs/Credentials/ProviderCredentials';
-import { ProviderNetworksTabPage } from 'src/modules/Providers/views/details/tabs/Networks/ProviderNetworks';
 import { ProviderVirtualMachinesTabPage } from 'src/modules/Providers/views/details/tabs/VirtualMachines/ProviderVirtualMachines';
 import { ProviderYAMLTabPage } from 'src/modules/Providers/views/details/tabs/YAML/ProviderYAML';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -10,6 +10,7 @@ import type { V1beta1Provider } from '@kubev2v/types';
 import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-sdk';
 
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
+import ProviderNetworksTabPage from './tabs/Networks/ProviderNetworksTabPage';
 
 const OpenshiftProviderDetailsPage: FC<{
   name: string;
@@ -40,17 +41,17 @@ const OpenshiftProviderDetailsPage: FC<{
       name: t('Virtual Machines'),
     },
     {
-      component: () => <ProviderNetworksTabPage name={name} namespace={namespace} />,
+      component: () => <ProviderNetworksTabPage provider={provider} />,
       href: 'networks',
       name: t('Networks'),
     },
   ];
 
   return (
-    <>
+    <ModalHOC>
       <ProviderPageHeadings name={name} namespace={namespace} />
       <HorizontalNav pages={tabPages} />
-    </>
+    </ModalHOC>
   );
 };
 

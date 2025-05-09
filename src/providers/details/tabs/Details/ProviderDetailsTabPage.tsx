@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -29,31 +30,33 @@ const ProviderDetailsTabPage: FC<ProviderDetailsTabPageProp> = ({ provider }) =>
   const data: ProviderData = { inventory: inventory ?? undefined, permissions, provider };
 
   return (
-    <div>
-      <PageSection variant={PageSectionVariants.light} className="forklift-page-section--info">
-        <InfoSection name={name} namespace={namespace} inventory={inventory} />
-      </PageSection>
+    <ModalHOC>
+      <div>
+        <PageSection variant={PageSectionVariants.light} className="forklift-page-section--info">
+          <InfoSection name={name} namespace={namespace} inventory={inventory} />
+        </PageSection>
 
-      <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
-        <SectionHeading text={t('Provider details')} />
-        <DetailsSection data={data} />
-      </PageSection>
+        <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
+          <SectionHeading text={t('Provider details')} />
+          <DetailsSection data={data} />
+        </PageSection>
 
-      <PageSection variant={PageSectionVariants.light} className="forklift-page-section">
-        <SectionHeading text={t('Secrets')} />
-        <SecretsSection data={data} />
-      </PageSection>
+        <PageSection variant={PageSectionVariants.light} className="forklift-page-section">
+          <SectionHeading text={t('Secrets')} />
+          <SecretsSection data={data} />
+        </PageSection>
 
-      <PageSection variant={PageSectionVariants.light} className="forklift-page-section">
-        <SectionHeading text={t('Provider inventory')} />
-        <InventorySection data={data} />
-      </PageSection>
+        <PageSection variant={PageSectionVariants.light} className="forklift-page-section">
+          <SectionHeading text={t('Provider inventory')} />
+          <InventorySection data={data} />
+        </PageSection>
 
-      <PageSection variant="light" className="forklift-page-section">
-        <SectionHeading text={t('Conditions')} />
-        <ConditionsSection conditions={provider?.status?.conditions} />
-      </PageSection>
-    </div>
+        <PageSection variant="light" className="forklift-page-section">
+          <SectionHeading text={t('Conditions')} />
+          <ConditionsSection conditions={provider?.status?.conditions} />
+        </PageSection>
+      </div>
+    </ModalHOC>
   );
 };
 
