@@ -11,8 +11,9 @@ export const DefaultRow = <T,>({ resourceData, resourceFields }: RowProps<T>) =>
   return (
     <Tr>
       {resourceFields?.map(({ label, resourceFieldId }) => (
-        <Td key={resourceFieldId} dataLabel={label}>
-          {String(getResourceFieldValue(resourceData, resourceFieldId, resourceFields) ?? '')}
+        <Td key={resourceFieldId} dataLabel={label ?? undefined}>
+          {(getResourceFieldValue(resourceData, resourceFieldId ?? '', resourceFields) as string) ??
+            ''}
         </Td>
       ))}
     </Tr>

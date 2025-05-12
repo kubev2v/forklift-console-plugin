@@ -17,17 +17,3 @@ export enum PROVIDER_TYPES {
  * Need to add more fields to this if required.
  */
 export const DEFAULT_FIELDS_TO_AVOID_COMPARING = ['revision', 'revisionValidated', 'storageUsed'];
-
-export enum ProvidersTableResourceFieldId {
-  Name = 'name',
-  Namespace = 'namespace',
-  Phase = 'phase',
-  Url = 'url',
-  Type = 'type',
-  VmCount = 'vmCount',
-  NetworkCount = 'networkCount',
-  ClusterCount = 'clusterCount',
-  HostCount = 'hostCount',
-  StorageCount = 'storageCount',
-  Actions = 'actions',
-}
