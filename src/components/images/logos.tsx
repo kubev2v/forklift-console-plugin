@@ -1,7 +1,17 @@
-import openshiftImg from './resources/openshift.svg';
-import openstackImg from './resources/openstack.svg';
+import ovaImg from './resources/open-virtual-appliance.png';
+import openshiftImg from './resources/openshift-virtualization.svg';
+import openstackImg from './resources/openstack2.svg';
 import redhatImg from './resources/redhat.svg';
-import vmImg from './resources/vm.svg';
+import vmwareImgDark from './resources/vmware-dark.svg';
+import vmwareImgLight from './resources/vmware-light.svg';
+
+export const getImages = (isDarkTheme: boolean) => ({
+  openshiftImg,
+  openstackImg,
+  ovaImg,
+  redhatImg,
+  vmwareImg: isDarkTheme ? vmwareImgLight : vmwareImgDark,
+});
 
 export const openshiftLogo = (
   <img
@@ -21,15 +31,6 @@ export const openstackLogo = (
   />
 );
 
-export const vmLogo = (
-  <img
-    className="forklift--create-provider-edit-card-title-logo"
-    src={vmImg}
-    alt="PatternFly logo"
-    width="27px"
-  />
-);
-
 export const redhatLogo = (
   <img
     className="forklift--create-provider-edit-card-title-logo"
@@ -38,3 +39,32 @@ export const redhatLogo = (
     width="27px"
   />
 );
+
+export const ovaLogo = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={ovaImg}
+    alt="PatternFly logo"
+    width="27px"
+  />
+);
+
+const vmLogoLight = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={vmwareImgLight}
+    alt="PatternFly logo"
+    width="27px"
+  />
+);
+
+const vmLogoDark = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={vmwareImgDark}
+    alt="PatternFly logo"
+    width="27px"
+  />
+);
+
+export const getVmwareLogo = (isDarkTheme: boolean) => (isDarkTheme ? vmLogoLight : vmLogoDark);
