@@ -87,7 +87,8 @@ export const createMatcher =
  */
 export const freetextMatcher = {
   filterType: 'freetext',
-  matchValue: (value: string) => (filter: string) => value?.includes(filter?.trim()),
+  matchValue: (value: string) => (filter: string) =>
+    value?.toLowerCase()?.includes(filter?.toLowerCase()?.trim()),
 };
 
 /**
