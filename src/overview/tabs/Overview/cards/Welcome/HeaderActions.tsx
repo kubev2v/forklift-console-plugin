@@ -15,7 +15,7 @@ const HeaderActions = ({ actions }: { actions: JSX.Element[] }) => {
         setMenuIsOpen(isOpen);
       }}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle ref={toggleRef} onClick={onToggle} isExpanded={menuIsOpen} variant={'plain'}>
+        <MenuToggle ref={toggleRef} onClick={onToggle} isExpanded={menuIsOpen} variant="plain">
           {<EllipsisVIcon />}
         </MenuToggle>
       )}

@@ -76,6 +76,5 @@ const OverviewPage: FC<OverviewPageProps> = () => {
     </>
   );
 };
-OverviewPage.displayName = 'OverviewPage';
 
 export default OverviewPage;

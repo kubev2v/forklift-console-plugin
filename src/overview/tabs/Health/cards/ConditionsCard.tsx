@@ -6,11 +6,11 @@ import type { K8sResourceCondition, V1beta1ForkliftController } from '@kubev2v/t
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
 type ConditionsCardProps = {
-  obj?: V1beta1ForkliftController;
-};
-
-type ConditionsStatus = {
-  conditions: K8sResourceCondition[];
+  obj?: V1beta1ForkliftController & {
+    status: {
+      conditions: K8sResourceCondition[];
+    };
+  };
 };
 
 const ConditionsCard: FC<ConditionsCardProps> = ({ obj }) => {
@@ -20,9 +20,7 @@ const ConditionsCard: FC<ConditionsCardProps> = ({ obj }) => {
     <Card className="pf-m-full-height">
       <CardTitle className="forklift-title">{t('Conditions')}</CardTitle>
       <CardBody>
-        {(obj?.status as ConditionsStatus)?.conditions && (
-          <ConditionsSection conditions={(obj?.status as ConditionsStatus).conditions} />
-        )}
+        {obj?.status?.conditions && <ConditionsSection conditions={obj.status.conditions} />}
       </CardBody>
     </Card>
   );

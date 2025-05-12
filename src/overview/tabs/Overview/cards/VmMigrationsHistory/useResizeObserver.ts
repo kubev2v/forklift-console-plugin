@@ -1,9 +1,9 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { type RefObject, useCallback, useLayoutEffect, useState } from 'react';
 
 import { getResizeObserver } from '@patternfly/react-core';
 
 export const useResizeObserver = (
-  ref: React.RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement>,
   initialDimensions = { height: 400, width: 800 },
 ) => {
   const [dimensions, setDimensions] = useState(initialDimensions);
