@@ -27,6 +27,6 @@ export const TableLinkCell: FC<TableLinkCellProps> = ({
 
 type TableLinkCellProps = {
   groupVersionKind: K8sGroupVersionKind;
-  name: string;
-  namespace: string;
+  name: string | undefined;
+  namespace: string | undefined;
 } & TableLabelCellProps;

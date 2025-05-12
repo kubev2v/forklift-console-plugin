@@ -1,0 +1,7 @@
+{
+    "name": "src",
+    "version": "2.9.0",
+    "dependencies": {
+        "yarn": "^1.22.22"
+    }
+}
