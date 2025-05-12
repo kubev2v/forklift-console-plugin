@@ -9,13 +9,20 @@ import type { CellProps } from 'src/modules/Providers/views/list/components/Cell
 import { ProviderModelRef } from '@kubev2v/types';
 import { NetworkIcon } from '@patternfly/react-icons';
 
-const OpenshiftNetworkCell: FC<CellProps> = ({
+type OpenshiftNetworkCellProps = {
+  inventoryValue?: number;
+} & CellProps;
+
+const OpenshiftNetworkCell: FC<OpenshiftNetworkCellProps> = ({
   data: providerData,
   fieldId,
   fields,
-}: CellProps) => {
+  inventoryValue,
+}: OpenshiftNetworkCellProps) => {
   const { inventory, provider } = providerData;
-  const value = getResourceFieldValue({ ...provider, inventory }, fieldId, fields);
+  const value = fields?.length
+    ? getResourceFieldValue({ ...provider, inventory }, fieldId, fields)
+    : inventoryValue;
   const providerURL = getResourceUrl({
     name: provider?.metadata?.name,
     namespace: provider?.metadata?.namespace,
