@@ -1,0 +1,41 @@
+import type { FC } from 'react';
+import { Controller } from 'react-hook-form';
+
+import { FormGroup, FormHelperText, TextInput } from '@patternfly/react-core';
+import { useForkliftTranslation } from '@utils/i18n';
+
+import { useCreatePlanFormContext } from '../../hooks';
+
+import { type HooksFormFieldId, MigrationHookFieldId } from './constants';
+import { getHooksFormFieldLabels, getHooksSubFieldId } from './utils';
+
+type HookRunnerImageFieldProps = {
+  fieldId: HooksFormFieldId;
+};
+
+const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
+  const { t } = useForkliftTranslation();
+  const { control } = useCreatePlanFormContext();
+  const subFieldId = getHooksSubFieldId(fieldId, MigrationHookFieldId.HookRunnerImage);
+
+  return (
+    <FormGroup
+      fieldId={subFieldId}
+      label={getHooksFormFieldLabels(fieldId)[MigrationHookFieldId.HookRunnerImage]}
+    >
+      <Controller
+        name={subFieldId}
+        control={control}
+        render={({ field }) => <TextInput {...field} />}
+      />
+
+      <FormHelperText>
+        {t(
+          'You can use a custom hook-runner image or specify a custom image, for example quay.io/konveyor/hook-runner.',
+        )}
+      </FormHelperText>
+    </FormGroup>
+  );
+};
+
+export default HookRunnerImageField;

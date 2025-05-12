@@ -10,6 +10,7 @@ import type {
 } from '@kubev2v/types';
 
 import type { GeneralFormFieldId } from './steps/general-information/constants';
+import type { HooksFormFieldId, MigrationHook } from './steps/hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
 import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
@@ -52,4 +53,6 @@ export type CreatePlanFormData = FieldValues & {
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
   [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
   [OtherSettingsFormFieldId.SharedDisks]: boolean;
+  [HooksFormFieldId.PreMigration]: MigrationHook;
+  [HooksFormFieldId.PostMigration]: MigrationHook;
 };

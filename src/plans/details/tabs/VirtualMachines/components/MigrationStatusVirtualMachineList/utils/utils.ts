@@ -1,7 +1,11 @@
+import type { V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import { taskStatuses } from '@utils/constants';
 import { t } from '@utils/i18n';
 
 import type { MigrationStatusVirtualMachinePageData } from './types';
+
+export const VIRTUAL_MACHINE_CREATION_NAME = 'VirtualMachineCreation';
 
 export const getVMMigrationStatus = (obj: unknown) => {
   const vmMigrationStatusData = obj as MigrationStatusVirtualMachinePageData;
@@ -38,11 +42,24 @@ export const getVMMigrationStatus = (obj: unknown) => {
   return t('Unknown');
 };
 
+export const isVirtualMachineCreationCompleted = (
+  statusVM: V1beta1PlanStatusMigrationVms | undefined,
+) => {
+  const pipeline = statusVM?.pipeline ?? [];
+  return pipeline.some(
+    (pipe) =>
+      pipe?.name === VIRTUAL_MACHINE_CREATION_NAME && pipe?.phase === taskStatuses.completed,
+  );
+};
+
+export const getVMDiskTransferPipeline = (statusVM: V1beta1PlanStatusMigrationVms | undefined) => {
+  const diskTransfer = statusVM?.pipeline.find((pipe) => pipe.name.startsWith('DiskTransfer'));
+  return diskTransfer;
+};
+
 export const getVMDiskProgress = (obj: unknown) => {
   const vmMigrationStatusData = obj as MigrationStatusVirtualMachinePageData;
-  const diskTransfer = vmMigrationStatusData.statusVM?.pipeline.find(
-    (pipe) => pipe.name === 'DiskTransfer',
-  );
+  const diskTransfer = getVMDiskTransferPipeline(vmMigrationStatusData.statusVM);
 
   return diskTransfer?.progress?.total
     ? diskTransfer?.progress?.completed / diskTransfer?.progress?.total

@@ -10,10 +10,15 @@ import './ExpandableSectionHeading.scss';
 type ExpandableSectionHeadingProps = {
   section: ReactNode;
   sectionTitle: ReactNode;
+  initialExpanded?: boolean;
 };
 
-const ExpandableSectionHeading: FC<ExpandableSectionHeadingProps> = ({ section, sectionTitle }) => {
-  const [showSection, setShowSection] = useToggle(false);
+const ExpandableSectionHeading: FC<ExpandableSectionHeadingProps> = ({
+  initialExpanded = false,
+  section,
+  sectionTitle,
+}) => {
+  const [showSection, setShowSection] = useToggle(initialExpanded);
   return (
     <>
       <Button

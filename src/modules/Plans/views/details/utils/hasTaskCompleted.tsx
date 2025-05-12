@@ -6,6 +6,11 @@ import type {
 import { hasPipelineCompleted } from './hasPipelineCompleted';
 import { hasPipelineNotFailed } from './hasPipelineNotFailed';
 
+const hasPipelineOkAndTaskProgressCompleted = (
+  taskProgress: V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
+  pipeline: V1beta1PlanStatusMigrationVmsPipeline,
+) => hasPipelineNotFailed(pipeline) && taskProgress.completed === taskProgress.total;
+
 /**
  *  Check if a given task within a pipeline has completed.
  *
@@ -22,15 +27,10 @@ import { hasPipelineNotFailed } from './hasPipelineNotFailed';
  * @returns {boolean} - Returns true if the task has completed.
  */
 export const hasTaskCompleted = (
-  taskPhase: string,
+  taskPhase: string | undefined,
   taskProgress: V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
   pipeline: V1beta1PlanStatusMigrationVmsPipeline,
 ) =>
   taskPhase === 'Completed' ||
   (taskPhase === undefined && hasPipelineCompleted(pipeline)) ||
   (taskPhase === undefined && hasPipelineOkAndTaskProgressCompleted(taskProgress, pipeline));
-
-const hasPipelineOkAndTaskProgressCompleted = (
-  taskProgress: V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
-  pipeline: V1beta1PlanStatusMigrationVmsPipeline,
-) => hasPipelineNotFailed(pipeline) && taskProgress.completed === taskProgress.total;

@@ -40,8 +40,8 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
     [PlanTableResourceId.Destination]: (
       <TableLinkCell
         groupVersionKind={ProviderModelGroupVersionKind}
-        name={destinationProviderName!}
-        namespace={destinationProviderNamespace!}
+        name={destinationProviderName}
+        namespace={destinationProviderNamespace}
       />
     ),
     [PlanTableResourceId.MigrationStarted]: (
@@ -51,15 +51,15 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
     [PlanTableResourceId.Name]: (
       <TableLinkCell
         groupVersionKind={PlanModelGroupVersionKind}
-        name={planName!}
-        namespace={planNamespace!}
+        name={planName}
+        namespace={planNamespace}
       />
     ),
     [PlanTableResourceId.Namespace]: (
       <TableLinkCell
         groupVersionKind={{ kind: 'Namespace', version: 'v1' }}
-        name={planNamespace!}
-        namespace={planNamespace!}
+        name={planNamespace}
+        namespace={planNamespace}
       />
     ),
     [PlanTableResourceId.Phase]: <PlanStatus plan={plan} isPlanRow />,

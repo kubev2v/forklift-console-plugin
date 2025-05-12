@@ -15,6 +15,14 @@ export enum ServerBranding {
 
 export const taskStatuses = {
   completed: 'Completed',
+  error: 'Error',
+  failed: 'Failed',
+  pending: 'Pending',
+};
+
+export const conditionBoolean = {
+  false: 'False',
+  true: 'True',
 };
 
 export const EMPTY_CELL_CONTENT = '-';

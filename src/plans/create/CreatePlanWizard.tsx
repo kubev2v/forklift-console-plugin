@@ -1,12 +1,13 @@
 import { type FC, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
 
-import { Form, Title, Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
+import { Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
+import HooksStep from './steps/hooks/HooksStep';
 import MigrationTypeStep from './steps/migration-type/MigrationTypeStep';
 import NetworkMapStep from './steps/network-map/NetworkMapStep';
 import OtherSettingsStep from './steps/other-settings/OtherSettingsStep';
@@ -96,9 +97,7 @@ const CreatePlanWizard: FC = () => {
               <OtherSettingsStep />
             </WizardStep>,
             <WizardStep key={PlanWizardStepId.Hooks} {...getStepProps(PlanWizardStepId.Hooks)}>
-              <Form>
-                <Title headingLevel="h2">{t('Hooks')}</Title>
-              </Form>
+              <HooksStep />
             </WizardStep>,
           ]}
         />
