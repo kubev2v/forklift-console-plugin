@@ -1,7 +1,15 @@
-import { openshiftLogo, openstackLogo, redhatLogo, vmLogo } from 'src/components/images/logos';
+import {
+  getVmwareLogo,
+  openshiftLogo,
+  openstackLogo,
+  ovaLogo,
+  redhatLogo,
+} from 'src/components/images/logos';
 import type { SelectableGalleryItem } from 'src/modules/Providers/utils/components/Gallery/SelectableGallery';
 
-export const providerCardItems: Record<string, SelectableGalleryItem> = {
+export const providerCardItems: (isDarkTheme: boolean) => Record<string, SelectableGalleryItem> = (
+  isDarkTheme,
+) => ({
   openshift: {
     content:
       'Red Hat OpenShift Virtualization runs and manages virtual machines in Red Hat OpenShift.',
@@ -15,7 +23,8 @@ export const providerCardItems: Record<string, SelectableGalleryItem> = {
   },
   ova: {
     content: 'An OVA file is a virtual appliance used by virtualization applications.',
-    title: 'Open Virtual Appliance (OVA)',
+    logo: ovaLogo,
+    title: 'Open Virtual Appliance',
   },
   ovirt: {
     content: 'Red Hat Virtualization (RHV) is a virtualization platform from Red Hat.',
@@ -24,7 +33,7 @@ export const providerCardItems: Record<string, SelectableGalleryItem> = {
   },
   vsphere: {
     content: "VMware vSphere is VMware's cloud computing virtualization platform.",
-    logo: vmLogo,
-    title: 'vSphere',
+    logo: getVmwareLogo(isDarkTheme),
+    title: 'VMware',
   },
-};
+});

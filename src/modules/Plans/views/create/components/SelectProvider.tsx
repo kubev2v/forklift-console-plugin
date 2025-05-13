@@ -16,6 +16,7 @@ import {
   SelectOption,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
 import providerTypes from '../constanats/providerTypes';
 import type { PlanCreatePageState } from '../states/PlanCreatePageStore';
@@ -33,6 +34,7 @@ const SelectProvider: FunctionComponent<SelectProviderProps> = ({
   filterState,
 }) => {
   const { t } = useForkliftTranslation();
+  const isDarkTheme = useIsDarkTheme();
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
@@ -62,7 +64,7 @@ const SelectProvider: FunctionComponent<SelectProviderProps> = ({
     </MenuToggle>
   );
 
-  const providerTypesArray = Object.keys(providerTypes);
+  const providerTypesArray = Object.keys(providerTypes(isDarkTheme));
 
   const renderOptions = () => {
     return providerTypesArray.map((providerType, index) => (

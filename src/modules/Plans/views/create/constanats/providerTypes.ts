@@ -1,26 +1,37 @@
-import { openshiftLogo, openstackLogo, redhatLogo, vmLogo } from 'src/components/images/logos';
+import {
+  getVmwareLogo,
+  openshiftLogo,
+  openstackLogo,
+  ovaLogo,
+  redhatLogo,
+} from 'src/components/images/logos';
 
-const providerTypes = {
+const providerTypes = (isDarkTheme: boolean) => ({
   openshift: {
+    key: 'openshift',
     logo: openshiftLogo,
     title: 'OpenShift Virtualization',
   },
   openstack: {
+    key: 'openstack',
     logo: openstackLogo,
     title: 'OpenStack',
   },
   ova: {
-    logo: null,
-    title: 'Open Virtual Appliance (OVA)',
+    key: 'ova',
+    logo: ovaLogo,
+    title: 'Open Virtual Appliance',
   },
   ovirt: {
+    key: 'ovirt',
     logo: redhatLogo,
     title: 'Red Hat Virtualization',
   },
   vsphere: {
-    logo: vmLogo,
-    title: 'vSphere',
+    key: 'vsphere',
+    logo: getVmwareLogo(isDarkTheme),
+    title: 'VMware',
   },
-};
+});
 
 export default providerTypes;
