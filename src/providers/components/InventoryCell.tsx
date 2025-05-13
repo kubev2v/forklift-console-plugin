@@ -4,8 +4,7 @@ import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell
 import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
 import type { CellProps } from 'src/modules/Providers/views/list/components/CellProps';
 
-import { PROVIDER_TYPES } from '../list/utils/constants';
-import { ProvidersResourceFieldId } from '../utils/constants';
+import { PROVIDER_TYPES, ProvidersResourceFieldId } from '../utils/constants';
 
 import OpenshiftNetworkCell from './OpenshiftNetworkCell';
 import VSphereHostCell from './VSphereHostCell';

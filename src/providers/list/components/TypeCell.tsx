@@ -3,7 +3,7 @@ import { getResourceFieldValue } from 'src/components/common/FilterGroup/matcher
 import { TableLabelCell } from 'src/modules/Providers/utils/components/TableCell/TableLabelCell';
 import { getIsOnlySource } from 'src/modules/Providers/utils/helpers/getIsTarget';
 import type { CellProps } from 'src/modules/Providers/views/list/components/CellProps';
-import type { PROVIDER_TYPES } from 'src/providers/list/utils/constants';
+import type { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

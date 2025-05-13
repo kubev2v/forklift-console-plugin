@@ -16,3 +16,11 @@ export enum ProvidersResourceFieldId {
   ProjectCount = 'projectCount',
   RegionCount = 'regionCount',
 }
+
+export enum PROVIDER_TYPES {
+  openshift = 'openshift',
+  openstack = 'openstack',
+  ovirt = 'ovirt',
+  vsphere = 'vsphere',
+  ova = 'ova',
+}

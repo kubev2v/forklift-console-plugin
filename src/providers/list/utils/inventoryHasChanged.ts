@@ -1,8 +1,8 @@
 import type { MutableRefObject } from 'react';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { ProvidersInventoryList } from '@kubev2v/types';
 
-import { PROVIDER_TYPES } from './constants';
 import { inventoryContentHasChanged } from './inventoryContentHasChanged';
 
 export const inventoryHasChanged = (
