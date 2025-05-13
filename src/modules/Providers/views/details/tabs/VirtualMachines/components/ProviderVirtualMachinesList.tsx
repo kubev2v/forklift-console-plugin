@@ -84,12 +84,12 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
     ),
   ];
 
-  const onSelectedIds = (selectedIds: string[]) => {
-    if (onSelect) {
-      const selectedVms = vmData?.filter((data) => selectedIds.includes(getVmId(data)));
-      onSelect(selectedVms);
-    }
-  };
+  const onSelectedIds = onSelect
+    ? (selectedIds: string[]) => {
+        const selectedVms = vmData?.filter((data) => selectedIds.includes(getVmId(data)));
+        onSelect(selectedVms);
+      }
+    : undefined;
 
   return (
     <StandardPageWithSelection

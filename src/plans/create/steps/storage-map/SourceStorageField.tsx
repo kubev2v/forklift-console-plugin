@@ -9,16 +9,21 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks';
+import type { MappingValue } from '../../types';
 
 import { StorageMapFieldId, type StorageMapping } from './constants';
 
 type SourceStorageFieldProps = {
   fieldId: string;
-  usedLabels: string[];
-  otherLabels: string[];
+  usedSourceStorages: MappingValue[];
+  otherSourceStorages: MappingValue[];
 };
 
-const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, otherLabels, usedLabels }) => {
+const SourceStorageField: FC<SourceStorageFieldProps> = ({
+  fieldId,
+  otherSourceStorages,
+  usedSourceStorages,
+}) => {
   const { control, trigger } = useCreatePlanFormContext();
   const { t } = useForkliftTranslation();
   const storageMappings = useWatch({ control, name: StorageMapFieldId.StorageMap });
@@ -31,7 +36,7 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, otherLabels,
         render={({ field }) => (
           <Select
             id={fieldId}
-            value={field.value}
+            value={(field.value as MappingValue).name}
             onSelect={async (_event, value) => {
               field.onChange(value);
               await trigger(StorageMapFieldId.StorageMap);
@@ -40,19 +45,19 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, otherLabels,
           >
             <SelectGroup label={t('Storages used by the selected VMs')}>
               <SelectList>
-                {isEmpty(usedLabels) ? (
+                {isEmpty(usedSourceStorages) ? (
                   <EmptyCategorySelectOption resourceName="storages" />
                 ) : (
-                  usedLabels.map((usedStorageLabel) => (
+                  usedSourceStorages.map((usedStorage) => (
                     <SelectOption
-                      key={usedStorageLabel}
-                      value={usedStorageLabel}
+                      key={usedStorage.name}
+                      value={usedStorage}
                       isDisabled={storageMappings.some(
                         (mapping: StorageMapping) =>
-                          mapping[StorageMapFieldId.SourceStorage] === usedStorageLabel,
+                          mapping[StorageMapFieldId.SourceStorage].name === usedStorage.name,
                       )}
                     >
-                      {usedStorageLabel}
+                      {usedStorage.name}
                     </SelectOption>
                   ))
                 )}
@@ -61,19 +66,19 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, otherLabels,
 
             <SelectGroup label={t('Other storages present on the source provider')}>
               <SelectList>
-                {isEmpty(otherLabels) ? (
+                {isEmpty(otherSourceStorages) ? (
                   <EmptyCategorySelectOption resourceName="storages" />
                 ) : (
-                  otherLabels?.map((otherStorageLabel) => (
+                  otherSourceStorages?.map((otherStorage) => (
                     <SelectOption
-                      key={otherStorageLabel}
-                      value={otherStorageLabel}
+                      key={otherStorage.name}
+                      value={otherStorage}
                       isDisabled={storageMappings.some(
                         (mapping: StorageMapping) =>
-                          mapping[StorageMapFieldId.SourceStorage] === otherStorageLabel,
+                          mapping[StorageMapFieldId.SourceStorage].name === otherStorage.name,
                       )}
                     >
-                      {otherStorageLabel}
+                      {otherStorage.name}
                     </SelectOption>
                   ))
                 )}

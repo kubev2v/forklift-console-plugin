@@ -1,5 +1,7 @@
 import { t } from '@utils/i18n';
 
+import type { MappingValue } from '../../types';
+
 export enum StorageMapFieldId {
   StorageMap = 'storageMap',
   SourceStorage = 'sourceStorage',
@@ -12,13 +14,13 @@ export const storageMapFieldLabels: Partial<Record<StorageMapFieldId, ReturnType
 };
 
 export type StorageMapping = {
-  [StorageMapFieldId.SourceStorage]: string;
-  [StorageMapFieldId.TargetStorage]: string;
+  [StorageMapFieldId.SourceStorage]: MappingValue;
+  [StorageMapFieldId.TargetStorage]: MappingValue;
 };
 
 export const defaultStorageMapping: StorageMapping = {
-  [StorageMapFieldId.SourceStorage]: '',
-  [StorageMapFieldId.TargetStorage]: '',
+  [StorageMapFieldId.SourceStorage]: { name: '' },
+  [StorageMapFieldId.TargetStorage]: { name: '' },
 };
 
 export type TargetStorage = {

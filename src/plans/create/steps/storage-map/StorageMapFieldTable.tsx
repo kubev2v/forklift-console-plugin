@@ -5,9 +5,10 @@ import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks';
-import type { CreatePlanFormData } from '../../types';
+import type { CreatePlanFormData, MappingValue } from '../../types';
 
 import {
+  defaultStorageMapping,
   StorageMapFieldId,
   storageMapFieldLabels,
   type StorageMapping,
@@ -19,8 +20,8 @@ import { getStorageMapFieldId } from './utils';
 
 type StorageMapFieldTableProps = {
   targetStorages: TargetStorage[];
-  usedSourceLabels: string[];
-  otherSourceLabels: string[];
+  usedSourceStorages: MappingValue[];
+  otherSourceStorages: MappingValue[];
   isLoading: boolean;
   loadError: Error | null;
 };
@@ -28,9 +29,9 @@ type StorageMapFieldTableProps = {
 const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
   isLoading,
   loadError,
-  otherSourceLabels,
+  otherSourceStorages,
   targetStorages,
-  usedSourceLabels,
+  usedSourceStorages,
 }) => {
   const { t } = useForkliftTranslation();
   const { control, setValue } = useCreatePlanFormContext();
@@ -38,8 +39,8 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
   const validate = useCallback(
     (values: StorageMapping[]) => {
       if (
-        !usedSourceLabels.every((label) =>
-          values.find((value) => value[StorageMapFieldId.SourceStorage] === label),
+        !usedSourceStorages.every((usedStorage) =>
+          values.find((value) => value[StorageMapFieldId.SourceStorage].name === usedStorage.name),
         )
       ) {
         return t('All storages detected on the selected VMs require a mapping.');
@@ -47,7 +48,7 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
 
       return true;
     },
-    [t, usedSourceLabels],
+    [t, usedSourceStorages],
   );
 
   const {
@@ -73,8 +74,8 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
         inputs: [
           <SourceStorageField
             fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
-            usedLabels={usedSourceLabels}
-            otherLabels={otherSourceLabels}
+            usedSourceStorages={usedSourceStorages}
+            otherSourceStorages={otherSourceStorages}
           />,
           <TargetStorageField
             fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
@@ -84,14 +85,15 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
       }))}
       addButton={{
         isDisabled:
-          [...usedSourceLabels, ...otherSourceLabels].length === netMappingFields.length ||
+          [...usedSourceStorages, ...otherSourceStorages].length === netMappingFields.length ||
           isLoading ||
           Boolean(loadError),
         label: t('Add mapping'),
         onClick: () => {
           append({
-            [StorageMapFieldId.SourceStorage]: '',
-            [StorageMapFieldId.TargetStorage]: targetStorages[0].name,
+            [StorageMapFieldId.SourceStorage]:
+              defaultStorageMapping[StorageMapFieldId.SourceStorage],
+            [StorageMapFieldId.TargetStorage]: { name: targetStorages[0].name },
           });
         },
       }}
@@ -103,11 +105,11 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
 
         setValue<FieldPath<CreatePlanFormData>>(
           getStorageMapFieldId(StorageMapFieldId.SourceStorage, index),
-          '',
+          defaultStorageMapping[StorageMapFieldId.SourceStorage],
         );
         setValue<FieldPath<CreatePlanFormData>>(
           getStorageMapFieldId(StorageMapFieldId.TargetStorage, index),
-          targetStorages[0].name,
+          { name: targetStorages[0].name },
         );
       }}
     />

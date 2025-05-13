@@ -15,7 +15,7 @@ import { VmFormFieldId } from '../virtual-machines/constants';
 import { defaultStorageMapping, StorageMapFieldId } from './constants';
 import StorageMapFieldTable from './StorageMapFieldTable';
 import useTargetStorages from './useTargetStorages';
-import { getSourceStorageLabels } from './utils';
+import { getSourceStorageValues } from './utils';
 
 const StorageMapStep = () => {
   const { t } = useForkliftTranslation();
@@ -41,7 +41,7 @@ const StorageMapStep = () => {
   const isStorageMapEmpty = isEmpty(storageMap);
   const isLoading = sourceStoragesLoading || targetStoragesLoading;
 
-  const { other: otherSourceLabels, used: usedSourceLabels } = getSourceStorageLabels(
+  const { other: otherSourceStorages, used: usedSourceStorages } = getSourceStorageValues(
     sourceProvider,
     availableSourceStorages,
     Object.values(vms ?? {}),
@@ -52,20 +52,20 @@ const StorageMapStep = () => {
   // otherwise set empty inputs for the field array to force an empty field table row.
   useEffect(() => {
     if (!isLoading && isStorageMapEmpty) {
-      if (isEmpty(usedSourceLabels)) {
+      if (isEmpty(usedSourceStorages)) {
         setValue(StorageMapFieldId.StorageMap, [defaultStorageMapping]);
         return;
       }
 
       setValue(
         StorageMapFieldId.StorageMap,
-        usedSourceLabels.map((label) => ({
-          [StorageMapFieldId.SourceStorage]: label,
-          [StorageMapFieldId.TargetStorage]: defaultTargetStorageName,
+        usedSourceStorages.map((sourceStorage) => ({
+          [StorageMapFieldId.SourceStorage]: sourceStorage,
+          [StorageMapFieldId.TargetStorage]: { name: defaultTargetStorageName },
         })),
       );
     }
-  }, [defaultTargetStorageName, isLoading, isStorageMapEmpty, setValue, usedSourceLabels]);
+  }, [defaultTargetStorageName, isLoading, isStorageMapEmpty, setValue, usedSourceStorages]);
 
   return (
     <WizardStepContainer title={planStepNames[PlanWizardStepId.StorageMap]}>
@@ -74,7 +74,7 @@ const StorageMapStep = () => {
           <Alert variant={AlertVariant.danger} isInline title={storageMapError.root.message} />
         )}
 
-        {isEmpty(usedSourceLabels) && !sourceStoragesLoading && (
+        {isEmpty(usedSourceStorages) && !sourceStoragesLoading && (
           <Alert
             variant={AlertVariant.warning}
             isInline
@@ -84,8 +84,8 @@ const StorageMapStep = () => {
 
         <StorageMapFieldTable
           targetStorages={targetStorages}
-          usedSourceLabels={usedSourceLabels}
-          otherSourceLabels={otherSourceLabels}
+          usedSourceStorages={usedSourceStorages}
+          otherSourceStorages={otherSourceStorages}
           isLoading={isLoading}
           loadError={sourceStoragesError ?? targetStoragesError}
         />

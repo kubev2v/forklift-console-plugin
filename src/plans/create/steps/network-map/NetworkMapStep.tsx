@@ -10,12 +10,13 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks';
+import type { MappingValue } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { defaultNetMapping, NetworkMapFieldId } from './constants';
 import NetworkMapFieldTable from './NetworkMapFieldTable';
-import { getSourceNetworkLabels } from './utils';
+import { getSourceNetworkValues } from './utils';
 
 const NetworkMapStep = () => {
   const { t } = useForkliftTranslation();
@@ -39,7 +40,7 @@ const NetworkMapStep = () => {
   const isNetMapEmpty = isEmpty(networkMap);
   const isLoading = sourceNetworksLoading || targetNetworksLoading;
 
-  const { other: otherSourceLabels, used: usedSourceLabels } = getSourceNetworkLabels(
+  const { other: otherSourceNetworks, used: usedSourceNetworks } = getSourceNetworkValues(
     sourceProvider,
     availableSourceNetworks,
     Object.values(vms ?? {}),
@@ -49,30 +50,30 @@ const NetworkMapStep = () => {
   // otherwise set empty inputs for the field array to force an empty field table row.
   useEffect(() => {
     if (!isLoading && isNetMapEmpty) {
-      if (isEmpty(usedSourceLabels)) {
+      if (isEmpty(usedSourceNetworks)) {
         setValue(NetworkMapFieldId.NetworkMap, [defaultNetMapping]);
         return;
       }
 
       setValue(
         NetworkMapFieldId.NetworkMap,
-        usedSourceLabels.map((label) => ({
-          [NetworkMapFieldId.SourceNetwork]: label,
+        usedSourceNetworks.map((sourceNetwork) => ({
+          [NetworkMapFieldId.SourceNetwork]: sourceNetwork,
           [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
         })),
       );
     }
-  }, [isLoading, isNetMapEmpty, usedSourceLabels, setValue]);
+  }, [isLoading, isNetMapEmpty, setValue, usedSourceNetworks]);
 
   const targetNetworks = useMemo(
     () =>
       availableTargetNetworks.reduce(
-        (acc: Record<string, string>, network) => {
+        (acc: Record<string, MappingValue>, network) => {
           if (
             network.namespace === targetProject ||
             (network.namespace as Namespace) === Namespace.Default
           ) {
-            acc[network.uid] = `${network.namespace}/${network.name}`;
+            acc[network.uid] = { id: network.id, name: `${network.namespace}/${network.name}` };
           }
 
           return acc;
@@ -89,7 +90,7 @@ const NetworkMapStep = () => {
           <Alert variant={AlertVariant.danger} isInline title={networkMapError.root.message} />
         )}
 
-        {isEmpty(usedSourceLabels) && !sourceNetworksLoading && (
+        {isEmpty(usedSourceNetworks) && !sourceNetworksLoading && (
           <Alert
             variant={AlertVariant.warning}
             isInline
@@ -99,8 +100,8 @@ const NetworkMapStep = () => {
 
         <NetworkMapFieldTable
           targetNetworks={targetNetworks}
-          usedSourceLabels={usedSourceLabels}
-          otherSourceLabels={otherSourceLabels}
+          usedSourceNetworks={usedSourceNetworks}
+          otherSourceNetworks={otherSourceNetworks}
           isLoading={isLoading}
           loadError={sourceNetworksError ?? targetNetworksError}
         />
