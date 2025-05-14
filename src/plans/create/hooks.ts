@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { useForm, useFormContext, type UseFormProps } from 'react-hook-form';
 
 import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
@@ -8,7 +8,8 @@ import { getDefaultNamespace } from '@utils/namespaces';
 
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import { OtherSettingsFormFieldId } from './steps/other-settings/constants';
-import type { CreatePlanFormData } from './types';
+import { CreatePlanWizardContext } from './constants';
+import type { CreatePlanFormData, CreatePlanWizardContextProps } from './types';
 
 /**
  * Hook to generate default form values for the migration plan creation form
@@ -52,3 +53,10 @@ export const useCreatePlanForm = (props: UseFormProps<CreatePlanFormData>) =>
  * Provides typed access to form context for the migration plan creation form
  */
 export const useCreatePlanFormContext = () => useFormContext<CreatePlanFormData>();
+
+/**
+ * Hook to access the CreatePlanWizard context
+ * @returns Context containing network data for source and target providers
+ */
+export const useCreatePlanWizardContext = (): CreatePlanWizardContextProps =>
+  useContext(CreatePlanWizardContext);

@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react';
+import type { FC } from 'react';
 import { type FieldPath, useFieldArray } from 'react-hook-form';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
@@ -7,15 +7,10 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks';
 import type { CreatePlanFormData, MappingValue } from '../../types';
 
-import {
-  defaultNetMapping,
-  netMapFieldLabels,
-  NetworkMapFieldId,
-  type NetworkMapping,
-} from './constants';
+import { defaultNetMapping, netMapFieldLabels, NetworkMapFieldId } from './constants';
 import SourceNetworkField from './SourceNetworkField';
 import TargetNetworkField from './TargetNetworkField';
-import { getNetworkMapFieldId } from './utils';
+import { getNetworkMapFieldId, validateNetworkMap } from './utils';
 
 type NetworkMapFieldTableProps = {
   targetNetworks: Record<string, MappingValue>;
@@ -35,23 +30,6 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
   const { t } = useForkliftTranslation();
   const { control, setValue } = useCreatePlanFormContext();
 
-  const validate = useCallback(
-    (values: NetworkMapping[]) => {
-      if (
-        !usedSourceNetworks.every((sourceNetwork) =>
-          values.find(
-            (value) => value[NetworkMapFieldId.SourceNetwork].name === sourceNetwork.name,
-          ),
-        )
-      ) {
-        return t('All networks detected on the selected VMs require a mapping.');
-      }
-
-      return true;
-    },
-    [t, usedSourceNetworks],
-  );
-
   const {
     append,
     fields: netMappingFields,
@@ -60,7 +38,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
     control,
     name: NetworkMapFieldId.NetworkMap,
     rules: {
-      validate,
+      validate: (values) => validateNetworkMap(values, usedSourceNetworks),
     },
   });
 

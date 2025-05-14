@@ -1,8 +1,15 @@
 import { toNetworks } from 'src/modules/Providers/views/migrate/reducer/getNetworksUsedBySelectedVMs';
 
 import type { OVirtNicProfile, ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
+import { t } from '@utils/i18n';
 
-import { type CategorizedSourceMappings, type ProviderNetwork, ProviderType } from '../../types';
+import {
+  type CategorizedSourceMappings,
+  type MappingValue,
+  type ProviderNetwork,
+  ProviderType,
+} from '../../types';
+import { getMapResourceLabel } from '../utils';
 
 import { NetworkMapFieldId, type NetworkMapping } from './constants';
 
@@ -24,30 +31,6 @@ const getNetworksUsedByProviderVms = (
   nicProfiles: OVirtNicProfile[],
 ): string[] => {
   return Array.from(new Set(providerVms.flatMap((vm) => toNetworks(vm, nicProfiles))));
-};
-
-/**
- * Creates a human-readable label for network based on provider type
- * Different providers have different naming conventions
- */
-const getNetworkMapLabel = (network: ProviderNetwork): string => {
-  switch (network.providerType) {
-    case 'openshift': {
-      return `${network.namespace}/${network.name}`;
-    }
-    case 'ova':
-    case 'vsphere':
-    case 'openstack': {
-      return network.name;
-    }
-    case 'ovirt': {
-      // Use path for oVirt if available, otherwise return empty string
-      return network.path ?? '';
-    }
-    default: {
-      return '';
-    }
-  }
 };
 
 /**
@@ -82,12 +65,12 @@ export const getSourceNetworkValues = (
       if (hasNetworksUsedByVms) {
         acc.used.push({
           id: sourceNetworkId,
-          name: getNetworkMapLabel(sourceNetwork),
+          name: getMapResourceLabel(sourceNetwork),
         });
       } else {
         acc.other.push({
           id: sourceNetworkId,
-          name: getNetworkMapLabel(sourceNetwork),
+          name: getMapResourceLabel(sourceNetwork),
         });
       }
 
@@ -98,4 +81,27 @@ export const getSourceNetworkValues = (
       used: [],
     },
   );
+};
+
+/**
+ * Validates network mappings by ensuring all networks detected on source VMs
+ * have corresponding mappings in the provided values
+ *
+ * @param values - Array of network mappings configured by user
+ * @param usedSourceNetworks - Array of networks that need to be mapped
+ * @returns Error message string if any network is unmapped, undefined if all are mapped
+ */
+export const validateNetworkMap = (
+  values: NetworkMapping[],
+  usedSourceNetworks: MappingValue[],
+) => {
+  if (
+    !usedSourceNetworks.every((sourceNetwork) =>
+      values.find((value) => value[NetworkMapFieldId.SourceNetwork].name === sourceNetwork.name),
+    )
+  ) {
+    return t('All networks detected on the selected VMs require a mapping.');
+  }
+
+  return undefined;
 };

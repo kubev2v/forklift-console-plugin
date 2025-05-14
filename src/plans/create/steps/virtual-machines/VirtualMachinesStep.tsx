@@ -24,7 +24,7 @@ const VirtualMachinesStep: FC = () => {
         return t('Must select at least 1 VM.');
       }
 
-      return true;
+      return undefined;
     },
     [t],
   );

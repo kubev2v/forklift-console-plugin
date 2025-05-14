@@ -8,8 +8,10 @@ import type {
   ProviderVirtualMachine,
   V1beta1Provider,
 } from '@kubev2v/types';
+import { t } from '@utils/i18n';
 
-import type { CategorizedSourceMappings } from '../../types';
+import type { CategorizedSourceMappings, MappingValue } from '../../types';
+import { getMapResourceLabel } from '../utils';
 
 import { StorageMapFieldId, type StorageMapping } from './constants';
 
@@ -93,30 +95,6 @@ const getStoragesUsedBySelectedVms = (
   );
 
 /**
- * Creates a human-readable label for storage based on provider type
- * Different providers have different naming conventions
- */
-const getStorageMapLabel = (storage: InventoryStorage): string => {
-  switch (storage.providerType) {
-    case 'openshift': {
-      return `${storage.namespace}/${storage.name}`;
-    }
-    case 'ova':
-    case 'vsphere':
-    case 'openstack': {
-      return storage.name;
-    }
-    case 'ovirt': {
-      // Use path for oVirt if available, fall back to name
-      return storage.path ?? storage.name;
-    }
-    default: {
-      return '';
-    }
-  }
-};
-
-/**
  * Creates a map of storage ID to storage object for quick lookups
  */
 const getInventoryStorageMap = (inventoryStorages: InventoryStorage[]) =>
@@ -151,12 +129,12 @@ export const getSourceStorageValues = (
       if (hasStoragesUsedByVms) {
         acc.used.push({
           id: sourceStorageId,
-          name: getStorageMapLabel(sourceStorage),
+          name: getMapResourceLabel(sourceStorage),
         });
       } else {
         acc.other.push({
           id: sourceStorageId,
-          name: getStorageMapLabel(sourceStorage),
+          name: getMapResourceLabel(sourceStorage),
         });
       }
 
@@ -167,4 +145,27 @@ export const getSourceStorageValues = (
       used: [],
     },
   );
+};
+
+/**
+ * Validates storage mappings by ensuring all storage devices detected on source VMs
+ * have corresponding mappings in the provided values
+ *
+ * @param values - Array of storage mappings configured by user
+ * @param usedSourceStorages - Array of storage devices that need to be mapped
+ * @returns Error message string if any storage is unmapped, undefined if all are mapped
+ */
+export const validateStorageMap = (
+  values: StorageMapping[],
+  usedSourceStorages: MappingValue[],
+) => {
+  if (
+    !usedSourceStorages.every((usedStorage) =>
+      values.find((value) => value[StorageMapFieldId.SourceStorage].name === usedStorage.name),
+    )
+  ) {
+    return t('All storages detected on the selected VMs require a mapping.');
+  }
+
+  return undefined;
 };

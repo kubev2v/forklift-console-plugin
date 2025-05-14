@@ -18,9 +18,9 @@ import { k8sCreate, type K8sModel, k8sPatch } from '@openshift-console/dynamic-p
 import { defaultNetMapping, NetworkMapFieldId } from './steps/network-map/constants';
 import {
   type CreateNetworkMapParams,
+  type CreatePlanFormData,
   type CreatePlanParams,
   type CreateStorageMapParams,
-  type PlanSubmissionParams,
   ProviderType,
 } from './types';
 
@@ -245,15 +245,10 @@ const addOwnerRef = async (
  * Handles the plan submission process including creation of network map, storage map,
  * plan, and establishing owner references.
  */
-export const handlePlanSubmission = async ({
-  networkMap,
-  planName,
-  planProject,
-  sourceProvider,
-  storageMap,
-  targetProvider,
-  vms,
-}: PlanSubmissionParams): Promise<void> => {
+export const handlePlanSubmission = async (formData: CreatePlanFormData): Promise<void> => {
+  const { networkMap, planName, planProject, sourceProvider, storageMap, targetProvider, vms } =
+    formData;
+
   // Create network map
   const createdNetworkMap = await createNetworkMap({
     networkMappings: networkMap,
@@ -278,7 +273,7 @@ export const handlePlanSubmission = async ({
     sourceProvider,
     storageMap: createdStorageMap,
     targetProvider,
-    vms,
+    vms: Object.values(vms),
   });
 
   // Add owner references to link resources

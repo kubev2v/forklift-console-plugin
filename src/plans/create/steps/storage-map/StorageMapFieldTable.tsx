@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react';
+import type { FC } from 'react';
 import { type FieldPath, useFieldArray } from 'react-hook-form';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
@@ -11,12 +11,11 @@ import {
   defaultStorageMapping,
   StorageMapFieldId,
   storageMapFieldLabels,
-  type StorageMapping,
   type TargetStorage,
 } from './constants';
 import SourceStorageField from './SourceStorageField';
 import TargetStorageField from './TargetStorageField';
-import { getStorageMapFieldId } from './utils';
+import { getStorageMapFieldId, validateStorageMap } from './utils';
 
 type StorageMapFieldTableProps = {
   targetStorages: TargetStorage[];
@@ -36,21 +35,6 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
   const { t } = useForkliftTranslation();
   const { control, setValue } = useCreatePlanFormContext();
 
-  const validate = useCallback(
-    (values: StorageMapping[]) => {
-      if (
-        !usedSourceStorages.every((usedStorage) =>
-          values.find((value) => value[StorageMapFieldId.SourceStorage].name === usedStorage.name),
-        )
-      ) {
-        return t('All storages detected on the selected VMs require a mapping.');
-      }
-
-      return true;
-    },
-    [t, usedSourceStorages],
-  );
-
   const {
     append,
     fields: netMappingFields,
@@ -59,7 +43,7 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
     control,
     name: StorageMapFieldId.StorageMap,
     rules: {
-      validate,
+      validate: (values) => validateStorageMap(values, usedSourceStorages),
     },
   });
 
