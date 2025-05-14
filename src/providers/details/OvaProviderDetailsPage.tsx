@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import { ProviderPageHeadings } from 'src/modules/Providers/views/details/components/ProviderPageHeadings';
 import { ProviderVirtualMachinesTabPage } from 'src/modules/Providers/views/details/tabs/VirtualMachines/ProviderVirtualMachines';
-import { ProviderYAMLTabPage } from 'src/modules/Providers/views/details/tabs/YAML/ProviderYAML';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-sdk';
 
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
+import ProviderYAMLTabPage from './tabs/YAML/ProviderYAMLTabPage';
 
 const OvaProviderDetailsPage: FC<{
   name: string;
@@ -23,7 +23,7 @@ const OvaProviderDetailsPage: FC<{
       name: t('Details'),
     },
     {
-      component: () => <ProviderYAMLTabPage name={name} namespace={namespace} />,
+      component: () => <ProviderYAMLTabPage provider={provider} />,
       href: 'yaml',
       name: t('YAML'),
     },
