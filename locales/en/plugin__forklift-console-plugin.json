@@ -760,6 +760,8 @@
   "VM(s) with multiple NICs on the same network were detected.": "VM(s) with multiple NICs on the same network were detected.",
   "VM(s) with NICs that are not linked with a NIC profile were detected.": "VM(s) with NICs that are not linked with a NIC profile were detected.",
   "VMs": "VMs",
+  "vmSelected_one": "{{count}} virtual machine selected",
+  "vmSelected_other": "{{count}} virtual machines selected",
   "VMware only: vSphere product name.": "VMware only: vSphere product name.",
   "VMware vSphere UI": "VMware vSphere UI",
   "Volume name template": "Volume name template",

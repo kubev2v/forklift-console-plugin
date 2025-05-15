@@ -50,7 +50,7 @@ const VirtualMachinesReviewSection: FC = () => {
                 setIsModalOpen(true);
               }}
             >
-              {t(`{{total}} virtual machine${vmCount > 1 ? 's' : ''} selected`, { total: vmCount })}
+              {t('vmSelected', { count: vmCount })}
             </Button>
           </DescriptionListDescription>
         </DescriptionListGroup>
