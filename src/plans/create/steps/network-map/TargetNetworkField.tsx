@@ -7,10 +7,11 @@ import { SelectList, SelectOption } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks';
+import type { MappingValue } from '../../types';
 
 type TargetNetworkFieldProps = {
   fieldId: string;
-  targetNetworks: Record<string, string>;
+  targetNetworks: Record<string, MappingValue>;
 };
 
 const TargetNetworkField: FC<TargetNetworkFieldProps> = ({ fieldId, targetNetworks }) => {
@@ -25,16 +26,16 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({ fieldId, targetNetwor
         render={({ field }) => (
           <Select
             id={fieldId}
-            value={field.value}
+            value={(field.value as MappingValue).name}
             onSelect={(_event, value) => {
               field.onChange(value);
             }}
             placeholder={t('Select target network')}
           >
             <SelectList>
-              {Object.entries(targetNetworks)?.map(([targetNetId, targetNetLabel]) => (
-                <SelectOption key={targetNetId} value={targetNetLabel}>
-                  {targetNetLabel}
+              {Object.entries(targetNetworks)?.map(([targetNetId, targetNetwork]) => (
+                <SelectOption key={targetNetId} value={targetNetwork}>
+                  {targetNetwork.name}
                 </SelectOption>
               ))}
             </SelectList>

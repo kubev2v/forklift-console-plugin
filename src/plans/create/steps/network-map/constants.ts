@@ -1,5 +1,7 @@
 import { t } from '@utils/i18n';
 
+import type { MappingValue } from '../../types';
+
 export enum NetworkMapFieldId {
   NetworkMap = 'networkMap',
   SourceNetwork = 'sourceNetwork',
@@ -12,11 +14,11 @@ export const netMapFieldLabels: Partial<Record<NetworkMapFieldId, ReturnType<typ
 };
 
 export type NetworkMapping = {
-  [NetworkMapFieldId.SourceNetwork]: string;
-  [NetworkMapFieldId.TargetNetwork]: string;
+  [NetworkMapFieldId.SourceNetwork]: MappingValue;
+  [NetworkMapFieldId.TargetNetwork]: MappingValue;
 };
 
 export const defaultNetMapping: NetworkMapping = {
-  [NetworkMapFieldId.SourceNetwork]: '',
-  [NetworkMapFieldId.TargetNetwork]: t('Pod network'),
+  [NetworkMapFieldId.SourceNetwork]: { name: '' },
+  [NetworkMapFieldId.TargetNetwork]: { name: t('Pod network') },
 };

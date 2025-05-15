@@ -7,6 +7,7 @@ import { SelectList, SelectOption } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks';
+import type { MappingValue } from '../../types';
 
 import type { TargetStorage } from './constants';
 
@@ -27,7 +28,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
         render={({ field }) => (
           <Select
             id={fieldId}
-            value={field.value}
+            value={(field.value as MappingValue).name}
             onSelect={(_event, value) => {
               field.onChange(value);
             }}

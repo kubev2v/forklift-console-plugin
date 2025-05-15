@@ -3,8 +3,7 @@ import { Controller, useWatch } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import WizardStepContainer from '@components/common/WizardStepContainer';
-import { Form, FormSection, MenuToggleStatus, TextInput } from '@patternfly/react-core';
-import { getInputValidated } from '@utils/form';
+import { Form, FormSection, MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import ProviderSelect from '../../../components/ProviderSelect';
@@ -16,6 +15,7 @@ import { StorageMapFieldId } from '../storage-map/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
+import PlanNameField from './PlanNameField';
 import PlanProjectField from './PlanProjectField';
 import TargetProjectField from './TargetProjectField';
 
@@ -38,24 +38,7 @@ const GeneralInformationStep: FC = () => {
         <FormSection title={t('Plan information')}>
           <p>{t('Name your plan and choose the project you would like it to be created in.')}</p>
 
-          <FormGroupWithErrorText
-            isRequired
-            fieldId={GeneralFormFieldId.PlanName}
-            label={generalFormFieldLabels[GeneralFormFieldId.PlanName]}
-          >
-            <Controller
-              name={GeneralFormFieldId.PlanName}
-              control={control}
-              render={({ field }) => (
-                <TextInput
-                  {...field}
-                  validated={getInputValidated(Boolean(errors[GeneralFormFieldId.PlanName]))}
-                />
-              )}
-              rules={{ required: t('Plan name is required.') }}
-            />
-          </FormGroupWithErrorText>
-
+          <PlanNameField />
           <PlanProjectField />
         </FormSection>
 

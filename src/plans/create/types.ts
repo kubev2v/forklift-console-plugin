@@ -1,11 +1,21 @@
 import type { FieldValues } from 'react-hook-form';
+import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
+import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 
 import type {
+  OpenShiftNetworkAttachmentDefinition,
   OpenshiftVM,
+  OpenstackNetwork,
   OpenstackVM,
+  OvaNetwork,
   OvaVM,
+  OVirtNetwork,
   OVirtVM,
+  V1beta1NetworkMap,
   V1beta1Provider,
+  V1beta1StorageMap,
+  V1NetworkAttachmentDefinition,
+  VSphereNetwork,
   VSphereVM,
 } from '@kubev2v/types';
 
@@ -14,10 +24,21 @@ import type { HooksFormFieldId, MigrationHook } from './steps/hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
 import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
-import type { StorageMapFieldId, StorageMapping } from './steps/storage-map/constants';
+import type {
+  StorageMapFieldId,
+  StorageMapping,
+  TargetStorage,
+} from './steps/storage-map/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
-export type SourceProviderMappingLabels = { used: string[]; other: string[] };
+export type ProviderNetwork =
+  | (Omit<OpenShiftNetworkAttachmentDefinition, 'object'> & {
+      object: V1NetworkAttachmentDefinition | undefined;
+    })
+  | OpenstackNetwork
+  | OVirtNetwork
+  | VSphereNetwork
+  | OvaNetwork;
 
 export enum ProviderType {
   Openshift = 'openshift',
@@ -55,4 +76,48 @@ export type CreatePlanFormData = FieldValues & {
   [OtherSettingsFormFieldId.SharedDisks]: boolean;
   [HooksFormFieldId.PreMigration]: MigrationHook;
   [HooksFormFieldId.PostMigration]: MigrationHook;
+};
+
+export type MappingValue = { id?: string; name: string };
+
+export type CategorizedSourceMappings = {
+  used: MappingValue[];
+  other: MappingValue[];
+};
+
+export type CreateNetworkMapParams = {
+  networkMappings: NetworkMapping[];
+  planProject: string;
+  sourceProvider: V1beta1Provider | undefined;
+  targetProvider: V1beta1Provider | undefined;
+};
+
+export type CreateStorageMapParams = {
+  storageMappings: StorageMapping[];
+  planProject: string;
+  sourceProvider: V1beta1Provider | undefined;
+  targetProvider: V1beta1Provider | undefined;
+};
+
+export type CreatePlanParams = {
+  planName: string;
+  planProject: string;
+  sourceProvider: V1beta1Provider | undefined;
+  targetProvider: V1beta1Provider | undefined;
+  networkMap: V1beta1NetworkMap;
+  storageMap: V1beta1StorageMap;
+  vms: ProviderVirtualMachine[];
+};
+
+type ResourceQueryResult<T> = [T, boolean, Error | null];
+
+export type CreatePlanWizardContextProps = {
+  network: {
+    sources: ResourceQueryResult<InventoryNetwork[]>;
+    targets: ResourceQueryResult<OpenShiftNetworkAttachmentDefinition[]>;
+  };
+  storage: {
+    sources: ResourceQueryResult<InventoryStorage[]>;
+    targets: ResourceQueryResult<TargetStorage[]>;
+  };
 };

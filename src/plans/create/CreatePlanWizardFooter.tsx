@@ -16,9 +16,14 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { PlanWizardStepId } from './constants';
 import { useCreatePlanFormContext } from './hooks';
 
-type CreatePlanWizardFooterProps = Partial<Pick<WizardFooterProps, 'nextButtonText' | 'onNext'>>;
+type CreatePlanWizardFooterProps = Partial<Pick<WizardFooterProps, 'nextButtonText' | 'onNext'>> & {
+  hasError?: boolean;
+  isLoading?: boolean;
+};
 
 const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
+  hasError,
+  isLoading,
   nextButtonText,
   onNext: onSubmit,
 }) => {
@@ -69,11 +74,16 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
       <Button
         variant={ButtonVariant.secondary}
         onClick={goToPrevStep}
-        isDisabled={activeStep.id === PlanWizardStepId.General}
+        isDisabled={hasError ?? (activeStep.id === PlanWizardStepId.General || isLoading)}
       >
         {t('Back')}
       </Button>
-      <Button variant={ButtonVariant.primary} onClick={onNextClick}>
+      <Button
+        variant={ButtonVariant.primary}
+        onClick={onNextClick}
+        isDisabled={hasError ?? isLoading}
+        isLoading={isLoading}
+      >
         {nextButtonText ?? t('Next')}
       </Button>
       {canSkipToReview && (

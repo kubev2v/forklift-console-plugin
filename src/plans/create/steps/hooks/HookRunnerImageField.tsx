@@ -7,7 +7,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks';
 
 import { type HooksFormFieldId, MigrationHookFieldId } from './constants';
-import { getHooksFormFieldLabels, getHooksSubFieldId } from './utils';
+import { getHooksSubFieldId, hooksFormFieldLabels } from './utils';
 
 type HookRunnerImageFieldProps = {
   fieldId: HooksFormFieldId;
@@ -21,7 +21,7 @@ const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
   return (
     <FormGroup
       fieldId={subFieldId}
-      label={getHooksFormFieldLabels(fieldId)[MigrationHookFieldId.HookRunnerImage]}
+      label={hooksFormFieldLabels[MigrationHookFieldId.HookRunnerImage]}
     >
       <Controller
         name={subFieldId}

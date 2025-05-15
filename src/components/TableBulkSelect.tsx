@@ -41,17 +41,19 @@ const TableBulkSelect: FC<TableBulkSelectProps> = ({
   );
 
   return (
-    <BulkSelect
-      canSelectAll
-      selectedCount={selectedIds.length}
-      pageCount={pageDataIds.length}
-      totalCount={dataIds.length}
-      onSelect={onBulkSelect}
-      {...(!isEmpty(pageDataIds) && {
-        pagePartiallySelected,
-        pageSelected,
-      })}
-    />
+    <div className="pf-v5-u-text-nowrap">
+      <BulkSelect
+        canSelectAll
+        selectedCount={selectedIds.length}
+        pageCount={pageDataIds.length}
+        totalCount={dataIds.length}
+        onSelect={onBulkSelect}
+        {...(!isEmpty(pageDataIds) && {
+          pagePartiallySelected,
+          pageSelected,
+        })}
+      />
+    </div>
   );
 };
 

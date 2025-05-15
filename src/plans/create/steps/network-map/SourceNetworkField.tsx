@@ -9,16 +9,21 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks';
+import type { MappingValue } from '../../types';
 
 import { NetworkMapFieldId, type NetworkMapping } from './constants';
 
 type SourceNetworkFieldProps = {
   fieldId: string;
-  usedLabels: string[];
-  otherLabels: string[];
+  usedSourceNetworks: MappingValue[];
+  otherSourceNetworks: MappingValue[];
 };
 
-const SourceNetworkField: FC<SourceNetworkFieldProps> = ({ fieldId, otherLabels, usedLabels }) => {
+const SourceNetworkField: FC<SourceNetworkFieldProps> = ({
+  fieldId,
+  otherSourceNetworks,
+  usedSourceNetworks,
+}) => {
   const { t } = useForkliftTranslation();
   const { control, trigger } = useCreatePlanFormContext();
   const networkMappings = useWatch({ control, name: NetworkMapFieldId.NetworkMap });
@@ -31,7 +36,7 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({ fieldId, otherLabels,
         render={({ field }) => (
           <Select
             id={fieldId}
-            value={field.value}
+            value={(field.value as MappingValue).name}
             onSelect={async (_event, value) => {
               field.onChange(value);
               await trigger(NetworkMapFieldId.NetworkMap);
@@ -40,19 +45,19 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({ fieldId, otherLabels,
           >
             <SelectGroup label={t('Networks used by the selected VMs')}>
               <SelectList>
-                {isEmpty(usedLabels) ? (
+                {isEmpty(usedSourceNetworks) ? (
                   <EmptyCategorySelectOption resourceName="networks" />
                 ) : (
-                  usedLabels.map((usedNetworkLabel) => (
+                  usedSourceNetworks.map((usedNetwork) => (
                     <SelectOption
-                      key={usedNetworkLabel}
-                      value={usedNetworkLabel}
+                      key={usedNetwork.name}
+                      value={usedNetwork}
                       isDisabled={networkMappings.some(
                         (mapping: NetworkMapping) =>
-                          mapping[NetworkMapFieldId.SourceNetwork] === usedNetworkLabel,
+                          mapping[NetworkMapFieldId.SourceNetwork].name === usedNetwork.name,
                       )}
                     >
-                      {usedNetworkLabel}
+                      {usedNetwork.name}
                     </SelectOption>
                   ))
                 )}
@@ -61,19 +66,19 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({ fieldId, otherLabels,
 
             <SelectGroup label={t('Other networks present on the source provider')}>
               <SelectList>
-                {isEmpty(otherLabels) ? (
+                {isEmpty(otherSourceNetworks) ? (
                   <EmptyCategorySelectOption resourceName="networks" />
                 ) : (
-                  otherLabels?.map((otherNetworkLabel) => (
+                  otherSourceNetworks?.map((otherNetwork) => (
                     <SelectOption
-                      key={otherNetworkLabel}
-                      value={otherNetworkLabel}
+                      key={otherNetwork.name}
+                      value={otherNetwork}
                       isDisabled={networkMappings.some(
                         (mapping: NetworkMapping) =>
-                          mapping[NetworkMapFieldId.SourceNetwork] === otherNetworkLabel,
+                          mapping[NetworkMapFieldId.SourceNetwork].name === otherNetwork.name,
                       )}
                     >
-                      {otherNetworkLabel}
+                      {otherNetwork.name}
                     </SelectOption>
                   ))
                 )}

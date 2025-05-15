@@ -24,7 +24,7 @@ const VirtualMachinesStep: FC = () => {
         return t('Must select at least 1 VM.');
       }
 
-      return true;
+      return undefined;
     },
     [t],
   );
@@ -44,7 +44,9 @@ const VirtualMachinesStep: FC = () => {
           name={VmFormFieldId.Vms}
           control={control}
           rules={{ validate }}
-          render={({ field }) => <VirtualMachinesTable field={field} />}
+          render={({ field }) => (
+            <VirtualMachinesTable isSelectable value={field.value} onChange={field.onChange} />
+          )}
         />
       </Stack>
     </WizardStepContainer>
