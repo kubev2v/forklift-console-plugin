@@ -1,4 +1,4 @@
-import type { ChangeEvent, MouseEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import type { SelectOptionObject } from '@patternfly/react-core/deprecated';
 export type EnumGroup = {
@@ -62,15 +62,6 @@ export type GlobalActionToolbarProps<T> = {
   dataOnScreen: T[];
   selectedIds?: string[];
 };
-
-/**
- * @typedef {Object} SelectEventType
- * @description Represents the possible event types that can be used for select actions.
- *
- * @property {MouseEvent<Element, MouseEvent>} MouseEvent - A React-specific mouse event.
- * @property {ChangeEvent<Element>} ChangeEvent - A React-specific change event.
- */
-export type SelectEventType = MouseEvent | ChangeEvent;
 
 /**
  * @typedef {Object} SelectValueType

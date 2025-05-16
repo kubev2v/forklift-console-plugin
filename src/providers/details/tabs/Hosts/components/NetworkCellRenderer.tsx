@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { calculateCidrNotation } from 'src/modules/Providers/views/details/tabs/Hosts/utils/helpers/calculateCidrNotation';
+import { determineHostStatus } from 'src/modules/Providers/views/details/tabs/Hosts/utils/helpers/determineHostStatus';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, HelperText, HelperTextItem, Popover } from '@patternfly/react-core';
@@ -9,10 +11,7 @@ import {
   ExclamationTriangleIcon,
 } from '@patternfly/react-icons';
 
-import { calculateCidrNotation } from '../utils/helpers/calculateCidrNotation';
-import { determineHostStatus } from '../utils/helpers/determineHostStatus';
-
-import type { HostCellProps } from './HostCellProps';
+import type { HostCellProps } from './utils/types';
 
 const statusIcons = {
   error: <ExclamationCircleIcon color="#C9190B" />,
@@ -21,7 +20,7 @@ const statusIcons = {
 };
 
 // Define cell renderer for 'network'
-export const NetworkCellRenderer: FC<HostCellProps> = (props) => {
+const NetworkCellRenderer: FC<HostCellProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const host = props?.data?.host;
@@ -67,3 +66,5 @@ export const NetworkCellRenderer: FC<HostCellProps> = (props) => {
 
   return <TableCell>{cellContent}</TableCell>;
 };
+
+export default NetworkCellRenderer;

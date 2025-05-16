@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import { ProviderPageHeadings } from 'src/modules/Providers/views/details/components/ProviderPageHeadings';
 import { ProviderCredentialsTabPage } from 'src/modules/Providers/views/details/tabs/Credentials/ProviderCredentials';
-import { ProviderHostsTabPage } from 'src/modules/Providers/views/details/tabs/Hosts/ProviderHosts';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-sdk';
 
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
+import ProviderHostsTabPage from './tabs/Hosts/ProviderHostsTabPage';
 import ProviderVirtualMachinesTabPage from './tabs/VirtualMachines/ProviderVirtualMachinesTabPage';
 import ProviderYAMLTabPage from './tabs/YAML/ProviderYAMLTabPage';
 
@@ -40,9 +40,9 @@ const VSphereProviderDetailsPage: FC<{
       name: t('Virtual Machines'),
     },
     {
-      component: () => <ProviderHostsTabPage name={name} namespace={namespace} />,
+      component: () => <ProviderHostsTabPage provider={provider} />,
       href: 'hosts',
-      name: t('Hosts'),
+      name: t('ESXi hosts'),
     },
   ];
 
