@@ -10,7 +10,7 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
  */
 export const patchHostSecretOwner = async (
   secret: IoK8sApiCoreV1Secret,
-  ownerRef: { name: string; uid: string },
+  ownerRef: { name: string | undefined; uid: string | undefined },
 ) => {
   const patchedSecret = await k8sPatch({
     data: [
@@ -21,8 +21,8 @@ export const patchHostSecretOwner = async (
           {
             apiVersion: 'forklift.konveyor.io/v1beta1',
             kind: 'Host',
-            name: ownerRef.name,
-            uid: ownerRef.uid,
+            name: ownerRef?.name,
+            uid: ownerRef?.uid,
           },
         ],
       },
