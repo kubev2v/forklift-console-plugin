@@ -10,7 +10,7 @@ type StatusResult = {
  * @param {V1beta1Host} host - The host object to evaluate.
  * @return {StatusResult} An object with the current status and the associated message.
  */
-export const determineHostStatus = (host: V1beta1Host): StatusResult => {
+export const determineHostStatus = (host: V1beta1Host | undefined): StatusResult => {
   const errorTypes = [
     'ConnectionTestFailed',
     'NotHealthy',
