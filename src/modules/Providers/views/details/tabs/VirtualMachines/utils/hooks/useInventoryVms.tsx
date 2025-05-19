@@ -22,7 +22,7 @@ export const useInventoryVms = (
   providerLoaded: boolean,
   providerLoadError: unknown,
 ): [VmData[], boolean, Error] => {
-  const validProvider = providerLoaded && !providerLoadError && provider;
+  const validProvider = (providerLoaded ?? true) && !providerLoadError && provider;
 
   const inventoryOptions: UseProviderInventoryParams = {
     interval: 180000,

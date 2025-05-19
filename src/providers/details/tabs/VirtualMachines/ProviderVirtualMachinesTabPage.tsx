@@ -1,0 +1,47 @@
+import type { FC } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
+import { useForkliftTranslation } from 'src/utils/i18n';
+
+import { LoadingDots } from '@components/common/LoadingDots/LoadingDots';
+import { ErrorState } from '@components/common/Page/PageStates';
+import type { V1beta1Provider } from '@kubev2v/types';
+
+import HeaderSection from './components/HeaderSection';
+import VirtualMachinesListSection from './components/VirtualMachinesListSection';
+import { PROVIDER_DETAILS_VMS_TAB_FIELDS } from './utils/constants';
+
+type ProviderVirtualMachinesTabPageProps = {
+  provider: V1beta1Provider;
+};
+
+const ProviderVirtualMachinesTabPage: FC<ProviderVirtualMachinesTabPageProps> = ({ provider }) => {
+  const { t } = useForkliftTranslation();
+  const [vmData, vmDataLoading, vmDataError] = useInventoryVms({ provider }, true, false);
+  const { control } = useForm();
+
+  if (vmDataError) {
+    return <ErrorState title={t('Unable to retrieve virtual machines data.')} />;
+  }
+
+  if (vmDataLoading) {
+    return <LoadingDots />;
+  }
+
+  return (
+    <ModalHOC>
+      <HeaderSection provider={provider} vmData={vmData} />
+
+      <Controller
+        name={PROVIDER_DETAILS_VMS_TAB_FIELDS.vms}
+        control={control}
+        render={({ field }) => (
+          <VirtualMachinesListSection field={field} providerData={{ provider, vmData }} />
+        )}
+      />
+    </ModalHOC>
+  );
+};
+
+export default ProviderVirtualMachinesTabPage;

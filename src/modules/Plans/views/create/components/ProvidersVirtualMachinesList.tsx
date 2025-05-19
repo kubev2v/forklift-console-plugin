@@ -1,10 +1,11 @@
 import type { FC } from 'react';
 import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
-import { ProviderVirtualMachinesListWrapper } from 'src/modules/Providers/views/details/tabs/VirtualMachines/ProviderVirtualMachines';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+
+import ProviderVirtualMachinesListWrapper from './ProviderVirtualMachinesListWrapper';
 
 export const ProviderVirtualMachinesList: FC<{
   title: string;
