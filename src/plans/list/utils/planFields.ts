@@ -1,16 +1,30 @@
 import { createElement } from 'react';
-import { migrationTypes } from 'src/modules/Plans/utils/constants/migrationTypes';
-import { planPhases } from 'src/modules/Plans/utils/constants/planPhases';
-import { getMigrationType } from 'src/modules/Plans/utils/helpers/getMigrationType';
-import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
-import type { PlanData } from 'src/modules/Plans/utils/types/PlanData';
+import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
 import DatesComparedHelperText from 'src/plans/details/components/DatesComparedHelperText';
+import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
+import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
 
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import type { V1beta1Plan } from '@kubev2v/types';
 import { t } from '@utils/i18n';
 
 import { planResourceApiJsonPaths, PlanTableResourceId } from './constants';
+
+const planPhases: { id: PlanStatuses; label: string }[] = [
+  { id: PlanStatuses.Archived, label: t('Archived') },
+  { id: PlanStatuses.Canceled, label: t('Canceled') },
+  { id: PlanStatuses.CannotStart, label: t('Cannot start') },
+  { id: PlanStatuses.Completed, label: t('Complete') },
+  { id: PlanStatuses.Executing, label: t('Running') },
+  { id: PlanStatuses.Incomplete, label: t('Incomplete') },
+  { id: PlanStatuses.Paused, label: t('Paused') },
+  { id: PlanStatuses.Ready, label: t('Ready to start') },
+];
+
+const migrationTypes: { id: MigrationTypeValue; label: string }[] = [
+  { id: MigrationTypeValue.Warm, label: t('Warm') },
+  { id: MigrationTypeValue.Cold, label: t('Cold') },
+];
 
 export const planFields: ResourceField[] = [
   {
@@ -102,7 +116,7 @@ export const planFields: ResourceField[] = [
       values: planPhases,
     },
     isVisible: true,
-    jsonPath: (plan) => getPlanPhase({ plan } as PlanData),
+    jsonPath: (plan) => getPlanStatus(plan as V1beta1Plan),
     label: t('Migration status'),
     resourceFieldId: PlanTableResourceId.Phase,
     sortable: true,
@@ -114,7 +128,8 @@ export const planFields: ResourceField[] = [
       values: migrationTypes,
     },
     isVisible: true,
-    jsonPath: (plan) => getMigrationType({ plan } as PlanData),
+    jsonPath: (plan) =>
+      (plan as V1beta1Plan)?.spec?.warm ? MigrationTypeValue.Warm : MigrationTypeValue.Cold,
     label: t('Migration type'),
     resourceFieldId: PlanTableResourceId.MigrationType,
     sortable: true,

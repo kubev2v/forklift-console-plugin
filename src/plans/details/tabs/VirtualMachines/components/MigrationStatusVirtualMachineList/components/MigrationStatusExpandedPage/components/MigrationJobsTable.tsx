@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 
+import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import SectionHeading from '@components/headers/SectionHeading';
 import type { IoK8sApiBatchV1Job } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { JobModelGroupVersionKind } from '@utils/crds/common/models';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
@@ -22,6 +22,7 @@ const MigrationJobsTable: FC<MigrationJobsTableProps> = ({ jobs }) => {
   if (isEmpty(jobs)) {
     return null;
   }
+
   return (
     <>
       <SectionHeading
@@ -33,7 +34,8 @@ const MigrationJobsTable: FC<MigrationJobsTableProps> = ({ jobs }) => {
         <Thead>
           <Tr>
             <Th width={40}>{t('Name')}</Th>
-            <Th>{t('Status')}</Th>
+            <Th width={20}>{t('Description')}</Th>
+            <Th>{t('Completed at')}</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -46,8 +48,12 @@ const MigrationJobsTable: FC<MigrationJobsTableProps> = ({ jobs }) => {
                   namespace={getNamespace(job)}
                 />
               </Td>
+              <Td width={20}>{getJobPhase(job)}</Td>
               <Td>
-                <Status status={getJobPhase(job)}></Status>
+                <ConsoleTimestamp
+                  timestamp={job?.status?.completionTime ?? null}
+                  showGlobalIcon={false}
+                />
               </Td>
             </Tr>
           ))}

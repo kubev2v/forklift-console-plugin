@@ -1,11 +1,12 @@
 import type { FC } from 'react';
-import PlanActionsDropdown from 'src/modules/Plans/actions/PlanActionsDropdown';
-import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import PlanActionsDropdown from 'src/plans/actions/PlanActionsDropdown';
 
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { Level } from '@patternfly/react-core';
+
+import PlanStatusLabel from '../PlanStatus/PlanStatusLabel';
 
 import PlanAlerts from './components/PlanAlerts/PlanAlerts';
 
@@ -14,14 +15,12 @@ type PlanPageHeadingsProps = {
 };
 
 const PlanPageHeadings: FC<PlanPageHeadingsProps> = ({ plan }) => {
-  const planPhase = getPlanPhase({ plan });
-
   return (
     <PageHeadings
       model={PlanModel}
       obj={plan}
       namespace={plan.metadata?.namespace}
-      status={planPhase}
+      status={<PlanStatusLabel plan={plan} />}
       actions={
         <Level hasGutter>
           <ModalHOC>

@@ -47,7 +47,6 @@ KUBEADMIN_PASSWORD=$(cat "$KUBEADMIN_PASSWORD_FILE")
 
 # Export environment variables
 export BRIDGE_BRANDING="openshift"
-export CONSOLE_IMAGE="quay.io/openshift/origin-console:4.18"
 
 # Log in
 echo "🔐 Logging into OpenShift cluster ${CLUSTER_ADDRESS}..."

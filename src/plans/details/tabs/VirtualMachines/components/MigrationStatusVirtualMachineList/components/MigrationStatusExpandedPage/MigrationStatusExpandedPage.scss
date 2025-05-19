@@ -1,5 +1,5 @@
 .migration-status-expanded-page {
   &__resource-list-header {
-    margin: 0 0 0 calc(var(--pf-v5-global--spacer--md) + var(--pf-v5-global--spacer--xs));
+    margin: 0 0 0 var(--pf-v5-global--spacer--lg);
   }
 }

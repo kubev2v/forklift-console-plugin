@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
-import { PROVIDER_TYPES } from 'src/providers/list/utils/constants';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { INITIAL_PAGE } from '@components/page/utils/constants';

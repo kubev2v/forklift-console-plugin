@@ -42,24 +42,24 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
   const [pods = [], podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
     ...watchOptions,
     groupVersionKind: PodModelGroupVersionKind,
-    namespace: getNamespace(plan),
   });
 
   const [jobs = [], jobsLoaded, jobsError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
-    groupVersionKind: JobModelGroupVersionKind,
     ...watchOptions,
+    groupVersionKind: JobModelGroupVersionKind,
+    namespace: getNamespace(plan),
   });
 
   const [pvcs = [], pvcsLoaded, pvcsError] = useK8sWatchResource<
     IoK8sApiCoreV1PersistentVolumeClaim[]
   >({
-    groupVersionKind: PersistentVolumeClaimModelGroupVersionKind,
     ...watchOptions,
+    groupVersionKind: PersistentVolumeClaimModelGroupVersionKind,
   });
 
   const [dvs = [], dvsLoaded, dvsError] = useK8sWatchResource<V1beta1DataVolume[]>({
-    groupVersionKind: DataVolumeModelGroupVersionKind,
     ...watchOptions,
+    groupVersionKind: DataVolumeModelGroupVersionKind,
   });
 
   const virtualMachines = getPlanVirtualMachines(plan);

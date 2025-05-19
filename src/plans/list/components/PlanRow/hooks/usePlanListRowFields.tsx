@@ -62,7 +62,7 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
         namespace={planNamespace}
       />
     ),
-    [PlanTableResourceId.Phase]: <PlanStatus plan={plan} isPlanRow />,
+    [PlanTableResourceId.Phase]: <PlanStatus plan={plan} />,
     [PlanTableResourceId.Source]: (
       <ProviderIconLink
         href={getResourceUrl({

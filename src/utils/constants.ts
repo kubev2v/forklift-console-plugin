@@ -20,9 +20,18 @@ export const taskStatuses = {
   pending: 'Pending',
 };
 
-export const conditionBoolean = {
-  false: 'False',
-  true: 'True',
+export const CONDITION_STATUS = {
+  FALSE: 'False',
+  TRUE: 'True',
+};
+
+export const CATEGORY_TYPES = {
+  CANCELED: 'Canceled',
+  CRITICAL: 'Critical',
+  EXECUTING: 'Executing',
+  FAILED: 'Failed',
+  READY: 'Ready',
+  SUCCEEDED: 'Succeeded',
 };
 
 export const EMPTY_CELL_CONTENT = '-';

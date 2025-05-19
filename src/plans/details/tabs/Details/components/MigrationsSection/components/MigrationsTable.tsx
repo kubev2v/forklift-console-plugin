@@ -1,27 +1,39 @@
 import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
+import {
+  getMigrationVMsStatusCounts,
+  getPlanStatus,
+} from 'src/plans/details/components/PlanStatus/utils/utils';
+import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import HelpText from '@components/HelpText';
-import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@kubev2v/types';
+import {
+  MigrationModelGroupVersionKind,
+  type V1beta1Migration,
+  type V1beta1Plan,
+} from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { Split } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 
-import MigrationProgressLabel from './MigrationProgressLabel';
+import { getMigrationStatusIcon } from './utils/utils';
 
 type MigrationTableProps = {
   migrations: V1beta1Migration[];
+  plan: V1beta1Plan;
 };
 
-const MigrationsTable: FC<MigrationTableProps> = ({ migrations }) => {
+const MigrationsTable: FC<MigrationTableProps> = ({ migrations, plan }) => {
   const { t } = useForkliftTranslation();
 
   if (isEmpty(migrations)) {
     return <HelpText>{t('The plan has not been executed for migration.')}</HelpText>;
   }
 
+  const planStatus = getPlanStatus(plan);
   return (
     <Table>
       <Thead>
@@ -33,26 +45,38 @@ const MigrationsTable: FC<MigrationTableProps> = ({ migrations }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {migrations.map((migration) => (
-          <Tr key={getUID(migration)}>
-            <Td>
-              <ResourceLink
-                groupVersionKind={MigrationModelGroupVersionKind}
-                name={getName(migration)}
-                namespace={getNamespace(migration)}
-              />
-            </Td>
-            <Td>
-              <MigrationProgressLabel migration={migration} />
-            </Td>
-            <Td>
-              <ConsoleTimestamp timestamp={migration?.status?.started} />
-            </Td>
-            <Td>
-              <ConsoleTimestamp timestamp={migration?.status?.completed} />
-            </Td>
-          </Tr>
-        ))}
+        {migrations.map((migration) => {
+          const migrationVMs = migration?.status?.vms;
+          const vmStatuses = getMigrationVMsStatusCounts(
+            migrationVMs ?? [],
+            planStatus,
+            migrationVMs?.length ?? 0,
+          );
+
+          return (
+            <Tr key={getUID(migration)}>
+              <Td>
+                <ResourceLink
+                  groupVersionKind={MigrationModelGroupVersionKind}
+                  name={getName(migration)}
+                  namespace={getNamespace(migration)}
+                />
+              </Td>
+              <Td>
+                <Split hasGutter>
+                  {getMigrationStatusIcon(vmStatuses, migrationVMs?.length)}
+                  <VMStatusIconsRow statuses={vmStatuses} />
+                </Split>
+              </Td>
+              <Td>
+                <ConsoleTimestamp timestamp={migration?.status?.started ?? null} />
+              </Td>
+              <Td>
+                <ConsoleTimestamp timestamp={migration?.status?.completed ?? null} />
+              </Td>
+            </Tr>
+          );
+        })}
       </Tbody>
     </Table>
   );
