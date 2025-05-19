@@ -8,7 +8,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks';
 
 import { type HooksFormFieldId, MigrationHookFieldId } from './constants';
-import { getHooksFormFieldLabels, getHooksSubFieldId } from './utils';
+import { getHooksSubFieldId, hooksFormFieldLabels } from './utils';
 
 type AnsiblePlaybookFieldProps = {
   fieldId: HooksFormFieldId;
@@ -22,7 +22,7 @@ const AnsiblePlaybookField: FC<AnsiblePlaybookFieldProps> = ({ fieldId }) => {
   return (
     <FormGroup
       fieldId={subFieldId}
-      label={getHooksFormFieldLabels(fieldId)[MigrationHookFieldId.AnsiblePlaybook]}
+      label={hooksFormFieldLabels[MigrationHookFieldId.AnsiblePlaybook]}
     >
       <Controller
         name={subFieldId}

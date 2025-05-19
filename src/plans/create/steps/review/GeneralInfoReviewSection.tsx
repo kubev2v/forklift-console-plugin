@@ -1,0 +1,83 @@
+import type { FC } from 'react';
+import { useWatch } from 'react-hook-form';
+
+import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
+import {
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  useWizardContext,
+} from '@patternfly/react-core';
+
+import { planStepNames, PlanWizardStepId } from '../../constants';
+import { useCreatePlanFormContext } from '../../hooks';
+import { GeneralFormFieldId, generalFormFieldLabels } from '../general-information/constants';
+
+const GeneralInfoReviewSection: FC = () => {
+  const { goToStepById } = useWizardContext();
+  const { control } = useCreatePlanFormContext();
+  const [planName, planProject, sourceProvider, targetProvider, targetProject] = useWatch({
+    control,
+    name: [
+      GeneralFormFieldId.PlanName,
+      GeneralFormFieldId.PlanProject,
+      GeneralFormFieldId.SourceProvider,
+      GeneralFormFieldId.TargetProvider,
+      GeneralFormFieldId.TargetProject,
+    ],
+  });
+
+  return (
+    <ExpandableReviewSection
+      title={planStepNames[PlanWizardStepId.General]}
+      onEditClick={() => {
+        goToStepById(PlanWizardStepId.General);
+      }}
+    >
+      <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            {generalFormFieldLabels[GeneralFormFieldId.PlanName]}
+          </DescriptionListTerm>
+
+          <DescriptionListDescription>{planName}</DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            {generalFormFieldLabels[GeneralFormFieldId.PlanProject]}
+          </DescriptionListTerm>
+
+          <DescriptionListDescription>{planProject}</DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            {generalFormFieldLabels[GeneralFormFieldId.SourceProvider]}
+          </DescriptionListTerm>
+
+          <DescriptionListDescription>{sourceProvider?.metadata?.name}</DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            {generalFormFieldLabels[GeneralFormFieldId.TargetProvider]}
+          </DescriptionListTerm>
+
+          <DescriptionListDescription>{targetProvider?.metadata?.name}</DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            {generalFormFieldLabels[GeneralFormFieldId.TargetProject]}
+          </DescriptionListTerm>
+
+          <DescriptionListDescription>{targetProject}</DescriptionListDescription>
+        </DescriptionListGroup>
+      </DescriptionList>
+    </ExpandableReviewSection>
+  );
+};
+
+export default GeneralInfoReviewSection;

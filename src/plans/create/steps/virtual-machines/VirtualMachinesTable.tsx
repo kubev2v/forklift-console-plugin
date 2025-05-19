@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { type ControllerRenderProps, useWatch } from 'react-hook-form';
 import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import { OpenShiftVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/OpenShiftVirtualMachinesList';
@@ -17,31 +17,51 @@ import { GeneralFormFieldId } from '../general-information/constants';
 import type { VmFormFieldId } from './constants';
 
 type VirtualMachinesTableProps = {
-  field: ControllerRenderProps<CreatePlanFormData, VmFormFieldId>;
+  value: Record<string, ProviderVirtualMachine>;
+  onChange?: ControllerRenderProps<CreatePlanFormData, VmFormFieldId>['onChange'];
+  isSelectable?: boolean;
+  showSelectedOnly?: boolean;
 };
 
-const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({ field }) => {
+const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
+  isSelectable,
+  onChange,
+  showSelectedOnly,
+  value,
+}) => {
   const { control } = useCreatePlanFormContext();
   const sourceProvider = useWatch({ control, name: GeneralFormFieldId.SourceProvider });
   const [vmData, vmDataLoading] = useInventoryVms({ provider: sourceProvider }, true, false);
+  const filteredVmData = showSelectedOnly
+    ? vmData?.filter((data) => Boolean(value[data.vm.id]))
+    : vmData;
 
-  const tableProps = {
-    initialSelectedIds: field.value ? Object.keys(field.value) : [],
-    obj: { provider: sourceProvider, vmData, vmDataLoading },
-    onSelect: (selectedVmData: VmData[]) => {
-      const selectedVms = selectedVmData?.reduce(
-        (acc: Record<string, ProviderVirtualMachine>, data) => ({
-          ...acc,
-          [data.vm.id]: data.vm,
-        }),
-        {},
-      );
+  const tableProps = useMemo(
+    () => ({
+      ...(isSelectable && {
+        initialSelectedIds: value ? Object.keys(value) : [],
+        onSelect: (selectedVmData: VmData[]) => {
+          const selectedVms = selectedVmData?.reduce(
+            (acc: Record<string, ProviderVirtualMachine>, data) => ({
+              ...acc,
+              [data.vm.id]: data.vm,
+            }),
+            {},
+          );
 
-      field.onChange(selectedVms);
-    },
-    showActions: false,
-    title: '',
-  };
+          onChange?.(selectedVms);
+        },
+      }),
+      obj: {
+        provider: sourceProvider,
+        vmData: filteredVmData,
+        vmDataLoading,
+      },
+      showActions: false,
+      title: '',
+    }),
+    [isSelectable, value, sourceProvider, filteredVmData, vmDataLoading, onChange],
+  );
 
   switch (sourceProvider?.spec?.type) {
     case ProviderType.Openshift:

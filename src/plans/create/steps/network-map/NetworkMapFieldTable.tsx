@@ -1,26 +1,21 @@
-import { type FC, useCallback } from 'react';
+import type { FC } from 'react';
 import { type FieldPath, useFieldArray } from 'react-hook-form';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks';
-import type { CreatePlanFormData } from '../../types';
+import type { CreatePlanFormData, MappingValue } from '../../types';
 
-import {
-  defaultNetMapping,
-  netMapFieldLabels,
-  NetworkMapFieldId,
-  type NetworkMapping,
-} from './constants';
+import { defaultNetMapping, netMapFieldLabels, NetworkMapFieldId } from './constants';
 import SourceNetworkField from './SourceNetworkField';
 import TargetNetworkField from './TargetNetworkField';
-import { getNetworkMapFieldId } from './utils';
+import { getNetworkMapFieldId, validateNetworkMap } from './utils';
 
 type NetworkMapFieldTableProps = {
-  targetNetworks: Record<string, string>;
-  usedSourceLabels: string[];
-  otherSourceLabels: string[];
+  targetNetworks: Record<string, MappingValue>;
+  usedSourceNetworks: MappingValue[];
+  otherSourceNetworks: MappingValue[];
   isLoading: boolean;
   loadError: Error | null;
 };
@@ -28,27 +23,12 @@ type NetworkMapFieldTableProps = {
 const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
   isLoading,
   loadError,
-  otherSourceLabels,
+  otherSourceNetworks,
   targetNetworks,
-  usedSourceLabels,
+  usedSourceNetworks,
 }) => {
   const { t } = useForkliftTranslation();
   const { control, setValue } = useCreatePlanFormContext();
-
-  const validate = useCallback(
-    (values: NetworkMapping[]) => {
-      if (
-        !usedSourceLabels.every((label) =>
-          values.find((value) => value[NetworkMapFieldId.SourceNetwork] === label),
-        )
-      ) {
-        return t('All networks detected on the selected VMs require a mapping.');
-      }
-
-      return true;
-    },
-    [t, usedSourceLabels],
-  );
 
   const {
     append,
@@ -58,7 +38,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
     control,
     name: NetworkMapFieldId.NetworkMap,
     rules: {
-      validate,
+      validate: (values) => validateNetworkMap(values, usedSourceNetworks),
     },
   });
 
@@ -73,8 +53,8 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
         inputs: [
           <SourceNetworkField
             fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-            usedLabels={usedSourceLabels}
-            otherLabels={otherSourceLabels}
+            usedSourceNetworks={usedSourceNetworks}
+            otherSourceNetworks={otherSourceNetworks}
           />,
           <TargetNetworkField
             fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
@@ -84,13 +64,13 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
       }))}
       addButton={{
         isDisabled:
-          [...usedSourceLabels, ...otherSourceLabels].length === netMappingFields.length ||
+          [...usedSourceNetworks, ...otherSourceNetworks].length === netMappingFields.length ||
           isLoading ||
           Boolean(loadError),
         label: t('Add mapping'),
         onClick: () => {
           append({
-            [NetworkMapFieldId.SourceNetwork]: '',
+            [NetworkMapFieldId.SourceNetwork]: defaultNetMapping[NetworkMapFieldId.SourceNetwork],
             [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
           });
         },
@@ -103,7 +83,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
 
         setValue<FieldPath<CreatePlanFormData>>(
           getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index),
-          '',
+          defaultNetMapping[NetworkMapFieldId.SourceNetwork],
         );
         setValue<FieldPath<CreatePlanFormData>>(
           getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index),
