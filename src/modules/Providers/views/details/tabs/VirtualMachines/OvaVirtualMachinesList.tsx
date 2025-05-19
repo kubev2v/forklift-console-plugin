@@ -1,11 +1,11 @@
 import type { FC } from 'react';
+import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
 import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import { concernFilter } from './utils/filters/concernFilter';
 import { OvaVirtualMachinesCells } from './OvaVirtualMachinesRow';
-import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
 export const ovaVmFieldsMetadataFactory = [
   {
@@ -42,7 +42,7 @@ export const ovaVmFieldsMetadataFactory = [
   },
 ];
 
-export const OvaVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => (
+export const OvaVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = (props) => (
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OvaVirtualMachinesCells}

@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
+import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
 import type { VSphereVM } from '@kubev2v/types';
 import { t } from '@utils/i18n';
@@ -10,7 +11,6 @@ import { concernFilter } from './utils/filters/concernFilter';
 import { vsphereHostFilter } from './utils/filters/VsphereHostFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
-import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
 export const vSphereVmFieldsMetadataFactory = [
@@ -82,7 +82,7 @@ export const vSphereVmFieldsMetadataFactory = [
   },
 ];
 
-export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => {
+export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = (props) => {
   const { obj } = props;
   const [hostsDict, foldersDict] = useVSphereInventoryVms({ provider: obj.provider }, true, null);
   const { vmData } = obj;

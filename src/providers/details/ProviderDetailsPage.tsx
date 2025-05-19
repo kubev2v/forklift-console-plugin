@@ -6,6 +6,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import { PROVIDER_TYPES } from '../utils/constants';
+
 import OpenshiftProviderDetailsPage from './OpenshiftProviderDetailsPage';
 import OpenStackProviderDetailsPage from './OpenStackProviderDetailsPage';
 import OvaProviderDetailsPage from './OvaProviderDetailsPage';
@@ -40,19 +42,19 @@ const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) 
   }
 
   switch (provider?.spec?.type) {
-    case 'openshift':
+    case PROVIDER_TYPES.openshift:
       return (
         <OpenshiftProviderDetailsPage name={name} namespace={namespace!} provider={provider} />
       );
-    case 'openstack':
+    case PROVIDER_TYPES.openstack:
       return (
         <OpenStackProviderDetailsPage name={name} namespace={namespace!} provider={provider} />
       );
-    case 'ovirt':
+    case PROVIDER_TYPES.ovirt:
       return <OVirtProviderDetailsPage name={name} namespace={namespace!} provider={provider} />;
-    case 'vsphere':
+    case PROVIDER_TYPES.vsphere:
       return <VSphereProviderDetailsPage name={name} namespace={namespace!} provider={provider} />;
-    case 'ova':
+    case PROVIDER_TYPES.ova:
       return <OvaProviderDetailsPage name={name} namespace={namespace!} provider={provider} />;
     case undefined:
     default:
