@@ -9,12 +9,10 @@ export const getHooksSubFieldId = (
   subFieldId: MigrationHookFieldId,
 ): HooksSubFieldId => `${fieldId}.${subFieldId}`;
 
-export const getHooksFormFieldLabels = (
-  fieldId: HooksFormFieldId,
-): Partial<Record<MigrationHookFieldId, ReturnType<typeof t>>> => ({
+export const getEnableHookFieldLabel = (fieldId: HooksFormFieldId) =>
+  `Enable ${fieldId === HooksFormFieldId.PreMigration ? 'pre' : 'post'} migration hook`;
+
+export const hooksFormFieldLabels: Partial<Record<MigrationHookFieldId, ReturnType<typeof t>>> = {
   [MigrationHookFieldId.AnsiblePlaybook]: t('Ansible playbook'),
-  [MigrationHookFieldId.EnableHook]: t(
-    `Enable ${fieldId === HooksFormFieldId.PreMigration ? 'pre' : 'post'} migration hook`,
-  ),
   [MigrationHookFieldId.HookRunnerImage]: t('Hook runner image'),
-});
+};

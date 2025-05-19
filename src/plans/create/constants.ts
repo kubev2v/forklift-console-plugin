@@ -1,5 +1,9 @@
+import { createContext } from 'react';
+
 import type { WizardStepType } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
+
+import type { CreatePlanWizardContextProps } from './types';
 
 export enum PlanWizardStepId {
   BasicSetup = 'basic-setup',
@@ -46,3 +50,5 @@ export const firstStep: WizardStepType = {
   name: PlanWizardStepId.General,
   parentId: PlanWizardStepId.BasicSetup,
 };
+
+export const CreatePlanWizardContext = createContext({} as CreatePlanWizardContextProps);

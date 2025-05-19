@@ -53,7 +53,7 @@ export type MetaFilterProps = {
 
 export type GlobalFilters = Record<string, string[]>;
 
-export type ValueMatcher<T = unknown> = {
+export type ValueMatcher<T = never> = {
   filterType: string;
   matchValue: (value: T) => (filter: string) => boolean;
 };
