@@ -6,7 +6,7 @@ import { Checkbox } from '@patternfly/react-core';
 import { useCreatePlanFormContext } from '../../hooks';
 
 import { type HooksFormFieldId, MigrationHookFieldId } from './constants';
-import { getHooksFormFieldLabels, getHooksSubFieldId } from './utils';
+import { getEnableHookFieldLabel, getHooksSubFieldId } from './utils';
 
 type EnableHookCheckboxProps = {
   fieldId: HooksFormFieldId;
@@ -23,7 +23,7 @@ const EnableHookCheckbox: FC<EnableHookCheckboxProps> = ({ fieldId }) => {
       render={({ field }) => (
         <Checkbox
           id={subFieldId}
-          label={getHooksFormFieldLabels(fieldId)[MigrationHookFieldId.EnableHook]}
+          label={getEnableHookFieldLabel(fieldId)}
           isChecked={field.value}
           onChange={(_, value) => {
             field.onChange(value);

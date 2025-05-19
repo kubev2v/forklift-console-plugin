@@ -1,11 +1,10 @@
-// eslint-disable-next-line no-undef
-module.exports = {
+import type { UserConfig } from 'i18next-parser';
+
+const config: UserConfig = {
   createOldCatalogs: false,
   defaultNamespace: 'plugin__forklift-console-plugin',
-  defaultValue(_local, _namespace, key) {
-    // The `useKeysAsDefaultValues` option is deprecated in favor of `defaultValue` option function arguments.
-    // The `key` is used to set default value.
-    return key;
+  defaultValue(_locale, _namespace, key: string | undefined): string {
+    return key ?? '';
   },
   keySeparator: false,
   lexers: {
@@ -18,6 +17,7 @@ module.exports = {
   },
   locales: ['en'],
   namespaceSeparator: '~',
-  reactNamespace: false,
   sort: true,
 };
+
+export default config;
