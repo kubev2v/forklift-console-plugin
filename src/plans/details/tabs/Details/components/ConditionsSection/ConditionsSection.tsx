@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { CRITICAL } from 'src/plans/details/utils/constants';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import HelpText from '@components/HelpText';
@@ -7,7 +6,7 @@ import StatusIcon from '@components/status/StatusIcon';
 import type { V1beta1PlanStatusConditions } from '@kubev2v/types';
 import { Icon, Split, SplitItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { EMPTY_MSG } from '@utils/constants';
+import { CATEGORY_TYPES, EMPTY_MSG } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -40,7 +39,7 @@ const ConditionsSection: FC<ConditionsSectionProps> = ({ conditions }) => {
           <Tr key={type}>
             <Td>
               <Split>
-                {category === CRITICAL && (
+                {category === CATEGORY_TYPES.CRITICAL && (
                   <SplitItem className="pf-u-pr-sm">
                     <Icon size="md">
                       <StatusIcon phase={category} />

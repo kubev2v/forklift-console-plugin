@@ -27,7 +27,7 @@ const SectionHeading: FC<SectionHeadingProps> = ({
 }) => (
   <Text
     component={textComponent}
-    className={`co-section-heading ${className ?? ''}`}
+    className={`pf-v6-c-content--${textComponent} ${className ?? ''}`}
     data-testid={dataTestid}
     id={id}
   >

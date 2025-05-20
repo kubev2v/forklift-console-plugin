@@ -64,7 +64,7 @@ const MigrationPodsTable: FC<MigrationPodsTableProps> = ({ pods }) => {
               </Td>
               <Td>
                 <ConsoleTimestamp
-                  timestamp={pod?.metadata?.creationTimestamp}
+                  timestamp={pod?.metadata?.creationTimestamp ?? null}
                   showGlobalIcon={false}
                 />
               </Td>

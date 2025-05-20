@@ -13,5 +13,3 @@ export const providerTypeIcons = (isDarkTheme: boolean) => ({
   ovirt: redhatLogo,
   vsphere: getVmwareLogo(isDarkTheme),
 });
-
-export const CRITICAL = 'Critical';

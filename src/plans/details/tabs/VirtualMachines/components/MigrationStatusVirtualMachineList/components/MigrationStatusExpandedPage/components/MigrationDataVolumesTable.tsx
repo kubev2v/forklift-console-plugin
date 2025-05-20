@@ -32,7 +32,7 @@ const MigrationDataVolumesTable: FC<MigrationDataVolumesTableProps> = ({ dvs }) 
         <Thead>
           <Tr>
             <Th width={40}>{t('Name')}</Th>
-            <Th>{t('Status')}</Th>
+            <Th>{t('Description')}</Th>
           </Tr>
         </Thead>
         <Tbody>

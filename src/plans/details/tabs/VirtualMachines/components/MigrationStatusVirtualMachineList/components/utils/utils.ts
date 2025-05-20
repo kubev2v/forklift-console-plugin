@@ -5,7 +5,7 @@ import type {
   V1beta1PlanStatusMigrationVmsPipeline,
   V1beta1PlanStatusMigrationVmsPipelineTasks,
 } from '@kubev2v/types';
-import { conditionBoolean, EMPTY_MSG, taskStatuses } from '@utils/constants';
+import { CONDITION_STATUS, EMPTY_MSG, taskStatuses } from '@utils/constants';
 
 import type { DiskTransferMap, TaskCounterMap } from './types';
 
@@ -69,11 +69,11 @@ export const getJobPhase = (job: IoK8sApiBatchV1Job) => {
 
   const conditionFailed = conditions.find(
     (condition) =>
-      condition.type === taskStatuses.failed && condition.status === conditionBoolean.true,
+      condition.type === taskStatuses.failed && condition.status === CONDITION_STATUS.TRUE,
   );
   const conditionComplete = conditions.find(
     (condition) =>
-      condition.type === taskStatuses.completed && condition.status === conditionBoolean.true,
+      condition.type === taskStatuses.completed && condition.status === CONDITION_STATUS.TRUE,
   );
 
   if (conditionFailed) {

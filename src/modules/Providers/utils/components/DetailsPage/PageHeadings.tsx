@@ -1,21 +1,29 @@
 import type { FC, ReactNode } from 'react';
-import { Link } from 'react-router-dom-v5-compat';
 
 import {
   getGroupVersionKindForResource,
   type K8sGroupVersionKind,
   type K8sModel,
-  type K8sResourceCommon,
+  type K8sResourceKind,
   ResourceIcon,
   ResourceStatus,
 } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
-import { Breadcrumb, BreadcrumbItem, Split, SplitItem } from '@patternfly/react-core';
-import { t } from '@utils/i18n';
+import { Split, SplitItem } from '@patternfly/react-core';
 
-import { getResourceUrl } from '../../helpers/getResourceUrl';
+import BreadCrumbs from './BreadCrumb';
 
-import './PageHeadings.style.css';
+import './PageHeadings.scss';
+
+type PageHeadingsProps = {
+  model: K8sModel;
+  namespace?: string;
+  obj?: K8sResourceKind;
+  title?: ReactNode;
+  actions?: ReactNode;
+  status?: string | ReactNode;
+  children?: ReactNode;
+};
 
 export const PageHeadings: FC<PageHeadingsProps> = ({
   actions,
@@ -23,29 +31,32 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
   model,
   namespace,
   obj: data,
-  status: status_,
+  status,
 }) => {
-  const status = status_ ?? data?.status?.phase;
+  const dataStatus = status ?? data?.status?.phase;
   const groupVersionKind = data?.kind && getGroupVersionKindForResource(data);
 
   return (
-    <div className="co-m-nav-title co-m-nav-title--detail forklift-page-headings">
+    <div className="pf-v6-c-page__main-section">
       <BreadCrumbs model={model} namespace={namespace} />
-      <span className="co-m-pane__heading">
-        <h1 className="co-resource-item__resource-name">
+      <span className="co-m-pane__heading co-resource-item">
+        <h1 className="pf-v6-c-content--h1">
           <Split hasGutter>
             <SplitItem>
               <ResourceIcon
-                groupVersionKind={groupVersionKind}
+                groupVersionKind={groupVersionKind as K8sGroupVersionKind}
                 className="co-m-resource-icon--lg"
               />{' '}
               {data?.metadata?.name}
-              {status && (
+              {typeof status === 'string' && (
                 <ResourceStatus additionalClassNames="hidden-xs">
-                  <Status status={status} />
+                  <Status status={dataStatus} />
                 </ResourceStatus>
               )}
             </SplitItem>
+            {status && typeof status !== 'string' && (
+              <SplitItem className="forklift-page-headings__status hidden-xs">{status}</SplitItem>
+            )}
           </Split>
         </h1>
         <Split hasGutter>
@@ -55,65 +66,4 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
       {children}
     </div>
   );
-};
-
-type PageHeadingsProps = {
-  model: K8sModel;
-  namespace?: string;
-  obj?: K8sResourceCommon;
-  title?: ReactNode;
-  actions?: ReactNode;
-  status?: string;
-  children?: ReactNode;
-};
-
-const BreadCrumbs: FC<BreadCrumbsProps> = ({ model, namespace }) => {
-  const breadcrumbs = breadcrumbsForModel(model, namespace);
-
-  return (
-    <Breadcrumb className="co-breadcrumb">
-      {breadcrumbs.map((crumb, i, { length }) => {
-        const isLast = i === length - 1;
-
-        return (
-          <BreadcrumbItem key={crumb.name} isActive={isLast}>
-            {isLast ? (
-              crumb.name
-            ) : (
-              <Link
-                className="pf-c-breadcrumb__link"
-                to={crumb.path}
-                data-test-id={`breadcrumb-link-${i}`}
-              >
-                {crumb.name}
-              </Link>
-            )}
-          </BreadcrumbItem>
-        );
-      })}
-    </Breadcrumb>
-  );
-};
-
-type BreadCrumbsProps = {
-  model: K8sModel;
-  namespace?: string;
-};
-
-const breadcrumbsForModel = (model: K8sModel, namespace: string) => {
-  const groupVersionKind: K8sGroupVersionKind = {
-    group: model.apiGroup,
-    kind: model.kind,
-    version: model.apiVersion,
-  };
-
-  return [
-    {
-      name: model.labelPlural,
-      path: getResourceUrl({ groupVersionKind, namespace }),
-    },
-    {
-      name: t('{{name}} Details', { name: model.label }),
-    },
-  ];
 };

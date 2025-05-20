@@ -103,7 +103,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                 )}
               </Td>
               <Td>
-                <ConsoleTimestamp timestamp={pipe?.started ?? null} showGlobalIcon={false} />
+                <ConsoleTimestamp timestamp={pipe?.completed ?? null} showGlobalIcon={false} />
               </Td>
             </Tr>
           );

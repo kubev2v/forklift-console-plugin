@@ -5,9 +5,9 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import ExpandableSectionHeading from '@components/ExpandableSectionHeading/ExpandableSectionHeading';
 import StatusIcon from '@components/status/StatusIcon';
 import { Divider, PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { CATEGORY_TYPES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
-import { CRITICAL } from '../../utils/constants';
 import type { PlanPageProps } from '../../utils/types';
 
 import ConditionsSection from './components/ConditionsSection/ConditionsSection';
@@ -20,7 +20,7 @@ const PlanDetailsPage: FC<PlanPageProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
 
   const criticalCondition = plan?.status?.conditions?.find(
-    (condition) => condition?.category === CRITICAL,
+    (condition) => condition?.category === CATEGORY_TYPES.CRITICAL,
   );
 
   return (
@@ -54,7 +54,7 @@ const PlanDetailsPage: FC<PlanPageProps> = ({ plan }) => {
             <>
               {t('Conditions')}{' '}
               {!isEmpty(criticalCondition) && (
-                <StatusIcon phase={criticalCondition?.category ?? CRITICAL} />
+                <StatusIcon phase={criticalCondition?.category ?? CATEGORY_TYPES.CRITICAL} />
               )}
             </>
           }

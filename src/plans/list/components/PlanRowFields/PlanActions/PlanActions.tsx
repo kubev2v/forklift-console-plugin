@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import PlanActionsDropdown from 'src/modules/Plans/actions/PlanActionsDropdown';
+import PlanActionsDropdown from 'src/plans/actions/PlanActionsDropdown';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
 

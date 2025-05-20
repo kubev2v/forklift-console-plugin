@@ -88,8 +88,8 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
 
   return (
     <Alert
-      title={`${t('The plan is not ready')} - ${type}`}
-      variant={AlertVariant.danger}
+      title={t('The plan is not ready')}
+      variant={AlertVariant.warning}
       isExpandable={showList}
     >
       <Stack hasGutter>

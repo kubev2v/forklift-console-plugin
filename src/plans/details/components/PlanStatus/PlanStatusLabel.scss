@@ -1,0 +1,20 @@
+.forklift-plan-status {
+  &__grey-label {
+    background: rgba(60, 63, 66, 1);
+    .pf-v5-c-label__content {
+      color: white;
+    }
+  }
+
+  &__dark-label {
+    background: var(--pf-v5-global--palette--black-1000);
+    .pf-v5-c-label__content {
+      color: white;
+    }
+  }
+
+  &__gold-label {
+    background: var(--pf-v5-global--warning-color--100);
+    color: black;
+  }
+}

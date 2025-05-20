@@ -2,7 +2,6 @@ import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
-import { CRITICAL } from 'src/plans/details/utils/constants';
 
 import {
   NetworkMapModelGroupVersionKind,
@@ -12,6 +11,7 @@ import {
   type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { CATEGORY_TYPES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 
 const usePlanAlerts = (plan: V1beta1Plan) => {
@@ -39,7 +39,7 @@ const usePlanAlerts = (plan: V1beta1Plan) => {
   const [sourceNetworks] = useSourceNetworks(sourceProvider);
 
   const criticalCondition = plan?.status?.conditions?.find(
-    (condition) => condition?.category === CRITICAL,
+    (condition) => condition?.category === CATEGORY_TYPES.CRITICAL,
   );
 
   return {
