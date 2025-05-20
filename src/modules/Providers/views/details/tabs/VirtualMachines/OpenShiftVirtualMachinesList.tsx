@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
+import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
 import { t } from '@utils/i18n';
 
@@ -9,7 +10,6 @@ import { getOpenShiftFeatureMap } from './utils/helpers/getOpenShiftFeatureMap';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
-import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
 export const openShiftVmFieldsMetadataFactory = [
   {
@@ -76,7 +76,7 @@ export const openShiftVmFieldsMetadataFactory = [
   },
 ];
 
-export const OpenShiftVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => (
+export const OpenShiftVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = (props) => (
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OpenShiftVirtualMachinesCells}

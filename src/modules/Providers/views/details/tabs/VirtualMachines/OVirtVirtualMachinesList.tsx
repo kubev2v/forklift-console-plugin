@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
+import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
 import { t } from '@utils/i18n';
 
@@ -9,7 +10,6 @@ import { concernFilter } from './utils/filters/concernFilter';
 import { ovirtHostFilter } from './utils/filters/OvirtHostFilter';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
-import type { ProviderVirtualMachinesProps } from './ProviderVirtualMachines';
 
 export const oVirtVmFieldsMetadataFactory = [
   {
@@ -88,7 +88,7 @@ export const oVirtVmFieldsMetadataFactory = [
   },
 ];
 
-export const OVirtVirtualMachinesList: FC<ProviderVirtualMachinesProps> = (props) => (
+export const OVirtVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = (props) => (
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OVirtVirtualMachinesCells}

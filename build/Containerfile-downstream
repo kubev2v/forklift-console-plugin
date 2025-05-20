@@ -1,5 +1,5 @@
 # Builder container
-FROM registry.redhat.io/rhel9/nodejs-18:9.5-1745988698 AS build
+FROM registry.redhat.io/rhel9/nodejs-22:9.6-1747320144 AS build
 
 # VERSION default value should match the forklift-console-plugin package version
 # The VERSION value can be customize during build by using --build-arg:
@@ -7,7 +7,7 @@ FROM registry.redhat.io/rhel9/nodejs-18:9.5-1745988698 AS build
 #      -t quay.io/kubev2v/forklift-console-plugin \
 #      -f ./build/Containerfile \
 #      --build-arg VERSION=1.2.3 .
-ARG VERSION=2.9.0
+
 ENV VERSION=${VERSION}
 
 # Copy app source
@@ -46,10 +46,11 @@ CMD nginx -g "daemon off;"
 LABEL \
         com.redhat.component="mtv-console-plugin-container" \
         version="$VERSION" \
-        name="migration-toolkit-virtualization/mtv-console-plugin-rhel9" \
+        name="${REGISTRY}/mtv-console-plugin-rhel9" \
         license="Apache License 2.0" \
         io.k8s.display-name="Migration Toolkit for Virtualization" \
         io.k8s.description="Migration Toolkit for Virtualization - User Console Plugin Interface" \
         io.openshift.tags="migration,mtv,forklift" \
         summary="Migration Toolkit for Virtualization - User Console Plugin Interface" \
-        maintainer="Migration Toolkit for Virtualization Team <migtoolkit-virt@redhat.com>"
+        maintainer="Migration Toolkit for Virtualization Team <migtoolkit-virt@redhat.com>" \
+        description="Migration Toolkit for Virtualization - User Console Plugin Interface"

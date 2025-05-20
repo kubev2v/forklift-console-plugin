@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import { ProviderPageHeadings } from 'src/modules/Providers/views/details/components/ProviderPageHeadings';
 import { ProviderCredentialsTabPage } from 'src/modules/Providers/views/details/tabs/Credentials/ProviderCredentials';
-import { ProviderVirtualMachinesTabPage } from 'src/modules/Providers/views/details/tabs/VirtualMachines/ProviderVirtualMachines';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-sdk';
 
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
+import ProviderVirtualMachinesTabPage from './tabs/VirtualMachines/ProviderVirtualMachinesTabPage';
 import ProviderYAMLTabPage from './tabs/YAML/ProviderYAMLTabPage';
 
 const OVirtProviderDetailsPage: FC<{
@@ -34,7 +34,7 @@ const OVirtProviderDetailsPage: FC<{
       name: t('Credentials'),
     },
     {
-      component: () => <ProviderVirtualMachinesTabPage name={name} namespace={namespace} />,
+      component: () => <ProviderVirtualMachinesTabPage provider={provider} />,
       href: 'vms',
       name: t('Virtual Machines'),
     },

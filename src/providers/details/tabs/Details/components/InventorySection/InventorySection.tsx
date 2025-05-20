@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -22,15 +23,15 @@ const InventorySection: FC<InventorySectionProps> = ({ data }) => {
   }
 
   switch (provider?.spec?.type) {
-    case 'ovirt':
+    case PROVIDER_TYPES.ovirt:
       return <OvirtInventorySection data={data} />;
-    case 'openshift':
+    case PROVIDER_TYPES.openshift:
       return <OpenshiftInventorySection data={data} />;
-    case 'openstack':
+    case PROVIDER_TYPES.openstack:
       return <OpenstackInventorySection data={data} />;
-    case 'vsphere':
+    case PROVIDER_TYPES.vsphere:
       return <VSphereInventorySection data={data} />;
-    case 'ova':
+    case PROVIDER_TYPES.ova:
       return <OVAInventorySection data={data} />;
     case undefined:
     default:

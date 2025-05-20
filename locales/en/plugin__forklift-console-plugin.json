@@ -719,6 +719,7 @@
   "Type": "Type",
   "Unable to retrieve data": "Unable to retrieve data",
   "Unable to retrieve data.": "Unable to retrieve data.",
+  "Unable to retrieve virtual machines data.": "Unable to retrieve virtual machines data.",
   "Undefined": "Undefined",
   "Unknown": "Unknown",
   "Unknown power state": "Unknown power state",
