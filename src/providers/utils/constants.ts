@@ -17,10 +17,12 @@ export enum ProvidersResourceFieldId {
   RegionCount = 'regionCount',
 }
 
-export enum PROVIDER_TYPES {
-  openshift = 'openshift',
-  openstack = 'openstack',
-  ovirt = 'ovirt',
-  vsphere = 'vsphere',
-  ova = 'ova',
-}
+export const PROVIDER_TYPES = {
+  openshift: 'openshift',
+  openstack: 'openstack',
+  ova: 'ova',
+  ovirt: 'ovirt',
+  vsphere: 'vsphere',
+} as const;
+
+export type ProviderTypes = (typeof PROVIDER_TYPES)[keyof typeof PROVIDER_TYPES];

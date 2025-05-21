@@ -1,6 +1,6 @@
 import { type FC, useMemo } from 'react';
-import { isPlanArchived } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { isPlanArchived } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ToolbarItem } from '@patternfly/react-core';
