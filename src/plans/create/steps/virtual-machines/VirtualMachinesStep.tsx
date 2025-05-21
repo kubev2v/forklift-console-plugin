@@ -9,13 +9,15 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks';
+import { NetworkMapFieldId } from '../network-map/constants';
+import { StorageMapFieldId } from '../storage-map/constants';
 
 import { VmFormFieldId } from './constants';
 import VirtualMachinesTable from './VirtualMachinesTable';
 
 const VirtualMachinesStep: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control, getFieldState } = useCreatePlanFormContext();
+  const { control, getFieldState, unregister } = useCreatePlanFormContext();
   const { error } = getFieldState(VmFormFieldId.Vms);
 
   const validate = useCallback(
@@ -34,7 +36,7 @@ const VirtualMachinesStep: FC = () => {
       <Stack hasGutter>
         <p>
           {t(
-            "Select the virtual machines you want to migrate. To help find the virtual machines you're looking for, try using the filter.",
+            "Select the virtual machines you want to migrate. To help find the virtual machines you're looking for, try using the filters.",
           )}
         </p>
 
@@ -45,7 +47,14 @@ const VirtualMachinesStep: FC = () => {
           control={control}
           rules={{ validate }}
           render={({ field }) => (
-            <VirtualMachinesTable isSelectable value={field.value} onChange={field.onChange} />
+            <VirtualMachinesTable
+              isSelectable
+              value={field.value}
+              onChange={(value) => {
+                field.onChange(value);
+                unregister([NetworkMapFieldId.NetworkMap, StorageMapFieldId.StorageMap]);
+              }}
+            />
           )}
         />
       </Stack>

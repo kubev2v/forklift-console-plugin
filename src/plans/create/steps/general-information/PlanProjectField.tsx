@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Controller, useWatch } from 'react-hook-form';
+import { Controller, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
@@ -49,10 +49,14 @@ const PlanProjectField: FC = () => {
                 field.onChange(value);
 
                 if (sourceProvider) {
-                  setValue(GeneralFormFieldId.SourceProvider, undefined, { shouldValidate: true });
+                  setValue<FieldPath<FieldValues>>(GeneralFormFieldId.SourceProvider, '', {
+                    shouldValidate: true,
+                  });
                 }
                 if (targetProvider) {
-                  setValue(GeneralFormFieldId.TargetProvider, undefined, { shouldValidate: true });
+                  setValue<FieldPath<FieldValues>>(GeneralFormFieldId.TargetProvider, '', {
+                    shouldValidate: true,
+                  });
                 }
                 if (targetProject) {
                   setValue(GeneralFormFieldId.TargetProject, '', { shouldValidate: true });

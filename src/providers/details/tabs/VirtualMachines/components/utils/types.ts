@@ -6,8 +6,9 @@ export type ProviderVirtualMachinesListProps = {
   obj: ProviderData;
   loaded?: boolean;
   loadError?: unknown;
-  onSelect?: (selectedVMs: VmData[]) => void;
+  onSelect?: (selectedVMs: VmData[] | undefined) => void;
   initialSelectedIds?: string[];
   showActions: boolean;
   className?: string;
+  hasCriticalConcernFilter?: boolean;
 };

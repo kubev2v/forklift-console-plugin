@@ -78,6 +78,7 @@ export const AttributeValueFilter = ({
           shouldFocusFirstItemOnOpen={false}
           isScrollable
           popperProps={{
+            appendTo: document.body,
             direction: 'down',
             enableFlip: true,
           }}

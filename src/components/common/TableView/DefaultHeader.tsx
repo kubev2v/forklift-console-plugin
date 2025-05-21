@@ -16,7 +16,7 @@ export const DefaultHeader = <T,>({
 }: TableViewHeaderProps<T>) => {
   return (
     <>
-      {visibleColumns.map(({ label, resourceFieldId, sortable }, columnIndex) => (
+      {visibleColumns.map(({ info, label, resourceFieldId, sortable }, columnIndex) => (
         <Th
           key={resourceFieldId}
           sort={
@@ -28,6 +28,7 @@ export const DefaultHeader = <T,>({
               setActiveSort,
             })
           }
+          info={info}
         >
           {label}
         </Th>

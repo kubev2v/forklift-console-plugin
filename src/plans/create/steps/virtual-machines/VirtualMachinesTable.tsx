@@ -7,6 +7,7 @@ import { OvaVirtualMachinesList } from 'src/modules/Providers/views/details/tabs
 import { OVirtVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/OVirtVirtualMachinesList';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 import { VSphereVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/VSphereVirtualMachinesList';
+import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
 import type { ProviderVirtualMachine } from '@kubev2v/types';
 
@@ -17,30 +18,44 @@ import { GeneralFormFieldId } from '../general-information/constants';
 import type { VmFormFieldId } from './constants';
 
 type VirtualMachinesTableProps = {
-  value: Record<string, ProviderVirtualMachine>;
+  vmData?: VmData[];
+  initialSelectedIds?: string[];
+  value: Record<string, ProviderVirtualMachine> | undefined;
   onChange?: ControllerRenderProps<CreatePlanFormData, VmFormFieldId>['onChange'];
   isSelectable?: boolean;
   showSelectedOnly?: boolean;
+  hasCriticalConcernFilter?: boolean;
 };
 
 const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
+  hasCriticalConcernFilter,
+  initialSelectedIds,
   isSelectable,
   onChange,
   showSelectedOnly,
   value,
+  vmData: customVmData,
 }) => {
   const { control } = useCreatePlanFormContext();
   const sourceProvider = useWatch({ control, name: GeneralFormFieldId.SourceProvider });
-  const [vmData, vmDataLoading] = useInventoryVms({ provider: sourceProvider }, true, false);
-  const filteredVmData = showSelectedOnly
-    ? vmData?.filter((data) => Boolean(value[data.vm.id]))
-    : vmData;
+  const [providerVmData, isVmDataLoading] = useInventoryVms({ provider: sourceProvider });
 
-  const tableProps = useMemo(
+  // Use custom VM data if provided, otherwise use fetched VM data
+  const availableVmData = customVmData ?? providerVmData;
+
+  const displayedVmData = useMemo(
+    () =>
+      showSelectedOnly
+        ? availableVmData?.filter((data) => Boolean(value?.[data.vm.id]))
+        : availableVmData,
+    [availableVmData, showSelectedOnly, value],
+  );
+
+  const tableProps: ProviderVirtualMachinesListProps = useMemo(
     () => ({
       ...(isSelectable && {
-        initialSelectedIds: value ? Object.keys(value) : [],
-        onSelect: (selectedVmData: VmData[]) => {
+        initialSelectedIds: value ? Object.keys(value) : (initialSelectedIds ?? []),
+        onSelect: (selectedVmData: VmData[] | undefined) => {
           const selectedVms = selectedVmData?.reduce(
             (acc: Record<string, ProviderVirtualMachine>, data) => ({
               ...acc,
@@ -52,17 +67,28 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
           onChange?.(selectedVms);
         },
       }),
+      hasCriticalConcernFilter,
       obj: {
         provider: sourceProvider,
-        vmData: filteredVmData,
-        vmDataLoading,
+        vmData: displayedVmData,
+        vmDataLoading: isVmDataLoading,
       },
       showActions: false,
       title: '',
     }),
-    [isSelectable, value, sourceProvider, filteredVmData, vmDataLoading, onChange],
+    [
+      isSelectable,
+      value,
+      initialSelectedIds,
+      hasCriticalConcernFilter,
+      sourceProvider,
+      displayedVmData,
+      isVmDataLoading,
+      onChange,
+    ],
   );
 
+  // Render the appropriate VM list component based on provider type
   switch (sourceProvider?.spec?.type) {
     case ProviderType.Openshift:
       return <OpenShiftVirtualMachinesList {...tableProps} />;
