@@ -8,6 +8,8 @@ FROM registry.redhat.io/rhel9/nodejs-22:9.6-1747320144 AS build
 #      -f ./build/Containerfile \
 #      --build-arg VERSION=1.2.3 .
 
+# Need this as ARG from konflux does not propagate
+ARG VERSION
 ENV VERSION=${VERSION}
 
 # Copy app source
@@ -42,6 +44,8 @@ COPY --from=build /opt/app-root/src/app/dist /opt/app-root/src
 # Run the server
 CMD nginx -g "daemon off;"
 
+ARG VERSION
+ARG REGISTRY
 
 LABEL \
         com.redhat.component="mtv-console-plugin-container" \
