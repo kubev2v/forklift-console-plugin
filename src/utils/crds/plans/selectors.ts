@@ -3,7 +3,12 @@ import type { V1beta1Plan } from '@kubev2v/types';
 export const getPlanDestinationProvider = (plan: V1beta1Plan) =>
   plan?.spec?.provider?.destination ?? {};
 
+export const getPlanDestinationProviderName = (plan: V1beta1Plan) =>
+  getPlanDestinationProvider(plan)?.name;
+
 export const getPlanSourceProvider = (plan: V1beta1Plan) => plan?.spec?.provider?.source ?? {};
+
+export const getPlanSourceProviderName = (plan: V1beta1Plan) => getPlanSourceProvider(plan)?.name;
 
 export const getPlanMigrationStarted = (plan: V1beta1Plan) =>
   plan?.status?.migration?.started ?? '';
@@ -25,7 +30,11 @@ const getPlanStorageMap = (plan: V1beta1Plan) => getPlanMap(plan)?.storage;
 
 export const getPlanStorageMapName = (plan: V1beta1Plan) => getPlanStorageMap(plan)?.name;
 
+export const getPlanStorageMapNamespace = (plan: V1beta1Plan) => getPlanStorageMap(plan)?.namespace;
+
 export const getPlanNetworkMapName = (plan: V1beta1Plan) => getPlanNetworkMap(plan)?.name;
+
+export const getPlanNetworkMapNamespace = (plan: V1beta1Plan) => getPlanNetworkMap(plan)?.namespace;
 
 export const getPlanTransferNetwork = (plan: V1beta1Plan) => plan?.spec?.transferNetwork;
 

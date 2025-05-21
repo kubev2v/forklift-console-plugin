@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
-import { getRootDiskLabelByKey } from 'src/modules/Plans/views/details/components/SettingsSection/modals/EditRootDisk/getRootDiskLabelByKey';
 import { diskOptions } from 'src/plans/details/tabs/Details/components/SettingsSection/components/RootDisk/utils/constants';
+import { getRootDiskLabelByKey } from 'src/plans/details/tabs/Details/components/SettingsSection/components/RootDisk/utils/utils';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
