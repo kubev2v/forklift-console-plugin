@@ -1,10 +1,12 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 
-import type { HostCellProps } from './HostCellProps';
+import type { HostCellProps } from './utils/types';
 
 // Define cell renderer for 'linkSpeed'
-export const LinkSpeedCellRenderer: FC<HostCellProps> = (props: HostCellProps) => {
+const LinkSpeedCellRenderer: FC<HostCellProps> = (props: HostCellProps) => {
   const linkSpeed = props?.data?.networkAdapter?.linkSpeed;
   return <TableCell>{linkSpeed ? `${linkSpeed} Mbps` : ''}</TableCell>;
 };
+
+export default LinkSpeedCellRenderer;

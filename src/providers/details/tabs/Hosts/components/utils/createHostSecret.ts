@@ -1,5 +1,20 @@
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { isEmpty } from '@utils/helpers';
+
+/**
+ * Removes null or empty string values from an object.
+ */
+const cleanObject = (obj: Record<string, string> | undefined) => {
+  const result: Record<string, string> = {};
+  for (const key in obj) {
+    if (!isEmpty(obj[key])) {
+      result[key] = obj[key];
+    }
+  }
+
+  return result;
+};
 
 /**
  * Creates a Kubernetes secret with the given data.
@@ -17,21 +32,4 @@ export const createHostSecret = async (secret: IoK8sApiCoreV1Secret) => {
   });
 
   return createdSecret;
-};
-
-/**
- * Removes null or empty string values from an object.
- *
- * @param {Record<string, any>} obj - The object to clean.
- * @returns {Record<string, any>} A new object with null or empty string values removed.
- */
-const cleanObject = (obj) => {
-  const result = {};
-  for (const key in obj) {
-    if (obj[key] !== null && obj[key] !== '') {
-      result[key] = obj[key];
-    }
-  }
-
-  return result;
 };
