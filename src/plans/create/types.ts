@@ -54,7 +54,7 @@ type VsphereVirtualMachine = VSphereVM & {
 
 type OvaVirtualMachine = Omit<OvaVM, 'changeTrackingEnabled'>;
 
-type ProviderVirtualMachine =
+export type ProviderVirtualMachine =
   | VsphereVirtualMachine
   | OpenshiftVM
   | OVirtVM

@@ -24,6 +24,12 @@ const concernsMatcher: ValueMatcher<Concern[]> = {
     concerns.some(({ category, label }) => category === filter || label === filter),
 };
 
+const criticalConcernsMatcher: ValueMatcher<Concern[]> = {
+  filterType: 'criticalConcerns',
+  matchValue: (concerns) => (filter: string) =>
+    Array.isArray(concerns) && concerns.some(({ label }) => label === filter),
+};
+
 const featuresMatcher: ValueMatcher<Record<string, boolean>> = {
   filterType: 'features',
   matchValue: (features) => (filter: string) => Boolean(features?.[filter]),
@@ -103,10 +109,16 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       userSettings={userSettings}
       extraSupportedFilters={{
         concerns: GroupedEnumFilter,
+        criticalConcerns: EnumFilter,
         features: EnumFilter,
         host: EnumFilter,
       }}
-      extraSupportedMatchers={[concernsMatcher, hostMatcher, featuresMatcher]}
+      extraSupportedMatchers={[
+        criticalConcernsMatcher,
+        concernsMatcher,
+        hostMatcher,
+        featuresMatcher,
+      ]}
       GlobalActionToolbarItems={showActions ? actions : undefined}
       toId={getVmId}
       onSelect={onSelectedIds}

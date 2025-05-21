@@ -308,6 +308,7 @@ const StandardPageInner = <T,>({
     fields: fieldsMetadata,
     userSettings,
   });
+
   const clearAllFilters = () => {
     setSelectedFilters({});
   };
@@ -337,6 +338,13 @@ const StandardPageInner = <T,>({
       );
     }
   }, [sortedData, selectedFilters, fields, supportedMatchers]);
+
+  // Clear all filters on unmount
+  useEffect(() => {
+    return () => {
+      clearAllFilters();
+    };
+  }, []);
 
   const showPagination =
     pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination);

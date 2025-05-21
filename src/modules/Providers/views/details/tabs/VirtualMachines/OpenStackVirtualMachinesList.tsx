@@ -6,8 +6,9 @@ import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
-import { concernFilter } from './utils/filters/concernFilter';
+import { getConcernsResourceField } from './utils/helpers/getConcernsResourceField';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
+import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { OpenStackVirtualMachinesCells } from './OpenStackVirtualMachinesRow';
 
 export const openStackVmFieldsMetadataFactory = [
@@ -23,14 +24,7 @@ export const openStackVmFieldsMetadataFactory = [
     resourceFieldId: 'name',
     sortable: true,
   },
-  {
-    filter: concernFilter(),
-    isVisible: true,
-    jsonPath: '$.vm.concerns',
-    label: t('Concerns'),
-    resourceFieldId: 'concerns',
-    sortable: true,
-  },
+  getConcernsResourceField(),
   {
     filter: {
       placeholderLabel: t('Filter by host'),
@@ -106,11 +100,17 @@ export const openStackVmFieldsMetadataFactory = [
   },
 ];
 
-export const OpenStackVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = (props) => (
+export const OpenStackVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
+  hasCriticalConcernFilter,
+  ...props
+}) => (
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OpenStackVirtualMachinesCells}
-    fieldsMetadata={openStackVmFieldsMetadataFactory}
+    fieldsMetadata={getVmTableResourceFields(
+      openStackVmFieldsMetadataFactory,
+      hasCriticalConcernFilter,
+    )}
     pageId="OpenStackVirtualMachinesList"
   />
 );

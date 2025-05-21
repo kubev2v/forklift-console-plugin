@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 
+import { isEmpty } from '@utils/helpers';
+
 import type { FilterTypeProps } from '../Filter/types';
 import type { FilterDef } from '../utils/types';
 
@@ -31,14 +33,17 @@ export const FilterFromDef = ({
   const selectedFilterValues = useMemo(() => {
     const groupSelectedIds = def.groups?.map((group) => group.groupId);
 
-    if (!resourceFieldId && groupSelectedIds.length > 0) {
-      return Object.entries(selectedFilters).reduce((acc, [selectedId, selectedValues]) => {
-        if (groupSelectedIds.includes(selectedId)) {
-          return acc.length > 0 ? acc.concat(selectedValues) : selectedValues;
-        }
+    if (!resourceFieldId && !isEmpty(groupSelectedIds)) {
+      return Object.entries(selectedFilters).reduce(
+        (acc: string[], [selectedId, selectedValues]) => {
+          if (groupSelectedIds?.includes(selectedId)) {
+            return acc.length > 0 ? acc.concat(selectedValues) : selectedValues;
+          }
 
-        return acc;
-      }, []);
+          return acc;
+        },
+        [],
+      );
     }
 
     return selectedFilters[filterId] ?? [];
@@ -51,7 +56,7 @@ export const FilterFromDef = ({
 
     onFilterUpdate({
       ...selectedFilters,
-      [selectedResourceId || resourceFieldId]: values,
+      [selectedResourceId ?? resourceFieldId]: values,
     });
   };
 
@@ -64,11 +69,11 @@ export const FilterFromDef = ({
       title={def?.fieldLabel ?? label}
       showFilter={showFilter}
       supportedValues={def.values}
-      supportedGroups={def.groups}
+      supportedGroups={def.groups ?? []}
       resolvedLanguage={resolvedLanguage}
       helperText={def.helperText}
       showFilterIcon={def.showFilterIcon}
-      hasMultipleResources={!resourceFieldId && def.groups.length > 0}
+      hasMultipleResources={!resourceFieldId && !isEmpty(def.groups)}
     />
   ) : null;
 };

@@ -19,10 +19,10 @@ import type { VmData } from '../../components/VMCellProps';
  */
 export const useInventoryVms = (
   { provider }: ProviderData,
-  providerLoaded: boolean,
-  providerLoadError: unknown,
-): [VmData[], boolean, Error] => {
-  const validProvider = (providerLoaded ?? true) && !providerLoadError && provider;
+  providerLoaded = true,
+  providerLoadError?: unknown,
+): [VmData[], boolean, Error | null] => {
+  const validProvider = providerLoaded && !providerLoadError ? provider : undefined;
 
   const inventoryOptions: UseProviderInventoryParams = {
     interval: 180000,
@@ -41,7 +41,7 @@ export const useInventoryVms = (
       ? vms.map((vm) => ({
           isProviderLocalOpenshift: isProviderLocalOpenshift(validProvider),
           name: vm.name,
-          namespace: isProviderOpenshift(validProvider) ? (vm as OpenshiftVM).namespace : undefined,
+          namespace: isProviderOpenshift(validProvider) ? (vm as OpenshiftVM).namespace : '',
           vm: {
             ...vm,
             providerType: provider?.spec?.type,

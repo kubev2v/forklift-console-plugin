@@ -199,6 +199,7 @@ export const EnumFilter = ({
         shouldFocusFirstItemOnOpen={false}
         isScrollable
         popperProps={{
+          appendTo: document.body,
           direction: 'down',
           enableFlip: true,
         }}
