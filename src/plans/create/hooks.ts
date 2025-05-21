@@ -8,6 +8,7 @@ import { getDefaultNamespace } from '@utils/namespaces';
 
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import { OtherSettingsFormFieldId } from './steps/other-settings/constants';
+import { VmFormFieldId } from './steps/virtual-machines/constants';
 import { CreatePlanWizardContext } from './constants';
 import type { CreatePlanFormData, CreatePlanWizardContextProps } from './types';
 
@@ -38,6 +39,7 @@ export const useDefaultFormValues = (): Partial<CreatePlanFormData> => {
   return {
     [GeneralFormFieldId.PlanProject]: initialPlanProject,
     [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [{ value: '' }],
+    [VmFormFieldId.Vms]: {},
   };
 };
 

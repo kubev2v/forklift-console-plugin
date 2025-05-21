@@ -191,6 +191,7 @@ export const GroupedEnumFilter = ({
           shouldFocusToggleOnSelect
           shouldFocusFirstItemOnOpen={false}
           popperProps={{
+            appendTo: document.body,
             direction: 'down',
             enableFlip: true,
           }}

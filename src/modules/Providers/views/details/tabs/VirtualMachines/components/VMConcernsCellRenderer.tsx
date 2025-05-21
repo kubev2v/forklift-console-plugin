@@ -4,7 +4,7 @@ import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { Concern } from '@kubev2v/types';
-import { Button, Flex, FlexItem, Label, Popover, Stack, StackItem } from '@patternfly/react-core';
+import { Button, Label, Popover, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 
 import {
   getCategoryColor,
@@ -16,30 +16,21 @@ import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategor
 import type { VMCellProps } from './VMCellProps';
 
 /**
- * Renders a table cell containing concerns grouped by category.
+ * Renders a list of concerns.
  *
- * @param {VMCellProps} props - The properties of the VMConcernsCellRenderer component.
- * @returns {ReactElement} The rendered table cell.
+ * @param {Object} props - The properties of the ConcernList component.
+ * @param {Concern[]} props.concerns - The list of concerns to render.
+ * @returns {ReactElement} The rendered list of concerns.
  */
-export const VMConcernsCellRenderer: FC<VMCellProps> = ({ data }) => {
-  if (data?.vm?.providerType === 'openshift') {
-    return <TableEmptyCell />;
-  }
-
-  const groupedConcerns = groupConcernsByCategory(data?.vm?.concerns);
-
-  return (
-    <TableCell>
-      <Flex spaceItems={{ default: 'spaceItemsNone' }} flexWrap={{ default: 'nowrap' }}>
-        {['Critical', 'Information', 'Warning'].map((category) => (
-          <FlexItem key={category}>
-            <ConcernPopover category={category} concerns={groupedConcerns[category] || []} />
-          </FlexItem>
-        ))}
-      </Flex>
-    </TableCell>
-  );
-};
+const ConcernList: FC<{ concerns: Concern[] }> = ({ concerns }) => (
+  <Stack>
+    {concerns.map((concern) => (
+      <StackItem key={concern.category}>
+        {getCategoryIcon(concern.category)} {concern.label}
+      </StackItem>
+    ))}
+  </Stack>
+);
 
 /**
  * Renders a popover for a specific concern category.
@@ -64,7 +55,7 @@ const ConcernPopover: FC<{
       bodyContent={<ConcernList concerns={concerns} />}
       footerContent={t('Total: {{length}}', { length: concerns.length })}
     >
-      <Button variant="link" className="forklift-page-provider-vm_concern-button">
+      <Button isInline variant="link">
         <Label color={getCategoryColor(category)} icon={getCategoryIcon(category)}>
           {concerns.length}
         </Label>
@@ -74,18 +65,36 @@ const ConcernPopover: FC<{
 };
 
 /**
- * Renders a list of concerns.
+ * Renders a table cell containing concerns grouped by category.
  *
- * @param {Object} props - The properties of the ConcernList component.
- * @param {Concern[]} props.concerns - The list of concerns to render.
- * @returns {ReactElement} The rendered list of concerns.
+ * @param {VMCellProps} props - The properties of the VMConcernsCellRenderer component.
+ * @returns {ReactElement} The rendered table cell.
  */
-const ConcernList: FC<{ concerns: Concern[] }> = ({ concerns }) => (
-  <Stack>
-    {concerns.map((concern) => (
-      <StackItem key={concern.category}>
-        {getCategoryIcon(concern.category)} {concern.label}
-      </StackItem>
-    ))}
-  </Stack>
-);
+export const VMConcernsCellRenderer: FC<VMCellProps> = ({ data }) => {
+  if (data?.vm?.providerType === 'openshift') {
+    return <TableEmptyCell />;
+  }
+
+  const concerns = data?.vm?.concerns;
+  const groupedConcerns = groupConcernsByCategory(concerns);
+
+  return (
+    <TableCell>
+      <Split hasGutter>
+        {['Critical', 'Information', 'Warning'].map((category) => {
+          const hasConcernCategory = concerns.find((concern) => concern.category === category);
+
+          if (hasConcernCategory) {
+            return (
+              <SplitItem key={category}>
+                <ConcernPopover category={category} concerns={groupedConcerns[category] || []} />
+              </SplitItem>
+            );
+          }
+
+          return null;
+        })}
+      </Split>
+    </TableCell>
+  );
+};

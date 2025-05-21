@@ -7,20 +7,19 @@ import { Tr } from '@patternfly/react-table';
 
 import ProviderDataCell from './ProviderDataCell';
 
-const ProviderRow: FC<RowProps<ProviderData>> = ({ resourceData, resourceFields }) => {
-  return (
-    <ModalHOC>
-      <Tr>
-        {resourceFields.map(({ resourceFieldId }) => (
-          <ProviderDataCell
-            resourceFieldId={resourceFieldId}
-            resourceFields={resourceFields}
-            resourceData={resourceData}
-          />
-        ))}
-      </Tr>
-    </ModalHOC>
-  );
-};
+const ProviderRow: FC<RowProps<ProviderData>> = ({ resourceData, resourceFields }) => (
+  <ModalHOC>
+    <Tr>
+      {resourceFields.map(({ resourceFieldId }) => (
+        <ProviderDataCell
+          key={resourceFieldId}
+          resourceFieldId={resourceFieldId}
+          resourceFields={resourceFields}
+          resourceData={resourceData}
+        />
+      ))}
+    </Tr>
+  </ModalHOC>
+);
 
 export default ProviderRow;

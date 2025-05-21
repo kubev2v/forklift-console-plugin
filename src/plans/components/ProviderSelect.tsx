@@ -66,7 +66,7 @@ const ProviderSelect: FC<ProviderSelectProps> = ({
 
   return (
     <Select id={id} value={value} status={status} onSelect={onSelect} placeholder={placeholder}>
-      {isEmpty(providers)
+      {isEmpty(filteredProviders)
         ? (emptyState ?? (
             <EmptyState variant={EmptyStateVariant.xs}>
               <ForkliftTrans>

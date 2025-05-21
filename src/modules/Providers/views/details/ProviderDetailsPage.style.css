@@ -20,10 +20,6 @@
   padding-bottom: var(--pf-global--spacer--lg);
 }
 
-.forklift-page-provider-vm_concern-button {
-  padding: var(--pf-global--spacer--xs);
-}
-
 .forklift-page-provider-field-error-validation {
   color: var(--pf-c-form__helper-text--m-error--Color);
   font-size: small;
