@@ -13,7 +13,6 @@ export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
   PlanCreatePageV2: './plans/create/PlanCreatePage',
   PlanDetailsNav: './plans/details/PlanDetailsNav',
-  PlanDetailsPage: './modules/Plans/views/details/PlanDetailsPage',
   PlansListPage: './plans/list/PlansListPage',
 };
 
@@ -26,28 +25,9 @@ export const extensions: EncodedExtension[] = [
       },
       id: 'plans',
       insertAfter: 'providers',
-      model: {
-        ...PlanModelGroupVersionKind,
-        kind: 'Plan1',
-      },
+      model: PlanModelGroupVersionKind,
       // t('plugin__forklift-console-plugin~Migration plans')
       name: '%plugin__forklift-console-plugin~Migration plans%',
-      perspective: 'admin',
-      section: 'migration',
-    },
-    type: 'console.navigation/resource-ns',
-  } as EncodedExtension<ResourceNSNavItem>,
-  {
-    properties: {
-      dataAttributes: {
-        'data-quickstart-id': 'qs-nav-plans',
-        'data-testid': 'plans-nav-item',
-      },
-      id: 'plans2',
-      insertAfter: 'plans',
-      model: PlanModelGroupVersionKind,
-      // t('plugin__forklift-console-plugin~Migration plans (new)')
-      name: '%plugin__forklift-console-plugin~Migration plans (new)%',
       perspective: 'admin',
       section: 'migration',
     },
@@ -63,19 +43,6 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.page/resource/list',
   } as EncodedExtension<ResourceListPage>,
-
-  {
-    properties: {
-      component: {
-        $codeRef: 'PlanDetailsPage',
-      },
-      model: {
-        ...PlanModelGroupVersionKind,
-        kind: 'Plan1',
-      },
-    },
-    type: 'console.page/resource/details',
-  } as EncodedExtension<ResourceDetailsPage>,
 
   {
     properties: {
