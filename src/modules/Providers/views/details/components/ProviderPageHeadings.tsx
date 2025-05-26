@@ -1,8 +1,9 @@
 import type { FC } from 'react';
-import { ProviderActionsDropdown } from 'src/modules/Providers/actions/ProviderActionsDropdown';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import ProviderActionsDropdown from 'src/providers/actions/ProviderActionsDropdown';
 
 import {
   type ProviderInventory,
@@ -40,7 +41,7 @@ export const ProviderPageHeadings: FC<{ name: string; namespace: string }> = ({
     namespace,
   });
 
-  const data = { inventory, permissions, provider };
+  const data: ProviderData = { inventory, permissions, provider };
   const alerts = [];
 
   const criticalCondition =
@@ -72,7 +73,7 @@ export const ProviderPageHeadings: FC<{ name: string; namespace: string }> = ({
         model={ProviderModel}
         obj={data?.provider}
         namespace={namespace}
-        actions={<ProviderActionsDropdown data={data} fieldId={''} fields={[]} />}
+        actions={<ProviderActionsDropdown data={data} />}
       >
         {alerts && alerts.length > 0 && (
           <PageSection variant="light" className="forklift-page-headings-alerts">
