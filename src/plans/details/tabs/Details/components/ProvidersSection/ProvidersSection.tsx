@@ -4,8 +4,8 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceU
 import { providerTypeIcons } from 'src/plans/details/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import LoadingSuspend from '@components/LoadingSuspend';
 import ProviderIconLink from '@components/ProviderIconLink';
-import Suspend from '@components/Suspend';
 import { ProviderModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
@@ -38,7 +38,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
   const providerIcons = providerTypeIcons(isDarkTheme);
 
   return (
-    <Suspend
+    <LoadingSuspend
       obj={sourceProvider}
       loaded={sourceProviderLoaded && destinationProviderLoaded}
       loadError={sourceProviderLoadError ?? destinationProviderLoadError}
@@ -82,7 +82,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
           crumbs={['spec', 'providers', 'destination']}
         />
       </DescriptionList>
-    </Suspend>
+    </LoadingSuspend>
   );
 };
 

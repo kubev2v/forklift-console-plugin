@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import { LoadingDots } from 'src/components/common/LoadingDots/LoadingDots';
 import { ErrorState } from 'src/components/common/Page/PageStates';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import LoadingSuspend from '@components/LoadingSuspend';
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -38,7 +38,7 @@ const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) 
   }
 
   if (!loaded) {
-    return <LoadingDots />;
+    return <LoadingSuspend />;
   }
 
   switch (provider?.spec?.type) {

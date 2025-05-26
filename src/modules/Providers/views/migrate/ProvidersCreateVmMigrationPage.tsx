@@ -1,6 +1,6 @@
 import type { Dispatch, FC } from 'react';
-import { LoadingDots } from 'src/components/common/LoadingDots/LoadingDots';
 
+import LoadingSuspend from '@components/LoadingSuspend';
 import { Alert } from '@patternfly/react-core';
 
 import { PlansCreateForm } from './components/PlansCreateForm';
@@ -21,7 +21,7 @@ const ProvidersCreateVmMigrationPage: FC<{
   }
 
   if (!isDone(state.flow.initialLoading) && !state.flow.apiError) {
-    return <LoadingDots />;
+    return <LoadingSuspend />;
   }
 
   const FormAlerts = state.flow.apiError && (

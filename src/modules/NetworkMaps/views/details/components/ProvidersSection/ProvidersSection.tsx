@@ -2,7 +2,7 @@ import { type FC, type FormEvent, useEffect, useReducer } from 'react';
 import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import {
   NetworkMapModel,
   ProviderModelGroupVersionKind,
@@ -70,7 +70,7 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
   };
 
   return (
-    <Suspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
+    <LoadingSuspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
       <Flex className="forklift-network-map__details-tab--update-button">
         <FlexItem>
           <Button
@@ -127,7 +127,7 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
           }}
         />
       </DescriptionList>
-    </Suspend>
+    </LoadingSuspend>
   );
 };
 

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import type { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
@@ -35,11 +35,11 @@ const ControllerCard: FC<ControllerCardProps> = ({ limit, obj }) => {
       >
         <CardTitle className="forklift-title">{t('MTV Health')}</CardTitle>
       </CardHeader>
-      <Suspend obj={pods} loaded={loaded} loadError={loadError}>
+      <LoadingSuspend obj={pods} loaded={loaded} loadError={loadError}>
         <CardBody>
           <PodsTable pods={pods} limit={limit} />
         </CardBody>
-      </Suspend>
+      </LoadingSuspend>
     </Card>
   );
 };
