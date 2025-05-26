@@ -1,0 +1,50 @@
+import type { FC } from 'react';
+import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { canDeleteAndPatchPlanMaps } from 'src/modules/Plans/views/details/utils/canDeleteAndPatchPlan';
+import { hasSomeCompleteRunningVMs } from 'src/modules/Plans/views/details/utils/hasSomeCompleteRunningVMs';
+
+import type { V1beta1Plan } from '@kubev2v/types';
+import { Button, ButtonVariant, HelperText, HelperTextItem } from '@patternfly/react-core';
+import { PencilAltIcon } from '@patternfly/react-icons';
+import { useForkliftTranslation } from '@utils/i18n';
+
+import './PlanMappingEditButton.scss';
+
+type PlanMappingEditButtonProps = {
+  plan: V1beta1Plan;
+  onEdit: () => void;
+};
+
+const PlanMappingEditButton: FC<PlanMappingEditButtonProps> = ({ onEdit, plan }) => {
+  const { t } = useForkliftTranslation();
+
+  if (!canDeleteAndPatchPlanMaps(plan)) {
+    return null;
+  }
+
+  const disableEditMappings = hasSomeCompleteRunningVMs(plan) || !isPlanEditable(plan);
+  return (
+    <>
+      <Button
+        variant={ButtonVariant.secondary}
+        icon={<PencilAltIcon />}
+        onClick={onEdit}
+        isDisabled={disableEditMappings}
+        className="forklift-plan-mapping-edit-button"
+      >
+        {t('Edit mappings')}
+      </Button>
+      {disableEditMappings && (
+        <HelperText className="forklift-plan-mapping-edit-button__helper-text">
+          <HelperTextItem variant="indeterminate">
+            {t(
+              'The edit mappings button is disabled if the plan started running and at least one virtual machine was migrated successfully or when the plan status does not enable editing.',
+            )}
+          </HelperTextItem>
+        </HelperText>
+      )}
+    </>
+  );
+};
+
+export default PlanMappingEditButton;

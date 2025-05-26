@@ -183,7 +183,7 @@ const withIdBasedSelection = <T,>({
  *
  * @template T - The type of the items being displayed in the table.
  */
-export type StandardPageWithSelectionProps<T> = {
+type StandardPageWithSelectionProps<T> = {
   toId?: (item: T) => string;
   canSelect?: (item: T) => boolean;
   onSelect?: (selectedIds: string[]) => void;
