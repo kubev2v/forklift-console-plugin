@@ -1,15 +1,13 @@
 import { type FC, useMemo } from 'react';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 
-import Loading from '@components/Loading';
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import {
   ProviderModelGroupVersionKind,
   type ProviderVirtualMachine,
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Bullseye } from '@patternfly/react-core';
 
 import type { PlanPageProps } from '../../utils/types';
 
@@ -43,17 +41,12 @@ const PlanResourcesPage: FC<PlanPageProps> = ({ plan }) => {
 
   const planResourcesTableProps = getPlanResourcesTableProps(planInventory, provider?.spec?.type);
 
-  if (!planResourcesTableProps)
-    return (
-      <Bullseye>
-        <Loading />
-      </Bullseye>
-    );
+  if (!planResourcesTableProps) return <LoadingSuspend />;
 
   return (
-    <Suspend obj={plan} loaded={!inventoryLoading} loadError={inventoryLoadError}>
+    <LoadingSuspend obj={plan} loaded={!inventoryLoading} loadError={inventoryLoadError}>
       <PlanResourcesTable {...planResourcesTableProps} />
-    </Suspend>
+    </LoadingSuspend>
   );
 };
 

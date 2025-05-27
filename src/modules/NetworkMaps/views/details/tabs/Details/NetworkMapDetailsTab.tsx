@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import { NetworkMapModelGroupVersionKind, type V1beta1NetworkMap } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
@@ -29,7 +29,7 @@ export const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, name
   });
 
   return (
-    <Suspend obj={obj} loaded={loaded} loadError={loadError}>
+    <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
       <PageSection variant="light" className="forklift-page-section--details">
         <SectionHeading text={t('NetworkMap details')} />
         <DetailsSection obj={obj} />
@@ -49,6 +49,6 @@ export const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, name
         <SectionHeading text={t('Conditions')} />
         <ConditionsSection conditions={obj?.status?.conditions} />
       </PageSection>
-    </Suspend>
+    </LoadingSuspend>
   );
 };

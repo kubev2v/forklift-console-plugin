@@ -4,7 +4,7 @@ import SectionHeading from 'src/components/headers/SectionHeading';
 import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import { Alert, Divider, PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -50,7 +50,7 @@ const PlanHooksPage: FC<PlanPageProps> = ({ plan }) => {
 
   return (
     <FormProvider {...methods}>
-      <Suspend obj={plan} loaded loadError={null}>
+      <LoadingSuspend obj={plan} loaded loadError={null}>
         <PageSection variant="light">
           <SectionHeading text={t('Hooks')} />
           {warning && (
@@ -74,7 +74,7 @@ const PlanHooksPage: FC<PlanPageProps> = ({ plan }) => {
 
           <HooksCodeEditor type={hookTypes.PostHook} planEditable={isPlanEditable(plan)} />
         </PageSection>
-      </Suspend>
+      </LoadingSuspend>
     </FormProvider>
   );
 };

@@ -1,6 +1,6 @@
 import { type FC, useMemo } from 'react';
 
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import {
   MigrationModelGroupVersionKind,
   type V1beta1Migration,
@@ -32,9 +32,9 @@ const MigrationsSection: FC<MigrationsSectionProps> = ({ plan }) => {
   }, [migrations, plan]);
 
   return (
-    <Suspend obj={planMigrations} loaded={loaded} loadError={loadError}>
+    <LoadingSuspend obj={planMigrations} loaded={loaded} loadError={loadError}>
       <MigrationsTable migrations={planMigrations} plan={plan} />
-    </Suspend>
+    </LoadingSuspend>
   );
 };
 

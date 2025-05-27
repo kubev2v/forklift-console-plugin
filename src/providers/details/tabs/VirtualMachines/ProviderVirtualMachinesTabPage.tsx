@@ -4,8 +4,8 @@ import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { LoadingDots } from '@components/common/LoadingDots/LoadingDots';
 import { ErrorState } from '@components/common/Page/PageStates';
+import LoadingSuspend from '@components/LoadingSuspend';
 import type { V1beta1Provider } from '@kubev2v/types';
 
 import HeaderSection from './components/HeaderSection';
@@ -26,7 +26,7 @@ const ProviderVirtualMachinesTabPage: FC<ProviderVirtualMachinesTabPageProps> = 
   }
 
   if (vmDataLoading) {
-    return <LoadingDots />;
+    return <LoadingSuspend />;
   }
 
   return (

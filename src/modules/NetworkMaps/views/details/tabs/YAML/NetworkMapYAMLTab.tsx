@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import { NetworkMapModelGroupVersionKind, type V1beta1NetworkMap } from '@kubev2v/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -22,9 +22,9 @@ const NetworkMapYAMLTab: FC<NetworkMapYAMLTabProps> = ({ name, namespace }) => {
   });
 
   return (
-    <Suspend obj={obj} loaded={loaded} loadError={loadError}>
+    <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
       <ResourceYAMLEditor header={t('NetworkMap YAML')} initialResource={obj} />
-    </Suspend>
+    </LoadingSuspend>
   );
 };
 

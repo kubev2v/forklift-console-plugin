@@ -9,7 +9,7 @@ import type { Mapping } from 'src/modules/Providers/views/migrate/types';
 import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import {
   NetworkMapModel,
   type OpenShiftNetworkAttachmentDefinition,
@@ -169,7 +169,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   };
 
   return (
-    <Suspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
+    <LoadingSuspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
       <Flex className="forklift-network-map__details-tab--update-button">
         <FlexItem>
           <Button
@@ -220,7 +220,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
           isDisabled={false}
         />
       </DescriptionListDescription>
-    </Suspend>
+    </LoadingSuspend>
   );
 };
 

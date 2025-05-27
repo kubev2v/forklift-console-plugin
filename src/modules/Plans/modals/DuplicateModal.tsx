@@ -8,7 +8,7 @@ import type { Validation } from 'src/modules/Providers/utils/types/Validation';
 import { validateK8sName } from 'src/modules/Providers/utils/validators/common';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import {
   type K8sResourceCommon,
   NetworkMapModel,
@@ -219,7 +219,7 @@ export const DuplicateModal: FC<DuplicateModalProps> = ({ redirectTo, resource, 
       actions={actions}
     >
       {
-        <Suspend
+        <LoadingSuspend
           obj={plans}
           loaded={plansLoaded && networkMapLoaded && storageMapLoaded}
           loadError={plansLoadError || networkMapLoadError || storageMapLoadError}
@@ -264,7 +264,7 @@ export const DuplicateModal: FC<DuplicateModalProps> = ({ redirectTo, resource, 
               Network map: <strong className="co-break-word">{networkMap?.metadata?.name}</strong>
             </p>
           </ForkliftTrans>
-        </Suspend>
+        </LoadingSuspend>
       }
       {alertMessage}
     </Modal>

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import Suspend from '@components/Suspend';
+import LoadingSuspend from '@components/LoadingSuspend';
 import { PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
 import { HorizontalNav, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -23,10 +23,10 @@ const PlanDetailsNav: FC<PlanDetailsNavProps> = ({ name, namespace }) => {
   const pages = usePlanPages(plan);
 
   return (
-    <Suspend obj={plan} loaded={loaded} loadError={loadError}>
+    <LoadingSuspend obj={plan} loaded={loaded} loadError={loadError}>
       <PlanPageHeader plan={plan} />
       <HorizontalNav pages={pages} />
-    </Suspend>
+    </LoadingSuspend>
   );
 };
 
