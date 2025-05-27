@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 
 import type { SelectOptionObject } from '@patternfly/react-core/deprecated';
+import type { ThInfoType } from '@patternfly/react-table/dist/esm/components/Table/base/types';
+
 export type EnumGroup = {
   groupId: string;
   label: string;
@@ -33,12 +35,12 @@ export type FilterDef = {
   // by default missing/empty filters result in positive match (vacuous truth)
   defaultValues?: string[];
   helperText?: string | ReactNode;
-  dynamicFilter?: (items: unknown[]) => Partial<FilterDef>;
+  dynamicFilter?: (items: never[]) => Partial<FilterDef>;
   isHidden?: boolean;
   showFilterIcon?: boolean;
 };
 
-type OpenApiJsonPath = string | ((resourceData: unknown) => unknown);
+type OpenApiJsonPath = string | ((resourceData: never) => unknown);
 
 export type ResourceField = {
   resourceFieldId: string | null;
@@ -54,6 +56,7 @@ export type ResourceField = {
   filter?: FilterDef;
   // if true then the field filters state should persist between sessions
   isPersistent?: boolean;
+  info?: ThInfoType;
   compareFn?: (a: string, b: string, locale: string) => number;
 };
 

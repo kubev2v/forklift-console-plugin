@@ -4,7 +4,8 @@ import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tab
 import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
-import { concernFilter } from './utils/filters/concernFilter';
+import { getConcernsResourceField } from './utils/helpers/getConcernsResourceField';
+import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { OvaVirtualMachinesCells } from './OvaVirtualMachinesRow';
 
 export const ovaVmFieldsMetadataFactory = [
@@ -20,14 +21,7 @@ export const ovaVmFieldsMetadataFactory = [
     resourceFieldId: 'name',
     sortable: true,
   },
-  {
-    filter: concernFilter(),
-    isVisible: true,
-    jsonPath: '$.vm.concerns',
-    label: t('Concerns'),
-    resourceFieldId: 'concerns',
-    sortable: true,
-  },
+  getConcernsResourceField(),
   {
     filter: {
       placeholderLabel: t('Filter by path'),
@@ -42,11 +36,14 @@ export const ovaVmFieldsMetadataFactory = [
   },
 ];
 
-export const OvaVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = (props) => (
+export const OvaVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
+  hasCriticalConcernFilter,
+  ...props
+}) => (
   <ProviderVirtualMachinesList
     {...props}
     cellMapper={OvaVirtualMachinesCells}
-    fieldsMetadata={ovaVmFieldsMetadataFactory}
+    fieldsMetadata={getVmTableResourceFields(ovaVmFieldsMetadataFactory, hasCriticalConcernFilter)}
     pageId="OvaVirtualMachinesList"
   />
 );

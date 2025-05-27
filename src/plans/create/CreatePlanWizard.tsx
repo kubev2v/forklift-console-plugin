@@ -15,6 +15,7 @@ import OtherSettingsStep from './steps/other-settings/OtherSettingsStep';
 import ReviewStep from './steps/review/ReviewStep';
 import StorageMapStep from './steps/storage-map/StorageMapStep';
 import VirtualMachinesStep from './steps/virtual-machines/VirtualMachinesStep';
+import VirtualMachinesStepFooter from './steps/virtual-machines/VirtualMachinesStepFooter';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import CreatePlanWizardContextProvider from './CreatePlanWizardContextProvider';
 import CreatePlanWizardFooter from './CreatePlanWizardFooter';
@@ -96,6 +97,7 @@ const CreatePlanWizard: FC = () => {
               </WizardStep>,
               <WizardStep
                 key={PlanWizardStepId.VirtualMachines}
+                footer={<VirtualMachinesStepFooter />}
                 {...getStepProps(PlanWizardStepId.VirtualMachines)}
               >
                 <VirtualMachinesStep />

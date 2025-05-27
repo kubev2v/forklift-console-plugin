@@ -2,14 +2,15 @@ import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
-import type { VSphereVM } from '@kubev2v/types';
+import type { OVirtHost, VSphereHostInventory, VSphereVM } from '@kubev2v/types';
 import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
-import { concernFilter } from './utils/filters/concernFilter';
 import { vsphereHostFilter } from './utils/filters/VsphereHostFilter';
+import { getConcernsResourceField } from './utils/helpers/getConcernsResourceField';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
+import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
@@ -26,14 +27,7 @@ export const vSphereVmFieldsMetadataFactory = [
     resourceFieldId: 'name',
     sortable: true,
   },
-  {
-    filter: concernFilter(),
-    isVisible: true,
-    jsonPath: '$.vm.concerns',
-    label: t('Concerns'),
-    resourceFieldId: 'concerns',
-    sortable: true,
-  },
+  getConcernsResourceField(),
   {
     filter: vsphereHostFilter(),
     isIdentity: false,
@@ -83,7 +77,7 @@ export const vSphereVmFieldsMetadataFactory = [
 ];
 
 export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = (props) => {
-  const { obj } = props;
+  const { hasCriticalConcernFilter, obj } = props;
   const [hostsDict, foldersDict] = useVSphereInventoryVms({ provider: obj.provider }, true, null);
   const { vmData } = obj;
 
@@ -95,11 +89,11 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = 
    * @returns {Array} An array with updated VM data objects.
    */
   const newVMData = vmData
-    .filter((data) => !(data.vm as VSphereVM).isTemplate)
+    ?.filter((data) => !(data.vm as VSphereVM).isTemplate)
     .map((data) => {
       const vm = data.vm as VSphereVM;
       const folder = foldersDict?.[vm.parent.id];
-      const host = hostsDict?.[vm.host];
+      const host: OVirtHost | VSphereHostInventory = hostsDict?.[vm.host];
 
       return {
         ...data,
@@ -111,10 +105,13 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = 
   return (
     <ProviderVirtualMachinesList
       {...props}
-      obj={{ ...obj, vmData: newVMData }}
       cellMapper={VSphereVirtualMachinesCells}
-      fieldsMetadata={vSphereVmFieldsMetadataFactory}
+      fieldsMetadata={getVmTableResourceFields(
+        vSphereVmFieldsMetadataFactory,
+        hasCriticalConcernFilter,
+      )}
       pageId="VSphereVirtualMachinesList"
+      obj={{ ...obj, vmData: newVMData }}
     />
   );
 };
