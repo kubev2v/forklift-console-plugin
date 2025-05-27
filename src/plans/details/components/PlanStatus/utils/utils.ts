@@ -166,3 +166,19 @@ export const canPlanReStart = (plan: V1beta1Plan) => {
     conditions?.includes(CATEGORY_TYPES.FAILED) ?? conditions?.includes(CATEGORY_TYPES.CANCELED)
   );
 };
+
+export const isPlanSucceeded = (plan: V1beta1Plan) => {
+  const conditions = getConditions(plan);
+
+  return conditions?.includes(CATEGORY_TYPES.SUCCEEDED);
+};
+
+export const isPlanEditable = (plan: V1beta1Plan) => {
+  const status = getPlanStatus(plan);
+  return (
+    status === PlanStatuses.Ready ||
+    status === PlanStatuses.Canceled ||
+    status === PlanStatuses.Incomplete ||
+    status === PlanStatuses.Unknown
+  );
+};

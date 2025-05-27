@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import { PlanCutoverMigrationModal } from 'src/modules/Plans/modals/PlanCutoverMigrationModal';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import {
   isPlanArchived,
   isPlanExecuting,
@@ -20,7 +20,7 @@ const PlanMigrationType: FC<PlanFieldProps> = ({ plan }) => {
   const isWaitingForCutover = isWarm && isPlanExecuting(plan) && !isPlanArchived(plan);
 
   const onClickPlanCutoverMigration = () => {
-    showModal(<PlanCutoverMigrationModal resource={plan} />);
+    showModal(<PlanCutoverMigrationModal plan={plan} />);
   };
 
   if (isWarm) {

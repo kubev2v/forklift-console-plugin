@@ -1,4 +1,3 @@
-import { getPlanPhase } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
@@ -14,9 +13,11 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 
+import { getPlanStatus } from '../../PlanStatus/utils/utils';
+
 const usePlanAlerts = (plan: V1beta1Plan) => {
   const namespace = getNamespace(plan);
-  const planPhase = getPlanPhase({ plan });
+  const status = getPlanStatus(plan);
 
   const [networkMaps, networkMapsLoaded, networkMapsError] = useK8sWatchResource<
     V1beta1NetworkMap[]
@@ -47,9 +48,9 @@ const usePlanAlerts = (plan: V1beta1Plan) => {
     networkMaps,
     networkMapsError,
     networkMapsLoaded,
-    planPhase,
     sourceNetworks,
     sourceStorages,
+    status,
     storageMaps,
   };
 };

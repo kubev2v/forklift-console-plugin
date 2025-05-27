@@ -4,25 +4,30 @@ import {
   type V1beta1Plan,
 } from '@kubev2v/types';
 import { useK8sWatchResource, type WatchK8sResult } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  getCreatedAt,
+  getNamespace,
+  getOwnerReference,
+  getUID,
+} from '@utils/crds/common/selectors';
 
 export const usePlanMigration = (plan: V1beta1Plan): WatchK8sResult<V1beta1Migration> => {
   const [migrations, migrationLoaded, migrationLoadError] = useK8sWatchResource<V1beta1Migration[]>(
     {
       groupVersionKind: MigrationModelGroupVersionKind,
       isList: true,
-      namespace: plan?.metadata?.namespace,
+      namespace: getNamespace(plan),
       namespaced: true,
     },
   );
 
   const planMigrations = (
     migrations && migrationLoaded && !migrationLoadError ? migrations : []
-  ).filter((migration) => migration?.metadata?.ownerReferences?.[0]?.uid === plan?.metadata?.uid);
+  ).filter((migration) => getOwnerReference(migration)?.uid === getUID(plan));
 
   planMigrations?.sort(
-    (a, b) =>
-      new Date(b.metadata.creationTimestamp).getTime() -
-      new Date(a.metadata.creationTimestamp).getTime(),
+    (migA, migB) =>
+      new Date(getCreatedAt(migB) ?? '').getTime() - new Date(getCreatedAt(migA) ?? '').getTime(),
   );
   const [lastMigration] = planMigrations;
 

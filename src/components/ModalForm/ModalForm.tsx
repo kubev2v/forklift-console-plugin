@@ -6,10 +6,12 @@ import {
   Alert,
   AlertVariant,
   Button,
+  type ButtonProps,
   ButtonVariant,
   Modal,
   ModalVariant,
 } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type ModalFormProps = {
@@ -22,9 +24,11 @@ type ModalFormProps = {
   className?: string;
   confirmVariant?: ButtonVariant;
   isDisabled?: boolean;
+  additionalAction?: ButtonProps;
 };
 
 const ModalForm: FC<ModalFormProps> = ({
+  additionalAction,
   cancelLabel,
   children,
   className,
@@ -72,6 +76,11 @@ const ModalForm: FC<ModalFormProps> = ({
         >
           {confirmLabel ?? t('Save')}
         </Button>,
+        !isEmpty(additionalAction) && (
+          <Button key="secondary" {...additionalAction}>
+            {additionalAction?.children}
+          </Button>
+        ),
         <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal}>
           {cancelLabel ?? t('Cancel')}
         </Button>,
@@ -81,8 +90,8 @@ const ModalForm: FC<ModalFormProps> = ({
       {children}
 
       {error && (
-        <Alert title="Error" variant={AlertVariant.danger} isInline>
-          {error}
+        <Alert title={t('Error')} variant={AlertVariant.danger} isInline>
+          {t('{{errorMessage}}', { errorMessage: error })}
         </Alert>
       )}
     </Modal>

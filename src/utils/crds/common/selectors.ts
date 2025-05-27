@@ -12,3 +12,5 @@ export const getOwnerReference = (resource: K8sResourceCommon) =>
   resource?.metadata?.ownerReferences?.[0];
 
 export const getKind = (resource: K8sResourceCommon) => resource?.kind;
+
+export const getApiVersion = (resource: K8sResourceCommon) => resource?.apiVersion;

@@ -1,12 +1,13 @@
 import type { FC } from 'react';
-import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
-import { canDeleteAndPatchPlanMaps } from 'src/modules/Plans/views/details/utils/canDeleteAndPatchPlan';
-import { hasSomeCompleteRunningVMs } from 'src/modules/Plans/views/details/utils/hasSomeCompleteRunningVMs';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { Button, ButtonVariant, HelperText, HelperTextItem } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
+import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
+
+import { canDeleteAndPatchPlanMaps, hasSomeCompleteRunningVMs } from './utils/utils';
 
 import './PlanMappingEditButton.scss';
 
@@ -18,7 +19,7 @@ type PlanMappingEditButtonProps = {
 const PlanMappingEditButton: FC<PlanMappingEditButtonProps> = ({ onEdit, plan }) => {
   const { t } = useForkliftTranslation();
 
-  if (!canDeleteAndPatchPlanMaps(plan)) {
+  if (!canDeleteAndPatchPlanMaps({ name: getName(plan), namespace: getNamespace(plan) })) {
     return null;
   }
 

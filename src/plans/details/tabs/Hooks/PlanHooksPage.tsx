@@ -1,7 +1,7 @@
 import { type FC, useCallback, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';

@@ -1,10 +1,5 @@
-import { type FC, useEffect, useState } from 'react';
+import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { ArchiveModal } from 'src/modules/Plans/modals/ArchiveModal';
-import { DuplicateModal } from 'src/modules/Plans/modals/DuplicateModal';
-import { PlanCutoverMigrationModal } from 'src/modules/Plans/modals/PlanCutoverMigrationModal';
-import { PlanDeleteModal } from 'src/modules/Plans/modals/PlanDeleteModal';
-import { PlanStartMigrationModal } from 'src/modules/Plans/modals/PlanStartMigrationModal';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -24,6 +19,11 @@ import {
   isPlanExecuting,
 } from '../details/components/PlanStatus/utils/utils';
 
+import ArchiveModal from './components/ArchiveModal';
+import PlanCutoverMigrationModal from './components/CutoverModal/PlanCutoverMigrationModal';
+import DuplicateModal from './components/DuplicateModal/DuplicateModal';
+import PlanDeleteModal from './components/PlanDeleteModal';
+import PlanStartMigrationModal from './components/StartPlanModal/PlanStartMigrationModal';
 import { getDuplicateDescription, getEditDescription, startDescription } from './utils/utils';
 
 type PlanActionsDropdownItemsProps = {
@@ -49,37 +49,24 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
   const isArchived = isPlanArchived(plan);
   const buttonStartLabel = canReStart ? t('Restart') : t('Start');
 
-  const [isStartItemEnabled, setIsStartItemEnabled] = useState(canStart);
-
-  useEffect(() => {
-    if (canStart) setIsStartItemEnabled(true);
-  }, [canStart]);
-
   const onClickPlanStart = () => {
-    showModal(
-      <PlanStartMigrationModal
-        resource={plan}
-        model={PlanModel}
-        title={buttonStartLabel}
-        setButtonEnabledOnChange={setIsStartItemEnabled}
-      />,
-    );
+    showModal(<PlanStartMigrationModal plan={plan} title={buttonStartLabel} />);
   };
 
   const onClickPlanCutover = () => {
-    showModal(<PlanCutoverMigrationModal resource={plan} />);
+    showModal(<PlanCutoverMigrationModal plan={plan} />);
   };
 
   const onClickDuplicate = () => {
-    showModal(<DuplicateModal resource={plan} model={PlanModel} />);
+    showModal(<DuplicateModal plan={plan} />);
   };
 
   const onClickArchive = () => {
-    showModal(<ArchiveModal resource={plan} model={PlanModel} />);
+    showModal(<ArchiveModal plan={plan} />);
   };
 
   const onClickPlanDelete = () => {
-    showModal(<PlanDeleteModal resource={plan} model={PlanModel} />);
+    showModal(<PlanDeleteModal plan={plan} />);
   };
 
   return (
@@ -100,7 +87,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
       <DropdownItem
         value={1}
         key="start"
-        isDisabled={!canStart || !isStartItemEnabled}
+        isDisabled={!canStart && !canReStart}
         onClick={onClickPlanStart}
         description={startDescription[planStatus]}
       >

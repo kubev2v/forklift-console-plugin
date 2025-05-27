@@ -13,7 +13,7 @@ import './alerts.style.css';
 
 type ItemIsOwnedAlertProps = {
   owner: OwnerReference;
-  namespace: string;
+  namespace?: string;
 };
 
 export const ItemIsOwnedAlert: FC<ItemIsOwnedAlertProps> = ({ namespace, owner }) => {
