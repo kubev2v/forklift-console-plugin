@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form';
 
 import { Checkbox } from '@patternfly/react-core';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { type HooksFormFieldId, MigrationHookFieldId } from './constants';
 import { getEnableHookFieldLabel, getHooksSubFieldId } from './utils';

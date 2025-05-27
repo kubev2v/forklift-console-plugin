@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, useCallback, useState } from 'react';
+import { type ComponentProps, type FC, useCallback, useRef, useState } from 'react';
 
 import DefaultSelectHeader from '@components/common/TableView/DefaultSelectHeader';
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
@@ -226,6 +226,7 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
     toId,
     ...rest
   } = props;
+  const pageRef = useRef(rest.page);
 
   if (onSelect && (!toId || !selectedIds)) {
     throw new Error('Missing required properties: toId, selectedIds');
@@ -245,8 +246,8 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
   });
 
   return onSelect ? (
-    <EnhancedStandardPage onSelect={onSelect} {...rest} />
+    <EnhancedStandardPage onSelect={onSelect} {...rest} pageRef={pageRef} />
   ) : (
-    <StandardPage {...rest} />
+    <StandardPage {...rest} pageRef={pageRef} />
   );
 };

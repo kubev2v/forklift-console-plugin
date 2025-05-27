@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { useHistory } from 'react-router';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import { useCreateVmMigrationData } from 'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -17,20 +16,15 @@ type PlansAddButtonProps = {
 const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namespace }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
-  const { setData } = useCreateVmMigrationData();
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
-  const plansListURL = getResourceUrl({
-    namespace,
-    namespaced: namespace !== undefined,
-    reference: PlanModelRef,
-  });
-
   const onClick = () => {
-    setData?.({
-      selectedVms: [],
+    const planResourceUrl = getResourceUrl({
+      namespaced: false,
+      reference: PlanModelRef,
     });
-    history.push(`${plansListURL}/~new`);
+
+    history.push(`${planResourceUrl}/~new`);
   };
 
   const button = (

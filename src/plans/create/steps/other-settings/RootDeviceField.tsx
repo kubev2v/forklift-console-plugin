@@ -10,7 +10,7 @@ import { FormGroup, SelectList, SelectOption, Stack, StackItem } from '@patternf
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from './constants';
 

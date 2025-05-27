@@ -6,7 +6,7 @@ import { Form, FormSection } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import AnsiblePlaybookField from './AnsiblePlaybookField';
 import { HooksFormFieldId } from './constants';

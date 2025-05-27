@@ -5,7 +5,7 @@ import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
 import { FormGroup, FormHelperText } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { type HooksFormFieldId, MigrationHookFieldId } from './constants';
 import { getHooksSubFieldId, hooksFormFieldLabels } from './utils';

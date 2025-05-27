@@ -11,7 +11,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { CBT_HELP_LINK, WARM_MIGRATION_HELP_LINK } from '@utils/links';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { ProviderType } from '../../types';
 import { VmFormFieldId } from '../virtual-machines/constants';
 

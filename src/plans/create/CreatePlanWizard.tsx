@@ -1,11 +1,14 @@
 import { type FC, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router';
+import { type Location, useLocation } from 'react-router-dom-v5-compat';
 
 import { Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { useCreatePlanForm } from './hooks/useCreatePlanForm';
+import { useDefaultFormValues } from './hooks/useDefaultFormValues';
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
 import HooksStep from './steps/hooks/HooksStep';
@@ -19,7 +22,7 @@ import VirtualMachinesStepFooter from './steps/virtual-machines/VirtualMachinesS
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import CreatePlanWizardContextProvider from './CreatePlanWizardContextProvider';
 import CreatePlanWizardFooter from './CreatePlanWizardFooter';
-import { useCreatePlanForm, useDefaultFormValues } from './hooks';
+import type { CreatePlanFormData } from './types';
 import { getCreatedPlanPath, handlePlanSubmission, hasWarmMigrationProviderType } from './utils';
 
 import './CreatePlanWizard.style.scss';
@@ -27,11 +30,12 @@ import './CreatePlanWizard.style.scss';
 const CreatePlanWizard: FC = () => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
+  const location: Location<CreatePlanFormData> = useLocation();
   const [currentStep, setCurrentStep] = useState<WizardStepType>(firstStep);
   const [createPlanError, setCreatePlanError] = useState<Error>();
   const [isCreating, setIsCreating] = useState(false);
 
-  const defaultValues = useDefaultFormValues();
+  const defaultValues = useDefaultFormValues(location.state);
   const form = useCreatePlanForm({
     defaultValues,
     mode: 'onChange',

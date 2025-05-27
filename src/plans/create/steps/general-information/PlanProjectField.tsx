@@ -7,7 +7,7 @@ import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSel
 import { MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 

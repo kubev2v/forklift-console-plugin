@@ -11,7 +11,7 @@ import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { OpenStackVirtualMachinesCells } from './OpenStackVirtualMachinesRow';
 
-export const openStackVmFieldsMetadataFactory = [
+const openStackVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),

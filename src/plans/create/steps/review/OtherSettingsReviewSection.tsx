@@ -13,7 +13,7 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { ProviderType } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from '../other-settings/constants';
