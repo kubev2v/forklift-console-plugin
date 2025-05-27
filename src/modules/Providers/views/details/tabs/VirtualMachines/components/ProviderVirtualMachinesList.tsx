@@ -11,6 +11,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import type { GlobalActionToolbarProps, ResourceField } from '@components/common/utils/types';
 import type { Concern } from '@kubev2v/types';
 
+import { CustomFilterType } from '../constants';
 import { getVmId } from '../utils/helpers/vmProps';
 
 import { ConcernsTable } from './ConcernsTable';
@@ -18,25 +19,25 @@ import { MigrationAction } from './MigrationAction';
 import type { VmData } from './VMCellProps';
 
 const concernsMatcher: ValueMatcher<Concern[]> = {
-  filterType: 'concerns',
+  filterType: CustomFilterType.Concerns,
   matchValue: (concerns) => (filter: string) =>
     Array.isArray(concerns) &&
     concerns.some(({ category, label }) => category === filter || label === filter),
 };
 
 const criticalConcernsMatcher: ValueMatcher<Concern[]> = {
-  filterType: 'criticalConcerns',
+  filterType: CustomFilterType.CriticalConcerns,
   matchValue: (concerns) => (filter: string) =>
     Array.isArray(concerns) && concerns.some(({ label }) => label === filter),
 };
 
 const featuresMatcher: ValueMatcher<Record<string, boolean>> = {
-  filterType: 'features',
+  filterType: CustomFilterType.Features,
   matchValue: (features) => (filter: string) => Boolean(features?.[filter]),
 };
 
 const hostMatcher: ValueMatcher<string> = {
-  filterType: 'host',
+  filterType: CustomFilterType.Host,
   matchValue: (value) => (filter: string) => value === filter,
 };
 
@@ -108,10 +109,10 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       title={title ?? t('Virtual Machines')}
       userSettings={userSettings}
       extraSupportedFilters={{
-        concerns: GroupedEnumFilter,
-        criticalConcerns: EnumFilter,
-        features: EnumFilter,
-        host: EnumFilter,
+        [CustomFilterType.Concerns]: GroupedEnumFilter,
+        [CustomFilterType.CriticalConcerns]: EnumFilter,
+        [CustomFilterType.Features]: EnumFilter,
+        [CustomFilterType.Host]: EnumFilter,
       }}
       extraSupportedMatchers={[
         criticalConcernsMatcher,

@@ -2,6 +2,8 @@ import { criticalConcernTableField } from 'src/plans/create/steps/virtual-machin
 
 import type { ResourceField } from '@components/common/utils/types';
 
+import { CustomFilterType } from '../../constants';
+
 /**
  * Arranges fields array with critical concern at the beginning when enabled
  */
@@ -10,7 +12,7 @@ export const getVmTableResourceFields = (
   hasCriticalFilter?: boolean,
 ): ResourceField[] => {
   const updatedFields = fields.map((resourceField) => {
-    if (resourceField.filter?.type === 'concerns' && hasCriticalFilter) {
+    if (resourceField.filter?.type === CustomFilterType.Concerns && hasCriticalFilter) {
       return {
         ...resourceField,
         filter: {

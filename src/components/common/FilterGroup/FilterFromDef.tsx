@@ -37,7 +37,7 @@ export const FilterFromDef = ({
       return Object.entries(selectedFilters).reduce(
         (acc: string[], [selectedId, selectedValues]) => {
           if (groupSelectedIds?.includes(selectedId)) {
-            return acc.length > 0 ? acc.concat(selectedValues) : selectedValues;
+            return isEmpty(acc) ? selectedValues : acc.concat(selectedValues);
           }
 
           return acc;

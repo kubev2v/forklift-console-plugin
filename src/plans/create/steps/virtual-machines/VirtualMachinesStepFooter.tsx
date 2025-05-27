@@ -18,7 +18,7 @@ import type { ProviderVirtualMachine } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 
 import { VmFormFieldId } from './constants';
-import { hasCriticalConcern } from './utils';
+import { getVmsWithCriticalConcerns, hasCriticalConcern } from './utils';
 import VirtualMachinesTable from './VirtualMachinesTable';
 
 const VirtualMachinesStepFooter: FC = () => {
@@ -32,14 +32,7 @@ const VirtualMachinesStepFooter: FC = () => {
     name: [GeneralFormFieldId.SourceProvider, VmFormFieldId.Vms],
   });
   const [vmInventoryData] = useInventoryVms({ provider: sourceProvider });
-
-  const vmsWithCriticalIssues = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(selectedVms ?? {}).filter(([_, vm]) => hasCriticalConcern(vm)),
-      ),
-    [selectedVms],
-  );
+  const vmsWithCriticalIssues = getVmsWithCriticalConcerns(selectedVms);
 
   const pendingVms = useMemo(
     () =>
@@ -84,9 +77,10 @@ const VirtualMachinesStepFooter: FC = () => {
 
       if (isEmpty(vms)) {
         await trigger(VmFormFieldId.Vms);
-      } else {
-        await goToNextStep();
+        return;
       }
+
+      await goToNextStep();
     },
     [closeModal, goToNextStep, setValue, trigger],
   );

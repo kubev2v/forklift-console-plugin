@@ -6,6 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import type { Concern } from '@kubev2v/types';
 import { Button, Label, Popover, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 
+import { ConcernCategory } from '../constants';
 import {
   getCategoryColor,
   getCategoryIcon,
@@ -81,7 +82,7 @@ export const VMConcernsCellRenderer: FC<VMCellProps> = ({ data }) => {
   return (
     <TableCell>
       <Split hasGutter>
-        {['Critical', 'Information', 'Warning'].map((category) => {
+        {Object.values(ConcernCategory).map((category) => {
           const hasConcernCategory = concerns.find((concern) => concern.category === category);
 
           if (hasConcernCategory) {
