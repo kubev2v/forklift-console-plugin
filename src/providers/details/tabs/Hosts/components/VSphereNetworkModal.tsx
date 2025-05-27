@@ -4,7 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
-import { Form, ModalVariant } from '@patternfly/react-core';
+import { Form, ModalVariant, Stack } from '@patternfly/react-core';
 
 import { VSphereEndpointType } from './utils/constants';
 import { getSelectedInventoryHostNetworkTriples } from './utils/getSelectedInventoryHostNetworkTriples';
@@ -64,31 +64,33 @@ const VSphereNetworkModal: FC<VSphereNetworkModalProps> = ({ data, provider, sel
       onConfirm={handleSave}
       isDisabled={shouldDisableSave}
     >
-      <div className="forklift-edit-modal-body">
-        {t(
-          'You can select a migration network for a source provider to reduce risk to the source environment and to improve performance.',
-        )}
-      </div>
+      <Stack hasGutter>
+        <div className="forklift-edit-modal-body">
+          {t(
+            'You can select a migration network for a source provider to reduce risk to the source environment and to improve performance.',
+          )}
+        </div>
 
-      <div className="forklift-edit-modal-body">
-        <strong>{t('{{selectedLength}} hosts selected.', { selectedLength })}</strong>
-      </div>
+        <div className="forklift-edit-modal-body">
+          <strong>{t('{{selectedLength}} hosts selected.', { selectedLength })}</strong>
+        </div>
 
-      <Form>
-        <HostsNetworksSelect
-          data={data}
-          selectedIds={selectedIds}
-          value={network}
-          onChange={setNetwork}
-        />
+        <Form>
+          <HostsNetworksSelect
+            data={data}
+            selectedIds={selectedIds}
+            value={network}
+            onChange={setNetwork}
+          />
 
-        {endpointType !== VSphereEndpointType.ESXi.valueOf() && (
-          <>
-            <HostsNetworksSetUserName username={username} setUsername={setUsername} />
-            <HostsNetworksSetPassword password={password} setPassword={setPassword} />
-          </>
-        )}
-      </Form>
+          {endpointType !== VSphereEndpointType.ESXi.valueOf() && (
+            <>
+              <HostsNetworksSetUserName username={username} setUsername={setUsername} />
+              <HostsNetworksSetPassword password={password} setPassword={setPassword} />
+            </>
+          )}
+        </Form>
+      </Stack>
     </ModalForm>
   );
 };

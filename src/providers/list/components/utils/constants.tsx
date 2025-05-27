@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 import type { CellProps } from 'src/modules/NetworkMaps/views/list/components/CellProps';
-import { ProviderActionsDropdown } from 'src/modules/Providers/actions/ProviderActionsDropdown';
 import { NamespaceCell } from 'src/modules/Providers/views/list/components/NamespaceCell';
 import { ProviderLinkCell } from 'src/modules/Providers/views/list/components/ProviderLinkCell';
 import { StatusCell } from 'src/modules/Providers/views/list/components/StatusCell';
+import ProviderActionsDropdown from 'src/providers/actions/ProviderActionsDropdown';
 import InventoryCell from 'src/providers/components/InventoryCell';
 import { VirtualMachinesCell } from 'src/providers/components/VirtualMachinesCell';
 import type { ProvidersResourceFieldId } from 'src/providers/utils/constants';

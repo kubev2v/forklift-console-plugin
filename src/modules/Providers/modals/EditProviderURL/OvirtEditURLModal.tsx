@@ -15,7 +15,7 @@ export const OvirtEditURLModal: FC<EditProviderURLModalProps> = (props) => {
 
   const ModalBody = (
     <ForkliftTrans>
-      <p>`URL of the Red Hat Virtualization Manager (RHVM) API endpoint.</p>
+      <p>URL of the Red Hat Virtualization Manager (RHVM) API endpoint.</p>
       <br />
       <p>
         The format of the provided URL of the Red Hat Virtualization Manager (RHVM) API endpoint

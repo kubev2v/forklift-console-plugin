@@ -11,7 +11,15 @@ import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, Form, Modal, ModalVariant, Popover, TextInput } from '@patternfly/react-core';
+import {
+  Button,
+  Form,
+  Modal,
+  ModalVariant,
+  Popover,
+  Stack,
+  TextInput,
+} from '@patternfly/react-core';
 import { HelpIcon } from '@patternfly/react-icons';
 
 import useToggle from '../../hooks/useToggle';
@@ -197,21 +205,22 @@ export const EditModal: FC<EditModalProps> = ({
       onClose={toggleModal}
       actions={actions}
     >
-      <div className="forklift-edit-modal-body">{body}</div>
+      <Stack hasGutter>
+        <div>{body}</div>
 
-      <Form id="modal-with-form-form" className="forklift-edit-modal-form">
-        <FormGroupWithHelpText
-          label={label}
-          labelIcon={LabelIcon}
-          fieldId="modal-with-form-form-field"
-          helperText={validation.msg || helperText}
-          helperTextInvalid={validation.msg || helperText}
-          validated={validation.type}
-        >
-          {InputComponent_}
-        </FormGroupWithHelpText>
-      </Form>
-
+        <Form id="modal-with-form-form">
+          <FormGroupWithHelpText
+            label={label}
+            labelIcon={LabelIcon}
+            fieldId="modal-with-form-form-field"
+            helperText={validation.msg || helperText}
+            helperTextInvalid={validation.msg || helperText}
+            validated={validation.type}
+          >
+            {InputComponent_}
+          </FormGroupWithHelpText>
+        </Form>
+      </Stack>
       {typeof owner === 'object' && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}
       {alertMessage}
     </Modal>
