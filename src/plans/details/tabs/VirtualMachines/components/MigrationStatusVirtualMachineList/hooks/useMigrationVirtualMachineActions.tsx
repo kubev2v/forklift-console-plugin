@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import { usePlanMigration } from 'src/modules/Plans/hooks/usePlanMigration';
 import {
   isPlanArchived,
   isPlanExecuting,
 } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import type { V1beta1Plan } from '@kubev2v/types';

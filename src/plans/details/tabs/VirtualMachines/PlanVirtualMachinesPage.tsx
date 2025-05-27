@@ -1,10 +1,13 @@
 import type { FC } from 'react';
-import { isPlanSucceeded } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import { DrawerProvider } from '@components/DrawerContext/DrawerProvider';
 
-import { canPlanReStart, isPlanExecuting } from '../../components/PlanStatus/utils/utils';
+import {
+  canPlanReStart,
+  isPlanExecuting,
+  isPlanSucceeded,
+} from '../../components/PlanStatus/utils/utils';
 import type { PlanPageProps } from '../../utils/types';
 
 import MigrationStatusVirtualMachinesList from './components/MigrationStatusVirtualMachineList/MigrationStatusVirtualMachinesList';

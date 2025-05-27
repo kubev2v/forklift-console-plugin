@@ -1,13 +1,31 @@
-import { hasTaskCompleted } from 'src/modules/Plans/views/details/utils/hasTaskCompleted';
-
 import type {
   IoK8sApiBatchV1Job,
   V1beta1PlanStatusMigrationVmsPipeline,
   V1beta1PlanStatusMigrationVmsPipelineTasks,
+  V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
 } from '@kubev2v/types';
 import { CONDITION_STATUS, EMPTY_MSG, taskStatuses } from '@utils/constants';
 
 import type { DiskTransferMap, TaskCounterMap } from './types';
+
+const hasPipelineNotFailed = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => !pipeline?.error;
+
+const hasPipelineCompleted = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) =>
+  hasPipelineNotFailed(pipeline) && pipeline?.phase === taskStatuses.completed;
+
+const hasPipelineOkAndTaskProgressCompleted = (
+  taskProgress: V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
+  pipeline: V1beta1PlanStatusMigrationVmsPipeline,
+) => hasPipelineNotFailed(pipeline) && taskProgress.completed === taskProgress.total;
+
+const hasTaskCompleted = (
+  taskPhase: string | undefined,
+  taskProgress: V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
+  pipeline: V1beta1PlanStatusMigrationVmsPipeline,
+) =>
+  taskPhase === taskStatuses.completed ||
+  (taskPhase === undefined && hasPipelineCompleted(pipeline)) ||
+  (taskPhase === undefined && hasPipelineOkAndTaskProgressCompleted(taskProgress, pipeline));
 
 export const countTasks = (
   diskTransferPipeline: V1beta1PlanStatusMigrationVmsPipeline | undefined,

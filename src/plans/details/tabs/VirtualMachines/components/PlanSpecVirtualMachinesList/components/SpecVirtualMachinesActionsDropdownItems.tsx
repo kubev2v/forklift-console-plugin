@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import { isPlanEditable } from 'src/modules/Plans/utils/helpers/getPlanPhase';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import EditNetworkNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/NetworkNameTemplate/EditNetworkNameTemplate';
 import EditPVCNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/PVCNameTemplate/EditPVCNameTemplate';
 import EditVolumeNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';

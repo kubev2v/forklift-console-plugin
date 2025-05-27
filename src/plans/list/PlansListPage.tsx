@@ -8,10 +8,9 @@ import { INITIAL_PAGE } from '@components/page/utils/constants';
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import PlansAddButton from '../../modules/Plans/components/PlansAddButton';
-import PlansEmptyState from '../../modules/Plans/components/PlansEmptyState';
-
 import PlanRow from './components/PlanRow/PlanRow';
+import PlansAddButton from './components/PlansAddButton';
+import PlansEmptyState from './components/PlansEmptyState';
 import { planFields } from './utils/planFields';
 
 import './PlansListPage.style.css';

@@ -27,7 +27,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namesp
   });
 
   const onClick = () => {
-    setData({
+    setData?.({
       selectedVms: [],
     });
     history.push(`${plansListURL}/~new`);

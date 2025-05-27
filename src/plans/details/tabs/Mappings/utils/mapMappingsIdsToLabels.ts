@@ -1,4 +1,3 @@
-import { POD_NETWORK } from 'src/modules/Plans/views/details/utils/constants';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { POD } from 'src/plans/details/components/PlanPageHeader/utils/constants';
@@ -12,7 +11,7 @@ import type {
 import { Namespace } from '@utils/constants';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 
-import { STANDARD } from './constants';
+import { POD_NETWORK, STANDARD } from './constants';
 
 const resolveCollisions = (tuples: [string, string][]): Record<string, string> =>
   tuples.reduce<Record<string, string>>((acc, [label, id]) => {

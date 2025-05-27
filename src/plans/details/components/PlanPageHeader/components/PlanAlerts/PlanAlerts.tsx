@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import { PlanPhase } from 'src/modules/Plans/utils/types/PlanPhase';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 
+import { PlanStatuses } from '../../../PlanStatus/utils/types';
 import usePlanAlerts from '../../hooks/usePlanAlerts';
 import PlanCriticalCondition from '../PlanCriticalCondition';
 import PlanPreserveIPWarning from '../PlanPreserveIPWarning';
@@ -20,13 +20,13 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
     networkMaps,
     networkMapsError,
     networkMapsLoaded,
-    planPhase,
     sourceNetworks,
     sourceStorages,
+    status,
     storageMaps,
   } = usePlanAlerts(plan);
 
-  const alertsNotRelevant = planPhase === PlanPhase.Succeeded || planPhase === PlanPhase.Archived;
+  const alertsNotRelevant = status === PlanStatuses.Completed || status === PlanStatuses.Archived;
 
   if (alertsNotRelevant || !criticalCondition || !networkMapsLoaded || networkMapsError) {
     return null;

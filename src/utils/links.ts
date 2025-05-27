@@ -15,3 +15,6 @@ export const MTV_SETTINGS = `${REDHAT_DOCS_URL}/migration_toolkit_for_virtualiza
 export const WARM_MIGRATION_HELP_LINK = `${REDHAT_DOCS_URL}/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#warm-migration_mtv`;
 
 export const CBT_HELP_LINK = 'https://knowledge.broadcom.com/external/article?legacyId=1020128';
+
+export const FORKLIFT_DOCS_URL =
+  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';

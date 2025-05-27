@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
+import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { taskStatuses } from '@utils/constants';
 
-import { usePlanMigration } from '../../../../../../modules/Plans/hooks/usePlanMigration';
 import type { VirtualMachinePipelineTask } from '../utils/types';
 
 const usePipelineTaskProgress = (plan: V1beta1Plan) => {

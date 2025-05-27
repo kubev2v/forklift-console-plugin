@@ -10,11 +10,10 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModel, ProviderModelRef } from '@kubev2v/types';
 import { Button, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
+import { ALL_PROJECTS_KEY } from '@utils/constants';
+import { FORKLIFT_DOCS_URL } from '@utils/links';
 
 import PlansAddButton from './PlansAddButton';
-
-const HELP_LINK_HREF =
-  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/';
 
 const PlansEmptyState: FC<{ namespace: string }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
@@ -28,7 +27,7 @@ const PlansEmptyState: FC<{ namespace: string }> = ({ namespace }) => {
 
   const ProvidersListURL = getResourceUrl({
     namespace,
-    namespaced: namespace !== undefined,
+    namespaced: namespace !== undefined || namespace !== ALL_PROJECTS_KEY,
     reference: ProviderModelRef,
   });
 
@@ -45,7 +44,11 @@ const PlansEmptyState: FC<{ namespace: string }> = ({ namespace }) => {
         )
       }
       textContent={
-        !hasSufficientProviders ? (
+        hasSufficientProviders ? (
+          t(
+            'Migration plans are used to document the moving of virtualization workloads from source providers to target providers.',
+          )
+        ) : (
           <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
             <FlexItem>
               <ForkliftTrans>
@@ -55,7 +58,7 @@ const PlansEmptyState: FC<{ namespace: string }> = ({ namespace }) => {
               </ForkliftTrans>
             </FlexItem>
             <FlexItem>
-              <ExternalLink href={HELP_LINK_HREF}>
+              <ExternalLink href={FORKLIFT_DOCS_URL}>
                 {t('Learn more about migration plans.')}
               </ExternalLink>
             </FlexItem>
@@ -68,10 +71,6 @@ const PlansEmptyState: FC<{ namespace: string }> = ({ namespace }) => {
               </Button>
             </FlexItem>
           </Flex>
-        ) : (
-          t(
-            'Migration plans are used to document the moving of virtualization workloads from source providers to target providers.',
-          )
         )
       }
       callForActionButtons={

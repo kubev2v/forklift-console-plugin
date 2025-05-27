@@ -1,6 +1,6 @@
-import { type FC, useState } from 'react';
-import { PlanStartMigrationModal } from 'src/modules/Plans/modals/PlanStartMigrationModal';
+import type { FC } from 'react';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import PlanStartMigrationModal from 'src/plans/actions/components/StartPlanModal/PlanStartMigrationModal';
 import PlanStatusLabel from 'src/plans/details/components/PlanStatus/PlanStatusLabel';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import {
@@ -12,7 +12,6 @@ import {
 import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel } from '@kubev2v/types';
 import { Button, ButtonVariant, Flex, FlexItem, Split } from '@patternfly/react-core';
 import { PlayIcon as StartIcon } from '@patternfly/react-icons';
 import {
@@ -30,7 +29,6 @@ import './PlanStatus.style.scss';
 const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
-  const [isButtonEnabled, setIsButtonEnabled] = useState(true);
   const pipelinesProgressPercentage = usePipelineTaskProgress(plan);
   const planStatus = getPlanStatus(plan);
 
@@ -40,16 +38,8 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
         <Button
           variant={ButtonVariant.secondary}
           icon={<StartIcon />}
-          isDisabled={!isButtonEnabled}
           onClick={() => {
-            showModal(
-              <PlanStartMigrationModal
-                resource={plan}
-                model={PlanModel}
-                title={t('Start')}
-                setButtonEnabledOnChange={setIsButtonEnabled}
-              />,
-            );
+            showModal(<PlanStartMigrationModal plan={plan} title={t('Start')} />);
           }}
           isInline
         >
