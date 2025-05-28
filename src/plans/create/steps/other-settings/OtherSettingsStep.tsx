@@ -4,7 +4,7 @@ import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Form } from '@patternfly/react-core';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { ProviderType } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 

@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { GeneralFormFieldId, generalFormFieldLabels } from '../general-information/constants';
 
 const GeneralInfoReviewSection: FC = () => {

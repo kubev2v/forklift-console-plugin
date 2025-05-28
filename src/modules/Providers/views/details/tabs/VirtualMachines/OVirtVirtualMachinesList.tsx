@@ -12,7 +12,7 @@ import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
 
-export const oVirtVmFieldsMetadataFactory = [
+const oVirtVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),

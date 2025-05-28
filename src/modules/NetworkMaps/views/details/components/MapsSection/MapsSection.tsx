@@ -1,4 +1,5 @@
 import { type FC, useEffect, useReducer } from 'react';
+import { updateNetworkMapDestination } from 'src/modules/NetworkMaps/utils/helpers/updateNetworkMapDestination';
 import {
   type InventoryNetwork,
   useOpenShiftNetworks,
@@ -6,7 +7,6 @@ import {
 } from 'src/modules/Providers/hooks/useNetworks';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
 import type { Mapping } from 'src/modules/Providers/views/migrate/types';
-import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';

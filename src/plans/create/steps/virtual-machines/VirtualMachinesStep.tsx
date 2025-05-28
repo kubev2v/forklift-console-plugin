@@ -8,11 +8,11 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { NetworkMapFieldId } from '../network-map/constants';
 import { StorageMapFieldId } from '../storage-map/constants';
 
-import { VmFormFieldId } from './constants';
+import { defaultVms, VmFormFieldId } from './constants';
 import VirtualMachinesTable from './VirtualMachinesTable';
 
 const VirtualMachinesStep: FC = () => {
@@ -46,6 +46,7 @@ const VirtualMachinesStep: FC = () => {
           name={VmFormFieldId.Vms}
           control={control}
           rules={{ validate }}
+          defaultValue={defaultVms}
           render={({ field }) => (
             <VirtualMachinesTable
               isSelectable

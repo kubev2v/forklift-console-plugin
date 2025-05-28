@@ -12,7 +12,7 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { MigrationTypeFieldId, migrationTypeLabels } from '../migration-type/constants';
 
 const MigrationTypeReviewSection: FC = () => {

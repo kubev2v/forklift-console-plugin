@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 
+import { useDeepMemo } from '@utils/hooks/useDeepMemo';
+
 import { useSearchParams } from '../hooks/useSearchParams';
 import type { UserSettings } from '../Page/types';
 import type { ResourceField } from '../utils/types';
@@ -59,25 +61,22 @@ const convertFiltersToSearchParams = (fields, filters) => {
  * Sets the state and updates the URL search parameters.
  * @param {Function} setSelectedFilters - The function to set selected filters.
  * @param {Function} updateSearchParams - The function to update search parameters.
- * @param {Array} fields - The fields containing resourceFieldId.
+ * @param {Function} updateUserSettings - The function to update user settings.
+ * @param {Array} persistentFieldIds - The persistent field IDs.
  * @returns {Function} - The function to set state and update URL.
  */
 const createSetStateAndUrl = (
   setSelectedFilters,
   updateSearchParams,
   updateUserSettings,
+  persistentFieldIds,
   fields,
 ) => {
-  const persistentFieldIds = fields
-    .filter((field) => field?.isPersistent)
-    .map((field) => field.resourceFieldId);
-
   return (filters) => {
     if (updateUserSettings) {
       const persistentFilters = Object.fromEntries(
         Object.entries(filters || {}).filter(([key]) => persistentFieldIds.includes(key)),
       );
-
       updateUserSettings(persistentFilters);
     }
     setSelectedFilters(filters);
@@ -96,31 +95,52 @@ const createSetStateAndUrl = (
  * @returns [selectedFilters, setSelectedFilters]
  */
 export const useUrlFilters = ({
-  fields,
+  fields: initialFields,
   userSettings,
 }: {
   fields: ResourceField[];
   userSettings?: UserSettings;
 }): [GlobalFilters, (filters: GlobalFilters) => void] => {
-  const persistentFieldIds = fields
-    .filter((field) => field?.isPersistent)
-    .map((field) => field.resourceFieldId);
-  const persistentFilters = Object.fromEntries(
-    Object.entries(userSettings?.filters?.data ?? {}).filter(([key]) =>
-      persistentFieldIds.includes(key),
-    ),
+  const fields = useDeepMemo(initialFields);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const persistentFieldIds = useMemo(
+    () => fields.filter((field) => field?.isPersistent).map((field) => field.resourceFieldId),
+    [fields],
   );
 
-  const [searchParams, updateSearchParams] = useSearchParams();
-  const [selectedFilters, setSelectedFilters] = useState(() => ({
-    ...persistentFilters,
-    ...getValidFilters(fields, searchParams),
-  }));
+  const initialFilters = useMemo(() => {
+    const initialFieldIds = fields
+      .filter((field) => field?.isPersistent)
+      .map((field) => field.resourceFieldId);
+
+    const persistentFilters = Object.fromEntries(
+      Object.entries(userSettings?.filters?.data ?? {}).filter(([key]) =>
+        initialFieldIds.includes(key),
+      ),
+    );
+
+    return {
+      ...persistentFilters,
+      ...getValidFilters(fields, searchParams),
+    };
+  }, [fields, searchParams, userSettings?.filters?.data]);
+
+  const [selectedFilters, setSelectedFilters] = useState(initialFilters);
   const updateUserSettings = userSettings?.filters?.save;
+  const updateSelectedFilters = useDeepMemo(setSelectedFilters);
+  const updateSearchParams = useDeepMemo(setSearchParams);
 
   const setStateAndUrl = useMemo(
-    () => createSetStateAndUrl(setSelectedFilters, updateSearchParams, updateUserSettings, fields),
-    [setSelectedFilters, updateSearchParams, fields],
+    () =>
+      createSetStateAndUrl(
+        updateSelectedFilters,
+        updateSearchParams,
+        updateUserSettings,
+        persistentFieldIds,
+        fields,
+      ),
+    [updateSelectedFilters, updateSearchParams, updateUserSettings, persistentFieldIds, fields],
   );
 
   return [selectedFilters, setStateAndUrl];

@@ -7,7 +7,7 @@ import { FormGroup, Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import {
   defaultDiskPassPhrase,

@@ -4,7 +4,7 @@ import { type FieldPath, useFieldArray } from 'react-hook-form';
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import type { CreatePlanFormData, MappingValue } from '../../types';
 
 import { defaultNetMapping, netMapFieldLabels, NetworkMapFieldId } from './constants';

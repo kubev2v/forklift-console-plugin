@@ -7,15 +7,15 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Grid,
-  GridItem,
+  Flex,
+  FlexItem,
   Title,
   useWizardContext,
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { HooksFormFieldId, MigrationHookFieldId } from '../hooks/constants';
 import { hooksFormFieldLabels } from '../hooks/utils';
 
@@ -35,13 +35,9 @@ const HooksReviewSection: FC = () => {
         goToStepById(PlanWizardStepId.Hooks);
       }}
     >
-      <Grid hasGutter>
-        <GridItem span={6}>
-          <DescriptionList
-            isHorizontal
-            horizontalTermWidthModifier={{ default: '18ch' }}
-            className="pf-v5-u-w-50"
-          >
+      <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsXl' }}>
+        <FlexItem>
+          <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
             <Title headingLevel="h4">{t('Pre migration hook')}</Title>
 
             {preMigration[MigrationHookFieldId.EnableHook] ? (
@@ -76,14 +72,10 @@ const HooksReviewSection: FC = () => {
               </DescriptionListGroup>
             )}
           </DescriptionList>
-        </GridItem>
+        </FlexItem>
 
-        <GridItem span={6}>
-          <DescriptionList
-            isHorizontal
-            horizontalTermWidthModifier={{ default: '18ch' }}
-            className="pf-v5-u-w-50"
-          >
+        <FlexItem>
+          <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
             <Title headingLevel="h4">{t('Post migration hook')}</Title>
 
             {postMigration[MigrationHookFieldId.EnableHook] ? (
@@ -118,8 +110,8 @@ const HooksReviewSection: FC = () => {
               </DescriptionListGroup>
             )}
           </DescriptionList>
-        </GridItem>
-      </Grid>
+        </FlexItem>
+      </Flex>
     </ExpandableReviewSection>
   );
 };

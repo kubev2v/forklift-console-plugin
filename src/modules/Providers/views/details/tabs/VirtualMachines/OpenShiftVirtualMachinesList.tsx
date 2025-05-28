@@ -11,7 +11,7 @@ import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
 
-export const openShiftVmFieldsMetadataFactory = [
+const openShiftVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),

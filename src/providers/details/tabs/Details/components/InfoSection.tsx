@@ -28,12 +28,11 @@ const InfoSection: FC<InfoSectionProps> = ({ inventory, name, namespace }) => {
       {(inventory?.vmCount ?? 0) > 0 && (
         <Alert customIcon={<BellIcon />} variant="info" title={t('How to create a migration plan')}>
           <ForkliftTrans>
-            To migrate virtual machines from <strong>{name}</strong> provider, select the virtual
-            machines to migrate from the list of available virtual machines located in the virtual
-            machines tab.{' '}
+            To migrate virtual machines from <strong>{name}</strong> provider,{' '}
             <Link to={`${providerURL}/vms`}>
-              Go to <strong>Virtual Machines</strong> tab
+              go to <strong>Virtual Machines</strong> tab
             </Link>
+            .
           </ForkliftTrans>
         </Alert>
       )}

@@ -8,7 +8,7 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { defaultNetMapping, NetworkMapFieldId } from '../network-map/constants';
 
 const NetworkMapReviewSection: FC = () => {

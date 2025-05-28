@@ -4,7 +4,7 @@ import { Controller } from 'react-hook-form';
 import { FormGroup, FormHelperText, TextInput } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { type HooksFormFieldId, MigrationHookFieldId } from './constants';
 import { getHooksSubFieldId, hooksFormFieldLabels } from './utils';

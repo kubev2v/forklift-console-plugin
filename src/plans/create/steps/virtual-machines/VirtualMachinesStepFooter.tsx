@@ -13,7 +13,7 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import CreatePlanWizardFooter from '../../CreatePlanWizardFooter';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import type { ProviderVirtualMachine } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 

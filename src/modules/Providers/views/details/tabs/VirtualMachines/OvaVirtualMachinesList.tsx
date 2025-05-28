@@ -8,7 +8,7 @@ import { getConcernsResourceField } from './utils/helpers/getConcernsResourceFie
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { OvaVirtualMachinesCells } from './OvaVirtualMachinesRow';
 
-export const ovaVmFieldsMetadataFactory = [
+const ovaVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),

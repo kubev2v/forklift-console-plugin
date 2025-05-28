@@ -11,7 +11,7 @@ import type {
 import { FormGroup, FormHelperText, SelectList, SelectOption } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { GeneralFormFieldId } from '../general-information/constants';
 
 import {

@@ -7,7 +7,7 @@ import { useActiveNamespace, useK8sWatchResource } from '@openshift-console/dyna
 import { TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 import { validatePlanName } from './utils';

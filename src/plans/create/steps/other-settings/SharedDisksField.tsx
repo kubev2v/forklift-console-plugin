@@ -5,7 +5,7 @@ import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopo
 import { Checkbox, FormGroup, FormHelperText, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from './constants';
 
