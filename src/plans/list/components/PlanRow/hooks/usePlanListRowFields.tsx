@@ -18,6 +18,7 @@ import {
   getPlanMigrationStarted,
   getPlanSourceProvider,
 } from '@utils/crds/plans/selectors';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
 import PlanActions from '../../PlanRowFields/PlanActions/PlanActions';
 import PlanMigrationType from '../../PlanRowFields/PlanMigrationType/PlanMigrationType';
@@ -33,6 +34,7 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
     getPlanDestinationProvider(plan);
   const { name: sourceProviderName, namespace: sourceProviderNamespace } =
     getPlanSourceProvider(plan);
+  const isDarkTheme = useIsDarkTheme();
   return {
     [PlanTableResourceId.Actions]: <PlanActions plan={plan} />,
     [PlanTableResourceId.Archived]: null,
@@ -70,7 +72,9 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
           name: sourceProviderName,
           namespace: sourceProviderNamespace,
         })}
-        providerIcon={providerTypeIcons[sourceProviderType as keyof typeof providerTypeIcons]}
+        providerIcon={
+          providerTypeIcons(isDarkTheme)[sourceProviderType as keyof typeof providerTypeIcons]
+        }
         providerName={sourceProviderName}
       />
     ),

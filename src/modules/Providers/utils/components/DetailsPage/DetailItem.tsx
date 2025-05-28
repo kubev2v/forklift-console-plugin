@@ -140,9 +140,7 @@ const ContentField: FC<{
       <Flex alignItems={{ default: 'alignItemsCenter' }}>
         <FlexItem spacer={{ default: 'spacerNone' }}>{content}</FlexItem>
         <FlexItem spacer={{ default: 'spacerNone' }}>
-          <Button variant="link" isInline onClick={onEdit}>
-            <Pencil className="pf-u-ml-sm" />
-          </Button>
+          <Button variant="link" isInline onClick={onEdit} icon={<Pencil />} iconPosition="right" />
         </FlexItem>
       </Flex>
     </DescriptionListDescription>

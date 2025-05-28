@@ -17,5 +17,6 @@ export type EnhancedPlan = V1beta1Plan & {
     PlanNameTemplates & {
       migrateSharedDisks?: boolean;
       vms: EnhancedPlanSpecVms[];
+      skipGuestConversion?: boolean;
     };
 };
