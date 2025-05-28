@@ -12,10 +12,3 @@ export type HostCellProps = {
   fieldId: string;
   fields: ResourceField[];
 };
-
-export enum ValidationState {
-  Success = 'success',
-  Warning = 'warning',
-  Error = 'error',
-  Default = 'default',
-}
