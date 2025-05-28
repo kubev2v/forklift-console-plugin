@@ -13,8 +13,8 @@ import {
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { useCreatePlanFormContext } from './hooks/useCreatePlanFormContext';
 import { PlanWizardStepId } from './constants';
-import { useCreatePlanFormContext } from './hooks';
 
 type CreatePlanWizardFooterProps = Partial<Pick<WizardFooterProps, 'nextButtonText' | 'onNext'>> & {
   hasError?: boolean;

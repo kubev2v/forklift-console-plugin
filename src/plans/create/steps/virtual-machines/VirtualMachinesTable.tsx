@@ -11,7 +11,7 @@ import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tab
 
 import type { ProviderVirtualMachine } from '@kubev2v/types';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { type CreatePlanFormData, ProviderType } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 

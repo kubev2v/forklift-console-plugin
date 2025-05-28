@@ -10,8 +10,7 @@ import type {
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
-  PlanCreatePage: './modules/Plans/views/create/PlanCreatePage',
-  PlanCreatePageV2: './plans/create/PlanCreatePage',
+  PlanCreatePage: './plans/create/PlanCreatePage',
   PlanDetailsNav: './plans/details/PlanDetailsNav',
   PlansListPage: './plans/list/PlansListPage',
 };
@@ -64,17 +63,6 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.resource/create',
   } as EncodedExtension<CreateResource>,
-
-  {
-    properties: {
-      component: {
-        $codeRef: 'PlanCreatePageV2',
-      },
-      exact: false,
-      path: ['/mtv/create/plan'],
-    },
-    type: 'console.page/route',
-  },
 
   {
     properties: {

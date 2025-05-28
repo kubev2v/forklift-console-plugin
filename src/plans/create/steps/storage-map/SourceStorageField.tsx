@@ -8,7 +8,7 @@ import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import type { MappingValue } from '../../types';
 
 import { StorageMapFieldId, type StorageMapping } from './constants';

@@ -1,5 +1,5 @@
 import { type FC, type FormEvent, useEffect, useReducer } from 'react';
-import { updateNetworkMapDestination } from 'src/modules/Providers/views/migrate/useSaveEffect';
+import { updateNetworkMapDestination } from 'src/modules/NetworkMaps/utils/helpers/updateNetworkMapDestination';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';

@@ -8,7 +8,6 @@ import { ErrorState } from '@components/common/Page/PageStates';
 import LoadingSuspend from '@components/LoadingSuspend';
 import type { V1beta1Provider } from '@kubev2v/types';
 
-import HeaderSection from './components/HeaderSection';
 import VirtualMachinesListSection from './components/VirtualMachinesListSection';
 import { PROVIDER_DETAILS_VMS_TAB_FIELDS } from './utils/constants';
 
@@ -18,7 +17,7 @@ type ProviderVirtualMachinesTabPageProps = {
 
 const ProviderVirtualMachinesTabPage: FC<ProviderVirtualMachinesTabPageProps> = ({ provider }) => {
   const { t } = useForkliftTranslation();
-  const [vmData, vmDataLoading, vmDataError] = useInventoryVms({ provider }, true, false);
+  const [vmData, vmDataLoading, vmDataError] = useInventoryVms({ provider });
   const { control } = useForm();
 
   if (vmDataError) {
@@ -31,8 +30,6 @@ const ProviderVirtualMachinesTabPage: FC<ProviderVirtualMachinesTabPageProps> = 
 
   return (
     <ModalHOC>
-      <HeaderSection provider={provider} vmData={vmData} />
-
       <Controller
         name={PROVIDER_DETAILS_VMS_TAB_FIELDS.vms}
         control={control}

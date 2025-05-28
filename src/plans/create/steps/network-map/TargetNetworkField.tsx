@@ -6,7 +6,7 @@ import Select from '@components/common/MtvSelect';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import type { MappingValue } from '../../types';
 
 type TargetNetworkFieldProps = {

@@ -1,45 +1,19 @@
-import type { FC } from 'react';
-import { EnumFilter } from 'src/components/common/Filter/EnumFilter';
-import { GroupedEnumFilter } from 'src/components/common/Filter/GroupedEnumFilter';
-import type { ValueMatcher } from 'src/components/common/FilterGroup/types';
+import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { GlobalActionToolbarProps, ResourceField } from '@components/common/utils/types';
-import type { Concern } from '@kubev2v/types';
+import type { ResourceField } from '@components/common/utils/types';
+import { getNamespace } from '@utils/crds/common/selectors';
 
-import { CustomFilterType } from '../constants';
 import { getVmId } from '../utils/helpers/vmProps';
 
 import { ConcernsTable } from './ConcernsTable';
+import { extraSupportedFilters, extraSupportedMatchers } from './constants';
 import { MigrationAction } from './MigrationAction';
 import type { VmData } from './VMCellProps';
-
-const concernsMatcher: ValueMatcher<Concern[]> = {
-  filterType: CustomFilterType.Concerns,
-  matchValue: (concerns) => (filter: string) =>
-    Array.isArray(concerns) &&
-    concerns.some(({ category, label }) => category === filter || label === filter),
-};
-
-const criticalConcernsMatcher: ValueMatcher<Concern[]> = {
-  filterType: CustomFilterType.CriticalConcerns,
-  matchValue: (concerns) => (filter: string) =>
-    Array.isArray(concerns) && concerns.some(({ label }) => label === filter),
-};
-
-const featuresMatcher: ValueMatcher<Record<string, boolean>> = {
-  filterType: CustomFilterType.Features,
-  matchValue: (features) => (filter: string) => Boolean(features?.[filter]),
-};
-
-const hostMatcher: ValueMatcher<string> = {
-  filterType: CustomFilterType.Host,
-  matchValue: (value) => (filter: string) => value === filter,
-};
 
 type ProviderVirtualMachinesListProps = {
   title?: string;
@@ -68,30 +42,21 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   title,
 }) => {
   const { t } = useForkliftTranslation();
-
-  const userSettings = loadUserSettings({ pageId });
-
-  const initialExpandedIds: string[] = [];
   const { vmData, vmDataLoading } = obj;
+  const provider = obj?.provider;
+  const namespace = (provider ? getNamespace(provider) : '') ?? '';
 
-  const actions: FC<GlobalActionToolbarProps<VmData>>[] = [
-    ({ selectedIds }) => (
-      <MigrationAction
-        provider={obj?.provider}
-        selectedVms={
-          vmData?.reduce((acc: VmData[], data) => {
-            if (selectedIds?.includes(getVmId(data))) {
-              acc.push(data);
-            }
+  const userSettings = useMemo(() => loadUserSettings({ pageId }), [pageId]);
 
-            return acc;
-          }, []) ?? []
-        }
-      />
-    ),
-  ];
+  const actions = useMemo(
+    () =>
+      showActions
+        ? [() => <MigrationAction namespace={namespace} provider={provider} />]
+        : undefined,
+    [namespace, provider, showActions],
+  );
 
-  const onSelectedIds = onSelect
+  const handleSelectedIds = onSelect
     ? (selectedIds: string[]) => {
         const selectedVms = vmData?.filter((data) => selectedIds.includes(getVmId(data)));
         onSelect(selectedVms);
@@ -105,27 +70,17 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       dataSource={[vmData ?? [], !vmDataLoading, null]}
       CellMapper={cellMapper}
       fieldsMetadata={fieldsMetadata}
-      namespace={obj?.provider?.metadata?.namespace ?? ''}
+      namespace={namespace}
       title={title ?? t('Virtual Machines')}
       userSettings={userSettings}
-      extraSupportedFilters={{
-        [CustomFilterType.Concerns]: GroupedEnumFilter,
-        [CustomFilterType.CriticalConcerns]: EnumFilter,
-        [CustomFilterType.Features]: EnumFilter,
-        [CustomFilterType.Host]: EnumFilter,
-      }}
-      extraSupportedMatchers={[
-        criticalConcernsMatcher,
-        concernsMatcher,
-        hostMatcher,
-        featuresMatcher,
-      ]}
-      GlobalActionToolbarItems={showActions ? actions : undefined}
+      extraSupportedFilters={extraSupportedFilters}
+      extraSupportedMatchers={extraSupportedMatchers}
+      GlobalActionToolbarItems={actions}
       toId={getVmId}
-      onSelect={onSelectedIds}
+      onSelect={handleSelectedIds}
       selectedIds={initialSelectedIds}
       page={1}
-      expandedIds={initialExpandedIds}
+      expandedIds={[]}
       ExpandedComponent={ConcernsTable}
     />
   );

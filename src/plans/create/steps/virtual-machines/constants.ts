@@ -13,3 +13,5 @@ export const criticalConcernTableField: ResourceField = {
   label: t('Critical concerns'),
   resourceFieldId: 'concerns',
 };
+
+export const defaultVms = {};

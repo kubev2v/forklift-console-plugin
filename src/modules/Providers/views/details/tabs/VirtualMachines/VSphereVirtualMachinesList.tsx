@@ -14,7 +14,7 @@ import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFiel
 import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
-export const vSphereVmFieldsMetadataFactory = [
+const vSphereVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),

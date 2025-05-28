@@ -16,7 +16,7 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
-import { useCreatePlanFormContext } from '../../hooks';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { VmFormFieldId } from '../virtual-machines/constants';
 import VirtualMachinesTable from '../virtual-machines/VirtualMachinesTable';
 

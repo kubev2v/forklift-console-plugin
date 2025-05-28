@@ -1,7 +1,5 @@
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
 
-import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
-
 import { POD_NETWORK } from './actions';
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
@@ -49,18 +47,3 @@ export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicPro
 
     return acc;
   }, []);
-
-// based on packages legacy/src/Plans/components/Wizard/helpers.tsx
-export const getNetworksUsedBySelectedVms = (
-  selectedVMs: VmData[],
-  nicProfiles: OVirtNicProfile[],
-): string[] => {
-  return Array.from(
-    new Set(
-      selectedVMs
-        ?.map(({ vm }) => vm)
-        .flatMap((vm) => toNetworks(vm, nicProfiles))
-        .filter(Boolean),
-    ),
-  );
-};

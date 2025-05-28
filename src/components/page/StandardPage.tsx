@@ -1,18 +1,12 @@
-import {
-  type FC,
-  type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
-  type ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { type FC, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import TableBulkSelect from '@components/TableBulkSelect';
 import {
   Level,
   LevelItem,
+  type OnPerPageSelect,
+  type OnSetPage,
   PageSection,
   Pagination,
   Split,
@@ -57,221 +51,45 @@ import {
   useTableSortContext,
 } from '../TableSortContext';
 
+import { reduceValueFilters } from './utils/reduceValueFilters';
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
 import './StandardPage.style.css';
 
-/**
- * Reduce two list of filters to one list.
- *
- * @param extraFilters filters we want to use to add or override the default list
- * @param defaultFilters a default list of filters
- * @returns a list containing the default filters plus the extra ones, if an extra filter
- *          already exist in the default list, the extra filter will override the default one.
- */
-const reduceValueFilters = (
-  extraFilters: ValueMatcher[],
-  defaultFilters: ValueMatcher[],
-): ValueMatcher[] => {
-  const filters = [...extraFilters, ...defaultFilters].reduce<ValueMatcher[]>((acc, filter) => {
-    const accFilterTypes = acc.map((matcher) => matcher.filterType);
-    const filterTypeFound = accFilterTypes.includes(filter.filterType);
-
-    if (!filterTypeFound) {
-      acc.push(filter);
-    }
-
-    return acc;
-  }, []);
-
-  return filters;
-};
-
-/**
- * Properties for the `StandardPage` component.
- * These properties define the configuration and behavior of the standard list page.
- *
- * @typedef {Object} StandardPageProps
- * @property {string} namespace - The namespace in which the data resides.
- * @property {[T[], boolean, unknown]} dataSource - The data source tuple consisting of an array of items, a loading flag, and an error object.
- * @property {FC<RowProps<T>>} [RowMapper=DefaultRow<T>] - Optional component to map resource data to a table row.
- * @property {FC<RowProps<T>>} [CellMapper] - Optional component to map resource data to individual cells within a row.
- * @property {string} title - The title displayed at the top of the page.
- * @property {JSX.Element} [addButton] - Optional element to display as an "add" or "create" button.
- * @property {ResourceField[]} fieldsMetadata - Metadata for the fields to be displayed.
- * @property {{ [type: string]: FilterRenderer }} [extraSupportedFilters] - Optional additional filter types.
- * @property {JSX.Element} [customNoResultsFound] - Optional custom message to display when no results are found.
- * @property {JSX.Element} [customNoResultsMatchFilter] - Optional custom message to display when no results match the filter.
- * @property {number | 'on' | 'off'} [pagination=DEFAULT_PER_PAGE] - Controls the display of pagination controls.
- * @property {UserSettings} [userSettings] - User settings store to initialize the page according to user preferences.
- * @property {ReactNode} [alerts] - Optional alerts section below the page title.
- * @property {FC<GlobalActionToolbarProps<T>>[]} [GlobalActionToolbarItems=[]] - Optional toolbar items with global actions.
- *
- * @template T - The type of the items being displayed in the table.
- */
 export type StandardPageProps<T> = {
-  /**
-   * Component displayed close to the top right corner. By convention it's usually "add" or "create" button.
-   */
-  addButton?: JSX.Element;
-  /**
-   * Source of data. Tuple should consist of:
-   * @param T[] array of items
-   * @param loading flag that indicates if loading is in progress
-   * @param error an error object/message/flag, undefined o/w
-   */
   dataSource: [T[], boolean, unknown];
-  /**
-   * Fields to be displayed (from the provided type T).
-   */
   fieldsMetadata: ResourceField[];
-  /**
-   * Currently used namespace.
-   */
   namespace: string;
-  /**
-   * (optional) Maps resourceData of type T to a table row.
-   * Defaults to rendering values as strings.
-   */
-  RowMapper?: FC<RowProps<T>>;
-
-  /**
-   * (optional) Maps entity to a list of cells (without wrapping them in <Tr>).
-   * If present, it is used instead of RowMapper.
-   */
-  CellMapper?: FC<RowProps<T>>;
-
-  /**
-   * (optional) Maps entity to a list of cells (without wrapping them in <Tr>).
-   * If present, it is used instead of RowMapper.
-   */
-  ExpandedComponent?: FC<RowProps<T>>;
-  /**
-   * (optional) Maps field list to table header.
-   * Defaults to all visible fields.
-   */
-  HeaderMapper?: FC<TableViewHeaderProps<T>>;
-
-  /**
-   * Filter types that will be used.
-   * Default are: EnumFilter and FreetextFilter
-   */
-  extraSupportedFilters?: Record<string, FilterRenderer>;
-
-  /**
-   * Extract value from fields and compare to selected filter.
-   * The default matchers support the default filters.
-   */
-  extraSupportedMatchers?: ValueMatcher[];
-
   title: string;
-  /**
-   * Information displayed when the data source returned no items.
-   */
-  customNoResultsFound?: JSX.Element;
-  /**
-   * Information displayed when the data source returned some items but due to applied filters no items can be shown.
-   */
-  customNoResultsMatchFilter?: JSX.Element;
-
-  /**
-   * 1. 'on' - always show pagination controls
-   * 2. 'off' - disable
-   * 3.  auto -  display if unfiltered number of items is greater than provided threshold
-   *
-   * Default value: 10
-   */
-  pagination?: number | 'on' | 'off';
-
-  /**
-   * page number
-   */
   page: number;
 
-  /**
-   * User settings store to initialize the page according to user preferences.
-   */
+  addButton?: JSX.Element;
+  RowMapper?: FC<RowProps<T>>;
+  CellMapper?: FC<RowProps<T>>;
+  ExpandedComponent?: FC<RowProps<T>>;
+  HeaderMapper?: FC<TableViewHeaderProps<T>>;
+  extraSupportedFilters?: Record<string, FilterRenderer>;
+  extraSupportedMatchers?: ValueMatcher[];
+  customNoResultsFound?: JSX.Element;
+  customNoResultsMatchFilter?: JSX.Element;
+  pagination?: number | 'on' | 'off';
   userSettings?: UserSettings;
-
-  /**
-   * Alerts section below the page title
-   */
   alerts?: ReactNode;
-
-  /**
-   * Toolbar items with global actions.
-   */
   GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<T>>[];
-
-  /**
-   * className
-   */
   className?: string;
-
-  /**
-   * @returns string that can be used as an unique identifier
-   */
   toId?: (item: T) => string;
-
-  /**
-   * @returns true if items can be selected, false otherwise
-   */
   canSelect?: (item: T) => boolean;
-
-  /**
-   * onSelect is called when selection changes
-   */
   onSelect?: (selectedIds: string[]) => void;
-
-  /**
-   * Selected ids
-   */
   selectedIds?: string[];
-
-  /**
-   * onExpand is called when expand changes
-   */
   onExpand?: (expandedIds: string[]) => void;
-
-  /**
-   * Expanded ids
-   */
   expandedIds?: string[];
+  pageRef?: React.MutableRefObject<number>;
 };
 
-/**
- * Standard list page component.
- * This component renders a list view with filtering, sorting, and pagination capabilities.
- * It supports custom renderers for rows and headers, as well as global actions.
- *
- * @param {StandardPageProps<T>} props - The properties passed to the component.
- * @param {string} props.namespace - The namespace in which the data resides.
- * @param {T[]} props.dataSource - The data source tuple consisting of an array of items, a loading flag, and an error object.
- * @param {FC<RowProps<T>>} [props.RowMapper=DefaultRow<T>] - Optional component to map resource data to a table row.
- * @param {FC<RowProps<T>>} [props.CellMapper] - Optional component to map resource data to individual cells within a row.
- * @param {string} props.title - The title displayed at the top of the page.
- * @param {JSX.Element} [props.addButton] - Optional element to display as an "add" or "create" button.
- * @param {ResourceField[]} props.fieldsMetadata - Metadata for the fields to be displayed.
- * @param {{ [type: string]: FilterRenderer }} [props.extraSupportedFilters] - Optional additional filter types.
- * @param {JSX.Element} [props.customNoResultsFound] - Optional custom message to display when no results are found.
- * @param {JSX.Element} [props.customNoResultsMatchFilter] - Optional custom message to display when no results match the filter.
- * @param {number | 'on' | 'off'} [props.pagination=DEFAULT_PER_PAGE] - Controls the display of pagination controls.
- * @param {UserSettings} [props.userSettings] - User settings store to initialize the page according to user preferences.
- * @param {ReactNode} [props.alerts] - Optional alerts section below the page title.
- * @param {FC<GlobalActionToolbarProps<T>>[]} [props.GlobalActionToolbarItems=[]] - Optional toolbar items with global actions.
- *
- * @template T - The type of the items being displayed in the table.
- *
- * @example
- * <StandardPage
- *   namespace="my-namespace"
- *   dataSource={[myData, false, null]}
- *   title="My List"
- *   fieldsMetadata={myFieldsMetadata}
- *   page={page}
- *   // ...other props
- * />
- */
+type StandardPageInnerProps<T> = Omit<StandardPageProps<T>, 'pageRef'> &
+  TableSortContextProps &
+  Required<Pick<StandardPageProps<T>, 'pageRef'>>;
+
 const StandardPageInner = <T,>({
   activeSort,
   addButton,
@@ -291,6 +109,7 @@ const StandardPageInner = <T,>({
   namespace,
   onSelect,
   page: initialPage,
+  pageRef,
   pagination = DEFAULT_PER_PAGE,
   RowMapper = DefaultRow<T>,
   selectedIds,
@@ -298,20 +117,36 @@ const StandardPageInner = <T,>({
   title,
   toId,
   userSettings,
-}: StandardPageProps<T> & TableSortContextProps) => {
+}: StandardPageInnerProps<T>) => {
   const { t } = useForkliftTranslation();
   const [sortedData, setSortedData] = useState<T[]>([]);
   const [filteredData, setFilteredData] = useState<T[]>([]);
   const [page, setPage] = useState(initialPage);
+
+  const onPageSet = useCallback(
+    (newPage: number) => {
+      pageRef.current = newPage;
+      setPage(newPage);
+    },
+    [pageRef],
+  );
+
+  // Initialize page from ref on mount to handle cases where initialPage might change
+  useEffect(() => {
+    if (pageRef.current !== initialPage) {
+      setPage(pageRef.current);
+    }
+  }, [initialPage, pageRef]);
 
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
     fields: fieldsMetadata,
     userSettings,
   });
 
-  const clearAllFilters = () => {
+  const clearAllFilters = useCallback(() => {
     setSelectedFilters({});
-  };
+  }, [setSelectedFilters]);
+
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
 
   const supportedMatchers = useMemo(
@@ -321,9 +156,14 @@ const StandardPageInner = <T,>({
         : defaultValueMatchers,
     [extraSupportedMatchers],
   );
-  const supportedFilters = extraSupportedFilters
-    ? { ...defaultSupportedFilters, ...extraSupportedFilters }
-    : defaultSupportedFilters;
+
+  const supportedFilters = useMemo(
+    () =>
+      extraSupportedFilters
+        ? { ...defaultSupportedFilters, ...extraSupportedFilters }
+        : defaultSupportedFilters,
+    [extraSupportedFilters],
+  );
 
   useEffect(() => {
     if (flatData) {
@@ -331,64 +171,110 @@ const StandardPageInner = <T,>({
     }
   }, [flatData, compareFn, loaded]);
 
+  const metaMatcher = useMemo(
+    () => createMetaMatcher(selectedFilters, fields, supportedMatchers),
+    [selectedFilters, fields, supportedMatchers],
+  );
+
   useEffect(() => {
     if (sortedData) {
-      setFilteredData(
-        sortedData.filter(createMetaMatcher(selectedFilters, fields, supportedMatchers)),
-      );
+      setFilteredData(sortedData.filter(metaMatcher));
     }
-  }, [sortedData, selectedFilters, fields, supportedMatchers]);
+  }, [sortedData, metaMatcher]);
 
   // Clear all filters on unmount
   useEffect(() => {
-    return () => {
-      clearAllFilters();
-    };
-  }, []);
+    return clearAllFilters;
+  }, [clearAllFilters]);
 
-  const showPagination =
-    pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination);
+  const showPagination = useMemo(
+    () => pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination),
+    [pagination, sortedData.length],
+  );
 
-  const { itemsPerPage, lastPage, setPerPage } = usePagination({
+  const { itemsPerPage, setPerPage } = usePagination({
     filteredDataLength: filteredData.length,
     userSettings: userSettings?.pagination,
   });
 
-  const currentPage = Math.min(page, lastPage);
-
   const pageData = useMemo(
-    () => filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
-    [filteredData, currentPage, itemsPerPage],
+    () => filteredData.slice((page - 1) * itemsPerPage, page * itemsPerPage),
+    [filteredData, page, itemsPerPage],
   );
 
-  const errorFetchingData = error;
-  const noResults = loaded && !error && sortedData.length === 0;
-  const noMatchingResults = loaded && !error && filteredData.length === 0 && sortedData.length > 0;
+  // Memoize error/loading states
+  const errorFetchingData = useMemo(() => error, [error]);
+  const noResults = useMemo(
+    () => loaded && !error && sortedData.length === 0,
+    [loaded, error, sortedData.length],
+  );
+  const noMatchingResults = useMemo(
+    () => loaded && !error && filteredData.length === 0 && sortedData.length > 0,
+    [loaded, error, filteredData.length, sortedData.length],
+  );
 
-  const primaryFilters = fields
-    .filter((field) => field.filter?.primary)
-    .map(toFieldFilter(sortedData));
+  const primaryFilters = useMemo(
+    () => fields.filter((field) => field.filter?.primary).map(toFieldFilter(sortedData)),
+    [fields, sortedData],
+  );
 
-  const onSetPage: (
-    event: MouseEvent | ReactMouseEvent | ReactKeyboardEvent,
-    newPage: number,
-    perPage?: number,
-    startIdx?: number,
-    endIdx?: number,
-  ) => void = (_event, newPage) => {
-    setPage(newPage);
-  };
+  const secondaryFilters = useMemo(
+    () =>
+      fields
+        .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
+        .map(toFieldFilter(flatData)),
+    [fields, flatData],
+  );
 
-  const onPerPageSelect: (
-    event: MouseEvent | ReactMouseEvent | ReactKeyboardEvent,
-    newPerPage: number,
-    newPage: number,
-    startIdx?: number,
-    endIdx?: number,
-  ) => void = (_event, perPage, newPage) => {
-    setPerPage(perPage);
-    setPage(newPage);
-  };
+  const standaloneFilters = useMemo(
+    () => fields.filter((field) => field.filter?.standalone).map(toFieldFilter(flatData)),
+    [fields, flatData],
+  );
+
+  const visibleColumns = useMemo(
+    () => fields.filter(({ isHidden, isVisible }) => isVisible && !isHidden),
+    [fields],
+  );
+
+  const onSetPage = useCallback<OnSetPage>(
+    (_event, newPage) => {
+      onPageSet(newPage);
+    },
+    [onPageSet],
+  );
+
+  const onPerPageSelect = useCallback<OnPerPageSelect>(
+    (_event, perPage, newPage) => {
+      setPerPage(perPage);
+      onPageSet(newPage);
+    },
+    [setPerPage, onPageSet],
+  );
+
+  const RowComponent = useMemo(
+    () => (CellMapper ? withTr(CellMapper) : RowMapper),
+    [CellMapper, RowMapper],
+  );
+
+  const dataOnScreen = useMemo(
+    () => (showPagination ? pageData : filteredData),
+    [showPagination, pageData, filteredData],
+  );
+
+  const dataIds = useMemo(
+    () => filteredData?.map((data) => toId?.(data) ?? ''),
+    [filteredData, toId],
+  );
+
+  const pageDataIds = useMemo(() => pageData?.map((data) => toId?.(data) ?? ''), [pageData, toId]);
+
+  const renderedGlobalActions = useMemo(
+    () =>
+      GlobalActionToolbarItems.map((Action, index) => (
+        <Action key={`${Action.name}-${index}`} dataOnScreen={dataOnScreen} />
+      )),
+    [GlobalActionToolbarItems, dataOnScreen],
+  );
 
   return (
     <span className={className}>
@@ -410,8 +296,8 @@ const StandardPageInner = <T,>({
               {selectedIds && onSelect && (
                 <TableBulkSelect
                   selectedIds={selectedIds}
-                  dataIds={filteredData?.map((data) => toId?.(data) ?? '')}
-                  pageDataIds={pageData?.map((data) => toId?.(data) ?? '')}
+                  dataIds={dataIds}
+                  pageDataIds={pageDataIds}
                   onSelect={onSelect}
                 />
               )}
@@ -426,18 +312,14 @@ const StandardPageInner = <T,>({
                   />
                 )}
                 <AttributeValueFilter
-                  fieldFilters={fields
-                    .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
-                    .map(toFieldFilter(flatData))}
+                  fieldFilters={secondaryFilters}
                   onFilterUpdate={setSelectedFilters}
                   selectedFilters={selectedFilters}
                   supportedFilterTypes={supportedFilters}
                 />
                 {Boolean(fields.find((field) => field.filter?.standalone)) && (
                   <FilterGroup
-                    fieldFilters={fields
-                      .filter((field) => field.filter?.standalone)
-                      .map(toFieldFilter(flatData))}
+                    fieldFilters={standaloneFilters}
                     onFilterUpdate={setSelectedFilters}
                     selectedFilters={selectedFilters}
                     supportedFilterTypes={supportedFilters}
@@ -448,10 +330,7 @@ const StandardPageInner = <T,>({
                   defaultColumns={fieldsMetadata}
                   setColumns={setFields}
                 />
-                {!isEmpty(GlobalActionToolbarItems) &&
-                  GlobalActionToolbarItems.map((Action, index) => (
-                    <Action key={index} dataOnScreen={showPagination ? pageData : filteredData} />
-                  ))}
+                {!isEmpty(GlobalActionToolbarItems) && renderedGlobalActions}
               </ToolbarToggleGroup>
             </Split>
 
@@ -460,7 +339,7 @@ const StandardPageInner = <T,>({
                 <Pagination
                   variant="top"
                   perPage={itemsPerPage}
-                  page={currentPage}
+                  page={page}
                   itemCount={filteredData.length}
                   onSetPage={onSetPage}
                   onPerPageSelect={onPerPageSelect}
@@ -470,10 +349,10 @@ const StandardPageInner = <T,>({
           </ToolbarContent>
         </Toolbar>
         <TableView<T>
-          entities={showPagination ? pageData : filteredData}
-          visibleColumns={fields.filter(({ isHidden, isVisible }) => isVisible && !isHidden)}
+          entities={dataOnScreen}
+          visibleColumns={visibleColumns}
           aria-label={title}
-          Row={CellMapper ? withTr(CellMapper) : RowMapper}
+          Row={RowComponent}
           Header={HeaderMapper}
           activeSort={activeSort}
           setActiveSort={setActiveSort}
@@ -506,7 +385,7 @@ const StandardPageInner = <T,>({
           <Pagination
             variant="bottom"
             perPage={itemsPerPage}
-            page={currentPage}
+            page={page}
             itemCount={filteredData.length}
             onSetPage={onSetPage}
             onPerPageSelect={onPerPageSelect}
@@ -519,6 +398,8 @@ const StandardPageInner = <T,>({
 
 const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
   const { activeSort, compareFn, setActiveSort } = useTableSortContext();
+  const internalPageRef = useRef(pageProps.page);
+  const pageRef = pageProps.pageRef ?? internalPageRef;
 
   if (activeSort.resourceFieldId) {
     return (
@@ -527,6 +408,7 @@ const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
         activeSort={activeSort}
         setActiveSort={setActiveSort}
         compareFn={compareFn}
+        pageRef={pageRef}
       />
     );
   }
@@ -534,7 +416,7 @@ const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
   return (
     <TableSortContextProvider fields={pageProps.fieldsMetadata}>
       <TableSortContext.Consumer>
-        {(sortProps) => <StandardPageInner {...pageProps} {...sortProps} />}
+        {(sortProps) => <StandardPageInner {...pageProps} {...sortProps} pageRef={pageRef} />}
       </TableSortContext.Consumer>
     </TableSortContextProvider>
   );
