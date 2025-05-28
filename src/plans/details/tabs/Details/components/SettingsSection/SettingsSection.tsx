@@ -14,6 +14,7 @@ import TransferNetworkDetailsItem from './components/PlanTransferNetwork/Transfe
 import PreserveClusterCpuModelDetailsItem from './components/PreserveClusterCpuModel/PreserveClusterCpuModelDetailsItem';
 import PreserveStaticIPsDetailsItem from './components/PreserveStaticIPs/PreserveStaticIPsDetailsItem';
 import PVCNameTemplateDetailsItem from './components/PVCNameTemplate/PVCNameTemplateDetailsItem';
+import RawDiskCopyDetailsItem from './components/RawDiskCopy/RawDiskCopyDetailsItem';
 import RootDiskDetailsItem from './components/RootDisk/RootDiskDetailsItem';
 import SetLUKSEncryptionPasswordsDetailsItem from './components/SetLUKSEncryptionPasswords/SetLUKSEncryptionPasswordsDetailsItem';
 import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
@@ -56,6 +57,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
           canPatch={canPatch}
           shouldRender={isOvirt}
         />
+        <RawDiskCopyDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
       </DescriptionList>
     </ModalHOC>
   );
