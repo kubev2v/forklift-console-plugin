@@ -1,4 +1,4 @@
-import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
 import { missingKeysInSecretData } from '../../../helpers/missingKeysInSecretData';
 import { safeBase64Decode } from '../../../helpers/safeBase64Decode';
@@ -6,7 +6,10 @@ import type { ValidationMsg } from '../../common';
 
 import { openstackSecretFieldValidator } from './openstackSecretFieldValidator';
 
-export const openstackSecretValidator = (secret: IoK8sApiCoreV1Secret): ValidationMsg => {
+export const openstackSecretValidator = (
+  secret: IoK8sApiCoreV1Secret,
+  _provider?: V1beta1Provider,
+): ValidationMsg => {
   const authType = safeBase64Decode(secret?.data?.authType) || 'password';
 
   // eslint-disable-next-line no-useless-assignment

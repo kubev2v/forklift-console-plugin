@@ -14,7 +14,7 @@ import OvaProviderDetailsPage from './OvaProviderDetailsPage';
 import OVirtProviderDetailsPage from './OVirtProviderDetailsPage';
 import VSphereProviderDetailsPage from './VSphereProviderDetailsPage';
 
-import './ProviderDetailsPage.style.css';
+import './ProviderDetailsPage.style.scss';
 
 type ProviderDetailsPageProps = {
   kind: string;

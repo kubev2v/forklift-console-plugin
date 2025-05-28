@@ -99,14 +99,21 @@ const DescriptionTitle: FC<{ title: string }> = ({ title }) => (
  *
  * @component
  */
-const DisplayTitle: FC<{
+export const DisplayTitle: FC<{
   title: string;
-  helpContent: ReactNode;
-  showHelpIconNextToTitle: boolean;
+  helpContent?: ReactNode;
+  showHelpIconNextToTitle?: boolean;
   moreInfoLabel?: string;
   moreInfoLink?: string;
   crumbs?: string[];
-}> = ({ crumbs, helpContent, moreInfoLabel, moreInfoLink, showHelpIconNextToTitle, title }) =>
+}> = ({
+  crumbs,
+  helpContent,
+  moreInfoLabel,
+  moreInfoLink,
+  showHelpIconNextToTitle = false,
+  title,
+}) =>
   helpContent ? (
     <DescriptionTitleWithHelp
       title={title}
@@ -200,7 +207,7 @@ export const DetailsItem: FC<DetailsItemProps> = ({
       <DisplayTitle
         title={title}
         helpContent={helpContent}
-        showHelpIconNextToTitle={showHelpIconNextToTitle!}
+        showHelpIconNextToTitle={showHelpIconNextToTitle}
         moreInfoLabel={moreInfoLabel}
         moreInfoLink={moreInfoLink}
         crumbs={crumbs}

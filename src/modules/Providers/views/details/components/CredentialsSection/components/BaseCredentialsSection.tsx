@@ -1,6 +1,7 @@
 import { type FC, useReducer, useState } from 'react';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
 import type { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
+import type { CredentialsEditModeByTypeProps } from 'src/providers/details/tabs/Credentials/components/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
@@ -35,9 +36,9 @@ export type EditComponentProps = {
 
 export type BaseCredentialsSectionProps = {
   secret: IoK8sApiCoreV1Secret;
-  validator: (provider: V1beta1Provider, secret: IoK8sApiCoreV1Secret) => ValidationMsg;
+  validator: (secret: IoK8sApiCoreV1Secret, provider: V1beta1Provider) => ValidationMsg;
   ListComponent: FC<ListComponentProps>;
-  EditComponent: FC<EditComponentProps>;
+  EditComponent: FC<CredentialsEditModeByTypeProps>;
 };
 
 export const BaseCredentialsSection: FC<BaseCredentialsSectionProps> = ({
@@ -162,7 +163,7 @@ export const BaseCredentialsSection: FC<BaseCredentialsSectionProps> = ({
       <Divider />
 
       {state.alertMessage}
-      <EditComponent secret={state.newSecret} onChange={onNewSecretChange} />
+      <EditComponent secret={state.newSecret} onNewSecretChange={onNewSecretChange} />
     </>
   ) : (
     <>

@@ -1,12 +1,12 @@
 import { type FC, useCallback, useMemo, useState } from 'react';
 import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
+import { VSphereEndpointType } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
 import { Form, ModalVariant, Stack } from '@patternfly/react-core';
 
-import { VSphereEndpointType } from './utils/constants';
 import { getSelectedInventoryHostNetworkTriples } from './utils/getSelectedInventoryHostNetworkTriples';
 import { onSaveHost } from './utils/onSaveHost';
 import type { InventoryHostNetworkTriple } from './utils/types';

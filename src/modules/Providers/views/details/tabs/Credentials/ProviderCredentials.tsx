@@ -30,7 +30,7 @@ const ProviderCredentials: FC<ProviderCredentialsProps> = ({ loaded, loadError, 
   );
 };
 
-export const ProviderCredentialsTabPage: FC<{ name: string; namespace: string }> = ({
+export const ProviderCredentialsTabPage1: FC<{ name: string; namespace: string }> = ({
   name,
   namespace,
 }) => {
