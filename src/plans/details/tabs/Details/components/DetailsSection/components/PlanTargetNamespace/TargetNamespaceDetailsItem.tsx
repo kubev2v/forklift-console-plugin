@@ -17,11 +17,13 @@ const TargetNamespaceDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pl
 
   return (
     <DetailsItem
-      title={t('Target namespace')}
+      title={t('Target project')}
       content={
         getPlanTargetNamespace(plan) ?? <span className="text-muted">{PROVIDER_DEFAULTS}</span>
       }
-      helpContent={t('Target namespace.')}
+      helpContent={t(
+        'Projects, also known as namespaces, separate resources within clusters. The target project is the project, within your selected target provider, that your virtual machines will be migrated to. This is different from the project that your migration plan will be created in and where your provider was created.',
+      )}
       crumbs={['spec', 'targetNamespace']}
       onEdit={() => {
         showModal(<EditPlanTargetNamespace resource={plan} />);

@@ -47,7 +47,7 @@ export const planFields: ResourceField[] = [
     isIdentity: true,
     isVisible: true,
     jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Namespace],
-    label: t('Namespace'),
+    label: t('Project'),
     resourceFieldId: PlanTableResourceId.Namespace,
     sortable: true,
   },

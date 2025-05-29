@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { Label, Spinner } from '@patternfly/react-core';
+import { Label } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
 import { PlanStatuses } from './types';
@@ -23,10 +23,14 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
   ),
   [PlanStatuses.Completed]: (
     <Label className="forklift-plan-status__dark-label" isCompact variant="filled">
-      {t('Completed')}
+      {t('Complete')}
     </Label>
   ),
-  [PlanStatuses.Executing]: <Spinner size="md" />,
+  [PlanStatuses.Executing]: (
+    <Label className="forklift-plan-status__grey-label" isCompact variant="filled">
+      {t('Migration running')}
+    </Label>
+  ),
   [PlanStatuses.Incomplete]: (
     <Label className="forklift-plan-status__grey-label" isCompact variant="filled">
       {t('Incomplete')}
