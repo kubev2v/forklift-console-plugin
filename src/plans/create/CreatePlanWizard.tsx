@@ -19,11 +19,13 @@ import ReviewStep from './steps/review/ReviewStep';
 import StorageMapStep from './steps/storage-map/StorageMapStep';
 import VirtualMachinesStep from './steps/virtual-machines/VirtualMachinesStep';
 import VirtualMachinesStepFooter from './steps/virtual-machines/VirtualMachinesStepFooter';
+import { getCreatedPlanPath } from './utils/getCreatedPlanPath';
+import { hasWarmMigrationProviderType } from './utils/hasWarmMigrationProviderType';
+import { submitMigrationPlan } from './utils/submitMigrationPlan';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import CreatePlanWizardContextProvider from './CreatePlanWizardContextProvider';
 import CreatePlanWizardFooter from './CreatePlanWizardFooter';
 import type { CreatePlanFormData } from './types';
-import { getCreatedPlanPath, handlePlanSubmission, hasWarmMigrationProviderType } from './utils';
 
 import './CreatePlanWizard.style.scss';
 
@@ -58,7 +60,7 @@ const CreatePlanWizard: FC = () => {
 
     try {
       const formData = getValues();
-      await handlePlanSubmission(formData);
+      await submitMigrationPlan(formData);
 
       // Navigate to the created plan
       history.push(getCreatedPlanPath(planName, planProject));
