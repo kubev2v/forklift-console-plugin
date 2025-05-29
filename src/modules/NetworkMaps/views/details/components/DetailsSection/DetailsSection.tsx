@@ -1,38 +1,35 @@
 import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
+import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';
+import NameDetailsItem from '@components/DetailItems/NameDetailItem';
+import NamespaceDetailsItem from '@components/DetailItems/NamespaceDetailItem';
+import OwnerDetailsItem from '@components/DetailItems/OwnerDetailItem';
 import type { V1beta1NetworkMap } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
-
-import { CreatedAtDetailsItem } from './components/CreatedAtDetailsItem';
-import { NameDetailsItem } from './components/NameDetailsItem';
-import { NamespaceDetailsItem } from './components/NamespaceDetailsItem';
-import { OwnerDetailsItem } from './components/OwnerDetailsItem';
-
-export const DetailsSection: FC<DetailsSectionProps> = (props) => (
-  <ModalHOC>
-    <DetailsSectionInternal {...props} />
-  </ModalHOC>
-);
 
 type DetailsSectionProps = {
   obj: V1beta1NetworkMap;
 };
 
-const DetailsSectionInternal: FC<DetailsSectionProps> = ({ obj }) => {
+const DetailsSection: FC<DetailsSectionProps> = ({ obj }) => {
   return (
-    <DescriptionList
-      columnModifier={{
-        default: '1Col',
-      }}
-    >
-      <NameDetailsItem resource={obj} />
+    <ModalHOC>
+      <DescriptionList
+        columnModifier={{
+          default: '1Col',
+        }}
+      >
+        <NameDetailsItem resource={obj} />
 
-      <NamespaceDetailsItem resource={obj} />
+        <NamespaceDetailsItem resource={obj} />
 
-      <CreatedAtDetailsItem resource={obj} />
+        <CreatedAtDetailsItem resource={obj} />
 
-      <OwnerDetailsItem resource={obj} />
-    </DescriptionList>
+        <OwnerDetailsItem resource={obj} />
+      </DescriptionList>
+    </ModalHOC>
   );
 };
+
+export default DetailsSection;

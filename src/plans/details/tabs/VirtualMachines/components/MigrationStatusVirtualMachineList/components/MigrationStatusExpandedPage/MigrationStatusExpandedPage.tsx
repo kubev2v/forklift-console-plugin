@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import PlanWarmLabel from 'src/plans/details/components/PlanWarmLabel';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import PlanWarmLabel from 'src/plans/details/components/PlanWarmLabel/PlanWarmLabel';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ExpandableSectionHeading from '@components/ExpandableSectionHeading/ExpandableSectionHeading';
@@ -12,7 +13,7 @@ import { isVirtualMachineCreationCompleted } from '../../utils/utils';
 import MigrationDataVolumesTable from './components/MigrationDataVolumesTable';
 import MigrationJobsTable from './components/MigrationJobsTable';
 import MigrationPodsTable from './components/MigrationPodsTable';
-import MigrationProgressTable from './components/MigrationProgressTable';
+import MigrationProgressTable from './components/MigrationProgressTable/MigrationProgressTable';
 import MigrationPVCsTable from './components/MigrationPVCsTable';
 import MigrationVirtualMachineTable from './components/MigrationVirtualMachineTable';
 
@@ -23,17 +24,17 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
 }) => {
   const { t } = useForkliftTranslation();
 
-  const { dvs, isWarm, jobs, pods, pvcs, statusVM, targetNamespace } = resourceData;
-  const pipeline = statusVM?.pipeline ?? [];
+  const { dvs, isWarm, jobs, plan, pods, pvcs, statusVM, targetNamespace } = resourceData;
   const vmCreated = isVirtualMachineCreationCompleted(statusVM);
 
   return (
-    <>
+    <ModalHOC>
       <PageSection>
         <ExpandableSectionHeading
           section={
             <MigrationProgressTable
-              pipeline={pipeline}
+              plan={plan}
+              statusVM={statusVM}
               vmCreated={vmCreated}
               targetNamespace={targetNamespace}
               vmName={statusVM?.name}
@@ -65,7 +66,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
           sectionTitle={t('Migration resources')}
         />
       </PageSection>
-    </>
+    </ModalHOC>
   );
 };
 

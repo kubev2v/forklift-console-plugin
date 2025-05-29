@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import { PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
@@ -24,7 +25,9 @@ const PlanDetailsNav: FC<PlanDetailsNavProps> = ({ name, namespace }) => {
 
   return (
     <LoadingSuspend obj={plan} loaded={loaded} loadError={loadError}>
-      <PlanPageHeader plan={plan} />
+      <ModalHOC>
+        <PlanPageHeader plan={plan} />
+      </ModalHOC>
       <HorizontalNav pages={pages} />
     </LoadingSuspend>
   );

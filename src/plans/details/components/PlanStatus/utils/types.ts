@@ -27,3 +27,7 @@ export enum PlanStatuses {
   Executing = 'Executing',
   Ready = 'Ready',
 }
+
+export const planMigrationVirtualMachineStatuses = {
+  CopyingPaused: 'CopyingPaused',
+} as const;
