@@ -1,85 +1,74 @@
-import { useEffect } from 'react';
-import { useWatch } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
-import { Alert, AlertVariant, Stack } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
+import { Flex, FlexItem, Form, Radio, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardContext';
-import { GeneralFormFieldId } from '../general-information/constants';
-import { VmFormFieldId } from '../virtual-machines/constants';
 
-import { defaultStorageMapping, StorageMapFieldId } from './constants';
-import StorageMapFieldTable from './StorageMapFieldTable';
-import { getSourceStorageValues } from './utils';
+import { StorageMapFieldId, StorageMapType, storageMapTypeLabels } from './constants';
+import ExistingStorageMapField from './ExistingStorageMapField';
+import NewStorageMapFields from './NewStorageMapFields';
 
 const StorageMapStep = () => {
   const { t } = useForkliftTranslation();
-  const { control, getFieldState, setValue } = useCreatePlanFormContext();
-  const { storage } = useCreatePlanWizardContext();
-  const { error: storageMapError } = getFieldState(StorageMapFieldId.StorageMap);
-  const [sourceProvider, vms, storageMap] = useWatch({
-    control,
-    name: [GeneralFormFieldId.SourceProvider, VmFormFieldId.Vms, StorageMapFieldId.StorageMap],
-  });
-
-  const [availableSourceStorages, sourceStoragesLoading, sourceStoragesError] = storage.sources;
-  const [availableTargetStorages, targetStoragesLoading, targetStoragesError] = storage.targets;
-  const isStorageMapEmpty = isEmpty(storageMap);
-  const isLoading = sourceStoragesLoading || targetStoragesLoading;
-
-  const { other: otherSourceStorages, used: usedSourceStorages } = getSourceStorageValues(
-    sourceProvider,
-    availableSourceStorages,
-    Object.values(vms),
-  );
-  const defaultTargetStorageName = availableTargetStorages?.[0]?.name;
-
-  // When the network mappings are empty, default to source network values used by VMs,
-  // otherwise set empty inputs for the field array to force an empty field table row.
-  useEffect(() => {
-    if (!isLoading && isStorageMapEmpty) {
-      if (isEmpty(usedSourceStorages)) {
-        setValue(StorageMapFieldId.StorageMap, [defaultStorageMapping]);
-        return;
-      }
-
-      setValue(
-        StorageMapFieldId.StorageMap,
-        usedSourceStorages.map((sourceStorage) => ({
-          [StorageMapFieldId.SourceStorage]: sourceStorage,
-          [StorageMapFieldId.TargetStorage]: { name: defaultTargetStorageName },
-        })),
-      );
-    }
-  }, [defaultTargetStorageName, isLoading, isStorageMapEmpty, setValue, usedSourceStorages]);
+  const { control, unregister } = useCreatePlanFormContext();
 
   return (
     <WizardStepContainer title={planStepNames[PlanWizardStepId.StorageMap]}>
-      <Stack hasGutter>
-        {storageMapError?.root && (
-          <Alert variant={AlertVariant.danger} isInline title={storageMapError.root.message} />
-        )}
+      <Form>
+        <Controller
+          name={StorageMapFieldId.StorageMapType}
+          control={control}
+          render={({ field: storageTypeField }) => (
+            <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
+              <FlexItem>
+                <Stack hasGutter>
+                  <Radio
+                    id={StorageMapType.Existing}
+                    name={StorageMapType.Existing}
+                    label={storageMapTypeLabels[StorageMapType.Existing]}
+                    checked={storageTypeField.value === StorageMapType.Existing}
+                    value={storageTypeField.value}
+                    isChecked={storageTypeField.value === StorageMapType.Existing}
+                    onChange={() => {
+                      storageTypeField.onChange(StorageMapType.Existing);
+                      unregister([StorageMapFieldId.StorageMap, StorageMapFieldId.StorageMapName]);
+                    }}
+                  />
 
-        {isEmpty(usedSourceStorages) && !sourceStoragesLoading && (
-          <Alert
-            variant={AlertVariant.warning}
-            isInline
-            title={t('No source storages are available for the selected VMs.')}
-          />
-        )}
+                  {storageTypeField.value === StorageMapType.Existing && (
+                    <ExistingStorageMapField />
+                  )}
+                </Stack>
+              </FlexItem>
 
-        <StorageMapFieldTable
-          targetStorages={availableTargetStorages}
-          usedSourceStorages={usedSourceStorages}
-          otherSourceStorages={otherSourceStorages}
-          isLoading={isLoading}
-          loadError={sourceStoragesError ?? targetStoragesError}
+              <FlexItem>
+                <Stack hasGutter>
+                  <Radio
+                    id={StorageMapType.New}
+                    name={StorageMapType.New}
+                    label={storageMapTypeLabels[StorageMapType.New]}
+                    description={t(
+                      'Use the suggested storage map, add mappings to it, or create a brand new one as needed.',
+                    )}
+                    checked={storageTypeField.value === StorageMapType.New}
+                    value={storageTypeField.value}
+                    isChecked={storageTypeField.value === StorageMapType.New}
+                    onChange={() => {
+                      storageTypeField.onChange(StorageMapType.New);
+                      unregister(StorageMapFieldId.ExistingStorageMap);
+                    }}
+                  />
+
+                  {storageTypeField.value === StorageMapType.New && <NewStorageMapFields />}
+                </Stack>
+              </FlexItem>
+            </Flex>
+          )}
         />
-      </Stack>
+      </Form>
     </WizardStepContainer>
   );
 };

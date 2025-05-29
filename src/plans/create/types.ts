@@ -70,6 +70,7 @@ export type CreatePlanFormData = FieldValues & {
   [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine>;
   [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
   [NetworkMapFieldId.ExistingNetworkMap]: V1beta1NetworkMap | undefined;
+  [StorageMapFieldId.ExistingStorageMap]: V1beta1StorageMap | undefined;
   [StorageMapFieldId.StorageMap]: StorageMapping[];
   [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
