@@ -1,7 +1,15 @@
 import type { ReactNode } from 'react';
 
-import { Button, ToolbarItem, Tooltip } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  Split,
+  SplitItem,
+  ToolbarItem,
+  Tooltip,
+} from '@patternfly/react-core';
 import { ColumnsIcon } from '@patternfly/react-icons';
+import { useForkliftTranslation } from '@utils/i18n';
 
 type ManageColumnsToolbarItemProps = {
   children: ReactNode;
@@ -26,16 +34,27 @@ type ManageColumnsToolbarItemProps = {
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/TableView/ManageColumnsToolbarItem.tsx)
  */
 export const ManageColumnsToolbarItem = ({
-  ariaLabel = 'Manage Columns',
+  ariaLabel,
   children,
   showDialog,
-  tooltip = 'Manage Columns',
+  tooltip,
 }: ManageColumnsToolbarItemProps) => {
+  const { t } = useForkliftTranslation();
+  const manageColumnsText = t('Manage columns');
   return (
     <ToolbarItem>
-      <Tooltip content={tooltip}>
-        <Button variant="plain" onClick={showDialog} aria-label={ariaLabel}>
-          <ColumnsIcon />
+      <Tooltip content={tooltip ?? manageColumnsText}>
+        <Button
+          variant={ButtonVariant.plain}
+          onClick={showDialog}
+          aria-label={ariaLabel ?? manageColumnsText}
+        >
+          <Split hasGutter>
+            <SplitItem>
+              <ColumnsIcon />
+            </SplitItem>
+            <SplitItem>{manageColumnsText}</SplitItem>
+          </Split>
         </Button>
       </Tooltip>
       {children}
