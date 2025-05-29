@@ -68,10 +68,12 @@ export type CreatePlanFormData = FieldValues & {
   [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProject]: string;
   [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine>;
-  [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
   [NetworkMapFieldId.ExistingNetworkMap]: V1beta1NetworkMap | undefined;
+  [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
+  [NetworkMapFieldId.NetworkMapName]: string;
   [StorageMapFieldId.ExistingStorageMap]: V1beta1StorageMap | undefined;
   [StorageMapFieldId.StorageMap]: StorageMapping[];
+  [StorageMapFieldId.StorageMapName]: string;
   [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
   [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
@@ -87,18 +89,12 @@ export type CategorizedSourceMappings = {
   other: MappingValue[];
 };
 
-export type CreateNetworkMapParams = {
-  networkMappings: NetworkMapping[];
+export type CreateMapParams<T> = {
+  mappings: T[];
   planProject: string;
   sourceProvider: V1beta1Provider | undefined;
   targetProvider: V1beta1Provider | undefined;
-};
-
-export type CreateStorageMapParams = {
-  storageMappings: StorageMapping[];
-  planProject: string;
-  sourceProvider: V1beta1Provider | undefined;
-  targetProvider: V1beta1Provider | undefined;
+  name?: string;
 };
 
 export type CreatePlanParams = {
