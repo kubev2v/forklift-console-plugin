@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
+import { TableSortContextProvider } from '@components/TableSortContext';
 import type { OVirtHost, VSphereHostInventory, VSphereVM } from '@kubev2v/types';
 import { t } from '@utils/i18n';
 
@@ -80,6 +81,10 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = 
   const { hasCriticalConcernFilter, obj } = props;
   const [hostsDict, foldersDict] = useVSphereInventoryVms({ provider: obj.provider }, true, null);
   const { vmData } = obj;
+  const fieldsMetadata = getVmTableResourceFields(
+    vSphereVmFieldsMetadataFactory,
+    hasCriticalConcernFilter,
+  );
 
   /**
    * Processes the vmData to filter out templates,
@@ -103,15 +108,14 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = 
     });
 
   return (
-    <ProviderVirtualMachinesList
-      {...props}
-      cellMapper={VSphereVirtualMachinesCells}
-      fieldsMetadata={getVmTableResourceFields(
-        vSphereVmFieldsMetadataFactory,
-        hasCriticalConcernFilter,
-      )}
-      pageId="VSphereVirtualMachinesList"
-      obj={{ ...obj, vmData: newVMData }}
-    />
+    <TableSortContextProvider fields={fieldsMetadata}>
+      <ProviderVirtualMachinesList
+        {...props}
+        cellMapper={VSphereVirtualMachinesCells}
+        fieldsMetadata={fieldsMetadata}
+        pageId="VSphereVirtualMachinesList"
+        obj={{ ...obj, vmData: newVMData }}
+      />
+    </TableSortContextProvider>
   );
 };

@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
+import { TableSortContextProvider } from '@components/TableSortContext';
 import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
@@ -39,11 +40,20 @@ const ovaVmFieldsMetadataFactory = [
 export const OvaVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
   hasCriticalConcernFilter,
   ...props
-}) => (
-  <ProviderVirtualMachinesList
-    {...props}
-    cellMapper={OvaVirtualMachinesCells}
-    fieldsMetadata={getVmTableResourceFields(ovaVmFieldsMetadataFactory, hasCriticalConcernFilter)}
-    pageId="OvaVirtualMachinesList"
-  />
-);
+}) => {
+  const fieldsMetadata = getVmTableResourceFields(
+    ovaVmFieldsMetadataFactory,
+    hasCriticalConcernFilter,
+  );
+
+  return (
+    <TableSortContextProvider fields={fieldsMetadata}>
+      <ProviderVirtualMachinesList
+        {...props}
+        cellMapper={OvaVirtualMachinesCells}
+        fieldsMetadata={fieldsMetadata}
+        pageId="OvaVirtualMachinesList"
+      />
+    </TableSortContextProvider>
+  );
+};

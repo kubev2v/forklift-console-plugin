@@ -105,7 +105,7 @@ export const mapTargetNetworksIdsToLabels = (
   const tuples: [string, string][] = targets
     .filter(
       ({ namespace }) =>
-        namespace === getPlanTargetNamespace(plan) || namespace === (Namespace.Default as string),
+        namespace === getPlanTargetNamespace(plan) || namespace === Namespace.Default,
     )
     .map((net) => [net.uid, `${net.namespace}/${net.name}`]);
 

@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
+import { TableSortContextProvider } from '@components/TableSortContext';
 import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
@@ -103,14 +104,20 @@ const openStackVmFieldsMetadataFactory = [
 export const OpenStackVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
   hasCriticalConcernFilter,
   ...props
-}) => (
-  <ProviderVirtualMachinesList
-    {...props}
-    cellMapper={OpenStackVirtualMachinesCells}
-    fieldsMetadata={getVmTableResourceFields(
-      openStackVmFieldsMetadataFactory,
-      hasCriticalConcernFilter,
-    )}
-    pageId="OpenStackVirtualMachinesList"
-  />
-);
+}) => {
+  const fieldsMetadata = getVmTableResourceFields(
+    openStackVmFieldsMetadataFactory,
+    hasCriticalConcernFilter,
+  );
+
+  return (
+    <TableSortContextProvider fields={fieldsMetadata}>
+      <ProviderVirtualMachinesList
+        {...props}
+        cellMapper={OpenStackVirtualMachinesCells}
+        fieldsMetadata={fieldsMetadata}
+        pageId="OpenStackVirtualMachinesList"
+      />
+    </TableSortContextProvider>
+  );
+};

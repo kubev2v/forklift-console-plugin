@@ -6,6 +6,8 @@ import { ALL_PROJECTS_KEY } from '@utils/constants';
 import { getDefaultNamespace } from '@utils/namespaces';
 
 import { GeneralFormFieldId } from '../steps/general-information/constants';
+import { HooksFormFieldId, MigrationHookFieldId } from '../steps/hooks/constants';
+import { NetworkMapFieldId, NetworkMapType } from '../steps/network-map/constants';
 import { OtherSettingsFormFieldId } from '../steps/other-settings/constants';
 import type { CreatePlanFormData } from '../types';
 
@@ -38,6 +40,13 @@ export const useDefaultFormValues = (
   return {
     [GeneralFormFieldId.PlanProject]: initialValues?.planProject ?? initialPlanProject,
     [GeneralFormFieldId.SourceProvider]: initialValues?.sourceProvider,
+    [HooksFormFieldId.PostMigration]: {
+      [MigrationHookFieldId.EnableHook]: false,
+    },
+    [HooksFormFieldId.PreMigration]: {
+      [MigrationHookFieldId.EnableHook]: false,
+    },
+    [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
     [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [{ value: '' }],
   };
 };

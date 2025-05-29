@@ -1,6 +1,13 @@
 import { toNetworks } from 'src/modules/Providers/views/migrate/reducer/getNetworksUsedBySelectedVMs';
 
-import type { OVirtNicProfile, ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
+import type {
+  OpenShiftNetworkAttachmentDefinition,
+  OVirtNicProfile,
+  ProviderVirtualMachine,
+  V1beta1Provider,
+} from '@kubev2v/types';
+import { Namespace } from '@utils/constants';
+import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
 import {
@@ -11,7 +18,7 @@ import {
 } from '../../types';
 import { getMapResourceLabel } from '../utils';
 
-import { NetworkMapFieldId, type NetworkMapping } from './constants';
+import { defaultNetMapping, NetworkMapFieldId, type NetworkMapping } from './constants';
 
 type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
 
@@ -104,4 +111,32 @@ export const validateNetworkMap = (
   }
 
   return undefined;
+};
+
+/**
+ * Filters target networks by project/namespace and transforms them into a mapping object.
+ * Only includes networks from the target project or default namespace.
+ *
+ */
+export const filterTargetNetworksByProject = (
+  availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[],
+  targetProject: string,
+) => {
+  if (isEmpty(availableTargetNetworks) || !targetProject) {
+    return { podNetwork: defaultNetMapping[NetworkMapFieldId.TargetNetwork] };
+  }
+
+  return availableTargetNetworks.reduce(
+    (networkMap: Record<string, MappingValue>, network) => {
+      if (network.namespace === targetProject || network.namespace === Namespace.Default) {
+        networkMap[network.uid] = {
+          id: network.id,
+          name: `${network.namespace}/${network.name}`,
+        };
+      }
+
+      return networkMap;
+    },
+    { podNetwork: defaultNetMapping[NetworkMapFieldId.TargetNetwork] },
+  );
 };

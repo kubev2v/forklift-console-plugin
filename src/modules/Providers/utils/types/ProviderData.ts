@@ -6,7 +6,7 @@ import type { ProvidersPermissionStatus } from './ProvidersPermissionStatus';
 
 export type ProviderData = {
   provider?: V1beta1Provider;
-  inventory?: ProviderInventory;
+  inventory?: ProviderInventory | null;
   inventoryLoading?: boolean;
   vmData?: VmData[];
   vmDataLoading?: boolean;

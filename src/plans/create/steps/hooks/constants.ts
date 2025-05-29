@@ -11,6 +11,6 @@ export enum MigrationHookFieldId {
 
 export type MigrationHook = {
   [MigrationHookFieldId.EnableHook]: boolean;
-  [MigrationHookFieldId.HookRunnerImage]: string;
-  [MigrationHookFieldId.AnsiblePlaybook]: string;
+  [MigrationHookFieldId.HookRunnerImage]?: string;
+  [MigrationHookFieldId.AnsiblePlaybook]?: string;
 };

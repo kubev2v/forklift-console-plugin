@@ -1,112 +1,74 @@
-import { useEffect, useMemo } from 'react';
-import { useWatch } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
-import { Alert, AlertVariant, Stack } from '@patternfly/react-core';
-import { Namespace } from '@utils/constants';
-import { isEmpty } from '@utils/helpers';
+import { Flex, FlexItem, Form, Radio, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardContext';
-import type { MappingValue } from '../../types';
-import { GeneralFormFieldId } from '../general-information/constants';
-import { VmFormFieldId } from '../virtual-machines/constants';
 
-import { defaultNetMapping, NetworkMapFieldId } from './constants';
-import NetworkMapFieldTable from './NetworkMapFieldTable';
-import { getSourceNetworkValues } from './utils';
+import { NetworkMapFieldId, NetworkMapType, networkMapTypeLabels } from './constants';
+import ExistingNetworkMapField from './ExistingNetworkMapField';
+import NewNetworkMapFields from './NewNetworkMapFields';
 
 const NetworkMapStep = () => {
   const { t } = useForkliftTranslation();
-  const { control, getFieldState, setValue } = useCreatePlanFormContext();
-  const { network } = useCreatePlanWizardContext();
-  const { error: networkMapError } = getFieldState(NetworkMapFieldId.NetworkMap);
-  const [targetProject, sourceProvider, vms, networkMap] = useWatch({
-    control,
-    name: [
-      GeneralFormFieldId.TargetProject,
-      GeneralFormFieldId.SourceProvider,
-      VmFormFieldId.Vms,
-      NetworkMapFieldId.NetworkMap,
-    ],
-  });
-
-  const [availableSourceNetworks, sourceNetworksLoading, sourceNetworksError] = network.sources;
-  const [availableTargetNetworks, targetNetworksLoading, targetNetworksError] = network.targets;
-  const isNetMapEmpty = isEmpty(networkMap);
-  const isLoading = sourceNetworksLoading || targetNetworksLoading;
-
-  const { other: otherSourceNetworks, used: usedSourceNetworks } = getSourceNetworkValues(
-    sourceProvider,
-    availableSourceNetworks,
-    Object.values(vms),
-  );
-
-  // When the network map is empty, default to source network values used by VMs,
-  // otherwise set empty inputs for the field array to force an empty field table row.
-  useEffect(() => {
-    if (!isLoading && isNetMapEmpty) {
-      if (isEmpty(usedSourceNetworks)) {
-        setValue(NetworkMapFieldId.NetworkMap, [defaultNetMapping]);
-        return;
-      }
-
-      setValue(
-        NetworkMapFieldId.NetworkMap,
-        usedSourceNetworks.map((sourceNetwork) => ({
-          [NetworkMapFieldId.SourceNetwork]: sourceNetwork,
-          [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
-        })),
-      );
-    }
-  }, [isLoading, isNetMapEmpty, setValue, usedSourceNetworks]);
-
-  const targetNetworkMap = useMemo(
-    () =>
-      availableTargetNetworks.reduce(
-        (acc: Record<string, MappingValue>, targetNetwork) => {
-          if (
-            targetNetwork.namespace === targetProject ||
-            (targetNetwork.namespace as Namespace) === Namespace.Default
-          ) {
-            acc[targetNetwork.uid] = {
-              id: targetNetwork.id,
-              name: `${targetNetwork.namespace}/${targetNetwork.name}`,
-            };
-          }
-
-          return acc;
-        },
-        { podNetwork: defaultNetMapping[NetworkMapFieldId.TargetNetwork] },
-      ),
-    [availableTargetNetworks, targetProject],
-  );
+  const { control, unregister } = useCreatePlanFormContext();
 
   return (
     <WizardStepContainer title={planStepNames[PlanWizardStepId.NetworkMap]}>
-      <Stack hasGutter>
-        {networkMapError?.root && (
-          <Alert variant={AlertVariant.danger} isInline title={networkMapError.root.message} />
-        )}
+      <Form>
+        <Controller
+          name={NetworkMapFieldId.NetworkMapType}
+          control={control}
+          render={({ field: networkTypeField }) => (
+            <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
+              <FlexItem>
+                <Stack hasGutter>
+                  <Radio
+                    id={NetworkMapType.Existing}
+                    name={NetworkMapType.Existing}
+                    label={networkMapTypeLabels[NetworkMapType.Existing]}
+                    checked={networkTypeField.value === NetworkMapType.Existing}
+                    value={networkTypeField.value}
+                    isChecked={networkTypeField.value === NetworkMapType.Existing}
+                    onChange={() => {
+                      networkTypeField.onChange(NetworkMapType.Existing);
+                      unregister([NetworkMapFieldId.NetworkMap, NetworkMapFieldId.NetworkMapName]);
+                    }}
+                  />
 
-        {isEmpty(usedSourceNetworks) && !sourceNetworksLoading && (
-          <Alert
-            variant={AlertVariant.warning}
-            isInline
-            title={t('No source networks are available for the selected VMs.')}
-          />
-        )}
+                  {networkTypeField.value === NetworkMapType.Existing && (
+                    <ExistingNetworkMapField />
+                  )}
+                </Stack>
+              </FlexItem>
 
-        <NetworkMapFieldTable
-          targetNetworks={targetNetworkMap}
-          usedSourceNetworks={usedSourceNetworks}
-          otherSourceNetworks={otherSourceNetworks}
-          isLoading={isLoading}
-          loadError={sourceNetworksError ?? targetNetworksError}
+              <FlexItem>
+                <Stack hasGutter>
+                  <Radio
+                    id={NetworkMapType.New}
+                    name={NetworkMapType.New}
+                    label={networkMapTypeLabels[NetworkMapType.New]}
+                    description={t(
+                      'Use the suggested network map, add mappings to it, or create a brand new one as needed.',
+                    )}
+                    checked={networkTypeField.value === NetworkMapType.New}
+                    value={networkTypeField.value}
+                    isChecked={networkTypeField.value === NetworkMapType.New}
+                    onChange={() => {
+                      networkTypeField.onChange(NetworkMapType.New);
+                      unregister(NetworkMapFieldId.ExistingNetworkMap);
+                    }}
+                  />
+
+                  {networkTypeField.value === NetworkMapType.New && <NewNetworkMapFields />}
+                </Stack>
+              </FlexItem>
+            </Flex>
+          )}
         />
-      </Stack>
+      </Form>
     </WizardStepContainer>
   );
 };

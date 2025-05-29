@@ -11,7 +11,6 @@ import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 
 import ConditionsSection from './components/ConditionsSection/ConditionsSection';
 import DetailsSection from './components/DetailsSection/DetailsSection';
-import InfoSection from './components/InfoSection';
 import InventorySection from './components/InventorySection/InventorySection';
 import SecretsSection from './components/SecretsSection/SecretsSection';
 
@@ -21,8 +20,6 @@ type ProviderDetailsTabPageProp = {
 
 const ProviderDetailsTabPage: FC<ProviderDetailsTabPageProp> = ({ provider }) => {
   const { t } = useForkliftTranslation();
-
-  const name = provider?.metadata?.name;
   const namespace = provider?.metadata?.namespace;
 
   const { inventory } = useProviderInventory<ProviderInventory>({ provider });
@@ -32,10 +29,6 @@ const ProviderDetailsTabPage: FC<ProviderDetailsTabPageProp> = ({ provider }) =>
   return (
     <ModalHOC>
       <div>
-        <PageSection variant={PageSectionVariants.light} className="forklift-page-section--info">
-          <InfoSection name={name} namespace={namespace} inventory={inventory} />
-        </PageSection>
-
         <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
           <SectionHeading text={t('Provider details')} />
           <DetailsSection data={data} />
