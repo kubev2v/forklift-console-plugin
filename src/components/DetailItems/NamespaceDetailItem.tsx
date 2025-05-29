@@ -25,10 +25,10 @@ const NamespaceDetailsItem: FC<ResourceDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Namespace')}
+      title={t('Project')}
       content={
         <ResourceLink
-          groupVersionKind={{ kind: 'Namespace', version: 'v1' }}
+          groupVersionKind={{ kind: 'Project', version: 'v1' }}
           name={namespace}
           namespace={namespace}
         />

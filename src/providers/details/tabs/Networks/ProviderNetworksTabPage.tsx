@@ -46,7 +46,7 @@ const ProviderNetworksTabPage: FC<ProviderNetworksTabPageProp> = ({ provider }) 
       networks?.map((network) => {
         const config = network?.object?.spec?.config;
         return {
-          config: JSON.parse(!config?.length ? '{}' : config) as CnoConfig,
+          config: JSON.parse(config ?? '{}') as CnoConfig,
           isDefault: `${network.namespace}/${network.name}` === defaultNetworkName,
           name: network.name,
           namespace: network.namespace,
@@ -80,7 +80,7 @@ const ProviderNetworksTabPage: FC<ProviderNetworksTabPageProp> = ({ provider }) 
             <Thead>
               <Tr>
                 <Th width={30}>{t('Name')}</Th>
-                <Th width={30}>{t('Namespace')}</Th>
+                <Th width={30}>{t('Project')}</Th>
                 <Th width={30}>{t('Type')}</Th>
               </Tr>
             </Thead>

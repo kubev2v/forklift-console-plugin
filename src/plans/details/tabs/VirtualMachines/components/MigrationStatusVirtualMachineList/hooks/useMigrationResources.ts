@@ -88,6 +88,7 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
       dvs: dvsDict[specVM.id!],
       isWarm: getPlanIsWarm(plan),
       jobs: jobsDict[specVM.id!],
+      plan,
       pods: podsDict[specVM.id!],
       pvcs: pvcsDict[specVM.id!],
       specVM,
