@@ -2,9 +2,10 @@ import type { FC } from 'react';
 import { Controller, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
+import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
 import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
-import { MenuToggleStatus } from '@patternfly/react-core';
+import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -33,6 +34,20 @@ const PlanProjectField: FC = () => {
       isRequired
       fieldId={GeneralFormFieldId.PlanProject}
       label={generalFormFieldLabels[GeneralFormFieldId.PlanProject]}
+      labelIcon={
+        <HelpIconPopover>
+          <Stack hasGutter>
+            <StackItem>
+              {t(
+                'The project that your migration plan will be created in. Only projects with providers in them can be selected.',
+              )}
+            </StackItem>
+            <StackItem>
+              {t('Projects, also known as namespaces, separate resources within clusters.')}
+            </StackItem>
+          </Stack>
+        </HelpIconPopover>
+      }
     >
       <Controller
         name={GeneralFormFieldId.PlanProject}

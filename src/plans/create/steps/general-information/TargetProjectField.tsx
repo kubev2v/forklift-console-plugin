@@ -3,8 +3,9 @@ import { Controller, useWatch } from 'react-hook-form';
 import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
+import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
-import { MenuToggleStatus } from '@patternfly/react-core';
+import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -34,6 +35,20 @@ const TargetProjectField: FC = () => {
       isRequired
       fieldId={GeneralFormFieldId.TargetProject}
       label={generalFormFieldLabels[GeneralFormFieldId.TargetProject]}
+      labelIcon={
+        <HelpIconPopover>
+          <Stack hasGutter>
+            <StackItem>
+              {t(
+                'The target project is the project, within your selected target provider, that your virtual machines will be migrated to. This is different from the project that your migration plan will be created in and where your provider was created.',
+              )}
+            </StackItem>
+            <StackItem>
+              {t('Projects, also known as namespaces, separate resources within clusters.')}
+            </StackItem>
+          </Stack>
+        </HelpIconPopover>
+      }
     >
       <Controller
         name={GeneralFormFieldId.TargetProject}

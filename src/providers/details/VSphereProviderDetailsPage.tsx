@@ -37,7 +37,7 @@ const VSphereProviderDetailsPage: FC<{
     {
       component: () => <ProviderVirtualMachinesTabPage provider={provider} />,
       href: 'vms',
-      name: t('Virtual Machines'),
+      name: t('Virtual machines'),
     },
     {
       component: () => <ProviderHostsTabPage provider={provider} />,

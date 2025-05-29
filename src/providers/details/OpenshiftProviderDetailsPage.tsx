@@ -38,7 +38,7 @@ const OpenshiftProviderDetailsPage: FC<{
     {
       component: () => <ProviderVirtualMachinesTabPage provider={provider} />,
       href: 'vms',
-      name: t('Virtual Machines'),
+      name: t('Virtual machines'),
     },
     {
       component: () => <ProviderNetworksTabPage provider={provider} />,

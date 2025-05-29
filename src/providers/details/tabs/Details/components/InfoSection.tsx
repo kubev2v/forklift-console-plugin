@@ -30,7 +30,7 @@ const InfoSection: FC<InfoSectionProps> = ({ inventory, name, namespace }) => {
           <ForkliftTrans>
             To migrate virtual machines from <strong>{name}</strong> provider,{' '}
             <Link to={`${providerURL}/vms`}>
-              go to <strong>Virtual Machines</strong> tab
+              go to <strong>Virtual machines</strong> tab
             </Link>
             .
           </ForkliftTrans>

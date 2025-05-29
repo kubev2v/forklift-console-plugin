@@ -21,7 +21,7 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
 
   return (
     <Card>
-      <CardTitle className="forklift-title">{t('Virtual Machines')}</CardTitle>
+      <CardTitle className="forklift-title">{t('Virtual machines')}</CardTitle>
       <CardBody className="forklift-status-migration">
         <div className="forklift-status-migration-donut">
           <ChartDonut

@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
+import { TableSortContextProvider } from '@components/TableSortContext';
 import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
@@ -77,10 +78,12 @@ const openShiftVmFieldsMetadataFactory = [
 ];
 
 export const OpenShiftVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = (props) => (
-  <ProviderVirtualMachinesList
-    {...props}
-    cellMapper={OpenShiftVirtualMachinesCells}
-    fieldsMetadata={openShiftVmFieldsMetadataFactory}
-    pageId="OpenShiftVirtualMachinesList"
-  />
+  <TableSortContextProvider fields={openShiftVmFieldsMetadataFactory}>
+    <ProviderVirtualMachinesList
+      {...props}
+      cellMapper={OpenShiftVirtualMachinesCells}
+      fieldsMetadata={openShiftVmFieldsMetadataFactory}
+      pageId="OpenShiftVirtualMachinesList"
+    />
+  </TableSortContextProvider>
 );
