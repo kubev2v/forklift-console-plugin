@@ -24,3 +24,30 @@ export const PROVIDER_TYPES = {
   ovirt: 'ovirt',
   vsphere: 'vsphere',
 } as const;
+
+export enum VSphereEndpointType {
+  ESXi = 'esxi',
+  vCenter = 'vcenter',
+}
+
+export enum OpenstackAuthType {
+  PasswordSecretFields = 'passwordSecretFields',
+  TokenWithUsernameSecretFields = 'tokenWithUsernameSecretFields',
+  TokenWithUserIDSecretFields = 'tokenWithUserIDSecretFields',
+  ApplicationCredentialIdSecretFields = 'applicationCredentialIdSecretFields',
+  ApplicationCredentialNameSecretFields = 'applicationCredentialNameSecretFields',
+}
+
+export enum OpenstackSecretFieldsId {
+  Username = 'username',
+  Password = 'password',
+  Token = 'token',
+  RegionName = 'regionName',
+  ProjectName = 'projectName',
+  DomainName = 'domainName',
+  UserId = 'userID',
+  ProjectId = 'projectID',
+  ApplicationCredentialName = 'applicationCredentialName',
+  ApplicationCredentialSecret = 'applicationCredentialSecret',
+  ApplicationCredentialId = 'applicationCredentialID',
+}
