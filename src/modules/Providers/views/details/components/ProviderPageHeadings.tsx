@@ -13,6 +13,7 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection, Split, SplitItem } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import InventoryNotReachable from '../../list/components/InventoryNotReachable';
 import ProviderCriticalCondition from '../../list/components/ProviderCriticalCondition';
@@ -86,7 +87,7 @@ export const ProviderPageHeadings: FC<{ name: string; namespace: string }> = ({
           </Split>
         }
       >
-        {alerts && alerts.length > 0 && (
+        {!isEmpty(alerts) && (
           <PageSection variant="light" className="forklift-page-headings-alerts">
             {alerts}
           </PageSection>
