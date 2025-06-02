@@ -1,2 +1,6 @@
 export const STANDARD = 'standard';
-export const POD_NETWORK = 'Pod Networking';
+
+export enum PodNetworkLabel {
+  Source = 'Pod Network',
+  Target = 'Pod',
+}

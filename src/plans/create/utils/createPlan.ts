@@ -3,6 +3,7 @@ import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helper
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
+import { MigrationTypeValue } from '../steps/migration-type/constants';
 import { type CreatePlanParams, ProviderType } from '../types';
 
 /**
@@ -10,6 +11,7 @@ import { type CreatePlanParams, ProviderType } from '../types';
  * Links together providers, network maps, storage maps, and VMs to be migrated
  */
 export const createPlan = async ({
+  migrationType,
   networkMap,
   planName,
   planProject,
@@ -41,6 +43,7 @@ export const createPlan = async ({
         name: vm.name,
         namespace: vm.providerType === ProviderType.Openshift ? vm.namespace : undefined,
       })),
+      warm: migrationType === MigrationTypeValue.Warm,
     },
   };
 

@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useEffect } from 'react';
 import { Controller, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
@@ -11,6 +11,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
+import { useDefaultProject } from './useDefaultProject';
 
 const PlanProjectField: FC = () => {
   const { t } = useForkliftTranslation();
@@ -28,6 +29,14 @@ const PlanProjectField: FC = () => {
     ],
   });
   const [projectOptions] = useProjectNameSelectOptions();
+  const defaultProject = useDefaultProject(projectOptions);
+
+  // Automatically set the default plan project once it's resolved
+  useEffect(() => {
+    if (defaultProject) {
+      setValue(GeneralFormFieldId.PlanProject, defaultProject);
+    }
+  }, [defaultProject, setValue]);
 
   return (
     <FormGroupWithErrorText

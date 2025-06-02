@@ -2,7 +2,7 @@ import { NetworkMapModel, StorageMapModel } from '@kubev2v/types';
 
 import type { CreatePlanFormData } from '../types';
 
-import { addOwnerRef } from './addOwnerRef';
+import { addOwnerRefs } from './addOwnerRefs';
 import { createNetworkMap } from './createNetworkMap';
 import { createPlan } from './createPlan';
 import { createStorageMap } from './createStorageMap';
@@ -15,6 +15,7 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
   const {
     existingNetworkMap,
     existingStorageMap,
+    migrationType,
     networkMap: newNetworkMap,
     networkMapName,
     planName,
@@ -53,6 +54,7 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
 
   // Create plan with references to created maps
   const createdPlanRef = await createPlan({
+    migrationType,
     networkMap: planNetworkMap,
     planName,
     planProject,
@@ -63,6 +65,6 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
   });
 
   // Add owner references to link resources
-  await addOwnerRef(StorageMapModel, planStorageMap, [createdPlanRef]);
-  await addOwnerRef(NetworkMapModel, planNetworkMap, [createdPlanRef]);
+  await addOwnerRefs(StorageMapModel, planStorageMap, [createdPlanRef]);
+  await addOwnerRefs(NetworkMapModel, planNetworkMap, [createdPlanRef]);
 };

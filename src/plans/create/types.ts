@@ -105,6 +105,7 @@ export type CreatePlanParams = {
   networkMap: V1beta1NetworkMap;
   storageMap: V1beta1StorageMap;
   vms: ProviderVirtualMachine[];
+  migrationType: MigrationTypeValue;
 };
 
 type ResourceQueryResult<T> = [T, boolean, Error | null];

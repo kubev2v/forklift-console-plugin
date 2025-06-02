@@ -11,7 +11,7 @@ import type {
 import { Namespace } from '@utils/constants';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 
-import { POD_NETWORK, STANDARD } from './constants';
+import { PodNetworkLabel, STANDARD } from './constants';
 
 const resolveCollisions = (tuples: [string, string][]): Record<string, string> =>
   tuples.reduce<Record<string, string>>((acc, [label, id]) => {
@@ -62,6 +62,8 @@ export const mapSourceNetworksIdsToLabels = (
       }
     })
     .filter(Boolean);
+
+  tuples.push([POD, PodNetworkLabel.Source]);
   const labelToId = resolveCollisions(tuples);
   return labelToId;
 };
@@ -109,7 +111,7 @@ export const mapTargetNetworksIdsToLabels = (
     )
     .map((net) => [net.uid, `${net.namespace}/${net.name}`]);
 
-  tuples.push([POD, POD_NETWORK]);
+  tuples.push([POD, PodNetworkLabel.Target]);
   const labelToId = resolveCollisions(tuples);
   return labelToId;
 };

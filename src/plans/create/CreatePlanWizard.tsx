@@ -8,7 +8,6 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanForm } from './hooks/useCreatePlanForm';
-import { useDefaultFormValues } from './hooks/useDefaultFormValues';
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
 import HooksStep from './steps/hooks/HooksStep';
@@ -20,6 +19,7 @@ import StorageMapStep from './steps/storage-map/StorageMapStep';
 import VirtualMachinesStep from './steps/virtual-machines/VirtualMachinesStep';
 import VirtualMachinesStepFooter from './steps/virtual-machines/VirtualMachinesStepFooter';
 import { getCreatedPlanPath } from './utils/getCreatedPlanPath';
+import { getDefaultFormValues } from './utils/getDefaultFormValues';
 import { hasWarmMigrationProviderType } from './utils/hasWarmMigrationProviderType';
 import { submitMigrationPlan } from './utils/submitMigrationPlan';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
@@ -37,7 +37,7 @@ const CreatePlanWizard: FC = () => {
   const [createPlanError, setCreatePlanError] = useState<Error>();
   const [isCreating, setIsCreating] = useState(false);
 
-  const defaultValues = useDefaultFormValues(location.state);
+  const defaultValues = getDefaultFormValues(location.state);
   const form = useCreatePlanForm({
     defaultValues,
     mode: 'onChange',
