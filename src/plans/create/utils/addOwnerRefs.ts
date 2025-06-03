@@ -1,6 +1,11 @@
 import type { ObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
 
-import type { IoK8sApiCoreV1Secret, V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
+import type {
+  IoK8sApiCoreV1Secret,
+  V1beta1Hook,
+  V1beta1NetworkMap,
+  V1beta1StorageMap,
+} from '@kubev2v/types';
 import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { isEmpty } from '@utils/helpers';
 
@@ -10,7 +15,7 @@ import { isEmpty } from '@utils/helpers';
  */
 export const addOwnerRefs = async (
   model: K8sModel,
-  resource: V1beta1NetworkMap | V1beta1StorageMap | IoK8sApiCoreV1Secret,
+  resource: V1beta1NetworkMap | V1beta1StorageMap | IoK8sApiCoreV1Secret | V1beta1Hook,
   newOwnerReferences: ObjectRef[],
 ) => {
   const existingOwnerReferences = resource.metadata?.ownerReferences;

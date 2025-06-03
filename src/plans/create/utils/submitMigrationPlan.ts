@@ -1,21 +1,27 @@
 import {
+  HookModel,
   type IoK8sApiCoreV1Secret,
   NetworkMapModel,
   SecretModel,
   StorageMapModel,
+  type V1beta1Hook,
+  type V1beta1NetworkMap,
+  type V1beta1StorageMap,
 } from '@kubev2v/types';
-import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
+import { MigrationHookFieldId } from '../steps/migration-hooks/constants';
 import type { CreatePlanFormData } from '../types';
 
 import { addOwnerRefs } from './addOwnerRefs';
+import { createDecryptionSecret } from './createDecryptionSecret';
+import { createMigrationHooks } from './createMigrationHooks';
 import { createNetworkMap } from './createNetworkMap';
 import { createPlan } from './createPlan';
 import { createStorageMap } from './createStorageMap';
 
 /**
- * Handles the plan submission process including creation of network map, storage map,
- * plan, and establishing owner references.
+ * Handles the migration plan submission process including creation of network map,
+ * storage map, encryption secret, hooks, and establishing owner references.
  */
 export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise<void> => {
   const {
@@ -27,6 +33,8 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
     networkMapName,
     planName,
     planProject,
+    postMigrationHook,
+    preMigrationHook,
     preserveStaticIps,
     rootDevice,
     sharedDisks,
@@ -40,50 +48,83 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
 
   let planNetworkMap = existingNetworkMap!;
   let planStorageMap = existingStorageMap!;
-  let createdSecret: IoK8sApiCoreV1Secret = {};
+  let createdSecret: IoK8sApiCoreV1Secret | undefined = {};
+  let createdHooks: { preHook?: V1beta1Hook; postHook?: V1beta1Hook } = {};
 
-  // Create network map only if no existing network map is provided
+  // Collection of promises for concurrent resource creation
+  const createResourceRequests: Promise<void>[] = [];
+
+  // Create network map
   if (!existingNetworkMap) {
-    planNetworkMap = await createNetworkMap({
-      mappings: newNetworkMap,
-      name: networkMapName,
-      planProject,
-      sourceProvider,
-      targetProvider,
-    });
+    createResourceRequests.push(
+      createNetworkMap({
+        mappings: newNetworkMap,
+        name: networkMapName,
+        planProject,
+        sourceProvider,
+        targetProvider,
+      }).then((networkMap: V1beta1NetworkMap) => {
+        planNetworkMap = networkMap;
+      }),
+    );
   }
 
-  // Create storage map only if no existing storage map is provided
+  // Create storage map
   if (!existingStorageMap) {
-    planStorageMap = await createStorageMap({
-      mappings: newStorageMap,
-      name: storageMapName,
-      planProject,
-      sourceProvider,
-      targetProvider,
-    });
+    createResourceRequests.push(
+      createStorageMap({
+        mappings: newStorageMap,
+        name: storageMapName,
+        planProject,
+        sourceProvider,
+        targetProvider,
+      }).then((storageMap: V1beta1StorageMap) => {
+        planStorageMap = storageMap;
+      }),
+    );
   }
 
+  // Create decryption secret
   if (diskDecryptionPassPhrases) {
-    const secretData: IoK8sApiCoreV1Secret = {
-      data: Object.fromEntries(diskDecryptionPassPhrases.map(({ value }, i) => [i, btoa(value)])),
-      metadata: {
-        generateName: `${planName}-`,
-        namespace: planProject,
-      },
-      type: 'Opaque',
-    };
-
-    createdSecret = await k8sCreate({ data: secretData, model: SecretModel });
+    createResourceRequests.push(
+      createDecryptionSecret(diskDecryptionPassPhrases, planName, planProject).then(
+        (secret: IoK8sApiCoreV1Secret) => {
+          createdSecret = secret;
+        },
+      ),
+    );
   }
 
-  // Create plan with references to created maps
+  // Create migration hooks
+  const hasEnabledHooks =
+    preMigrationHook[MigrationHookFieldId.EnableHook] ||
+    postMigrationHook[MigrationHookFieldId.EnableHook];
+
+  if (hasEnabledHooks) {
+    createResourceRequests.push(
+      createMigrationHooks({
+        planName,
+        planProject,
+        postMigrationHook,
+        preMigrationHook,
+      }).then((hooks) => {
+        createdHooks = hooks;
+      }),
+    );
+  }
+
+  // Execute all prerequisite resource creation concurrently
+  await Promise.all(createResourceRequests);
+
+  // Create the migration plan
   const createdPlanRef = await createPlan({
-    luks: { name: createdSecret.metadata?.name },
+    luks: createdSecret ? { name: createdSecret.metadata?.name } : undefined,
     migrationType,
     networkMap: planNetworkMap,
     planName,
     planProject,
+    postHook: createdHooks.postHook,
+    preHook: createdHooks.preHook,
     preserveStaticIps,
     rootDevice,
     sharedDisks,
@@ -94,8 +135,23 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
     vms: Object.values(vms),
   });
 
-  // Add owner references to link resources
-  await addOwnerRefs(StorageMapModel, planStorageMap, [createdPlanRef]);
-  await addOwnerRefs(NetworkMapModel, planNetworkMap, [createdPlanRef]);
-  await addOwnerRefs(SecretModel, createdSecret, [createdPlanRef]);
+  // Establish owner references for resources to the created plan
+  const addOwnerRefRequests: ReturnType<typeof addOwnerRefs>[] = [
+    addOwnerRefs(StorageMapModel, planStorageMap, [createdPlanRef]),
+    addOwnerRefs(NetworkMapModel, planNetworkMap, [createdPlanRef]),
+  ];
+
+  if (createdSecret) {
+    addOwnerRefRequests.push(addOwnerRefs(SecretModel, createdSecret, [createdPlanRef]));
+  }
+
+  if (createdHooks.preHook) {
+    addOwnerRefRequests.push(addOwnerRefs(HookModel, createdHooks.preHook, [createdPlanRef]));
+  }
+
+  if (createdHooks.postHook) {
+    addOwnerRefRequests.push(addOwnerRefs(HookModel, createdHooks.postHook, [createdPlanRef]));
+  }
+
+  await Promise.all(addOwnerRefRequests);
 };

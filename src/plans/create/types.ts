@@ -11,6 +11,7 @@ import type {
   OvaVM,
   OVirtNetwork,
   OVirtVM,
+  V1beta1Hook,
   V1beta1NetworkMap,
   V1beta1PlanSpecTransferNetwork,
   V1beta1PlanSpecVmsLuks,
@@ -22,7 +23,7 @@ import type {
 } from '@kubev2v/types';
 
 import type { GeneralFormFieldId } from './steps/general-information/constants';
-import type { HooksFormFieldId, MigrationHook } from './steps/hooks/constants';
+import type { HooksFormFieldId, MigrationHook } from './steps/migration-hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
 import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
@@ -115,6 +116,8 @@ export type CreatePlanParams = {
   transferNetwork?: V1beta1PlanSpecTransferNetwork;
   sharedDisks?: boolean;
   luks?: V1beta1PlanSpecVmsLuks;
+  preHook?: V1beta1Hook;
+  postHook?: V1beta1Hook;
 };
 
 type ResourceQueryResult<T> = [T, boolean, Error | null];

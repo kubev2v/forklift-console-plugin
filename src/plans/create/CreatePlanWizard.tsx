@@ -10,7 +10,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanForm } from './hooks/useCreatePlanForm';
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
-import HooksStep from './steps/hooks/HooksStep';
+import HooksStep from './steps/migration-hooks/HooksStep';
 import MigrationTypeStep from './steps/migration-type/MigrationTypeStep';
 import NetworkMapStep from './steps/network-map/NetworkMapStep';
 import OtherSettingsStep from './steps/other-settings/OtherSettingsStep';

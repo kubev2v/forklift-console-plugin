@@ -5,11 +5,13 @@ import { PlanModel } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { MigrationTypeValue } from '../steps/migration-type/constants';
-import { type CreatePlanParams, ProviderType } from '../types';
+import type { CreatePlanParams } from '../types';
+
+import { buildPlanSpecVms } from './buildPlanSpecVms';
 
 /**
- * Creates a migration Plan resource
- * Links together providers, network maps, storage maps, and VMs to be migrated
+ * Constructs and creates a Plan custom resource from input params.
+ * Connects providers, maps, transfer networks, hooks, and selected VMs.
  */
 export const createPlan = async ({
   luks,
@@ -17,6 +19,8 @@ export const createPlan = async ({
   networkMap,
   planName,
   planProject,
+  postHook,
+  preHook,
   preserveStaticIps,
   rootDevice,
   sharedDisks,
@@ -38,22 +42,15 @@ export const createPlan = async ({
         network: getObjectRef(networkMap),
         storage: getObjectRef(storageMap),
       },
-      ...(sharedDisks && { migrateSharedDisks: sharedDisks }),
-      ...(preserveStaticIps && { preserveStaticIPs: preserveStaticIps }),
       provider: {
         destination: getObjectRef(targetProvider),
         source: getObjectRef(sourceProvider),
       },
       targetNamespace: planProject,
+      ...(sharedDisks && { migrateSharedDisks: sharedDisks }),
+      ...(preserveStaticIps && { preserveStaticIPs: preserveStaticIps }),
       ...(transferNetwork && { transferNetwork }),
-      // Include namespace only for OpenShift VMs
-      vms: vms.map((vm) => ({
-        id: vm.id,
-        name: vm.name,
-        namespace: vm.providerType === ProviderType.Openshift ? vm.namespace : undefined,
-        ...(rootDevice && { rootDisk: rootDevice }),
-        ...(luks?.name && { luks }),
-      })),
+      vms: buildPlanSpecVms({ luks, postHook, preHook, rootDevice, vms }),
       warm: migrationType === MigrationTypeValue.Warm,
     },
   };
