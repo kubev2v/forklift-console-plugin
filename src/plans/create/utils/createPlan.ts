@@ -1,6 +1,7 @@
 import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
+import type { EnhancedPlan } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 
-import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModel } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { MigrationTypeValue } from '../steps/migration-type/constants';
@@ -11,16 +12,21 @@ import { type CreatePlanParams, ProviderType } from '../types';
  * Links together providers, network maps, storage maps, and VMs to be migrated
  */
 export const createPlan = async ({
+  luks,
   migrationType,
   networkMap,
   planName,
   planProject,
+  preserveStaticIps,
+  rootDevice,
+  sharedDisks,
   sourceProvider,
   storageMap,
   targetProvider,
+  transferNetwork,
   vms,
 }: CreatePlanParams) => {
-  const plan: V1beta1Plan = {
+  const plan: EnhancedPlan = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Plan',
     metadata: {
@@ -32,16 +38,21 @@ export const createPlan = async ({
         network: getObjectRef(networkMap),
         storage: getObjectRef(storageMap),
       },
+      ...(sharedDisks && { migrateSharedDisks: sharedDisks }),
+      ...(preserveStaticIps && { preserveStaticIPs: preserveStaticIps }),
       provider: {
         destination: getObjectRef(targetProvider),
         source: getObjectRef(sourceProvider),
       },
       targetNamespace: planProject,
+      ...(transferNetwork && { transferNetwork }),
       // Include namespace only for OpenShift VMs
       vms: vms.map((vm) => ({
         id: vm.id,
         name: vm.name,
         namespace: vm.providerType === ProviderType.Openshift ? vm.namespace : undefined,
+        ...(rootDevice && { rootDisk: rootDevice }),
+        ...(luks?.name && { luks }),
       })),
       warm: migrationType === MigrationTypeValue.Warm,
     },
