@@ -12,6 +12,8 @@ import type {
   OVirtNetwork,
   OVirtVM,
   V1beta1NetworkMap,
+  V1beta1PlanSpecTransferNetwork,
+  V1beta1PlanSpecVmsLuks,
   V1beta1Provider,
   V1beta1StorageMap,
   V1NetworkAttachmentDefinition,
@@ -80,6 +82,8 @@ export type CreatePlanFormData = FieldValues & {
   [OtherSettingsFormFieldId.SharedDisks]: boolean;
   [HooksFormFieldId.PreMigration]: MigrationHook;
   [HooksFormFieldId.PostMigration]: MigrationHook;
+  [OtherSettingsFormFieldId.RootDevice]: string;
+  [OtherSettingsFormFieldId.TransferNetwork]: V1beta1PlanSpecTransferNetwork;
 };
 
 export type MappingValue = { id?: string; name: string };
@@ -106,6 +110,11 @@ export type CreatePlanParams = {
   storageMap: V1beta1StorageMap;
   vms: ProviderVirtualMachine[];
   migrationType: MigrationTypeValue;
+  preserveStaticIps?: boolean;
+  rootDevice?: string;
+  transferNetwork?: V1beta1PlanSpecTransferNetwork;
+  sharedDisks?: boolean;
+  luks?: V1beta1PlanSpecVmsLuks;
 };
 
 type ResourceQueryResult<T> = [T, boolean, Error | null];

@@ -76,7 +76,7 @@ const OtherSettingsReviewSection: FC = () => {
           </DescriptionListTerm>
 
           <DescriptionListDescription>
-            {transferNetwork ?? t('Target provider default')}
+            {transferNetwork?.name ?? t('Target provider default')}
           </DescriptionListDescription>
         </DescriptionListGroup>
 
