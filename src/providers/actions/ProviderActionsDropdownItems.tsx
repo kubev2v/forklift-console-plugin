@@ -55,16 +55,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
         </DropdownItem>
       )}
       <DropdownItem
-        value={3}
-        key="MigratePlan"
-        onClick={() => {
-          navigate(`${providerURL}/vms`);
-        }}
-      >
-        {t('Migrate')}
-      </DropdownItem>
-      <DropdownItem
-        value={4}
+        value={2}
         key="delete"
         isDisabled={!data?.permissions?.canDelete}
         onClick={onProviderDelete}

@@ -36,7 +36,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
           >
             <SelectList>
               {targetStorages.map((targetStorage) => (
-                <SelectOption key={targetStorage.id} value={targetStorage.name}>
+                <SelectOption key={targetStorage.id} value={targetStorage}>
                   {targetStorage.name}
                 </SelectOption>
               ))}
