@@ -107,6 +107,7 @@ export type CreatePlanParams = {
   planProject: string;
   sourceProvider: V1beta1Provider | undefined;
   targetProvider: V1beta1Provider | undefined;
+  targetProject: string;
   networkMap: V1beta1NetworkMap;
   storageMap: V1beta1StorageMap;
   vms: ProviderVirtualMachine[];
