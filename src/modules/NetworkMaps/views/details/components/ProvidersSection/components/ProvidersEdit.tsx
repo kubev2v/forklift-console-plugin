@@ -1,6 +1,6 @@
 import type { FC, FormEvent, ReactNode } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';

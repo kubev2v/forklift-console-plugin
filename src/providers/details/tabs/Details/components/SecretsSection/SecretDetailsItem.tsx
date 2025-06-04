@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@kubev2v/types';

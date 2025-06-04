@@ -1,13 +1,16 @@
 import type { FC } from 'react';
-import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
-import type { ModalInputComponentType } from 'src/modules/Providers/modals/EditModal/types';
 import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
+import { DisplayTitle } from 'src/components/DetailItems/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
-import { ModalVariant } from '@patternfly/react-core';
+import { Text } from '@patternfly/react-core';
+import { MTV_SETTINGS } from '@utils/links';
 
-import type { EditSettingsModalProps } from './EditSettingsModalProps';
+import { EditField } from '../cards/EditField';
+import type { InputComponentType } from '../cards/EditFieldTypes';
+
+import type { EditSettingsProps } from './EditSettingsProps';
 import SettingsSelectInput from './SettingsSelectInput';
 
 // Define the options
@@ -21,32 +24,43 @@ const options = [
 /**
  * SnapshotPoolingIntervalSelect component.
  * Wraps the SettingsSelectInput component with pre-defined options.
- *
- * @param {ModalInputComponentProps} props - Properties passed to the component
- * @returns {JSX.Element}
  */
-const SnapshotPoolingIntervalSelect: ModalInputComponentType = (props) => {
+const SnapshotPoolingIntervalSelect: InputComponentType = (props) => {
   return <SettingsSelectInput {...props} options={options} />;
 };
 
-export const EditSnapshotPoolingIntervalModal: FC<EditSettingsModalProps> = (props) => {
+const EditSnapshotPoolingInterval: FC<EditSettingsProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (
-    <EditModal
+    <EditField
       {...props}
       resource={props.resource as K8sResourceCommon}
       jsonPath={'spec.controller_snapshot_status_check_rate_seconds'}
-      title={props?.title ?? t('Edit Snapshot polling interval (seconds)')}
-      label={props?.label ?? t('Snapshot polling interval (seconds)')}
+      label={
+        <DisplayTitle
+          title={t('Snapshot polling interval')}
+          showHelpIconNextToTitle
+          moreInfoLink={MTV_SETTINGS}
+          helpContent={
+            <Text>
+              {t(
+                'Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.',
+              )}
+            </Text>
+          }
+          crumbs={['spec', 'controller_snapshot_status_check_rate_seconds']}
+        />
+      }
       model={ForkliftControllerModel}
-      variant={ModalVariant.small}
-      body={t('The interval in seconds for snapshot pooling. Default value is 10.')}
       helperText={t(
-        'Please enter the interval in seconds for snapshot pooling, if empty default value will be used.',
+        'Enter the interval in seconds for snapshot pooling. If empty, the default value will be used.',
       )}
       InputComponent={SnapshotPoolingIntervalSelect}
       onConfirmHook={defaultOnConfirmWithIntValue}
+      defaultValue="10"
     />
   );
 };
+
+export default EditSnapshotPoolingInterval;

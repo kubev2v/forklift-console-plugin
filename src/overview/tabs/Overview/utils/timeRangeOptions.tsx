@@ -1,20 +1,17 @@
-import type { DateTime } from 'luxon';
+import { DateTime } from 'luxon';
 
-import { t } from '@utils/i18n';
-
-const isLast7Days = (date: DateTime) => date.diffNow('days').get('days') <= 7;
-const isLast31Days = (date: DateTime) => date.diffNow('days').get('days') <= 31;
-const isLast24H = (date: DateTime) => date.diffNow('hours').get('hours') <= 24;
+const isLast24H = (date: DateTime) => DateTime.now().toUTC().diff(date, 'hours').hours <= 24;
+const isLast10Days = (date: DateTime) => DateTime.now().toUTC().diff(date, 'days').days <= 10;
+const isLast31Days = (date: DateTime) => DateTime.now().toUTC().diff(date, 'days').days <= 31;
 
 export enum TimeRangeOptions {
-  Last7Days = 'Last7Days',
+  Last10Days = 'Last10Days',
   Last31Days = 'Last31Days',
   Last24H = 'Last24H',
+  All = 'All',
 }
 
 type TimeRangeOptionsProperties = {
-  migrationsLabelKey: string;
-  vmMigrationsLabelKey: string;
   span: { days: number } | { hours: number };
   bucket: { day: number } | { hour: number };
   unit: 'day' | 'hour';
@@ -22,32 +19,33 @@ type TimeRangeOptionsProperties = {
 };
 
 export const TimeRangeOptionsDictionary: {
-  Last7Days: TimeRangeOptionsProperties;
+  Last10Days: TimeRangeOptionsProperties;
   Last31Days: TimeRangeOptionsProperties;
   Last24H: TimeRangeOptionsProperties;
+  All: TimeRangeOptionsProperties;
 } = {
+  All: {
+    bucket: { day: 1 },
+    filter: () => true,
+    span: { days: 365 },
+    unit: 'day',
+  },
+  Last10Days: {
+    bucket: { day: 1 },
+    filter: isLast10Days,
+    span: { days: 10 },
+    unit: 'day',
+  },
   Last24H: {
-    bucket: { hour: 4 },
+    bucket: { hour: 2 },
     filter: isLast24H,
-    migrationsLabelKey: t('Migrations (last 24 hours)'),
     span: { hours: 24 },
     unit: 'hour',
-    vmMigrationsLabelKey: t('Virtual Machine Migrations (last 24 hours)'),
   },
   Last31Days: {
     bucket: { day: 4 },
     filter: isLast31Days,
-    migrationsLabelKey: t('Migrations (last 31 days)'),
     span: { days: 31 },
     unit: 'day',
-    vmMigrationsLabelKey: t('Virtual Machine Migrations (last 31 days)'),
-  },
-  Last7Days: {
-    bucket: { day: 1 },
-    filter: isLast7Days,
-    migrationsLabelKey: t('Migrations (last 7 days)'),
-    span: { days: 7 },
-    unit: 'day',
-    vmMigrationsLabelKey: t('Virtual Machine Migrations (last 7 days)'),
   },
 };

@@ -50,8 +50,8 @@
 }
 
 .forklift-status-migration-donut {
-  height: 230px;
-  width: 230px;
+  height: 270px;
+  width: 270px;
 }
 
 .forklift-status-migration-chart {
@@ -104,15 +104,41 @@
   }
 }
 
-.forklift-welcome__text {
+.forklift-overview__text {
   max-width: 900px;
 }
 
 .forklift-overview__vms {
-  height: 318px;
+  height: 358px;
 }
 
 .forklift-overview__pods {
-  height: 339px;
+  height: 379px;
   overflow: auto;
+}
+
+.forklift-overview__create-plan-btn {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.forklift-overview__donut-card {
+  min-width: 325px;
+  max-width: 325px;
+  width: 325px;
+}
+
+.pf-v5-c-alert-group.pf-m-toast.forklift-toast-alert-group {
+  max-width: 280px;
+}
+
+.forklift-select-width {
+  width: 142.95px;
+}
+
+.forklift-settings__description-list {
+  gap: 2rem;
 }

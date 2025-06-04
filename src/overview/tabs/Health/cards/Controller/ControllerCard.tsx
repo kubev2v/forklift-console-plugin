@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
+import TabTitle from 'src/overview/components/TabTitle';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
@@ -33,7 +34,14 @@ const ControllerCard: FC<ControllerCardProps> = ({ limit, obj }) => {
           actions: limit ? <Link to={'health'}>View all</Link> : null,
         }}
       >
-        <CardTitle className="forklift-title">{t('MTV Health')}</CardTitle>
+        <CardTitle className="forklift-title">
+          <TabTitle
+            title={t('Health')}
+            helpContent={t(
+              'Health indicates the current status of the pods related to the Migration Toolkit for Virtualization, including whether any have failed. For more details, refer to the logs.',
+            )}
+          />
+        </CardTitle>
       </CardHeader>
       <LoadingSuspend obj={pods} loaded={loaded} loadError={loadError}>
         <CardBody>

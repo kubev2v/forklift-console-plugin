@@ -1,13 +1,27 @@
-import type { FC } from 'react';
+import { type FC, Suspense } from 'react';
+import Loading from 'src/overview/components/Loading';
 import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
+
+import { Bullseye } from '@patternfly/react-core';
 
 import SettingsCard from './cards/SettingsCard';
 
 const ForkliftControllerSettingsTab: FC = () => {
-  const [forkliftController] = useK8sWatchForkliftController();
+  const [forkliftController, controllerLoaded, controllerLoadError] =
+    useK8sWatchForkliftController();
   return (
     <div className="co-dashboard-body">
-      <SettingsCard obj={forkliftController} />
+      <Suspense
+        fallback={
+          <Bullseye>
+            <Loading />
+          </Bullseye>
+        }
+      >
+        {forkliftController && controllerLoaded && !controllerLoadError && (
+          <SettingsCard obj={forkliftController} />
+        )}
+      </Suspense>
     </div>
   );
 };

@@ -31,8 +31,8 @@ const ForkliftControllerOverviewTab: FC = () => {
         )}
 
         <FlexItem>
-          <Flex direction={{ default: 'row' }}>
-            <FlexItem>
+          <Flex direction={{ default: 'row' }} alignItems={{ default: 'alignItemsStretch' }}>
+            <FlexItem className="forklift-overview__donut-card">
               <VmMigrationsDonutCard obj={forkliftController} />
             </FlexItem>
             <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__vms">
@@ -42,12 +42,12 @@ const ForkliftControllerOverviewTab: FC = () => {
         </FlexItem>
 
         <FlexItem>
-          <Flex direction={{ default: 'row' }}>
-            <FlexItem>
+          <Flex direction={{ default: 'row' }} alignItems={{ default: 'alignItemsStretch' }}>
+            <FlexItem className="forklift-overview__donut-card">
               <MigrationPlansDonutCard obj={forkliftController} />
             </FlexItem>
             <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__pods">
-              <ControllerCard obj={forkliftController} limit={5} />
+              <ControllerCard obj={forkliftController} limit={6} />
             </FlexItem>
           </Flex>
         </FlexItem>

@@ -1,7 +1,11 @@
 import { createContext } from 'react';
 
+import type { TimeRangeOptions } from '../tabs/Overview/utils/timeRangeOptions';
+
 export type CreateOverviewContextData = {
-  hideWelcomeCardByContext: boolean;
+  hideWelcomeCardByContext?: boolean;
+  vmMigrationsDonutSelectedRange?: TimeRangeOptions;
+  vmMigrationsHistorySelectedRange?: TimeRangeOptions;
 };
 
 export type CreateOverviewContextType = {

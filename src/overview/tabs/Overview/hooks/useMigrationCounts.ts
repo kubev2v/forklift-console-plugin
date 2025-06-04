@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { getMigrationCounts } from '../utils/getMigrationCounts';
+import { getPlanMigrationCounts } from '../utils/getMigrationCounts';
 import { getVmCounts } from '../utils/getVmCounts';
+import { TimeRangeOptions } from '../utils/timeRangeOptions';
 
 type MigrationCounts = Record<string, number>;
 
@@ -26,7 +27,9 @@ type CountState = {
  * Only triggers a re-render if the counts change.
  * @return {MigrationCountsHookResponse} An object with 'count', 'vmCount', 'loaded', and 'loadError' keys.
  */
-const useMigrationCounts = (): MigrationCountsHookResponse => {
+const useMigrationCounts = (
+  range: TimeRangeOptions = TimeRangeOptions.Last10Days,
+): MigrationCountsHookResponse => {
   const [counts, setCounts] = useState<CountState>({
     migrationCounts: {
       Failure: 0,
@@ -52,11 +55,11 @@ const useMigrationCounts = (): MigrationCountsHookResponse => {
   useEffect(() => {
     if (loaded && !loadError) {
       setCounts({
-        migrationCounts: getMigrationCounts(migrations),
-        vmCounts: getVmCounts(migrations),
+        migrationCounts: getPlanMigrationCounts(migrations),
+        vmCounts: getVmCounts(migrations, range),
       });
     }
-  }, [migrations, loaded, loadError]);
+  }, [migrations, loaded, loadError, range]);
 
   return {
     count: counts.migrationCounts,

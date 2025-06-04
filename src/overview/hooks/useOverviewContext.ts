@@ -1,15 +1,27 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { produce } from 'immer';
 
-import { loadUserSettings } from '../utils/helpers/OverviewUserSettings';
+import { TimeRangeOptions } from '../tabs/Overview/utils/timeRangeOptions';
+import {
+  loadOverviewSelectedRanges,
+  loadUserSettings,
+  saveOverviewSelectedRanges,
+} from '../utils/helpers/OverviewUserSettings';
 
 import type { CreateOverviewContextData, CreateOverviewContextType } from './OverviewContext';
 
 export const useOverviewContext = (): CreateOverviewContextType => {
   const userSettings = loadUserSettings('Overview');
   const hideWelcomeCardInitState = userSettings?.welcome?.hideWelcome ?? false;
+  const {
+    vmMigrationsDonutSelectedRange: donutRange,
+    vmMigrationsHistorySelectedRange: historyRange,
+  } = loadOverviewSelectedRanges();
   const [data, setData] = useState<CreateOverviewContextData>({
     hideWelcomeCardByContext: hideWelcomeCardInitState,
+    vmMigrationsDonutSelectedRange: (donutRange as TimeRangeOptions) ?? TimeRangeOptions.All,
+    vmMigrationsHistorySelectedRange:
+      (historyRange as TimeRangeOptions) ?? TimeRangeOptions.Last10Days,
   });
 
   const mounted = useRef(true);
@@ -33,6 +45,11 @@ export const useOverviewContext = (): CreateOverviewContextType => {
         // Save/clear the user settings stored in local storage
         if (newState.hideWelcomeCardByContext) userSettings?.welcome?.save(true);
         else userSettings?.welcome?.clear();
+
+        saveOverviewSelectedRanges({
+          vmMigrationsDonutSelectedRange: newState.vmMigrationsDonutSelectedRange,
+          vmMigrationsHistorySelectedRange: newState.vmMigrationsHistorySelectedRange,
+        });
 
         setValueSafe(
           produce(data, (draft) => {

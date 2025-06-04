@@ -17,7 +17,7 @@ import {
 } from '@patternfly/react-core';
 import { HelpIcon, PencilAltIcon as Pencil } from '@patternfly/react-icons';
 
-import { ensureArray } from '../../helpers/ensureArray';
+import { ensureArray } from '../../utils/ensureArray';
 
 /**
  * Component for displaying title with help text in a popover.
@@ -45,7 +45,7 @@ const DescriptionTitleWithHelp: FC<{
 
   return (
     <DescriptionListTermHelpText>
-      {showHelpIconNextToTitle ? <label>{title} &nbsp;</label> : null}
+      {showHelpIconNextToTitle ? <div>{title} &nbsp;</div> : null}
       <Popover
         headerContent={<div>{title}</div>}
         bodyContent={
@@ -99,7 +99,7 @@ const DescriptionTitle: FC<{ title: string }> = ({ title }) => (
  *
  * @component
  */
-const DisplayTitle: FC<{
+export const DisplayTitle: FC<{
   title: string;
   helpContent: ReactNode;
   showHelpIconNextToTitle: boolean;

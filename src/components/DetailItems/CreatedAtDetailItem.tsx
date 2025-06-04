@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
-import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { getCreatedAt } from '@utils/crds/common/selectors';

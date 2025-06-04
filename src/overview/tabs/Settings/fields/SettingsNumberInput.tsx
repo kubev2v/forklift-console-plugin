@@ -1,37 +1,32 @@
-import { type FC, type FormEvent, type MouseEvent, useState } from 'react';
+import type { FC, FormEvent, MouseEvent } from 'react';
 
 import { NumberInput } from '@patternfly/react-core';
 
 import type { SettingsSelectInputProps } from './SettingsSelectInput';
 
-const SettingsNumberInput: FC<SettingsSelectInputProps> = ({ onChange, value: value_ = 0 }) => {
-  const [value, setValue] = useState<number | ''>(parseInt(value_.toString(), 10));
+const SettingsNumberInput: FC<SettingsSelectInputProps> = ({ onChange, value }) => {
+  const numberValue = Number(value) || 20;
 
-  const setNewValue = (newValue: number) => {
-    setValue(newValue);
-    onChange(newValue.toString());
-  };
+  const normalize = (val: number) => (val <= 0 ? 20 : val);
 
   const onUserMinus: (event: MouseEvent, name?: string) => void = () => {
-    const newValue = (value || 0) - 1;
-    setNewValue(newValue);
+    onChange(normalize(numberValue - 1).toString());
   };
 
   const onUserPlus: (event: MouseEvent, name?: string) => void = () => {
-    const newValue = (value || 0) + 1;
-    setNewValue(newValue);
+    onChange(normalize(numberValue + 1).toString());
   };
 
   const onUserChange: (event: FormEvent<HTMLInputElement>) => void = (event) => {
     const { value: inputValue } = event.target as HTMLInputElement;
-    const newValue = inputValue === '' ? inputValue : Number(inputValue);
-    setNewValue(newValue || 0);
+    const num = Number(inputValue);
+    onChange(normalize(num).toString());
   };
 
   // Render the Select component with dynamically created SelectOption children
   return (
     <NumberInput
-      value={value}
+      value={numberValue}
       onMinus={onUserMinus}
       onChange={onUserChange}
       onPlus={onUserPlus}
