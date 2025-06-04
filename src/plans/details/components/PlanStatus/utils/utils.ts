@@ -1,51 +1,88 @@
 import { isMigrationVirtualMachinePaused } from 'src/plans/details/utils/utils';
 
-import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import type {
+  V1beta1Plan,
+  V1beta1PlanSpecVms,
+  V1beta1PlanStatusMigrationVms,
+} from '@kubev2v/types';
 import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
 import { getPlanIsWarm, getPlanVirtualMachinesMigrationStatus } from '@utils/crds/plans/selectors';
+import { deepCopy } from '@utils/deepCopy';
 import { isEmpty } from '@utils/helpers';
+import { t } from '@utils/i18n';
 
+import { STATUS_POPOVER_VMS_COUNT_THRESHOLD } from './constants';
 import {
+  type MigrationVirtualMachinesStatusCountObjectVM,
   type MigrationVirtualMachinesStatusesCounts,
-  MigrationVirtualMachineStatusIcon,
+  MigrationVirtualMachineStatus,
   PlanStatuses,
+  type StatusPopoverLabels,
 } from './types';
 
 const emptyCount: MigrationVirtualMachinesStatusesCounts = {
-  [MigrationVirtualMachineStatusIcon.Canceled]: 0,
-  [MigrationVirtualMachineStatusIcon.CantStart]: 0,
-  [MigrationVirtualMachineStatusIcon.Failed]: 0,
-  [MigrationVirtualMachineStatusIcon.InProgress]: 0,
-  [MigrationVirtualMachineStatusIcon.Paused]: 0,
-  [MigrationVirtualMachineStatusIcon.Succeeded]: 0,
+  [MigrationVirtualMachineStatus.Canceled]: {
+    count: 0,
+    vms: [],
+  },
+  [MigrationVirtualMachineStatus.CantStart]: {
+    count: 0,
+    vms: [],
+  },
+  [MigrationVirtualMachineStatus.Failed]: {
+    count: 0,
+    vms: [],
+  },
+  [MigrationVirtualMachineStatus.InProgress]: {
+    count: 0,
+    vms: [],
+  },
+  [MigrationVirtualMachineStatus.Paused]: {
+    count: 0,
+    vms: [],
+  },
+  [MigrationVirtualMachineStatus.Succeeded]: {
+    count: 0,
+    vms: [],
+  },
 };
 
-export const getVMStatusIcon = (
+export const getMigrationVMStatus = (
   vm?: V1beta1PlanStatusMigrationVms,
-): MigrationVirtualMachineStatusIcon | null => {
+): MigrationVirtualMachineStatus | null => {
   const conditions = vm?.conditions ?? [];
 
   const isCanceled = conditions.some(
     (condition) =>
       condition.type === CATEGORY_TYPES.CANCELED && condition.status === CONDITION_STATUS.TRUE,
   );
-  if (isCanceled) return MigrationVirtualMachineStatusIcon.Canceled;
+  if (isCanceled) return MigrationVirtualMachineStatus.Canceled;
 
   const isSucceeded = conditions.some(
     (condition) =>
       condition.type === CATEGORY_TYPES.SUCCEEDED && condition.status === CONDITION_STATUS.TRUE,
   );
-  if (isSucceeded) return MigrationVirtualMachineStatusIcon.Succeeded;
+  if (isSucceeded) return MigrationVirtualMachineStatus.Succeeded;
 
-  if (vm?.error) return MigrationVirtualMachineStatusIcon.Failed;
+  if (vm?.error) return MigrationVirtualMachineStatus.Failed;
 
-  if (isMigrationVirtualMachinePaused(vm)) return MigrationVirtualMachineStatusIcon.Paused;
+  if (isMigrationVirtualMachinePaused(vm)) return MigrationVirtualMachineStatus.Paused;
 
   if (vm?.started && !vm?.completed && !vm?.error) {
-    return MigrationVirtualMachineStatusIcon.InProgress;
+    return MigrationVirtualMachineStatus.InProgress;
   }
 
   return null;
+};
+
+export const getCantStartVMStatusCount = (vms: V1beta1PlanSpecVms[]) => {
+  return {
+    ...emptyCount,
+    [MigrationVirtualMachineStatus.CantStart]: {
+      count: vms.length,
+      vms: vms.map((vm) => ({ name: String(vm.name) })),
+    },
+  };
 };
 
 export const getMigrationVMsStatusCounts = (
@@ -53,29 +90,30 @@ export const getMigrationVMsStatusCounts = (
   phase: PlanStatuses,
   planSpecVMsTotal: number,
 ): MigrationVirtualMachinesStatusesCounts => {
-  if (PlanStatuses.CannotStart === phase) {
-    return {
-      ...emptyCount,
-      [MigrationVirtualMachineStatusIcon.CantStart]: planSpecVMsTotal,
-    };
-  }
-
   if (PlanStatuses.Paused === phase) {
     return {
       ...emptyCount,
-      [MigrationVirtualMachineStatusIcon.Paused]: planSpecVMsTotal,
+      [MigrationVirtualMachineStatus.Paused]: {
+        count: planSpecVMsTotal,
+        vms: vms.map((vm) => ({ name: String(vm.name) })),
+      },
     };
   }
-  const counts: MigrationVirtualMachinesStatusesCounts = vms.reduce(
-    (acc, vm) => {
-      const status = getVMStatusIcon(vm);
-      if (status) {
-        acc[status] += 1;
+
+  const counts: MigrationVirtualMachinesStatusesCounts = vms.reduce((acc, vm) => {
+    const status = getMigrationVMStatus(vm);
+    if (status) {
+      acc[status].count += 1;
+      const vmObj: MigrationVirtualMachinesStatusCountObjectVM = {
+        name: String(vm.name),
+      };
+      if (status === MigrationVirtualMachineStatus.Failed) {
+        vmObj.failedTaskName = (vm.pipeline ?? []).find((pipe) => pipe?.error)?.name;
       }
-      return acc;
-    },
-    { ...emptyCount },
-  );
+      acc[status].vms.push(vmObj);
+    }
+    return acc;
+  }, deepCopy(emptyCount));
 
   return counts;
 };
@@ -125,6 +163,10 @@ export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
     return PlanStatuses.Canceled;
   }
 
+  if (isPlanWaitingForCutover(plan)) {
+    return PlanStatuses.Paused;
+  }
+
   const isCritical = plan?.status?.conditions?.find(
     (condition) =>
       condition.category === CATEGORY_TYPES.CRITICAL && condition.status === CONDITION_STATUS.TRUE,
@@ -138,10 +180,6 @@ export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
 
   if (conditions.includes(CATEGORY_TYPES.FAILED) || vmError) {
     return PlanStatuses.Incomplete;
-  }
-
-  if (isPlanWaitingForCutover(plan)) {
-    return PlanStatuses.Paused;
   }
 
   if (isPlanExecuting(plan)) {
@@ -189,4 +227,66 @@ export const isPlanEditable = (plan: V1beta1Plan) => {
     status === PlanStatuses.Unknown ||
     status === PlanStatuses.CannotStart
   );
+};
+
+export const getPopoverMessageByStatus = (
+  planStatus: MigrationVirtualMachineStatus,
+  vmCount: number,
+): StatusPopoverLabels => {
+  const showAll = vmCount > STATUS_POPOVER_VMS_COUNT_THRESHOLD ? 'all ' : '';
+  const isPlural = vmCount > 1 ? 's' : '';
+
+  const popoverMessageMap: Record<MigrationVirtualMachineStatus, StatusPopoverLabels> = {
+    [MigrationVirtualMachineStatus.Canceled]: {
+      actionLabel: t('View {{showAll}}canceled VM{{isPlural}}', {
+        isPlural,
+        showAll,
+      }),
+      header: t('{{vmCount}} VM{{isPlural}} migration canceled', { isPlural, vmCount }),
+    },
+    [MigrationVirtualMachineStatus.CantStart]: {
+      actionLabel: t('View {{showAll}}VM{{isPlural}} that cannot start migration', {
+        isPlural,
+        showAll,
+      }),
+      header: t('{{vmCount}} VM{{isPlural}} migration cannot start', { isPlural, vmCount }),
+    },
+    [MigrationVirtualMachineStatus.Failed]: {
+      actionLabel: t('View {{showAll}}{{vmCount}} failed VM{{isPlural}}', {
+        isPlural,
+        showAll,
+        vmCount,
+      }),
+      header: t('{{vmCount}} VM{{isPlural}} migration failed', { isPlural, vmCount }),
+    },
+    [MigrationVirtualMachineStatus.InProgress]: {
+      actionLabel: t('View {{showAll}}{{vmCount}} VM{{isPlural}} in progress', {
+        isPlural,
+        showAll,
+        vmCount,
+      }),
+      header: t('{{vmCount}} VM{{isPlural}} migration in progress', { isPlural, vmCount }),
+    },
+    [MigrationVirtualMachineStatus.Paused]: {
+      actionLabel: t('Schedule cutover'),
+      body: t(
+        'To resume, the cutover must be scheduled. When the cutover starts the {{vmCount}} VM{{isPlural}} included in this plan will shut down.',
+        { isPlural, vmCount },
+      ),
+      header: t('{{vmCount}} VM{{isPlural}} migration paused until cutover scheduled', {
+        isPlural,
+        vmCount,
+      }),
+    },
+    [MigrationVirtualMachineStatus.Succeeded]: {
+      actionLabel: t('View {{showAll}}{{vmCount}} fully migrated VM{{isPlural}}', {
+        isPlural,
+        showAll,
+        vmCount,
+      }),
+      header: t('{{vmCount}} VM{{isPlural}} fully migrated', { isPlural, vmCount }),
+    },
+  };
+
+  return popoverMessageMap[planStatus] ?? { header: t('Unknown') };
 };

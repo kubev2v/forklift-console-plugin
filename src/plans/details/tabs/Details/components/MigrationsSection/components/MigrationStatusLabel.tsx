@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { migrationStatusIconMap } from 'src/plans/details/components/PlanStatus/utils/statusIconMapper';
-import { getVMStatusIcon } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { getMigrationVMStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
 
 import type { V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
 import { Flex } from '@patternfly/react-core';
@@ -12,7 +12,7 @@ type MigrationStatusLabelProps = {
 };
 
 const MigrationStatusLabel: FC<MigrationStatusLabelProps> = ({ statusVM }) => {
-  const status = getVMStatusIcon(statusVM);
+  const status = getMigrationVMStatus(statusVM);
   return (
     <Flex gap={{ default: 'gapSm' }} direction={{ default: 'row' }}>
       {migrationStatusIconMap[status!]}

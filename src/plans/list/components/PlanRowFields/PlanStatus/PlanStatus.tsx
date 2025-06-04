@@ -1,9 +1,10 @@
 import type { FC } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import PlanStartMigrationModal from 'src/plans/actions/components/StartPlanModal/PlanStartMigrationModal';
 import PlanStatusLabel from 'src/plans/details/components/PlanStatus/PlanStatusLabel';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import {
+  getCantStartVMStatusCount,
   getMigrationVMsStatusCounts,
   getPlanStatus,
   isPlanArchived,
@@ -50,11 +51,14 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
 
   const isPlanRunning = isPlanExecuting(plan) && !isPlanArchived(plan);
 
-  const vmStatuses = getMigrationVMsStatusCounts(
-    getPlanVirtualMachinesMigrationStatus(plan),
-    planStatus,
-    getPlanVirtualMachines(plan).length,
-  );
+  const vmStatuses =
+    PlanStatuses.CannotStart === planStatus
+      ? getCantStartVMStatusCount(getPlanVirtualMachines(plan))
+      : getMigrationVMsStatusCounts(
+          getPlanVirtualMachinesMigrationStatus(plan),
+          planStatus,
+          getPlanVirtualMachinesMigrationStatus(plan).length,
+        );
 
   return (
     <>
@@ -63,22 +67,22 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
         alignItems={{ default: 'alignItemsCenter' }}
         spaceItems={{ default: 'spaceItemsSm' }}
       >
-        {isPlanRunning ? (
-          <Spinner size="md" />
-        ) : (
-          <FlexItem className="plan-status-cell-label-section">
+        <FlexItem className="plan-status-cell-label-section">
+          {isPlanRunning && PlanStatuses.Paused !== planStatus ? (
+            <Split hasGutter>
+              <Spinner size="md" />
+              <span className="pf-v5-u-font-size-sm">
+                {Math.trunc(pipelinesProgressPercentage)}%
+              </span>
+            </Split>
+          ) : (
             <PlanStatusLabel plan={plan} />
-          </FlexItem>
-        )}
-
-        {pipelinesProgressPercentage !== 0 && isPlanRunning && (
-          <FlexItem className="pf-v5-u-font-size-sm">
-            {Math.trunc(pipelinesProgressPercentage)}%
-          </FlexItem>
-        )}
-
+          )}
+        </FlexItem>
         <FlexItem>
-          <VMStatusIconsRow statuses={vmStatuses} />
+          <ModalHOC>
+            <VMStatusIconsRow plan={plan} statuses={vmStatuses} />
+          </ModalHOC>
         </FlexItem>
       </Flex>
     </>
