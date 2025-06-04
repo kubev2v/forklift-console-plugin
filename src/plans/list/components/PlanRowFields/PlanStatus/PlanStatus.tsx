@@ -12,10 +12,9 @@ import {
 import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, ButtonVariant, Flex, FlexItem, Split } from '@patternfly/react-core';
+import { Button, ButtonVariant, Flex, FlexItem, Spinner, Split } from '@patternfly/react-core';
 import { PlayIcon as StartIcon } from '@patternfly/react-icons';
 import {
-  getPlanIsWarm,
   getPlanVirtualMachines,
   getPlanVirtualMachinesMigrationStatus,
 } from '@utils/crds/plans/selectors';
@@ -49,8 +48,7 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
     );
   }
 
-  const isWaitingForCutover = getPlanIsWarm(plan) && isPlanExecuting(plan) && !isPlanArchived(plan);
-  const isPlanRunning = !isWaitingForCutover && planStatus === PlanStatuses.Executing;
+  const isPlanRunning = isPlanExecuting(plan) && !isPlanArchived(plan);
 
   const vmStatuses = getMigrationVMsStatusCounts(
     getPlanVirtualMachinesMigrationStatus(plan),
@@ -65,9 +63,13 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
         alignItems={{ default: 'alignItemsCenter' }}
         spaceItems={{ default: 'spaceItemsSm' }}
       >
-        <FlexItem className="plan-status-cell-label-section">
-          <PlanStatusLabel plan={plan} />
-        </FlexItem>
+        {isPlanRunning ? (
+          <Spinner size="md" />
+        ) : (
+          <FlexItem className="plan-status-cell-label-section">
+            <PlanStatusLabel plan={plan} />
+          </FlexItem>
+        )}
 
         {pipelinesProgressPercentage !== 0 && isPlanRunning && (
           <FlexItem className="pf-v5-u-font-size-sm">

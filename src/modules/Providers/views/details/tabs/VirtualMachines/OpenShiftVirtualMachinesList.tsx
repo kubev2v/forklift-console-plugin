@@ -33,7 +33,7 @@ const openShiftVmFieldsMetadataFactory = [
     isIdentity: true,
     isVisible: true,
     jsonPath: '$.vm.object.metadata.namespace',
-    label: t('Namespace'),
+    label: t('Project'),
     resourceFieldId: 'possiblyRemoteNamespace',
     sortable: true,
   },

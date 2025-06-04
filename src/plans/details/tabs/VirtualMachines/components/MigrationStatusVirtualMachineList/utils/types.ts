@@ -3,6 +3,7 @@ import type {
   IoK8sApiCoreV1PersistentVolumeClaim,
   IoK8sApiCoreV1Pod,
   V1beta1DataVolume,
+  V1beta1Plan,
   V1beta1PlanSpecVms,
   V1beta1PlanStatusMigrationVms,
 } from '@kubev2v/types';
@@ -17,6 +18,7 @@ export type MigrationStatusVirtualMachinePageData = {
   statusVM?: V1beta1PlanStatusMigrationVms;
   targetNamespace: string;
   isWarm: boolean;
+  plan: V1beta1Plan;
 };
 
 export enum MigrationStatusVirtualMachinesTableResourceId {
