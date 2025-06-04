@@ -29,8 +29,8 @@ export const ManageColumnsToolbar = ({
       showDialog={() => {
         setIsOpen(true);
       }}
-      ariaLabel={t('Manage Columns')}
-      tooltip={t('Manage Columns')}
+      ariaLabel={t('Manage columns')}
+      tooltip={t('Manage columns')}
     >
       <ManageColumnsModal
         showModal={isOpen}
@@ -45,7 +45,7 @@ export const ManageColumnsToolbar = ({
         cancelLabel={t('Cancel')}
         reorderLabel={t('Reorder')}
         restoreLabel={t('Restore default columns')}
-        title={t('Manage Columns')}
+        title={t('Manage columns')}
       />
     </ManageColumnsToolbarItem>
   );

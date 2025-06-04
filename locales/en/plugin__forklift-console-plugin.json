@@ -333,7 +333,7 @@
   "Loading...": "Loading...",
   "Logs": "Logs",
   "Make sure your migration plan looks correct. To make any changes, click directly on the step you want to go to or press the back button.": "Make sure your migration plan looks correct. To make any changes, click directly on the step you want to go to or press the back button.",
-  "Manage Columns": "Manage Columns",
+  "Manage columns": "Manage columns",
   "Managed resource": "Managed resource",
   "Map": "Map",
   "Map source datastores, storage domains, volume types, storage classes and networks to their respective target storage classes and networks.": "Map source datastores, storage domains, volume types, storage classes and networks to their respective target storage classes and networks.",
