@@ -1,11 +1,11 @@
 export const EMPTY_MSG = '-';
 
-export enum Namespace {
-  AllProjects = '#ALL_NS#',
-  KonveyorForklift = 'konveyor-forklift',
-  OpenshiftMtv = 'openshift-mtv',
-  Default = 'default',
-}
+export const Namespace = {
+  AllProjects: '#ALL_NS#',
+  Default: 'default',
+  KonveyorForklift: 'konveyor-forklift',
+  OpenshiftMtv: 'openshift-mtv',
+};
 
 export const ALL_PROJECTS_KEY = '#ALL_NS#';
 

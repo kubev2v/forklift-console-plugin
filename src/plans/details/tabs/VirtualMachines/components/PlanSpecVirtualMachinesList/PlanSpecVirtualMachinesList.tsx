@@ -33,7 +33,7 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
 
   return (
     <StandardPageWithSelection<SpecVirtualMachinePageData>
-      title={t('Virtual Machines')}
+      title={t('Virtual machines')}
       data-testid="plan-spec-virtual-machines-list"
       dataSource={[specVirtualMachinesListData ?? [], true, undefined]}
       CellMapper={PlanSpecVirtualMachinesRow}

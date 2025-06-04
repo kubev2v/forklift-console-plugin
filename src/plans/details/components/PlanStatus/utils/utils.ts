@@ -1,6 +1,8 @@
+import { isMigrationVirtualMachinePaused } from 'src/plans/details/utils/utils';
+
 import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
 import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
-import { getPlanIsWarm } from '@utils/crds/plans/selectors';
+import { getPlanIsWarm, getPlanVirtualMachinesMigrationStatus } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 
 import {
@@ -36,6 +38,8 @@ export const getVMStatusIcon = (
   if (isSucceeded) return MigrationVirtualMachineStatusIcon.Succeeded;
 
   if (vm?.error) return MigrationVirtualMachineStatusIcon.Failed;
+
+  if (isMigrationVirtualMachinePaused(vm)) return MigrationVirtualMachineStatusIcon.Paused;
 
   if (vm?.started && !vm?.completed && !vm?.error) {
     return MigrationVirtualMachineStatusIcon.InProgress;
@@ -87,6 +91,11 @@ export const isPlanExecuting = (plan: V1beta1Plan) => {
   return conditions?.includes(PlanStatuses.Executing);
 };
 
+const isPlanWaitingForCutover = (plan: V1beta1Plan) =>
+  getPlanVirtualMachinesMigrationStatus(plan).some(isMigrationVirtualMachinePaused) &&
+  isPlanExecuting(plan) &&
+  getPlanIsWarm(plan);
+
 export const isPlanArchived = (plan: V1beta1Plan) => {
   const conditions = getConditions(plan);
   return (
@@ -131,9 +140,7 @@ export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
     return PlanStatuses.Incomplete;
   }
 
-  const isWaitingForCutover = getPlanIsWarm(plan) && isPlanExecuting(plan) && !isPlanArchived(plan);
-
-  if (isWaitingForCutover) {
+  if (isPlanWaitingForCutover(plan)) {
     return PlanStatuses.Paused;
   }
 
@@ -179,6 +186,7 @@ export const isPlanEditable = (plan: V1beta1Plan) => {
     status === PlanStatuses.Ready ||
     status === PlanStatuses.Canceled ||
     status === PlanStatuses.Incomplete ||
-    status === PlanStatuses.Unknown
+    status === PlanStatuses.Unknown ||
+    status === PlanStatuses.CannotStart
   );
 };

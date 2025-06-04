@@ -12,7 +12,6 @@ import { getVmId } from '../utils/helpers/vmProps';
 
 import { ConcernsTable } from './ConcernsTable';
 import { extraSupportedFilters, extraSupportedMatchers } from './constants';
-import { MigrationAction } from './MigrationAction';
 import type { VmData } from './VMCellProps';
 
 type ProviderVirtualMachinesListProps = {
@@ -38,7 +37,6 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   obj,
   onSelect,
   pageId,
-  showActions,
   title,
 }) => {
   const { t } = useForkliftTranslation();
@@ -47,14 +45,6 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   const namespace = (provider ? getNamespace(provider) : '') ?? '';
 
   const userSettings = useMemo(() => loadUserSettings({ pageId }), [pageId]);
-
-  const actions = useMemo(
-    () =>
-      showActions
-        ? [() => <MigrationAction namespace={namespace} provider={provider} />]
-        : undefined,
-    [namespace, provider, showActions],
-  );
 
   const handleSelectedIds = onSelect
     ? (selectedIds: string[]) => {
@@ -71,11 +61,10 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       CellMapper={cellMapper}
       fieldsMetadata={fieldsMetadata}
       namespace={namespace}
-      title={title ?? t('Virtual Machines')}
+      title={title ?? t('Virtual machines')}
       userSettings={userSettings}
       extraSupportedFilters={extraSupportedFilters}
       extraSupportedMatchers={extraSupportedMatchers}
-      GlobalActionToolbarItems={actions}
       toId={getVmId}
       onSelect={handleSelectedIds}
       selectedIds={initialSelectedIds}

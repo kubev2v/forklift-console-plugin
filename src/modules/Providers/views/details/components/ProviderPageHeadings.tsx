@@ -12,10 +12,12 @@ import {
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { PageSection } from '@patternfly/react-core';
+import { PageSection, Split, SplitItem } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import InventoryNotReachable from '../../list/components/InventoryNotReachable';
 import ProviderCriticalCondition from '../../list/components/ProviderCriticalCondition';
+import { MigrationAction } from '../tabs/VirtualMachines/components/MigrationAction';
 
 export const ProviderPageHeadings: FC<{ name: string; namespace: string }> = ({
   name,
@@ -46,7 +48,7 @@ export const ProviderPageHeadings: FC<{ name: string; namespace: string }> = ({
 
   const criticalCondition =
     providerLoaded &&
-    provider?.status?.conditions.find((condition) => condition?.category === 'Critical');
+    provider?.status?.conditions?.find((condition) => condition?.category === 'Critical');
 
   const inventoryNotReachable =
     providerLoaded &&
@@ -61,7 +63,7 @@ export const ProviderPageHeadings: FC<{ name: string; namespace: string }> = ({
     alerts.push(
       <ProviderCriticalCondition
         type={criticalCondition?.type}
-        message={criticalCondition?.message}
+        message={criticalCondition?.message ?? ''}
         key={'providerCriticalCondition'}
       />,
     );
@@ -73,9 +75,19 @@ export const ProviderPageHeadings: FC<{ name: string; namespace: string }> = ({
         model={ProviderModel}
         obj={data?.provider}
         namespace={namespace}
-        actions={<ProviderActionsDropdown data={data} />}
+        actions={
+          <Split hasGutter>
+            <SplitItem>
+              <MigrationAction namespace={namespace} provider={data.provider} />
+            </SplitItem>
+
+            <SplitItem>
+              <ProviderActionsDropdown data={data} />
+            </SplitItem>
+          </Split>
+        }
       >
-        {alerts && alerts.length > 0 && (
+        {!isEmpty(alerts) && (
           <PageSection variant="light" className="forklift-page-headings-alerts">
             {alerts}
           </PageSection>

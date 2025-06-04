@@ -55,7 +55,7 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
         onSelect={() => undefined}
         page={INITIAL_PAGE}
         selectedIds={[]}
-        title={t('Virtual Machines')}
+        title={t('Virtual machines')}
         toId={(item: MigrationStatusVirtualMachinePageData) => item?.specVM?.id ?? ''}
         userSettings={userSettings}
       />

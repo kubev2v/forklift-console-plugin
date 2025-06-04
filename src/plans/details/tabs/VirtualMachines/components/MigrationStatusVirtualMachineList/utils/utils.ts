@@ -6,6 +6,7 @@ import { t } from '@utils/i18n';
 import type { MigrationStatusVirtualMachinePageData } from './types';
 
 export const VIRTUAL_MACHINE_CREATION_NAME = 'VirtualMachineCreation';
+export const CUTOVER_NAME = 'Cutover';
 
 export const getVMMigrationStatus = (obj: unknown) => {
   const vmMigrationStatusData = obj as MigrationStatusVirtualMachinePageData;

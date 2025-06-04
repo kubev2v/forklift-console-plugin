@@ -25,7 +25,7 @@ const usePlanPages = (plan: V1beta1Plan) => {
     {
       component: () => <PlanVirtualMachinesPage plan={plan} />,
       href: 'vms',
-      name: t('Virtual Machines'),
+      name: t('Virtual machines'),
     },
     {
       component: () => <PlanResourcesPage plan={plan} />,

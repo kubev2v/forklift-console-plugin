@@ -36,7 +36,7 @@ export const providerFields = (): ResourceField[] => {
       isIdentity: true,
       isVisible: true,
       jsonPath: '$.provider.metadata.namespace',
-      label: t('Namespace'),
+      label: t('Project'),
       resourceFieldId: ProvidersResourceFieldId.Namespace,
       sortable: true,
     },

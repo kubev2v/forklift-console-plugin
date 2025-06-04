@@ -59,7 +59,7 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
     ),
     [PlanTableResourceId.Namespace]: (
       <TableLinkCell
-        groupVersionKind={{ kind: 'Namespace', version: 'v1' }}
+        groupVersionKind={{ kind: 'Project', version: 'v1' }}
         name={planNamespace}
         namespace={planNamespace}
       />

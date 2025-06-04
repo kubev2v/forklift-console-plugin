@@ -29,7 +29,11 @@ const ProviderNetworksTabPage: FC<ProviderNetworksTabPageProp> = ({ provider }) 
 
   const { showModal } = useModal();
 
-  const { inventory: networks } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
+  const {
+    error,
+    inventory: networks,
+    loading,
+  } = useProviderInventory<OpenShiftNetworkAttachmentDefinition[]>({
     provider,
     subPath: 'networkattachmentdefinitions?detail=4',
   });
@@ -43,16 +47,18 @@ const ProviderNetworksTabPage: FC<ProviderNetworksTabPageProp> = ({ provider }) 
 
   const networksDataList = useMemo(
     () =>
-      networks?.map((network) => {
-        const config = network?.object?.spec?.config;
-        return {
-          config: JSON.parse(!config?.length ? '{}' : config) as CnoConfig,
-          isDefault: `${network.namespace}/${network.name}` === defaultNetworkName,
-          name: network.name,
-          namespace: network.namespace,
-        };
-      }),
-    [defaultNetworkName, networks],
+      !loading && !error && Array.isArray(networks)
+        ? networks?.map((network) => {
+            const config = network?.object?.spec?.config;
+            return {
+              config: JSON.parse(config?.length ? config : '{}') as CnoConfig,
+              isDefault: `${network?.namespace}/${network?.name}` === defaultNetworkName,
+              name: network?.name,
+              namespace: network?.namespace,
+            };
+          })
+        : [],
+    [defaultNetworkName, error, loading, networks],
   );
 
   const onClick = () => {
@@ -80,7 +86,7 @@ const ProviderNetworksTabPage: FC<ProviderNetworksTabPageProp> = ({ provider }) 
             <Thead>
               <Tr>
                 <Th width={30}>{t('Name')}</Th>
-                <Th width={30}>{t('Namespace')}</Th>
+                <Th width={30}>{t('Project')}</Th>
                 <Th width={30}>{t('Type')}</Th>
               </Tr>
             </Thead>

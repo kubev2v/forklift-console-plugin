@@ -10,3 +10,9 @@ export enum CustomFilterType {
   Features = 'features',
   Host = 'host',
 }
+
+export const orderedConcernCategories = [
+  ConcernCategory.Critical,
+  ConcernCategory.Warning,
+  ConcernCategory.Information,
+];

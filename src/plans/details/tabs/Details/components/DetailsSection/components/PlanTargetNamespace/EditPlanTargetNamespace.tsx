@@ -19,14 +19,14 @@ const EditPlanTargetNamespace: FC<EditPlanProps> = ({ resource }) => {
 
   return (
     <ModalForm
-      title={t('Edit migration plan target namespace')}
+      title={t('Edit migration plan target project')}
       onConfirm={async () => onConfirmTargetNamespace({ newValue: value, resource })}
     >
       <Stack hasGutter>
-        {t(`You can select a migration target namespace for the migration virtual machines.`)}
+        {t(`You can select a migration target project for the migration virtual machines.`)}
         <FormGroupWithHelpText
-          label={t('Target namespace')}
-          helperText={t('Please choose a target namespace for the migrated virtual machines.')}
+          label={t('Target project')}
+          helperText={t('Please choose a target project for the migrated virtual machines.')}
         >
           <TargetNamespaceSelect provider={destinationProvider} value={value} onChange={setValue} />
         </FormGroupWithHelpText>

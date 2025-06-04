@@ -8,7 +8,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
 import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
-import { DetailsSection } from '../../components/DetailsSection/DetailsSection';
+import DetailsSection from '../../components/DetailsSection/DetailsSection';
 import { MapsSection } from '../../components/MapsSection/MapsSection';
 import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSection';
 
@@ -47,7 +47,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
 
       <PageSection variant="light" className="forklift-page-section">
         <SectionHeading text={t('Conditions')} />
-        <ConditionsSection conditions={obj?.status?.conditions} />
+        <ConditionsSection conditions={obj?.status?.conditions ?? []} />
       </PageSection>
     </LoadingSuspend>
   );
