@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import PlanWarmLabel from 'src/plans/details/components/PlanWarmLabel/PlanWarmLabel';
 import { useForkliftTranslation } from 'src/utils/i18n';

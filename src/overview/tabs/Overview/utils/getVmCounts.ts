@@ -1,4 +1,8 @@
+import { DateTime } from 'luxon';
+
 import type { V1beta1Migration, V1beta1MigrationStatusVms } from '@kubev2v/types';
+
+import { TimeRangeOptions, TimeRangeOptionsDictionary } from './timeRangeOptions';
 
 // Helper function to process 'True' vm conditions
 const processVmConditions = (vm: V1beta1MigrationStatusVms) => {
@@ -38,7 +42,10 @@ const incrementCounts = (
  * @param {V1beta1Migration[]} migrations - The array of migration objects to inspect.
  * @return {Object} A dictionary with the phase as the key and the count as the value.
  */
-export const getVmCounts = (migrations: V1beta1Migration[]): Record<string, number> => {
+export const getVmCounts = (
+  migrations: V1beta1Migration[],
+  range: TimeRangeOptions,
+): Record<string, number> => {
   const vmCounts: Record<string, number> = {
     Canceled: 0,
     Failed: 0,
@@ -50,8 +57,14 @@ export const getVmCounts = (migrations: V1beta1Migration[]): Record<string, numb
   for (const migration of migrations || []) {
     if (migration?.status?.vms) {
       for (const vm of migration.status.vms) {
-        const conditions = processVmConditions(vm);
-        incrementCounts(conditions, vm, vmCounts);
+        const time = DateTime.fromISO(vm.completed ?? vm.started ?? '');
+        if (
+          range === TimeRangeOptions.All ||
+          (time.isValid && TimeRangeOptionsDictionary[range].filter(time))
+        ) {
+          const conditions = processVmConditions(vm);
+          incrementCounts(conditions, vm, vmCounts);
+        }
       }
     }
   }

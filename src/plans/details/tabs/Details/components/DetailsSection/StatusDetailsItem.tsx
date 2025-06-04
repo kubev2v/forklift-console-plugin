@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { DetailsItem } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import PlanStatus from 'src/plans/list/components/PlanRowFields/PlanStatus/PlanStatus';
 
 import type { V1beta1Plan } from '@kubev2v/types';

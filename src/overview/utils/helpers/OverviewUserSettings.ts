@@ -1,3 +1,5 @@
+import type { TimeRangeOptions } from 'src/overview/tabs/Overview/utils/timeRangeOptions';
+
 import {
   loadFromLocalStorage,
   removeFromLocalStorage,
@@ -8,6 +10,8 @@ import { isEmpty } from '@utils/helpers';
 
 type OverviewUserSettings = {
   welcome?: WelcomeSettings;
+  vmMigrationsDonutSelectedRange?: string;
+  vmMigrationsHistorySelectedRange?: string;
 };
 
 type WelcomeSettings = {
@@ -26,6 +30,33 @@ const parseOrClean = <T>(key: string): T => {
     MTVConsole.error(`Removed invalid key [${key}] from local storage`);
   }
   return {} as T;
+};
+
+const getOverviewKey = () => `${process.env.PLUGIN_NAME}/Overview`;
+
+export const saveOverviewSelectedRanges = (ranges: {
+  vmMigrationsDonutSelectedRange?: TimeRangeOptions;
+  vmMigrationsHistorySelectedRange?: TimeRangeOptions;
+}) => {
+  const key = getOverviewKey();
+  const current = parseOrClean<OverviewUserSettings>(key);
+  saveToLocalStorage(
+    key,
+    JSON.stringify({
+      ...current,
+      ...ranges,
+    }),
+  );
+};
+
+export const loadOverviewSelectedRanges = (): {
+  vmMigrationsDonutSelectedRange?: string;
+  vmMigrationsHistorySelectedRange?: string;
+} => {
+  const key = getOverviewKey();
+  const { vmMigrationsDonutSelectedRange, vmMigrationsHistorySelectedRange } =
+    parseOrClean<OverviewUserSettings>(key);
+  return { vmMigrationsDonutSelectedRange, vmMigrationsHistorySelectedRange };
 };
 
 const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string, unknown>>) => {

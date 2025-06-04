@@ -1,5 +1,5 @@
 import { type FC, type FormEvent, useEffect, useReducer } from 'react';
-import { useSearchParams } from 'react-router-dom-v5-compat';
+import { useNavigate, useSearchParams } from 'react-router-dom-v5-compat';
 import { Base64 } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -53,7 +53,8 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
   const [projectNameOptions] = useProjectNameSelectOptions(projectName);
   const isDarkTheme = useIsDarkTheme();
   const providerItems = providerCardItems(isDarkTheme);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const providerType = searchParams.get('providerType');
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const ProvidersCreateForm: FC<ProvidersCreateFormProps> = ({
         spec: { ...newProvider?.spec, type: providerType as ProviderType },
       });
       searchParams.delete('providerType');
-      setSearchParams(searchParams);
+      navigate({ search: searchParams.toString() }, { replace: true });
     }
   }, [providerType, newProvider, providerNamesLoaded]);
 

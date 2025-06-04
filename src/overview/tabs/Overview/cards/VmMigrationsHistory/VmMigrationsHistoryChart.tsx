@@ -1,17 +1,25 @@
-import { useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom-v5-compat';
+import { DateTime } from 'luxon';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { PlanTableResourceId } from 'src/plans/list/utils/constants';
 
+import { PlanModelRef } from '@kubev2v/types';
+import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Chart,
   ChartArea,
   ChartAxis,
-  ChartGroup,
-  ChartScatter,
+  ChartStack,
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
+import { Button } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import useMigrationCounts from '../../hooks/useMigrationCounts';
 import { ChartColors } from '../../utils/colors';
 import { mapDataPoints } from '../../utils/getVmMigrationsDataPoints';
+import { type TimeRangeOptions, TimeRangeOptionsDictionary } from '../../utils/timeRangeOptions';
 import type { MigrationDataPoint } from '../../utils/toDataPointsHelper';
 import type { ChartDatumWithName } from '../../utils/types';
 
@@ -20,8 +28,10 @@ import { useResizeObserver } from './useResizeObserver';
 const MAX_DOMAIN_Y = 5;
 
 const VmMigrationsHistoryChart = ({
+  selectedTimeRange,
   vmMigrationsDataPoints,
 }: {
+  selectedTimeRange: TimeRangeOptions;
   vmMigrationsDataPoints: {
     running: MigrationDataPoint[];
     failed: MigrationDataPoint[];
@@ -29,9 +39,21 @@ const VmMigrationsHistoryChart = ({
   };
 }) => {
   const { t } = useForkliftTranslation();
+  const { count } = useMigrationCounts();
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartDimensions = useResizeObserver(chartContainerRef);
   const { failed, running, succeeded } = vmMigrationsDataPoints;
+  const [activeNamespace] = useActiveNamespace();
+  const navigate = useNavigate();
+  const [activeArea, setActiveArea] = useState<string | null>(null);
+
+  const plansListURL = useMemo(() => {
+    return getResourceUrl({
+      namespace: activeNamespace,
+      namespaced: true,
+      reference: PlanModelRef,
+    });
+  }, [activeNamespace]);
 
   const maxVmMigrationValue = Math.max(
     ...running.map((migration) => migration.value),
@@ -40,7 +62,7 @@ const VmMigrationsHistoryChart = ({
   );
 
   const legendData = [
-    { name: t('Running'), symbol: { fill: ChartColors.Running } },
+    { name: t('Running'), symbol: { fill: ChartColors.Executing } },
     { name: t('Failed'), symbol: { fill: ChartColors.Failure } },
     { name: t('Succeeded'), symbol: { fill: ChartColors.Success } },
   ];
@@ -48,18 +70,74 @@ const VmMigrationsHistoryChart = ({
   const maxTicks = Math.max(MAX_DOMAIN_Y, Math.ceil(maxVmMigrationValue) + 1);
   const tickValues = Array.from({ length: maxTicks }, (_, i) => i + 1);
 
+  const getAreaProps = (dataPoints: MigrationDataPoint[], areaName: string, color: string) => ({
+    colorScale: [color],
+    data: mapDataPoints(dataPoints, areaName),
+    events: [
+      {
+        eventHandlers: {
+          onClick: () => {
+            const dateEnd = DateTime.now().toUTC();
+            const dateStart = dateEnd.minus(TimeRangeOptionsDictionary[selectedTimeRange].span);
+            const rangeString = `${dateStart.toFormat('yyyy-MM-dd')}/${dateEnd.toFormat('yyyy-MM-dd')}`;
+            const param = encodeURIComponent(JSON.stringify([rangeString]));
+            navigate(`${plansListURL}?${PlanTableResourceId.MigrationStarted}=${param}`);
+            return null;
+          },
+          onMouseOut: () => {
+            setActiveArea(null);
+            return null;
+          },
+          onMouseOver: () => {
+            setActiveArea(areaName);
+            return null;
+          },
+        },
+        target: 'data',
+      },
+    ],
+    style: {
+      data: {
+        cursor: 'pointer',
+        opacity: activeArea === areaName ? 1 : 0.7,
+        stroke: activeArea === areaName ? color : undefined,
+        strokeWidth: activeArea === areaName ? 4 : 2,
+      },
+    },
+  });
+
   return (
     <div ref={chartContainerRef} className="pf-u-h-100 pf-u-w-100">
+      {count.Total === 0 && (
+        <div className="forklift-overview__create-plan-btn">
+          <Button
+            variant="primary"
+            onClick={() => {
+              navigate(`${plansListURL}/~new`);
+            }}
+          >
+            {t('Create migration plan')}
+          </Button>
+        </div>
+      )}
       <Chart
-        ariaDesc={t('Area chart with VM migration statistics')}
+        ariaDesc={t('Area chart with VM migration history')}
         containerComponent={
           <ChartVoronoiContainer
             labels={({ datum }: { datum: ChartDatumWithName }) =>
               datum.y === 0 || !datum.name
                 ? (undefined as unknown as string)
-                : `${datum.x} - ${datum.name}: ${datum.y}`
+                : `${t('{{count}} VM migration', { count: datum.y })}
+                ${datum.name.toLowerCase()}`
             }
             constrainToVisibleArea
+            onActivated={(points: ChartDatumWithName[]) => {
+              // points[0].name will be 'Succeeded', 'Failed', or 'Running'
+              setActiveArea(points[0]?.name ?? null);
+            }}
+            onDeactivated={() => {
+              setActiveArea(null);
+            }}
           />
         }
         legendData={legendData}
@@ -75,36 +153,12 @@ const VmMigrationsHistoryChart = ({
         height={chartDimensions.height}
       >
         <ChartAxis />
-        <ChartAxis dependentAxis showGrid tickValues={tickValues} />
-        <ChartGroup>
-          <ChartArea
-            data={mapDataPoints(succeeded, t('Succeeded'))}
-            colorScale={[ChartColors.Success]}
-          />
-          <ChartScatter
-            data={mapDataPoints(succeeded)}
-            size={3}
-            symbol="circle"
-            colorScale={[ChartColors.Success]}
-          />
-          <ChartArea data={mapDataPoints(failed, t('Failed'))} colorScale={[ChartColors.Failure]} />
-          <ChartScatter
-            data={mapDataPoints(failed)}
-            size={3}
-            symbol="circle"
-            colorScale={[ChartColors.Failure]}
-          />
-          <ChartArea
-            data={mapDataPoints(running, t('Running'))}
-            colorScale={[ChartColors.Running]}
-          />
-          <ChartScatter
-            data={mapDataPoints(running)}
-            size={3}
-            symbol="circle"
-            colorScale={[ChartColors.Running]}
-          />
-        </ChartGroup>
+        <ChartAxis dependentAxis tickValues={tickValues} />
+        <ChartStack>
+          <ChartArea {...getAreaProps(failed, t('Failed'), ChartColors.Failure)} />
+          <ChartArea {...getAreaProps(running, t('Running'), ChartColors.Executing)} />
+          <ChartArea {...getAreaProps(succeeded, t('Succeeded'), ChartColors.Success)} />
+        </ChartStack>
       </Chart>
     </div>
   );
