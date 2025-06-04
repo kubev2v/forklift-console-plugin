@@ -13,6 +13,7 @@ import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
 export const TableLinkCell: FC<TableLinkCellProps> = ({
   groupVersionKind,
   hasLabel = false,
+  hideIcon,
   label,
   labelColor = 'grey',
   name,
@@ -20,7 +21,12 @@ export const TableLinkCell: FC<TableLinkCellProps> = ({
 }) => {
   return (
     <TableLabelCell hasLabel={hasLabel} label={label} labelColor={labelColor} isWrap={true}>
-      <ResourceLink groupVersionKind={groupVersionKind} name={name} namespace={namespace} />
+      <ResourceLink
+        groupVersionKind={groupVersionKind}
+        name={name}
+        namespace={namespace}
+        hideIcon={hideIcon}
+      />
     </TableLabelCell>
   );
 };
@@ -29,4 +35,5 @@ type TableLinkCellProps = {
   groupVersionKind: K8sGroupVersionKind;
   name: string | undefined;
   namespace: string | undefined;
+  hideIcon?: boolean;
 } & TableLabelCellProps;
