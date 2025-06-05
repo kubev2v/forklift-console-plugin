@@ -1,18 +1,16 @@
-import {
-  HookModel,
-  type IoK8sApiCoreV1Secret,
-  NetworkMapModel,
-  SecretModel,
-  StorageMapModel,
-  type V1beta1Hook,
-  type V1beta1NetworkMap,
-  type V1beta1StorageMap,
+import type {
+  IoK8sApiCoreV1Secret,
+  V1beta1Hook,
+  V1beta1NetworkMap,
+  V1beta1StorageMap,
 } from '@kubev2v/types';
 
 import { MigrationHookFieldId } from '../steps/migration-hooks/constants';
 import type { CreatePlanFormData } from '../types';
 
-import { addOwnerRefs } from './addOwnerRefs';
+import { addPlanResourceOwnerRefs } from './addPlanResourceOwnerRefs';
+import { copyNetworkMap } from './copyNetworkMap';
+import { copyStorageMap } from './copyStorageMap';
 import { createDecryptionSecret } from './createDecryptionSecret';
 import { createMigrationHooks } from './createMigrationHooks';
 import { createNetworkMap } from './createNetworkMap';
@@ -47,16 +45,24 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
     vms,
   } = formData;
 
-  let planNetworkMap = existingNetworkMap!;
-  let planStorageMap = existingStorageMap!;
+  let planNetworkMap = {} as V1beta1NetworkMap;
+  let planStorageMap = {} as V1beta1StorageMap;
   let createdSecret: IoK8sApiCoreV1Secret | undefined = {};
   let createdHooks: { preHook?: V1beta1Hook; postHook?: V1beta1Hook } = {};
 
-  // Collection of promises for concurrent resource creation
+  // Collection of promises for concurrent plan resource creation
   const createResourceRequests: Promise<void>[] = [];
 
-  // Create network map
-  if (!existingNetworkMap) {
+  // Create or copy network map
+  if (existingNetworkMap) {
+    createResourceRequests.push(
+      copyNetworkMap(existingNetworkMap, planName, planProject).then(
+        (networkMap: V1beta1NetworkMap) => {
+          planNetworkMap = networkMap;
+        },
+      ),
+    );
+  } else {
     createResourceRequests.push(
       createNetworkMap({
         mappings: newNetworkMap,
@@ -70,8 +76,16 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
     );
   }
 
-  // Create storage map
-  if (!existingStorageMap) {
+  // Create or copy storage map
+  if (existingStorageMap) {
+    createResourceRequests.push(
+      copyStorageMap(existingStorageMap, planName, planProject).then(
+        (storageMap: V1beta1StorageMap) => {
+          planStorageMap = storageMap;
+        },
+      ),
+    );
+  } else {
     createResourceRequests.push(
       createStorageMap({
         mappings: newStorageMap,
@@ -137,23 +151,14 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
     vms: Object.values(vms),
   });
 
-  // Establish owner references for resources to the created plan
-  const addOwnerRefRequests: ReturnType<typeof addOwnerRefs>[] = [
-    addOwnerRefs(StorageMapModel, planStorageMap, [createdPlanRef]),
-    addOwnerRefs(NetworkMapModel, planNetworkMap, [createdPlanRef]),
-  ];
-
-  if (createdSecret) {
-    addOwnerRefRequests.push(addOwnerRefs(SecretModel, createdSecret, [createdPlanRef]));
-  }
-
-  if (createdHooks.preHook) {
-    addOwnerRefRequests.push(addOwnerRefs(HookModel, createdHooks.preHook, [createdPlanRef]));
-  }
-
-  if (createdHooks.postHook) {
-    addOwnerRefRequests.push(addOwnerRefs(HookModel, createdHooks.postHook, [createdPlanRef]));
-  }
-
-  await Promise.all(addOwnerRefRequests);
+  // Add owner references to all created resources
+  await addPlanResourceOwnerRefs(
+    {
+      hooks: createdHooks,
+      networkMap: planNetworkMap,
+      secret: createdSecret,
+      storageMap: planStorageMap,
+    },
+    createdPlanRef,
+  );
 };

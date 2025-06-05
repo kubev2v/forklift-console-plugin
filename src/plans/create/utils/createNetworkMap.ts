@@ -42,7 +42,13 @@ export const createNetworkMap = async ({
             destination:
               targetNetwork.name === defaultNetMapping[NetworkMapFieldId.TargetNetwork].name
                 ? { type: 'pod' }
-                : { name: targetNetwork.name, namespace: planProject, type: 'multus' },
+                : {
+                    name: targetNetwork.name.includes('/')
+                      ? targetNetwork.name.split('/')[1]
+                      : targetNetwork.name,
+                    namespace: planProject,
+                    type: 'multus',
+                  },
             // Handle pod network type or regular network for the source
             source:
               sourceNetwork.id === 'pod'

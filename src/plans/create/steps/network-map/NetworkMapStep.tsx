@@ -16,7 +16,10 @@ const NetworkMapStep = () => {
   const { control, unregister } = useCreatePlanFormContext();
 
   return (
-    <WizardStepContainer title={planStepNames[PlanWizardStepId.NetworkMap]}>
+    <WizardStepContainer
+      title={planStepNames[PlanWizardStepId.NetworkMap]}
+      description={t('Select an existing network map or use a new network map.')}
+    >
       <Form>
         <Controller
           name={NetworkMapFieldId.NetworkMapType}
@@ -36,6 +39,9 @@ const NetworkMapStep = () => {
                       networkTypeField.onChange(NetworkMapType.Existing);
                       unregister([NetworkMapFieldId.NetworkMap, NetworkMapFieldId.NetworkMapName]);
                     }}
+                    description={t(
+                      'Existing network map options are limited to those without an owner reference. Upon creation of this plan, a new network map will be created with this plan as its owner.',
+                    )}
                   />
 
                   {networkTypeField.value === NetworkMapType.Existing && (
@@ -51,7 +57,7 @@ const NetworkMapStep = () => {
                     name={NetworkMapType.New}
                     label={networkMapTypeLabels[NetworkMapType.New]}
                     description={t(
-                      'Use the suggested network map, add mappings to it, or create a brand new one as needed.',
+                      'Use the suggested network mapping and add mappings to it, or create a brand new one as needed. A new map, with this plan as its owner, will be automatically created based on your selected mappings.',
                     )}
                     checked={networkTypeField.value === NetworkMapType.New}
                     value={networkTypeField.value}

@@ -16,7 +16,10 @@ const StorageMapStep = () => {
   const { control, unregister } = useCreatePlanFormContext();
 
   return (
-    <WizardStepContainer title={planStepNames[PlanWizardStepId.StorageMap]}>
+    <WizardStepContainer
+      title={planStepNames[PlanWizardStepId.StorageMap]}
+      description={t('Select an existing storage map or use a new storage map.')}
+    >
       <Form>
         <Controller
           name={StorageMapFieldId.StorageMapType}
@@ -36,6 +39,9 @@ const StorageMapStep = () => {
                       storageTypeField.onChange(StorageMapType.Existing);
                       unregister([StorageMapFieldId.StorageMap, StorageMapFieldId.StorageMapName]);
                     }}
+                    description={t(
+                      'Existing storage map options are limited to those without an owner reference. Upon creation of this plan, a new storage map will be created with this plan as its owner.',
+                    )}
                   />
 
                   {storageTypeField.value === StorageMapType.Existing && (
@@ -51,7 +57,7 @@ const StorageMapStep = () => {
                     name={StorageMapType.New}
                     label={storageMapTypeLabels[StorageMapType.New]}
                     description={t(
-                      'Use the suggested storage map, add mappings to it, or create a brand new one as needed.',
+                      'Use the suggested storage mapping and add mappings to it, or create a brand new one as needed. A new map, with this plan as its owner, will be automatically created based on your selected mappings.',
                     )}
                     checked={storageTypeField.value === StorageMapType.New}
                     value={storageTypeField.value}

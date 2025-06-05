@@ -1,11 +1,12 @@
 import type { FC } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
+import { GeneralFormFieldId } from '../general-information/constants';
 
 import { netMapFieldLabels, NetworkMapFieldId } from './constants';
 import NetworkMapSelect from './NetworkMapSelect';
@@ -14,6 +15,7 @@ const ExistingNetworkMapField: FC = () => {
   const { t } = useForkliftTranslation();
   const { control, getFieldState } = useCreatePlanFormContext();
   const { error } = getFieldState(NetworkMapFieldId.ExistingNetworkMap);
+  const planProject = useWatch({ control, name: GeneralFormFieldId.PlanProject });
 
   return (
     <FormGroupWithErrorText
@@ -33,6 +35,7 @@ const ExistingNetworkMapField: FC = () => {
             onSelect={(_, value) => {
               field.onChange(value);
             }}
+            namespace={planProject}
           />
         )}
         rules={{
