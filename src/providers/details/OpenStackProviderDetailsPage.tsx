@@ -1,11 +1,12 @@
 import type { FC } from 'react';
 import { ProviderPageHeadings } from 'src/modules/Providers/views/details/components/ProviderPageHeadings';
-import { ProviderCredentialsTabPage } from 'src/modules/Providers/views/details/tabs/Credentials/ProviderCredentials';
+import { ProviderCredentialsTabPage1 } from 'src/modules/Providers/views/details/tabs/Credentials/ProviderCredentials';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-sdk';
 
+import ProviderCredentialsTabPage from './tabs/Credentials/ProviderCredentialsTabPage';
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
 import ProviderVirtualMachinesTabPage from './tabs/VirtualMachines/ProviderVirtualMachinesTabPage';
 import ProviderYAMLTabPage from './tabs/YAML/ProviderYAMLTabPage';
@@ -29,7 +30,12 @@ const OpenStackProviderDetailsPage: FC<{
       name: t('YAML'),
     },
     {
-      component: () => <ProviderCredentialsTabPage name={name} namespace={namespace} />,
+      component: () => <ProviderCredentialsTabPage1 name={name} namespace={namespace} />,
+      href: 'credentials-old',
+      name: t('Credentials old'),
+    },
+    {
+      component: () => <ProviderCredentialsTabPage provider={provider} />,
       href: 'credentials',
       name: t('Credentials'),
     },

@@ -9,7 +9,7 @@ import { EllipsisVIcon } from '@patternfly/react-icons';
 
 import ProviderActionsDropdownItems from './ProviderActionsDropdownItems';
 
-import './ProviderActionsDropdown.style.css';
+import './ProviderActionsDropdown.style.scss';
 
 type ProviderActionsDropdownProps = {
   data: ProviderData;

@@ -34,7 +34,7 @@ export const EditProvider: FC<ProvidersCreateFormProps> = ({
           <OpenstackProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
 
           <EditProviderSectionHeading text={t('Provider credentials')} />
-          <OpenstackCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
+          <OpenstackCredentialsEdit secret={newSecret} onNewSecretChange={onNewSecretChange} />
         </>
       );
     case 'openshift':
@@ -43,7 +43,7 @@ export const EditProvider: FC<ProvidersCreateFormProps> = ({
           <OpenshiftProviderFormCreate provider={newProvider} onChange={onNewProviderChange} />
 
           <EditProviderSectionHeading text={t('Provider credentials')} />
-          <OpenshiftCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
+          <OpenshiftCredentialsEdit secret={newSecret} onNewSecretChange={onNewSecretChange} />
         </>
       );
     case 'ovirt':
@@ -52,7 +52,7 @@ export const EditProvider: FC<ProvidersCreateFormProps> = ({
           <OvirtProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
 
           <EditProviderSectionHeading text={t('Provider credentials')} />
-          <OvirtCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
+          <OvirtCredentialsEdit secret={newSecret} onNewSecretChange={onNewSecretChange} />
         </>
       );
     case 'vsphere':
@@ -63,7 +63,7 @@ export const EditProvider: FC<ProvidersCreateFormProps> = ({
               <EsxiProviderCreateForm provider={newProvider} onChange={onNewProviderChange} />
 
               <EditProviderSectionHeading text={t('Provider credentials')} />
-              <EsxiCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
+              <EsxiCredentialsEdit secret={newSecret} onNewSecretChange={onNewSecretChange} />
             </>
           );
         default:
@@ -76,7 +76,7 @@ export const EditProvider: FC<ProvidersCreateFormProps> = ({
               />
 
               <EditProviderSectionHeading text={t('Provider credentials')} />
-              <VCenterCredentialsEdit secret={newSecret} onChange={onNewSecretChange} />
+              <VCenterCredentialsEdit secret={newSecret} onNewSecretChange={onNewSecretChange} />
             </>
           );
       }
