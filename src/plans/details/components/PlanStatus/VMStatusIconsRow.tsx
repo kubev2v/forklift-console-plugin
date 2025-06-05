@@ -1,29 +1,42 @@
 import type { FC } from 'react';
 
+import type { V1beta1Plan } from '@kubev2v/types';
 import { Flex } from '@patternfly/react-core';
 
-import { migrationStatusIconMap } from './utils/statusIconMapper';
-import type { MigrationVirtualMachineStatusIcon } from './utils/types';
+import {
+  type MigrationVirtualMachinesStatusCountObject,
+  type MigrationVirtualMachineStatus,
+  statusPriority,
+} from './utils/types';
+import StatusPopover from './StatusPopover';
 
 type VMStatusIconsRowProps = {
-  statuses: Record<MigrationVirtualMachineStatusIcon, number>;
+  statuses: Record<MigrationVirtualMachineStatus, MigrationVirtualMachinesStatusCountObject>;
+  plan: V1beta1Plan;
 };
 
-const VMStatusIconsRow: FC<VMStatusIconsRowProps> = ({ statuses }) => {
+const VMStatusIconsRow: FC<VMStatusIconsRowProps> = ({ plan, statuses }) => {
   return (
     <Flex
       alignItems={{ default: 'alignItemsCenter' }}
       gap={{ default: 'gapSm' }}
       direction={{ default: 'row' }}
     >
-      {(Object.entries(statuses) as [MigrationVirtualMachineStatusIcon, number][])
-        .filter(([, count]) => count > 0)
-        .map(([status, count]) => (
-          <Flex gap={{ default: 'gapXs' }} key={status}>
-            {migrationStatusIconMap[status]}
-            <span>{count}</span>
-          </Flex>
-        ))}
+      {(
+        Object.entries(statuses) as [
+          MigrationVirtualMachineStatus,
+          MigrationVirtualMachinesStatusCountObject,
+        ][]
+      )
+        .filter(([, { count }]) => count > 0)
+        .sort(([statusA], [statusB]) => statusPriority[statusA] - statusPriority[statusB])
+        .map(([status, { count, vms }]) => {
+          return (
+            <Flex gap={{ default: 'gapXs' }} key={status}>
+              <StatusPopover count={count} plan={plan} status={status} vms={vms} />
+            </Flex>
+          );
+        })}
     </Flex>
   );
 };
