@@ -1,13 +1,16 @@
 import { Base64 } from 'js-base64';
 
-import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
 import { missingKeysInSecretData } from '../../../helpers/missingKeysInSecretData';
 import type { ValidationMsg } from '../../common';
 
 import { esxiSecretFieldValidator } from './esxiSecretFieldValidator';
 
-export const esxiSecretValidator = (secret: IoK8sApiCoreV1Secret): ValidationMsg => {
+export const esxiSecretValidator = (
+  secret: IoK8sApiCoreV1Secret,
+  _provider?: V1beta1Provider,
+): ValidationMsg => {
   const requiredFields = ['user', 'password'];
   const validateFields = ['user', 'password', 'insecureSkipVerify'];
 

@@ -39,7 +39,3 @@ export const hostsFields = [
     sortable: true,
   },
 ];
-
-export enum VSphereEndpointType {
-  ESXi = 'esxi',
-}

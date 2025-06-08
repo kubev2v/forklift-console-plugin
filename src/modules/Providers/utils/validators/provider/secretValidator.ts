@@ -20,7 +20,7 @@ export const secretValidator = (
 
   switch (type) {
     case 'openshift':
-      validationError = openshiftSecretValidator(provider, secret);
+      validationError = openshiftSecretValidator(secret, provider);
       break;
     case 'openstack':
       validationError = openstackSecretValidator(secret);

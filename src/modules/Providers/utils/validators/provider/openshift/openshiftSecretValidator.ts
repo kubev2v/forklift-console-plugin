@@ -8,8 +8,8 @@ import type { ValidationMsg } from '../../common';
 import { openshiftSecretFieldValidator } from './openshiftSecretFieldValidator';
 
 export const openshiftSecretValidator = (
-  provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret,
+  provider: V1beta1Provider,
 ): ValidationMsg => {
   const url = provider?.spec?.url ?? '';
   const token = secret?.data?.token ?? '';

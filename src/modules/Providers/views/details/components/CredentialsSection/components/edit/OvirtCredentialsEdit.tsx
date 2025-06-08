@@ -4,6 +4,7 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload/CertificateUpload';
 import { safeBase64Decode } from 'src/modules/Providers/utils/helpers/safeBase64Decode';
 import { ovirtSecretFieldValidator } from 'src/modules/Providers/utils/validators/provider/ovirt/ovirtSecretFieldValidator';
+import type { CredentialsEditModeByTypeProps } from 'src/providers/details/tabs/Credentials/components/utils/types';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -17,9 +18,10 @@ import {
 } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon, HelpIcon } from '@patternfly/react-icons';
 
-import type { EditComponentProps } from '../BaseCredentialsSection';
-
-export const OvirtCredentialsEdit: FC<EditComponentProps> = ({ onChange, secret }) => {
+export const OvirtCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
+  onNewSecretChange,
+  secret,
+}) => {
   const { t } = useForkliftTranslation();
 
   const url = safeBase64Decode(secret?.data?.url);
@@ -97,7 +99,7 @@ export const OvirtCredentialsEdit: FC<EditComponentProps> = ({ onChange, secret 
         ? Base64.encode(value || '')
         : Base64.encode(value?.trim() || '');
 
-      onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
+      onNewSecretChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
     [secret],
   );

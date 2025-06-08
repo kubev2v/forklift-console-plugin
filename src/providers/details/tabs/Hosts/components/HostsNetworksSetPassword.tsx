@@ -1,12 +1,11 @@
 import { type Dispatch, type FC, type FormEvent, type SetStateAction, useState } from 'react';
 import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
+import { ValidationState } from 'src/providers/utils/types';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { Button, ButtonVariant, InputGroup, TextInput } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n';
-
-import { ValidationState } from './utils/types';
 
 type HostsNetworksSetPasswordProps = {
   password: string;
@@ -31,7 +30,7 @@ const HostsNetworksSetPassword: FC<HostsNetworksSetPasswordProps> = ({ password,
   };
 
   const togglePasswordHidden = () => {
-    setPasswordHidden(!passwordHidden);
+    setPasswordHidden((isHidden) => !isHidden);
   };
 
   return (
