@@ -4,12 +4,11 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import { CertificateUpload } from 'src/modules/Providers/utils/components/CertificateUpload/CertificateUpload';
 import { safeBase64Decode } from 'src/modules/Providers/utils/helpers/safeBase64Decode';
 import { openstackSecretFieldValidator } from 'src/modules/Providers/utils/validators/provider/openstack/openstackSecretFieldValidator';
+import type { CredentialsEditModeByTypeProps } from 'src/providers/details/tabs/Credentials/components/utils/types';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Divider, Form, Popover, Radio, Switch } from '@patternfly/react-core';
 import { HelpIcon } from '@patternfly/react-icons';
-
-import type { EditComponentProps } from '../BaseCredentialsSection';
 
 import { ApplicationCredentialNameSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/ApplicationCredentialNameSecretFieldsFormGroup';
 import { ApplicationWithCredentialsIDFormGroup } from './OpenstackCredentialsEditFormGroups/ApplicationWithCredentialsIDFormGroup';
@@ -17,7 +16,10 @@ import { PasswordSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGro
 import { TokenWithUserIDSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/TokenWithUserIDSecretFieldsFormGroup';
 import { TokenWithUsernameSecretFieldsFormGroup } from './OpenstackCredentialsEditFormGroups/TokenWithUsernameSecretFieldsFormGroup';
 
-export const OpenstackCredentialsEdit: FC<EditComponentProps> = ({ onChange, secret }) => {
+export const OpenstackCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
+  onNewSecretChange,
+  secret,
+}) => {
   const { t } = useForkliftTranslation();
 
   const insecureSkipVerifyHelperTextMsgs = {
@@ -112,7 +114,7 @@ export const OpenstackCredentialsEdit: FC<EditComponentProps> = ({ onChange, sec
         ? Base64.encode(value || '')
         : Base64.encode(value?.trim() || '');
 
-      onChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
+      onNewSecretChange({ ...secret, data: { ...secret.data, [id]: encodedValue } });
     },
     [secret],
   );
@@ -123,7 +125,7 @@ export const OpenstackCredentialsEdit: FC<EditComponentProps> = ({ onChange, sec
 
       switch (type) {
         case 'passwordSecretFields':
-          onChange({
+          onNewSecretChange({
             ...secret,
             data: { ...secret.data, authType: Base64.encode('password') },
           });
@@ -131,7 +133,7 @@ export const OpenstackCredentialsEdit: FC<EditComponentProps> = ({ onChange, sec
         case 'tokenWithUserIDSecretFields':
         case 'tokenWithUsernameSecretFields':
           // on change also clean userID and username
-          onChange({
+          onNewSecretChange({
             ...secret,
             data: {
               ...secret.data,
@@ -144,7 +146,7 @@ export const OpenstackCredentialsEdit: FC<EditComponentProps> = ({ onChange, sec
         case 'applicationCredentialIdSecretFields':
         case 'applicationCredentialNameSecretFields':
           // on change also clean userID and username
-          onChange({
+          onNewSecretChange({
             ...secret,
             data: {
               ...secret.data,
@@ -239,19 +241,22 @@ export const OpenstackCredentialsEdit: FC<EditComponentProps> = ({ onChange, sec
       <Divider />
 
       {state.authenticationType === 'passwordSecretFields' && (
-        <PasswordSecretFieldsFormGroup secret={secret} onChange={onChange} />
+        <PasswordSecretFieldsFormGroup secret={secret} onChange={onNewSecretChange} />
       )}
       {state.authenticationType === 'tokenWithUserIDSecretFields' && (
-        <TokenWithUserIDSecretFieldsFormGroup secret={secret} onChange={onChange} />
+        <TokenWithUserIDSecretFieldsFormGroup secret={secret} onChange={onNewSecretChange} />
       )}
       {state.authenticationType === 'tokenWithUsernameSecretFields' && (
-        <TokenWithUsernameSecretFieldsFormGroup secret={secret} onChange={onChange} />
+        <TokenWithUsernameSecretFieldsFormGroup secret={secret} onChange={onNewSecretChange} />
       )}
       {state.authenticationType === 'applicationCredentialIdSecretFields' && (
-        <ApplicationWithCredentialsIDFormGroup secret={secret} onChange={onChange} />
+        <ApplicationWithCredentialsIDFormGroup secret={secret} onChange={onNewSecretChange} />
       )}
       {state.authenticationType === 'applicationCredentialNameSecretFields' && (
-        <ApplicationCredentialNameSecretFieldsFormGroup secret={secret} onChange={onChange} />
+        <ApplicationCredentialNameSecretFieldsFormGroup
+          secret={secret}
+          onChange={onNewSecretChange}
+        />
       )}
 
       <Divider />

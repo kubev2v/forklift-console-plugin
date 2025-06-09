@@ -19,7 +19,7 @@ const ForkliftControllerOverviewTab: FC = () => {
 
   return (
     <div className="co-dashboard-body">
-      <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
+      <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
         {hideWelcomeCardByContext ? null : (
           <FlexItem>
             <WelcomeCard
@@ -31,7 +31,11 @@ const ForkliftControllerOverviewTab: FC = () => {
         )}
 
         <FlexItem>
-          <Flex direction={{ default: 'row' }} alignItems={{ default: 'alignItemsStretch' }}>
+          <Flex
+            direction={{ default: 'row' }}
+            alignItems={{ default: 'alignItemsStretch' }}
+            spaceItems={{ default: 'spaceItemsMd' }}
+          >
             <FlexItem className="forklift-overview__donut-card">
               <VmMigrationsDonutCard obj={forkliftController} />
             </FlexItem>
@@ -42,7 +46,11 @@ const ForkliftControllerOverviewTab: FC = () => {
         </FlexItem>
 
         <FlexItem>
-          <Flex direction={{ default: 'row' }} alignItems={{ default: 'alignItemsStretch' }}>
+          <Flex
+            direction={{ default: 'row' }}
+            alignItems={{ default: 'alignItemsStretch' }}
+            spaceItems={{ default: 'spaceItemsMd' }}
+          >
             <FlexItem className="forklift-overview__donut-card">
               <MigrationPlansDonutCard obj={forkliftController} />
             </FlexItem>
