@@ -16,6 +16,7 @@ import {
   SelectOption,
   Title,
 } from '@patternfly/react-core';
+import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -84,11 +85,15 @@ const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
     >
       {isEmpty(networkMaps)
         ? emptyState
-        : networkMaps.map((networkMap) => (
-            <SelectOption key={networkMap.metadata?.name} value={networkMap}>
-              {networkMap.metadata?.name}
-            </SelectOption>
-          ))}
+        : networkMaps.map((networkMap) => {
+            const networkMapName = getName(networkMap);
+
+            return (
+              <SelectOption key={networkMapName} value={networkMap}>
+                {networkMapName}
+              </SelectOption>
+            );
+          })}
     </Select>
   );
 };

@@ -3,7 +3,7 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { type MigrationHook, MigrationHookFieldId } from '../steps/migration-hooks/constants';
 
-type CreatedHooks = {
+export type CreatedHooks = {
   preHook?: V1beta1Hook;
   postHook?: V1beta1Hook;
 };

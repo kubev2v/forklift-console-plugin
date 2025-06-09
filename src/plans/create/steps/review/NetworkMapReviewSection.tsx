@@ -10,13 +10,14 @@ import {
   Stack,
   useWizardContext,
 } from '@patternfly/react-core';
-import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { defaultNetMapping, NetworkMapFieldId, NetworkMapType } from '../network-map/constants';
+
+import NetworkMapReviewTable from './NetworkMapReviewTable';
 
 const NetworkMapReviewSectionInner: FC = () => {
   const { t } = useForkliftTranslation();
@@ -39,44 +40,6 @@ const NetworkMapReviewSectionInner: FC = () => {
         JSON.stringify(networkMap[0]) === JSON.stringify(defaultNetMapping))
     );
   }, [networkMap]);
-
-  const networkMapTable = useMemo(() => {
-    if (!networkMap) return null;
-
-    return (
-      <Table aria-label="Network map review table" variant={TableVariant.compact}>
-        <Thead>
-          <Tr>
-            <Th width={50}>{t('Source network')}</Th>
-            <Th width={50}>{t('Target network')}</Th>
-          </Tr>
-        </Thead>
-
-        <Tbody>
-          {networkMap.map((mapping) => {
-            // Only render rows that have both source and target network names
-            if (
-              mapping[NetworkMapFieldId.SourceNetwork].name &&
-              mapping[NetworkMapFieldId.TargetNetwork].name
-            ) {
-              return (
-                <Tr key={mapping[NetworkMapFieldId.SourceNetwork].name}>
-                  <Td dataLabel={NetworkMapFieldId.SourceNetwork}>
-                    {mapping[NetworkMapFieldId.SourceNetwork].name}
-                  </Td>
-                  <Td dataLabel={NetworkMapFieldId.TargetNetwork}>
-                    {mapping[NetworkMapFieldId.TargetNetwork].name}
-                  </Td>
-                </Tr>
-              );
-            }
-
-            return null;
-          })}
-        </Tbody>
-      </Table>
-    );
-  }, [networkMap, t]);
 
   if (netMapType === NetworkMapType.Existing) {
     return (
@@ -103,12 +66,12 @@ const NetworkMapReviewSectionInner: FC = () => {
           </DescriptionListGroup>
         </DescriptionList>
 
-        {networkMapTable}
+        <NetworkMapReviewTable />
       </Stack>
     );
   }
 
-  return networkMapTable;
+  return <NetworkMapReviewTable />;
 };
 
 const NetworkMapReviewSection: FC = () => {

@@ -16,6 +16,7 @@ import {
   SelectOption,
   Title,
 } from '@patternfly/react-core';
+import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -83,11 +84,15 @@ const StorageMapSelect: FC<StorageMapSelectProps> = ({
     >
       {isEmpty(storageMaps)
         ? emptyState
-        : storageMaps.map((storageMap) => (
-            <SelectOption key={storageMap.metadata?.name} value={storageMap}>
-              {storageMap.metadata?.name}
-            </SelectOption>
-          ))}
+        : storageMaps.map((storageMap) => {
+            const storageMapName = getName(storageMap);
+
+            return (
+              <SelectOption key={storageMapName} value={storageMap}>
+                {storageMapName}
+              </SelectOption>
+            );
+          })}
     </Select>
   );
 };

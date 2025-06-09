@@ -5,6 +5,7 @@ import type {
   V1beta1PlanSpecVmsHooks,
   V1beta1PlanSpecVmsLuks,
 } from '@kubev2v/types';
+import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 
 import { ProviderType } from '../types';
@@ -30,22 +31,27 @@ export const buildPlanSpecVms = ({
 }: PlanSpecVmsParams): V1beta1PlanSpecVms[] =>
   vms.map((vm) => {
     const hooks: V1beta1PlanSpecVmsHooks[] = [];
+    const preHookName = getName(preHook);
+    const preHookNamespace = getNamespace(preHook);
 
-    if (preHook?.metadata?.name && preHook.metadata.namespace) {
+    if (preHookName && preHookNamespace) {
       hooks.push({
         hook: {
-          name: preHook.metadata.name,
-          namespace: preHook.metadata.namespace,
+          name: preHookName,
+          namespace: preHookNamespace,
         },
         step: 'PreHook',
       });
     }
 
-    if (postHook?.metadata?.name && postHook.metadata.namespace) {
+    const postHookName = getName(postHook);
+    const postHookNamespace = getNamespace(postHook);
+
+    if (postHookName && postHookNamespace) {
       hooks.push({
         hook: {
-          name: postHook.metadata.name,
-          namespace: postHook.metadata.namespace,
+          name: postHookName,
+          namespace: postHookNamespace,
         },
         step: 'PostHook',
       });
