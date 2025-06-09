@@ -8,13 +8,12 @@ import { PlanModel, PlanModelRef, type V1beta1Provider } from '@kubev2v/types';
 import { Button, ToolbarItem } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 
-type MigrationActionProps = {
-  namespace: string;
+type CreatePlanActionProps = {
+  namespace: string | undefined;
   provider?: V1beta1Provider;
-  className?: string;
 };
 
-export const MigrationAction: FC<MigrationActionProps> = ({ className, namespace, provider }) => {
+const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) => {
   const { t } = useForkliftTranslation();
   const history = useHistory();
 
@@ -39,10 +38,12 @@ export const MigrationAction: FC<MigrationActionProps> = ({ className, namespace
   };
 
   return (
-    <ToolbarItem className={className}>
+    <ToolbarItem>
       <Button variant="primary" onClick={handleCreatePlan} isDisabled={!canCreate}>
         {t('Create migration plan')}
       </Button>
     </ToolbarItem>
   );
 };
+
+export default CreatePlanAction;

@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { ProviderPageHeadings } from 'src/modules/Providers/views/details/components/ProviderPageHeadings';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@kubev2v/types';
@@ -8,12 +7,11 @@ import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-s
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
 import ProviderVirtualMachinesTabPage from './tabs/VirtualMachines/ProviderVirtualMachinesTabPage';
 import ProviderYAMLTabPage from './tabs/YAML/ProviderYAMLTabPage';
+import ProviderPageHeader from './ProviderPageHeader';
 
 const OvaProviderDetailsPage: FC<{
-  name: string;
-  namespace: string;
   provider: V1beta1Provider;
-}> = ({ name, namespace, provider }) => {
+}> = ({ provider }) => {
   const { t } = useForkliftTranslation();
 
   const tabPages: NavPage[] = [
@@ -36,7 +34,7 @@ const OvaProviderDetailsPage: FC<{
 
   return (
     <>
-      <ProviderPageHeadings name={name} namespace={namespace} />
+      <ProviderPageHeader provider={provider} />
       <HorizontalNav pages={tabPages} />
     </>
   );

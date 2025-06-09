@@ -1,16 +1,12 @@
-import { Base64 } from 'js-base64';
+import { decode } from 'js-base64';
 
 import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 
 /**
  * Checks if a list of keys exist in a secret's data, and verifies they are not null or empty strings.
  *
- * @param {IoK8sApiCoreV1Secret} secret - The secret to be checked.
- * @param {string[]} keys - The list of keys to check.
- * @returns {string[]} Returns a list of missing keys in secret data.
  */
 export const missingKeysInSecretData = (secret: IoK8sApiCoreV1Secret, keys: string[]): string[] => {
-  // If secret or secret's data is not defined, return false
   if (!secret?.data) {
     return keys;
   }
@@ -18,14 +14,11 @@ export const missingKeysInSecretData = (secret: IoK8sApiCoreV1Secret, keys: stri
   const missing: string[] = [];
 
   for (const key of keys) {
-    const secretValue = secret.data[key] && Base64.decode(secret.data[key]);
-
-    // Check if the key exists and is not null or empty string
+    const secretValue = secret.data[key] && decode(secret.data[key]);
     if (!secretValue || secretValue.trim() === '') {
       missing.push(key);
     }
   }
 
-  // All keys exist and are not null or empty string
   return missing;
 };

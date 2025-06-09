@@ -1,4 +1,3 @@
-import { missingKeysInSecretData } from 'src/modules/Providers/utils/helpers/missingKeysInSecretData';
 import { OpenstackSecretFieldsId, SecretFieldsId } from 'src/providers/utils/constants';
 import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 
@@ -8,6 +7,7 @@ import { isEmpty } from '@utils/helpers';
 import { getAuthTypeRequiredFields } from './getAuthTypeRequiredFields';
 import { getAuthTypeValidateFields } from './getAuthTypeValidateFields';
 import { getDecodedValue } from './getDecodedValue';
+import { missingKeysInSecretData } from './missingKeysInSecretData';
 import { openstackSecretFieldValidator } from './openstackSecretFieldValidator';
 
 export const openstackSecretValidator = (secret: IoK8sApiCoreV1Secret): ValidationMsg => {
