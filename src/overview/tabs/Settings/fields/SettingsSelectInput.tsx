@@ -29,7 +29,7 @@ type Option = {
 export type SettingsSelectInputProps = {
   value: number | string;
   onChange: (value: number | string) => void;
-  options?: Option[];
+  options: Option[];
 };
 
 /**
@@ -67,7 +67,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
       ref={toggleRef}
       onClick={onToggleClick}
       isExpanded={isOpen}
-      className="forklift-select-width"
+      className="forklift-overview__settings-select"
     >
       {selected || 'Select an option'}
     </MenuToggle>

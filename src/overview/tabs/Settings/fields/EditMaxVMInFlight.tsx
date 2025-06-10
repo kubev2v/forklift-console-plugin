@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { DisplayTitle } from 'src/components/DetailItems/DetailItem';
+import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
@@ -8,29 +8,24 @@ import { MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS } from '@utils/links';
 
 import { EditField } from '../cards/EditField';
 import type { InputComponentType } from '../cards/EditFieldTypes';
-import type { ForkliftControllerSpec } from '../cards/SettingsCard';
 
 import type { EditSettingsProps } from './EditSettingsProps';
 import SettingsNumberInput from './SettingsNumberInput';
+
+const DEFAULT = 20;
 
 /**
  * MaxVMInFlightNumberInput component.
  * Wraps the SettingsNumberInput component with pre-defined default value.
  */
 const MaxVMInFlightNumberInput: InputComponentType = (props) => {
-  return <SettingsNumberInput {...props} />;
+  return <SettingsNumberInput {...props} defaultValue={DEFAULT} />;
 };
 
 const EditMaxVMInFlight: FC<EditSettingsProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const { resource } = props;
-  if (resource && typeof resource === 'object') {
-    resource.spec ??= {};
-    // Set default value to 20
-    // eslint-disable-next-line camelcase
-    (resource.spec as ForkliftControllerSpec).controller_max_vm_inflight ??= '20';
-  }
 
   return (
     <EditField
@@ -60,6 +55,7 @@ const EditMaxVMInFlight: FC<EditSettingsProps> = (props) => {
         'Enter the maximum number of concurrent VM migrations. If empty, the default value will be used.',
       )}
       InputComponent={MaxVMInFlightNumberInput}
+      defaultValue={String(DEFAULT)}
       onConfirmHook={defaultOnConfirmWithIntValue}
     />
   );

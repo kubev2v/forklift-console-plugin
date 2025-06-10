@@ -54,7 +54,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
       >
         <CardTitle className="forklift-title">{t('Migration history')}</CardTitle>
       </CardHeader>
-      <CardBody className="forklift-status-migration-chart">
+      <CardBody className="forklift-overview__status-migration-chart">
         <VmMigrationsHistoryChart
           vmMigrationsDataPoints={vmMigrationsDataPoints}
           selectedTimeRange={selectedRange}

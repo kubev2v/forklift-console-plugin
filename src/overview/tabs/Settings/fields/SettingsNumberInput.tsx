@@ -2,12 +2,16 @@ import type { FC, FormEvent, MouseEvent } from 'react';
 
 import { NumberInput } from '@patternfly/react-core';
 
-import type { SettingsSelectInputProps } from './SettingsSelectInput';
+type SettingsNumberInputProps = {
+  value: number | string;
+  onChange: (value: number | string) => void;
+  defaultValue: number;
+};
 
-const SettingsNumberInput: FC<SettingsSelectInputProps> = ({ onChange, value }) => {
-  const numberValue = Number(value) || 20;
+const SettingsNumberInput: FC<SettingsNumberInputProps> = ({ defaultValue, onChange, value }) => {
+  const numberValue = Number(value);
 
-  const normalize = (val: number) => (val <= 0 ? 20 : val);
+  const normalize = (val: number) => (val < 0 ? defaultValue : val);
 
   const onUserMinus: (event: MouseEvent, name?: string) => void = () => {
     onChange(normalize(numberValue - 1).toString());
@@ -23,7 +27,6 @@ const SettingsNumberInput: FC<SettingsSelectInputProps> = ({ onChange, value }) 
     onChange(normalize(num).toString());
   };
 
-  // Render the Select component with dynamically created SelectOption children
   return (
     <NumberInput
       value={numberValue}

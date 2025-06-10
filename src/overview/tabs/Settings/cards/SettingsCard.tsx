@@ -24,15 +24,6 @@ type SettingsCardProps = {
   obj?: V1beta1ForkliftController;
 };
 
-export type ForkliftControllerSpec = {
-  controller_max_vm_inflight?: string;
-  controller_container_limits_cpu?: string;
-  controller_container_limits_memory?: string;
-  inventory_container_limits_memory?: string;
-  controller_precopy_interval?: string;
-  controller_snapshot_status_check_rate_seconds?: string;
-};
-
 const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const [showSaved, setShowSaved] = useState(false);
@@ -60,7 +51,7 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
 
   return (
     <>
-      <AlertGroup isToast isLiveRegion className="forklift-toast-alert-group">
+      <AlertGroup isToast isLiveRegion className="forklift-overview__settings-alert">
         {showSaved && <Alert variant={AlertVariant.success} title={t('All changes saved')} />}
       </AlertGroup>
       <Card>
@@ -74,7 +65,7 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
         </CardTitle>
         <CardBody>
           <DescriptionList
-            className="forklift-settings__description-list"
+            className="forklift-overview__settings-description-list"
             columnModifier={{
               default: '1Col',
             }}

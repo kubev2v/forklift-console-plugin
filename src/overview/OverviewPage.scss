@@ -1,88 +1,36 @@
-.forklift-page-headings-alerts {
-  padding-left: 0;
-}
+@use '../styles/common';
 
-.forklift-page-section {
-  border-top: 1px solid var(--pf-global--BorderColor--100);
-}
-
-.forklift-title {
-  font-size: 1rem;
-}
-
-.forklift-welcome__flex-text {
+.forklift-overview__welcome-right {
   align-self: normal;
   width: 100%;
 }
 
-.forklift-welcome-text {
-  padding-bottom: var(--pf-global--spacer--sm);
-}
-
-.forklift-welcome__flex-icon {
+.forklift-overview__welcome-left {
   align-self: center;
+  width: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.forklift-welcome__icon {
+.forklift-overview__welcome-left--img {
   padding: var(--pf-global--spacer--lg);
-  width: 10rem;
+  width: 11rem;
 }
 
-.forklift-welcome-header-badge {
-  min-width: 768px;
-  margin-left: var(--pf-global--spacer--sm);
+.forklift-overview__welcome-text {
+  max-width: 900px;
 }
 
-.forklift-status-migration-running {
-  color: var(--pf-global--info-color--100);
-}
-
-.forklift-status-migration-failed {
-  color: var(--pf-global--danger-color--100);
-}
-
-.forklift-status-migration-succeeded {
-  color: var(--pf-global--success-color--100);
-}
-
-.forklift-status-migration {
-  padding-right: var(--pf-global--spacer--xl);
-}
-
-.forklift-status-migration-donut {
-  height: 270px;
-  width: 270px;
-}
-
-.forklift-status-migration-chart {
-  overflow: hidden;
+.forklift-overview__welcome-body {
   padding-bottom: 16px;
 }
 
-.forklift-overview__controller-card__status-icon {
-  padding-right: var(--pf-global--spacer--sm);
-}
-
-.forklift-overview__pods-tab {
-  background: var(--pf-c-drawer__section--BackgroundColor);
-}
-
-.forklift-welcome__body {
-  padding-bottom: 16px;
-}
-
-.pf-v5-theme-dark .forklift-welcome__tiles .pf-v5-c-tile {
-  background-color: #151515;
-
-  &::before {
-    border: none;
-  }
-}
-
-.forklift-welcome__tiles {
+.forklift-overview__welcome-tiles {
   padding-top: 12px;
 
   .pf-v5-c-tile {
+    background-color: #151515;
     transform: scale(0.8);
     transform-origin: left;
     margin-right: -31px;
@@ -90,6 +38,10 @@
     padding-top: 32px;
     padding-bottom: 32px;
     margin-bottom: -14px;
+
+    &::before {
+      border: none;
+    }
 
     img {
       vertical-align: sub;
@@ -104,8 +56,23 @@
   }
 }
 
-.forklift-overview__text {
-  max-width: 900px;
+.forklift-overview__welcome-badge {
+  min-width: 768px;
+  margin-left: var(--pf-global--spacer--sm);
+}
+
+.forklift-overview__status-migration {
+  padding-right: var(--pf-global--spacer--xl);
+}
+
+.forklift-overview__status-migration-donut {
+  height: 270px;
+  width: 270px;
+}
+
+.forklift-overview__status-migration-chart {
+  overflow: hidden;
+  padding-bottom: 16px;
 }
 
 .forklift-overview__vms {
@@ -131,14 +98,18 @@
   width: 325px;
 }
 
-.pf-v5-c-alert-group.pf-m-toast.forklift-toast-alert-group {
+.forklift-overview__cards-select {
+  width: 140px;
+}
+
+.pf-v5-c-alert-group.pf-m-toast.forklift-overview__settings-alert {
   max-width: 280px;
 }
 
-.forklift-select-width {
+.forklift-overview__settings-select {
   width: 142.95px;
 }
 
-.forklift-settings__description-list {
+.forklift-overview__settings-description-list {
   gap: 2rem;
 }

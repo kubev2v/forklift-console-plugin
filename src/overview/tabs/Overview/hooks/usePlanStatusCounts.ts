@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 
 import { PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
@@ -24,19 +23,9 @@ type CountState = {
  * @return {PlanStatusCountsHookResponse} An object with 'count', 'loaded', and 'loadError' keys.
  */
 const usePlanStatusCounts = (): PlanStatusCountsHookResponse => {
+  const initialPlanStatusCounts = getPlanStatusCounts();
   const [counts, setCounts] = useState<CountState>({
-    planStatusCounts: {
-      [PlanStatuses.Archived]: 0,
-      [PlanStatuses.Canceled]: 0,
-      [PlanStatuses.CannotStart]: 0,
-      [PlanStatuses.Completed]: 0,
-      [PlanStatuses.Executing]: 0,
-      [PlanStatuses.Incomplete]: 0,
-      [PlanStatuses.Paused]: 0,
-      [PlanStatuses.Ready]: 0,
-      [PlanStatuses.Unknown]: 0,
-      Total: 0,
-    },
+    planStatusCounts: initialPlanStatusCounts,
   });
 
   const [plans, loaded, loadError] = useK8sWatchResource<V1beta1Plan[]>({

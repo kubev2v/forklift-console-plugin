@@ -21,7 +21,7 @@ const HeaderTitle: FC<HeaderTitleProps> = ({ badge, status, title }) => {
             </SplitItem>
             {badge && (
               <SplitItem>
-                {<span className="forklift-welcome-header-badge">{badge}</span>}
+                {<span className="forklift-overview__welcome-badge">{badge}</span>}
               </SplitItem>
             )}
           </Split>

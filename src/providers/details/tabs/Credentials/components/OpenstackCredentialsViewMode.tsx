@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { DisplayTitle } from 'src/modules/Providers/utils/components/DetailsPage/DetailItem';
+import { DisplayTitle } from 'src/components/DetailItems/DetailItem';
 import type { Fields } from 'src/modules/Providers/views/details/components/CredentialsSection/components/list/Fields';
 import { FieldWithClipboardCopy } from 'src/modules/Providers/views/details/components/CredentialsSection/FieldWithClipboardCopy';
 import { MaskedField } from 'src/modules/Providers/views/details/components/CredentialsSection/MaskedField';

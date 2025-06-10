@@ -1,8 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { DateTime } from 'luxon';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import { PlanTableResourceId } from 'src/plans/list/utils/constants';
 
 import { PlanModelRef } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
@@ -19,7 +17,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 import useMigrationCounts from '../../hooks/useMigrationCounts';
 import { ChartColors } from '../../utils/colors';
 import { mapDataPoints } from '../../utils/getVmMigrationsDataPoints';
-import { type TimeRangeOptions, TimeRangeOptionsDictionary } from '../../utils/timeRangeOptions';
+import { navigateToPlans } from '../../utils/navigateToPlans';
+import type { TimeRangeOptions } from '../../utils/timeRangeOptions';
 import type { MigrationDataPoint } from '../../utils/toDataPointsHelper';
 import type { ChartDatumWithName } from '../../utils/types';
 
@@ -76,14 +75,8 @@ const VmMigrationsHistoryChart = ({
     events: [
       {
         eventHandlers: {
-          onClick: () => {
-            const dateEnd = DateTime.now().toUTC();
-            const dateStart = dateEnd.minus(TimeRangeOptionsDictionary[selectedTimeRange].span);
-            const rangeString = `${dateStart.toFormat('yyyy-MM-dd')}/${dateEnd.toFormat('yyyy-MM-dd')}`;
-            const param = encodeURIComponent(JSON.stringify([rangeString]));
-            navigate(`${plansListURL}?${PlanTableResourceId.MigrationStarted}=${param}`);
-            return null;
-          },
+          onClick: () =>
+            navigateToPlans({ navigate, plansListURL, selectedRange: selectedTimeRange }),
           onMouseOut: () => {
             setActiveArea(null);
             return null;
@@ -132,7 +125,6 @@ const VmMigrationsHistoryChart = ({
             }
             constrainToVisibleArea
             onActivated={(points: ChartDatumWithName[]) => {
-              // points[0].name will be 'Succeeded', 'Failed', or 'Running'
               setActiveArea(points[0]?.name ?? null);
             }}
             onDeactivated={() => {

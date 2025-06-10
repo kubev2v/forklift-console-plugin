@@ -7,10 +7,10 @@ import { getValueByJsonPath } from 'src/modules/Providers/utils/helpers/getValue
 import type { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { debounce, Form, Popover, TextInput } from '@patternfly/react-core';
-import { HelpIcon } from '@patternfly/react-icons';
+import { debounce, Form, TextInput } from '@patternfly/react-core';
 
 import type { EditFieldProps } from './EditFieldTypes';
+import LabelIcon from './LabelIcon';
 
 /**
  * `EditField` is a React Functional Component that allows editing a Kubernetes resource property.
@@ -106,24 +106,6 @@ export const EditField: FC<EditFieldProps> = ({
   };
 
   /**
-   * LabelIcon is a (?) icon that triggers a Popover component when clicked.
-   */
-  const LabelIcon =
-    headerContent && bodyContent ? (
-      <Popover headerContent={headerContent} bodyContent={bodyContent}>
-        <button
-          type="button"
-          aria-label="More info for field"
-          onClick={onClick}
-          aria-describedby="modal-with-form-form-field"
-          className="pf-c-form__group-label-help"
-        >
-          <HelpIcon />
-        </button>
-      </Popover>
-    ) : undefined;
-
-  /**
    * InputComponentWithDefault is a higher-order component that renders either the passed-in InputComponent, or a default TextInput,
    */
   const InputComponentWithDefault = InputComponent ? (
@@ -151,7 +133,15 @@ export const EditField: FC<EditFieldProps> = ({
       <Form id="modal-with-form-form">
         <FormGroupWithHelpText
           label={label}
-          labelIcon={LabelIcon}
+          labelIcon={
+            headerContent && bodyContent ? (
+              <LabelIcon
+                bodyContent={bodyContent}
+                headerContent={headerContent}
+                onClick={onClick}
+              />
+            ) : undefined
+          }
           fieldId="modal-with-form-form-field"
           helperText={validation.msg ?? helperText}
           helperTextInvalid={validation.msg ?? helperText}

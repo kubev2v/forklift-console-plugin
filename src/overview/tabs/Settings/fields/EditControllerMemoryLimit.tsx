@@ -10,22 +10,15 @@ import { EditField } from '../cards/EditField';
 import type { InputComponentType } from '../cards/EditFieldTypes';
 
 import type { EditSettingsProps } from './EditSettingsProps';
+import { controllerMemoryLimitOptions } from './options';
 import SettingsSelectInput from './SettingsSelectInput';
-
-// Define the options
-const options = [
-  { description: 'Low memory limit', key: '200Mi', name: '200Mi' },
-  { description: 'Moderate memory limit', key: '800Mi', name: '800Mi' },
-  { description: 'High memory limit', key: '2000Mi', name: '2000Mi' },
-  { description: 'Very high memory limit', key: '8000Mi', name: '8000Mi' },
-];
 
 /**
  * ControllerMemoryLimitSelect component.
  * Wraps the SettingsSelectInput component with pre-defined options.
  */
 const ControllerMemoryLimitSelect: InputComponentType = (props) => {
-  return <SettingsSelectInput {...props} options={options} />;
+  return <SettingsSelectInput {...props} options={controllerMemoryLimitOptions} />;
 };
 
 const EditControllerMemoryLimit: FC<EditSettingsProps> = (props) => {

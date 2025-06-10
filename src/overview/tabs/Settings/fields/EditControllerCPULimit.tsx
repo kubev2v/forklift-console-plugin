@@ -10,22 +10,15 @@ import { EditField } from '../cards/EditField';
 import type { InputComponentType } from '../cards/EditFieldTypes';
 
 import type { EditSettingsProps } from './EditSettingsProps';
+import { controllerCpuLimitOptions } from './options';
 import SettingsSelectInput from './SettingsSelectInput';
-
-// Define the options
-const options = [
-  { description: 'Low CPU limit', key: '200m', name: '200m' },
-  { description: 'Moderate CPU limit', key: '500m', name: '500m' },
-  { description: 'High CPU limit', key: '2000m', name: '2000m' },
-  { description: 'Very high CPU limit', key: '8000m', name: '8000m' },
-];
 
 /**
  * ControllerCPULimitSelect component.
  * Wraps the SettingsSelectInput component with pre-defined options.
  */
 const ControllerCPULimitSelect: InputComponentType = (props) => {
-  return <SettingsSelectInput {...props} options={options} />;
+  return <SettingsSelectInput {...props} options={controllerCpuLimitOptions} />;
 };
 
 const EditControllerCPULimit: FC<EditSettingsProps> = (props) => {

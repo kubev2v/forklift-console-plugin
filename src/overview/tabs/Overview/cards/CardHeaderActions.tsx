@@ -3,7 +3,7 @@ import { type MouseEvent, type Ref, useState } from 'react';
 import { MenuToggle, type MenuToggleElement, Select, SelectOption } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
-import { TimeRangeOptions } from '../utils/timeRangeOptions';
+import { TimeRangeOptions, valueToLabel } from '../utils/timeRangeOptions';
 
 const HeaderActions = ({
   selectedTimeRange,
@@ -25,23 +25,12 @@ const HeaderActions = ({
     setIsOpen(!isOpen);
   };
 
-  const valueToLabel = {
-    [TimeRangeOptions.All]: t('All'),
-    [TimeRangeOptions.Last10Days]: t('Last 10 days'),
-    [TimeRangeOptions.Last24H]: t('Last 24 hours'),
-    [TimeRangeOptions.Last31Days]: t('Last 31 days'),
-  };
-
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle
       ref={toggleRef}
       onClick={onToggleClick}
       isExpanded={isOpen}
-      style={
-        {
-          width: '140px',
-        } as React.CSSProperties
-      }
+      className="forklift-overview__cards-select"
     >
       {valueToLabel[selectedTimeRange]}
     </MenuToggle>

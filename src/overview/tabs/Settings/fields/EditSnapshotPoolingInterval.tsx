@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { DisplayTitle } from 'src/components/DetailItems/DetailItem';
+import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
@@ -11,22 +11,15 @@ import { EditField } from '../cards/EditField';
 import type { InputComponentType } from '../cards/EditFieldTypes';
 
 import type { EditSettingsProps } from './EditSettingsProps';
+import { snapshotPoolingIntervalOptions } from './options';
 import SettingsSelectInput from './SettingsSelectInput';
-
-// Define the options
-const options = [
-  { description: 'Extra short snapshot polling interval', key: 1, name: '1s' },
-  { description: 'Short snapshot polling interval', key: 5, name: '5s' },
-  { description: 'Long snapshot polling interval', key: 10, name: '10s' },
-  { description: 'Extra long snapshot polling interval', key: 60, name: '60s' },
-];
 
 /**
  * SnapshotPoolingIntervalSelect component.
  * Wraps the SettingsSelectInput component with pre-defined options.
  */
 const SnapshotPoolingIntervalSelect: InputComponentType = (props) => {
-  return <SettingsSelectInput {...props} options={options} />;
+  return <SettingsSelectInput {...props} options={snapshotPoolingIntervalOptions} />;
 };
 
 const EditSnapshotPoolingInterval: FC<EditSettingsProps> = (props) => {

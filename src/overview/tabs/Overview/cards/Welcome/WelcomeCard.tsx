@@ -55,15 +55,15 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
   return (
     <Card>
       <Split>
-        <SplitItem className="forklift-welcome__flex-icon">
-          <img alt="" src={migrationIcon} className="forklift-welcome__icon" />
+        <SplitItem className="forklift-overview__welcome-left">
+          <img alt="" src={migrationIcon} className="forklift-overview__welcome-left--img" />
         </SplitItem>
-        <SplitItem className="forklift-welcome__flex-text">
+        <SplitItem className="forklift-overview__welcome-right">
           <CardHeader actions={{ actions: <HeaderActions actions={actionDropdownItems} /> }}>
             <CardTitle>{t('Welcome!')}</CardTitle>
           </CardHeader>
-          <CardBody className="forklift-welcome__body">
-            <Text className="forklift-overview__text">
+          <CardBody className="forklift-overview__welcome-body">
+            <Text className="forklift-overview__welcome-text">
               <ForkliftTrans>
                 Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale to Red
                 Hat OpenShift Virtualization. This allows organizations to more easily access
@@ -73,10 +73,10 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
             </Text>
           </CardBody>
           <CardFooter>
-            <Text className="forklift-overview__text">
+            <Text className="forklift-overview__welcome-text">
               <ForkliftTrans>You can migrate virtual machines from:</ForkliftTrans>
             </Text>
-            <div className="forklift-welcome__tiles">
+            <div className="forklift-overview__welcome-tiles">
               <Tile
                 className="vmware-tile"
                 title={providerItems.vsphere.title}

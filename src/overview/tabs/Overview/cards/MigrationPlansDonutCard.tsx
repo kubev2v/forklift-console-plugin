@@ -72,8 +72,8 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
   return (
     <Card>
       <CardTitle className="forklift-title">{t('Migration plans')}</CardTitle>
-      <CardBody className="forklift-status-migration pf-v5-u-display-flex pf-v5-u-align-items-center pf-v5-u-flex-direction-column">
-        <div className="forklift-status-migration-donut">
+      <CardBody className="forklift-overview__status-migration pf-v5-u-display-flex pf-v5-u-align-items-center pf-v5-u-flex-direction-column">
+        <div className="forklift-overview__status-migration-donut">
           <ChartDonut
             ariaDesc={t('Donut chart with migration plans statistics')}
             colorScale={colorScale}

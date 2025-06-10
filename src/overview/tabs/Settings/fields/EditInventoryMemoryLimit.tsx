@@ -10,22 +10,15 @@ import { EditField } from '../cards/EditField';
 import type { InputComponentType } from '../cards/EditFieldTypes';
 
 import type { EditSettingsProps } from './EditSettingsProps';
+import { inventoryMemoryLimitOptions } from './options';
 import SettingsSelectInput from './SettingsSelectInput';
-
-// Define the options
-const options = [
-  { description: 'Low memory limit', key: '400Mi', name: '400Mi' },
-  { description: 'Moderate memory limit', key: '1000Mi', name: '1000Mi' },
-  { description: 'High memory limit', key: '2000Mi', name: '2000Mi' },
-  { description: 'Very high memory limit', key: '8000Mi', name: '8000Mi' },
-];
 
 /**
  * InventoryMemoryLimitSelect component.
  * Wraps the SettingsSelectInput component with pre-defined options.
  */
 const InventoryMemoryLimitSelect: InputComponentType = (props) => {
-  return <SettingsSelectInput {...props} options={options} />;
+  return <SettingsSelectInput {...props} options={inventoryMemoryLimitOptions} />;
 };
 
 const EditInventoryMemoryLimit: FC<EditSettingsProps> = (props) => {

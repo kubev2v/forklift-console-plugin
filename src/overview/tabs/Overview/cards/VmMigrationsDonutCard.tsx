@@ -1,9 +1,7 @@
 import { type FC, useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { DateTime } from 'luxon';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
-import { PlanTableResourceId } from 'src/plans/list/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
@@ -13,7 +11,8 @@ import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 
 import useMigrationCounts from '../hooks/useMigrationCounts';
 import { ChartColors } from '../utils/colors';
-import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
+import { navigateToPlans } from '../utils/navigateToPlans';
+import { TimeRangeOptions } from '../utils/timeRangeOptions';
 import type { ChartDatum } from '../utils/types';
 
 import HeaderActions from './CardHeaderActions';
@@ -72,8 +71,8 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
       >
         <CardTitle className="forklift-title">{t('Virtual Machines')}</CardTitle>
       </CardHeader>
-      <CardBody className="forklift-status-migration pf-v5-u-display-flex pf-v5-u-align-items-center pf-v5-u-flex-direction-column">
-        <div className="forklift-status-migration-donut">
+      <CardBody className="forklift-overview__status-migration pf-v5-u-display-flex pf-v5-u-align-items-center pf-v5-u-flex-direction-column">
+        <div className="forklift-overview__status-migration-donut">
           <ChartDonut
             ariaDesc={t('Donut chart with VM migration statistics')}
             colorScale={colorScale}
@@ -100,14 +99,7 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
             events={[
               {
                 eventHandlers: {
-                  onClick: () => {
-                    const dateEnd = DateTime.now().toUTC();
-                    const dateStart = dateEnd.minus(TimeRangeOptionsDictionary[selectedRange].span);
-                    const rangeString = `${dateStart.toFormat('yyyy-MM-dd')}/${dateEnd.toFormat('yyyy-MM-dd')}`;
-                    const param = encodeURIComponent(JSON.stringify([rangeString]));
-                    navigate(`${plansListURL}?${PlanTableResourceId.MigrationStarted}=${param}`);
-                    return null;
-                  },
+                  onClick: () => navigateToPlans({ navigate, plansListURL, selectedRange }),
                   onMouseOut: () => {
                     setHoveredIndex(null);
                     return [

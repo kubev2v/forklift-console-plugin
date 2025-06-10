@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon';
 
+import { t } from '@utils/i18n';
+
 const isLast24H = (date: DateTime) => DateTime.now().toUTC().diff(date, 'hours').hours <= 24;
 const isLast10Days = (date: DateTime) => DateTime.now().toUTC().diff(date, 'days').days <= 10;
 const isLast31Days = (date: DateTime) => DateTime.now().toUTC().diff(date, 'days').days <= 31;
@@ -16,6 +18,13 @@ type TimeRangeOptionsProperties = {
   bucket: { day: number } | { hour: number };
   unit: 'day' | 'hour';
   filter: (date: DateTime) => boolean;
+};
+
+export const valueToLabel = {
+  [TimeRangeOptions.All]: t('All'),
+  [TimeRangeOptions.Last10Days]: t('Last 10 days'),
+  [TimeRangeOptions.Last24H]: t('Last 24 hours'),
+  [TimeRangeOptions.Last31Days]: t('Last 31 days'),
 };
 
 export const TimeRangeOptionsDictionary: {
