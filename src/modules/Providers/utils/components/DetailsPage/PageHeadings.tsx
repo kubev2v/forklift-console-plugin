@@ -48,7 +48,7 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
                 className="co-m-resource-icon--lg"
               />{' '}
               {data?.metadata?.name}
-              {typeof status === 'string' && (
+              {typeof dataStatus === 'string' && (
                 <ResourceStatus additionalClassNames="hidden-xs">
                   <Status status={dataStatus} />
                 </ResourceStatus>

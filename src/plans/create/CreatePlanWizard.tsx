@@ -8,10 +8,9 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanForm } from './hooks/useCreatePlanForm';
-import { useDefaultFormValues } from './hooks/useDefaultFormValues';
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import GeneralInformationStep from './steps/general-information/GeneralInformationStep';
-import HooksStep from './steps/hooks/HooksStep';
+import HooksStep from './steps/migration-hooks/HooksStep';
 import MigrationTypeStep from './steps/migration-type/MigrationTypeStep';
 import NetworkMapStep from './steps/network-map/NetworkMapStep';
 import OtherSettingsStep from './steps/other-settings/OtherSettingsStep';
@@ -19,11 +18,14 @@ import ReviewStep from './steps/review/ReviewStep';
 import StorageMapStep from './steps/storage-map/StorageMapStep';
 import VirtualMachinesStep from './steps/virtual-machines/VirtualMachinesStep';
 import VirtualMachinesStepFooter from './steps/virtual-machines/VirtualMachinesStepFooter';
+import { getCreatedPlanPath } from './utils/getCreatedPlanPath';
+import { getDefaultFormValues } from './utils/getDefaultFormValues';
+import { hasWarmMigrationProviderType } from './utils/hasWarmMigrationProviderType';
+import { submitMigrationPlan } from './utils/submitMigrationPlan';
 import { firstStep, planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import CreatePlanWizardContextProvider from './CreatePlanWizardContextProvider';
 import CreatePlanWizardFooter from './CreatePlanWizardFooter';
 import type { CreatePlanFormData } from './types';
-import { getCreatedPlanPath, handlePlanSubmission, hasWarmMigrationProviderType } from './utils';
 
 import './CreatePlanWizard.style.scss';
 
@@ -35,7 +37,7 @@ const CreatePlanWizard: FC = () => {
   const [createPlanError, setCreatePlanError] = useState<Error>();
   const [isCreating, setIsCreating] = useState(false);
 
-  const defaultValues = useDefaultFormValues(location.state);
+  const defaultValues = getDefaultFormValues(location.state);
   const form = useCreatePlanForm({
     defaultValues,
     mode: 'onChange',
@@ -58,7 +60,7 @@ const CreatePlanWizard: FC = () => {
 
     try {
       const formData = getValues();
-      await handlePlanSubmission(formData);
+      await submitMigrationPlan(formData);
 
       // Navigate to the created plan
       history.push(getCreatedPlanPath(planName, planProject));

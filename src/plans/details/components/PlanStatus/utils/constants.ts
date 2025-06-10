@@ -1,0 +1,1 @@
+export const STATUS_POPOVER_VMS_COUNT_THRESHOLD = 5;

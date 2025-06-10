@@ -1,12 +1,12 @@
+import { esxiSecretValidator } from 'src/providers/details/tabs/Credentials/components/utils/esxiSecretValidator';
+import { openshiftSecretValidator } from 'src/providers/details/tabs/Credentials/components/utils/openshiftSecretValidator';
+import { openstackSecretValidator } from 'src/providers/details/tabs/Credentials/components/utils/openstackSecretValidator';
+import { ovirtSecretValidator } from 'src/providers/details/tabs/Credentials/components/utils/ovirtSecretValidator';
+import { vcenterSecretValidator } from 'src/providers/details/tabs/Credentials/components/utils/vcenterSecretValidator';
+
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
 import type { ValidationMsg } from '../common';
-
-import { openshiftSecretValidator } from './openshift/openshiftSecretValidator';
-import { openstackSecretValidator } from './openstack/openstackSecretValidator';
-import { ovirtSecretValidator } from './ovirt/ovirtSecretValidator';
-import { esxiSecretValidator } from './vsphere/esxiSecretValidator';
-import { vcenterSecretValidator } from './vsphere/vcenterSecretValidator';
 
 export type SecretSubType = 'esxi' | 'vcenter';
 

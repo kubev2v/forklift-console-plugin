@@ -1,4 +1,3 @@
-import { missingKeysInSecretData } from 'src/modules/Providers/utils/helpers/missingKeysInSecretData';
 import { SecretFieldsId } from 'src/providers/utils/constants';
 import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 
@@ -7,6 +6,7 @@ import { isEmpty } from '@utils/helpers';
 
 import { esxiSecretFieldValidator } from './esxiSecretFieldValidator';
 import { getDecodedValue } from './getDecodedValue';
+import { missingKeysInSecretData } from './missingKeysInSecretData';
 
 export const esxiSecretValidator = (secret: IoK8sApiCoreV1Secret): ValidationMsg => {
   const requiredFields = ['user', 'password'];

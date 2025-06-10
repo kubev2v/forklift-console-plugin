@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import {
   getMigrationVMsStatusCounts,
   getPlanStatus,
@@ -19,7 +20,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 
-import { getMigrationStatusIcon } from './utils/utils';
+import { getMigrationStatusLabel } from './utils/utils';
 
 type MigrationTableProps = {
   migrations: V1beta1Migration[];
@@ -64,8 +65,10 @@ const MigrationsTable: FC<MigrationTableProps> = ({ migrations, plan }) => {
               </Td>
               <Td>
                 <Split hasGutter>
-                  {getMigrationStatusIcon(vmStatuses, migrationVMs?.length)}
-                  <VMStatusIconsRow statuses={vmStatuses} />
+                  {getMigrationStatusLabel(vmStatuses, migrationVMs?.length)}
+                  <ModalHOC>
+                    <VMStatusIconsRow statuses={vmStatuses} plan={plan} />
+                  </ModalHOC>
                 </Split>
               </Td>
               <Td>
