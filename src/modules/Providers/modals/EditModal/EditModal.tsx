@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -24,7 +25,6 @@ import { HelpIcon } from '@patternfly/react-icons';
 
 import useToggle from '../../hooks/useToggle';
 import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';
-import type { ValidationMsg } from '../../utils/validators/common';
 import { AlertMessageForModals } from '../components/AlertMessageForModals';
 import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
 import { useModal } from '../ModalHOC/ModalHOC';
