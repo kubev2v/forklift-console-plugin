@@ -1,0 +1,100 @@
+import { type ComponentProps, type FC, useMemo } from 'react';
+import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+
+import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
+import Select from '@components/common/MtvSelect';
+import {
+  StorageMapModelGroupVersionKind,
+  StorageMapModelRef,
+  type V1beta1StorageMap,
+} from '@kubev2v/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateVariant,
+  SelectOption,
+  Title,
+} from '@patternfly/react-core';
+import { getName } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
+
+type StorageMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
+  id: string;
+  value: string;
+  namespace: string;
+  includeOwnerReferenced?: boolean;
+};
+
+const StorageMapSelect: FC<StorageMapSelectProps> = ({
+  id,
+  includeOwnerReferenced = false,
+  namespace,
+  onSelect,
+  status,
+  value,
+}) => {
+  const { t } = useForkliftTranslation();
+  const [allStorageMaps] = useK8sWatchResource<V1beta1StorageMap[]>({
+    groupVersionKind: StorageMapModelGroupVersionKind,
+    isList: true,
+    namespace,
+  });
+
+  const storageMapsListUrl = getResourceUrl({
+    namespace,
+    reference: StorageMapModelRef,
+  });
+
+  // Filter out storage maps that have ownerReferences unless includeOwnerReferenced is true
+  const storageMaps = useMemo(() => {
+    if (!allStorageMaps) {
+      return [];
+    }
+    if (includeOwnerReferenced) {
+      return allStorageMaps;
+    }
+
+    return allStorageMaps.filter((storageMap) => {
+      return isEmpty(storageMap.metadata?.ownerReferences);
+    });
+  }, [allStorageMaps, includeOwnerReferenced]);
+
+  const emptyState = (
+    <EmptyState variant={EmptyStateVariant.xs}>
+      <Title headingLevel="h4" size="md">
+        {t('You do not have any storage maps without owner references.')}
+      </Title>
+      <EmptyStateBody>
+        <ExternalLink href={`${storageMapsListUrl}/~new`} isInline>
+          {t('Create a storage map without an owner')}
+        </ExternalLink>
+      </EmptyStateBody>
+    </EmptyState>
+  );
+
+  return (
+    <Select
+      id={id}
+      value={value}
+      status={status}
+      onSelect={onSelect}
+      placeholder={t('Select storage map')}
+    >
+      {isEmpty(storageMaps)
+        ? emptyState
+        : storageMaps.map((storageMap) => {
+            const storageMapName = getName(storageMap);
+
+            return (
+              <SelectOption key={storageMapName} value={storageMap}>
+                {storageMapName}
+              </SelectOption>
+            );
+          })}
+    </Select>
+  );
+};
+
+export default StorageMapSelect;

@@ -60,24 +60,21 @@ const TransferNetworkField: FC = () => {
         render={({ field }) => (
           <Select
             id={field.name}
-            value={field.value}
+            value={field.value?.name ?? ''}
             onSelect={(_event, value) => {
               field.onChange(value);
             }}
             placeholder={defaultTransferNetwork}
           >
             <SelectList>
-              <SelectOption
-                value={''}
-                description={t('Use the default target provider transfer network')}
-              >
+              <SelectOption description={t('Use the default target provider transfer network')}>
                 {defaultTransferNetwork}
               </SelectOption>
 
               {transferNetworks.map((network) => (
                 <SelectOption
                   key={network.uid ?? network.name}
-                  value={network.name}
+                  value={network}
                   description={network.namespace}
                 >
                   {network.name}

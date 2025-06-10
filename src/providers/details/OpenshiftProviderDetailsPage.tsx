@@ -1,22 +1,20 @@
 import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { ProviderPageHeadings } from 'src/modules/Providers/views/details/components/ProviderPageHeadings';
-import { ProviderCredentialsTabPage } from 'src/modules/Providers/views/details/tabs/Credentials/ProviderCredentials';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-sdk';
 
+import ProviderCredentialsTabPage from './tabs/Credentials/ProviderCredentialsTabPage';
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
 import ProviderNetworksTabPage from './tabs/Networks/ProviderNetworksTabPage';
 import ProviderVirtualMachinesTabPage from './tabs/VirtualMachines/ProviderVirtualMachinesTabPage';
 import ProviderYAMLTabPage from './tabs/YAML/ProviderYAMLTabPage';
+import ProviderPageHeader from './ProviderPageHeader';
 
 const OpenshiftProviderDetailsPage: FC<{
-  name: string;
-  namespace: string;
   provider: V1beta1Provider;
-}> = ({ name, namespace, provider }) => {
+}> = ({ provider }) => {
   const { t } = useForkliftTranslation();
 
   const tabPages: NavPage[] = [
@@ -31,7 +29,7 @@ const OpenshiftProviderDetailsPage: FC<{
       name: t('YAML'),
     },
     {
-      component: () => <ProviderCredentialsTabPage name={name} namespace={namespace} />,
+      component: () => <ProviderCredentialsTabPage provider={provider} />,
       href: 'credentials',
       name: t('Credentials'),
     },
@@ -49,7 +47,7 @@ const OpenshiftProviderDetailsPage: FC<{
 
   return (
     <ModalHOC>
-      <ProviderPageHeadings name={name} namespace={namespace} />
+      <ProviderPageHeader provider={provider} />
       <HorizontalNav pages={tabPages} />
     </ModalHOC>
   );

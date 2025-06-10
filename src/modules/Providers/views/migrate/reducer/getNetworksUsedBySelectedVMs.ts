@@ -1,6 +1,6 @@
-import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
+import { PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 
-import { POD_NETWORK } from './actions';
+import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
   switch (vm.providerType) {
@@ -18,7 +18,7 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
         const networkName = network?.multus?.networkName;
 
         if (network?.pod) {
-          acc.push(POD_NETWORK);
+          acc.push(PodNetworkLabel.Target);
         } else if (networkName) {
           acc.push(networkName);
         }

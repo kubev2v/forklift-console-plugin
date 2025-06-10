@@ -1,8 +1,11 @@
 import type { FormEvent } from 'react';
 
 import { Switch, ToolbarItem } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import type { FilterTypeProps } from './types';
+
+import './SwitchFilter.scss';
 
 /**
  * Simple boolean filter without support for filter chips.
@@ -25,10 +28,10 @@ export const SwitchFilter = ({
   };
 
   return (
-    <ToolbarItem>
+    <ToolbarItem className="forklift-switch-filter">
       <Switch
         label={placeholderLabel}
-        isChecked={selectedFilters.length === 1 && selectedFilters[0] === 'true'}
+        isChecked={!isEmpty(selectedFilters) && selectedFilters?.[0] === 'true'}
         onChange={(e, value) => {
           onChange(value, e);
         }}

@@ -14,7 +14,7 @@ import OvaProviderDetailsPage from './OvaProviderDetailsPage';
 import OVirtProviderDetailsPage from './OVirtProviderDetailsPage';
 import VSphereProviderDetailsPage from './VSphereProviderDetailsPage';
 
-import './ProviderDetailsPage.style.css';
+import './ProviderDetailsPage.style.scss';
 
 type ProviderDetailsPageProps = {
   kind: string;
@@ -43,19 +43,15 @@ const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) 
 
   switch (provider?.spec?.type) {
     case PROVIDER_TYPES.openshift:
-      return (
-        <OpenshiftProviderDetailsPage name={name} namespace={namespace!} provider={provider} />
-      );
+      return <OpenshiftProviderDetailsPage provider={provider} />;
     case PROVIDER_TYPES.openstack:
-      return (
-        <OpenStackProviderDetailsPage name={name} namespace={namespace!} provider={provider} />
-      );
+      return <OpenStackProviderDetailsPage provider={provider} />;
     case PROVIDER_TYPES.ovirt:
-      return <OVirtProviderDetailsPage name={name} namespace={namespace!} provider={provider} />;
+      return <OVirtProviderDetailsPage provider={provider} />;
     case PROVIDER_TYPES.vsphere:
-      return <VSphereProviderDetailsPage name={name} namespace={namespace!} provider={provider} />;
+      return <VSphereProviderDetailsPage provider={provider} />;
     case PROVIDER_TYPES.ova:
-      return <OvaProviderDetailsPage name={name} namespace={namespace!} provider={provider} />;
+      return <OvaProviderDetailsPage provider={provider} />;
     case undefined:
     default:
       return <ErrorState title={t('Unsupported provider type')} />;

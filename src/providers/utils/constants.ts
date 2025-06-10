@@ -24,3 +24,49 @@ export const PROVIDER_TYPES = {
   ovirt: 'ovirt',
   vsphere: 'vsphere',
 } as const;
+
+export enum VSphereEndpointType {
+  ESXi = 'esxi',
+  vCenter = 'vcenter',
+}
+
+export enum OpenstackAuthType {
+  PasswordSecretFields = 'passwordSecretFields',
+  TokenWithUsernameSecretFields = 'tokenWithUsernameSecretFields',
+  TokenWithUserIDSecretFields = 'tokenWithUserIDSecretFields',
+  ApplicationCredentialIdSecretFields = 'applicationCredentialIdSecretFields',
+  ApplicationCredentialNameSecretFields = 'applicationCredentialNameSecretFields',
+}
+
+export enum OpenstackSecretFieldsId {
+  Username = 'username',
+  Password = 'password',
+  Token = 'token',
+  RegionName = 'regionName',
+  ProjectName = 'projectName',
+  DomainName = 'domainName',
+  UserId = 'userID',
+  ProjectId = 'projectID',
+  ApplicationCredentialName = 'applicationCredentialName',
+  ApplicationCredentialSecret = 'applicationCredentialSecret',
+  ApplicationCredentialId = 'applicationCredentialID',
+  InsecureSkipVerify = 'insecureSkipVerify',
+  CaCert = 'cacert',
+  AuthType = 'authType',
+}
+
+export enum OpenstackAuthTypeLabels {
+  ApplicationCredentialId = 'Application credential ID',
+  ApplicationCredentialName = 'Application credential name',
+  TokenWithUserID = 'Token with user ID',
+  TokenWithUsername = 'Token with user name',
+  Password = 'Password',
+}
+
+export enum SecretFieldsId {
+  User = 'user',
+  Password = 'password',
+  CaCert = 'cacert',
+  InsecureSkipVerify = 'insecureSkipVerify',
+  Token = 'token',
+}
