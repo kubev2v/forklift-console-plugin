@@ -71,7 +71,7 @@ const VmMigrationsHistoryChart = ({
 
   const getAreaProps = (dataPoints: MigrationDataPoint[], areaName: string, color: string) => ({
     colorScale: [color],
-    data: mapDataPoints(dataPoints, areaName),
+    data: mapDataPoints(dataPoints, areaName).slice(-12),
     events: [
       {
         eventHandlers: {

@@ -26,7 +26,7 @@ type Option = {
  * @property {(value: string) => void} onChange - Function to call when the value changes
  * @property {Option[]} options - The options to present to the user
  */
-export type SettingsSelectInputProps = {
+type SettingsSelectInputProps = {
   value: number | string;
   onChange: (value: number | string) => void;
   options: Option[];
