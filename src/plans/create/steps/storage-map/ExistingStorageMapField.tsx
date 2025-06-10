@@ -8,28 +8,28 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { GeneralFormFieldId } from '../general-information/constants';
 
-import { netMapFieldLabels, NetworkMapFieldId } from './constants';
-import NetworkMapSelect from './NetworkMapSelect';
+import { StorageMapFieldId, storageMapFieldLabels } from './constants';
+import StorageMapSelect from './StorageMapSelect';
 
-const ExistingNetworkMapField: FC = () => {
+const ExistingStorageMapField: FC = () => {
   const { t } = useForkliftTranslation();
   const { control, getFieldState } = useCreatePlanFormContext();
-  const { error } = getFieldState(NetworkMapFieldId.ExistingNetworkMap);
+  const { error } = getFieldState(StorageMapFieldId.ExistingStorageMap);
   const planProject = useWatch({ control, name: GeneralFormFieldId.PlanProject });
 
   return (
     <FormGroupWithErrorText
       isRequired
-      fieldId={NetworkMapFieldId.ExistingNetworkMap}
-      label={netMapFieldLabels[NetworkMapFieldId.ExistingNetworkMap]}
+      fieldId={StorageMapFieldId.ExistingStorageMap}
+      label={storageMapFieldLabels[StorageMapFieldId.ExistingStorageMap]}
       className="pf-v5-u-ml-lg"
     >
       <Controller
-        name={NetworkMapFieldId.ExistingNetworkMap}
+        name={StorageMapFieldId.ExistingStorageMap}
         control={control}
         render={({ field }) => (
-          <NetworkMapSelect
-            id={NetworkMapFieldId.ExistingNetworkMap}
+          <StorageMapSelect
+            id={StorageMapFieldId.ExistingStorageMap}
             value={field.value?.metadata?.name ?? ''}
             status={error && MenuToggleStatus.danger}
             onSelect={(_, value) => {
@@ -39,11 +39,11 @@ const ExistingNetworkMapField: FC = () => {
           />
         )}
         rules={{
-          required: t('Network map is required.'),
+          required: t('Storage map is required.'),
         }}
       />
     </FormGroupWithErrorText>
   );
 };
 
-export default ExistingNetworkMapField;
+export default ExistingStorageMapField;

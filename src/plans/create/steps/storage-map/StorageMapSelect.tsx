@@ -4,9 +4,9 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceU
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import Select from '@components/common/MtvSelect';
 import {
-  NetworkMapModelGroupVersionKind,
-  NetworkMapModelRef,
-  type V1beta1NetworkMap,
+  StorageMapModelGroupVersionKind,
+  StorageMapModelRef,
+  type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
@@ -20,14 +20,14 @@ import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-type NetworkMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
+type StorageMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
   id: string;
   value: string;
   namespace: string;
   includeOwnerReferenced?: boolean;
 };
 
-const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
+const StorageMapSelect: FC<StorageMapSelectProps> = ({
   id,
   includeOwnerReferenced = false,
   namespace,
@@ -36,40 +36,39 @@ const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
   value,
 }) => {
   const { t } = useForkliftTranslation();
-  const [allNetworkMaps] = useK8sWatchResource<V1beta1NetworkMap[]>({
-    groupVersionKind: NetworkMapModelGroupVersionKind,
+  const [allStorageMaps] = useK8sWatchResource<V1beta1StorageMap[]>({
+    groupVersionKind: StorageMapModelGroupVersionKind,
     isList: true,
     namespace,
   });
 
-  const networkMapsListUrl = getResourceUrl({
+  const storageMapsListUrl = getResourceUrl({
     namespace,
-    reference: NetworkMapModelRef,
+    reference: StorageMapModelRef,
   });
 
-  // Filter out network maps that have ownerReferences unless includeOwnerReferenced is true
-  const networkMaps = useMemo(() => {
-    if (!allNetworkMaps) {
+  // Filter out storage maps that have ownerReferences unless includeOwnerReferenced is true
+  const storageMaps = useMemo(() => {
+    if (!allStorageMaps) {
       return [];
     }
-
     if (includeOwnerReferenced) {
-      return allNetworkMaps;
+      return allStorageMaps;
     }
 
-    return allNetworkMaps.filter((networkMap) => {
-      return isEmpty(networkMap.metadata?.ownerReferences);
+    return allStorageMaps.filter((storageMap) => {
+      return isEmpty(storageMap.metadata?.ownerReferences);
     });
-  }, [allNetworkMaps, includeOwnerReferenced]);
+  }, [allStorageMaps, includeOwnerReferenced]);
 
   const emptyState = (
     <EmptyState variant={EmptyStateVariant.xs}>
       <Title headingLevel="h4" size="md">
-        {t('You do not have any network maps without owner references.')}
+        {t('You do not have any storage maps without owner references.')}
       </Title>
       <EmptyStateBody>
-        <ExternalLink href={`${networkMapsListUrl}/~new`} isInline>
-          {t('Create a network map without an owner')}
+        <ExternalLink href={`${storageMapsListUrl}/~new`} isInline>
+          {t('Create a storage map without an owner')}
         </ExternalLink>
       </EmptyStateBody>
     </EmptyState>
@@ -81,16 +80,16 @@ const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
       value={value}
       status={status}
       onSelect={onSelect}
-      placeholder={t('Select network map')}
+      placeholder={t('Select storage map')}
     >
-      {isEmpty(networkMaps)
+      {isEmpty(storageMaps)
         ? emptyState
-        : networkMaps.map((networkMap) => {
-            const networkMapName = getName(networkMap);
+        : storageMaps.map((storageMap) => {
+            const storageMapName = getName(storageMap);
 
             return (
-              <SelectOption key={networkMapName} value={networkMap}>
-                {networkMapName}
+              <SelectOption key={storageMapName} value={storageMap}>
+                {storageMapName}
               </SelectOption>
             );
           })}
@@ -98,4 +97,4 @@ const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
   );
 };
 
-export default NetworkMapSelect;
+export default StorageMapSelect;

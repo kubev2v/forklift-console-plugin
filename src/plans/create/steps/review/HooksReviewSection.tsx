@@ -16,8 +16,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { HooksFormFieldId, MigrationHookFieldId } from '../hooks/constants';
-import { hooksFormFieldLabels } from '../hooks/utils';
+import { HooksFormFieldId, MigrationHookFieldId } from '../migration-hooks/constants';
+import { hooksFormFieldLabels } from '../migration-hooks/utils';
 
 const HooksReviewSection: FC = () => {
   const { t } = useForkliftTranslation();

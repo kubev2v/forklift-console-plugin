@@ -11,7 +11,10 @@ import type {
   OvaVM,
   OVirtNetwork,
   OVirtVM,
+  V1beta1Hook,
   V1beta1NetworkMap,
+  V1beta1PlanSpecTransferNetwork,
+  V1beta1PlanSpecVmsLuks,
   V1beta1Provider,
   V1beta1StorageMap,
   V1NetworkAttachmentDefinition,
@@ -20,7 +23,7 @@ import type {
 } from '@kubev2v/types';
 
 import type { GeneralFormFieldId } from './steps/general-information/constants';
-import type { HooksFormFieldId, MigrationHook } from './steps/hooks/constants';
+import type { HooksFormFieldId, MigrationHook } from './steps/migration-hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
 import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
@@ -68,15 +71,20 @@ export type CreatePlanFormData = FieldValues & {
   [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProject]: string;
   [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine>;
-  [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
   [NetworkMapFieldId.ExistingNetworkMap]: V1beta1NetworkMap | undefined;
+  [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
+  [NetworkMapFieldId.NetworkMapName]: string;
+  [StorageMapFieldId.ExistingStorageMap]: V1beta1StorageMap | undefined;
   [StorageMapFieldId.StorageMap]: StorageMapping[];
+  [StorageMapFieldId.StorageMapName]: string;
   [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
   [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
   [OtherSettingsFormFieldId.SharedDisks]: boolean;
   [HooksFormFieldId.PreMigration]: MigrationHook;
   [HooksFormFieldId.PostMigration]: MigrationHook;
+  [OtherSettingsFormFieldId.RootDevice]: string;
+  [OtherSettingsFormFieldId.TransferNetwork]: V1beta1PlanSpecTransferNetwork;
 };
 
 export type MappingValue = { id?: string; name: string };
@@ -86,18 +94,12 @@ export type CategorizedSourceMappings = {
   other: MappingValue[];
 };
 
-export type CreateNetworkMapParams = {
-  networkMappings: NetworkMapping[];
+export type CreateMapParams<T> = {
+  mappings: T[];
   planProject: string;
   sourceProvider: V1beta1Provider | undefined;
   targetProvider: V1beta1Provider | undefined;
-};
-
-export type CreateStorageMapParams = {
-  storageMappings: StorageMapping[];
-  planProject: string;
-  sourceProvider: V1beta1Provider | undefined;
-  targetProvider: V1beta1Provider | undefined;
+  name?: string;
 };
 
 export type CreatePlanParams = {
@@ -105,9 +107,18 @@ export type CreatePlanParams = {
   planProject: string;
   sourceProvider: V1beta1Provider | undefined;
   targetProvider: V1beta1Provider | undefined;
+  targetProject: string;
   networkMap: V1beta1NetworkMap;
   storageMap: V1beta1StorageMap;
   vms: ProviderVirtualMachine[];
+  migrationType: MigrationTypeValue;
+  preserveStaticIps?: boolean;
+  rootDevice?: string;
+  transferNetwork?: V1beta1PlanSpecTransferNetwork;
+  sharedDisks?: boolean;
+  luks?: V1beta1PlanSpecVmsLuks;
+  preHook?: V1beta1Hook;
+  postHook?: V1beta1Hook;
 };
 
 type ResourceQueryResult<T> = [T, boolean, Error | null];
