@@ -8,7 +8,7 @@ import {
 import PlanWarmLabel from 'src/plans/details/components/PlanWarmLabel/PlanWarmLabel';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, ButtonVariant, Flex } from '@patternfly/react-core';
+import { Button, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 
 import type { PlanFieldProps } from '../utils/types';
@@ -26,12 +26,16 @@ const PlanMigrationType: FC<PlanFieldProps> = ({ plan }) => {
 
   return (
     <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsMd' }}>
-      <PlanWarmLabel isWarm={isWarm} />
+      <FlexItem>
+        <PlanWarmLabel isWarm={isWarm} />
+      </FlexItem>
 
       {canSetCutover && (
-        <Button isInline variant={ButtonVariant.link} onClick={onClickPlanCutoverMigration}>
-          {t('Cutover')}
-        </Button>
+        <FlexItem>
+          <Button isInline variant={ButtonVariant.link} onClick={onClickPlanCutoverMigration}>
+            {t('Cutover')}
+          </Button>
+        </FlexItem>
       )}
     </Flex>
   );

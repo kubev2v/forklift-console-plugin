@@ -6,39 +6,39 @@ import {
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   MinusCircleIcon,
-  NewProcessIcon,
   PauseCircleIcon,
 } from '@patternfly/react-icons';
 
-import { MigrationVirtualMachineStatusIcon } from './types';
+import InProgressIcon from './InProgressIcon';
+import { MigrationVirtualMachineStatus } from './types';
 
-export const migrationStatusIconMap: Record<MigrationVirtualMachineStatusIcon, ReactNode> = {
-  [MigrationVirtualMachineStatusIcon.Canceled]: (
+export const migrationStatusIconMap: Record<MigrationVirtualMachineStatus, ReactNode> = {
+  [MigrationVirtualMachineStatus.Canceled]: (
     <Icon isInline>
       <MinusCircleIcon />
     </Icon>
   ),
-  [MigrationVirtualMachineStatusIcon.CantStart]: (
+  [MigrationVirtualMachineStatus.CantStart]: (
     <Icon status="warning">
       <ExclamationTriangleIcon />
     </Icon>
   ),
-  [MigrationVirtualMachineStatusIcon.Failed]: (
+  [MigrationVirtualMachineStatus.Failed]: (
     <Icon status="danger">
       <ExclamationCircleIcon />
     </Icon>
   ),
-  [MigrationVirtualMachineStatusIcon.InProgress]: (
-    <Icon isInline>
-      <NewProcessIcon />
+  [MigrationVirtualMachineStatus.InProgress]: (
+    <Icon>
+      <InProgressIcon />
     </Icon>
   ),
-  [MigrationVirtualMachineStatusIcon.Paused]: (
+  [MigrationVirtualMachineStatus.Paused]: (
     <Icon status="warning">
       <PauseCircleIcon />
     </Icon>
   ),
-  [MigrationVirtualMachineStatusIcon.Succeeded]: (
+  [MigrationVirtualMachineStatus.Succeeded]: (
     <Icon status="success">
       <CheckCircleIcon />
     </Icon>
