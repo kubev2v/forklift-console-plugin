@@ -117,6 +117,7 @@ const VmMigrationsHistoryChart = ({
         ariaDesc={t('Area chart with VM migration history')}
         containerComponent={
           <ChartVoronoiContainer
+            voronoiDimension="x"
             labels={({ datum }: { datum: ChartDatumWithName }) =>
               datum.y === 0 || !datum.name
                 ? (undefined as unknown as string)
