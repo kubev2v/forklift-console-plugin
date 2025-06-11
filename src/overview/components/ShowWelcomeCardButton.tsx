@@ -15,13 +15,7 @@ export const ShowWelcomeCardButton: FC = () => {
   if (!hideWelcomeCardByContext) return null;
 
   return (
-    <Label
-      color="purple"
-      onClick={onClick}
-      onClose={() => null}
-      style={{ cursor: 'pointer' }}
-      data-testid="show-welcome-card"
-    >
+    <Label onClick={onClick} data-testid="show-welcome-card">
       {t('Show the welcome card')}
     </Label>
   );

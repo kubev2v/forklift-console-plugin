@@ -1,4 +1,5 @@
-import { type FC, useState } from 'react';
+import { type FC, useContext } from 'react';
+import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -10,9 +11,9 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 
 import { getVmMigrationsDataPoints } from '../../utils/getVmMigrationsDataPoints';
-import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../../utils/timeRangeOptions';
+import { TimeRangeOptions } from '../../utils/timeRangeOptions';
+import HeaderActions from '../CardHeaderActions';
 
-import HeaderActions from './VmMigrationsHistoryCardHeaderActions';
 import VmMigrationsHistoryChart from './VmMigrationsHistoryChart';
 
 type MigrationsCardProps = {
@@ -23,29 +24,41 @@ type MigrationsCardProps = {
 
 const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
   const { t } = useForkliftTranslation();
-
-  const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRangeOptions>(
-    TimeRangeOptions.Last7Days,
-  );
+  const { data, setData } = useContext(CreateOverviewContext);
+  const selectedRange = data?.vmMigrationsHistorySelectedRange ?? TimeRangeOptions.Last10Days;
+  const setSelectedRange = (range: TimeRangeOptions) => {
+    setData({
+      ...data,
+      vmMigrationsHistorySelectedRange: range,
+    });
+  };
   const [migrations] = useK8sWatchResource<V1beta1Migration[]>({
     groupVersionKind: MigrationModelGroupVersionKind,
     isList: true,
     namespaced: true,
   });
 
-  const vmMigrationsDataPoints = getVmMigrationsDataPoints(migrations, selectedTimeRange);
+  const vmMigrationsDataPoints = getVmMigrationsDataPoints(migrations, selectedRange);
 
   return (
     <Card className="pf-m-full-height">
       <CardHeader
-        actions={{ actions: <HeaderActions setSelectedTimeRange={setSelectedTimeRange} /> }}
+        actions={{
+          actions: (
+            <HeaderActions
+              selectedTimeRange={selectedRange}
+              setSelectedTimeRange={setSelectedRange}
+            />
+          ),
+        }}
       >
-        <CardTitle className="forklift-title">
-          {t(TimeRangeOptionsDictionary[selectedTimeRange].vmMigrationsLabelKey)}
-        </CardTitle>
+        <CardTitle className="forklift-title">{t('Migration history')}</CardTitle>
       </CardHeader>
-      <CardBody className="forklift-status-migration-chart">
-        <VmMigrationsHistoryChart vmMigrationsDataPoints={vmMigrationsDataPoints} />
+      <CardBody className="forklift-overview__status-migration-chart">
+        <VmMigrationsHistoryChart
+          vmMigrationsDataPoints={vmMigrationsDataPoints}
+          selectedTimeRange={selectedRange}
+        />
       </CardBody>
     </Card>
   );

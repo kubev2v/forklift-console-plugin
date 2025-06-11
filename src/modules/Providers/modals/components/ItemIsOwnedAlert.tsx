@@ -14,9 +14,10 @@ import './alerts.style.css';
 type ItemIsOwnedAlertProps = {
   owner: OwnerReference;
   namespace?: string;
+  className?: string;
 };
 
-export const ItemIsOwnedAlert: FC<ItemIsOwnedAlertProps> = ({ namespace, owner }) => {
+export const ItemIsOwnedAlert: FC<ItemIsOwnedAlertProps> = ({ className, namespace, owner }) => {
   const { t } = useForkliftTranslation();
   if (isEmpty(owner)) {
     return null;
@@ -24,7 +25,7 @@ export const ItemIsOwnedAlert: FC<ItemIsOwnedAlertProps> = ({ namespace, owner }
 
   return (
     <Alert
-      className="co-alert forklift-alert--margin-top"
+      className={className ?? 'co-alert forklift-alert--margin-top'}
       isInline
       variant="warning"
       title={t('Managed resource')}

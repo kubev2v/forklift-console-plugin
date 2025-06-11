@@ -7,7 +7,7 @@ import { StorageMapPageHeadings } from './components/DetailsSection/components/S
 import { StorageMapDetailsTab } from './tabs/Details/StorageMapDetailsTab';
 import { StorageMapYAMLTab } from './tabs/YAML/StorageMapYAMLTab';
 
-import './StorageMapDetailsPage.style.css';
+import './StorageMapDetailsPage.scss';
 
 const StorageMapDetailsPageInternal: FC<{
   name: string;

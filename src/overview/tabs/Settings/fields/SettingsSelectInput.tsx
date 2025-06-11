@@ -26,7 +26,7 @@ type Option = {
  * @property {(value: string) => void} onChange - Function to call when the value changes
  * @property {Option[]} options - The options to present to the user
  */
-export type SettingsSelectInputProps = {
+type SettingsSelectInputProps = {
   value: number | string;
   onChange: (value: number | string) => void;
   options: Option[];
@@ -34,9 +34,6 @@ export type SettingsSelectInputProps = {
 
 /**
  * SelectInput component. Provides a select input form element with predefined options.
- *
- * @param {ModalInputComponentProps} props - Properties passed to the component
- * @returns {JSX.Element}
  */
 const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, value }) => {
   // State to keep track of the dropdown menu open/closed state
@@ -45,20 +42,20 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
   // Build a dictionary mapping option names to keys for efficient lookup
   // This dictionary is re-calculated every time the options prop changes
   const nameToKey = useMemo(() => {
-    return options.reduce<Record<string, string | number>>((dict, option) => {
+    return options?.reduce<Record<string, string | number>>((dict, option) => {
       dict[option.name] = option.key;
       return dict;
     }, {});
   }, [options]);
 
   const keyToName = useMemo(() => {
-    return options.reduce<Record<string, string | number>>((dict, option) => {
+    return options?.reduce<Record<string, string | number>>((dict, option) => {
       dict[option.key] = option.name;
       return dict;
     }, {});
   }, [options]);
 
-  const valueLabel = keyToName?.[value] || value;
+  const valueLabel = keyToName?.[value] ?? value;
   const [selected, setSelected] = useState<string | number>(valueLabel);
 
   const onToggleClick = () => {
@@ -66,13 +63,18 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
   };
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
-    <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
+    <MenuToggle
+      ref={toggleRef}
+      onClick={onToggleClick}
+      isExpanded={isOpen}
+      className="forklift-overview__settings-select"
+    >
       {selected || 'Select an option'}
     </MenuToggle>
   );
 
   const renderOptions = () => {
-    return options.map((option) => (
+    return options?.map((option) => (
       <SelectOption key={option.key} value={option.name} description={option.description}>
         {option.name}
       </SelectOption>

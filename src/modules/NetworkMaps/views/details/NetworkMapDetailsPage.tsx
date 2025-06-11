@@ -7,7 +7,7 @@ import { NetworkMapPageHeadings } from './components/DetailsSection/components/N
 import { NetworkMapDetailsTab } from './tabs/Details/NetworkMapDetailsTab';
 import NetworkMapYAMLTab from './tabs/YAML/NetworkMapYAMLTab';
 
-import './NetworkMapDetailsPage.style.css';
+import './NetworkMapDetailsPage.scss';
 
 const NetworkMapDetailsPageInternal: FC<{
   name: string;

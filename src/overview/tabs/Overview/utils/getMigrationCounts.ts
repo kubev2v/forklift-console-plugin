@@ -5,7 +5,7 @@ import type { V1beta1Migration } from '@kubev2v/types';
  * @param {V1beta1Migration[]} migrations - The array of migration objects to inspect.
  * @return {Object} A dictionary with the phase as the key and the count as the value.
  */
-export const getMigrationCounts = (migrations: V1beta1Migration[]): Record<string, number> => {
+export const getPlanMigrationCounts = (migrations: V1beta1Migration[]): Record<string, number> => {
   const migrationCounts: Record<string, number> = {
     Canceled: 0,
     Failed: 0,

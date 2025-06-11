@@ -9,8 +9,14 @@ export const AlertMessageForModals: FC<{
   title?: string;
   message: ReactNode | string;
   variant?: 'success' | 'danger' | 'warning' | 'info' | 'custom';
-}> = ({ message, title = t('Error'), variant = 'danger' }) => (
-  <Alert className="co-alert forklift-alert--margin-top" isInline variant={variant} title={title}>
+  className?: string;
+}> = ({ className, message, title = t('Error'), variant = 'danger' }) => (
+  <Alert
+    className={className ?? 'co-alert forklift-alert--margin-top'}
+    isInline
+    variant={variant}
+    title={title}
+  >
     {message}
   </Alert>
 );

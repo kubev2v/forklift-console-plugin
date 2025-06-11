@@ -7,7 +7,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Pod } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { HelperText, HelperTextItem, Pagination } from '@patternfly/react-core';
+import { HelperText, HelperTextItem, Pagination, Tooltip } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { getKind, getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -112,7 +112,13 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
                 </Td>
               )}
               <Td modifier="fitContent">
-                {pod?.status?.phase ? <StatusIcon phase={pod?.status?.phase} /> : ''}
+                {pod?.status?.phase ? (
+                  <Tooltip content={pod.status.phase}>
+                    <StatusIcon phase={pod.status.phase} />
+                  </Tooltip>
+                ) : (
+                  ''
+                )}
               </Td>
               <Td modifier="fitContent">
                 <Link to={`${getPodLogsLink(pod)}/logs`}>{t('Logs')}</Link>
