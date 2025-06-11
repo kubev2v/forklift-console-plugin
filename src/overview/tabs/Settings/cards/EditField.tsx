@@ -73,15 +73,8 @@ export const EditField: FC<EditFieldProps> = ({
       await onConfirmHook({ jsonPath, model, newValue: latestValueRef.current, resource });
       onSave?.();
     } catch (err) {
-      // eslint-disable-next-line no-useless-assignment
-      let message = '';
-      if (err && typeof err === 'object' && 'message' in err && err.message === 'string') {
-        const { message: errMessage } = err as { message: string };
-        message = errMessage;
-      } else {
-        message = String(err);
-      }
-      setAlertMessage(<AlertMessageForModals title={t('Error')} message={message} />);
+      const message = (err as Error)?.message ?? err;
+      setAlertMessage(message);
     }
   };
 
@@ -149,9 +142,13 @@ export const EditField: FC<EditFieldProps> = ({
         >
           {InputComponentWithDefault}
         </FormGroupWithHelpText>
+        {typeof owner === 'object' && (
+          <ItemIsOwnedAlert owner={owner} namespace={namespace} className="" />
+        )}
+        {alertMessage && (
+          <AlertMessageForModals title={t('Error')} message={alertMessage} className="" />
+        )}
       </Form>
-      {typeof owner === 'object' && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}
-      {alertMessage}
     </>
   );
 };
