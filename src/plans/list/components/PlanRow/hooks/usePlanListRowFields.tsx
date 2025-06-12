@@ -14,9 +14,9 @@ import {
 } from '@kubev2v/types';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import {
-  getPlanDestinationProvider,
   getPlanMigrationStarted,
   getPlanSourceProvider,
+  getPlanTargetNamespace,
 } from '@utils/crds/plans/selectors';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
@@ -30,8 +30,6 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
   const sourceProviderType = sourceProvider?.spec?.type;
   const planNamespace = getNamespace(plan);
   const planName = getName(plan);
-  const { name: destinationProviderName, namespace: destinationProviderNamespace } =
-    getPlanDestinationProvider(plan);
   const { name: sourceProviderName, namespace: sourceProviderNamespace } =
     getPlanSourceProvider(plan);
   const isDarkTheme = useIsDarkTheme();
@@ -41,9 +39,9 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
     [PlanTableResourceId.Description]: <TableCell>{plan?.spec?.description}</TableCell>,
     [PlanTableResourceId.Destination]: (
       <TableLinkCell
-        groupVersionKind={ProviderModelGroupVersionKind}
-        name={destinationProviderName}
-        namespace={destinationProviderNamespace}
+        groupVersionKind={{ kind: 'Project', version: 'v1' }}
+        name={getPlanTargetNamespace(plan)}
+        namespace={getPlanTargetNamespace(plan)}
       />
     ),
     [PlanTableResourceId.MigrationStarted]: (
