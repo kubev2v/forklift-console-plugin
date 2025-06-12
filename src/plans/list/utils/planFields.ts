@@ -69,7 +69,7 @@ export const planFields: ResourceField[] = [
     },
     isVisible: false,
     jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Destination],
-    label: t('Target provider'),
+    label: t('Target project'),
     resourceFieldId: PlanTableResourceId.Destination,
     sortable: true,
   },

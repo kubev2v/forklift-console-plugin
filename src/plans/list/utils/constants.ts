@@ -15,7 +15,7 @@ export enum PlanTableResourceId {
 export const planResourceApiJsonPaths: Partial<Record<PlanTableResourceId, string>> = {
   [PlanTableResourceId.Archived]: '$.spec.archived',
   [PlanTableResourceId.Description]: '$.spec.description',
-  [PlanTableResourceId.Destination]: '$.spec.provider.destination.name',
+  [PlanTableResourceId.Destination]: '$.spec.targetNamespace',
   [PlanTableResourceId.MigrationStarted]: '$.status.migration.started',
   [PlanTableResourceId.Name]: '$.metadata.name',
   [PlanTableResourceId.Namespace]: '$.metadata.namespace',
