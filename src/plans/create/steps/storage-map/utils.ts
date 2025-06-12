@@ -1,13 +1,8 @@
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type {
-  OpenstackVM,
-  OpenstackVolume,
-  OVirtDisk,
-  OVirtVM,
-  ProviderVirtualMachine,
-  V1beta1Provider,
-} from '@kubev2v/types';
+import type { ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
+import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { t } from '@utils/i18n';
 
 import type { CategorizedSourceMappings, MappingValue } from '../../types';
@@ -25,49 +20,10 @@ export const getStorageMapFieldId = (id: keyof StorageMapping, index: number): S
   `${StorageMapFieldId.StorageMap}.${index}.${id}`;
 
 /**
- * Extracts volume type IDs from an OpenStack VM
- * Includes both attached volumes and image-based disks
- */
-const getOpenstackVolumeTypeIds = (vm: OpenstackVM, disks: (OVirtDisk | OpenstackVolume)[]) => {
-  // Find volumes attached to this VM
-  const vmDisks =
-    vm.attachedVolumes?.map((av) =>
-      (disks as OpenstackVolume[])?.find((disk) => disk.id === av.ID),
-    ) ?? [];
-  const volumeTypeIds: string[] = vmDisks ? vmDisks.map((disk) => disk?.volumeType ?? '') : [];
-
-  // Include Glance image ID if VM is based on an image
-  if (vm?.imageID) {
-    volumeTypeIds.push('glance');
-  }
-
-  return volumeTypeIds;
-};
-
-/**
- * Extracts storage domain IDs from an oVirt VM's disk attachments
- */
-const getOvirtStorageDomainIds = (vm: OVirtVM, disks: (OVirtDisk | OpenstackVolume)[]) => {
-  // Find disks attached to this VM
-  const vmDisks = vm.diskAttachments?.map((da) =>
-    (disks as OVirtDisk[]).find((disk) => disk.id === da.disk),
-  );
-  const storageDomainIds: string[] = vmDisks
-    ? vmDisks.map((disk) => disk?.storageDomain ?? '')
-    : [];
-
-  return storageDomainIds;
-};
-
-/**
  * Identifies all unique storage IDs used by the selected VMs
  * Handles different provider types with appropriate storage extraction logic
  */
-const getStoragesUsedBySelectedVms = (
-  sourceStorageLabelToId: Record<string, string>,
-  selectedVMs: ProviderVirtualMachine[],
-  disks: (OVirtDisk | OpenstackVolume)[],
-): string[] =>
+const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[]): string[] =>
   Array.from(
     new Set(
       selectedVMs.flatMap((vm) => {
@@ -75,16 +31,11 @@ const getStoragesUsedBySelectedVms = (
           case 'vsphere': {
             return vm.disks?.map((disk) => disk?.datastore?.id);
           }
-          case 'openstack': {
-            return getOpenstackVolumeTypeIds(vm, disks);
-          }
-          case 'ovirt': {
-            return getOvirtStorageDomainIds(vm, disks);
-          }
           case 'ova': {
-            // OVA uses the first available storage
-            return [Object.values(sourceStorageLabelToId)[0]];
+            return (vm as EnhancedOvaVM).disks.map((disk) => disk.ID);
           }
+          case 'ovirt':
+          case 'openstack':
           case 'openshift':
           case undefined:
           default:
@@ -114,12 +65,19 @@ export const getSourceStorageValues = (
 ): CategorizedSourceMappings => {
   const sourceProviderType = sourceProvider?.spec?.type ?? '';
 
-  // Skip determining used storages for oVirt and OpenStack as they're handled differently
-  const storageIdsUsedBySelectedVms = ['ovirt', 'openstack'].includes(sourceProviderType)
-    ? []
-    : getStoragesUsedBySelectedVms({}, vms, []);
+  const storageIdsUsedBySelectedVms = getStoragesUsedBySelectedVms(vms);
 
-  const sourceStorageMap = getInventoryStorageMap(availableSourceStorages);
+  const selectedOvaVMsDiskIDs = new Set(storageIdsUsedBySelectedVms);
+
+  const filteredOVAStoragesBySelectedVMs = availableSourceStorages.filter((storage) =>
+    selectedOvaVMsDiskIDs.has(storage.id),
+  );
+
+  const sourceStorageMap = getInventoryStorageMap(
+    sourceProviderType === PROVIDER_TYPES.ova
+      ? filteredOVAStoragesBySelectedVMs
+      : availableSourceStorages,
+  );
 
   // Categorize storages into 'used' and 'other'
   return Object.entries(sourceStorageMap).reduce(
