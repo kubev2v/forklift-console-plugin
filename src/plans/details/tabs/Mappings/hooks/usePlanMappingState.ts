@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type Dispatch, type SetStateAction, useState } from 'react';
 
 import type {
   V1beta1NetworkMap,
@@ -6,8 +6,7 @@ import type {
   V1beta1StorageMap,
   V1beta1StorageMapSpecMap,
 } from '@kubev2v/types';
-
-import { hasPlanMappingsChanged } from '../utils/utils';
+import { deepCopy } from '@utils/deepCopy';
 
 export type UsePlanMappingsStateResult = {
   editMode: boolean;
@@ -21,36 +20,35 @@ export type UsePlanMappingsStateResult = {
 };
 
 export const usePlanMappingsState = (
-  planNetworkMaps: V1beta1NetworkMap,
-  planStorageMaps: V1beta1StorageMap,
+  planNetworkMap: V1beta1NetworkMap,
+  planStorageMap: V1beta1StorageMap,
 ): UsePlanMappingsStateResult => {
   const [editMode, setEditMode] = useState(false);
   const [updatedNetwork, setUpdatedNetwork] = useState<V1beta1NetworkMapSpecMap[]>(
-    planNetworkMaps?.spec?.map ?? [],
+    deepCopy(planNetworkMap?.spec?.map) ?? [],
   );
   const [updatedStorage, setUpdatedStorage] = useState<V1beta1StorageMapSpecMap[]>(
-    planStorageMaps?.spec?.map ?? [],
+    deepCopy(planStorageMap?.spec?.map) ?? [],
   );
   const [dataChanged, setDataChanged] = useState(false);
 
-  useEffect(() => {
-    setDataChanged(
-      hasPlanMappingsChanged({
-        originalNetwork: planNetworkMaps?.spec?.map,
-        originalStorage: planStorageMaps?.spec?.map,
-        updatedNetwork,
-        updatedStorage,
-      }),
-    );
-  }, [updatedNetwork, updatedStorage, planNetworkMaps, planStorageMaps]);
-
   const reset = (preserveUpdated = false) => {
     if (!preserveUpdated) {
-      setUpdatedNetwork(planNetworkMaps?.spec?.map ?? []);
-      setUpdatedStorage(planStorageMaps?.spec?.map ?? []);
+      setUpdatedNetwork(planNetworkMap?.spec?.map ?? []);
+      setUpdatedStorage(planStorageMap?.spec?.map ?? []);
     }
     setDataChanged(false);
     setEditMode(false);
+  };
+
+  const onNetworkChange: Dispatch<SetStateAction<V1beta1NetworkMapSpecMap[]>> = (value) => {
+    setDataChanged(true);
+    setUpdatedNetwork(value);
+  };
+
+  const onStorageChange: Dispatch<SetStateAction<V1beta1StorageMapSpecMap[]>> = (value) => {
+    setDataChanged(true);
+    setUpdatedStorage(value);
   };
 
   return {
@@ -58,8 +56,8 @@ export const usePlanMappingsState = (
     editMode,
     reset,
     setEditMode,
-    setUpdatedNetwork,
-    setUpdatedStorage,
+    setUpdatedNetwork: onNetworkChange,
+    setUpdatedStorage: onStorageChange,
     updatedNetwork,
     updatedStorage,
   };

@@ -58,48 +58,6 @@ export const getMappingPageMessage: (props: MappingPageMessageProps) => string |
   return null;
 };
 
-type HasPlanMappingsChangedParams = {
-  originalNetwork?: V1beta1NetworkMapSpecMap[];
-  originalStorage?: V1beta1StorageMapSpecMap[];
-  updatedNetwork?: V1beta1NetworkMapSpecMap[];
-  updatedStorage?: V1beta1StorageMapSpecMap[];
-};
-
-export const hasPlanMappingsChanged = ({
-  originalNetwork = [],
-  originalStorage = [],
-  updatedNetwork = [],
-  updatedStorage = [],
-}: HasPlanMappingsChangedParams): boolean => {
-  const normalizeNetwork = (mappings: V1beta1NetworkMapSpecMap[]) =>
-    mappings.map((mapping) => ({
-      destinationName: mapping.destination?.name,
-      destinationNamespace: mapping.destination?.namespace,
-      destinationType: mapping.destination?.type,
-      sourceId: mapping.source?.id ?? mapping.source?.type,
-      sourceType: mapping.source?.type,
-    }));
-
-  const normalizeStorage = (mappings: V1beta1StorageMapSpecMap[]) =>
-    mappings.map((mapping) => ({
-      destinationStorageClass: mapping.destination?.storageClass,
-      sourceId: mapping.source?.id,
-      sourceType: mapping.source?.type,
-    }));
-
-  const originalNetworkNorm = normalizeNetwork(originalNetwork);
-  const updatedNetworkNorm = normalizeNetwork(updatedNetwork);
-
-  const originalStorageNorm = normalizeStorage(originalStorage);
-  const updatedStorageNorm = normalizeStorage(updatedStorage);
-
-  const changed =
-    JSON.stringify(originalNetworkNorm) !== JSON.stringify(updatedNetworkNorm) ||
-    JSON.stringify(originalStorageNorm) !== JSON.stringify(updatedStorageNorm);
-
-  return changed;
-};
-
 const updateNetworkMapSpecMapDestination = (
   networkMaps: V1beta1NetworkMapSpecMap[],
 ): V1beta1NetworkMapSpecMap[] => {
