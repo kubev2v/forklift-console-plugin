@@ -1,7 +1,7 @@
 import type { FC } from 'react';
+import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { EditProviderVDDKImage } from 'src/modules/Providers/modals/EditProviderVDDKImage/EditProviderVDDKImage';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';
@@ -35,7 +35,7 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
     <DetailsItem
       title={t('VDDK init image')}
       content={
-        provider?.spec?.settings?.vddkInitImage || (
+        provider?.spec?.settings?.vddkInitImage ?? (
           <Label isCompact color={'orange'}>
             <ExclamationTriangleIcon color="#F0AB00" />
             <span className="forklift-section-provider-empty-vddk-label-text">{t('Empty')}</span>
@@ -45,12 +45,10 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'settings', 'vddkInitImage']}
-      onEdit={
-        canPatch &&
-        (() => {
-          showModal(<EditProviderVDDKImage resource={provider} />);
-        })
-      }
+      onEdit={() => {
+        showModal(<EditProviderVDDKImage resource={provider} />);
+      }}
+      canEdit={canPatch}
     />
   );
 };

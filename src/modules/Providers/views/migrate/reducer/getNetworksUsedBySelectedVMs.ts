@@ -1,6 +1,7 @@
 import { PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
+import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
   switch (vm.providerType) {
@@ -27,7 +28,7 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
       }, []);
     }
     case 'ova': {
-      return vm?.Networks?.map((network) => network.name) ?? [];
+      return (vm as EnhancedOvaVM)?.networks?.map((network) => network.ID) ?? [];
     }
     default:
       return [];
