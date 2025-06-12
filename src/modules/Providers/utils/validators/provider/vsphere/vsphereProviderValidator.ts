@@ -19,7 +19,7 @@ export const vsphereProviderValidator = (
     provider?.metadata?.annotations?.['forklift.konveyor.io/empty-vddk-init-image'];
 
   if (!validateK8sName(name)) {
-    return { msg: 'invalid kubernetes resource name', type: 'error' };
+    return { msg: 'invalid provider name', type: 'error' };
   }
 
   if (
