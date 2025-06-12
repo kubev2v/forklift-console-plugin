@@ -10,7 +10,7 @@ import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 
 import { PROVIDER_TYPES } from '../utils/constants';
-import { getProviderURL } from '../utils/getProviderURL';
+import { getProviderDetailsPageUrl } from '../utils/getProviderDetailsPageUrl';
 
 type ProviderActionsDropdownItemsProps = {
   data: ProviderData;
@@ -25,7 +25,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
 
   if (!provider || !getName(provider) || !getNamespace(provider)) return null;
 
-  const providerURL = getProviderURL(provider);
+  const providerURL = getProviderDetailsPageUrl(provider);
 
   const onProviderDelete = () => {
     showModal(<DeleteModal resource={provider} model={ProviderModel} />);

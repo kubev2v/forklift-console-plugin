@@ -2,7 +2,6 @@ import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plug
 
 import { exposedModules as networkMapModules } from './src/modules/NetworkMaps/dynamic-plugin';
 import { exposedModules as planModules } from './src/modules/Plans/dynamic-plugin';
-import { exposedModules as providerModulesOld } from './src/modules/Providers/dynamic-plugin';
 import { exposedModules as storageMapModules } from './src/modules/StorageMaps/dynamic-plugin';
 import { exposedModules as overviewModules } from './src/overview/dynamic-plugin';
 import { exposedModules as providerModules } from './src/providers/dynamic-plugin';
@@ -18,7 +17,6 @@ const pluginMetadata: ConsolePluginBuildMetadata = {
   exposedModules: {
     ...overviewModules,
     ...providerModules,
-    ...providerModulesOld,
     ...planModules,
     ...networkMapModules,
     ...storageMapModules,

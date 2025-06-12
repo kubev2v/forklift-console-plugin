@@ -6,8 +6,7 @@ export default {
     'src/overview/hooks/OverviewContext.ts',
     'src/overview/hooks/useOverviewContext.ts',
 
-    'src/modules/Providers/views/create/ProvidersCreatePage.tsx',
-    'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext.tsx',
+    'src/providers/create/ProvidersCreatePage.tsx',
     'src/providers/list/ProvidersListPage.tsx',
     'src/providers/details/ProviderDetailsPage.tsx',
     'src/utils/types.ts',
