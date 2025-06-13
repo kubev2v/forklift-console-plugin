@@ -1,6 +1,6 @@
-import type { V1beta1Provider } from '@kubev2v/types';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import { ProviderType } from '../types';
+import type { V1beta1Provider } from '@kubev2v/types';
 
 /**
  * Determines if the source provider supports warm migration
@@ -10,5 +10,7 @@ export const hasWarmMigrationProviderType = (
   sourceProvider: V1beta1Provider | undefined,
 ): boolean => {
   const sourceProviderType = sourceProvider?.spec?.type;
-  return sourceProviderType === ProviderType.Vsphere || sourceProviderType === ProviderType.Ovirt;
+  return (
+    sourceProviderType === PROVIDER_TYPES.vsphere || sourceProviderType === PROVIDER_TYPES.ovirt
+  );
 };
