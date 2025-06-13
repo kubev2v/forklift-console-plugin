@@ -7,7 +7,7 @@ export const ovaProviderValidator = (provider: V1beta1Provider): ValidationMsg =
   const url = provider?.spec?.url ?? '';
 
   if (!validateK8sName(name)) {
-    return { msg: 'invalid kubernetes resource name', type: 'error' };
+    return { msg: 'invalid provider name', type: 'error' };
   }
 
   if (!validateNFSMount(url)) {
