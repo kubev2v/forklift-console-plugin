@@ -1,30 +1,35 @@
 import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import {
   NetworkMapModel,
   type V1beta1NetworkMap,
   type V1beta1NetworkMapSpecMap,
+  type V1beta1Provider,
 } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
-import {
-  defaultNetMapping,
-  NetworkMapFieldId,
-  type NetworkMapping,
-} from '../steps/network-map/constants';
-import { type CreateMapParams, ProviderType } from '../types';
+import type { NetworkMapping } from '../steps/network-map/constants';
+
+type CreateNetworkMapParams = {
+  mappings: NetworkMapping[];
+  project: string;
+  sourceProvider: V1beta1Provider | undefined;
+  targetProvider: V1beta1Provider | undefined;
+  name?: string;
+};
 
 /**
- * Creates a NetworkMap resource for VM migration
+ * Creates a network map resource
  * Maps source networks to destination networks or pods based on configuration
  */
 export const createNetworkMap = async ({
   mappings,
   name,
-  planProject,
+  project,
   sourceProvider,
   targetProvider,
-}: CreateMapParams<NetworkMapping>) => {
+}: CreateNetworkMapParams) => {
   const sourceProviderName = sourceProvider?.metadata?.name;
   const networkMap: V1beta1NetworkMap = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -32,7 +37,7 @@ export const createNetworkMap = async ({
     metadata: {
       name,
       ...(!name && sourceProviderName && { generateName: `${sourceProvider?.metadata?.name}-` }),
-      namespace: planProject,
+      namespace: project,
     },
     spec: {
       map: mappings?.reduce((acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork }) => {
@@ -40,13 +45,13 @@ export const createNetworkMap = async ({
           acc.push({
             // Handle pod network type or multus network type for the destination
             destination:
-              targetNetwork.name === defaultNetMapping[NetworkMapFieldId.TargetNetwork].name
+              targetNetwork.name === ''
                 ? { type: 'pod' }
                 : {
                     name: targetNetwork.name.includes('/')
                       ? targetNetwork.name.split('/')[1]
                       : targetNetwork.name,
-                    namespace: planProject,
+                    namespace: project,
                     type: 'multus',
                   },
             // Handle pod network type or regular network for the source
@@ -58,7 +63,9 @@ export const createNetworkMap = async ({
                     name: sourceNetwork.name,
                     // Set type to 'multus' only for OpenShift source providers
                     type:
-                      sourceProvider?.spec?.type === ProviderType.Openshift ? 'multus' : undefined,
+                      sourceProvider?.spec?.type === PROVIDER_TYPES.openshift
+                        ? 'multus'
+                        : undefined,
                   },
           });
         }

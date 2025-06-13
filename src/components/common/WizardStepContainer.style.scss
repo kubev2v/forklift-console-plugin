@@ -13,6 +13,8 @@
 
   &--form {
     @extend .wizard-step-container;
-    width: 66%;
+    max-width: 600px;
+    min-width: 280px;
+    width: 100%;
   }
 }

@@ -6,6 +6,7 @@ import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderDat
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { ResourceField } from '@components/common/utils/types';
+import { EmptyState, EmptyStateVariant, Spinner, Title } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 
 import { getVmId } from '../utils/helpers/vmProps';
@@ -52,6 +53,18 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
         onSelect(selectedVms);
       }
     : undefined;
+
+  // Render the spinner while data is loading
+  if (vmDataLoading) {
+    return (
+      <EmptyState variant={EmptyStateVariant.sm}>
+        <Spinner size="xl" />
+        <Title headingLevel="h4" size="lg">
+          {t('Loading virtual machines...')}
+        </Title>
+      </EmptyState>
+    );
+  }
 
   return (
     <StandardPageWithSelection

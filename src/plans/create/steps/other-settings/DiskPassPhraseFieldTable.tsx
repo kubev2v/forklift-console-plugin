@@ -1,9 +1,9 @@
 import { Controller, useFieldArray } from 'react-hook-form';
-import HelpIconWithLabel from 'src/plans/components/HelpIconWithLabel';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
+import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
-import { FormGroup, Stack, StackItem, TextInput } from '@patternfly/react-core';
+import { Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
@@ -34,10 +34,9 @@ const DiskPassPhraseFieldTable = () => {
     <FieldBuilderTable
       headers={[
         {
-          label: (
-            <HelpIconWithLabel
-              label={otherFormFieldLabels[OtherSettingsFormFieldId.DiskDecryptionPassPhrases]}
-            >
+          label: otherFormFieldLabels[OtherSettingsFormFieldId.DiskDecryptionPassPhrases],
+          labelIcon: (
+            <HelpIconPopover>
               <Stack hasGutter>
                 <StackItem>
                   {t(
@@ -57,20 +56,18 @@ const DiskPassPhraseFieldTable = () => {
                   </ExternalLink>
                 </StackItem>
               </Stack>
-            </HelpIconWithLabel>
+            </HelpIconPopover>
           ),
         },
       ]}
       fieldRows={diskPassPhrases.map((fieldRow, index) => ({
         ...fieldRow,
         inputs: [
-          <FormGroup fieldId={getDiskPassPhraseFieldId(index)}>
-            <Controller
-              name={getDiskPassPhraseFieldId(index)}
-              control={control}
-              render={({ field }) => <TextInput {...field} />}
-            />
-          </FormGroup>,
+          <Controller
+            name={getDiskPassPhraseFieldId(index)}
+            control={control}
+            render={({ field }) => <TextInput {...field} />}
+          />,
         ],
       }))}
       addButton={{
@@ -80,13 +77,15 @@ const DiskPassPhraseFieldTable = () => {
           append(defaultDiskPassPhrase);
         },
       }}
-      onRemove={(index) => {
-        if (diskPassPhrases.length > 1) {
-          remove(index);
-          return;
-        }
+      removeButton={{
+        onClick: (index) => {
+          if (diskPassPhrases.length > 1) {
+            remove(index);
+            return;
+          }
 
-        setValue(getDiskPassPhraseFieldId(index), '');
+          setValue(OtherSettingsFormFieldId.DiskDecryptionPassPhrases, [defaultDiskPassPhrase]);
+        },
       }}
     />
   );

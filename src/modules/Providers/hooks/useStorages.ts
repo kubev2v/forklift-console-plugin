@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { STORAGE_NAMES } from 'src/storageMaps/constants';
 
 import type {
   OpenShiftStorageClass,
@@ -14,9 +15,9 @@ import useProviderInventory from './useProviderInventory';
 
 const glanceStorage: InventoryStorage = {
   description: '',
-  id: 'glance',
+  id: STORAGE_NAMES.GLANCE,
   isPublic: true,
-  name: 'glance',
+  name: STORAGE_NAMES.GLANCE,
   providerType: 'openstack',
   publicAccess: true,
   qosSpecsID: '',

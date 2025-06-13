@@ -1,3 +1,5 @@
+import { createStorageMap } from 'src/storageMaps/create/utils/createStorageMap';
+
 import type { IoK8sApiCoreV1Secret, V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
 
 import { MigrationHookFieldId } from '../steps/migration-hooks/constants';
@@ -10,7 +12,6 @@ import { createDecryptionSecret } from './createDecryptionSecret';
 import { type CreatedHooks, createMigrationHooks } from './createMigrationHooks';
 import { createNetworkMap } from './createNetworkMap';
 import { createPlan } from './createPlan';
-import { createStorageMap } from './createStorageMap';
 
 /**
  * Handles the migration plan submission process including creation of network map,
@@ -56,7 +57,7 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
       : createNetworkMap({
           mappings: newNetworkMap,
           name: networkMapName,
-          planProject,
+          project: planProject,
           sourceProvider,
           targetProvider,
         }),
@@ -66,7 +67,7 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
       : createStorageMap({
           mappings: newStorageMap,
           name: storageMapName,
-          planProject,
+          project: planProject,
           sourceProvider,
           targetProvider,
         }),

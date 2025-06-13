@@ -1,6 +1,7 @@
 import type { FieldValues } from 'react-hook-form';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import type { TargetStorage } from 'src/storageMaps/types';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,
@@ -27,11 +28,7 @@ import type { HooksFormFieldId, MigrationHook } from './steps/migration-hooks/co
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
 import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
-import type {
-  StorageMapFieldId,
-  StorageMapping,
-  TargetStorage,
-} from './steps/storage-map/constants';
+import type { StorageMapFieldId, StorageMapping } from './steps/storage-map/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
 export type ProviderNetwork =
@@ -42,14 +39,6 @@ export type ProviderNetwork =
   | OVirtNetwork
   | VSphereNetwork
   | OvaNetwork;
-
-export enum ProviderType {
-  Openshift = 'openshift',
-  Openstack = 'openstack',
-  Ova = 'ova',
-  Ovirt = 'ovirt',
-  Vsphere = 'vsphere',
-}
 
 type VsphereVirtualMachine = VSphereVM & {
   changeTrackingEnabled: boolean;
@@ -92,14 +81,6 @@ export type MappingValue = { id?: string; name: string };
 export type CategorizedSourceMappings = {
   used: MappingValue[];
   other: MappingValue[];
-};
-
-export type CreateMapParams<T> = {
-  mappings: T[];
-  planProject: string;
-  sourceProvider: V1beta1Provider | undefined;
-  targetProvider: V1beta1Provider | undefined;
-  name?: string;
 };
 
 export type CreatePlanParams = {

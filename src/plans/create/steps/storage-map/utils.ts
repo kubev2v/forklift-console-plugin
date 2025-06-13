@@ -1,4 +1,5 @@
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import { STORAGE_NAMES } from 'src/storageMaps/constants';
 
 import type {
   OpenstackVM,
@@ -38,7 +39,7 @@ const getOpenstackVolumeTypeIds = (vm: OpenstackVM, disks: (OVirtDisk | Openstac
 
   // Include Glance image ID if VM is based on an image
   if (vm?.imageID) {
-    volumeTypeIds.push('glance');
+    volumeTypeIds.push(STORAGE_NAMES.GLANCE);
   }
 
   return volumeTypeIds;

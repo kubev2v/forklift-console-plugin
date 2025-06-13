@@ -27,9 +27,8 @@ const NewStorageMapFields: FC = () => {
   });
 
   const [availableSourceStorages, sourceStoragesLoading, sourceStoragesError] = storage.sources;
-  const [availableTargetStorages, targetStoragesLoading, targetStoragesError] = storage.targets;
+  const [availableTargetStorages, _targetStoragesLoading, targetStoragesError] = storage.targets;
   const isStorageMapEmpty = isEmpty(storageMap);
-  const isLoading = sourceStoragesLoading || targetStoragesLoading;
 
   const { other: otherSourceStorages, used: usedSourceStorages } = getSourceStorageValues(
     sourceProvider,
@@ -41,7 +40,7 @@ const NewStorageMapFields: FC = () => {
   // When the storage mappings are empty, default to source storage values used by VMs,
   // otherwise set empty inputs for the field array to force an empty field table row.
   useEffect(() => {
-    if (!isLoading && isStorageMapEmpty) {
+    if (!sourceStoragesLoading && isStorageMapEmpty) {
       if (isEmpty(usedSourceStorages)) {
         setValue(StorageMapFieldId.StorageMap, [defaultStorageMapping]);
         return;
@@ -55,7 +54,13 @@ const NewStorageMapFields: FC = () => {
         })),
       );
     }
-  }, [defaultTargetStorageName, isLoading, isStorageMapEmpty, setValue, usedSourceStorages]);
+  }, [
+    defaultTargetStorageName,
+    sourceStoragesLoading,
+    isStorageMapEmpty,
+    setValue,
+    usedSourceStorages,
+  ]);
 
   return (
     <Stack hasGutter className="pf-v5-u-ml-lg">
@@ -73,7 +78,7 @@ const NewStorageMapFields: FC = () => {
         targetStorages={availableTargetStorages}
         usedSourceStorages={usedSourceStorages}
         otherSourceStorages={otherSourceStorages}
-        isLoading={isLoading}
+        isLoading={sourceStoragesLoading}
         loadError={sourceStoragesError ?? targetStoragesError}
       />
 

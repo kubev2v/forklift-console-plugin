@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { type FieldPath, useFieldArray } from 'react-hook-form';
+import type { TargetStorage } from 'src/storageMaps/types';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -7,12 +8,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import type { CreatePlanFormData, MappingValue } from '../../types';
 
-import {
-  defaultStorageMapping,
-  StorageMapFieldId,
-  storageMapFieldLabels,
-  type TargetStorage,
-} from './constants';
+import { defaultStorageMapping, StorageMapFieldId, storageMapFieldLabels } from './constants';
 import SourceStorageField from './SourceStorageField';
 import TargetStorageField from './TargetStorageField';
 import { getStorageMapFieldId, validateStorageMap } from './utils';
@@ -37,7 +33,7 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
 
   const {
     append,
-    fields: netMappingFields,
+    fields: storageMappingFields,
     remove,
   } = useFieldArray({
     control,
@@ -53,7 +49,7 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
         { label: storageMapFieldLabels[StorageMapFieldId.SourceStorage], width: 45 },
         { label: storageMapFieldLabels[StorageMapFieldId.TargetStorage], width: 45 },
       ]}
-      fieldRows={netMappingFields.map((field, index) => ({
+      fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
         inputs: [
           <SourceStorageField
@@ -69,7 +65,7 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
       }))}
       addButton={{
         isDisabled:
-          [...usedSourceStorages, ...otherSourceStorages].length === netMappingFields.length ||
+          [...usedSourceStorages, ...otherSourceStorages].length === storageMappingFields.length ||
           isLoading ||
           Boolean(loadError),
         label: t('Add mapping'),
@@ -77,24 +73,34 @@ const StorageMapFieldTable: FC<StorageMapFieldTableProps> = ({
           append({
             [StorageMapFieldId.SourceStorage]:
               defaultStorageMapping[StorageMapFieldId.SourceStorage],
-            [StorageMapFieldId.TargetStorage]: { name: targetStorages[0].name },
+            [StorageMapFieldId.TargetStorage]: {
+              name:
+                targetStorages[0]?.name ??
+                defaultStorageMapping[StorageMapFieldId.TargetStorage].name,
+            },
           });
         },
       }}
-      onRemove={(index) => {
-        if (netMappingFields.length > 1) {
-          remove(index);
-          return;
-        }
+      removeButton={{
+        onClick: (index) => {
+          if (storageMappingFields.length > 1) {
+            remove(index);
+            return;
+          }
 
-        setValue<FieldPath<CreatePlanFormData>>(
-          getStorageMapFieldId(StorageMapFieldId.SourceStorage, index),
-          defaultStorageMapping[StorageMapFieldId.SourceStorage],
-        );
-        setValue<FieldPath<CreatePlanFormData>>(
-          getStorageMapFieldId(StorageMapFieldId.TargetStorage, index),
-          { name: targetStorages[0].name },
-        );
+          setValue<FieldPath<CreatePlanFormData>>(
+            getStorageMapFieldId(StorageMapFieldId.SourceStorage, index),
+            defaultStorageMapping[StorageMapFieldId.SourceStorage],
+          );
+          setValue<FieldPath<CreatePlanFormData>>(
+            getStorageMapFieldId(StorageMapFieldId.TargetStorage, index),
+            {
+              name:
+                targetStorages[0]?.name ??
+                defaultStorageMapping[StorageMapFieldId.TargetStorage].name,
+            },
+          );
+        },
       }}
     />
   );

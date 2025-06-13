@@ -28,16 +28,6 @@ export const defaultStorageMapping: StorageMapping = {
   [StorageMapFieldId.TargetStorage]: { name: '' },
 };
 
-export type TargetStorage = {
-  id: string;
-  name: string;
-  isDefault: boolean;
-};
-
-export enum StorageClassAnnotation {
-  IsDefault = 'storageclass.kubernetes.io/is-default-class',
-}
-
 export enum StorageMapType {
   New = 'new',
   Existing = 'existing',
