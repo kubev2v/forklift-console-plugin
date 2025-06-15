@@ -1,4 +1,6 @@
-import { validateContainerImage, type ValidationMsg } from '../../common';
+import type { ValidationMsg } from 'src/providers/utils/types';
+
+import { validateContainerImage } from '../../common';
 
 export const validateVDDKImage = (vddkImage?: string | number): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
