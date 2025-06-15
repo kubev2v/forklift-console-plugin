@@ -2,11 +2,15 @@ import type { FC } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import { getInventoryApiUrl } from 'src/modules/Providers/utils/helpers/getApiUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { INITIAL_PAGE } from '@components/page/utils/constants';
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { consoleFetch, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { Button } from '@patternfly/react-core';
+
+import VddkUploader from '../components/VddkUploader/VddkUploader';
 
 import PlanRow from './components/PlanRow/PlanRow';
 import PlansAddButton from './components/PlansAddButton';
@@ -37,24 +41,39 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
   });
 
   return (
-    <StandardPage
-      data-testid="plans-list"
-      addButton={
-        <PlansAddButton
-          dataTestId="add-network-map-button"
-          namespace={namespace}
-          canCreate={canCreate}
-        />
-      }
-      dataSource={[plans || [], plansLoaded, plansLoadError]}
-      RowMapper={PlanRow}
-      fieldsMetadata={planFields}
-      namespace={namespace}
-      title={t('Plans')}
-      userSettings={userSettings}
-      customNoResultsFound={<PlansEmptyState namespace={namespace} />}
-      page={INITIAL_PAGE}
-    />
+    <>
+      <StandardPage
+        data-testid="plans-list"
+        addButton={
+          <>
+            <PlansAddButton
+              dataTestId="add-network-map-button"
+              namespace={namespace}
+              canCreate={canCreate}
+            />
+            <Button
+              onClick={async () => {
+                const url = getInventoryApiUrl(`vddk/image-url`);
+                await consoleFetch(url);
+                // eslint-disable-next-line no-console
+                console.log('🚀 ~ onClick={ ~ url', url);
+              }}
+            >
+              Get VDDK image URL
+            </Button>
+          </>
+        }
+        dataSource={[plans || [], plansLoaded, plansLoadError]}
+        RowMapper={PlanRow}
+        fieldsMetadata={planFields}
+        namespace={namespace}
+        title={t('Plans')}
+        userSettings={userSettings}
+        customNoResultsFound={<PlansEmptyState namespace={namespace} />}
+        page={INITIAL_PAGE}
+      />
+      <VddkUploader />
+    </>
   );
 };
 
