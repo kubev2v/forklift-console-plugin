@@ -75,20 +75,22 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
           });
         },
       }}
-      onRemove={(index) => {
-        if (netMappingFields.length > 1) {
-          remove(index);
-          return;
-        }
+      removeButton={{
+        onClick: (index) => {
+          if (netMappingFields.length > 1) {
+            remove(index);
+            return;
+          }
 
-        setValue<FieldPath<CreatePlanFormData>>(
-          getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index),
-          defaultNetMapping[NetworkMapFieldId.SourceNetwork],
-        );
-        setValue<FieldPath<CreatePlanFormData>>(
-          getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index),
-          defaultNetMapping[NetworkMapFieldId.TargetNetwork],
-        );
+          setValue<FieldPath<CreatePlanFormData>>(
+            getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index),
+            defaultNetMapping[NetworkMapFieldId.SourceNetwork],
+          );
+          setValue<FieldPath<CreatePlanFormData>>(
+            getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index),
+            defaultNetMapping[NetworkMapFieldId.TargetNetwork],
+          );
+        },
       }}
     />
   );

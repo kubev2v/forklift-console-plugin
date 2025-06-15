@@ -3,9 +3,10 @@ import { useWatch } from 'react-hook-form';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 
+import useTargetStorages from '@utils/hooks/useTargetStorages';
+
 import { useCreatePlanFormContext } from './hooks/useCreatePlanFormContext';
 import { GeneralFormFieldId } from './steps/general-information/constants';
-import useTargetStorages from './steps/storage-map/useTargetStorages';
 import { CreatePlanWizardContext } from './constants';
 
 const CreatePlanWizardContextProvider: React.FC<PropsWithChildren> = ({ children }) => {

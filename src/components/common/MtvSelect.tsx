@@ -1,32 +1,56 @@
-import { type FC, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
 import {
   MenuToggle,
   type MenuToggleStatus,
   Select,
   SelectList,
+  SelectOption,
   type SelectProps,
 } from '@patternfly/react-core';
+import { useForkliftTranslation } from '@utils/i18n';
 
-type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'children' | 'className'> & {
+type MtvSelectOption = {
+  value: string;
+  label: string;
+  disabled?: boolean;
+};
+
+type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'className' | 'children'> & {
   id: string;
   value: string;
+  options?: MtvSelectOption[];
   status?: MenuToggleStatus;
   placeholder?: string;
   isDisabled?: boolean;
 };
 
+/**
+ * A customized PatternFly Select that enforces project conventions.
+ *
+ * Use this instead of `@patternfly/react-core/Select`.
+ */
 const MtvSelect: FC<MtvSelectProps> = ({
   children,
   className,
   id,
   isDisabled,
   onSelect,
+  options,
   placeholder = '',
   status,
   value,
 }) => {
+  const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
+
+  const selectedOption = useMemo(
+    () =>
+      options?.find((option) => option.value === value) ??
+      // Try to find a label from custom children
+      (typeof value === 'string' ? { label: value } : undefined),
+    [options, value],
+  );
 
   return (
     <Select
@@ -48,7 +72,9 @@ const MtvSelect: FC<MtvSelectProps> = ({
           aria-label="Select menu toggle"
           status={status}
         >
-          {value || placeholder}
+          {selectedOption?.label?.trim()
+            ? selectedOption.label
+            : (placeholder ?? t('Select an option'))}
         </MenuToggle>
       )}
       onOpenChange={setIsOpen}
@@ -57,7 +83,15 @@ const MtvSelect: FC<MtvSelectProps> = ({
         setIsOpen(false);
       }}
     >
-      <SelectList>{children}</SelectList>
+      {children ?? (
+        <SelectList>
+          {(options ?? []).map((option) => (
+            <SelectOption key={option.value} value={option.value} isDisabled={option.disabled}>
+              {option.label}
+            </SelectOption>
+          ))}
+        </SelectList>
+      )}
     </Select>
   );
 };

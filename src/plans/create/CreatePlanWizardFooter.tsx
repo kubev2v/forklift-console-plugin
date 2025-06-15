@@ -18,19 +18,20 @@ import { PlanWizardStepId } from './constants';
 
 type CreatePlanWizardFooterProps = Partial<Pick<WizardFooterProps, 'nextButtonText' | 'onNext'>> & {
   hasError?: boolean;
-  isLoading?: boolean;
 };
 
 const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   hasError,
-  isLoading,
   nextButtonText,
   onNext: onSubmit,
 }) => {
   const history = useHistory();
   const { t } = useForkliftTranslation();
   const [activeNamespace] = useActiveNamespace();
-  const { trigger } = useCreatePlanFormContext();
+  const {
+    formState: { isSubmitting },
+    trigger,
+  } = useCreatePlanFormContext();
   const { activeStep, goToNextStep, goToPrevStep, goToStepById } = useWizardContext();
   const canSkipToReview =
     activeStep.id === PlanWizardStepId.MigrationType ||
@@ -74,15 +75,15 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
       <Button
         variant={ButtonVariant.secondary}
         onClick={goToPrevStep}
-        isDisabled={hasError ?? (activeStep.id === PlanWizardStepId.General || isLoading)}
+        isDisabled={hasError ?? (activeStep.id === PlanWizardStepId.General || isSubmitting)}
       >
         {t('Back')}
       </Button>
       <Button
         variant={ButtonVariant.primary}
         onClick={onNextClick}
-        isDisabled={hasError ?? isLoading}
-        isLoading={isLoading}
+        isDisabled={hasError ?? isSubmitting}
+        isLoading={isSubmitting}
       >
         {nextButtonText ?? t('Next')}
       </Button>

@@ -13,6 +13,7 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
+  SelectList,
   SelectOption,
   Title,
 } from '@patternfly/react-core';
@@ -82,17 +83,19 @@ const StorageMapSelect: FC<StorageMapSelectProps> = ({
       onSelect={onSelect}
       placeholder={t('Select storage map')}
     >
-      {isEmpty(storageMaps)
-        ? emptyState
-        : storageMaps.map((storageMap) => {
-            const storageMapName = getName(storageMap);
+      <SelectList>
+        {isEmpty(storageMaps)
+          ? emptyState
+          : storageMaps.map((storageMap) => {
+              const storageMapName = getName(storageMap);
 
-            return (
-              <SelectOption key={storageMapName} value={storageMap}>
-                {storageMapName}
-              </SelectOption>
-            );
-          })}
+              return (
+                <SelectOption key={storageMapName} value={storageMap}>
+                  {storageMapName}
+                </SelectOption>
+              );
+            })}
+      </SelectList>
     </Select>
   );
 };
