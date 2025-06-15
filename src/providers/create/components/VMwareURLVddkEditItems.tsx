@@ -8,7 +8,19 @@ import { ProviderFieldsId, VSphereEndpointType } from 'src/providers/utils/const
 import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Alert, Checkbox, Form, Popover, Radio, TextInput } from '@patternfly/react-core';
+import VddkUploader from '@components/VddkUploader/VddkUploader';
+import {
+  Alert,
+  Button,
+  ButtonVariant,
+  Checkbox,
+  Form,
+  Popover,
+  Radio,
+  Stack,
+  StackItem,
+  TextInput,
+} from '@patternfly/react-core';
 import { HelpIcon } from '@patternfly/react-icons';
 
 import { YES_VALUE } from '../utils/constants';
@@ -18,7 +30,7 @@ type VMwareURLVddkEditItemsProps = {
   url: string | undefined;
   emptyVddkInitImage: string | undefined;
   vddkInitImage: string | undefined;
-  handleChange: (id: ProviderFieldsId, value: string) => void;
+  handleChange: (id: ProviderFieldsId, value: string | undefined) => void;
   urlValidation: ValidationMsg;
   vddkInitImageValidation: ValidationMsg;
 };
@@ -121,38 +133,48 @@ const VMwareURLVddkEditItems: FC<VMwareURLVddkEditItemsProps> = ({
             bodyContent={VDDKHelperText}
             alertSeverityVariant="info"
           >
-            <button type="button" onClick={onClick}>
-              <HelpIcon />
-            </button>
+            <Button variant={ButtonVariant.plain} onClick={onClick} icon={<HelpIcon />} />
           </Popover>
         }
       >
-        <Alert variant="warning" isInline title={<VDDKHelperTextShort />}>
-          <Checkbox
-            className="forklift-section-provider-edit-vddk-checkbox"
-            label={t(
-              'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
-            )}
-            isChecked={emptyVddkInitImage === YES_VALUE}
-            onChange={onChangEmptyVddk}
-            id="emptyVddkInitImage"
-            name="emptyVddkInitImage"
-          />
-        </Alert>
-
-        <div className="forklift-section-provider-edit-vddk-input">
-          <TextInput
-            spellCheck="false"
-            type="text"
-            id={ProviderFieldsId.VddkInitImage}
-            name={ProviderFieldsId.VddkInitImage}
-            isDisabled={emptyVddkInitImage === YES_VALUE}
-            value={emptyVddkInitImage === YES_VALUE ? '' : vddkInitImage}
-            validated={emptyVddkInitImage === YES_VALUE ? 'default' : vddkInitImageValidation.type}
-            onChange={onChangeVddk}
-          />
-        </div>
+        <Stack hasGutter>
+          <StackItem>
+            <Alert variant="warning" isInline title={<VDDKHelperTextShort />}>
+              <Checkbox
+                className="forklift-section-provider-edit-vddk-checkbox"
+                label={t(
+                  'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
+                )}
+                isChecked={emptyVddkInitImage === YES_VALUE}
+                onChange={onChangEmptyVddk}
+                id="emptyVddkInitImage"
+                name="emptyVddkInitImage"
+              />
+            </Alert>
+          </StackItem>
+          <StackItem>
+            <div className="forklift-section-provider-edit-vddk-input">
+              <TextInput
+                spellCheck="false"
+                type="text"
+                id={ProviderFieldsId.VddkInitImage}
+                name={ProviderFieldsId.VddkInitImage}
+                isDisabled={emptyVddkInitImage === YES_VALUE}
+                value={emptyVddkInitImage === YES_VALUE ? '' : vddkInitImage}
+                validated={
+                  emptyVddkInitImage === YES_VALUE ? 'default' : vddkInitImageValidation.type
+                }
+                onChange={onChangeVddk}
+              />
+            </div>
+          </StackItem>
+        </Stack>
       </FormGroupWithHelpText>
+      <VddkUploader
+        onChangeVddk={(val) => {
+          if (!val || val !== vddkInitImage) handleChange(ProviderFieldsId.VddkInitImage, val);
+        }}
+      />
     </Form>
   );
 };

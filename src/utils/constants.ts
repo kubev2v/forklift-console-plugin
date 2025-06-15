@@ -20,6 +20,11 @@ export const taskStatuses = {
   pending: 'Pending',
 };
 
+export const PHASES = {
+  COMPLETE: 'Complete',
+  FAILED: 'Failed',
+};
+
 export const CONDITION_STATUS = {
   FALSE: 'False',
   TRUE: 'True',
