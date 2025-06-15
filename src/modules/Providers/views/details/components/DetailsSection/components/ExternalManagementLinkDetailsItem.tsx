@@ -1,11 +1,12 @@
 import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
+import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { EditProviderUIModal } from 'src/modules/Providers/modals/EditProviderUI/EditProviderUIModal';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionListDescription } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
@@ -37,6 +38,7 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
+  const canEdit = !isEmpty(provider?.metadata) && canPatch;
   const defaultHelpContent = (
     <ForkliftTrans>
       <p>Use the external web UI link to access the provider virtual machine management system.</p>
@@ -50,7 +52,7 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
     </ExternalLink>
   ) : (
     <span className="text-muted">
-      {canPatch && provider?.metadata
+      {canEdit
         ? t('Click the pencil for setting provider web UI link')
         : t('No value for provider web UI link')}
     </span>
@@ -64,13 +66,10 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
         helpContent={helpContent ?? defaultHelpContent}
         crumbs={['metadata', 'annotations', 'forklift.konveyor.io/providerUI']}
         content={webUILinkContent}
-        onEdit={
-          canPatch &&
-          provider?.metadata &&
-          (() => {
-            showModal(<EditProviderUIModal resource={provider} content={webUILink} />);
-          })
-        }
+        onEdit={() => {
+          showModal(<EditProviderUIModal resource={provider} content={webUILink} />);
+        }}
+        canEdit={canEdit}
       />
     </DescriptionListDescription>
   );

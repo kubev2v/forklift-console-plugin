@@ -1,7 +1,7 @@
 import type { FC } from 'react';
+import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { EditProviderURLModal } from 'src/modules/Providers/modals/EditProviderURL/EditProviderURLModal';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
@@ -34,22 +34,19 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
   return (
     <DetailsItem
       title={t('URL')}
-      content={provider?.spec?.url || <span className="text-muted">{t('Empty')}</span>}
+      content={provider?.spec?.url ?? <span className="text-muted">{t('Empty')}</span>}
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'url']}
-      onEdit={
-        canPatch &&
-        provider?.spec?.url &&
-        (() => {
-          showModal(
-            <EditProviderURLModal
-              resource={provider}
-              insecureSkipVerify={secret?.data?.insecureSkipVerify}
-            />,
-          );
-        })
-      }
+      onEdit={() => {
+        showModal(
+          <EditProviderURLModal
+            resource={provider}
+            insecureSkipVerify={secret?.data?.insecureSkipVerify}
+          />,
+        );
+      }}
+      canEdit={Boolean(provider?.spec?.url) && canPatch}
     />
   );
 };
