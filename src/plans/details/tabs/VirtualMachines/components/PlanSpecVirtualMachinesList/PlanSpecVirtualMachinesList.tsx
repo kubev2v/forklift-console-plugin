@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
@@ -23,7 +23,10 @@ type PlanVirtualMachinesListProps = {
 const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
 
-  const userSettings = loadUserSettings({ pageId: PLAN_VIRTUAL_MACHINES_LIST_ID });
+  const userSettings = useMemo(
+    () => loadUserSettings({ pageId: PLAN_VIRTUAL_MACHINES_LIST_ID }),
+    [],
+  );
 
   const specVirtualMachinesListData = useSpecVirtualMachinesListData(plan);
   const actions = useSpecVirtualMachinesActions(plan);

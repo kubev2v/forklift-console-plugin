@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import { TableSortContextProvider } from 'src/components/TableSortContext';
@@ -25,7 +25,10 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
   plan,
 }) => {
   const { t } = useForkliftTranslation();
-  const userSettings = loadUserSettings({ pageId: PLAN_VIRTUAL_MACHINES_LIST_ID });
+  const userSettings = useMemo(
+    () => loadUserSettings({ pageId: PLAN_VIRTUAL_MACHINES_LIST_ID }),
+    [],
+  );
   const { migrationListData } = useMigrationResources(plan);
   const actions = useMigrationVirtualMachineActions(plan);
   const [expandedIds, setExpandedIds] = useState<string[]>([]);

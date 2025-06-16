@@ -56,8 +56,8 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
       ? getCantStartVMStatusCount(getPlanVirtualMachines(plan))
       : getMigrationVMsStatusCounts(
           getPlanVirtualMachinesMigrationStatus(plan),
-          planStatus,
           getPlanVirtualMachinesMigrationStatus(plan).length,
+          planStatus,
         );
 
   return (

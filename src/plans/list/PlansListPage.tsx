@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
@@ -22,7 +22,7 @@ type PlansListPageProps = {
 const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
-  const userSettings = loadUserSettings({ pageId: 'Plans' });
+  const userSettings = useMemo(() => loadUserSettings({ pageId: 'Plans' }), []);
 
   const [plans, plansLoaded, plansLoadError] = useK8sWatchResource<V1beta1Plan[]>({
     groupVersionKind: PlanModelGroupVersionKind,

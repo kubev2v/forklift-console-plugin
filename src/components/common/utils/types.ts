@@ -20,6 +20,7 @@ export enum FilterDefType {
   Enum = 'enum',
   GroupedEnum = 'groupedEnum',
   DateRange = 'dateRange',
+  Date = 'date',
   Slider = 'slider',
 }
 
@@ -58,6 +59,7 @@ export type ResourceField = {
   isPersistent?: boolean;
   info?: ThInfoType;
   compareFn?: (a: string, b: string, locale: string) => number;
+  defaultSortDirection?: 'asc' | 'desc';
 };
 
 export type GlobalActionToolbarProps<T> = {

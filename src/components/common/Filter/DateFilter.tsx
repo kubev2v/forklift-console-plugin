@@ -28,7 +28,7 @@ export const DateFilter = ({
   const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(isString) ?? [];
 
   // internal state - stored as ISO date string (no time)
-  const [date, setDate] = useState(toISODate(new Date()));
+  const [date, setDate] = useState();
 
   const clearSingleDate = (option: string) => {
     onFilterUpdate([...validFilters.filter((filter) => filter !== option)]);

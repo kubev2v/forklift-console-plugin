@@ -60,7 +60,6 @@ export type StandardPageProps<T> = {
   dataSource: [T[], boolean, unknown];
   fieldsMetadata: ResourceField[];
   namespace: string;
-  title: string;
   page: number;
 
   addButton?: JSX.Element;
@@ -84,6 +83,9 @@ export type StandardPageProps<T> = {
   onExpand?: (expandedIds: string[]) => void;
   expandedIds?: string[];
   pageRef?: React.MutableRefObject<number>;
+  showManageColumns?: boolean;
+  title?: string;
+  noPadding?: boolean;
 };
 
 type StandardPageInnerProps<T> = Omit<StandardPageProps<T>, 'pageRef'> &
@@ -107,6 +109,7 @@ const StandardPageInner = <T,>({
   GlobalActionToolbarItems = [],
   HeaderMapper = DefaultHeader<T>,
   namespace,
+  noPadding,
   onSelect,
   page: initialPage,
   pageRef,
@@ -114,6 +117,7 @@ const StandardPageInner = <T,>({
   RowMapper = DefaultRow<T>,
   selectedIds,
   setActiveSort,
+  showManageColumns = true,
   title,
   toId,
   userSettings,
@@ -181,11 +185,6 @@ const StandardPageInner = <T,>({
       setFilteredData(sortedData.filter(metaMatcher));
     }
   }, [sortedData, metaMatcher]);
-
-  // Clear all filters on unmount
-  useEffect(() => {
-    return clearAllFilters;
-  }, [clearAllFilters]);
 
   const showPagination = useMemo(
     () => pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination),
@@ -289,7 +288,7 @@ const StandardPageInner = <T,>({
         </PageSection>
       )}
       {alerts && <PageSection variant="light">{alerts}</PageSection>}
-      <PageSection variant="light">
+      <PageSection variant="light" padding={{ default: noPadding ? 'noPadding' : 'padding' }}>
         <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
           <ToolbarContent>
             <Split hasGutter>
@@ -325,11 +324,13 @@ const StandardPageInner = <T,>({
                     supportedFilterTypes={supportedFilters}
                   />
                 )}
-                <ManageColumnsToolbar
-                  resourceFields={fields}
-                  defaultColumns={fieldsMetadata}
-                  setColumns={setFields}
-                />
+                {showManageColumns && (
+                  <ManageColumnsToolbar
+                    resourceFields={fields}
+                    defaultColumns={fieldsMetadata}
+                    setColumns={setFields}
+                  />
+                )}
                 {!isEmpty(GlobalActionToolbarItems) && renderedGlobalActions}
               </ToolbarToggleGroup>
             </Split>
@@ -351,7 +352,7 @@ const StandardPageInner = <T,>({
         <TableView<T>
           entities={dataOnScreen}
           visibleColumns={visibleColumns}
-          aria-label={title}
+          aria-label={title ?? t('Page table')}
           Row={RowComponent}
           Header={HeaderMapper}
           activeSort={activeSort}
@@ -401,6 +402,13 @@ const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
   const internalPageRef = useRef(pageProps.page);
   const pageRef = pageProps.pageRef ?? internalPageRef;
 
+  const defaultSort = useMemo(() => {
+    const field = pageProps.fieldsMetadata.find((fld) => fld.defaultSortDirection);
+    return field?.defaultSortDirection && field?.resourceFieldId
+      ? { direction: field.defaultSortDirection, resourceFieldId: field.resourceFieldId }
+      : undefined;
+  }, [pageProps.fieldsMetadata]);
+
   if (activeSort.resourceFieldId) {
     return (
       <StandardPageInner
@@ -414,7 +422,7 @@ const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
   }
 
   return (
-    <TableSortContextProvider fields={pageProps.fieldsMetadata}>
+    <TableSortContextProvider fields={pageProps.fieldsMetadata} defaultSort={defaultSort}>
       <TableSortContext.Consumer>
         {(sortProps) => <StandardPageInner {...pageProps} {...sortProps} pageRef={pageRef} />}
       </TableSortContext.Consumer>

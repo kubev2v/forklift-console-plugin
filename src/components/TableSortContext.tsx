@@ -20,13 +20,15 @@ export const TableSortContext = createContext<TableSortContextProps>(defaultTabl
 
 type TableSortContextProviderProps = PropsWithChildren & {
   fields: ResourceField[];
+  defaultSort?: { resourceFieldId: string; direction: 'asc' | 'desc' };
 };
 
 export const TableSortContextProvider: FC<TableSortContextProviderProps> = ({
   children,
+  defaultSort,
   fields,
 }) => {
-  const [activeSort, setActiveSort, compareFn] = useSort(fields);
+  const [activeSort, setActiveSort, compareFn] = useSort(fields, 'en', defaultSort);
 
   return (
     <TableSortContext.Provider value={{ activeSort, compareFn, setActiveSort }}>

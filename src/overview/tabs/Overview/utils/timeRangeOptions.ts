@@ -34,7 +34,7 @@ export const TimeRangeOptionsDictionary: {
   All: TimeRangeOptionsProperties;
 } = {
   All: {
-    bucket: { day: 1 },
+    bucket: { day: 4 },
     filter: () => true,
     span: { days: 365 },
     unit: 'day',

@@ -1,19 +1,18 @@
-import { type FC, useContext, useMemo, useState } from 'react';
+import { type FC, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
-import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
+import LoadingSuspend from '@components/LoadingSuspend';
+import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { ChartDonut } from '@patternfly/react-charts';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 
-import useMigrationCounts from '../hooks/useMigrationCounts';
 import { ChartColors } from '../utils/colors';
-import { navigateToPlans } from '../utils/navigateToPlans';
+import { navigateToHistoryTab } from '../utils/navigate';
 import { TimeRangeOptions } from '../utils/timeRangeOptions';
 import type { ChartDatum } from '../utils/types';
+import { useVmMigrationsDataPoints } from '../utils/useVmMigrationsDataPoints';
 
 import HeaderActions from './CardHeaderActions';
 
@@ -33,21 +32,21 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
       vmMigrationsDonutSelectedRange: range,
     });
   };
-  const { vmCount } = useMigrationCounts(selectedRange);
-  const [activeNamespace] = useActiveNamespace();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const navigate = useNavigate();
-
-  const plansListURL = useMemo(() => {
-    return getResourceUrl({
-      namespace: activeNamespace,
-      namespaced: true,
-      reference: PlanModelRef,
-    });
-  }, [activeNamespace]);
+  const {
+    loaded,
+    loadError,
+    obj,
+    total,
+    totalCanceledCount,
+    totalFailedCount,
+    totalRunningCount,
+    totalSucceededCount,
+  } = useVmMigrationsDataPoints(selectedRange);
 
   const colorScale =
-    vmCount.Total === 0
+    total === 0
       ? [ChartColors.Empty]
       : [ChartColors.Executing, ChartColors.Failure, ChartColors.Success, ChartColors.Canceled];
 
@@ -73,63 +72,65 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
       </CardHeader>
       <CardBody className="forklift-overview__status-migration pf-v5-u-display-flex pf-v5-u-align-items-center pf-v5-u-flex-direction-column">
         <div className="forklift-overview__status-migration-donut">
-          <ChartDonut
-            ariaDesc={t('Donut chart with VM migration statistics')}
-            colorScale={colorScale}
-            constrainToVisibleArea
-            data={
-              vmCount.Total === 0
-                ? [{ x: 'Empty state', y: 1 }]
-                : ([
-                    { x: t('running'), y: vmCount.Running },
-                    { x: t('failed'), y: vmCount.Failed },
-                    { x: t('succeeded'), y: vmCount.Succeeded },
-                    { x: t('canceled'), y: vmCount.Canceled },
-                  ] as ChartDatum[])
-            }
-            labels={({ datum }: { datum: ChartDatum }) =>
-              vmCount.Total === 0
-                ? (undefined as unknown as string)
-                : `${t('{{count}} VM migration', { count: datum.y })}
+          <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
+            <ChartDonut
+              ariaDesc={t('Donut chart with VM migration statistics')}
+              colorScale={colorScale}
+              constrainToVisibleArea
+              data={
+                total === 0
+                  ? [{ x: 'Empty state', y: 1 }]
+                  : ([
+                      { x: t('running'), y: totalRunningCount },
+                      { x: t('failed'), y: totalFailedCount },
+                      { x: t('succeeded'), y: totalSucceededCount },
+                      { x: t('canceled'), y: totalCanceledCount },
+                    ] as ChartDatum[])
+              }
+              labels={({ datum }: { datum: ChartDatum }) =>
+                total === 0
+                  ? (undefined as unknown as string)
+                  : `${t('{{count}} VM migration', { count: datum.y })}
                         ${datum.x}`
-            }
-            title={`${vmCount?.Succeeded ?? '0'}`}
-            subTitle={t('Migrated')}
-            innerRadius={88}
-            events={[
-              {
-                eventHandlers: {
-                  onClick: () => navigateToPlans({ navigate, plansListURL, selectedRange }),
-                  onMouseOut: () => {
-                    setHoveredIndex(null);
-                    return [
-                      {
-                        mutation: () => ({ active: false }),
-                        target: 'labels',
-                      },
-                    ];
+              }
+              title={`${totalSucceededCount ?? '0'}`}
+              subTitle={t('Migrated')}
+              innerRadius={88}
+              events={[
+                {
+                  eventHandlers: {
+                    onClick: () => navigateToHistoryTab({ navigate, selectedRange }),
+                    onMouseOut: () => {
+                      setHoveredIndex(null);
+                      return [
+                        {
+                          mutation: () => ({ active: false }),
+                          target: 'labels',
+                        },
+                      ];
+                    },
+                    onMouseOver: (_, props: { index: number }) => {
+                      setHoveredIndex(props.index);
+                      return [
+                        {
+                          mutation: () => ({ active: true }),
+                          target: 'labels',
+                        },
+                      ];
+                    },
                   },
-                  onMouseOver: (_, props: { index: number }) => {
-                    setHoveredIndex(props.index);
-                    return [
-                      {
-                        mutation: () => ({ active: true }),
-                        target: 'labels',
-                      },
-                    ];
-                  },
+                  target: 'data',
                 },
-                target: 'data',
-              },
-            ]}
-            style={{
-              data: {
-                cursor: 'pointer',
-                stroke: ({ index }) => (hoveredIndex === index ? highlightColor : ''),
-                strokeWidth: ({ index }) => (hoveredIndex === index ? 2 : 1),
-              },
-            }}
-          />
+              ]}
+              style={{
+                data: {
+                  cursor: 'pointer',
+                  stroke: ({ index }) => (hoveredIndex === index ? highlightColor : ''),
+                  strokeWidth: ({ index }) => (hoveredIndex === index ? 2 : 1),
+                },
+              }}
+            />
+          </LoadingSuspend>
         </div>
       </CardBody>
     </Card>

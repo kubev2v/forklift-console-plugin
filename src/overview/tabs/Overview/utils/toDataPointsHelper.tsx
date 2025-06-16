@@ -1,5 +1,7 @@
 import { DateTime, Interval } from 'luxon';
 
+import type { V1beta1Migration } from '@kubev2v/types';
+
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from './timeRangeOptions';
 
 const hasTimestamp = (timestamp: string) => timestamp && DateTime.fromISO(timestamp).isValid;
