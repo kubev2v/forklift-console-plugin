@@ -6,6 +6,7 @@ import type {
   ProviderVirtualMachine,
   V1VirtualMachine,
 } from '@kubev2v/types';
+import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 
 import {
   ACTIVE,
@@ -18,7 +19,6 @@ import {
   UP,
 } from './constants';
 import type {
-  EnhancedOvaVM,
   EnhancedOVirtVM,
   EnhancedVSphereVM,
   PlanResourcesTableProps,

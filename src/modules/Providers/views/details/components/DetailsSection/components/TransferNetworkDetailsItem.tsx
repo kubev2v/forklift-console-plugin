@@ -1,7 +1,7 @@
 import type { FC } from 'react';
+import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { EditProviderDefaultTransferNetwork } from 'src/modules/Providers/modals/EditProviderDefaultTransferNetwork/EditProviderDefaultTransferNetwork';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
@@ -28,7 +28,7 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
     <DetailsItem
       title={t('Default Transfer Network')}
       content={
-        provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'] || (
+        provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'] ?? (
           <span className="text-muted">{t('Pod network')}</span>
         )
       }
@@ -40,12 +40,10 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
         'annotations',
         'forklift.konveyor.io/defaultTransferNetwork',
       ]}
-      onEdit={
-        canPatch &&
-        (() => {
-          showModal(<EditProviderDefaultTransferNetwork resource={provider} />);
-        })
-      }
+      onEdit={() => {
+        showModal(<EditProviderDefaultTransferNetwork resource={provider} />);
+      }}
+      canEdit={canPatch}
     />
   );
 };
