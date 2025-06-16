@@ -15,15 +15,18 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import useMigrationCounts from '../../hooks/useMigrationCounts';
 import { ChartColors } from '../../utils/colors';
-import { mapDataPoints } from '../../utils/getVmMigrationsDataPoints';
 import { navigateToHistoryTab } from '../../utils/navigate';
 import type { TimeRangeOptions } from '../../utils/timeRangeOptions';
-import type { MigrationDataPoint } from '../../utils/toDataPointsHelper';
 import type { ChartDatumWithName } from '../../utils/types';
 
 import { useResizeObserver } from './useResizeObserver';
 
 const MAX_DOMAIN_Y = 5;
+
+type MigrationDataPoint = {
+  dateLabel: string;
+  value: number;
+};
 
 const VmMigrationsHistoryChart = ({
   selectedTimeRange,
@@ -65,6 +68,13 @@ const VmMigrationsHistoryChart = ({
 
   const maxTicks = Math.max(MAX_DOMAIN_Y, Math.ceil(maxVmMigrationValue) + 1);
   const tickValues = Array.from({ length: maxTicks }, (_, i) => i + 1);
+
+  const mapDataPoints = (dataPoints: MigrationDataPoint[], name = ''): ChartDatumWithName[] =>
+    dataPoints.map(({ dateLabel, value }) => ({
+      name,
+      x: dateLabel,
+      y: value,
+    }));
 
   const getAreaProps = (dataPoints: MigrationDataPoint[], areaName: string, color: string) => ({
     colorScale: [color],

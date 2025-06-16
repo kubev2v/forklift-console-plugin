@@ -9,7 +9,6 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from './timeRangeOptions';
-// import type { MigrationDataPoint } from './utils/toDataPointsHelper';
 
 type MigrationDataPoint = {
   dateLabel: string;
@@ -19,7 +18,7 @@ type MigrationDataPoint = {
 const getPlanKey = (migration: V1beta1Migration) => {
   const plan = migration?.spec?.plan;
   return (
-    plan?.uid || (plan?.namespace && plan?.name ? `${plan.namespace}/${plan.name}` : 'unknown-plan')
+    plan?.uid ?? (plan?.namespace && plan?.name ? `${plan.namespace}/${plan.name}` : 'unknown-plan')
   );
 };
 
@@ -29,22 +28,21 @@ const getMigrationStarted = (migration: V1beta1Migration) =>
 const toHourLabel = (date: DateTime | null) => (date ? date.toUTC().toFormat('HH:mm') : '');
 const toDayLabel = (date: DateTime | null) => (date ? date.toUTC().toFormat('LLL dd') : '');
 
-const createTimeBuckets = (selectedTimeRange: TimeRangeOptions) => {
+const createTimeBuckets = (selectedTimeRange: TimeRangeOptions, singleBucket = false) => {
   const { bucket, span, unit } = TimeRangeOptionsDictionary[selectedTimeRange];
   const now = DateTime.now().toUTC();
   const start = now.minus(span).startOf(unit);
+  let end = now;
 
-  let bucketUnit: 'hour' | 'day';
-  let bucketValue: number;
-  if ('hour' in bucket) {
-    bucketUnit = 'hour';
-    bucketValue = bucket.hour;
-  } else {
-    bucketUnit = 'day';
-    bucketValue = bucket.day;
+  if (singleBucket) {
+    // Return a single interval covering the whole selected range
+    return [Interval.fromDateTimes(start, end)];
   }
 
-  let end = now.plus({ [bucketUnit]: bucketValue }).startOf(bucketUnit);
+  const bucketUnit: 'hour' | 'day' = 'hour' in bucket ? 'hour' : 'day';
+  const bucketValue: number = 'hour' in bucket ? bucket.hour : bucket.day;
+
+  end = now.plus({ [bucketUnit]: bucketValue }).startOf(bucketUnit);
   while (end <= now) {
     end = end.plus({ [bucketUnit]: bucketValue });
   }
@@ -68,7 +66,10 @@ const isSucceeded = (vm: V1beta1MigrationStatusVms) =>
 const isRunning = (vm: V1beta1MigrationStatusVms) =>
   !isFailed(vm) && !isSucceeded(vm) && !isCanceled(vm) && vm?.phase !== 'Completed';
 
-export const useVmMigrationsDataPoints = (selectedRange: TimeRangeOptions) => {
+export const useVmMigrationsDataPoints = (
+  selectedRange: TimeRangeOptions,
+  singleBucket = false,
+) => {
   const [migrations, loaded, loadError] = useK8sWatchResource<V1beta1Migration[]>({
     groupVersionKind: MigrationModelGroupVersionKind,
     isList: true,
@@ -84,11 +85,15 @@ export const useVmMigrationsDataPoints = (selectedRange: TimeRangeOptions) => {
       running: [],
       succeeded: [],
       total: 0,
+      totalCanceledCount: 0,
+      totalFailedCount: 0,
+      totalRunningCount: 0,
+      totalSucceededCount: 0,
     };
   }
 
   // 1. Create interval buckets
-  const intervals = createTimeBuckets(selectedRange);
+  const intervals = createTimeBuckets(selectedRange, singleBucket);
 
   // 2. Group migrations into interval buckets, keeping only the latest per plan in each bucket
   const buckets = intervals.map((interval) => {

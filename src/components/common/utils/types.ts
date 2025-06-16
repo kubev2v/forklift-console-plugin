@@ -20,7 +20,6 @@ export enum FilterDefType {
   Enum = 'enum',
   GroupedEnum = 'groupedEnum',
   DateRange = 'dateRange',
-  Date = 'date',
   Slider = 'slider',
 }
 

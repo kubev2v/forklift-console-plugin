@@ -43,7 +43,7 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
     totalFailedCount,
     totalRunningCount,
     totalSucceededCount,
-  } = useVmMigrationsDataPoints(selectedRange);
+  } = useVmMigrationsDataPoints(selectedRange, true);
 
   const colorScale =
     total === 0
