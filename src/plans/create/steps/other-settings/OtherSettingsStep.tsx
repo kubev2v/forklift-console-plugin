@@ -1,11 +1,11 @@
 import { useWatch } from 'react-hook-form';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Form } from '@patternfly/react-core';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { ProviderType } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 
 import DiskPassPhraseFieldTable from './DiskPassPhraseFieldTable';
@@ -17,7 +17,7 @@ import TransferNetworkField from './TransferNetworkField';
 const OtherSettingsStep = () => {
   const { control } = useCreatePlanFormContext();
   const sourceProvider = useWatch({ control, name: GeneralFormFieldId.SourceProvider });
-  const isVsphere = sourceProvider?.spec?.type === ProviderType.Vsphere;
+  const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
 
   return (
     <WizardStepContainer title={planStepNames[PlanWizardStepId.OtherSettings]}>

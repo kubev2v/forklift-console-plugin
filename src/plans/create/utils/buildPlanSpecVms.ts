@@ -1,3 +1,5 @@
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+
 import type {
   ProviderVirtualMachine,
   V1beta1Hook,
@@ -7,8 +9,6 @@ import type {
 } from '@kubev2v/types';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
-
-import { ProviderType } from '../types';
 
 type PlanSpecVmsParams = {
   vms: ProviderVirtualMachine[];
@@ -60,7 +60,7 @@ export const buildPlanSpecVms = ({
     return {
       id: vm.id,
       name: vm.name,
-      ...(vm.providerType === ProviderType.Openshift && { namespace: vm.namespace }),
+      ...(vm.providerType === PROVIDER_TYPES.openshift && { namespace: vm.namespace }),
       ...(rootDevice && { rootDisk: rootDevice }),
       ...(luks && { luks }),
       ...(!isEmpty(hooks) && { hooks }),

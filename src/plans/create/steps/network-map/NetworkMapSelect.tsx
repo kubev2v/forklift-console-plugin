@@ -13,6 +13,7 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
+  SelectList,
   SelectOption,
   Title,
 } from '@patternfly/react-core';
@@ -83,17 +84,19 @@ const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
       onSelect={onSelect}
       placeholder={t('Select network map')}
     >
-      {isEmpty(networkMaps)
-        ? emptyState
-        : networkMaps.map((networkMap) => {
-            const networkMapName = getName(networkMap);
+      <SelectList>
+        {isEmpty(networkMaps)
+          ? emptyState
+          : networkMaps.map((networkMap) => {
+              const networkMapName = getName(networkMap);
 
-            return (
-              <SelectOption key={networkMapName} value={networkMap}>
-                {networkMapName}
-              </SelectOption>
-            );
-          })}
+              return (
+                <SelectOption key={networkMapName} value={networkMap}>
+                  {networkMapName}
+                </SelectOption>
+              );
+            })}
+      </SelectList>
     </Select>
   );
 };

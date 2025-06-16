@@ -3,7 +3,26 @@ import useProviderInventory, {
 } from 'src/modules/Providers/hooks/useProviderInventory';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
-import type { ProviderHost, VSphereResource } from '@kubev2v/types';
+import type { ProviderHost, V1beta1Provider, VSphereResource } from '@kubev2v/types';
+
+/**
+ * Converts an array of Resource objects into a dictionary where the keys are the resource IDs.
+ *
+ * @param {T[]} resources - The array of Resource objects to convert.
+ * @returns {{ [key: string]: T }} - A dictionary with resource IDs as keys and Resource objects as values.
+ */
+const convertArrayToDictionary = <T extends { id: string }>(
+  resources: T[] | null | undefined, // Allow null here
+): Record<string, T> => {
+  if (!resources || !Array.isArray(resources)) {
+    return {};
+  }
+
+  return resources.reduce<Record<string, T>>((dict, resource) => {
+    dict[resource.id] = resource;
+    return dict;
+  }, {});
+};
 
 /**
  * A hook for retrieving hosts and folders from the inventory.
@@ -17,8 +36,9 @@ export const useVSphereInventoryVms = (
   { provider }: ProviderData,
   providerLoaded: boolean,
   providerLoadError: unknown,
-): [Record<string, ProviderHost>, Record<string, VSphereResource>] => {
-  const validProvider = providerLoaded && !providerLoadError && provider;
+): [Record<string, ProviderHost>, Record<string, VSphereResource>, boolean, unknown] => {
+  const validProvider: V1beta1Provider | undefined =
+    providerLoaded && !providerLoadError ? provider : undefined;
 
   const hostsInventoryOptions: UseProviderInventoryParams = {
     interval: 180000,
@@ -26,7 +46,11 @@ export const useVSphereInventoryVms = (
     subPath: 'hosts?detail=4',
   };
 
-  const { inventory: hosts } = useProviderInventory<ProviderHost[]>(hostsInventoryOptions);
+  const {
+    error,
+    inventory: hosts,
+    loading: providersLoading,
+  } = useProviderInventory<ProviderHost[]>(hostsInventoryOptions);
 
   const foldersInventoryOptions: UseProviderInventoryParams = {
     interval: 180000,
@@ -34,27 +58,12 @@ export const useVSphereInventoryVms = (
     subPath: 'folders?detail=4',
   };
 
-  const { inventory: folders } = useProviderInventory<VSphereResource[]>(foldersInventoryOptions);
+  const { inventory: folders, loading: foldersLoading } =
+    useProviderInventory<VSphereResource[]>(foldersInventoryOptions);
 
   const foldersDict = convertArrayToDictionary(folders);
   const hostsDict = convertArrayToDictionary(hosts);
+  const loading = providersLoading || foldersLoading;
 
-  return [hostsDict, foldersDict];
-};
-
-/**
- * Converts an array of Resource objects into a dictionary where the keys are the resource IDs.
- *
- * @param {T[]} resources - The array of Resource objects to convert.
- * @returns {{ [key: string]: T }} - A dictionary with resource IDs as keys and Resource objects as values.
- */
-const convertArrayToDictionary = <T,>(resources: T[]): Record<string, T> => {
-  if (!resources || !Array.isArray(resources)) {
-    return undefined;
-  }
-
-  return resources.reduce<Record<string, T>>((dict, resource) => {
-    dict[resource.id] = resource;
-    return dict;
-  }, {});
+  return [hostsDict, foldersDict, loading, error];
 };

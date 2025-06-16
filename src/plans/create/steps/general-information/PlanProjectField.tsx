@@ -6,12 +6,12 @@ import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopo
 import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
 import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
+import { useDefaultProject } from '@utils/hooks/useDefaultProject';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
-import { useDefaultProject } from './useDefaultProject';
 
 const PlanProjectField: FC = () => {
   const { t } = useForkliftTranslation();

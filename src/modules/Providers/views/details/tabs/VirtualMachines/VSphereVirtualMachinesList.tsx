@@ -79,8 +79,14 @@ const vSphereVmFieldsMetadataFactory = [
 
 export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = (props) => {
   const { hasCriticalConcernFilter, obj } = props;
-  const [hostsDict, foldersDict] = useVSphereInventoryVms({ provider: obj.provider }, true, null);
-  const { vmData } = obj;
+  const [hostsDict, foldersDict, isVsphereInventoryLoading] = useVSphereInventoryVms(
+    { provider: obj.provider },
+    true,
+    null,
+  );
+  const { vmData, vmDataLoading } = obj;
+  const isLoading = vmDataLoading === true || isVsphereInventoryLoading;
+
   const fieldsMetadata = getVmTableResourceFields(
     vSphereVmFieldsMetadataFactory,
     hasCriticalConcernFilter,
@@ -114,7 +120,7 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = 
         cellMapper={VSphereVirtualMachinesCells}
         fieldsMetadata={fieldsMetadata}
         pageId="VSphereVirtualMachinesList"
-        obj={{ ...obj, vmData: newVMData }}
+        obj={{ ...obj, vmData: newVMData, vmDataLoading: isLoading }}
       />
     </TableSortContextProvider>
   );

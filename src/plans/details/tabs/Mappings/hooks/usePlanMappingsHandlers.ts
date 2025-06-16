@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
-import { StorageClassAnnotation } from 'src/plans/create/steps/storage-map/constants';
+import { StorageClassAnnotation } from 'src/storageMaps/types';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,

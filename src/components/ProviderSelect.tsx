@@ -1,5 +1,6 @@
 import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import Select from '@components/common/MtvSelect';
@@ -9,14 +10,16 @@ import {
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { EmptyState, EmptyStateVariant, SelectOption } from '@patternfly/react-core';
+import { EmptyState, EmptyStateVariant, SelectList, SelectOption } from '@patternfly/react-core';
+import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { ForkliftTrans } from '@utils/i18n';
 import { ProviderStatus } from '@utils/types';
 
-import { ProviderType } from '../create/types';
-
-type ProviderSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
+type ProviderSelectProps = Pick<
+  ComponentProps<typeof Select>,
+  'onSelect' | 'status' | 'isDisabled'
+> & {
   id: string;
   value: string;
   namespace: string | undefined;
@@ -28,6 +31,7 @@ type ProviderSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'sta
 const ProviderSelect: FC<ProviderSelectProps> = ({
   emptyState,
   id,
+  isDisabled,
   isTarget,
   namespace,
   onSelect,
@@ -47,7 +51,7 @@ const ProviderSelect: FC<ProviderSelectProps> = ({
         const isReady = provider.status?.phase === ProviderStatus.Ready;
 
         if (isTarget) {
-          return isReady && provider.spec?.type === ProviderType.Openshift;
+          return isReady && provider.spec?.type === PROVIDER_TYPES.openshift;
         }
 
         return isReady;
@@ -65,23 +69,37 @@ const ProviderSelect: FC<ProviderSelectProps> = ({
   );
 
   return (
-    <Select id={id} value={value} status={status} onSelect={onSelect} placeholder={placeholder}>
-      {isEmpty(filteredProviders)
-        ? (emptyState ?? (
-            <EmptyState variant={EmptyStateVariant.xs}>
-              <ForkliftTrans>
-                There are no providers in project <strong>{namespace}</strong>. Create one from the{' '}
-                <ExternalLink href={providersListUrl} isInline>
-                  Providers page
-                </ExternalLink>
-              </ForkliftTrans>
-            </EmptyState>
-          ))
-        : filteredProviders.map((provider) => (
-            <SelectOption key={provider.metadata?.name} value={provider}>
-              {provider.metadata?.name}
-            </SelectOption>
-          ))}
+    <Select
+      id={id}
+      value={value}
+      status={status}
+      onSelect={onSelect}
+      placeholder={placeholder}
+      isDisabled={isDisabled}
+    >
+      <SelectList>
+        {isEmpty(filteredProviders)
+          ? (emptyState ?? (
+              <EmptyState variant={EmptyStateVariant.xs}>
+                <ForkliftTrans>
+                  There are no providers in project <strong>{namespace}</strong>. Create one from
+                  the{' '}
+                  <ExternalLink href={providersListUrl} isInline>
+                    Providers page
+                  </ExternalLink>
+                </ForkliftTrans>
+              </EmptyState>
+            ))
+          : filteredProviders.map((provider) => {
+              const providerName = getName(provider);
+
+              return (
+                <SelectOption key={providerName} value={provider}>
+                  {providerName}
+                </SelectOption>
+              );
+            })}
+      </SelectList>
     </Select>
   );
 };
