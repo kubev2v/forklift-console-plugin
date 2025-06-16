@@ -1,7 +1,6 @@
 import { type FC, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
-import { useHistory } from 'react-router';
-import { type Location, useLocation } from 'react-router-dom-v5-compat';
+import { type Location, useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
 import { Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
@@ -31,11 +30,10 @@ import './CreatePlanWizard.style.scss';
 
 const CreatePlanWizard: FC = () => {
   const { t } = useForkliftTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location: Location<CreatePlanFormData> = useLocation();
   const [currentStep, setCurrentStep] = useState<WizardStepType>(firstStep);
   const [createPlanError, setCreatePlanError] = useState<Error>();
-  const [isCreating, setIsCreating] = useState(false);
 
   const defaultValues = getDefaultFormValues(location.state);
   const form = useCreatePlanForm({
@@ -43,7 +41,12 @@ const CreatePlanWizard: FC = () => {
     mode: 'onChange',
   });
 
-  const { control, formState, getValues } = form;
+  const {
+    control,
+    formState: { errors, isSubmitting },
+    getValues,
+    handleSubmit,
+  } = form;
   const [planName, planProject, sourceProvider] = useWatch({
     control,
     name: [
@@ -56,29 +59,26 @@ const CreatePlanWizard: FC = () => {
 
   const onSubmit = async () => {
     setCreatePlanError(undefined);
-    setIsCreating(true);
 
     try {
       const formData = getValues();
       await submitMigrationPlan(formData);
 
       // Navigate to the created plan
-      history.push(getCreatedPlanPath(planName, planProject));
+      navigate(getCreatedPlanPath(planName, planProject));
     } catch (error) {
       setCreatePlanError(error as Error);
-    } finally {
-      setIsCreating(false);
     }
   };
 
   const getStepProps = (id: PlanWizardStepId) => ({
     id,
     isDisabled:
-      (currentStep?.index < planStepOrder[id] && !isEmpty(formState?.errors)) ||
-      isCreating ||
+      (currentStep?.index < planStepOrder[id] && !isEmpty(errors)) ||
+      isSubmitting ||
       hasCreatePlanError,
     name: planStepNames[id],
-    ...((isCreating || hasCreatePlanError) && { body: null }),
+    ...((isSubmitting || hasCreatePlanError) && { body: null }),
   });
 
   return (
@@ -149,15 +149,13 @@ const CreatePlanWizard: FC = () => {
             footer={
               <CreatePlanWizardFooter
                 nextButtonText={t('Create plan')}
-                onNext={onSubmit}
-                isLoading={isCreating}
+                onNext={handleSubmit(onSubmit)}
                 hasError={hasCreatePlanError}
               />
             }
             {...getStepProps(PlanWizardStepId.ReviewAndCreate)}
           >
             <ReviewStep
-              isLoading={isCreating}
               error={createPlanError}
               onBackToReviewClick={() => {
                 setCreatePlanError(undefined);

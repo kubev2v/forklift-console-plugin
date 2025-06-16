@@ -1,4 +1,5 @@
 import { toNetworks } from 'src/modules/Providers/views/migrate/reducer/getNetworksUsedBySelectedVMs';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,
@@ -10,12 +11,7 @@ import { Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
-import {
-  type CategorizedSourceMappings,
-  type MappingValue,
-  type ProviderNetwork,
-  ProviderType,
-} from '../../types';
+import type { CategorizedSourceMappings, MappingValue, ProviderNetwork } from '../../types';
 import { getMapResourceLabel } from '../utils';
 
 import { defaultNetMapping, NetworkMapFieldId, type NetworkMapping } from './constants';
@@ -60,7 +56,9 @@ export const getSourceNetworkValues = (
 ): CategorizedSourceMappings => {
   // Skip determining used networks for oVirt as they're handled differently
   const networkIdsUsedBySelectedVms =
-    sourceProvider?.spec?.type === ProviderType.Ovirt ? [] : getNetworksUsedByProviderVms(vms, []);
+    sourceProvider?.spec?.type === PROVIDER_TYPES.ovirt
+      ? []
+      : getNetworksUsedByProviderVms(vms, []);
 
   const sourceNetworkMap = getInventoryNetworkMap(availableSourceNetworks);
 

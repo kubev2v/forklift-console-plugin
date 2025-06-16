@@ -5,6 +5,7 @@ import { EmptyState, EmptyStateHeader, EmptyStateIcon, Spinner } from '@patternf
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import GeneralInfoReviewSection from './GeneralInfoReviewSection';
 import HooksReviewSection from './HooksReviewSection';
@@ -16,15 +17,17 @@ import StorageMapReviewSection from './StorageMapReviewSection';
 import VirtualMachinesReviewSection from './VirtualMachinesReviewSection';
 
 type ReviewStepProps = {
-  isLoading: boolean;
   error: Error | undefined;
   onBackToReviewClick: () => void;
 };
 
-const ReviewStep: FC<ReviewStepProps> = ({ error, isLoading, onBackToReviewClick }) => {
+const ReviewStep: FC<ReviewStepProps> = ({ error, onBackToReviewClick }) => {
   const { t } = useForkliftTranslation();
+  const {
+    formState: { isSubmitting },
+  } = useCreatePlanFormContext();
 
-  if (isLoading) {
+  if (isSubmitting) {
     return (
       <EmptyState className="pf-v5-u-h-100">
         <EmptyStateHeader

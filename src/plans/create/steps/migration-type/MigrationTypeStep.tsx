@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import HelpIconWithLabel from 'src/plans/components/HelpIconWithLabel';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
@@ -12,7 +13,6 @@ import { CBT_HELP_LINK, WARM_MIGRATION_HELP_LINK } from '@utils/links';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { ProviderType } from '../../types';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { MigrationTypeFieldId, migrationTypeLabels, MigrationTypeValue } from './constants';
@@ -22,7 +22,7 @@ const MigrationTypeStep: FC = () => {
   const { control } = useCreatePlanFormContext();
   const vms = useWatch({ control, name: VmFormFieldId.Vms });
   const cbtDisabledVms = Object.values(vms ?? {}).filter(
-    (vm) => vm.providerType === ProviderType.Vsphere && !vm.changeTrackingEnabled,
+    (vm) => vm.providerType === PROVIDER_TYPES.vsphere && !vm.changeTrackingEnabled,
   );
 
   return (

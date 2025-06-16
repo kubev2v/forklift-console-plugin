@@ -8,11 +8,12 @@ import { OVirtVirtualMachinesList } from 'src/modules/Providers/views/details/ta
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 import { VSphereVirtualMachinesList } from 'src/modules/Providers/views/details/tabs/VirtualMachines/VSphereVirtualMachinesList';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { ProviderVirtualMachine } from '@kubev2v/types';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { type CreatePlanFormData, ProviderType } from '../../types';
+import type { CreatePlanFormData } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 
 import type { VmFormFieldId } from './constants';
@@ -90,15 +91,15 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
 
   // Render the appropriate VM list component based on provider type
   switch (sourceProvider?.spec?.type) {
-    case ProviderType.Openshift:
+    case PROVIDER_TYPES.openshift:
       return <OpenShiftVirtualMachinesList {...tableProps} />;
-    case ProviderType.Openstack:
+    case PROVIDER_TYPES.openstack:
       return <OpenStackVirtualMachinesList {...tableProps} />;
-    case ProviderType.Ovirt:
+    case PROVIDER_TYPES.ovirt:
       return <OVirtVirtualMachinesList {...tableProps} />;
-    case ProviderType.Ova:
+    case PROVIDER_TYPES.ova:
       return <OvaVirtualMachinesList {...tableProps} />;
-    case ProviderType.Vsphere:
+    case PROVIDER_TYPES.vsphere:
       return <VSphereVirtualMachinesList {...tableProps} />;
     case undefined:
     default:
