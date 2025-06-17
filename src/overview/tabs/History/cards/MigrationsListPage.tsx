@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import { DateTime } from 'luxon';
 import StandardPage from 'src/components/page/StandardPage';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { SwitchFilter } from '@components/common/Filter/SwitchFilter';
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import LoadingSuspend from '@components/LoadingSuspend';
 import { INITIAL_PAGE } from '@components/page/utils/constants';
@@ -14,6 +14,9 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Namespace } from '@utils/constants';
+
+import { dateRangeObjectMatcher, mostRecentMatcher } from '../utils/matchers';
+import { getMigrationStatusFromVMs } from '../utils/migrationStatus';
 
 import MigrationRow from './MigrationRow';
 
@@ -47,9 +50,19 @@ const MigrationsListPage: FC = () => {
       sortable: true,
     },
     {
+      filter: {
+        placeholderLabel: t('Filter by status'),
+        type: FilterDefType.Enum,
+        values: [
+          { id: 'Running', label: t('Running') },
+          { id: 'Succeeded', label: t('Succeeded') },
+          { id: 'Failed', label: t('Failed') },
+          { id: 'Canceled', label: t('Canceled') },
+        ],
+      },
       isVisible: true,
-      jsonPath: '$.status.vms',
-      label: t('VMs'),
+      jsonPath: getMigrationStatusFromVMs,
+      label: t('Status'),
       resourceFieldId: 'vms',
       sortable: true,
     },
@@ -93,23 +106,18 @@ const MigrationsListPage: FC = () => {
       label: t('Range'),
       resourceFieldId: 'range',
     },
-  ];
-
-  const dateRangeObjectMatcher = {
-    filterType: 'dateRange',
-    matchValue: (value: { started?: string; completed?: string }) => (filter: string) => {
-      if (!value) return false;
-      const [from, to] = filter.split('/');
-      const fromDate = DateTime.fromISO(from, { zone: 'utc' }).startOf('day');
-      const toDate = DateTime.fromISO(to, { zone: 'utc' }).endOf('day');
-      const inRange = (dateStr?: string) => {
-        if (!dateStr) return false;
-        const date = DateTime.fromISO(dateStr);
-        return date >= fromDate && date <= toDate;
-      };
-      return inRange(value.started) || inRange(value.completed);
+    {
+      filter: {
+        placeholderLabel: t('Recent plan migrations only'),
+        standalone: true,
+        type: FilterDefType.Slider,
+      },
+      isVisible: false,
+      jsonPath: (migration: V1beta1Migration) => migration,
+      label: t('Recent plan migrations only'),
+      resourceFieldId: 'recent',
     },
-  };
+  ];
 
   return (
     <LoadingSuspend obj={plans} loaded={plansLoaded} loadError={plansLoadError}>
@@ -122,7 +130,10 @@ const MigrationsListPage: FC = () => {
         page={INITIAL_PAGE}
         showManageColumns={false}
         noPadding
-        extraSupportedMatchers={[dateRangeObjectMatcher]}
+        extraSupportedMatchers={[dateRangeObjectMatcher, mostRecentMatcher(migrations)]}
+        extraSupportedFilters={{
+          recent: SwitchFilter,
+        }}
       />
     </LoadingSuspend>
   );

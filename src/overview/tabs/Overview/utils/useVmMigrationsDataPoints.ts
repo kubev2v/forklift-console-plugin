@@ -1,4 +1,5 @@
 import { DateTime, Interval } from 'luxon';
+import { getMigrationStarted, getPlanKey } from 'src/overview/utils/utils';
 
 import {
   MigrationModelGroupVersionKind,
@@ -14,16 +15,6 @@ type MigrationDataPoint = {
   dateLabel: string;
   value: number;
 };
-
-const getPlanKey = (migration: V1beta1Migration) => {
-  const plan = migration?.spec?.plan;
-  return (
-    plan?.uid ?? (plan?.namespace && plan?.name ? `${plan.namespace}/${plan.name}` : 'unknown-plan')
-  );
-};
-
-const getMigrationStarted = (migration: V1beta1Migration) =>
-  migration?.status?.started ?? migration?.metadata?.creationTimestamp ?? '1970-01-01T00:00:00Z';
 
 const toHourLabel = (date: DateTime | null) => (date ? date.toUTC().toFormat('HH:mm') : '');
 const toDayLabel = (date: DateTime | null) => (date ? date.toUTC().toFormat('LLL dd') : '');

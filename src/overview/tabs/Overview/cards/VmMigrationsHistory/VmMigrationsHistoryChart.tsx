@@ -82,7 +82,8 @@ const VmMigrationsHistoryChart = ({
     events: [
       {
         eventHandlers: {
-          onClick: () => navigateToHistoryTab({ navigate, selectedRange: selectedTimeRange }),
+          onClick: () =>
+            navigateToHistoryTab({ navigate, selectedRange: selectedTimeRange, status: areaName }),
           onMouseOut: () => {
             setActiveArea(null);
             return null;
