@@ -153,7 +153,7 @@ const NetworkMapsListPage: FC<{
       RowMapper={NetworkMapRow}
       fieldsMetadata={fieldsMetadata}
       namespace={namespace}
-      title={t('NetworkMaps')}
+      title={t('Network maps')}
       userSettings={userSettings}
       customNoResultsFound={EmptyState}
       page={1}

@@ -25,7 +25,8 @@ export const extensions: EncodedExtension[] = [
       id: 'StorageMappings',
       insertAfter: 'plans',
       model: StorageMapModelGroupVersionKind,
-      name: '%plugin__forklift-console-plugin~StorageMaps for virtualization%',
+      // t('plugin__forklift-console-plugin~Storage maps')
+      name: '%plugin__forklift-console-plugin~Storage maps%',
       perspective: 'admin',
       section: 'migration',
     },
