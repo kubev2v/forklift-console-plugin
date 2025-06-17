@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
+import { Base64 } from 'js-base64';
 
-import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
+import { CodeEditor, Language } from '@patternfly/react-code-editor';
 import { FormGroup, FormHelperText } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -29,13 +30,13 @@ const AnsiblePlaybookField: FC<AnsiblePlaybookFieldProps> = ({ fieldId }) => {
         control={control}
         render={({ field }) => (
           <CodeEditor
-            language="yaml"
-            value={field.value}
+            language={Language.yaml}
+            code={Base64.decode(field.value ?? '')}
             onChange={(value) => {
-              field.onChange(value);
+              field.onChange(Base64.encode(String(value)));
             }}
-            minHeight="400px"
-            showMiniMap={false}
+            height="20rem"
+            isMinimapVisible={false}
           />
         )}
       />
