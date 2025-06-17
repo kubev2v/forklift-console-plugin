@@ -1,4 +1,5 @@
 import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
+import { PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import {
@@ -41,11 +42,11 @@ export const createNetworkMap = async ({
     },
     spec: {
       map: mappings?.reduce((acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork }) => {
-        if (sourceNetwork.name && targetNetwork.name) {
+        if (sourceNetwork.name) {
           acc.push({
             // Handle pod network type or multus network type for the destination
             destination:
-              targetNetwork.name === ''
+              targetNetwork.name === PodNetworkLabel.Source || targetNetwork.name === ''
                 ? { type: 'pod' }
                 : {
                     name: targetNetwork.name.includes('/')
