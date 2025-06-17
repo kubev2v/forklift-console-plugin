@@ -17,7 +17,8 @@ const extensions: EncodedExtension[] = [
       },
       id: 'migration',
       insertAfter: ['virtualization', 'workloads'],
-      name: '%plugin__kubevirt-plugin~Migration%',
+      // t('plugin__forklift-console-plugin~Migration for Virtualization')
+      name: '%plugin__forklift-console-plugin~Migration for Virtualization%',
     },
     type: 'console.navigation/section',
   } as EncodedExtension<NavSection>,
@@ -26,8 +27,8 @@ const extensions: EncodedExtension[] = [
   ...providerExtensions,
   ...providerExtensionsOld,
   ...planExtensions,
-  ...networkMapExtensions,
   ...storageMapExtensions,
+  ...networkMapExtensions,
 ];
 
 export default extensions;

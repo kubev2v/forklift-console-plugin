@@ -17,7 +17,7 @@
     "build": "NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 webpack",
     "build:analyze": "ANALYZE_BUNDLE=true NODE_ENV=production webpack",
     "start": "NODE_ENV=development webpack serve --progress",
-    "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" [-oc] -c ./i18next-parser.config.ts",
+    "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" ./plugin-extensions.ts [-oc] -c ./i18next-parser.config.ts",
     "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "lint:ia": "rm -rf node_modules/.cache/eslint-interactive && npx eslint-interactive .",
