@@ -142,7 +142,7 @@ export const isPlanArchived = (plan: V1beta1Plan) => {
   );
 };
 
-export const getPlanStatus = (plan?: V1beta1Plan): PlanStatuses => {
+export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
   if (!plan) return PlanStatuses.Unknown;
 
   const conditions = getConditions(plan);

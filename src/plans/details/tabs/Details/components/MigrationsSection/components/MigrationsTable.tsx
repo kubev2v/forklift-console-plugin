@@ -1,44 +1,85 @@
 import type { FC } from 'react';
+import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import {
+  getMigrationVMsStatusCounts,
+  getPlanStatus,
+} from 'src/plans/details/components/PlanStatus/utils/utils';
+import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import HelpText from '@components/HelpText';
-import type { V1beta1Migration, V1beta1Plan } from '@kubev2v/types';
-import { Table, Tbody, Th, Thead, Tr } from '@patternfly/react-table';
+import {
+  MigrationModelGroupVersionKind,
+  type V1beta1Migration,
+  type V1beta1Plan,
+} from '@kubev2v/types';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { Split } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 
-import MigrationsTableRow from './MigrationsTableRow';
+import { getMigrationStatusLabel } from './utils/utils';
 
 type MigrationTableProps = {
   migrations: V1beta1Migration[];
-  plan?: V1beta1Plan;
+  plan: V1beta1Plan;
 };
 
 const MigrationsTable: FC<MigrationTableProps> = ({ migrations, plan }) => {
   const { t } = useForkliftTranslation();
 
   if (isEmpty(migrations)) {
-    return plan ? (
-      <HelpText>{t('The plan has not been executed for migration.')}</HelpText>
-    ) : (
-      <HelpText>{t('No plan migrations have been executed.')}</HelpText>
-    );
+    return <HelpText>{t('The plan has not been executed for migration.')}</HelpText>;
   }
 
+  const planStatus = getPlanStatus(plan);
   return (
     <Table>
       <Thead>
         <Tr>
           <Th width={20}>{t('Migration')}</Th>
           <Th width={15}>{t('VMs')}</Th>
-          {!plan && <Th width={15}>{t('Plan')}</Th>}
-          <Th>{t('Started at')}</Th>
-          <Th>{t('Completed at')}</Th>
+          <Th width={10}>{t('Started at')}</Th>
+          <Th width={10}>{t('Completed at')}</Th>
         </Tr>
       </Thead>
       <Tbody>
-        {migrations.map((migration) => (
-          <MigrationsTableRow migration={migration} plan={plan} showPlanColumn={!plan} />
-        ))}
+        {migrations.map((migration) => {
+          const migrationVMs = migration?.status?.vms;
+          const vmStatuses = getMigrationVMsStatusCounts(
+            migrationVMs ?? [],
+            planStatus,
+            migrationVMs?.length ?? 0,
+          );
+
+          return (
+            <Tr key={getUID(migration)}>
+              <Td>
+                <ResourceLink
+                  groupVersionKind={MigrationModelGroupVersionKind}
+                  name={getName(migration)}
+                  namespace={getNamespace(migration)}
+                />
+              </Td>
+              <Td>
+                <Split hasGutter>
+                  {getMigrationStatusLabel(vmStatuses, migrationVMs?.length)}
+                  <ModalHOC>
+                    <VMStatusIconsRow statuses={vmStatuses} plan={plan} />
+                  </ModalHOC>
+                </Split>
+              </Td>
+              <Td>
+                <ConsoleTimestamp timestamp={migration?.status?.started ?? null} />
+              </Td>
+              <Td>
+                <ConsoleTimestamp timestamp={migration?.status?.completed ?? null} />
+              </Td>
+            </Tr>
+          );
+        })}
       </Tbody>
     </Table>
   );

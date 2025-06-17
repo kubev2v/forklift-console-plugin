@@ -13,21 +13,18 @@ import MigrationsTable from './components/MigrationsTable';
 import { sortMigrationsByStartedAtDate } from './utils/utils';
 
 type MigrationsSectionProps = {
-  plan?: V1beta1Plan;
+  plan: V1beta1Plan;
 };
 
 const MigrationsSection: FC<MigrationsSectionProps> = ({ plan }) => {
   const [migrations, loaded, loadError] = useK8sWatchResource<V1beta1Migration[]>({
     groupVersionKind: MigrationModelGroupVersionKind,
     isList: true,
-    namespace: plan ? getNamespace(plan) : undefined,
+    namespace: getNamespace(plan),
     namespaced: true,
   });
 
   const planMigrations = useMemo(() => {
-    if (!plan) {
-      return migrations;
-    }
     const filtered = migrations.filter(
       (migration) => getOwnerReference(migration)?.uid === getUID(plan),
     );
