@@ -1,6 +1,8 @@
-import { validateURL, type ValidationMsg } from '../../common';
+import type { ValidationMsg } from 'src/providers/utils/types';
 
-export const validateOpenstackURL = (url: string | number): ValidationMsg => {
+import { validateURL } from '../../common';
+
+export const validateOpenstackURL = (url: string | number | undefined): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (url === undefined) {
     return {

@@ -1,10 +1,18 @@
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
 import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
-import type { ResourceListPage, ResourceNSNavItem } from '@openshift-console/dynamic-plugin-sdk';
+import type {
+  CreateResource,
+  ModelMetadata,
+  ResourceDetailsPage,
+  ResourceListPage,
+  ResourceNSNavItem,
+} from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
-  ProvidersListPage: '/src/providers/list/ProvidersListPage',
+  ProviderDetailsPage: './providers/details/ProviderDetailsPage',
+  ProvidersCreatePage: './providers/create/ProvidersCreatePage',
+  ProvidersListPage: './providers/list/ProvidersListPage',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -33,4 +41,30 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.page/resource/list',
   } as EncodedExtension<ResourceListPage>,
+  {
+    properties: {
+      component: {
+        $codeRef: 'ProviderDetailsPage',
+      },
+      model: ProviderModelGroupVersionKind,
+    },
+    type: 'console.page/resource/details',
+  } as EncodedExtension<ResourceDetailsPage>,
+
+  {
+    properties: {
+      model: ProviderModelGroupVersionKind,
+    },
+    type: 'console.model-metadata',
+  } as EncodedExtension<ModelMetadata>,
+
+  {
+    properties: {
+      component: {
+        $codeRef: 'ProvidersCreatePage',
+      },
+      model: ProviderModelGroupVersionKind,
+    },
+    type: 'console.resource/create',
+  } as EncodedExtension<CreateResource>,
 ];

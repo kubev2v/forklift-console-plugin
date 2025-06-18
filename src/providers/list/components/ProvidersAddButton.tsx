@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, ButtonVariant } from '@patternfly/react-core';
@@ -15,7 +15,7 @@ type ProvidersAddButtonProps = {
 
 const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, dataTestId, namespace }) => {
   const { t } = useForkliftTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const providersListURL = getResourceUrl({
     namespace,
@@ -24,7 +24,7 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, dataTestId
   });
 
   const onClick = () => {
-    history.push(`${providersListURL}/~new`);
+    navigate(`${providersListURL}/~new`);
   };
 
   return (
