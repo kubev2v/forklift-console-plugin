@@ -2,28 +2,27 @@ import type { FC } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
+import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
-import { FeatureGate } from '@components/FeatureGate';
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { FEATURE_NAMES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import OffloadStorageIndexedForm from '../OffloadStorageIndexedForm/OffloadStorageIndexedForm';
+import OffloadStorageIndexedForm from '../../components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
+import { defaultStorageMapping, StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';
 
-import {
-  CreateStorageMapFieldId,
-  createStorageMapFieldLabels,
-  defaultStorageMapping,
-} from './constants';
-import SourceStorageField from './SourceStorageField';
-import TargetStorageField from './TargetStorageField';
-import { getCreateStorageMapFieldId, validateStorageMaps } from './utils';
+import InventorySourceStorageField from './InventorySourceStorageField';
+import { validateStorageMaps } from './utils';
 
-const StorageMappingFieldBuilder: FC = () => {
+const CreateStorageMapFieldTable: FC = () => {
   const { t } = useForkliftTranslation();
+  const { isFeatureEnabled } = useFeatureFlags();
+  const isCopyOffloadEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD);
   const {
     control,
     formState: { isSubmitting },
@@ -32,9 +31,9 @@ const StorageMappingFieldBuilder: FC = () => {
   const [project, sourceProvider, targetProvider] = useWatch({
     control,
     name: [
-      CreateStorageMapFieldId.Project,
-      CreateStorageMapFieldId.SourceProvider,
-      CreateStorageMapFieldId.TargetProvider,
+      StorageMapFieldId.Project,
+      StorageMapFieldId.SourceProvider,
+      StorageMapFieldId.TargetProvider,
     ],
   });
 
@@ -44,7 +43,7 @@ const StorageMappingFieldBuilder: FC = () => {
     remove,
   } = useFieldArray({
     control,
-    name: CreateStorageMapFieldId.StorageMap,
+    name: StorageMapFieldId.StorageMap,
     rules: {
       validate: (values) => validateStorageMaps(values),
     },
@@ -63,31 +62,30 @@ const StorageMappingFieldBuilder: FC = () => {
       headers={[
         {
           isRequired: true,
-          label: createStorageMapFieldLabels[CreateStorageMapFieldId.SourceStorage],
+          label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
           width: 45,
         },
         {
           isRequired: true,
-          label: createStorageMapFieldLabels[CreateStorageMapFieldId.TargetStorage],
+          label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
           width: 45,
         },
       ]}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
-        ...(sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere && {
-          additionalOptions: (
-            <FeatureGate featureName={FEATURE_NAMES.COPY_OFFLOAD}>
-              <OffloadStorageIndexedForm index={index} />
-            </FeatureGate>
-          ),
-        }),
+        ...(sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere &&
+          isCopyOffloadEnabled && {
+            additionalOptions: (
+              <OffloadStorageIndexedForm index={index} sourceProvider={sourceProvider} />
+            ),
+          }),
         inputs: [
-          <SourceStorageField
-            fieldId={getCreateStorageMapFieldId(CreateStorageMapFieldId.SourceStorage, index)}
+          <InventorySourceStorageField
+            fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             sourceStorages={sourceStorages}
           />,
           <TargetStorageField
-            fieldId={getCreateStorageMapFieldId(CreateStorageMapFieldId.TargetStorage, index)}
+            fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
             targetStorages={targetStorages}
           />,
         ],
@@ -112,11 +110,11 @@ const StorageMappingFieldBuilder: FC = () => {
             return;
           }
 
-          setValue(CreateStorageMapFieldId.StorageMap, [defaultStorageMapping]);
+          setValue(StorageMapFieldId.StorageMap, [defaultStorageMapping]);
         },
       }}
     />
   );
 };
 
-export default StorageMappingFieldBuilder;
+export default CreateStorageMapFieldTable;

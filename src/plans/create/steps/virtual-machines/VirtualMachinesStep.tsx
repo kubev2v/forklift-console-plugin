@@ -10,7 +10,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { NetworkMapFieldId } from '../network-map/constants';
-import { StorageMapFieldId } from '../storage-map/constants';
+import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 
 import { defaultVms, VmFormFieldId } from './constants';
 import VirtualMachinesTable from './VirtualMachinesTable';
@@ -53,7 +53,7 @@ const VirtualMachinesStep: FC = () => {
               value={field.value}
               onChange={(value) => {
                 field.onChange(value);
-                unregister([NetworkMapFieldId.NetworkMap, StorageMapFieldId.StorageMap]);
+                unregister([NetworkMapFieldId.NetworkMap, CreatePlanStorageMapFieldId.StorageMap]);
               }}
             />
           )}

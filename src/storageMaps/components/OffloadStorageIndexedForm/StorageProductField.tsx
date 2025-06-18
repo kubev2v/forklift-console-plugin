@@ -6,14 +6,12 @@ import MtvSelect from '@components/common/MtvSelect';
 import { FormGroup } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { CreateStorageMapFormData } from '../types';
-
 import {
-  CreateStorageMapFieldId,
-  createStorageMapFieldLabels,
+  StorageMapFieldId,
+  storageMapFieldLabels,
   storageVendorProductLabels,
   storageVendorProducts,
-} from './constants';
+} from '../../constants';
 
 type StorageProductFieldProps = { fieldId: string };
 
@@ -22,7 +20,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId }) => {
   const {
     control,
     formState: { isSubmitting },
-  } = useFormContext<CreateStorageMapFormData>();
+  } = useFormContext();
 
   const options = storageVendorProducts.map((product) => ({
     label: storageVendorProductLabels[product],
@@ -32,7 +30,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId }) => {
   return (
     <FormGroup
       fieldId={fieldId}
-      label={createStorageMapFieldLabels[CreateStorageMapFieldId.StorageProduct]}
+      label={storageMapFieldLabels[StorageMapFieldId.StorageProduct]}
       labelIcon={
         <HelpIconPopover>
           {t(

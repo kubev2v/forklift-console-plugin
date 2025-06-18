@@ -6,9 +6,8 @@ import { TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';
-
-import { CreateStorageMapFieldId, createStorageMapFieldLabels } from './constants';
 
 const MapNameField: FC = () => {
   const { t } = useForkliftTranslation();
@@ -17,16 +16,16 @@ const MapNameField: FC = () => {
     formState: { isSubmitting },
     getFieldState,
   } = useFormContext<CreateStorageMapFormData>();
-  const { error } = getFieldState(CreateStorageMapFieldId.MapName);
+  const { error } = getFieldState(StorageMapFieldId.MapName);
 
   return (
     <FormGroupWithErrorText
       isRequired
-      fieldId={CreateStorageMapFieldId.MapName}
-      label={createStorageMapFieldLabels[CreateStorageMapFieldId.MapName]}
+      fieldId={StorageMapFieldId.MapName}
+      label={storageMapFieldLabels[StorageMapFieldId.MapName]}
     >
       <Controller
-        name={CreateStorageMapFieldId.MapName}
+        name={StorageMapFieldId.MapName}
         control={control}
         render={({ field }) => (
           <TextInput

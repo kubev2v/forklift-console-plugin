@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import type { StorageMappingValue } from 'src/storageMaps/types';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import Select from '@components/common/MtvSelect';
@@ -7,24 +9,25 @@ import { SelectList, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { StorageMapFieldId, type StorageMapping } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';
 
-import { CreateStorageMapFieldId, type StorageMapping } from './constants';
-import type { MappingValue } from './types';
-
-type SourceStorageFieldProps = {
+type InventorySourceStorageFieldProps = {
   fieldId: string;
-  sourceStorages: MappingValue[];
+  sourceStorages: InventoryStorage[];
 };
 
-const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, sourceStorages }) => {
+const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
+  fieldId,
+  sourceStorages,
+}) => {
   const {
     control,
     formState: { isSubmitting },
     trigger,
   } = useFormContext<CreateStorageMapFormData>();
   const { t } = useForkliftTranslation();
-  const storageMappings = useWatch({ control, name: CreateStorageMapFieldId.StorageMap });
+  const storageMappings = useWatch({ control, name: StorageMapFieldId.StorageMap });
 
   return (
     <FormGroupWithErrorText isRequired fieldId={fieldId}>
@@ -35,10 +38,10 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, sourceStorag
           <Select
             id={fieldId}
             isDisabled={isSubmitting}
-            value={(field.value as MappingValue).name}
+            value={(field.value as StorageMappingValue).name}
             onSelect={async (_event, value) => {
               field.onChange(value);
-              await trigger(CreateStorageMapFieldId.StorageMap);
+              await trigger(StorageMapFieldId.StorageMap);
             }}
             placeholder={t('Select source storage')}
           >
@@ -54,7 +57,7 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, sourceStorag
                     value={storage}
                     isDisabled={storageMappings?.some(
                       (mapping: StorageMapping) =>
-                        mapping[CreateStorageMapFieldId.SourceStorage].name === storage.name,
+                        mapping[StorageMapFieldId.SourceStorage].name === storage.name,
                     )}
                   >
                     {storage.name}
@@ -69,4 +72,4 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, sourceStorag
   );
 };
 
-export default SourceStorageField;
+export default InventorySourceStorageField;

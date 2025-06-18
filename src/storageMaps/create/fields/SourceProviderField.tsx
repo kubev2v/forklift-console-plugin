@@ -6,13 +6,8 @@ import ProviderSelect from '@components/ProviderSelect';
 import { MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { defaultStorageMapping, StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';
-
-import {
-  CreateStorageMapFieldId,
-  createStorageMapFieldLabels,
-  defaultStorageMapping,
-} from './constants';
 
 const SourceProviderField: FC = () => {
   const { t } = useForkliftTranslation();
@@ -22,28 +17,28 @@ const SourceProviderField: FC = () => {
     getFieldState,
     setValue,
   } = useFormContext<CreateStorageMapFormData>();
-  const { error } = getFieldState(CreateStorageMapFieldId.SourceProvider);
-  const project = useWatch({ control, name: CreateStorageMapFieldId.Project });
+  const { error } = getFieldState(StorageMapFieldId.SourceProvider);
+  const project = useWatch({ control, name: StorageMapFieldId.Project });
 
   return (
     <FormGroupWithErrorText
       isRequired
-      fieldId={CreateStorageMapFieldId.SourceProvider}
-      label={createStorageMapFieldLabels[CreateStorageMapFieldId.SourceProvider]}
+      fieldId={StorageMapFieldId.SourceProvider}
+      label={storageMapFieldLabels[StorageMapFieldId.SourceProvider]}
     >
       <Controller
-        name={CreateStorageMapFieldId.SourceProvider}
+        name={StorageMapFieldId.SourceProvider}
         control={control}
         render={({ field }) => (
           <ProviderSelect
             isDisabled={isSubmitting}
             placeholder={t('Select source provider')}
-            id={CreateStorageMapFieldId.SourceProvider}
+            id={StorageMapFieldId.SourceProvider}
             namespace={project}
             value={field.value?.metadata?.name ?? ''}
             onSelect={(_, value) => {
               field.onChange(value);
-              setValue(CreateStorageMapFieldId.StorageMap, [defaultStorageMapping]);
+              setValue(StorageMapFieldId.StorageMap, [defaultStorageMapping]);
             }}
             status={error && MenuToggleStatus.danger}
           />

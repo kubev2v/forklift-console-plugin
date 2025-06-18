@@ -41,7 +41,7 @@ export const planFields: ResourceField[] = [
   },
   {
     filter: {
-      placeholderLabel: t('Filter by namespace'),
+      placeholderLabel: t('Filter by project'),
       type: FilterDefType.FreeText,
     },
     isIdentity: true,

@@ -6,7 +6,7 @@ import type { V1beta1Provider } from '@kubev2v/types';
 
 const useTargetStorages = (
   targetProvider: V1beta1Provider | undefined,
-  targetProject: string,
+  targetProject: string | undefined,
 ): [TargetStorage[], boolean, Error | null] => {
   const [availableTargetStorages, targetStoragesLoading, targetStoragesError] =
     useOpenShiftStorages(targetProvider);

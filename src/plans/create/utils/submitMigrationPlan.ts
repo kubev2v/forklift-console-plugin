@@ -77,7 +77,6 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
       ? Promise.resolve(undefined)
       : createDecryptionSecret(diskDecryptionPassPhrases, planName, planProject),
 
-    // Migration hooks (index 3)
     hasEnabledHooks
       ? createMigrationHooks({
           planName,

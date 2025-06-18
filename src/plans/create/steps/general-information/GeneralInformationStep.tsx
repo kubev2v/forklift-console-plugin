@@ -11,7 +11,7 @@ import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { MigrationTypeFieldId } from '../migration-type/constants';
 import { NetworkMapFieldId } from '../network-map/constants';
-import { StorageMapFieldId } from '../storage-map/constants';
+import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
@@ -68,7 +68,7 @@ const GeneralInformationStep: FC = () => {
                     unregister([
                       VmFormFieldId.Vms,
                       NetworkMapFieldId.NetworkMap,
-                      StorageMapFieldId.StorageMap,
+                      CreatePlanStorageMapFieldId.StorageMap,
                       MigrationTypeFieldId.MigrationType,
                     ]);
                   }}

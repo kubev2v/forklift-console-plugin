@@ -5,14 +5,14 @@ import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { StorageMapFieldId } from '../storage-map/constants';
+import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 
 const StorageMapReviewTable: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
   const storageMap = useWatch({
     control,
-    name: StorageMapFieldId.StorageMap,
+    name: CreatePlanStorageMapFieldId.StorageMap,
   });
 
   if (!storageMap) {
@@ -32,16 +32,16 @@ const StorageMapReviewTable: FC = () => {
         {storageMap.map((mapping) => {
           // Only render rows that have both source and target storage names
           if (
-            mapping[StorageMapFieldId.SourceStorage].name &&
-            mapping[StorageMapFieldId.TargetStorage].name
+            mapping[CreatePlanStorageMapFieldId.SourceStorage].name &&
+            mapping[CreatePlanStorageMapFieldId.TargetStorage].name
           ) {
             return (
-              <Tr key={mapping[StorageMapFieldId.SourceStorage].name}>
-                <Td dataLabel={StorageMapFieldId.SourceStorage}>
-                  {mapping[StorageMapFieldId.SourceStorage].name}
+              <Tr key={mapping[CreatePlanStorageMapFieldId.SourceStorage].name}>
+                <Td dataLabel={CreatePlanStorageMapFieldId.SourceStorage}>
+                  {mapping[CreatePlanStorageMapFieldId.SourceStorage].name}
                 </Td>
-                <Td dataLabel={StorageMapFieldId.TargetStorage}>
-                  {mapping[StorageMapFieldId.TargetStorage].name}
+                <Td dataLabel={CreatePlanStorageMapFieldId.TargetStorage}>
+                  {mapping[CreatePlanStorageMapFieldId.TargetStorage].name}
                 </Td>
               </Tr>
             );

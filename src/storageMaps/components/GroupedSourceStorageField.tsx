@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Controller, useWatch } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import EmptyCategorySelectOption from 'src/plans/components/EmptyCategorySelectOption';
 
 import Select from '@components/common/MtvSelect';
@@ -7,25 +7,28 @@ import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import type { MappingValue } from '../../types';
+import { StorageMapFieldId, type StorageMapping } from '../constants';
+import type { StorageMappingValue } from '../types';
 
-import { StorageMapFieldId, type StorageMapping } from './constants';
-
-type SourceStorageFieldProps = {
+type GroupedSourceStorageFieldProps = {
   fieldId: string;
-  usedSourceStorages: MappingValue[];
-  otherSourceStorages: MappingValue[];
+  storageMappings: StorageMapping[];
+  usedSourceStorages: StorageMappingValue[];
+  otherSourceStorages: StorageMappingValue[];
 };
 
-const SourceStorageField: FC<SourceStorageFieldProps> = ({
+const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
   fieldId,
   otherSourceStorages,
+  storageMappings,
   usedSourceStorages,
 }) => {
-  const { control, trigger } = useCreatePlanFormContext();
+  const {
+    control,
+    formState: { isSubmitting },
+    trigger,
+  } = useFormContext();
   const { t } = useForkliftTranslation();
-  const storageMappings = useWatch({ control, name: StorageMapFieldId.StorageMap });
 
   return (
     <Controller
@@ -34,7 +37,8 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({
       render={({ field }) => (
         <Select
           id={fieldId}
-          value={(field.value as MappingValue).name}
+          isDisabled={isSubmitting}
+          value={(field.value as StorageMappingValue).name}
           onSelect={async (_event, value) => {
             field.onChange(value);
             await trigger(StorageMapFieldId.StorageMap);
@@ -88,4 +92,4 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({
   );
 };
 
-export default SourceStorageField;
+export default GroupedSourceStorageField;

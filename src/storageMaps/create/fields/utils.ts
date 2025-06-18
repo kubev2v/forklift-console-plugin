@@ -1,17 +1,6 @@
 import { t } from '@utils/i18n';
 
-import { CreateStorageMapFieldId, type StorageMapping } from './constants';
-
-type StorageMappingId = `${CreateStorageMapFieldId.StorageMap}.${number}.${keyof StorageMapping}`;
-
-/**
- * Creates a field ID for a storage mapping at a specific index
- * Used for form field identification and validation
- */
-export const getCreateStorageMapFieldId = (
-  id: keyof StorageMapping,
-  index: number,
-): StorageMappingId => `${CreateStorageMapFieldId.StorageMap}.${index}.${id}`;
+import { StorageMapFieldId, type StorageMapping } from '../../constants';
 
 /**
  * Validates storage mapping configurations to ensure complete and valid mappings
@@ -27,8 +16,8 @@ export const validateStorageMaps = (values: StorageMapping[]) => {
 
   // Count empty, valid, and incomplete rows
   for (const value of values) {
-    const hasSource = Boolean(value[CreateStorageMapFieldId.SourceStorage]?.name);
-    const hasTarget = Boolean(value[CreateStorageMapFieldId.TargetStorage]?.name);
+    const hasSource = Boolean(value[StorageMapFieldId.SourceStorage]?.name);
+    const hasTarget = Boolean(value[StorageMapFieldId.TargetStorage]?.name);
 
     if (!hasSource && !hasTarget) {
       emptyCount += 1;

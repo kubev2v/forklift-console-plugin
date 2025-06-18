@@ -7,7 +7,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
-import { StorageMapFieldId, StorageMapType, storageMapTypeLabels } from './constants';
+import { CreatePlanStorageMapFieldId, StorageMapType, storageMapTypeLabels } from './constants';
 import ExistingStorageMapField from './ExistingStorageMapField';
 import NewStorageMapFields from './NewStorageMapFields';
 
@@ -22,7 +22,7 @@ const StorageMapStep = () => {
     >
       <Form>
         <Controller
-          name={StorageMapFieldId.StorageMapType}
+          name={CreatePlanStorageMapFieldId.StorageMapType}
           control={control}
           render={({ field: storageTypeField }) => (
             <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
@@ -37,7 +37,10 @@ const StorageMapStep = () => {
                     isChecked={storageTypeField.value === StorageMapType.Existing}
                     onChange={() => {
                       storageTypeField.onChange(StorageMapType.Existing);
-                      unregister([StorageMapFieldId.StorageMap, StorageMapFieldId.StorageMapName]);
+                      unregister([
+                        CreatePlanStorageMapFieldId.StorageMap,
+                        CreatePlanStorageMapFieldId.StorageMapName,
+                      ]);
                     }}
                     description={t(
                       'Existing storage map options are limited to those without an owner reference. Upon creation of this plan, a new storage map will be created with this plan as its owner.',
@@ -64,7 +67,7 @@ const StorageMapStep = () => {
                     isChecked={storageTypeField.value === StorageMapType.New}
                     onChange={() => {
                       storageTypeField.onChange(StorageMapType.New);
-                      unregister(StorageMapFieldId.ExistingStorageMap);
+                      unregister(CreatePlanStorageMapFieldId.ExistingStorageMap);
                     }}
                   />
 

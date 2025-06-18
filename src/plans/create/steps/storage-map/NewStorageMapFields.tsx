@@ -1,5 +1,7 @@
 import { type FC, useEffect } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
+import { defaultStorageMapping } from 'src/storageMaps/constants';
+import { getSourceStorageValues } from 'src/storageMaps/utils/getSourceStorageValues';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -12,18 +14,21 @@ import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardConte
 import { GeneralFormFieldId } from '../general-information/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
-import { defaultStorageMapping, StorageMapFieldId, storageMapFieldLabels } from './constants';
-import StorageMapFieldTable from './StorageMapFieldTable';
-import { getSourceStorageValues } from './utils';
+import { CreatePlanStorageMapFieldId, createPlanStorageMapFieldLabels } from './constants';
+import StorageMapFieldTable from './CreatePlanStorageMapFieldTable';
 
 const NewStorageMapFields: FC = () => {
   const { t } = useForkliftTranslation();
   const { control, getFieldState, setValue } = useCreatePlanFormContext();
   const { storage } = useCreatePlanWizardContext();
-  const { error } = getFieldState(StorageMapFieldId.StorageMap);
+  const { error } = getFieldState(CreatePlanStorageMapFieldId.StorageMap);
   const [sourceProvider, vms, storageMap] = useWatch({
     control,
-    name: [GeneralFormFieldId.SourceProvider, VmFormFieldId.Vms, StorageMapFieldId.StorageMap],
+    name: [
+      GeneralFormFieldId.SourceProvider,
+      VmFormFieldId.Vms,
+      CreatePlanStorageMapFieldId.StorageMap,
+    ],
   });
 
   const [availableSourceStorages, sourceStoragesLoading, sourceStoragesError] = storage.sources;
@@ -42,15 +47,15 @@ const NewStorageMapFields: FC = () => {
   useEffect(() => {
     if (!sourceStoragesLoading && isStorageMapEmpty) {
       if (isEmpty(usedSourceStorages)) {
-        setValue(StorageMapFieldId.StorageMap, [defaultStorageMapping]);
+        setValue(CreatePlanStorageMapFieldId.StorageMap, [defaultStorageMapping]);
         return;
       }
 
       setValue(
-        StorageMapFieldId.StorageMap,
+        CreatePlanStorageMapFieldId.StorageMap,
         usedSourceStorages.map((sourceStorage) => ({
-          [StorageMapFieldId.SourceStorage]: sourceStorage,
-          [StorageMapFieldId.TargetStorage]: { name: defaultTargetStorageName },
+          [CreatePlanStorageMapFieldId.SourceStorage]: sourceStorage,
+          [CreatePlanStorageMapFieldId.TargetStorage]: { name: defaultTargetStorageName },
         })),
       );
     }
@@ -83,7 +88,7 @@ const NewStorageMapFields: FC = () => {
       />
 
       <FormGroupWithHelpText
-        label={storageMapFieldLabels[StorageMapFieldId.StorageMapName]}
+        label={createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.StorageMapName]}
         helperText={t("Provide a name now, or we'll generate one when the map is created.")}
         labelIcon={
           <HelpIconPopover>
@@ -103,7 +108,7 @@ const NewStorageMapFields: FC = () => {
         }
       >
         <Controller
-          name={StorageMapFieldId.StorageMapName}
+          name={CreatePlanStorageMapFieldId.StorageMapName}
           control={control}
           render={({ field }) => <TextInput {...field} />}
         />
