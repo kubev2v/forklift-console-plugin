@@ -6,10 +6,10 @@ import {
   useFormContext,
   useWatch,
 } from 'react-hook-form';
+import useProjectNameSelectOptions from 'src/providers/create/hooks/useProjectNameSelectOptions';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import { useProjectNameSelectOptions } from '@components/common/ProjectNameSelect';
 import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
 import { useDefaultProject } from '@utils/hooks/useDefaultProject';
