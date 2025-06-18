@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useWatch } from 'react-hook-form';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
 import {
@@ -14,7 +15,6 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { ProviderType } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from '../other-settings/constants';
 
@@ -40,7 +40,7 @@ const OtherSettingsReviewSection: FC = () => {
       OtherSettingsFormFieldId.SharedDisks,
     ],
   });
-  const isVsphere = sourceProvider?.spec?.type === ProviderType.Vsphere;
+  const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
   const hasNoDiskPassPhrases =
     isEmpty(diskPassPhrases) || (diskPassPhrases.length === 1 && !diskPassPhrases[0].value);
 

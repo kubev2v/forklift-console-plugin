@@ -147,7 +147,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
             </DataListCell>,
           ]}
         />
-        {isEditable ? (
+        {isEditable && (
           <DataListAction
             id={`mapping_list_item_${index}`}
             aria-label={t('Actions')}
@@ -163,7 +163,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
               icon={<MinusCircleIcon />}
             />
           </DataListAction>
-        ) : null}
+        )}
       </DataListItemRow>
     </DataListItem>
   );

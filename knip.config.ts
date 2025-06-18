@@ -6,8 +6,7 @@ export default {
     'src/overview/hooks/OverviewContext.ts',
     'src/overview/hooks/useOverviewContext.ts',
 
-    'src/modules/Providers/views/create/ProvidersCreatePage.tsx',
-    'src/modules/Providers/views/migrate/ProvidersCreateVmMigrationContext.tsx',
+    'src/providers/create/ProvidersCreatePage.tsx',
     'src/providers/list/ProvidersListPage.tsx',
     'src/providers/details/ProviderDetailsPage.tsx',
     'src/utils/types.ts',
@@ -24,6 +23,7 @@ export default {
     'src/modules/StorageMaps/views/list/StorageMapsListPage.tsx',
     'src/modules/StorageMaps/views/details/StorageMapDetailsPage.tsx',
     'src/modules/StorageMaps/yamlTemplates/defaultYamlTemplate.ts',
+    'src/storageMaps/create/StorageMapCreatePage.tsx',
   ],
   ignore: ['i18next-parser.config.ts', 'testing/**', 'eslint.ide.config.ts'],
   ignoreBinaries: ['kubectl', 'test:e2e'],

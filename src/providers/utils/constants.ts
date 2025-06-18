@@ -1,3 +1,5 @@
+export const EMPTY_VDDK_INIT_IMAGE_ANNOTATION = 'forklift.konveyor.io/empty-vddk-init-image';
+
 export enum ProvidersResourceFieldId {
   Name = 'name',
   Namespace = 'namespace',
@@ -61,6 +63,15 @@ export enum OpenstackAuthTypeLabels {
   TokenWithUserID = 'Token with user ID',
   TokenWithUsername = 'Token with user name',
   Password = 'Password',
+}
+
+export enum ProviderFieldsId {
+  Name = 'k8sName',
+  Url = 'url',
+  SdkEndpoint = 'sdkEndpoint',
+  VddkInitImage = 'vddkInitImage',
+  EmptyVddkInitImage = 'emptyVddkInitImage',
+  Project = 'project',
 }
 
 export enum SecretFieldsId {

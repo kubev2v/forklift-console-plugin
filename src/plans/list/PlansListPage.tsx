@@ -50,7 +50,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
       RowMapper={PlanRow}
       fieldsMetadata={planFields}
       namespace={namespace}
-      title={t('Plans')}
+      title={t('Migration plans')}
       userSettings={userSettings}
       customNoResultsFound={<PlansEmptyState namespace={namespace} />}
       page={INITIAL_PAGE}

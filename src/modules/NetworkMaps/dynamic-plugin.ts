@@ -24,8 +24,8 @@ export const extensions: EncodedExtension[] = [
       id: 'networkMappings',
       insertAfter: 'plans',
       model: NetworkMapModelGroupVersionKind,
-      // t('plugin__forklift-console-plugin~NetworkMaps for virtualization')
-      name: '%plugin__forklift-console-plugin~NetworkMaps for virtualization%',
+      // t('plugin__forklift-console-plugin~Network maps')
+      name: '%plugin__forklift-console-plugin~Network maps%',
       perspective: 'admin',
       section: 'migration',
     },

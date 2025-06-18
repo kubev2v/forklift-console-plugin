@@ -9,6 +9,7 @@ import type {
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
+  StorageMapCreatePage: './storageMaps/create/StorageMapCreatePage',
   StorageMapDetailsPage: './modules/StorageMaps/views/details/StorageMapDetailsPage',
   StorageMapsListPage: './modules/StorageMaps/views/list/StorageMapsListPage',
   yamlTemplate: './modules/StorageMaps/yamlTemplates/defaultYamlTemplate.ts',
@@ -24,8 +25,8 @@ export const extensions: EncodedExtension[] = [
       id: 'StorageMappings',
       insertAfter: 'plans',
       model: StorageMapModelGroupVersionKind,
-      // t('plugin__forklift-console-plugin~StorageMaps for virtualization')
-      name: '%plugin__forklift-console-plugin~StorageMaps for virtualization%',
+      // t('plugin__forklift-console-plugin~Storage maps')
+      name: '%plugin__forklift-console-plugin~Storage maps%',
       perspective: 'admin',
       section: 'migration',
     },
@@ -51,6 +52,15 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.page/resource/details',
   } as EncodedExtension<ResourceDetailsPage>,
+
+  {
+    properties: {
+      component: { $codeRef: 'StorageMapCreatePage' },
+      exact: true,
+      path: `/k8s/storageMaps/create/form`,
+    },
+    type: 'console.page/route',
+  },
 
   {
     properties: {

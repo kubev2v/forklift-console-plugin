@@ -1,4 +1,4 @@
-import type { OvaVM, OVirtVM, VSphereVM } from '@kubev2v/types';
+import type { OVirtVM, VSphereVM } from '@kubev2v/types';
 
 export type VMResources = {
   cpuCount: number;
@@ -17,4 +17,3 @@ export type EnhancedOVirtVM = OVirtVM & {
   cpuCores: number;
   memory: number;
 };
-export type EnhancedOvaVM = OvaVM & { powerState: string };

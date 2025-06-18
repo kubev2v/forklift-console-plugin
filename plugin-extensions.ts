@@ -3,7 +3,6 @@ import type { NavSection } from '@openshift-console/dynamic-plugin-sdk';
 
 import { extensions as networkMapExtensions } from './src/modules/NetworkMaps/dynamic-plugin';
 import { extensions as planExtensions } from './src/modules/Plans/dynamic-plugin';
-import { extensions as providerExtensionsOld } from './src/modules/Providers/dynamic-plugin';
 import { extensions as storageMapExtensions } from './src/modules/StorageMaps/dynamic-plugin';
 import { extensions as overviewExtensions } from './src/overview/dynamic-plugin';
 import { extensions as providerExtensions } from './src/providers/dynamic-plugin';
@@ -17,17 +16,17 @@ const extensions: EncodedExtension[] = [
       },
       id: 'migration',
       insertAfter: ['virtualization', 'workloads'],
-      name: '%plugin__kubevirt-plugin~Migration%',
+      // t('plugin__forklift-console-plugin~Migration for Virtualization')
+      name: '%plugin__forklift-console-plugin~Migration for Virtualization%',
     },
     type: 'console.navigation/section',
   } as EncodedExtension<NavSection>,
 
   ...overviewExtensions,
   ...providerExtensions,
-  ...providerExtensionsOld,
   ...planExtensions,
-  ...networkMapExtensions,
   ...storageMapExtensions,
+  ...networkMapExtensions,
 ];
 
 export default extensions;

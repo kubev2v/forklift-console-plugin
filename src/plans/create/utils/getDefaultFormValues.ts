@@ -22,7 +22,7 @@ export const getDefaultFormValues = (
       [MigrationHookFieldId.EnableHook]: false,
     },
     [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
-    [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [{ value: '' }],
+    [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [],
     [StorageMapFieldId.StorageMapType]: StorageMapType.Existing,
   };
 };

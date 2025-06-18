@@ -6,7 +6,7 @@ import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Form, FormSection, MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import ProviderSelect from '../../../components/ProviderSelect';
+import ProviderSelect from '../../../../components/ProviderSelect';
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { MigrationTypeFieldId } from '../migration-type/constants';

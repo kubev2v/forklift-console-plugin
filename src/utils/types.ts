@@ -1,3 +1,5 @@
+import type { FEATURE_NAMES } from './constants';
+
 export enum ProviderStatus {
   ValidationFailed = 'ValidationFailed',
   ConnectionFailed = 'ConnectionFailed',
@@ -12,3 +14,5 @@ export type VmFeatures = {
   persistentTpmEfi?: boolean;
   dedicatedCpu?: boolean;
 };
+
+export type FeatureName = (typeof FEATURE_NAMES)[keyof typeof FEATURE_NAMES];

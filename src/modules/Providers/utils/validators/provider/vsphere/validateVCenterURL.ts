@@ -1,8 +1,10 @@
+import type { ValidationMsg } from 'src/providers/utils/types';
+
 import { safeBase64Decode } from '../../../helpers/safeBase64Decode';
-import { validateIpv4, validateURL, type ValidationMsg } from '../../common';
+import { validateIpv4, validateURL } from '../../common';
 
 export const validateVCenterURL = (
-  url: string | number,
+  url: string | number | undefined,
   insecureSkipVerify?: string,
 ): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.

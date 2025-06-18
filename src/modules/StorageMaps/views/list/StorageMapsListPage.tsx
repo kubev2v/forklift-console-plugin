@@ -153,7 +153,7 @@ const StorageMapsListPage: FC<{
       RowMapper={StorageMapRow}
       fieldsMetadata={fieldsMetadata}
       namespace={namespace}
-      title={t('StorageMaps')}
+      title={t('Storage maps')}
       userSettings={userSettings}
       customNoResultsFound={EmptyState}
       page={1}
