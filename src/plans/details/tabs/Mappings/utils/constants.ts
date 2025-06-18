@@ -1,6 +1,6 @@
 export const STANDARD = 'standard';
 
-export enum PodNetworkLabel {
-  Source = 'Pod Network',
-  Target = 'Pod',
-}
+export const PodNetworkLabel = {
+  Source: 'Pod network',
+  Target: 'Pod',
+} as const;
