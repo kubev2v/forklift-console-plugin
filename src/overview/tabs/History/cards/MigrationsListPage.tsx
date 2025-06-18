@@ -103,7 +103,7 @@ const MigrationsListPage: FC = () => {
         completed: migration?.status?.completed,
         started: migration?.status?.started,
       }),
-      label: t('Range'),
+      label: t('Date range'),
       resourceFieldId: 'range',
     },
     {

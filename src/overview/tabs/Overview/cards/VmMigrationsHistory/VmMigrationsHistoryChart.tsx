@@ -67,7 +67,10 @@ const VmMigrationsHistoryChart = ({
   ];
 
   const maxTicks = Math.max(MAX_DOMAIN_Y, Math.ceil(maxVmMigrationValue) + 1);
-  const tickValues = Array.from({ length: maxTicks }, (_, i) => i + 1);
+  const tickStep = Math.ceil(maxTicks / 6);
+  const tickValues = Array.from({ length: maxTicks }, (_, i) => i + 1).filter(
+    (val) => val === 1 || val % tickStep === 0 || val === maxTicks,
+  );
 
   const mapDataPoints = (dataPoints: MigrationDataPoint[], name = ''): ChartDatumWithName[] =>
     dataPoints.map(({ dateLabel, value }) => ({

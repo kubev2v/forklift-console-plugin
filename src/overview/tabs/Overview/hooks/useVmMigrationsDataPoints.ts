@@ -9,7 +9,7 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { TimeRangeOptions, TimeRangeOptionsDictionary } from './timeRangeOptions';
+import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
 
 type MigrationDataPoint = {
   dateLabel: string;

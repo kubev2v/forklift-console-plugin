@@ -88,10 +88,10 @@ export const toISODateInterval = (from: Date, to: Date): string | undefined => {
   return target.isValid ? target.toISODate() : undefined;
 };
 
-export const abbreviateInterval = (isoInterval: string): string | undefined => {
+export const localizeInterval = (isoInterval: string): string | undefined => {
   const interval = Interval.fromISO(isoInterval);
   if (!interval.isValid) {
     return undefined;
   }
-  return `${interval.start.toFormat('MM-dd')}/${interval.end.toFormat('MM-dd')}`;
+  return `${interval.start.toLocaleString()} - ${interval.end.toLocaleString()}`;
 };

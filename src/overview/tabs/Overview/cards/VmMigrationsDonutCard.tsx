@@ -8,11 +8,11 @@ import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { ChartDonut } from '@patternfly/react-charts';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 
+import { useVmMigrationsDataPoints } from '../hooks/useVmMigrationsDataPoints';
 import { ChartColors } from '../utils/colors';
 import { navigateToHistoryTab } from '../utils/navigate';
 import { TimeRangeOptions } from '../utils/timeRangeOptions';
 import type { ChartDatum } from '../utils/types';
-import { useVmMigrationsDataPoints } from '../utils/useVmMigrationsDataPoints';
 
 import HeaderActions from './CardHeaderActions';
 

@@ -58,7 +58,7 @@ export type ResourceField = {
   isPersistent?: boolean;
   info?: ThInfoType;
   compareFn?: (a: string, b: string, locale: string) => number;
-  defaultSortDirection?: 'asc' | 'desc';
+  defaultSortDirection?: SortDirection;
 };
 
 export type GlobalActionToolbarProps<T> = {
@@ -75,3 +75,5 @@ export type GlobalActionToolbarProps<T> = {
  * @property {SelectOptionObject} SelectOptionObject
  */
 export type SelectValueType = string | SelectOptionObject;
+
+export type SortDirection = 'asc' | 'desc';

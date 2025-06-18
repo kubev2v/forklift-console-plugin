@@ -4,7 +4,7 @@ import type { ThSortType } from '@patternfly/react-table/dist/esm/components/Tab
 
 import { getResourceFieldValue } from '../FilterGroup/matchers';
 import { localeCompare } from '../utils/localCompare';
-import type { ResourceField } from '../utils/types';
+import type { ResourceField, SortDirection } from '../utils/types';
 
 import type { SortType } from './types';
 
@@ -59,7 +59,7 @@ export const compareWith = (
 export const useSort = (
   fields: ResourceField[],
   resolvedLanguage = 'en',
-  defaultSort?: { resourceFieldId: string; direction: 'asc' | 'desc' },
+  defaultSort?: { resourceFieldId: string; direction: SortDirection },
 ): [SortType, (sort: SortType) => void, (a, b) => number] => {
   // by default sort by the first identity column (if any)
   const [firstField] = [...fields].sort(

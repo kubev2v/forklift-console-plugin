@@ -6,8 +6,8 @@ import LoadingSuspend from '@components/LoadingSuspend';
 import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 
+import { useVmMigrationsDataPoints } from '../../hooks/useVmMigrationsDataPoints';
 import { TimeRangeOptions } from '../../utils/timeRangeOptions';
-import { useVmMigrationsDataPoints } from '../../utils/useVmMigrationsDataPoints';
 import HeaderActions from '../CardHeaderActions';
 
 import VmMigrationsHistoryChart from './VmMigrationsHistoryChart';

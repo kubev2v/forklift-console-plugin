@@ -16,7 +16,7 @@ import {
 } from '@kubev2v/types';
 import { Split } from '@patternfly/react-core';
 import { Tr } from '@patternfly/react-table';
-import { getName, getNamespace } from '@utils/crds/common/selectors';
+import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 
 type MigrationRowProps = RowProps<V1beta1Migration> & {
   plans: V1beta1Plan[];
@@ -29,8 +29,9 @@ const MigrationRow: FC<MigrationRowProps> = ({
 }) => {
   const plan = plans.find((pl) => {
     return (
-      pl.metadata?.name === migration.spec?.plan?.name &&
-      pl.metadata?.namespace === migration.spec?.plan?.namespace
+      getUID(pl) === migration.spec?.plan?.uid ||
+      (getName(pl) === migration.spec?.plan?.name &&
+        getNamespace(pl) === migration.spec?.plan?.namespace)
     );
   });
   const migrationVMs = migration?.status?.vms;

@@ -4,9 +4,7 @@ import HistoryCard from './cards/HistoryCard';
 
 const ForkliftControllerHistoryTab: FC = () => (
   <div className="co-dashboard-body">
-    <div>
-      <HistoryCard />
-    </div>
+    <HistoryCard />
   </div>
 );
 
