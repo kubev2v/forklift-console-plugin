@@ -37,6 +37,9 @@ spec:
     value: '[{"type": "yarn", "path": "."}, {"type": "npm", "path": ".konflux"}]'
   - name: build-args-file
     value: build/release.conf
+  - name: build-args
+    value:
+      - "REVISION={{revision}}"
   taskRunSpecs:
   - pipelineTaskName: build-container
     computeResources:
