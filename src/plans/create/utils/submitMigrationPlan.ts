@@ -1,6 +1,7 @@
 import { createStorageMap } from 'src/storageMaps/create/utils/createStorageMap';
 
 import type { IoK8sApiCoreV1Secret, V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
+import { isEmpty } from '@utils/helpers';
 
 import { MigrationHookFieldId } from '../steps/migration-hooks/constants';
 import type { CreatePlanFormData } from '../types';
@@ -72,9 +73,9 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
           targetProvider,
         }),
 
-    diskDecryptionPassPhrases
-      ? createDecryptionSecret(diskDecryptionPassPhrases, planName, planProject)
-      : Promise.resolve(undefined),
+    isEmpty(diskDecryptionPassPhrases)
+      ? Promise.resolve(undefined)
+      : createDecryptionSecret(diskDecryptionPassPhrases, planName, planProject),
 
     // Migration hooks (index 3)
     hasEnabledHooks
