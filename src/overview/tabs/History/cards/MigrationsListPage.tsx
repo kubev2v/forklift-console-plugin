@@ -123,7 +123,7 @@ const MigrationsListPage: FC = () => {
     <LoadingSuspend obj={plans} loaded={plansLoaded} loadError={plansLoadError}>
       <StandardPage
         data-testid="migrations-list"
-        dataSource={[migrations || [], migrationsLoaded, migrationsLoadError]}
+        dataSource={[migrations ?? [], migrationsLoaded, migrationsLoadError]}
         RowMapper={(props) => <MigrationRow {...props} plans={plans} />}
         fieldsMetadata={migrationFields}
         namespace={Namespace.AllProjects}
