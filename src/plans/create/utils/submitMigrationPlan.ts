@@ -73,7 +73,8 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
           targetProvider,
         }),
 
-    isEmpty(diskDecryptionPassPhrases)
+    isEmpty(diskDecryptionPassPhrases) ||
+    diskDecryptionPassPhrases.every((diskPhrase) => diskPhrase.value === '')
       ? Promise.resolve(undefined)
       : createDecryptionSecret(diskDecryptionPassPhrases, planName, planProject),
 

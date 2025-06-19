@@ -15,7 +15,7 @@ import { GeneralFormFieldId } from '../general-information/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { CreatePlanStorageMapFieldId, createPlanStorageMapFieldLabels } from './constants';
-import StorageMapFieldTable from './CreatePlanStorageMapFieldTable';
+import CreatePlanStorageMapFieldTable from './CreatePlanStorageMapFieldTable';
 
 const NewStorageMapFields: FC = () => {
   const { t } = useForkliftTranslation();
@@ -79,7 +79,7 @@ const NewStorageMapFields: FC = () => {
         />
       )}
 
-      <StorageMapFieldTable
+      <CreatePlanStorageMapFieldTable
         targetStorages={availableTargetStorages}
         usedSourceStorages={usedSourceStorages}
         otherSourceStorages={otherSourceStorages}
