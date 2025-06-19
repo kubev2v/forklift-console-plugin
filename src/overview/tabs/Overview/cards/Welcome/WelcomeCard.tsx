@@ -8,7 +8,6 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { getImages } from '@components/images/logos';
 import { ProviderModelRef } from '@kubev2v/types';
-import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Card,
   CardBody,
@@ -30,7 +29,6 @@ type WelcomeCardProps = {
 
 const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
   const { t } = useForkliftTranslation();
-  const [activeNamespace] = useActiveNamespace();
   const navigate = useNavigate();
   const isDarkTheme = useIsDarkTheme();
   const providerItems = providerTypes(isDarkTheme);
@@ -38,11 +36,10 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
 
   const providersListUrl = useMemo(() => {
     return getResourceUrl({
-      namespace: activeNamespace,
-      namespaced: true,
+      namespaced: false,
       reference: ProviderModelRef,
     });
-  }, [activeNamespace]);
+  }, []);
   const providersCreateUrl = `${providersListUrl}/~new`;
   const actionDropdownItems = [<HideFromViewDropdownOption key="hide" onHide={onHide} />];
 

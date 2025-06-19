@@ -2,26 +2,19 @@ import type { FC } from 'react';
 import InventoryNotReachable from 'src/modules/Providers/views/list/components/InventoryNotReachable';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 
 import HeaderTitle from './components/HeaderTitle';
 import { ShowWelcomeCardButton } from './components/ShowWelcomeCardButton';
 import { useProvidersInventoryIsLive } from './hooks/useProvidersInventoryIsLive';
 import ForkliftControllerHealthTab from './tabs/Health/ForkliftControllerHealthTab';
+import ForkliftControllerHistoryTab from './tabs/History/ForkliftControllerHistoryTab';
 import ForkliftControllerOverviewTab from './tabs/Overview/ForkliftControllerOverviewTab';
 import ForkliftControllerSettingsTab from './tabs/Settings/ForkliftControllerSettingsTab';
 import ForkliftControllerYAMLTab from './tabs/YAML/ForkliftControllerYAMLTab';
 
 import './OverviewPage.scss';
-
-type OverviewPageProps = {
-  kind: string;
-  kindObj: K8sModel;
-  match: { path: string; url: string; isExact: boolean; params: unknown };
-  name: string;
-  namespace?: string;
-};
 
 const HeaderTitleWrapper: FC = () => {
   const { loadError: inventoryLivelinessError } = useProvidersInventoryIsLive({});
@@ -43,7 +36,7 @@ const HeaderTitleWrapper: FC = () => {
   );
 };
 
-const OverviewPage: FC<OverviewPageProps> = () => {
+const OverviewPage: FC = () => {
   const { t } = useForkliftTranslation();
 
   const pages = [
@@ -61,6 +54,11 @@ const OverviewPage: FC<OverviewPageProps> = () => {
       component: ForkliftControllerHealthTab,
       href: 'health',
       name: t('Health'),
+    },
+    {
+      component: ForkliftControllerHistoryTab,
+      href: 'history',
+      name: t('History'),
     },
     {
       component: ForkliftControllerSettingsTab,

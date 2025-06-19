@@ -2,7 +2,7 @@ import { createContext, type FC, type PropsWithChildren, useContext } from 'reac
 
 import { useSort } from './common/TableView/sort';
 import type { SortType } from './common/TableView/types';
-import type { ResourceField } from './common/utils/types';
+import type { ResourceField, SortDirection } from './common/utils/types';
 
 export type TableSortContextProps = {
   activeSort: SortType;
@@ -20,13 +20,15 @@ export const TableSortContext = createContext<TableSortContextProps>(defaultTabl
 
 type TableSortContextProviderProps = PropsWithChildren & {
   fields: ResourceField[];
+  defaultSort?: { resourceFieldId: string; direction: SortDirection };
 };
 
 export const TableSortContextProvider: FC<TableSortContextProviderProps> = ({
   children,
+  defaultSort,
   fields,
 }) => {
-  const [activeSort, setActiveSort, compareFn] = useSort(fields);
+  const [activeSort, setActiveSort, compareFn] = useSort(fields, 'en', defaultSort);
 
   return (
     <TableSortContext.Provider value={{ activeSort, compareFn, setActiveSort }}>

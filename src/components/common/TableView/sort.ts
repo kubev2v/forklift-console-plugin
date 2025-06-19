@@ -4,7 +4,7 @@ import type { ThSortType } from '@patternfly/react-table/dist/esm/components/Tab
 
 import { getResourceFieldValue } from '../FilterGroup/matchers';
 import { localeCompare } from '../utils/localCompare';
-import type { ResourceField } from '../utils/types';
+import type { ResourceField, SortDirection } from '../utils/types';
 
 import type { SortType } from './types';
 
@@ -59,17 +59,27 @@ export const compareWith = (
 export const useSort = (
   fields: ResourceField[],
   resolvedLanguage = 'en',
+  defaultSort?: { resourceFieldId: string; direction: SortDirection },
 ): [SortType, (sort: SortType) => void, (a, b) => number] => {
   // by default sort by the first identity column (if any)
   const [firstField] = [...fields].sort(
     (a, b) => Number(Boolean(b.isIdentity)) - Number(Boolean(a.isIdentity)),
   );
 
-  const [activeSort, setActiveSort] = useState<SortType>({
-    // when no other order is define, default to ascending order
-    isAsc: true,
-    label: firstField?.label,
-    resourceFieldId: firstField?.resourceFieldId,
+  const [activeSort, setActiveSort] = useState<SortType>(() => {
+    if (defaultSort) {
+      const field = fields.find((fld) => fld.resourceFieldId === defaultSort.resourceFieldId);
+      return {
+        isAsc: defaultSort.direction === 'asc',
+        label: field?.label,
+        resourceFieldId: defaultSort.resourceFieldId,
+      };
+    }
+    return {
+      isAsc: true,
+      label: firstField?.label,
+      resourceFieldId: firstField?.resourceFieldId,
+    };
   });
 
   const compareFn = useMemo(

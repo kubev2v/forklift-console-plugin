@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 
 import {
-  abbreviateInterval,
+  localizeInterval,
   isValidDate,
   isValidInterval,
   parseISOtoJSDate,
@@ -47,12 +47,12 @@ export const DateRangeFilter = ({
   const [to, setTo] = useState<Date>();
 
   const rangeToOption = (range: string) => {
-    const abbr = abbreviateInterval(range);
+    const formatted = localizeInterval(range);
     return {
       key: range,
       node: (
-        <Tooltip content={range}>
-          <span>{abbr ?? ''}</span>
+        <Tooltip content={formatted}>
+          <span>{formatted ?? ''}</span>
         </Tooltip>
       ),
     };

@@ -27,6 +27,10 @@ export const valueToLabel = {
   [TimeRangeOptions.Last31Days]: t('Last 31 days'),
 };
 
+const BUCKET_SM_HOURS = 2;
+const BUCKET_MD_DAYS = 1;
+const BUCKET_LARGE_DAYS = 4;
+
 export const TimeRangeOptionsDictionary: {
   Last10Days: TimeRangeOptionsProperties;
   Last31Days: TimeRangeOptionsProperties;
@@ -34,25 +38,25 @@ export const TimeRangeOptionsDictionary: {
   All: TimeRangeOptionsProperties;
 } = {
   All: {
-    bucket: { day: 1 },
+    bucket: { day: BUCKET_LARGE_DAYS },
     filter: () => true,
     span: { days: 365 },
     unit: 'day',
   },
   Last10Days: {
-    bucket: { day: 1 },
+    bucket: { day: BUCKET_MD_DAYS },
     filter: isLast10Days,
     span: { days: 10 },
     unit: 'day',
   },
   Last24H: {
-    bucket: { hour: 2 },
+    bucket: { hour: BUCKET_SM_HOURS },
     filter: isLast24H,
     span: { hours: 24 },
     unit: 'hour',
   },
   Last31Days: {
-    bucket: { day: 4 },
+    bucket: { day: BUCKET_LARGE_DAYS },
     filter: isLast31Days,
     span: { days: 31 },
     unit: 'day',

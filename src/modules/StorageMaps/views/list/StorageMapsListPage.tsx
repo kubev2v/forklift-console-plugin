@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
@@ -108,7 +108,7 @@ const StorageMapsListPage: FC<{
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
-  const userSettings = loadUserSettings({ pageId: 'StorageMaps' });
+  const userSettings = useMemo(() => loadUserSettings({ pageId: 'StorageMaps' }), []);
 
   const [StorageMaps, StorageMapsLoaded, StorageMapsLoadError] = useK8sWatchResource<
     V1beta1StorageMap[]

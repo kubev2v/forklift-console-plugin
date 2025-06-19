@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { PlanModelRef } from '@kubev2v/types';
-import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Chart,
   ChartArea,
@@ -16,15 +15,18 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import useMigrationCounts from '../../hooks/useMigrationCounts';
 import { ChartColors } from '../../utils/colors';
-import { mapDataPoints } from '../../utils/getVmMigrationsDataPoints';
-import { navigateToPlans } from '../../utils/navigateToPlans';
+import { navigateToHistoryTab } from '../../utils/navigate';
 import type { TimeRangeOptions } from '../../utils/timeRangeOptions';
-import type { MigrationDataPoint } from '../../utils/toDataPointsHelper';
 import type { ChartDatumWithName } from '../../utils/types';
 
 import { useResizeObserver } from './useResizeObserver';
 
 const MAX_DOMAIN_Y = 5;
+
+type MigrationDataPoint = {
+  dateLabel: string;
+  value: number;
+};
 
 const VmMigrationsHistoryChart = ({
   selectedTimeRange,
@@ -42,17 +44,15 @@ const VmMigrationsHistoryChart = ({
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartDimensions = useResizeObserver(chartContainerRef);
   const { failed, running, succeeded } = vmMigrationsDataPoints;
-  const [activeNamespace] = useActiveNamespace();
   const navigate = useNavigate();
   const [activeArea, setActiveArea] = useState<string | null>(null);
 
   const plansListURL = useMemo(() => {
     return getResourceUrl({
-      namespace: activeNamespace,
       namespaced: true,
       reference: PlanModelRef,
     });
-  }, [activeNamespace]);
+  }, []);
 
   const maxVmMigrationValue = Math.max(
     ...running.map((migration) => migration.value),
@@ -67,7 +67,17 @@ const VmMigrationsHistoryChart = ({
   ];
 
   const maxTicks = Math.max(MAX_DOMAIN_Y, Math.ceil(maxVmMigrationValue) + 1);
-  const tickValues = Array.from({ length: maxTicks }, (_, i) => i + 1);
+  const tickStep = Math.ceil(maxTicks / 6);
+  const tickValues = Array.from({ length: maxTicks }, (_, i) => i + 1).filter(
+    (val) => val === 1 || val % tickStep === 0 || val === maxTicks,
+  );
+
+  const mapDataPoints = (dataPoints: MigrationDataPoint[], name = ''): ChartDatumWithName[] =>
+    dataPoints.map(({ dateLabel, value }) => ({
+      name,
+      x: dateLabel,
+      y: value,
+    }));
 
   const getAreaProps = (dataPoints: MigrationDataPoint[], areaName: string, color: string) => ({
     colorScale: [color],
@@ -76,7 +86,7 @@ const VmMigrationsHistoryChart = ({
       {
         eventHandlers: {
           onClick: () =>
-            navigateToPlans({ navigate, plansListURL, selectedRange: selectedTimeRange }),
+            navigateToHistoryTab({ navigate, selectedRange: selectedTimeRange, status: areaName }),
           onMouseOut: () => {
             setActiveArea(null);
             return null;
@@ -121,8 +131,7 @@ const VmMigrationsHistoryChart = ({
             labels={({ datum }: { datum: ChartDatumWithName }) =>
               datum.y === 0 || !datum.name
                 ? (undefined as unknown as string)
-                : `${t('{{count}} VM migration', { count: datum.y })}
-                ${datum.name.toLowerCase()}`
+                : `${t('{{count}} VM migration', { count: datum.y })} ${datum.name.toLowerCase()}`
             }
             constrainToVisibleArea
             onActivated={(points: ChartDatumWithName[]) => {

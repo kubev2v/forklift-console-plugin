@@ -2,15 +2,11 @@ import { type FC, useContext } from 'react';
 import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  MigrationModelGroupVersionKind,
-  type V1beta1ForkliftController,
-  type V1beta1Migration,
-} from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import LoadingSuspend from '@components/LoadingSuspend';
+import type { V1beta1ForkliftController } from '@kubev2v/types';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 
-import { getVmMigrationsDataPoints } from '../../utils/getVmMigrationsDataPoints';
+import { useVmMigrationsDataPoints } from '../../hooks/useVmMigrationsDataPoints';
 import { TimeRangeOptions } from '../../utils/timeRangeOptions';
 import HeaderActions from '../CardHeaderActions';
 
@@ -32,13 +28,8 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
       vmMigrationsHistorySelectedRange: range,
     });
   };
-  const [migrations] = useK8sWatchResource<V1beta1Migration[]>({
-    groupVersionKind: MigrationModelGroupVersionKind,
-    isList: true,
-    namespaced: true,
-  });
-
-  const vmMigrationsDataPoints = getVmMigrationsDataPoints(migrations, selectedRange);
+  const { failed, loaded, loadError, obj, running, succeeded } =
+    useVmMigrationsDataPoints(selectedRange);
 
   return (
     <Card className="pf-m-full-height">
@@ -55,10 +46,16 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
         <CardTitle className="forklift-title">{t('Migration history')}</CardTitle>
       </CardHeader>
       <CardBody className="forklift-overview__status-migration-chart">
-        <VmMigrationsHistoryChart
-          vmMigrationsDataPoints={vmMigrationsDataPoints}
-          selectedTimeRange={selectedRange}
-        />
+        <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
+          <VmMigrationsHistoryChart
+            vmMigrationsDataPoints={{
+              failed,
+              running,
+              succeeded,
+            }}
+            selectedTimeRange={selectedRange}
+          />
+        </LoadingSuspend>
       </CardBody>
     </Card>
   );

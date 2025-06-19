@@ -24,7 +24,7 @@ const ProvidersListPage: FC<{
 }> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
-  const userSettings = loadUserSettings({ pageId: 'Providers' });
+  const userSettings = useMemo(() => loadUserSettings({ pageId: 'Providers' }), []);
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,

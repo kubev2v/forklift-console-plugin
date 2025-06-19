@@ -5,7 +5,6 @@ import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/type
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
-import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import { ChartDonut } from '@patternfly/react-charts';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
@@ -22,17 +21,15 @@ type MigrationPlansDonutCardProps = {
 const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
   const { t } = useForkliftTranslation();
   const { count } = usePlanStatusCounts();
-  const [activeNamespace] = useActiveNamespace();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const plansListURL = useMemo(() => {
     return getResourceUrl({
-      namespace: activeNamespace,
       namespaced: true,
       reference: PlanModelRef,
     });
-  }, [activeNamespace]);
+  }, []);
 
   const data =
     count.Total === 0

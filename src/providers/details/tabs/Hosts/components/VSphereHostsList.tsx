@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
@@ -26,6 +26,8 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
   const { permissions, provider } = data;
   const { namespace } = provider?.metadata ?? {};
 
+  const userSettings = useMemo(() => loadUserSettings({ pageId: 'ProviderHosts' }), []);
+
   const { inventory: inventoryHosts } = useProviderInventory<VSphereHost[]>({
     provider,
     subPath: 'hosts?detail=4',
@@ -43,7 +45,6 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
   if (!provider || !namespace || !permissions || !inventoryHosts)
     return <Bullseye className="text-muted">{t('No data available.')}</Bullseye>;
 
-  const userSettings = loadUserSettings({ pageId: 'ProviderHosts' });
   const hostsData = matchHostsToInventory(inventoryHosts, hosts, provider);
 
   const actions: FC[] = [

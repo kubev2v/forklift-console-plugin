@@ -87,8 +87,8 @@ export const getCantStartVMStatusCount = (vms: V1beta1PlanSpecVms[]) => {
 
 export const getMigrationVMsStatusCounts = (
   vms: V1beta1PlanStatusMigrationVms[],
-  phase: PlanStatuses,
   planSpecVMsTotal: number,
+  phase?: PlanStatuses,
 ): MigrationVirtualMachinesStatusesCounts => {
   if (PlanStatuses.Paused === phase) {
     return {

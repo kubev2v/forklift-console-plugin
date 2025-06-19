@@ -1,22 +1,25 @@
 import type { NavigateFunction } from 'react-router-dom-v5-compat';
 import { DateTime } from 'luxon';
-import { PlanTableResourceId } from 'src/plans/list/utils/constants';
 
 import { type TimeRangeOptions, TimeRangeOptionsDictionary } from './timeRangeOptions';
 
-export const navigateToPlans = ({
+export const navigateToHistoryTab = ({
   navigate,
-  plansListURL,
   selectedRange,
+  status,
 }: {
   navigate: NavigateFunction;
-  plansListURL: string;
   selectedRange: TimeRangeOptions;
+  status?: string;
 }) => {
   const dateEnd = DateTime.now().toUTC();
   const dateStart = dateEnd.minus(TimeRangeOptionsDictionary[selectedRange].span);
   const rangeString = `${dateStart.toFormat('yyyy-MM-dd')}/${dateEnd.toFormat('yyyy-MM-dd')}`;
   const param = encodeURIComponent(JSON.stringify([rangeString]));
-  navigate(`${plansListURL}?${PlanTableResourceId.MigrationStarted}=${param}`);
+  const params = [`range=${param}`, `recent=${encodeURIComponent(JSON.stringify(['true']))}`];
+  if (status) {
+    params.push(`vms=${encodeURIComponent(JSON.stringify([status]))}`);
+  }
+  navigate(`/mtv/overview/history?${params.join('&')}`);
   return null;
 };

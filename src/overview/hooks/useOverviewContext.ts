@@ -11,7 +11,7 @@ import {
 import type { CreateOverviewContextData, CreateOverviewContextType } from './OverviewContext';
 
 export const useOverviewContext = (): CreateOverviewContextType => {
-  const userSettings = loadUserSettings('Overview');
+  const userSettings = useMemo(() => loadUserSettings('Overview'), []);
   const hideWelcomeCardInitState = userSettings?.welcome?.hideWelcome ?? false;
   const {
     vmMigrationsDonutSelectedRange: donutRange,
