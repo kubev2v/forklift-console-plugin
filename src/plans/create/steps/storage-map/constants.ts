@@ -1,32 +1,20 @@
+import { StorageMapFieldId, storageMapFieldLabels } from 'src/storageMaps/constants';
+
 import { t } from '@utils/i18n';
 
-import type { MappingValue } from '../../types';
+export const CreatePlanStorageMapFieldId = {
+  ...StorageMapFieldId,
+  ExistingStorageMap: 'existingStorageMap',
+  StorageMapName: 'storageMapName',
+  StorageMapType: 'storageMapType',
+} as const;
 
-export enum StorageMapFieldId {
-  StorageMap = 'storageMap',
-  ExistingStorageMap = 'existingStorageMap',
-  StorageMapType = 'storageMapType',
-  StorageMapName = 'storageMapName',
-  SourceStorage = 'sourceStorage',
-  TargetStorage = 'targetStorage',
-}
-
-export const storageMapFieldLabels: Partial<Record<StorageMapFieldId, ReturnType<typeof t>>> = {
-  [StorageMapFieldId.ExistingStorageMap]: t('Storage map'),
-  [StorageMapFieldId.SourceStorage]: t('Source Storage'),
-  [StorageMapFieldId.StorageMapName]: t('Storage map name'),
-  [StorageMapFieldId.TargetStorage]: t('Target Storage'),
-};
-
-export type StorageMapping = {
-  [StorageMapFieldId.SourceStorage]: MappingValue;
-  [StorageMapFieldId.TargetStorage]: MappingValue;
-};
-
-export const defaultStorageMapping: StorageMapping = {
-  [StorageMapFieldId.SourceStorage]: { name: '' },
-  [StorageMapFieldId.TargetStorage]: { name: '' },
-};
+export const createPlanStorageMapFieldLabels = {
+  ...storageMapFieldLabels,
+  [CreatePlanStorageMapFieldId.ExistingStorageMap]: t('Storage map'),
+  [CreatePlanStorageMapFieldId.StorageMapName]: t('Storage map name'),
+  [CreatePlanStorageMapFieldId.StorageMapType]: t('Storage map type'),
+} as const;
 
 export enum StorageMapType {
   New = 'new',
@@ -36,4 +24,4 @@ export enum StorageMapType {
 export const storageMapTypeLabels = {
   [StorageMapType.Existing]: t('Use an existing storage map'),
   [StorageMapType.New]: t('Use new storage map'),
-};
+} as const;

@@ -1,5 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
+import { defaultStorageMapping } from 'src/storageMaps/constants';
 
 import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
 import {
@@ -15,7 +16,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { defaultStorageMapping, StorageMapFieldId, StorageMapType } from '../storage-map/constants';
+import { CreatePlanStorageMapFieldId, StorageMapType } from '../storage-map/constants';
 
 import StorageMapReviewTable from './StorageMapReviewTable';
 
@@ -26,10 +27,10 @@ const StorageMapReviewSectionInner: FC = () => {
   const [storageMapType, storageMap, existingNetMap, netMapName] = useWatch({
     control,
     name: [
-      StorageMapFieldId.StorageMapType,
-      StorageMapFieldId.StorageMap,
-      StorageMapFieldId.ExistingStorageMap,
-      StorageMapFieldId.StorageMapName,
+      CreatePlanStorageMapFieldId.StorageMapType,
+      CreatePlanStorageMapFieldId.StorageMap,
+      CreatePlanStorageMapFieldId.ExistingStorageMap,
+      CreatePlanStorageMapFieldId.StorageMapName,
     ],
   });
 

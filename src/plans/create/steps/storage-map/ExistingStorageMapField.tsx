@@ -8,28 +8,28 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { GeneralFormFieldId } from '../general-information/constants';
 
-import { StorageMapFieldId, storageMapFieldLabels } from './constants';
+import { CreatePlanStorageMapFieldId, createPlanStorageMapFieldLabels } from './constants';
 import StorageMapSelect from './StorageMapSelect';
 
 const ExistingStorageMapField: FC = () => {
   const { t } = useForkliftTranslation();
   const { control, getFieldState } = useCreatePlanFormContext();
-  const { error } = getFieldState(StorageMapFieldId.ExistingStorageMap);
+  const { error } = getFieldState(CreatePlanStorageMapFieldId.ExistingStorageMap);
   const planProject = useWatch({ control, name: GeneralFormFieldId.PlanProject });
 
   return (
     <FormGroupWithErrorText
       isRequired
-      fieldId={StorageMapFieldId.ExistingStorageMap}
-      label={storageMapFieldLabels[StorageMapFieldId.ExistingStorageMap]}
+      fieldId={CreatePlanStorageMapFieldId.ExistingStorageMap}
+      label={createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.ExistingStorageMap]}
       className="pf-v5-u-ml-lg"
     >
       <Controller
-        name={StorageMapFieldId.ExistingStorageMap}
+        name={CreatePlanStorageMapFieldId.ExistingStorageMap}
         control={control}
         render={({ field }) => (
           <StorageMapSelect
-            id={StorageMapFieldId.ExistingStorageMap}
+            id={CreatePlanStorageMapFieldId.ExistingStorageMap}
             value={field.value?.metadata?.name ?? ''}
             status={error && MenuToggleStatus.danger}
             onSelect={(_, value) => {

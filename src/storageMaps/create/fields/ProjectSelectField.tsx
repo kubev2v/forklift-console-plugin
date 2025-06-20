@@ -15,9 +15,8 @@ import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
 import { useDefaultProject } from '@utils/hooks/useDefaultProject';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';
-
-import { CreateStorageMapFieldId, createStorageMapFieldLabels } from './constants';
 
 const ProjectSelectField: FC = () => {
   const { t } = useForkliftTranslation();
@@ -28,7 +27,7 @@ const ProjectSelectField: FC = () => {
   } = useFormContext<CreateStorageMapFormData>();
   const [targetProvider, sourceProvider] = useWatch({
     control,
-    name: [CreateStorageMapFieldId.TargetProvider, CreateStorageMapFieldId.SourceProvider],
+    name: [StorageMapFieldId.TargetProvider, StorageMapFieldId.SourceProvider],
   });
   const [projectOptions] = useProjectNameSelectOptions();
   const defaultProject = useDefaultProject(projectOptions);
@@ -36,15 +35,15 @@ const ProjectSelectField: FC = () => {
   // Automatically set the default project once it's resolved
   useEffect(() => {
     if (defaultProject) {
-      setValue(CreateStorageMapFieldId.Project, defaultProject);
+      setValue(StorageMapFieldId.Project, defaultProject);
     }
   }, [defaultProject, setValue]);
 
   return (
     <FormGroupWithErrorText
       isRequired
-      fieldId={CreateStorageMapFieldId.Project}
-      label={createStorageMapFieldLabels[CreateStorageMapFieldId.Project]}
+      fieldId={StorageMapFieldId.Project}
+      label={storageMapFieldLabels[StorageMapFieldId.Project]}
       labelIcon={
         <HelpIconPopover>
           <Stack hasGutter>
@@ -57,7 +56,7 @@ const ProjectSelectField: FC = () => {
       }
     >
       <Controller
-        name={CreateStorageMapFieldId.Project}
+        name={StorageMapFieldId.Project}
         control={control}
         render={({ field }) => (
           <div ref={field.ref}>
@@ -65,19 +64,19 @@ const ProjectSelectField: FC = () => {
               isScrollable
               isDisabled={isSubmitting}
               placeholder={t('Select project')}
-              id={CreateStorageMapFieldId.Project}
+              id={StorageMapFieldId.Project}
               selectOptions={projectOptions}
               selected={field.value}
               onSelect={(_, value) => {
                 field.onChange(value);
 
                 if (sourceProvider) {
-                  setValue<FieldPath<FieldValues>>(CreateStorageMapFieldId.SourceProvider, '', {
+                  setValue<FieldPath<FieldValues>>(StorageMapFieldId.SourceProvider, '', {
                     shouldValidate: true,
                   });
                 }
                 if (targetProvider) {
-                  setValue<FieldPath<FieldValues>>(CreateStorageMapFieldId.TargetProvider, '', {
+                  setValue<FieldPath<FieldValues>>(StorageMapFieldId.TargetProvider, '', {
                     shouldValidate: true,
                   });
                 }
@@ -86,7 +85,7 @@ const ProjectSelectField: FC = () => {
                 field.onChange('');
               }}
               toggleProps={{
-                status: errors[CreateStorageMapFieldId.Project] && MenuToggleStatus.danger,
+                status: errors[StorageMapFieldId.Project] && MenuToggleStatus.danger,
               }}
             />
           </div>

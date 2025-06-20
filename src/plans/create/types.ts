@@ -1,6 +1,7 @@
 import type { FieldValues } from 'react-hook-form';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import type { StorageMapping } from 'src/storageMaps/constants';
 import type { TargetStorage } from 'src/storageMaps/types';
 
 import type {
@@ -28,7 +29,7 @@ import type { HooksFormFieldId, MigrationHook } from './steps/migration-hooks/co
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
 import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
-import type { StorageMapFieldId, StorageMapping } from './steps/storage-map/constants';
+import type { CreatePlanStorageMapFieldId } from './steps/storage-map/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
 export type ProviderNetwork =
@@ -63,9 +64,9 @@ export type CreatePlanFormData = FieldValues & {
   [NetworkMapFieldId.ExistingNetworkMap]: V1beta1NetworkMap | undefined;
   [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
   [NetworkMapFieldId.NetworkMapName]: string;
-  [StorageMapFieldId.ExistingStorageMap]: V1beta1StorageMap | undefined;
-  [StorageMapFieldId.StorageMap]: StorageMapping[];
-  [StorageMapFieldId.StorageMapName]: string;
+  [CreatePlanStorageMapFieldId.ExistingStorageMap]: V1beta1StorageMap | undefined;
+  [CreatePlanStorageMapFieldId.StorageMap]: StorageMapping[];
+  [CreatePlanStorageMapFieldId.StorageMapName]: string;
   [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
   [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;

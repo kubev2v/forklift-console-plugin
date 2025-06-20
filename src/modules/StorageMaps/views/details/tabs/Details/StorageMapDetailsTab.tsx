@@ -1,15 +1,15 @@
 import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import MapsSection from 'src/storageMaps/details/MapsSection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { PageSection } from '@patternfly/react-core';
+import { Flex, PageSection } from '@patternfly/react-core';
 
 import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
-import { MapsSection } from '../../components/MapsSection/MapsSection';
 import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSection';
 
 type StorageMapDetailsTabProps = {
@@ -41,8 +41,10 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
       </PageSection>
 
       <PageSection variant="light" className="forklift-page-section">
-        <SectionHeading text={t('Map')} />
-        <MapsSection obj={obj} />
+        <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
+          <SectionHeading text={t('Map')} />
+          <MapsSection storageMap={obj} />
+        </Flex>
       </PageSection>
 
       <PageSection variant="light" className="forklift-page-section">

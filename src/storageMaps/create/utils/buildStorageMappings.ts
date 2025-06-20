@@ -3,7 +3,7 @@ import { STORAGE_NAMES } from 'src/storageMaps/constants';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 
-import type { StorageMapping } from '../fields/constants';
+import type { StorageMapping } from '../../constants';
 import type { CustomStorageMapSpecMap, OffloadPluginConfig } from '../types';
 
 import { createOffloadPluginConfig } from './createOffloadPluginConfig';

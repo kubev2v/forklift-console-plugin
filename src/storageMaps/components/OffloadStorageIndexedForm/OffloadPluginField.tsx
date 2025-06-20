@@ -6,14 +6,12 @@ import MtvSelect from '@components/common/MtvSelect';
 import { FormGroup, Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { CreateStorageMapFormData } from '../types';
-
 import {
-  CreateStorageMapFieldId,
-  createStorageMapFieldLabels,
   offloadPluginLabels,
   offloadPlugins,
-} from './constants';
+  StorageMapFieldId,
+  storageMapFieldLabels,
+} from '../../constants';
 
 type OffloadPluginFieldProps = { fieldId: string };
 
@@ -22,7 +20,7 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
   const {
     control,
     formState: { isSubmitting },
-  } = useFormContext<CreateStorageMapFormData>();
+  } = useFormContext();
 
   const options = offloadPlugins.map((plugin) => ({
     label: offloadPluginLabels[plugin],
@@ -32,7 +30,7 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
   return (
     <FormGroup
       fieldId={fieldId}
-      label={createStorageMapFieldLabels[CreateStorageMapFieldId.OffloadPlugin]}
+      label={storageMapFieldLabels[StorageMapFieldId.OffloadPlugin]}
       labelIcon={
         <HelpIconPopover>
           <Stack hasGutter>

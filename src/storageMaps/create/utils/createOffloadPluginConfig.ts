@@ -1,4 +1,4 @@
-import { CreateStorageMapFieldId, OffloadPlugin, type StorageMapping } from '../fields/constants';
+import { OffloadPlugin, StorageMapFieldId, type StorageMapping } from '../../constants';
 import type { OffloadPluginConfig } from '../types';
 
 /**
@@ -10,9 +10,9 @@ export const createOffloadPluginConfig = (
   mapping: StorageMapping,
 ): OffloadPluginConfig | undefined => {
   // Extract values from mapping using constants for better readability
-  const offloadPlugin = mapping[CreateStorageMapFieldId.OffloadPlugin] as OffloadPlugin;
-  const storageSecret = mapping[CreateStorageMapFieldId.StorageSecret];
-  const storageVendorProduct = mapping[CreateStorageMapFieldId.StorageProduct];
+  const offloadPlugin = mapping[StorageMapFieldId.OffloadPlugin] as OffloadPlugin;
+  const storageSecret = mapping[StorageMapFieldId.StorageSecret];
+  const storageVendorProduct = mapping[StorageMapFieldId.StorageProduct];
 
   // Check if all required offload plugin fields are present
   if (!offloadPlugin || !storageSecret || !storageVendorProduct) {
@@ -23,9 +23,7 @@ export const createOffloadPluginConfig = (
     case OffloadPlugin.VSphereXcopyConfig:
       return {
         vsphereXcopyConfig: {
-          secretRef: {
-            name: storageSecret,
-          },
+          secretRef: storageSecret,
           storageVendorProduct,
         },
       };

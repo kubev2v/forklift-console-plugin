@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/MtvSelect';
-import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@kubev2v/types';
 import {
   getGroupVersionKindForModel,
   useK8sWatchResource,
@@ -13,23 +13,19 @@ import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { CreateStorageMapFormData } from '../types';
+import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 
-import { CreateStorageMapFieldId, createStorageMapFieldLabels } from './constants';
+type StorageSecretFieldProps = {
+  fieldId: string;
+  sourceProvider: V1beta1Provider | undefined;
+};
 
-type StorageSecretFieldProps = { fieldId: string };
-
-const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId }) => {
+const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvider }) => {
   const { t } = useForkliftTranslation();
   const {
     control,
     formState: { isSubmitting },
-  } = useFormContext<CreateStorageMapFormData>();
-
-  const sourceProvider = useWatch({
-    control,
-    name: CreateStorageMapFieldId.SourceProvider,
-  });
+  } = useFormContext();
 
   const [secrets] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
     groupVersionKind: getGroupVersionKindForModel(SecretModel),
@@ -41,7 +37,7 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId }) => {
   return (
     <FormGroup
       fieldId={fieldId}
-      label={createStorageMapFieldLabels[CreateStorageMapFieldId.StorageSecret]}
+      label={storageMapFieldLabels[StorageMapFieldId.StorageSecret]}
       labelIcon={
         <HelpIconPopover>
           <Stack hasGutter>

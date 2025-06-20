@@ -7,3 +7,5 @@ export type TargetStorage = {
 export enum StorageClassAnnotation {
   IsDefault = 'storageclass.kubernetes.io/is-default-class',
 }
+
+export type StorageMappingValue = { id?: string; name: string };

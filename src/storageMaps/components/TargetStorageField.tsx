@@ -1,15 +1,10 @@
 import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { TargetStorage } from 'src/storageMaps/types';
+import type { StorageMappingValue, TargetStorage } from 'src/storageMaps/types';
 
 import Select from '@components/common/MtvSelect';
 import { SelectList, SelectOption } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-
-import type { CreateStorageMapFormData } from '../types';
-
-import type { MappingValue } from './types';
 
 type TargetStorageFieldProps = {
   fieldId: string;
@@ -20,7 +15,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
   const {
     control,
     formState: { isSubmitting },
-  } = useFormContext<CreateStorageMapFormData>();
+  } = useFormContext();
   const { t } = useForkliftTranslation();
 
   return (
@@ -30,25 +25,19 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
       render={({ field }) => (
         <Select
           id={fieldId}
-          isDisabled={isSubmitting}
-          value={(field.value as MappingValue).name}
-          onSelect={(_event, value) => {
+          onSelect={(_, value) => {
             field.onChange(value);
           }}
           placeholder={t('Select target storage')}
+          isDisabled={isSubmitting}
+          value={(field.value as StorageMappingValue).name}
         >
           <SelectList>
-            {isEmpty(targetStorages) ? (
-              <SelectOption key="empty" isDisabled>
-                {t('Select a target provider to list available target storages')}
+            {targetStorages.map((targetStorage) => (
+              <SelectOption key={targetStorage.id} value={targetStorage}>
+                {targetStorage.name}
               </SelectOption>
-            ) : (
-              targetStorages.map((targetStorage) => (
-                <SelectOption key={targetStorage.id} value={targetStorage}>
-                  {targetStorage.name}
-                </SelectOption>
-              ))
-            )}
+            ))}
           </SelectList>
         </Select>
       )}

@@ -27,7 +27,7 @@ const openShiftVmFieldsMetadataFactory = [
   },
   {
     filter: {
-      placeholderLabel: t('Filter by namespace'),
+      placeholderLabel: t('Filter by project'),
       type: 'freetext',
     },
     isIdentity: true,

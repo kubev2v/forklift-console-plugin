@@ -18,11 +18,12 @@ import {
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { CreateStorageMapFieldId, defaultStorageMapping } from './fields/constants';
+import { defaultStorageMapping, StorageMapFieldId } from '../constants';
+
+import CreateStorageMapFieldTable from './fields/CreateStorageMapFieldTable';
 import MapNameField from './fields/MapNameField';
 import ProjectSelectField from './fields/ProjectSelectField';
 import SourceProviderField from './fields/SourceProviderField';
-import StorageMappingFieldBuilder from './fields/StorageMappingFieldBuilder';
 import TargetProviderField from './fields/TargetProviderField';
 import { createStorageMap } from './utils/createStorageMap';
 import type { CreateStorageMapFormData } from './types';
@@ -34,7 +35,7 @@ const CreateStorageMapForm: React.FC = () => {
   const navigate = useNavigate();
 
   const form = useForm<CreateStorageMapFormData>({
-    defaultValues: { [CreateStorageMapFieldId.StorageMap]: [defaultStorageMapping] },
+    defaultValues: { [StorageMapFieldId.StorageMap]: [defaultStorageMapping] },
     mode: 'onChange',
   });
   const {
@@ -46,7 +47,7 @@ const CreateStorageMapForm: React.FC = () => {
   const [createError, setCreateError] = useState<Error>();
   const project = useWatch({
     control,
-    name: CreateStorageMapFieldId.Project,
+    name: StorageMapFieldId.Project,
   });
 
   const storageMapsListUrl = getResourceUrl({
@@ -96,7 +97,7 @@ const CreateStorageMapForm: React.FC = () => {
           <ProjectSelectField />
           <SourceProviderField />
           <TargetProviderField />
-          <StorageMappingFieldBuilder />
+          <CreateStorageMapFieldTable />
         </Form>
 
         <FlexItem>

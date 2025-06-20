@@ -1,21 +1,27 @@
 import { type FC, useState } from 'react';
+import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
+import type { V1beta1Provider } from '@kubev2v/types';
 import { ExpandableSection, Form } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { CreateStorageMapFieldId } from '../fields/constants';
-import OffloadPluginField from '../fields/OffloadPluginField';
-import StorageProductField from '../fields/StorageProductField';
-import StorageSecretField from '../fields/StorageSecretField';
-import { getCreateStorageMapFieldId } from '../fields/utils';
+import { StorageMapFieldId } from '../../constants';
+
+import OffloadPluginField from './OffloadPluginField';
+import StorageProductField from './StorageProductField';
+import StorageSecretField from './StorageSecretField';
 
 import './OffloadStorageIndexedForm.style.scss';
 
 type OffloadStorageIndexedFormProps = {
   index: number;
+  sourceProvider: V1beta1Provider | undefined;
 };
 
-const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({ index }) => {
+const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
+  index,
+  sourceProvider,
+}) => {
   const { t } = useForkliftTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -30,13 +36,14 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({ index }
     >
       <Form className="offload-storage__form">
         <OffloadPluginField
-          fieldId={getCreateStorageMapFieldId(CreateStorageMapFieldId.OffloadPlugin, index)}
+          fieldId={getStorageMapFieldId(StorageMapFieldId.OffloadPlugin, index)}
         />
         <StorageSecretField
-          fieldId={getCreateStorageMapFieldId(CreateStorageMapFieldId.StorageSecret, index)}
+          fieldId={getStorageMapFieldId(StorageMapFieldId.StorageSecret, index)}
+          sourceProvider={sourceProvider}
         />
         <StorageProductField
-          fieldId={getCreateStorageMapFieldId(CreateStorageMapFieldId.StorageProduct, index)}
+          fieldId={getStorageMapFieldId(StorageMapFieldId.StorageProduct, index)}
         />
       </Form>
     </ExpandableSection>

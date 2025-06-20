@@ -15,7 +15,9 @@ type FeatureFlagsResult = {
  * Provides access to feature flags defined in the ForkliftController.
  *
  * Flags are read from the `spec` of the first ForkliftController found in the current
- * or specified namespace. A flag is considered enabled if its value is the string 'true'.
+ * or specified namespace. A flag is considered enabled if its value is the boolean true
+ * or the string 'true'. All other values (including 'false', false, null, undefined)
+ * are considered disabled.
  *
  * @param namespace - Namespace to watch for the ForkliftController. Defaults to the active namespace.
  */
@@ -38,10 +40,12 @@ export const useFeatureFlags = (namespace?: string): FeatureFlagsResult => {
         return false;
       }
 
-      // Feature flags are stored as string fields in the controller's `spec`
+      // Feature flags are stored as fields in the controller's `spec`
       const spec = forkliftController.spec ?? {};
+      const featureValue = spec[featureName];
 
-      return spec[featureName] === 'true';
+      // Consider enabled if value is boolean true or string 'true'
+      return featureValue === true || featureValue === 'true';
     };
   }, [loaded, error, forkliftController]);
 

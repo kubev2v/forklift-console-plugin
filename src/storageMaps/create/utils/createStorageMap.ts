@@ -3,7 +3,7 @@ import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helper
 import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
-import type { StorageMapping } from '../fields/constants';
+import type { StorageMapping } from '../../constants';
 
 import { buildStorageMappings } from './buildStorageMappings';
 
