@@ -1,12 +1,10 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
-import { diskOptions } from 'src/plans/details/tabs/Details/components/SettingsSection/components/RootDisk/utils/constants';
-import { getRootDiskLabelByKey } from 'src/plans/details/tabs/Details/components/SettingsSection/components/RootDisk/utils/utils';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
+import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import Select from '@components/common/MtvSelect';
-import { FormGroup, SelectList, SelectOption, Stack, StackItem } from '@patternfly/react-core';
+import { Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
@@ -20,7 +18,7 @@ const RootDeviceField: FC = () => {
   const fieldId = OtherSettingsFormFieldId.RootDevice;
 
   return (
-    <FormGroup
+    <FormGroupWithHelpText
       fieldId={fieldId}
       label={otherFormFieldLabels[fieldId]}
       labelIcon={
@@ -28,15 +26,15 @@ const RootDeviceField: FC = () => {
           <ForkliftTrans>
             <Stack hasGutter>
               <StackItem>
-                Default behavior is to choose the first root device in the case of a multi-boot
-                operating system. Since this is a heuristic, it may sometimes choose the wrong one.
+                A root device is the storage device or partition that contains the root filesystem.
+                For example, naming a root device "/dev/sda2" would mean to use the second partition
+                on the first hard drive.
               </StackItem>
 
               <StackItem>
-                When using a multi-boot VM, you can also name a specific root device, eg.{' '}
-                <strong>/dev/sda2</strong> would mean to use the second partition on the first hard
-                drive. If the named root device does not exist or was not detected as a root device,
-                the migration will fail.
+                If you do not provide a root device, the first root device will be used. If the
+                named root device does not exist or is not detected as a root device, the migration
+                will fail.
               </StackItem>
 
               <StackItem>
@@ -48,30 +46,24 @@ const RootDeviceField: FC = () => {
           </ForkliftTrans>
         </HelpIconPopover>
       }
+      helperText={t(
+        'Provide the storage device or partition that contains the root filesystem. If left blank, the first root device will be used.',
+      )}
     >
       <Controller
         name={fieldId}
         control={control}
         render={({ field }) => (
-          <Select
+          <TextInput
             id={field.name}
             value={field.value}
-            onSelect={(_event, value) => {
+            onChange={(_event, value) => {
               field.onChange(value);
             }}
-            placeholder={t('First root device')}
-          >
-            <SelectList>
-              {diskOptions.map(({ description, key }) => (
-                <SelectOption key={key} value={key} description={description}>
-                  {getRootDiskLabelByKey(String(key))}
-                </SelectOption>
-              ))}
-            </SelectList>
-          </Select>
+          />
         )}
       />
-    </FormGroup>
+    </FormGroupWithHelpText>
   );
 };
 
