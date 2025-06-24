@@ -18,6 +18,7 @@ type CreateNetworkMapParams = {
   sourceProvider: V1beta1Provider | undefined;
   targetProvider: V1beta1Provider | undefined;
   name?: string;
+  targetNamespace: string;
 };
 
 /**
@@ -29,6 +30,7 @@ export const createNetworkMap = async ({
   name,
   project,
   sourceProvider,
+  targetNamespace,
   targetProvider,
 }: CreateNetworkMapParams) => {
   const sourceProviderName = sourceProvider?.metadata?.name;
@@ -52,7 +54,7 @@ export const createNetworkMap = async ({
                     name: targetNetwork.name.includes('/')
                       ? targetNetwork.name.split('/')[1]
                       : targetNetwork.name,
-                    namespace: project,
+                    namespace: targetNamespace,
                     type: 'multus',
                   },
             // Handle pod network type or regular network for the source
