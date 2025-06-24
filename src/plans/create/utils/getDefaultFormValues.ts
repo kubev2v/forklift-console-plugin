@@ -24,5 +24,6 @@ export const getDefaultFormValues = (
     },
     [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
     [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
+    [OtherSettingsFormFieldId.SharedDisks]: false,
   };
 };

@@ -43,12 +43,12 @@ export const createPlan = async ({
         network: getObjectRef(networkMap),
         storage: getObjectRef(storageMap),
       },
+      migrateSharedDisks: sharedDisks,
       provider: {
         destination: getObjectRef(targetProvider),
         source: getObjectRef(sourceProvider),
       },
       targetNamespace: targetProject,
-      ...(sharedDisks && { migrateSharedDisks: sharedDisks }),
       ...(preserveStaticIps && { preserveStaticIPs: preserveStaticIps }),
       ...(transferNetwork && { transferNetwork }),
       vms: buildPlanSpecVms({ luks, postHook, preHook, rootDevice, vms }),
