@@ -8,6 +8,7 @@ import LoadingSuspend from '@components/LoadingSuspend';
 import { Alert, Divider, PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
+import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';
 
 import HooksCodeEditor from './components/HooksCodeEditor';
@@ -18,8 +19,9 @@ import type { HookFormValues } from './state/types';
 import { hookTypes } from './utils/constants';
 import { onUpdatePlanHooks } from './utils/utils';
 
-const PlanHooksPage: FC<PlanPageProps> = ({ plan }) => {
+const PlanHooksPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+  const { plan } = usePlan(name, namespace);
 
   const { error, loaded, postHookResource, preHookResource, warning } = usePlanHooks(plan);
 

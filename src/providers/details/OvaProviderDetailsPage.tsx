@@ -1,32 +1,30 @@
-import type { FC } from 'react';
+import { type FC, memo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1Provider } from '@kubev2v/types';
 import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-sdk';
 
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
 import ProviderVirtualMachinesTabPage from './tabs/VirtualMachines/ProviderVirtualMachinesTabPage';
 import ProviderYAMLTabPage from './tabs/YAML/ProviderYAMLTabPage';
+import type { ProviderDetailsPageProps } from './utils/types';
 import ProviderPageHeader from './ProviderPageHeader';
 
-const OvaProviderDetailsPage: FC<{
-  provider: V1beta1Provider;
-}> = ({ provider }) => {
+const OvaProviderDetailsPage: FC<ProviderDetailsPageProps> = memo(({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const tabPages: NavPage[] = [
     {
-      component: () => <ProviderDetailsTabPage provider={provider} />,
+      component: () => <ProviderDetailsTabPage name={name} namespace={namespace} />,
       href: '',
       name: t('Details'),
     },
     {
-      component: () => <ProviderYAMLTabPage provider={provider} />,
+      component: () => <ProviderYAMLTabPage name={name} namespace={namespace} />,
       href: 'yaml',
       name: t('YAML'),
     },
     {
-      component: () => <ProviderVirtualMachinesTabPage provider={provider} />,
+      component: () => <ProviderVirtualMachinesTabPage name={name} namespace={namespace} />,
       href: 'vms',
       name: t('Virtual machines'),
     },
@@ -34,10 +32,10 @@ const OvaProviderDetailsPage: FC<{
 
   return (
     <>
-      <ProviderPageHeader provider={provider} />
+      <ProviderPageHeader name={name} namespace={namespace} />
       <HorizontalNav pages={tabPages} />
     </>
   );
-};
+});
 
 export default OvaProviderDetailsPage;

@@ -1,5 +1,4 @@
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
-import type { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
 import type {
   CreateResource,
   ModelMetadata,
@@ -7,7 +6,10 @@ import type {
   ResourceListPage,
   ResourceNSNavItem,
 } from '@openshift-console/dynamic-plugin-sdk';
-import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
+import type {
+  ConsolePluginBuildMetadata,
+  EncodedExtension,
+} from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   ProviderDetailsPage: './providers/details/ProviderDetailsPage',
@@ -22,7 +24,7 @@ export const extensions: EncodedExtension[] = [
         'data-quickstart-id': 'qs-nav-providers',
         'data-testid': 'providers-nav-item',
       },
-      id: 'providers-ng',
+      id: 'providers',
       insertAfter: ['forkliftSettings', 'importSeparator'],
       model: ProviderModelGroupVersionKind,
       name: '%plugin__forklift-console-plugin~Providers%',

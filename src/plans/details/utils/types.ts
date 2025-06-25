@@ -1,5 +1,4 @@
-import type { V1beta1Plan } from '@kubev2v/types';
-
 export type PlanPageProps = {
-  plan: V1beta1Plan;
+  name: string;
+  namespace: string;
 };

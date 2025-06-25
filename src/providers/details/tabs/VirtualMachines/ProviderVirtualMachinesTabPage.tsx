@@ -6,17 +6,16 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ErrorState } from '@components/common/Page/PageStates';
 import LoadingSuspend from '@components/LoadingSuspend';
-import type { V1beta1Provider } from '@kubev2v/types';
+
+import { useProvider } from '../../hooks/useProvider';
+import type { ProviderDetailsPageProps } from '../../utils/types';
 
 import VirtualMachinesListSection from './components/VirtualMachinesListSection';
 import { PROVIDER_DETAILS_VMS_TAB_FIELDS } from './utils/constants';
 
-type ProviderVirtualMachinesTabPageProps = {
-  provider: V1beta1Provider;
-};
-
-const ProviderVirtualMachinesTabPage: FC<ProviderVirtualMachinesTabPageProps> = ({ provider }) => {
+const ProviderVirtualMachinesTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+  const { provider } = useProvider(name, namespace);
   const [vmData, vmDataLoading, vmDataError] = useInventoryVms({ provider });
   const { control } = useForm();
 
@@ -33,9 +32,7 @@ const ProviderVirtualMachinesTabPage: FC<ProviderVirtualMachinesTabPageProps> = 
       <Controller
         name={PROVIDER_DETAILS_VMS_TAB_FIELDS.vms}
         control={control}
-        render={({ field }) => (
-          <VirtualMachinesListSection field={field} providerData={{ provider, vmData }} />
-        )}
+        render={() => <VirtualMachinesListSection providerData={{ provider, vmData }} />}
       />
     </ModalHOC>
   );

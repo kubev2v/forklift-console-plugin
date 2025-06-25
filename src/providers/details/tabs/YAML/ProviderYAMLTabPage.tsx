@@ -1,22 +1,16 @@
-import { type FC, Suspense } from 'react';
+import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import LoadingSuspend from '@components/LoadingSuspend';
-import type { V1beta1Provider } from '@kubev2v/types';
 import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
 
-type ProviderYAMLTabPageProp = {
-  provider: V1beta1Provider;
-};
+import { useProvider } from '../../hooks/useProvider';
+import type { ProviderDetailsPageProps } from '../../utils/types';
 
-const ProviderYAMLTabPage: FC<ProviderYAMLTabPageProp> = ({ provider }) => {
+const ProviderYAMLTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+  const { provider } = useProvider(name, namespace);
 
-  return (
-    <Suspense fallback={<LoadingSuspend />}>
-      {provider && <ResourceYAMLEditor header={t('Provider YAML')} initialResource={provider} />}
-    </Suspense>
-  );
+  return <ResourceYAMLEditor header={t('Provider YAML')} initialResource={provider} />;
 };
 
 export default ProviderYAMLTabPage;

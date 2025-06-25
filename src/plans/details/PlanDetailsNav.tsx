@@ -1,35 +1,22 @@
 import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
-import LoadingSuspend from '@components/LoadingSuspend';
-import { PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
-import { HorizontalNav, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
 
 import PlanPageHeader from './components/PlanPageHeader/PlanPageHeader';
 import usePlanPages from './hooks/usePlanPages';
+import type { PlanPageProps } from './utils/types';
 
-type PlanDetailsNavProps = {
-  name: string;
-  namespace: string;
-};
-
-const PlanDetailsNav: FC<PlanDetailsNavProps> = ({ name, namespace }) => {
-  const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
-    groupVersionKind: PlanModelGroupVersionKind,
-    name,
-    namespace,
-    namespaced: true,
-  });
-
-  const pages = usePlanPages(plan);
+const PlanDetailsNav: FC<PlanPageProps> = ({ name, namespace }) => {
+  const pages = usePlanPages(name, namespace);
 
   return (
-    <LoadingSuspend obj={plan} loaded={loaded} loadError={loadError}>
+    <>
       <ModalHOC>
-        <PlanPageHeader plan={plan} />
+        <PlanPageHeader name={name} namespace={namespace} />
       </ModalHOC>
       <HorizontalNav pages={pages} />
-    </LoadingSuspend>
+    </>
   );
 };
 
