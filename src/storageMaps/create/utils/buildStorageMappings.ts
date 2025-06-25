@@ -50,13 +50,12 @@ export const buildStorageMappings = (
     const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
     const isGlanceStorage = sourceStorage.name === STORAGE_NAMES.GLANCE;
 
-    // OpenShift provider: includes both id and name in source
+    // OpenShift provider: uses name-based mapping
     if (isOpenShiftProvider) {
       const baseMapping = {
         destination: { storageClass: targetStorage.name },
         source: {
-          id: sourceStorage.id,
-          name: targetStorage.name.replace(/^\//gu, ''),
+          name: sourceStorage.name.replace(/^\//gu, ''),
         },
       };
       acc.push(createStorageMapping(baseMapping, offloadPluginConfig));
@@ -74,13 +73,15 @@ export const buildStorageMappings = (
     }
 
     // Default storage mapping: uses id-based mapping
-    const defaultBaseMapping = {
-      destination: { storageClass: targetStorage.name },
-      source: {
-        id: sourceStorage.id,
-      },
-    };
-    acc.push(createStorageMapping(defaultBaseMapping, offloadPluginConfig));
+    if (!isOpenShiftProvider && !isGlanceStorage) {
+      const defaultBaseMapping = {
+        destination: { storageClass: targetStorage.name },
+        source: {
+          id: sourceStorage.id,
+        },
+      };
+      acc.push(createStorageMapping(defaultBaseMapping, offloadPluginConfig));
+    }
 
     return acc;
   }, []);
