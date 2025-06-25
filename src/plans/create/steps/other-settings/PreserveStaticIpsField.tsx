@@ -22,7 +22,7 @@ const PreserveStaticIpsField: FC = () => {
       labelIcon={
         <HelpIconPopover header={label}>
           {t(
-            'By default, the static IPs of VMs with Windows guest Operating system from vSphere is set to preserve.',
+            'By default, vNICs change during migration causing VMs to lose their static IPs. Enable to preserve static IP configurations.',
           )}
         </HelpIconPopover>
       }
@@ -30,9 +30,7 @@ const PreserveStaticIpsField: FC = () => {
     >
       <Stack hasGutter>
         <FormHelperText>
-          {t(
-            'Do not try to preserve the static IPs of VMs with Windows guest operating system from vSphere.',
-          )}
+          {t('Use when VMs have static IPs that must remain unchanged after migration.')}
         </FormHelperText>
 
         <Controller
