@@ -5,19 +5,16 @@ import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import ProviderActionsDropdown from 'src/providers/actions/ProviderActionsDropdown';
 
-import { type ProviderInventory, ProviderModel, type V1beta1Provider } from '@kubev2v/types';
+import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
 import { Split, SplitItem } from '@patternfly/react-core';
-import { getNamespace } from '@utils/crds/common/selectors';
 
 import CreatePlanAction from './components/CreatePlanAction';
 import ProviderPageHeaderAlerts from './components/ProviderPageHeaderAlerts';
+import { useProvider } from './hooks/useProvider';
+import type { ProviderDetailsPageProps } from './utils/types';
 
-type ProviderPageHeaderProps = {
-  provider: V1beta1Provider;
-};
-
-const ProviderPageHeader: FC<ProviderPageHeaderProps> = ({ provider }) => {
-  const namespace = getNamespace(provider);
+const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
+  const { provider } = useProvider(name, namespace);
   const {
     error: inventoryError,
     inventory,

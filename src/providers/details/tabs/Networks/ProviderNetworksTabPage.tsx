@@ -9,23 +9,20 @@ import {
   type CnoConfig,
   type OpenShiftNetworkAttachmentDefinition,
   ProviderModel,
-  type V1beta1Provider,
 } from '@kubev2v/types';
 import { Button, ButtonVariant, PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { EMPTY_CELL_CONTENT } from '@utils/constants';
 
+import { useProvider } from '../../hooks/useProvider';
+import type { ProviderDetailsPageProps } from '../../utils/types';
+
 import DefaultNetworkLabel from './components/DefaultNetworkLabel';
 import EditProviderDefaultTransferNetwork from './components/EditProviderDefaultTransferNetwork';
 
-type ProviderNetworksTabPageProp = {
-  provider: V1beta1Provider;
-};
-
-const ProviderNetworksTabPage: FC<ProviderNetworksTabPageProp> = ({ provider }) => {
+const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
-
-  const namespace = provider?.metadata?.namespace;
+  const { provider } = useProvider(name, namespace);
 
   const { showModal } = useModal();
 

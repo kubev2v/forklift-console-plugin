@@ -23,13 +23,13 @@ export enum ProvidersInventoryFields {
 
 export const ProviderDataCellRenderers: Record<ProvidersResourceFieldId, FC<CellProps>> = {
   actions: (props) => <ProviderActionsDropdown isKebab {...props} />,
-  clusterCount: (props) => <InventoryCell icon=<></> {...props} />,
-  hostCount: (props) => <InventoryCell icon=<OutlinedHddIcon /> {...props} />,
+  clusterCount: (props) => <InventoryCell icon={<></>} {...props} />,
+  hostCount: (props) => <InventoryCell icon={<OutlinedHddIcon />} {...props} />,
   name: ProviderLinkCell,
   namespace: NamespaceCell,
-  networkCount: (props) => <InventoryCell icon=<NetworkIcon /> {...props} />,
+  networkCount: (props) => <InventoryCell icon={<NetworkIcon />} {...props} />,
   phase: StatusCell,
-  storageCount: (props) => <InventoryCell icon=<DatabaseIcon /> {...props} />,
+  storageCount: (props) => <InventoryCell icon={<DatabaseIcon />} {...props} />,
   type: TypeCell,
   url: URLCell,
   vmCount: VirtualMachinesCell,

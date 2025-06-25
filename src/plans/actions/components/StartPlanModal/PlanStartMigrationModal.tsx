@@ -1,5 +1,5 @@
 import { type FC, useCallback } from 'react';
-import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
+import { canPlanStart } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -17,10 +17,7 @@ type PlanStartMigrationModalProps = {
 
 const PlanStartMigrationModal: FC<PlanStartMigrationModalProps> = ({ plan, title }) => {
   const { t } = useForkliftTranslation();
-  const [lastMigration] = usePlanMigration(plan);
 
-  const isRunningMigrationExist =
-    lastMigration !== undefined && lastMigration?.status?.completed === undefined;
   const name = getName(plan);
   const warm = getPlanIsWarm(plan);
 
@@ -33,7 +30,7 @@ const PlanStartMigrationModal: FC<PlanStartMigrationModalProps> = ({ plan, title
       title={t('{{title}} migration', { title })}
       onConfirm={onStart}
       confirmLabel={t('{{title}}', { title })}
-      isDisabled={isRunningMigrationExist}
+      isDisabled={!canPlanStart(plan)}
     >
       <Stack hasGutter>
         <StackItem>

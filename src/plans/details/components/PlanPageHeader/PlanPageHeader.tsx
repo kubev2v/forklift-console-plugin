@@ -4,23 +4,26 @@ import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import PlanActionsDropdown from 'src/plans/actions/PlanActionsDropdown';
 
-import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModel } from '@kubev2v/types';
 import { Button, ButtonVariant, Level, LevelItem } from '@patternfly/react-core';
 import { CalendarAltIcon } from '@patternfly/react-icons';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { usePlan } from '../../hooks/usePlan';
 import PlanStatusLabel from '../PlanStatus/PlanStatusLabel';
 import { isPlanArchived, isPlanExecuting } from '../PlanStatus/utils/utils';
 
 import PlanAlerts from './components/PlanAlerts/PlanAlerts';
 
 type PlanPageHeaderProps = {
-  plan: V1beta1Plan;
+  name: string;
+  namespace: string;
 };
 
-const PlanPageHeader: FC<PlanPageHeaderProps> = ({ plan }) => {
+const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+  const { plan } = usePlan(name, namespace);
   const { showModal } = useModal();
 
   const canSetCutover = getPlanIsWarm(plan) && isPlanExecuting(plan) && !isPlanArchived(plan);
@@ -28,7 +31,7 @@ const PlanPageHeader: FC<PlanPageHeaderProps> = ({ plan }) => {
     <PageHeadings
       model={PlanModel}
       obj={plan}
-      namespace={plan.metadata?.namespace}
+      namespace={namespace}
       status={<PlanStatusLabel plan={plan} />}
       actions={
         <Level hasGutter>

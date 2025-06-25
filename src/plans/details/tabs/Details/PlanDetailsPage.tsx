@@ -8,6 +8,7 @@ import { Divider, PageSection, PageSectionVariants } from '@patternfly/react-cor
 import { CATEGORY_TYPES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
+import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';
 
 import ConditionsSection from './components/ConditionsSection/ConditionsSection';
@@ -16,8 +17,9 @@ import MigrationsSection from './components/MigrationsSection/MigrationsSection'
 import ProvidersSection from './components/ProvidersSection/ProvidersSection';
 import SettingsSection from './components/SettingsSection/SettingsSection';
 
-const PlanDetailsPage: FC<PlanPageProps> = ({ plan }) => {
+const PlanDetailsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+  const { plan } = usePlan(name, namespace);
 
   const criticalCondition = plan?.status?.conditions?.find(
     (condition) => condition?.category === CATEGORY_TYPES.CRITICAL,

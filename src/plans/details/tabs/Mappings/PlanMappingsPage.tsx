@@ -5,6 +5,7 @@ import { Bullseye, PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';
 
 import MappingAlerts from './components/MappingAlerts';
@@ -12,8 +13,9 @@ import PlanMappingsSection from './components/PlanMappingsSection';
 import { useMappingResources } from './hooks/useMappingResources';
 import { getMappingAlerts, getMappingPageMessage } from './utils/utils';
 
-const PlanMappingsPage: FC<PlanPageProps> = ({ plan }) => {
+const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+  const { plan } = usePlan(name, namespace);
   const [alert, setAlert] = useState<string>('');
 
   const {

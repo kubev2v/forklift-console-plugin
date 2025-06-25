@@ -9,12 +9,14 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
+import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';
 
 import PlanResourcesTable from './components/PlanResourcesTable';
 import { getPlanResourcesTableProps } from './utils/utils';
 
-const PlanResourcesPage: FC<PlanPageProps> = ({ plan }) => {
+const PlanResourcesPage: FC<PlanPageProps> = ({ name, namespace }) => {
+  const { plan } = usePlan(name, namespace);
   const [provider, providerLoaded, providerLodeError] = useK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     name: plan?.spec?.provider?.source?.name,

@@ -20,7 +20,7 @@ type ProviderDetailsPageProps = {
   kind: string;
   kindObj: K8sModel;
   name: string;
-  namespace?: string;
+  namespace: string;
 };
 
 const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
@@ -43,15 +43,15 @@ const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) 
 
   switch (provider?.spec?.type) {
     case PROVIDER_TYPES.openshift:
-      return <OpenshiftProviderDetailsPage provider={provider} />;
+      return <OpenshiftProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.openstack:
-      return <OpenStackProviderDetailsPage provider={provider} />;
+      return <OpenStackProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.ovirt:
-      return <OVirtProviderDetailsPage provider={provider} />;
+      return <OVirtProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.vsphere:
-      return <VSphereProviderDetailsPage provider={provider} />;
+      return <VSphereProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.ova:
-      return <OvaProviderDetailsPage provider={provider} />;
+      return <OvaProviderDetailsPage name={name} namespace={namespace} />;
     case undefined:
     default:
       return <ErrorState title={t('Unsupported provider type')} />;
