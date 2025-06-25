@@ -60,6 +60,7 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
           name: networkMapName,
           project: planProject,
           sourceProvider,
+          targetNamespace: targetProject,
           targetProvider,
         }),
 
