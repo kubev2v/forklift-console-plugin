@@ -22,7 +22,7 @@ const SharedDisksField: FC = () => {
       labelIcon={
         <HelpIconPopover header={label}>
           {t(
-            'If virtual machines are using shared disks, the shared disks will migrate only once by default.',
+            'MTV behavior is based on the Shared disks setting in the plan. If checked, the shared disks will be migrated, otherwise the shared disks will not be migrated.',
           )}
         </HelpIconPopover>
       }
@@ -30,12 +30,11 @@ const SharedDisksField: FC = () => {
     >
       <Stack hasGutter>
         <FormHelperText>
-          {t('Choose whether to migrate share disks with your migration.')}
+          {t('Choose whether to migrate shared disks with your migration.')}
         </FormHelperText>
 
         <Controller
           name={fieldId}
-          defaultValue={false}
           control={control}
           render={({ field }) => (
             <Checkbox
