@@ -51,6 +51,7 @@ export const createPlan = async ({
       targetNamespace: targetProject,
       ...(preserveStaticIps && { preserveStaticIPs: preserveStaticIps }),
       ...(transferNetwork && { transferNetwork }),
+      type: migrationType,
       vms: buildPlanSpecVms({ luks, postHook, preHook, rootDevice, vms }),
       warm: migrationType === MigrationTypeValue.Warm,
     },

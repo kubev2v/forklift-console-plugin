@@ -3,6 +3,7 @@ import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/consta
 import DatesComparedHelperText from 'src/plans/details/components/DatesComparedHelperText';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { getPlanMigrationType } from 'src/plans/details/utils/utils.ts';
 
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import type { V1beta1Plan } from '@kubev2v/types';
@@ -24,6 +25,7 @@ const planPhases: { id: PlanStatuses; label: string }[] = [
 const migrationTypes: { id: MigrationTypeValue; label: string }[] = [
   { id: MigrationTypeValue.Warm, label: t('Warm') },
   { id: MigrationTypeValue.Cold, label: t('Cold') },
+  { id: MigrationTypeValue.Live, label: t('Live') },
 ];
 
 export const planFields: ResourceField[] = [
@@ -128,8 +130,7 @@ export const planFields: ResourceField[] = [
       values: migrationTypes,
     },
     isVisible: true,
-    jsonPath: (plan) =>
-      (plan as V1beta1Plan)?.spec?.warm ? MigrationTypeValue.Warm : MigrationTypeValue.Cold,
+    jsonPath: (plan) => getPlanMigrationType(plan as V1beta1Plan),
     label: t('Migration type'),
     resourceFieldId: PlanTableResourceId.MigrationType,
     sortable: true,

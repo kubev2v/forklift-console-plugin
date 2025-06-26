@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import PlanWarmLabel from 'src/plans/details/components/PlanWarmLabel/PlanWarmLabel';
+import PlanMigrationTypeLabel from 'src/plans/details/components/PlanMigrationTypeLabel/PlanMigrationTypeLabel';
+import { getPlanMigrationType } from 'src/plans/details/utils/utils.ts';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ExpandableSectionHeading from '@components/ExpandableSectionHeading/ExpandableSectionHeading';
@@ -24,7 +25,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
 }) => {
   const { t } = useForkliftTranslation();
 
-  const { dvs, isWarm, jobs, plan, pods, pvcs, statusVM, targetNamespace } = resourceData;
+  const { dvs, jobs, plan, pods, pvcs, statusVM, targetNamespace } = resourceData;
   const vmCreated = isVirtualMachineCreationCompleted(statusVM);
 
   return (
@@ -42,7 +43,8 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
           }
           sectionTitle={
             <>
-              {t('Migration progress')} <PlanWarmLabel isWarm={isWarm} />
+              {t('Migration progress')}{' '}
+              <PlanMigrationTypeLabel migrationType={getPlanMigrationType(plan)} />
             </>
           }
           initialExpanded
