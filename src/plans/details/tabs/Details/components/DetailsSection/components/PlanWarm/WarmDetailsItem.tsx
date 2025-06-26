@@ -1,11 +1,10 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import PlanMigrationTypeLabel from 'src/plans/details/components/PlanMigrationTypeLabel/PlanMigrationTypeLabel';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
-import PlanWarmLabel from 'src/plans/details/components/PlanWarmLabel/PlanWarmLabel';
+import { getPlanMigrationType } from 'src/plans/details/utils/utils.ts';
 import { useForkliftTranslation } from 'src/utils/i18n';
-
-import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
@@ -17,11 +16,11 @@ const WarmDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldR
 
   if (!shouldRender) return null;
 
-  const isWarm = getPlanIsWarm(plan);
+  const migrationType = getPlanMigrationType(plan);
   return (
     <DetailsItem
       title={t('Migration type')}
-      content={<PlanWarmLabel isWarm={isWarm} />}
+      content={<PlanMigrationTypeLabel migrationType={migrationType} />}
       helpContent={t('Whether this is a warm migration.')}
       crumbs={['spec', 'warm']}
       onEdit={() => {

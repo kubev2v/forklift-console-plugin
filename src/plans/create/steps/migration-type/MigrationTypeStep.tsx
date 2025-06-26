@@ -1,6 +1,9 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import HelpIconWithLabel from 'src/plans/components/HelpIconWithLabel';
+import { GeneralFormFieldId } from 'src/plans/create/steps/general-information/constants.ts';
+import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType.ts';
+import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigrationProviderType.ts';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
@@ -9,7 +12,7 @@ import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Alert, Flex, Radio, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { CBT_HELP_LINK, WARM_MIGRATION_HELP_LINK } from '@utils/links';
+import { CBT_HELP_LINK, LIVE_MIGRATION_HELP_LINK, WARM_MIGRATION_HELP_LINK } from '@utils/links';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -20,7 +23,10 @@ import { MigrationTypeFieldId, migrationTypeLabels, MigrationTypeValue } from '.
 const MigrationTypeStep: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
-  const vms = useWatch({ control, name: VmFormFieldId.Vms });
+  const [vms, sourceProvider] = useWatch({
+    control,
+    name: [VmFormFieldId.Vms, GeneralFormFieldId.SourceProvider],
+  });
   const cbtDisabledVms = Object.values(vms ?? {}).filter(
     (vm) => vm.providerType === PROVIDER_TYPES.vsphere && !vm.changeTrackingEnabled,
   );
@@ -52,35 +58,69 @@ const MigrationTypeStep: FC = () => {
                 }}
               />
 
-              <Radio
-                id={MigrationTypeValue.Warm}
-                name={MigrationTypeValue.Warm}
-                label={
-                  <HelpIconWithLabel label={migrationTypeLabels[MigrationTypeValue.Warm]}>
-                    <Stack hasGutter>
-                      <StackItem>
-                        {t(
-                          'This type of migration reduces downtime by copying most of the VM data during a precopy stage while the VMs are running. During the cutover stage, the VMs are stopped and the rest of the data is copied. This is different from a live migration, where there is zero downtime.',
-                        )}
-                      </StackItem>
+              {hasWarmMigrationProviderType(sourceProvider) && (
+                <Radio
+                  id={MigrationTypeValue.Warm}
+                  name={MigrationTypeValue.Warm}
+                  label={
+                    <HelpIconWithLabel label={migrationTypeLabels[MigrationTypeValue.Warm]}>
+                      <Stack hasGutter>
+                        <StackItem>
+                          {t(
+                            'This type of migration reduces downtime by copying most of the VM data during a precopy stage while the VMs are running. During the cutover stage, the VMs are stopped and the rest of the data is copied. This is different from a live migration, where there is zero downtime.',
+                          )}
+                        </StackItem>
 
-                      <StackItem>
-                        <ExternalLink isInline href={WARM_MIGRATION_HELP_LINK}>
-                          {t('Learn more')}
-                        </ExternalLink>
-                      </StackItem>
-                    </Stack>
-                  </HelpIconWithLabel>
-                }
-                description={t(
-                  'A warm migration migrates an active virtual machine (VM) from one host to another with minimal downtime.  This is not live migration.',
-                )}
-                value={migrationTypeField.value}
-                isChecked={migrationTypeField.value === MigrationTypeValue.Warm}
-                onChange={() => {
-                  migrationTypeField.onChange(MigrationTypeValue.Warm);
-                }}
-              />
+                        <StackItem>
+                          <ExternalLink isInline href={WARM_MIGRATION_HELP_LINK}>
+                            {t('Learn more')}
+                          </ExternalLink>
+                        </StackItem>
+                      </Stack>
+                    </HelpIconWithLabel>
+                  }
+                  description={t(
+                    'A warm migration migrates an active virtual machine (VM) from one host to another with minimal downtime.  This is not live migration.',
+                  )}
+                  value={migrationTypeField.value}
+                  isChecked={migrationTypeField.value === MigrationTypeValue.Warm}
+                  onChange={() => {
+                    migrationTypeField.onChange(MigrationTypeValue.Warm);
+                  }}
+                />
+              )}
+
+              {hasLiveMigrationProviderType(sourceProvider) && (
+                <Radio
+                  id={MigrationTypeValue.Live}
+                  name={MigrationTypeValue.Live}
+                  label={
+                    <HelpIconWithLabel label={migrationTypeLabels[MigrationTypeValue.Live]}>
+                      <Stack hasGutter>
+                        <StackItem>
+                          {t(
+                            'A live migration migrates an active virtual machine (VM) from one host to another with no downtime.',
+                          )}
+                        </StackItem>
+
+                        <StackItem>
+                          <ExternalLink isInline href={LIVE_MIGRATION_HELP_LINK}>
+                            {t('Learn more')}
+                          </ExternalLink>
+                        </StackItem>
+                      </Stack>
+                    </HelpIconWithLabel>
+                  }
+                  description={t(
+                    'A live migration migrates an active virtual machine (VM) from one host to another with no downtime.',
+                  )}
+                  value={migrationTypeField.value}
+                  isChecked={migrationTypeField.value === MigrationTypeValue.Live}
+                  onChange={() => {
+                    migrationTypeField.onChange(MigrationTypeValue.Live);
+                  }}
+                />
+              )}
 
               {migrationTypeField.value === MigrationTypeValue.Warm && !isEmpty(cbtDisabledVms) && (
                 <Alert
