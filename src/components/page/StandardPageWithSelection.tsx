@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, useCallback, useRef, useState } from 'react';
+import { type ComponentProps, type FC, useCallback, useMemo, useRef, useState } from 'react';
 
 import DefaultSelectHeader from '@components/common/TableView/DefaultSelectHeader';
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
@@ -86,68 +86,90 @@ const withIdBasedSelection = <T,>({
     const [expandedIds, setExpandedIds] = useState(initialExpandedIds);
     const itemToId = useCallback((item: T) => (toId ? toId(item) : ''), []);
 
-    const isSelected =
-      onSelect || selectedIds ? (item: T) => selectedIds?.includes(itemToId(item)) : undefined;
-    const isExpanded =
-      onExpand || expandedIds ? (item: T) => expandedIds?.includes(itemToId(item)) : undefined;
+    const isSelected = useMemo(
+      () =>
+        onSelect || selectedIds ? (item: T) => selectedIds?.includes(itemToId(item)) : undefined,
+      [selectedIds, itemToId],
+    );
+    const isExpanded = useMemo(
+      () =>
+        onExpand || expandedIds ? (item: T) => expandedIds?.includes(itemToId(item)) : undefined,
+      [expandedIds, itemToId],
+    );
 
-    const toggleSelectFor = (items: T[]) => {
-      const ids = items.map(itemToId);
-      const allSelected = ids.every((id) => selectedIds?.includes(id));
-      const newSelectedIds = [
-        ...(selectedIds ?? []).filter((it) => !ids.includes(it)),
-        ...(allSelected ? [] : ids),
-      ];
+    const toggleSelectFor = useCallback(
+      (items: T[]) => {
+        const ids = items.map(itemToId);
+        const allSelected = ids.every((id) => selectedIds?.includes(id));
+        const newSelectedIds = [
+          ...(selectedIds ?? []).filter((it) => !ids.includes(it)),
+          ...(allSelected ? [] : ids),
+        ];
 
-      setSelectedIds(newSelectedIds);
+        setSelectedIds(newSelectedIds);
 
-      if (onSelect) {
-        onSelect(newSelectedIds);
-      }
-    };
+        if (onSelect) {
+          onSelect(newSelectedIds);
+        }
+      },
+      [selectedIds, itemToId],
+    );
 
-    const toggleExpandFor = (items: T[]) => {
-      const ids = items.map(itemToId);
-      const allExpanded = ids.every((id) => expandedIds?.includes(id));
-      const newExpandedIds = [
-        ...(expandedIds ?? []).filter((it) => !ids.includes(it)),
-        ...(allExpanded ? [] : ids),
-      ];
+    const toggleExpandFor = useCallback(
+      (items: T[]) => {
+        const ids = items.map(itemToId);
+        const allExpanded = ids.every((id) => expandedIds?.includes(id));
+        const newExpandedIds = [
+          ...(expandedIds ?? []).filter((it) => !ids.includes(it)),
+          ...(allExpanded ? [] : ids),
+        ];
 
-      setExpandedIds(newExpandedIds);
-      if (onExpand) {
-        onExpand(newExpandedIds);
-      }
-    };
+        setExpandedIds(newExpandedIds);
+        if (onExpand) {
+          onExpand(newExpandedIds);
+        }
+      },
+      [itemToId, expandedIds],
+    );
 
     const { CellMapper, ExpandedComponent, ...rest } = props;
 
-    const RowMapper = withTr(
-      withRowSelection({
-        canSelect,
-        CellMapper,
-        isExpanded,
-        isSelected,
-        toggleExpandFor,
-        toggleSelectFor,
-      }),
-      ExpandedComponent,
+    const RowMapper = useMemo(
+      () =>
+        withTr(
+          withRowSelection({
+            canSelect,
+            CellMapper,
+            isExpanded,
+            isSelected,
+            toggleExpandFor,
+            toggleSelectFor,
+          }),
+          ExpandedComponent,
+        ),
+      [ExpandedComponent, toggleExpandFor, toggleSelectFor, isExpanded, isSelected, CellMapper],
     );
 
-    const HeaderMapper = withHeaderSelection({
-      HeaderMapper: props.HeaderMapper ?? DefaultSelectHeader,
-      isExpanded,
-    });
+    const HeaderMapper = useMemo(
+      () =>
+        withHeaderSelection({
+          HeaderMapper: props.HeaderMapper ?? DefaultSelectHeader,
+          isExpanded,
+        }),
+      [props.HeaderMapper, isExpanded],
+    );
+
+    const onSelectCallback = useCallback((ids: string[]) => {
+      setSelectedIds(ids);
+      onSelect?.(ids);
+    }, []);
 
     return (
       <StandardPage
         {...rest}
         expandedIds={expandedIds}
         selectedIds={selectedIds}
-        onSelect={(ids) => {
-          setSelectedIds(ids);
-          onSelect?.(ids);
-        }}
+        onSelect={onSelectCallback}
         toId={toId}
         RowMapper={RowMapper}
         HeaderMapper={HeaderMapper}
@@ -236,14 +258,18 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
     throw new Error('Missing required properties: toId, expandedIds');
   }
 
-  const EnhancedStandardPage = withIdBasedSelection<T>({
-    canSelect,
-    expandedIds,
-    onExpand,
-    onSelect,
-    selectedIds,
-    toId,
-  });
+  const EnhancedStandardPage = useMemo(
+    () =>
+      withIdBasedSelection<T>({
+        canSelect,
+        expandedIds,
+        onExpand,
+        onSelect,
+        selectedIds,
+        toId,
+      }),
+    [canSelect, expandedIds, onExpand, onSelect, selectedIds, toId],
+  );
 
   return onSelect ? (
     <EnhancedStandardPage onSelect={onSelect} {...rest} pageRef={pageRef} />
