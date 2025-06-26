@@ -1,4 +1,4 @@
-import { type FC, useMemo, useState } from 'react';
+import { type FC, useCallback, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import { TableSortContextProvider } from 'src/components/TableSortContext';
@@ -21,6 +21,12 @@ type MigrationStatusVirtualMachinesListProps = {
   plan: V1beta1Plan;
 };
 
+const selectedIds: string[] = [];
+
+const onSelect = () => undefined;
+
+const toId = (item: MigrationStatusVirtualMachinePageData) => item?.specVM?.id ?? '';
+
 const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListProps> = ({
   plan,
 }) => {
@@ -35,31 +41,46 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
 
   const isExecuting = isPlanExecuting(plan);
 
-  const canSelectWhenExecuting = (item: MigrationStatusVirtualMachinePageData) =>
-    item?.statusVM?.completed === undefined && isExecuting;
+  const canSelectWhenExecuting = useCallback(
+    (item: MigrationStatusVirtualMachinePageData) =>
+      item?.statusVM?.completed === undefined && isExecuting,
+    [isExecuting],
+  );
 
-  const canSelectWhenNotExecuting = (item: MigrationStatusVirtualMachinePageData) =>
-    (item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined) && !isExecuting;
+  const canSelectWhenNotExecuting = useCallback(
+    (item: MigrationStatusVirtualMachinePageData) =>
+      (item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined) &&
+      !isExecuting,
+    [isExecuting],
+  );
 
+  const dataSource: [MigrationStatusVirtualMachinePageData[], boolean, unknown] = useMemo(
+    () => [migrationListData ?? [], true, undefined],
+    [migrationListData],
+  );
+
+  const canSelect = useCallback(
+    (item: MigrationStatusVirtualMachinePageData) =>
+      canSelectWhenExecuting(item) ?? canSelectWhenNotExecuting(item),
+    [canSelectWhenExecuting, canSelectWhenNotExecuting],
+  );
   return (
     <TableSortContextProvider fields={planMigrationVirtualMachinesFields}>
       <StandardPageWithSelection<MigrationStatusVirtualMachinePageData>
-        canSelect={(item: MigrationStatusVirtualMachinePageData) =>
-          canSelectWhenExecuting(item) ?? canSelectWhenNotExecuting(item)
-        }
+        canSelect={canSelect}
         CellMapper={MigrationStatusVirtualMachinesRow}
-        dataSource={[migrationListData ?? [], true, undefined]}
+        dataSource={dataSource}
         ExpandedComponent={MigrationStatusExpandedPage}
         expandedIds={expandedIds}
         fieldsMetadata={planMigrationVirtualMachinesFields}
         GlobalActionToolbarItems={actions}
         namespace={''}
         onExpand={setExpandedIds}
-        onSelect={() => undefined}
+        onSelect={onSelect}
         page={INITIAL_PAGE}
-        selectedIds={[]}
+        selectedIds={selectedIds}
         title={t('Virtual machines')}
-        toId={(item: MigrationStatusVirtualMachinePageData) => item?.specVM?.id ?? ''}
+        toId={toId}
         userSettings={userSettings}
       />
     </TableSortContextProvider>
