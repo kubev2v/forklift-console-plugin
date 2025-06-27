@@ -5,6 +5,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Button,
+  ButtonVariant,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
@@ -12,6 +13,7 @@ import {
   DescriptionListTermHelpTextButton,
   Flex,
   FlexItem,
+  Icon,
   Popover,
   Truncate,
 } from '@patternfly/react-core';
@@ -44,7 +46,7 @@ const DescriptionTitleWithHelp: FC<{
   };
 
   return (
-    <DescriptionListTermHelpText>
+    <DescriptionListTermHelpText className="pf-v5-u-align-items-center">
       {showHelpIconNextToTitle ? <div>{title} &nbsp;</div> : null}
       <Popover
         headerContent={<div>{title}</div>}
@@ -74,9 +76,11 @@ const DescriptionTitleWithHelp: FC<{
         }
       >
         {showHelpIconNextToTitle ? (
-          <button type="button" onClick={onClick} className="pf-c-form__group-label-help">
-            <HelpIcon />
-          </button>
+          <Button variant={ButtonVariant.plain} className="pf-v5-u-p-0" onClick={onClick}>
+            <Icon size="sm">
+              <HelpIcon />
+            </Icon>
+          </Button>
         ) : (
           <DescriptionListTermHelpTextButton> {title} </DescriptionListTermHelpTextButton>
         )}

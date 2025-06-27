@@ -10,14 +10,10 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
+import type { MigrationDataPoint } from '../utils/types';
 
-type MigrationDataPoint = {
-  dateLabel: string;
-  value: number;
-};
-
-const toHourLabel = (date: DateTime | null) => (date ? date.toUTC().toFormat('HH:mm') : '');
-const toDayLabel = (date: DateTime | null) => (date ? date.toUTC().toFormat('LLL dd') : '');
+const toHourLabel = (date: DateTime | null) => (date ? date.toLocal().toFormat('HH:mm') : '');
+const toDayLabel = (date: DateTime | null) => (date ? date.toLocal().toFormat('LLL dd') : '');
 
 const createTimeBuckets = (selectedTimeRange: TimeRangeOptions, singleBucket = false) => {
   const { bucket, span, unit } = TimeRangeOptionsDictionary[selectedTimeRange];
@@ -156,15 +152,16 @@ export const useVmMigrationsDataPoints = (
         ? toHourLabel(interval.start)
         : toDayLabel(interval.start);
 
-    failed.push({ dateLabel, value: failedCount });
-    running.push({ dateLabel, value: runningCount });
-    succeeded.push({ dateLabel, value: succeededCount });
-    canceled.push({ dateLabel, value: canceledCount });
+    failed.push({ dateLabel, interval, value: failedCount });
+    running.push({ dateLabel, interval, value: runningCount });
+    succeeded.push({ dateLabel, interval, value: succeededCount });
+    canceled.push({ dateLabel, interval, value: canceledCount });
   });
 
   return {
     canceled,
     failed,
+    intervals,
     loaded,
     loadError,
     obj: migrations,

@@ -2,7 +2,7 @@ export enum MigrationVirtualMachineStatus {
   Canceled = 'Canceled',
   CantStart = 'CantStart',
   Failed = 'Failed',
-  InProgress = 'InProgress',
+  InProgress = 'Running',
   Paused = 'Paused',
   Succeeded = 'Succeeded',
 }

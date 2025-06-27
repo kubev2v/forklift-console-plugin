@@ -3,33 +3,34 @@ import type { FC, FormEvent, MouseEvent } from 'react';
 import { NumberInput } from '@patternfly/react-core';
 
 type SettingsNumberInputProps = {
-  value: number | string;
+  value: number | '';
   onChange: (value: number | string) => void;
   defaultValue: number;
 };
 
 const SettingsNumberInput: FC<SettingsNumberInputProps> = ({ defaultValue, onChange, value }) => {
-  const numberValue = Number(value);
-
-  const normalize = (val: number) => (val < 0 ? defaultValue : val);
+  const normalize = (val: number | string) =>
+    typeof val !== 'number' || val < 0 ? defaultValue : Number(val);
 
   const onUserMinus: (event: MouseEvent, name?: string) => void = () => {
-    onChange(normalize(numberValue - 1).toString());
+    const updatedValue = normalize(value) - 1;
+    onChange(updatedValue.toString());
   };
 
   const onUserPlus: (event: MouseEvent, name?: string) => void = () => {
-    onChange(normalize(numberValue + 1).toString());
+    const updatedValue = normalize(value) + 1;
+    onChange(updatedValue.toString());
   };
 
   const onUserChange: (event: FormEvent<HTMLInputElement>) => void = (event) => {
     const { value: inputValue } = event.target as HTMLInputElement;
-    const num = Number(inputValue);
-    onChange(normalize(num).toString());
+    const updatedValue = normalize(inputValue);
+    onChange(updatedValue.toString());
   };
 
   return (
     <NumberInput
-      value={numberValue}
+      value={value}
       onMinus={onUserMinus}
       onChange={onUserChange}
       onPlus={onUserPlus}
