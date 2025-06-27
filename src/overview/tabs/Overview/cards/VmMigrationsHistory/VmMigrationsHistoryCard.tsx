@@ -28,7 +28,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
       vmMigrationsHistorySelectedRange: range,
     });
   };
-  const { failed, loaded, loadError, obj, running, succeeded } =
+  const { failed, intervals, loaded, loadError, obj, running, succeeded } =
     useVmMigrationsDataPoints(selectedRange);
 
   return (
@@ -54,6 +54,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
               succeeded,
             }}
             selectedTimeRange={selectedRange}
+            intervals={intervals}
           />
         </LoadingSuspend>
       </CardBody>
