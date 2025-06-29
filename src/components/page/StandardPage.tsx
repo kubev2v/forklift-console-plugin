@@ -186,6 +186,12 @@ const StandardPageInner = <T,>({
     }
   }, [sortedData, metaMatcher]);
 
+  useEffect(() => {
+    if (Object.values(selectedFilters).some((filter) => !isEmpty(filter))) {
+      setPage(1); // When filters are applied, reset to page 1 to show correct results
+    }
+  }, [selectedFilters]);
+
   const showPagination = useMemo(
     () => pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination),
     [pagination, sortedData.length],
