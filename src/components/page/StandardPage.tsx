@@ -55,6 +55,7 @@ import { reduceValueFilters } from './utils/reduceValueFilters';
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
 import './StandardPage.style.css';
+import { INITIAL_PAGE } from './utils/constants';
 
 export type StandardPageProps<T> = {
   dataSource: [T[], boolean, unknown];
@@ -185,6 +186,12 @@ const StandardPageInner = <T,>({
       setFilteredData(sortedData.filter(metaMatcher));
     }
   }, [sortedData, metaMatcher]);
+
+  useEffect(() => {
+    if (Object.values(selectedFilters).some((filter) => !isEmpty(filter))) {
+      setPage(INITIAL_PAGE); // When filters are applied, reset to page 1 to show correct results
+    }
+  }, [selectedFilters]);
 
   const showPagination = useMemo(
     () => pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination),
