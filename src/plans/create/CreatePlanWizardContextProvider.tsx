@@ -6,6 +6,7 @@ import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 
 import { useCreatePlanFormContext } from './hooks/useCreatePlanFormContext';
+import { useOvirtNicProfiles } from './hooks/useOvirtNicProfiles';
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import { CreatePlanWizardContext } from './constants';
 
@@ -24,12 +25,14 @@ const CreatePlanWizardContextProvider: React.FC<PropsWithChildren> = ({ children
   // Fetch network and storage data based on selected providers.
   const sourceNetworksResult = useSourceNetworks(sourceProvider);
   const targetNetworksResult = useOpenShiftNetworks(targetProvider);
+  const oVirtNicProfilesResult = useOvirtNicProfiles(sourceProvider);
   const sourceStoragesResult = useSourceStorages(sourceProvider);
   const targetStoragesResult = useTargetStorages(targetProvider, targetProject);
 
   const value = useMemo(
     () => ({
       network: {
+        oVirtNicProfiles: oVirtNicProfilesResult,
         sources: sourceNetworksResult,
         targets: targetNetworksResult,
       },
@@ -38,7 +41,13 @@ const CreatePlanWizardContextProvider: React.FC<PropsWithChildren> = ({ children
         targets: targetStoragesResult,
       },
     }),
-    [sourceNetworksResult, sourceStoragesResult, targetNetworksResult, targetStoragesResult],
+    [
+      sourceNetworksResult,
+      targetNetworksResult,
+      oVirtNicProfilesResult,
+      sourceStoragesResult,
+      targetStoragesResult,
+    ],
   );
 
   return (
