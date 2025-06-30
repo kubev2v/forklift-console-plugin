@@ -12,6 +12,7 @@ import { getNamespace } from '@utils/crds/common/selectors';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 
+import LiveDetailsItem from './components/PlanLive/LiveDetailsItem';
 import TargetNamespaceDetailsItem from './components/PlanTargetNamespace/TargetNamespaceDetailsItem';
 import WarmDetailsItem from './components/PlanWarm/WarmDetailsItem';
 import StatusDetailsItem from './StatusDetailsItem';
@@ -30,6 +31,7 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
 
   const isVsphere = sourceProvider?.spec?.type === 'vsphere';
   const isOvirt = sourceProvider?.spec?.type === 'ovirt';
+  const isOpenshift = sourceProvider?.spec?.type === 'openshift';
   return (
     <ModalHOC>
       <DescriptionList>
@@ -43,6 +45,7 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
         >
           <NameDetailsItem resource={plan} />
           <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
+          <LiveDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOpenshift} />
           <NamespaceDetailsItem resource={plan} />
           <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
           <CreatedAtDetailsItem resource={plan} />

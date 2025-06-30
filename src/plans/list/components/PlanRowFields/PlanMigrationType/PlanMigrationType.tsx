@@ -6,7 +6,7 @@ import {
   isPlanArchived,
   isPlanExecuting,
 } from 'src/plans/details/components/PlanStatus/utils/utils';
-import { getPlanMigrationType } from 'src/plans/details/utils/utils.ts';
+import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';

@@ -15,6 +15,8 @@ export const getPlanMigrationStarted = (plan: V1beta1Plan) =>
 
 export const getPlanIsWarm = (plan: V1beta1Plan) => plan?.spec?.warm;
 
+export const getPlanIsLive = (plan: V1beta1Plan) => plan?.spec?.type === 'live';
+
 export const getPlanArchived = (plan: V1beta1Plan) => plan?.spec?.archived;
 
 export const getPlanVirtualMachinesMigrationStatus = (plan: V1beta1Plan) =>
