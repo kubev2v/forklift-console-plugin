@@ -54,7 +54,7 @@ const MigrationsListPage: FC = () => {
         placeholderLabel: t('Filter by status'),
         type: FilterDefType.Enum,
         values: [
-          { id: 'InProgress', label: t('Running') },
+          { id: 'Running', label: t('Running') },
           { id: 'Succeeded', label: t('Succeeded') },
           { id: 'Failed', label: t('Failed') },
           { id: 'Canceled', label: t('Canceled') },

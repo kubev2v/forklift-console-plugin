@@ -69,8 +69,9 @@ const VmMigrationsHistoryChart = ({
   );
 
   const mapDataPoints = (dataPoints: MigrationDataPoint[], name = ''): ChartDatumWithName[] =>
-    dataPoints.map(({ dateLabel, interval, value }) => ({
+    dataPoints.map(({ dateLabel, interval, migrations, value }) => ({
       interval,
+      migrations,
       name,
       x: dateLabel,
       y: value,
@@ -130,13 +131,13 @@ const VmMigrationsHistoryChart = ({
             constrainToVisibleArea
             onActivated={(points: ChartDatumWithName[]) => {
               const activePoint = points.find((pt) => pt.y > 0);
-              if (activePoint) {
-                setActiveArea(activePoint.name);
-                setActiveInterval(activePoint.interval);
-              } else {
+              if (!activePoint) {
                 setActiveArea(null);
                 setActiveInterval(null);
+                return;
               }
+              setActiveArea(activePoint.name);
+              setActiveInterval(activePoint.interval);
             }}
           />
         }

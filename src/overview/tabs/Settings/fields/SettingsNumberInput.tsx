@@ -9,8 +9,11 @@ type SettingsNumberInputProps = {
 };
 
 const SettingsNumberInput: FC<SettingsNumberInputProps> = ({ defaultValue, onChange, value }) => {
-  const normalize = (val: number | string) =>
-    typeof val !== 'number' || val < 0 ? defaultValue : Number(val);
+  const normalize = (val: number | string) => {
+    const num = typeof val === 'number' ? val : parseInt(val, 10);
+    if (isNaN(num) || num < 1) return defaultValue;
+    return num;
+  };
 
   const onUserMinus: (event: MouseEvent, name?: string) => void = () => {
     const updatedValue = normalize(value) - 1;
