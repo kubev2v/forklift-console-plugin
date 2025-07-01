@@ -33,8 +33,6 @@ import {
 type MappingResources = {
   loadingResources: boolean;
   resourcesError: Error | undefined;
-  networkMaps: V1beta1NetworkMap[];
-  storageMaps: V1beta1StorageMap[];
   planNetworkMap: V1beta1NetworkMap | null;
   planStorageMap: V1beta1StorageMap | null;
   sourceNetworks: InventoryNetwork[];
@@ -113,7 +111,6 @@ export const useMappingResources = (plan: V1beta1Plan): MappingResources => {
       targetNetworksLoading ||
       sourceStoragesLoading ||
       targetStoragesLoading,
-    networkMaps: networkMaps ?? [],
     planNetworkMap: planNetworkMaps ?? null,
     planStorageMap: planStorageMaps ?? null,
     resourcesError:
@@ -126,7 +123,6 @@ export const useMappingResources = (plan: V1beta1Plan): MappingResources => {
       targetStoragesError,
     sourceNetworks: sourceNetworks ?? [],
     sourceStorages: sourceStorages ?? [],
-    storageMaps: storageMaps ?? [],
     targetNetworks: targetNetworks ?? [],
     targetStorages: targetStorages ?? [],
   };
