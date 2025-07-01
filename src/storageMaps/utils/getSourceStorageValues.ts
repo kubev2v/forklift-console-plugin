@@ -3,43 +3,107 @@ import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { CategorizedSourceMappings } from 'src/plans/create/types';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type { ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
+import type { ProviderVirtualMachine, V1beta1Provider, VSphereVM } from '@kubev2v/types';
 import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
+import { isEmpty } from '@utils/helpers';
+
+import type { OVirtVMWithDisks } from '../types';
 
 /**
- * Identifies all unique storage IDs used by the selected VMs
- * Handles different provider types with appropriate storage extraction logic
+ * Extracts storage IDs from vSphere VMs
  */
-const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | null): string[] =>
-  Array.from(
-    new Set(
-      selectedVMs?.flatMap((vm) => {
-        switch (vm.providerType) {
-          case 'vsphere': {
-            return vm.disks?.map((disk) => disk?.datastore?.id);
-          }
-          case 'ova': {
-            return (vm as EnhancedOvaVM).disks.map((disk) => disk.ID);
-          }
-          case 'ovirt':
-          case 'openstack':
-          case 'openshift':
-          case undefined:
-          default:
-            return [];
-        }
-      }),
-    ),
+const getVSphereStorageIds = (vm: ProviderVirtualMachine): string[] => {
+  const vsphereVM = vm as VSphereVM;
+
+  if (!vsphereVM.disks || !Array.isArray(vsphereVM.disks)) {
+    return [];
+  }
+
+  return vsphereVM.disks.reduce<string[]>(
+    (acc, disk) => (disk?.datastore?.id ? [...acc, disk.datastore.id] : acc),
+    [],
+  );
+};
+
+/**
+ * Extracts storage IDs from OVA VMs
+ */
+const getOvaStorageIds = (vm: EnhancedOvaVM): string[] =>
+  vm.disks?.reduce<string[]>((acc, disk) => (disk.ID ? [...acc, disk.ID] : acc), []) ?? [];
+
+/**
+ * Extracts storage IDs from oVirt VMs using disk attachments and storage domain data
+ */
+const getOvirtStorageIds = (vm: OVirtVMWithDisks): string[] => {
+  // Create disk ID to storage domain mapping
+  const diskToStorageMap =
+    vm.disks?.reduce<Map<string, string>>((map, disk) => {
+      if (disk.id && disk.storageDomain) {
+        map.set(disk.id, disk.storageDomain);
+      }
+
+      return map;
+    }, new Map()) ?? new Map();
+
+  // Extract storage IDs from disk attachments using the mapping
+  const storageFromAttachments = vm.diskAttachments?.reduce<string[]>((acc, attachment) => {
+    const storageId: string = diskToStorageMap.get(attachment.disk);
+    return storageId ? [...acc, storageId] : acc;
+  }, []);
+
+  if (!isEmpty(storageFromAttachments)) {
+    return storageFromAttachments || [];
+  }
+
+  // Fallback: Extract storage domains directly from disks
+  const storageFromDisks = vm.disks?.reduce<string[]>(
+    (acc, disk) => (disk.storageDomain ? [...acc, disk.storageDomain] : acc),
+    [],
   );
 
+  if (!isEmpty(storageFromDisks)) {
+    return storageFromDisks ?? [];
+  }
+
+  return [];
+};
+
 /**
- * Creates a map of storage ID to storage object for quick lookups
+ * Identifies unique storage IDs used by selected VMs across all provider types
  */
-const getInventoryStorageMap = (inventoryStorages: InventoryStorage[]) =>
-  inventoryStorages.reduce((acc: Record<string, InventoryStorage>, inventoryStorage) => {
-    acc[inventoryStorage.id] = inventoryStorage;
+const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | null): string[] => {
+  if (!selectedVMs || isEmpty(selectedVMs)) {
+    return [];
+  }
+
+  const storageIdSet = selectedVMs.reduce<Set<string>>((acc, vm) => {
+    let storageIds: string[] = [];
+
+    switch (vm.providerType) {
+      case 'vsphere':
+        storageIds = getVSphereStorageIds(vm);
+        break;
+
+      case 'ova':
+        storageIds = getOvaStorageIds(vm as EnhancedOvaVM);
+        break;
+
+      case 'ovirt':
+        storageIds = getOvirtStorageIds(vm as OVirtVMWithDisks);
+        break;
+
+      case 'openstack':
+      case 'openshift':
+      default:
+      // Use empty array
+    }
+
+    storageIds.forEach((id) => acc.add(id));
     return acc;
-  }, {});
+  }, new Set());
+
+  return Array.from(storageIdSet);
+};
 
 /**
  * Categorizes available source storages into 'used' and 'other' based on VM usage
@@ -50,44 +114,32 @@ export const getSourceStorageValues = (
   availableSourceStorages: InventoryStorage[],
   vms: ProviderVirtualMachine[] | null,
 ): CategorizedSourceMappings => {
-  const sourceProviderType = sourceProvider?.spec?.type ?? '';
+  const sourceProviderType = sourceProvider?.spec?.type;
+  const storageIdsUsedByVms = getStoragesUsedBySelectedVms(vms);
+  const usedStorageIds = new Set(storageIdsUsedByVms);
 
-  const storageIdsUsedBySelectedVms = getStoragesUsedBySelectedVms(vms);
-
-  const selectedOvaVMsDiskIDs = new Set(storageIdsUsedBySelectedVms);
-
-  const filteredOVAStoragesBySelectedVMs = availableSourceStorages.filter((storage) =>
-    selectedOvaVMsDiskIDs.has(storage.id),
-  );
-
-  const sourceStorageMap = getInventoryStorageMap(
+  // For OVA providers, filter storages to only those used by selected VMs
+  const relevantStorages =
     sourceProviderType === PROVIDER_TYPES.ova
-      ? filteredOVAStoragesBySelectedVMs
-      : availableSourceStorages,
-  );
+      ? availableSourceStorages.filter((storage) => usedStorageIds.has(storage.id))
+      : availableSourceStorages;
 
-  // Categorize storages into 'used' and 'other'
-  return Object.entries(sourceStorageMap).reduce(
-    (acc: CategorizedSourceMappings, [sourceStorageId, sourceStorage]) => {
-      const hasStoragesUsedByVms = storageIdsUsedBySelectedVms.some((id) => id === sourceStorageId);
+  // Partition storages into used and other categories
+  return relevantStorages.reduce<CategorizedSourceMappings>(
+    (acc, storage) => {
+      const storageEntry = {
+        id: storage.id,
+        name: getMapResourceLabel(storage),
+      };
 
-      if (hasStoragesUsedByVms) {
-        acc.used.push({
-          id: sourceStorageId,
-          name: getMapResourceLabel(sourceStorage),
-        });
+      if (usedStorageIds.has(storage.id)) {
+        acc.used.push(storageEntry);
       } else {
-        acc.other.push({
-          id: sourceStorageId,
-          name: getMapResourceLabel(sourceStorage),
-        });
+        acc.other.push(storageEntry);
       }
 
       return acc;
     },
-    {
-      other: [],
-      used: [],
-    },
+    { other: [], used: [] },
   );
 };

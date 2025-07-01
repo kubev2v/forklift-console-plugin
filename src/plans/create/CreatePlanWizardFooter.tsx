@@ -1,5 +1,5 @@
 import type { FC, MouseEvent } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { type Location, useLocation, useNavigate } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { PlanModelRef } from '@kubev2v/types';
@@ -15,6 +15,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from './hooks/useCreatePlanFormContext';
 import { PlanWizardStepId } from './constants';
+import type { CreatePlanFormData } from './types';
 
 type CreatePlanWizardFooterProps = Partial<Pick<WizardFooterProps, 'nextButtonText' | 'onNext'>> & {
   hasError?: boolean;
@@ -26,6 +27,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   onNext: onSubmit,
 }) => {
   const navigate = useNavigate();
+  const location: Location<CreatePlanFormData> = useLocation();
   const { t } = useForkliftTranslation();
   const [activeNamespace] = useActiveNamespace();
   const {
@@ -62,12 +64,19 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   };
 
   const onCancel = () => {
-    const plansListURL = getResourceUrl({
+    // If we have a sourceProvider in the location state, go back to the previous page (provider details)
+    if (location.state?.sourceProvider) {
+      navigate(-1);
+      return;
+    }
+
+    // Otherwise, navigate to the plans list page
+    const plansListUrl = getResourceUrl({
       namespace: activeNamespace,
       reference: PlanModelRef,
     });
 
-    navigate(plansListURL);
+    navigate(plansListUrl);
   };
 
   return (

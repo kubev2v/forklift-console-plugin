@@ -12,6 +12,7 @@ import type {
   OvaNetwork,
   OvaVM,
   OVirtNetwork,
+  OVirtNicProfile,
   OVirtVM,
   V1beta1Hook,
   V1beta1NetworkMap,
@@ -109,6 +110,7 @@ export type CreatePlanWizardContextProps = {
   network: {
     sources: ResourceQueryResult<InventoryNetwork[]>;
     targets: ResourceQueryResult<OpenShiftNetworkAttachmentDefinition[]>;
+    oVirtNicProfiles: ResourceQueryResult<OVirtNicProfile[]>;
   };
   storage: {
     sources: ResourceQueryResult<InventoryStorage[]>;
