@@ -8,7 +8,9 @@ import NamespaceDetailsItem from '@components/DetailItems/NamespaceDetailItem';
 import OwnerDetailsItem from '@components/DetailItems/OwnerDetailItem';
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 
@@ -23,6 +25,7 @@ type DetailsSectionProps = {
 
 const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
   const { sourceProvider } = usePlanSourceProvider(plan);
+  const { isFeatureEnabled } = useFeatureFlags();
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
@@ -32,6 +35,7 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
   const isVsphere = sourceProvider?.spec?.type === 'vsphere';
   const isOvirt = sourceProvider?.spec?.type === 'ovirt';
   const isOpenshift = sourceProvider?.spec?.type === 'openshift';
+  const isLiveMigrationEnabled = isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION);
   return (
     <ModalHOC>
       <DescriptionList>
@@ -45,7 +49,11 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
         >
           <NameDetailsItem resource={plan} />
           <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
-          <LiveDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOpenshift} />
+          <LiveDetailsItem
+            plan={plan}
+            canPatch={canPatch}
+            shouldRender={isOpenshift && isLiveMigrationEnabled}
+          />
           <NamespaceDetailsItem resource={plan} />
           <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
           <CreatedAtDetailsItem resource={plan} />
