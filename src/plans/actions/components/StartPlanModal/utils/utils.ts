@@ -3,7 +3,7 @@ import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/consta
 import { MigrationModel, type V1beta1Migration, type V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
-import { useForkliftTranslation } from '@utils/i18n';
+import { t } from '@utils/i18n';
 
 export const startPlanMigration = async (plan: V1beta1Plan) => {
   const name = getName(plan);
@@ -37,7 +37,6 @@ export const startPlanMigration = async (plan: V1beta1Plan) => {
 };
 
 export const migrationModalMessage = (migrationType: MigrationTypeValue): string => {
-  const { t } = useForkliftTranslation();
   switch (migrationType) {
     case MigrationTypeValue.Warm:
       return t('VMs included in warm migrations migrate with minimal downtime.');

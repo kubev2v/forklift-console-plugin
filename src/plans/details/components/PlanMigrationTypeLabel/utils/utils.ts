@@ -1,6 +1,6 @@
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
 
-import { useForkliftTranslation } from '@utils/i18n';
+import { t } from '@utils/i18n';
 
 export const typeLabel = (migrationType: MigrationTypeValue): string => {
   switch (migrationType) {
@@ -15,7 +15,6 @@ export const typeLabel = (migrationType: MigrationTypeValue): string => {
 };
 
 export const bodyContent = (migrationType: MigrationTypeValue): string => {
-  const { t } = useForkliftTranslation();
   switch (migrationType) {
     case MigrationTypeValue.Live:
       return t('With a live migration, we will move an active virtual machine without downtime.');

@@ -19,6 +19,7 @@
   "{{count}} VM migration_other": "{{count}} VM migration",
   "{{errorMessage}}": "{{errorMessage}}",
   "{{hookType}} migration hook": "{{hookType}} migration hook",
+  "{{label}}": "{{label}}",
   "{{label}} field is missing from the secret data.": "{{label}} field is missing from the secret data.",
   "{{name}} Details": "{{name}} Details",
   "{{selectedLength}} hosts selected.": "{{selectedLength}} hosts selected.",
