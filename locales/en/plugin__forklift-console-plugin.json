@@ -8,6 +8,7 @@
   "- .PlanName: name of the migration plan": "- .PlanName: name of the migration plan",
   "- .PVCName: name of the PVC mounted to the VM using this volume": "- .PVCName: name of the PVC mounted to the VM using this volume",
   "- .RootDiskIndex: index of the root disk": "- .RootDiskIndex: index of the root disk",
+  "- .Shared: true if the volume is shared by multiple VMs, false otherwise": "- .Shared: true if the volume is shared by multiple VMs, false otherwise",
   "- .VmName: name of the VM": "- .VmName: name of the VM",
   "- .VolumeIndex: sequential index of the volume interface (0-based)": "- .VolumeIndex: sequential index of the volume interface (0-based)",
   "{{completed}} of {{total}} {{name}}": "{{completed}} of {{total}} {{name}}",
