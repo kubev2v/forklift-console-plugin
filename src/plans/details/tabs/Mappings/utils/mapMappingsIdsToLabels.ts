@@ -63,7 +63,6 @@ export const mapSourceNetworksIdsToLabels = (
     })
     .filter(Boolean);
 
-  tuples.push([POD, PodNetworkLabel.Source]);
   const labelToId = resolveCollisions(tuples);
   return labelToId;
 };
@@ -111,7 +110,7 @@ export const mapTargetNetworksIdsToLabels = (
     )
     .map((net) => [net.uid, `${net.namespace}/${net.name}`]);
 
-  tuples.push([POD, PodNetworkLabel.Target]);
+  tuples.push([POD, PodNetworkLabel.Source]);
   const labelToId = resolveCollisions(tuples);
   return labelToId;
 };

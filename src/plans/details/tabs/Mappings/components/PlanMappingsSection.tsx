@@ -21,8 +21,8 @@ import PlanMappingsViewMode from './PlanMappingsViewMode';
 
 type PlanMappingsSectionProps = {
   plan: V1beta1Plan;
-  planNetworkMaps: V1beta1NetworkMap;
-  planStorageMaps: V1beta1StorageMap;
+  planNetworkMap: V1beta1NetworkMap;
+  planStorageMap: V1beta1StorageMap;
   setAlertMessage: (message: string) => void;
   sourceNetworks: InventoryNetwork[];
   sourceStorages: InventoryStorage[];
@@ -32,8 +32,8 @@ type PlanMappingsSectionProps = {
 
 const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
   plan,
-  planNetworkMaps,
-  planStorageMaps,
+  planNetworkMap,
+  planStorageMap,
   setAlertMessage,
   sourceNetworks,
   sourceStorages,
@@ -56,8 +56,8 @@ const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
     updatedNetwork,
     updatedStorage,
   } = usePlanMappingsHandlers({
-    planNetworkMaps,
-    planStorageMaps,
+    planNetworkMap,
+    planStorageMap,
     sourceNetworks,
     sourceStorages,
     targetNetworks,
@@ -69,8 +69,8 @@ const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
     setIsLoading(true);
     try {
       await patchPlanMappingsData({
-        planNetworkMaps,
-        planStorageMaps,
+        planNetworkMap,
+        planStorageMap,
         updatedNetwork,
         updatedStorage,
       });
