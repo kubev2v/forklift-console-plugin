@@ -24,7 +24,7 @@ export const createReplacedNetworkMap = (
 
   const targetEntry: V1beta1NetworkMapSpecMapDestination = target
     ? { name: target.name, namespace: target.namespace, type: MULTUS }
-    : { name: POD, namespace: '', type: POD };
+    : { type: POD };
 
   return { destination: { ...targetEntry }, source: sourceEntry };
 };
