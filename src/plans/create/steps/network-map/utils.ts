@@ -4,8 +4,8 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type {
   OpenShiftNetworkAttachmentDefinition,
   OVirtNicProfile,
+  OVirtVM,
   ProviderVirtualMachine,
-  V1beta1Provider,
 } from '@kubev2v/types';
 import { Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
@@ -26,95 +26,125 @@ export const getNetworkMapFieldId = (id: keyof NetworkMapping, index: number): N
   `${NetworkMapFieldId.NetworkMap}.${index}.${id}`;
 
 /**
- * Extracts all unique network IDs used by the provided VMs
- * Uses the toNetworks utility to handle provider-specific network extraction
+ * Creates a mapping from NIC profile IDs to network IDs
  */
-const getNetworksUsedByProviderVms = (
-  providerVms: ProviderVirtualMachine[],
+const createNicProfileToNetworkMap = (
   nicProfiles: OVirtNicProfile[],
-): string[] => {
-  return Array.from(new Set(providerVms.flatMap((vm) => toNetworks(vm, nicProfiles))));
+  availableNetworks: ProviderNetwork[] = [],
+): Map<string, string> => {
+  const networkByName = new Map(
+    availableNetworks.map((network) => [network.name.toLowerCase(), network.id]),
+  );
+
+  return new Map(
+    nicProfiles.flatMap((profile) => {
+      if (profile.network) {
+        return [[profile.id, profile.network]];
+      }
+
+      const networkId = networkByName.get(profile.name.toLowerCase());
+      return networkId ? [[profile.id, networkId]] : [];
+    }),
+  );
 };
 
 /**
- * Creates a map of network ID to network object for quick lookups
+ * Extracts network IDs from oVirt VMs using NIC profile mapping
  */
-const getInventoryNetworkMap = (inventoryNetworks: ProviderNetwork[]) =>
-  inventoryNetworks.reduce((acc: Record<string, ProviderNetwork>, inventoryNetwork) => {
-    acc[inventoryNetwork.id] = inventoryNetwork;
+const getOvirtNetworkIds = (vm: OVirtVM, nicProfileToNetworkMap: Map<string, string>): string[] => {
+  return (
+    vm.nics?.reduce<string[]>((acc, nic) => {
+      const networkId = nicProfileToNetworkMap.get(nic.profile);
+      const id = networkId ?? nic.profile;
+
+      return id ? [...acc, id] : acc;
+    }, []) ?? []
+  );
+};
+
+/**
+ * Extracts all unique network IDs used by the provided VMs
+ * For oVirt, uses NIC profiles to map NIC profile IDs to network IDs
+ */
+const getNetworksUsedByProviderVms = (
+  providerVms: ProviderVirtualMachine[],
+  nicProfiles: OVirtNicProfile[] = [],
+  availableNetworks: ProviderNetwork[] = [],
+): string[] => {
+  const nicProfileToNetworkMap = createNicProfileToNetworkMap(nicProfiles, availableNetworks);
+
+  const networkIdSet = providerVms.reduce<Set<string>>((acc, vm) => {
+    const networkIds =
+      vm.providerType === PROVIDER_TYPES.ovirt
+        ? getOvirtNetworkIds(vm, nicProfileToNetworkMap)
+        : toNetworks(vm, nicProfiles);
+
+    // Add network IDs to the set
+    networkIds.forEach((id) => acc.add(id));
     return acc;
-  }, {});
+  }, new Set());
+
+  return Array.from(networkIdSet);
+};
 
 /**
  * Categorizes available source networks into 'used' and 'other' based on VM usage
  * This helps prioritize networks that need mapping in the UI
  */
 export const getSourceNetworkValues = (
-  sourceProvider: V1beta1Provider | undefined,
   availableSourceNetworks: ProviderNetwork[],
   vms: ProviderVirtualMachine[],
+  nicProfiles: OVirtNicProfile[],
 ): CategorizedSourceMappings => {
-  // Skip determining used networks for oVirt as they're handled differently
-  const networkIdsUsedBySelectedVms =
-    sourceProvider?.spec?.type === PROVIDER_TYPES.ovirt
-      ? []
-      : getNetworksUsedByProviderVms(vms, []);
-
-  const sourceNetworkMap = getInventoryNetworkMap(availableSourceNetworks);
-
-  // Categorize networks into 'used' and 'other'
-  return Object.entries(sourceNetworkMap).reduce(
-    (acc: CategorizedSourceMappings, [sourceNetworkId, sourceNetwork]) => {
-      const hasNetworksUsedByVms = networkIdsUsedBySelectedVms.some((id) => id === sourceNetworkId);
-
-      if (hasNetworksUsedByVms) {
-        acc.used.push({
-          id: sourceNetworkId,
-          name: getMapResourceLabel(sourceNetwork),
-        });
-      } else {
-        acc.other.push({
-          id: sourceNetworkId,
-          name: getMapResourceLabel(sourceNetwork),
-        });
-      }
-
-      return acc;
-    },
-    {
-      other: [],
-      used: [],
-    },
+  const usedNetworkIds = new Set(
+    getNetworksUsedByProviderVms(vms, nicProfiles, availableSourceNetworks),
   );
+
+  const used: MappingValue[] = [];
+  const other: MappingValue[] = [];
+
+  for (const network of availableSourceNetworks) {
+    const mappingValue = {
+      id: network.id,
+      name: getMapResourceLabel(network),
+    };
+
+    if (usedNetworkIds.has(network.id)) {
+      used.push(mappingValue);
+    } else {
+      other.push(mappingValue);
+    }
+  }
+
+  return { other, used };
 };
 
 /**
- * Validates network mappings by ensuring all networks detected on source VMs
- * have corresponding mappings in the provided values
+ * Validates that all detected networks have corresponding mappings
  *
- * @param values - Array of network mappings configured by user
- * @param usedSourceNetworks - Array of networks that need to be mapped
- * @returns Error message string if any network is unmapped, undefined if all are mapped
+ * @param values - Network mappings configured by user
+ * @param usedSourceNetworks - Networks that need to be mapped
+ * @returns Error message if any network is unmapped, undefined if all are mapped
  */
 export const validateNetworkMap = (
   values: NetworkMapping[],
   usedSourceNetworks: MappingValue[],
 ) => {
-  if (
-    !usedSourceNetworks.every((sourceNetwork) =>
-      values.find((value) => value[NetworkMapFieldId.SourceNetwork].name === sourceNetwork.name),
-    )
-  ) {
-    return t('All networks detected on the selected VMs require a mapping.');
-  }
+  const mappedNetworkNames = new Set(
+    values.map((value) => value[NetworkMapFieldId.SourceNetwork].name),
+  );
 
-  return undefined;
+  const hasUnmappedNetwork = !usedSourceNetworks.every((sourceNetwork) =>
+    mappedNetworkNames.has(sourceNetwork.name),
+  );
+
+  return hasUnmappedNetwork
+    ? t('All networks detected on the selected VMs require a mapping.')
+    : undefined;
 };
 
 /**
- * Filters target networks by project/namespace and transforms them into a mapping object.
- * Only includes networks from the target project or default namespace.
- *
+ * Filters target networks by project/namespace and transforms to mapping object
  */
 export const filterTargetNetworksByProject = (
   availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[],
@@ -126,7 +156,10 @@ export const filterTargetNetworksByProject = (
 
   return availableTargetNetworks.reduce(
     (networkMap: Record<string, MappingValue>, network) => {
-      if (network.namespace === targetProject || network.namespace === Namespace.Default) {
+      const isValidNamespace =
+        network.namespace === targetProject || network.namespace === Namespace.Default;
+
+      if (isValidNamespace) {
         networkMap[network.uid] = {
           id: network.id,
           name: `${network.namespace}/${network.name}`,
