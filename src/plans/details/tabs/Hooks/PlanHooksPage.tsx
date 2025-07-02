@@ -6,7 +6,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import { Alert, Divider, PageSection } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
 
 import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';
@@ -36,10 +35,10 @@ const PlanHooksPage: FC<PlanPageProps> = ({ name, namespace }) => {
   }, [reset, postHookResource, preHookResource]);
 
   useEffect(() => {
-    if (loaded && !error && (!isEmpty(postHookResource) || !isEmpty(preHookResource))) {
+    if (loaded && !error) {
       resetToDefaultValues();
     }
-  }, [plan, preHookResource, postHookResource, loaded, error, resetToDefaultValues]);
+  }, [plan, loaded, error, resetToDefaultValues]);
 
   const onUpdate = handleSubmit(async (formData) => {
     await onUpdatePlanHooks({
