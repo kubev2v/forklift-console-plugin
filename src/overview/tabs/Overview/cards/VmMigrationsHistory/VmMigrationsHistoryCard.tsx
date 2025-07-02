@@ -53,7 +53,6 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
               running,
               succeeded,
             }}
-            selectedTimeRange={selectedRange}
           />
         </LoadingSuspend>
       </CardBody>

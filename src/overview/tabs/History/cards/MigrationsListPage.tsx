@@ -15,7 +15,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Namespace } from '@utils/constants';
 
-import { dateRangeObjectMatcher, mostRecentMatcher } from '../utils/matchers';
+import { dateRangeObjectMatcher, filterMostRecentMigrations } from '../utils/matchers';
 import { getMigrationStatusFromVMs } from '../utils/migrationStatus';
 
 import MigrationRow from './MigrationRow';
@@ -108,13 +108,13 @@ const MigrationsListPage: FC = () => {
     },
     {
       filter: {
-        placeholderLabel: t('Recent plan migrations only'),
+        placeholderLabel: t('Group by plan'),
         standalone: true,
         type: FilterDefType.Slider,
       },
       isVisible: false,
       jsonPath: (migration: V1beta1Migration) => migration,
-      label: t('Recent plan migrations only'),
+      label: t('Group by plan'),
       resourceFieldId: 'recent',
     },
   ];
@@ -130,7 +130,10 @@ const MigrationsListPage: FC = () => {
         page={INITIAL_PAGE}
         showManageColumns={false}
         noPadding
-        extraSupportedMatchers={[dateRangeObjectMatcher, mostRecentMatcher(migrations)]}
+        extraSupportedMatchers={[dateRangeObjectMatcher]}
+        postFilterData={(data, selectedFilters) =>
+          selectedFilters.recent?.[0] === 'true' ? filterMostRecentMigrations(data) : data
+        }
         extraSupportedFilters={{
           recent: SwitchFilter,
         }}

@@ -70,7 +70,9 @@ const OverviewPage: FC = () => {
   return (
     <>
       <HeaderTitleWrapper />
-      <HorizontalNav pages={pages.filter(Boolean)} />
+      <div className="pf-v5-u-pt-lg pf-v5-u-h-100 pf-v5-u-display-flex">
+        <HorizontalNav pages={pages.filter(Boolean)} />
+      </div>
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import { POD } from 'src/plans/details/components/PlanPageHeader/utils/constants';
 import { StorageClassAnnotation } from 'src/storageMaps/types';
 
 import type {
@@ -11,6 +12,7 @@ import type {
 } from '@kubev2v/types';
 import { CONDITION_STATUS } from '@utils/constants';
 
+import { PodNetworkLabel } from '../utils/constants';
 import {
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
@@ -39,8 +41,8 @@ type PlanMappingsHandlers = {
 } & UsePlanMappingsStateResult;
 
 type PlanMappingsHandlersParams = {
-  planNetworkMaps: V1beta1NetworkMap;
-  planStorageMaps: V1beta1StorageMap;
+  planNetworkMap: V1beta1NetworkMap;
+  planStorageMap: V1beta1StorageMap;
   sourceNetworks: InventoryNetwork[];
   sourceStorages: InventoryStorage[];
   targetNetworks: OpenShiftNetworkAttachmentDefinition[];
@@ -50,14 +52,14 @@ type PlanMappingsHandlersParams = {
 type UsePlanMappingsHandlers = (params: PlanMappingsHandlersParams) => PlanMappingsHandlers;
 
 export const usePlanMappingsHandlers: UsePlanMappingsHandlers = ({
-  planNetworkMaps,
-  planStorageMaps,
+  planNetworkMap,
+  planStorageMap,
   sourceNetworks,
   sourceStorages,
   targetNetworks,
   targetStorages,
 }) => {
-  const mappingsState = usePlanMappingsState(planNetworkMaps, planStorageMaps);
+  const mappingsState = usePlanMappingsState(planNetworkMap, planStorageMap);
   const { setUpdatedNetwork, setUpdatedStorage, updatedNetwork, updatedStorage } = mappingsState;
 
   const [canAddNetwork, setCanAddNetwork] = useState(true);
@@ -124,7 +126,8 @@ export const usePlanMappingsHandlers: UsePlanMappingsHandlers = ({
           mapSourceNetworksIdsToLabels(sourceNetworks)[item.source.id ?? item.source.type!] ===
             current.source &&
           (item.destination.name === current.destination ||
-            `${item.destination.namespace}/${item.destination.name}` === current.destination),
+            `${item.destination.namespace}/${item.destination.name}` === current.destination ||
+            (current.destination === PodNetworkLabel.Source && item.destination.type === POD)),
         newMap,
       );
       setUpdatedNetwork(newState);

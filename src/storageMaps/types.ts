@@ -1,3 +1,5 @@
+import type { OVirtVM } from '@kubev2v/types';
+
 export type TargetStorage = {
   id: string;
   name: string;
@@ -9,3 +11,10 @@ export enum StorageClassAnnotation {
 }
 
 export type StorageMappingValue = { id?: string; name: string };
+
+export type OVirtVMWithDisks = OVirtVM & {
+  disks?: {
+    id: string;
+    storageDomain?: string;
+  }[];
+};
