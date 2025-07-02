@@ -9,29 +9,39 @@ export const dateRangeObjectMatcher = {
   matchValue: (value: { started?: string; completed?: string }) => (filter: string) => {
     if (!value) return false;
     const [from, to] = filter.split('/');
-    const fromDate = DateTime.fromISO(from);
-    const toDate = DateTime.fromISO(to);
+    const fromDate = DateTime.fromISO(from, { zone: 'utc' }).startOf('day');
+    const toDate = DateTime.fromISO(to, { zone: 'utc' }).endOf('day');
     const inRange = (dateStr?: string) => {
       if (!dateStr) return false;
       const date = DateTime.fromISO(dateStr);
       return date >= fromDate && date <= toDate;
     };
-    return inRange(value.started);
+    return inRange(value.started) || inRange(value.completed);
   },
 };
 
-export const filterMostRecentMigrations = (migrations: V1beta1Migration[]): V1beta1Migration[] => {
-  const latestByPlan = new Map<string, V1beta1Migration>();
-  for (const migration of migrations) {
-    const planKey = getPlanKey(migration);
-    const started = getMigrationStarted(migration);
-    const current = latestByPlan.get(planKey);
-    if (
-      !current ||
-      new Date(started).getTime() > new Date(getMigrationStarted(current)).getTime()
-    ) {
-      latestByPlan.set(planKey, migration);
-    }
-  }
-  return Array.from(latestByPlan.values());
+const mostRecentMigrationFilter = (
+  migration: V1beta1Migration,
+  migrations: V1beta1Migration[],
+): boolean => {
+  const planKey = getPlanKey(migration);
+  // Find the most recent migration for this plan
+  const [mostRecent] = migrations
+    .filter((migrationItem) => getPlanKey(migrationItem) === planKey)
+    .sort((a, b) => {
+      const aStarted = getMigrationStarted(a);
+      const bStarted = getMigrationStarted(b);
+      return new Date(bStarted).getTime() - new Date(aStarted).getTime();
+    });
+  return mostRecent?.metadata?.uid === migration.metadata?.uid;
 };
+
+export const mostRecentMatcher = (migrations: V1beta1Migration[]) => ({
+  filterType: FilterDefType.Slider,
+  matchValue: (migration: V1beta1Migration) => (filter: string) => {
+    if (filter === 'true') {
+      return mostRecentMigrationFilter(migration, migrations);
+    }
+    return true;
+  },
+});

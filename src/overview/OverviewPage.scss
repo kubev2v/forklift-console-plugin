@@ -30,6 +30,7 @@
   padding-top: 12px;
 
   .pf-v5-c-tile {
+    background-color: #151515;
     transform: scale(0.8);
     transform-origin: left;
     margin-right: -31px;
@@ -38,11 +39,8 @@
     padding-bottom: 32px;
     margin-bottom: -14px;
 
-    .pf-v5-theme-dark & {
-      background-color: #151515;
-      &::before {
-        border: none;
-      }
+    &::before {
+      border: none;
     }
 
     img {

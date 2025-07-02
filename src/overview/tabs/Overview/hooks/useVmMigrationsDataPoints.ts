@@ -8,13 +8,16 @@ import {
   type V1beta1MigrationStatusVmsConditions,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { getName } from '@utils/crds/common/selectors';
 
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
-import type { MigrationDataPoint } from '../utils/types';
 
-const toHourLabel = (date: DateTime | null) => (date ? date.toLocal().toFormat('HH:mm') : '');
-const toDayLabel = (date: DateTime | null) => (date ? date.toLocal().toFormat('LLL dd') : '');
+type MigrationDataPoint = {
+  dateLabel: string;
+  value: number;
+};
+
+const toHourLabel = (date: DateTime | null) => (date ? date.toUTC().toFormat('HH:mm') : '');
+const toDayLabel = (date: DateTime | null) => (date ? date.toUTC().toFormat('LLL dd') : '');
 
 const createTimeBuckets = (selectedTimeRange: TimeRangeOptions, singleBucket = false) => {
   const { bucket, span, unit } = TimeRangeOptionsDictionary[selectedTimeRange];
@@ -43,36 +46,6 @@ const createTimeBuckets = (selectedTimeRange: TimeRangeOptions, singleBucket = f
     cursor = next;
   }
   return intervals.slice(-12);
-};
-
-const createBuckets = (intervals: Interval[], migrations: V1beta1Migration[]) => {
-  return intervals.map((interval) => {
-    // Find migrations that fit the bucket interval
-    const inBucket = migrations.filter((migration) => {
-      const started = getMigrationStarted(migration);
-      const dt = DateTime.fromISO(started).toUTC();
-      return interval.contains(dt);
-    });
-
-    // Group by plan, keep only the most recent (by migration started) per plan
-    const latestByPlan = new Map<string, V1beta1Migration>();
-    inBucket.forEach((migration) => {
-      const planKey = getPlanKey(migration);
-      const started = getMigrationStarted(migration);
-      if (
-        !latestByPlan.has(planKey) ||
-        DateTime.fromISO(started) >
-          DateTime.fromISO(getMigrationStarted(latestByPlan.get(planKey)!))
-      ) {
-        latestByPlan.set(planKey, migration);
-      }
-    });
-
-    return {
-      interval,
-      migrations: Array.from(latestByPlan.values()),
-    };
-  });
 };
 
 const isCanceled = (vm: V1beta1MigrationStatusVms) =>
@@ -114,7 +87,33 @@ export const useVmMigrationsDataPoints = (
   const intervals = createTimeBuckets(selectedRange, singleBucket);
 
   // 2. Group migrations into interval buckets, keeping only the latest per plan in each bucket
-  const buckets = createBuckets(intervals, migrations);
+  const buckets = intervals.map((interval) => {
+    // Find migrations that fit the bucket interval
+    const inBucket = migrations.filter((migration) => {
+      const started = getMigrationStarted(migration);
+      const dt = DateTime.fromISO(started).toUTC();
+      return interval.contains(dt);
+    });
+
+    // Group by plan, keep only the most recent (by migration started) per plan
+    const latestByPlan = new Map<string, V1beta1Migration>();
+    inBucket.forEach((migration) => {
+      const planKey = getPlanKey(migration);
+      const started = getMigrationStarted(migration);
+      if (
+        !latestByPlan.has(planKey) ||
+        DateTime.fromISO(started) >
+          DateTime.fromISO(getMigrationStarted(latestByPlan.get(planKey)!))
+      ) {
+        latestByPlan.set(planKey, migration);
+      }
+    });
+
+    return {
+      interval,
+      migrations: Array.from(latestByPlan.values()),
+    };
+  });
 
   // 3. For each bucket, count failed/running/succeeded VMs
   const failed: MigrationDataPoint[] = [];
@@ -132,33 +131,22 @@ export const useVmMigrationsDataPoints = (
     let runningCount = 0;
     let succeededCount = 0;
     let canceledCount = 0;
-    const countedMigrations: Record<string, Record<string, boolean>> = {
-      canceled: {},
-      failed: {},
-      running: {},
-      succeeded: {},
-    };
 
     migrationsInBucket.forEach((migration) => {
-      const name = getName(migration) ?? '';
       (migration?.status?.vms ?? []).forEach((vm) => {
         total += 1;
         if (isFailed(vm)) {
           failedCount += 1;
           totalFailedCount += 1;
-          countedMigrations.failed[name] = true;
         } else if (isSucceeded(vm)) {
           succeededCount += 1;
           totalSucceededCount += 1;
-          countedMigrations.succeeded[name] = true;
         } else if (isRunning(vm)) {
           runningCount += 1;
           totalRunningCount += 1;
-          countedMigrations.running[name] = true;
         } else if (isCanceled(vm)) {
           canceledCount += 1;
           totalCanceledCount += 1;
-          countedMigrations.canceled[name] = true;
         }
       });
     });
@@ -168,36 +156,15 @@ export const useVmMigrationsDataPoints = (
         ? toHourLabel(interval.start)
         : toDayLabel(interval.start);
 
-    failed.push({
-      dateLabel,
-      interval,
-      migrations: Object.keys(countedMigrations.failed),
-      value: failedCount,
-    });
-    running.push({
-      dateLabel,
-      interval,
-      migrations: Object.keys(countedMigrations.running),
-      value: runningCount,
-    });
-    succeeded.push({
-      dateLabel,
-      interval,
-      migrations: Object.keys(countedMigrations.succeeded),
-      value: succeededCount,
-    });
-    canceled.push({
-      dateLabel,
-      interval,
-      migrations: Object.keys(countedMigrations.canceled),
-      value: canceledCount,
-    });
+    failed.push({ dateLabel, value: failedCount });
+    running.push({ dateLabel, value: runningCount });
+    succeeded.push({ dateLabel, value: succeededCount });
+    canceled.push({ dateLabel, value: canceledCount });
   });
 
   return {
     canceled,
     failed,
-    intervals,
     loaded,
     loadError,
     obj: migrations,
