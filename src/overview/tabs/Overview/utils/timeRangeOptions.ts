@@ -40,7 +40,7 @@ export const TimeRangeOptionsDictionary: {
   All: {
     bucket: { day: BUCKET_LARGE_DAYS },
     filter: () => true,
-    span: { days: 365 * 10 },
+    span: { days: 365 },
     unit: 'day',
   },
   Last10Days: {
