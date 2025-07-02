@@ -23,7 +23,7 @@ const PlanMigrationTypeLabel: FC<PlanMigrationTypeLabelProps> = ({ migrationType
     >
       <Button className="forklift-plan-migration-type-label" variant={ButtonVariant.plain} isInline>
         <Label isCompact color={migrationType === MigrationTypeValue.Cold ? 'blue' : 'orange'}>
-          {t('{{label}}', typeLabel(migrationType))}
+          {t('{{label}}', { label: typeLabel(migrationType) })}
         </Label>
       </Button>
     </Popover>

@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType.ts';
 
 import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';
 import NameDetailsItem from '@components/DetailItems/NameDetailItem';
@@ -34,8 +35,9 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
 
   const isVsphere = sourceProvider?.spec?.type === 'vsphere';
   const isOvirt = sourceProvider?.spec?.type === 'ovirt';
-  const isOpenshift = sourceProvider?.spec?.type === 'openshift';
-  const isLiveMigrationEnabled = isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION);
+  const isLiveMigrationEnabled =
+    isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION) &&
+    hasLiveMigrationProviderType(sourceProvider);
   return (
     <ModalHOC>
       <DescriptionList>
@@ -49,11 +51,7 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
         >
           <NameDetailsItem resource={plan} />
           <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
-          <LiveDetailsItem
-            plan={plan}
-            canPatch={canPatch}
-            shouldRender={isOpenshift && isLiveMigrationEnabled}
-          />
+          <LiveDetailsItem plan={plan} canPatch={canPatch} shouldRender={isLiveMigrationEnabled} />
           <NamespaceDetailsItem resource={plan} />
           <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
           <CreatedAtDetailsItem resource={plan} />
