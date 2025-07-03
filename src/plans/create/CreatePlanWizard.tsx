@@ -90,6 +90,7 @@ const CreatePlanWizard: FC = () => {
     <FormProvider {...form}>
       <CreatePlanWizardContextProvider>
         <Wizard
+          data-testid="create-plan-wizard"
           isVisitRequired
           footer={<CreatePlanWizardFooter />}
           onStepChange={(_event, step) => {

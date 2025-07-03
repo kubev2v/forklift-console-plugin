@@ -31,6 +31,7 @@ const HooksReviewSection: FC = () => {
   return (
     <ExpandableReviewSection
       title={planStepNames[PlanWizardStepId.Hooks]}
+      testId="review-hooks-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.Hooks);
       }}
@@ -44,7 +45,9 @@ const HooksReviewSection: FC = () => {
               <>
                 <DescriptionListGroup>
                   <DescriptionListTerm>{t('Enabled')}</DescriptionListTerm>
-                  <DescriptionListDescription>{t('True')}</DescriptionListDescription>
+                  <DescriptionListDescription data-testid="review-pre-migration-hook-enabled">
+                    {t('True')}
+                  </DescriptionListDescription>
                 </DescriptionListGroup>
 
                 <DescriptionListGroup>
@@ -68,7 +71,9 @@ const HooksReviewSection: FC = () => {
             ) : (
               <DescriptionListGroup>
                 <DescriptionListTerm>{t('Enabled')}</DescriptionListTerm>
-                <DescriptionListDescription>{t('False')}</DescriptionListDescription>
+                <DescriptionListDescription data-testid="review-pre-migration-hook-enabled">
+                  {t('False')}
+                </DescriptionListDescription>
               </DescriptionListGroup>
             )}
           </DescriptionList>
@@ -82,7 +87,9 @@ const HooksReviewSection: FC = () => {
               <>
                 <DescriptionListGroup>
                   <DescriptionListTerm>{t('Enabled')}</DescriptionListTerm>
-                  <DescriptionListDescription>{t('True')}</DescriptionListDescription>
+                  <DescriptionListDescription data-testid="review-post-migration-hook-enabled">
+                    {t('True')}
+                  </DescriptionListDescription>
                 </DescriptionListGroup>
 
                 <DescriptionListGroup>
@@ -106,7 +113,9 @@ const HooksReviewSection: FC = () => {
             ) : (
               <DescriptionListGroup>
                 <DescriptionListTerm>{t('Enabled')}</DescriptionListTerm>
-                <DescriptionListDescription>{t('False')}</DescriptionListDescription>
+                <DescriptionListDescription data-testid="review-post-migration-hook-enabled">
+                  {t('False')}
+                </DescriptionListDescription>
               </DescriptionListGroup>
             )}
           </DescriptionList>

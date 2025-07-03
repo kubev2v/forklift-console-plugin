@@ -46,7 +46,9 @@ const NetworkMapReviewSectionInner: FC = () => {
       <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Network map')}</DescriptionListTerm>
-          <DescriptionListDescription>{existingNetMap?.metadata?.name}</DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-network-map">
+            {existingNetMap?.metadata?.name}
+          </DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>
     );
@@ -80,6 +82,7 @@ const NetworkMapReviewSection: FC = () => {
   return (
     <ExpandableReviewSection
       title={planStepNames[PlanWizardStepId.NetworkMap]}
+      testId="review-network-map-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.NetworkMap);
       }}

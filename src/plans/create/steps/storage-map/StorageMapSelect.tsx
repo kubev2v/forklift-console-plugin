@@ -26,6 +26,7 @@ type StorageMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 's
   value: string;
   namespace: string;
   includeOwnerReferenced?: boolean;
+  testId?: string;
 };
 
 const StorageMapSelect: FC<StorageMapSelectProps> = ({
@@ -34,6 +35,7 @@ const StorageMapSelect: FC<StorageMapSelectProps> = ({
   namespace,
   onSelect,
   status,
+  testId,
   value,
 }) => {
   const { t } = useForkliftTranslation();
@@ -82,6 +84,7 @@ const StorageMapSelect: FC<StorageMapSelectProps> = ({
       status={status}
       onSelect={onSelect}
       placeholder={t('Select storage map')}
+      testId={testId}
     >
       <SelectList>
         {isEmpty(storageMaps)
