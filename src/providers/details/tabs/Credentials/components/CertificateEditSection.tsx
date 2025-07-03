@@ -3,8 +3,8 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, ButtonVariant, Popover, Switch } from '@patternfly/react-core';
-import { HelpIcon } from '@patternfly/react-icons';
+import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
+import { Switch } from '@patternfly/react-core';
 
 import CertificateUpload from './CertificateUpload/CertificateUpload';
 import { CacertHelperTextPopover, InsecureSkipVerifyHelperTextPopover } from './utils/constants';
@@ -35,15 +35,12 @@ const CertificateEditSection: FC<CertificateEditSectionProps> = ({
       <FormGroupWithHelpText
         label={t('Skip certificate validation')}
         labelIcon={
-          <Popover
-            headerContent={t('Skip certificate validation')}
-            bodyContent={InsecureSkipVerifyHelperTextPopover}
-            alertSeverityVariant="info"
+          <HelpIconPopover
+            header={t('Skip certificate validation')}
+            popoverProps={{ alertSeverityVariant: 'info' }}
           >
-            <Button variant={ButtonVariant.plain}>
-              <HelpIcon />
-            </Button>
-          </Popover>
+            {InsecureSkipVerifyHelperTextPopover}
+          </HelpIconPopover>
         }
         fieldId="insecureSkipVerify"
         validated={insecureSkipVerifyValidation.type}
@@ -63,15 +60,12 @@ const CertificateEditSection: FC<CertificateEditSectionProps> = ({
       <FormGroupWithHelpText
         label={t('CA certificate')}
         labelIcon={
-          <Popover
-            headerContent={t('CA certificate')}
-            bodyContent={CacertHelperTextPopover}
-            alertSeverityVariant="info"
+          <HelpIconPopover
+            header={t('CA certificate')}
+            popoverProps={{ alertSeverityVariant: 'info' }}
           >
-            <Button variant={ButtonVariant.plain}>
-              <HelpIcon />
-            </Button>
-          </Popover>
+            {CacertHelperTextPopover}
+          </HelpIconPopover>
         }
         fieldId="cacert"
         helperText={cacertValidation.msg}

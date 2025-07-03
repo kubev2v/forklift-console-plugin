@@ -82,6 +82,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   return (
     <WizardFooterWrapper>
       <Button
+        data-testid="wizard-back-button"
         variant={ButtonVariant.secondary}
         onClick={goToPrevStep}
         isDisabled={hasError ?? (activeStep.id === PlanWizardStepId.General || isSubmitting)}
@@ -89,6 +90,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
         {t('Back')}
       </Button>
       <Button
+        data-testid="wizard-next-button"
         variant={ButtonVariant.primary}
         onClick={onNextClick}
         isDisabled={hasError ?? isSubmitting}
@@ -97,11 +99,15 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
         {nextButtonText ?? t('Next')}
       </Button>
       {canSkipToReview && (
-        <Button variant={ButtonVariant.tertiary} onClick={onSkipToReviewClick}>
+        <Button
+          data-testid="wizard-review-button"
+          variant={ButtonVariant.tertiary}
+          onClick={onSkipToReviewClick}
+        >
           {t('Skip to review')}
         </Button>
       )}
-      <Button variant={ButtonVariant.link} onClick={onCancel}>
+      <Button data-testid="wizard-cancel-button" variant={ButtonVariant.link} onClick={onCancel}>
         {t('Cancel')}
       </Button>
     </WizardFooterWrapper>

@@ -12,16 +12,8 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  Button,
-  Form,
-  Modal,
-  ModalVariant,
-  Popover,
-  Stack,
-  TextInput,
-} from '@patternfly/react-core';
-import { HelpIcon } from '@patternfly/react-icons';
+import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
+import { Button, Form, Modal, ModalVariant, Stack, TextInput } from '@patternfly/react-core';
 
 import useToggle from '../../hooks/useToggle';
 import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';
@@ -136,23 +128,6 @@ export const EditModal: FC<EditModalProps> = ({
     event.preventDefault();
   };
 
-  /**
-   * LabelIcon is a (?) icon that triggers a Popover component when clicked.
-   */
-  const LabelIcon = headerContent && bodyContent && (
-    <Popover headerContent={headerContent} bodyContent={bodyContent}>
-      <button
-        type="button"
-        aria-label="More info for field"
-        onClick={onClick}
-        aria-describedby="modal-with-form-form-field"
-        className="pf-c-form__group-label-help"
-      >
-        <HelpIcon />
-      </button>
-    </Popover>
-  );
-
   const onChange: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
     handleValueChange(value);
   };
@@ -211,7 +186,11 @@ export const EditModal: FC<EditModalProps> = ({
         <Form id="modal-with-form-form">
           <FormGroupWithHelpText
             label={label}
-            labelIcon={LabelIcon}
+            labelIcon={
+              <HelpIconPopover header={headerContent} onClick={onClick}>
+                {bodyContent}
+              </HelpIconPopover>
+            }
             fieldId="modal-with-form-form-field"
             helperText={validation.msg || helperText}
             helperTextInvalid={validation.msg || helperText}
