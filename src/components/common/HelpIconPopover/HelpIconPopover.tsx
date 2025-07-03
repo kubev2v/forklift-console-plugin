@@ -1,11 +1,12 @@
 import type { FC, MouseEventHandler, ReactNode } from 'react';
+import classNames from 'classnames';
 
-import { Popover, type PopoverProps } from '@patternfly/react-core';
+import { Button, ButtonVariant, Popover, type PopoverProps } from '@patternfly/react-core';
 import { HelpIcon } from '@patternfly/react-icons';
 
 type HelpIconPopoverProps = {
   children: ReactNode;
-  header?: string;
+  header?: ReactNode;
   popoverProps?: Omit<PopoverProps, 'bodyContent' | 'titleContent'>;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
@@ -13,14 +14,23 @@ type HelpIconPopoverProps = {
 
 export const HelpIconPopover: FC<HelpIconPopoverProps> = ({
   children,
-  className = `pf-c-form__group-label-help pf-v5-u-ml-sm`,
+  className,
   header,
   onClick,
   popoverProps,
 }) => (
   <Popover position="right" bodyContent={children} headerContent={header} {...popoverProps}>
-    <button type="button" className={className} onClick={onClick}>
-      <HelpIcon />
-    </button>
+    <Button
+      isInline
+      variant={ButtonVariant.plain}
+      icon={<HelpIcon />}
+      onClick={onClick}
+      className={classNames(
+        'pf-v5-u-align-items-center',
+        'pf-v5-u-p-0',
+        'pf-v5-u-ml-sm',
+        className,
+      )}
+    />
   </Popover>
 );

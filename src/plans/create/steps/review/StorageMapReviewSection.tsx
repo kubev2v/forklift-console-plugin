@@ -47,7 +47,9 @@ const StorageMapReviewSectionInner: FC = () => {
       <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Storage map')}</DescriptionListTerm>
-          <DescriptionListDescription>{existingNetMap?.metadata?.name}</DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-storage-map">
+            {existingNetMap?.metadata?.name}
+          </DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>
     );
@@ -81,6 +83,7 @@ const StorageMapReviewSection: FC = () => {
   return (
     <ExpandableReviewSection
       title={planStepNames[PlanWizardStepId.StorageMap]}
+      testId="review-storage-map-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.StorageMap);
       }}

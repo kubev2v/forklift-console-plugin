@@ -2,8 +2,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "types": ["cypress", "@testing-library/cypress"]
+    "types": ["cypress", "@testing-library/cypress", "node"],
+    "skipLibCheck": true
   },
-  "include": ["**/*.*.ts", "**/*.ts", "./**/*.ts", "./**/*.jsx", "./**/*.js"],
-  "exclude": ["node_modules", "dist", "locales", "docs", "ci"]
+  "include": ["**/*.ts", "**/*.tsx", "cypress/support/index.ts"],
+  "exclude": ["node_modules", "dist"]
 }

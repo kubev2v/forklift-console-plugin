@@ -23,6 +23,7 @@ type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'className' | 'children'> &
   status?: MenuToggleStatus;
   placeholder?: string;
   isDisabled?: boolean;
+  testId?: string;
 };
 
 /**
@@ -39,6 +40,7 @@ const MtvSelect: FC<MtvSelectProps> = ({
   options,
   placeholder = '',
   status,
+  testId,
   value,
 }) => {
   const { t } = useForkliftTranslation();
@@ -64,6 +66,7 @@ const MtvSelect: FC<MtvSelectProps> = ({
         <MenuToggle
           isFullWidth
           ref={ref}
+          data-testid={testId}
           isDisabled={isDisabled}
           isExpanded={isOpen}
           onClick={() => {
