@@ -26,6 +26,7 @@ type ProviderSelectProps = Pick<
   placeholder?: string;
   emptyState?: ReactNode;
   isTarget?: boolean;
+  testId?: string;
 };
 
 const ProviderSelect: FC<ProviderSelectProps> = ({
@@ -37,6 +38,7 @@ const ProviderSelect: FC<ProviderSelectProps> = ({
   onSelect,
   placeholder,
   status,
+  testId,
   value,
 }) => {
   const [providers] = useK8sWatchResource<V1beta1Provider[]>({
@@ -76,6 +78,7 @@ const ProviderSelect: FC<ProviderSelectProps> = ({
       onSelect={onSelect}
       placeholder={placeholder}
       isDisabled={isDisabled}
+      testId={testId}
     >
       <SelectList>
         {isEmpty(filteredProviders)

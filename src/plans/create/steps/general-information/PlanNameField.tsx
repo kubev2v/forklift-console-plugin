@@ -38,6 +38,7 @@ const PlanNameField: FC = () => {
         render={({ field }) => (
           <TextInput
             {...field}
+            data-testid="plan-name-input"
             validated={getInputValidated(Boolean(errors[GeneralFormFieldId.PlanName]))}
           />
         )}

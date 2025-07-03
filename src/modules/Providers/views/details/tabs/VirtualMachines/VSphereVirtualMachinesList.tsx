@@ -101,7 +101,7 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = 
    */
   const newVMData = vmData
     ?.filter((data) => !(data.vm as VSphereVM).isTemplate)
-    .map((data) => {
+    ?.map((data) => {
       const vm = data.vm as VSphereVM;
       const folder = foldersDict?.[vm.parent.id];
       const host: OVirtHost | VSphereHostInventory = hostsDict?.[vm.host];
