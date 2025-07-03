@@ -58,11 +58,13 @@ const createHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) 
     ],
   }));
 
-  return k8sPatch({
+  const newPlan = await k8sPatch({
     data: [{ op: 'replace', path: '/spec/vms', value: newVms }],
     model: PlanModel,
     resource: plan,
   });
+
+  return newPlan;
 };
 
 const deleteHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) => {
@@ -105,9 +107,20 @@ const createUpdateOrDeleteHook = async ({
   hookSet,
   plan,
   step,
-}: createUpdateOrDeleteHookParams) => {
+}: createUpdateOrDeleteHookParams): Promise<V1beta1Plan> => {
   const image = hookImage ?? '';
   const playbook = hookPlaybook ?? '';
+
+  if (hookSet && !hook) {
+    const resourceHook = getHookTemplate({ image, plan, playbook, step });
+    const newPlan = await createHook(plan, resourceHook, step);
+    return newPlan;
+  }
+
+  if (!hookSet && hook) {
+    const newPlan = await deleteHook(plan, hook, step);
+    return newPlan;
+  }
 
   if (hookSet && hook) {
     const updatedHook = produce(hook, (draft) => {
@@ -119,14 +132,7 @@ const createUpdateOrDeleteHook = async ({
     await updateHook(updatedHook);
   }
 
-  if (hookSet && !hook) {
-    const resourceHook = getHookTemplate({ image, plan, playbook, step });
-    await createHook(plan, resourceHook, step);
-  }
-
-  if (!hookSet && hook) {
-    await deleteHook(plan, hook, step);
-  }
+  return plan;
 };
 
 type onUpdatePlanHooksProps = {
@@ -147,14 +153,12 @@ export const onUpdatePlanHooks = async (props: onUpdatePlanHooksProps) => {
     preHookSet,
   } = formData;
 
-  const newPlan = deepCopy(plan);
-
-  await createUpdateOrDeleteHook({
+  const newPlan = await createUpdateOrDeleteHook({
     hook: preHookResource,
     hookImage: preHookImage,
     hookPlaybook: preHookPlaybook,
     hookSet: preHookSet,
-    plan: newPlan,
+    plan: deepCopy(plan),
     step: hookTypes.PreHook,
   });
 
