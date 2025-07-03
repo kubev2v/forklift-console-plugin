@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { StorageMappingValue } from 'src/storageMaps/types';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
@@ -51,18 +52,26 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
                   {t('Select a source provider to list available source storages')}
                 </SelectOption>
               ) : (
-                sourceStorages.map((storage) => (
-                  <SelectOption
-                    key={storage.name}
-                    value={storage}
-                    isDisabled={storageMappings?.some(
-                      (mapping: StorageMapping) =>
-                        mapping[StorageMapFieldId.SourceStorage].name === storage.name,
-                    )}
-                  >
-                    {storage.name}
-                  </SelectOption>
-                ))
+                sourceStorages.map((storage) => {
+                  const storageLabel = getMapResourceLabel(storage);
+                  const storageValue: StorageMappingValue = {
+                    id: storage.id,
+                    name: storageLabel,
+                  };
+
+                  return (
+                    <SelectOption
+                      key={storage.id}
+                      value={storageValue}
+                      isDisabled={storageMappings?.some(
+                        (mapping: StorageMapping) =>
+                          mapping[StorageMapFieldId.SourceStorage].name === storageLabel,
+                      )}
+                    >
+                      {storageLabel}
+                    </SelectOption>
+                  );
+                })
               )}
             </SelectList>
           </Select>
