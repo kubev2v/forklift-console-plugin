@@ -13,6 +13,7 @@ export const VIRT_V2V_HELP_LINK = `${REDHAT_DOCS_URL}/migration_toolkit_for_virt
 export const MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS = `${REDHAT_DOCS_URL}/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#max-concurrent-vms_mtv`;
 export const MTV_SETTINGS = `${REDHAT_DOCS_URL}/migration_toolkit_for_virtualization/2.8/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#mtv-settings_mtv`;
 export const WARM_MIGRATION_HELP_LINK = `${REDHAT_DOCS_URL}/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#warm-migration_mtv`;
+export const LIVE_MIGRATION_HELP_LINK = `${REDHAT_DOCS_URL}/migration_toolkit_for_virtualization/2.7/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#live-migration_mtv`;
 
 export const CBT_HELP_LINK = 'https://knowledge.broadcom.com/external/article?legacyId=1020128';
 

@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType.ts';
 
 import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';
 import NameDetailsItem from '@components/DetailItems/NameDetailItem';
@@ -8,10 +9,13 @@ import NamespaceDetailsItem from '@components/DetailItems/NamespaceDetailItem';
 import OwnerDetailsItem from '@components/DetailItems/OwnerDetailItem';
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 
+import LiveDetailsItem from './components/PlanLive/LiveDetailsItem';
 import TargetNamespaceDetailsItem from './components/PlanTargetNamespace/TargetNamespaceDetailsItem';
 import WarmDetailsItem from './components/PlanWarm/WarmDetailsItem';
 import StatusDetailsItem from './StatusDetailsItem';
@@ -22,6 +26,7 @@ type DetailsSectionProps = {
 
 const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
   const { sourceProvider } = usePlanSourceProvider(plan);
+  const { isFeatureEnabled } = useFeatureFlags();
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
@@ -30,6 +35,9 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
 
   const isVsphere = sourceProvider?.spec?.type === 'vsphere';
   const isOvirt = sourceProvider?.spec?.type === 'ovirt';
+  const isLiveMigrationEnabled =
+    isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION) &&
+    hasLiveMigrationProviderType(sourceProvider);
   return (
     <ModalHOC>
       <DescriptionList>
@@ -43,6 +51,7 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
         >
           <NameDetailsItem resource={plan} />
           <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
+          <LiveDetailsItem plan={plan} canPatch={canPatch} shouldRender={isLiveMigrationEnabled} />
           <NamespaceDetailsItem resource={plan} />
           <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
           <CreatedAtDetailsItem resource={plan} />

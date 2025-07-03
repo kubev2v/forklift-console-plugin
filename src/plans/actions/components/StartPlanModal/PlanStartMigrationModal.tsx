@@ -1,14 +1,14 @@
 import { type FC, useCallback } from 'react';
 import { canPlanStart } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan } from '@kubev2v/types';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { getName } from '@utils/crds/common/selectors';
-import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 
-import { startPlanMigration } from './utils/utils';
+import { migrationModalMessage, startPlanMigration } from './utils/utils';
 
 type PlanStartMigrationModalProps = {
   plan: V1beta1Plan;
@@ -19,11 +19,13 @@ const PlanStartMigrationModal: FC<PlanStartMigrationModalProps> = ({ plan, title
   const { t } = useForkliftTranslation();
 
   const name = getName(plan);
-  const warm = getPlanIsWarm(plan);
+  const migrationType = getPlanMigrationType(plan);
 
   const onStart = useCallback(async () => {
     return startPlanMigration(plan);
   }, [plan]);
+
+  const migrationMessage = migrationModalMessage(migrationType);
 
   return (
     <ModalForm
@@ -36,14 +38,10 @@ const PlanStartMigrationModal: FC<PlanStartMigrationModalProps> = ({ plan, title
         <StackItem>
           <ForkliftTrans>
             <StackItem>
-              Start the {warm ? 'warm' : 'cold'} migration for plan{' '}
+              Start the {migrationType} migration for plan{' '}
               <strong className="co-break-word">{name}</strong>?
             </StackItem>
-            <StackItem>
-              VMs included in {warm ? 'warm' : 'cold'}{' '}
-              {warm ? 'migrations migrate with minimal downtime' : 'are shut down during migration'}
-              .
-            </StackItem>
+            <StackItem>{migrationMessage}</StackItem>
           </ForkliftTrans>
         </StackItem>
       </Stack>

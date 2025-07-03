@@ -1,9 +1,12 @@
 import { type FC, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
 import { type Location, useLocation, useNavigate } from 'react-router-dom-v5-compat';
+import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType.ts';
 
 import { Wizard, WizardStep, type WizardStepType } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanForm } from './hooks/useCreatePlanForm';
@@ -34,7 +37,9 @@ const CreatePlanWizard: FC = () => {
   const location: Location<CreatePlanFormData> = useLocation();
   const [currentStep, setCurrentStep] = useState<WizardStepType>(firstStep);
   const [createPlanError, setCreatePlanError] = useState<Error>();
+  const { isFeatureEnabled } = useFeatureFlags();
 
+  const isLiveMigrationEnabled = isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION);
   const defaultValues = getDefaultFormValues(location.state);
   const form = useCreatePlanForm({
     defaultValues,
@@ -123,7 +128,10 @@ const CreatePlanWizard: FC = () => {
               <WizardStep
                 key={PlanWizardStepId.MigrationType}
                 {...getStepProps(PlanWizardStepId.MigrationType)}
-                isHidden={!hasWarmMigrationProviderType(sourceProvider)}
+                isHidden={
+                  !hasWarmMigrationProviderType(sourceProvider) &&
+                  (!hasLiveMigrationProviderType(sourceProvider) || !isLiveMigrationEnabled)
+                }
               >
                 <MigrationTypeStep />
               </WizardStep>,
