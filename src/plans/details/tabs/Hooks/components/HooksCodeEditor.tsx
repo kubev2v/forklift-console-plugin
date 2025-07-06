@@ -50,7 +50,7 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
                 })}
                 isChecked={value}
                 isDisabled={!planEditable}
-                onChange={(e, checked) => {
+                onChange={(_e, checked) => {
                   onChange(checked);
                 }}
               />
