@@ -1,12 +1,8 @@
 import { useMemo } from 'react';
 
 import { ForkliftControllerModelGroupVersionKind } from '@kubev2v/types';
-import {
-  type K8sResourceKind,
-  useActiveNamespace,
-  useK8sWatchResource,
-} from '@openshift-console/dynamic-plugin-sdk';
-
+import { type K8sResourceKind, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { getDefaultNamespace } from '@utils/namespaces';
 type FeatureFlagsResult = {
   isFeatureEnabled: (featureName: string) => boolean;
 };
@@ -19,14 +15,13 @@ type FeatureFlagsResult = {
  * or the string 'true'. All other values (including 'false', false, null, undefined)
  * are considered disabled.
  *
- * @param namespace - Namespace to watch for the ForkliftController. Defaults to the active namespace.
+ * @param namespace - Namespace to watch for the ForkliftController. Defaults to the default namespace of forklift (openshift-mtv for DS/ konveyor-forklift for US).
  */
 export const useFeatureFlags = (namespace?: string): FeatureFlagsResult => {
-  const [activeNamespace] = useActiveNamespace();
   const [forkliftControllers, loaded, error] = useK8sWatchResource<K8sResourceKind[]>({
     groupVersionKind: ForkliftControllerModelGroupVersionKind,
     isList: true,
-    namespace: namespace ?? activeNamespace,
+    namespace: namespace ?? getDefaultNamespace(),
     namespaced: true,
   });
 
