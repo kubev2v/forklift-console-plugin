@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import HelpIconWithLabel from 'src/plans/components/HelpIconWithLabel';
+import { getMigrationTypeConfig } from 'src/plans/create/steps/migration-type/utils';
 import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType.ts';
 import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigrationProviderType.ts';
 
@@ -8,7 +9,7 @@ import type { ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
 import { Alert, FlexItem, Radio, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { CBT_HELP_LINK, LIVE_MIGRATION_HELP_LINK, WARM_MIGRATION_HELP_LINK } from '@utils/links';
+import { CBT_HELP_LINK } from '@utils/links';
 
 import { migrationTypeLabels, MigrationTypeValue } from './constants';
 
@@ -36,30 +37,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
 
   if (!canRender) return null;
 
-  let description = '';
-  let helpBody = '';
-  let helpLink = '';
-
-  switch (migrationType) {
-    case MigrationTypeValue.Cold:
-      description = t('A cold migration moves a shut-down VM between hosts.');
-      break;
-    case MigrationTypeValue.Warm:
-      description = t(
-        'A warm migration moves an active VM with minimal downtime (not zero-downtime).',
-      );
-      helpBody = t(
-        'Warm migration copies most VM data while it is still running; at cut-over the VM is paused and the rest of the data is copied.',
-      );
-      helpLink = WARM_MIGRATION_HELP_LINK;
-      break;
-    case MigrationTypeValue.Live:
-      description = t('A live migration moves an active VM between hosts with zero downtime.');
-      helpBody = description;
-      helpLink = LIVE_MIGRATION_HELP_LINK;
-      break;
-    default:
-  }
+  const { description, helpBody, helpLink } = getMigrationTypeConfig(migrationType);
 
   return (
     <>
@@ -73,7 +51,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
                 <Stack hasGutter>
                   <StackItem>{helpBody}</StackItem>
                   <StackItem>
-                    <ExternalLink isInline href={helpLink}>
+                    <ExternalLink isInline href={helpLink!}>
                       {t('Learn more')}
                     </ExternalLink>
                   </StackItem>
