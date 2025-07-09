@@ -43,5 +43,6 @@ export const EMPTY_CELL_CONTENT = '-';
 
 export const FEATURE_NAMES = {
   COPY_OFFLOAD: 'feature_copy_offload',
+  OCP_LIVE_MIGRATION: 'feature_ocp_live_migration',
   VOLUME_POPULATOR: 'feature_volume_populator',
 } as const;

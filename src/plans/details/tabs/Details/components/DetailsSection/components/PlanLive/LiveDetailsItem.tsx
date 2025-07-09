@@ -8,9 +8,9 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
-import EditPlanWarm from './EditPlanWarm';
+import EditPlanLive from './EditPlanLive';
 
-const WarmDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldRender }) => {
+const LiveDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldRender }) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
 
@@ -21,14 +21,14 @@ const WarmDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldR
     <DetailsItem
       title={t('Migration type')}
       content={<PlanMigrationTypeLabel migrationType={migrationType} />}
-      helpContent={t('Whether this is a warm migration.')}
-      crumbs={['spec', 'warm']}
+      helpContent={t('Whether this is a live migration.')}
+      crumbs={['spec', 'type']}
       onEdit={() => {
-        showModal(<EditPlanWarm resource={plan} />);
+        showModal(<EditPlanLive resource={plan} />);
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />
   );
 };
 
-export default WarmDetailsItem;
+export default LiveDetailsItem;
