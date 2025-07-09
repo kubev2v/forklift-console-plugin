@@ -7,10 +7,10 @@ import { getValueByJsonPath } from 'src/modules/Providers/utils/helpers/getValue
 import type { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { debounce, Form, TextInput } from '@patternfly/react-core';
 
 import type { EditFieldProps } from './EditFieldTypes';
-import LabelIcon from './LabelIcon';
 
 /**
  * `EditField` is a React Functional Component that allows editing a Kubernetes resource property.
@@ -128,11 +128,9 @@ export const EditField: FC<EditFieldProps> = ({
           label={label}
           labelIcon={
             headerContent && bodyContent ? (
-              <LabelIcon
-                bodyContent={bodyContent}
-                headerContent={headerContent}
-                onClick={onClick}
-              />
+              <HelpIconPopover header={headerContent} onClick={onClick}>
+                {bodyContent}
+              </HelpIconPopover>
             ) : undefined
           }
           fieldId="modal-with-form-form-field"
