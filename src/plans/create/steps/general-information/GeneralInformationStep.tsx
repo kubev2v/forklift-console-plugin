@@ -59,6 +59,7 @@ const GeneralInformationStep: FC = () => {
               control={control}
               render={({ field }) => (
                 <ProviderSelect
+                  testId="source-provider-select"
                   placeholder={t('Select source provider')}
                   id={GeneralFormFieldId.SourceProvider}
                   namespace={planProject}
@@ -89,6 +90,7 @@ const GeneralInformationStep: FC = () => {
               control={control}
               render={({ field }) => (
                 <ProviderSelect
+                  testId="target-provider-select"
                   isTarget
                   placeholder={t('Select target provider')}
                   id={GeneralFormFieldId.TargetProvider}

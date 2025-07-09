@@ -16,11 +16,13 @@ import './ExpandableReviewSection.style.scss';
 type ExpandableReviewSectionProps = PropsWithChildren &
   Pick<ExpandableSectionProps, 'title'> & {
     onEditClick?: () => void;
+    testId?: string;
   };
 
 const ExpandableReviewSection: FC<ExpandableReviewSectionProps> = ({
   children,
   onEditClick,
+  testId,
   title,
 }) => {
   const { t } = useForkliftTranslation();
@@ -29,6 +31,7 @@ const ExpandableReviewSection: FC<ExpandableReviewSectionProps> = ({
   return (
     <ExpandableSection
       className="expandable-review-section pf-v5-w-100"
+      data-testid={testId}
       toggleContent={
         <Flex
           justifyContent={{ default: 'justifyContentSpaceBetween' }}
