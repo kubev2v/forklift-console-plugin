@@ -45,7 +45,7 @@ const VmMigrationsHistoryChart = ({
 
   const plansListURL = useMemo(() => {
     return getResourceUrl({
-      namespaced: true,
+      namespaced: false,
       reference: PlanModelRef,
     });
   }, []);

@@ -1,13 +1,21 @@
+.forklift--create-provider-edit-card-title {
+  justify-content: normal;
+}
+
+.forklift--create-provider-edit-card-title-logo {
+  margin-right: var(--pf-v5-global--spacer--sm);
+}
+
 .forklift--create-provider-edit-card-selected {
   min-width: 25%;
 }
 
 .forklift-section-provider-edit-vddk-input {
-  padding-top: var(--pf-global--spacer--sm);
+  padding-top: var(--pf-v5-global--spacer--sm);
 }
 
 .forklift-section-provider-edit-vddk-checkbox {
-  padding-top: var(--pf-global--spacer--sm);
+  padding-top: var(--pf-v5-global--spacer--sm);
 }
 
 .forklift-create-subtitle {
