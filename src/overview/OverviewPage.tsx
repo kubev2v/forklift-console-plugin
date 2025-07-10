@@ -70,7 +70,7 @@ const OverviewPage: FC = () => {
   return (
     <>
       <HeaderTitleWrapper />
-      <div className="pf-v5-u-pt-lg pf-v5-u-h-100 pf-v5-u-display-flex">
+      <div className="pf-v5-u-h-100 pf-v5-u-display-flex pf-v5-u-flex-direction-column pf-v5-u-min-width-0 pf-v5-u-min-height-0">
         <HorizontalNav pages={pages.filter(Boolean)} />
       </div>
     </>

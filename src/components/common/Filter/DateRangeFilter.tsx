@@ -11,9 +11,9 @@ import {
 } from '@patternfly/react-core';
 
 import {
-  localizeInterval,
   isValidDate,
   isValidInterval,
+  localizeInterval,
   parseISOtoJSDate,
   toISODate,
   toISODateInterval,
