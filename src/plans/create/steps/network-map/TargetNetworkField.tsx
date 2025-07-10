@@ -8,13 +8,15 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import type { MappingValue } from '../../types';
 
+import { NetworkMapFieldId } from './constants';
+
 type TargetNetworkFieldProps = {
   fieldId: string;
   targetNetworks: Record<string, MappingValue>;
 };
 
 const TargetNetworkField: FC<TargetNetworkFieldProps> = ({ fieldId, targetNetworks }) => {
-  const { control } = useCreatePlanFormContext();
+  const { control, trigger } = useCreatePlanFormContext();
   const { t } = useForkliftTranslation();
 
   return (
@@ -25,8 +27,9 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({ fieldId, targetNetwor
         <Select
           id={fieldId}
           value={(field.value as MappingValue).name}
-          onSelect={(_event, value) => {
+          onSelect={async (_event, value) => {
             field.onChange(value);
+            await trigger(NetworkMapFieldId.NetworkMap);
           }}
           placeholder={t('Select target network')}
         >
