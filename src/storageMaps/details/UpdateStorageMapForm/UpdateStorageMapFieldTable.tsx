@@ -71,7 +71,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
         },
       ]}
       fieldRows={storageMappingFields.map((field, index) => ({
-        id: field.id,
+        ...field,
         ...(isVsphere &&
           isCopyOffloadEnabled && {
             additionalOptions: (
