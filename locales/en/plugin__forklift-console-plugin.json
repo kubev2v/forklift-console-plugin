@@ -116,6 +116,7 @@
   "At least one row must have both source and target storages": "At least one row must have both source and target storages",
   "At least one source and one target provider in the {{name}} project must be available.": "At least one source and one target provider in the {{name}} project must be available.",
   "At least one source and one target provider must be available.": "At least one source and one target provider must be available.",
+  "At least one VM is detected with more than one interface mapped to Pod Network. This is not allowed.": "At least one VM is detected with more than one interface mapped to Pod Network. This is not allowed.",
   "Authentication type": "Authentication type",
   "Back": "Back",
   "Bandwidth": "Bandwidth",
