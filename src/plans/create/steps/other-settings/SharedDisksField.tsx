@@ -12,7 +12,7 @@ import { otherFormFieldLabels, OtherSettingsFormFieldId } from './constants';
 const SharedDisksField: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
-  const fieldId = OtherSettingsFormFieldId.SharedDisks;
+  const fieldId = OtherSettingsFormFieldId.MigrateSharedDisks;
   const label = otherFormFieldLabels[fieldId];
 
   return (
