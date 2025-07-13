@@ -9,7 +9,7 @@ type HeaderTitleProps = {
 
 const HeaderTitle: FC<HeaderTitleProps> = ({ badge, title }) => {
   return (
-    <PageSection variant="light" className="forklift-page__main-title">
+    <PageSection variant="light">
       <Split hasGutter style={{ alignItems: 'baseline' }}>
         <SplitItem isFilled>
           <Title headingLevel="h1">{title}</Title>

@@ -104,6 +104,11 @@
   width: 140px;
 }
 
+.forklift-overview__pods-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .pf-v5-c-alert-group.pf-m-toast.forklift-overview__settings-alert {
   max-width: 280px;
 }
