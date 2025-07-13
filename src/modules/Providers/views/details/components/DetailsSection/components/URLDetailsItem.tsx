@@ -26,7 +26,7 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
   });
 
   const defaultMoreInfoLink =
-    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-virt_cnv#adding-source-provider_cnv';
+    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-virt_cnv#adding-source-provider_cnv';
   const defaultHelpContent =
     t(`URL of the providers API endpoint. The URL must be a valid endpoint for the provider type, see
       the documentation for each provider type to learn more about the URL format.`);
