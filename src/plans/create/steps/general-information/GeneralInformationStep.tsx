@@ -33,7 +33,10 @@ const GeneralInformationStep: FC = () => {
   });
 
   return (
-    <WizardStepContainer title={planStepNames[PlanWizardStepId.General]}>
+    <WizardStepContainer
+      title={planStepNames[PlanWizardStepId.General]}
+      testId="create-plan-general-step"
+    >
       <Form>
         <FormSection title={t('Plan information')}>
           <p>{t('Name your plan and choose the project you would like it to be created in.')}</p>
