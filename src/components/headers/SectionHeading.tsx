@@ -6,7 +6,7 @@ type SectionHeadingProps = {
   text: ReactNode;
   className?: string;
   id?: string;
-  'data-testid'?: string;
+  testId?: string;
   children?: ReactNode;
   textComponent?: TextProps['component'];
 };
@@ -20,15 +20,15 @@ type SectionHeadingProps = {
 const SectionHeading: FC<SectionHeadingProps> = ({
   children,
   className,
-  'data-testid': dataTestid,
   id,
+  testId,
   text,
   textComponent = 'h2',
 }) => (
   <Text
     component={textComponent}
     className={`pf-v6-c-content--${textComponent} ${className ?? ''}`}
-    data-testid={dataTestid}
+    data-testid={testId}
     id={id}
   >
     <span>{text}</span>

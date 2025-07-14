@@ -29,6 +29,7 @@ const ExistingNetworkMapField: FC = () => {
         control={control}
         render={({ field }) => (
           <NetworkMapSelect
+            testId="network-map-select"
             id={NetworkMapFieldId.ExistingNetworkMap}
             value={field.value?.metadata?.name ?? ''}
             status={error && MenuToggleStatus.danger}

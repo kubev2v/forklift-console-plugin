@@ -19,6 +19,7 @@ const StorageMapStep = () => {
     <WizardStepContainer
       title={planStepNames[PlanWizardStepId.StorageMap]}
       description={t('Select an existing storage map or use a new storage map.')}
+      testId="create-plan-storage-map-step"
     >
       <Form>
         <Controller

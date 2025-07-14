@@ -18,7 +18,10 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namesp
   const navigate = useNavigate();
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
-  const onClick = () => {
+  const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     const planResourceUrl = getResourceUrl({
       namespaced: false,
       reference: PlanModelRef,
@@ -35,7 +38,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namesp
       onClick={onClick}
       isDisabled={!canCreate}
     >
-      {t('Create Plan')}
+      {t('Create plan')}
     </Button>
   );
 

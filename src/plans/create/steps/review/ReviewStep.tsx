@@ -49,6 +49,7 @@ const ReviewStep: FC<ReviewStepProps> = ({ error, onBackToReviewClick }) => {
       description={t(
         'Make sure your migration plan looks correct. To make any changes, click directly on the step you want to go to or press the back button.',
       )}
+      testId="create-plan-review-step"
     >
       <GeneralInfoReviewSection />
       <VirtualMachinesReviewSection />

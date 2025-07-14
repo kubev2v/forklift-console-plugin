@@ -33,7 +33,10 @@ const GeneralInformationStep: FC = () => {
   });
 
   return (
-    <WizardStepContainer title={planStepNames[PlanWizardStepId.General]}>
+    <WizardStepContainer
+      title={planStepNames[PlanWizardStepId.General]}
+      testId="create-plan-general-step"
+    >
       <Form>
         <FormSection title={t('Plan information')}>
           <p>{t('Name your plan and choose the project you would like it to be created in.')}</p>
@@ -59,6 +62,7 @@ const GeneralInformationStep: FC = () => {
               control={control}
               render={({ field }) => (
                 <ProviderSelect
+                  testId="source-provider-select"
                   placeholder={t('Select source provider')}
                   id={GeneralFormFieldId.SourceProvider}
                   namespace={planProject}
@@ -89,6 +93,7 @@ const GeneralInformationStep: FC = () => {
               control={control}
               render={({ field }) => (
                 <ProviderSelect
+                  testId="target-provider-select"
                   isTarget
                   placeholder={t('Select target provider')}
                   id={GeneralFormFieldId.TargetProvider}

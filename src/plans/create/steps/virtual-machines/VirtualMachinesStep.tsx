@@ -32,7 +32,11 @@ const VirtualMachinesStep: FC = () => {
   );
 
   return (
-    <WizardStepContainer title={planStepNames[PlanWizardStepId.VirtualMachines]} isFullWidth>
+    <WizardStepContainer
+      title={planStepNames[PlanWizardStepId.VirtualMachines]}
+      isFullWidth
+      testId="create-plan-vm-step"
+    >
       <Stack hasGutter>
         <p>
           {t(

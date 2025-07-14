@@ -41,7 +41,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
       data-testid="plans-list"
       addButton={
         <PlansAddButton
-          dataTestId="add-network-map-button"
+          dataTestId="create-plan-button"
           namespace={namespace}
           canCreate={canCreate}
         />

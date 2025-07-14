@@ -34,6 +34,7 @@ const VirtualMachinesReviewSection: FC = () => {
   return (
     <ExpandableReviewSection
       title={planStepNames[PlanWizardStepId.VirtualMachines]}
+      testId="review-virtual-machines-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.VirtualMachines);
       }}
@@ -42,7 +43,7 @@ const VirtualMachinesReviewSection: FC = () => {
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Selected VMs')}</DescriptionListTerm>
 
-          <DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-vm-count">
             <Button
               isInline
               variant={ButtonVariant.link}
