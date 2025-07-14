@@ -124,7 +124,7 @@ describe('Create plan wizard', () => {
     wizard.verifyHooksSection();
 
     // STEP 6: Create the plan
-    wizard.clickCreatePlan();
+    wizard.clickNext();
     wizard.waitForPlanCreation();
     wizard.verifyRedirectToPlanDetails(TEST_DATA.planName);
   });

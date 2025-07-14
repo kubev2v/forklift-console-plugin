@@ -1,8 +1,4 @@
 export class CreatePlanWizard {
-  clickCreatePlan() {
-    cy.findByRole('button', { name: 'Create plan' }).should('be.visible').and('be.enabled').click();
-  }
-
   clickNext() {
     cy.findByTestId('wizard-next-button').should('be.enabled').click();
   }
@@ -72,7 +68,7 @@ export class CreatePlanWizard {
   }
 
   verifyGeneralStepVisible() {
-    cy.findByRole('heading', { name: 'General' }).should('be.visible');
+    cy.findByTestId('create-plan-general-step').should('be.visible');
   }
 
   verifyHooksSection() {
@@ -95,7 +91,7 @@ export class CreatePlanWizard {
   }
 
   verifyNetworkMapStepVisible() {
-    cy.findByRole('heading', { name: 'Network map' }).should('be.visible');
+    cy.findByTestId('create-plan-network-map-step').should('be.visible');
   }
 
   verifyOtherSettingsSection() {
@@ -114,11 +110,11 @@ export class CreatePlanWizard {
       `/k8s/ns/openshift-mtv/forklift.konveyor.io~v1beta1~Plan/${planName}`,
     );
     cy.wait('@getPlanDetails');
-    cy.findByRole('heading', { name: new RegExp(planName, 'i') }).should('be.visible');
+    cy.findByTestId('plan-details-title').should('be.visible');
   }
 
   verifyReviewStepVisible() {
-    cy.findByRole('heading', { name: 'Review and create' }).should('be.visible');
+    cy.findByTestId('create-plan-review-step').should('be.visible');
   }
 
   verifyStorageMapSection(storageMapName: string) {
@@ -128,7 +124,7 @@ export class CreatePlanWizard {
   }
 
   verifyStorageMapStepVisible() {
-    cy.findByRole('heading', { name: 'Storage map' }).should('be.visible');
+    cy.findByTestId('create-plan-storage-map-step').should('be.visible');
   }
 
   verifyVirtualMachinesSection(vmCount = '1 virtual machine selected') {
@@ -138,7 +134,7 @@ export class CreatePlanWizard {
   }
 
   verifyVirtualMachinesStepVisible() {
-    cy.findByRole('heading', { name: 'Virtual machines' }).should('be.visible');
+    cy.findByTestId('create-plan-vm-step').should('be.visible');
   }
 
   verifyVirtualMachinesTableLoaded() {
