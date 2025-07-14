@@ -5,14 +5,14 @@ export enum OtherSettingsFormFieldId {
   TransferNetwork = 'transferNetwork',
   PreserveStaticIps = 'preserveStaticIps',
   RootDevice = 'rootDevice',
-  SharedDisks = 'sharedDisks',
+  MigrateSharedDisks = 'migrateSharedDisks',
 }
 
 export const otherFormFieldLabels: Record<OtherSettingsFormFieldId, ReturnType<typeof t>> = {
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: t('Disk decryption passphrases'),
+  [OtherSettingsFormFieldId.MigrateSharedDisks]: t('Migrate shared disks'),
   [OtherSettingsFormFieldId.PreserveStaticIps]: t('Preserve static IPs'),
   [OtherSettingsFormFieldId.RootDevice]: t('Root device'),
-  [OtherSettingsFormFieldId.SharedDisks]: t('Shared disks'),
   [OtherSettingsFormFieldId.TransferNetwork]: t('Transfer network'),
 };
 

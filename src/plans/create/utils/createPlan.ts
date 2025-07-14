@@ -15,6 +15,7 @@ import { buildPlanSpecVms } from './buildPlanSpecVms';
  */
 export const createPlan = async ({
   luks,
+  migrateSharedDisks,
   migrationType,
   networkMap,
   planName,
@@ -23,7 +24,6 @@ export const createPlan = async ({
   preHook,
   preserveStaticIps,
   rootDevice,
-  sharedDisks,
   sourceProvider,
   storageMap,
   targetProject,
@@ -43,7 +43,7 @@ export const createPlan = async ({
         network: getObjectRef(networkMap),
         storage: getObjectRef(storageMap),
       },
-      migrateSharedDisks: sharedDisks,
+      migrateSharedDisks,
       provider: {
         destination: getObjectRef(targetProvider),
         source: getObjectRef(sourceProvider),
