@@ -19,3 +19,4 @@ kubectl
 kubectl.sha256
 
 forkliftci
+quick-start.sh
