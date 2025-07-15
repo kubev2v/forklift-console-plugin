@@ -24,6 +24,7 @@ const MigrationTypeReviewSection: FC = () => {
   return (
     <ExpandableReviewSection
       title={planStepNames[PlanWizardStepId.MigrationType]}
+      testId="review-migration-type-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.MigrationType);
       }}
@@ -31,7 +32,7 @@ const MigrationTypeReviewSection: FC = () => {
       <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Migration type')}</DescriptionListTerm>
-          <DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-migration-type">
             {migrationTypeLabels[migrationType]}
           </DescriptionListDescription>
         </DescriptionListGroup>

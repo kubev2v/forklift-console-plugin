@@ -3,11 +3,10 @@ import useProjectNameSelectOptions from 'src/providers/create/hooks/useProjectNa
 import { PROJECT_NAME_SELECT_POPOVER_HELP_CONTENT } from 'src/providers/create/utils/constants';
 import { ProviderFieldsId } from 'src/providers/utils/constants';
 
-import { Button, ButtonVariant, Popover } from '@patternfly/react-core';
-import { HelpIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { FormGroupWithHelpText } from './FormGroupWithHelpText/FormGroupWithHelpText';
+import { HelpIconPopover } from './HelpIconPopover/HelpIconPopover';
 import { TypeaheadSelect } from './TypeaheadSelect/TypeaheadSelect';
 
 type ProjectNameSelectProps = {
@@ -25,13 +24,9 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({ onSelect, projec
       isRequired
       fieldId={ProviderFieldsId.Project}
       labelIcon={
-        <Popover
-          position="right"
-          alertSeverityVariant="info"
-          bodyContent={PROJECT_NAME_SELECT_POPOVER_HELP_CONTENT}
-        >
-          <Button variant={ButtonVariant.plain} icon={<HelpIcon />} />
-        </Popover>
+        <HelpIconPopover popoverProps={{ alertSeverityVariant: 'info' }}>
+          {PROJECT_NAME_SELECT_POPOVER_HELP_CONTENT}
+        </HelpIconPopover>
       }
     >
       <TypeaheadSelect

@@ -73,6 +73,7 @@ const TargetProjectField: FC = () => {
                   : t('Select a target provider to list available target projects')
               }
               toggleProps={{
+                id: 'target-project-select',
                 status: errors[GeneralFormFieldId.TargetProject] && MenuToggleStatus.danger,
               }}
             />
