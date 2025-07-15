@@ -32,6 +32,7 @@ export const CONDITION_STATUS = {
 
 export const CATEGORY_TYPES = {
   CANCELED: 'Canceled',
+  CRITERIA_MET: 'SuccessCriteriaMet',
   CRITICAL: 'Critical',
   EXECUTING: 'Executing',
   FAILED: 'Failed',
