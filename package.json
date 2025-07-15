@@ -35,6 +35,14 @@
     "storybook": "yarn workspace @kubev2v/common run storybook dev -p 6006",
     "storybook:build": "yarn workspace @kubev2v/common run storybook build"
   },
+  "dependencies": {
+    "rollup": "^4.22.4",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@rollup/plugin-url": "^8.0.2",
+    "@rollup/pluginutils": "^5.0.2"
+  },
   "devDependencies": {
     "@cspell/eslint-plugin": "^6.31.1",
     "@rollup/plugin-commonjs": "^24.0.1",
