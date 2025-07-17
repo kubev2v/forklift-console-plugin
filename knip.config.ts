@@ -27,5 +27,9 @@ export default {
   ],
   ignore: ['i18next-parser.config.ts', 'testing/**', 'eslint.ide.config.ts'],
   ignoreBinaries: ['kubectl', 'test:e2e'],
-  ignoreDependencies: ['ts-node'],
+  ignoreDependencies: [
+    'ts-node',
+    '@types/i18next', // Provides TypeScript types for i18next
+    'monaco-editor', // Required peer dependency for @patternfly/react-code-editor
+  ],
 } satisfies KnipConfig;

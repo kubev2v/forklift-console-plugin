@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import type { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base/types';
+import type { ThProps } from '@patternfly/react-table';
 
 import { getResourceFieldValue } from '../FilterGroup/matchers';
 import { localeCompare } from '../utils/localCompare';
@@ -98,7 +98,6 @@ export const useSort = (
 
 /**
  * Builds table specific sort definition based on provided active sort definition.
- * @see ThSortType
  */
 export const buildSort = ({
   activeSort,
@@ -110,7 +109,7 @@ export const buildSort = ({
   resourceFields: ResourceField[];
   activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
-}): ThSortType => ({
+}): ThProps['sort'] => ({
   columnIndex,
   onSort: (_event, index, direction) => {
     resourceFields[index]?.resourceFieldId &&
