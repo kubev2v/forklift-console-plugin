@@ -18,6 +18,7 @@ import type { V1beta1StorageMapSpecMapWithOffload } from './types';
 export const transformFormValuesToK8sSpec = (
   formValues: UpdateMappingsFormData,
   existingStorageMap: V1beta1StorageMap,
+  isOpenshift = false,
 ): V1beta1StorageMap | undefined => {
   if (!existingStorageMap.spec) {
     return undefined;
@@ -36,7 +37,10 @@ export const transformFormValuesToK8sSpec = (
           storageClass: mapping.targetStorage.name,
         },
         source: {
-          id: mapping.sourceStorage.name,
+          id: isOpenshift ? undefined : mapping.sourceStorage.id,
+          name: mapping.sourceStorage.name.startsWith('/')
+            ? mapping.sourceStorage.name.slice(1)
+            : mapping.sourceStorage.name,
         },
       };
 
@@ -84,7 +88,8 @@ export const transformStorageMapToFormValues = (
     (mapping: V1beta1StorageMapSpecMapWithOffload) => ({
       offloadPlugin: mapping.offloadPlugin ? OffloadPlugin.VSphereXcopyConfig : '',
       sourceStorage: {
-        name: mapping.source?.id ?? '',
+        id: mapping.source?.id ?? '',
+        name: mapping.source?.name ?? '',
       },
       storageProduct: mapping.offloadPlugin?.vsphereXcopyConfig?.storageVendorProduct ?? '',
       storageSecret: mapping.offloadPlugin?.vsphereXcopyConfig?.secretRef ?? '',
