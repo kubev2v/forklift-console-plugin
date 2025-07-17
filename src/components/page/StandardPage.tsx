@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-// Ignoring above eslint rule as this file needs to be refactored
 import { type FC, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -54,6 +53,7 @@ import {
   useTableSortContext,
 } from '../TableSortContext';
 
+import { INITIAL_PAGE } from './utils/constants';
 import { reduceValueFilters } from './utils/reduceValueFilters';
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
@@ -72,6 +72,11 @@ export type StandardPageProps<T> = {
   HeaderMapper?: FC<TableViewHeaderProps<T>>;
   extraSupportedFilters?: Record<string, FilterRenderer>;
   extraSupportedMatchers?: ValueMatcher[];
+  postFilterData?: (
+    data: T[],
+    selectedFilters: Record<string, string[]>,
+    fields: ResourceField[],
+  ) => T[];
   customNoResultsFound?: JSX.Element;
   customNoResultsMatchFilter?: JSX.Element;
   pagination?: number | 'on' | 'off';
@@ -117,6 +122,7 @@ const StandardPageInner = <T,>({
   page: initialPage,
   pageRef,
   pagination = DEFAULT_PER_PAGE,
+  postFilterData,
   RowMapper = DefaultRow<T>,
   selectedIds,
   setActiveSort,
@@ -129,6 +135,7 @@ const StandardPageInner = <T,>({
   const [sortedData, setSortedData] = useState<T[]>([]);
   const [filteredData, setFilteredData] = useState<T[]>([]);
   const [page, setPage] = useState(initialPage);
+  const [finalFilteredData, setFinalFilteredData] = useState<T[]>([]);
 
   const onPageSet = useCallback(
     (newPage: number) => {
@@ -173,10 +180,10 @@ const StandardPageInner = <T,>({
   );
 
   useEffect(() => {
-    if (flatData) {
+    if (flatData && loaded && !error) {
       setSortedData([...flatData].sort(compareFn));
     }
-  }, [flatData, compareFn, loaded]);
+  }, [flatData, compareFn, loaded, error]);
 
   const metaMatcher = useMemo(
     () => createMetaMatcher(selectedFilters, fields, supportedMatchers),
@@ -184,10 +191,34 @@ const StandardPageInner = <T,>({
   );
 
   useEffect(() => {
-    if (sortedData) {
+    if (sortedData && loaded && !error) {
       setFilteredData(sortedData.filter(metaMatcher));
     }
-  }, [sortedData, metaMatcher]);
+  }, [sortedData, metaMatcher, loaded, error]);
+
+  useEffect(() => {
+    if (!loaded || error) {
+      return;
+    }
+
+    if (!filteredData || filteredData.length === 0) {
+      setFinalFilteredData([]);
+      return;
+    }
+
+    if (!postFilterData) {
+      setFinalFilteredData(filteredData);
+      return;
+    }
+
+    setFinalFilteredData(postFilterData(filteredData, selectedFilters, fields));
+  }, [filteredData, postFilterData, selectedFilters, fields, loaded, error]);
+
+  useEffect(() => {
+    if (Object.values(selectedFilters).some((filter) => !isEmpty(filter))) {
+      setPage(INITIAL_PAGE); // When filters are applied, reset to page 1 to show correct results
+    }
+  }, [selectedFilters]);
 
   const showPagination = useMemo(
     () => pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination),
@@ -195,13 +226,13 @@ const StandardPageInner = <T,>({
   );
 
   const { itemsPerPage, setPerPage } = usePagination({
-    filteredDataLength: filteredData.length,
+    filteredDataLength: finalFilteredData.length,
     userSettings: userSettings?.pagination,
   });
 
   const pageData = useMemo(
-    () => filteredData.slice((page - 1) * itemsPerPage, page * itemsPerPage),
-    [filteredData, page, itemsPerPage],
+    () => finalFilteredData.slice((page - 1) * itemsPerPage, page * itemsPerPage),
+    [finalFilteredData, page, itemsPerPage],
   );
 
   // Memoize error/loading states
@@ -211,8 +242,8 @@ const StandardPageInner = <T,>({
     [loaded, error, sortedData.length],
   );
   const noMatchingResults = useMemo(
-    () => loaded && !error && filteredData.length === 0 && sortedData.length > 0,
-    [loaded, error, filteredData.length, sortedData.length],
+    () => loaded && !error && finalFilteredData.length === 0 && sortedData.length > 0,
+    [loaded, error, finalFilteredData.length, sortedData.length],
   );
 
   const primaryFilters = useMemo(
@@ -259,13 +290,13 @@ const StandardPageInner = <T,>({
   );
 
   const dataOnScreen = useMemo(
-    () => (showPagination ? pageData : filteredData),
-    [showPagination, pageData, filteredData],
+    () => (showPagination ? pageData : finalFilteredData),
+    [showPagination, pageData, finalFilteredData],
   );
 
   const dataIds = useMemo(
-    () => filteredData?.map((data) => toId?.(data) ?? ''),
-    [filteredData, toId],
+    () => finalFilteredData?.map((data) => toId?.(data) ?? ''),
+    [finalFilteredData, toId],
   );
 
   const pageDataIds = useMemo(() => pageData?.map((data) => toId?.(data) ?? ''), [pageData, toId]);
@@ -344,7 +375,7 @@ const StandardPageInner = <T,>({
                   variant="top"
                   perPage={itemsPerPage}
                   page={page}
-                  itemCount={filteredData.length}
+                  itemCount={finalFilteredData.length}
                   onSetPage={onSetPage}
                   onPerPageSelect={onPerPageSelect}
                 />
@@ -390,7 +421,7 @@ const StandardPageInner = <T,>({
             variant="bottom"
             perPage={itemsPerPage}
             page={page}
-            itemCount={filteredData.length}
+            itemCount={finalFilteredData.length}
             onSetPage={onSetPage}
             onPerPageSelect={onPerPageSelect}
           />
