@@ -1,14 +1,14 @@
-import { produce } from 'immer';
-
+import { ADD } from '@components/ModalForm/utils/constants';
 import {
   NetworkMapModel,
   PlanModel,
   StorageMapModel,
   type V1beta1NetworkMap,
   type V1beta1Plan,
+  type V1beta1PlanSpecMap,
   type V1beta1StorageMap,
 } from '@kubev2v/types';
-import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { k8sCreate, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { buildOwnerReference, getRandomChars } from '@utils/crds/common/utils';
 
@@ -25,25 +25,6 @@ export const createDuplicatePlanAndMapResources = async ({
   storageMap,
 }: CreateDuplicatePlanParams) => {
   const namespace = getNamespace(plan);
-  const newNetworkMapData: V1beta1NetworkMap = {
-    apiVersion: 'forklift.konveyor.io/v1beta1',
-    kind: 'NetworkMap',
-    metadata: {
-      name: `${newPlanName}-${getRandomChars(5)}`,
-      namespace,
-    },
-    spec: networkMap.spec,
-  };
-
-  const newStorageMapData: V1beta1StorageMap = {
-    apiVersion: 'forklift.konveyor.io/v1beta1',
-    kind: 'StorageMap',
-    metadata: {
-      name: `${newPlanName}-${getRandomChars(5)}`,
-      namespace,
-    },
-    spec: storageMap.spec,
-  };
 
   const newPlanData: V1beta1Plan = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -55,43 +36,62 @@ export const createDuplicatePlanAndMapResources = async ({
     spec: {
       ...plan.spec!,
       archived: false,
-      map: {
-        network: {
-          apiVersion: 'forklift.konveyor.io/v1beta1',
-          kind: 'NetworkMap',
-          name: getName(newNetworkMapData),
-          namespace: getNamespace(newNetworkMapData),
-        },
-        storage: {
-          apiVersion: 'forklift.konveyor.io/v1beta1',
-          kind: 'StorageMap',
-          name: getName(newStorageMapData),
-          namespace: getNamespace(newStorageMapData),
-        },
-      },
     },
   };
-  const newPlan = await k8sCreate({ data: newPlanData, model: PlanModel });
+  const initPlan = await k8sCreate({ data: newPlanData, model: PlanModel });
 
-  const newPlanOwnerReference = buildOwnerReference(newPlan, {
+  const newPlanOwnerReference = buildOwnerReference(initPlan, {
     blockOwnerDeletion: false,
   });
 
-  const networkMapWithOwner = produce(newNetworkMapData, (draft) => {
-    if (draft.metadata) {
-      draft.metadata.ownerReferences = [newPlanOwnerReference];
-    }
+  const newNetworkMapData: V1beta1NetworkMap = {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    kind: 'NetworkMap',
+    metadata: {
+      name: `${newPlanName}-${getRandomChars(5)}`,
+      namespace,
+      ownerReferences: [newPlanOwnerReference],
+    },
+    spec: networkMap.spec,
+  };
+
+  const newStorageMapData: V1beta1StorageMap = {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    kind: 'StorageMap',
+    metadata: {
+      name: `${newPlanName}-${getRandomChars(5)}`,
+      namespace,
+      ownerReferences: [newPlanOwnerReference],
+    },
+    spec: storageMap.spec,
+  };
+
+  await k8sCreate({ data: newNetworkMapData, model: NetworkMapModel });
+
+  await k8sCreate({ data: newStorageMapData, model: StorageMapModel });
+
+  const mappings: V1beta1PlanSpecMap = {
+    network: {
+      name: getName(newNetworkMapData),
+      namespace: getNamespace(newNetworkMapData),
+    },
+    storage: {
+      name: getName(newStorageMapData),
+      namespace: getNamespace(newStorageMapData),
+    },
+  };
+
+  const newPlan = await k8sPatch({
+    data: [
+      {
+        op: ADD,
+        path: '/spec/map',
+        value: mappings,
+      },
+    ],
+    model: PlanModel,
+    resource: initPlan,
   });
-
-  const storageMapWithOwner = produce(newStorageMapData, (draft) => {
-    if (draft.metadata) {
-      draft.metadata.ownerReferences = [newPlanOwnerReference];
-    }
-  });
-
-  await k8sCreate({ data: networkMapWithOwner, model: NetworkMapModel });
-
-  await k8sCreate({ data: storageMapWithOwner, model: StorageMapModel });
 
   return newPlan;
 };
