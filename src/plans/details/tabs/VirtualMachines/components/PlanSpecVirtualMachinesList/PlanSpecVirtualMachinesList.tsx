@@ -1,7 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
-import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -28,9 +27,8 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
     [],
   );
 
-  const specVirtualMachinesListData = useSpecVirtualMachinesListData(plan);
+  const [specVirtualMachinesListData, sourceProvider] = useSpecVirtualMachinesListData(plan);
   const actions = useSpecVirtualMachinesActions(plan);
-  const { sourceProvider } = usePlanSourceProvider(plan);
 
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
 
