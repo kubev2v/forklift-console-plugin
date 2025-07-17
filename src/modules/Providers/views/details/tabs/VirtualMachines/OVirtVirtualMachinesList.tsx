@@ -11,6 +11,7 @@ import { ovirtHostFilter } from './utils/filters/OvirtHostFilter';
 import { getConcernsResourceField } from './utils/helpers/getConcernsResourceField';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
+import { CustomFilterType } from './constants';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
 
 const oVirtVmFieldsMetadataFactory = [
@@ -45,7 +46,7 @@ const oVirtVmFieldsMetadataFactory = [
     isVisible: true,
     jsonPath: '$.vm.host',
     label: t('Host'),
-    resourceFieldId: 'host',
+    resourceFieldId: CustomFilterType.Host,
     sortable: true,
   },
   {
