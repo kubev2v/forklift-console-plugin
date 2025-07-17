@@ -1,3 +1,5 @@
+import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+
 import type {
   V1beta1Plan,
   V1beta1PlanSpecVms,
@@ -11,11 +13,12 @@ export type SpecVirtualMachinePageData = {
   specVM: V1beta1PlanSpecVms;
   statusVM?: V1beta1PlanStatusMigrationVms;
   conditions?: V1beta1PlanStatusConditions[];
+  inventoryVmData: VmData;
   targetNamespace: string;
 };
 
 export enum PlanSpecVirtualMachinesTableResourceId {
   Name = 'name',
-  Conditions = 'conditions',
+  Concerns = 'concerns',
   Actions = 'actions',
 }
