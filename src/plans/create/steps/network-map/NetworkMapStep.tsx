@@ -1,4 +1,5 @@
-import { Controller } from 'react-hook-form';
+import { useEffect, useRef } from 'react';
+import { Controller, useWatch } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Flex, FlexItem, Form, Radio, Stack } from '@patternfly/react-core';
@@ -13,7 +14,32 @@ import NewNetworkMapFields from './NewNetworkMapFields';
 
 const NetworkMapStep = () => {
   const { t } = useForkliftTranslation();
-  const { control, unregister } = useCreatePlanFormContext();
+  const { control, trigger, unregister } = useCreatePlanFormContext();
+  const networkMapType = useWatch({
+    control,
+    name: NetworkMapFieldId.NetworkMapType,
+  });
+  const prevNetworkMapType = useRef(networkMapType);
+
+  useEffect(() => {
+    if (prevNetworkMapType.current === networkMapType) {
+      return;
+    }
+
+    prevNetworkMapType.current = networkMapType;
+
+    (async () => {
+      try {
+        if (networkMapType === NetworkMapType.Existing) {
+          await trigger(NetworkMapFieldId.ExistingNetworkMap);
+        } else if (networkMapType === NetworkMapType.New) {
+          await trigger(NetworkMapFieldId.NetworkMap);
+        }
+      } catch {
+        // Silently handle validation errors
+      }
+    })();
+  }, [networkMapType, trigger]);
 
   return (
     <WizardStepContainer

@@ -1,4 +1,5 @@
-import { Controller } from 'react-hook-form';
+import { useEffect, useRef } from 'react';
+import { Controller, useWatch } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Flex, FlexItem, Form, Radio, Stack } from '@patternfly/react-core';
@@ -13,7 +14,32 @@ import NewStorageMapFields from './NewStorageMapFields';
 
 const StorageMapStep = () => {
   const { t } = useForkliftTranslation();
-  const { control, unregister } = useCreatePlanFormContext();
+  const { control, trigger, unregister } = useCreatePlanFormContext();
+  const storageMapType = useWatch({
+    control,
+    name: CreatePlanStorageMapFieldId.StorageMapType,
+  });
+  const prevStorageMapType = useRef(storageMapType);
+
+  useEffect(() => {
+    if (prevStorageMapType.current === storageMapType) {
+      return;
+    }
+
+    prevStorageMapType.current = storageMapType;
+
+    (async () => {
+      try {
+        if (storageMapType === StorageMapType.Existing) {
+          await trigger(CreatePlanStorageMapFieldId.ExistingStorageMap);
+        } else if (storageMapType === StorageMapType.New) {
+          await trigger(CreatePlanStorageMapFieldId.StorageMap);
+        }
+      } catch {
+        // Silently handle validation errors
+      }
+    })();
+  }, [storageMapType, trigger]);
 
   return (
     <WizardStepContainer

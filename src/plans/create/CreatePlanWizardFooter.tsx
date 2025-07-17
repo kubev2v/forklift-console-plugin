@@ -1,4 +1,4 @@
-import type { FC, MouseEvent } from 'react';
+import { type FC, type MouseEvent, useCallback, useMemo } from 'react';
 import { type Location, useLocation, useNavigate } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
@@ -14,6 +14,7 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from './hooks/useCreatePlanFormContext';
+import { useStepValidation } from './hooks/useStepValidation';
 import { PlanWizardStepId } from './constants';
 import type { CreatePlanFormData } from './types';
 
@@ -22,7 +23,7 @@ type CreatePlanWizardFooterProps = Partial<Pick<WizardFooterProps, 'nextButtonTe
 };
 
 const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
-  hasError,
+  hasError = false,
   nextButtonText,
   onNext: onSubmit,
 }) => {
@@ -32,52 +33,54 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   const [activeNamespace] = useActiveNamespace();
   const {
     formState: { isSubmitting },
-    trigger,
   } = useCreatePlanFormContext();
+  const { validateStep } = useStepValidation();
   const { activeStep, goToNextStep, goToPrevStep, goToStepById } = useWizardContext();
-  const canSkipToReview =
-    activeStep.id === PlanWizardStepId.MigrationType ||
-    activeStep.id === PlanWizardStepId.OtherSettings;
 
-  const onStepSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
-    if (onSubmit) {
-      return onSubmit(event);
-    }
+  const canSkipToReview = useMemo(
+    () =>
+      activeStep.id === PlanWizardStepId.MigrationType ||
+      activeStep.id === PlanWizardStepId.OtherSettings,
+    [activeStep.id],
+  );
 
-    return trigger(undefined, { shouldFocus: true });
-  };
+  const isBackDisabled = hasError || activeStep.id === PlanWizardStepId.General || isSubmitting;
+  const isNextDisabled = hasError || isSubmitting;
 
-  const onNextClick = async (event: MouseEvent<HTMLButtonElement>) => {
-    const isValid = await onStepSubmit(event);
+  const onNextClick = useCallback(
+    async (event: MouseEvent<HTMLButtonElement>) => {
+      if (onSubmit) return onSubmit(event);
 
-    if (isValid) {
-      await goToNextStep();
-    }
-  };
+      const isValid = await validateStep(activeStep.id as PlanWizardStepId);
+      if (isValid) {
+        await goToNextStep();
+      }
 
-  const onSkipToReviewClick = async (event: MouseEvent<HTMLButtonElement>) => {
-    const isValid = await onStepSubmit(event);
+      return undefined;
+    },
+    [onSubmit, validateStep, activeStep.id, goToNextStep],
+  );
 
+  const onSkipToReviewClick = useCallback(async () => {
+    const isValid = await validateStep(activeStep.id as PlanWizardStepId);
     if (isValid) {
       goToStepById(PlanWizardStepId.ReviewAndCreate);
     }
-  };
+  }, [validateStep, activeStep.id, goToStepById]);
 
-  const onCancel = () => {
-    // If we have a sourceProvider in the location state, go back to the previous page (provider details)
+  const onCancel = useCallback(() => {
     if (location.state?.sourceProvider) {
       navigate(-1);
       return;
     }
 
-    // Otherwise, navigate to the plans list page
     const plansListUrl = getResourceUrl({
       namespace: activeNamespace,
       reference: PlanModelRef,
     });
 
     navigate(plansListUrl);
-  };
+  }, [location.state?.sourceProvider, navigate, activeNamespace]);
 
   return (
     <WizardFooterWrapper>
@@ -85,7 +88,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
         data-testid="wizard-back-button"
         variant={ButtonVariant.secondary}
         onClick={goToPrevStep}
-        isDisabled={hasError ?? (activeStep.id === PlanWizardStepId.General || isSubmitting)}
+        isDisabled={isBackDisabled}
       >
         {t('Back')}
       </Button>
@@ -93,7 +96,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
         data-testid="wizard-next-button"
         variant={ButtonVariant.primary}
         onClick={onNextClick}
-        isDisabled={hasError ?? isSubmitting}
+        isDisabled={isNextDisabled}
         isLoading={isSubmitting}
       >
         {nextButtonText ?? t('Next')}
