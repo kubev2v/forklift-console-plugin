@@ -1,16 +1,29 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useCallback, useMemo, useState } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
-import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
+import {
+  TypeaheadSelect,
+  type TypeaheadSelectOption,
+} from '@components/common/TypeaheadSelect/TypeaheadSelect';
+import { Divider, MenuToggleStatus, Stack, StackItem, Switch } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
+
+const SYSTEM_NAMESPACES_PREFIX = ['kube-', 'openshift-', 'kubernetes-'];
+const SYSTEM_NAMESPACES = ['default', 'openshift'];
+
+const isSystemNamespace = (option: string) => {
+  const startsWithNamespace = SYSTEM_NAMESPACES_PREFIX.some((ns) => option.startsWith(ns));
+  const isNamespace = SYSTEM_NAMESPACES.includes(option);
+
+  return startsWithNamespace || isNamespace;
+};
 
 const TargetProjectField: FC = () => {
   const { t } = useForkliftTranslation();
@@ -20,6 +33,7 @@ const TargetProjectField: FC = () => {
   } = useCreatePlanFormContext();
   const targetProvider = useWatch({ control, name: GeneralFormFieldId.TargetProvider });
   const [targetProviderProjects] = useProviderNamespaces(targetProvider);
+  const [showDefaultProjects, setShowDefaultProjects] = useState(false);
 
   const targetProviderOptions = useMemo(
     () =>
@@ -29,6 +43,13 @@ const TargetProjectField: FC = () => {
       })),
     [targetProviderProjects],
   );
+
+  const filteredTargetProviderOptions = useMemo(() => {
+    if (!showDefaultProjects) {
+      return targetProviderOptions.filter((option) => !isSystemNamespace(String(option.content)));
+    }
+    return targetProviderOptions;
+  }, [targetProviderOptions, showDefaultProjects]);
 
   return (
     <FormGroupWithErrorText
@@ -59,7 +80,7 @@ const TargetProjectField: FC = () => {
               isScrollable
               placeholder={t('Select target project')}
               id={GeneralFormFieldId.TargetProject}
-              selectOptions={targetProviderOptions}
+              selectOptions={filteredTargetProviderOptions}
               selected={field.value}
               onSelect={(_event, value) => {
                 field.onChange(value);
@@ -76,6 +97,22 @@ const TargetProjectField: FC = () => {
                 id: 'target-project-select',
                 status: errors[GeneralFormFieldId.TargetProject] && MenuToggleStatus.danger,
               }}
+              Filter={
+                <>
+                  <div className="pf-v5-u-px-md pf-v5-u-py-md">
+                    <Switch
+                      id="show-default-projects-switch"
+                      label={t('Show default projects')}
+                      isChecked={showDefaultProjects}
+                      onChange={(_event, checked) => {
+                        setShowDefaultProjects(checked);
+                      }}
+                      isDisabled={false}
+                    />
+                  </div>
+                  <Divider />
+                </>
+              }
             />
           </div>
         )}
