@@ -12,7 +12,11 @@ import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 
-const TargetProjectField: FC = () => {
+type TargetProjectFieldProps = {
+  testId?: string;
+};
+
+const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-project-select' }) => {
   const { t } = useForkliftTranslation();
   const {
     control,
@@ -54,7 +58,7 @@ const TargetProjectField: FC = () => {
         name={GeneralFormFieldId.TargetProject}
         control={control}
         render={({ field }) => (
-          <div ref={field.ref}>
+          <div ref={field.ref} data-testid={testId}>
             <TypeaheadSelect
               isScrollable
               placeholder={t('Select target project')}

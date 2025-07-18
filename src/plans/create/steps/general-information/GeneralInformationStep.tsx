@@ -42,7 +42,7 @@ const GeneralInformationStep: FC = () => {
           <p>{t('Name your plan and choose the project you would like it to be created in.')}</p>
 
           <PlanNameField />
-          <PlanProjectField />
+          <PlanProjectField testId="plan-project-select" />
         </FormSection>
 
         <FormSection title={t('Source and target providers')}>
@@ -113,7 +113,7 @@ const GeneralInformationStep: FC = () => {
             />
           </FormGroupWithErrorText>
 
-          <TargetProjectField />
+          <TargetProjectField testId="target-project-select" />
         </FormSection>
       </Form>
     </WizardStepContainer>
