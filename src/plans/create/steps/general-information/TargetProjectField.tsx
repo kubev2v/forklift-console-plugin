@@ -1,13 +1,10 @@
-import { type FC, useCallback, useMemo, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import {
-  TypeaheadSelect,
-  type TypeaheadSelectOption,
-} from '@components/common/TypeaheadSelect/TypeaheadSelect';
+import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { Divider, MenuToggleStatus, Stack, StackItem, Switch } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -107,7 +104,6 @@ const TargetProjectField: FC = () => {
                       onChange={(_event, checked) => {
                         setShowDefaultProjects(checked);
                       }}
-                      isDisabled={false}
                     />
                   </div>
                   <Divider />
