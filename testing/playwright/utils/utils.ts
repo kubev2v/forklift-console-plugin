@@ -36,8 +36,8 @@ export const skipGuidedTourIfPresent = async (page: Page) => {
  * Waits for a loading indicator to appear and then disappear.
  * This is useful for waiting for page loads or async operations to complete.
  */
-export async function waitForLoader(page: Page) {
+export const waitForLoader = async (page: Page) => {
   const loader = page.locator('[data-test="loading-indicator"]');
   await loader.waitFor({ state: 'visible', timeout: 1000 });
   await loader.waitFor({ state: 'hidden', timeout: 30000 });
-}
+};

@@ -65,6 +65,7 @@ const ProjectSelectField: FC = () => {
               isDisabled={isSubmitting}
               placeholder={t('Select project')}
               id={StorageMapFieldId.Project}
+              testId={testId}
               selectOptions={projectOptions}
               selected={field.value}
               onSelect={(_, value) => {

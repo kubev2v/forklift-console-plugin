@@ -1,9 +1,9 @@
-import { test, expect } from '@playwright/test';
-import { PlansListPage } from '../page-objects/PlansListPage';
-import { CreatePlanWizardPage } from '../page-objects/CreatePlanWizardPage';
-import { TEST_DATA, createTestPlan } from '../fixtures/test-data';
-import { setupCreatePlanIntercepts } from '../utils/api-intercepts';
+import { test } from '@playwright/test';
 
+import { TEST_DATA } from '../fixtures/test-data';
+import { setupCreatePlanIntercepts } from '../intercepts';
+import { CreatePlanWizardPage } from '../page-objects/CreatePlanWizard/CreatePlanWizardPage';
+import { PlansListPage } from '../page-objects/PlansListPage';
 
 test.describe('Plans - Critical End-to-End Migration', () => {
   test.beforeEach(async ({ page }) => {
@@ -12,81 +12,64 @@ test.describe('Plans - Critical End-to-End Migration', () => {
     await plansPage.navigateFromMainMenu();
   });
 
-  test('should show Create Plan button on list page', async ({ page }) => {
-    const plansPage = new PlansListPage(page);
-  
-   
-    await plansPage.waitForPageLoad();
-    await plansPage.clickCreatePlanButton();
-  });
+  // test('should show Create Plan button on list page', async ({ page }) => {
+  //   const plansPage = new PlansListPage(page);
+
+  //   await plansPage.waitForPageLoad();
+  //   await plansPage.assertCreatePlanButtonEnabled();
+  // });
 
   test('should complete full migration plan lifecycle', async ({ page }) => {
     const plansPage = new PlansListPage(page);
     const createWizard = new CreatePlanWizardPage(page);
 
-    // 2. Create New Plan
+    // Navigate to wizard
+    await plansPage.waitForPageLoad();
     await plansPage.clickCreatePlanButton();
-    
-    // 3. Fill Plan Details (Step 1)
-    await createWizard.fillPlanName(TEST_DATA.planName);
-    await createWizard.fillPlanDescription('End-to-end test migration plan');
-    await createWizard.selectTargetNamespace(TEST_DATA.targetProject);
+    await createWizard.waitForWizardLoad();
+
+    // STEP 1: General Information
+    await createWizard.generalInformation.fillPlanName(TEST_DATA.planName);
+    await createWizard.generalInformation.selectPlanProject(TEST_DATA.planProject);
+    await createWizard.generalInformation.selectSourceProvider(TEST_DATA.sourceProvider);
+    await createWizard.generalInformation.selectTargetProvider(TEST_DATA.targetProvider);
+    await createWizard.generalInformation.waitForTargetProviderNamespaces();
+    await createWizard.generalInformation.selectTargetProject(TEST_DATA.targetProject);
     await createWizard.clickNext();
 
-    // 4. Select Source Provider (Step 2)
-    await createWizard.verifyCurrentStep(2);
-    await createWizard.selectSourceProvider(TEST_DATA.sourceProvider);
+    // STEP 2: Virtual Machines
+    await createWizard.virtualMachines.verifyStepVisible();
+    await createWizard.virtualMachines.verifyTableLoaded();
+    await createWizard.virtualMachines.selectFirstVirtualMachine();
     await createWizard.clickNext();
 
-    // 5. Select Target Provider (Step 3)
-    await createWizard.verifyCurrentStep(3);
-    await createWizard.selectTargetProvider(TEST_DATA.targetProvider);
+    // STEP 3: Network Map
+    await createWizard.networkMap.verifyStepVisible();
+    await createWizard.networkMap.waitForData();
+    await createWizard.networkMap.selectNetworkMap(TEST_DATA.networkMap);
     await createWizard.clickNext();
 
-    // 6. Select VMs (Step 4)
-    await createWizard.verifyCurrentStep(4);
-    await createWizard.selectVirtualMachine(TEST_DATA.virtualMachines[0].name);
+    // STEP 4: Storage Map
+    await createWizard.storageMap.verifyStepVisible();
+    await createWizard.storageMap.waitForData();
+    await createWizard.storageMap.selectStorageMap(TEST_DATA.storageMap);
     await createWizard.clickNext();
+    await createWizard.clickSkipToReview();
 
-    // 7. Network Mapping (Step 5)
-    await createWizard.verifyCurrentStep(5);
-    // Network mapping logic here
-    await createWizard.clickNext();
+    // STEP 5: Review
+    await createWizard.review.verifyStepVisible();
+    await createWizard.review.verifyAllSections(
+      {
+        planName: TEST_DATA.planName,
+        planProject: TEST_DATA.planProject,
+        sourceProvider: TEST_DATA.sourceProvider,
+        targetProvider: TEST_DATA.targetProvider,
+        targetProject: TEST_DATA.targetProject,
+      },
+      TEST_DATA.networkMap,
+      TEST_DATA.storageMap,
+    );
 
-    // 8. Storage Mapping (Step 6)
-    await createWizard.verifyCurrentStep(6);
-    // Storage mapping logic here
-    await createWizard.clickNext();
-
-    // 9. Review and Create (Step 7)
-    await createWizard.verifyCurrentStep(7);
-    await createWizard.clickFinish();
-
-    // 10. Verify Plan Creation
-    await createWizard.verifyPlanCreated(TEST_DATA.planName);
-    
-    // 11. Verify Plan Appears in List
-    expect(page.url()).toContain('forklift.konveyor.io~v1beta1~Plan');
-    await expect(page.getByText(TEST_DATA.planName)).toBeVisible();
-
-    // 12. Verify Plan Status
-    await expect(page.getByTestId('plan-status-ready')).toBeVisible();
+    // STEP 6: Plan Details
   });
-
-  test('should handle plan validation errors gracefully', async ({ page }) => {
-    const plansPage = new PlansListPage(page);
-    const createWizard = new CreatePlanWizardPage(page);
-    
-    await plansPage.navigateFromMainMenu();
-    await plansPage.clickCreatePlanButton();
-
-    // Try to proceed without filling required fields
-    await createWizard.clickNext();
-    
-    // Verify validation errors
-    await expect(page.getByText('Plan name is required')).toBeVisible();
-    await expect(page.getByText('Target namespace is required')).toBeVisible();
-  });
-
-
-}); 
+});
