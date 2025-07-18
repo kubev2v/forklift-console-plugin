@@ -3,6 +3,7 @@ import {
   type FormEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactNode,
   type Ref,
   useEffect,
   useMemo,
@@ -76,6 +77,8 @@ type TypeaheadSelectProps = {
   toggleWidth?: string;
   /** Additional props passed to the toggle. */
   toggleProps?: MenuToggleProps;
+  /** Optionally add filters to Select */
+  Filter?: ReactNode;
 } & Omit<SelectProps, 'toggle' | 'onSelect'>;
 
 const defaultNoOptionsFoundMessage = (filter: string) => `No results found for "${filter}"`;
@@ -89,6 +92,7 @@ export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
   allowClear,
   children,
   createOptionMessage = defaultCreateOptionMessage,
+  Filter,
   filterFunction = defaultFilterFunction,
   innerRef,
   isCreatable = false,
@@ -416,6 +420,7 @@ export const TypeaheadSelect: FC<TypeaheadSelectProps> = ({
       ref={innerRef}
       {...props}
     >
+      {Filter}
       {children ?? (
         <SelectList>
           {filteredSelections.map((option, index) => {
