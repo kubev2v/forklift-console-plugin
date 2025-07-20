@@ -8,7 +8,15 @@ import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp'
 import { useDrawer } from '@components/DrawerContext/useDrawer';
 import HelpText from '@components/HelpText';
 import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
-import { Button, ButtonVariant, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
+import {
+  Alert,
+  Button,
+  ButtonVariant,
+  Split,
+  SplitItem,
+  Stack,
+  StackItem,
+} from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { taskStatuses } from '@utils/constants';
 import { VirtualMachineModelGroupVersionKind } from '@utils/crds/common/models';
@@ -128,6 +136,17 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                       </Button>
                     </StackItem>
                   </Stack>
+                )}
+                {pipe?.error?.reasons && !isEmpty(pipe?.error?.reasons) && (
+                  <div className="pf-v5-u-mt-sm">
+                    <Alert variant="danger" title={t('Error details')} isInline isPlain>
+                      <ul>
+                        {pipe.error.reasons.map((reason: string, idx: number) => (
+                          <li key={idx}>{reason}</li>
+                        ))}
+                      </ul>
+                    </Alert>
+                  </div>
                 )}
               </Td>
               <Td>
