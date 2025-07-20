@@ -48,17 +48,19 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
   return (
     <PageSection variant="light">
-      <SectionHeading text={t('Mappings')} />
       <MappingAlerts
         alerts={[
-          ...getMappingAlerts(
-            isEmpty(targetStorages),
-            isEmpty(sourceStorages),
-            isEmpty(sourceNetworks),
-          ),
+          ...getMappingAlerts({
+            resourcesError,
+            sourceNetworkEmpty: isEmpty(sourceNetworks),
+            sourceStoragesEmpty: isEmpty(sourceStorages),
+            targetStoragesEmpty: isEmpty(targetStorages),
+          }),
           alert,
         ].filter(Boolean)}
       />
+      <SectionHeading text={t('Mappings')} />
+
       <PlanMappingsSection
         plan={plan}
         planNetworkMaps={planNetworkMap!}

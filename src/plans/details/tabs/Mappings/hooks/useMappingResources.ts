@@ -29,6 +29,7 @@ import {
   getPlanSourceProviderName,
   getPlanStorageMapName,
 } from '@utils/crds/plans/selectors';
+import { isEmpty } from '@utils/helpers';
 
 type MappingResources = {
   loadingResources: boolean;
@@ -104,6 +105,24 @@ export const useMappingResources = (plan: V1beta1Plan): MappingResources => {
   const [targetStorages, targetStoragesLoading, targetStoragesError] =
     useOpenShiftStorages(targetProvider);
 
+  const resourcesError = () => {
+    if (!isEmpty(providersLoadError as Error)) return providersLoadError as Error;
+
+    if (!isEmpty(networkMapsError as Error)) return networkMapsError as Error;
+
+    if (!isEmpty(storageMapsError as Error)) return storageMapsError as Error;
+
+    if (!isEmpty(sourceNetworksError)) return sourceNetworksError!;
+
+    if (!isEmpty(targetNetworksError)) return targetNetworksError!;
+
+    if (!isEmpty(sourceStoragesError)) return sourceStoragesError!;
+
+    if (!isEmpty(targetStoragesError)) return targetStoragesError!;
+
+    return undefined;
+  };
+
   return {
     loadingResources:
       !providersLoaded ||
@@ -116,14 +135,7 @@ export const useMappingResources = (plan: V1beta1Plan): MappingResources => {
     networkMaps: networkMaps ?? [],
     planNetworkMap: planNetworkMaps ?? null,
     planStorageMap: planStorageMaps ?? null,
-    resourcesError:
-      providersLoadError ??
-      networkMapsError ??
-      storageMapsError ??
-      sourceNetworksError ??
-      targetNetworksError ??
-      sourceStoragesError ??
-      targetStoragesError,
+    resourcesError: resourcesError(),
     sourceNetworks: sourceNetworks ?? [],
     sourceStorages: sourceStorages ?? [],
     storageMaps: storageMaps ?? [],

@@ -9,22 +9,41 @@ import {
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { t } from '@utils/i18n';
 
-export const getMappingAlerts = (
-  targetStoragesEmpty: boolean,
-  sourceStoragesEmpty: boolean,
-  sourceNetworkEmpty: boolean,
-) => {
+type getMappingAlertsProps = {
+  targetStoragesEmpty: boolean;
+  sourceStoragesEmpty: boolean;
+  sourceNetworkEmpty: boolean;
+  resourcesError: Error | undefined;
+};
+
+export const getMappingAlerts: (props: getMappingAlertsProps) => string[] = ({
+  resourcesError,
+  sourceNetworkEmpty,
+  sourceStoragesEmpty,
+  targetStoragesEmpty,
+}) => {
   // Warn when missing inventory data, missing inventory will make
   // some editing options missing.
   const alerts = [];
 
   if (targetStoragesEmpty) {
     // Note: target network can't be missing, we always have Pod network.
-    alerts.push(t('Missing target storage inventory.'));
+    alerts.push(
+      t(
+        'The target storage mapping data from the inventory is not available: {{resourcesError}}.',
+        {
+          resourcesError: resourcesError?.message,
+        },
+      ),
+    );
   }
 
   if (sourceStoragesEmpty || sourceNetworkEmpty) {
-    alerts.push(t('Missing storage inventory.'));
+    alerts.push(
+      t('The source mapping data from the inventory is not available: {{resourcesError}}.', {
+        resourcesError: resourcesError?.message,
+      }),
+    );
   }
 
   return alerts;
@@ -47,12 +66,10 @@ export const getMappingPageMessage: (props: MappingPageMessageProps) => string |
     return t('Data is loading, please wait.');
   }
 
-  if (resourcesError) {
-    return t('Something is wrong, {{resourcesError}}.', { resourcesError: resourcesError.message });
-  }
-
   if (networkMapsEmpty || storageMapsEmpty) {
-    return t('No Mapping found.');
+    return t('The mapping data from the inventory is not available, {{resourcesError}}.', {
+      resourcesError: resourcesError?.message,
+    });
   }
 
   return null;
