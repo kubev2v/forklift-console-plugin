@@ -272,6 +272,7 @@
   "Enter the maximum number of concurrent VM migrations. If empty, the default value will be used.": "Enter the maximum number of concurrent VM migrations. If empty, the default value will be used.",
   "Error": "Error",
   "Error creating storage map": "Error creating storage map",
+  "Error details": "Error details",
   "Error updating storage map": "Error updating storage map",
   "ESXi": "ESXi",
   "ESXi host admin password": "ESXi host admin password",
