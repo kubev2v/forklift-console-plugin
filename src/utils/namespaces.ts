@@ -14,3 +14,13 @@ export const getDefaultNamespace = (): string => {
 
   return Namespace.OpenshiftMtv;
 };
+
+const SYSTEM_NAMESPACES_PREFIX = ['kube-', 'openshift-', 'kubernetes-'];
+const SYSTEM_NAMESPACES = ['default', 'openshift'];
+
+export const isSystemNamespace = (option: string) => {
+  const startsWithNamespace = SYSTEM_NAMESPACES_PREFIX.some((ns) => option.startsWith(ns));
+  const isNamespace = SYSTEM_NAMESPACES.includes(option);
+
+  return startsWithNamespace || isNamespace;
+};

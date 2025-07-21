@@ -1,6 +1,7 @@
 import { type FC, useMemo, useState } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
+import { isSystemNamespace } from 'src/utils/namespaces';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -11,16 +12,6 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
-
-const SYSTEM_NAMESPACES_PREFIX = ['kube-', 'openshift-', 'kubernetes-'];
-const SYSTEM_NAMESPACES = ['default', 'openshift'];
-
-const isSystemNamespace = (option: string) => {
-  const startsWithNamespace = SYSTEM_NAMESPACES_PREFIX.some((ns) => option.startsWith(ns));
-  const isNamespace = SYSTEM_NAMESPACES.includes(option);
-
-  return startsWithNamespace || isNamespace;
-};
 
 const TargetProjectField: FC = () => {
   const { t } = useForkliftTranslation();
