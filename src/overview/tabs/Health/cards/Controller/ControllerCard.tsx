@@ -45,7 +45,9 @@ const ControllerCard: FC<ControllerCardProps> = ({ limit, obj }) => {
       </CardHeader>
       <LoadingSuspend obj={pods} loaded={loaded} loadError={loadError}>
         <CardBody>
-          <PodsTable pods={pods} limit={limit} />
+          <div className="forklift-overview__pods-table">
+            <PodsTable pods={pods} limit={limit} />
+          </div>
         </CardBody>
       </LoadingSuspend>
     </Card>

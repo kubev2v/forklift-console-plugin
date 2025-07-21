@@ -26,6 +26,7 @@ type NetworkMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 's
   value: string;
   namespace: string;
   includeOwnerReferenced?: boolean;
+  testId?: string;
 };
 
 const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
@@ -34,6 +35,7 @@ const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
   namespace,
   onSelect,
   status,
+  testId,
   value,
 }) => {
   const { t } = useForkliftTranslation();
@@ -83,6 +85,7 @@ const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
       status={status}
       onSelect={onSelect}
       placeholder={t('Select network map')}
+      testId={testId}
     >
       <SelectList>
         {isEmpty(networkMaps)

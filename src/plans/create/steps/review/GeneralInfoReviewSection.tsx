@@ -31,6 +31,7 @@ const GeneralInfoReviewSection: FC = () => {
   return (
     <ExpandableReviewSection
       title={planStepNames[PlanWizardStepId.General]}
+      testId="review-general-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.General);
       }}
@@ -41,7 +42,9 @@ const GeneralInfoReviewSection: FC = () => {
             {generalFormFieldLabels[GeneralFormFieldId.PlanName]}
           </DescriptionListTerm>
 
-          <DescriptionListDescription>{planName}</DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-plan-name">
+            {planName}
+          </DescriptionListDescription>
         </DescriptionListGroup>
 
         <DescriptionListGroup>
@@ -49,7 +52,9 @@ const GeneralInfoReviewSection: FC = () => {
             {generalFormFieldLabels[GeneralFormFieldId.PlanProject]}
           </DescriptionListTerm>
 
-          <DescriptionListDescription>{planProject}</DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-plan-project">
+            {planProject}
+          </DescriptionListDescription>
         </DescriptionListGroup>
 
         <DescriptionListGroup>
@@ -57,7 +62,9 @@ const GeneralInfoReviewSection: FC = () => {
             {generalFormFieldLabels[GeneralFormFieldId.SourceProvider]}
           </DescriptionListTerm>
 
-          <DescriptionListDescription>{sourceProvider?.metadata?.name}</DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-source-provider">
+            {sourceProvider?.metadata?.name}
+          </DescriptionListDescription>
         </DescriptionListGroup>
 
         <DescriptionListGroup>
@@ -65,7 +72,9 @@ const GeneralInfoReviewSection: FC = () => {
             {generalFormFieldLabels[GeneralFormFieldId.TargetProvider]}
           </DescriptionListTerm>
 
-          <DescriptionListDescription>{targetProvider?.metadata?.name}</DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-target-provider">
+            {targetProvider?.metadata?.name}
+          </DescriptionListDescription>
         </DescriptionListGroup>
 
         <DescriptionListGroup>
@@ -73,7 +82,9 @@ const GeneralInfoReviewSection: FC = () => {
             {generalFormFieldLabels[GeneralFormFieldId.TargetProject]}
           </DescriptionListTerm>
 
-          <DescriptionListDescription>{targetProject}</DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-target-project">
+            {targetProject}
+          </DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>
     </ExpandableReviewSection>

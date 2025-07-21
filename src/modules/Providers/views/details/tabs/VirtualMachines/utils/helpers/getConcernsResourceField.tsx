@@ -1,6 +1,7 @@
 import { t } from '@utils/i18n';
 
 import ConcernsColumnPopover from '../../components/ConcernsColumnPopover';
+import { CustomFilterType } from '../../constants';
 import { concernFilter } from '../filters/concernFilter';
 
 export const getConcernsResourceField = () => ({
@@ -12,6 +13,6 @@ export const getConcernsResourceField = () => ({
   isVisible: true,
   jsonPath: '$.vm.concerns',
   label: t('Concerns'),
-  resourceFieldId: 'concerns',
+  resourceFieldId: CustomFilterType.Concerns,
   sortable: true,
 });

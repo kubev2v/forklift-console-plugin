@@ -90,6 +90,7 @@ const PlanProjectField: FC = () => {
                 field.onChange('');
               }}
               toggleProps={{
+                id: 'plan-project-select',
                 status: errors[GeneralFormFieldId.PlanProject] && MenuToggleStatus.danger,
               }}
             />

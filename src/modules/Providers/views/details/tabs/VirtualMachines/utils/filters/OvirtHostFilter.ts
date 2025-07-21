@@ -1,6 +1,8 @@
 import type { EnumValue } from '@components/common/utils/types';
 import { t } from '@utils/i18n';
 
+import { CustomFilterType } from '../../constants';
+
 const labelToFilterItem = (label: string): EnumValue =>
   label !== '' ? { id: label, label } : { id: label, label: 'Undefined' };
 
@@ -18,6 +20,6 @@ export const ovirtHostFilter = () => {
     }),
     placeholderLabel: t('Host'),
     primary: true,
-    type: 'host',
+    type: CustomFilterType.Host,
   };
 };

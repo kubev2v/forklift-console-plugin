@@ -19,6 +19,7 @@ const NetworkMapStep = () => {
     <WizardStepContainer
       title={planStepNames[PlanWizardStepId.NetworkMap]}
       description={t('Select an existing network map or use a new network map.')}
+      testId="create-plan-network-map-step"
     >
       <Form>
         <Controller

@@ -162,7 +162,6 @@ export const planFields: ResourceField[] = [
   },
   {
     filter: {
-      defaultValues: ['false'],
       placeholderLabel: t('Show archived'),
       standalone: true,
       type: FilterDefType.Slider,

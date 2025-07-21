@@ -2,17 +2,26 @@ import type { FC } from 'react';
 import { type FieldPath, useFieldArray } from 'react-hook-form';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
+import type { OVirtNicProfile } from '@kubev2v/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import type { CreatePlanFormData, MappingValue } from '../../types';
+import type { CreatePlanFormData, MappingValue, ProviderVirtualMachine } from '../../types';
 
-import { defaultNetMapping, netMapFieldLabels, NetworkMapFieldId } from './constants';
+import {
+  defaultNetMapping,
+  netMapFieldLabels,
+  NetworkMapFieldId,
+  type NetworkMapping,
+} from './constants';
 import SourceNetworkField from './SourceNetworkField';
 import TargetNetworkField from './TargetNetworkField';
 import { getNetworkMapFieldId, validateNetworkMap } from './utils';
 
 type NetworkMapFieldTableProps = {
+  networkMap: NetworkMapping[];
+  vms: Record<string, ProviderVirtualMachine>;
+  oVirtNicProfiles: OVirtNicProfile[];
   targetNetworks: Record<string, MappingValue>;
   usedSourceNetworks: MappingValue[];
   otherSourceNetworks: MappingValue[];
@@ -24,8 +33,10 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
   isLoading,
   loadError,
   otherSourceNetworks,
+  oVirtNicProfiles,
   targetNetworks,
   usedSourceNetworks,
+  vms,
 }) => {
   const { t } = useForkliftTranslation();
   const { control, setValue } = useCreatePlanFormContext();
@@ -38,7 +49,8 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
     control,
     name: NetworkMapFieldId.NetworkMap,
     rules: {
-      validate: (values) => validateNetworkMap(values, usedSourceNetworks),
+      validate: (values) =>
+        validateNetworkMap({ oVirtNicProfiles, usedSourceNetworks, values, vms }),
     },
   });
 

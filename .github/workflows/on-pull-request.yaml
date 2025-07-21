@@ -105,9 +105,11 @@ jobs:
           headed: false
           working-directory: testing
 
-      - name: Upload videos
+      - name: Upload videos and screenshots
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-videos
-          path: cypress/videos
+          name: cypress-test-artifacts
+          path: |
+            /tmp/gui-test-screenshots/videos/
+            /tmp/gui-test-screenshots/screenshots/

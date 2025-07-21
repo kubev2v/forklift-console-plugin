@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 import { type FC, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -51,11 +53,11 @@ import {
   useTableSortContext,
 } from '../TableSortContext';
 
+import { INITIAL_PAGE } from './utils/constants';
 import { reduceValueFilters } from './utils/reduceValueFilters';
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
 import './StandardPage.style.css';
-import { INITIAL_PAGE } from './utils/constants';
 
 export type StandardPageProps<T> = {
   dataSource: [T[], boolean, unknown];
@@ -178,22 +180,10 @@ const StandardPageInner = <T,>({
   );
 
   useEffect(() => {
-    if (!filteredData) {
-      setFinalFilteredData([]);
-      return;
-    }
-    if (!postFilterData) {
-      setFinalFilteredData(filteredData);
-      return;
-    }
-    setFinalFilteredData(postFilterData(filteredData, selectedFilters, fields));
-  }, [filteredData, postFilterData, selectedFilters, fields]);
-
-  useEffect(() => {
-    if (flatData) {
+    if (flatData && loaded && !error) {
       setSortedData([...flatData].sort(compareFn));
     }
-  }, [flatData, compareFn, loaded]);
+  }, [flatData, compareFn, loaded, error]);
 
   const metaMatcher = useMemo(
     () => createMetaMatcher(selectedFilters, fields, supportedMatchers),
@@ -201,10 +191,28 @@ const StandardPageInner = <T,>({
   );
 
   useEffect(() => {
-    if (sortedData) {
+    if (sortedData && loaded && !error) {
       setFilteredData(sortedData.filter(metaMatcher));
     }
-  }, [sortedData, metaMatcher]);
+  }, [sortedData, metaMatcher, loaded, error]);
+
+  useEffect(() => {
+    if (!loaded || error) {
+      return;
+    }
+
+    if (!filteredData || filteredData.length === 0) {
+      setFinalFilteredData([]);
+      return;
+    }
+
+    if (!postFilterData) {
+      setFinalFilteredData(filteredData);
+      return;
+    }
+
+    setFinalFilteredData(postFilterData(filteredData, selectedFilters, fields));
+  }, [filteredData, postFilterData, selectedFilters, fields, loaded, error]);
 
   useEffect(() => {
     if (Object.values(selectedFilters).some((filter) => !isEmpty(filter))) {

@@ -8,20 +8,9 @@ import { ProviderFieldsId, VSphereEndpointType } from 'src/providers/utils/const
 import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import VddkUploader from '@components/VddkUploader/VddkUploader';
-import {
-  Alert,
-  Button,
-  ButtonVariant,
-  Checkbox,
-  Form,
-  Popover,
-  Radio,
-  Stack,
-  StackItem,
-  TextInput,
-} from '@patternfly/react-core';
-import { HelpIcon } from '@patternfly/react-icons';
+import { Alert, Checkbox, Form, Radio, Stack, StackItem, TextInput } from '@patternfly/react-core';
 
 import { YES_VALUE } from '../utils/constants';
 
@@ -128,13 +117,13 @@ const VMwareURLVddkEditItems: FC<VMwareURLVddkEditItemsProps> = ({
         helperTextInvalid={vddkInitImageValidation.msg}
         validated={emptyVddkInitImage === YES_VALUE ? 'default' : vddkInitImageValidation.type}
         labelIcon={
-          <Popover
-            headerContent={t('VDDK init image')}
-            bodyContent={VDDKHelperText}
-            alertSeverityVariant="info"
+          <HelpIconPopover
+            header={t('VDDK init image')}
+            onClick={onClick}
+            popoverProps={{ alertSeverityVariant: 'info' }}
           >
-            <Button variant={ButtonVariant.plain} onClick={onClick} icon={<HelpIcon />} />
-          </Popover>
+            <VDDKHelperText />
+          </HelpIconPopover>
         }
       >
         <Stack hasGutter>

@@ -142,6 +142,14 @@ export const createEslintConfig = (ideMode = false) =>
         'import/no-named-as-default-member': 'off',
         'import/no-unresolved': 'off',
         'import/order': 'off',
+        'max-lines': [
+          'error',
+          {
+            max: 300,
+            skipBlankLines: true,
+            skipComments: true,
+          },
+        ],
         'max-lines-per-function': ['error', 150],
         'max-statements': 'off',
         'new-cap': [
@@ -233,6 +241,21 @@ export const createEslintConfig = (ideMode = false) =>
         react: {
           version: 'detect',
         },
+      },
+    },
+    // Testing directory specific rules
+    {
+      files: ['testing/**/*.{js,ts,jsx,tsx}'],
+      rules: {
+        '@cspell/spellchecker': 'off',
+        '@typescript-eslint/class-methods-use-this': 'off',
+        '@typescript-eslint/consistent-type-definitions': 'off',
+        '@typescript-eslint/explicit-member-accessibility': 'off',
+        '@typescript-eslint/no-magic-numbers': 'off',
+        '@typescript-eslint/no-namespace': 'off',
+        'max-lines-per-function': 'off',
+        'perfectionist/sort-objects': 'off',
+        'require-unicode-regexp': 'off',
       },
     },
     prettier,

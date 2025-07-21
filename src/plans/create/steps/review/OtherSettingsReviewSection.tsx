@@ -37,7 +37,7 @@ const OtherSettingsReviewSection: FC = () => {
       OtherSettingsFormFieldId.TransferNetwork,
       OtherSettingsFormFieldId.PreserveStaticIps,
       OtherSettingsFormFieldId.RootDevice,
-      OtherSettingsFormFieldId.SharedDisks,
+      OtherSettingsFormFieldId.MigrateSharedDisks,
     ],
   });
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
@@ -47,6 +47,7 @@ const OtherSettingsReviewSection: FC = () => {
   return (
     <ExpandableReviewSection
       title={planStepNames[PlanWizardStepId.OtherSettings]}
+      testId="review-other-settings-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.OtherSettings);
       }}
@@ -59,10 +60,15 @@ const OtherSettingsReviewSection: FC = () => {
             </DescriptionListTerm>
 
             {hasNoDiskPassPhrases ? (
-              <DescriptionListDescription>{t('None')}</DescriptionListDescription>
+              <DescriptionListDescription data-testid="review-disk-decryption-passphrases">
+                {t('None')}
+              </DescriptionListDescription>
             ) : (
               diskPassPhrases.map((diskPassPhrase) => (
-                <DescriptionListDescription key={diskPassPhrase.value}>
+                <DescriptionListDescription
+                  key={diskPassPhrase.value}
+                  data-testid="review-disk-decryption-passphrases"
+                >
                   {diskPassPhrase.value}
                 </DescriptionListDescription>
               ))
@@ -75,7 +81,7 @@ const OtherSettingsReviewSection: FC = () => {
             {otherFormFieldLabels[OtherSettingsFormFieldId.TransferNetwork]}
           </DescriptionListTerm>
 
-          <DescriptionListDescription>
+          <DescriptionListDescription data-testid="review-transfer-network">
             {transferNetwork?.name ?? t('Target provider default')}
           </DescriptionListDescription>
         </DescriptionListGroup>
@@ -87,7 +93,7 @@ const OtherSettingsReviewSection: FC = () => {
                 {otherFormFieldLabels[OtherSettingsFormFieldId.PreserveStaticIps]}
               </DescriptionListTerm>
 
-              <DescriptionListDescription>
+              <DescriptionListDescription data-testid="review-preserve-static-ips">
                 {preserveStaticIps ? t('Enabled') : t('Disabled')}
               </DescriptionListDescription>
             </DescriptionListGroup>
@@ -97,17 +103,17 @@ const OtherSettingsReviewSection: FC = () => {
                 {otherFormFieldLabels[OtherSettingsFormFieldId.RootDevice]}
               </DescriptionListTerm>
 
-              <DescriptionListDescription>
+              <DescriptionListDescription data-testid="review-root-device">
                 {rootDevice ?? t('First root device')}
               </DescriptionListDescription>
             </DescriptionListGroup>
 
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {otherFormFieldLabels[OtherSettingsFormFieldId.SharedDisks]}
+                {otherFormFieldLabels[OtherSettingsFormFieldId.MigrateSharedDisks]}
               </DescriptionListTerm>
 
-              <DescriptionListDescription>
+              <DescriptionListDescription data-testid="review-shared-disks">
                 {sharedDisks ? t('Enabled') : t('Disabled')}
               </DescriptionListDescription>
             </DescriptionListGroup>

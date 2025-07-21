@@ -3,6 +3,8 @@ import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import type { EnumValue } from '@components/common/utils/types';
 import { t } from '@utils/i18n';
 
+import { CustomFilterType } from '../../constants';
+
 export const concernFilter = () => ({
   dynamicFilter: (items: { vm: { concerns: { label: string }[] } }[]) => ({
     values: [
@@ -28,5 +30,5 @@ export const concernFilter = () => ({
   ],
   placeholderLabel: t('Concerns'),
   primary: true,
-  type: 'concerns',
+  type: CustomFilterType.Concerns,
 });

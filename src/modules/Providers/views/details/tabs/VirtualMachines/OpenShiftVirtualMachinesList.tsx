@@ -10,6 +10,7 @@ import type { VmData } from './components/VMCellProps';
 import { getOpenShiftFeatureMap } from './utils/helpers/getOpenShiftFeatureMap';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
+import { CustomFilterType } from './constants';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
 
 const openShiftVmFieldsMetadataFactory = [
@@ -53,14 +54,14 @@ const openShiftVmFieldsMetadataFactory = [
   {
     filter: {
       placeholderLabel: t('Filter by features'),
-      type: 'features',
+      type: CustomFilterType.Features,
       values: enumToTuple(toVmFeatureEnum()),
     },
     isIdentity: false,
     isVisible: true,
     jsonPath: (data: VmData) => getOpenShiftFeatureMap(data?.vm),
     label: t('Features'),
-    resourceFieldId: 'features',
+    resourceFieldId: CustomFilterType.Features,
     sortable: true,
   },
   {

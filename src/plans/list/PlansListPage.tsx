@@ -11,6 +11,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import PlanRow from './components/PlanRow/PlanRow';
 import PlansAddButton from './components/PlansAddButton';
 import PlansEmptyState from './components/PlansEmptyState';
+import { PlanTableResourceId } from './utils/constants';
 import { planFields } from './utils/planFields';
 
 import './PlansListPage.style.css';
@@ -41,7 +42,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
       data-testid="plans-list"
       addButton={
         <PlansAddButton
-          dataTestId="add-network-map-button"
+          dataTestId="create-plan-button"
           namespace={namespace}
           canCreate={canCreate}
         />
@@ -54,6 +55,11 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
       userSettings={userSettings}
       customNoResultsFound={<PlansEmptyState namespace={namespace} />}
       page={INITIAL_PAGE}
+      postFilterData={(data, selectedFilters) =>
+        selectedFilters[PlanTableResourceId.Archived]?.[0] === 'true'
+          ? data
+          : data.filter((plan) => !plan?.spec?.archived)
+      }
     />
   );
 };

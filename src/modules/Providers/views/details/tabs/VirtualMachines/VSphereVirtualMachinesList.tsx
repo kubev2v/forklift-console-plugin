@@ -13,6 +13,7 @@ import { getConcernsResourceField } from './utils/helpers/getConcernsResourceFie
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
+import { CustomFilterType } from './constants';
 import { VSphereVirtualMachinesCells } from './VSphereVirtualMachinesRow';
 
 const vSphereVmFieldsMetadataFactory = [
@@ -35,7 +36,7 @@ const vSphereVmFieldsMetadataFactory = [
     isVisible: true,
     jsonPath: '$.hostName',
     label: t('Host'),
-    resourceFieldId: 'host',
+    resourceFieldId: CustomFilterType.Host,
     sortable: true,
   },
   {
@@ -101,7 +102,7 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = 
    */
   const newVMData = vmData
     ?.filter((data) => !(data.vm as VSphereVM).isTemplate)
-    .map((data) => {
+    ?.map((data) => {
       const vm = data.vm as VSphereVM;
       const folder = foldersDict?.[vm.parent.id];
       const host: OVirtHost | VSphereHostInventory = hostsDict?.[vm.host];
