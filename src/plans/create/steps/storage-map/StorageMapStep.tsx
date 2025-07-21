@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
@@ -15,31 +14,21 @@ import NewStorageMapFields from './NewStorageMapFields';
 const StorageMapStep = () => {
   const { t } = useForkliftTranslation();
   const { control, trigger, unregister } = useCreatePlanFormContext();
-  const storageMapType = useWatch({
+
+  const [existingStorageMap, storageMap] = useWatch({
     control,
-    name: CreatePlanStorageMapFieldId.StorageMapType,
+    name: [CreatePlanStorageMapFieldId.ExistingStorageMap, CreatePlanStorageMapFieldId.StorageMap],
   });
-  const prevStorageMapType = useRef(storageMapType);
 
-  useEffect(() => {
-    if (prevStorageMapType.current === storageMapType) {
-      return;
-    }
-
-    prevStorageMapType.current = storageMapType;
-
-    (async () => {
-      try {
-        if (storageMapType === StorageMapType.Existing) {
-          await trigger(CreatePlanStorageMapFieldId.ExistingStorageMap);
-        } else if (storageMapType === StorageMapType.New) {
-          await trigger(CreatePlanStorageMapFieldId.StorageMap);
-        }
-      } catch {
-        // Silently handle validation errors
+  const handleStorageMapTypeChange = (newType: StorageMapType) => {
+    setTimeout(async () => {
+      if (newType === StorageMapType.Existing && !existingStorageMap) {
+        await trigger(CreatePlanStorageMapFieldId.ExistingStorageMap);
+      } else if (newType === StorageMapType.New && !storageMap) {
+        await trigger(CreatePlanStorageMapFieldId.StorageMap);
       }
-    })();
-  }, [storageMapType, trigger]);
+    }, 0);
+  };
 
   return (
     <WizardStepContainer
@@ -68,6 +57,7 @@ const StorageMapStep = () => {
                         CreatePlanStorageMapFieldId.StorageMap,
                         CreatePlanStorageMapFieldId.StorageMapName,
                       ]);
+                      handleStorageMapTypeChange(StorageMapType.Existing);
                     }}
                     description={t(
                       'Existing storage map options are limited to those without an owner reference. Upon creation of this plan, a new storage map will be created with this plan as its owner.',
@@ -95,6 +85,7 @@ const StorageMapStep = () => {
                     onChange={() => {
                       storageTypeField.onChange(StorageMapType.New);
                       unregister(CreatePlanStorageMapFieldId.ExistingStorageMap);
+                      handleStorageMapTypeChange(StorageMapType.New);
                     }}
                   />
 

@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
@@ -15,31 +14,21 @@ import NewNetworkMapFields from './NewNetworkMapFields';
 const NetworkMapStep = () => {
   const { t } = useForkliftTranslation();
   const { control, trigger, unregister } = useCreatePlanFormContext();
-  const networkMapType = useWatch({
+
+  const [existingNetworkMap, networkMap] = useWatch({
     control,
-    name: NetworkMapFieldId.NetworkMapType,
+    name: [NetworkMapFieldId.ExistingNetworkMap, NetworkMapFieldId.NetworkMap],
   });
-  const prevNetworkMapType = useRef(networkMapType);
 
-  useEffect(() => {
-    if (prevNetworkMapType.current === networkMapType) {
-      return;
-    }
-
-    prevNetworkMapType.current = networkMapType;
-
-    (async () => {
-      try {
-        if (networkMapType === NetworkMapType.Existing) {
-          await trigger(NetworkMapFieldId.ExistingNetworkMap);
-        } else if (networkMapType === NetworkMapType.New) {
-          await trigger(NetworkMapFieldId.NetworkMap);
-        }
-      } catch {
-        // Silently handle validation errors
+  const handleNetworkMapTypeChange = (newType: NetworkMapType) => {
+    setTimeout(async () => {
+      if (newType === NetworkMapType.Existing && !existingNetworkMap) {
+        await trigger(NetworkMapFieldId.ExistingNetworkMap);
+      } else if (newType === NetworkMapType.New && !networkMap) {
+        await trigger(NetworkMapFieldId.NetworkMap);
       }
-    })();
-  }, [networkMapType, trigger]);
+    }, 0);
+  };
 
   return (
     <WizardStepContainer
@@ -65,6 +54,7 @@ const NetworkMapStep = () => {
                     onChange={() => {
                       networkTypeField.onChange(NetworkMapType.Existing);
                       unregister([NetworkMapFieldId.NetworkMap, NetworkMapFieldId.NetworkMapName]);
+                      handleNetworkMapTypeChange(NetworkMapType.Existing);
                     }}
                     description={t(
                       'Existing network map options are limited to those without an owner reference. Upon creation of this plan, a new network map will be created with this plan as its owner.',
@@ -92,6 +82,7 @@ const NetworkMapStep = () => {
                     onChange={() => {
                       networkTypeField.onChange(NetworkMapType.New);
                       unregister(NetworkMapFieldId.ExistingNetworkMap);
+                      handleNetworkMapTypeChange(NetworkMapType.New);
                     }}
                   />
 
