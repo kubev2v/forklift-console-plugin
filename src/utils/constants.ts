@@ -7,6 +7,9 @@ export const Namespace = {
   OpenshiftMtv: 'openshift-mtv',
 };
 
+export const SYSTEM_NAMESPACES_PREFIX = ['kube-', 'openshift-', 'kubernetes-'];
+export const SYSTEM_NAMESPACES = ['default', 'openshift'];
+
 export const ALL_PROJECTS_KEY = '#ALL_NS#';
 
 export enum ServerBranding {
