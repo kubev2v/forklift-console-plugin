@@ -3,6 +3,13 @@ import { createContext } from 'react';
 import type { WizardStepType } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
+import { GeneralFormFieldId } from './steps/general-information/constants';
+import { HooksFormFieldId } from './steps/migration-hooks/constants';
+import { MigrationTypeFieldId } from './steps/migration-type/constants';
+import { NetworkMapFieldId } from './steps/network-map/constants';
+import { OtherSettingsFormFieldId } from './steps/other-settings/constants';
+import { CreatePlanStorageMapFieldId } from './steps/storage-map/constants';
+import { VmFormFieldId } from './steps/virtual-machines/constants';
 import type { CreatePlanWizardContextProps } from './types';
 
 export enum PlanWizardStepId {
@@ -52,3 +59,16 @@ export const firstStep: WizardStepType = {
 };
 
 export const CreatePlanWizardContext = createContext({} as CreatePlanWizardContextProps);
+
+export const stepFieldMap: Record<PlanWizardStepId, string[]> = {
+  [PlanWizardStepId.AdditionalSetup]: [],
+  [PlanWizardStepId.BasicSetup]: [],
+  [PlanWizardStepId.General]: Object.values(GeneralFormFieldId),
+  [PlanWizardStepId.Hooks]: Object.values(HooksFormFieldId),
+  [PlanWizardStepId.MigrationType]: Object.values(MigrationTypeFieldId),
+  [PlanWizardStepId.NetworkMap]: Object.values(NetworkMapFieldId),
+  [PlanWizardStepId.OtherSettings]: Object.values(OtherSettingsFormFieldId),
+  [PlanWizardStepId.ReviewAndCreate]: [],
+  [PlanWizardStepId.StorageMap]: Object.values(CreatePlanStorageMapFieldId),
+  [PlanWizardStepId.VirtualMachines]: Object.values(VmFormFieldId),
+};

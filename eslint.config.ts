@@ -150,7 +150,15 @@ export const createEslintConfig = (ideMode = false) =>
             skipComments: true,
           },
         ],
-        'max-lines-per-function': ['error', 150],
+        'max-lines-per-function': [
+          'error',
+          {
+            IIFEs: true,
+            max: 150,
+            skipBlankLines: true,
+            skipComments: true,
+          },
+        ],
         'max-statements': 'off',
         'new-cap': [
           'error',

@@ -1,4 +1,4 @@
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Flex, FlexItem, Form, Radio, Stack } from '@patternfly/react-core';
@@ -13,7 +13,22 @@ import NewStorageMapFields from './NewStorageMapFields';
 
 const StorageMapStep = () => {
   const { t } = useForkliftTranslation();
-  const { control, unregister } = useCreatePlanFormContext();
+  const { control, trigger, unregister } = useCreatePlanFormContext();
+
+  const [existingStorageMap, storageMap] = useWatch({
+    control,
+    name: [CreatePlanStorageMapFieldId.ExistingStorageMap, CreatePlanStorageMapFieldId.StorageMap],
+  });
+
+  const handleStorageMapTypeChange = (newType: StorageMapType) => {
+    setTimeout(async () => {
+      if (newType === StorageMapType.Existing && !existingStorageMap) {
+        await trigger(CreatePlanStorageMapFieldId.ExistingStorageMap);
+      } else if (newType === StorageMapType.New && !storageMap) {
+        await trigger(CreatePlanStorageMapFieldId.StorageMap);
+      }
+    }, 0);
+  };
 
   return (
     <WizardStepContainer
@@ -42,6 +57,7 @@ const StorageMapStep = () => {
                         CreatePlanStorageMapFieldId.StorageMap,
                         CreatePlanStorageMapFieldId.StorageMapName,
                       ]);
+                      handleStorageMapTypeChange(StorageMapType.Existing);
                     }}
                     description={t(
                       'Existing storage map options are limited to those without an owner reference. Upon creation of this plan, a new storage map will be created with this plan as its owner.',
@@ -69,6 +85,7 @@ const StorageMapStep = () => {
                     onChange={() => {
                       storageTypeField.onChange(StorageMapType.New);
                       unregister(CreatePlanStorageMapFieldId.ExistingStorageMap);
+                      handleStorageMapTypeChange(StorageMapType.New);
                     }}
                   />
 
