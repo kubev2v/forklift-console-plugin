@@ -12,11 +12,19 @@ import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
 import type { CategorizedSourceMappings, MappingValue, ProviderNetwork } from '../../types';
+import { hasMultiplePodNetworkMappings } from '../../utils/hasMultiplePodNetworkMappings';
 import { getMapResourceLabel } from '../utils';
 
 import { defaultNetMapping, NetworkMapFieldId, type NetworkMapping } from './constants';
 
 type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
+
+type ValidateNetworkMapParams = {
+  values: NetworkMapping[];
+  usedSourceNetworks: MappingValue[];
+  vms: Record<string, ProviderVirtualMachine>;
+  oVirtNicProfiles: OVirtNicProfile[];
+};
 
 /**
  * Creates a field ID for a network mapping at a specific index
@@ -89,24 +97,28 @@ export const getSourceNetworkValues = (
 };
 
 /**
- * Validates network mappings by ensuring all networks detected on source VMs
- * have corresponding mappings in the provided values
+ * Validates that all detected networks have corresponding mappings and that no vm with 2 nics are both
+ * mapped to pod networking.
  *
- * @param values - Array of network mappings configured by user
- * @param usedSourceNetworks - Array of networks that need to be mapped
- * @returns Error message string if any network is unmapped, undefined if all are mapped
+ * @param values - Network mappings configured by user
+ * @param usedSourceNetworks - Networks that need to be mapped
+ * @returns Error message if mapping is not valid, undefined otherwise
  */
-export const validateNetworkMap = (
-  values: NetworkMapping[],
-  usedSourceNetworks: MappingValue[],
-) => {
-  if (
-    !usedSourceNetworks.every((sourceNetwork) =>
-      values.find((value) => value[NetworkMapFieldId.SourceNetwork].name === sourceNetwork.name),
-    )
-  ) {
-    return t('All networks detected on the selected VMs require a mapping.');
-  }
+export const validateNetworkMap = (validateNetworkMapParams: ValidateNetworkMapParams) => {
+  const { oVirtNicProfiles, usedSourceNetworks, values, vms } = validateNetworkMapParams;
+  const mappedNetworkNames = new Set(
+    values.map((value) => value[NetworkMapFieldId.SourceNetwork].name),
+  );
+  const hasUnmappedNetwork = !usedSourceNetworks.every((sourceNetwork) =>
+    mappedNetworkNames.has(sourceNetwork.name),
+  );
+  if (hasUnmappedNetwork) return t('All networks detected on the selected VMs require a mapping.');
+
+  const hasMultiplePodNetwork = hasMultiplePodNetworkMappings(values, vms, oVirtNicProfiles);
+  if (hasMultiplePodNetwork)
+    return t(
+      'At least one VM is detected with more than one interface mapped to Pod Network. This is not allowed.',
+    );
 
   return undefined;
 };
