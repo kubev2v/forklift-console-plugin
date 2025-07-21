@@ -142,6 +142,14 @@ export const createEslintConfig = (ideMode = false) =>
         'import/no-named-as-default-member': 'off',
         'import/no-unresolved': 'off',
         'import/order': 'off',
+        'max-lines': [
+          'error',
+          {
+            max: 300,
+            skipBlankLines: true,
+            skipComments: true,
+          },
+        ],
         'max-lines-per-function': ['error', 150],
         'max-statements': 'off',
         'new-cap': [
