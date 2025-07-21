@@ -62,6 +62,7 @@ const GeneralInformationStep: FC = () => {
               control={control}
               render={({ field }) => (
                 <ProviderSelect
+                  ref={field.ref}
                   testId="source-provider-select"
                   placeholder={t('Select source provider')}
                   id={GeneralFormFieldId.SourceProvider}
@@ -93,6 +94,7 @@ const GeneralInformationStep: FC = () => {
               control={control}
               render={({ field }) => (
                 <ProviderSelect
+                  ref={field.ref}
                   testId="target-provider-select"
                   isTarget
                   placeholder={t('Select target provider')}

@@ -29,6 +29,7 @@ const ExistingStorageMapField: FC = () => {
         control={control}
         render={({ field }) => (
           <StorageMapSelect
+            ref={field.ref}
             testId="storage-map-select"
             id={CreatePlanStorageMapFieldId.ExistingStorageMap}
             value={field.value?.metadata?.name ?? ''}

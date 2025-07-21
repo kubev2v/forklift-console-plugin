@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { StorageMappingValue, TargetStorage } from 'src/storageMaps/types';
 
-import Select from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -24,6 +24,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
       control={control}
       render={({ field }) => (
         <Select
+          ref={field.ref}
           id={fieldId}
           onSelect={(_, value) => {
             field.onChange(value);

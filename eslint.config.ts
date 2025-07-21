@@ -182,6 +182,14 @@ export const createEslintConfig = (ideMode = false) =>
             ],
           },
         ],
+        'no-restricted-syntax': [
+          'warn',
+          {
+            message: "Use the custom Select from '@components/common/Select' for consistency.",
+            selector:
+              'Program:has(ImportDeclaration[source.value="@patternfly/react-core"] ImportSpecifier[imported.name="Select"]) JSXElement[openingElement.name.name="Select"]',
+          },
+        ],
         'no-ternary': 'off',
         'no-undefined': 'off',
         'no-unused-vars': 'off',
@@ -251,9 +259,16 @@ export const createEslintConfig = (ideMode = false) =>
         },
       },
     },
+    // TypeaheadSelect component specific rules
+    {
+      files: ['**/TypeaheadSelect/*.tsx'],
+      rules: {
+        'no-restricted-syntax': 'off',
+      },
+    },
     // Testing directory specific rules
     {
-      files: ['testing/**/*.{js,ts,jsx,tsx}'],
+      files: ['testing/**/*.{js,ts,jsx,tsx}', '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}'],
       rules: {
         '@cspell/spellchecker': 'off',
         '@typescript-eslint/class-methods-use-this': 'off',
@@ -263,6 +278,7 @@ export const createEslintConfig = (ideMode = false) =>
         '@typescript-eslint/no-namespace': 'off',
         'max-lines-per-function': 'off',
         'perfectionist/sort-objects': 'off',
+        'react-refresh/only-export-components': 'off',
         'require-unicode-regexp': 'off',
       },
     },
