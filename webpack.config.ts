@@ -32,6 +32,7 @@ const config: Configuration = {
     client: {
       progress: true,
     },
+    compress: true, // Enable gzip compression
     devMiddleware: {
       writeToDisk: true,
     },
@@ -42,6 +43,7 @@ const config: Configuration = {
       'Cache-Control': 'no-store', // Jan-4-2024, workaround for a caching bug in bridge
       'Service-Worker-Allowed': '/', // Needed to support MockServiceWorker
     },
+    historyApiFallback: true, // Better SPA routing support
     hot: true,
     port: 9001,
     static: ['./dist'],
@@ -57,6 +59,10 @@ const config: Configuration = {
         use: [
           {
             loader: 'ts-loader',
+            options: {
+              experimentalWatchApi: true, // Faster incremental builds
+              transpileOnly: true, // Skip type checking for faster builds
+            },
           },
         ],
       },
@@ -96,10 +102,11 @@ const config: Configuration = {
     chunkFilename: '[name]-chunk.js',
     filename: '[name]-bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: `/api/plugins/${pluginMetadata.name}/`,
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin({
+      async: true,
+      devServer: true,
       typescript: {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
         diagnosticOptions: {
