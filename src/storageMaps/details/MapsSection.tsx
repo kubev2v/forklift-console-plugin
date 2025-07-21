@@ -52,7 +52,11 @@ const MapsSection: FC<MapsSectionProps> = ({ storageMap }) => {
     setUpdateError(undefined);
 
     try {
-      const updatedStorageMap = transformFormValuesToK8sSpec(formValues, storageMap);
+      const updatedStorageMap = transformFormValuesToK8sSpec(
+        formValues,
+        storageMap,
+        sourceProvider?.spec?.type === PROVIDER_TYPES.openshift,
+      );
 
       if (updatedStorageMap) {
         await k8sUpdate({

@@ -70,7 +70,7 @@ export type CreatePlanFormData = FieldValues & {
   [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
   [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
-  [OtherSettingsFormFieldId.SharedDisks]: boolean;
+  [OtherSettingsFormFieldId.MigrateSharedDisks]: boolean;
   [HooksFormFieldId.PreMigration]: MigrationHook;
   [HooksFormFieldId.PostMigration]: MigrationHook;
   [OtherSettingsFormFieldId.RootDevice]: string;
@@ -97,7 +97,7 @@ export type CreatePlanParams = {
   preserveStaticIps?: boolean;
   rootDevice?: string;
   transferNetwork?: V1beta1PlanSpecTransferNetwork;
-  sharedDisks?: boolean;
+  migrateSharedDisks?: boolean;
   luks?: V1beta1PlanSpecVmsLuks;
   preHook?: V1beta1Hook;
   postHook?: V1beta1Hook;

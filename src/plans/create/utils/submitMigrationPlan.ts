@@ -23,6 +23,7 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
     diskDecryptionPassPhrases,
     existingNetworkMap,
     existingStorageMap,
+    migrateSharedDisks,
     migrationType,
     networkMap: newNetworkMap,
     networkMapName,
@@ -32,7 +33,6 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
     preMigrationHook,
     preserveStaticIps,
     rootDevice,
-    sharedDisks,
     sourceProvider,
     storageMap: newStorageMap,
     storageMapName,
@@ -96,6 +96,7 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
   // Create the migration plan
   const createdPlanRef = await createPlan({
     luks: createdSecret ? { name: createdSecret.metadata?.name } : undefined,
+    migrateSharedDisks,
     migrationType,
     networkMap: planNetworkMap,
     planName,
@@ -104,7 +105,6 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
     preHook: createdHooks.preHook,
     preserveStaticIps,
     rootDevice,
-    sharedDisks,
     sourceProvider,
     storageMap: planStorageMap,
     targetProject,

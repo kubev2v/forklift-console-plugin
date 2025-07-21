@@ -4,6 +4,7 @@ import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
 
+import type { ProviderType } from '@kubev2v/types';
 import { Label } from '@patternfly/react-core';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
@@ -15,10 +16,10 @@ export const TypeDetailsItem: FC<ProviderDetailsItemProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const type = PROVIDERS[provider?.spec?.type] || provider?.spec?.type;
+  const type = PROVIDERS[provider?.spec?.type as ProviderType] ?? provider?.spec?.type;
 
   const defaultMoreInfoLink =
-    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.8/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-virt_cnv#adding-source-provider_cnv';
+    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-virt_cnv#adding-source-provider_cnv';
   const defaultHelpContent = t(
     `Specify the type of source provider. Allowed values are ova, ovirt, vsphere,
       openshift, and openstack. This label is needed to verify the credentials are correct when the remote system is accessible and, for RHV, to retrieve the Manager CA certificate when

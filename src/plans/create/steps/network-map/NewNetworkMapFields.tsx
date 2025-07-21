@@ -79,6 +79,9 @@ const NewNetworkMapFields: FC = () => {
       )}
 
       <NetworkMapFieldTable
+        networkMap={networkMap}
+        vms={vms}
+        oVirtNicProfiles={oVirtNicProfiles}
         targetNetworks={targetNetworkMap}
         usedSourceNetworks={usedSourceNetworks}
         otherSourceNetworks={otherSourceNetworks}

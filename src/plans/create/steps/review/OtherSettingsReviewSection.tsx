@@ -37,7 +37,7 @@ const OtherSettingsReviewSection: FC = () => {
       OtherSettingsFormFieldId.TransferNetwork,
       OtherSettingsFormFieldId.PreserveStaticIps,
       OtherSettingsFormFieldId.RootDevice,
-      OtherSettingsFormFieldId.SharedDisks,
+      OtherSettingsFormFieldId.MigrateSharedDisks,
     ],
   });
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
@@ -104,7 +104,7 @@ const OtherSettingsReviewSection: FC = () => {
 
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {otherFormFieldLabels[OtherSettingsFormFieldId.SharedDisks]}
+                {otherFormFieldLabels[OtherSettingsFormFieldId.MigrateSharedDisks]}
               </DescriptionListTerm>
 
               <DescriptionListDescription>
