@@ -2,8 +2,7 @@ import type { Page } from '@playwright/test';
 
 export const setupDatastoresIntercepts = async (page: Page, sourceProviderType = 'vsphere') => {
   // Handle both single and double slash variations
-  const endpoint1 = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1/datastores`;
-  const endpoint2 = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1//datastores`;
+  const endpoint = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1/datastores`;
 
   const responseBody = JSON.stringify([
     {
@@ -16,16 +15,7 @@ export const setupDatastoresIntercepts = async (page: Page, sourceProviderType =
     },
   ]);
 
-  // Set up routes for both variations
-  await page.route(endpoint1, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: responseBody,
-    });
-  });
-
-  await page.route(endpoint2, async (route) => {
+  await page.route(endpoint, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',

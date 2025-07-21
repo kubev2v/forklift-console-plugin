@@ -2,8 +2,7 @@ import type { Page } from '@playwright/test';
 
 export const setupFoldersIntercepts = async (page: Page, sourceProviderType = 'vsphere') => {
   // Handle both single and double slash variations
-  const endpoint1 = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1/folders?detail=4`;
-  const endpoint2 = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1//folders?detail=4`;
+  const endpoint = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1/folders?detail=4`;
 
   const responseBody = JSON.stringify([
     {
@@ -18,16 +17,7 @@ export const setupFoldersIntercepts = async (page: Page, sourceProviderType = 'v
     },
   ]);
 
-  // Set up routes for both variations
-  await page.route(endpoint1, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: responseBody,
-    });
-  });
-
-  await page.route(endpoint2, async (route) => {
+  await page.route(endpoint, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',

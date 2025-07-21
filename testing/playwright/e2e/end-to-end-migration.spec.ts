@@ -12,14 +12,7 @@ test.describe('Plans - Critical End-to-End Migration', () => {
     await plansPage.navigateFromMainMenu();
   });
 
-  // test('should show Create Plan button on list page', async ({ page }) => {
-  //   const plansPage = new PlansListPage(page);
-
-  //   await plansPage.waitForPageLoad();
-  //   await plansPage.assertCreatePlanButtonEnabled();
-  // });
-
-  test('should complete full migration plan lifecycle', async ({ page }) => {
+  test('should run plan creation wizard', async ({ page }) => {
     const plansPage = new PlansListPage(page);
     const createWizard = new CreatePlanWizardPage(page);
 

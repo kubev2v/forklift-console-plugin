@@ -7,8 +7,7 @@ export const setupVirtualMachinesIntercepts = async (
   sourceProviderType = 'vsphere',
 ) => {
   // Handle both single and double slash variations
-  const endpoint1 = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1/vms?detail=4`;
-  const endpoint2 = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1//vms?detail=4`;
+  const endpoint = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1/vms?detail=4`;
 
   const responseBody = JSON.stringify(
     TEST_DATA.virtualMachines.map((vm) => ({
@@ -55,16 +54,7 @@ export const setupVirtualMachinesIntercepts = async (
     })),
   );
 
-  // Set up routes for both variations
-  await page.route(endpoint1, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: responseBody,
-    });
-  });
-
-  await page.route(endpoint2, async (route) => {
+  await page.route(endpoint, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
