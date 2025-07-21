@@ -1,3 +1,6 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
+// Ignoring above eslint rule as this file needs to be refactored
 import { type FC, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
