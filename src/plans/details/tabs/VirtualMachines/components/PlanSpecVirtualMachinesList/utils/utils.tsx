@@ -1,3 +1,6 @@
+import ConcernsColumnPopover from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/ConcernsColumnPopover';
+import { concernFilter } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/filters/concernFilter';
+
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import type { V1beta1Plan, V1beta1PlanStatusConditions } from '@kubev2v/types';
 import { t } from '@utils/i18n';
@@ -27,7 +30,7 @@ const extractIdAndNameFromConditionItem = (input: string): { id: string; name: s
   };
 };
 
-export const getSpecVirtualMachineFields: (isVsphere: boolean) => ResourceField[] = (isVsphere) => [
+export const specVirtualMachineFields: ResourceField[] = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -41,15 +44,19 @@ export const getSpecVirtualMachineFields: (isVsphere: boolean) => ResourceField[
     sortable: true,
   },
   {
+    filter: concernFilter(),
+    info: {
+      ariaLabel: 'More information on concerns',
+      popover: <ConcernsColumnPopover />,
+    },
     isVisible: true,
-    jsonPath: (obj: unknown) => (obj as SpecVirtualMachinePageData)?.conditions?.[0]?.category,
-    label: t('Conditions'),
-    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Conditions,
+    jsonPath: '$.inventoryVmData.vm.concerns',
+    label: t('Concerns'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Concerns,
     sortable: true,
   },
   {
     isAction: true,
-    isHidden: !isVsphere,
     isVisible: true,
     label: '',
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Actions,

@@ -1,8 +1,7 @@
 import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
-import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { ConcernsTable } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/ConcernsTable';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { INITIAL_PAGE } from '@components/page/utils/constants';
@@ -13,7 +12,7 @@ import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
 import { useSpecVirtualMachinesActions } from './hooks/useSpecVirtualMachinesActions';
 import { useSpecVirtualMachinesListData } from './hooks/useSpecVirtualMachinesListData';
 import type { SpecVirtualMachinePageData } from './utils/types';
-import { canSelect, getSpecVirtualMachineFields, vmDataToId } from './utils/utils';
+import { canSelect, specVirtualMachineFields, vmDataToId } from './utils/utils';
 import PlanSpecVirtualMachinesRow from './PlanSpecVirtualMachinesRow';
 
 type PlanVirtualMachinesListProps = {
@@ -28,19 +27,17 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
     [],
   );
 
-  const specVirtualMachinesListData = useSpecVirtualMachinesListData(plan);
+  const [specVirtualMachinesListData, loading, inventoryError] =
+    useSpecVirtualMachinesListData(plan);
   const actions = useSpecVirtualMachinesActions(plan);
-  const { sourceProvider } = usePlanSourceProvider(plan);
-
-  const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
 
   return (
     <StandardPageWithSelection<SpecVirtualMachinePageData>
       title={t('Virtual machines')}
       data-testid="plan-spec-virtual-machines-list"
-      dataSource={[specVirtualMachinesListData ?? [], true, undefined]}
+      dataSource={[specVirtualMachinesListData ?? [], !loading, inventoryError]}
       CellMapper={PlanSpecVirtualMachinesRow}
-      fieldsMetadata={getSpecVirtualMachineFields(isVsphere)}
+      fieldsMetadata={specVirtualMachineFields}
       userSettings={userSettings}
       namespace={''}
       page={INITIAL_PAGE}
@@ -49,6 +46,8 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       onSelect={() => undefined}
       selectedIds={[]}
       GlobalActionToolbarItems={actions}
+      ExpandedComponent={(props) => <ConcernsTable {...props} />}
+      expandedIds={[]}
     />
   );
 };
