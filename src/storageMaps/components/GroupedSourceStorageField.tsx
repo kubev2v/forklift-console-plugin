@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import EmptyCategorySelectOption from 'src/plans/components/EmptyCategorySelectOption';
 
-import Select from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -36,6 +36,7 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
       control={control}
       render={({ field }) => (
         <Select
+          ref={field.ref}
           id={fieldId}
           isDisabled={isSubmitting}
           value={(field.value as StorageMappingValue).name}

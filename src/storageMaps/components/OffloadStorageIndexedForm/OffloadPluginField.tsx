@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import MtvSelect from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import { FormGroup, Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -52,7 +52,8 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
         name={fieldId}
         control={control}
         render={({ field }) => (
-          <MtvSelect
+          <Select
+            ref={field.ref}
             id={fieldId}
             isDisabled={isSubmitting}
             value={field.value}

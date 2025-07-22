@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import Select from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@kubev2v/types';
 import {
   getGroupVersionKindForModel,
@@ -60,6 +60,7 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
         control={control}
         render={({ field }) => (
           <Select
+            ref={field.ref}
             id={fieldId}
             isDisabled={isSubmitting}
             value={field.value}

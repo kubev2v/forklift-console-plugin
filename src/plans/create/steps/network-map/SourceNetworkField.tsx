@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import EmptyCategorySelectOption from 'src/plans/components/EmptyCategorySelectOption';
 
-import Select from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -33,6 +33,7 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({
       control={control}
       render={({ field }) => (
         <Select
+          ref={field.ref}
           id={fieldId}
           value={(field.value as MappingValue).name}
           onSelect={async (_event, value) => {
