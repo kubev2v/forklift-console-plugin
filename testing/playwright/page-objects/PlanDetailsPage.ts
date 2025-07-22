@@ -31,14 +31,16 @@ export class PlanDetailsPage {
 
   async verifyNavigationTabs() {
     // Verify the navigation tabs are present (using data-test-id instead of data-testid)
-    const tabs = ['Details', 'YAML', 'Virtual machines', 'Resources', 'Mappings', 'Hooks'];
 
     // Verify all tabs are visible
-    await Promise.all(
-      tabs.map(async (tab) =>
-        expect(this.page.locator(`[data-test-id="horizontal-link-${tab}"]`)).toBeVisible(),
-      ),
-    );
+    await expect(this.page.locator('[data-test-id="horizontal-link-Details"]')).toBeVisible();
+    await expect(this.page.locator('[data-test-id="horizontal-link-YAML"]')).toBeVisible();
+    await expect(
+      this.page.locator('[data-test-id="horizontal-link-Virtual machines"]'),
+    ).toBeVisible();
+    await expect(this.page.locator('[data-test-id="horizontal-link-Resources"]')).toBeVisible();
+    await expect(this.page.locator('[data-test-id="horizontal-link-Mappings"]')).toBeVisible();
+    await expect(this.page.locator('[data-test-id="horizontal-link-Hooks"]')).toBeVisible();
 
     // Verify Details tab is currently selected
     await expect(this.page.locator('[data-test-id="horizontal-link-Details"]')).toHaveAttribute(
@@ -81,10 +83,10 @@ export class PlanDetailsPage {
 
   async verifyPlanDetailsURL(planName: string) {
     // Verify we're on the correct plan details page
-    const expectedUrlPattern = new RegExp(
-      `.*forklift\\.konveyor\\.io~v1beta1~Plan/${planName}(?:/.*)?$`,
+    // Use string contains check instead of regex to avoid ReDoS vulnerability
+    await expect(this.page).toHaveURL((url) =>
+      url.toString().includes(`forklift.konveyor.io~v1beta1~Plan/${planName}`),
     );
-    await expect(this.page).toHaveURL(expectedUrlPattern);
   }
 
   async verifyPlanStatus(expectedStatus = 'Ready for migration') {

@@ -41,9 +41,13 @@ export class CreatePlanWizardPage {
 
   async waitForPlanCreation() {
     // Wait for the plan creation to complete and navigate away from wizard
-    await this.page.waitForURL(/forklift\.konveyor\.io~v1beta1~Plan\/[^/]+/, {
-      timeout: 30000,
-    });
+    // Use string contains check instead of regex to avoid ReDoS vulnerability
+    await this.page.waitForURL(
+      (url) => url.toString().includes('forklift.konveyor.io~v1beta1~Plan/'),
+      {
+        timeout: 30000,
+      },
+    );
   }
 
   async waitForWizardLoad() {
