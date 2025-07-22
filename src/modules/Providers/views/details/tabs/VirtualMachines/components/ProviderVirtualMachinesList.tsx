@@ -83,7 +83,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       selectedIds={initialSelectedIds}
       page={1}
       expandedIds={[]}
-      ExpandedComponent={ConcernsTable}
+      ExpandedComponent={(props) => <ConcernsTable {...props} />}
     />
   );
 };

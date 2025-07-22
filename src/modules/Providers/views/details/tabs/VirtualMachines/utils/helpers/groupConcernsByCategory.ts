@@ -7,7 +7,7 @@ import type { Concern } from '@kubev2v/types';
  * @returns {Record<string, Concern[]>} The grouped concerns by category.
  */
 export const groupConcernsByCategory = (concerns: Concern[] = []): Record<string, Concern[]> => {
-  return concerns.reduce(
+  return concerns.reduce<Record<string, Concern[]>>(
     (acc, concern) => {
       if (!acc[concern.category]) {
         acc[concern.category] = [];
