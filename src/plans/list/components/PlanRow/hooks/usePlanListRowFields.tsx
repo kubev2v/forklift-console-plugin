@@ -2,7 +2,7 @@ import { TableCell } from 'src/modules/Providers/utils/components/TableCell/Tabl
 import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
-import { providerTypeIcons } from 'src/plans/details/utils/constants';
+import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 import { PlanTableResourceId } from 'src/plans/list/utils/constants';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
@@ -70,9 +70,7 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
           name: sourceProviderName,
           namespace: sourceProviderNamespace,
         })}
-        providerIcon={
-          providerTypeIcons(isDarkTheme)[sourceProviderType as keyof typeof providerTypeIcons]
-        }
+        providerIcon={getProviderTypeIcon(sourceProviderType, isDarkTheme)}
         providerName={sourceProviderName}
       />
     ),

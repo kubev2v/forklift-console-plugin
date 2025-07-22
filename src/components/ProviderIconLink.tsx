@@ -22,7 +22,7 @@ const ProviderIconLink: FC<ProviderIconLinkProps> = ({
   return (
     <Split className={className}>
       <SplitItem className="forklift-provider-icon-link">{providerIcon}</SplitItem>
-      <SplitItem>
+      <SplitItem className="forklift-provider-link">
         <Button
           type="button"
           isInline
