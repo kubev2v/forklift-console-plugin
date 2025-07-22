@@ -1,3 +1,4 @@
+import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
 import { PLACEHOLDER_VALUES } from './constants';
@@ -37,7 +38,7 @@ const shouldAddCreateOption = (
 ): boolean =>
   isCreatable &&
   Boolean(inputValue.trim()) &&
-  !filteredOptions.some(
+  !filteredOptions?.some(
     (option) => String(option.content).toLowerCase() === inputValue.toLowerCase(),
   );
 
@@ -48,9 +49,9 @@ export const defaultFilterFunction = (
   filterValue: string,
   options: TypeaheadSelectOption[],
 ): TypeaheadSelectOption[] =>
-  options.filter((option) =>
+  options?.filter((option) =>
     String(option.content).toLowerCase().includes(filterValue.toLowerCase()),
-  );
+  ) ?? [];
 
 /**
  * Checks if a value is a placeholder value that should not trigger selection
@@ -85,7 +86,7 @@ export const generateFilteredOptions = (config: FilterOptionsConfig): TypeaheadS
   }
 
   // Return no results option if no matches found
-  return filtered.length === 0 ? [createNoResultsOption(inputValue, noResultsMessage)] : filtered;
+  return isEmpty(filtered) ? [createNoResultsOption(inputValue, noResultsMessage)] : filtered;
 };
 
 export const getDefaultCreateMessage = (value: string): string => t(`Create "${value}"`);

@@ -15,6 +15,7 @@ import {
   SelectOption,
   type SelectProps,
 } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import { DEFAULT_NO_OPTIONS, DEFAULT_PLACEHOLDER, PLACEHOLDER_VALUES } from './constants';
 import TypeaheadMenuToggle from './TypeaheadMenuToggle';
@@ -105,7 +106,7 @@ const TypeaheadSelect = (
 
   // Show filtered options when filtering, all options when not, or no options message
   const displayOptions = useMemo(() => {
-    if (options.length === 0) {
+    if (isEmpty(options)) {
       return [
         {
           content: noOptionsMessage,
@@ -115,7 +116,7 @@ const TypeaheadSelect = (
       ];
     }
     return filteredOptions;
-  }, [options.length, filteredOptions, noOptionsMessage]);
+  }, [options, filteredOptions, noOptionsMessage]);
 
   const handleToggleClick = (): void => {
     const newIsOpen = !isOpen;

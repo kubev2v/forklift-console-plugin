@@ -1,6 +1,7 @@
 import {
   type ForwardedRef,
   forwardRef,
+  type MutableRefObject,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -75,7 +76,7 @@ const Select = (
       isOpen={isOpen}
       selected={value}
       className={className}
-      toggle={(pfToggleRef: React.MutableRefObject<HTMLButtonElement>) => (
+      toggle={(pfToggleRef: MutableRefObject<HTMLButtonElement>) => (
         <MenuToggle
           isFullWidth
           ref={(element: HTMLButtonElement) => {

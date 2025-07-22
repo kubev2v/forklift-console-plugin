@@ -1,7 +1,8 @@
-import { type FC, type FormEvent, useEffect, useState } from 'react';
+import { type FC, type FormEvent, type Ref, type RefObject, useState } from 'react';
 
 import {
   Button,
+  ButtonVariant,
   MenuToggle,
   type MenuToggleElement,
   type MenuToggleProps,
@@ -14,8 +15,8 @@ import { TimesIcon } from '@patternfly/react-icons';
 import type { TypeaheadSelectOption } from './types';
 
 type TypeaheadMenuToggleProps = {
-  toggleRef: React.Ref<MenuToggleElement>;
-  inputRef: React.RefObject<HTMLInputElement>;
+  toggleRef: Ref<MenuToggleElement>;
+  inputRef: RefObject<HTMLInputElement>;
   placeholder: string;
   isDisabled: boolean;
   isOpen: boolean;
@@ -51,15 +52,8 @@ const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Update input value when selected option changes (only when not filtering)
-  useEffect(() => {
-    if (!isFiltering) {
-      const newValue = selectedOption?.content?.toString() ?? '';
-      if (newValue !== inputValue) {
-        onInputValueChange(newValue, false);
-      }
-    }
-  }, [selectedOption, isFiltering, inputValue, onInputValueChange]);
+  // Derive the display value: use input value when filtering, selected option content when not
+  const displayValue = isFiltering ? inputValue : (selectedOption?.content?.toString() ?? '');
 
   const handleToggleClick = (): void => {
     if (isDisabled) return;
@@ -120,7 +114,7 @@ const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
     >
       <TextInputGroup isPlain>
         <TextInputGroupMain
-          value={inputValue}
+          value={displayValue}
           onClick={handleInputClick}
           onChange={handleInputChange}
           onFocus={() => {
@@ -140,7 +134,7 @@ const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
           <TextInputGroupUtilities>
             <Button
               icon={<TimesIcon />}
-              variant="plain"
+              variant={ButtonVariant.plain}
               onClick={handleClear}
               aria-label="Clear selection"
             />
