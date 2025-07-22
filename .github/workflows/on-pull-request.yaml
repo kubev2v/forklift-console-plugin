@@ -102,6 +102,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Install testing dependencies
+        run: cd testing && yarn install
+
       - name: Run pre e2e test tasks
         run: yarn e2e:pre-test
 
