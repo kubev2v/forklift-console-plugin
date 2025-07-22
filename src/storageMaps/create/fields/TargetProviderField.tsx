@@ -31,6 +31,7 @@ const TargetProviderField: FC = () => {
         render={({ field }) => (
           <ProviderSelect
             isTarget
+            ref={field.ref}
             isDisabled={isSubmitting}
             placeholder={t('Select target provider')}
             id={StorageMapFieldId.TargetProvider}

@@ -1,9 +1,13 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
+import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import type { Concern, OpenstackVM, OvaVM, OVirtVM, VSphereVM } from '@kubev2v/types';
 import { HelperText, HelperTextItem, Label, PageSection } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { isEmpty } from '@utils/helpers';
 
 import {
   getCategoryColor,
@@ -14,13 +18,20 @@ import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategor
 
 import type { VmData } from './VMCellProps';
 
-/**
- * React Component to display a table of concerns.
- */
-export const ConcernsTable: FC<RowProps<VmData>> = ({ resourceData }) => {
+type ConcernsTableProps = RowProps<VmData> | RowProps<SpecVirtualMachinePageData>;
+
+type VirtualMachineWithConcerns = OVirtVM | VSphereVM | OpenstackVM | OvaVM;
+
+export const ConcernsTable: FC<ConcernsTableProps> = ({ resourceData }) => {
   const { t } = useForkliftTranslation();
 
-  if (!resourceData?.vm?.concerns || resourceData?.vm?.concerns?.length < 1) {
+  const vm =
+    (resourceData as VmData)?.vm ??
+    (resourceData as SpecVirtualMachinePageData)?.inventoryVmData?.vm;
+
+  const concerns: Concern[] = (vm as VirtualMachineWithConcerns)?.concerns;
+
+  if ((!concerns || isEmpty(concerns)) && vm.providerType !== PROVIDER_TYPES.openshift) {
     return (
       <PageSection>
         <HelperText>
@@ -32,7 +43,7 @@ export const ConcernsTable: FC<RowProps<VmData>> = ({ resourceData }) => {
     );
   }
 
-  const groupedConcerns = groupConcernsByCategory(resourceData?.vm?.concerns);
+  const groupedConcerns = groupConcernsByCategory(concerns);
 
   return (
     <PageSection>

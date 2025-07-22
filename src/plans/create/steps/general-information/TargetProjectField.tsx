@@ -5,7 +5,7 @@ import { isSystemNamespace } from 'src/utils/namespaces';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
+import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { Divider, MenuToggleStatus, Stack, StackItem, Switch } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -38,7 +38,9 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
 
   const filteredTargetProviderOptions = useMemo(() => {
     if (!showDefaultProjects) {
-      return targetProviderOptions.filter((option) => !isSystemNamespace(String(option.content)));
+      return targetProviderOptions.filter(
+        (option) => typeof option.content === 'string' && !isSystemNamespace(option.content),
+      );
     }
     return targetProviderOptions;
   }, [targetProviderOptions, showDefaultProjects]);
@@ -67,45 +69,43 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
         name={GeneralFormFieldId.TargetProject}
         control={control}
         render={({ field }) => (
-          <div ref={field.ref} data-testid={testId}>
-            <TypeaheadSelect
-              isScrollable
-              placeholder={t('Select target project')}
-              id={GeneralFormFieldId.TargetProject}
-              selectOptions={filteredTargetProviderOptions}
-              selected={field.value}
-              onSelect={(_event, value) => {
-                field.onChange(value);
-              }}
-              onClearSelection={() => {
-                field.onChange('');
-              }}
-              noOptionsAvailableMessage={
-                targetProvider
-                  ? undefined
-                  : t('Select a target provider to list available target projects')
-              }
-              toggleProps={{
-                id: 'target-project-select',
-                status: errors[GeneralFormFieldId.TargetProject] && MenuToggleStatus.danger,
-              }}
-              Filter={
-                <>
-                  <div className="pf-v5-u-px-md pf-v5-u-py-md">
-                    <Switch
-                      id="show-default-projects-switch"
-                      label={t('Show default projects')}
-                      isChecked={showDefaultProjects}
-                      onChange={(_event, checked) => {
-                        setShowDefaultProjects(checked);
-                      }}
-                    />
-                  </div>
-                  <Divider />
-                </>
-              }
-            />
-          </div>
+          <TypeaheadSelect
+            ref={field.ref}
+            data-testid={testId}
+            isScrollable
+            allowClear
+            placeholder={t('Select target project')}
+            id={GeneralFormFieldId.TargetProject}
+            options={filteredTargetProviderOptions}
+            value={field.value}
+            onChange={(value) => {
+              field.onChange(value);
+            }}
+            noOptionsMessage={
+              targetProvider
+                ? undefined
+                : t('Select a target provider to list available target projects')
+            }
+            toggleProps={{
+              id: 'target-project-select',
+              status: errors[GeneralFormFieldId.TargetProject] && MenuToggleStatus.danger,
+            }}
+            filterControls={
+              <>
+                <div className="pf-v5-u-px-md pf-v5-u-py-md">
+                  <Switch
+                    id="show-default-projects-switch"
+                    label={t('Show default projects')}
+                    isChecked={showDefaultProjects}
+                    onChange={(_event, checked) => {
+                      setShowDefaultProjects(checked);
+                    }}
+                  />
+                </div>
+                <Divider />
+              </>
+            }
+          />
         )}
         rules={{ required: t('Target project is required.') }}
       />

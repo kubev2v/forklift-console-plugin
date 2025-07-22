@@ -1,10 +1,21 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { Concern } from '@kubev2v/types';
-import { Button, Label, Popover, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  Label,
+  Popover,
+  Split,
+  SplitItem,
+  Stack,
+  StackItem,
+} from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import { orderedConcernCategories } from '../constants';
 import {
@@ -56,7 +67,7 @@ const ConcernPopover: FC<{
       bodyContent={<ConcernList concerns={concerns} />}
       footerContent={t('Total: {{length}}', { length: concerns.length })}
     >
-      <Button isInline variant="link">
+      <Button isInline variant={ButtonVariant.link}>
         <Label color={getCategoryColor(category)} icon={getCategoryIcon(category)}>
           {concerns.length}
         </Label>
@@ -72,18 +83,19 @@ const ConcernPopover: FC<{
  * @returns {ReactElement} The rendered table cell.
  */
 export const VMConcernsCellRenderer: FC<VMCellProps> = ({ data }) => {
-  if (data?.vm?.providerType === 'openshift') {
+  const concerns: Concern[] =
+    data?.vm?.providerType === PROVIDER_TYPES.openshift ? [] : data?.vm?.concerns;
+  if (!concerns || isEmpty(concerns)) {
     return <TableEmptyCell />;
   }
 
-  const concerns = data?.vm?.concerns;
   const groupedConcerns = groupConcernsByCategory(concerns);
 
   return (
     <TableCell>
       <Split hasGutter>
         {orderedConcernCategories.map((category) => {
-          const hasConcernCategory = concerns.find((concern) => concern.category === category);
+          const hasConcernCategory = concerns?.find((concern) => concern.category === category);
 
           if (hasConcernCategory) {
             return (

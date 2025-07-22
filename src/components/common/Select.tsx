@@ -1,25 +1,33 @@
-import { type FC, useMemo, useState } from 'react';
+import {
+  type ForwardedRef,
+  forwardRef,
+  type MutableRefObject,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   MenuToggle,
   type MenuToggleStatus,
-  Select,
+  Select as PfSelect,
   SelectList,
-  SelectOption,
-  type SelectProps,
+  SelectOption as PfSelectOption,
+  type SelectProps as PfSelectProps,
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-type MtvSelectOption = {
+type SelectOption = {
   value: string;
   label: string;
   disabled?: boolean;
 };
 
-type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'className' | 'children'> & {
+type SelectProps = Pick<PfSelectProps, 'onSelect' | 'className' | 'children'> & {
   id: string;
   value: string;
-  options?: MtvSelectOption[];
+  options?: SelectOption[];
   status?: MenuToggleStatus;
   placeholder?: string;
   isDisabled?: boolean;
@@ -31,20 +39,26 @@ type MtvSelectProps = Pick<SelectProps, 'onSelect' | 'className' | 'children'> &
  *
  * Use this instead of `@patternfly/react-core/Select`.
  */
-const MtvSelect: FC<MtvSelectProps> = ({
-  children,
-  className,
-  id,
-  isDisabled,
-  onSelect,
-  options,
-  placeholder = '',
-  status,
-  testId,
-  value,
-}) => {
+const Select = (
+  {
+    children,
+    className,
+    id,
+    isDisabled,
+    onSelect,
+    options,
+    placeholder = '',
+    status,
+    testId,
+    value,
+  }: SelectProps,
+  ref: ForwardedRef<HTMLButtonElement>,
+) => {
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>();
+
+  useImperativeHandle(ref, () => toggleRef.current!);
 
   const selectedOption = useMemo(
     () =>
@@ -55,17 +69,23 @@ const MtvSelect: FC<MtvSelectProps> = ({
   );
 
   return (
-    <Select
+    <PfSelect
       isScrollable
       shouldFocusToggleOnSelect
       id={id}
       isOpen={isOpen}
       selected={value}
       className={className}
-      toggle={(ref) => (
+      toggle={(pfToggleRef: MutableRefObject<HTMLButtonElement>) => (
         <MenuToggle
           isFullWidth
-          ref={ref}
+          ref={(element: HTMLButtonElement) => {
+            if (pfToggleRef) {
+              pfToggleRef.current = element;
+            }
+
+            toggleRef.current = element;
+          }}
           data-testid={testId}
           isDisabled={isDisabled}
           isExpanded={isOpen}
@@ -80,7 +100,9 @@ const MtvSelect: FC<MtvSelectProps> = ({
             : (placeholder ?? t('Select an option'))}
         </MenuToggle>
       )}
-      onOpenChange={setIsOpen}
+      onOpenChange={(changedIsOpen) => {
+        setIsOpen(changedIsOpen);
+      }}
       onSelect={(event, selectedValue) => {
         onSelect?.(event, selectedValue);
         setIsOpen(false);
@@ -89,14 +111,14 @@ const MtvSelect: FC<MtvSelectProps> = ({
       {children ?? (
         <SelectList>
           {(options ?? []).map((option) => (
-            <SelectOption key={option.value} value={option.value} isDisabled={option.disabled}>
+            <PfSelectOption key={option.value} value={option.value} isDisabled={option.disabled}>
               {option.label}
-            </SelectOption>
+            </PfSelectOption>
           ))}
         </SelectList>
       )}
-    </Select>
+    </PfSelect>
   );
 };
 
-export default MtvSelect;
+export default forwardRef(Select);
