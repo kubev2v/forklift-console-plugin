@@ -13,7 +13,11 @@ import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 
-const TargetProjectField: FC = () => {
+type TargetProjectFieldProps = {
+  testId?: string;
+};
+
+const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-project-select' }) => {
   const { t } = useForkliftTranslation();
   const {
     control,
@@ -34,7 +38,9 @@ const TargetProjectField: FC = () => {
 
   const filteredTargetProviderOptions = useMemo(() => {
     if (!showDefaultProjects) {
-      return targetProviderOptions.filter((option) => !isSystemNamespace(String(option.content)));
+      return targetProviderOptions.filter(
+        (option) => typeof option.content === 'string' && !isSystemNamespace(option.content),
+      );
     }
     return targetProviderOptions;
   }, [targetProviderOptions, showDefaultProjects]);
@@ -65,6 +71,7 @@ const TargetProjectField: FC = () => {
         render={({ field }) => (
           <TypeaheadSelect
             ref={field.ref}
+            data-testid={testId}
             isScrollable
             allowClear
             placeholder={t('Select target project')}

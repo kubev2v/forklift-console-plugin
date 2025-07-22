@@ -13,7 +13,11 @@ import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 
-const PlanProjectField: FC = () => {
+type PlanProjectFieldProps = {
+  testId?: string;
+};
+
+const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-select' }) => {
   const { t } = useForkliftTranslation();
   const {
     control,
@@ -64,6 +68,7 @@ const PlanProjectField: FC = () => {
         render={({ field }) => (
           <TypeaheadSelect
             ref={field.ref}
+            data-testid={testId}
             isScrollable
             allowClear
             placeholder={t('Select plan project')}
