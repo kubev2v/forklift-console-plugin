@@ -19,8 +19,8 @@ export const migrationStatusIconMap: Record<MigrationVirtualMachineStatus, React
     </Icon>
   ),
   [MigrationVirtualMachineStatus.CantStart]: (
-    <Icon>
-      <InProgressIcon />
+    <Icon status="warning">
+      <ExclamationTriangleIcon />
     </Icon>
   ),
   [MigrationVirtualMachineStatus.Failed]: (
@@ -29,8 +29,8 @@ export const migrationStatusIconMap: Record<MigrationVirtualMachineStatus, React
     </Icon>
   ),
   [MigrationVirtualMachineStatus.InProgress]: (
-    <Icon status="warning">
-      <ExclamationTriangleIcon />
+    <Icon>
+      <InProgressIcon />
     </Icon>
   ),
   [MigrationVirtualMachineStatus.Paused]: (
