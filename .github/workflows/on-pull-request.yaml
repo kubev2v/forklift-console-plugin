@@ -94,22 +94,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install
+
       - name: Run pre e2e test tasks
         run: yarn e2e:pre-test
 
-      - name: Run cypress
-        uses: cypress-io/github-action@v6
-        with:
-          wait-on: 'http://localhost:30080'
-          browser: chrome
-          headed: false
-          working-directory: testing
+      - name: Install Playwright browsers
+        run: cd testing && npx playwright install --with-deps chromium
 
-      - name: Upload videos and screenshots
+      - name: Wait for application
+        run: |
+          timeout 300 bash -c 'until curl -f http://localhost:30080; do sleep 5; done'
+
+      - name: Run Playwright tests
+        run: cd testing && npx playwright test
+        env:
+          BASE_ADDRESS: http://localhost:30080
+
+      - name: Upload Playwright test results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-test-artifacts
+          name: playwright-test-results
           path: |
-            /tmp/gui-test-screenshots/videos/
-            /tmp/gui-test-screenshots/screenshots/
+            testing/test-results/
+            testing/playwright-report/
+
