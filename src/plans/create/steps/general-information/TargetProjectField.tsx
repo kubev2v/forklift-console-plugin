@@ -1,11 +1,12 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
+import { isSystemNamespace } from 'src/utils/namespaces';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
-import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
+import { Divider, MenuToggleStatus, Stack, StackItem, Switch } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -24,6 +25,7 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
   } = useCreatePlanFormContext();
   const targetProvider = useWatch({ control, name: GeneralFormFieldId.TargetProvider });
   const [targetProviderProjects] = useProviderNamespaces(targetProvider);
+  const [showDefaultProjects, setShowDefaultProjects] = useState(false);
 
   const targetProviderOptions = useMemo(
     () =>
@@ -33,6 +35,13 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
       })),
     [targetProviderProjects],
   );
+
+  const filteredTargetProviderOptions = useMemo(() => {
+    if (!showDefaultProjects) {
+      return targetProviderOptions.filter((option) => !isSystemNamespace(String(option.content)));
+    }
+    return targetProviderOptions;
+  }, [targetProviderOptions, showDefaultProjects]);
 
   return (
     <FormGroupWithErrorText
@@ -63,7 +72,7 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
               isScrollable
               placeholder={t('Select target project')}
               id={GeneralFormFieldId.TargetProject}
-              selectOptions={targetProviderOptions}
+              selectOptions={filteredTargetProviderOptions}
               selected={field.value}
               onSelect={(_event, value) => {
                 field.onChange(value);
@@ -80,6 +89,21 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
                 id: 'target-project-select',
                 status: errors[GeneralFormFieldId.TargetProject] && MenuToggleStatus.danger,
               }}
+              Filter={
+                <>
+                  <div className="pf-v5-u-px-md pf-v5-u-py-md">
+                    <Switch
+                      id="show-default-projects-switch"
+                      label={t('Show default projects')}
+                      isChecked={showDefaultProjects}
+                      onChange={(_event, checked) => {
+                        setShowDefaultProjects(checked);
+                      }}
+                    />
+                  </div>
+                  <Divider />
+                </>
+              }
             />
           </div>
         )}

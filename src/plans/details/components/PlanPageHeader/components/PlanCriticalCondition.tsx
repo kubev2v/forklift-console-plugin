@@ -33,7 +33,7 @@ import TroubleshootMessage from './TroubleshootMessage';
 
 type PlanCriticalConditionProps = PropsWithChildren & {
   plan: V1beta1Plan;
-  condition: V1beta1PlanStatusConditions;
+  condition: V1beta1PlanStatusConditions | undefined;
   storageMaps: V1beta1StorageMap[];
   networkMaps: V1beta1NetworkMap[];
   sourceStorages: InventoryStorage[];
@@ -50,7 +50,7 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const type = condition.type as PlanConditionType;
+  const type = condition?.type as PlanConditionType;
 
   const planStorageMapName = getPlanStorageMapName(plan);
   const planNetworkMapName = getPlanNetworkMapName(plan);
@@ -95,8 +95,8 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
       <Stack hasGutter>
         <TextContent className="forklift-providers-list-header__alert">
           <Text component={TextVariants.p}>
-            <Linkify>{condition.message ?? EMPTY_MSG}</Linkify>
-            {condition.message?.endsWith('.') ? ' ' : '. '}
+            <Linkify>{condition?.message ?? EMPTY_MSG}</Linkify>
+            {condition?.message?.endsWith('.') ? ' ' : '. '}
             <TroubleshootMessage planURL={getPlanURL(plan)} type={type} />
           </Text>
         </TextContent>
