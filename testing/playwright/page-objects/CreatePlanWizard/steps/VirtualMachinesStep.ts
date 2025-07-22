@@ -1,5 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
+import { API_ENDPOINTS, TEST_DATA } from '../../../fixtures/test-data';
+
 export class VirtualMachinesStep {
   private readonly page: Page;
 
@@ -29,10 +31,8 @@ export class VirtualMachinesStep {
 
   async waitForData(): Promise<void> {
     await this.page.waitForResponse(
-      '**/forklift-inventory/providers/vsphere/test-source-uid-1/vms?detail=4',
+      API_ENDPOINTS.virtualMachines('vsphere', TEST_DATA.providers.source.uid),
     );
-    await this.page.waitForResponse(
-      '**/forklift-inventory/providers/openshift/test-target-uid-1/storageclasses?detail=1',
-    );
+    await this.page.waitForResponse(API_ENDPOINTS.storageClasses(TEST_DATA.providers.target.uid));
   }
 }

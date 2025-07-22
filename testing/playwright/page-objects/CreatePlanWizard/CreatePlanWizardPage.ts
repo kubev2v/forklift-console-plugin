@@ -27,6 +27,10 @@ export class CreatePlanWizardPage {
     await this.page.getByTestId('wizard-back-button').click();
   }
 
+  async clickCreatePlan() {
+    await this.page.getByTestId('wizard-create-button').click();
+  }
+
   async clickNext() {
     await this.page.getByTestId('wizard-next-button').click();
   }
@@ -35,12 +39,11 @@ export class CreatePlanWizardPage {
     await this.page.getByTestId('wizard-review-button').click();
   }
 
-  async verifyCurrentStep(stepNumber: number) {
-    await expect(this.page.getByTestId(`wizard-step-${stepNumber}`)).toHaveClass(/current/);
-  }
-
-  async verifyPlanCreated(planName: string) {
-    await expect(this.page.getByText(`Plan "${planName}" created successfully`)).toBeVisible();
+  async waitForPlanCreation() {
+    // Wait for the plan creation to complete and navigate away from wizard
+    await this.page.waitForURL(/.*forklift\.konveyor\.io~v1beta1~Plan\/[^/]+(?:\/.*)?$/, {
+      timeout: 30000,
+    });
   }
 
   async waitForWizardLoad() {

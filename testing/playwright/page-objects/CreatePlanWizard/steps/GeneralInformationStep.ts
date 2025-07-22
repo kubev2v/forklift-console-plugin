@@ -1,5 +1,7 @@
 import type { Page } from '@playwright/test';
 
+import { API_ENDPOINTS } from '../../../fixtures/test-data';
+
 export class GeneralInformationStep {
   private readonly page: Page;
 
@@ -35,6 +37,6 @@ export class GeneralInformationStep {
   }
 
   async waitForTargetProviderNamespaces() {
-    await this.page.waitForResponse('**/forklift-inventory/providers/openshift/*/namespaces');
+    await this.page.waitForResponse(API_ENDPOINTS.targetNamespaces('*'));
   }
 }

@@ -3,6 +3,7 @@ import { test } from '@playwright/test';
 import { TEST_DATA } from '../fixtures/test-data';
 import { setupCreatePlanIntercepts } from '../intercepts';
 import { CreatePlanWizardPage } from '../page-objects/CreatePlanWizard/CreatePlanWizardPage';
+import { PlanDetailsPage } from '../page-objects/PlanDetailsPage';
 import { PlansListPage } from '../page-objects/PlansListPage';
 
 test.describe('Plans - Critical End-to-End Migration', () => {
@@ -15,6 +16,7 @@ test.describe('Plans - Critical End-to-End Migration', () => {
   test('should run plan creation wizard', async ({ page }) => {
     const plansPage = new PlansListPage(page);
     const createWizard = new CreatePlanWizardPage(page);
+    const planDetailsPage = new PlanDetailsPage(page);
 
     // Navigate to wizard
     await plansPage.waitForPageLoad();
@@ -63,6 +65,14 @@ test.describe('Plans - Critical End-to-End Migration', () => {
       TEST_DATA.storageMap,
     );
 
-    // STEP 6: Plan Details
+    // STEP 6: Create the plan and verify basic plan details
+    await createWizard.clickNext();
+    await createWizard.waitForPlanCreation();
+    await planDetailsPage.waitForPageLoad();
+    await planDetailsPage.verifyBasicPlanDetailsPage({
+      planName: TEST_DATA.planName,
+      planProject: TEST_DATA.planProject,
+      targetProject: TEST_DATA.targetProject,
+    });
   });
 });

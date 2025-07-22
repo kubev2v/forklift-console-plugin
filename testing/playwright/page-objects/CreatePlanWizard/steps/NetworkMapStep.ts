@@ -1,5 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
+import { API_ENDPOINTS } from '../../../fixtures/test-data';
+
 export class NetworkMapStep {
   private readonly page: Page;
 
@@ -17,8 +19,6 @@ export class NetworkMapStep {
   }
 
   async waitForData(): Promise<void> {
-    await this.page.waitForResponse(
-      '**/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/networkmaps?limit=250',
-    );
+    await this.page.waitForResponse(API_ENDPOINTS.networkMaps);
   }
 }
