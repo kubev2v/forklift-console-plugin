@@ -189,6 +189,30 @@ export const createEslintConfig = (ideMode = false) =>
             selector:
               'Program:has(ImportDeclaration[source.value="@patternfly/react-core"] ImportSpecifier[imported.name="Select"]) JSXElement[openingElement.name.name="Select"]',
           },
+          {
+            message:
+              "Use 'isEmpty()' from '@utils/helpers' instead of manually checking Object.keys().length === 0.",
+            selector:
+              'BinaryExpression[operator="==="][left.type="MemberExpression"][left.object.type="CallExpression"][left.object.callee.type="MemberExpression"][left.object.callee.object.name="Object"][left.object.callee.property.name="keys"][left.property.name="length"][right.type="Literal"][right.value=0]',
+          },
+          {
+            message:
+              "Use 'isEmpty()' from '@utils/helpers' instead of manually checking array.length === 0.",
+            selector:
+              'BinaryExpression[operator="==="][left.type="MemberExpression"][left.property.name="length"][right.type="Literal"][right.value=0]:not([left.object.type="CallExpression"])',
+          },
+          {
+            message:
+              "Use 'isEmpty()' from '@utils/helpers' instead of manually checking !array.length.",
+            selector:
+              'UnaryExpression[operator="!"][argument.type="MemberExpression"][argument.property.name="length"]',
+          },
+          {
+            message:
+              "Use ButtonVariant enum from '@patternfly/react-core' instead of string literals for button variants.",
+            selector:
+              'JSXOpeningElement[name.name="Button"] > JSXAttribute[name.name="variant"][value.type="Literal"][value.value=/^(primary|secondary|tertiary|danger|warning|link|plain|control)$/]',
+          },
         ],
         'no-ternary': 'off',
         'no-undefined': 'off',
