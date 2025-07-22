@@ -1,5 +1,6 @@
 import { type ComponentProps, type ForwardedRef, forwardRef, type ReactNode, useMemo } from 'react';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
@@ -10,9 +11,16 @@ import {
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { EmptyState, EmptyStateVariant, SelectList, SelectOption } from '@patternfly/react-core';
+import {
+  EmptyState,
+  EmptyStateVariant,
+  Icon,
+  SelectList,
+  SelectOption,
+} from '@patternfly/react-core';
 import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { ForkliftTrans } from '@utils/i18n';
 import { ProviderStatus } from '@utils/types';
 
@@ -44,6 +52,7 @@ const ProviderSelect = (
   }: ProviderSelectProps,
   ref: ForwardedRef<HTMLButtonElement>,
 ) => {
+  const isDarkTheme = useIsDarkTheme();
   const [providers] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
@@ -101,7 +110,13 @@ const ProviderSelect = (
               const providerName = getName(provider);
 
               return (
-                <SelectOption key={providerName} value={provider}>
+                <SelectOption
+                  icon={
+                    <Icon size="lg">{getProviderTypeIcon(provider?.spec?.type, isDarkTheme)}</Icon>
+                  }
+                  key={providerName}
+                  value={provider}
+                >
                   {providerName}
                 </SelectOption>
               );
