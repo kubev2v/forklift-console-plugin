@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -7,11 +7,12 @@ import { FormGroup, Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import {
+  type OffloadPlugin,
   offloadPluginLabels,
-  offloadPlugins,
   StorageMapFieldId,
   storageMapFieldLabels,
 } from '../../constants';
+import { useOffloadPlugins } from '../../hooks/useOffloadPlugins';
 
 type OffloadPluginFieldProps = { fieldId: string };
 
@@ -21,11 +22,16 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
     control,
     formState: { isSubmitting },
   } = useFormContext();
+  const { loading, offloadPlugins } = useOffloadPlugins();
 
-  const options = offloadPlugins.map((plugin) => ({
-    label: offloadPluginLabels[plugin],
-    value: plugin,
-  }));
+  const options = useMemo(
+    () =>
+      offloadPlugins.map((plugin) => ({
+        label: offloadPluginLabels[plugin as OffloadPlugin] ?? plugin,
+        value: plugin,
+      })),
+    [offloadPlugins],
+  );
 
   return (
     <FormGroup
@@ -55,7 +61,7 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
           <Select
             ref={field.ref}
             id={fieldId}
-            isDisabled={isSubmitting}
+            isDisabled={isSubmitting || loading}
             value={field.value}
             options={options}
             onSelect={(_event, value) => {

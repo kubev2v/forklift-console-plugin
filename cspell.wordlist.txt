@@ -1,3 +1,4 @@
+APIV
 apimachinery
 cacerts
 chunkhash
@@ -93,3 +94,6 @@ ONTAP
 Primera
 VAAI
 operatorhub
+powerflex
+apiextensions
+customresourcedefinitions
