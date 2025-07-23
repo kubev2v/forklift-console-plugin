@@ -14,7 +14,7 @@ export const useOvirtNicProfiles = (
   } = useProviderInventory<OVirtNicProfile[]>({
     disabled: !provider || !isOVirt,
     provider,
-    subPath: '/nicprofiles?detail=1',
+    subPath: 'nicprofiles?detail=1',
   });
 
   const typedNicProfiles: OVirtNicProfile[] = useMemo(
