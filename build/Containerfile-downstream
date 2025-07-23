@@ -19,12 +19,12 @@ WORKDIR /opt/app-root/src/app
 # Run install as supper tux
 USER 0
 WORKDIR /opt/app-root/src/app/.konflux/
-RUN command -v yarn || npm i
+RUN npm i
 RUN mv node_modules/yarn/bin/* /usr/local/bin
 RUN mv node_modules/yarn/lib/* /usr/local/lib
 
 WORKDIR /opt/app-root/src/app/
-RUN yarn install --frozen-lockfile --ignore-engines --offline && yarn build
+RUN yarn install --frozen-lockfile --ignore-engines --offline --ignore-scripts && yarn build
 
 # Web server container
 FROM registry.redhat.io/rhel9/nginx-122:9.5-1745931244
@@ -39,7 +39,7 @@ USER 1001
 #  listen       8080 default_server;
 #  root         /opt/app-root/src;
 
-COPY --from=build /opt/app-root/src/app/dist /opt/app-root/src
+COPY --from=build /opt/app-root/src/app/packages/forklift-console-plugin/dist /opt/app-root/src
 
 # Run the server
 CMD nginx -g "daemon off;"
