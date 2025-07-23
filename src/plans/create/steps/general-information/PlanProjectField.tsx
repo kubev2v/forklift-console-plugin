@@ -4,7 +4,7 @@ import useProjectNameSelectOptions from 'src/providers/create/hooks/useProjectNa
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import { TypeaheadSelect } from '@components/common/TypeaheadSelect/TypeaheadSelect';
+import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
 import { useDefaultProject } from '@utils/hooks/useDefaultProject';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -13,7 +13,11 @@ import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
 
-const PlanProjectField: FC = () => {
+type PlanProjectFieldProps = {
+  testId?: string;
+};
+
+const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-select' }) => {
   const { t } = useForkliftTranslation();
   const {
     control,
@@ -62,39 +66,37 @@ const PlanProjectField: FC = () => {
         name={GeneralFormFieldId.PlanProject}
         control={control}
         render={({ field }) => (
-          <div ref={field.ref}>
-            <TypeaheadSelect
-              isScrollable
-              placeholder={t('Select plan project')}
-              id={GeneralFormFieldId.PlanProject}
-              selectOptions={projectOptions}
-              selected={field.value}
-              onSelect={(_, value) => {
-                field.onChange(value);
+          <TypeaheadSelect
+            ref={field.ref}
+            data-testid={testId}
+            isScrollable
+            allowClear
+            placeholder={t('Select plan project')}
+            id={GeneralFormFieldId.PlanProject}
+            options={projectOptions}
+            value={field.value}
+            onChange={(value) => {
+              field.onChange(value);
 
-                if (sourceProvider) {
-                  setValue<FieldPath<FieldValues>>(GeneralFormFieldId.SourceProvider, '', {
-                    shouldValidate: true,
-                  });
-                }
-                if (targetProvider) {
-                  setValue<FieldPath<FieldValues>>(GeneralFormFieldId.TargetProvider, '', {
-                    shouldValidate: true,
-                  });
-                }
-                if (targetProject) {
-                  setValue(GeneralFormFieldId.TargetProject, '', { shouldValidate: true });
-                }
-              }}
-              onClearSelection={() => {
-                field.onChange('');
-              }}
-              toggleProps={{
-                id: 'plan-project-select',
-                status: errors[GeneralFormFieldId.PlanProject] && MenuToggleStatus.danger,
-              }}
-            />
-          </div>
+              if (sourceProvider) {
+                setValue<FieldPath<FieldValues>>(GeneralFormFieldId.SourceProvider, '', {
+                  shouldValidate: true,
+                });
+              }
+              if (targetProvider) {
+                setValue<FieldPath<FieldValues>>(GeneralFormFieldId.TargetProvider, '', {
+                  shouldValidate: true,
+                });
+              }
+              if (targetProject) {
+                setValue(GeneralFormFieldId.TargetProject, '', { shouldValidate: true });
+              }
+            }}
+            toggleProps={{
+              id: 'plan-project-select',
+              status: errors[GeneralFormFieldId.PlanProject] && MenuToggleStatus.danger,
+            }}
+          />
         )}
         rules={{ required: t('Plan project is required.') }}
       />

@@ -3,7 +3,7 @@ import { Controller, useWatch } from 'react-hook-form';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import Select from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import type {
   OpenShiftNetworkAttachmentDefinition,
   V1beta1PlanSpecTransferNetwork,
@@ -59,6 +59,7 @@ const TransferNetworkField: FC = () => {
         control={control}
         render={({ field }) => (
           <Select
+            ref={field.ref}
             id={field.name}
             value={field.value?.name ?? ''}
             onSelect={(_event, value) => {

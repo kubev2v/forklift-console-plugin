@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Select from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -25,6 +25,7 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({ fieldId, targetNetwor
       control={control}
       render={({ field }) => (
         <Select
+          ref={field.ref}
           id={fieldId}
           value={(field.value as MappingValue).name}
           onSelect={async (_event, value) => {

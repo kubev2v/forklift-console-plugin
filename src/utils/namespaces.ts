@@ -1,4 +1,4 @@
-import { Namespace } from './constants';
+import { Namespace, SYSTEM_NAMESPACES, SYSTEM_NAMESPACES_PREFIX } from './constants';
 import { isUpstream } from './env';
 
 /**
@@ -13,4 +13,11 @@ export const getDefaultNamespace = (): string => {
   }
 
   return Namespace.OpenshiftMtv;
+};
+
+export const isSystemNamespace = (option: string) => {
+  const startsWithNamespace = SYSTEM_NAMESPACES_PREFIX.some((ns) => option.startsWith(ns));
+  const isNamespace = SYSTEM_NAMESPACES.includes(option);
+
+  return startsWithNamespace || isNamespace;
 };

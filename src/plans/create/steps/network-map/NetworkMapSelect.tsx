@@ -1,8 +1,8 @@
-import { type ComponentProps, type FC, useMemo } from 'react';
+import { type ComponentProps, type ForwardedRef, forwardRef, useMemo } from 'react';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
-import Select from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import {
   NetworkMapModelGroupVersionKind,
   NetworkMapModelRef,
@@ -29,15 +29,18 @@ type NetworkMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 's
   testId?: string;
 };
 
-const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
-  id,
-  includeOwnerReferenced = false,
-  namespace,
-  onSelect,
-  status,
-  testId,
-  value,
-}) => {
+const NetworkMapSelect = (
+  {
+    id,
+    includeOwnerReferenced = false,
+    namespace,
+    onSelect,
+    status,
+    testId,
+    value,
+  }: NetworkMapSelectProps,
+  ref: ForwardedRef<HTMLButtonElement>,
+) => {
   const { t } = useForkliftTranslation();
   const [allNetworkMaps] = useK8sWatchResource<V1beta1NetworkMap[]>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
@@ -81,6 +84,7 @@ const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
   return (
     <Select
       id={id}
+      ref={ref}
       value={value}
       status={status}
       onSelect={onSelect}
@@ -104,4 +108,4 @@ const NetworkMapSelect: FC<NetworkMapSelectProps> = ({
   );
 };
 
-export default NetworkMapSelect;
+export default forwardRef(NetworkMapSelect);

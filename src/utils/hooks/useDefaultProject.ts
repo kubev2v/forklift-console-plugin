@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-import type { TypeaheadSelectOption } from '@components/common/TypeaheadSelect/TypeaheadSelect';
+import type { TypeaheadSelectOption } from '@components/common/TypeaheadSelect/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import { ALL_PROJECTS_KEY, Namespace } from '@utils/constants';
 import { getDefaultNamespace } from '@utils/namespaces';

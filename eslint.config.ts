@@ -150,7 +150,15 @@ export const createEslintConfig = (ideMode = false) =>
             skipComments: true,
           },
         ],
-        'max-lines-per-function': ['error', 150],
+        'max-lines-per-function': [
+          'error',
+          {
+            IIFEs: true,
+            max: 150,
+            skipBlankLines: true,
+            skipComments: true,
+          },
+        ],
         'max-statements': 'off',
         'new-cap': [
           'error',
@@ -172,6 +180,38 @@ export const createEslintConfig = (ideMode = false) =>
                 name: 'react',
               },
             ],
+          },
+        ],
+        'no-restricted-syntax': [
+          'warn',
+          {
+            message: "Use the custom Select from '@components/common/Select' for consistency.",
+            selector:
+              'Program:has(ImportDeclaration[source.value="@patternfly/react-core"] ImportSpecifier[imported.name="Select"]) JSXElement[openingElement.name.name="Select"]',
+          },
+          {
+            message:
+              "Use 'isEmpty()' from '@utils/helpers' instead of manually checking Object.keys().length === 0.",
+            selector:
+              'BinaryExpression[operator="==="][left.type="MemberExpression"][left.object.type="CallExpression"][left.object.callee.type="MemberExpression"][left.object.callee.object.name="Object"][left.object.callee.property.name="keys"][left.property.name="length"][right.type="Literal"][right.value=0]',
+          },
+          {
+            message:
+              "Use 'isEmpty()' from '@utils/helpers' instead of manually checking array.length === 0.",
+            selector:
+              'BinaryExpression[operator="==="][left.type="MemberExpression"][left.property.name="length"][right.type="Literal"][right.value=0]:not([left.object.type="CallExpression"])',
+          },
+          {
+            message:
+              "Use 'isEmpty()' from '@utils/helpers' instead of manually checking !array.length.",
+            selector:
+              'UnaryExpression[operator="!"][argument.type="MemberExpression"][argument.property.name="length"]',
+          },
+          {
+            message:
+              "Use ButtonVariant enum from '@patternfly/react-core' instead of string literals for button variants.",
+            selector:
+              'JSXOpeningElement[name.name="Button"] > JSXAttribute[name.name="variant"][value.type="Literal"][value.value=/^(primary|secondary|tertiary|danger|warning|link|plain|control)$/]',
           },
         ],
         'no-ternary': 'off',
@@ -243,9 +283,16 @@ export const createEslintConfig = (ideMode = false) =>
         },
       },
     },
+    // TypeaheadSelect component specific rules
+    {
+      files: ['**/TypeaheadSelect/*.tsx'],
+      rules: {
+        'no-restricted-syntax': 'off',
+      },
+    },
     // Testing directory specific rules
     {
-      files: ['testing/**/*.{js,ts,jsx,tsx}'],
+      files: ['testing/**/*.{js,ts,jsx,tsx}', '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}'],
       rules: {
         '@cspell/spellchecker': 'off',
         '@typescript-eslint/class-methods-use-this': 'off',
@@ -255,6 +302,7 @@ export const createEslintConfig = (ideMode = false) =>
         '@typescript-eslint/no-namespace': 'off',
         'max-lines-per-function': 'off',
         'perfectionist/sort-objects': 'off',
+        'react-refresh/only-export-components': 'off',
         'require-unicode-regexp': 'off',
       },
     },
