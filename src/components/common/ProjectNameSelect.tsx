@@ -7,7 +7,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { FormGroupWithHelpText } from './FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from './HelpIconPopover/HelpIconPopover';
-import { TypeaheadSelect } from './TypeaheadSelect/TypeaheadSelect';
+import TypeaheadSelect from './TypeaheadSelect/TypeaheadSelect';
 
 type ProjectNameSelectProps = {
   projectName: string | undefined;
@@ -31,14 +31,12 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({ onSelect, projec
     >
       <TypeaheadSelect
         isScrollable
+        allowClear
         id="project-name-select"
-        selectOptions={projectNameOptions}
-        selected={projectName}
-        onSelect={(_event, value) => {
-          onSelect?.(String(value));
-        }}
-        onClearSelection={() => {
-          onSelect?.('');
+        options={projectNameOptions}
+        value={projectName}
+        onChange={(value) => {
+          onSelect?.(value as string);
         }}
       />
     </FormGroupWithHelpText>

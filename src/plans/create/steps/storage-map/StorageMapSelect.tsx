@@ -1,8 +1,8 @@
-import { type ComponentProps, type FC, useMemo } from 'react';
+import { type ComponentProps, type ForwardedRef, forwardRef, useMemo } from 'react';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
-import Select from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import {
   StorageMapModelGroupVersionKind,
   StorageMapModelRef,
@@ -29,15 +29,18 @@ type StorageMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 's
   testId?: string;
 };
 
-const StorageMapSelect: FC<StorageMapSelectProps> = ({
-  id,
-  includeOwnerReferenced = false,
-  namespace,
-  onSelect,
-  status,
-  testId,
-  value,
-}) => {
+const StorageMapSelect = (
+  {
+    id,
+    includeOwnerReferenced = false,
+    namespace,
+    onSelect,
+    status,
+    testId,
+    value,
+  }: StorageMapSelectProps,
+  ref: ForwardedRef<HTMLButtonElement>,
+) => {
   const { t } = useForkliftTranslation();
   const [allStorageMaps] = useK8sWatchResource<V1beta1StorageMap[]>({
     groupVersionKind: StorageMapModelGroupVersionKind,
@@ -80,6 +83,7 @@ const StorageMapSelect: FC<StorageMapSelectProps> = ({
   return (
     <Select
       id={id}
+      ref={ref}
       value={value}
       status={status}
       onSelect={onSelect}
@@ -103,4 +107,4 @@ const StorageMapSelect: FC<StorageMapSelectProps> = ({
   );
 };
 
-export default StorageMapSelect;
+export default forwardRef(StorageMapSelect);

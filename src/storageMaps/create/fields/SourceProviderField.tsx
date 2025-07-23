@@ -31,6 +31,7 @@ const SourceProviderField: FC = () => {
         control={control}
         render={({ field }) => (
           <ProviderSelect
+            ref={field.ref}
             isDisabled={isSubmitting}
             placeholder={t('Select source provider')}
             id={StorageMapFieldId.SourceProvider}

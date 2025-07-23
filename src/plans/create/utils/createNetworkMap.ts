@@ -34,6 +34,7 @@ export const createNetworkMap = async ({
   targetProvider,
 }: CreateNetworkMapParams) => {
   const sourceProviderName = sourceProvider?.metadata?.name;
+
   const networkMap: V1beta1NetworkMap = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'NetworkMap',
@@ -45,16 +46,18 @@ export const createNetworkMap = async ({
     spec: {
       map: mappings?.reduce((acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork }) => {
         if (sourceNetwork.name) {
+          const [nadNamespace, nadName] = targetNetwork.name.includes('/')
+            ? targetNetwork.name.split('/')
+            : [targetNamespace, targetNetwork.name];
+
           acc.push({
             // Handle pod network type or multus network type for the destination
             destination:
               targetNetwork.name === PodNetworkLabel.Source || targetNetwork.name === ''
                 ? { type: 'pod' }
                 : {
-                    name: targetNetwork.name.includes('/')
-                      ? targetNetwork.name.split('/')[1]
-                      : targetNetwork.name,
-                    namespace: targetNamespace,
+                    name: nadName,
+                    namespace: nadNamespace,
                     type: 'multus',
                   },
             // Handle pod network type or regular network for the source

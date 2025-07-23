@@ -1,9 +1,9 @@
-import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react';
+import { type ComponentProps, type ForwardedRef, forwardRef, type ReactNode, useMemo } from 'react';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
-import Select from '@components/common/MtvSelect';
+import Select from '@components/common/Select';
 import {
   ProviderModelGroupVersionKind,
   ProviderModelRef,
@@ -29,18 +29,21 @@ type ProviderSelectProps = Pick<
   testId?: string;
 };
 
-const ProviderSelect: FC<ProviderSelectProps> = ({
-  emptyState,
-  id,
-  isDisabled,
-  isTarget,
-  namespace,
-  onSelect,
-  placeholder,
-  status,
-  testId,
-  value,
-}) => {
+const ProviderSelect = (
+  {
+    emptyState,
+    id,
+    isDisabled,
+    isTarget,
+    namespace,
+    onSelect,
+    placeholder,
+    status,
+    testId,
+    value,
+  }: ProviderSelectProps,
+  ref: ForwardedRef<HTMLButtonElement>,
+) => {
   const [providers] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
@@ -79,6 +82,7 @@ const ProviderSelect: FC<ProviderSelectProps> = ({
       placeholder={placeholder}
       isDisabled={isDisabled}
       testId={testId}
+      ref={ref}
     >
       <SelectList>
         {isEmpty(filteredProviders)
@@ -107,4 +111,4 @@ const ProviderSelect: FC<ProviderSelectProps> = ({
   );
 };
 
-export default ProviderSelect;
+export default forwardRef(ProviderSelect);

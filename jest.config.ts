@@ -17,6 +17,7 @@ export const config: JestConfigWithTsJest = {
   preset: 'ts-jest',
   roots: ['<rootDir>/src'],
   setupFiles: ['<rootDir>/src/__mocks__/envvars.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testEnvironment: 'jest-environment-jsdom',
   testMatch: ['<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   transform: {

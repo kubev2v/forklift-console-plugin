@@ -5,7 +5,16 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { Concern } from '@kubev2v/types';
-import { Button, Label, Popover, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  Label,
+  Popover,
+  Split,
+  SplitItem,
+  Stack,
+  StackItem,
+} from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
 import { orderedConcernCategories } from '../constants';
@@ -58,7 +67,7 @@ const ConcernPopover: FC<{
       bodyContent={<ConcernList concerns={concerns} />}
       footerContent={t('Total: {{length}}', { length: concerns.length })}
     >
-      <Button isInline variant="link">
+      <Button isInline variant={ButtonVariant.link}>
         <Label color={getCategoryColor(category)} icon={getCategoryIcon(category)}>
           {concerns.length}
         </Label>
