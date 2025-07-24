@@ -18,6 +18,22 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namesp
   const navigate = useNavigate();
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
+  // DEBUG: Log button state for GitHub Actions debugging
+  // eslint-disable-next-line no-console
+  console.log('🔲 PlansAddButton DEBUG:', {
+    namespace,
+    canCreate,
+    hasSufficientProviders,
+    dataTestId,
+    buttonWillBeDisabled: !canCreate,
+    buttonWillBeAriaDisabled: !hasSufficientProviders,
+    finalButtonState: {
+      enabled: canCreate && hasSufficientProviders,
+      disabled: !canCreate,
+      ariaDisabled: !hasSufficientProviders,
+    },
+  });
+
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
