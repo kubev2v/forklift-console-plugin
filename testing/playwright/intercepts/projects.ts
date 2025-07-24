@@ -1,60 +1,89 @@
 import type { Page } from '@playwright/test';
 
-import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
+import { TEST_DATA } from '../fixtures/test-data';
 
 export const setupProjectsIntercepts = async (page: Page) => {
-  await page.route(API_ENDPOINTS.projects, async (route) => {
+  const projectsResponse = {
+    kind: 'ProjectList',
+    apiVersion: 'project.openshift.io/v1',
+    metadata: {},
+    items: TEST_DATA.projects.map((project) => ({
+      metadata: {
+        name: project.name,
+        uid: project.uid,
+        labels: {
+          'kubernetes.io/metadata.name': project.name,
+        },
+      },
+      spec: {
+        finalizers: ['kubernetes'],
+      },
+      status: {
+        phase: project.phase,
+      },
+    })),
+  };
+
+  const namespacesResponse = {
+    kind: 'NamespaceList',
+    apiVersion: 'v1',
+    metadata: {},
+    items: TEST_DATA.projects.map((project) => ({
+      metadata: {
+        name: project.name,
+        uid: project.uid,
+        labels: {
+          'kubernetes.io/metadata.name': project.name,
+        },
+      },
+      spec: {
+        finalizers: ['kubernetes'],
+      },
+      status: {
+        phase: project.phase,
+      },
+    })),
+  };
+
+  // EXACT endpoints that work in Cypress (and therefore in GitHub Actions)
+  // OpenShift projects endpoint
+  await page.route(
+    '/api/kubernetes/apis/project.openshift.io/v1/projects?limit=250',
+    async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(projectsResponse),
+      });
+    },
+  );
+
+  // Kubernetes namespaces endpoint (for CI environment)
+  await page.route('/api/kubernetes/api/v1/namespaces?limit=250', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({
-        kind: 'ProjectList',
-        apiVersion: 'project.openshift.io/v1',
-        metadata: {},
-        items: TEST_DATA.projects.map((project) => ({
-          metadata: {
-            name: project.name,
-            uid: project.uid,
-            labels: {
-              'kubernetes.io/metadata.name': project.name,
-            },
-          },
-          spec: {
-            finalizers: ['kubernetes'],
-          },
-          status: {
-            phase: project.phase,
-          },
-        })),
-      }),
+      body: JSON.stringify(namespacesResponse),
     });
   });
 
-  // Also handle Kubernetes namespaces (for CI environment)
-  await page.route(API_ENDPOINTS.namespaces, async (route) => {
+  // Handle other limit values
+  await page.route(
+    /\/api\/kubernetes\/apis\/project\.openshift\.io\/v1\/projects\?limit=\d+/,
+    async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(projectsResponse),
+      });
+    },
+  );
+
+  await page.route(/\/api\/kubernetes\/api\/v1\/namespaces\?limit=\d+/, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({
-        kind: 'NamespaceList',
-        apiVersion: 'v1',
-        metadata: {},
-        items: TEST_DATA.projects.map((project) => ({
-          metadata: {
-            name: project.name,
-            uid: project.uid,
-            labels: {
-              'kubernetes.io/metadata.name': project.name,
-            },
-          },
-          spec: {
-            finalizers: ['kubernetes'],
-          },
-          status: {
-            phase: project.phase,
-          },
-        })),
-      }),
+      body: JSON.stringify(namespacesResponse),
     });
   });
 };
