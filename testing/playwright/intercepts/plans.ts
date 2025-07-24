@@ -74,19 +74,21 @@ export const setupPlansIntercepts = async (page: Page) => {
     },
   );
 
-  // SelfSubjectAccessReview for authorization (essential for button enabling)
-  await page.route(
-    /.*\/api\/kubernetes\/apis\/authorization\.k8s\.io\/v1\/selfsubjectaccessreviews/,
-    async (route) => {
+  // Catch ANY authorization API call
+  await page.route('**/authorization.k8s.io/**', async (route) => {
+    console.log('🎯 ANY AUTH API CALL:', route.request().url());
+    if (route.request().url().includes('selfsubjectaccessreviews')) {
       if (route.request().method() === 'POST') {
-        const url = route.request().url();
-        console.log('🎯 INTERCEPTED SelfSubjectAccessReview request:', url);
+        console.log('🎯 INTERCEPTED SelfSubjectAccessReview request');
+
+        // Parse the request to see what permissions are being checked
+        const requestBody = route.request().postData();
+        console.log('📋 Request body:', requestBody);
+
         const authResponse = {
           apiVersion: 'authorization.k8s.io/v1',
           kind: 'SelfSubjectAccessReview',
-          metadata: {
-            creationTimestamp: null,
-          },
+          metadata: { creationTimestamp: null },
           spec: {
             resourceAttributes: {
               verb: 'create',
@@ -99,15 +101,19 @@ export const setupPlansIntercepts = async (page: Page) => {
             reason: 'RBAC: allowed by test intercept',
           },
         };
+
         await route.fulfill({
           status: 201,
           contentType: 'application/json',
           body: JSON.stringify(authResponse),
         });
-        console.log('✅ Responded to SelfSubjectAccessReview with allowed=true');
+
+        console.log('✅ Responded with allowed=true');
       }
-    },
-  );
+    } else {
+      await route.continue();
+    }
+  });
 
   // NetworkMap creation endpoint for plan wizard
   await page.route(
