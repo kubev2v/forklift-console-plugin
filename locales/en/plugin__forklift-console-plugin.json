@@ -348,6 +348,7 @@
   "If true, the provider's TLS certificate won't be validated.": "If true, the provider's TLS certificate won't be validated.",
   "If you specify a playbook, the image must be hook-runner.": "If you specify a playbook, the image must be hook-runner.",
   "If your VMs use static IPs, click the Mappings tab of your plan, and choose a different target network mapping.<1></1>If your VMs do not use static IPs, you can ignore this message.": "If your VMs use static IPs, click the Mappings tab of your plan, and choose a different target network mapping.<1></1>If your VMs do not use static IPs, you can ignore this message.",
+  "Ignore network": "Ignore network",
   "Image": "Image",
   "In live migration, the source virtual machine continues to run until the migration is complete.": "In live migration, the source virtual machine continues to run until the migration is complete.",
   "In warm migration, the VM disks are copied incrementally using changed block tracking (CBT) snapshots.\n          The snapshots are created at one-hour intervals by default.\n          You can change the snapshot interval by updating the forklift-controller deployment.": "In warm migration, the VM disks are copied incrementally using changed block tracking (CBT) snapshots.\n          The snapshots are created at one-hour intervals by default.\n          You can change the snapshot interval by updating the forklift-controller deployment.",
