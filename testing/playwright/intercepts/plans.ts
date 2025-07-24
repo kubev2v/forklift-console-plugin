@@ -10,10 +10,10 @@ export const setupPlansIntercepts = async (page: Page) => {
     items: [],
   };
 
-  // EXACT endpoints that work in Cypress (and therefore in GitHub Actions)
+  // URL patterns that work for both local (9000) and GitHub Actions (30080)
   // Namespaced plans endpoint (wildcard namespace)
   await page.route(
-    '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/*/plans?limit=250',
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/plans\?limit=\d+/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -25,7 +25,7 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // All plans endpoint (cluster-wide)
   await page.route(
-    '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/plans?limit=250',
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/plans\?limit=\d+/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -35,9 +35,9 @@ export const setupPlansIntercepts = async (page: Page) => {
     },
   );
 
-  // Handle other limit values
+  // Additional plan patterns
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/plans\?limit=\d+/,
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/plans.*/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -48,7 +48,7 @@ export const setupPlansIntercepts = async (page: Page) => {
   );
 
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/plans\?limit=\d+/,
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/plans.*/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -60,7 +60,7 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // SubjectAccessReview for authorization (essential for button enabling)
   await page.route(
-    '/api/kubernetes/apis/authorization.k8s.io/v1/subjectaccessreviews',
+    /.*\/api\/kubernetes\/apis\/authorization\.k8s\.io\/v1\/subjectaccessreviews/,
     async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
@@ -78,7 +78,7 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // NetworkMap creation endpoint for plan wizard
   await page.route(
-    '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/networkmaps',
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps/,
     async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
@@ -106,7 +106,7 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // StorageMap creation endpoint for plan wizard
   await page.route(
-    '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/storagemaps',
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps/,
     async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
@@ -134,7 +134,7 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // Plan creation endpoint
   await page.route(
-    '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/plans',
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/plans/,
     async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({

@@ -45,10 +45,10 @@ export const setupProjectsIntercepts = async (page: Page) => {
     })),
   };
 
-  // EXACT endpoints that work in Cypress (and therefore in GitHub Actions)
+  // URL patterns that work for both local (9000) and GitHub Actions (30080)
   // OpenShift projects endpoint
   await page.route(
-    '/api/kubernetes/apis/project.openshift.io/v1/projects?limit=250',
+    /.*\/api\/kubernetes\/apis\/project\.openshift\.io\/v1\/projects\?limit=\d+/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -59,7 +59,7 @@ export const setupProjectsIntercepts = async (page: Page) => {
   );
 
   // Kubernetes namespaces endpoint (for CI environment)
-  await page.route('/api/kubernetes/api/v1/namespaces?limit=250', async (route) => {
+  await page.route(/.*\/api\/kubernetes\/api\/v1\/namespaces\?limit=\d+/, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -67,9 +67,9 @@ export const setupProjectsIntercepts = async (page: Page) => {
     });
   });
 
-  // Handle other limit values
+  // Additional patterns for projects
   await page.route(
-    /\/api\/kubernetes\/apis\/project\.openshift\.io\/v1\/projects\?limit=\d+/,
+    /.*\/api\/kubernetes\/apis\/project\.openshift\.io\/v1\/projects.*/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -79,7 +79,7 @@ export const setupProjectsIntercepts = async (page: Page) => {
     },
   );
 
-  await page.route(/\/api\/kubernetes\/api\/v1\/namespaces\?limit=\d+/, async (route) => {
+  await page.route(/.*\/api\/kubernetes\/api\/v1\/namespaces.*/, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
