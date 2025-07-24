@@ -56,10 +56,10 @@ export const setupProvidersIntercepts = async (page: Page) => {
     ],
   };
 
-  // EXACT endpoints that work in Cypress (and therefore in GitHub Actions)
+  // URL patterns that work for both local (9000) and GitHub Actions (30080)
   // Namespaced providers endpoint
   await page.route(
-    '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/providers?limit=250',
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/providers\?limit=\d+/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -71,7 +71,7 @@ export const setupProvidersIntercepts = async (page: Page) => {
 
   // All providers endpoint (cluster-wide)
   await page.route(
-    '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/providers?limit=250',
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/providers\?limit=\d+/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -81,9 +81,9 @@ export const setupProvidersIntercepts = async (page: Page) => {
     },
   );
 
-  // Also handle any other limit values (250 is default but might vary)
+  // Additional variations to ensure we catch all patterns
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/providers\?limit=\d+/,
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/providers.*/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -94,7 +94,7 @@ export const setupProvidersIntercepts = async (page: Page) => {
   );
 
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/providers\?limit=\d+/,
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/providers.*/,
     async (route) => {
       await route.fulfill({
         status: 200,
