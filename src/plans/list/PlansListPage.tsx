@@ -52,6 +52,9 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
       fieldsMetadata={planFields}
       namespace={namespace}
       title={t('Migration plans')}
+      titleHelpContent={t(
+        'A migration plan is a strategy for moving VMs from 1 environment to OpenShift Virtualization. It lets you group VMs to be migrated together or with the same migration configuration.',
+      )}
       userSettings={userSettings}
       customNoResultsFound={<PlansEmptyState namespace={namespace} />}
       page={INITIAL_PAGE}
