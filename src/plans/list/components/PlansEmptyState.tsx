@@ -20,7 +20,7 @@ const PlansEmptyState: FC<{ namespace: string }> = ({ namespace }) => {
 
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
-  const permissions = useGetDeleteAndEditAccessReview({
+  const { canCreate } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
     namespace,
   });
@@ -74,7 +74,7 @@ const PlansEmptyState: FC<{ namespace: string }> = ({ namespace }) => {
         )
       }
       callForActionButtons={
-        hasSufficientProviders && permissions.canCreate && <PlansAddButton namespace={namespace} />
+        hasSufficientProviders && <PlansAddButton namespace={namespace} canCreate={canCreate} />
       }
     />
   );
