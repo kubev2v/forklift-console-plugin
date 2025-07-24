@@ -5,12 +5,21 @@ const moduleNameMapper = {
   '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
   '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
   '^@components/(.*)$': '<rootDir>/src/components/$1',
+  '^@test-utils/(.*)$': '<rootDir>/src/test-utils/$1',
   '^@utils/(.*)$': '<rootDir>/src/utils/$1',
   'react-i18next': '<rootDir>/src/__mocks__/react-i18next.tsx',
 };
 
 // Sync object
 export const config: JestConfigWithTsJest = {
+  // Coverage configuration
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/**/*.{test,spec}.{js,jsx,ts,tsx}',
+    '!src/__mocks__/**',
+    '!src/test-utils/**',
+  ],
+  coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/', '/src/test-utils/'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   moduleNameMapper,
   modulePaths: ['<rootDir>'],
