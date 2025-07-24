@@ -10,12 +10,13 @@ import type {
   V1NetworkAttachmentDefinition,
   VSphereNetwork,
 } from '@kubev2v/types';
+import { POD_NETWORK } from '@utils/constants';
 
 import useProviderInventory from './useProviderInventory';
 
 const podNetwork: InventoryNetwork = {
   id: 'pod',
-  name: 'Pod network',
+  name: POD_NETWORK,
   namespace: '',
   object: undefined,
   providerType: 'openshift',

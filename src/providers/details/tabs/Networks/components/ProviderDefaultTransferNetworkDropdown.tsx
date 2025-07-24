@@ -9,6 +9,7 @@ import {
   MenuToggle,
   type MenuToggleElement,
 } from '@patternfly/react-core';
+import { POD_NETWORK } from '@utils/constants';
 
 import { getNetworkName } from './utils/getNetworkName';
 
@@ -41,13 +42,13 @@ const ProviderDefaultTransferNetworkDropdown: FC<ProviderDefaultTransferNetworkD
   const dropdownItems = [
     <DropdownItem
       value={0}
-      key="Pod network"
+      key={POD_NETWORK}
       description={'Default pod network'}
       onClick={() => {
         onChange('');
       }}
     >
-      {'Pod network'}
+      {POD_NETWORK}
     </DropdownItem>,
     ...(networks ?? []).map((network) => (
       <DropdownItem

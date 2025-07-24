@@ -1,3 +1,5 @@
+import { t } from '@utils/i18n';
+
 export const EMPTY_MSG = '-';
 
 export const Namespace = {
@@ -50,3 +52,5 @@ export const FEATURE_NAMES = {
   OCP_LIVE_MIGRATION: 'feature_ocp_live_migration',
   VOLUME_POPULATOR: 'feature_volume_populator',
 } as const;
+
+export const POD_NETWORK = t('Pod network');

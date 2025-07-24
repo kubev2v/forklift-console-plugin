@@ -4,6 +4,8 @@ import { EditProviderDefaultTransferNetwork } from 'src/modules/Providers/modals
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { POD_NETWORK } from '@utils/constants';
+
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
 export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
@@ -29,7 +31,7 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
       title={t('Default Transfer Network')}
       content={
         provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'] ?? (
-          <span className="text-muted">{t('Pod network')}</span>
+          <span className="text-muted">{POD_NETWORK}</span>
         )
       }
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
