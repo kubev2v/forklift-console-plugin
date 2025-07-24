@@ -61,10 +61,25 @@ export const setupProvidersIntercepts = async (page: Page) => {
 
   console.log('📦 Mock providers response prepared:', JSON.stringify(providersResponse, null, 2));
 
-  // URL patterns that work for both local (9000) and GitHub Actions (30080)
-  // Namespaced providers endpoint
+  // CRITICAL: Add the namespaced endpoint that should be called with namespace='openshift-mtv'
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/providers\?limit=\d+/,
+    async (route) => {
+      const url = route.request().url();
+      console.log('🎯 INTERCEPTED openshift-mtv namespaced providers request:', url);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(providersResponse),
+      });
+      console.log('✅ Responded to openshift-mtv namespaced providers request');
+    },
+  );
+
+  // URL patterns that work for both local (9000) and GitHub Actions (30080)
+  // Namespaced providers endpoint (any namespace)
+  await page.route(
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/providers\?limit=\d+/,
     async (route) => {
       const url = route.request().url();
       console.log('🎯 INTERCEPTED namespaced providers request:', url);
@@ -73,50 +88,13 @@ export const setupProvidersIntercepts = async (page: Page) => {
         contentType: 'application/json',
         body: JSON.stringify(providersResponse),
       });
-      console.log(
-        '✅ Responded to namespaced providers request with',
-        providersResponse.items.length,
-        'providers',
-      );
+      console.log('✅ Responded to namespaced providers request');
     },
   );
 
-  // All providers endpoint (cluster-wide)
+  // All providers endpoint (cluster-wide) - this is what we're currently seeing
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/providers\?limit=\d+/,
-    async (route) => {
-      const url = route.request().url();
-      console.log('🎯 INTERCEPTED cluster-wide providers request:', url);
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(providersResponse),
-      });
-      console.log(
-        '✅ Responded to cluster-wide providers request with',
-        providersResponse.items.length,
-        'providers',
-      );
-    },
-  );
-
-  // Additional variations to ensure we catch all patterns
-  await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/providers.*/,
-    async (route) => {
-      const url = route.request().url();
-      console.log('🎯 INTERCEPTED general namespaced providers request:', url);
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(providersResponse),
-      });
-      console.log('✅ Responded to general namespaced providers request');
-    },
-  );
-
-  await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/providers.*/,
     async (route) => {
       const url = route.request().url();
       console.log('🎯 INTERCEPTED general providers request:', url);
