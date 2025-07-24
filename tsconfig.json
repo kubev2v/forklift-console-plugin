@@ -32,6 +32,7 @@
     "paths": {
       "@utils/*": ["./src/utils/*"],
       "@components/*": ["./src/components/*"],
+      "@test-utils/*": ["./src/test-utils/*"],
       "src/*": ["./src/*"]
     }
   },
