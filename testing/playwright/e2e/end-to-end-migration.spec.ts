@@ -294,16 +294,10 @@ test.describe('Plans - Critical End-to-End Migration', () => {
         console.log('   3. Both hooks failed');
         console.log('\n📊 CHECK THE API CALLS SUMMARY ABOVE TO SEE WHICH FAILED');
 
-        // TEMPORARILY COMMENT OUT ERROR TO SEE LOGS
-        console.log('\n🔧 FORCING TEST TO PASS TO SEE DEBUG LOGS - REMOVE THIS LATER!');
-        console.log(
-          `🔧 Button was disabled: disabled=${finalButtonState.disabled}, aria-disabled=${finalButtonState.ariaDisabled}`,
+        // Force test failure with clear message
+        throw new Error(
+          `Button is disabled: disabled=${finalButtonState.disabled}, aria-disabled=${finalButtonState.ariaDisabled}. Check logs above for API call details.`,
         );
-
-        // Force test failure with clear message - TEMPORARILY DISABLED
-        // throw new Error(
-        //   `Button is disabled: disabled=${finalButtonState.disabled}, aria-disabled=${finalButtonState.ariaDisabled}. Check logs above for API call details.`,
-        // );
       }
     } else {
       console.log('❌ BUTTON NOT FOUND');
