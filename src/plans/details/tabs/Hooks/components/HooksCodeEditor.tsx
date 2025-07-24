@@ -4,7 +4,7 @@ import { Base64 } from 'js-base64';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import SectionHeading from '@components/headers/SectionHeading';
-import { CodeEditor, Language } from '@patternfly/react-code-editor';
+import VersionedCodeEditor from '@components/VersionedCodeEditor/VersionedCodeEditor';
 import { Form, HelperText, HelperTextItem, Switch, TextInput } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -93,14 +93,11 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
                     : HOOK_FORM_FIELD_NAMES.postHookPlaybook
                 }
                 render={({ field: { onChange, value } }) => (
-                  <CodeEditor
-                    language={Language.yaml}
-                    code={Base64.decode(value)}
+                  <VersionedCodeEditor
+                    value={Base64.decode(value)}
                     onChange={(code) => {
                       onChange(Base64.encode(code));
                     }}
-                    height="20rem"
-                    isMinimapVisible={false}
                   />
                 )}
               />
