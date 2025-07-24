@@ -11,24 +11,102 @@ test.describe('Plans - Critical End-to-End Migration', () => {
   test.beforeEach(async ({ page }) => {
     console.log('🚀 Starting test setup...');
 
+    // Track ALL API calls with enhanced logging
+    const apiCalls = [];
+    let selfSubjectCalls = 0;
+    let providerCalls = 0;
+
     // Log all console messages from the browser
     page.on('console', (msg) => {
       console.log(`🌐 BROWSER CONSOLE [${msg.type()}]:`, msg.text());
     });
 
-    // Log all Forklift-related network requests with detailed info
+    // Enhanced request tracking
     page.on('request', (request) => {
       const url = request.url();
+      const method = request.method();
+
+      // Track SelfSubjectAccessReview specifically
+      if (url.includes('selfsubjectaccessreviews')) {
+        selfSubjectCalls++;
+        console.log(`🎯 SelfSubjectAccessReview REQUEST #${selfSubjectCalls}:`, url);
+        console.log(`   📋 Method: ${method}`);
+        console.log(`   📦 Body:`, request.postData());
+        console.log(`   📋 Headers:`, JSON.stringify(request.headers()));
+
+        apiCalls.push({
+          type: 'SelfSubjectAccessReview',
+          method,
+          url,
+          timestamp: new Date().toISOString(),
+        });
+      }
+
+      // Track provider calls (needed for useHasSufficientProviders)
+      if (url.includes('providers') && !url.includes('forklift-console-plugin')) {
+        providerCalls++;
+        console.log(`🔧 Provider API REQUEST #${providerCalls}:`, url);
+
+        apiCalls.push({
+          type: 'Provider',
+          method,
+          url,
+          timestamp: new Date().toISOString(),
+        });
+      }
+
+      // Track all Forklift-related requests
       if (url.includes('forklift') || url.includes('authorization.k8s.io')) {
-        console.log(`📡 REQUEST: ${request.method()} ${url}`);
-        console.log(`   📋 Headers: ${JSON.stringify(request.headers())}`);
+        console.log(`📡 REQUEST: ${method} ${url}`);
       }
     });
 
+    // Enhanced response tracking
     page.on('response', (response) => {
       const url = response.url();
+      const status = response.status();
+
+      if (url.includes('selfsubjectaccessreviews')) {
+        console.log(`✅ SelfSubjectAccessReview RESPONSE: ${status} ${url}`);
+
+        // Try to get response body
+        void response
+          .json()
+          .then((data) => {
+            console.log('📨 SelfSubjectAccessReview Response data:', JSON.stringify(data, null, 2));
+
+            if (data.status && data.status.allowed !== undefined) {
+              console.log(`🔑 Permission result: allowed=${data.status.allowed}`);
+            }
+          })
+          .catch((err) => {
+            console.log(
+              '❌ Could not parse SelfSubjectAccessReview response as JSON:',
+              err.message,
+            );
+          });
+      }
+
+      if (url.includes('providers') && !url.includes('forklift-console-plugin')) {
+        console.log(`📦 Provider API RESPONSE: ${status} ${url}`);
+
+        void response
+          .json()
+          .then((data: any) => {
+            if (data.items) {
+              console.log(`🏭 Provider count: ${data.items.length}`);
+              data.items.forEach((provider: any, index: number) => {
+                console.log(
+                  `   Provider ${index + 1}: ${provider.metadata?.name} (${provider.spec?.type})`,
+                );
+              });
+            }
+          })
+          .catch(() => console.log('Could not parse provider response'));
+      }
+
       if (url.includes('forklift') || url.includes('authorization.k8s.io')) {
-        console.log(`📨 RESPONSE: ${response.status()} ${url}`);
+        console.log(`📨 RESPONSE: ${status} ${url}`);
       }
     });
 
@@ -40,6 +118,132 @@ test.describe('Plans - Critical End-to-End Migration', () => {
     const plansPage = new PlansListPage(page);
     await plansPage.navigateFromMainMenu();
     console.log('✅ Navigation complete');
+
+    // Wait for initial page load and API calls
+    console.log('⏱️ Waiting for initial API calls...');
+    await page.waitForTimeout(3000);
+
+    // DETAILED BUTTON STATE ANALYSIS
+    console.log('\n🔍 === DETAILED BUTTON ANALYSIS ===');
+
+    const button = plansPage.createPlanButton;
+
+    // Check if button exists at all
+    const buttonExists = await button.count();
+    console.log(`🔲 Button element count: ${buttonExists}`);
+
+    if (buttonExists > 0) {
+      // Get detailed button properties
+      const buttonProps = await button.evaluate((el) => {
+        const element = el as HTMLElement;
+        return {
+          disabled: (element as any).disabled,
+          ariaDisabled: element.getAttribute('aria-disabled'),
+          className: element.className,
+          textContent: element.textContent?.trim(),
+          visible: element.offsetParent !== null,
+          style: (element as any).style?.cssText || '',
+          parentClass: element.parentElement?.className,
+        };
+      });
+
+      console.log('🔲 Button properties:', JSON.stringify(buttonProps, null, 2));
+
+      // Check if button is in viewport
+      const isVisible = await button.isVisible();
+      const isEnabled = await button.isEnabled();
+      console.log(`🔲 Playwright checks: visible=${isVisible}, enabled=${isEnabled}`);
+    } else {
+      console.log('❌ Button element not found!');
+
+      // Look for alternative button patterns
+      const alternativeButtons = await page.$$('button, [role="button"]');
+      console.log(`🔍 Total buttons on page: ${alternativeButtons.length}`);
+
+      for (let i = 0; i < Math.min(alternativeButtons.length, 5); i++) {
+        const text = await alternativeButtons[i].textContent();
+        const testId = await alternativeButtons[i].getAttribute('data-testid');
+        console.log(`   Button ${i + 1}: "${text}" (testid: ${testId})`);
+      }
+    }
+
+    // Check what page state we're in
+    console.log('\n🔍 === PAGE STATE ANALYSIS ===');
+
+    // Check for empty state vs table view
+    const emptyStateElements = await page.$$('[data-test*="empty"], *:has-text("No plans found")');
+    const tableElements = await page.$$('table, [role="table"]');
+    const planRows = await page.$$('[data-testid*="plan-row"], tr[data-testid]');
+
+    console.log(`🏜️ Empty state elements: ${emptyStateElements.length}`);
+    console.log(`📊 Table elements: ${tableElements.length}`);
+    console.log(`📋 Plan rows: ${planRows.length}`);
+
+    // Check main content
+    const mainContent = await page
+      .textContent('main, [role="main"], .pf-v5-c-page__main-section')
+      .catch(() => '');
+    const hasNoPlansText = mainContent
+      ? mainContent.includes('No plans found') || mainContent.includes('no plans')
+      : false;
+    console.log(`📄 Page suggests empty state: ${hasNoPlansText}`);
+
+    // API CALLS SUMMARY
+    console.log('\n📊 === API CALLS SUMMARY ===');
+    console.log(`Total SelfSubjectAccessReview calls: ${selfSubjectCalls}`);
+    console.log(`Total Provider calls: ${providerCalls}`);
+    console.log(`Total tracked API calls: ${apiCalls.length}`);
+
+    if (selfSubjectCalls === 0) {
+      console.log('❌ NO SelfSubjectAccessReview calls - This is why canCreate might be false!');
+    }
+
+    if (providerCalls === 0) {
+      console.log('❌ NO Provider calls - This is why useHasSufficientProviders might not work!');
+    }
+
+    // Wait a bit more for any delayed API calls
+    console.log('\n⏱️ Waiting for potential delayed API calls...');
+    await page.waitForTimeout(2000);
+
+    // Final button state check
+    console.log('\n🎯 === FINAL BUTTON STATE CHECK ===');
+    if (buttonExists > 0) {
+      const finalButtonState = await button.evaluate((el) => {
+        const element = el as HTMLElement;
+        const disabled = (element as any).disabled;
+        const ariaDisabled = element.getAttribute('aria-disabled');
+        return {
+          disabled,
+          ariaDisabled,
+          enabled: !disabled && ariaDisabled !== 'true',
+        };
+      });
+
+      console.log('🔲 Final button state:', finalButtonState);
+
+      if (!finalButtonState.enabled) {
+        console.log('❌ Button is still disabled - checking why...');
+        console.log('   - Check SelfSubjectAccessReview calls and responses above');
+        console.log('   - Check Provider calls and responses above');
+        console.log(
+          '   - Button might be in empty state where useHasSufficientProviders prevents rendering',
+        );
+      }
+    }
+
+    console.log('\n🎯 Attempting to assert button is enabled...');
+    await plansPage.assertCreatePlanButtonEnabled();
+    console.log('✅ Create plan button is enabled!');
+
+    console.log('🖱️ Clicking create plan button...');
+    await plansPage.clickCreatePlanButton();
+    console.log('✅ Create plan button clicked');
+
+    console.log('📝 Waiting for wizard to load...');
+    const wizardPage = new CreatePlanWizardPage(page);
+    await wizardPage.waitForWizardLoad();
+    console.log('✅ Test completed - button worked and wizard loaded!');
   });
 
   test('should run plan creation wizard', async ({ page }) => {
