@@ -5,13 +5,33 @@ import {
   type WatchK8sResult,
 } from '@openshift-console/dynamic-plugin-sdk';
 
-const useProviders = ({ namespace }: WatchK8sResource): WatchK8sResult<V1beta1Provider[]> =>
-  useK8sWatchResource<V1beta1Provider[]>({
+const useProviders = ({ namespace }: WatchK8sResource): WatchK8sResult<V1beta1Provider[]> => {
+  const result = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
     namespace,
     namespaced: true,
   });
+
+  // DEBUG: Log what useK8sWatchResource is actually returning
+  const [providers, loaded, error] = result;
+  // eslint-disable-next-line no-console
+  console.log('📡 useProviders hook result:', {
+    namespace,
+    providersReceived: providers?.length || 0,
+    loaded,
+    error: error ? String(error) : null,
+    rawProviders: providers,
+    watchResourceConfig: {
+      groupVersionKind: ProviderModelGroupVersionKind,
+      isList: true,
+      namespace,
+      namespaced: true,
+    },
+  });
+
+  return result;
+};
 
 const useHasSourceAndTargetProviders = (
   namespace?: string,
@@ -28,10 +48,10 @@ const useHasSourceAndTargetProviders = (
     providersLoaded,
     providersError: providersError ? String(providersError) : null,
     providers:
-      providers?.map((p) => ({
-        name: p.metadata?.name,
-        type: p.spec?.type,
-        namespace: p.metadata?.namespace,
+      providers?.map((provider) => ({
+        name: provider.metadata?.name,
+        namespace: provider.metadata?.namespace,
+        type: provider.spec?.type,
       })) || [],
   });
 
@@ -44,7 +64,7 @@ const useHasSourceAndTargetProviders = (
     hasSourceProviders,
     hasTargetProviders,
     providersLoaded,
-    hasError: !!providersError,
+    hasError: Boolean(providersError),
   });
 
   return [hasSourceProviders, hasTargetProviders, providersLoaded, providersError];
@@ -63,19 +83,8 @@ export const useHasSufficientProviders = (namespace?: string) => {
     hasSourceProviders,
     hasTargetProviders,
     providersLoaded,
-    hasError: !!providersError,
+    hasError: Boolean(providersError),
     hasSufficientProviders,
-    failureReason: !hasSufficientProviders
-      ? !hasSourceProviders
-        ? 'No source providers'
-        : !hasTargetProviders
-          ? 'No target (openshift) providers'
-          : !providersLoaded
-            ? 'Providers not loaded yet'
-            : providersError
-              ? 'Providers error: ' + String(providersError)
-              : 'Unknown reason'
-      : null,
   });
 
   return hasSufficientProviders;

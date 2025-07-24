@@ -185,5 +185,30 @@ export const setupProvidersIntercepts = async (page: Page) => {
     },
   );
 
+  // Provider List endpoint
+  await page.route(
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/providers.*$/,
+    async (route) => {
+      const url = route.request().url();
+      console.log('🔧 INTERCEPTED Provider List:', url);
+      console.log('🔧 Provider List Method:', route.request().method());
+      
+      if (route.request().method() === 'GET') {
+        console.log('📦 Returning Provider List with', providersResponse.items.length, 'providers');
+        console.log('📦 Provider types:', providersResponse.items.map(p => `${p.metadata.name}(${p.spec.type})`));
+        
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(providersResponse),
+        });
+        
+        console.log('✅ Provider List response sent successfully');
+      } else {
+        await route.continue();
+      }
+    },
+  );
+
   console.log('✨ Providers intercepts setup complete');
 };
