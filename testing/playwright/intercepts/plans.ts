@@ -75,24 +75,37 @@ export const setupPlansIntercepts = async (page: Page) => {
     },
   );
 
-  // SubjectAccessReview for authorization (essential for button enabling)
+  // SelfSubjectAccessReview for authorization (essential for button enabling)
   await page.route(
-    /.*\/api\/kubernetes\/apis\/authorization\.k8s\.io\/v1\/subjectaccessreviews/,
+    /.*\/api\/kubernetes\/apis\/authorization\.k8s\.io\/v1\/selfsubjectaccessreviews/,
     async (route) => {
       if (route.request().method() === 'POST') {
         const url = route.request().url();
-        console.log('🎯 INTERCEPTED SubjectAccessReview request:', url);
+        console.log('🎯 INTERCEPTED SelfSubjectAccessReview request:', url);
         const authResponse = {
+          kind: 'SelfSubjectAccessReview',
           apiVersion: 'authorization.k8s.io/v1',
-          kind: 'SubjectAccessReview',
-          status: { allowed: true },
+          metadata: {
+            creationTimestamp: null,
+          },
+          spec: {
+            resourceAttributes: {
+              verb: 'create',
+              group: 'forklift.konveyor.io',
+              resource: 'plans',
+            },
+          },
+          status: {
+            allowed: true,
+            reason: 'RBAC: allowed by ClusterRoleBinding for testing',
+          },
         };
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify(authResponse),
         });
-        console.log('✅ Responded to SubjectAccessReview with allowed=true');
+        console.log('✅ Responded to SelfSubjectAccessReview with allowed=true');
       }
     },
   );
