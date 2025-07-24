@@ -119,9 +119,35 @@ test.describe('Plans - Critical End-to-End Migration', () => {
     await plansPage.navigateFromMainMenu();
     console.log('✅ Navigation complete');
 
+    // Immediate debugging after navigation
+    console.log('🔍 IMMEDIATE POST-NAVIGATION CHECK:');
+    const currentUrl = page.url();
+    console.log(`   Current URL: ${currentUrl}`);
+
+    // Check if we can find the button immediately
+    const immediateButtonCheck = await page.getByTestId('create-plan-button').count();
+    console.log(`   Button found immediately: ${immediateButtonCheck > 0}`);
+
+    if (immediateButtonCheck > 0) {
+      const immediateButtonState = await page.getByTestId('create-plan-button').evaluate((el) => {
+        const element = el as HTMLElement;
+        return {
+          ariaDisabled: element.getAttribute('aria-disabled'),
+          className: element.className,
+        };
+      });
+      console.log(`   Immediate button state:`, immediateButtonState);
+    }
+
     // Wait for initial page load and API calls
     console.log('⏱️ Waiting for initial API calls...');
     await page.waitForTimeout(3000);
+
+    // Quick API call summary
+    console.log('📊 QUICK API SUMMARY AFTER 3s:');
+    console.log(`   SelfSubjectAccessReview calls: ${selfSubjectCalls}`);
+    console.log(`   Provider calls: ${providerCalls}`);
+    console.log(`   Total API calls: ${apiCalls.length}`);
 
     // DETAILED BUTTON STATE ANALYSIS
     console.log('\n🔍 === DETAILED BUTTON ANALYSIS ===');
@@ -233,17 +259,50 @@ test.describe('Plans - Critical End-to-End Migration', () => {
     }
 
     console.log('\n🎯 Attempting to assert button is enabled...');
-    await plansPage.assertCreatePlanButtonEnabled();
-    console.log('✅ Create plan button is enabled!');
 
-    console.log('🖱️ Clicking create plan button...');
-    await plansPage.clickCreatePlanButton();
-    console.log('✅ Create plan button clicked');
+    // Only proceed if button is actually enabled, otherwise show debug info
+    if (buttonExists > 0) {
+      const finalButtonState = await button.evaluate((el) => {
+        const element = el as HTMLElement;
+        const disabled = (element as any).disabled;
+        const ariaDisabled = element.getAttribute('aria-disabled');
+        return {
+          disabled,
+          ariaDisabled,
+          enabled: !disabled && ariaDisabled !== 'true',
+        };
+      });
 
-    console.log('📝 Waiting for wizard to load...');
-    const wizardPage = new CreatePlanWizardPage(page);
-    await wizardPage.waitForWizardLoad();
-    console.log('✅ Test completed - button worked and wizard loaded!');
+      if (finalButtonState.enabled) {
+        await plansPage.assertCreatePlanButtonEnabled();
+        console.log('✅ Create plan button is enabled!');
+
+        console.log('🖱️ Clicking create plan button...');
+        await plansPage.clickCreatePlanButton();
+        console.log('✅ Create plan button clicked');
+
+        console.log('📝 Waiting for wizard to load...');
+        const wizardPage = new CreatePlanWizardPage(page);
+        await wizardPage.waitForWizardLoad();
+        console.log('✅ Test completed - button worked and wizard loaded!');
+      } else {
+        console.log('❌ BUTTON IS DISABLED - DETAILED ANALYSIS:');
+        console.log('   Button state:', finalButtonState);
+        console.log('   This means either:');
+        console.log('   1. SelfSubjectAccessReview failed (canCreate = false)');
+        console.log('   2. Provider calls failed (useHasSufficientProviders = false)');
+        console.log('   3. Both hooks failed');
+        console.log('\n📊 CHECK THE API CALLS SUMMARY ABOVE TO SEE WHICH FAILED');
+
+        // Force test failure with clear message
+        throw new Error(
+          `Button is disabled: disabled=${finalButtonState.disabled}, aria-disabled=${finalButtonState.ariaDisabled}. Check logs above for API call details.`,
+        );
+      }
+    } else {
+      console.log('❌ BUTTON NOT FOUND');
+      throw new Error('Create plan button not found on the page');
+    }
   });
 
   test('should run plan creation wizard', async ({ page }) => {
