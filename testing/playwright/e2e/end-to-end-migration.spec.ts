@@ -55,9 +55,15 @@ test.describe('Plans - Critical End-to-End Migration', () => {
         });
       }
 
-      // Track all Forklift-related requests
+      // Log all Forklift-related network requests with detailed info
       if (url.includes('forklift') || url.includes('authorization.k8s.io')) {
-        console.log(`📡 REQUEST: ${method} ${url}`);
+        console.log(`📡 REQUEST: ${request.method()} ${url}`);
+        console.log(`   📋 Headers: ${JSON.stringify(request.headers())}`);
+        
+        // EXTRA: Check if this is a provider list request
+        if (url.includes('/providers') && !url.includes('/providers/test-')) {
+          console.log('🏭 PROVIDER LIST REQUEST detected:', url);
+        }
       }
     });
 
@@ -107,6 +113,16 @@ test.describe('Plans - Critical End-to-End Migration', () => {
 
       if (url.includes('forklift') || url.includes('authorization.k8s.io')) {
         console.log(`📨 RESPONSE: ${status} ${url}`);
+        
+        // EXTRA: Check provider responses specifically
+        if (url.includes('/providers') && !url.includes('/providers/test-')) {
+          console.log('🏭 PROVIDER LIST RESPONSE:', response.status());
+          
+          // Try to get response body for provider list
+          void response.json().then((data: any) => {
+            console.log('🏭 PROVIDER LIST DATA:', JSON.stringify(data, null, 2));
+          }).catch(() => console.log('Could not parse provider list response'));
+        }
       }
     });
 
