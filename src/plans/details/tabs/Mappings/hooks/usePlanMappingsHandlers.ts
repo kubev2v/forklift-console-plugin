@@ -12,7 +12,7 @@ import type {
 } from '@kubev2v/types';
 import { CONDITION_STATUS } from '@utils/constants';
 
-import { PodNetworkLabel } from '../utils/constants';
+import { IgnoreNetwork, PodNetworkLabel } from '../utils/constants';
 import {
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
@@ -114,9 +114,10 @@ export const usePlanMappingsHandlers: UsePlanMappingsHandlers = ({
 
   const onReplaceNetwork = ({ current, next }: { current: Mapping; next: Mapping }) => {
     const source = sourceNetworks.find((sourceNetwork) => sourceNetwork.name === next.source);
-    const target = targetNetworks.find(
-      (targetNetwork) => `${targetNetwork.namespace}/${targetNetwork.name}` === next.destination,
-    );
+    const target =
+      targetNetworks.find(
+        (targetNetwork) => `${targetNetwork.namespace}/${targetNetwork.name}` === next.destination,
+      ) ?? next.destination;
 
     if (source) {
       const newMap = createReplacedNetworkMap(source, target);
@@ -127,7 +128,9 @@ export const usePlanMappingsHandlers: UsePlanMappingsHandlers = ({
             current.source &&
           (item.destination.name === current.destination ||
             `${item.destination.namespace}/${item.destination.name}` === current.destination ||
-            (current.destination === PodNetworkLabel.Source && item.destination.type === POD)),
+            (current.destination === PodNetworkLabel.Source && item.destination.type === POD) ||
+            (current.destination === IgnoreNetwork.Label &&
+              item.destination.type === IgnoreNetwork.Type)),
         newMap,
       );
       setUpdatedNetwork(newState);

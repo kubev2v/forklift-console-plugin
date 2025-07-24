@@ -1,24 +1,59 @@
 import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
-import { PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
+import { IgnoreNetwork, PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import {
   NetworkMapModel,
   type V1beta1NetworkMap,
   type V1beta1NetworkMapSpecMap,
+  type V1beta1NetworkMapSpecMapDestination,
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { NetworkMapping } from '../steps/network-map/constants';
+import type { MappingValue } from '../types';
 
 type CreateNetworkMapParams = {
   mappings: NetworkMapping[];
   project: string;
-  sourceProvider: V1beta1Provider | undefined;
-  targetProvider: V1beta1Provider | undefined;
+  sourceProvider?: V1beta1Provider;
+  targetProvider?: V1beta1Provider;
   name?: string;
   targetNamespace: string;
+};
+
+const getSource = (sourceNetwork: MappingValue, sourceProvider?: V1beta1Provider) => {
+  if (sourceNetwork.id === 'pod') {
+    return { type: 'pod' };
+  }
+  return {
+    id: sourceNetwork.id,
+    name: sourceNetwork.name,
+    // Set type to 'multus' only for OpenShift source providers
+    type: sourceProvider?.spec?.type === PROVIDER_TYPES.openshift ? 'multus' : undefined,
+  };
+};
+
+const getDestination = (
+  targetNetwork: { name: string },
+  targetNamespace: string,
+): V1beta1NetworkMapSpecMapDestination => {
+  const [nadNamespace, nadName] = targetNetwork.name.includes('/')
+    ? targetNetwork.name.split('/')
+    : [targetNamespace, targetNetwork.name];
+
+  if (targetNetwork.name === PodNetworkLabel.Source || targetNetwork.name === '') {
+    return { type: 'pod' };
+  }
+  if (targetNetwork.name === IgnoreNetwork.Label) {
+    return { type: IgnoreNetwork.Type };
+  }
+  return {
+    name: nadName,
+    namespace: nadNamespace,
+    type: 'multus',
+  };
 };
 
 /**
@@ -46,33 +81,9 @@ export const createNetworkMap = async ({
     spec: {
       map: mappings?.reduce((acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork }) => {
         if (sourceNetwork.name) {
-          const [nadNamespace, nadName] = targetNetwork.name.includes('/')
-            ? targetNetwork.name.split('/')
-            : [targetNamespace, targetNetwork.name];
-
           acc.push({
-            // Handle pod network type or multus network type for the destination
-            destination:
-              targetNetwork.name === PodNetworkLabel.Source || targetNetwork.name === ''
-                ? { type: 'pod' }
-                : {
-                    name: nadName,
-                    namespace: nadNamespace,
-                    type: 'multus',
-                  },
-            // Handle pod network type or regular network for the source
-            source:
-              sourceNetwork.id === 'pod'
-                ? { type: 'pod' }
-                : {
-                    id: sourceNetwork.id,
-                    name: sourceNetwork.name,
-                    // Set type to 'multus' only for OpenShift source providers
-                    type:
-                      sourceProvider?.spec?.type === PROVIDER_TYPES.openshift
-                        ? 'multus'
-                        : undefined,
-                  },
+            destination: getDestination(targetNetwork, targetNamespace),
+            source: getSource(sourceNetwork, sourceProvider),
           });
         }
 

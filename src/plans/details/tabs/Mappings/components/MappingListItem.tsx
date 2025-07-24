@@ -9,11 +9,13 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
+  Divider,
   MenuToggle,
   type MenuToggleElement,
   Select,
   SelectGroup,
   SelectList,
+  SelectOption,
 } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 
@@ -26,6 +28,7 @@ type MappingListItemProps = {
   destination: string;
   sources?: string[];
   destinations?: string[];
+  additionalDestinations?: string[];
   generalSourcesLabel: string;
   noSourcesLabel: string;
   index: number;
@@ -35,6 +38,7 @@ type MappingListItemProps = {
 };
 
 export const MappingListItem: FC<MappingListItemProps> = ({
+  additionalDestinations,
   deleteMapping,
   destination,
   destinations,
@@ -142,6 +146,16 @@ export const MappingListItem: FC<MappingListItemProps> = ({
               >
                 <SelectList>
                   <SelectedOptions options={destinations} />
+                  {additionalDestinations && (
+                    <>
+                      <Divider />
+                      {additionalDestinations.map((dest) => (
+                        <SelectOption key={dest} value={dest}>
+                          {dest}
+                        </SelectOption>
+                      ))}
+                    </>
+                  )}
                 </SelectList>
               </Select>
             </DataListCell>,

@@ -23,6 +23,7 @@ import {
   getPlanStorageMapNamespace,
 } from '@utils/crds/plans/selectors';
 
+import { IgnoreNetwork } from '../utils/constants';
 import type { Mapping } from '../utils/types';
 
 import MappingList from './MappingList';
@@ -85,7 +86,10 @@ const PlanMappingsEditMode: FC<PlanMappingsEditModeProps> = ({
             <MappingList
               mappings={labeledNetworkMappings}
               availableSources={availableNetworkSources}
-              availableDestinations={availableNetworkTargets}
+              availableDestinations={availableNetworkTargets.filter(
+                (target) => target !== IgnoreNetwork.Label,
+              )}
+              additionalDestinations={[IgnoreNetwork.Label]}
               deleteMapping={onDeleteNetwork}
               addMapping={onAddNetwork}
               replaceMapping={onReplaceNetwork}

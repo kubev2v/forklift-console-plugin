@@ -12,6 +12,7 @@ type MappingListProps = {
   mappings: Mapping[];
   availableSources?: string[];
   availableDestinations?: string[];
+  additionalDestinations?: string[];
   replaceMapping?: (val: { current: Mapping; next: Mapping }) => void;
   deleteMapping?: (mapping: Mapping) => void;
   addMapping?: () => void;
@@ -22,6 +23,7 @@ type MappingListProps = {
 };
 
 const MappingList: FC<MappingListProps> = ({
+  additionalDestinations,
   addMapping,
   availableDestinations,
   availableSources,
@@ -44,6 +46,7 @@ const MappingList: FC<MappingListProps> = ({
             destination={destination}
             sources={availableSources}
             destinations={availableDestinations}
+            additionalDestinations={additionalDestinations}
             replaceMapping={replaceMapping}
             deleteMapping={deleteMapping}
             index={index}
