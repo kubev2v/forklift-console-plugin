@@ -39,6 +39,10 @@ const getDestination = (
   targetNetwork: { name: string },
   targetNamespace: string,
 ): V1beta1NetworkMapSpecMapDestination => {
+  const [nadNamespace, nadName] = targetNetwork.name.includes('/')
+    ? targetNetwork.name.split('/')
+    : [targetNamespace, targetNetwork.name];
+
   if (targetNetwork.name === PodNetworkLabel.Source || targetNetwork.name === '') {
     return { type: 'pod' };
   }
@@ -46,8 +50,8 @@ const getDestination = (
     return { type: IgnoreNetwork.Type };
   }
   return {
-    name: targetNetwork.name.includes('/') ? targetNetwork.name.split('/')[1] : targetNetwork.name,
-    namespace: targetNamespace,
+    name: nadName,
+    namespace: nadNamespace,
     type: 'multus',
   };
 };
@@ -65,6 +69,7 @@ export const createNetworkMap = async ({
   targetProvider,
 }: CreateNetworkMapParams) => {
   const sourceProviderName = sourceProvider?.metadata?.name;
+
   const networkMap: V1beta1NetworkMap = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'NetworkMap',

@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { Link, useNavigate } from 'react-router-dom-v5-compat';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import providerTypes from 'src/modules/Plans/views/create/constanats/providerTypes';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
@@ -8,6 +8,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { getImages } from '@components/images/logos';
 import { ProviderModelRef } from '@kubev2v/types';
+import { useActiveNamespace, useFlag } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Card,
   CardBody,
@@ -19,6 +20,7 @@ import {
   Text,
   Tile,
 } from '@patternfly/react-core';
+import { Namespace } from '@utils/constants';
 
 import HeaderActions from './HeaderActions';
 import HideFromViewDropdownOption from './HideFromViewDropdownOption';
@@ -48,7 +50,13 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
       state: { providerType: type as keyof typeof providerItems },
     });
   };
+  const [activeNamespace] = useActiveNamespace();
+  const kubevirtInstalled = useFlag('KUBEVIRT_DYNAMIC');
+  const namespaceURL =
+    activeNamespace === Namespace.AllProjects ? 'all-namespaces' : `ns/${activeNamespace}`;
 
+  const operatorHubURL = `/operatorhub/${namespaceURL}?keyword=kubevirt`;
+  const virtualizationOverviewURL = `/k8s/${namespaceURL}/virtualization-overview`;
   return (
     <Card>
       <Split>
@@ -62,10 +70,12 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
           <CardBody className="forklift-overview__welcome-body">
             <Text className="forklift-overview__welcome-text">
               <ForkliftTrans>
-                Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale to Red
-                Hat OpenShift Virtualization. This allows organizations to more easily access
-                workloads running on virtual machines while developing new cloud-native
-                applications.
+                Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale to{' '}
+                <Link to={kubevirtInstalled ? virtualizationOverviewURL : operatorHubURL}>
+                  Red Hat OpenShift Virtualization
+                </Link>
+                . This allows organizations to more easily access workloads running on virtual
+                machines while developing new cloud-native applications.
               </ForkliftTrans>
             </Text>
           </CardBody>

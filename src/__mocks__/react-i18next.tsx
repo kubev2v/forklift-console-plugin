@@ -10,4 +10,8 @@ export const useTranslation = () => ({
   t: (key: string) => key,
 });
 
+export const getI18n = () => ({
+  t: (key: string) => key,
+});
+
 export const Trans = () => <div data-test-element-name="Trans" />;
