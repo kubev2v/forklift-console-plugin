@@ -1,8 +1,11 @@
+/* eslint-disable no-console */
 import type { Page } from '@playwright/test';
 
 import { TEST_DATA } from '../fixtures/test-data';
 
 export const setupPlansIntercepts = async (page: Page) => {
+  console.log('🔧 Setting up plans intercepts...');
+
   const plansResponse = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'PlanList',
@@ -10,16 +13,21 @@ export const setupPlansIntercepts = async (page: Page) => {
     items: [],
   };
 
+  console.log('📦 Mock plans response prepared:', JSON.stringify(plansResponse, null, 2));
+
   // URL patterns that work for both local (9000) and GitHub Actions (30080)
   // Namespaced plans endpoint (wildcard namespace)
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/plans\?limit=\d+/,
     async (route) => {
+      const url = route.request().url();
+      console.log('🎯 INTERCEPTED namespaced plans request:', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify(plansResponse),
       });
+      console.log('✅ Responded to namespaced plans request');
     },
   );
 
@@ -27,11 +35,14 @@ export const setupPlansIntercepts = async (page: Page) => {
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/plans\?limit=\d+/,
     async (route) => {
+      const url = route.request().url();
+      console.log('🎯 INTERCEPTED cluster-wide plans request:', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify(plansResponse),
       });
+      console.log('✅ Responded to cluster-wide plans request');
     },
   );
 
@@ -39,22 +50,28 @@ export const setupPlansIntercepts = async (page: Page) => {
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/plans.*/,
     async (route) => {
+      const url = route.request().url();
+      console.log('🎯 INTERCEPTED general namespaced plans request:', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify(plansResponse),
       });
+      console.log('✅ Responded to general namespaced plans request');
     },
   );
 
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/plans.*/,
     async (route) => {
+      const url = route.request().url();
+      console.log('🎯 INTERCEPTED general plans request:', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify(plansResponse),
       });
+      console.log('✅ Responded to general plans request');
     },
   );
 
@@ -63,15 +80,19 @@ export const setupPlansIntercepts = async (page: Page) => {
     /.*\/api\/kubernetes\/apis\/authorization\.k8s\.io\/v1\/subjectaccessreviews/,
     async (route) => {
       if (route.request().method() === 'POST') {
+        const url = route.request().url();
+        console.log('🎯 INTERCEPTED SubjectAccessReview request:', url);
+        const authResponse = {
+          apiVersion: 'authorization.k8s.io/v1',
+          kind: 'SubjectAccessReview',
+          status: { allowed: true },
+        };
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify({
-            apiVersion: 'authorization.k8s.io/v1',
-            kind: 'SubjectAccessReview',
-            status: { allowed: true },
-          }),
+          body: JSON.stringify(authResponse),
         });
+        console.log('✅ Responded to SubjectAccessReview with allowed=true');
       }
     },
   );
@@ -81,6 +102,7 @@ export const setupPlansIntercepts = async (page: Page) => {
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps/,
     async (route) => {
       if (route.request().method() === 'POST') {
+        console.log('🎯 INTERCEPTED NetworkMap creation request');
         await route.fulfill({
           status: 201,
           contentType: 'application/json',
@@ -100,6 +122,7 @@ export const setupPlansIntercepts = async (page: Page) => {
             },
           }),
         });
+        console.log('✅ Responded to NetworkMap creation');
       }
     },
   );
@@ -109,6 +132,7 @@ export const setupPlansIntercepts = async (page: Page) => {
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps/,
     async (route) => {
       if (route.request().method() === 'POST') {
+        console.log('🎯 INTERCEPTED StorageMap creation request');
         await route.fulfill({
           status: 201,
           contentType: 'application/json',
@@ -128,6 +152,7 @@ export const setupPlansIntercepts = async (page: Page) => {
             },
           }),
         });
+        console.log('✅ Responded to StorageMap creation');
       }
     },
   );
@@ -137,6 +162,7 @@ export const setupPlansIntercepts = async (page: Page) => {
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/plans/,
     async (route) => {
       if (route.request().method() === 'POST') {
+        console.log('🎯 INTERCEPTED Plan creation request');
         await route.fulfill({
           status: 201,
           contentType: 'application/json',
@@ -156,7 +182,10 @@ export const setupPlansIntercepts = async (page: Page) => {
             },
           }),
         });
+        console.log('✅ Responded to Plan creation');
       }
     },
   );
+
+  console.log('✨ Plans intercepts setup complete');
 };
