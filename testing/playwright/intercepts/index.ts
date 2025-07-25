@@ -1,6 +1,5 @@
 import type { Page } from '@playwright/test';
 
-export { setupCatchAllInventoryIntercepts } from './catchAllInventory';
 export { setupDatastoresIntercepts } from './datastores';
 export { setupHostsIntercepts } from './hosts';
 export { setupNetworkMapsIntercepts } from './networkMaps';
@@ -13,7 +12,6 @@ export { setupTargetProviderNamespacesIntercepts } from './targetProviderNamespa
 export { setupVirtualMachinesIntercepts } from './virtualMachines';
 
 // Import individual functions for the comprehensive setup
-import { setupCatchAllInventoryIntercepts } from './catchAllInventory';
 import { setupDatastoresIntercepts } from './datastores';
 import { setupHostsIntercepts } from './hosts';
 import { setupNetworkMapsIntercepts } from './networkMaps';
@@ -103,20 +101,6 @@ export const setupCreatePlanIntercepts = async (page: Page): Promise<void> => {
     }
   });
 
-  // Core Forklift resources
-  await setupProvidersIntercepts(page);
-  await setupPlansIntercepts(page);
-  await setupProjectsIntercepts(page);
-  await setupNetworkMapsIntercepts(page);
-  await setupStorageMapsIntercepts(page);
-
-  // Provider inventory data (needed for wizard steps)
-  await setupVirtualMachinesIntercepts(page, 'vsphere');
-  await setupHostsIntercepts(page, 'vsphere');
-  await setupDatastoresIntercepts(page, 'vsphere');
-  await setupStorageClassesIntercepts(page, 'test-target-uid-1');
-  await setupTargetProviderNamespacesIntercepts(page, 'test-target-uid-1');
-
   // Authorization endpoints (essential for UI permissions)
   await page.route('**/apis/authorization.k8s.io/v1/subjectaccessreviews', async (route) => {
     await route.fulfill({
@@ -130,7 +114,19 @@ export const setupCreatePlanIntercepts = async (page: Page): Promise<void> => {
     });
   });
 
-  // Network data for source provider
+  // Use the original specific interceptors approach
+  await setupProvidersIntercepts(page);
+  await setupPlansIntercepts(page);
+  await setupProjectsIntercepts(page);
+  await setupNetworkMapsIntercepts(page);
+  await setupStorageMapsIntercepts(page);
+  await setupVirtualMachinesIntercepts(page, 'vsphere');
+  await setupHostsIntercepts(page, 'vsphere');
+  await setupDatastoresIntercepts(page, 'vsphere');
+  await setupStorageClassesIntercepts(page, 'test-target-uid-1');
+  await setupTargetProviderNamespacesIntercepts(page, 'test-target-uid-1');
+
+  // Add missing source provider networks (vsphere)
   await page.route(
     '**/forklift-inventory/providers/vsphere/test-source-uid-1/networks',
     async (route) => {
@@ -140,46 +136,23 @@ export const setupCreatePlanIntercepts = async (page: Page): Promise<void> => {
         body: JSON.stringify([
           {
             uid: 'test-network-1-uid',
+            version: '12345',
+            namespace: '',
             name: 'test-vm-network',
-            type: 'DistributedVirtualPortgroup',
-            vlan: 100,
             selfLink: 'providers/vsphere/test-source-uid-1/networks/test-network-1-uid',
-          },
-          {
-            uid: 'test-network-2-uid',
-            name: 'test-mgmt-network',
-            type: 'DistributedVirtualPortgroup',
-            vlan: 200,
-            selfLink: 'providers/vsphere/test-source-uid-1/networks/test-network-2-uid',
+            id: 'test-network-1-uid',
+            object: {
+              name: 'test-vm-network',
+              type: 'DistributedVirtualPortgroup',
+              vlan: 100,
+            },
           },
         ]),
       });
     },
   );
 
-  // Handle networks with double slash (from URL patterns observed)
-  await page.route(
-    '**/forklift-inventory/providers/vsphere/test-source-uid-1//networks',
-    async (route) => {
-      // eslint-disable-next-line no-console
-      console.log(`🎯 NETWORKS WITH DOUBLE SLASH: ${route.request().url()}`);
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          {
-            uid: 'test-network-1-uid',
-            name: 'test-vm-network',
-            type: 'DistributedVirtualPortgroup',
-            vlan: 100,
-            selfLink: 'providers/vsphere/test-source-uid-1/networks/test-network-1-uid',
-          },
-        ]),
-      });
-    },
-  );
-
-  // NetworkAttachmentDefinitions for OpenShift target provider (CRITICAL for plan details)
+  // Add missing target provider network attachment definitions
   await page.route(
     '**/forklift-inventory/providers/openshift/test-target-uid-1/networkattachmentdefinitions',
     async (route) => {
@@ -189,117 +162,27 @@ export const setupCreatePlanIntercepts = async (page: Page): Promise<void> => {
         body: JSON.stringify([
           {
             uid: 'test-nad-1-uid',
-            name: 'test-multus-network',
-            namespace: 'default',
+            version: '12345',
+            namespace: 'test-target-namespace',
+            name: 'test-multus-bridge',
             selfLink:
               'providers/openshift/test-target-uid-1/networkattachmentdefinitions/test-nad-1-uid',
+            id: 'test-nad-1-uid',
             object: {
+              apiVersion: 'k8s.cni.cncf.io/v1',
+              kind: 'NetworkAttachmentDefinition',
               metadata: {
-                name: 'test-multus-network',
-                namespace: 'default',
+                name: 'test-multus-bridge',
+                namespace: 'test-target-namespace',
                 uid: 'test-nad-1-uid',
+                resourceVersion: '12345',
+                creationTimestamp: '2025-01-01T00:00:00Z',
               },
               spec: {
-                config: '{"cniVersion":"0.3.1","type":"macvlan","master":"eth0","mode":"bridge"}',
+                config:
+                  '{"cniVersion":"0.3.1","name":"test-multus-bridge","type":"bridge","bridge":"br0"}',
               },
             },
-          },
-        ]),
-      });
-    },
-  );
-
-  // Broad proxy interceptor to catch all plugin proxy calls
-  await page.route('**/api/proxy/plugin/**', async (route) => {
-    const url = route.request().url();
-    // eslint-disable-next-line no-console
-    console.log(`🌐 ALL PROXY CALLS: ${url}`);
-
-    // Handle target provider namespaces specifically
-    if (url.includes('/providers/openshift/test-target-uid-1/namespaces')) {
-      // eslint-disable-next-line no-console
-      console.log(`🎯 INTERCEPTED TARGET NAMESPACES!`);
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          {
-            uid: 'test-target-project-uid',
-            name: 'test-target-project',
-            selfLink: 'providers/openshift/test-target-uid-1/namespaces/test-target-project',
-          },
-          {
-            uid: 'default-uid',
-            name: 'default',
-            selfLink: 'providers/openshift/test-target-uid-1/namespaces/default',
-          },
-          {
-            uid: 'openshift-mtv-uid',
-            name: 'openshift-mtv',
-            selfLink: 'providers/openshift/test-target-uid-1/namespaces/openshift-mtv',
-          },
-        ]),
-      });
-      return;
-    }
-
-    // Let other calls through
-    await route.continue();
-  });
-
-  // Target provider networks (OpenShift networks)
-  await page.route(
-    '**/forklift-inventory/providers/openshift/test-target-uid-1/networks',
-    async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          {
-            uid: 'test-openshift-network-1-uid',
-            name: 'default',
-            namespace: 'default',
-            selfLink: 'providers/openshift/test-target-uid-1/networks/test-openshift-network-1-uid',
-            object: {
-              metadata: {
-                name: 'default',
-                namespace: 'default',
-                uid: 'test-openshift-network-1-uid',
-              },
-              spec: {
-                type: 'OpenShiftSDN',
-              },
-            },
-          },
-        ]),
-      });
-    },
-  );
-
-  // Use the catch-all inventory interceptors
-  await setupCatchAllInventoryIntercepts(page);
-
-  // Folders data for wizard
-  await page.route(
-    '**/forklift-inventory/providers/vsphere/test-source-uid-1/folders?detail=4',
-    async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          {
-            id: 'test-folder-1',
-            name: 'Test Folder 1',
-            datacenter: 'test-datacenter-1',
-            children: 0,
-            selfLink: 'providers/vsphere/test-source-uid-1/folders/test-folder-1',
-          },
-          {
-            id: 'test-folder-2',
-            name: 'Test Folder 2',
-            datacenter: 'test-datacenter-1',
-            children: 0,
-            selfLink: 'providers/vsphere/test-source-uid-1/folders/test-folder-2',
           },
         ]),
       });

@@ -156,7 +156,11 @@ export const setupPlansIntercepts = async (page: Page) => {
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/plans/,
     async (route) => {
+      // eslint-disable-next-line no-console
+      console.log(`🚀 PLAN CREATION: ${route.request().method()} ${route.request().url()}`);
       if (route.request().method() === 'POST') {
+        // eslint-disable-next-line no-console
+        console.log(`🎯 CREATING PLAN: ${TEST_DATA.planName}`);
         await route.fulfill({
           status: 201,
           contentType: 'application/json',
