@@ -4,9 +4,9 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceU
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModelRef } from '@kubev2v/types';
-import { Button } from '@patternfly/react-core';
+import { Button, ButtonVariant } from '@patternfly/react-core';
 
-const NetworkMapsAddButton: FC<{ namespace: string; dataTestId?: string }> = ({
+const NetworkMapsAddButton: FC<{ namespace?: string; dataTestId?: string }> = ({
   dataTestId,
   namespace,
 }) => {
@@ -24,8 +24,8 @@ const NetworkMapsAddButton: FC<{ namespace: string; dataTestId?: string }> = ({
   };
 
   return (
-    <Button data-testid={dataTestId} variant="primary" onClick={onClick}>
-      {t('Create NetworkMap')}
+    <Button data-testid={dataTestId} variant={ButtonVariant.primary} onClick={onClick}>
+      {t('Create network map')}
     </Button>
   );
 };

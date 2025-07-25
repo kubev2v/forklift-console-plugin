@@ -5,7 +5,10 @@ import { DOC_MAIN_HELP_LINK } from 'src/utils/links';
 import {
   Bullseye,
   EmptyState,
+  EmptyStateActions,
   EmptyStateBody,
+  EmptyStateFooter,
+  EmptyStateHeader,
   EmptyStateIcon,
   Level,
   LevelItem,
@@ -13,15 +16,12 @@ import {
   TextContent,
   TextList,
   TextListItem,
-  Title,
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 
 import { ExternalLink } from '../../../components/common/ExternalLink/ExternalLink';
 
 import ProvidersAddButton from './ProvidersAddButton';
-
-import './ProvidersEmptyState.style.scss';
 
 type ProvidersEmptyStateProps = {
   namespace?: string;
@@ -33,21 +33,24 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespac
 
   return (
     <EmptyState>
-      <EmptyStateBody className="providers-empty-state-section">
+      <EmptyStateHeader
+        titleText={
+          namespace ? (
+            <ForkliftTrans>
+              No providers found in project <strong>{namespace}</strong>
+            </ForkliftTrans>
+          ) : (
+            t('No providers found')
+          )
+        }
+        headingLevel="h4"
+        icon={<EmptyStateIcon icon={PlusCircleIcon} />}
+      />
+      <EmptyStateBody>
         <Level hasGutter>
-          <LevelItem>{<EmptyStateIcon icon={PlusCircleIcon} />}</LevelItem>
           <LevelItem>
             <Bullseye>
               <TextContent>
-                <Title headingLevel="h4" size="lg">
-                  {namespace ? (
-                    <ForkliftTrans>
-                      No Providers found in namespace <strong>{namespace}</strong>.
-                    </ForkliftTrans>
-                  ) : (
-                    t('No providers found')
-                  )}
-                </Title>
                 <Text>
                   <ForkliftTrans>
                     Migrating virtualization workloads is a multi-step process.{' '}
@@ -57,32 +60,36 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespac
                     .
                   </ForkliftTrans>
                 </Text>
-                <TextList component="ol">
+                <TextList isPlain>
                   <TextListItem>
-                    {t('Add source and target providers for the migration.')}
+                    {t('1. Add source and target providers for the migration.')}
                   </TextListItem>
                   <TextListItem>
                     {t(
-                      'Map source datastores, storage domains, volume types, storage classes and networks to their respective target storage classes and networks.',
+                      '2. Map source datastores, storage domains, volume types, storage classes and networks to their respective target storage classes and networks.',
                     )}
                   </TextListItem>
                   <TextListItem>
                     {t(
-                      'Create a migration plan and select VMs from the source provider for migration.',
+                      '3. Create a migration plan and select VMs from the source provider for migration.',
                     )}
                   </TextListItem>
-                  <TextListItem>{t('Run the migration plan.')}</TextListItem>
+                  <TextListItem>{t('4. Run the migration plan.')}</TextListItem>
                 </TextList>
               </TextContent>
             </Bullseye>
           </LevelItem>
         </Level>
       </EmptyStateBody>
-      <ProvidersAddButton
-        dataTestId="add-provider-button-empty-state"
-        namespace={namespace}
-        canCreate={canCreate}
-      />
+      <EmptyStateFooter>
+        <EmptyStateActions>
+          <ProvidersAddButton
+            dataTestId="add-provider-button-empty-state"
+            namespace={namespace}
+            canCreate={canCreate}
+          />
+        </EmptyStateActions>
+      </EmptyStateFooter>
     </EmptyState>
   );
 };
