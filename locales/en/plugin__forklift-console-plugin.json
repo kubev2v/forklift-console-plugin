@@ -1,6 +1,7 @@
 {
   " tasks": " tasks",
   "- .DiskIndex: initial volume index of the disk": "- .DiskIndex: initial volume index of the disk",
+  "- .FileName: name of the file in the source provider (vmWare only, require guest agent)": "- .FileName: name of the file in the source provider (vmWare only, require guest agent)",
   "- .NetworkIndex: sequential index of the network interface (0-based)": "- .NetworkIndex: sequential index of the network interface (0-based)",
   "- .NetworkName: If target network is multus, name of the Multus network attachment definition, empty otherwise.": "- .NetworkName: If target network is multus, name of the Multus network attachment definition, empty otherwise.",
   "- .NetworkNamespace: If target network is multus, namespace where the network attachment definition is located.": "- .NetworkNamespace: If target network is multus, namespace where the network attachment definition is located.",
@@ -11,6 +12,7 @@
   "- .Shared: true if the volume is shared by multiple VMs, false otherwise": "- .Shared: true if the volume is shared by multiple VMs, false otherwise",
   "- .VmName: name of the VM": "- .VmName: name of the VM",
   "- .VolumeIndex: sequential index of the volume interface (0-based)": "- .VolumeIndex: sequential index of the volume interface (0-based)",
+  "- .WinDriveLetter: Windows drive letter (lower case, if applicable, e.g. \"c\", require guest agent)": "- .WinDriveLetter: Windows drive letter (lower case, if applicable, e.g. \"c\", require guest agent)",
   "{{completed}} of {{total}} {{name}}": "{{completed}} of {{total}} {{name}}",
   "{{count}} plan_one": "{{count}} plan",
   "{{count}} plan_other": "{{count}} plans",
