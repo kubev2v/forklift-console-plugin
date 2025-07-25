@@ -3,6 +3,7 @@ import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import StorageMapsEmptyState from 'src/storageMaps/components/StorageMapsEmptyState';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -14,7 +15,6 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { t } from '@utils/i18n';
 
 import StorageMapsAddButton from '../../components/StorageMapsAddButton';
-import StorageMapsEmptyState from '../../components/StorageMapsEmptyState';
 import { STORAGE_MAP_STATUS } from '../../utils/constants/storage-map-status';
 import { getStorageMapPhase } from '../../utils/helpers/getStorageMapPhase';
 import type { StorageMapData } from '../../utils/types/StorageMapData';

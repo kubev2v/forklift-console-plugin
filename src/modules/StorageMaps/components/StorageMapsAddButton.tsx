@@ -13,7 +13,7 @@ import {
   type MenuToggleElement,
 } from '@patternfly/react-core';
 
-const StorageMapsAddButton: FC<{ namespace: string; dataTestId?: string }> = ({
+const StorageMapsAddButton: FC<{ namespace?: string; dataTestId?: string }> = ({
   dataTestId,
   namespace,
 }) => {
