@@ -64,10 +64,12 @@ test.describe('Plans - Critical End-to-End Migration', () => {
       TEST_DATA.networkMap,
       TEST_DATA.storageMap,
     );
-
+    await page.pause();
     // STEP 6: Create the plan and verify basic plan details
     await createWizard.clickNext();
+    await page.pause();
     await createWizard.waitForPlanCreation();
+    await page.pause();
     await planDetailsPage.waitForPageLoad();
     await planDetailsPage.verifyBasicPlanDetailsPage({
       planName: TEST_DATA.planName,
