@@ -122,6 +122,154 @@ export const setupCatchAllInventoryIntercepts = async (page: Page): Promise<void
       return;
     }
 
+    // Handle storage classes for target provider
+    if (url.includes('/providers/openshift/test-target-uid-1/storageclasses?detail=1')) {
+      // eslint-disable-next-line no-console
+      console.log(`🎯 CATCH-ALL HANDLING STORAGE CLASSES!`);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            uid: 'test-storage-class-1-uid',
+            version: '12345',
+            namespace: '',
+            name: 'test-ceph-rbd',
+            selfLink:
+              'providers/openshift/test-target-uid-1/storageclasses/test-storage-class-1-uid',
+            id: 'test-storage-class-1-uid',
+            object: {
+              metadata: {
+                name: 'test-ceph-rbd',
+                uid: 'test-storage-class-1-uid',
+                resourceVersion: '12345',
+                creationTimestamp: '2025-01-01T00:00:00Z',
+                annotations: {
+                  'storageclass.kubernetes.io/is-default-class': 'true',
+                },
+              },
+              provisioner: 'test.csi.ceph.com',
+              reclaimPolicy: 'Delete',
+              allowVolumeExpansion: true,
+              volumeBindingMode: 'Immediate',
+            },
+          },
+        ]),
+      });
+      return;
+    }
+
+    // Handle networks for source provider (vsphere)
+    if (url.includes('/providers/vsphere/test-source-uid-1/networks')) {
+      // eslint-disable-next-line no-console
+      console.log(`🎯 CATCH-ALL HANDLING SOURCE NETWORKS!`);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            uid: 'test-network-1-uid',
+            version: '12345',
+            namespace: '',
+            name: 'test-vm-network',
+            selfLink: 'providers/vsphere/test-source-uid-1/networks/test-network-1-uid',
+            id: 'test-network-1-uid',
+            object: {
+              name: 'test-vm-network',
+              type: 'DistributedVirtualPortgroup',
+              vlan: 100,
+            },
+          },
+          {
+            uid: 'test-network-2-uid',
+            version: '12346',
+            namespace: '',
+            name: 'test-mgmt-network',
+            selfLink: 'providers/vsphere/test-source-uid-1/networks/test-network-2-uid',
+            id: 'test-network-2-uid',
+            object: {
+              name: 'test-mgmt-network',
+              type: 'DistributedVirtualPortgroup',
+              vlan: 200,
+            },
+          },
+        ]),
+      });
+      return;
+    }
+
+    // Handle datastores for source provider (vsphere)
+    if (url.includes('/providers/vsphere/test-source-uid-1/datastores')) {
+      // eslint-disable-next-line no-console
+      console.log(`🎯 CATCH-ALL HANDLING DATASTORES!`);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            id: 'test-datastore-1',
+            parent: {
+              kind: 'Folder',
+              id: 'group-test-datastore',
+            },
+            path: '/test/datastore/test-datastore-1',
+            revision: 212,
+            name: 'test-datastore-1',
+            selfLink: 'providers/vsphere/test-source-uid-1/datastores/test-datastore-1',
+          },
+          {
+            id: 'test-datastore-2',
+            parent: {
+              kind: 'Folder',
+              id: 'group-test-datastore',
+            },
+            path: '/test/datastore/test-datastore-2',
+            revision: 1,
+            name: 'test-datastore-2',
+            selfLink: 'providers/vsphere/test-source-uid-1/datastores/test-datastore-2',
+          },
+        ]),
+      });
+      return;
+    }
+
+    // Handle network attachment definitions for target provider
+    if (url.includes('/providers/openshift/test-target-uid-1/networkattachmentdefinitions')) {
+      // eslint-disable-next-line no-console
+      console.log(`🎯 CATCH-ALL HANDLING NETWORK ATTACHMENT DEFINITIONS!`);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            uid: 'test-nad-1-uid',
+            version: '12345',
+            namespace: 'test-target-namespace',
+            name: 'test-multus-bridge',
+            selfLink:
+              'providers/openshift/test-target-uid-1/networkattachmentdefinitions/test-nad-1-uid',
+            id: 'test-nad-1-uid',
+            object: {
+              apiVersion: 'k8s.cni.cncf.io/v1',
+              kind: 'NetworkAttachmentDefinition',
+              metadata: {
+                name: 'test-multus-bridge',
+                namespace: 'test-target-namespace',
+                uid: 'test-nad-1-uid',
+                resourceVersion: '12345',
+                creationTimestamp: '2025-01-01T00:00:00Z',
+              },
+              spec: {
+                config:
+                  '{"cniVersion":"0.3.1","name":"test-multus-bridge","type":"bridge","bridge":"br0","isDefaultGateway":true,"ipMasq":true,"hairpinMode":true,"ipam":{"type":"host-local","subnet":"192.168.1.0/24"}}',
+              },
+            },
+          },
+        ]),
+      });
+      return;
+    }
+
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
