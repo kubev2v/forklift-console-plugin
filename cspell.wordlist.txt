@@ -92,3 +92,4 @@ XCOPY
 ONTAP
 Primera
 VAAI
+operatorhub

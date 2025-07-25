@@ -92,8 +92,8 @@ const getOVAPlanResources = (planInventory: EnhancedOvaVM[]): PlanResourcesTable
   const totalResources = planInventory.reduce(
     (accumulator, currentVM) => {
       return {
-        cpuCount: accumulator.cpuCount + currentVM.CpuCount,
-        memoryMB: accumulator.memoryMB + currentVM.MemoryMB,
+        cpuCount: accumulator.cpuCount + currentVM.cpuCount,
+        memoryMB: accumulator.memoryMB + currentVM.memoryMB,
       };
     },
     { cpuCount: 0, memoryMB: 0 },
@@ -102,8 +102,8 @@ const getOVAPlanResources = (planInventory: EnhancedOvaVM[]): PlanResourcesTable
   const totalResourcesRunning = planInventoryRunning.reduce(
     (accumulator, currentVM) => {
       return {
-        cpuCount: accumulator.cpuCount + currentVM.CpuCount,
-        memoryMB: accumulator.memoryMB + currentVM.MemoryMB,
+        cpuCount: accumulator.cpuCount + currentVM.cpuCount,
+        memoryMB: accumulator.memoryMB + currentVM.memoryMB,
       };
     },
     { cpuCount: 0, memoryMB: 0 },

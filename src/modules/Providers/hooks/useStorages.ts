@@ -26,11 +26,11 @@ const glanceStorage: InventoryStorage = {
 };
 
 const subPath: Record<ProviderType, string> = {
-  openshift: '/storageclasses?detail=1',
-  openstack: '/volumetypes',
-  ova: '/storages?detail=1',
-  ovirt: '/storagedomains',
-  vsphere: '/datastores',
+  openshift: 'storageclasses?detail=1',
+  openstack: 'volumetypes',
+  ova: 'storages?detail=1',
+  ovirt: 'storagedomains',
+  vsphere: 'datastores',
 };
 
 export type InventoryStorage =
@@ -80,7 +80,7 @@ export const useOpenShiftStorages = (
   } = useProviderInventory<OpenShiftStorageClass[]>({
     disabled: !provider || providerType !== 'openshift',
     provider,
-    subPath: '/storageclasses?detail=1',
+    subPath: 'storageclasses?detail=1',
   });
 
   const typedStorages = useMemo(
