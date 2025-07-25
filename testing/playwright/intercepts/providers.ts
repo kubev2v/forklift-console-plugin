@@ -1,11 +1,8 @@
-/* eslint-disable no-console */
 import type { Page } from '@playwright/test';
 
 import { TEST_DATA } from '../fixtures/test-data';
 
 export const setupProvidersIntercepts = async (page: Page) => {
-  console.log('🔧 Setting up providers intercepts...');
-
   const providersResponse = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'ProviderList',
@@ -68,8 +65,6 @@ export const setupProvidersIntercepts = async (page: Page) => {
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/providers(?:\?.*)?$/,
     async (route) => {
-      const url = route.request().url();
-      console.log('🎯 INTERCEPTED cluster-wide providers request:', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -82,8 +77,6 @@ export const setupProvidersIntercepts = async (page: Page) => {
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/providers(?:\?.*)?$/,
     async (route) => {
-      const url = route.request().url();
-      console.log('🎯 INTERCEPTED namespaced providers request:', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -116,15 +109,10 @@ export const setupProvidersIntercepts = async (page: Page) => {
 
   // Fallback catch-all for any missed provider calls (essential for GitHub Actions)
   await page.route('**/api/kubernetes/**/*providers*', async (route) => {
-    const url = route.request().url();
-    console.log('🔄 Fallback provider intercept:', url);
-
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(providersResponse),
     });
   });
-
-  console.log('✨ Providers intercepts setup complete');
 };

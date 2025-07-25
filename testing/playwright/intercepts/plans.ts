@@ -1,11 +1,8 @@
-/* eslint-disable no-console */
 import type { Page } from '@playwright/test';
 
 import { TEST_DATA } from '../fixtures/test-data';
 
 export const setupPlansIntercepts = async (page: Page) => {
-  console.log('🔧 Setting up plans intercepts...');
-
   // CRITICAL: Return a mock plan instead of empty list to avoid PlansEmptyState path
   const plansResponse = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -41,21 +38,16 @@ export const setupPlansIntercepts = async (page: Page) => {
     ],
   };
 
-  console.log('📦 Mock plans response prepared:', JSON.stringify(plansResponse, null, 2));
-
   // URL patterns that work for both local (9000) and GitHub Actions (30080)
   // Namespaced plans endpoint (wildcard namespace)
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/plans\?limit=\d+/,
     async (route) => {
-      const url = route.request().url();
-      console.log('🎯 INTERCEPTED namespaced plans request:', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify(plansResponse),
       });
-      console.log('✅ Responded to namespaced plans request with 1 plan (to avoid empty state)');
     },
   );
 
@@ -63,28 +55,18 @@ export const setupPlansIntercepts = async (page: Page) => {
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/plans\?limit=\d+/,
     async (route) => {
-      const url = route.request().url();
-      console.log('🎯 INTERCEPTED general plans request:', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify(plansResponse),
       });
-      console.log('✅ Responded to general plans request with 1 plan (to avoid empty state)');
     },
   );
 
   // Catch ANY authorization API call
   await page.route('**/authorization.k8s.io/**', async (route) => {
-    console.log('🎯 ANY AUTH API CALL:', route.request().url());
     if (route.request().url().includes('selfsubjectaccessreviews')) {
       if (route.request().method() === 'POST') {
-        console.log('🎯 INTERCEPTED SelfSubjectAccessReview request');
-
-        // Parse the request to see what permissions are being checked
-        const requestBody = route.request().postData();
-        console.log('📋 Request body:', requestBody);
-
         const authResponse = {
           apiVersion: 'authorization.k8s.io/v1',
           kind: 'SelfSubjectAccessReview',
@@ -107,8 +89,6 @@ export const setupPlansIntercepts = async (page: Page) => {
           contentType: 'application/json',
           body: JSON.stringify(authResponse),
         });
-
-        console.log('✅ Responded with allowed=true');
       }
     } else {
       await route.continue();
@@ -199,6 +179,4 @@ export const setupPlansIntercepts = async (page: Page) => {
       }
     },
   );
-
-  console.log('✨ Plans intercepts setup complete');
 };
