@@ -53,34 +53,6 @@ const useGetDeleteAndEditAccessReview: UseAccessReviewFn = ({ model, name, names
     verb: 'get',
   });
 
-  // DEBUG: Log permission states for button debugging
-  // eslint-disable-next-line no-console
-  console.log('🔐 useGetDeleteAndEditAccessReview DEBUG:', {
-    model: model.kind,
-    namespace,
-    permissions: {
-      canCreate,
-      canDelete,
-      canGet,
-      canPatch,
-    },
-    loading: {
-      loadingCreate,
-      loadingDelete,
-      loadingGet,
-      loadingPatch,
-    },
-    overallLoading: loadingCreate || loadingPatch || loadingDelete || loadingGet,
-    accessReviewDetails: {
-      createReview: {
-        group: model.apiGroup,
-        resource: model.plural,
-        verb: 'create',
-        result: canCreate,
-      },
-    },
-  });
-
   return {
     canCreate,
     canDelete,
