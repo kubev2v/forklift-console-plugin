@@ -25,6 +25,97 @@ import { setupVirtualMachinesIntercepts } from './virtualMachines';
 
 // Comprehensive setup function for existing tests to work in GitHub Actions
 export const setupCreatePlanIntercepts = async (page: Page): Promise<void> => {
+  // eslint-disable-next-line no-console
+  console.log('🔧 Setting up API intercepts...');
+
+  // === CRITICAL: Core Kubernetes API intercepts for console bootstrap ===
+
+  // OpenAPI v2 endpoint (required for console to discover API structure)
+  await page.route('**/api/kubernetes/openapi/v2', async (route) => {
+    // eslint-disable-next-line no-console
+    console.log('🎯 INTERCEPTED OpenAPI v2 request');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        swagger: '2.0',
+        info: { title: 'Kubernetes', version: 'v1.0.0' },
+        paths: {},
+        definitions: {},
+      }),
+    });
+  });
+
+  // CustomResourceDefinitions endpoint (required for console to discover CRDs)
+  await page.route(
+    '**/api/kubernetes/apis/apiextensions.k8s.io/v1/customresourcedefinitions**',
+    async (route) => {
+      // eslint-disable-next-line no-console
+      console.log('🎯 INTERCEPTED CRDs request');
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          apiVersion: 'apiextensions.k8s.io/v1',
+          kind: 'CustomResourceDefinitionList',
+          metadata: {},
+          items: [],
+        }),
+      });
+    },
+  );
+
+  // User info endpoint
+  await page.route('**/api/kubernetes/apis/user.openshift.io/v1/users/~', async (route) => {
+    // eslint-disable-next-line no-console
+    console.log('🎯 INTERCEPTED User info request');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        apiVersion: 'user.openshift.io/v1',
+        kind: 'User',
+        metadata: {
+          name: 'test-user',
+          uid: 'test-user-uid',
+        },
+      }),
+    });
+  });
+
+  // Package manifest endpoint (for operators)
+  await page.route('**/api/check-package-manifest/**', async (route) => {
+    // eslint-disable-next-line no-console
+    console.log('🎯 INTERCEPTED Package manifest request');
+    await route.fulfill({
+      status: 404,
+      contentType: 'application/json',
+      body: JSON.stringify({ error: 'Not found' }),
+    });
+  });
+
+  // GraphQL endpoint (for console queries)
+  await page.route('**/api/graphql', async (route) => {
+    // eslint-disable-next-line no-console
+    console.log('🎯 INTERCEPTED GraphQL request');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: null }),
+    });
+  });
+
+  // WebSocket upgrade requests
+  await page.route('**/api/graphql', async (route) => {
+    if (route.request().headers().upgrade === 'websocket') {
+      // eslint-disable-next-line no-console
+      console.log('🎯 BLOCKED WebSocket upgrade to GraphQL');
+      await route.abort();
+    } else {
+      await route.continue();
+    }
+  });
+
   // Core Forklift resources
   await setupProvidersIntercepts(page);
   await setupPlansIntercepts(page);
