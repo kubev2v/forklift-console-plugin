@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 
+export { setupCatchAllInventoryIntercepts } from './catchAllInventory';
 export { setupDatastoresIntercepts } from './datastores';
 export { setupHostsIntercepts } from './hosts';
 export { setupNetworkMapsIntercepts } from './networkMaps';
@@ -12,6 +13,7 @@ export { setupTargetProviderNamespacesIntercepts } from './targetProviderNamespa
 export { setupVirtualMachinesIntercepts } from './virtualMachines';
 
 // Import individual functions for the comprehensive setup
+import { setupCatchAllInventoryIntercepts } from './catchAllInventory';
 import { setupDatastoresIntercepts } from './datastores';
 import { setupHostsIntercepts } from './hosts';
 import { setupNetworkMapsIntercepts } from './networkMaps';
@@ -154,6 +156,128 @@ export const setupCreatePlanIntercepts = async (page: Page): Promise<void> => {
       });
     },
   );
+
+  // Handle networks with double slash (from URL patterns observed)
+  await page.route(
+    '**/forklift-inventory/providers/vsphere/test-source-uid-1//networks',
+    async (route) => {
+      // eslint-disable-next-line no-console
+      console.log(`🎯 NETWORKS WITH DOUBLE SLASH: ${route.request().url()}`);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            uid: 'test-network-1-uid',
+            name: 'test-vm-network',
+            type: 'DistributedVirtualPortgroup',
+            vlan: 100,
+            selfLink: 'providers/vsphere/test-source-uid-1/networks/test-network-1-uid',
+          },
+        ]),
+      });
+    },
+  );
+
+  // NetworkAttachmentDefinitions for OpenShift target provider (CRITICAL for plan details)
+  await page.route(
+    '**/forklift-inventory/providers/openshift/test-target-uid-1/networkattachmentdefinitions',
+    async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            uid: 'test-nad-1-uid',
+            name: 'test-multus-network',
+            namespace: 'default',
+            selfLink:
+              'providers/openshift/test-target-uid-1/networkattachmentdefinitions/test-nad-1-uid',
+            object: {
+              metadata: {
+                name: 'test-multus-network',
+                namespace: 'default',
+                uid: 'test-nad-1-uid',
+              },
+              spec: {
+                config: '{"cniVersion":"0.3.1","type":"macvlan","master":"eth0","mode":"bridge"}',
+              },
+            },
+          },
+        ]),
+      });
+    },
+  );
+
+  // Broad proxy interceptor to catch all plugin proxy calls
+  await page.route('**/api/proxy/plugin/**', async (route) => {
+    const url = route.request().url();
+    // eslint-disable-next-line no-console
+    console.log(`🌐 ALL PROXY CALLS: ${url}`);
+
+    // Handle target provider namespaces specifically
+    if (url.includes('/providers/openshift/test-target-uid-1/namespaces')) {
+      // eslint-disable-next-line no-console
+      console.log(`🎯 INTERCEPTED TARGET NAMESPACES!`);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            uid: 'test-target-project-uid',
+            name: 'test-target-project',
+            selfLink: 'providers/openshift/test-target-uid-1/namespaces/test-target-project',
+          },
+          {
+            uid: 'default-uid',
+            name: 'default',
+            selfLink: 'providers/openshift/test-target-uid-1/namespaces/default',
+          },
+          {
+            uid: 'openshift-mtv-uid',
+            name: 'openshift-mtv',
+            selfLink: 'providers/openshift/test-target-uid-1/namespaces/openshift-mtv',
+          },
+        ]),
+      });
+      return;
+    }
+
+    // Let other calls through
+    await route.continue();
+  });
+
+  // Target provider networks (OpenShift networks)
+  await page.route(
+    '**/forklift-inventory/providers/openshift/test-target-uid-1/networks',
+    async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            uid: 'test-openshift-network-1-uid',
+            name: 'default',
+            namespace: 'default',
+            selfLink: 'providers/openshift/test-target-uid-1/networks/test-openshift-network-1-uid',
+            object: {
+              metadata: {
+                name: 'default',
+                namespace: 'default',
+                uid: 'test-openshift-network-1-uid',
+              },
+              spec: {
+                type: 'OpenShiftSDN',
+              },
+            },
+          },
+        ]),
+      });
+    },
+  );
+
+  // Use the catch-all inventory interceptors
+  await setupCatchAllInventoryIntercepts(page);
 
   // Folders data for wizard
   await page.route(
