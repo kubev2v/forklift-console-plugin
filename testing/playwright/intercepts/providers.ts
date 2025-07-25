@@ -9,6 +9,11 @@ export const setupProvidersIntercepts = async (page: Page) => {
   const providersResponse = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'ProviderList',
+    metadata: {
+      resourceVersion: '12345',
+      continue: '',
+      remainingItemCount: 0,
+    },
     items: [
       {
         apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -61,12 +66,45 @@ export const setupProvidersIntercepts = async (page: Page) => {
 
   console.log('📦 Mock providers response prepared:', JSON.stringify(providersResponse, null, 2));
 
-  // CRITICAL: Add the namespaced endpoint that should be called with namespace='openshift-mtv'
+  // 🚨 DEBUGGING INTERCEPTOR - Catch ALL provider API calls to see what's being called
+  // Note: Commented out to avoid interference, will add catch-all at end instead
+  // await page.route('**/api/kubernetes/apis/forklift.konveyor.io/v1beta1/**', async (route) => {
+  //   const url = route.request().url();
+  //   const method = route.request().method();
+  //   console.log('🔍 DEBUGGING: Provider API call detected:', {
+  //     url,
+  //     method,
+  //     headers: route.request().headers(),
+  //     isProviderUrl: url.includes('providers'),
+  //   });
+  //
+  //   // Don't intercept, just log and continue to see actual patterns
+  //   await route.continue();
+  // });
+
+  // FLEXIBLE PATTERNS - Remove strict query parameter requirements
+
+  // Cluster-wide providers endpoint (flexible) - PRIORITY 1
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/providers\?limit=\d+/,
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/providers(?:\?.*)?$/,
     async (route) => {
       const url = route.request().url();
-      console.log('🎯 INTERCEPTED openshift-mtv namespaced providers request:', url);
+      console.log('🎯 INTERCEPTED cluster-wide providers request (IMPROVED):', url);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(providersResponse),
+      });
+      console.log('✅ Responded to cluster-wide providers request');
+    },
+  );
+
+  // Namespaced providers endpoint for openshift-mtv (most flexible) - PRIORITY 2
+  await page.route(
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/providers(?:\?.*)?$/,
+    async (route) => {
+      const url = route.request().url();
+      console.log('🎯 INTERCEPTED openshift-mtv namespaced providers request (IMPROVED):', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -76,34 +114,18 @@ export const setupProvidersIntercepts = async (page: Page) => {
     },
   );
 
-  // URL patterns that work for both local (9000) and GitHub Actions (30080)
-  // Namespaced providers endpoint (any namespace)
+  // Namespaced providers endpoint (any namespace, flexible) - PRIORITY 3
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/providers\?limit=\d+/,
+    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/providers(?:\?.*)?$/,
     async (route) => {
       const url = route.request().url();
-      console.log('🎯 INTERCEPTED namespaced providers request:', url);
+      console.log('🎯 INTERCEPTED namespaced providers request (IMPROVED):', url);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify(providersResponse),
       });
       console.log('✅ Responded to namespaced providers request');
-    },
-  );
-
-  // All providers endpoint (cluster-wide) - this is what we're currently seeing
-  await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/providers\?limit=\d+/,
-    async (route) => {
-      const url = route.request().url();
-      console.log('🎯 INTERCEPTED general providers request:', url);
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(providersResponse),
-      });
-      console.log('✅ Responded to general providers request');
     },
   );
 
@@ -192,17 +214,22 @@ export const setupProvidersIntercepts = async (page: Page) => {
       const url = route.request().url();
       console.log('🔧 INTERCEPTED Provider List:', url);
       console.log('🔧 Provider List Method:', route.request().method());
-      
+
       if (route.request().method() === 'GET') {
         console.log('📦 Returning Provider List with', providersResponse.items.length, 'providers');
-        console.log('📦 Provider types:', providersResponse.items.map(p => `${p.metadata.name}(${p.spec.type})`));
-        
+        console.log(
+          '📦 Provider types:',
+          providersResponse.items.map(
+            (provider) => `${provider.metadata.name}(${provider.spec.type})`,
+          ),
+        );
+
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify(providersResponse),
         });
-        
+
         console.log('✅ Provider List response sent successfully');
       } else {
         await route.continue();
@@ -211,4 +238,22 @@ export const setupProvidersIntercepts = async (page: Page) => {
   );
 
   console.log('✨ Providers intercepts setup complete');
+
+  // 🚨 CATCH-ALL DEBUGGER - Log any provider API calls that weren't intercepted above
+  await page.route('**/api/kubernetes/**/*providers*', async (route) => {
+    const url = route.request().url();
+    console.log('❌ MISSED PROVIDER API CALL - URL pattern not matched:', {
+      url,
+      method: route.request().method(),
+    });
+    console.log('❌ This suggests the intercept patterns need to be updated');
+
+    // Fallback: return our mock data anyway
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(providersResponse),
+    });
+    console.log('✅ Provided fallback mock response');
+  });
 };

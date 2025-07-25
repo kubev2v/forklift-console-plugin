@@ -9,21 +9,69 @@ import { PlansListPage } from '../page-objects/PlansListPage';
 
 test.describe('Plans - Critical End-to-End Migration', () => {
   // Track ALL API calls with enhanced logging (declare at describe scope)
-  let apiCalls: any[] = [];
+  let apiCalls: string[] = [];
   let selfSubjectCalls = 0;
   let providerCalls = 0;
 
   test.beforeEach(async ({ page }) => {
     console.log('🚀 Starting test setup...');
 
-    // Reset counters for each test
-    apiCalls = [];
-    selfSubjectCalls = 0;
-    providerCalls = 0;
+    // API call tracking
+    const apiCalls: string[] = [];
+    let selfSubjectCalls = 0;
+    let providerCalls = 0;
 
-    // Log all console messages from the browser
-    page.on('console', (msg) => {
-      console.log(`🌐 BROWSER CONSOLE [${msg.type()}]:`, msg.text());
+    // COMPREHENSIVE API DEBUGGING - Log all network requests
+    page.on('request', (request) => {
+      const url = request.url();
+      const method = request.method();
+
+      // Log ALL API calls for debugging
+      if (url.includes('/api/')) {
+        console.log('📡 API REQUEST:', { method, url });
+        apiCalls.push(`${method} ${url}`);
+      }
+
+      // Track specific provider-related calls
+      if (url.includes('forklift') && url.includes('provider')) {
+        providerCalls++;
+        console.log('🔍 PROVIDER API CALL DETECTED:', {
+          method,
+          url,
+          headers: request.headers(),
+        });
+      }
+
+      // Track permission calls
+      if (url.includes('subjectaccessreviews')) {
+        selfSubjectCalls++;
+        console.log('🔐 PERMISSION CHECK:', { method, url });
+      }
+    });
+
+    // Log responses to see what's actually being returned
+    page.on('response', (response) => {
+      const url = response.url();
+      const status = response.status();
+
+      // Log provider API responses
+      if (url.includes('forklift') && url.includes('provider')) {
+        console.log('📨 PROVIDER API RESPONSE:', {
+          url,
+          status,
+          contentType: response.headers()['content-type'],
+        });
+
+        // Try to log response body for debugging
+        response
+          .text()
+          .then((body) => {
+            console.log('📨 PROVIDER RESPONSE BODY:', body.substring(0, 500));
+          })
+          .catch(() => {
+            console.log('📨 Could not read provider response body');
+          });
+      }
     });
 
     // Enhanced request tracking
@@ -39,12 +87,7 @@ test.describe('Plans - Critical End-to-End Migration', () => {
         console.log(`   📦 Body:`, request.postData());
         console.log(`   📋 Headers:`, JSON.stringify(request.headers()));
 
-        apiCalls.push({
-          type: 'SelfSubjectAccessReview',
-          method,
-          url,
-          timestamp: new Date().toISOString(),
-        });
+        apiCalls.push(`SelfSubjectAccessReview ${method} ${url}`);
       }
 
       // Track provider calls (needed for useHasSufficientProviders)
@@ -52,12 +95,7 @@ test.describe('Plans - Critical End-to-End Migration', () => {
         providerCalls++;
         console.log(`🔧 Provider API REQUEST #${providerCalls}:`, url);
 
-        apiCalls.push({
-          type: 'Provider',
-          method,
-          url,
-          timestamp: new Date().toISOString(),
-        });
+        apiCalls.push(`Provider ${method} ${url}`);
       }
 
       // Log all Forklift-related network requests with detailed info
