@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, DataList } from '@patternfly/react-core';
+import { Button, ButtonVariant, DataList } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 
 import type { Mapping } from '../utils/types';
@@ -58,7 +58,7 @@ const MappingList: FC<MappingListProps> = ({
         <Button
           onClick={addMapping}
           type="button"
-          variant="link"
+          variant={ButtonVariant.link}
           isDisabled={isDisabled}
           icon={<PlusCircleIcon />}
         >
