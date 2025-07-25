@@ -70,7 +70,6 @@ const TypeaheadSelect = (
   }: TypeaheadSelectProps,
   ref: ForwardedRef<HTMLInputElement>,
 ) => {
-  // QA: Forward data-testid to clickable toggle for test automation
   const dataTestId = (selectProps as Record<string, unknown>)['data-testid'] as string;
   const enhancedToggleProps = dataTestId
     ? { ...toggleProps, 'data-testid': dataTestId }
