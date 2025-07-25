@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import NetworkMapsAddButton from 'src/modules/NetworkMaps/components/NetworkMapsAddButton';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, ProviderModelRef } from '@kubev2v/types';
+import { ProviderModelRef } from '@kubev2v/types';
 import {
   Bullseye,
   EmptyState,
@@ -19,28 +19,19 @@ import {
   TextContent,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons';
-import { ALL_PROJECTS_KEY } from '@utils/constants';
 import { FORKLIFT_DOCS_URL } from '@utils/links';
 
-import PlansAddButton from './PlansAddButton';
-
-type PlansEmptyStateProps = {
+type NetworkMapsEmptyStateProps = {
   namespace?: string;
 };
-
-const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
+const NetworkMapsEmptyState: FC<NetworkMapsEmptyStateProps> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
 
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
-  const permissions = useGetDeleteAndEditAccessReview({
-    model: PlanModel,
-    namespace,
-  });
-
   const ProvidersListURL = getResourceUrl({
     namespace,
-    namespaced: namespace !== undefined || namespace !== ALL_PROJECTS_KEY,
+    namespaced: namespace !== undefined,
     reference: ProviderModelRef,
   });
 
@@ -50,10 +41,10 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
         titleText={
           namespace ? (
             <ForkliftTrans>
-              No Plans found in namespace <strong>{namespace}</strong>.
+              No Network maps found in namespace <strong>{namespace}</strong>.
             </ForkliftTrans>
           ) : (
-            t('No Plans found')
+            t('No Network maps found')
           )
         }
         headingLevel="h4"
@@ -61,20 +52,18 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
       />
       <EmptyStateBody>
         {hasSufficientProviders ? (
-          t(
-            'Migration plans are used to document the moving of virtualization workloads from source providers to target providers.',
-          )
+          t('Migration network maps are used to map networks between source and target providers.')
         ) : (
           <Level hasGutter>
             <LevelItem>
               <Bullseye>
                 <TextContent>
                   <ForkliftTrans>
-                    Migration plans are used to document the moving of virtualization workloads from
-                    source providers to target providers, at least one source and one target
-                    provider must be available in order to create a migration plan,{' '}
+                    Migration network maps are used to map network interfaces between source and
+                    target virtualization providers, at least one source and one target provider
+                    must be available in order to create a migration network map,{' '}
                     <ExternalLink href={FORKLIFT_DOCS_URL} isInline>
-                      Learn more about migration plans
+                      Learn more
                     </ExternalLink>
                     .
                   </ForkliftTrans>
@@ -84,11 +73,10 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
           </Level>
         )}
       </EmptyStateBody>
-
       <EmptyStateFooter>
         <EmptyStateActions>
           {hasSufficientProviders ? (
-            <PlansAddButton namespace={namespace} canCreate={permissions.canCreate} />
+            <NetworkMapsAddButton namespace={namespace} />
           ) : (
             <ExternalLink href={ProvidersListURL} isInline={false} hideIcon={true}>
               {t('Return to the providers list page')}
@@ -100,4 +88,4 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
   );
 };
 
-export default PlansEmptyState;
+export default NetworkMapsEmptyState;
