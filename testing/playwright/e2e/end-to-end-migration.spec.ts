@@ -8,6 +8,19 @@ import { PlansListPage } from '../page-objects/PlansListPage';
 
 test.describe('Plans - Critical End-to-End Migration', () => {
   test.beforeEach(async ({ page }) => {
+    // Capture browser console logs and errors
+    page.on('console', (msg) => {
+      // eslint-disable-next-line no-console
+      console.log(`🖥️ BROWSER ${msg.type().toUpperCase()}: ${msg.text()}`);
+    });
+
+    page.on('pageerror', (error) => {
+      // eslint-disable-next-line no-console
+      console.error(`🖥️ BROWSER ERROR: ${error.message}`);
+      // eslint-disable-next-line no-console
+      console.error(`🖥️ BROWSER STACK: ${error.stack}`);
+    });
+
     await setupCreatePlanIntercepts(page);
     const plansPage = new PlansListPage(page);
     await plansPage.navigateFromMainMenu();
@@ -67,9 +80,10 @@ test.describe('Plans - Critical End-to-End Migration', () => {
     await page.pause();
     // STEP 6: Create the plan and verify basic plan details
     await createWizard.clickNext();
-    await page.pause();
+    // await page.pause();
     await createWizard.waitForPlanCreation();
-    await page.pause();
+    // eslint-disable-next-line no-console
+    console.log(`🚀 NAVIGATED TO URL: ${page.url()}`);
     await planDetailsPage.waitForPageLoad();
     await planDetailsPage.verifyBasicPlanDetailsPage({
       planName: TEST_DATA.planName,
