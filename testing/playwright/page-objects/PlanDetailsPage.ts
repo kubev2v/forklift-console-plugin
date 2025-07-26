@@ -45,10 +45,21 @@ export class PlanDetailsPage {
     await expect(this.page.locator('[data-test-id="horizontal-link-Mappings"]')).toBeVisible();
     await expect(this.page.locator('[data-test-id="horizontal-link-Hooks"]')).toBeVisible();
 
+    // Wait for the tab navigation component to be fully initialized
+    // In CI environments, the tab component may take longer to set aria-selected attributes
+    await this.page.waitForFunction(
+      () => {
+        const detailsTab = document.querySelector('[data-test-id="horizontal-link-Details"]');
+        return detailsTab?.hasAttribute('aria-selected');
+      },
+      { timeout: 10000 },
+    );
+
     // Verify Details tab is currently selected
     await expect(this.page.locator('[data-test-id="horizontal-link-Details"]')).toHaveAttribute(
       'aria-selected',
       'true',
+      { timeout: 10000 },
     );
   }
 
