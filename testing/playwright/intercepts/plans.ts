@@ -38,63 +38,89 @@ export const setupPlansIntercepts = async (page: Page) => {
     ],
   };
 
-  // Individual plan GET request (used by usePlan hook for plan details)
-  // This is the MOST IMPORTANT mock - it provides the plan data for the details page
-  // The useK8sWatchResource uses a watch request with field selector, not a direct GET
-  // EXACT pattern from logs: /api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/plans?watch=true&fieldSelector=metadata.name%3Dtest-create-plan
-  await page.route(
-    '**/namespaces/openshift-mtv/plans?watch=true&fieldSelector=metadata.name%3Dtest-create-plan**',
-    async (route) => {
-      const url = route.request().url();
-      const method = route.request().method();
-      // eslint-disable-next-line no-console
-      console.log(`🎯 EXACT WATCH MOCK TRIGGERED - ${method} ${url}`);
-
-      if (method === 'GET') {
-        // eslint-disable-next-line no-console
-        console.log(`✅ SERVING EXACT WATCH DATA FOR: ${TEST_DATA.planName}`);
-
-        const planData = {
+  // Plan details for usePlan hook - handle both GET and watch requests
+  const planData = {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    kind: 'Plan',
+    metadata: {
+      name: TEST_DATA.planName,
+      namespace: 'openshift-mtv',
+      uid: 'test-plan-uid-1',
+      creationTimestamp: new Date().toISOString(),
+      resourceVersion: '123456',
+    },
+    spec: {
+      map: {
+        network: {
           apiVersion: 'forklift.konveyor.io/v1beta1',
-          kind: 'Plan',
-          metadata: {
-            name: TEST_DATA.planName,
-            namespace: 'openshift-mtv',
-            uid: 'test-plan-uid-1',
-            creationTimestamp: new Date().toISOString(),
-            resourceVersion: '123456',
-          },
-          spec: {
-            provider: {
-              source: { name: TEST_DATA.providers.source.name, namespace: 'openshift-mtv' },
-              destination: { name: TEST_DATA.providers.target.name, namespace: 'openshift-mtv' },
-            },
-            targetNamespace: TEST_DATA.targetProject,
-            type: 'Cold',
-            warm: false,
-            vms: [
-              {
-                id: 'test-vm-1',
-                name: 'test-virtual-machine-1',
-              },
-            ],
-          },
-          status: {
-            phase: 'Ready',
-            conditions: [
-              {
-                type: 'Ready',
-                status: 'True',
-                message: 'The plan is ready for migration.',
-                category: 'Info',
-              },
-            ],
-          },
-        };
+          kind: 'NetworkMap',
+          name: `${TEST_DATA.planName}-networkmap`,
+          namespace: 'openshift-mtv',
+          uid: 'test-networkmap-uid-1',
+        },
+        storage: {
+          apiVersion: 'forklift.konveyor.io/v1beta1',
+          kind: 'StorageMap',
+          name: `${TEST_DATA.planName}-storagemap`,
+          namespace: 'openshift-mtv',
+          uid: 'test-storagemap-uid-1',
+        },
+      },
+      migrateSharedDisks: false,
+      provider: {
+        source: {
+          apiVersion: 'forklift.konveyor.io/v1beta1',
+          kind: 'Provider',
+          name: TEST_DATA.providers.source.name,
+          namespace: 'openshift-mtv',
+          uid: TEST_DATA.providers.source.uid,
+        },
+        destination: {
+          apiVersion: 'forklift.konveyor.io/v1beta1',
+          kind: 'Provider',
+          name: TEST_DATA.providers.target.name,
+          namespace: 'openshift-mtv',
+          uid: TEST_DATA.providers.target.uid,
+        },
+      },
+      targetNamespace: TEST_DATA.targetProject,
+      pvcNameTemplateUseGenerateName: true,
+      skipGuestConversion: false,
+      warm: false,
+      vms: [
+        {
+          id: 'test-vm-1',
+          name: 'test-virtual-machine-1',
+        },
+      ],
+    },
+    status: {
+      phase: 'Ready',
+      conditions: [
+        {
+          category: 'Advisory',
+          lastTransitionTime: new Date().toISOString(),
+          message: 'The plan is ready.',
+          reason: 'Ready',
+          status: 'True',
+          type: 'Ready',
+        },
+      ],
+    },
+  };
 
-        // For watch requests, return the single item directly (not wrapped in a list)
+  // Direct GET request for individual plan (like Cypress)
+  await page.route(
+    `**/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/plans/${TEST_DATA.planName}`,
+    async (route) => {
+      // eslint-disable-next-line no-console
+      console.log(
+        `🎯 PLAN GET REQUEST INTERCEPTED - ${route.request().method()} ${route.request().url()}`,
+      );
+
+      if (route.request().method() === 'GET') {
         // eslint-disable-next-line no-console
-        console.log(`🎯 DIRECT PLAN DATA SERVED:`, JSON.stringify(planData.metadata, null, 2));
+        console.log(`✅ SERVING PLAN DATA FOR: ${TEST_DATA.planName}`);
 
         await route.fulfill({
           status: 200,
@@ -107,18 +133,50 @@ export const setupPlansIntercepts = async (page: Page) => {
     },
   );
 
-  // BACKUP: Also try to catch any other plan watch patterns
-  await page.route('**/plans?watch=true**', async (route) => {
+  // Watch request for individual plan (for real-time updates)
+  // Handle both HTTP and WebSocket-like patterns
+  await page.route('**/namespaces/openshift-mtv/plans?watch=true**', async (route) => {
     const url = route.request().url();
-    if (url.includes('test-create-plan')) {
+
+    // eslint-disable-next-line no-console
+    console.log(`🎯 PLAN WATCH REQUEST INTERCEPTED - ${route.request().method()} ${url}`);
+
+    if (url.includes(TEST_DATA.planName) || url.includes('fieldSelector')) {
       // eslint-disable-next-line no-console
-      console.log(`🔥 BACKUP MOCK TRIGGERED - ${route.request().method()} ${url}`);
-      // Redirect to our main handler
-      await route.continue();
+      console.log(`✅ SERVING WATCH DATA FOR: ${TEST_DATA.planName}`);
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(planData),
+      });
     } else {
       await route.continue();
     }
   });
+
+  // Alternative pattern for plan queries that might include fieldSelector
+  await page.route(
+    `**/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/plans?**`,
+    async (route) => {
+      const url = route.request().url();
+      // eslint-disable-next-line no-console
+      console.log(`🎯 PLANS QUERY PATTERN INTERCEPTED - ${route.request().method()} ${url}`);
+
+      if (url.includes(TEST_DATA.planName) && route.request().method() === 'GET') {
+        // eslint-disable-next-line no-console
+        console.log(`✅ SERVING PLAN DATA VIA QUERY PATTERN: ${TEST_DATA.planName}`);
+
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(planData),
+        });
+      } else {
+        await route.continue();
+      }
+    },
+  );
 
   // URL patterns that work for both local (9000) and GitHub Actions (30080)
   // Namespaced plans endpoint (wildcard namespace)
@@ -260,6 +318,7 @@ export const setupPlansIntercepts = async (page: Page) => {
               },
             },
           };
+
           // eslint-disable-next-line no-console
           console.log(`✅ PLAN CREATION SUCCESS: Returning plan data`);
           await route.fulfill({

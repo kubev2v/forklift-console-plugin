@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test';
 export { setupDatastoresIntercepts } from './datastores';
 export { setupHostsIntercepts } from './hosts';
 export { setupNetworkMapsIntercepts } from './networkMaps';
+export { setupPlanDetailsIntercepts } from './planDetails';
 export { setupPlansIntercepts } from './plans';
 export { setupProjectsIntercepts } from './projects';
 export { setupProvidersIntercepts } from './providers';
@@ -15,6 +16,7 @@ export { setupVirtualMachinesIntercepts } from './virtualMachines';
 import { setupDatastoresIntercepts } from './datastores';
 import { setupHostsIntercepts } from './hosts';
 import { setupNetworkMapsIntercepts } from './networkMaps';
+import { setupPlanDetailsIntercepts } from './planDetails';
 import { setupPlansIntercepts } from './plans';
 import { setupProjectsIntercepts } from './projects';
 import { setupProvidersIntercepts } from './providers';
@@ -117,6 +119,7 @@ export const setupCreatePlanIntercepts = async (page: Page): Promise<void> => {
   // Use the original specific interceptors approach
   await setupProvidersIntercepts(page);
   await setupPlansIntercepts(page);
+  await setupPlanDetailsIntercepts(page);
   await setupProjectsIntercepts(page);
   await setupNetworkMapsIntercepts(page);
   await setupStorageMapsIntercepts(page);
