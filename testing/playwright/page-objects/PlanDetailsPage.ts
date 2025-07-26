@@ -12,6 +12,9 @@ export class PlanDetailsPage {
     planProject: string;
     targetProject: string;
   }) {
+    // eslint-disable-next-line no-console
+    console.log('🔧 PAGE OBJECT - verifyBasicPlanDetailsPage called with:', planData);
+
     // Simplified verification focusing on core plan details that should always be present
     await this.verifyPlanDetailsURL(planData.planName);
     await this.verifyPlanTitle(planData.planName);
@@ -100,17 +103,35 @@ export class PlanDetailsPage {
   }
 
   async verifyPlanTitle(planName: string) {
+    // eslint-disable-next-line no-console
+    console.log('🔧 PAGE OBJECT - verifyPlanTitle called with planName:', planName);
+
+    // Check what the element actually contains
+    const titleElement = this.page.getByTestId('plan-details-title');
+    const actualText = await titleElement.textContent();
+    // eslint-disable-next-line no-console
+    console.log('🔧 PAGE OBJECT - plan-details-title actual text:', `"${actualText}"`);
+
     // Verify the plan title with icon and name
     await expect(this.page.getByTestId('plan-details-title')).toBeVisible();
     await expect(this.page.getByTestId('plan-details-title')).toContainText(planName);
   }
 
   async waitForPageLoad() {
+    // eslint-disable-next-line no-console
+    console.log('🔧 PAGE OBJECT - waitForPageLoad called');
+
     // Wait for the plan details page to load by ensuring key elements are present
     // Don't wait for provider spinner since we're not mocking provider details API
     await expect(this.page.getByTestId('plan-details-title')).toBeVisible({
       timeout: 30000,
     });
+
+    // Check what the title shows after loading
+    const titleElement = this.page.getByTestId('plan-details-title');
+    const actualText = await titleElement.textContent();
+    // eslint-disable-next-line no-console
+    console.log('🔧 PAGE OBJECT - After waitForPageLoad, title text:', `"${actualText}"`);
 
     // Ensure the main plan details section is loaded - use more specific selector
     await expect(

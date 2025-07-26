@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 /* eslint-disable @cspell/spellchecker */
 
 import { dirname, join } from 'path';
@@ -24,6 +23,7 @@ const dirName = dirname(fileName);
 const CSPELL_WORD_LIST = join(dirName, 'cspell.wordlist.txt');
 import type { Linter } from 'eslint';
 
+// eslint-disable-next-line max-lines-per-function
 export const createEslintConfig = (ideMode = false) =>
   [
     {
