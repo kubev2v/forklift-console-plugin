@@ -5,7 +5,7 @@ import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef } from '@kubev2v/types';
-import { Button, Tooltip } from '@patternfly/react-core';
+import { Button, ButtonVariant, Tooltip } from '@patternfly/react-core';
 
 type PlansAddButtonProps = {
   namespace?: string;
@@ -33,7 +33,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namesp
   const button = (
     <Button
       data-testid={dataTestId}
-      variant="primary"
+      variant={ButtonVariant.primary}
       isAriaDisabled={!hasSufficientProviders}
       onClick={onClick}
       isDisabled={!canCreate}
