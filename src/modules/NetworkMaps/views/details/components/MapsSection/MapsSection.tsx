@@ -28,6 +28,7 @@ import {
   FlexItem,
   Spinner,
 } from '@patternfly/react-core';
+import { POD_NETWORK } from '@utils/constants';
 
 import { mapsSectionReducer, type MapsSectionState } from './state/reducer';
 
@@ -211,7 +212,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
             destination: getDestinationNetName(destinationNetworks, networkMapSpec.destination),
             source:
               networkMapSpec.source?.type === 'pod'
-                ? 'Pod network'
+                ? POD_NETWORK
                 : getSourceNetName(sourceNetworks, networkMapSpec.source),
           }))}
           generalSourcesLabel={t('Other networks present on the source provider ')}
