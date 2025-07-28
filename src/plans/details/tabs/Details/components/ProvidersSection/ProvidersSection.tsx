@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import { providerTypeIcons } from 'src/plans/details/utils/constants';
+import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
@@ -31,11 +31,8 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
     loadError: destinationProviderLoadError,
   } = usePlanDestinationProvider(plan);
   const sourceProviderName = getName(sourceProvider);
-  const sourceProviderType = sourceProvider?.spec?.type;
   const destinationProviderName = getName(destinationProvider);
-  const destinationProviderType = destinationProvider?.spec?.type;
   const isDarkTheme = useIsDarkTheme();
-  const providerIcons = providerTypeIcons(isDarkTheme);
 
   return (
     <LoadingSuspend
@@ -57,7 +54,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
                 name: sourceProviderName,
                 namespace: getNamespace(sourceProvider),
               })}
-              providerIcon={providerIcons[sourceProviderType as keyof typeof providerIcons]}
+              providerIcon={getProviderTypeIcon(sourceProvider?.spec?.type, isDarkTheme)}
               providerName={sourceProviderName}
             />
           }
@@ -74,7 +71,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
                 name: destinationProviderName,
                 namespace: getNamespace(destinationProvider),
               })}
-              providerIcon={providerIcons[destinationProviderType as keyof typeof providerIcons]}
+              providerIcon={getProviderTypeIcon(destinationProvider?.spec?.type, isDarkTheme)}
               providerName={destinationProviderName}
             />
           }
