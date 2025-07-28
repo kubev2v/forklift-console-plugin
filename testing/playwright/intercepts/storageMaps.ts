@@ -63,7 +63,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
 
   // StorageMap creation for copying (POST request with new name)
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps$/,
     async (route) => {
       if (route.request().method() === 'POST') {
         const requestBody = JSON.parse(route.request().postData() ?? '{}') as {
@@ -91,7 +91,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
 
   // StorageMap PATCH request for adding owner references
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps\/.*$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps\/[^/?]*$/,
     async (route) => {
       if (route.request().method() === 'PATCH') {
         // Extract the name from URL

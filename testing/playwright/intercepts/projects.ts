@@ -66,7 +66,7 @@ export const setupProjectsIntercepts = async (page: Page) => {
 
   // Additional patterns for projects
   await page.route(
-    /.*\/api\/kubernetes\/apis\/project\.openshift\.io\/v1\/projects.*/,
+    /\/api\/kubernetes\/apis\/project\.openshift\.io\/v1\/projects[^?]*$/,
     async (route) => {
       await route.fulfill({
         status: 200,
@@ -76,7 +76,7 @@ export const setupProjectsIntercepts = async (page: Page) => {
     },
   );
 
-  await page.route(/.*\/api\/kubernetes\/api\/v1\/namespaces.*/, async (route) => {
+  await page.route(/\/api\/kubernetes\/api\/v1\/namespaces[^?]*$/, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',

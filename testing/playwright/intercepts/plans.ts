@@ -215,7 +215,7 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // NetworkMap creation endpoint for plan wizard
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps$/,
     async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
@@ -243,7 +243,7 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // StorageMap creation endpoint for plan wizard
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps$/,
     async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
@@ -272,7 +272,7 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // Plan creation endpoint
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/plans/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/plans$/,
     async (route) => {
       if (route.request().method() === 'POST') {
         try {

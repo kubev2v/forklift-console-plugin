@@ -81,7 +81,7 @@ export const setupProvidersIntercepts = async (page: Page) => {
 
   // Individual Provider fetch endpoints
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/providers\/[^/?]+$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/providers\/[^/?]+$/,
     async (route) => {
       if (route.request().method() === 'GET') {
         const url = route.request().url();

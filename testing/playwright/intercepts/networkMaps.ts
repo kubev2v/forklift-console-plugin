@@ -62,7 +62,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
 
   // NetworkMap creation for copying (POST request with new name)
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps$/,
     async (route) => {
       if (route.request().method() === 'POST') {
         const requestBody = JSON.parse(route.request().postData() ?? '{}') as {
@@ -90,7 +90,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
 
   // NetworkMap PATCH request for adding owner references
   await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps\/.*$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps\/[^/?]*$/,
     async (route) => {
       if (route.request().method() === 'PATCH') {
         // Extract the name from URL
