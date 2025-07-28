@@ -34,15 +34,11 @@ export class PlanDetailsPage {
 
   async verifyNavigationTabs(): Promise<void> {
     // Verify Details tab is currently selected
-    try {
-      await expect(this.page.locator('[data-test-id="horizontal-link-Details"]')).toHaveAttribute(
-        'aria-selected',
-        'true',
-        { timeout: 5000 },
-      );
-    } catch (_error) {
-      // Ignore the error and continue - tab navigation might not be fully loaded yet
-    }
+    await expect(this.page.locator('[data-test-id="horizontal-link-Details"]')).toHaveAttribute(
+      'aria-selected',
+      'true',
+      { timeout: 5000 },
+    );
   }
 
   async verifyPlanDetails(planData: {

@@ -275,32 +275,28 @@ export const setupPlansIntercepts = async (page: Page) => {
     /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/plans$/,
     async (route) => {
       if (route.request().method() === 'POST') {
-        try {
-          const response = {
-            apiVersion: 'forklift.konveyor.io/v1beta1',
-            kind: 'Plan',
-            metadata: {
-              name: TEST_DATA.planName,
-              namespace: 'openshift-mtv',
-              uid: 'test-plan-uid-1',
-              creationTimestamp: new Date().toISOString(),
+        const response = {
+          apiVersion: 'forklift.konveyor.io/v1beta1',
+          kind: 'Plan',
+          metadata: {
+            name: TEST_DATA.planName,
+            namespace: 'openshift-mtv',
+            uid: 'test-plan-uid-1',
+            creationTimestamp: new Date().toISOString(),
+          },
+          spec: {
+            provider: {
+              destination: { name: TEST_DATA.providers.target.name, namespace: 'openshift-mtv' },
+              source: { name: TEST_DATA.providers.source.name, namespace: 'openshift-mtv' },
             },
-            spec: {
-              provider: {
-                destination: { name: TEST_DATA.providers.target.name, namespace: 'openshift-mtv' },
-                source: { name: TEST_DATA.providers.source.name, namespace: 'openshift-mtv' },
-              },
-            },
-          };
+          },
+        };
 
-          await route.fulfill({
-            status: 201,
-            contentType: 'application/json',
-            body: JSON.stringify(response),
-          });
-        } catch (_error) {
-          await route.abort();
-        }
+        await route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: JSON.stringify(response),
+        });
       }
     },
   );
