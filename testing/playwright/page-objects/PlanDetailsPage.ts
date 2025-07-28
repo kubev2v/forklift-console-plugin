@@ -96,7 +96,7 @@ export class PlanDetailsPage {
   }
 
   async verifyPlanTitle(planName: string): Promise<void> {
-    const titleLocator = this.page.locator('[data-test="plan-details-title"]');
+    const titleLocator = this.page.locator('[data-testid="plan-details-title"]');
     await expect(titleLocator).toBeVisible({ timeout: 15000 });
 
     const actualText = await titleLocator.textContent();
@@ -106,8 +106,8 @@ export class PlanDetailsPage {
   async waitForPageLoad(): Promise<void> {
     await this.page.waitForLoadState('domcontentloaded', { timeout: 15000 });
 
-    // Verify the plan title is visible
-    const titleLocator = this.page.locator('[data-test="plan-details-title"]');
+    // Verify the plan title is visible (using correct data-testid attribute)
+    const titleLocator = this.page.locator('[data-testid="plan-details-title"]');
     await expect(titleLocator).toBeVisible({ timeout: 15000 });
 
     // Wait for the plan details page to load by ensuring key elements are present
