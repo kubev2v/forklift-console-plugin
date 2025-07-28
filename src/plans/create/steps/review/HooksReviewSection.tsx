@@ -64,7 +64,7 @@ const HooksReviewSection: FC = () => {
                     {hooksFormFieldLabels[MigrationHookFieldId.AnsiblePlaybook]}
                   </DescriptionListTerm>
                   <DescriptionListDescription>
-                    {preMigration[MigrationHookFieldId.AnsiblePlaybook]}
+                    {preMigration[MigrationHookFieldId.AnsiblePlaybook] ?? t('None')}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               </>
@@ -106,7 +106,7 @@ const HooksReviewSection: FC = () => {
                     {hooksFormFieldLabels[MigrationHookFieldId.AnsiblePlaybook]}
                   </DescriptionListTerm>
                   <DescriptionListDescription>
-                    {postMigration[MigrationHookFieldId.AnsiblePlaybook]}
+                    {postMigration[MigrationHookFieldId.AnsiblePlaybook] ?? t('None')}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               </>

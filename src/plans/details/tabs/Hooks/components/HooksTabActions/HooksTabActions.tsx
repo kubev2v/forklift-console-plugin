@@ -12,9 +12,6 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { HookFormValues } from '../../state/types';
-import HooksActionHelperMessageContent from '../HooksActionHelperMessage';
-
-import './HooksTabActions.scss';
 
 type HooksTabActionsProps = {
   onCancel: () => void;
@@ -48,11 +45,13 @@ const HooksTabActions: FC<HooksTabActionsProps> = ({ onCancel, onUpdate, planEdi
           </Button>
         </FlexItem>
       </Flex>
-      <HelperText className="forklift-plan-hooks-page__helper-text">
-        <HelperTextItem variant="indeterminate">
-          <HooksActionHelperMessageContent planEditable={planEditable} />
-        </HelperTextItem>
-      </HelperText>
+      {!planEditable && (
+        <HelperText className="forklift-plan-hooks-page__helper-text">
+          <HelperTextItem variant="indeterminate">
+            {t('Can not update plan hooks when the plan is not editable.')}
+          </HelperTextItem>
+        </HelperText>
+      )}
     </>
   );
 };
