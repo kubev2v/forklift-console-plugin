@@ -1,0 +1,116 @@
+# Page snapshot
+
+```yaml
+- link "Skip to content":
+  - /url: /k8s/cluster/forklift.konveyor.io~v1beta1~Plan/~new#content-scrollable
+- banner:
+  - button "Side navigation toggle" [expanded]
+  - link "OKD":
+    - /url: /
+  - button "Notification drawer": "88"
+  - button "Quick create"
+  - button "Help menu"
+  - button "User menu": Auth disabled
+- navigation "Nav":
+  - button "Administrator":
+    - heading "Administrator" [level=2]
+  - list "Main navigation":
+    - listitem:
+      - button "Home"
+    - listitem:
+      - button "Favorites"
+    - listitem:
+      - button "Ecosystem"
+    - listitem:
+      - button "Operators"
+    - listitem:
+      - button "Helm"
+    - listitem:
+      - button "Workloads"
+    - listitem:
+      - button "Migration for Virtualization" [expanded]
+      - region "Migration for Virtualization":
+        - list:
+          - listitem:
+            - link "Overview":
+              - /url: /mtv/overview
+          - listitem:
+            - link "Providers":
+              - /url: /k8s/all-namespaces/forklift.konveyor.io~v1beta1~Provider
+          - listitem:
+            - link "Migration plans":
+              - /url: /k8s/all-namespaces/forklift.konveyor.io~v1beta1~Plan
+          - listitem:
+            - link "Network maps":
+              - /url: /k8s/all-namespaces/forklift.konveyor.io~v1beta1~NetworkMap
+          - listitem:
+            - link "Storage maps":
+              - /url: /k8s/all-namespaces/forklift.konveyor.io~v1beta1~StorageMap
+    - listitem:
+      - button "Storage"
+    - listitem:
+      - button "Builds"
+    - listitem:
+      - button "Compute"
+    - listitem:
+      - button "User Management"
+    - listitem:
+      - button "Administration"
+- main:
+  - paragraph:
+    - text: You are logged in as a temporary administrative user. Update the
+    - link "cluster OAuth configuration":
+      - /url: /k8s/cluster/config.openshift.io~v1~OAuth/cluster
+    - text: to allow others to log in.
+  - heading "Create migration plan" [level=2]
+  - navigation "Wizard steps":
+    - list:
+      - listitem:
+        - button "Basic setup"
+        - list:
+          - listitem:
+            - button "General"
+          - listitem:
+            - button "Virtual machines" [disabled]
+          - listitem:
+            - button "Network map" [disabled]
+          - listitem:
+            - button "Storage map" [disabled]
+          - listitem:
+            - button "Migration type" [disabled]
+      - listitem:
+        - button "Additional setup" [disabled]
+        - list:
+          - listitem:
+            - button "Other settings (optional)" [disabled]
+          - listitem:
+            - button "Hooks (optional)" [disabled]
+      - listitem:
+        - button "Review and create" [disabled]
+  - heading "General" [level=2]
+  - group "Plan information":
+    - text: Plan information
+    - paragraph: Name your plan and choose the project you would like it to be created in.
+    - text: Plan name
+    - textbox: test-create-plan
+    - text: Plan project
+    - button
+    - combobox "Type to filter": openshift-mtv
+    - button "Menu toggle"
+  - group "Source and target providers":
+    - text: Source and target providers
+    - paragraph: Select the provider you would like to migrate your virtual machines from (source provider) and the provider you want to migrate your virtual machines to (target provider).
+    - text: Source provider
+    - button "Select menu toggle": test-source-provider
+    - text: Target provider
+    - button "Select menu toggle": test-target-provider
+    - text: Target project
+    - button
+    - combobox "Type to filter"
+    - button "Menu toggle"
+  - button "Back" [disabled]
+  - button "Next"
+  - button "Cancel"
+- dialog "Modal"
+- img
+```

@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { ComponentProps, FC } from 'react';
 import { Base64 } from 'js-base64';
 import Loading from 'src/overview/components/Loading';
 
@@ -9,7 +9,10 @@ import useOpenshiftClusterVersion from '@utils/hooks/useOpenshiftClusterVersion/
 import { OCP_VERSION_4_18 } from './utils/constants';
 import { isVersionGte } from './utils/utils';
 
-type VersionedCodeEditorProps = {
+type VersionedCodeEditorProps = Pick<
+  ComponentProps<typeof PFCodeEditor>,
+  'isReadOnly' | 'isDarkTheme'
+> & {
   value: string | undefined;
   onChange: (encodedValue: string) => void;
   minHeight?: string;
@@ -18,6 +21,7 @@ type VersionedCodeEditorProps = {
 // VersionedCodeEditor component that uses the appropriate CodeEditor based on OCP version
 // https://issues.redhat.com/browse/MTV-2918
 const VersionedCodeEditor: FC<VersionedCodeEditorProps> = ({
+  isReadOnly,
   minHeight = '20rem',
   onChange,
   value,
@@ -43,6 +47,7 @@ const VersionedCodeEditor: FC<VersionedCodeEditorProps> = ({
         }}
         height={minHeight}
         isMinimapVisible={false}
+        isReadOnly={isReadOnly}
       />
     );
   }

@@ -40,7 +40,7 @@ const HooksStep: FC = () => {
           )}
         </FormSection>
 
-        <FormSection title={t('Post migration hook')}>
+        <FormSection title={t('Post migration hook')} className="pf-v5-u-mt-md">
           <EnableHookCheckbox fieldId={HooksFormFieldId.PostMigration} />
 
           {postMigrationHook?.enableHook && (
