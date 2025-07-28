@@ -109,7 +109,7 @@ export const setupPlansIntercepts = async (page: Page) => {
     },
   };
 
-  // Direct GET request for individual plan (like Cypress)
+  // Direct GET request for individual plan
   await page.route(
     `**/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/plans/${TEST_DATA.planName}`,
     async (route) => {

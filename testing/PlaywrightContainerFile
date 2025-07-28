@@ -1,4 +1,4 @@
-FROM cypress/included:latest
+FROM mcr.microsoft.com/playwright:latest
 
 WORKDIR /e2e
 
@@ -7,3 +7,4 @@ COPY . .
 ENV BASE_ADDRESS="http://host.docker.internal:9000"
 
 RUN yarn
+RUN npx playwright install
