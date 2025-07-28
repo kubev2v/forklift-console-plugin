@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
-import { useActiveNamespace, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 
@@ -17,13 +17,9 @@ const PlanNameField: FC = () => {
     control,
     formState: { errors },
   } = useCreatePlanFormContext();
-  const [activeNamespace] = useActiveNamespace();
-
   const [plans] = useK8sWatchResource<V1beta1Plan[]>({
     groupVersionKind: PlanModelGroupVersionKind,
     isList: true,
-    namespace: activeNamespace,
-    namespaced: true,
   });
 
   return (

@@ -89,15 +89,15 @@ const updateNetworkMapSpecMapDestination = (
 };
 
 type UpdatePlanMappingsDataParams = {
-  planNetworkMaps: V1beta1NetworkMap;
-  planStorageMaps: V1beta1StorageMap;
+  planNetworkMap: V1beta1NetworkMap;
+  planStorageMap: V1beta1StorageMap;
   updatedNetwork: V1beta1NetworkMapSpecMap[];
   updatedStorage: V1beta1StorageMapSpecMap[];
 };
 
 export const patchPlanMappingsData = async ({
-  planNetworkMaps,
-  planStorageMaps,
+  planNetworkMap,
+  planStorageMap,
   updatedNetwork,
   updatedStorage,
 }: UpdatePlanMappingsDataParams) => {
@@ -110,7 +110,7 @@ export const patchPlanMappingsData = async ({
       },
     ],
     model: NetworkMapModel,
-    resource: planNetworkMaps,
+    resource: planNetworkMap,
   });
 
   await k8sPatch({
@@ -122,6 +122,6 @@ export const patchPlanMappingsData = async ({
       },
     ],
     model: StorageMapModel,
-    resource: planStorageMaps,
+    resource: planStorageMap,
   });
 };

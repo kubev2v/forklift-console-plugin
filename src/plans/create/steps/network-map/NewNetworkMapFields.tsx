@@ -20,26 +20,23 @@ const NewNetworkMapFields: FC = () => {
   const { t } = useForkliftTranslation();
   const { control, getFieldState, setValue } = useCreatePlanFormContext();
   const { network } = useCreatePlanWizardContext();
-  const [targetProject, sourceProvider, vms, networkMap] = useWatch({
+  const [targetProject, vms, networkMap] = useWatch({
     control,
-    name: [
-      GeneralFormFieldId.TargetProject,
-      GeneralFormFieldId.SourceProvider,
-      VmFormFieldId.Vms,
-      NetworkMapFieldId.NetworkMap,
-    ],
+    name: [GeneralFormFieldId.TargetProject, VmFormFieldId.Vms, NetworkMapFieldId.NetworkMap],
   });
 
   const [availableSourceNetworks, sourceNetworksLoading, sourceNetworksError] = network.sources;
   const [availableTargetNetworks, targetNetworksLoading, targetNetworksError] = network.targets;
+  const [oVirtNicProfiles, oVirtNicProfilesLoading, oVirtNicProfilesError] =
+    network.oVirtNicProfiles;
   const isNetMapEmpty = isEmpty(networkMap);
-  const isLoading = sourceNetworksLoading || targetNetworksLoading;
+  const isLoading = sourceNetworksLoading || targetNetworksLoading || oVirtNicProfilesLoading;
   const { error } = getFieldState(NetworkMapFieldId.NetworkMap);
 
   const { other: otherSourceNetworks, used: usedSourceNetworks } = getSourceNetworkValues(
-    sourceProvider,
     availableSourceNetworks,
     Object.values(vms),
+    oVirtNicProfiles,
   );
 
   const targetNetworkMap = useMemo(
@@ -48,7 +45,7 @@ const NewNetworkMapFields: FC = () => {
   );
 
   // When the network map is empty, default to source network values used by VMs,
-  // otherwise set empty inputs for the field array to force an empty field table row.
+  // otherwise set empty inputs for the field array to force an empty field table row
   useEffect(() => {
     if (!isLoading && isNetMapEmpty) {
       if (isEmpty(usedSourceNetworks)) {
@@ -86,7 +83,7 @@ const NewNetworkMapFields: FC = () => {
         usedSourceNetworks={usedSourceNetworks}
         otherSourceNetworks={otherSourceNetworks}
         isLoading={isLoading}
-        loadError={sourceNetworksError ?? targetNetworksError}
+        loadError={sourceNetworksError ?? targetNetworksError ?? oVirtNicProfilesError}
       />
 
       <FormGroupWithHelpText

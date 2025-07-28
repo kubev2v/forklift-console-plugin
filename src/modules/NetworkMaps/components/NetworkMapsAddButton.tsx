@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -11,7 +11,7 @@ const NetworkMapsAddButton: FC<{ namespace: string; dataTestId?: string }> = ({
   namespace,
 }) => {
   const { t } = useForkliftTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const NetworkMapsListURL = getResourceUrl({
     namespace,
@@ -20,7 +20,7 @@ const NetworkMapsAddButton: FC<{ namespace: string; dataTestId?: string }> = ({
   });
 
   const onClick = () => {
-    history.push(`${NetworkMapsListURL}/~new`);
+    navigate(`${NetworkMapsListURL}/~new`);
   };
 
   return (

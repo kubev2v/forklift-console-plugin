@@ -20,22 +20,20 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
   const {
     loadingResources,
-    networkMaps,
     planNetworkMap,
     planStorageMap,
     resourcesError,
     sourceNetworks,
     sourceStorages,
-    storageMaps,
     targetNetworks,
     targetStorages,
   } = useMappingResources(plan);
 
   const message = getMappingPageMessage({
     loadingResources,
-    networkMapsEmpty: isEmpty(networkMaps),
+    networkMapsEmpty: isEmpty(planNetworkMap),
     resourcesError,
-    storageMapsEmpty: isEmpty(storageMaps),
+    storageMapsEmpty: isEmpty(planStorageMap),
   });
 
   if (message) {
@@ -63,8 +61,8 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
       <PlanMappingsSection
         plan={plan}
-        planNetworkMaps={planNetworkMap!}
-        planStorageMaps={planStorageMap!}
+        planNetworkMap={planNetworkMap!}
+        planStorageMap={planStorageMap!}
         setAlertMessage={setAlert}
         sourceNetworks={sourceNetworks}
         sourceStorages={sourceStorages}

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -15,7 +15,7 @@ type PlansAddButtonProps = {
 
 const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namespace }) => {
   const { t } = useForkliftTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
   const onClick = () => {
@@ -24,7 +24,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namesp
       reference: PlanModelRef,
     });
 
-    history.push(`${planResourceUrl}/~new`);
+    navigate(`${planResourceUrl}/~new`);
   };
 
   const button = (
