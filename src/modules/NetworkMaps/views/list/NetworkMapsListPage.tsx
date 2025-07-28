@@ -3,7 +3,6 @@ import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   NetworkMapModel,
@@ -23,7 +22,7 @@ import NetworkMapRow from './NetworkMapRow';
 
 import './NetworkMapsListPage.style.css';
 
-export const fieldsMetadata = [
+const fieldsMetadata = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -106,8 +105,6 @@ export const fieldsMetadata = [
 const NetworkMapsListPage: FC<{
   namespace: string;
 }> = ({ namespace }) => {
-  const { t } = useForkliftTranslation();
-
   const userSettings = useMemo(() => loadUserSettings({ pageId: 'NetworkMaps' }), []);
 
   const [networkMaps, networkMapsLoaded, networkMapsLoadError] = useK8sWatchResource<
@@ -129,45 +126,27 @@ const NetworkMapsListPage: FC<{
     permissions,
   }));
 
-  const EmptyState = (
-    <EmptyState_
-      AddButton={
-        <NetworkMapsAddButton
-          namespace={namespace}
-          dataTestId="add-network-map-button-empty-state"
-        />
-      }
-      namespace={namespace}
-    />
-  );
-
   return (
     <StandardPage<NetworkMapData>
       data-testid="network-maps-list"
-      addButton={
-        permissions.canCreate && (
+      {...(permissions.canCreate && {
+        addButton: (
           <NetworkMapsAddButton namespace={namespace} dataTestId="add-network-map-button" />
-        )
-      }
+        ),
+      })}
       dataSource={[data || [], networkMapsLoaded, networkMapsLoadError]}
       RowMapper={NetworkMapRow}
       fieldsMetadata={fieldsMetadata}
       namespace={namespace}
       title={t('Network maps')}
+      titleHelpContent={t(
+        'Network maps ensure that the network configurations of your migrating virtual machines (VMs) are correctly translated and applied in the target environment.',
+      )}
       userSettings={userSettings}
-      customNoResultsFound={EmptyState}
+      customNoResultsFound={<NetworkMapsEmptyState namespace={namespace} />}
       page={1}
     />
   );
-};
-
-type EmptyStateProps = {
-  AddButton: JSX.Element;
-  namespace?: string;
-};
-
-const EmptyState_: FC<EmptyStateProps> = ({ namespace }) => {
-  return <NetworkMapsEmptyState namespace={namespace} />;
 };
 
 export default NetworkMapsListPage;
