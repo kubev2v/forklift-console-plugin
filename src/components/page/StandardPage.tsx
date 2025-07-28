@@ -1,10 +1,24 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import { type FC, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type FC,
+  type MutableRefObject,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import TableBulkSelect from '@components/TableBulkSelect';
 import {
+  Button,
+  ButtonVariant,
+  Flex,
+  FlexItem,
+  Icon,
   Level,
   LevelItem,
   type OnPerPageSelect,
@@ -17,8 +31,9 @@ import {
   ToolbarContent,
   ToolbarItem,
   ToolbarToggleGroup,
+  Tooltip,
 } from '@patternfly/react-core';
-import { FilterIcon } from '@patternfly/react-icons';
+import { FilterIcon, HelpIcon } from '@patternfly/react-icons';
 import { isEmpty } from '@utils/helpers';
 
 import { AttributeValueFilter } from '../common/FilterGroup/AttributeValueFilter';
@@ -90,9 +105,10 @@ export type StandardPageProps<T> = {
   selectedIds?: string[];
   onExpand?: (expandedIds: string[]) => void;
   expandedIds?: string[];
-  pageRef?: React.MutableRefObject<number>;
+  pageRef?: MutableRefObject<number>;
   showManageColumns?: boolean;
   title?: string;
+  titleHelpContent?: ReactNode;
   noPadding?: boolean;
 };
 
@@ -128,6 +144,7 @@ const StandardPageInner = <T,>({
   setActiveSort,
   showManageColumns = true,
   title,
+  titleHelpContent,
   toId,
   userSettings,
 }: StandardPageInnerProps<T>) => {
@@ -201,7 +218,7 @@ const StandardPageInner = <T,>({
       return;
     }
 
-    if (!filteredData || filteredData.length === 0) {
+    if (!filteredData || isEmpty(filteredData)) {
       setFinalFilteredData([]);
       return;
     }
@@ -238,12 +255,12 @@ const StandardPageInner = <T,>({
   // Memoize error/loading states
   const errorFetchingData = useMemo(() => error, [error]);
   const noResults = useMemo(
-    () => loaded && !error && sortedData.length === 0,
-    [loaded, error, sortedData.length],
+    () => loaded && !error && isEmpty(sortedData),
+    [loaded, error, sortedData],
   );
   const noMatchingResults = useMemo(
-    () => loaded && !error && finalFilteredData.length === 0 && sortedData.length > 0,
-    [loaded, error, finalFilteredData.length, sortedData.length],
+    () => loaded && !error && isEmpty(finalFilteredData) && !isEmpty(sortedData),
+    [loaded, error, finalFilteredData, sortedData],
   );
 
   const primaryFilters = useMemo(
@@ -315,7 +332,25 @@ const StandardPageInner = <T,>({
         <PageSection variant="light" className="forklift-page__main-title">
           <Level>
             <LevelItem>
-              <Title headingLevel="h1">{title}</Title>
+              <Title headingLevel="h1">
+                <Flex
+                  alignItems={{ default: 'alignItemsCenter' }}
+                  spaceItems={{ default: 'spaceItemsSm' }}
+                >
+                  <FlexItem>{title}</FlexItem>
+                  {titleHelpContent && (
+                    <FlexItem>
+                      <Tooltip content={titleHelpContent}>
+                        <Button variant={ButtonVariant.plain} className="pf-v5-u-p-0">
+                          <Icon size="md">
+                            <HelpIcon />
+                          </Icon>
+                        </Button>
+                      </Tooltip>
+                    </FlexItem>
+                  )}
+                </Flex>
+              </Title>
             </LevelItem>
             {addButton && <LevelItem>{addButton}</LevelItem>}
           </Level>
