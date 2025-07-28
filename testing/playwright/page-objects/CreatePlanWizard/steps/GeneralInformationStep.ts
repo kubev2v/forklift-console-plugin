@@ -8,17 +8,12 @@ export class GeneralInformationStep {
   }
 
   private async selectProjectByTestId(testId: string, projectName: string) {
-    // Use data-testid selectors (QA-appropriate approach)
     await this.page.getByTestId(testId).waitFor({ state: 'visible', timeout: 10000 });
     await this.page.getByTestId(testId).click();
+    await this.page.waitForTimeout(1000);
 
-    // Wait for the dropdown to load options (API call to complete)
-    // This is critical for target project which loads from API
-    await this.page.waitForTimeout(1000); // Give API call time to start
-
-    // Wait for the specific option to appear before trying to click it
     const option = this.page.getByRole('option', { name: projectName });
-    await option.waitFor({ state: 'visible', timeout: 15000 }); // Extended timeout for API call
+    await option.waitFor({ state: 'visible', timeout: 15000 });
     await option.click();
   }
 

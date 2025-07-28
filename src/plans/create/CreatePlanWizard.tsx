@@ -54,89 +54,12 @@ const CreatePlanWizard: FC = () => {
   return (
     <FormProvider {...form}>
       <CreatePlanWizardContextProvider>
-        <Wizard
-          data-testid="create-plan-wizard"
-          isVisitRequired
-          footer={<CreatePlanWizardFooter />}
-          onStepChange={(_event, step) => {
-            setCurrentStep(step);
-          }}
-          className="create-plan-wizard"
-        >
-          <WizardStep
-            {...getStepProps(PlanWizardStepId.BasicSetup)}
-            steps={[
-              <WizardStep
-                key={PlanWizardStepId.General}
-                {...getStepProps(PlanWizardStepId.General)}
-              >
-                <GeneralInformationStep />
-              </WizardStep>,
-              <WizardStep
-                key={PlanWizardStepId.VirtualMachines}
-                footer={<VirtualMachinesStepFooter />}
-                {...getStepProps(PlanWizardStepId.VirtualMachines)}
-              >
-                <VirtualMachinesStep />
-              </WizardStep>,
-              <WizardStep
-                key={PlanWizardStepId.NetworkMap}
-                {...getStepProps(PlanWizardStepId.NetworkMap)}
-              >
-                <NetworkMapStep />
-              </WizardStep>,
-              <WizardStep
-                key={PlanWizardStepId.StorageMap}
-                {...getStepProps(PlanWizardStepId.StorageMap)}
-              >
-                <StorageMapStep />
-              </WizardStep>,
-              <WizardStep
-                key={PlanWizardStepId.MigrationType}
-                {...getStepProps(PlanWizardStepId.MigrationType)}
-                isHidden={
-                  !hasWarmMigrationProviderType(sourceProvider) &&
-                  (!hasLiveMigrationProviderType(sourceProvider) || !isLiveMigrationEnabled)
-                }
-              >
-                <MigrationTypeStep />
-              </WizardStep>,
-            ]}
-          />
-
-          <WizardStep
-            {...getStepProps(PlanWizardStepId.AdditionalSetup)}
-            steps={[
-              <WizardStep
-                key={PlanWizardStepId.OtherSettings}
-                {...getStepProps(PlanWizardStepId.OtherSettings)}
-              >
-                <OtherSettingsStep />
-              </WizardStep>,
-              <WizardStep key={PlanWizardStepId.Hooks} {...getStepProps(PlanWizardStepId.Hooks)}>
-                <HooksStep />
-              </WizardStep>,
-            ]}
-          />
-
-          <WizardStep
-            footer={
-              <CreatePlanWizardFooter
-                nextButtonText={t('Create plan')}
-                onNext={handleSubmit(onSubmit)}
-                hasError={hasCreatePlanError}
-              />
-            }
-            {...getStepProps(PlanWizardStepId.ReviewAndCreate)}
-          >
-            <ReviewStep
-              error={createPlanError}
-              onBackToReviewClick={() => {
-                setCreatePlanError(undefined);
-              }}
-            />
-          </WizardStep>
-        </Wizard>
+        <CreatePlanWizardInner
+          onSubmit={handleSubmit(onSubmit)}
+          isLiveMigrationEnabled={isLiveMigrationEnabled}
+          sourceProvider={sourceProvider}
+          isSubmitting={isSubmitting}
+        />
       </CreatePlanWizardContextProvider>
     </FormProvider>
   );
