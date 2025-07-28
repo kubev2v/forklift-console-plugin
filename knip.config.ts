@@ -24,10 +24,6 @@ export default {
     'src/modules/StorageMaps/views/details/StorageMapDetailsPage.tsx',
     'src/modules/StorageMaps/yamlTemplates/defaultYamlTemplate.ts',
     'src/storageMaps/create/StorageMapCreatePage.tsx',
-
-    // Configuration files
-    'eslint.config.ts',
-    'eslint-rules-disabled.ts',
   ],
   ignore: ['i18next-parser.config.ts', 'testing/**', 'eslint.ide.config.ts'],
   ignoreBinaries: ['kubectl', 'test:e2e', 'playwright'],

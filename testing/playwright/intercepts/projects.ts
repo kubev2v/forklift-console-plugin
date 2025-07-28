@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { TEST_DATA } from '../fixtures/test-data';
+import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
 
 export const setupProjectsIntercepts = async (page: Page) => {
   const projectsResponse = {
@@ -47,19 +47,16 @@ export const setupProjectsIntercepts = async (page: Page) => {
 
   // URL patterns that work for both local (9000) and GitHub Actions (30080)
   // OpenShift projects endpoint
-  await page.route(
-    /.*\/api\/kubernetes\/apis\/project\.openshift\.io\/v1\/projects\?limit=\d+/,
-    async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(projectsResponse),
-      });
-    },
-  );
+  await page.route(API_ENDPOINTS.projects, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(projectsResponse),
+    });
+  });
 
   // Kubernetes namespaces endpoint (for CI environment)
-  await page.route(/.*\/api\/kubernetes\/api\/v1\/namespaces\?limit=\d+/, async (route) => {
+  await page.route(API_ENDPOINTS.namespaces, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',

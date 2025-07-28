@@ -4,14 +4,14 @@ import { API_ENDPOINTS } from '../fixtures/test-data';
 
 export const setupTargetProviderNamespacesIntercepts = async (
   page: Page,
-  targetProviderId = 'test-target-uid-1',
+  targetProviderUid: string,
 ) => {
-  const endpoint = API_ENDPOINTS.targetNamespaces(targetProviderId);
+  const endpoint = API_ENDPOINTS.targetNamespaces(targetProviderUid);
   const namespaceData = [
     {
       uid: 'default-uid',
       name: 'default',
-      selfLink: `providers/openshift/${targetProviderId}/namespaces/default`,
+      selfLink: `providers/openshift/${targetProviderUid}/namespaces/default`,
       object: {
         metadata: {
           name: 'default',
@@ -27,7 +27,7 @@ export const setupTargetProviderNamespacesIntercepts = async (
     {
       uid: 'test-target-project-uid',
       name: 'test-target-project',
-      selfLink: `providers/openshift/${targetProviderId}/namespaces/test-target-project`,
+      selfLink: `providers/openshift/${targetProviderUid}/namespaces/test-target-project`,
       object: {
         metadata: {
           name: 'test-target-project',
@@ -43,7 +43,7 @@ export const setupTargetProviderNamespacesIntercepts = async (
     {
       uid: 'openshift-mtv-uid',
       name: 'openshift-mtv',
-      selfLink: `providers/openshift/${targetProviderId}/namespaces/openshift-mtv`,
+      selfLink: `providers/openshift/${targetProviderUid}/namespaces/openshift-mtv`,
       object: {
         metadata: {
           name: 'openshift-mtv',
@@ -63,17 +63,17 @@ export const setupTargetProviderNamespacesIntercepts = async (
     {
       uid: 'default-uid',
       name: 'default',
-      selfLink: `providers/openshift/${targetProviderId}/namespaces/default`,
+      selfLink: `providers/openshift/${targetProviderUid}/namespaces/default`,
     },
     {
       uid: 'test-target-project-uid',
       name: 'test-target-project',
-      selfLink: `providers/openshift/${targetProviderId}/namespaces/test-target-project`,
+      selfLink: `providers/openshift/${targetProviderUid}/namespaces/test-target-project`,
     },
     {
       uid: 'openshift-mtv-uid',
       name: 'openshift-mtv',
-      selfLink: `providers/openshift/${targetProviderId}/namespaces/openshift-mtv`,
+      selfLink: `providers/openshift/${targetProviderUid}/namespaces/openshift-mtv`,
     },
   ];
 
@@ -88,7 +88,7 @@ export const setupTargetProviderNamespacesIntercepts = async (
 
   // Plugin proxy endpoint (CRITICAL for target project dropdown)
   await page.route(
-    `**/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers/openshift/${targetProviderId}/namespaces*`,
+    `**/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers/openshift/${targetProviderUid}/namespaces*`,
     async (route) => {
       const url = route.request().url();
       const hasDetailParam = url.includes('detail=');
@@ -105,7 +105,7 @@ export const setupTargetProviderNamespacesIntercepts = async (
 
   // Direct inventory endpoint for all namespaces calls
   await page.route(
-    `**/forklift-inventory/providers/openshift/${targetProviderId}/namespaces*`,
+    `**/forklift-inventory/providers/openshift/${targetProviderUid}/namespaces*`,
     async (route) => {
       const url = route.request().url();
       const hasDetailParam = url.includes('detail=');
@@ -122,7 +122,7 @@ export const setupTargetProviderNamespacesIntercepts = async (
 
   // Backup: Exact URL pattern from the logs
   await page.route(
-    `**/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers/openshift/${targetProviderId}/namespaces`,
+    `**/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers/openshift/${targetProviderUid}/namespaces`,
     async (route) => {
       const url = route.request().url();
       // eslint-disable-next-line no-console

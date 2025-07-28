@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { TEST_DATA } from '../fixtures/test-data';
+import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
 
 export const setupPlansIntercepts = async (page: Page) => {
   // CRITICAL: Return a mock plan instead of empty list to avoid PlansEmptyState path
@@ -113,15 +113,7 @@ export const setupPlansIntercepts = async (page: Page) => {
   await page.route(
     `**/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/plans/${TEST_DATA.planName}`,
     async (route) => {
-      // eslint-disable-next-line no-console
-      console.log(
-        `🎯 PLAN GET REQUEST INTERCEPTED - ${route.request().method()} ${route.request().url()}`,
-      );
-
       if (route.request().method() === 'GET') {
-        // eslint-disable-next-line no-console
-        console.log(`✅ SERVING PLAN DATA FOR: ${TEST_DATA.planName}`);
-
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -138,17 +130,14 @@ export const setupPlansIntercepts = async (page: Page) => {
   await page.route('**/namespaces/openshift-mtv/plans?watch=true**', async (route) => {
     const url = route.request().url();
 
-    // eslint-disable-next-line no-console
-    console.log(`🎯 PLAN WATCH REQUEST INTERCEPTED - ${route.request().method()} ${url}`);
-
     if (url.includes(TEST_DATA.planName) || url.includes('fieldSelector')) {
-      // eslint-disable-next-line no-console
-      console.log(`✅ SERVING WATCH DATA FOR: ${TEST_DATA.planName}`);
-
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(planData),
+        body: JSON.stringify({
+          type: 'ADDED',
+          object: planData,
+        }),
       });
     } else {
       await route.continue();
@@ -160,13 +149,8 @@ export const setupPlansIntercepts = async (page: Page) => {
     `**/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/plans?**`,
     async (route) => {
       const url = route.request().url();
-      // eslint-disable-next-line no-console
-      console.log(`🎯 PLANS QUERY PATTERN INTERCEPTED - ${route.request().method()} ${url}`);
 
       if (url.includes(TEST_DATA.planName) && route.request().method() === 'GET') {
-        // eslint-disable-next-line no-console
-        console.log(`✅ SERVING PLAN DATA VIA QUERY PATTERN: ${TEST_DATA.planName}`);
-
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -180,28 +164,22 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // URL patterns that work for both local (9000) and GitHub Actions (30080)
   // Namespaced plans endpoint (wildcard namespace)
-  await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/.*\/plans\?limit=\d+/,
-    async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(plansResponse),
-      });
-    },
-  );
+  await page.route(API_ENDPOINTS.plans, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(plansResponse),
+    });
+  });
 
   // All plans endpoint (cluster-wide)
-  await page.route(
-    /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/plans\?limit=\d+/,
-    async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(plansResponse),
-      });
-    },
-  );
+  await page.route(API_ENDPOINTS.allPlans, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(plansResponse),
+    });
+  });
 
   // Catch ANY authorization API call
   await page.route('**/authorization.k8s.io/**', async (route) => {
@@ -296,11 +274,7 @@ export const setupPlansIntercepts = async (page: Page) => {
   await page.route(
     /.*\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/plans/,
     async (route) => {
-      // eslint-disable-next-line no-console
-      console.log(`🚀 PLAN CREATION: ${route.request().method()} ${route.request().url()}`);
       if (route.request().method() === 'POST') {
-        // eslint-disable-next-line no-console
-        console.log(`🎯 CREATING PLAN: ${TEST_DATA.planName}`);
         try {
           const response = {
             apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -319,16 +293,12 @@ export const setupPlansIntercepts = async (page: Page) => {
             },
           };
 
-          // eslint-disable-next-line no-console
-          console.log(`✅ PLAN CREATION SUCCESS: Returning plan data`);
           await route.fulfill({
             status: 201,
             contentType: 'application/json',
             body: JSON.stringify(response),
           });
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.log(`❌ PLAN CREATION ERROR:`, error);
+        } catch (_error) {
           await route.abort();
         }
       }

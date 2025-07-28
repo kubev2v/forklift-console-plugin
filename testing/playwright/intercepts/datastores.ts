@@ -1,8 +1,9 @@
 import type { Page } from '@playwright/test';
 
+import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
+
 export const setupDatastoresIntercepts = async (page: Page, sourceProviderType = 'vsphere') => {
-  // Handle both single and double slash variations
-  const endpoint = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1/datastores`;
+  const endpoint = API_ENDPOINTS.datastores(sourceProviderType, TEST_DATA.providers.source.uid);
 
   const responseBody = JSON.stringify([
     {

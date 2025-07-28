@@ -6,15 +6,7 @@ export const setupPlanDetailsIntercepts = async (page: Page) => {
   await page.route(
     `**/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/plans/${TEST_DATA.planName}`,
     async (route) => {
-      // eslint-disable-next-line no-console
-      console.log(
-        `🎯 PLAN DETAILS INTERCEPT TRIGGERED - ${route.request().method()} ${route.request().url()}`,
-      );
-
       if (route.request().method() === 'GET') {
-        // eslint-disable-next-line no-console
-        console.log(`✅ SERVING PLAN DETAILS FOR: ${TEST_DATA.planName}`);
-
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
