@@ -36,7 +36,7 @@ const NetworkMapReviewSectionInner: FC = () => {
   const noMappingsSelected = useMemo(() => {
     return (
       isEmpty(networkMap) ||
-      (networkMap.length === 1 &&
+      (networkMap?.length === 1 &&
         JSON.stringify(networkMap[0]) === JSON.stringify(defaultNetMapping))
     );
   }, [networkMap]);

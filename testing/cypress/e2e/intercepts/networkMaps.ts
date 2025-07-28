@@ -14,6 +14,7 @@ export const setupNetworkMapsIntercepts = () => {
               name: 'test-network-map-1',
               namespace: 'openshift-mtv',
               uid: 'test-netmap-uid-1',
+              ownerReferences: [],
             },
             spec: {
               map: [
@@ -54,6 +55,16 @@ export const setupNetworkMapsIntercepts = () => {
               name: 'test-network-map-2',
               namespace: 'openshift-mtv',
               uid: 'test-netmap-uid-2',
+              ownerReferences: [
+                {
+                  apiVersion: 'forklift.konveyor.io/v1beta1',
+                  kind: 'Plan',
+                  name: 'test-plan-2',
+                  uid: 'test-plan-uid-2',
+                  controller: true,
+                  blockOwnerDeletion: true,
+                },
+              ],
             },
             spec: {
               map: [

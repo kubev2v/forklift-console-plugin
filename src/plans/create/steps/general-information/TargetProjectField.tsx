@@ -95,6 +95,7 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
                 <div className="pf-v5-u-px-md pf-v5-u-py-md">
                   <Switch
                     id="show-default-projects-switch"
+                    data-testid="show-default-projects-switch"
                     label={t('Show default projects')}
                     isChecked={showDefaultProjects}
                     onChange={(_event, checked) => {

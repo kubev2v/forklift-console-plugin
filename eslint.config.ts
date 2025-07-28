@@ -191,21 +191,13 @@ export const createEslintConfig = (ideMode = false) =>
           },
           {
             message:
-              "Use 'isEmpty()' from '@utils/helpers' instead of manually checking Object.keys().length === 0.",
-            selector:
+              "Use 'isEmpty()' or '!isEmpty()' from '@utils/helpers' instead of manual length checks.",
+            selector: [
               'BinaryExpression[operator="==="][left.type="MemberExpression"][left.object.type="CallExpression"][left.object.callee.type="MemberExpression"][left.object.callee.object.name="Object"][left.object.callee.property.name="keys"][left.property.name="length"][right.type="Literal"][right.value=0]',
-          },
-          {
-            message:
-              "Use 'isEmpty()' from '@utils/helpers' instead of manually checking array.length === 0.",
-            selector:
               'BinaryExpression[operator="==="][left.type="MemberExpression"][left.property.name="length"][right.type="Literal"][right.value=0]:not([left.object.type="CallExpression"])',
-          },
-          {
-            message:
-              "Use 'isEmpty()' from '@utils/helpers' instead of manually checking !array.length.",
-            selector:
               'UnaryExpression[operator="!"][argument.type="MemberExpression"][argument.property.name="length"]',
+              'BinaryExpression[operator=">"][left.type="MemberExpression"][left.property.name="length"][right.type="Literal"][right.value=0]',
+            ].join(','),
           },
           {
             message:
@@ -286,6 +278,13 @@ export const createEslintConfig = (ideMode = false) =>
     // TypeaheadSelect component specific rules
     {
       files: ['**/TypeaheadSelect/*.tsx'],
+      rules: {
+        'no-restricted-syntax': 'off',
+      },
+    },
+    // Helpers directory specific rules
+    {
+      files: ['**/utils/helpers.ts'],
       rules: {
         'no-restricted-syntax': 'off',
       },

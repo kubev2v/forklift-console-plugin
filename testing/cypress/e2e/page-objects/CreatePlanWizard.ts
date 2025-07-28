@@ -43,6 +43,12 @@ export class CreatePlanWizard {
 
   selectTargetProject(projectName: string) {
     cy.get('#target-project-select').should('be.visible').click();
+
+    cy.contains('label', 'Show default projects')
+      .should('be.visible')
+      .find('input')
+      .click({ force: true });
+
     cy.get('.pf-v5-c-menu__item-text').contains(projectName).closest('button').click();
   }
 
