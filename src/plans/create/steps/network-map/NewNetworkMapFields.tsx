@@ -45,7 +45,7 @@ const NewNetworkMapFields: FC = () => {
   );
 
   // When the network map is empty, default to source network values used by VMs,
-  // otherwise set empty inputs for the field array to force an empty field table row.
+  // otherwise set empty inputs for the field array to force an empty field table row
   useEffect(() => {
     if (!isLoading && isNetMapEmpty) {
       if (isEmpty(usedSourceNetworks)) {
