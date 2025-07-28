@@ -7,8 +7,6 @@ yarn-error.log
 openapitools.json
 tsconfig.tsbuildinfo
 
-cypress/videos
-cypress/screenshots
 ci/yaml/openapi.yaml
 
 **/mockServiceWorker.js
@@ -19,28 +17,3 @@ kubectl
 kubectl.sha256
 
 forkliftci
-
-.DS_Store
-.gitignore
-.DS_Store
-eslint.config.ts
-kind-linux-amd64
-.gitignore
-quick-start.sh
-.gitignore
-README.md
-testing/test-results/.last-run.json
-testing/test-results/*
-git-cheat-sheet.md
-kind-linux-amd64.sha256sum
-src/components/common/TypeaheadSelect/__tests__/TypeaheadSelect.test.tsx
-test-results/.last-run.json
-testing/debug-navigation-before-retry.png
-testing/GITHUB_ACTIONS_STRATEGY.md
-testing/mock-server.js
-testing/cypress/e2e/tests/Plans/CreatePlan.cy.ts
-testing/test-results/*
-git-cheat-sheet.md
-git-cheat-sheet.md
-kind-linux-amd64.sha256sum
-quick-start2.sh

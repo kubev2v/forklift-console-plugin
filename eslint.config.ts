@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable @cspell/spellchecker */
 
 import { dirname, join } from 'path';
@@ -23,7 +24,6 @@ const dirName = dirname(fileName);
 const CSPELL_WORD_LIST = join(dirName, 'cspell.wordlist.txt');
 import type { Linter } from 'eslint';
 
-// eslint-disable-next-line max-lines-per-function
 export const createEslintConfig = (ideMode = false) =>
   [
     {
@@ -39,7 +39,6 @@ export const createEslintConfig = (ideMode = false) =>
         'yarn.lock',
         'package-lock.json',
         '**/generated/**',
-        'testing/cypress.config.ts',
       ],
     },
     eslint.configs.all,

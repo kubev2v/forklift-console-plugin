@@ -92,14 +92,20 @@ export const setupTargetProviderNamespacesIntercepts = async (
     async (route) => {
       const url = route.request().url();
       const hasDetailParam = url.includes('detail=');
-      // eslint-disable-next-line no-console
-      console.log(`🎯 TARGET PROXY NAMESPACES: ${url}, hasDetail: ${hasDetailParam}`);
 
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(hasDetailParam ? namespaceData : simpleNamespaceData),
-      });
+      if (hasDetailParam) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(namespaceData),
+        });
+      } else {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(simpleNamespaceData),
+        });
+      }
     },
   );
 
@@ -109,14 +115,20 @@ export const setupTargetProviderNamespacesIntercepts = async (
     async (route) => {
       const url = route.request().url();
       const hasDetailParam = url.includes('detail=');
-      // eslint-disable-next-line no-console
-      console.log(`🎯 TARGET DIRECT NAMESPACES: ${url}, hasDetail: ${hasDetailParam}`);
 
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(hasDetailParam ? namespaceData : simpleNamespaceData),
-      });
+      if (hasDetailParam) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(namespaceData),
+        });
+      } else {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(simpleNamespaceData),
+        });
+      }
     },
   );
 
@@ -124,10 +136,6 @@ export const setupTargetProviderNamespacesIntercepts = async (
   await page.route(
     `**/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers/openshift/${targetProviderUid}/namespaces`,
     async (route) => {
-      const url = route.request().url();
-      // eslint-disable-next-line no-console
-      console.log(`🎯 EXACT TARGET NAMESPACES MATCH: ${url}`);
-
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
