@@ -58,7 +58,6 @@ import { reduceValueFilters } from './utils/reduceValueFilters';
 import { ManageColumnsToolbar } from './ManageColumnsToolbar';
 
 import './StandardPage.style.css';
-import { INITIAL_PAGE } from './utils/constants';
 
 export type StandardPageProps<T> = {
   dataSource: [T[], boolean, unknown];
