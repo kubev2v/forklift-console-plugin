@@ -4,9 +4,17 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import type { CredentialsEditModeByTypeProps } from 'src/providers/details/tabs/Credentials/components/utils/types';
 import { SecretFieldsId } from 'src/providers/utils/constants';
 import type { ValidationMsg } from 'src/providers/utils/types';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, Divider, Form, InputGroup, TextInput } from '@patternfly/react-core';
+import {
+  Alert,
+  AlertVariant,
+  Button,
+  Divider,
+  Form,
+  InputGroup,
+  TextInput,
+} from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 
 import { getDecodedValue } from './utils/getDecodedValue';
@@ -104,6 +112,17 @@ const OpenshiftCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
           </Button>
         </InputGroup>
       </FormGroupWithHelpText>
+
+      <Alert
+        variant={AlertVariant.info}
+        isInline
+        title={
+          <ForkliftTrans>
+            if both 'URL' and 'Service account bearer token' fields are left empty, the local
+            OpenShift cluster is used.
+          </ForkliftTrans>
+        }
+      ></Alert>
 
       <Divider />
 

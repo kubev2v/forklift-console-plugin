@@ -348,6 +348,7 @@
   "Hosts": "Hosts",
   "HPE Primera/3PAR": "HPE Primera/3PAR",
   "I trust the authenticity of this certificate": "I trust the authenticity of this certificate",
+  "if both 'URL' and 'Service account bearer token' fields are left empty, the local OpenShift cluster is used.": "if both 'URL' and 'Service account bearer token' fields are left empty, the local OpenShift cluster is used.",
   "If true, the provider's CA certificate won't be validated.": "If true, the provider's CA certificate won't be validated.",
   "If true, the provider's TLS certificate won't be validated.": "If true, the provider's TLS certificate won't be validated.",
   "If you specify a playbook, the image must be hook-runner.": "If you specify a playbook, the image must be hook-runner.",
