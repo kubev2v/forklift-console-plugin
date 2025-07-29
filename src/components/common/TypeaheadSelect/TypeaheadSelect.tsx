@@ -31,7 +31,7 @@ import {
 type TypeaheadSelectProps = {
   options: TypeaheadSelectOption[];
   value?: string | number;
-  onChange?: (value: string | number | undefined) => void;
+  onChange: (value: string | number | undefined) => void;
   onInputChange?: (inputValue: string) => void;
   filterFunction?: (
     filterValue: string,
@@ -47,7 +47,7 @@ type TypeaheadSelectProps = {
   toggleWidth?: string;
   toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
   filterControls?: ReactNode;
-} & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected'>;
+} & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected' | 'onChange'>;
 
 const TypeaheadSelect = (
   {
@@ -135,7 +135,8 @@ const TypeaheadSelect = (
   };
 
   const handleSelectionClear = (): void => {
-    onChange?.(undefined);
+    setInputValue('');
+    onChange('');
   };
 
   const handleSelect = (selectedValue: string | number | undefined): void => {
@@ -147,7 +148,7 @@ const TypeaheadSelect = (
     const existingOption = options.find((option) => option.value === selectedValue);
 
     if (existingOption || isCreatable) {
-      onChange?.(selectedValue);
+      onChange(selectedValue);
       setIsOpen(false);
       setIsFiltering(false);
       setInputValue(existingOption?.content?.toString() ?? selectedValue?.toString() ?? '');
