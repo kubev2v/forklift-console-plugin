@@ -53,14 +53,14 @@ export const setupPlanDetailsIntercepts = () => {
             network: {
               apiVersion: 'forklift.konveyor.io/v1beta1',
               kind: 'NetworkMap',
-              name: 'test-create-plan-networkmap',
+              name: 'test-network-map-1',
               namespace: 'openshift-mtv',
-              uid: 'test-networkmap-uid-1',
+              uid: 'test-netmap-uid-1',
             },
             storage: {
               apiVersion: 'forklift.konveyor.io/v1beta1',
               kind: 'StorageMap',
-              name: 'test-create-plan-storagemap',
+              name: 'test-storage-map-1',
               namespace: 'openshift-mtv',
               uid: 'test-storagemap-uid-1',
             },

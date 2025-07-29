@@ -14,6 +14,7 @@ export const setupStorageMapsIntercepts = () => {
               name: 'test-storage-map-1',
               namespace: 'openshift-mtv',
               uid: 'test-storagemap-uid-1',
+              ownerReferences: [],
             },
             spec: {
               map: [
@@ -55,6 +56,16 @@ export const setupStorageMapsIntercepts = () => {
               name: 'test-storage-map-2',
               namespace: 'openshift-mtv',
               uid: 'test-storagemap-uid-2',
+              ownerReferences: [
+                {
+                  apiVersion: 'forklift.konveyor.io/v1beta1',
+                  kind: 'Plan',
+                  name: 'test-plan-2',
+                  uid: 'test-plan-uid-2',
+                  controller: true,
+                  blockOwnerDeletion: true,
+                },
+              ],
             },
             spec: {
               map: [

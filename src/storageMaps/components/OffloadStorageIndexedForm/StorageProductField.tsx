@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -6,12 +6,9 @@ import Select from '@components/common/Select';
 import { FormGroup } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import {
-  StorageMapFieldId,
-  storageMapFieldLabels,
-  storageVendorProductLabels,
-  storageVendorProducts,
-} from '../../constants';
+import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
+import { useStorageVendorProducts } from '../../hooks/useStorageVendorProducts';
+import { getVendorProductLabel } from '../../utils/labelHelpers';
 
 type StorageProductFieldProps = { fieldId: string };
 
@@ -21,11 +18,16 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId }) => {
     control,
     formState: { isSubmitting },
   } = useFormContext();
+  const { loading, storageVendorProducts } = useStorageVendorProducts();
 
-  const options = storageVendorProducts.map((product) => ({
-    label: storageVendorProductLabels[product],
-    value: product,
-  }));
+  const options = useMemo(
+    () =>
+      storageVendorProducts.map((product) => ({
+        label: getVendorProductLabel(product),
+        value: product,
+      })),
+    [storageVendorProducts],
+  );
 
   return (
     <FormGroup
@@ -46,7 +48,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId }) => {
           <Select
             ref={field.ref}
             id={fieldId}
-            isDisabled={isSubmitting}
+            isDisabled={isSubmitting || loading}
             value={field.value}
             options={options}
             onSelect={(_event, value) => {
