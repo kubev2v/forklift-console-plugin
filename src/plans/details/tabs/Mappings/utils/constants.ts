@@ -1,8 +1,7 @@
-<<<<<<< HEAD
-import { t } from '@utils/i18n';
-=======
+import { IGNORED } from 'src/plans/details/utils/constants';
+
 import { POD_NETWORK } from '@utils/constants';
->>>>>>> upstream/main
+import { t } from '@utils/i18n';
 
 export const STANDARD = 'standard';
 
@@ -13,5 +12,5 @@ export const PodNetworkLabel = {
 
 export const IgnoreNetwork = {
   Label: t('Ignore network'),
-  Type: 'ignored',
+  Type: IGNORED,
 } as const;
