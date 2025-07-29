@@ -8,10 +8,13 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
   const { inventoryVmData, plan, vmIndex } = fieldsData;
 
   return {
-    [PlanSpecVirtualMachinesTableResourceId.Actions]:
-      inventoryVmData.vm?.providerType === 'vsphere' ? (
-        <SpecVirtualMachinesActions plan={plan} vmIndex={vmIndex} />
-      ) : null,
+    [PlanSpecVirtualMachinesTableResourceId.Actions]: (
+      <SpecVirtualMachinesActions
+        plan={plan}
+        vmIndex={vmIndex}
+        providerType={inventoryVmData?.vm?.providerType}
+      />
+    ),
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
       <VMConcernsCellRenderer data={inventoryVmData} fieldId="" fields={[]} />
     ),
