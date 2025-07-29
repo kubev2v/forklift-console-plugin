@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { ForkliftControllerModelGroupVersionKind } from '@kubev2v/types';
 import { type K8sResourceKind, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getDefaultNamespace } from '@utils/namespaces';
+
 type FeatureFlagsResult = {
   isFeatureEnabled: (featureName: string) => boolean;
 };

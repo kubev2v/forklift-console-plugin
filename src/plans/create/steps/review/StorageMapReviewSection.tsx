@@ -37,7 +37,7 @@ const StorageMapReviewSectionInner: FC = () => {
   const noMappingsSelected = useMemo(() => {
     return (
       isEmpty(storageMap) ||
-      (storageMap.length === 1 &&
+      (storageMap?.length === 1 &&
         JSON.stringify(storageMap[0]) === JSON.stringify(defaultStorageMapping))
     );
   }, [storageMap]);
