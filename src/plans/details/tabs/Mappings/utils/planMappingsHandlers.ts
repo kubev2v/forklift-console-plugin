@@ -1,6 +1,6 @@
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
-import { IGNORED, MULTUS, POD } from 'src/plans/details/components/PlanPageHeader/utils/constants';
+import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,

@@ -13,3 +13,7 @@ export const providerTypeIcons = (isDarkTheme: boolean) => ({
   ovirt: redhatLogo,
   vsphere: getVmwareLogo(isDarkTheme),
 });
+
+export const POD = 'pod';
+export const MULTUS = 'multus';
+export const IGNORED = 'ignored';

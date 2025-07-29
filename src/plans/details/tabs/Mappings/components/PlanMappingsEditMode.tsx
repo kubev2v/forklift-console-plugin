@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -65,6 +65,11 @@ const PlanMappingsEditMode: FC<PlanMappingsEditModeProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
+  const filteredNetworkTargets = useMemo(
+    () => availableNetworkTargets.filter((target) => target !== IgnoreNetwork.Label),
+    [availableNetworkTargets],
+  );
+
   return (
     <Drawer>
       <DescriptionList columnModifier={{ default: '1Col' }}>
@@ -86,9 +91,7 @@ const PlanMappingsEditMode: FC<PlanMappingsEditModeProps> = ({
             <MappingList
               mappings={labeledNetworkMappings}
               availableSources={availableNetworkSources}
-              availableDestinations={availableNetworkTargets.filter(
-                (target) => target !== IgnoreNetwork.Label,
-              )}
+              availableDestinations={filteredNetworkTargets}
               additionalDestinations={[IgnoreNetwork.Label]}
               deleteMapping={onDeleteNetwork}
               addMapping={onAddNetwork}

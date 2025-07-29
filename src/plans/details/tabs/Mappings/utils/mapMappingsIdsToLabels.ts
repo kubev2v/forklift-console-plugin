@@ -1,6 +1,6 @@
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
-import { POD } from 'src/plans/details/components/PlanPageHeader/utils/constants';
+import { POD } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type {
