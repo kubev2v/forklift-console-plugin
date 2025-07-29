@@ -36,9 +36,9 @@ export class PlanDetailsPage {
     // Verify the Details tab exists and is visible
     const detailsTab = this.page.locator('[data-test-id="horizontal-link-Details"]');
     await expect(detailsTab).toBeVisible({ timeout: 10000 });
-    // Instead of checking aria-selected (which may not be set properly in CI),
-    // verify we're on the Details page by checking for Details-specific content
-    const planDetailsSection = this.page.locator('section').filter({ hasText: 'Plan details' });
+    const planDetailsSection = this.page
+      .locator('section.pf-m-light')
+      .filter({ hasText: 'Plan details' });
     await expect(planDetailsSection).toBeVisible({ timeout: 15000 });
   }
 
