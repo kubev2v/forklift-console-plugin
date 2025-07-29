@@ -30,6 +30,7 @@ export type FilterDef = {
   fieldLabel?: string;
   primary?: boolean;
   standalone?: boolean;
+  excludeFromClearFilters?: boolean;
   groups?: EnumGroup[];
   // override default behavior if there are no filters provided by the user
   // by default missing/empty filters result in positive match (vacuous truth)

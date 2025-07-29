@@ -157,10 +157,6 @@ const StandardPageInner = <T,>({
     userSettings,
   });
 
-  const clearAllFilters = useCallback(() => {
-    setSelectedFilters({});
-  }, [setSelectedFilters]);
-
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
 
   const supportedMatchers = useMemo(
@@ -263,6 +259,26 @@ const StandardPageInner = <T,>({
     () => fields.filter((field) => field.filter?.standalone).map(toFieldFilter(flatData)),
     [fields, flatData],
   );
+
+  const excludeFromClearFiltersIds = useMemo(
+    () =>
+      fields
+        .filter((field) => field.filter?.excludeFromClearFilters)
+        .map((field) => field.resourceFieldId),
+    [fields],
+  );
+
+  const selectedFiltersAfterClearAll = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(selectedFilters).filter(([key]) => excludeFromClearFiltersIds.includes(key)),
+      ),
+    [excludeFromClearFiltersIds, selectedFilters],
+  );
+
+  const clearAllFilters = useCallback(() => {
+    setSelectedFilters(selectedFiltersAfterClearAll);
+  }, [selectedFiltersAfterClearAll, setSelectedFilters]);
 
   const visibleColumns = useMemo(
     () => fields.filter(({ isHidden, isVisible }) => isVisible && !isHidden),

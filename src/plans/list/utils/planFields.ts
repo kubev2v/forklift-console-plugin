@@ -162,6 +162,7 @@ export const planFields: ResourceField[] = [
   },
   {
     filter: {
+      excludeFromClearFilters: true,
       placeholderLabel: t('Show archived'),
       standalone: true,
       type: FilterDefType.Slider,
