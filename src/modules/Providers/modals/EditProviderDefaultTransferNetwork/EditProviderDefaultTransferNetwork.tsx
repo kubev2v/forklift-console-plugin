@@ -15,6 +15,7 @@ import {
   MenuToggle,
   type MenuToggleElement,
 } from '@patternfly/react-core';
+import { POD_NETWORK } from '@utils/constants';
 
 import useProviderInventory from '../../hooks/useProviderInventory';
 import { EditModal } from '../EditModal/EditModal';
@@ -88,13 +89,13 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
     const dropdownItems = [
       <DropdownItem
         value={0}
-        key="Pod network"
+        key={POD_NETWORK}
         description={'Default pod network'}
         onClick={() => {
           onChange('');
         }}
       >
-        {'Pod network'}
+        {POD_NETWORK}
       </DropdownItem>,
       ...(networks || []).map((network) => (
         <DropdownItem

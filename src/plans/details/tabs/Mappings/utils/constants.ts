@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 import { t } from '@utils/i18n';
+=======
+import { POD_NETWORK } from '@utils/constants';
+>>>>>>> upstream/main
 
 export const STANDARD = 'standard';
 
 export const PodNetworkLabel = {
-  Source: 'Pod network',
+  Source: POD_NETWORK,
   Target: 'Pod',
 } as const;
 
