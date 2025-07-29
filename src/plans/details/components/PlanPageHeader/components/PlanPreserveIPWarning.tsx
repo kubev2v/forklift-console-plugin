@@ -1,13 +1,12 @@
 import { type FC, useMemo } from 'react';
 import Linkify from 'react-linkify';
+import { POD } from 'src/plans/details/utils/constants';
 
 import type { V1beta1NetworkMap, V1beta1Plan } from '@kubev2v/types';
 import { Alert, AlertVariant, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { getName } from '@utils/crds/common/selectors';
 import { getPlanNetworkMapName, getPlanPreserveIP } from '@utils/crds/plans/selectors';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
-
-import { POD } from '../utils/constants';
 
 type PlanPreserveIPWarningProps = {
   plan: V1beta1Plan;
