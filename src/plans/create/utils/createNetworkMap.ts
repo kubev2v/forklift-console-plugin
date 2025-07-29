@@ -1,5 +1,6 @@
 import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
 import { IgnoreNetwork, PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
+import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import {
@@ -24,14 +25,14 @@ type CreateNetworkMapParams = {
 };
 
 const getSource = (sourceNetwork: MappingValue, sourceProvider?: V1beta1Provider) => {
-  if (sourceNetwork.id === 'pod') {
-    return { type: 'pod' };
+  if (sourceNetwork.id === POD) {
+    return { type: POD };
   }
   return {
     id: sourceNetwork.id,
     name: sourceNetwork.name,
     // Set type to 'multus' only for OpenShift source providers
-    type: sourceProvider?.spec?.type === PROVIDER_TYPES.openshift ? 'multus' : undefined,
+    type: sourceProvider?.spec?.type === PROVIDER_TYPES.openshift ? MULTUS : undefined,
   };
 };
 
@@ -44,15 +45,15 @@ const getDestination = (
     : [targetNamespace, targetNetwork.name];
 
   if (targetNetwork.name === PodNetworkLabel.Source || targetNetwork.name === '') {
-    return { type: 'pod' };
+    return { type: POD };
   }
   if (targetNetwork.name === IgnoreNetwork.Label) {
-    return { type: IgnoreNetwork.Type };
+    return { type: IGNORED };
   }
   return {
     name: nadName,
     namespace: nadNamespace,
-    type: 'multus',
+    type: MULTUS,
   };
 };
 
