@@ -3,23 +3,76 @@ import type { Page } from '@playwright/test';
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
 
 export const setupStorageMapsIntercepts = async (page: Page) => {
-  const storageMapData = {
+  const storageMapData1 = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'StorageMap',
     metadata: {
       name: 'test-storage-map-1',
       namespace: 'openshift-mtv',
       uid: 'test-storagemap-uid-1',
+      ownerReferences: [],
     },
     spec: {
       map: [
         {
           destination: {
-            storageClass: 'test-storage-class',
+            storageClass: 'test-ceph-rbd',
+            accessMode: 'ReadWriteOnce',
           },
           source: {
-            id: 'test-storage-id-1',
-            name: 'test-datastore-1',
+            id: 'test-datastore-1',
+          },
+        },
+      ],
+      provider: {
+        destination: {
+          name: 'test-target-provider',
+          namespace: 'openshift-mtv',
+        },
+        source: {
+          name: 'test-source-provider',
+          namespace: 'openshift-mtv',
+        },
+      },
+    },
+    status: {
+      conditions: [
+        {
+          type: 'Ready',
+          status: 'True',
+          message: 'The storage map is ready.',
+        },
+      ],
+    },
+  };
+
+  const storageMapData2 = {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    kind: 'StorageMap',
+    metadata: {
+      name: 'test-storage-map-2',
+      namespace: 'openshift-mtv',
+      uid: 'test-storagemap-uid-2',
+      ownerReferences: [
+        {
+          apiVersion: 'forklift.konveyor.io/v1beta1',
+          kind: 'Plan',
+          name: 'test-plan-2',
+          uid: 'test-plan-uid-2',
+          controller: true,
+          blockOwnerDeletion: true,
+        },
+      ],
+    },
+    spec: {
+      map: [
+        {
+          destination: {
+            storageClass: 'test-ceph-rbd',
+            accessMode: 'ReadWriteOnce',
+          },
+          source: {
+            id: 'test-datastore-2',
           },
         },
       ],
@@ -53,7 +106,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify(storageMapData),
+          body: JSON.stringify(storageMapData1),
         });
       } else {
         await route.continue();
@@ -69,17 +122,17 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
         const requestBody = JSON.parse(route.request().postData() ?? '{}') as {
           metadata?: { name?: string };
         };
-        const newName = requestBody.metadata?.name ?? 'copied-storage-map';
+        const newName = requestBody.metadata?.name ?? 'test-create-plan-storagemap';
 
         await route.fulfill({
           status: 201,
           contentType: 'application/json',
           body: JSON.stringify({
-            ...storageMapData,
+            ...storageMapData1,
             metadata: {
-              ...storageMapData.metadata,
+              ...storageMapData1.metadata,
               name: newName,
-              uid: `copied-storagemap-uid-${Date.now()}`,
+              uid: `test-storagemap-uid-${Date.now()}`,
             },
           }),
         });
@@ -102,9 +155,9 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify({
-            ...storageMapData,
+            ...storageMapData1,
             metadata: {
-              ...storageMapData.metadata,
+              ...storageMapData1.metadata,
               name,
               ownerReferences: [
                 {
@@ -129,7 +182,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
       contentType: 'application/json',
       body: JSON.stringify({
         apiVersion: 'forklift.konveyor.io/v1beta1',
-        items: [storageMapData],
+        items: [storageMapData1, storageMapData2],
       }),
     });
   });
