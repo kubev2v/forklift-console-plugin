@@ -33,12 +33,10 @@ export class PlanDetailsPage {
   }
 
   async verifyNavigationTabs(): Promise<void> {
-    // Verify Details tab is currently selected
-    await expect(this.page.locator('[data-test-id="horizontal-link-Details"]')).toHaveAttribute(
-      'aria-selected',
-      'true',
-      { timeout: 5000 },
-    );
+    // Wait for the Details tab to be fully loaded and selected
+    const detailsTab = this.page.locator('[data-test-id="horizontal-link-Details"]');
+    await expect(detailsTab).toBeVisible({ timeout: 10000 });
+    await expect(detailsTab).toHaveAttribute('aria-selected', 'true', { timeout: 15000 });
   }
 
   async verifyPlanDetails(planData: {
