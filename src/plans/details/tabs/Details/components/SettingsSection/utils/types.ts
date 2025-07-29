@@ -8,9 +8,10 @@ type PlanNameTemplates = {
   pvcNameTemplate?: string;
   volumeNameTemplate?: string;
   networkNameTemplate?: string;
+  targetName?: string;
 };
 
-type EnhancedPlanSpecVms = V1beta1PlanSpecVms & PlanNameTemplates;
+export type EnhancedPlanSpecVms = V1beta1PlanSpecVms & PlanNameTemplates;
 
 export type EnhancedPlan = V1beta1Plan & {
   spec: V1beta1PlanSpec &
