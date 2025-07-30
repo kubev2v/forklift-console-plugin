@@ -9,6 +9,7 @@ import {
 } from '../steps/network-map/constants';
 import { defaultDiskPassPhrase, OtherSettingsFormFieldId } from '../steps/other-settings/constants';
 import { CreatePlanStorageMapFieldId, StorageMapType } from '../steps/storage-map/constants';
+import { defaultVms, VmFormFieldId } from '../steps/virtual-machines/constants';
 import type { CreatePlanFormData } from '../types';
 
 /**
@@ -33,5 +34,6 @@ export const getDefaultFormValues = (
     [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
     [OtherSettingsFormFieldId.MigrateSharedDisks]: true,
     [StorageMapFieldId.StorageMap]: [defaultStorageMapping],
+    [VmFormFieldId.Vms]: defaultVms,
   };
 };
