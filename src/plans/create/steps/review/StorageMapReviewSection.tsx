@@ -1,6 +1,5 @@
 import { type FC, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
-import { defaultStorageMapping } from 'src/storageMaps/constants';
 
 import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
 import {
@@ -35,11 +34,18 @@ const StorageMapReviewSectionInner: FC = () => {
   });
 
   const noMappingsSelected = useMemo(() => {
-    return (
-      isEmpty(storageMap) ||
-      (storageMap?.length === 1 &&
-        JSON.stringify(storageMap[0]) === JSON.stringify(defaultStorageMapping))
+    if (!storageMap || isEmpty(storageMap)) {
+      return true;
+    }
+
+    // Check if we have any valid mappings (both source and target storage must be present)
+    const hasValidMapping = storageMap.some(
+      (mapping) =>
+        mapping?.[CreatePlanStorageMapFieldId.SourceStorage]?.name &&
+        mapping?.[CreatePlanStorageMapFieldId.TargetStorage]?.name,
     );
+
+    return !hasValidMapping;
   }, [storageMap]);
 
   if (storageMapType === StorageMapType.Existing) {
