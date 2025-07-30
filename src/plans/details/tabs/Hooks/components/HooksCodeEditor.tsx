@@ -6,6 +6,7 @@ import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import VersionedCodeEditor from '@components/VersionedCodeEditor/VersionedCodeEditor';
 import { Checkbox, Form, FormHelperText, TextInput, Title } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { HOOK_FORM_FIELD_NAMES } from '../state/constants';
@@ -24,6 +25,7 @@ type HooksCodeEditorProps = {
 
 const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
   const { t } = useForkliftTranslation();
+  const isDarkTheme = useIsDarkTheme();
   const {
     control,
     formState: { errors },
@@ -116,6 +118,7 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
                 }
                 render={({ field: { onChange, value } }) => (
                   <VersionedCodeEditor
+                    isDarkTheme={isDarkTheme}
                     value={Base64.decode(value)}
                     onChange={(code) => {
                       onChange(Base64.encode(code));
