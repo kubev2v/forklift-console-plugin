@@ -303,13 +303,6 @@ export const createEslintConfig = (ideMode = false) =>
         'require-unicode-regexp': 'off',
       },
     },
-    // TypeaheadSelect component specific rules
-    {
-      files: ['**/TypeaheadSelect/*.tsx'],
-      rules: {
-        'no-restricted-syntax': 'off',
-      },
-    },
     // Testing directory specific rules
     prettier,
     ...(process.env.HUSKY_LINT_STAGED || ideMode ? [] : [disabledRules]),
