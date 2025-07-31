@@ -2,7 +2,6 @@ import type { FC } from 'react';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
 
 import { PlanStatuses } from '../../../PlanStatus/utils/types';
 import usePlanAlerts from '../../hooks/usePlanAlerts';
@@ -21,6 +20,8 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
     networkMaps,
     networkMapsError,
     networkMapsLoaded,
+    showCriticalCondition,
+    showPreserveIPWarning,
     sourceNetworks,
     sourceStorages,
     status,
@@ -33,9 +34,13 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
     return null;
   }
 
+  if (!showCriticalCondition && !showPreserveIPWarning) {
+    return null;
+  }
+
   return (
     <PageSection variant={PageSectionVariants.light} className="plan-header-alerts">
-      {!isEmpty(criticalCondition) && (
+      {showCriticalCondition && (
         <PlanCriticalCondition
           plan={plan}
           condition={criticalCondition}
@@ -45,12 +50,7 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
           sourceNetworks={sourceNetworks}
         />
       )}
-      <PlanPreserveIPWarning
-        plan={plan}
-        networkMaps={networkMaps}
-        loaded={networkMapsLoaded}
-        error={networkMapsError}
-      />
+      {showPreserveIPWarning && <PlanPreserveIPWarning />}
     </PageSection>
   );
 };
