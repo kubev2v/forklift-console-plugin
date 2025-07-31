@@ -1,59 +1,40 @@
-import { useMemo } from 'react';
 
-import type { IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition as CustomResourceDefinition } from '@kubev2v/types';
-import { isEmpty } from '@utils/helpers';
+import { useState, useEffect } from 'react';
 
-import { storageVendorProducts } from '../constants';
-import { getStorageMapSchema } from '../utils/getStorageMapSchema';
+import { k8sGet } from '@openshift-console/dynamic-plugin-sdk';
+import { CustomResourceDefinitionModel } from '@openshift-console/dynamic-plugin-sdk-internal';
 
-import { useStorageMapCrd } from './useStorageMapCrd';
+export const useStorageVendorProducts = (): [string[], boolean, Error] => {
+  const [vendorProducts, setVendorProducts] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
 
-type UseStorageVendorProductsResult = {
-  storageVendorProducts: string[];
-  loading: boolean;
-  error: Error | null;
-};
+  useEffect(() => {
+    const fetchCRD = async () => {
+      try {
+        setLoading(true);
+        const crd = await k8sGet({
+          model: CustomResourceDefinitionModel,
+          name: 'storagemaps.forklift.konveyor.io',
+        });
 
-/**
- * Gets storage vendor product enum values from StorageMap CRD schema
- */
-const getStorageVendorProductNames = (crd: CustomResourceDefinition): string[] | undefined => {
-  const schema = getStorageMapSchema(crd);
+        const enumValues = crd?.spec?.versions?.[0]?.schema?.openAPIV3Schema?.properties?.spec?.properties?.map?.items?.properties?.offloadPlugin?.properties?.vsphereXcopyVolumePopulator?.properties?.storageVendorProduct?.enum;
 
-  const enumValues =
-    schema?.spec?.properties?.map?.items?.properties?.offloadPlugin?.properties?.vsphereXcopyConfig
-      ?.properties?.storageVendorProduct?.enum;
-
-  return Array.isArray(enumValues) && isEmpty(enumValues) ? undefined : enumValues;
-};
-
-/**
- * Hook that fetches storage vendor product enums from CRD, extends with constants
- */
-export const useStorageVendorProducts = (): UseStorageVendorProductsResult => {
-  const { crd, error, loading } = useStorageMapCrd();
-
-  const products = useMemo(() => {
-    if (loading || error || !crd) {
-      return storageVendorProducts;
-    }
-
-    try {
-      const crdProducts = getStorageVendorProductNames(crd);
-
-      if (!crdProducts) {
-        return storageVendorProducts;
+        if (enumValues && Array.isArray(enumValues)) {
+          setVendorProducts(enumValues);
+        } else {
+          console.warn('Could not find StorageVendorProduct enum in CRD');
+          setVendorProducts([]);
+        }
+      } catch (e) {
+        setError(e);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      return Array.from(new Set([...crdProducts, ...storageVendorProducts]));
-    } catch {
-      return storageVendorProducts;
-    }
-  }, [crd, error, loading]);
+    fetchCRD();
+  }, []);
 
-  return {
-    error,
-    loading,
-    storageVendorProducts: products,
-  };
+  return [vendorProducts, loading, error];
 };

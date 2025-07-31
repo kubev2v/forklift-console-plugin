@@ -47,29 +47,11 @@ export enum OffloadPlugin {
   VSphereXcopyConfig = 'vsphereXcopyConfig',
 }
 
-// Reference: https://github.com/kubev2v/forklift/blob/29b60e21c388420e6e0e79a55802c2c0a201ab45/pkg/apis/forklift/v1beta1/mapping.go
-export enum StorageVendorProduct {
-  Vantara = 'vantara',
-  Ontap = 'ontap',
-  Primera3Par = 'primera3par',
-  PowerFlex = 'powerflex',
-  PureFlashArray = 'pureFlashArray',
-}
-
 export const offloadPluginLabels: Record<OffloadPlugin, ReturnType<typeof t>> = {
   [OffloadPlugin.VSphereXcopyConfig]: t('vSphere XCOPY'),
 };
 
-export const storageVendorProductLabels: Record<StorageVendorProduct, ReturnType<typeof t>> = {
-  [StorageVendorProduct.Ontap]: t('NetApp ONTAP'),
-  [StorageVendorProduct.PowerFlex]: t('Dell PowerFlex'),
-  [StorageVendorProduct.Primera3Par]: t('HPE Primera/3PAR'),
-  [StorageVendorProduct.PureFlashArray]: t('Pure Storage FlashArray'),
-  [StorageVendorProduct.Vantara]: t('Hitachi Vantara'),
-};
-
 export const offloadPlugins = Object.values(OffloadPlugin);
-export const storageVendorProducts = Object.values(StorageVendorProduct);
 
 export const STORAGE_NAMES = {
   GLANCE: 'glance',
