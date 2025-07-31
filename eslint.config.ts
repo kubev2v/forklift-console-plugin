@@ -290,7 +290,7 @@ export const createEslintConfig = (ideMode = false) =>
     },
     // Testing directory specific rules
     {
-      files: ['testing/**/*.{js,ts,jsx,tsx}'],
+      files: ['testing/**/*.{js,ts,jsx,tsx}', '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}'],
       rules: {
         '@cspell/spellchecker': 'off',
         '@typescript-eslint/class-methods-use-this': 'off',
@@ -300,10 +300,10 @@ export const createEslintConfig = (ideMode = false) =>
         '@typescript-eslint/no-namespace': 'off',
         'max-lines-per-function': 'off',
         'perfectionist/sort-objects': 'off',
+        'react-refresh/only-export-components': 'off',
         'require-unicode-regexp': 'off',
       },
     },
-    // Testing directory specific rules
     prettier,
     ...(process.env.HUSKY_LINT_STAGED || ideMode ? [] : [disabledRules]),
   ] as Linter.Config[];

@@ -26,7 +26,7 @@ export class PlanDetailsPage {
 
   async verifyBreadcrumbs() {
     // Verify breadcrumb navigation
-    await expect(this.page.locator('[data-test-id="breadcrumb-link-0"]')).toContainText('Plans');
+    await expect(this.page.getByTestId('breadcrumb-link-0')).toContainText('Plans');
     await expect(this.page.locator('.pf-v5-c-breadcrumb__item').last()).toContainText(
       'Plan Details',
     );
@@ -35,6 +35,8 @@ export class PlanDetailsPage {
   async verifyNavigationTabs(): Promise<void> {
     // Verify the Details tab exists and is visible
     const detailsTab = this.page.locator('[data-test-id="horizontal-link-Details"]');
+
+    //const detailsTab = this.page.getByTestId('horizontal-link-Details');
     await expect(detailsTab).toBeVisible({ timeout: 10000 });
     const planDetailsSection = this.page
       .locator('section.pf-m-light')
@@ -56,9 +58,7 @@ export class PlanDetailsPage {
     ).toBeVisible();
 
     // Verify project (should be a link with specific data-test attribute)
-    await expect(
-      planDetailsSection.locator(`a[data-test-id="${planData.planProject}"]`),
-    ).toBeVisible();
+    await expect(planDetailsSection.getByTestId(planData.planProject)).toBeVisible();
 
     // Verify target project (take first occurrence)
     await expect(
@@ -93,7 +93,7 @@ export class PlanDetailsPage {
   }
 
   async verifyPlanTitle(planName: string): Promise<void> {
-    const titleLocator = this.page.locator('[data-testid="plan-details-title"]');
+    const titleLocator = this.page.getByTestId('plan-details-title');
     await expect(titleLocator).toBeVisible({ timeout: 15000 });
 
     const actualText = await titleLocator.textContent();
@@ -104,7 +104,7 @@ export class PlanDetailsPage {
     await this.page.waitForLoadState('domcontentloaded', { timeout: 15000 });
 
     // Verify the plan title is visible (using correct data-testid attribute)
-    const titleLocator = this.page.locator('[data-testid="plan-details-title"]');
+    const titleLocator = this.page.getByTestId('plan-details-title');
     await expect(titleLocator).toBeVisible({ timeout: 15000 });
 
     // Wait for the plan details page to load by ensuring key elements are present

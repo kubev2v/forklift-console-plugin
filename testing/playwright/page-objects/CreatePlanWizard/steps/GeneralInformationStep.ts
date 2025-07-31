@@ -10,7 +10,6 @@ export class GeneralInformationStep {
   private async selectProjectByTestId(testId: string, projectName: string) {
     await this.page.getByTestId(testId).waitFor({ state: 'visible', timeout: 10000 });
     await this.page.getByTestId(testId).click();
-    await this.page.waitForTimeout(1000);
 
     const option = this.page.getByRole('option', { name: projectName });
     await option.waitFor({ state: 'visible', timeout: 15000 });
@@ -54,10 +53,6 @@ export class GeneralInformationStep {
   }
 
   async waitForTargetProviderNamespaces() {
-    // Wait for the target provider namespaces API call to complete
-    // This should be called after selecting a target provider
-    await this.page.waitForTimeout(2000);
-
     // Ensure the target project select is enabled (indicating namespaces loaded)
     const targetProjectSelect = this.page.getByTestId('target-project-select');
     await expect(targetProjectSelect).toBeEnabled({ timeout: 15000 });

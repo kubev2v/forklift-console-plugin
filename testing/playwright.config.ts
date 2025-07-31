@@ -10,5 +10,7 @@ export default defineConfig({
     viewport: { width: 1920, height: 1080 },
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    // Use data-testid to match actual rendered HTML
+    testIdAttribute: 'data-testid',
   },
 });
