@@ -24,3 +24,7 @@ export const getProviderTypeIcon = (
   }
   return providerTypeIcons(isDarkTheme)[providerType];
 };
+
+export const POD = 'pod';
+export const MULTUS = 'multus';
+export const IGNORED = 'ignored';

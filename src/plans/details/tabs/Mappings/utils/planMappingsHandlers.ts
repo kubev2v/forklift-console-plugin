@@ -1,6 +1,6 @@
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
-import { MULTUS, POD } from 'src/plans/details/components/PlanPageHeader/utils/constants';
+import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,
@@ -13,18 +13,21 @@ import type {
   V1beta1StorageMapSpecMapSource,
 } from '@kubev2v/types';
 
+import { PodNetworkLabel } from './constants';
+
 export const createReplacedNetworkMap = (
   source: InventoryNetwork,
-  target?: OpenShiftNetworkAttachmentDefinition,
+  target?: OpenShiftNetworkAttachmentDefinition | string,
 ): V1beta1NetworkMapSpecMap => {
   const sourceEntry: V1beta1NetworkMapSpecMapSource =
     source.id === POD
       ? { type: POD }
       : { id: source.id, name: source.name, type: source.providerType };
 
-  const targetEntry: V1beta1NetworkMapSpecMapDestination = target
-    ? { name: target.name, namespace: target.namespace, type: MULTUS }
-    : { type: POD };
+  const targetEntry: V1beta1NetworkMapSpecMapDestination =
+    typeof target === 'object'
+      ? { name: target.name, namespace: target.namespace, type: MULTUS }
+      : { type: target === PodNetworkLabel.Source ? POD : IGNORED };
 
   return { destination: { ...targetEntry }, source: sourceEntry };
 };
