@@ -1,13 +1,21 @@
 import type { FC } from 'react';
-import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
+import SmartLinkify from 'src/components/common/SmartLinkify';
 import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef } from '@kubev2v/types';
-import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  Popover,
+  Spinner,
+  Text,
+  TextContent,
+  TextVariants,
+} from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 import { t } from '@utils/i18n';
 
@@ -93,10 +101,14 @@ const ErrorStatusCell: FC<CellProps> = ({ data, fields }) => {
   return (
     <Popover
       headerContent={phaseLabel}
-      bodyContent={bodyContent && <Linkify>{bodyContent}</Linkify>}
+      bodyContent={bodyContent && <SmartLinkify>{bodyContent}</SmartLinkify>}
       footerContent={footerContent}
     >
-      <Button variant="link" isInline data-testid="popover-status-button-providers-list">
+      <Button
+        variant={ButtonVariant.link}
+        isInline
+        data-testid="popover-status-button-providers-list"
+      >
         <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>
       </Button>
     </Popover>

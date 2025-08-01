@@ -11,7 +11,6 @@ import {
   Modal,
   ModalVariant,
 } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type ModalFormProps = {
@@ -76,11 +75,13 @@ const ModalForm: FC<ModalFormProps> = ({
         >
           {confirmLabel ?? t('Save')}
         </Button>,
-        !isEmpty(additionalAction) && (
-          <Button key="secondary" {...additionalAction}>
-            {additionalAction?.children}
-          </Button>
-        ),
+        ...(additionalAction
+          ? [
+              <Button key="secondary" {...additionalAction}>
+                {additionalAction?.children}
+              </Button>,
+            ]
+          : []),
         <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal}>
           {cancelLabel ?? t('Cancel')}
         </Button>,

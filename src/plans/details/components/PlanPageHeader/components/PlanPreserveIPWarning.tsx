@@ -1,38 +1,11 @@
-import { type FC, useMemo } from 'react';
+import type { FC } from 'react';
 import Linkify from 'react-linkify';
-import { POD } from 'src/plans/details/utils/constants';
 
-import type { V1beta1NetworkMap, V1beta1Plan } from '@kubev2v/types';
 import { Alert, AlertVariant, Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { getName } from '@utils/crds/common/selectors';
-import { getPlanNetworkMapName, getPlanPreserveIP } from '@utils/crds/plans/selectors';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
-type PlanPreserveIPWarningProps = {
-  plan: V1beta1Plan;
-  networkMaps: V1beta1NetworkMap[];
-  loaded: boolean;
-  error: Error | null;
-};
-
-const PlanPreserveIPWarning: FC<PlanPreserveIPWarningProps> = ({
-  error,
-  loaded,
-  networkMaps,
-  plan,
-}) => {
+const PlanPreserveIPWarning: FC = () => {
   const { t } = useForkliftTranslation();
-
-  const shouldWarn = useMemo(() => {
-    if (!loaded || error) return false;
-    const isPreserveStaticIPs = getPlanPreserveIP(plan);
-    const networkMap = networkMaps.find((net) => getName(net) === getPlanNetworkMapName(plan));
-    const isMapToPod =
-      networkMap?.spec?.map.some((entry) => entry.destination.type === POD) ?? false;
-    return Boolean(isPreserveStaticIPs && isMapToPod);
-  }, [error, loaded, networkMaps, plan]);
-
-  if (!shouldWarn) return null;
 
   return (
     <Alert
