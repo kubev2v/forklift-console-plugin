@@ -30,10 +30,12 @@ type TypeaheadMenuToggleProps = {
   onToggleClick: () => void;
   onInputValueChange: (value: string, isFiltering: boolean) => void;
   toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
+  dataTestId?: string;
 };
 
 const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
   allowClear,
+  dataTestId,
   inputRef,
   inputValue,
   isDisabled,
@@ -110,6 +112,7 @@ const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
       onMouseLeave={() => {
         setIsHovered(false);
       }}
+      data-testid={dataTestId}
       {...toggleProps}
     >
       <TextInputGroup isPlain>

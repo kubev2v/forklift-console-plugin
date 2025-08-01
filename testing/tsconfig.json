@@ -2,9 +2,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "types": ["cypress", "@testing-library/cypress", "node"],
+    "types": ["node"],
     "skipLibCheck": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "cypress/support/index.ts"],
+  "include": ["playwright/**/*.ts", "playwright/**/*.tsx", "*.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,10 +1,10 @@
 import type { Page } from '@playwright/test';
 
-// Export individual intercept functions
+export { setupCoreKubernetesIntercepts } from './core';
 export { setupDatastoresIntercepts } from './datastores';
-export { setupFoldersIntercepts } from './folders';
 export { setupHostsIntercepts } from './hosts';
 export { setupNetworkMapsIntercepts } from './networkMaps';
+export { setupPlanDetailsIntercepts } from './planDetails';
 export { setupPlansIntercepts } from './plans';
 export { setupProjectsIntercepts } from './projects';
 export { setupProvidersIntercepts } from './providers';
@@ -13,11 +13,12 @@ export { setupStorageMapsIntercepts } from './storageMaps';
 export { setupTargetProviderNamespacesIntercepts } from './targetProviderNamespaces';
 export { setupVirtualMachinesIntercepts } from './virtualMachines';
 
-// Import individual functions for convenience functions
+// Import individual functions for the comprehensive setup
+import { setupCoreKubernetesIntercepts } from './core';
 import { setupDatastoresIntercepts } from './datastores';
-import { setupFoldersIntercepts } from './folders';
 import { setupHostsIntercepts } from './hosts';
 import { setupNetworkMapsIntercepts } from './networkMaps';
+import { setupPlanDetailsIntercepts } from './planDetails';
 import { setupPlansIntercepts } from './plans';
 import { setupProjectsIntercepts } from './projects';
 import { setupProvidersIntercepts } from './providers';
@@ -26,22 +27,21 @@ import { setupStorageMapsIntercepts } from './storageMaps';
 import { setupTargetProviderNamespacesIntercepts } from './targetProviderNamespaces';
 import { setupVirtualMachinesIntercepts } from './virtualMachines';
 
-// Convenience function to setup all basic intercepts (like Cypress beforeEach)
-export const setupAllBasicIntercepts = async (page: Page) => {
-  await setupProjectsIntercepts(page);
-  await setupPlansIntercepts(page);
+// Comprehensive setup function for existing tests to work in GitHub Actions
+export const setupCreatePlanIntercepts = async (page: Page): Promise<void> => {
+  // Core Kubernetes API intercepts for console bootstrap
+  await setupCoreKubernetesIntercepts(page);
+
+  // Forklift-specific interceptors
   await setupProvidersIntercepts(page);
+  await setupPlansIntercepts(page);
+  await setupPlanDetailsIntercepts(page);
+  await setupProjectsIntercepts(page);
   await setupNetworkMapsIntercepts(page);
   await setupStorageMapsIntercepts(page);
-};
-
-// Setup all intercepts needed for plan creation wizard
-export const setupCreatePlanIntercepts = async (page: Page, sourceProviderType = 'vsphere') => {
-  await setupAllBasicIntercepts(page);
-  await setupVirtualMachinesIntercepts(page, sourceProviderType);
-  await setupTargetProviderNamespacesIntercepts(page);
-  await setupHostsIntercepts(page, sourceProviderType);
-  await setupFoldersIntercepts(page, sourceProviderType);
-  await setupDatastoresIntercepts(page, sourceProviderType);
-  await setupStorageClassesIntercepts(page);
+  await setupVirtualMachinesIntercepts(page, 'vsphere');
+  await setupHostsIntercepts(page, 'vsphere');
+  await setupDatastoresIntercepts(page, 'vsphere');
+  await setupStorageClassesIntercepts(page, 'test-target-uid-1');
+  await setupTargetProviderNamespacesIntercepts(page, 'test-target-uid-1');
 };

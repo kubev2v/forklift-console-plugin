@@ -32,7 +32,7 @@ const BreadCrumbs: FC<BreadCrumbsProps> = ({ model, namespace }) => {
             <Link
               className="pf-c-breadcrumb__link"
               to={crumb.path!}
-              data-test-id={`breadcrumb-link-${index}`}
+              data-testid={`breadcrumb-link-${index}`}
             >
               {crumb.name}
             </Link>
