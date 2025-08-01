@@ -2,7 +2,6 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './playwright/e2e',
-  testMatch: '**/*.spec.ts',
   timeout: 60_000,
   use: {
     // GitHub Actions uses port 30080, local dev uses 9000

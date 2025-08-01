@@ -6,5 +6,5 @@
     "skipLibCheck": true
   },
   "include": ["playwright/**/*.ts", "playwright/**/*.tsx", "*.ts"],
-  "exclude": ["node_modules", "dist", "cypress", "**/*.cy.ts"]
+  "exclude": ["node_modules", "dist"]
 }
