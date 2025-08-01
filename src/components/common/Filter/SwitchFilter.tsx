@@ -1,7 +1,8 @@
 import type { FormEvent } from 'react';
 
-import { Switch, ToolbarItem } from '@patternfly/react-core';
+import { Switch, ToolbarFilter } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import type { FilterTypeProps } from './types';
 
@@ -23,19 +24,27 @@ export const SwitchFilter = ({
   placeholderLabel,
   selectedFilters,
 }: FilterTypeProps) => {
+  const { t } = useForkliftTranslation();
+
   const onChange: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (checked) => {
     onFilterUpdate(checked ? [Boolean(checked).toString()] : []);
   };
 
+  const isChecked = (): boolean => !isEmpty(selectedFilters) && selectedFilters?.[0] === 'true';
+
   return (
-    <ToolbarItem className="forklift-switch-filter">
+    <ToolbarFilter
+      chips={isChecked() ? [t('true')] : undefined}
+      categoryName={placeholderLabel!}
+      deleteChip={() => onFilterUpdate([])}
+    >
       <Switch
         label={placeholderLabel}
-        isChecked={!isEmpty(selectedFilters) && selectedFilters?.[0] === 'true'}
+        isChecked={isChecked()}
         onChange={(e, value) => {
           onChange(value, e);
         }}
       />
-    </ToolbarItem>
+    </ToolbarFilter>
   );
 };
