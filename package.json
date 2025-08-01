@@ -129,7 +129,6 @@
   "resolutions": {
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
-    "monaco-editor": "^0.52.2",
-    "webpack": "5.98.0"
+    "monaco-editor": "^0.52.2"
   }
 }

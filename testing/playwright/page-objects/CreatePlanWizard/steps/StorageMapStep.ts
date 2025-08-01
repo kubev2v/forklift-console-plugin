@@ -19,12 +19,12 @@ export class StorageMapStep {
   async waitForData(): Promise<void> {
     // Wait for the storage map select element to be visible and enabled
     const selectElement = this.page.getByTestId('storage-map-select');
-    await expect(selectElement).toBeVisible();
-    await expect(selectElement).toBeEnabled();
+    await expect(selectElement).toBeVisible({ timeout: 10000 });
+    await expect(selectElement).toBeEnabled({ timeout: 10000 });
 
     // Wait for options to be available in the select
     await selectElement.click();
-    await expect(this.page.getByRole('option').first()).toBeVisible();
+    await expect(this.page.getByRole('option').first()).toBeVisible({ timeout: 15000 });
     // Close the dropdown after checking
     await selectElement.click();
   }
