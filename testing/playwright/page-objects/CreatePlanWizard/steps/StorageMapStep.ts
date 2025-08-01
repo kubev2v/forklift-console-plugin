@@ -24,7 +24,7 @@ export class StorageMapStep {
 
     // Wait for options to be available in the select
     await selectElement.click();
-    await expect(this.page.getByRole('option').first()).toBeVisible({ timeout: 3000 });
+    await expect(this.page.getByRole('option').first()).toBeVisible();
     // Close the dropdown after checking
     await selectElement.click();
   }
