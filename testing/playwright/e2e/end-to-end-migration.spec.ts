@@ -71,7 +71,8 @@ test.describe('Plans - Critical End-to-End Migration', () => {
     await planDetailsPage.waitForPageLoad();
     await planDetailsPage.verifyBasicPlanDetailsPage({
       planName: TEST_DATA.planName,
-      planProject: TEST_DATA.planProject,
+      sourceProvider: TEST_DATA.sourceProvider,
+      targetProvider: TEST_DATA.targetProvider,
       targetProject: TEST_DATA.targetProject,
     });
   });

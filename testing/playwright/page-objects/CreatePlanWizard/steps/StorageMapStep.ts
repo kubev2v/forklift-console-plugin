@@ -1,7 +1,5 @@
 import { expect, type Page } from '@playwright/test';
 
-import { API_ENDPOINTS } from '../../../fixtures/test-data';
-
 export class StorageMapStep {
   private readonly page: Page;
 
@@ -19,6 +17,15 @@ export class StorageMapStep {
   }
 
   async waitForData(): Promise<void> {
-    await this.page.waitForResponse(API_ENDPOINTS.storageMaps);
+    // Wait for the storage map select element to be visible and enabled
+    const selectElement = this.page.getByTestId('storage-map-select');
+    await expect(selectElement).toBeVisible();
+    await expect(selectElement).toBeEnabled();
+
+    // Wait for options to be available in the select
+    await selectElement.click();
+    await expect(this.page.getByRole('option').first()).toBeVisible({ timeout: 3000 });
+    // Close the dropdown after checking
+    await selectElement.click();
   }
 }
