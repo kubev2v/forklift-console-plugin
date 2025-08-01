@@ -1,6 +1,6 @@
 import { type FC, type Ref, useState } from 'react';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { ProviderType, V1beta1Plan } from '@kubev2v/types';
 import { Dropdown, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 
@@ -9,10 +9,12 @@ import SpecVirtualMachinesActionsDropdownItems from './SpecVirtualMachinesAction
 type SpecVirtualMachinesActionsDropdownProps = {
   plan: V1beta1Plan;
   vmIndex: number;
+  providerType: ProviderType;
 };
 
 const SpecVirtualMachinesActionsDropdown: FC<SpecVirtualMachinesActionsDropdownProps> = ({
   plan,
+  providerType,
   vmIndex,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +43,11 @@ const SpecVirtualMachinesActionsDropdown: FC<SpecVirtualMachinesActionsDropdownP
         position: 'right',
       }}
     >
-      <SpecVirtualMachinesActionsDropdownItems plan={plan} vmIndex={vmIndex} />
+      <SpecVirtualMachinesActionsDropdownItems
+        plan={plan}
+        vmIndex={vmIndex}
+        providerType={providerType}
+      />
     </Dropdown>
   );
 };
