@@ -184,7 +184,7 @@ const TypeaheadSelect = (
           onToggleClick={handleToggleClick}
           onInputValueChange={handleInputValueChange}
           toggleProps={toggleProps}
-          dataTestId={dataTestId ?? (selectProps['data-testid'] as string)}
+          dataTestId={dataTestId ?? selectProps['data-testid']}
         />
       )}
       shouldFocusFirstItemOnOpen={false}
