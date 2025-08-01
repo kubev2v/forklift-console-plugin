@@ -36,7 +36,6 @@ export class PlanDetailsPage {
     // Verify the Details tab exists and is visible
     const detailsTab = this.page.locator('[data-test-id="horizontal-link-Details"]');
 
-    //const detailsTab = this.page.getByTestId('horizontal-link-Details');
     await expect(detailsTab).toBeVisible({ timeout: 10000 });
     const planDetailsSection = this.page
       .locator('section.pf-m-light')
