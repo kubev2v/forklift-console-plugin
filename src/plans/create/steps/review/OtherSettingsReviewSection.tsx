@@ -29,6 +29,7 @@ const OtherSettingsReviewSection: FC = () => {
     preserveStaticIps,
     rootDevice,
     sharedDisks,
+    targetPowerState,
   ] = useWatch({
     control,
     name: [
@@ -38,6 +39,7 @@ const OtherSettingsReviewSection: FC = () => {
       OtherSettingsFormFieldId.PreserveStaticIps,
       OtherSettingsFormFieldId.RootDevice,
       OtherSettingsFormFieldId.MigrateSharedDisks,
+      OtherSettingsFormFieldId.TargetPowerState,
     ],
   });
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
@@ -119,6 +121,16 @@ const OtherSettingsReviewSection: FC = () => {
             </DescriptionListGroup>
           </>
         )}
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            {otherFormFieldLabels[OtherSettingsFormFieldId.TargetPowerState]}
+          </DescriptionListTerm>
+
+          <DescriptionListDescription data-testid="review-target-power-state">
+            {targetPowerState.label}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
       </DescriptionList>
     </ExpandableReviewSection>
   );
