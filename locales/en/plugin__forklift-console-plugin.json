@@ -575,7 +575,7 @@
   "Plan is not archived": "Plan is not archived",
   "Plan name": "Plan name",
   "Plan name is required.": "Plan name is required.",
-  "Plan name must be unique within a namespace.": "Plan name must be unique within a namespace.",
+  "Plan name must be unique across all namespaces.": "Plan name must be unique across all namespaces.",
   "Plan name must contain only lowercase alphanumeric characters or '-', and must start or end with lowercase alphanumeric character.": "Plan name must contain only lowercase alphanumeric characters or '-', and must start or end with lowercase alphanumeric character.",
   "Plan project": "Plan project",
   "Plan project is required.": "Plan project is required.",
