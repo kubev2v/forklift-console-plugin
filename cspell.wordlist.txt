@@ -97,3 +97,5 @@ operatorhub
 powerflex
 apiextensions
 customresourcedefinitions
+clusterversion
+clusterversions
