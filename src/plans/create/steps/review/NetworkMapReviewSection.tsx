@@ -15,7 +15,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { defaultNetMapping, NetworkMapFieldId, NetworkMapType } from '../network-map/constants';
+import { NetworkMapFieldId, NetworkMapType } from '../network-map/constants';
 
 import NetworkMapReviewTable from './NetworkMapReviewTable';
 
@@ -34,11 +34,18 @@ const NetworkMapReviewSectionInner: FC = () => {
   });
 
   const noMappingsSelected = useMemo(() => {
-    return (
-      isEmpty(networkMap) ||
-      (networkMap?.length === 1 &&
-        JSON.stringify(networkMap[0]) === JSON.stringify(defaultNetMapping))
+    if (!networkMap || isEmpty(networkMap)) {
+      return true;
+    }
+
+    // Check if we have any valid mappings (both source and target networks must be present)
+    const hasValidMapping = networkMap.some(
+      (mapping) =>
+        mapping?.[NetworkMapFieldId.SourceNetwork]?.name &&
+        mapping?.[NetworkMapFieldId.TargetNetwork]?.name,
     );
+
+    return !hasValidMapping;
   }, [networkMap]);
 
   if (netMapType === NetworkMapType.Existing) {

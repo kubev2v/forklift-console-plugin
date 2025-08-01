@@ -4,6 +4,7 @@ import { Base64 } from 'js-base64';
 
 import { CodeEditor, Language } from '@patternfly/react-code-editor';
 import { FormGroup, FormHelperText } from '@patternfly/react-core';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -17,6 +18,7 @@ type AnsiblePlaybookFieldProps = {
 
 const AnsiblePlaybookField: FC<AnsiblePlaybookFieldProps> = ({ fieldId }) => {
   const { t } = useForkliftTranslation();
+  const isDarkTheme = useIsDarkTheme();
   const { control } = useCreatePlanFormContext();
   const subFieldId = getHooksSubFieldId(fieldId, MigrationHookFieldId.AnsiblePlaybook);
 
@@ -30,6 +32,7 @@ const AnsiblePlaybookField: FC<AnsiblePlaybookFieldProps> = ({ fieldId }) => {
         control={control}
         render={({ field }) => (
           <CodeEditor
+            isDarkTheme={isDarkTheme}
             language={Language.yaml}
             code={Base64.decode(field.value ?? '')}
             onChange={(value) => {

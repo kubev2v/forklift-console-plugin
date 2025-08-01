@@ -1,6 +1,6 @@
-import { type FC, useEffect } from 'react';
+import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
-import { defaultStorageMapping } from 'src/storageMaps/constants';
+import { defaultStorageMapping, type StorageMapping } from 'src/storageMaps/constants';
 import { getSourceStorageValues } from 'src/storageMaps/utils/getSourceStorageValues';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
@@ -11,6 +11,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardContext';
+import { useInitializeMappings } from '../../hooks/useInitializeMappings';
 import { GeneralFormFieldId } from '../general-information/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
@@ -19,7 +20,7 @@ import CreatePlanStorageMapFieldTable from './CreatePlanStorageMapFieldTable';
 
 const NewStorageMapFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control, getFieldState, setValue } = useCreatePlanFormContext();
+  const { control, getFieldState } = useCreatePlanFormContext();
   const { storage } = useCreatePlanWizardContext();
   const { error } = getFieldState(CreatePlanStorageMapFieldId.StorageMap);
   const [sourceProvider, vms, storageMap] = useWatch({
@@ -33,7 +34,7 @@ const NewStorageMapFields: FC = () => {
 
   const [availableSourceStorages, sourceStoragesLoading, sourceStoragesError] = storage.sources;
   const [availableTargetStorages, _targetStoragesLoading, targetStoragesError] = storage.targets;
-  const isStorageMapEmpty = isEmpty(storageMap);
+  const isLoading = sourceStoragesLoading;
 
   const { other: otherSourceStorages, used: usedSourceStorages } = getSourceStorageValues(
     sourceProvider,
@@ -42,30 +43,18 @@ const NewStorageMapFields: FC = () => {
   );
   const defaultTargetStorageName = availableTargetStorages?.[0]?.name;
 
-  // When the storage mappings are empty, default to source storage values used by VMs,
-  // otherwise set empty inputs for the field array to force an empty field table row.
-  useEffect(() => {
-    if (!sourceStoragesLoading && isStorageMapEmpty) {
-      if (isEmpty(usedSourceStorages)) {
-        setValue(CreatePlanStorageMapFieldId.StorageMap, [defaultStorageMapping]);
-        return;
-      }
-
-      setValue(
-        CreatePlanStorageMapFieldId.StorageMap,
-        usedSourceStorages.map((sourceStorage) => ({
-          [CreatePlanStorageMapFieldId.SourceStorage]: sourceStorage,
-          [CreatePlanStorageMapFieldId.TargetStorage]: { name: defaultTargetStorageName },
-        })),
-      );
-    }
-  }, [
-    defaultTargetStorageName,
-    sourceStoragesLoading,
-    isStorageMapEmpty,
-    setValue,
-    usedSourceStorages,
-  ]);
+  useInitializeMappings<StorageMapping>({
+    currentMap: storageMap,
+    defaultTarget: defaultStorageMapping[CreatePlanStorageMapFieldId.TargetStorage],
+    defaultTargetName: defaultTargetStorageName,
+    fieldIds: {
+      mapField: CreatePlanStorageMapFieldId.StorageMap,
+      sourceField: CreatePlanStorageMapFieldId.SourceStorage,
+      targetField: CreatePlanStorageMapFieldId.TargetStorage,
+    },
+    isLoading,
+    usedSources: usedSourceStorages,
+  });
 
   return (
     <Stack hasGutter className="pf-v5-u-ml-lg">
