@@ -12,6 +12,7 @@ import DiskPassPhraseFieldTable from './DiskPassPhraseFieldTable';
 import PreserveStaticIpsField from './PreserveStaticIpsField';
 import RootDeviceField from './RootDeviceField';
 import SharedDisksField from './SharedDisksField';
+import TargetPowerStateField from './TargetPowerStateField';
 import TransferNetworkField from './TransferNetworkField';
 
 const OtherSettingsStep = () => {
@@ -33,6 +34,8 @@ const OtherSettingsStep = () => {
             <SharedDisksField />
           </>
         )}
+
+        <TargetPowerStateField />
       </Form>
     </WizardStepContainer>
   );

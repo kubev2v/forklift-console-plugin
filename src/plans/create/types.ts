@@ -29,7 +29,12 @@ import type { GeneralFormFieldId } from './steps/general-information/constants';
 import type { HooksFormFieldId, MigrationHook } from './steps/migration-hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
-import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
+import type {
+  DiskPassPhrase,
+  OtherSettingsFormFieldId,
+  TargetPowerState,
+  TargetPowerStateValue,
+} from './steps/other-settings/constants';
 import type { CreatePlanStorageMapFieldId } from './steps/storage-map/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
@@ -76,6 +81,7 @@ export type CreatePlanFormData = FieldValues & {
   [HooksFormFieldId.PostMigration]: MigrationHook;
   [OtherSettingsFormFieldId.RootDevice]: string;
   [OtherSettingsFormFieldId.TransferNetwork]: V1beta1PlanSpecTransferNetwork;
+  [OtherSettingsFormFieldId.TargetPowerState]: TargetPowerState;
 };
 
 export type MappingValue = { id?: string; name: string };
@@ -102,6 +108,7 @@ export type CreatePlanParams = {
   luks?: V1beta1PlanSpecVmsLuks;
   preHook?: V1beta1Hook;
   postHook?: V1beta1Hook;
+  targetPowerState: TargetPowerStateValue;
 };
 
 type ResourceQueryResult<T> = [T, boolean, Error | null];
