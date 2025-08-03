@@ -1,6 +1,6 @@
 import { type FC, type PropsWithChildren, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import Linkify from 'react-linkify';
+import SmartLinkify from 'src/components/common/SmartLinkify';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { EMPTY_MSG } from 'src/utils/constants';
@@ -95,7 +95,7 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
       <Stack hasGutter>
         <TextContent className="forklift-providers-list-header__alert">
           <Text component={TextVariants.p}>
-            <Linkify>{condition?.message ?? EMPTY_MSG}</Linkify>
+            <SmartLinkify>{condition?.message ?? EMPTY_MSG}</SmartLinkify>
             {condition?.message?.endsWith('.') ? ' ' : '. '}
             <TroubleshootMessage planURL={getPlanURL(plan)} type={type} />
           </Text>
