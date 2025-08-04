@@ -59,7 +59,7 @@ const ProvidersListPage: FC<{
       data-testid="providers-list"
       addButton={
         <ProvidersAddButton
-          dataTestId="add-provider-button"
+          testId="add-provider-button"
           namespace={namespace}
           canCreate={permissions.canCreate}
         />

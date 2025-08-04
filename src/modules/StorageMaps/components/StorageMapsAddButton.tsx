@@ -13,9 +13,9 @@ import {
   type MenuToggleElement,
 } from '@patternfly/react-core';
 
-const StorageMapsAddButton: FC<{ namespace?: string; dataTestId?: string }> = ({
-  dataTestId,
+const StorageMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
   namespace,
+  testId,
 }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const StorageMapsAddButton: FC<{ namespace?: string; dataTestId?: string }> = ({
       onOpenChange={(isOpen: boolean) => {
         setIsMenuOpen(isOpen);
       }}
-      data-testid={dataTestId}
+      data-testid={testId}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
           ref={toggleRef}

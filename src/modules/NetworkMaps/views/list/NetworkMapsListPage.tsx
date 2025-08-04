@@ -130,9 +130,7 @@ const NetworkMapsListPage: FC<{
     <StandardPage<NetworkMapData>
       data-testid="network-maps-list"
       {...(permissions.canCreate && {
-        addButton: (
-          <NetworkMapsAddButton namespace={namespace} dataTestId="add-network-map-button" />
-        ),
+        addButton: <NetworkMapsAddButton namespace={namespace} testId="add-network-map-button" />,
       })}
       dataSource={[data || [], networkMapsLoaded, networkMapsLoadError]}
       RowMapper={NetworkMapRow}

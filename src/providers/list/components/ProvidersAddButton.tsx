@@ -9,11 +9,11 @@ import { useForkliftTranslation } from '../../../utils/i18n';
 
 type ProvidersAddButtonProps = {
   namespace?: string;
-  dataTestId?: string;
+  testId?: string;
   canCreate?: boolean;
 };
 
-const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, dataTestId, namespace }) => {
+const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, namespace, testId }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, dataTestId
 
   return (
     <Button
-      data-testid={dataTestId}
+      data-testid={testId}
       variant={ButtonVariant.primary}
       onClick={onClick}
       isDisabled={!canCreate}

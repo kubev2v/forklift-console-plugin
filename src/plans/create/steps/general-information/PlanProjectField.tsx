@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 import { Controller, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';
 import useProjectNameSelectOptions from 'src/providers/create/hooks/useProjectNameSelectOptions';
 
@@ -6,6 +6,7 @@ import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 import { useDefaultProject } from '@utils/hooks/useDefaultProject';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -24,23 +25,33 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
     formState: { errors },
     setValue,
   } = useCreatePlanFormContext();
-  const [targetProject, targetProvider, sourceProvider] = useWatch({
+
+  const [projectOptions] = useProjectNameSelectOptions();
+  const hasProjectOptions = !isEmpty(projectOptions);
+  const defaultProject = useDefaultProject(projectOptions);
+  const hasSetInitialDefault = useRef(false);
+
+  const [planProject, sourceProvider, targetProvider, targetProject] = useWatch({
     control,
     name: [
-      GeneralFormFieldId.TargetProject,
-      GeneralFormFieldId.TargetProvider,
+      GeneralFormFieldId.PlanProject,
       GeneralFormFieldId.SourceProvider,
+      GeneralFormFieldId.TargetProvider,
+      GeneralFormFieldId.TargetProject,
     ],
   });
-  const [projectOptions] = useProjectNameSelectOptions();
-  const defaultProject = useDefaultProject(projectOptions);
 
-  // Automatically set the default plan project once it's resolved
   useEffect(() => {
-    if (defaultProject) {
+    if (
+      defaultProject &&
+      hasProjectOptions &&
+      !hasSetInitialDefault.current &&
+      isEmpty(planProject)
+    ) {
       setValue(GeneralFormFieldId.PlanProject, defaultProject);
+      hasSetInitialDefault.current = true;
     }
-  }, [defaultProject, setValue]);
+  }, [defaultProject, setValue, planProject, projectOptions, hasProjectOptions]);
 
   return (
     <FormGroupWithErrorText
@@ -68,7 +79,7 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
         render={({ field }) => (
           <TypeaheadSelect
             ref={field.ref}
-            data-testid={testId}
+            testId={testId}
             isScrollable
             allowClear
             placeholder={t('Select plan project')}

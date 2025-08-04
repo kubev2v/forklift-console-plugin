@@ -9,11 +9,11 @@ import { Button, ButtonVariant, Tooltip } from '@patternfly/react-core';
 
 type PlansAddButtonProps = {
   namespace?: string;
-  dataTestId?: string;
+  testId?: string;
   canCreate?: boolean;
 };
 
-const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namespace }) => {
+const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
   const hasSufficientProviders = useHasSufficientProviders(namespace);
@@ -32,7 +32,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, dataTestId, namesp
 
   const button = (
     <Button
-      data-testid={dataTestId}
+      data-testid={testId}
       variant={ButtonVariant.primary}
       isAriaDisabled={!hasSufficientProviders}
       onClick={onClick}
