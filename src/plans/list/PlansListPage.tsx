@@ -41,11 +41,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
     <StandardPage
       data-testid="plans-list"
       addButton={
-        <PlansAddButton
-          dataTestId="create-plan-button"
-          namespace={namespace}
-          canCreate={canCreate}
-        />
+        <PlansAddButton testId="create-plan-button" namespace={namespace} canCreate={canCreate} />
       }
       dataSource={[plans || [], plansLoaded, plansLoadError]}
       RowMapper={PlanRow}

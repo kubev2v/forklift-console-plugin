@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
 /* eslint-disable @cspell/spellchecker */
 
@@ -203,6 +204,14 @@ export const createEslintConfig = (ideMode = false) =>
               "Use ButtonVariant enum from '@patternfly/react-core' instead of string literals for button variants.",
             selector:
               'JSXOpeningElement[name.name="Button"] > JSXAttribute[name.name="variant"][value.type="Literal"][value.value=/^(primary|secondary|tertiary|danger|warning|link|plain|control)$/]',
+          },
+          {
+            message: "Use 'testId' instead of 'dataTestId' for consistency across the codebase.",
+            selector: [
+              'JSXAttribute[name.name="dataTestId"]',
+              'TSPropertySignature[key.name="dataTestId"]',
+              'Property[key.name="dataTestId"]',
+            ].join(','),
           },
         ],
         'no-ternary': 'off',

@@ -84,7 +84,7 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespac
       <EmptyStateFooter>
         <EmptyStateActions>
           <ProvidersAddButton
-            dataTestId="add-provider-button-empty-state"
+            testId="add-provider-button-empty-state"
             namespace={namespace}
             canCreate={canCreate}
           />
