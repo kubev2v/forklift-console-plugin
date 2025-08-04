@@ -1,11 +1,9 @@
+import { defaultTargetPowerStateOption } from 'src/plans/constants';
+
 import { GeneralFormFieldId } from '../steps/general-information/constants';
 import { HooksFormFieldId, MigrationHookFieldId } from '../steps/migration-hooks/constants';
 import { NetworkMapFieldId, NetworkMapType } from '../steps/network-map/constants';
-import {
-  defaultDiskPassPhrase,
-  defaultTargetPowerStateOption,
-  OtherSettingsFormFieldId,
-} from '../steps/other-settings/constants';
+import { defaultDiskPassPhrase, OtherSettingsFormFieldId } from '../steps/other-settings/constants';
 import { CreatePlanStorageMapFieldId, StorageMapType } from '../steps/storage-map/constants';
 import type { CreatePlanFormData } from '../types';
 
