@@ -3,6 +3,7 @@ import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import NetworkMapsEmptyState from 'src/networkMaps/components/NetworkMapsEmptyState';
 
 import {
   NetworkMapModel,
@@ -13,7 +14,6 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { t } from '@utils/i18n';
 
 import NetworkMapsAddButton from '../../components/NetworkMapsAddButton';
-import NetworkMapsEmptyState from '../../components/NetworkMapsEmptyState';
 import { NETWORK_MAP_STATUS } from '../../utils/constants/network-map-status';
 import { getNetworkMapPhase } from '../../utils/helpers/getNetworkMapPhase';
 import type { NetworkMapData } from '../../utils/types/NetworkMapData';

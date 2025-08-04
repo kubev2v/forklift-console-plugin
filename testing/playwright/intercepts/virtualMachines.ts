@@ -1,13 +1,16 @@
 import type { Page } from '@playwright/test';
 
-import { TEST_DATA } from '../fixtures/test-data';
+import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
 
 export const setupVirtualMachinesIntercepts = async (
   page: Page,
   sourceProviderType = 'vsphere',
 ) => {
-  // Handle both single and double slash variations
-  const endpoint = `**/forklift-inventory/providers/${sourceProviderType}/test-source-uid-1/vms?detail=4`;
+  // Use API_ENDPOINTS function for consistency
+  const endpoint = API_ENDPOINTS.virtualMachines(
+    sourceProviderType,
+    TEST_DATA.providers.source.uid,
+  );
 
   const responseBody = JSON.stringify(
     TEST_DATA.virtualMachines.map((vm) => ({

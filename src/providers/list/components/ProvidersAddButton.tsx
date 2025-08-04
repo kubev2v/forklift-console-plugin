@@ -34,7 +34,7 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, dataTestId
       onClick={onClick}
       isDisabled={!canCreate}
     >
-      {t('Create Provider')}
+      {t('Create provider')}
     </Button>
   );
 };

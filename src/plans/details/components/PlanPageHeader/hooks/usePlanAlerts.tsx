@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
+import { POD } from 'src/plans/details/utils/constants';
 
 import {
   NetworkMapModelGroupVersionKind,
@@ -11,7 +13,9 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { CATEGORY_TYPES } from '@utils/constants';
-import { getNamespace } from '@utils/crds/common/selectors';
+import { getName, getNamespace } from '@utils/crds/common/selectors';
+import { getPlanNetworkMapName, getPlanPreserveIP } from '@utils/crds/plans/selectors';
+import { isEmpty } from '@utils/helpers';
 
 import { getPlanStatus } from '../../PlanStatus/utils/utils';
 
@@ -43,11 +47,28 @@ const usePlanAlerts = (plan: V1beta1Plan) => {
     (condition) => condition?.category === CATEGORY_TYPES.CRITICAL,
   );
 
+  const showPreserveIPWarning = useMemo(() => {
+    if (!networkMapsLoaded || networkMapsError) {
+      return false;
+    }
+
+    const isPreserveStaticIPs = getPlanPreserveIP(plan);
+    const networkMap = networkMaps.find((net) => getName(net) === getPlanNetworkMapName(plan));
+    const isMapToPod =
+      networkMap?.spec?.map.some((entry) => entry.destination.type === POD) ?? false;
+
+    return Boolean(isPreserveStaticIPs && isMapToPod);
+  }, [networkMapsError, networkMapsLoaded, networkMaps, plan]);
+
+  const showCriticalCondition = !isEmpty(criticalCondition);
+
   return {
     criticalCondition,
     networkMaps,
     networkMapsError,
     networkMapsLoaded,
+    showCriticalCondition,
+    showPreserveIPWarning,
     sourceNetworks,
     sourceStorages,
     status,

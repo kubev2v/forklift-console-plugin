@@ -22,7 +22,7 @@ export const validatePlanName = (value: string, plans: V1beta1Plan[]) => {
   }
 
   if (plans.some((plan) => plan?.metadata?.name === value)) {
-    return t('Plan name must be unique within a namespace.');
+    return t('Plan name must be unique across all namespaces.');
   }
 
   return undefined;

@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
-    "test:e2e": "cypress run --browser chrome --headed",
-    "test:e2e:headless": "cypress run --browser chrome",
+    "test:e2e": "playwright test --headed --project=chromium",
+    "test:e2e:headless": "playwright test --project=chromium",
     "playwright:test": "playwright test",
     "playwright:open": "playwright test --ui"
   },
@@ -14,10 +12,9 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@playwright/test": "^1.54.1",
-    "@testing-library/cypress": "^10.0.3",
+    "playwright": "1.54.2",
+    "@playwright/test": "1.54.2",
     "@types/node": "^20.0.0",
-    "cypress": "^14.1.0",
     "typescript": "^5.8.2"
   }
 }

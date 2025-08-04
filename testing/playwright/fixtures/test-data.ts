@@ -1,4 +1,4 @@
-// Test Data Constants - Similar to Cypress TEST_DATA
+// Test Data Constants
 export const TEST_DATA = {
   // Plan Creation Data
   planName: 'test-create-plan',

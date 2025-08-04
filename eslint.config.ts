@@ -39,7 +39,6 @@ export const createEslintConfig = (ideMode = false) =>
         'yarn.lock',
         'package-lock.json',
         '**/generated/**',
-        'testing/cypress.config.ts',
       ],
     },
     eslint.configs.all,

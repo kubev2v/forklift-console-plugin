@@ -1,6 +1,4 @@
-import type { Page } from '@playwright/test';
-
-import { API_ENDPOINTS } from '../../../fixtures/test-data';
+import { expect, type Page } from '@playwright/test';
 
 export class GeneralInformationStep {
   private readonly page: Page;
@@ -10,12 +8,18 @@ export class GeneralInformationStep {
   }
 
   private async selectProjectByTestId(testId: string, projectName: string) {
+    await this.page.getByTestId(testId).waitFor({ state: 'visible', timeout: 10000 });
     await this.page.getByTestId(testId).click();
-    await this.page.getByRole('option', { name: projectName }).click();
+
+    const option = this.page.getByRole('option', { name: projectName });
+    await option.waitFor({ state: 'visible', timeout: 15000 });
+    await option.click();
   }
 
   async fillPlanName(name: string) {
-    await this.page.getByTestId('plan-name-input').fill(name);
+    const nameInput = this.page.getByTestId('plan-name-input');
+    await expect(nameInput).toBeVisible();
+    await nameInput.fill(name);
   }
 
   async selectPlanProject(projectName: string) {
@@ -23,8 +27,14 @@ export class GeneralInformationStep {
   }
 
   async selectSourceProvider(providerName: string) {
-    await this.page.getByTestId('source-provider-select').click();
-    await this.page.getByRole('option', { name: providerName }).click();
+    const selector = this.page.getByTestId('source-provider-select');
+    await expect(selector).toBeVisible();
+    await expect(selector).toBeEnabled();
+    await selector.click();
+
+    const option = this.page.getByRole('option', { name: providerName });
+    await expect(option).toBeVisible();
+    await option.click();
   }
 
   async selectTargetProject(projectName: string) {
@@ -32,11 +42,19 @@ export class GeneralInformationStep {
   }
 
   async selectTargetProvider(providerName: string) {
-    await this.page.getByTestId('target-provider-select').click();
-    await this.page.getByRole('option', { name: providerName }).click();
+    const selector = this.page.getByTestId('target-provider-select');
+    await expect(selector).toBeVisible();
+    await expect(selector).toBeEnabled();
+    await selector.click();
+
+    const option = this.page.getByRole('option', { name: providerName });
+    await expect(option).toBeVisible();
+    await option.click();
   }
 
   async waitForTargetProviderNamespaces() {
-    await this.page.waitForResponse(API_ENDPOINTS.targetNamespaces('*'));
+    // Ensure the target project select is enabled (indicating namespaces loaded)
+    const targetProjectSelect = this.page.getByTestId('target-project-select');
+    await expect(targetProjectSelect).toBeEnabled({ timeout: 15000 });
   }
 }

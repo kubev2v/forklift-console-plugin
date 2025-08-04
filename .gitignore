@@ -7,8 +7,6 @@ yarn-error.log
 openapitools.json
 tsconfig.tsbuildinfo
 
-cypress/videos
-cypress/screenshots
 ci/yaml/openapi.yaml
 
 **/mockServiceWorker.js
@@ -19,4 +17,3 @@ kubectl
 kubectl.sha256
 
 forkliftci
-

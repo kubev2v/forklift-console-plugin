@@ -47,12 +47,14 @@ type TypeaheadSelectProps = {
   toggleWidth?: string;
   toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
   filterControls?: ReactNode;
+  dataTestId?: string;
 } & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected'>;
 
 const TypeaheadSelect = (
   {
     allowClear = false,
     createOptionMessage = getDefaultCreateMessage,
+    dataTestId,
     filterControls,
     filterFunction = defaultFilterFunction,
     isCreatable = false,
@@ -182,6 +184,7 @@ const TypeaheadSelect = (
           onToggleClick={handleToggleClick}
           onInputValueChange={handleInputValueChange}
           toggleProps={toggleProps}
+          dataTestId={dataTestId ?? selectProps['data-testid']}
         />
       )}
       shouldFocusFirstItemOnOpen={false}
