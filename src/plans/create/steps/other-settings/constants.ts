@@ -24,16 +24,3 @@ export const defaultDiskPassPhrase: DiskPassPhrase = { value: '' };
 export const defaultTransferNetwork = t('Target provider default');
 
 export const maxDiskPassPhrases = 20;
-
-export type TargetPowerStateValue = 'auto' | 'on' | 'off';
-export type TargetPowerState = {
-  description?: string;
-  label: string;
-  value: TargetPowerStateValue;
-};
-
-export const defaultTargetPowerStateOption: TargetPowerState = {
-  description: t('Retain source VM power state'),
-  label: t('Auto'),
-  value: 'auto',
-};

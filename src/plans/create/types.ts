@@ -1,6 +1,7 @@
 import type { FieldValues } from 'react-hook-form';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import type { TargetPowerState, TargetPowerStateValue } from 'src/plans/constants';
 import type { StorageMapping } from 'src/storageMaps/constants';
 import type { TargetStorage } from 'src/storageMaps/types';
 
@@ -29,12 +30,7 @@ import type { GeneralFormFieldId } from './steps/general-information/constants';
 import type { HooksFormFieldId, MigrationHook } from './steps/migration-hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
-import type {
-  DiskPassPhrase,
-  OtherSettingsFormFieldId,
-  TargetPowerState,
-  TargetPowerStateValue,
-} from './steps/other-settings/constants';
+import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
 import type { CreatePlanStorageMapFieldId } from './steps/storage-map/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
