@@ -15,6 +15,7 @@ export const getDefaultFormValues = (
   return {
     [CreatePlanStorageMapFieldId.StorageMapType]: StorageMapType.Existing,
     [GeneralFormFieldId.PlanProject]: initialValues?.planProject,
+    [GeneralFormFieldId.ShowDefaultProjects]: false,
     [GeneralFormFieldId.SourceProvider]: initialValues?.sourceProvider,
     [HooksFormFieldId.PostMigration]: {
       [MigrationHookFieldId.EnableHook]: false,

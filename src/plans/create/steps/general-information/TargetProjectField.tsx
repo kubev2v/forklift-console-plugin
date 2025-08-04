@@ -1,4 +1,4 @@
-import { type FC, useMemo, useState } from 'react';
+import { type FC, useMemo, useRef } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
 import { isSystemNamespace } from 'src/utils/namespaces';
@@ -25,7 +25,9 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
   } = useCreatePlanFormContext();
   const targetProvider = useWatch({ control, name: GeneralFormFieldId.TargetProvider });
   const [targetProviderProjects] = useProviderNamespaces(targetProvider);
-  const [showDefaultProjects, setShowDefaultProjects] = useState(false);
+  const showDefaultProjects =
+    useWatch({ control, name: GeneralFormFieldId.ShowDefaultProjects }) ?? false;
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const targetProviderOptions = useMemo(
     () =>
@@ -70,17 +72,18 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
         control={control}
         render={({ field }) => (
           <TypeaheadSelect
-            ref={field.ref}
-            data-testid={testId}
+            ref={(element) => {
+              field.ref(element);
+              inputRef.current = element;
+            }}
+            testId={testId}
             isScrollable
             allowClear
             placeholder={t('Select target project')}
             id={GeneralFormFieldId.TargetProject}
             options={filteredTargetProviderOptions}
             value={field.value}
-            onChange={(value) => {
-              field.onChange(value);
-            }}
+            onChange={field.onChange}
             noOptionsMessage={
               targetProvider
                 ? undefined
@@ -93,14 +96,21 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
             filterControls={
               <>
                 <div className="pf-v5-u-px-md pf-v5-u-py-md">
-                  <Switch
-                    id="show-default-projects-switch"
-                    data-testid="show-default-projects-switch"
-                    label={t('Show default projects')}
-                    isChecked={showDefaultProjects}
-                    onChange={(_event, checked) => {
-                      setShowDefaultProjects(checked);
-                    }}
+                  <Controller
+                    name={GeneralFormFieldId.ShowDefaultProjects}
+                    control={control}
+                    render={({ field: switchField }) => (
+                      <Switch
+                        id="show-default-projects-switch"
+                        data-testid="show-default-projects-switch"
+                        label={generalFormFieldLabels[GeneralFormFieldId.ShowDefaultProjects]}
+                        isChecked={switchField.value}
+                        onChange={(_event, checked) => {
+                          switchField.onChange(checked);
+                          setTimeout(() => inputRef.current?.focus(), 0);
+                        }}
+                      />
+                    )}
                   />
                 </div>
                 <Divider />

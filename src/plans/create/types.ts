@@ -61,6 +61,7 @@ export type CreatePlanFormData = FieldValues & {
   [GeneralFormFieldId.SourceProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProject]: string;
+  [GeneralFormFieldId.ShowDefaultProjects]: boolean;
   [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine>;
   [NetworkMapFieldId.ExistingNetworkMap]: V1beta1NetworkMap | undefined;
   [NetworkMapFieldId.NetworkMap]: NetworkMapping[];

@@ -137,7 +137,7 @@ describe('TypeaheadSelect', () => {
       const clearButton = screen.getByRole('button', { name: /clear/i });
       await user.click(clearButton);
 
-      expect(mockOnChange).toHaveBeenCalledWith(undefined);
+      expect(mockOnChange).toHaveBeenCalledWith('');
     });
 
     test('handles select, clear, and select workflow', async () => {
@@ -158,7 +158,7 @@ describe('TypeaheadSelect', () => {
       await user.click(input);
       const clearButton = screen.getByRole('button', { name: /clear/i });
       await user.click(clearButton);
-      expect(mockOnChange).toHaveBeenCalledWith(undefined);
+      expect(mockOnChange).toHaveBeenCalledWith('');
 
       // Re-render cleared state
       rerender(<TypeaheadSelect {...defaultProps} allowClear />);
@@ -179,7 +179,7 @@ describe('TypeaheadSelect', () => {
       await user.click(input);
       await user.clear(input);
 
-      expect(mockOnChange).toHaveBeenCalledWith(undefined);
+      expect(mockOnChange).toHaveBeenCalledWith('');
     });
   });
 

@@ -31,7 +31,7 @@ import {
 type TypeaheadSelectProps = {
   options: TypeaheadSelectOption[];
   value?: string | number;
-  onChange?: (value: string | number | undefined) => void;
+  onChange: (value: string | number | undefined) => void;
   onInputChange?: (inputValue: string) => void;
   filterFunction?: (
     filterValue: string,
@@ -47,14 +47,13 @@ type TypeaheadSelectProps = {
   toggleWidth?: string;
   toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
   filterControls?: ReactNode;
-  dataTestId?: string;
+  testId?: string;
 } & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected'>;
 
 const TypeaheadSelect = (
   {
     allowClear = false,
     createOptionMessage = getDefaultCreateMessage,
-    dataTestId,
     filterControls,
     filterFunction = defaultFilterFunction,
     isCreatable = false,
@@ -65,6 +64,7 @@ const TypeaheadSelect = (
     onInputChange,
     options = [],
     placeholder = DEFAULT_PLACEHOLDER,
+    testId,
     toggleProps,
     toggleWidth,
     value,
@@ -137,7 +137,8 @@ const TypeaheadSelect = (
   };
 
   const handleSelectionClear = (): void => {
-    onChange?.(undefined);
+    setInputValue('');
+    onChange('');
   };
 
   const handleSelect = (selectedValue: string | number | undefined): void => {
@@ -149,7 +150,7 @@ const TypeaheadSelect = (
     const existingOption = options.find((option) => option.value === selectedValue);
 
     if (existingOption || isCreatable) {
-      onChange?.(selectedValue);
+      onChange(selectedValue);
       setIsOpen(false);
       setIsFiltering(false);
       setInputValue(existingOption?.content?.toString() ?? selectedValue?.toString() ?? '');
@@ -184,7 +185,7 @@ const TypeaheadSelect = (
           onToggleClick={handleToggleClick}
           onInputValueChange={handleInputValueChange}
           toggleProps={toggleProps}
-          dataTestId={dataTestId ?? selectProps['data-testid']}
+          testId={testId}
         />
       )}
       shouldFocusFirstItemOnOpen={false}

@@ -2,6 +2,7 @@ node_modules/
 dist/
 distlib/
 coverage/
+test-results/
 tmp/
 yarn-error.log
 openapitools.json
