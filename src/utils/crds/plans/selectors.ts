@@ -1,4 +1,4 @@
-import { TargetPowerStates, type TargetPowerStateValue } from 'src/plans/constants';
+import type { TargetPowerStateValue } from 'src/plans/constants';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 
