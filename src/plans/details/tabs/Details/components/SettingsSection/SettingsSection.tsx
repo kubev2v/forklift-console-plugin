@@ -18,6 +18,7 @@ import RawDiskCopyDetailsItem from './components/RawDiskCopy/RawDiskCopyDetailsI
 import RootDiskDetailsItem from './components/RootDisk/RootDiskDetailsItem';
 import SetLUKSEncryptionPasswordsDetailsItem from './components/SetLUKSEncryptionPasswords/SetLUKSEncryptionPasswordsDetailsItem';
 import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
+import TargetPowerStateDetailsItem from './components/TargetPowerState/TargetPowerStateDetailsItem';
 
 type SettingsSectionProps = {
   plan: V1beta1Plan;
@@ -58,6 +59,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
           shouldRender={isOvirt}
         />
         <RawDiskCopyDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+        <TargetPowerStateDetailsItem plan={plan} canPatch={canPatch} />
       </DescriptionList>
     </ModalHOC>
   );
