@@ -3,6 +3,7 @@ cacerts
 chunkhash
 crdtotypes
 cutover
+flasharray
 forkliftcontrollers
 freetext
 konveyor
@@ -17,6 +18,7 @@ ovirtvolumepopulators
 patternfly
 populator
 populators
+powerflex
 precopies
 precopy
 quickstarts
