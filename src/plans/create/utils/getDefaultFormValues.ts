@@ -1,3 +1,5 @@
+import { defaultTargetPowerStateOption } from 'src/plans/constants';
+
 import { GeneralFormFieldId } from '../steps/general-information/constants';
 import { HooksFormFieldId, MigrationHookFieldId } from '../steps/migration-hooks/constants';
 import { NetworkMapFieldId, NetworkMapType } from '../steps/network-map/constants';
@@ -26,5 +28,6 @@ export const getDefaultFormValues = (
     [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
     [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
     [OtherSettingsFormFieldId.MigrateSharedDisks]: true,
+    [OtherSettingsFormFieldId.TargetPowerState]: defaultTargetPowerStateOption,
   };
 };

@@ -55,7 +55,7 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
                   <SelectOption
                     key={usedStorage.name}
                     value={usedStorage}
-                    isDisabled={storageMappings.some(
+                    isDisabled={storageMappings?.some(
                       (mapping: StorageMapping) =>
                         mapping[StorageMapFieldId.SourceStorage].name === usedStorage.name,
                     )}

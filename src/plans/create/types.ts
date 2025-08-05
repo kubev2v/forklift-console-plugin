@@ -1,6 +1,7 @@
 import type { FieldValues } from 'react-hook-form';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import type { TargetPowerState, TargetPowerStateValue } from 'src/plans/constants';
 import type { StorageMapping } from 'src/storageMaps/constants';
 import type { TargetStorage } from 'src/storageMaps/types';
 
@@ -77,6 +78,7 @@ export type CreatePlanFormData = FieldValues & {
   [HooksFormFieldId.PostMigration]: MigrationHook;
   [OtherSettingsFormFieldId.RootDevice]: string;
   [OtherSettingsFormFieldId.TransferNetwork]: V1beta1PlanSpecTransferNetwork;
+  [OtherSettingsFormFieldId.TargetPowerState]: TargetPowerState;
 };
 
 export type MappingValue = { id?: string; name: string };
@@ -103,6 +105,7 @@ export type CreatePlanParams = {
   luks?: V1beta1PlanSpecVmsLuks;
   preHook?: V1beta1Hook;
   postHook?: V1beta1Hook;
+  targetPowerState: TargetPowerStateValue;
 };
 
 type ResourceQueryResult<T> = [T, boolean, Error | null];

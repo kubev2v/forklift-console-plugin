@@ -6,6 +6,7 @@ export enum OtherSettingsFormFieldId {
   PreserveStaticIps = 'preserveStaticIps',
   RootDevice = 'rootDevice',
   MigrateSharedDisks = 'migrateSharedDisks',
+  TargetPowerState = 'targetPowerState',
 }
 
 export const otherFormFieldLabels: Record<OtherSettingsFormFieldId, ReturnType<typeof t>> = {
@@ -13,6 +14,7 @@ export const otherFormFieldLabels: Record<OtherSettingsFormFieldId, ReturnType<t
   [OtherSettingsFormFieldId.MigrateSharedDisks]: t('Migrate shared disks'),
   [OtherSettingsFormFieldId.PreserveStaticIps]: t('Preserve static IPs'),
   [OtherSettingsFormFieldId.RootDevice]: t('Root device'),
+  [OtherSettingsFormFieldId.TargetPowerState]: t('VM target power state'),
   [OtherSettingsFormFieldId.TransferNetwork]: t('Transfer network'),
 };
 
