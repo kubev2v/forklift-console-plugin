@@ -70,7 +70,7 @@ test.describe('Plans - Critical End-to-End Migration', () => {
     await createWizard.waitForPlanCreation();
     await planDetailsPage.waitForPageLoad();
     await planDetailsPage.verifyBasicPlanDetailsPage({
-      planName: `${TEST_DATA.planName}a`,
+      planName: TEST_DATA.planName,
       sourceProvider: TEST_DATA.sourceProvider,
       targetProvider: TEST_DATA.targetProvider,
       targetProject: TEST_DATA.targetProject,
