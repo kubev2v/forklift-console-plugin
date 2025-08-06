@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
-import { defaultTargetPowerStateOption, options } from 'src/plans/constants';
+import { defaultTargetPowerStateOption, targetPowerStateOptions } from 'src/plans/constants';
 
 import Select from '@components/common/Select';
 import { FormGroup, FormHelperText, SelectList, SelectOption, Stack } from '@patternfly/react-core';
@@ -40,7 +40,7 @@ const TargetPowerStateField: FC = () => {
               placeholder={defaultTargetPowerStateOption.label}
             >
               <SelectList>
-                {options.map((option) => (
+                {targetPowerStateOptions.map((option) => (
                   <SelectOption key={option.value} value={option} description={option.description}>
                     {option.label}
                   </SelectOption>

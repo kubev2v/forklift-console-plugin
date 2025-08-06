@@ -2,8 +2,8 @@ import type { FC } from 'react';
 import {
   defaultTargetPowerStateOption,
   getTargetPowerStateLabel,
-  options,
   type TargetPowerState,
+  targetPowerStateOptions,
   type TargetPowerStateValue,
 } from 'src/plans/constants';
 
@@ -26,7 +26,7 @@ const TargetPowerStateDropdown: FC<TargetPowerStateDropdownProps> = ({ onChange,
       placeholder={defaultTargetPowerStateOption.label}
     >
       <SelectList>
-        {options.map((option) => (
+        {targetPowerStateOptions.map((option) => (
           <SelectOption key={option.value} value={option} description={option.description}>
             {option.label}
           </SelectOption>

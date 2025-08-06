@@ -20,7 +20,7 @@ export const defaultTargetPowerStateOption: TargetPowerState = {
   value: TargetPowerStates.AUTO,
 };
 
-export const options: TargetPowerState[] = [
+export const targetPowerStateOptions: TargetPowerState[] = [
   defaultTargetPowerStateOption,
   {
     label: t('Powered on'),
@@ -33,6 +33,6 @@ export const options: TargetPowerState[] = [
 ];
 
 export const getTargetPowerStateLabel = (value: TargetPowerStateValue): string => {
-  const found = options.find((option) => option.value === value);
+  const found = targetPowerStateOptions.find((option) => option.value === value);
   return found ? found.label : value;
 };

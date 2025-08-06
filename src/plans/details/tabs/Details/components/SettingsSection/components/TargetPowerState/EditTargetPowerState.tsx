@@ -20,13 +20,12 @@ const EditTargetPowerState: FC<EditPlanProps> = ({ resource }) => {
 
   return (
     <ModalForm
-      title={t('Edit target power state?')}
+      title={t('Edit target power state')}
       onConfirm={async () => onConfirmTargetPowerState({ newValue: value, resource })}
-      confirmLabel={t('Save target power state')}
     >
       <Stack hasGutter>
         {t(
-          `Choose what state you'd like the VMs to be powered to after migration. By default, the target power state is set to auto.`,
+          `Choose what state you'd like the VMs in your plan to be powered to after migration. By default, the target power state is set to auto.`,
         )}
         <FormGroupWithHelpText label={t('VM target power state')} isRequired>
           <TargetPowerStateDropdown value={value} onChange={setValue} />
