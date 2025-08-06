@@ -8,17 +8,17 @@ import { getNamespace } from '@utils/crds/common/selectors';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 
+import GuestConversionDetailsItem from './components/GuestConversion/GuestConversionDetailsItem';
 import NetworkNameTemplateDetailsItem from './components/NetworkNameTemplate/NetworkNameTemplateDetailsItem';
 import SharedDisksDetailsItem from './components/PlanMigrateSharedDisks/MigrateSharedDisksDetailsItem';
 import TransferNetworkDetailsItem from './components/PlanTransferNetwork/TransferNetworkDetailsItem';
 import PreserveClusterCpuModelDetailsItem from './components/PreserveClusterCpuModel/PreserveClusterCpuModelDetailsItem';
 import PreserveStaticIPsDetailsItem from './components/PreserveStaticIPs/PreserveStaticIPsDetailsItem';
 import PVCNameTemplateDetailsItem from './components/PVCNameTemplate/PVCNameTemplateDetailsItem';
-import RawDiskCopyDetailsItem from './components/RawDiskCopy/RawDiskCopyDetailsItem';
 import RootDiskDetailsItem from './components/RootDisk/RootDiskDetailsItem';
 import SetLUKSEncryptionPasswordsDetailsItem from './components/SetLUKSEncryptionPasswords/SetLUKSEncryptionPasswordsDetailsItem';
-import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
 import TargetPowerStateDetailsItem from './components/TargetPowerState/TargetPowerStateDetailsItem';
+import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
 
 type SettingsSectionProps = {
   plan: V1beta1Plan;
@@ -58,7 +58,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
           canPatch={canPatch}
           shouldRender={isOvirt}
         />
-        <RawDiskCopyDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+        <GuestConversionDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <TargetPowerStateDetailsItem plan={plan} canPatch={canPatch} />
       </DescriptionList>
     </ModalHOC>
