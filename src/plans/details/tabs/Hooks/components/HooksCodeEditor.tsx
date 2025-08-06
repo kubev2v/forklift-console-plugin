@@ -2,10 +2,11 @@ import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Base64 } from 'js-base64';
 
-import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import SectionHeading from '@components/headers/SectionHeading';
+import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import VersionedCodeEditor from '@components/VersionedCodeEditor/VersionedCodeEditor';
-import { Form, HelperText, HelperTextItem, Switch, TextInput } from '@patternfly/react-core';
+import { Checkbox, Form, FormHelperText, TextInput, Title } from '@patternfly/react-core';
+import { getInputValidated } from '@utils/form';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { HOOK_FORM_FIELD_NAMES } from '../state/constants';
@@ -24,7 +25,11 @@ type HooksCodeEditorProps = {
 
 const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
   const { t } = useForkliftTranslation();
-  const { control, register } = useFormContext<HookFormValues>();
+  const isDarkTheme = useIsDarkTheme();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<HookFormValues>();
   const hookTypeLowercase = HookTypeLabelLowercase[type];
   const fieldIdPrefix = `${hookTypeLowercase}-hook`;
   const isPreHook = type === hookTypes.PreHook;
@@ -36,54 +41,73 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
 
   return (
     <>
-      <SectionHeading text={t('{{hookType}} migration hook', { hookType: HookTypeLabel[type] })} />
+      <Title headingLevel="h3" className="pf-v5-u-mt-lg pf-v5-u-mb-md">
+        {t('{{hookType}} migration hook', { hookType: HookTypeLabel[type] })}
+      </Title>
       <Form>
-        <FormGroupWithHelpText label={t('Enable hook')} isRequired fieldId={`${fieldIdPrefix}-set`}>
-          <Controller
-            control={control}
-            name={isPreHook ? HOOK_FORM_FIELD_NAMES.preHookSet : HOOK_FORM_FIELD_NAMES.postHookSet}
-            render={({ field: { onChange, value } }) => (
-              <Switch
-                label={t('Enable {{hookTypeLowercase}} migration hook', { hookTypeLowercase })}
-                labelOff={t('Do not enable a {{hookTypeLowercase}} migration hook', {
-                  hookTypeLowercase,
-                })}
-                isChecked={value}
-                isDisabled={!planEditable}
-                onChange={(_e, checked) => {
-                  onChange(checked);
-                }}
-              />
-            )}
-          />
-        </FormGroupWithHelpText>
+        <Controller
+          control={control}
+          name={isPreHook ? HOOK_FORM_FIELD_NAMES.preHookSet : HOOK_FORM_FIELD_NAMES.postHookSet}
+          render={({ field: { onChange, value } }) => (
+            <Checkbox
+              id={`${fieldIdPrefix}-set`}
+              label={t('Enable {{hookTypeLowercase}} migration hook', { hookTypeLowercase })}
+              isChecked={value}
+              isDisabled={!planEditable}
+              onChange={(_, checked) => {
+                onChange(checked);
+              }}
+            />
+          )}
+        />
         {isHookSet && (
           <>
-            <FormGroupWithHelpText
+            <FormGroupWithErrorText
               label={t('Hook runner image')}
               isRequired
-              fieldId={`${fieldIdPrefix}-image`}
+              fieldId={
+                isPreHook ? HOOK_FORM_FIELD_NAMES.preHookImage : HOOK_FORM_FIELD_NAMES.postHookImage
+              }
             >
-              <TextInput
-                spellCheck="false"
-                type="url"
-                {...register(
+              <Controller
+                control={control}
+                name={
                   isPreHook
                     ? HOOK_FORM_FIELD_NAMES.preHookImage
-                    : HOOK_FORM_FIELD_NAMES.postHookImage,
+                    : HOOK_FORM_FIELD_NAMES.postHookImage
+                }
+                rules={{ required: t('Hook runner image is required.') }}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    spellCheck="false"
+                    type="url"
+                    isDisabled={!planEditable}
+                    validated={getInputValidated(
+                      Boolean(
+                        errors[
+                          isPreHook
+                            ? HOOK_FORM_FIELD_NAMES.preHookImage
+                            : HOOK_FORM_FIELD_NAMES.postHookImage
+                        ],
+                      ),
+                    )}
+                  />
                 )}
               />
-              <HelperText>
-                <HelperTextItem>
-                  {t(
-                    'You can use a custom hook-runner image or specify a custom image, for example quay.io/konveyor/hook-runner .',
-                  )}
-                </HelperTextItem>
-              </HelperText>
-            </FormGroupWithHelpText>
-            <FormGroupWithHelpText
+              <FormHelperText>
+                {t(
+                  'You can use a custom hook-runner image or specify a custom image, for example quay.io/konveyor/hook-runner.',
+                )}
+              </FormHelperText>
+            </FormGroupWithErrorText>
+            <FormGroupWithErrorText
               label={t('Ansible playbook')}
-              fieldId={`${fieldIdPrefix}-playbook`}
+              fieldId={
+                isPreHook
+                  ? HOOK_FORM_FIELD_NAMES.preHookPlaybook
+                  : HOOK_FORM_FIELD_NAMES.postHookPlaybook
+              }
             >
               <Controller
                 control={control}
@@ -94,21 +118,21 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
                 }
                 render={({ field: { onChange, value } }) => (
                   <VersionedCodeEditor
+                    isDarkTheme={isDarkTheme}
                     value={Base64.decode(value)}
                     onChange={(code) => {
                       onChange(Base64.encode(code));
                     }}
+                    isReadOnly={!planEditable}
                   />
                 )}
               />
-              <HelperText>
-                <HelperTextItem>
-                  {t(
-                    'Optional: Ansible playbook. If you specify a playbook, the image must be hook-runner.',
-                  )}
-                </HelperTextItem>
-              </HelperText>
-            </FormGroupWithHelpText>
+              <FormHelperText>
+                {t(
+                  'Optional: Ansible playbook. If you specify a playbook, the image must be hook-runner.',
+                )}
+              </FormHelperText>
+            </FormGroupWithErrorText>
           </>
         )}
       </Form>

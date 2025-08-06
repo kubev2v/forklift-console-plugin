@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { type FieldPath, useFieldArray, useWatch } from 'react-hook-form';
+import { useFieldArray, useWatch } from 'react-hook-form';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
 import OffloadStorageIndexedForm from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
@@ -14,7 +14,7 @@ import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import type { CreatePlanFormData, MappingValue } from '../../types';
+import type { MappingValue } from '../../types';
 
 import { CreatePlanStorageMapFieldId, createPlanStorageMapFieldLabels } from './constants';
 import { validatePlanStorageMaps } from './utils';
@@ -37,7 +37,7 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
   const isCopyOffloadEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD);
-  const { control, setValue } = useCreatePlanFormContext();
+  const { control } = useCreatePlanFormContext();
 
   const [storageMappings, sourceProvider] = useWatch({
     control,
@@ -108,24 +108,11 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
         },
       }}
       removeButton={{
+        isDisabled: storageMappingFields.length <= 1,
         onClick: (index) => {
           if (storageMappingFields.length > 1) {
             remove(index);
-            return;
           }
-
-          setValue<FieldPath<CreatePlanFormData>>(
-            getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index),
-            defaultStorageMapping[CreatePlanStorageMapFieldId.SourceStorage],
-          );
-          setValue<FieldPath<CreatePlanFormData>>(
-            getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index),
-            {
-              name:
-                targetStorages[0]?.name ??
-                defaultStorageMapping[CreatePlanStorageMapFieldId.TargetStorage].name,
-            },
-          );
         },
       }}
     />

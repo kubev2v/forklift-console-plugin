@@ -1,10 +1,16 @@
 import { defaultTargetPowerStateOption } from 'src/plans/constants';
+import { defaultStorageMapping, StorageMapFieldId } from 'src/storageMaps/constants';
 
 import { GeneralFormFieldId } from '../steps/general-information/constants';
 import { HooksFormFieldId, MigrationHookFieldId } from '../steps/migration-hooks/constants';
-import { NetworkMapFieldId, NetworkMapType } from '../steps/network-map/constants';
+import {
+  defaultNetMapping,
+  NetworkMapFieldId,
+  NetworkMapType,
+} from '../steps/network-map/constants';
 import { defaultDiskPassPhrase, OtherSettingsFormFieldId } from '../steps/other-settings/constants';
 import { CreatePlanStorageMapFieldId, StorageMapType } from '../steps/storage-map/constants';
+import { defaultVms, VmFormFieldId } from '../steps/virtual-machines/constants';
 import type { CreatePlanFormData } from '../types';
 
 /**
@@ -25,9 +31,12 @@ export const getDefaultFormValues = (
     [HooksFormFieldId.PreMigration]: {
       [MigrationHookFieldId.EnableHook]: false,
     },
+    [NetworkMapFieldId.NetworkMap]: [defaultNetMapping],
     [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
     [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
     [OtherSettingsFormFieldId.MigrateSharedDisks]: true,
     [OtherSettingsFormFieldId.TargetPowerState]: defaultTargetPowerStateOption,
+    [StorageMapFieldId.StorageMap]: [defaultStorageMapping],
+    [VmFormFieldId.Vms]: defaultVms,
   };
 };
