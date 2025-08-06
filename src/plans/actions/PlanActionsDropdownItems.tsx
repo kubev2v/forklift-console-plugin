@@ -18,6 +18,7 @@ import {
   isPlanArchived,
   isPlanExecuting,
 } from '../details/components/PlanStatus/utils/utils';
+import { usePlanMigration } from '../hooks/usePlanMigration';
 
 import ArchiveModal from './components/ArchiveModal';
 import PlanCutoverMigrationModal from './components/CutoverModal/PlanCutoverMigrationModal';
@@ -48,6 +49,10 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
   const isWarmAndExecuting = getPlanIsWarm(plan) && isPlanExecuting(plan);
   const isArchived = isPlanArchived(plan);
   const buttonStartLabel = canReStart ? t('Restart') : t('Start');
+  const canScheduleCutover = isWarmAndExecuting && !isArchived;
+
+  const [lastMigration] = usePlanMigration(plan);
+  const hasCutover = canScheduleCutover && Boolean(lastMigration?.spec?.cutover);
 
   const onClickPlanStart = () => {
     showModal(<PlanStartMigrationModal plan={plan} title={buttonStartLabel} />);
@@ -96,10 +101,10 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
       <DropdownItem
         value={2}
         key="cutover"
-        isDisabled={!isWarmAndExecuting || isArchived}
+        isDisabled={!canScheduleCutover}
         onClick={onClickPlanCutover}
       >
-        {t('Cutover')}
+        {hasCutover ? t('Edit cutover') : t('Schedule cutover')}
       </DropdownItem>
       <DropdownItem
         value={3}
