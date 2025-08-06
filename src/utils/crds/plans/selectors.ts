@@ -1,3 +1,5 @@
+import type { TargetPowerStateValue } from 'src/plans/constants';
+
 import type { V1beta1Plan } from '@kubev2v/types';
 
 export const getPlanDestinationProvider = (plan: V1beta1Plan) =>
@@ -50,3 +52,6 @@ export const getPlanPreserveClusterCpuModel = (plan: V1beta1Plan) =>
 export const getLUKSSecretName = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.luks?.name;
 
 export const getRootDisk = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.rootDisk;
+
+export const getPlanTargetPowerState = (plan: V1beta1Plan) =>
+  plan?.spec?.targetPowerState as TargetPowerStateValue;

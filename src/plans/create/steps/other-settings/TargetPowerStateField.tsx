@@ -1,10 +1,6 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
-import {
-  defaultTargetPowerStateOption,
-  type TargetPowerState,
-  TargetPowerStates,
-} from 'src/plans/constants';
+import { defaultTargetPowerStateOption, targetPowerStateOptions } from 'src/plans/constants';
 
 import Select from '@components/common/Select';
 import { FormGroup, FormHelperText, SelectList, SelectOption, Stack } from '@patternfly/react-core';
@@ -17,18 +13,6 @@ import { otherFormFieldLabels, OtherSettingsFormFieldId } from './constants';
 const TargetPowerStateField: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
-
-  const options: TargetPowerState[] = [
-    defaultTargetPowerStateOption,
-    {
-      label: t('Powered on'),
-      value: TargetPowerStates.ON,
-    },
-    {
-      label: t('Powered off'),
-      value: TargetPowerStates.OFF,
-    },
-  ];
 
   return (
     <FormGroup
@@ -56,7 +40,7 @@ const TargetPowerStateField: FC = () => {
               placeholder={defaultTargetPowerStateOption.label}
             >
               <SelectList>
-                {options.map((option) => (
+                {targetPowerStateOptions.map((option) => (
                   <SelectOption key={option.value} value={option} description={option.description}>
                     {option.label}
                   </SelectOption>

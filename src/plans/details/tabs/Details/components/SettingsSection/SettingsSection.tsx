@@ -17,6 +17,7 @@ import PreserveStaticIPsDetailsItem from './components/PreserveStaticIPs/Preserv
 import PVCNameTemplateDetailsItem from './components/PVCNameTemplate/PVCNameTemplateDetailsItem';
 import RootDiskDetailsItem from './components/RootDisk/RootDiskDetailsItem';
 import SetLUKSEncryptionPasswordsDetailsItem from './components/SetLUKSEncryptionPasswords/SetLUKSEncryptionPasswordsDetailsItem';
+import TargetPowerStateDetailsItem from './components/TargetPowerState/TargetPowerStateDetailsItem';
 import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
 
 type SettingsSectionProps = {
@@ -58,6 +59,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
           shouldRender={isOvirt}
         />
         <GuestConversionDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+        <TargetPowerStateDetailsItem plan={plan} canPatch={canPatch} />
       </DescriptionList>
     </ModalHOC>
   );
