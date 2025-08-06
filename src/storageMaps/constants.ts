@@ -62,10 +62,10 @@ export const offloadPluginLabels: Record<OffloadPlugin, ReturnType<typeof t>> = 
 
 export const storageVendorProductLabels: Record<StorageVendorProduct, ReturnType<typeof t>> = {
   [StorageVendorProduct.Ontap]: t('NetApp ONTAP'),
-  [StorageVendorProduct.Primera3Par]: t('HPE Primera/3PAR'),
-  [StorageVendorProduct.Vantara]: t('Hitachi Vantara'),
   [StorageVendorProduct.Powerflex]: t('Dell PowerFlex'),
+  [StorageVendorProduct.Primera3Par]: t('HPE Primera/3PAR'),
   [StorageVendorProduct.PureFlashArray]: t('Pure FlashArray'),
+  [StorageVendorProduct.Vantara]: t('Hitachi Vantara'),
 };
 
 export const offloadPlugins = Object.values(OffloadPlugin);
