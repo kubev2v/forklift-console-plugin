@@ -1,12 +1,12 @@
 import type { FC } from 'react';
-import { type FieldPath, useFieldArray } from 'react-hook-form';
+import { useFieldArray } from 'react-hook-form';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import type { OVirtNicProfile } from '@kubev2v/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import type { CreatePlanFormData, MappingValue, ProviderVirtualMachine } from '../../types';
+import type { MappingValue, ProviderVirtualMachine } from '../../types';
 
 import {
   defaultNetMapping,
@@ -39,7 +39,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
   vms,
 }) => {
   const { t } = useForkliftTranslation();
-  const { control, setValue } = useCreatePlanFormContext();
+  const { control } = useCreatePlanFormContext();
 
   const {
     append,
@@ -88,20 +88,11 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
         },
       }}
       removeButton={{
+        isDisabled: netMappingFields.length <= 1,
         onClick: (index) => {
           if (netMappingFields.length > 1) {
             remove(index);
-            return;
           }
-
-          setValue<FieldPath<CreatePlanFormData>>(
-            getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index),
-            defaultNetMapping[NetworkMapFieldId.SourceNetwork],
-          );
-          setValue<FieldPath<CreatePlanFormData>>(
-            getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index),
-            defaultNetMapping[NetworkMapFieldId.TargetNetwork],
-          );
         },
       }}
     />

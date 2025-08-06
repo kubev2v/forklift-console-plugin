@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
@@ -9,16 +9,22 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardContext';
+import { useInitializeMappings } from '../../hooks/useInitializeMappings';
 import { GeneralFormFieldId } from '../general-information/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
-import { defaultNetMapping, netMapFieldLabels, NetworkMapFieldId } from './constants';
+import {
+  defaultNetMapping,
+  netMapFieldLabels,
+  NetworkMapFieldId,
+  type NetworkMapping,
+} from './constants';
 import NetworkMapFieldTable from './NetworkMapFieldTable';
 import { filterTargetNetworksByProject, getSourceNetworkValues } from './utils';
 
 const NewNetworkMapFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control, getFieldState, setValue } = useCreatePlanFormContext();
+  const { control, getFieldState } = useCreatePlanFormContext();
   const { network } = useCreatePlanWizardContext();
   const [targetProject, vms, networkMap] = useWatch({
     control,
@@ -29,7 +35,6 @@ const NewNetworkMapFields: FC = () => {
   const [availableTargetNetworks, targetNetworksLoading, targetNetworksError] = network.targets;
   const [oVirtNicProfiles, oVirtNicProfilesLoading, oVirtNicProfilesError] =
     network.oVirtNicProfiles;
-  const isNetMapEmpty = isEmpty(networkMap);
   const isLoading = sourceNetworksLoading || targetNetworksLoading || oVirtNicProfilesLoading;
   const { error } = getFieldState(NetworkMapFieldId.NetworkMap);
 
@@ -44,28 +49,21 @@ const NewNetworkMapFields: FC = () => {
     [availableTargetNetworks, targetProject],
   );
 
-  // When the network map is empty, default to source network values used by VMs,
-  // otherwise set empty inputs for the field array to force an empty field table row.
-  useEffect(() => {
-    if (!isLoading && isNetMapEmpty) {
-      if (isEmpty(usedSourceNetworks)) {
-        setValue(NetworkMapFieldId.NetworkMap, [defaultNetMapping]);
-        return;
-      }
-
-      setValue(
-        NetworkMapFieldId.NetworkMap,
-        usedSourceNetworks.map((sourceNetwork) => ({
-          [NetworkMapFieldId.SourceNetwork]: sourceNetwork,
-          [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
-        })),
-      );
-    }
-  }, [isLoading, isNetMapEmpty, setValue, usedSourceNetworks]);
+  useInitializeMappings<NetworkMapping>({
+    currentMap: networkMap,
+    defaultTarget: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
+    fieldIds: {
+      mapField: NetworkMapFieldId.NetworkMap,
+      sourceField: NetworkMapFieldId.SourceNetwork,
+      targetField: NetworkMapFieldId.TargetNetwork,
+    },
+    isLoading,
+    usedSources: usedSourceNetworks,
+  });
 
   return (
     <Stack hasGutter className="pf-v5-u-ml-lg">
-      {error?.root && <Alert isInline variant={AlertVariant.danger} title={error.root.message} />}
+      {error?.root && <Alert variant={AlertVariant.danger} isInline title={error.root.message} />}
 
       {isEmpty(usedSourceNetworks) && !sourceNetworksLoading && (
         <Alert
