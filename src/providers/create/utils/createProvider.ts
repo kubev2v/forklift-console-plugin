@@ -8,6 +8,7 @@ import {
   getName,
   getNamespace,
   getUrl,
+  getUseVddkAioOptimization,
   getVddkInitImage,
 } from '@utils/crds/common/selectors';
 
@@ -38,7 +39,11 @@ export const createProvider = async (provider: V1beta1Provider, secret: IoK8sApi
   const readEmptyVddkInitImage = getAnnotations(newProvider)?.[EMPTY_VDDK_INIT_IMAGE_ANNOTATION];
 
   if (readEmptyVddkInitImage === YES_VALUE && getVddkInitImage(newProvider)) {
-    newProvider.spec.settings.vddkInitImage = undefined!;
+    delete newProvider?.spec?.settings?.vddkInitImage;
+  }
+
+  if (readEmptyVddkInitImage === YES_VALUE && getUseVddkAioOptimization(newProvider)) {
+    delete newProvider?.spec?.settings?.useVddkAioOptimization;
   }
 
   const obj = await k8sCreate({

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { EditProviderVDDKImage } from 'src/modules/Providers/modals/EditProviderVDDKImage/EditProviderVDDKImage';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import EditProviderVDDKImage from 'src/providers/details/tabs/Details/components/DetailsSection/EditProviderVDDKImage';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { Label } from '@patternfly/react-core';

@@ -20,7 +20,12 @@ export const getApiVersion = (resource: K8sResourceCommon) => resource?.apiVersi
 export const getVddkInitImage = (provider: V1beta1Provider) =>
   provider?.spec?.settings?.vddkInitImage;
 
+export const getUseVddkAioOptimization = (provider: V1beta1Provider) =>
+  provider?.spec?.settings?.useVddkAioOptimization;
+
 export const getSdkEndpoint = (provider: V1beta1Provider) => provider?.spec?.settings?.sdkEndpoint;
+
+export const getSettings = (provider: V1beta1Provider) => provider?.spec?.settings;
 
 export const getAnnotations = (provider: V1beta1Provider) => provider?.metadata?.annotations;
 

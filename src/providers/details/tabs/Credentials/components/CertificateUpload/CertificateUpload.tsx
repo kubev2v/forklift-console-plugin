@@ -2,7 +2,14 @@ import type { ChangeEvent, FC } from 'react';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, FileUpload, type FileUploadProps, Flex, FlexItem } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  FileUpload,
+  type FileUploadProps,
+  Flex,
+  FlexItem,
+} from '@patternfly/react-core';
 
 import FetchCertificateModal from './FetchCertificateModal';
 
@@ -72,7 +79,7 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
             <Button
               className="forklift-certificate-upload-margin"
               isDisabled={isDisabled ?? !url?.trim().startsWith('https://')}
-              variant="secondary"
+              variant={ButtonVariant.secondary}
               onClick={onClick}
             >
               {t('Fetch certificate from URL')}

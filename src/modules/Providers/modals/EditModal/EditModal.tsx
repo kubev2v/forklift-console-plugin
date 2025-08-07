@@ -54,6 +54,7 @@ export const EditModal: FC<EditModalProps> = ({
   headerContent,
   helperText,
   InputComponent,
+  isVisible = true,
   jsonPath,
   label,
   model,
@@ -183,22 +184,26 @@ export const EditModal: FC<EditModalProps> = ({
       <Stack hasGutter>
         <div>{body}</div>
 
-        <Form id="modal-with-form-form">
-          <FormGroupWithHelpText
-            label={label}
-            labelIcon={
-              <HelpIconPopover header={headerContent} onClick={onClick}>
-                {bodyContent}
-              </HelpIconPopover>
-            }
-            fieldId="modal-with-form-form-field"
-            helperText={validation.msg || helperText}
-            helperTextInvalid={validation.msg || helperText}
-            validated={validation.type}
-          >
-            {InputComponent_}
-          </FormGroupWithHelpText>
-        </Form>
+        {isVisible && (
+          <Form id="modal-with-form-form">
+            <FormGroupWithHelpText
+              label={label}
+              labelIcon={
+                bodyContent || headerContent ? (
+                  <HelpIconPopover header={headerContent} onClick={onClick}>
+                    {bodyContent}
+                  </HelpIconPopover>
+                ) : undefined
+              }
+              fieldId="modal-with-form-form-field"
+              helperText={validation.msg || helperText}
+              helperTextInvalid={validation.msg || helperText}
+              validated={validation.type}
+            >
+              {InputComponent_}
+            </FormGroupWithHelpText>
+          </Form>
+        )}
       </Stack>
       {typeof owner === 'object' && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}
       {alertMessage}
