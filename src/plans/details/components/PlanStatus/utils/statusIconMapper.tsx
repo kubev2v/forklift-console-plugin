@@ -4,7 +4,6 @@ import { Icon } from '@patternfly/react-core';
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
-  ExclamationTriangleIcon,
   MinusCircleIcon,
   PauseCircleIcon,
 } from '@patternfly/react-icons';
@@ -19,8 +18,8 @@ export const migrationStatusIconMap: Record<MigrationVirtualMachineStatus, React
     </Icon>
   ),
   [MigrationVirtualMachineStatus.CantStart]: (
-    <Icon status="warning">
-      <ExclamationTriangleIcon />
+    <Icon status="danger">
+      <ExclamationCircleIcon />
     </Icon>
   ),
   [MigrationVirtualMachineStatus.Failed]: (
