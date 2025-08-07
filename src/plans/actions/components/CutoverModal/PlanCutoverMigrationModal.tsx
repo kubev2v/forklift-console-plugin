@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/max-params */
 // Ignoring above eslint rule as onTimeChange signature from PF has 6 params
 import { type FC, type FormEvent, useCallback, useEffect, useState } from 'react';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
@@ -92,7 +93,7 @@ const PlanCutoverMigrationModal: FC<PlanCutoverMigrationModalProps> = ({ plan })
 
   return (
     <ModalForm
-      title={t('Cutover')}
+      title={lastMigration?.spec?.cutover ? t('Edit cutover') : t('Schedule cutover')}
       onConfirm={onCutover}
       confirmLabel={t('Set cutover')}
       additionalAction={{
