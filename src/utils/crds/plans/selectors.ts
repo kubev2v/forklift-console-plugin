@@ -53,5 +53,5 @@ export const getLUKSSecretName = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.lu
 
 export const getRootDisk = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.rootDisk;
 
-export const getPlanTargetPowerState = (plan: V1beta1Plan) =>
+export const getPlanTargetPowerState = (plan: V1beta1Plan): TargetPowerStateValue =>
   plan?.spec?.targetPowerState as TargetPowerStateValue;
