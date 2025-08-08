@@ -6,7 +6,9 @@ export const TargetPowerStates = {
   ON: 'on',
 } as const;
 
-export type TargetPowerStateValue = (typeof TargetPowerStates)[keyof typeof TargetPowerStates];
+export type TargetPowerStateValue =
+  | (typeof TargetPowerStates)[keyof typeof TargetPowerStates]
+  | undefined;
 
 export type TargetPowerState = {
   description?: string;
@@ -33,6 +35,8 @@ export const targetPowerStateOptions: TargetPowerState[] = [
 ];
 
 export const getTargetPowerStateLabel = (value: TargetPowerStateValue): string => {
-  const found = targetPowerStateOptions.find((option) => option.value === value);
-  return found ? found.label : value;
+  const found = targetPowerStateOptions.find(
+    (option) => option.value === (value ?? TargetPowerStates.AUTO),
+  );
+  return found!.label;
 };
