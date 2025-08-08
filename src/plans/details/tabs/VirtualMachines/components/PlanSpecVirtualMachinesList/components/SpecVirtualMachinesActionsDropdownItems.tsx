@@ -4,6 +4,7 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import EditNetworkNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/NetworkNameTemplate/EditNetworkNameTemplate';
 import EditPVCNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/PVCNameTemplate/EditPVCNameTemplate';
+import EditVmTargetPowerState from 'src/plans/details/tabs/Details/components/SettingsSection/components/TargetPowerState/EditVmTargetPowerState';
 import EditVolumeNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -98,6 +99,16 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
           </DropdownItem>
         </>
       )}
+      <DropdownItem
+        value={4}
+        key="edit-target-power-state"
+        isDisabled={!canEdit}
+        onClick={() => {
+          showModal(<EditVmTargetPowerState resource={plan} index={vmIndex} />);
+        }}
+      >
+        {t('Edit target power state')}
+      </DropdownItem>
     </DropdownList>
   );
 };
