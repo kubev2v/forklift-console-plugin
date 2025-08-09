@@ -5,7 +5,7 @@ import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { Button, InputGroup, TextInput } from '@patternfly/react-core';
+import { Button, ButtonVariant, InputGroup, TextInput } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 
 import { getDecodedValue } from './utils/getDecodedValue';
@@ -88,7 +88,7 @@ const TokenWithUserIDSecretFieldsEditSection: FC<CredentialsEditModeByTypeProps>
             validated={tokenValidation.type}
           />
           <Button
-            variant="control"
+            variant={ButtonVariant.control}
             onClick={onClickTogglePassword}
             aria-label={passwordHidden ? 'Show password' : 'Hide password'}
           >

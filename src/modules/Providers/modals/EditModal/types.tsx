@@ -1,8 +1,7 @@
 import type { FC, JSX, ReactNode } from 'react';
+import type { ValidationMsg } from 'src/providers/utils/types';
 
 import type { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
-
-import type { ValidationMsg } from '../../utils/validators/common';
 
 import './EditModal.style.css';
 
@@ -43,6 +42,9 @@ export type EditModalProps = {
 
   /** Optional. The URL to which the user will be redirected after the confirmation action. */
   redirectTo?: string;
+
+  /** Optional. if true then input field and help text are visible */
+  isVisible?: boolean;
 
   /** Optional. The hook function to be called when the confirmation button is clicked. */
   onConfirmHook?: OnConfirmHookType;

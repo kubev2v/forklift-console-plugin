@@ -14,15 +14,15 @@ import type { OpenApiJsonPath } from '../types';
 /**
  * Patches a Kubernetes resource with a new value.
  */
-export const defaultOnConfirm = async ({ jsonPath, model, newValue: value, resource }) => {
+export const defaultOnConfirm = async ({ jsonPath, model, newValue, resource }) => {
   const op = getValueByJsonPath(resource, jsonPath) ? 'replace' : 'add';
 
   return k8sPatch<K8sResourceCommon>({
     data: [
       {
+        newValue,
         op,
         path: jsonPathToPatch(jsonPath),
-        value,
       },
     ],
     model,

@@ -5,7 +5,7 @@ import { OpenstackSecretFieldsId } from 'src/providers/utils/constants';
 import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, InputGroup, TextInput } from '@patternfly/react-core';
+import { Button, ButtonVariant, InputGroup, TextInput } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 
 import { getDecodedValue } from './utils/getDecodedValue';
@@ -101,7 +101,7 @@ const PasswordSecretFieldsEditSection: FC<CredentialsEditModeByTypeProps> = ({
             validated={passwordValidation.type}
           />
           <Button
-            variant="control"
+            variant={ButtonVariant.control}
             onClick={onClickTogglePassword}
             aria-label={passwordHidden ? 'Show password' : 'Hide password'}
           >
