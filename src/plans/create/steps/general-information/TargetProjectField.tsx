@@ -1,13 +1,13 @@
-import { type FC, useMemo, useRef } from 'react';
+import { type FC, useMemo } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
-import { isSystemNamespace } from 'src/utils/namespaces';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
-import { Divider, MenuToggleStatus, Stack, StackItem, Switch } from '@patternfly/react-core';
-import { useForkliftTranslation } from '@utils/i18n';
+import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
+import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
+import { getName } from '@utils/crds/common/selectors.ts';
+import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
@@ -22,30 +22,21 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
   const {
     control,
     formState: { errors },
+    setValue,
   } = useCreatePlanFormContext();
-  const targetProvider = useWatch({ control, name: GeneralFormFieldId.TargetProvider });
-  const [targetProviderProjects] = useProviderNamespaces(targetProvider);
+  const targetProvider = useWatch({
+    control,
+    name: GeneralFormFieldId.TargetProvider,
+  });
+  const targetProviderName = getName(targetProvider);
+  const [targetProviderProjects, , , forceRefresh] = useProviderNamespaces(targetProvider);
   const showDefaultProjects =
     useWatch({ control, name: GeneralFormFieldId.ShowDefaultProjects }) ?? false;
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const targetProviderOptions = useMemo(
-    () =>
-      targetProviderProjects.map((project) => ({
-        content: project.name,
-        value: project.name,
-      })),
+  const targetProjectNames = useMemo(
+    () => targetProviderProjects.map((project) => project.name),
     [targetProviderProjects],
   );
-
-  const filteredTargetProviderOptions = useMemo(() => {
-    if (!showDefaultProjects) {
-      return targetProviderOptions.filter(
-        (option) => typeof option.content === 'string' && !isSystemNamespace(option.content),
-      );
-    }
-    return targetProviderOptions;
-  }, [targetProviderOptions, showDefaultProjects]);
 
   return (
     <FormGroupWithErrorText
@@ -71,19 +62,35 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
         name={GeneralFormFieldId.TargetProject}
         control={control}
         render={({ field }) => (
-          <TypeaheadSelect
-            ref={(element) => {
-              field.ref(element);
-              inputRef.current = element;
-            }}
+          <ProjectSelect
             testId={testId}
-            isScrollable
-            allowClear
-            placeholder={t('Select target project')}
+            isDisabled={!targetProvider}
+            placeholder={
+              targetProvider
+                ? t('Select target project')
+                : t('Must choose a target provider to see available target projects')
+            }
             id={GeneralFormFieldId.TargetProject}
-            options={filteredTargetProviderOptions}
+            projectNames={targetProjectNames}
+            emptyStateMessage={
+              targetProviderName ? (
+                <ForkliftTrans>
+                  There are no projects in provider <strong>{targetProviderName}</strong>.
+                  <br />
+                  Create a project or select a different target provider.
+                </ForkliftTrans>
+              ) : null
+            }
             value={field.value}
             onChange={field.onChange}
+            onNewValue={(newProjectName) => {
+              forceRefresh();
+              setValue(GeneralFormFieldId.TargetProject, newProjectName);
+            }}
+            showDefaultProjects={Boolean(showDefaultProjects)}
+            setShowDefaultProjects={(value) => {
+              setValue(GeneralFormFieldId.ShowDefaultProjects, value);
+            }}
             noOptionsMessage={
               targetProvider
                 ? undefined
@@ -93,29 +100,6 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
               id: 'target-project-select',
               status: errors[GeneralFormFieldId.TargetProject] && MenuToggleStatus.danger,
             }}
-            filterControls={
-              <>
-                <div className="pf-v5-u-px-md pf-v5-u-py-md">
-                  <Controller
-                    name={GeneralFormFieldId.ShowDefaultProjects}
-                    control={control}
-                    render={({ field: switchField }) => (
-                      <Switch
-                        id="show-default-projects-switch"
-                        data-testid="show-default-projects-switch"
-                        label={generalFormFieldLabels[GeneralFormFieldId.ShowDefaultProjects]}
-                        isChecked={switchField.value}
-                        onChange={(_event, checked) => {
-                          switchField.onChange(checked);
-                          setTimeout(() => inputRef.current?.focus(), 0);
-                        }}
-                      />
-                    )}
-                  />
-                </div>
-                <Divider />
-              </>
-            }
           />
         )}
         rules={{ required: t('Target project is required.') }}

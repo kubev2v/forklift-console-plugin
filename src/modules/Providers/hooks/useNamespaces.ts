@@ -6,9 +6,10 @@ import useProviderInventory from './useProviderInventory';
 
 export const useNamespaces = (
   provider: V1beta1Provider | undefined,
-): [OpenShiftNamespace[], boolean, Error | null] => {
+): [OpenShiftNamespace[], boolean, Error | null, () => void] => {
   const {
     error,
+    forceRefresh,
     inventory: namespaces,
     loading,
   } = useProviderInventory<OpenShiftNamespace[]>({
@@ -19,5 +20,5 @@ export const useNamespaces = (
 
   const stableResponse = useMemo(() => (Array.isArray(namespaces) ? namespaces : []), [namespaces]);
 
-  return [stableResponse, loading, error];
+  return [stableResponse, loading, error, forceRefresh];
 };
