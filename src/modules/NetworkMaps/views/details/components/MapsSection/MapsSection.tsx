@@ -23,14 +23,117 @@ import {
 import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
+  ButtonVariant,
   DescriptionListDescription,
   Flex,
   FlexItem,
   Spinner,
 } from '@patternfly/react-core';
 import { POD_NETWORK } from '@utils/constants';
+import { isEmpty } from '@utils/helpers';
 
 import { mapsSectionReducer, type MapsSectionState } from './state/reducer';
+
+type MapsSectionProps = {
+  obj: V1beta1NetworkMap;
+};
+
+const convertInventoryNetworkToV1beta1NetworkMapSpecMapSource = (
+  inventoryNetwork: InventoryNetwork,
+): V1beta1NetworkMapSpecMapSource | undefined => {
+  if (!inventoryNetwork) {
+    return undefined;
+  }
+
+  if (inventoryNetwork?.id === 'pod') {
+    return { type: 'pod' };
+  }
+
+  return {
+    id: inventoryNetwork?.id,
+    name: inventoryNetwork.name,
+    namespace: inventoryNetwork.namespace,
+  };
+};
+
+const openShiftNetworkAttachmentDefinitionToName = (net: OpenShiftNetworkAttachmentDefinition) =>
+  net?.namespace ? `${net?.namespace}/${net?.name}` : (net?.name ?? 'Pod');
+
+const getSourceNetName = (networks: InventoryNetwork[], source: V1beta1NetworkMapSpecMapSource) => {
+  const net = networks.find(
+    (network) => network?.id === source?.id || network?.name === source?.name,
+  );
+
+  return net?.name ?? source?.name ?? source?.id;
+};
+
+const getDestinationNetName = (
+  networks: OpenShiftNetworkAttachmentDefinition[],
+  destination: V1beta1NetworkMapSpecMapDestination,
+) => {
+  const net = networks.find(
+    (network) =>
+      network?.name === destination?.name && network?.namespace === destination?.namespace,
+  );
+
+  return net ? openShiftNetworkAttachmentDefinitionToName(net) : 'Pod';
+};
+
+const convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination = (
+  networkAttachmentDefinition: OpenShiftNetworkAttachmentDefinition,
+): V1beta1NetworkMapSpecMapDestination => {
+  if (!networkAttachmentDefinition) {
+    return { type: 'pod' };
+  }
+
+  return {
+    name: networkAttachmentDefinition.name,
+    namespace: networkAttachmentDefinition.namespace,
+    type: networkAttachmentDefinition.type ?? 'multus',
+  };
+};
+
+const isNetMapped = (networkMapID: string, networkMap: V1beta1NetworkMap | null) => {
+  return (
+    networkMap?.spec?.map.find((networkMapSpec) => networkMapID === networkMapSpec?.source?.id) !==
+    undefined
+  );
+};
+
+type MapsButtonAreaProps = {
+  hasChanges: boolean;
+  updating: boolean;
+  onUpdate: () => void;
+  onCancel: () => void;
+};
+
+const MapsButtonArea: FC<MapsButtonAreaProps> = ({ hasChanges, onCancel, onUpdate, updating }) => {
+  const { t } = useForkliftTranslation();
+
+  return (
+    <Flex className="forklift-network-map__details-tab--update-button">
+      <FlexItem>
+        <Button
+          variant={ButtonVariant.primary}
+          onClick={onUpdate}
+          isDisabled={!hasChanges || updating}
+          icon={updating ? <Spinner size="sm" /> : undefined}
+        >
+          {t('Update mappings')}
+        </Button>
+      </FlexItem>
+      <FlexItem>
+        <Button
+          variant={ButtonVariant.secondary}
+          onClick={onCancel}
+          isDisabled={!hasChanges || updating}
+        >
+          {t('Cancel')}
+        </Button>
+      </FlexItem>
+    </Flex>
+  );
+};
 
 const initialState: MapsSectionState = {
   hasChanges: false,
@@ -50,7 +153,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
-    namespace: obj.metadata.namespace,
+    namespace: obj.metadata?.namespace,
     namespaced: true,
   });
 
@@ -69,42 +172,40 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   const [destinationNetworks] = useOpenShiftNetworks(destinationProvider);
 
   const onUpdate = async () => {
-    dispatch({ payload: true, type: 'SET_UPDATING' });
-    await k8sUpdate({
-      data: updateNetworkMapDestination(state.networkMap),
-      model: NetworkMapModel,
-    });
-    dispatch({ payload: false, type: 'SET_UPDATING' });
+    if (state.networkMap) {
+      dispatch({ payload: true, type: 'SET_UPDATING' });
+      await k8sUpdate({
+        data: updateNetworkMapDestination(state.networkMap),
+        model: NetworkMapModel,
+      });
+      dispatch({ payload: false, type: 'SET_UPDATING' });
+    }
   };
 
-  const isNetMapped = (networkMapID: string) => {
-    return (
-      state.networkMap.spec.map.find(
-        (networkMapSpec) => networkMapID === networkMapSpec?.source?.id,
-      ) !== undefined
-    );
+  const availableSources = sourceNetworks?.filter(
+    (network) => !isNetMapped(network?.id, state.networkMap),
+  );
+
+  const onAdd = () => {
+    if (!isEmpty(availableSources)) {
+      dispatch({
+        payload: [
+          ...(state.networkMap?.spec?.map ?? []),
+          {
+            destination: { type: 'pod' },
+            source: convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(availableSources[0]),
+          },
+        ],
+        type: 'SET_MAP',
+      });
+    }
   };
 
-  const availableSources = sourceNetworks?.filter((network) => !isNetMapped(network?.id));
-
-  const onAdd = () =>
-    availableSources.length > 0 &&
-    dispatch({
-      payload: [
-        ...(state.networkMap?.spec?.map || []),
-        {
-          destination: { type: 'pod' },
-          source: convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(availableSources[0]),
-        },
-      ],
-      type: 'SET_MAP',
-    });
-
-  const onReplace = ({ current, next }) => {
+  const onReplace = ({ current, next }: { current: Mapping; next: Mapping }) => {
     const currentDestinationNet = destinationNetworks.find(
       (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
     );
-    const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) || {
+    const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) ?? {
       id: 'pod',
     };
 
@@ -136,7 +237,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     });
 
     dispatch({
-      payload: payload || [],
+      payload: payload ?? [],
       type: 'SET_MAP',
     });
   };
@@ -144,8 +245,8 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   const onDelete = (current: Mapping) => {
     const currentDestinationNet = destinationNetworks.find(
       (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
-    ) || { type: 'pod' };
-    const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) || {
+    ) ?? { type: 'pod' };
+    const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) ?? {
       id: 'pod',
     };
 
@@ -159,41 +260,24 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
               (map.destination?.name === currentDestinationNet.name ||
                 map.destination?.type === currentDestinationNet.type)
             ),
-        ) || []),
+        ) ?? []),
       ],
       type: 'SET_MAP',
     });
   };
 
-  const onClick = () => {
+  const onCancel = () => {
     dispatch({ payload: obj, type: 'INIT' });
   };
 
   return (
     <LoadingSuspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
-      <Flex className="forklift-network-map__details-tab--update-button">
-        <FlexItem>
-          <Button
-            variant="primary"
-            onClick={onUpdate}
-            isDisabled={!state.hasChanges || state.updating}
-            icon={state.updating ? <Spinner size="sm" /> : undefined}
-          >
-            {t('Update mappings')}
-          </Button>
-        </FlexItem>
-
-        <FlexItem>
-          <Button
-            variant="secondary"
-            onClick={onClick}
-            isDisabled={!state.hasChanges || state.updating}
-          >
-            {t('Cancel')}
-          </Button>
-        </FlexItem>
-      </Flex>
-
+      <MapsButtonArea
+        hasChanges={state.hasChanges}
+        updating={state.updating}
+        onUpdate={onUpdate}
+        onCancel={onCancel}
+      />
       <DescriptionListDescription className="forklift-page-mapping-list">
         <MappingList
           addMapping={onAdd}
@@ -204,7 +288,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
             'Pod',
           ]}
           sources={sourceNetworks.map((network) => ({
-            isMapped: isNetMapped(network?.id),
+            isMapped: isNetMapped(network?.id, state.networkMap),
             label: network.name,
             usedBySelectedVms: false,
           }))}
@@ -224,62 +308,3 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     </LoadingSuspend>
   );
 };
-
-type MapsSectionProps = {
-  obj: V1beta1NetworkMap;
-};
-
-const getSourceNetName = (networks: InventoryNetwork[], source: V1beta1NetworkMapSpecMapSource) => {
-  const net = networks.find(
-    (network) => network?.id === source?.id || network?.name === source?.name,
-  );
-
-  return net?.name || source?.name || source?.id;
-};
-
-const getDestinationNetName = (
-  networks: OpenShiftNetworkAttachmentDefinition[],
-  destination: V1beta1NetworkMapSpecMapDestination,
-) => {
-  const net = networks.find(
-    (network) =>
-      network?.name === destination?.name && network?.namespace === destination?.namespace,
-  );
-
-  return net ? openShiftNetworkAttachmentDefinitionToName(net) : 'Pod';
-};
-
-const convertInventoryNetworkToV1beta1NetworkMapSpecMapSource = (
-  inventoryNetwork: InventoryNetwork,
-): V1beta1NetworkMapSpecMapSource => {
-  if (!inventoryNetwork) {
-    return undefined;
-  }
-
-  if (inventoryNetwork?.id === 'pod') {
-    return { type: 'pod' };
-  }
-
-  return {
-    id: inventoryNetwork?.id,
-    name: inventoryNetwork.name,
-    namespace: inventoryNetwork.namespace,
-  };
-};
-
-const convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination = (
-  networkAttachmentDefinition: OpenShiftNetworkAttachmentDefinition,
-): V1beta1NetworkMapSpecMapDestination => {
-  if (!networkAttachmentDefinition) {
-    return { type: 'pod' };
-  }
-
-  return {
-    name: networkAttachmentDefinition.name,
-    namespace: networkAttachmentDefinition.namespace,
-    type: networkAttachmentDefinition.type || 'multus',
-  };
-};
-
-const openShiftNetworkAttachmentDefinitionToName = (net) =>
-  net?.namespace ? `${net?.namespace}/${net?.name}` : net?.name || 'Pod';

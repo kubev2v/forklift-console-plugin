@@ -1,38 +1,34 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import Linkify from 'react-linkify';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { useStatusPhaseValues } from 'src/modules/utils/useStatusPhaseValues.tsx';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModelRef } from '@kubev2v/types';
-import { Button, Popover, Spinner, Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
-import { t } from '@utils/i18n';
+import {
+  Button,
+  ButtonVariant,
+  Popover,
+  Text,
+  TextContent,
+  TextVariants,
+} from '@patternfly/react-core';
 
 import type { CellProps } from './CellProps';
 
-export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
-  const { t } = useForkliftTranslation();
+type Phase = 'Critical' | 'Not Ready' | 'Ready';
 
-  const phase = getResourceFieldValue(data, 'phase', fields);
-  const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
-
-  switch (phase) {
-    case 'Critical':
-      return <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} />;
-    default:
-      return <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>;
-  }
-};
-
-const ErrorStatusCell: FC<CellProps> = ({ data, fields }) => {
+const ErrorStatusCell: FC<CellProps & { children: ReactNode; phaseLabel: string }> = ({
+  children,
+  data,
+  phaseLabel,
+}) => {
   const { t } = useForkliftTranslation();
 
   const { obj: networkMap } = data;
-  const phase = getResourceFieldValue(data, 'phase', fields);
-  const phaseLabel = phaseLabels[phase] ? t(phaseLabels[phase]) : t('Undefined');
   const networkMapURL = getResourceUrl({
     name: networkMap?.metadata?.name,
     namespace: networkMap?.metadata?.namespace,
@@ -40,7 +36,7 @@ const ErrorStatusCell: FC<CellProps> = ({ data, fields }) => {
   });
 
   // Find the error message from the status conditions
-  const bodyContent = networkMap?.status?.conditions.find(
+  const bodyContent = networkMap?.status?.conditions?.find(
     (condition) => condition?.category === 'Critical',
   )?.message;
 
@@ -65,21 +61,30 @@ const ErrorStatusCell: FC<CellProps> = ({ data, fields }) => {
       bodyContent={bodyContent && <Linkify>{bodyContent}</Linkify>}
       footerContent={footerContent}
     >
-      <Button variant="link" isInline data-testid="popover-status-button-network-maps-list">
-        <TableIconCell icon={statusIcons[phase]}>{phaseLabel}</TableIconCell>
+      <Button
+        variant={ButtonVariant.link}
+        isInline
+        data-testid="popover-status-button-network-maps-list"
+      >
+        {children}
       </Button>
     </Popover>
   );
 };
 
-const statusIcons = {
-  Critical: <ExclamationCircleIcon color="#C9190B" />,
-  'Not Ready': <Spinner size="sm" />,
-  Ready: <CheckCircleIcon color="#3E8635" />,
-};
+export const StatusCell: FC<CellProps> = ({ data, fieldId, fields }) => {
+  const phase = getResourceFieldValue(data, 'phase', fields) as Phase;
+  const { phaseIcon, phaseLabel } = useStatusPhaseValues(phase);
 
-const phaseLabels = {
-  Critical: t('Critical'),
-  'Not Ready': t('Not Ready'),
-  Ready: t('Ready'),
+  const tableCellIcon = <TableIconCell icon={phaseIcon}>{phaseLabel}</TableIconCell>;
+
+  if (phase === 'Critical') {
+    return (
+      <ErrorStatusCell data={data} fieldId={fieldId} fields={fields} phaseLabel={phaseLabel}>
+        {tableCellIcon}
+      </ErrorStatusCell>
+    );
+  }
+
+  return tableCellIcon;
 };

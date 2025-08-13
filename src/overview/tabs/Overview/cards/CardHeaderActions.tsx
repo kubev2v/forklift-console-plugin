@@ -37,6 +37,8 @@ const HeaderActions = ({
   );
 
   return (
+    // Custom select does not support the complex toggle being used here
+    // eslint-disable-next-line no-restricted-syntax
     <Select
       isOpen={isOpen}
       onSelect={onSelect}

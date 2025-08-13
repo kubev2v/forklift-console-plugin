@@ -64,6 +64,9 @@ export const createEslintConfig = (ideMode = false) =>
           tsconfigRootDir: import.meta.dirname,
         },
       },
+      linterOptions: {
+        reportUnusedDisableDirectives: false,
+      },
       plugins: {
         '@typescript-eslint': tseslint.plugin,
         'import/parsers': tseslint.parser,

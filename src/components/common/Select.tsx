@@ -19,8 +19,10 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 
 type SelectOption = {
+  key?: number | string;
   value: string;
   label: string;
+  description?: string;
   disabled?: boolean;
 };
 
@@ -111,7 +113,12 @@ const Select = (
       {children ?? (
         <SelectList>
           {(options ?? []).map((option) => (
-            <PfSelectOption key={option.value} value={option.value} isDisabled={option.disabled}>
+            <PfSelectOption
+              key={option.key ?? option.value}
+              value={option.value}
+              isDisabled={option.disabled}
+              description={option.description}
+            >
               {option.label}
             </PfSelectOption>
           ))}

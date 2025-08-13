@@ -1,5 +1,6 @@
-import { type MouseEvent as ReactMouseEvent, type Ref, useMemo, useState } from 'react';
+import { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
 
+import { useUniqueEnums } from '@components/common/Filter/useUniqueEnums';
 import {
   Badge,
   MenuToggle,
@@ -10,89 +11,9 @@ import {
   type ToolbarChip,
   ToolbarFilter,
 } from '@patternfly/react-core';
-
-import { localeCompare } from '../utils/localCompare';
+import { isEmpty } from '@utils/helpers';
 
 import type { FilterTypeProps } from './types';
-
-/**
- * One label may map to multiple enum ids due to translation or by design (i.e. "Unknown")
- * Aggregate enums with the same label and display them as a single option.
- *
- * @returns { uniqueEnumLabels, onUniqueFilterUpdate, selectedUniqueEnumLabels };
- */
-export const useUnique = ({
-  onSelectedEnumIdsChange,
-  resolvedLanguage = 'en',
-  selectedEnumIds,
-  supportedEnumValues,
-}: {
-  supportedEnumValues: {
-    id: string;
-    label: string;
-  }[];
-  onSelectedEnumIdsChange: (values: string[]) => void;
-  selectedEnumIds: string[];
-  resolvedLanguage: string;
-}): {
-  uniqueEnumLabels: string[];
-  onUniqueFilterUpdate: (selectedEnumLabels: string[]) => void;
-  selectedUniqueEnumLabels: string[];
-} => {
-  const translatedEnums = useMemo(
-    () =>
-      supportedEnumValues.map((it) => ({
-        id: it.id,
-        // fallback to ID
-        label: it.label ?? it.id,
-      })),
-
-    [supportedEnumValues],
-  );
-
-  // group filters with the same label
-  const labelToIds = useMemo(
-    () =>
-      translatedEnums.reduce((acc, { id, label }) => {
-        acc[label] = [...(acc?.[label] ?? []), id];
-        return acc;
-      }, {}),
-    [translatedEnums],
-  );
-
-  // for easy reverse lookup
-  const idToLabel = useMemo(
-    () =>
-      translatedEnums.reduce((acc, { id, label }) => {
-        acc[id] = label;
-        return acc;
-      }, {}),
-    [translatedEnums],
-  );
-
-  const uniqueEnumLabels = useMemo(
-    () =>
-      Object.entries(labelToIds)
-        .map(([label]) => label)
-        .sort((a, b) => localeCompare(a, b, resolvedLanguage)),
-    [labelToIds],
-  );
-
-  const onUniqueFilterUpdate = useMemo(
-    () =>
-      (labels: string[]): void => {
-        onSelectedEnumIdsChange(labels.flatMap((label) => labelToIds[label] ?? []));
-      },
-    [onSelectedEnumIdsChange, labelToIds],
-  );
-
-  const selectedUniqueEnumLabels = useMemo(
-    () => [...new Set(selectedEnumIds.map((id) => idToLabel[id]).filter(Boolean))] as string[],
-    [selectedEnumIds, idToLabel],
-  );
-
-  return { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels };
-};
 
 /**
  * This Filter type enables selecting one or many enum values from the list.
@@ -119,10 +40,10 @@ export const EnumFilter = ({
   selectedFilters: selectedEnumIds = [],
   showFilter = true,
   supportedValues: supportedEnumValues = [],
-  title,
+  title = '',
 }: FilterTypeProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels } = useUnique({
+  const { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels } = useUniqueEnums({
     onSelectedEnumIdsChange,
     resolvedLanguage,
     selectedEnumIds,
@@ -143,17 +64,21 @@ export const EnumFilter = ({
   };
 
   const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
+    setIsOpen((prev) => !prev);
   };
 
   const onSelect = (_event: ReactMouseEvent | undefined, value: string | number | undefined) => {
-    hasFilter(value as string) ? deleteFilter(value as string) : addFilter(value as string);
+    if (hasFilter(value as string)) {
+      deleteFilter(value as string);
+      return;
+    }
+    addFilter(value as string);
   };
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
       <>{placeholderLabel}</>
-      {selectedUniqueEnumLabels.length > 0 && (
+      {!isEmpty(selectedUniqueEnumLabels) && (
         <Badge isRead>{selectedUniqueEnumLabels.length}</Badge>
       )}
     </MenuToggle>
@@ -185,6 +110,8 @@ export const EnumFilter = ({
       categoryName={title}
       showToolbarItem={showFilter}
     >
+      {/* This select is different from most and cannot use the common Select */}
+      {/* eslint-disable-next-line no-restricted-syntax */}
       <Select
         role="menu"
         aria-label={placeholderLabel}

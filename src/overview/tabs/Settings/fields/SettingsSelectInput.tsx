@@ -101,6 +101,8 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
 
   // Render the Select component with dynamically created SelectOption children
   return (
+    // Custom select does not support the complex toggle being used here
+    // eslint-disable-next-line no-restricted-syntax
     <Select
       role="menu"
       aria-label="Select Input with descriptions"

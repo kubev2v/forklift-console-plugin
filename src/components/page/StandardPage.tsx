@@ -387,7 +387,7 @@ const StandardPageInner = <T,>({
               )}
 
               <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
-                {primaryFilters.length > 0 && (
+                {!isEmpty(primaryFilters) && (
                   <FilterGroup
                     fieldFilters={primaryFilters}
                     onFilterUpdate={setSelectedFilters}

@@ -1,5 +1,6 @@
 import { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
 
+import type { EnumGroup, EnumValue } from '@components/common/utils/types';
 import {
   Badge,
   MenuToggle,
@@ -11,8 +12,33 @@ import {
   ToolbarFilter,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
+import { isEmpty } from '@utils/helpers';
 
 import type { FilterTypeProps } from './types';
+
+const renderOptions = (
+  supportedGroups: EnumGroup[],
+  supportedEnumValues: EnumValue[],
+  selectedEnumIds: string[],
+) =>
+  supportedGroups.map(({ groupId, label }) => (
+    <SelectGroup key={groupId} label={label}>
+      <SelectList>
+        {supportedEnumValues
+          .filter((item) => item.groupId === groupId)
+          .map(({ id, label: itemLabel }) => (
+            <SelectOption
+              hasCheckbox
+              key={id}
+              value={itemLabel}
+              isSelected={selectedEnumIds.includes(id)}
+            >
+              {itemLabel}
+            </SelectOption>
+          ))}
+      </SelectList>
+    </SelectGroup>
+  ));
 
 /**
  * This Filter type enables selecting one or many enum values that are separated by groups.
@@ -57,7 +83,8 @@ export const GroupedEnumFilter = ({
 
   const deleteGroup = (groupId: string): void => {
     if (hasMultipleResources) {
-      return onSelectedEnumIdsChange([], groupId);
+      onSelectedEnumIdsChange([], groupId);
+      return;
     }
 
     onSelectedEnumIdsChange(
@@ -100,19 +127,25 @@ export const GroupedEnumFilter = ({
     }
 
     onSelectedEnumIdsChange(
-      [...selectedEnumIds.filter((id) => id2enum[id]), id],
+      [...selectedEnumIds.filter((selectedId) => id2enum[selectedId]), id],
       id2enum[id].resourceFieldId,
     );
   };
 
   const onSelect = (_event: ReactMouseEvent | undefined, value: string | number | undefined) => {
     const label = value?.toString();
-    const id = label2enum?.[label] ? label2enum[label]?.id : label;
-    hasFilter(id) ? deleteFilter(id) : addFilter(id);
+    if (label) {
+      const labelId = label2enum?.[label] ? label2enum[label]?.id : label;
+      if (hasFilter(labelId)) {
+        deleteFilter(labelId);
+      } else {
+        addFilter(labelId);
+      }
+    }
   };
 
   const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
+    setIsOpen((prev) => !prev);
   };
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
@@ -124,29 +157,9 @@ export const GroupedEnumFilter = ({
       {...(showFilterIcon && { icon: <FilterIcon /> })}
     >
       {placeholderLabel}
-      {selectedEnumIds.length > 0 && <Badge isRead>{selectedEnumIds.length}</Badge>}
+      {!isEmpty(selectedEnumIds) && <Badge isRead>{selectedEnumIds.length}</Badge>}
     </MenuToggle>
   );
-
-  const renderOptions = () =>
-    supportedGroups.map(({ groupId, label }) => (
-      <SelectGroup key={groupId} label={label}>
-        <SelectList>
-          {supportedEnumValues
-            .filter((item) => item.groupId === groupId)
-            .map(({ id, label }) => (
-              <SelectOption
-                hasCheckbox
-                key={id}
-                value={label}
-                isSelected={selectedEnumIds.includes(id)}
-              >
-                {label}
-              </SelectOption>
-            ))}
-        </SelectList>
-      </SelectGroup>
-    ));
 
   return (
     <>
@@ -162,15 +175,15 @@ export const GroupedEnumFilter = ({
               .filter((id) => id2enum[id])
               .map((id) => id2enum[id])
               .filter((enumVal) => enumVal.groupId === groupId)
-              .map(({ id, label }) => ({ key: id, node: label }))}
+              .map(({ id, label: enumLabel }) => ({ key: id, node: enumLabel }))}
             deleteChip={(category, option) => {
               // values are one enum so id is enough to identify (category is not needed)
               const id = typeof option === 'string' ? option : option.key;
               deleteFilter(id);
             }}
             deleteChipGroup={(category) => {
-              const groupId = typeof category === 'string' ? category : category.key;
-              deleteGroup(groupId);
+              const categoryId = typeof category === 'string' ? category : category.key;
+              deleteGroup(categoryId);
             }}
             categoryName={{ key: groupId, name: label }}
             showToolbarItem={showFilter}
@@ -178,6 +191,8 @@ export const GroupedEnumFilter = ({
             {acc}
           </ToolbarFilter>
         ),
+        // This select is different from most and cannot use the common Select
+        // eslint-disable-next-line no-restricted-syntax
         <Select
           role="menu"
           aria-label={placeholderLabel}
@@ -196,7 +211,9 @@ export const GroupedEnumFilter = ({
             enableFlip: true,
           }}
         >
-          <SelectList>{renderOptions()}</SelectList>
+          <SelectList>
+            {renderOptions(supportedGroups, supportedEnumValues, selectedEnumIds)}
+          </SelectList>
         </Select>,
       )}
     </>

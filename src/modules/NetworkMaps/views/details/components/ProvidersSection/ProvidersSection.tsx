@@ -10,7 +10,14 @@ import {
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, DescriptionList, Flex, FlexItem, Spinner } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  DescriptionList,
+  Flex,
+  FlexItem,
+  Spinner,
+} from '@patternfly/react-core';
 
 import { ProvidersEdit } from './components/ProvidersEdit';
 import { providersSectionReducer, type ProvidersSectionState } from './state/reducer';
@@ -35,20 +42,22 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
-    namespace: obj.metadata.namespace,
+    namespace: obj.metadata?.namespace,
     namespaced: true,
   });
 
-  const targetProviders = providers.filter((provider) =>
-    ['openshift'].includes(provider?.spec?.type),
+  const targetProviders = providers.filter(
+    (provider) => provider?.spec?.type && ['openshift'].includes(provider.spec.type),
   );
 
   const onUpdate = async () => {
-    dispatch({ payload: true, type: 'SET_UPDATING' });
-    await k8sUpdate({
-      data: updateNetworkMapDestination(state.networkMap),
-      model: NetworkMapModel,
-    });
+    if (state.networkMap) {
+      dispatch({ payload: true, type: 'SET_UPDATING' });
+      await k8sUpdate({
+        data: updateNetworkMapDestination(state.networkMap),
+        model: NetworkMapModel,
+      });
+    }
   };
 
   const onClick = () => {
@@ -56,17 +65,17 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
   };
 
   const onChangeSource: (value: string, event: FormEvent<HTMLSelectElement>) => void = (value) => {
-    dispatch({
-      payload: providers.find((provider) => provider?.metadata?.name === value),
-      type: 'SET_SOURCE_PROVIDER',
-    });
+    const payload = providers.find((provider) => provider?.metadata?.name === value);
+    if (payload) {
+      dispatch({ payload, type: 'SET_SOURCE_PROVIDER' });
+    }
   };
 
   const onChangeTarget: (value: string, event: FormEvent<HTMLSelectElement>) => void = (value) => {
-    dispatch({
-      payload: providers.find((provider) => provider?.metadata?.name === value),
-      type: 'SET_TARGET_PROVIDER',
-    });
+    const payload = providers.find((provider) => provider?.metadata?.name === value);
+    if (payload) {
+      dispatch({ payload, type: 'SET_TARGET_PROVIDER' });
+    }
   };
 
   return (
@@ -74,7 +83,7 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
       <Flex className="forklift-network-map__details-tab--update-button">
         <FlexItem>
           <Button
-            variant="primary"
+            variant={ButtonVariant.primary}
             onClick={onUpdate}
             isDisabled={!state.hasChanges || state.updating}
             icon={state.updating ? <Spinner size="sm" /> : undefined}
@@ -85,7 +94,7 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
 
         <FlexItem>
           <Button
-            variant="secondary"
+            variant={ButtonVariant.secondary}
             onClick={onClick}
             isDisabled={!state.hasChanges || state.updating}
           >
@@ -101,7 +110,7 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
       >
         <ProvidersEdit
           providers={providers}
-          selectedProviderName={state.networkMap?.spec?.provider?.source?.name}
+          selectedProviderName={state.networkMap?.spec?.provider?.source?.name ?? ''}
           label={t('Source provider')}
           placeHolderLabel={t('Select a provider')}
           onChange={onChangeSource}
@@ -115,7 +124,7 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
 
         <ProvidersEdit
           providers={targetProviders}
-          selectedProviderName={state.networkMap?.spec?.provider?.destination?.name}
+          selectedProviderName={state.networkMap?.spec?.provider?.destination?.name ?? ''}
           label={t('Target provider')}
           placeHolderLabel={t('Select a provider')}
           onChange={onChangeTarget}

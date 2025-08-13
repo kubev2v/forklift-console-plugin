@@ -1,19 +1,19 @@
-import {
-  type FC,
-  type FormEvent,
-  type MouseEvent,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { type FC, type MouseEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import type { ValidationMsg } from 'src/providers/utils/types';
+import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import { Button, Form, Modal, ModalVariant, Stack, TextInput } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  Form,
+  Modal,
+  ModalVariant,
+  Stack,
+  TextInput,
+} from '@patternfly/react-core';
 
 import useToggle from '../../hooks/useToggle';
 import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';
@@ -74,10 +74,10 @@ export const EditModal: FC<EditModalProps> = ({
   const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath) as string);
   const [validation, setValidation] = useState<ValidationMsg>({
     msg: '',
-    type: 'default',
+    type: ValidationState.Default,
   });
 
-  const { namespace } = resource?.metadata || {};
+  const { namespace } = resource?.metadata ?? {};
   const owner = resource?.metadata?.ownerReferences?.[0];
 
   /*
@@ -88,7 +88,7 @@ export const EditModal: FC<EditModalProps> = ({
       const validationResult = validationHook(value);
       setValidation(validationResult);
     }
-  }, [validationHook]);
+  }, [validationHook, value]);
 
   /**
    * Handles value change.
@@ -120,27 +120,35 @@ export const EditModal: FC<EditModalProps> = ({
       toggleIsLoading();
 
       setAlertMessage(
-        <AlertMessageForModals title={t('Error')} message={err.message || err.toString()} />,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        <AlertMessageForModals title={t('Error')} message={err.message ?? err.toString()} />,
       );
     }
-  }, [resource, value, onConfirmHook]);
+  }, [
+    resource,
+    value,
+    onConfirmHook,
+    jsonPath,
+    model,
+    navigate,
+    redirectTo,
+    t,
+    toggleIsLoading,
+    toggleModal,
+  ]);
 
   const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
 
-  const onChange: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
-    handleValueChange(value);
-  };
-
   /**
    * InputComponent_ is a higher-order component that renders either the passed-in InputComponent, or a default TextInput,
    */
-  const InputComponent_ = InputComponent ? (
+  const Component = InputComponent ? (
     <InputComponent
       value={value}
-      onChange={(value) => {
-        handleValueChange(value);
+      onChange={(newValue) => {
+        handleValueChange(String(newValue));
       }}
     />
   ) : (
@@ -149,8 +157,8 @@ export const EditModal: FC<EditModalProps> = ({
       id="modal-with-form-form-field"
       name="modal-with-form-form-field"
       value={value}
-      onChange={(e, value) => {
-        onChange(value, e);
+      onChange={(_e, newValue) => {
+        handleValueChange(newValue);
       }}
       validated={validation.type}
     />
@@ -159,14 +167,14 @@ export const EditModal: FC<EditModalProps> = ({
   const actions = [
     <Button
       key="confirm"
-      variant="primary"
+      variant={ButtonVariant.primary}
       onClick={handleSave}
-      isDisabled={validation.type === 'error'}
+      isDisabled={validation.type === ValidationState.Error}
       isLoading={isLoading}
     >
       {t('Save')}
     </Button>,
-    <Button key="cancel" variant="secondary" onClick={toggleModal} autoFocus>
+    <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal} autoFocus>
       {t('Cancel')}
     </Button>,
   ];
@@ -176,7 +184,7 @@ export const EditModal: FC<EditModalProps> = ({
       title={title}
       position="top"
       showClose={false}
-      variant={variant || ModalVariant.small}
+      variant={variant ?? ModalVariant.small}
       isOpen={true}
       onClose={toggleModal}
       actions={actions}
@@ -196,11 +204,11 @@ export const EditModal: FC<EditModalProps> = ({
                 ) : undefined
               }
               fieldId="modal-with-form-form-field"
-              helperText={validation.msg || helperText}
-              helperTextInvalid={validation.msg || helperText}
+              helperText={validation.msg ?? helperText}
+              helperTextInvalid={validation.msg ?? helperText}
               validated={validation.type}
             >
-              {InputComponent_}
+              {Component}
             </FormGroupWithHelpText>
           </Form>
         )}

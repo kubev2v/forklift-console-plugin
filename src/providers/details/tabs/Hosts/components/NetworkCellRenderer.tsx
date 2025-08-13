@@ -1,10 +1,10 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
 import { calculateCidrNotation } from 'src/modules/Providers/views/details/tabs/Hosts/utils/helpers/calculateCidrNotation';
 import { determineHostStatus } from 'src/modules/Providers/views/details/tabs/Hosts/utils/helpers/determineHostStatus';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, HelperText, HelperTextItem, Popover } from '@patternfly/react-core';
+import { Button, ButtonVariant, HelperText, HelperTextItem, Popover } from '@patternfly/react-core';
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -13,7 +13,7 @@ import {
 
 import type { HostCellProps } from './utils/types';
 
-const statusIcons = {
+const statusIcons: Record<string, ReactNode> = {
   error: <ExclamationCircleIcon color="#C9190B" />,
   ready: <CheckCircleIcon color="#3E8635" />,
   running: <ExclamationTriangleIcon color="#F0AB00" />,
@@ -57,7 +57,11 @@ const NetworkCellRenderer: FC<HostCellProps> = (props) => {
         }
         bodyContent={<div>{hostStatus.message}</div>}
       >
-        <Button variant="link" isInline data-testid="popover-status-button-host-network">
+        <Button
+          variant={ButtonVariant.link}
+          isInline
+          data-testid="popover-status-button-host-network"
+        >
           {cellContent}
         </Button>
       </Popover>

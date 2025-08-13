@@ -1,6 +1,8 @@
 import type { NavigateFunction } from 'react-router-dom-v5-compat';
 import { DateTime, type Interval } from 'luxon';
 
+import { isEmpty } from '@utils/helpers';
+
 import { type TimeRangeOptions, TimeRangeOptionsDictionary } from './timeRangeOptions';
 
 const DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
@@ -28,7 +30,7 @@ export const navigateToHistoryTab = ({
     const statuses = status === 'Running' ? [status] : [status, 'Running'];
     params.push(`vms=${encodeURIComponent(JSON.stringify(statuses))}`);
   }
-  if (migrations && migrations.length > 0) {
+  if (!isEmpty(migrations)) {
     params.push(`name=${encodeURIComponent(JSON.stringify(migrations))}`);
   }
   navigate(`/mtv/overview/history?${params.join('&')}`);

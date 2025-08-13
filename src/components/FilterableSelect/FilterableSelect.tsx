@@ -1,7 +1,5 @@
 import {
-  type FormEvent,
   type FunctionComponent,
-  type KeyboardEventHandler,
   type MouseEvent,
   type ReactNode,
   type Ref,
@@ -10,21 +8,17 @@ import {
   useState,
 } from 'react';
 
+import FilterableSelectMenuToggle from '@components/FilterableSelect/FilterableSelectMenuToggle';
 import {
-  Button,
   Divider,
-  MenuToggle,
   type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
   type SelectOptionProps,
   Text,
-  TextInputGroup,
-  TextInputGroupMain,
-  TextInputGroupUtilities,
 } from '@patternfly/react-core';
-import { TimesIcon } from '@patternfly/react-icons';
+import { isEmpty } from '@utils/helpers';
 
 /**
  * Props for the FilterableSelect component.
@@ -86,20 +80,19 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
   const [selectOptions, setSelectOptions] = useState<SelectOptionProps[]>(initialSelectOptions);
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
 
-  const menuRef = useRef<HTMLDivElement>(null);
-  const textInputRef = useRef<HTMLInputElement>();
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   /**
    * Sets the selected item and triggers the onSelect callback.
    *
-   * @param {string} value The value to set as selected.
+   * @param {string} newValue The value to set as selected.
    */
-  const setSelected = (value: string) => {
-    setSelectedItem(value);
+  const setSelected = (newValue: string) => {
+    setSelectedItem(newValue);
     setFilterValue('');
 
     // Call the external on select hook.
-    onSelect(value);
+    onSelect(newValue);
   };
 
   /**
@@ -115,20 +108,13 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
       );
 
       // When no options are found after filtering, display 'No results found'
-      if (!newSelectOptions.length) {
+      if (isEmpty(newSelectOptions)) {
         newSelectOptions = [{ children: noResultFoundLabel, isDisabled: true }];
       }
     }
 
     setSelectOptions(newSelectOptions);
   }, [filterValue, initialSelectOptions, noResultFoundLabel]);
-
-  /**
-   * Toggles the open state of the select dropdown.
-   */
-  const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
-  };
 
   /**
    * Handles item selection from the dropdown.
@@ -146,135 +132,26 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
     setFocusedItemIndex(null);
   };
 
-  /**
-   * Handles changes in the text input.
-   *
-   * @param {FormEvent<HTMLInputElement>} _event The input event.
-   * @param {string} value The new input value.
-   */
-  const onTextInputChange: (event: FormEvent<HTMLInputElement>, value: string) => void = (
-    _event,
-    value,
-  ) => {
-    setInputValue(value);
-    setFilterValue(value);
-  };
-
-  /**
-   * Handles arrow key navigation within the dropdown.
-   *
-   * @param {string} key The key pressed.
-   */
-  const handleMenuArrowKeys = (key: string) => {
-    let indexToFocus;
-
-    if (isOpen) {
-      if (key === 'ArrowUp') {
-        // When no index is set or at the first index, focus to the last, otherwise decrement focus index
-        if (focusedItemIndex === null || focusedItemIndex === 0) {
-          indexToFocus = selectOptions.length - 1;
-        } else {
-          indexToFocus = focusedItemIndex - 1;
-        }
-      }
-
-      if (key === 'ArrowDown') {
-        // When no index is set or at the last index, focus to the first, otherwise increment focus index
-        if (focusedItemIndex === null || focusedItemIndex === selectOptions.length - 1) {
-          indexToFocus = 0;
-        } else {
-          indexToFocus = focusedItemIndex + 1;
-        }
-      }
-
-      setFocusedItemIndex(indexToFocus);
-    }
-  };
-
-  /**
-   * Handles keydown events in the text input.
-   *
-   * @param {KeyboardEventHandler<HTMLDivElement>} event The keyboard event.
-   */
-  const onInputKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
-    const enabledMenuItems = selectOptions.filter((menuItem) => !menuItem.isDisabled);
-    const [firstMenuItem] = enabledMenuItems;
-    const focusedItem = focusedItemIndex ? enabledMenuItems[focusedItemIndex] : firstMenuItem;
-
-    switch (event.key) {
-      // Select the first available option
-      case 'Enter':
-        event.preventDefault();
-
-        if (isOpen) {
-          setInputValue(String(focusedItem?.itemId || filterValue));
-          setSelected(String(focusedItem?.itemId || filterValue));
-        }
-
-        setIsOpen((prevIsOpen) => !prevIsOpen);
-        setFocusedItemIndex(null);
-
-        break;
-      case 'Tab':
-      case 'Escape':
-        setIsOpen(false);
-        break;
-      case 'ArrowUp':
-      case 'ArrowDown':
-        handleMenuArrowKeys(event.key);
-        break;
-      default:
-        !isOpen && setIsOpen(true);
-    }
-  };
-
-  /**
-   * Renders the toggle component for the dropdown.
-   *
-   * @param {Ref<any>} toggleRef The reference to the toggle component.
-   * @returns {JSX.Element} The rendered toggle component.
-   */
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
-    <MenuToggle
-      ref={toggleRef}
-      variant="typeahead"
-      onClick={onToggleClick}
-      isExpanded={isOpen}
-      isFullWidth
-    >
-      <TextInputGroup isPlain>
-        <TextInputGroupMain
-          spellCheck="false"
-          value={inputValue}
-          onClick={onToggleClick}
-          onChange={onTextInputChange}
-          onKeyDown={onInputKeyDown}
-          id="typeahead-select-input"
-          autoComplete="off"
-          innerRef={textInputRef}
-          placeholder={placeholder}
-        />
-
-        <TextInputGroupUtilities>
-          {Boolean(inputValue) && (
-            <Button
-              variant="plain"
-              onClick={() => {
-                setSelected('');
-                setInputValue('');
-                setFilterValue('');
-              }}
-              aria-label="Clear input value"
-            >
-              <TimesIcon aria-hidden />
-            </Button>
-          )}
-        </TextInputGroupUtilities>
-      </TextInputGroup>
-    </MenuToggle>
+    <FilterableSelectMenuToggle
+      toggleRef={toggleRef}
+      placeholder={placeholder}
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      selectOptions={selectOptions}
+      inputValue={inputValue}
+      setInputValue={setInputValue}
+      setSelectedValue={setSelected}
+      filterValue={filterValue}
+      setFilterValue={setFilterValue}
+      focusedItemIndex={focusedItemIndex}
+      setFocusedItemIndex={setFocusedItemIndex}
+    />
   );
 
   return (
+    // Custom select does not support the complex toggle being used here
+    /* eslint-disable-next-line no-restricted-syntax */
     <Select
       id="typeahead-select"
       ref={menuRef}
@@ -298,7 +175,7 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
             isFocused={focusedItemIndex === index}
             className={option.className}
             onClick={() => {
-              setSelected(option.itemId);
+              setSelected(String(option.itemId));
             }}
             {...option}
             ref={null}
