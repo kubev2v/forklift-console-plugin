@@ -11,6 +11,7 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 export const NetworkMapPageHeadings: FC<{ name: string; namespace: string }> = ({
   name,
@@ -33,13 +34,13 @@ export const NetworkMapPageHeadings: FC<{ name: string; namespace: string }> = (
   const criticalCondition =
     loaded &&
     !loadError &&
-    obj?.status?.conditions.find((condition) => condition?.category === 'Critical');
+    obj?.status?.conditions?.find((condition) => condition?.category === 'Critical');
 
   if (criticalCondition) {
     alerts.push(
       <NetworkMapCriticalConditions
         type={criticalCondition?.type}
-        message={criticalCondition?.message}
+        message={criticalCondition?.message ?? ''}
         key={'mapCriticalCondition'}
       />,
     );
@@ -52,7 +53,7 @@ export const NetworkMapPageHeadings: FC<{ name: string; namespace: string }> = (
       namespace={namespace}
       actions={<NetworkMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />}
     >
-      {alerts && alerts.length > 0 && (
+      {!isEmpty(alerts) && (
         <PageSection variant="light" className="forklift-page-headings-alerts">
           {alerts}
         </PageSection>

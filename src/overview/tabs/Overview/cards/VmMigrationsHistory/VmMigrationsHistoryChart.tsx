@@ -11,7 +11,7 @@ import {
   ChartStack,
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
-import { Button } from '@patternfly/react-core';
+import { Button, ButtonVariant } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import useMigrationCounts from '../../hooks/useMigrationCounts';
@@ -110,7 +110,7 @@ const VmMigrationsHistoryChart = ({
       {count.Total === 0 && (
         <div className="forklift-overview__create-plan-btn">
           <Button
-            variant="primary"
+            variant={ButtonVariant.primary}
             onClick={() => {
               navigate(`${plansListURL}/~new`);
             }}

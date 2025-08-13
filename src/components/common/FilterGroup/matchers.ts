@@ -24,9 +24,9 @@ export const getResourceFieldValue = <
   T extends Record<string, object | string | ((resourceData: unknown) => unknown)>,
 >(
   resourceData: T,
-  resourceFieldId: keyof T,
+  resourceFieldId: keyof T | string,
   resourceFields: ResourceField[],
-): T[keyof T] | undefined => {
+): T[keyof T] | string | undefined => {
   const field = resourceFields.find(
     (fieldSearched) => fieldSearched.resourceFieldId === resourceFieldId,
   );

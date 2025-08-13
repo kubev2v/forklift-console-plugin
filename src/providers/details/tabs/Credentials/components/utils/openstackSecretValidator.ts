@@ -15,7 +15,7 @@ export const openstackSecretValidator = (secret: IoK8sApiCoreV1Secret): Validati
   const requiredFields = getAuthTypeRequiredFields(secret, authType);
   const validateFields = getAuthTypeValidateFields(secret, authType);
 
-  if (!requiredFields.length || !validateFields.length)
+  if (isEmpty(requiredFields) || isEmpty(validateFields))
     return { msg: 'invalid authType', type: ValidationState.Error };
 
   const insecureSkipVerify = getDecodedValue(secret?.data?.insecureSkipVerify);

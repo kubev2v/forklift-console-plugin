@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 
-import { useUnique } from '../EnumFilter';
+import { useUniqueEnums } from '../useUniqueEnums';
 
 afterEach(cleanup);
 
@@ -19,7 +19,7 @@ describe('aggregate filters with the same labels', () => {
         current: { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels },
       },
     } = renderHook(() =>
-      useUnique({
+      useUniqueEnums({
         onSelectedEnumIdsChange,
         resolvedLanguage: 'en',
         selectedEnumIds: [],
@@ -39,7 +39,7 @@ describe('aggregate filters with the same labels', () => {
         current: { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels },
       },
     } = renderHook(() =>
-      useUnique({
+      useUniqueEnums({
         onSelectedEnumIdsChange,
         resolvedLanguage: 'en',
         selectedEnumIds: ['True', 'AlsoTrue'],

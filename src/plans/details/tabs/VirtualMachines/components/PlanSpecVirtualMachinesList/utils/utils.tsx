@@ -3,6 +3,7 @@ import { concernFilter } from 'src/modules/Providers/views/details/tabs/VirtualM
 
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import type { V1beta1Plan, V1beta1PlanStatusConditions } from '@kubev2v/types';
+import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
 import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
@@ -67,9 +68,7 @@ export const specVirtualMachineFields: ResourceField[] = [
 export const getPlanConditionsDict = (
   plan: V1beta1Plan,
 ): Record<string, V1beta1PlanStatusConditions[]> => {
-  const conditions = plan?.status?.conditions?.filter(
-    (condition) => condition?.items && condition.items.length > 0,
-  );
+  const conditions = plan?.status?.conditions?.filter((condition) => !isEmpty(condition?.items));
   const conditionsDict = conditions?.reduce<Record<string, V1beta1PlanStatusConditions[]>>(
     (dict, condition) => {
       condition.items?.forEach((item) => {
