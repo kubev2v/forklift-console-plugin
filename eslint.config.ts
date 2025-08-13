@@ -297,6 +297,15 @@ export const createEslintConfig = (ideMode = false) =>
         'no-restricted-syntax': 'off',
       },
     },
+    // Telemetry file specific rules
+    {
+      files: ['**/utils/analytics/**/*.ts'],
+      rules: {
+        '@cspell/spellchecker': 'off',
+        'no-console': 'off',
+        'no-underscore-dangle': 'off',
+      },
+    },
     // Testing directory specific rules
     {
       files: ['testing/**/*.{js,ts,jsx,tsx}', '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}'],
@@ -305,8 +314,11 @@ export const createEslintConfig = (ideMode = false) =>
         '@typescript-eslint/class-methods-use-this': 'off',
         '@typescript-eslint/consistent-type-definitions': 'off',
         '@typescript-eslint/explicit-member-accessibility': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-magic-numbers': 'off',
         '@typescript-eslint/no-namespace': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
         'max-lines-per-function': 'off',
         'perfectionist/sort-objects': 'off',
         'react-refresh/only-export-components': 'off',
