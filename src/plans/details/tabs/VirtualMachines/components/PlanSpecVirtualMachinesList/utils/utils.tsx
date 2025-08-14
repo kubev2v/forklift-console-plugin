@@ -51,7 +51,7 @@ export const specVirtualMachineFields: ResourceField[] = [
     },
     isVisible: true,
     jsonPath: '$.inventoryVmData.vm.concerns',
-    label: t('Concerns'),
+    label: t('Concerns '),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Concerns,
     sortable: true,
   },
