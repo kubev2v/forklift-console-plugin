@@ -10,6 +10,7 @@ import {
   Alert,
   AlertVariant,
   Button,
+  ButtonVariant,
   Divider,
   Form,
   InputGroup,
@@ -104,7 +105,7 @@ const OpenshiftCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
             validated={tokenValidation.type}
           />
           <Button
-            variant="control"
+            variant={ButtonVariant.control}
             onClick={onClickToggleToken}
             aria-label={tokenHidden ? 'Show token' : 'Hide token'}
           >
