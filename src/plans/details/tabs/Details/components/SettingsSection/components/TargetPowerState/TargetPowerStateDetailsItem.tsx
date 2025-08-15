@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { getTargetPowerStateLabel } from 'src/plans/constants';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -20,7 +21,7 @@ const TargetPowerStateDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, p
       title={t('VM target power state')}
       content={
         <Label isCompact color="grey">
-          {getPlanTargetPowerState(plan) ?? t('Auto')}
+          {getTargetPowerStateLabel(getPlanTargetPowerState(plan))}
         </Label>
       }
       helpContent={t(

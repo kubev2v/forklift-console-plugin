@@ -1,11 +1,12 @@
 import { VMConcernsCellRenderer } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMConcernsCellRenderer';
 
 import SpecVirtualMachinesActions from '../components/SpecVirtualMachinesActions';
+import { VMTargetPowerStateCellRenderer } from '../components/VMTargetPowerStateCellRenderer';
 
 import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
 
 export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePageData) => {
-  const { inventoryVmData, plan, vmIndex } = fieldsData;
+  const { inventoryVmData, plan, specVM, vmIndex } = fieldsData;
 
   return {
     [PlanSpecVirtualMachinesTableResourceId.Actions]:
@@ -15,6 +16,9 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
       <VMConcernsCellRenderer data={inventoryVmData} fieldId="" fields={[]} />
     ),
-    [PlanSpecVirtualMachinesTableResourceId.Name]: <>{fieldsData?.specVM?.name}</>,
+    [PlanSpecVirtualMachinesTableResourceId.Name]: <>{specVM?.name}</>,
+    [PlanSpecVirtualMachinesTableResourceId.TargetPowerState]: (
+      <VMTargetPowerStateCellRenderer plan={plan} targetPowerState={specVM?.targetPowerState} />
+    ),
   };
 };
