@@ -13,6 +13,7 @@ type CreateStorageMapParams = {
   sourceProvider: V1beta1Provider | undefined;
   targetProvider: V1beta1Provider | undefined;
   name?: string;
+  trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void;
 };
 
 /**
@@ -33,28 +34,61 @@ export const createStorageMap = async ({
   project,
   sourceProvider,
   targetProvider,
+  trackEvent,
 }: CreateStorageMapParams) => {
   const sourceProviderName = sourceProvider?.metadata?.name;
 
-  const storageMap: V1beta1StorageMap = {
-    apiVersion: 'forklift.konveyor.io/v1beta1',
-    kind: 'StorageMap',
-    metadata: {
-      name,
-      ...(!name && sourceProviderName && { generateName: `${sourceProvider?.metadata?.name}-` }),
-      namespace: project,
-    },
-    spec: {
-      map: buildStorageMappings(mappings, sourceProvider),
-      provider: {
-        destination: getObjectRef(targetProvider),
-        source: getObjectRef(sourceProvider),
-      },
-    },
-  };
-
-  return k8sCreate({
-    data: storageMap,
-    model: StorageMapModel,
+  trackEvent?.('Storage map create started', {
+    hasOffloadPlugin: mappings?.some((mapping) => Boolean(mapping.offloadPlugin)),
+    mappingCount: mappings?.length,
+    namespace: project,
+    sourceProviderType: sourceProvider?.spec?.type,
+    storageClasses: mappings?.map((mapping) => mapping.targetStorage?.name).filter(Boolean),
   });
+
+  try {
+    const storageMap: V1beta1StorageMap = {
+      apiVersion: 'forklift.konveyor.io/v1beta1',
+      kind: 'StorageMap',
+      metadata: {
+        name,
+        ...(!name && sourceProviderName && { generateName: `${sourceProvider?.metadata?.name}-` }),
+        namespace: project,
+      },
+      spec: {
+        map: buildStorageMappings(mappings, sourceProvider),
+        provider: {
+          destination: getObjectRef(targetProvider),
+          source: getObjectRef(sourceProvider),
+        },
+      },
+    };
+
+    const createdStorageMap = await k8sCreate({
+      data: storageMap,
+      model: StorageMapModel,
+    });
+
+    trackEvent?.('Storage map created', {
+      hasOffloadPlugin: mappings?.some((mapping) => Boolean(mapping.offloadPlugin)),
+      mappingCount: mappings?.length,
+      namespace: project,
+      sourceProviderType: sourceProvider?.spec?.type,
+      storageClasses: mappings?.map((mapping) => mapping.targetStorage?.name).filter(Boolean),
+      storageMapName: createdStorageMap.metadata?.name,
+    });
+
+    return createdStorageMap;
+  } catch (error) {
+    trackEvent?.('Storage map create failed', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      hasOffloadPlugin: mappings?.some((mapping) => Boolean(mapping.offloadPlugin)),
+      mappingCount: mappings?.length,
+      namespace: project,
+      sourceProviderType: sourceProvider?.spec?.type,
+      storageClasses: mappings?.map((mapping) => mapping.targetStorage?.name).filter(Boolean),
+    });
+
+    throw error;
+  }
 };

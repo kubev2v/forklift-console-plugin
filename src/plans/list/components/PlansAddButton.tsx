@@ -6,6 +6,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef } from '@kubev2v/types';
 import { Button, ButtonVariant, Tooltip } from '@patternfly/react-core';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 
 type PlansAddButtonProps = {
   namespace?: string;
@@ -16,11 +18,17 @@ type PlansAddButtonProps = {
 const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
+  const { trackEvent } = useForkliftAnalytics();
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
+
+    trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_BUTTON_CLICKED, {
+      hasSufficientProviders,
+      namespace,
+    });
 
     const planResourceUrl = getResourceUrl({
       namespaced: false,

@@ -113,7 +113,7 @@ describe('useForkliftAnalytics', () => {
 
       result.current.trackEvent('test_event', properties);
 
-      expect(mockSendAnalyticsEvent).toHaveBeenCalledWith('test_event', properties, {
+      expect(mockSendAnalyticsEvent).toHaveBeenCalledWith('MTV: test_event', properties, {
         clusterId: 'test-cluster-id',
         segmentKey: 'test-segment-key',
       });
@@ -125,7 +125,7 @@ describe('useForkliftAnalytics', () => {
       result.current.trackEvent('test_event');
 
       expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
-        'test_event',
+        'MTV: test_event',
         {},
         {
           clusterId: 'test-cluster-id',
@@ -202,7 +202,7 @@ describe('useForkliftAnalytics', () => {
       result.current.trackEvent('test_event');
 
       expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
-        'test_event',
+        'MTV: test_event',
         {},
         {
           clusterId: 'test-cluster-id',

@@ -1,11 +1,16 @@
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
+import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 
 import { MigrationModel, type V1beta1Migration, type V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { t } from '@utils/i18n';
 
-export const startPlanMigration = async (plan: V1beta1Plan) => {
+export const startPlanMigration = async (
+  plan: V1beta1Plan,
+  trackEvent?: (event: string, data: Record<string, unknown>) => void,
+) => {
   const name = getName(plan);
   const namespace = getNamespace(plan);
   const uid = getUID(plan);
@@ -32,6 +37,13 @@ export const startPlanMigration = async (plan: V1beta1Plan) => {
       },
     },
   };
+
+  trackEvent?.(TELEMETRY_EVENTS.MIGRATION_STARTED, {
+    migrationType: getPlanMigrationType(plan),
+    namespace,
+    planName: name,
+    vmCount: plan?.spec?.vms?.length ?? 0,
+  });
 
   return k8sCreate({ data: migration, model: MigrationModel });
 };

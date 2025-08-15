@@ -21,6 +21,7 @@ type VersionedCodeEditorProps = Pick<
 // VersionedCodeEditor component that uses the appropriate CodeEditor based on OCP version
 // https://issues.redhat.com/browse/MTV-2918
 const VersionedCodeEditor: FC<VersionedCodeEditorProps> = ({
+  isDarkTheme,
   isReadOnly,
   minHeight = '20rem',
   onChange,
@@ -40,6 +41,7 @@ const VersionedCodeEditor: FC<VersionedCodeEditorProps> = ({
   if (isVersionGte(ocpVersion, OCP_VERSION_4_18)) {
     return (
       <PFCodeEditor
+        isDarkTheme={isDarkTheme}
         language={PFLanguage.yaml}
         code={decodedValue}
         onChange={(val) => {

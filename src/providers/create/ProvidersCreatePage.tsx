@@ -9,6 +9,8 @@ import { getDefaultNamespace } from 'src/utils/namespaces';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import { Divider, Form, PageSection } from '@patternfly/react-core';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 
 import { getProviderDetailsPageUrl } from '../utils/getProviderDetailsPageUrl';
 import { type ValidationMsg, ValidationState } from '../utils/types';
@@ -30,6 +32,7 @@ const ProvidersCreatePage: FC<{
 }> = ({ namespace: activeNamespace }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
+  const { trackEvent } = useForkliftAnalytics();
   const [isLoading, toggleIsLoading] = useToggle();
   const [providerNames, providerNamesLoaded] = useK8sWatchProviderNames({
     namespace: activeNamespace,
@@ -78,6 +81,11 @@ const ProvidersCreatePage: FC<{
   const onUpdate = async () => {
     toggleIsLoading();
 
+    trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_STARTED, {
+      namespace: projectName,
+      providerType: newProvider.spec?.type,
+    });
+
     try {
       const secret: IoK8sApiCoreV1Secret | undefined = await createProviderSecret(
         newProvider,
@@ -100,11 +108,23 @@ const ProvidersCreatePage: FC<{
       // set secret ownership using provider uid
       await patchProviderSecretOwner(provider, secret);
 
+      trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_COMPLETED, {
+        hasVddk: Boolean(newSecret.data?.vddkImage),
+        namespace: projectName,
+        providerType: provider?.spec?.type,
+      });
+
       // navigate to providers derails page
       const providerURL = getProviderDetailsPageUrl(provider);
 
       navigate(providerURL);
     } catch (err) {
+      trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_FAILED, {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        namespace: projectName,
+        providerType: newProvider.spec?.type,
+      });
+
       setApiError(err as Error | null);
       toggleIsLoading();
     }

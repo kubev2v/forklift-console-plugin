@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
 import { type Location, useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
-import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
@@ -52,21 +52,26 @@ const CreatePlanWizard: FC = () => {
     const formData = getValues();
 
     trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_STARTED, {
-      formData,
+      creationMethod: CreationMethod.PlanWizard,
+      namespace: formData.planProject,
+      sourceProviderType: formData.sourceProvider?.spec?.type,
+      targetProviderType: formData.targetProvider?.spec?.type,
     });
 
-    try {
-      await submitMigrationPlan(formData);
+    const trackPlanWizardEvent = (eventType: string, properties = {}) => {
+      trackEvent(eventType, { ...properties, creationMethod: CreationMethod.PlanWizard });
+    };
 
-      trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_COMPLETED, {
-        formData,
-      });
+    try {
+      await submitMigrationPlan(formData, trackPlanWizardEvent);
 
       navigate(getCreatedPlanPath(planName, planProject));
     } catch (error) {
       trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FAILED, {
+        creationMethod: CreationMethod.PlanWizard,
         error: error instanceof Error ? error.message : 'Unknown error',
-        formData,
+        namespace: formData.planProject,
+        sourceProviderType: formData.sourceProvider?.spec?.type,
       });
 
       throw error;
