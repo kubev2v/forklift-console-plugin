@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import {
   Controller,
   type FieldPath,
@@ -6,14 +6,15 @@ import {
   useFormContext,
   useWatch,
 } from 'react-hook-form';
-import useProjectNameSelectOptions from 'src/providers/create/hooks/useProjectNameSelectOptions';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
+import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
 import { useDefaultProject } from '@utils/hooks/useDefaultProject';
+import useWatchProjectNames from '@utils/hooks/useWatchProjectNames.ts';
 import { useForkliftTranslation } from '@utils/i18n';
+import { isSystemNamespace } from '@utils/namespaces.ts';
 
 import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';
@@ -29,13 +30,16 @@ const ProjectSelectField: FC = () => {
     control,
     name: [StorageMapFieldId.TargetProvider, StorageMapFieldId.SourceProvider],
   });
-  const [projectOptions] = useProjectNameSelectOptions();
-  const defaultProject = useDefaultProject(projectOptions);
+  const [projectNames] = useWatchProjectNames();
+
+  const defaultProject = useDefaultProject(projectNames);
+  const [showDefaultProjects, setShowDefaultProjects] = useState<boolean>(false);
 
   // Automatically set the default project once it's resolved
   useEffect(() => {
     if (defaultProject) {
       setValue(StorageMapFieldId.Project, defaultProject);
+      setShowDefaultProjects((prev) => prev || isSystemNamespace(defaultProject));
     }
   }, [defaultProject, setValue]);
 
@@ -60,14 +64,14 @@ const ProjectSelectField: FC = () => {
         control={control}
         render={({ field }) => (
           <div ref={field.ref}>
-            <TypeaheadSelect
-              isScrollable
-              allowClear
+            <ProjectSelect
+              showDefaultProjects={showDefaultProjects}
+              setShowDefaultProjects={setShowDefaultProjects}
               isDisabled={isSubmitting}
               placeholder={t('Select project')}
               id={StorageMapFieldId.Project}
               testId="project-select"
-              options={projectOptions}
+              projectNames={projectNames}
               value={field.value}
               onChange={(value) => {
                 field.onChange(value);

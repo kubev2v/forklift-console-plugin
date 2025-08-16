@@ -1,22 +1,23 @@
-import type { FC } from 'react';
-import useProjectNameSelectOptions from 'src/providers/create/hooks/useProjectNameSelectOptions';
+import { type FC, useState } from 'react';
 import { PROJECT_NAME_SELECT_POPOVER_HELP_CONTENT } from 'src/providers/create/utils/constants';
 import { ProviderFieldsId } from 'src/providers/utils/constants';
 
+import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
+import useWatchProjectNames from '@utils/hooks/useWatchProjectNames.ts';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { FormGroupWithHelpText } from './FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from './HelpIconPopover/HelpIconPopover';
-import TypeaheadSelect from './TypeaheadSelect/TypeaheadSelect';
 
 type ProjectNameSelectProps = {
   projectName: string | undefined;
-  onSelect: ((value: string) => void) | undefined;
+  onSelect?: (value: string) => void;
 };
 
 export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({ onSelect, projectName }) => {
   const { t } = useForkliftTranslation();
-  const [projectNameOptions] = useProjectNameSelectOptions(projectName);
+  const [showDefaultProjects, setShowDefaultProjects] = useState<boolean>(false);
+  const [projectNames] = useWatchProjectNames();
 
   return (
     <FormGroupWithHelpText
@@ -29,15 +30,15 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({ onSelect, projec
         </HelpIconPopover>
       }
     >
-      <TypeaheadSelect
-        isScrollable
-        allowClear
+      <ProjectSelect
         id="project-name-select"
-        options={projectNameOptions}
+        projectNames={projectNames}
         value={projectName}
-        onChange={(value) => {
-          onSelect?.(value as string);
-        }}
+        onChange={onSelect}
+        defaultProject={projectName}
+        onNewValue={onSelect}
+        showDefaultProjects={showDefaultProjects}
+        setShowDefaultProjects={setShowDefaultProjects}
       />
     </FormGroupWithHelpText>
   );
