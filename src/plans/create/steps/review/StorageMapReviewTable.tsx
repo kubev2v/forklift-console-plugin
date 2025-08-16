@@ -11,7 +11,7 @@ import {
   StackItem,
 } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { EMPTY_CELL_CONTENT } from '@utils/constants';
+import { EMPTY_MSG } from '@utils/constants';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
@@ -102,8 +102,7 @@ const StorageMapReviewTable: FC = () => {
                                 {storageMapFieldLabels[CreatePlanStorageMapFieldId.OffloadPlugin]}
                               </DescriptionListTerm>
                               <DescriptionListDescription>
-                                {mapping[CreatePlanStorageMapFieldId.OffloadPlugin] ??
-                                  EMPTY_CELL_CONTENT}
+                                {mapping[CreatePlanStorageMapFieldId.OffloadPlugin] ?? EMPTY_MSG}
                               </DescriptionListDescription>
                             </DescriptionListGroup>
                             <DescriptionListGroup>
@@ -111,8 +110,7 @@ const StorageMapReviewTable: FC = () => {
                                 {storageMapFieldLabels[CreatePlanStorageMapFieldId.StorageSecret]}
                               </DescriptionListTerm>
                               <DescriptionListDescription>
-                                {mapping[CreatePlanStorageMapFieldId.StorageSecret] ??
-                                  EMPTY_CELL_CONTENT}
+                                {mapping[CreatePlanStorageMapFieldId.StorageSecret] ?? EMPTY_MSG}
                               </DescriptionListDescription>
                             </DescriptionListGroup>
                             <DescriptionListGroup>
@@ -120,8 +118,7 @@ const StorageMapReviewTable: FC = () => {
                                 {storageMapFieldLabels[CreatePlanStorageMapFieldId.StorageProduct]}
                               </DescriptionListTerm>
                               <DescriptionListDescription>
-                                {mapping[CreatePlanStorageMapFieldId.StorageProduct] ??
-                                  EMPTY_CELL_CONTENT}
+                                {mapping[CreatePlanStorageMapFieldId.StorageProduct] ?? EMPTY_MSG}
                               </DescriptionListDescription>
                             </DescriptionListGroup>
                           </DescriptionList>
