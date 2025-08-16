@@ -18,6 +18,8 @@ import {
   SelectList,
   SelectOption,
 } from '@patternfly/react-core';
+import { ProviderCreateSource, TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
@@ -53,6 +55,7 @@ const ProviderSelect = (
   ref: ForwardedRef<HTMLButtonElement>,
 ) => {
   const isDarkTheme = useIsDarkTheme();
+  const { trackEvent } = useForkliftAnalytics();
   const [providers] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
@@ -100,7 +103,15 @@ const ProviderSelect = (
                 <ForkliftTrans>
                   There are no providers in project <strong>{namespace}</strong>. Create one from
                   the{' '}
-                  <ExternalLink href={providersListUrl} isInline>
+                  <ExternalLink
+                    href={providersListUrl}
+                    isInline
+                    onClick={() => {
+                      trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_CLICKED, {
+                        createSource: ProviderCreateSource.PlanWizard,
+                      });
+                    }}
+                  >
                     Providers page
                   </ExternalLink>
                 </ForkliftTrans>

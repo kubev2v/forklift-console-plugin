@@ -22,6 +22,19 @@ type CreateNetworkMapParams = {
   targetProvider?: V1beta1Provider;
   name?: string;
   targetNamespace: string;
+  trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void;
+};
+
+const getNetworkType = (targetName: string) => {
+  if (targetName === PodNetworkLabel.Source || targetName === '') {
+    return POD;
+  }
+
+  if (targetName === IgnoreNetwork.Label) {
+    return IGNORED;
+  }
+
+  return MULTUS;
 };
 
 const getSource = (sourceNetwork: MappingValue, sourceProvider?: V1beta1Provider) => {
@@ -68,37 +81,70 @@ export const createNetworkMap = async ({
   sourceProvider,
   targetNamespace,
   targetProvider,
+  trackEvent,
 }: CreateNetworkMapParams) => {
   const sourceProviderName = sourceProvider?.metadata?.name;
 
-  const networkMap: V1beta1NetworkMap = {
-    apiVersion: 'forklift.konveyor.io/v1beta1',
-    kind: 'NetworkMap',
-    metadata: {
-      name,
-      ...(!name && sourceProviderName && { generateName: `${sourceProvider?.metadata?.name}-` }),
-      namespace: project,
-    },
-    spec: {
-      map: mappings?.reduce((acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork }) => {
-        if (sourceNetwork.name) {
-          acc.push({
-            destination: getDestination(targetNetwork, targetNamespace),
-            source: getSource(sourceNetwork, sourceProvider),
-          });
-        }
-
-        return acc;
-      }, []),
-      provider: {
-        destination: getObjectRef(targetProvider),
-        source: getObjectRef(sourceProvider),
-      },
-    },
-  };
-
-  return k8sCreate({
-    data: networkMap,
-    model: NetworkMapModel,
+  trackEvent?.('Network map create started', {
+    mappingCount: mappings?.length,
+    namespace: project,
+    networkTypes: mappings?.map((mapping) => getNetworkType(mapping.targetNetwork.name)),
+    sourceProviderType: sourceProvider?.spec?.type,
   });
+
+  try {
+    const networkMap: V1beta1NetworkMap = {
+      apiVersion: 'forklift.konveyor.io/v1beta1',
+      kind: 'NetworkMap',
+      metadata: {
+        name,
+        ...(!name && sourceProviderName && { generateName: `${sourceProvider?.metadata?.name}-` }),
+        namespace: project,
+      },
+      spec: {
+        map: mappings?.reduce(
+          (acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork }) => {
+            if (sourceNetwork.name) {
+              acc.push({
+                destination: getDestination(targetNetwork, targetNamespace),
+                source: getSource(sourceNetwork, sourceProvider),
+              });
+            }
+
+            return acc;
+          },
+          [],
+        ),
+        provider: {
+          destination: getObjectRef(targetProvider),
+          source: getObjectRef(sourceProvider),
+        },
+      },
+    };
+
+    const createdNetworkMap = await k8sCreate({
+      data: networkMap,
+      model: NetworkMapModel,
+    });
+
+    trackEvent?.('Network map created', {
+      mappingCount: mappings?.length,
+      namespace: project,
+      networkMapName: createdNetworkMap.metadata?.name,
+      networkTypes: mappings?.map((mapping) => getNetworkType(mapping.targetNetwork.name)),
+      sourceProviderType: sourceProvider?.spec?.type,
+    });
+
+    return createdNetworkMap;
+  } catch (error) {
+    trackEvent?.('Network map create failed', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      mappingCount: mappings?.length,
+      namespace: project,
+      networkTypes: mappings?.map((mapping) => getNetworkType(mapping.targetNetwork.name)),
+      sourceProviderType: sourceProvider?.spec?.type,
+    });
+
+    throw error;
+  }
 };

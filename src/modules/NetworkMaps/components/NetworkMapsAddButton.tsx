@@ -5,6 +5,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModelRef } from '@kubev2v/types';
 import { Button, ButtonVariant } from '@patternfly/react-core';
+import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 
 const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
   namespace,
@@ -12,6 +14,7 @@ const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
+  const { trackEvent } = useForkliftAnalytics();
 
   const NetworkMapsListURL = getResourceUrl({
     namespace,
@@ -20,6 +23,10 @@ const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
   });
 
   const onClick = () => {
+    trackEvent(TELEMETRY_EVENTS.NETWORK_MAP_CREATE_STARTED, {
+      creationMethod: CreationMethod.YamlEditor,
+      namespace,
+    });
     navigate(`${NetworkMapsListURL}/~new`);
   };
 

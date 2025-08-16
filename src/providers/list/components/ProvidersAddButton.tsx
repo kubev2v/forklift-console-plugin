@@ -5,6 +5,8 @@ import { ProviderModelRef } from '@kubev2v/types';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 
 import { getResourceUrl } from '../../../modules/Providers/utils/helpers/getResourceUrl';
+import { ProviderCreateSource, TELEMETRY_EVENTS } from '../../../utils/analytics/constants';
+import { useForkliftAnalytics } from '../../../utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '../../../utils/i18n';
 
 type ProvidersAddButtonProps = {
@@ -16,6 +18,7 @@ type ProvidersAddButtonProps = {
 const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, namespace, testId }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
+  const { trackEvent } = useForkliftAnalytics();
 
   const providersListURL = getResourceUrl({
     namespace,
@@ -24,6 +27,11 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, namespace,
   });
 
   const onClick = () => {
+    trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_CLICKED, {
+      createSource: ProviderCreateSource.ProvidersPage,
+      namespace,
+    });
+
     navigate(`${providersListURL}/~new`);
   };
 
