@@ -2,6 +2,7 @@ import type { FC, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
 import { Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
+import { isEmpty } from '@utils/helpers';
 
 import { UID } from '../utils/constants';
 import type { ResourceField } from '../utils/types';
@@ -36,7 +37,7 @@ export const TableView = <T,>({
   uidFieldId = UID,
   visibleColumns,
 }: TableViewProps<T>) => {
-  const hasChildren = children.filter(Boolean).length > 0;
+  const hasChildren = !isEmpty(children?.filter(Boolean));
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
 
   return (

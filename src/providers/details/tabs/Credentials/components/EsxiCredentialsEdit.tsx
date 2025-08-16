@@ -6,7 +6,14 @@ import { SecretFieldsId } from 'src/providers/utils/constants';
 import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, Divider, Form, InputGroup, TextInput } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  Divider,
+  Form,
+  InputGroup,
+  TextInput,
+} from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 
 import { esxiSecretFieldValidator } from './utils/esxiSecretFieldValidator';
@@ -124,7 +131,7 @@ const EsxiCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({ onNewSecretCh
             validated={passwordValidation.type}
           />
           <Button
-            variant="control"
+            variant={ButtonVariant.control}
             onClick={onClickTogglePassword}
             aria-label={passwordHidden ? 'Show password' : 'Hide password'}
           >

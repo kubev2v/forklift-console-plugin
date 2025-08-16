@@ -76,7 +76,7 @@ const deleteHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) 
 
     return {
       ...vm,
-      hooks: newHooks.length > 0 ? newHooks : undefined,
+      hooks: isEmpty(newHooks) ? undefined : newHooks,
     };
   });
 

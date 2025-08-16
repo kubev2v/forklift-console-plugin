@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 
-import { Button } from '@patternfly/react-core';
+import { Button, ButtonVariant } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
 /**
@@ -19,7 +19,7 @@ export const ExternalLink: FC<ExternalLinkProps> = ({
   text = null,
 }) => (
   <Button
-    variant="link"
+    variant={ButtonVariant.link}
     icon={hideIcon ? undefined : <ExternalLinkAltIcon />}
     iconPosition="right"
     component="a"
@@ -27,7 +27,7 @@ export const ExternalLink: FC<ExternalLinkProps> = ({
     target="_blank"
     isInline={isInline}
   >
-    {text || children}{' '}
+    {text ?? children}{' '}
   </Button>
 );
 

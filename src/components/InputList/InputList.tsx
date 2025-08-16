@@ -2,6 +2,7 @@ import { type FC, useState } from 'react';
 
 import {
   Button,
+  ButtonVariant,
   DataList,
   DataListAction,
   DataListCell,
@@ -11,6 +12,7 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
+import { isEmpty } from '@utils/helpers';
 
 import './InputList.style.css';
 
@@ -85,7 +87,7 @@ export const InputList = <T,>({
   onChange,
   removeIconContent = 'Remove',
 }: InputListProps<T>) => {
-  const initialStateItems = (items || []).length > 0 ? items : [null as unknown as T];
+  const initialStateItems = isEmpty(items) ? [null as unknown as T] : items;
   const [localItems, setLocalItems] = useState<InputListItem<T>[]>(
     assignIdsToItems(initialStateItems),
   );
@@ -145,7 +147,7 @@ export const InputList = <T,>({
                     onClick={() => {
                       handleItemDelete(id);
                     }}
-                    variant="plain"
+                    variant={ButtonVariant.plain}
                     aria-label={removeIconContent}
                     key="delete-action"
                     icon={<MinusCircleIcon />}
@@ -159,7 +161,7 @@ export const InputList = <T,>({
       </DataList>
       <Button
         className="forklift--input-list-icon"
-        variant="link"
+        variant={ButtonVariant.link}
         icon={<PlusCircleIcon />}
         onClick={handleAddItem}
       >

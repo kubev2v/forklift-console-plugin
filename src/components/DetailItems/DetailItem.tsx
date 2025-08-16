@@ -18,6 +18,7 @@ import {
   Truncate,
 } from '@patternfly/react-core';
 import { HelpIcon, PencilAltIcon as Pencil } from '@patternfly/react-icons';
+import { isEmpty } from '@utils/helpers';
 
 import { ensureArray } from '../../utils/ensureArray';
 
@@ -63,7 +64,7 @@ const DescriptionTitleWithHelp: FC<{
               </FlexItem>
             )}
 
-            {crumbs && crumbs.length > 0 && (
+            {!isEmpty(crumbs) && (
               <FlexItem>
                 <Breadcrumb>
                   {crumbs.map((crumb) => (
@@ -151,7 +152,13 @@ const ContentField: FC<{
       <Flex alignItems={{ default: 'alignItemsCenter' }}>
         <FlexItem spacer={{ default: 'spacerNone' }}>{content}</FlexItem>
         <FlexItem spacer={{ default: 'spacerNone' }}>
-          <Button variant="link" isInline onClick={onEdit} icon={<Pencil />} iconPosition="right" />
+          <Button
+            variant={ButtonVariant.link}
+            isInline
+            onClick={onEdit}
+            icon={<Pencil />}
+            iconPosition="right"
+          />
         </FlexItem>
       </Flex>
     </DescriptionListDescription>

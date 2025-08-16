@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 
 import {
   Button,
+  ButtonVariant,
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
@@ -75,7 +76,7 @@ export const NoResultsMatchFilter = ({
       <EmptyStateBody>{description}</EmptyStateBody>
       <EmptyStateFooter>
         <EmptyStateActions>
-          <Button variant="link" onClick={clearAllFilters}>
+          <Button variant={ButtonVariant.link} onClick={clearAllFilters}>
             {clearAllLabel}
           </Button>
         </EmptyStateActions>

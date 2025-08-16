@@ -1,10 +1,6 @@
-import type {
-  NetworkAdapters,
-  V1beta1Host,
-  V1beta1Provider,
-  VSphereHostInventory,
-} from '@kubev2v/types';
+import type { V1beta1Host, V1beta1Provider, VSphereHostInventory } from '@kubev2v/types';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
 
 import type { InventoryHostNetworkTriple } from './types';
 
@@ -13,7 +9,7 @@ export const matchHostsToInventory = (
   hosts: V1beta1Host[],
   provider: V1beta1Provider,
 ): InventoryHostNetworkTriple[] => {
-  if (!inventories || inventories.length === 0) {
+  if (isEmpty(inventories)) {
     return [];
   }
 
@@ -30,12 +26,11 @@ export const matchHostsToInventory = (
 
   const result: InventoryHostNetworkTriple[] = inventories.map((inventory) => {
     const host = hostMap.get(inventory.id);
-    let networkAdapter: NetworkAdapters | undefined;
-    if (host?.spec?.ipAddress && inventory?.networkAdapters) {
-      networkAdapter = inventory.networkAdapters.find(
-        (adapter) => adapter?.ipAddress === host.spec?.ipAddress,
-      );
-    }
+    const networkAdapter =
+      host?.spec?.ipAddress && inventory?.networkAdapters
+        ? inventory.networkAdapters.find((adapter) => adapter?.ipAddress === host.spec?.ipAddress)
+        : undefined;
+
     return { host, inventory, networkAdapter };
   });
 
