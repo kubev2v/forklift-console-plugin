@@ -62,12 +62,35 @@ interface Window {
     hubConsoleURL: string;
     k8sMode: string;
     capabilities: Record<string, string>[];
+    clusterID?: string;
   };
+  analytics?: SegmentAnalytics;
 }
+
+// Based on Segment Analytics.js 2.0 snippet v5.2.0
+// Reference: https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/quickstart/
+type SegmentAnalytics = {
+  [key: string]: unknown;
+  initialized?: boolean;
+  track: (
+    event: string,
+    properties?: Record<string, unknown>,
+    options?: Record<string, unknown>,
+  ) => void;
+  factory: (method: string) => (...args: unknown[]) => SegmentAnalytics;
+  invoked?: boolean;
+  load: (key: string, options?: Record<string, unknown>) => void;
+  methods?: string[];
+  page: () => void;
+  push: (args: unknown[]) => number;
+  SNIPPET_VERSION?: string;
+  _loadOptions?: Record<string, unknown>;
+  _writeKey?: string;
+};
 
 declare module 'eslint-plugin-import' {
   const flatConfigs: {
-    recommended: any;
+    recommended: unknown;
   };
   export { flatConfigs };
 }
