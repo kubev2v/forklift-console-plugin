@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 import {
+  MenuFooter,
   type MenuToggleProps,
   Select,
   SelectList,
@@ -42,7 +43,9 @@ type TypeaheadSelectProps = {
   isCreatable?: boolean;
   createOptionMessage?: string | ((value: string) => string);
   noOptionsMessage?: string;
+  emptyState?: ReactNode;
   noResultsMessage?: string | ((filter: string) => string);
+  footer?: ReactNode;
   isDisabled?: boolean;
   toggleWidth?: string;
   toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
@@ -54,8 +57,10 @@ const TypeaheadSelect = (
   {
     allowClear = false,
     createOptionMessage = getDefaultCreateMessage,
+    emptyState,
     filterControls,
     filterFunction = defaultFilterFunction,
+    footer,
     isCreatable = false,
     isDisabled = false,
     noOptionsMessage = DEFAULT_NO_OPTIONS,
@@ -120,27 +125,6 @@ const TypeaheadSelect = (
     return filteredOptions;
   }, [options, filteredOptions, noOptionsMessage]);
 
-  const handleToggleClick = (): void => {
-    const newIsOpen = !isOpen;
-    setIsOpen(newIsOpen);
-
-    if (!newIsOpen) {
-      // Reset filtering state when closing
-      setIsFiltering(false);
-      setInputValue(selectedOption?.content?.toString() ?? '');
-    }
-  };
-
-  const handleInputValueChange = (newInputValue: string, newIsFiltering: boolean): void => {
-    setInputValue(newInputValue);
-    setIsFiltering(newIsFiltering);
-  };
-
-  const handleSelectionClear = (): void => {
-    setInputValue('');
-    onChange('');
-  };
-
   const handleSelect = (selectedValue: string | number | undefined): void => {
     if (isPlaceholderValue(selectedValue)) {
       return;
@@ -181,9 +165,22 @@ const TypeaheadSelect = (
           isFiltering={isFiltering}
           inputValue={inputValue}
           onInputChange={onInputChange}
-          onSelectionClear={handleSelectionClear}
-          onToggleClick={handleToggleClick}
-          onInputValueChange={handleInputValueChange}
+          onSelectionClear={() => {
+            setInputValue('');
+            onChange('');
+          }}
+          onToggleClick={() => {
+            if (isOpen) {
+              // Reset filtering state when closing
+              setIsFiltering(false);
+              setInputValue(selectedOption?.content?.toString() ?? '');
+            }
+            setIsOpen((prev) => !prev);
+          }}
+          onInputValueChange={(newInputValue: string, newIsFiltering: boolean): void => {
+            setInputValue(newInputValue);
+            setIsFiltering(newIsFiltering);
+          }}
           toggleProps={toggleProps}
           testId={testId}
         />
@@ -191,14 +188,29 @@ const TypeaheadSelect = (
       shouldFocusFirstItemOnOpen={false}
       {...selectProps}
     >
-      {filterControls}
-      <SelectList id="typeahead-listbox">
-        {displayOptions.map((option) => (
-          <SelectOption key={option.value} value={option.value} {...option.optionProps}>
-            {option.content}
-          </SelectOption>
-        ))}
-      </SelectList>
+      {isEmpty(options) && emptyState ? (
+        emptyState
+      ) : (
+        <>
+          {filterControls}
+          <SelectList id="typeahead-listbox">
+            {displayOptions.map((option) => (
+              <SelectOption key={option.value} value={option.value} {...option.optionProps}>
+                {option.content}
+              </SelectOption>
+            ))}
+          </SelectList>
+          {footer && (
+            <MenuFooter
+              onClick={() => {
+                setIsOpen(false);
+              }}
+            >
+              {footer}
+            </MenuFooter>
+          )}
+        </>
+      )}
     </Select>
   );
 };

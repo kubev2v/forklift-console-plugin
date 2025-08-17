@@ -1,14 +1,15 @@
-import { type FC, useEffect, useRef } from 'react';
+import { type FC, useEffect, useRef, useState } from 'react';
 import { Controller, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';
-import useProjectNameSelectOptions from 'src/providers/create/hooks/useProjectNameSelectOptions';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
+import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useDefaultProject } from '@utils/hooks/useDefaultProject';
+import useWatchProjectNames from '@utils/hooks/useWatchProjectNames.ts';
 import { useForkliftTranslation } from '@utils/i18n';
+import { isSystemNamespace } from '@utils/namespaces.ts';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
@@ -26,10 +27,12 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
     setValue,
   } = useCreatePlanFormContext();
 
-  const [projectOptions] = useProjectNameSelectOptions();
-  const hasProjectOptions = !isEmpty(projectOptions);
-  const defaultProject = useDefaultProject(projectOptions);
+  const [projectNames] = useWatchProjectNames();
+
+  const hasProjects = !isEmpty(projectNames);
+  const defaultProject = useDefaultProject(projectNames);
   const hasSetInitialDefault = useRef(false);
+  const [showDefaultProjects, setShowDefaultProjects] = useState<boolean>(false);
 
   const [planProject, sourceProvider, targetProvider, targetProject] = useWatch({
     control,
@@ -42,16 +45,12 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
   });
 
   useEffect(() => {
-    if (
-      defaultProject &&
-      hasProjectOptions &&
-      !hasSetInitialDefault.current &&
-      isEmpty(planProject)
-    ) {
+    if (defaultProject && hasProjects && !hasSetInitialDefault.current && isEmpty(planProject)) {
       setValue(GeneralFormFieldId.PlanProject, defaultProject);
+      setShowDefaultProjects((prev) => prev || isSystemNamespace(defaultProject));
       hasSetInitialDefault.current = true;
     }
-  }, [defaultProject, setValue, planProject, projectOptions, hasProjectOptions]);
+  }, [defaultProject, setValue, planProject, hasProjects]);
 
   return (
     <FormGroupWithErrorText
@@ -77,14 +76,13 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
         name={GeneralFormFieldId.PlanProject}
         control={control}
         render={({ field }) => (
-          <TypeaheadSelect
-            ref={field.ref}
+          <ProjectSelect
             testId={testId}
-            isScrollable
-            allowClear
+            showDefaultProjects={showDefaultProjects}
+            setShowDefaultProjects={setShowDefaultProjects}
             placeholder={t('Select plan project')}
             id={GeneralFormFieldId.PlanProject}
-            options={projectOptions}
+            projectNames={projectNames}
             value={field.value}
             onChange={(value) => {
               field.onChange(value);
