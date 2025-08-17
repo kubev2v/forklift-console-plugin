@@ -4,8 +4,7 @@ import { TableCell } from 'src/modules/Providers/utils/components/TableCell/Tabl
 import type { CellProps } from 'src/modules/Providers/views/list/components/CellProps';
 
 import { Truncate } from '@patternfly/react-core';
-
-import { EMPTY_CELL_CONTENT } from './utils/constants';
+import { EMPTY_MSG } from '@utils/constants';
 
 /**
  * URLCell component, used for displaying a TableCell with a URL string.
@@ -13,11 +12,12 @@ import { EMPTY_CELL_CONTENT } from './utils/constants';
  * @returns {JSX.Element} - The rendered component.
  */
 export const URLCell: FC<CellProps> = ({ data, fieldId, fields }) => {
-  const url: string = getResourceFieldValue(data, fieldId, fields);
+  const id = fieldId as keyof typeof data;
+  const url = getResourceFieldValue(data, id, fields) as unknown as string;
 
   return (
     <TableCell>
-      <Truncate content={url?.toString() ?? EMPTY_CELL_CONTENT} position={'middle'} />
+      <Truncate content={url?.toString() ?? EMPTY_MSG} position={'middle'} />
     </TableCell>
   );
 };

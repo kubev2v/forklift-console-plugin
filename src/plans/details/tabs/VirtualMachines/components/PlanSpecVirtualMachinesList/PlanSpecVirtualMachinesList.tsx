@@ -19,6 +19,11 @@ type PlanVirtualMachinesListProps = {
   plan: V1beta1Plan;
 };
 
+const selectedIds: string[] = [];
+const expandedIds: string[] = [];
+const emptyNamespace = '';
+const onSelect = () => undefined;
+
 const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
 
@@ -29,6 +34,7 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
 
   const [specVirtualMachinesListData, loading, inventoryError] =
     useSpecVirtualMachinesListData(plan);
+
   const actions = useSpecVirtualMachinesActions(plan);
 
   return (
@@ -39,15 +45,15 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       CellMapper={PlanSpecVirtualMachinesRow}
       fieldsMetadata={specVirtualMachineFields}
       userSettings={userSettings}
-      namespace={''}
+      namespace={emptyNamespace}
       page={INITIAL_PAGE}
       toId={vmDataToId}
       canSelect={canSelect}
-      onSelect={() => undefined}
-      selectedIds={[]}
+      onSelect={onSelect}
+      selectedIds={selectedIds}
       GlobalActionToolbarItems={actions}
       ExpandedComponent={(props) => <ConcernsTable {...props} />}
-      expandedIds={[]}
+      expandedIds={expandedIds}
     />
   );
 };
