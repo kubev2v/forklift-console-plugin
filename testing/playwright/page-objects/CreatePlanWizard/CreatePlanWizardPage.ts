@@ -107,7 +107,7 @@ export class CreatePlanWizardPage {
       if (testData.targetProject && !testData.targetProject.isPreexisting) {
         this.resourceManager.addResource({
           namespace: '',
-          resourceType: 'namespaces',
+          resourceType: 'projects',
           resourceName: testData.targetProject.name,
         });
       }

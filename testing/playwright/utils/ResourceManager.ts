@@ -17,7 +17,12 @@ export class ResourceManager {
   private resources: ResourceToCleanup[] = [];
 
   private async cleanupResource(page: Page, resource: ResourceToCleanup) {
-    const url = `/api/kubernetes/apis/${resource.apiVersion}/namespaces/${resource.namespace}/${resource.resourceType}/${resource.resourceName}`;
+    const { apiVersion, namespace, resourceType, resourceName } = resource;
+
+    // Namespaced resources URL
+    const url = namespace
+      ? `/api/kubernetes/apis/${apiVersion}/namespaces/${namespace}/${resourceType}/${resourceName}`
+      : `/api/kubernetes/apis/${apiVersion}/${resourceType}/${resourceName}`;
 
     // Use the browser's context to include authentication headers and cookies
     const response = await page.evaluate(async (deleteUrl) => {
@@ -48,13 +53,27 @@ export class ResourceManager {
     if (response.ok) {
       return true;
     }
+    // ignore 404 errors on cleanup
+    if (response.status === 404) {
+      console.log(`Resource ${resource.resourceName} not found, skipping cleanup.`);
+      return true;
+    }
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
 
   addResource(resource: ResourceToCleanup) {
+    const getDefaultApiVersion = (resourceType: string) => {
+      switch (resourceType) {
+        case 'projects':
+          return 'project.openshift.io/v1';
+        default:
+          return 'forklift.konveyor.io/v1beta1';
+      }
+    };
+
     this.resources.push({
       ...resource,
-      apiVersion: resource.apiVersion ?? 'forklift.konveyor.io/v1beta1',
+      apiVersion: resource.apiVersion ?? getDefaultApiVersion(resource.resourceType),
     });
   }
 
