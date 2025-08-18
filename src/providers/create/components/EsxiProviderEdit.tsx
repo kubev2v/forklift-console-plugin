@@ -6,14 +6,17 @@ import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION, ProviderFieldsId } from 'src/provider
 import type { ValidationMsg } from 'src/providers/utils/types';
 
 import type { V1beta1Provider } from '@kubev2v/types';
+import { Form } from '@patternfly/react-core';
 import {
   getAnnotations,
   getSdkEndpoint,
   getUrl,
+  getUseVddkAioOptimization,
   getVddkInitImage,
 } from '@utils/crds/common/selectors';
 
-import VMwareURLVddkEditItems from './VMwareURLVddkEditItems';
+import VMwareURLEditItems from './VMwareURLEditItems';
+import VMwareVddkEditItems from './VMwareVddkEditItems';
 
 type EsxiProviderEditProps = {
   provider: V1beta1Provider;
@@ -24,6 +27,7 @@ const EsxiProviderEdit: FC<EsxiProviderEditProps> = ({ onChange, provider }) => 
   const url = getUrl(provider);
   const emptyVddkInitImage = getAnnotations(provider)?.[EMPTY_VDDK_INIT_IMAGE_ANNOTATION];
   const vddkInitImage = getVddkInitImage(provider);
+  const useVddkAioOptimization = getUseVddkAioOptimization(provider);
 
   const [urlValidation, setUrlValidation] = useState<ValidationMsg>(validateEsxiURL(url));
   const [vddkInitImageValidation, setVddkInitImageValidation] = useState<ValidationMsg>(
@@ -52,6 +56,17 @@ const EsxiProviderEdit: FC<EsxiProviderEditProps> = ({ onChange, provider }) => 
             draft.spec ??= {};
             draft.spec.settings ??= {};
             draft.spec.settings.vddkInitImage = trimmedValue;
+          }),
+        );
+      }
+      if (id === ProviderFieldsId.UseVddkAioOptimization) {
+        setVddkInitImageValidation(validateVDDKImage(undefined));
+
+        onChange(
+          produce(provider, (draft) => {
+            draft.spec ??= {};
+            draft.spec.settings ??= {};
+            draft.spec.settings.useVddkAioOptimization = trimmedValue ?? undefined;
           }),
         );
       }
@@ -84,15 +99,21 @@ const EsxiProviderEdit: FC<EsxiProviderEditProps> = ({ onChange, provider }) => 
   );
 
   return (
-    <VMwareURLVddkEditItems
-      sdkEndpoint={getSdkEndpoint(provider)}
-      url={url}
-      vddkInitImage={vddkInitImage}
-      emptyVddkInitImage={emptyVddkInitImage}
-      urlValidation={urlValidation}
-      vddkInitImageValidation={vddkInitImageValidation}
-      handleChange={handleChange}
-    />
+    <Form>
+      <VMwareURLEditItems
+        sdkEndpoint={getSdkEndpoint(provider)}
+        url={url}
+        urlValidation={urlValidation}
+        handleChange={handleChange}
+      />
+      <VMwareVddkEditItems
+        vddkInitImage={vddkInitImage}
+        emptyVddkInitImage={emptyVddkInitImage}
+        useVddkAioOptimization={useVddkAioOptimization}
+        vddkInitImageValidation={vddkInitImageValidation}
+        handleChange={handleChange}
+      />
+    </Form>
   );
 };
 

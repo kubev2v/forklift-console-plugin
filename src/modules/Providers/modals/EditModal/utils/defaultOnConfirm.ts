@@ -3,6 +3,7 @@ import {
   jsonPathToPatch,
 } from 'src/modules/Providers/utils/helpers/getValueByJsonPath';
 
+import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import {
   type K8sModel,
   k8sPatch,
@@ -14,15 +15,15 @@ import type { OpenApiJsonPath } from '../types';
 /**
  * Patches a Kubernetes resource with a new value.
  */
-export const defaultOnConfirm = async ({ jsonPath, model, newValue: value, resource }) => {
-  const op = getValueByJsonPath(resource, jsonPath) ? 'replace' : 'add';
+export const defaultOnConfirm = async ({ jsonPath, model, newValue, resource }) => {
+  const op = getValueByJsonPath(resource, jsonPath) ? REPLACE : ADD;
 
   return k8sPatch<K8sResourceCommon>({
     data: [
       {
         op,
         path: jsonPathToPatch(jsonPath),
-        value,
+        value: newValue,
       },
     ],
     model,

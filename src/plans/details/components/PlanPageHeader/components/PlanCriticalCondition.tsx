@@ -87,11 +87,7 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
     type === PlanConditionType.VMStorageNotMapped || type === PlanConditionType.VMNetworksNotMapped;
 
   return (
-    <Alert
-      title={t('The plan is not ready')}
-      variant={AlertVariant.warning}
-      isExpandable={showList}
-    >
+    <Alert title={t('The plan is not ready')} variant={AlertVariant.danger} isExpandable={showList}>
       <Stack hasGutter>
         <TextContent className="forklift-providers-list-header__alert">
           <Text component={TextVariants.p}>

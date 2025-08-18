@@ -72,6 +72,7 @@ export enum ProviderFieldsId {
   VddkInitImage = 'vddkInitImage',
   EmptyVddkInitImage = 'emptyVddkInitImage',
   Project = 'project',
+  UseVddkAioOptimization = 'useVddkAioOptimization',
 }
 
 export enum SecretFieldsId {

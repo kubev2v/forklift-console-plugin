@@ -21,4 +21,5 @@ export enum PlanSpecVirtualMachinesTableResourceId {
   Name = 'name',
   Concerns = 'concerns',
   Actions = 'actions',
+  VMTargetName = 'vmTargetName',
 }
