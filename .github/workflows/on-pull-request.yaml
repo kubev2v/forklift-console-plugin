@@ -77,7 +77,7 @@ jobs:
         run: yarn test:coverage
 
       - name: Test coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@af2ee03a4e3e11499d866845a1e6c5a11f85cf4e
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
