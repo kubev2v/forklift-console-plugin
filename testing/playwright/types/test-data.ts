@@ -1,41 +1,35 @@
+export interface TargetProject {
+  name: string;
+  isPreexisting: boolean;
+}
+
+export interface NetworkMap {
+  name: string;
+  isPreExisting: boolean;
+}
+
+export interface StorageMap {
+  name: string;
+  isPreExisting: boolean;
+}
+
 export interface PlanTestData {
   planName: string;
   planProject: string;
   sourceProvider: string;
   targetProvider: string;
-  targetProject: string;
-  networkMap: {
-    name: string;
-    isPreExisting: boolean;
-  };
-  storageMap: {
-    name: string;
-    isPreExisting: boolean;
-  };
+  targetProject: TargetProject;
+  networkMap: NetworkMap;
+  storageMap: StorageMap;
 }
 
 /**
  * Helper to create plan test data with proper typing
  */
-export const createPlanTestData = ({
-  planName,
-  planProject,
-  sourceProvider,
-  targetProvider,
-  targetProject,
-  networkMap,
-  storageMap,
-}: PlanTestData): PlanTestData => ({
-  planName,
-  planProject,
-  sourceProvider,
-  targetProvider,
-  targetProject,
-  networkMap,
-  storageMap,
-});
+export const createPlanTestData = (data: PlanTestData): PlanTestData => ({ ...data });
 
 export interface ProviderConfig {
+  type: 'vsphere' | 'ovirt' | 'ova' | 'openstack';
   api_url: string;
   username: string;
   password: string;

@@ -22,7 +22,7 @@ test.describe(
         planProject: 'openshift-mtv',
         sourceProvider: 'test-source-provider',
         targetProvider: 'test-target-provider',
-        targetProject: 'test-target-project',
+        targetProject: { name: 'test-target-project', isPreexisting: true },
         networkMap: { name: 'test-network-map-1', isPreExisting: true },
         storageMap: { name: 'test-storage-map-1', isPreExisting: true },
       });

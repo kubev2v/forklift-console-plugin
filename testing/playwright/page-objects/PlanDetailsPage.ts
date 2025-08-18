@@ -38,7 +38,7 @@ export class PlanDetailsPage {
     await expect(this.page.getByTestId('name-detail-item')).toContainText(planData.planName);
     await expect(this.page.getByTestId('project-detail-item')).toContainText(planData.planProject);
     await expect(this.page.getByTestId('target-project-detail-item')).toContainText(
-      planData.targetProject,
+      planData.targetProject.name,
     );
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');

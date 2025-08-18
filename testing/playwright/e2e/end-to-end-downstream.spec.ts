@@ -77,13 +77,17 @@ test.describe.serial(
       },
       async ({ page }) => {
         const planName = `${testProviderData.name}-plan`;
+        const targetProjectName = `test-project-${Date.now()}`;
 
         const testPlanData = createPlanTestData({
           planName,
           planProject: 'openshift-mtv',
           sourceProvider: testProviderData.name,
           targetProvider: 'host',
-          targetProject: 'default',
+          targetProject: {
+            name: targetProjectName,
+            isPreexisting: false,
+          },
           networkMap: {
             name: `${planName}-network-map`,
             isPreExisting: false,

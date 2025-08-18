@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-import type { PlanTestData } from '../../../types/test-data';
+import type { NetworkMap, PlanTestData, StorageMap } from '../../../types/test-data';
 
 export class ReviewStep {
   private readonly page: Page;
@@ -56,7 +56,7 @@ export class ReviewStep {
       expectedData.targetProvider,
     );
     await expect(this.page.getByTestId('review-target-project')).toContainText(
-      expectedData.targetProject,
+      expectedData.targetProject.name,
     );
   }
 
@@ -72,7 +72,7 @@ export class ReviewStep {
     await expect(this.page.getByTestId('review-migration-type')).toBeVisible();
   }
 
-  async verifyNetworkMapSection(expectedNetworkMap: PlanTestData['networkMap']): Promise<void> {
+  async verifyNetworkMapSection(expectedNetworkMap: NetworkMap): Promise<void> {
     const section = this.page.getByTestId('review-network-map-section');
     await expect(section).toBeVisible();
 
@@ -99,7 +99,7 @@ export class ReviewStep {
     await expect(this.page.getByRole('heading', { name: 'Review and create' })).toBeVisible();
   }
 
-  async verifyStorageMapSection(expectedStorageMap: PlanTestData['storageMap']): Promise<void> {
+  async verifyStorageMapSection(expectedStorageMap: StorageMap): Promise<void> {
     const section = this.page.getByTestId('review-storage-map-section');
     await expect(section).toBeVisible();
     if (expectedStorageMap) {

@@ -47,7 +47,7 @@ export class CreatePlanWizardPage {
   async fillAndSubmit(testData: PlanTestData, { skipToReview = true } = {}): Promise<void> {
     // STEP 1: General Information
     await this.generalInformation.fillPlanName(testData.planName);
-    await this.generalInformation.selectPlanProject(testData.planProject);
+    await this.generalInformation.selectProject(testData.planProject, 'plan-project-select');
     await this.generalInformation.selectSourceProvider(testData.sourceProvider);
     await this.generalInformation.selectTargetProvider(testData.targetProvider);
     await this.generalInformation.waitForTargetProviderNamespaces();
@@ -101,6 +101,14 @@ export class CreatePlanWizardPage {
           namespace: 'openshift-mtv',
           resourceType: 'storagemaps',
           resourceName: `${testData.planName}-storage-map`,
+        });
+      }
+
+      if (testData.targetProject && !testData.targetProject.isPreexisting) {
+        this.resourceManager.addResource({
+          namespace: '',
+          resourceType: 'projects',
+          resourceName: testData.targetProject.name,
         });
       }
     }
