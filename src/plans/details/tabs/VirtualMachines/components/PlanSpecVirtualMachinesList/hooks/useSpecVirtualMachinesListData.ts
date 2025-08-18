@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
@@ -20,8 +20,16 @@ export const useSpecVirtualMachinesListData = (
   const [vmInventoryData, loading, error] = useInventoryVms({ provider: sourceProvider });
 
   const virtualMachines = useMemo(() => getPlanVirtualMachines(plan), [plan]);
+
   const vmDict = useMemo(() => getPlanVirtualMachinesDict(plan), [plan]);
   const conditionsDict = useMemo(() => getPlanConditionsDict(plan), [plan]);
+
+  const getInventoryVmIdByName = useCallback(
+    (vmName: string | undefined) => {
+      return vmInventoryData.find((vmData) => vmData?.vm?.name === vmName)?.vm?.id;
+    },
+    [vmInventoryData],
+  );
 
   const inventoryVmMap = useMemo(() => {
     const map = new Map<string, VmData>();
@@ -41,7 +49,7 @@ export const useSpecVirtualMachinesListData = (
     let vmIndex = 0;
 
     for (const specVM of virtualMachines) {
-      const id = specVM?.id;
+      const id = specVM?.id ?? getInventoryVmIdByName(specVM?.name);
       if (id) {
         out.push({
           conditions: conditionsDict[id],
@@ -57,7 +65,16 @@ export const useSpecVirtualMachinesListData = (
     }
 
     return out;
-  }, [virtualMachines, plan, vmDict, conditionsDict, inventoryVmMap, loading, error]);
+  }, [
+    loading,
+    error,
+    virtualMachines,
+    getInventoryVmIdByName,
+    conditionsDict,
+    inventoryVmMap,
+    plan,
+    vmDict,
+  ]);
 
   return [specVirtualMachinesListData, loading, error];
 };
