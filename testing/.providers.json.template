@@ -1,0 +1,67 @@
+{
+  "vsphere-6.5": {
+    "type": "vsphere",
+    "version": "6.5",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "guest_vm_linux_user": "",
+    "guest_vm_linux_password": "",
+    "guest_vm_win_user": "",
+    "guest_vm_win_password": "",
+    "vddk_init_image": ""
+  },
+  "vsphere-7.0.3": {
+    "type": "vsphere",
+    "version": "7.0.3",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "guest_vm_linux_user": "",
+    "guest_vm_linux_password": "",
+    "guest_vm_win_user": "",
+    "guest_vm_win_password": "",
+    "vddk_init_image": ""
+  },
+  "vsphere-8.0.1": {
+    "type": "vsphere",
+    "version": "8.0.1",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "guest_vm_linux_user": "",
+    "guest_vm_linux_password": "",
+    "guest_vm_win_user": "",
+    "guest_vm_win_password": "",
+    "vddk_init_image": ""
+  },
+  "vsphere-8.0.1-2": {
+    "type": "vsphere",
+    "version": "8.0.1",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "guest_vm_linux_user": "",
+    "guest_vm_linux_password": "",
+    "guest_vm_win_user": "",
+    "guest_vm_win_password": "",
+    "vddk_init_image": ""
+  },
+  "vsphere-8.0.1-esxi": {
+    "type": "vsphere",
+    "version": "8.0.1",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "guest_vm_linux_user": "",
+    "guest_vm_linux_password": "",
+    "guest_vm_win_user": "",
+    "guest_vm_win_password": "",
+    "vddk_init_image": ""
+  }
+}

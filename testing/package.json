@@ -2,19 +2,23 @@
   "name": "e2e-tests",
   "version": "1.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "test:e2e": "playwright test --headed --project=chromium",
-    "test:e2e:headless": "playwright test --project=chromium",
-    "playwright:test": "playwright test",
-    "playwright:open": "playwright test --ui"
+    "test:e2e": "npx playwright test --headed",
+    "test:e2e:headless": "npx playwright test",
+    "playwright:test": "npx playwright test",
+    "playwright:open": "npx playwright test --ui",
+    "test:downstream": "BASE_ADDRESS=http://localhost:9000 npx playwright test --grep @downstream",
+    "test:downstream:remote": "npx playwright test --grep @downstream",
+    "test:downstream:remote:docker": "bash run-e2e-docker.sh",
+    "test:downstream:local": "BASE_ADDRESS=http://localhost:9000 npx playwright test --grep @downstream",
+    "test:github": "npx playwright test playwright/e2e/end-to-end-upstream.spec.ts"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "playwright": "1.54.2",
     "@playwright/test": "1.54.2",
     "@types/node": "^20.0.0",
     "typescript": "^5.8.2"
-  }
+  },
+  "dependencies": {}
 }
