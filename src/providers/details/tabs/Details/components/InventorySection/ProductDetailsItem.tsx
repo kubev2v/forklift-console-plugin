@@ -17,6 +17,7 @@ const ProductDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
+      data-testid="product-detail-item"
       title={t('Product')}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'product']}

@@ -61,6 +61,7 @@ export const SelectableGallery: FC<SelectableGalleryProps> = ({
       {sortedItems.map(([id, item]) => (
         <GalleryItem key={id}>
           <SelectableCard
+            data-testid={`${id}-provider-card`}
             title={item.title}
             titleLogo={item.logo}
             content={item.content}

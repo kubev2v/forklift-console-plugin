@@ -7,9 +7,16 @@ export class NetworkMapStep {
     this.page = page;
   }
 
-  async selectNetworkMap(networkMapName: string): Promise<void> {
-    await this.page.getByTestId('network-map-select').click();
-    await this.page.getByRole('option', { name: networkMapName }).click();
+  async selectNetworkMap(networkMap: { name: string; isPreExisting: boolean }): Promise<void> {
+    const selectElement = this.page.getByTestId('network-map-select');
+    if (networkMap.isPreExisting) {
+      await selectElement.click();
+      await this.page.getByRole('option', { name: networkMap.name }).click();
+    } else {
+      await this.page.getByTestId('use-new-network-map-radio').check();
+      await this.page.getByRole('textbox').click();
+      await this.page.getByRole('textbox').fill(networkMap.name);
+    }
   }
 
   async verifyStepVisible(): Promise<void> {
@@ -21,11 +28,5 @@ export class NetworkMapStep {
     const selectElement = this.page.getByTestId('network-map-select');
     await expect(selectElement).toBeVisible({ timeout: 10000 });
     await expect(selectElement).toBeEnabled({ timeout: 10000 });
-
-    // Wait for options to be available in the select
-    await selectElement.click();
-    await expect(this.page.getByRole('option').first()).toBeVisible({ timeout: 15000 });
-    // Close the dropdown after checking
-    await selectElement.click();
   }
 }

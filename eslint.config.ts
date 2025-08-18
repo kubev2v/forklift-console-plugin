@@ -313,6 +313,13 @@ export const createEslintConfig = (ideMode = false) =>
         'require-unicode-regexp': 'off',
       },
     },
+    // Testing directory specific rules - disable no-console
+    {
+      files: ['testing/**/*.ts'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
     prettier,
     ...(process.env.HUSKY_LINT_STAGED || ideMode ? [] : [disabledRules]),
   ] as Linter.Config[];

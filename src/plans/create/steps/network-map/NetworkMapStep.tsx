@@ -45,6 +45,7 @@ const NetworkMapStep = () => {
               <FlexItem>
                 <Stack hasGutter>
                   <Radio
+                    data-testid="use-existing-network-map-radio"
                     id={NetworkMapType.Existing}
                     name={NetworkMapType.Existing}
                     label={networkMapTypeLabels[NetworkMapType.Existing]}
@@ -70,6 +71,7 @@ const NetworkMapStep = () => {
               <FlexItem>
                 <Stack hasGutter>
                   <Radio
+                    data-testid="use-new-network-map-radio"
                     id={NetworkMapType.New}
                     name={NetworkMapType.New}
                     label={networkMapTypeLabels[NetworkMapType.New]}

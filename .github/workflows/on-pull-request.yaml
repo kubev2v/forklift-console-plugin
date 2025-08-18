@@ -115,8 +115,8 @@ jobs:
         run: |
           timeout 300 bash -c 'until curl -f http://localhost:30080; do sleep 5; done'
 
-      - name: Run Playwright tests
-        run: cd testing && npx playwright test
+      - name: Run Playwright tests (upstream only)
+        run: cd testing && npx playwright test --grep @upstream
         env:
           BASE_ADDRESS: http://localhost:30080
 

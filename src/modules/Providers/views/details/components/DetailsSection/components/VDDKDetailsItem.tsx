@@ -33,6 +33,7 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
+      data-testid="vddk-detail-item"
       title={t('VDDK init image')}
       content={
         provider?.spec?.settings?.vddkInitImage ?? (

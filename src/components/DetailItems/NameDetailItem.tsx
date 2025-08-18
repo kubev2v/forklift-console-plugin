@@ -16,6 +16,7 @@ const NameDetailsItem: FC<ResourceDetailsItemProps> = ({ helpContent, moreInfoLi
 
   return (
     <DetailsItem
+      data-testid="name-detail-item"
       title={t('Name')}
       content={getName(resource)}
       moreInfoLink={moreInfoLink ?? MORE_INFO_NAME_DETAIL_ITEM}

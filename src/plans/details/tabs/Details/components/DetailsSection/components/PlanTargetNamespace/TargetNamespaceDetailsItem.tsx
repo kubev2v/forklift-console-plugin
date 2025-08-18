@@ -17,6 +17,7 @@ const TargetNamespaceDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pl
 
   return (
     <DetailsItem
+      data-testid="target-project-detail-item"
       title={t('Target project')}
       content={
         getPlanTargetNamespace(plan) ?? <span className="text-muted">{PROVIDER_DEFAULTS}</span>

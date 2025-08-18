@@ -99,6 +99,7 @@ const VMwareURLVddkEditItems: FC<VMwareURLVddkEditItemsProps> = ({
         validated={urlValidation.type}
       >
         <TextInput
+          data-testid="provider-url-input"
           spellCheck="false"
           isRequired
           type="text"
@@ -144,6 +145,7 @@ const VMwareURLVddkEditItems: FC<VMwareURLVddkEditItemsProps> = ({
           <StackItem>
             <div className="forklift-section-provider-edit-vddk-input">
               <TextInput
+                data-testid="provider-vddk-input"
                 spellCheck="false"
                 type="text"
                 id={ProviderFieldsId.VddkInitImage}

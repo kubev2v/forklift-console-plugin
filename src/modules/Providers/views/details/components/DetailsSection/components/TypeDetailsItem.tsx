@@ -15,7 +15,7 @@ export const TypeDetailsItem: FC<ProviderDetailsItemProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const type = PROVIDERS[provider?.spec?.type] || provider?.spec?.type;
+  const type = PROVIDERS[provider?.spec?.type] ?? provider?.spec?.type;
 
   const defaultMoreInfoLink =
     'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-virt_cnv#adding-source-provider_cnv';
@@ -27,6 +27,7 @@ export const TypeDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
+      data-testid="type-detail-item"
       title={t('Type')}
       content={
         <>

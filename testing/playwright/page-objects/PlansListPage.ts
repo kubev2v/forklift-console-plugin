@@ -27,7 +27,6 @@ export class PlansListPage {
   async navigateFromMainMenu() {
     await disableGuidedTour(this.page);
     await this.page.goto('/');
-
     await waitForLoader(this.page);
     await this.page.getByTestId('migration-nav-item').click();
     await this.page.getByTestId('plans-nav-item').click();

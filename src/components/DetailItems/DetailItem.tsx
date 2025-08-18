@@ -20,6 +20,7 @@ import {
 import { HelpIcon, PencilAltIcon as Pencil } from '@patternfly/react-icons';
 
 import { ensureArray } from '../../utils/ensureArray';
+import { isEmpty } from '../../utils/helpers';
 
 /**
  * Component for displaying title with help text in a popover.
@@ -63,7 +64,7 @@ const DescriptionTitleWithHelp: FC<{
               </FlexItem>
             )}
 
-            {crumbs && crumbs.length > 0 && (
+            {!isEmpty(crumbs) && (
               <FlexItem>
                 <Breadcrumb>
                   {crumbs.map((crumb) => (
@@ -151,7 +152,13 @@ const ContentField: FC<{
       <Flex alignItems={{ default: 'alignItemsCenter' }}>
         <FlexItem spacer={{ default: 'spacerNone' }}>{content}</FlexItem>
         <FlexItem spacer={{ default: 'spacerNone' }}>
-          <Button variant="link" isInline onClick={onEdit} icon={<Pencil />} iconPosition="right" />
+          <Button
+            variant={ButtonVariant.link}
+            isInline
+            onClick={onEdit}
+            icon={<Pencil />}
+            iconPosition="right"
+          />
         </FlexItem>
       </Flex>
     </DescriptionListDescription>
@@ -182,6 +189,7 @@ const ContentField: FC<{
  */
 type DetailsItemProps = {
   title: string;
+  'data-testid'?: string;
   helpContent?: ReactNode;
   showHelpIconNextToTitle?: boolean;
   moreInfoLabel?: string;
@@ -196,6 +204,7 @@ export const DetailsItem: FC<DetailsItemProps> = ({
   canEdit,
   content,
   crumbs,
+  'data-testid': dataTestId,
   helpContent,
   moreInfoLabel,
   moreInfoLink,
@@ -207,7 +216,7 @@ export const DetailsItem: FC<DetailsItemProps> = ({
   const onEdits = ensureArray(onEdit);
 
   return (
-    <DescriptionListGroup>
+    <DescriptionListGroup data-testid={dataTestId}>
       <DisplayTitle
         title={title}
         helpContent={helpContent}

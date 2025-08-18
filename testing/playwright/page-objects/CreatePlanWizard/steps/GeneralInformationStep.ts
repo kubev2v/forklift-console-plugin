@@ -7,10 +7,16 @@ export class GeneralInformationStep {
     this.page = page;
   }
 
-  private async selectProjectByTestId(testId: string, projectName: string) {
+  private async selectProjectByTestId(
+    testId: string,
+    projectName: string,
+    showDefaultProjects = false,
+  ) {
     await this.page.getByTestId(testId).waitFor({ state: 'visible', timeout: 10000 });
-    await this.page.getByTestId(testId).click();
-
+    await this.page.getByTestId(testId).getByRole('button').click();
+    if (showDefaultProjects) {
+      await this.page.locator('label[for="show-default-projects-switch"]').click();
+    }
     const option = this.page.getByRole('option', { name: projectName });
     await option.waitFor({ state: 'visible', timeout: 15000 });
     await option.click();
@@ -38,7 +44,7 @@ export class GeneralInformationStep {
   }
 
   async selectTargetProject(projectName: string) {
-    await this.selectProjectByTestId('target-project-select', projectName);
+    await this.selectProjectByTestId('target-project-select', projectName, true);
   }
 
   async selectTargetProvider(providerName: string) {

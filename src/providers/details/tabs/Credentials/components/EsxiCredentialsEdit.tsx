@@ -95,6 +95,7 @@ const EsxiCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({ onNewSecretCh
         validated={userValidation.type}
       >
         <TextInput
+          data-testid="provider-username-input"
           spellCheck="false"
           isRequired
           type="text"
@@ -115,6 +116,7 @@ const EsxiCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({ onNewSecretCh
       >
         <InputGroup>
           <TextInput
+            data-testid="provider-password-input"
             spellCheck="false"
             isRequired
             type={passwordHidden ? 'password' : 'text'}
