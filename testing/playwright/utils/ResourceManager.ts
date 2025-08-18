@@ -63,12 +63,10 @@ export class ResourceManager {
 
   addResource(resource: ResourceToCleanup) {
     const getDefaultApiVersion = (resourceType: string) => {
-      switch (resourceType) {
-        case 'projects':
-          return 'project.openshift.io/v1';
-        default:
-          return 'forklift.konveyor.io/v1beta1';
+      if (resourceType === 'projects') {
+        return 'project.openshift.io/v1';
       }
+      return 'forklift.konveyor.io/v1beta1';
     };
 
     this.resources.push({
