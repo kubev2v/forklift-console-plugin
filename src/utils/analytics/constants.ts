@@ -9,6 +9,7 @@ export const ConfigMapModel = {
 };
 
 export const ConsoleConfigMap = {
+  ConfigKey: 'console-config.yaml',
   Name: 'console-config',
   Namespace: 'openshift-console',
 } as const;

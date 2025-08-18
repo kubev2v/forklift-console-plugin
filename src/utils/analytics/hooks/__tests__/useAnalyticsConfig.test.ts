@@ -1,6 +1,7 @@
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { renderHook } from '@testing-library/react-hooks';
 
+import { ConsoleConfigMap } from '../../constants';
 import { useAnalyticsConfig } from '../useAnalyticsConfig';
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
@@ -41,7 +42,7 @@ describe('useAnalyticsConfig', () => {
     `;
 
     (mockUseK8sWatchResource as any).mockReturnValue([
-      { data: { 'console-config.yaml': yamlContent } },
+      { data: { [ConsoleConfigMap.ConfigKey]: yamlContent } },
       true,
     ]);
 
@@ -63,7 +64,7 @@ describe('useAnalyticsConfig', () => {
     `;
 
     (mockUseK8sWatchResource as any).mockReturnValue([
-      { data: { 'console-config.yaml': yamlContent } },
+      { data: { [ConsoleConfigMap.ConfigKey]: yamlContent } },
       true,
     ]);
 
@@ -79,7 +80,7 @@ describe('useAnalyticsConfig', () => {
     const yamlContent = 'some: other-config';
 
     (mockUseK8sWatchResource as any).mockReturnValue([
-      { data: { 'console-config.yaml': yamlContent } },
+      { data: { [ConsoleConfigMap.ConfigKey]: yamlContent } },
       true,
     ]);
 
@@ -98,7 +99,7 @@ describe('useAnalyticsConfig', () => {
     `;
 
     (mockUseK8sWatchResource as any).mockReturnValue([
-      { data: { 'console-config.yaml': yamlContent } },
+      { data: { [ConsoleConfigMap.ConfigKey]: yamlContent } },
       true,
     ]);
 

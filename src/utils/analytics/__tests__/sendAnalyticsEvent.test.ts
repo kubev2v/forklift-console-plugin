@@ -150,6 +150,7 @@ describe('sendAnalyticsEvent', () => {
   });
 
   it('handles errors during analytics.track call', () => {
+    process.env.NODE_ENV = 'development';
     const error = new Error('Analytics error');
     mockTrack.mockImplementation(() => {
       throw error;

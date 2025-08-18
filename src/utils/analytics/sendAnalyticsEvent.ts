@@ -40,6 +40,8 @@ export const sendAnalyticsEvent = (
       },
     });
   } catch (error) {
-    console.warn(`[Forklift Analytics] Failed to track ${eventType}:`, error);
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[Forklift Analytics] Failed to track ${eventType}:`, error);
+    }
   }
 };

@@ -5,9 +5,7 @@ export type AnalyticsConfig = {
 
 export type ConsoleConfigMap = {
   apiVersion: string;
-  data?: {
-    'console-config.yaml'?: string;
-  };
+  data?: Record<string, string>;
   kind: string;
   metadata: {
     name: string;

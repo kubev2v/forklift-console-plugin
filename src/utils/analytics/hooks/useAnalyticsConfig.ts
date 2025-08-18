@@ -19,7 +19,7 @@ export const useAnalyticsConfig = (): AnalyticsConfig => {
   });
 
   return useMemo(() => {
-    const yamlContent = configMap?.data?.['console-config.yaml'];
+    const yamlContent = configMap?.data?.[ConsoleConfigMap.ConfigKey];
 
     if (!loaded || !yamlContent) {
       return { clusterId: '', segmentKey: '' };

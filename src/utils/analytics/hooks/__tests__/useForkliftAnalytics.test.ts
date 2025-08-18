@@ -1,6 +1,7 @@
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { renderHook } from '@testing-library/react-hooks';
 
+import { ConsoleConfigMap } from '../../constants';
 import { initializeAnalytics } from '../../initializeAnalytics';
 import { sendAnalyticsEvent } from '../../sendAnalyticsEvent';
 import { useForkliftAnalytics } from '../useForkliftAnalytics';
@@ -29,7 +30,7 @@ describe('useForkliftAnalytics', () => {
     (mockUseK8sWatchResource as any).mockReturnValue([
       {
         data: {
-          'console-config.yaml': `
+          [ConsoleConfigMap.ConfigKey]: `
             SEGMENT_PUBLIC_API_KEY: test-segment-key
             CLUSTER_ID: test-cluster-id
           `,
@@ -59,7 +60,7 @@ describe('useForkliftAnalytics', () => {
 
   it('does not initialize when segment key is missing', () => {
     (mockUseK8sWatchResource as any).mockReturnValue([
-      { data: { 'console-config.yaml': 'CLUSTER_ID: test-cluster' } },
+      { data: { [ConsoleConfigMap.ConfigKey]: 'CLUSTER_ID: test-cluster' } },
       true,
     ]);
 
@@ -136,7 +137,7 @@ describe('useForkliftAnalytics', () => {
 
     it('does not send event when segment key is missing', () => {
       (mockUseK8sWatchResource as any).mockReturnValue([
-        { data: { 'console-config.yaml': 'CLUSTER_ID: test-cluster' } },
+        { data: { [ConsoleConfigMap.ConfigKey]: 'CLUSTER_ID: test-cluster' } },
         true,
       ]);
 
@@ -149,7 +150,7 @@ describe('useForkliftAnalytics', () => {
 
     it('does not send event when cluster ID is missing', () => {
       (mockUseK8sWatchResource as any).mockReturnValue([
-        { data: { 'console-config.yaml': 'SEGMENT_PUBLIC_API_KEY: test-key' } },
+        { data: { [ConsoleConfigMap.ConfigKey]: 'SEGMENT_PUBLIC_API_KEY: test-key' } },
         true,
       ]);
 

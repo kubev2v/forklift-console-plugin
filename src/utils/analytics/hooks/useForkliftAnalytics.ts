@@ -26,11 +26,7 @@ export const useForkliftAnalytics = () => {
   }, [segmentKey, isTelemetryDisabled]);
 
   const trackEvent = (eventType: string, properties: Record<string, unknown> = {}) => {
-    if (!segmentKey || !clusterId || isTelemetryDisabled) {
-      return;
-    }
-
-    if (!window.analytics?.track) {
+    if (!segmentKey || !clusterId || isTelemetryDisabled || !window.analytics?.track) {
       return;
     }
 
