@@ -1,5 +1,6 @@
 import { MigrationModel, type V1beta1Migration } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 
 export const formatDateTo12Hours = (date: Date): string => {
   const hours = date.getHours();
@@ -12,10 +13,11 @@ export const formatDateTo12Hours = (date: Date): string => {
 export const patchMigrationCutover = async (
   migration: V1beta1Migration,
   cutover: string | undefined = undefined,
+  trackEvent?: (event: string, data: Record<string, unknown>) => void,
 ) => {
   const op = migration?.spec?.cutover ? 'replace' : 'add';
 
-  return k8sPatch({
+  const result = await k8sPatch({
     data: [
       {
         op,
@@ -26,4 +28,13 @@ export const patchMigrationCutover = async (
     model: MigrationModel,
     resource: migration,
   });
+
+  trackEvent?.(TELEMETRY_EVENTS.MIGRATION_CUTOVER_SCHEDULED, {
+    cutoverTime: cutover,
+    hasCutover: Boolean(cutover),
+    migrationName: migration?.metadata?.name,
+    namespace: migration?.metadata?.namespace,
+  });
+
+  return result;
 };

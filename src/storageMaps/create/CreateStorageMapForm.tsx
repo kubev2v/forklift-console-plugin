@@ -16,6 +16,8 @@ import {
   Split,
   Stack,
 } from '@patternfly/react-core';
+import { CreationMethod } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { defaultStorageMapping, StorageMapFieldId } from '../constants';
@@ -33,6 +35,7 @@ import './CreateStorageMapForm.style.scss';
 const CreateStorageMapForm: React.FC = () => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
+  const { trackEvent } = useForkliftAnalytics();
 
   const form = useForm<CreateStorageMapFormData>({
     defaultValues: { [StorageMapFieldId.StorageMap]: [defaultStorageMapping] },
@@ -58,15 +61,20 @@ const CreateStorageMapForm: React.FC = () => {
   const onSubmit = async () => {
     setCreateError(undefined);
 
-    try {
-      const { mapName, sourceProvider, storageMap, targetProvider } = getValues();
+    const { mapName, sourceProvider, storageMap, targetProvider } = getValues();
 
+    const trackStorageMapEvent = (eventType: string, properties = {}) => {
+      trackEvent(eventType, { ...properties, creationMethod: CreationMethod.Form });
+    };
+
+    try {
       const createdStorageMap = await createStorageMap({
         mappings: storageMap,
         name: mapName,
         project,
         sourceProvider,
         targetProvider,
+        trackEvent: trackStorageMapEvent,
       });
 
       const createdStorageMapUrl = getResourceUrl({

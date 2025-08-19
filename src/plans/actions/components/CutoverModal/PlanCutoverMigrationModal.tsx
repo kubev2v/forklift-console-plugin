@@ -15,6 +15,7 @@ import {
   TimePicker,
   yyyyMMddFormat,
 } from '@patternfly/react-core';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getName } from '@utils/crds/common/selectors';
 
 import { formatDateTo12Hours, patchMigrationCutover } from './utils/utils';
@@ -27,6 +28,7 @@ type PlanCutoverMigrationModalProps = {
 
 const PlanCutoverMigrationModal: FC<PlanCutoverMigrationModalProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
+  const { trackEvent } = useForkliftAnalytics();
   const [cutoverDate, setCutoverDate] = useState<string>();
   const [time, setTime] = useState<string>();
   const [isDateValid, setIsDateValid] = useState<boolean>(true);
@@ -60,6 +62,7 @@ const PlanCutoverMigrationModal: FC<PlanCutoverMigrationModalProps> = ({ plan })
     setCutoverDate(updatedFromDate.toISOString());
   };
 
+  // eslint-disable-next-line @typescript-eslint/max-params
   const onTimeChange: (
     event: FormEvent<HTMLInputElement>,
     timeInput: string,
@@ -67,6 +70,7 @@ const PlanCutoverMigrationModal: FC<PlanCutoverMigrationModalProps> = ({ plan })
     minute?: number,
     seconds?: number,
     timeValid?: boolean,
+    // eslint-disable-next-line @typescript-eslint/max-params
   ) => void = (_event, timeInput, hour, minute, _seconds, timeValid) => {
     setTime(timeInput);
     setIsTimeValid(Boolean(timeValid) && Boolean(timeInput));
@@ -82,13 +86,13 @@ const PlanCutoverMigrationModal: FC<PlanCutoverMigrationModalProps> = ({ plan })
   };
 
   const onCutover = useCallback(
-    async () => patchMigrationCutover(lastMigration, cutoverDate),
-    [cutoverDate, lastMigration],
+    async () => patchMigrationCutover(lastMigration, cutoverDate, trackEvent),
+    [cutoverDate, lastMigration, trackEvent],
   );
 
   const onDeleteCutover = useCallback(
-    async () => patchMigrationCutover(lastMigration),
-    [lastMigration],
+    async () => patchMigrationCutover(lastMigration, undefined, trackEvent),
+    [lastMigration, trackEvent],
   );
 
   return (
