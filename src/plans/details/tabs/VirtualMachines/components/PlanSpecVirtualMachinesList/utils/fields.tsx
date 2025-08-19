@@ -23,7 +23,9 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
       <VMConcernsCellRenderer data={inventoryVmData} fieldId="" fields={[]} />
     ),
-    [PlanSpecVirtualMachinesTableResourceId.Name]: <>{fieldsData?.specVM?.name}</>,
+    [PlanSpecVirtualMachinesTableResourceId.Name]: (
+      <>{fieldsData?.specVM?.name ?? inventoryVmData?.vm?.name}</>
+    ),
     [PlanSpecVirtualMachinesTableResourceId.VMTargetName]: <>{vm?.targetName ?? EMPTY_MSG}</>,
   };
 };

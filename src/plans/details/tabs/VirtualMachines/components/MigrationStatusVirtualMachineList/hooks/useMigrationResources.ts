@@ -21,6 +21,7 @@ import {
   getPlanVirtualMachines,
 } from '@utils/crds/plans/selectors';
 
+import { getPlanVirtualMachineIdByName } from '../../utils/getPlanVirtualMachineIdByName';
 import { getPlanVirtualMachinesDict } from '../../utils/utils';
 import type { MigrationStatusVirtualMachinePageData } from '../utils/types';
 import { groupByVmId } from '../utils/utils';
@@ -84,17 +85,20 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
   const vmDict = getPlanVirtualMachinesDict(plan);
 
   const migrationListData = useMemo(() => {
-    return virtualMachines.map((specVM) => ({
-      dvs: dvsDict[specVM.id!],
-      isWarm: getPlanIsWarm(plan),
-      jobs: jobsDict[specVM.id!],
-      plan,
-      pods: podsDict[specVM.id!],
-      pvcs: pvcsDict[specVM.id!],
-      specVM,
-      statusVM: vmDict[specVM.id!],
-      targetNamespace: getPlanTargetNamespace(plan),
-    })) as MigrationStatusVirtualMachinePageData[];
+    return virtualMachines.map((specVM) => {
+      const id = specVM?.id ?? getPlanVirtualMachineIdByName(plan, specVM?.name);
+      return {
+        dvs: dvsDict[id!],
+        isWarm: getPlanIsWarm(plan),
+        jobs: jobsDict[id!],
+        plan,
+        pods: podsDict[id!],
+        pvcs: pvcsDict[id!],
+        specVM,
+        statusVM: vmDict[id!],
+        targetNamespace: getPlanTargetNamespace(plan),
+      };
+    }) as MigrationStatusVirtualMachinePageData[];
   }, [virtualMachines, dvsDict, jobsDict, podsDict, pvcsDict, vmDict, plan]);
 
   return {
