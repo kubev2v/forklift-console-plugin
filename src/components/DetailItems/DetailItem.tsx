@@ -1,6 +1,6 @@
 import type { FC, MouseEvent, ReactNode } from 'react';
-import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 
+import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,9 +18,9 @@ import {
   Truncate,
 } from '@patternfly/react-core';
 import { HelpIcon, PencilAltIcon as Pencil } from '@patternfly/react-icons';
+import { isEmpty } from '@utils/helpers';
 
 import { ensureArray } from '../../utils/ensureArray';
-import { isEmpty } from '../../utils/helpers';
 
 /**
  * Component for displaying title with help text in a popover.
