@@ -30,6 +30,7 @@ export const createPlanTestData = (data: PlanTestData): PlanTestData => ({ ...da
 
 export interface ProviderConfig {
   type: 'vsphere' | 'ovirt' | 'ova' | 'openstack';
+  endpointT_type?: 'vcenter' | 'esxi';
   api_url: string;
   username: string;
   password: string;

@@ -53,7 +53,7 @@ test.describe.serial(
         testProviderData = {
           name: providerName,
           type: providerConfig.type,
-          endpointType: 'esxi',
+          endpointType: providerConfig.endpoint_type ?? 'esxi',
           hostname: providerConfig.api_url,
           username: providerConfig.username,
           password: providerConfig.password,
