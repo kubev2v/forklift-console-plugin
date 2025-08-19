@@ -8,7 +8,7 @@ import {
   type K8sModel,
   type K8sResourceCommon,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, Modal, ModalVariant } from '@patternfly/react-core';
+import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
 
 import useToggle from '../../hooks/useToggle';
 import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
@@ -44,14 +44,8 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
 
-  const title_ = title || t('Delete {{model.label}}', { model });
-  const { name, namespace } = resource?.metadata || {};
+  const { name, namespace } = resource?.metadata ?? {};
   const owner = resource?.metadata?.ownerReferences?.[0];
-  const groupVersionKind: K8sGroupVersionKind = {
-    group: model.apiGroup,
-    kind: model.kind,
-    version: model.apiVersion,
-  };
 
   const onDelete = useCallback(async () => {
     const isOnResourcePage = () => {
@@ -60,6 +54,12 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
     };
 
     toggleIsLoading();
+
+    const groupVersionKind: K8sGroupVersionKind = {
+      group: model.apiGroup,
+      kind: model.kind,
+      version: model.apiVersion,
+    };
 
     try {
       await k8sDelete({ model, resource });
@@ -73,22 +73,23 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
     } catch (err) {
       toggleIsLoading();
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
     }
-  }, [resource, navigate]);
+  }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, toggleModal]);
 
   const actions = [
-    <Button key="confirm" variant="danger" onClick={onDelete} isLoading={isLoading}>
+    <Button key="confirm" variant={ButtonVariant.danger} onClick={onDelete} isLoading={isLoading}>
       {t('Delete')}
     </Button>,
-    <Button key="cancel" variant="secondary" onClick={toggleModal}>
+    <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal}>
       {t('Cancel')}
     </Button>,
   ];
 
   return (
     <Modal
-      title={title_}
+      title={title ?? t('Delete {{model.label}}', { model })}
       titleIconVariant="warning"
       position="top"
       showClose={false}

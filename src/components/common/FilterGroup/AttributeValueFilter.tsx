@@ -1,4 +1,4 @@
-import { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
+import { type Ref, useState } from 'react';
 
 import {
   MenuToggle,
@@ -36,7 +36,7 @@ export const AttributeValueFilter = ({
     fieldFilters.find(({ label }) => label === selectedValue) ?? currentFilter;
 
   const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
+    setIsOpen((prev) => !prev);
   };
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
@@ -45,12 +45,11 @@ export const AttributeValueFilter = ({
     </MenuToggle>
   );
 
-  const onSelect: (event?: ReactMouseEvent, value?: string | number) => void = (
-    _event,
-    value: string,
-  ) => {
-    setCurrentFilter(selectOptionToFilter(value));
-    setIsOpen((isOpen) => !isOpen);
+  const onSelect = (value?: string) => {
+    if (value) {
+      setCurrentFilter(selectOptionToFilter(value));
+    }
+    setIsOpen((prev) => !prev);
   };
 
   const renderOptions = () => {
@@ -64,12 +63,16 @@ export const AttributeValueFilter = ({
   return (
     <ToolbarGroup variant="filter-group">
       <ToolbarItem>
+        {/* This select is different from most and cannot use the common Select */}
+        {/* eslint-disable-next-line no-restricted-syntax */}
         <Select
           role="menu"
           aria-label={'Select Filter'}
           isOpen={isOpen}
           selected={currentFilter?.label}
-          onSelect={onSelect}
+          onSelect={(_ev, value) => {
+            onSelect(String(value));
+          }}
           onOpenChange={(nextOpen: boolean) => {
             setIsOpen(nextOpen);
           }}

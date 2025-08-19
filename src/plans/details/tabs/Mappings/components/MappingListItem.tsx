@@ -110,6 +110,8 @@ export const MappingListItem: FC<MappingListItemProps> = ({
         <DataListItemCells
           dataListCells={[
             <DataListCell key="source">
+              {/* Custom select does not support the complex toggle being used here */}
+              {/* eslint-disable-next-line no-restricted-syntax */}
               <Select
                 isOpen={isSrcOpen}
                 selected={srcSelected}
@@ -133,6 +135,8 @@ export const MappingListItem: FC<MappingListItemProps> = ({
               </Select>
             </DataListCell>,
             <DataListCell key="destination">
+              {/* Custom select does not support the complex toggle being used here */}
+              {/* eslint-disable-next-line no-restricted-syntax */}
               <Select
                 isOpen={isTrgOpen}
                 selected={trgSelected}

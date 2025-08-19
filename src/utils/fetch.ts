@@ -4,6 +4,7 @@ import {
   type WatchK8sResource,
   type WatchK8sResult,
 } from '@openshift-console/dynamic-plugin-sdk';
+import { isEmpty } from '@utils/helpers';
 
 const useProviders = ({ namespace }: WatchK8sResource): WatchK8sResult<V1beta1Provider[]> =>
   useK8sWatchResource<V1beta1Provider[]>({
@@ -20,7 +21,7 @@ const useHasSourceAndTargetProviders = (
     namespace,
   });
 
-  const hasSourceProviders = providers.length > 0;
+  const hasSourceProviders = !isEmpty(providers);
   const hasTargetProviders = providers.some((provider) => provider?.spec?.type === 'openshift');
 
   return [hasSourceProviders, hasTargetProviders, providersLoaded, providersError];

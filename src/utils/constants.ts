@@ -37,12 +37,16 @@ export const CONDITION_STATUS = {
 
 export const CATEGORY_TYPES = {
   CANCELED: 'Canceled',
+  CONNECTION_FAILED: 'ConnectionFailed',
   CRITERIA_MET: 'SuccessCriteriaMet',
   CRITICAL: 'Critical',
   EXECUTING: 'Executing',
   FAILED: 'Failed',
+  NOT_READY: 'Not Ready',
   READY: 'Ready',
+  STAGING: 'Staging',
   SUCCEEDED: 'Succeeded',
+  VALIDATION_FAILED: 'ValidationFailed',
 };
 
 export const FEATURE_NAMES = {

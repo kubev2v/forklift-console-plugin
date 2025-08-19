@@ -3,6 +3,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
   Button,
+  ButtonVariant,
   DataListAction,
   DataListCell,
   DataListItem,
@@ -18,10 +19,24 @@ import {
   SelectOption,
 } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
+import { isEmpty } from '@utils/helpers';
 
 import type { Mapping, MappingSource } from '../types';
 
 import '../ProvidersCreateVmMigration.style.css';
+
+const toGroup = (sources: MappingSource[], noSourcesLabel: string, selectedSource: string) =>
+  isEmpty(sources) ? (
+    <SelectOption value={noSourcesLabel} isDisabled={true}>
+      {noSourcesLabel}
+    </SelectOption>
+  ) : (
+    sources.map(({ isMapped, label }) => (
+      <SelectOption value={label} key={label} isDisabled={isMapped && label !== selectedSource}>
+        {label}
+      </SelectOption>
+    ))
+  );
 
 type MappingListItemProps = {
   source: string;
@@ -116,6 +131,8 @@ export const MappingListItem: FC<MappingListItemProps> = ({
             <DataListCell key="source">
               <Form>
                 <FormGroup label={t('Source')}>
+                  {/* Custom select does not support the complex toggle being used here */}
+                  {/* eslint-disable-next-line no-restricted-syntax */}
                   <Select
                     role="menu"
                     aria-label=""
@@ -150,6 +167,8 @@ export const MappingListItem: FC<MappingListItemProps> = ({
             <DataListCell key="destination">
               <Form>
                 <FormGroup label={t('Target')}>
+                  {/* Custom select does not support the complex toggle being used here */}
+                  {/* eslint-disable-next-line no-restricted-syntax */}
                   <Select
                     role="menu"
                     aria-label=""
@@ -190,7 +209,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
         >
           <Button
             onClick={onClick}
-            variant="plain"
+            variant={ButtonVariant.plain}
             aria-label={t('Delete mapping')}
             key="delete-action"
             icon={<MinusCircleIcon />}
@@ -201,16 +220,3 @@ export const MappingListItem: FC<MappingListItemProps> = ({
     </DataListItem>
   );
 };
-
-const toGroup = (sources: MappingSource[], noSourcesLabel: string, selectedSource: string) =>
-  sources.length !== 0 ? (
-    sources.map(({ isMapped, label }) => (
-      <SelectOption value={label} key={label} isDisabled={isMapped && label !== selectedSource}>
-        {label}
-      </SelectOption>
-    ))
-  ) : (
-    <SelectOption value={noSourcesLabel} isDisabled={true}>
-      {noSourcesLabel}
-    </SelectOption>
-  );

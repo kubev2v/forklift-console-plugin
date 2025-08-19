@@ -2,6 +2,7 @@ import { createRef, type FormEvent, useState } from 'react';
 
 import {
   Button,
+  ButtonVariant,
   DataList,
   DataListCell,
   DataListCheck,
@@ -129,7 +130,10 @@ export const ManageColumnsModal = ({
   };
   const onSave = () => {
     // assume that action resourceFields are always at the end
-    onChange([...editedColumns, ...resourceFields.filter((col) => col.isAction || col.isHidden)]);
+    onChange([
+      ...editedColumns,
+      ...resourceFields.filter((col) => Boolean(col.isAction) || Boolean(col.isHidden)),
+    ]);
     onClose();
   };
 
@@ -155,16 +159,16 @@ export const ManageColumnsModal = ({
       actions={[
         <Button
           key="save"
-          variant="primary"
+          variant={ButtonVariant.primary}
           isDisabled={resourceFields === editedColumns}
           onClick={onSave}
         >
           {saveLabel}
         </Button>,
-        <Button key="cancel" variant="secondary" onClick={onClose}>
+        <Button key="cancel" variant={ButtonVariant.secondary} onClick={onClose}>
           {cancelLabel}
         </Button>,
-        <Button key="restore" variant="link" onClick={restoreDefaults}>
+        <Button key="restore" variant={ButtonVariant.link} onClick={restoreDefaults}>
           {restoreLabel}
         </Button>,
       ]}
