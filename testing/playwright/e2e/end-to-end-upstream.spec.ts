@@ -17,6 +17,10 @@ test.describe(
     });
 
     test('should run plan creation wizard', async ({ page }) => {
+      const plansPage = new PlansListPage(page);
+      const createWizard = new CreatePlanWizardPage(page);
+      const planDetailsPage = new PlanDetailsPage(page);
+
       const testData = createPlanTestData({
         planName: 'test-create-plan',
         planProject: 'openshift-mtv',
@@ -27,11 +31,7 @@ test.describe(
         storageMap: { name: 'test-storage-map-1', isPreExisting: true },
       });
 
-      const plansPage = new PlansListPage(page);
       await plansPage.navigateFromMainMenu();
-      const createWizard = new CreatePlanWizardPage(page);
-      const planDetailsPage = new PlanDetailsPage(page);
-
       await plansPage.clickCreatePlanButton();
       await createWizard.waitForWizardLoad();
       await createWizard.fillAndSubmit(testData);

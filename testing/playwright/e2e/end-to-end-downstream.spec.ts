@@ -43,8 +43,8 @@ test.describe.serial(
       },
       async ({ page }) => {
         const providersPage = new ProvidersListPage(page);
-        await providersPage.navigateFromMainMenu();
         const createProvider = new CreateProviderPage(page, resourceManager);
+        const providerDetailsPage = new ProviderDetailsPage(page);
 
         const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
         const providerName = `test-vsphere-provider-${Date.now()}`;
@@ -60,11 +60,10 @@ test.describe.serial(
           vddkInitImage: providerConfig.vddk_init_image,
         };
 
+        await providersPage.navigateFromMainMenu();
         await providersPage.clickCreateProviderButton();
         await createProvider.waitForWizardLoad();
         await createProvider.fillAndSubmit(testProviderData);
-
-        const providerDetailsPage = new ProviderDetailsPage(page);
         await providerDetailsPage.waitForPageLoad();
         await providerDetailsPage.verifyProviderDetails(testProviderData);
       },
@@ -76,6 +75,10 @@ test.describe.serial(
         tag: ['@downstream'],
       },
       async ({ page }) => {
+        const plansPage = new PlansListPage(page);
+        const createWizard = new CreatePlanWizardPage(page, resourceManager);
+        const planDetailsPage = new PlanDetailsPage(page);
+
         const planName = `${testProviderData.name}-plan`;
         const targetProjectName = `test-project-${Date.now()}`;
 
@@ -98,10 +101,7 @@ test.describe.serial(
           },
         });
 
-        const plansPage = new PlansListPage(page);
         await plansPage.navigateFromMainMenu();
-        const createWizard = new CreatePlanWizardPage(page, resourceManager);
-        const planDetailsPage = new PlanDetailsPage(page);
         await plansPage.clickCreatePlanButton();
         await createWizard.waitForWizardLoad();
         await createWizard.fillAndSubmit(testPlanData);
