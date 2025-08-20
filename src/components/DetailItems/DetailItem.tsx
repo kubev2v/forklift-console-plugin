@@ -189,7 +189,7 @@ const ContentField: FC<{
  */
 type DetailsItemProps = {
   title: string;
-  'data-testid'?: string;
+  testId?: string;
   helpContent?: ReactNode;
   showHelpIconNextToTitle?: boolean;
   moreInfoLabel?: string;
@@ -204,19 +204,19 @@ export const DetailsItem: FC<DetailsItemProps> = ({
   canEdit,
   content,
   crumbs,
-  'data-testid': dataTestId,
   helpContent,
   moreInfoLabel,
   moreInfoLink,
   onEdit,
   showHelpIconNextToTitle,
+  testId,
   title,
 }) => {
   const contents = ensureArray(content);
   const onEdits = ensureArray(onEdit);
 
   return (
-    <DescriptionListGroup data-testid={dataTestId}>
+    <DescriptionListGroup data-testid={testId}>
       <DisplayTitle
         title={title}
         helpContent={helpContent}

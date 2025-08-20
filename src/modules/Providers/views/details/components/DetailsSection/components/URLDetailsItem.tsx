@@ -33,7 +33,7 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      data-testid="url-detail-item"
+      testId="url-detail-item"
       title={t('URL')}
       content={provider?.spec?.url ?? <span className="text-muted">{t('Empty')}</span>}
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}

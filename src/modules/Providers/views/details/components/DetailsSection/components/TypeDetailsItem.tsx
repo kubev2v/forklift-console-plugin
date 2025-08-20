@@ -27,7 +27,7 @@ export const TypeDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      data-testid="type-detail-item"
+      testId="type-detail-item"
       title={t('Type')}
       content={
         <>

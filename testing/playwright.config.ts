@@ -3,8 +3,8 @@ import { defineConfig, devices } from '@playwright/test';
 const authFile = 'playwright/.auth/user.json';
 
 export default defineConfig({
-  globalSetup: require.resolve('./playwright/global.setup.ts'),
-  globalTeardown: require.resolve('./playwright/global.teardown.ts'),
+  globalSetup: './playwright/global.setup.ts',
+  globalTeardown: './playwright/global.teardown.ts',
   testDir: './playwright/e2e',
   timeout: process.env.JENKINS ? 120_000 : 60_000,
   fullyParallel: true,
