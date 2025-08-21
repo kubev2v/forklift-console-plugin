@@ -17,6 +17,7 @@ import PreserveStaticIPsDetailsItem from './components/PreserveStaticIPs/Preserv
 import PVCNameTemplateDetailsItem from './components/PVCNameTemplate/PVCNameTemplateDetailsItem';
 import RootDiskDetailsItem from './components/RootDisk/RootDiskDetailsItem';
 import SetLUKSEncryptionPasswordsDetailsItem from './components/SetLUKSEncryptionPasswords/SetLUKSEncryptionPasswordsDetailsItem';
+import TargetLabelsDetailsItem from './components/TargetLabels/TargetLabelsDetailsItem';
 import TargetPowerStateDetailsItem from './components/TargetPowerState/TargetPowerStateDetailsItem';
 import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
 
@@ -60,6 +61,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
         />
         <GuestConversionDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <TargetPowerStateDetailsItem plan={plan} canPatch={canPatch} />
+        <TargetLabelsDetailsItem plan={plan} canPatch={canPatch} />
       </DescriptionList>
     </ModalHOC>
   );
