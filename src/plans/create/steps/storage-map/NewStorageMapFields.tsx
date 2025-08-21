@@ -5,6 +5,7 @@ import { getSourceStorageValues } from 'src/storageMaps/utils/getSourceStorageVa
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
+import type { ProviderVirtualMachine } from '@kubev2v/types';
 import { Alert, AlertVariant, Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -12,33 +13,30 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardContext';
 import { GeneralFormFieldId } from '../general-information/constants';
-import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { CreatePlanStorageMapFieldId, createPlanStorageMapFieldLabels } from './constants';
 import CreatePlanStorageMapFieldTable from './CreatePlanStorageMapFieldTable';
 
 const NewStorageMapFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control, getFieldState, setValue } = useCreatePlanFormContext();
-  const { storage } = useCreatePlanWizardContext();
+  const { control, getFieldState } = useCreatePlanFormContext();
+  const { storage, vmsWithDisks: vmsWithDisksResult } = useCreatePlanWizardContext();
   const { error } = getFieldState(CreatePlanStorageMapFieldId.StorageMap);
-  const [sourceProvider, vms, storageMap] = useWatch({
+  const [sourceProvider, storageMap] = useWatch({
     control,
-    name: [
-      GeneralFormFieldId.SourceProvider,
-      VmFormFieldId.Vms,
-      CreatePlanStorageMapFieldId.StorageMap,
-    ],
+    name: [GeneralFormFieldId.SourceProvider, CreatePlanStorageMapFieldId.StorageMap],
   });
 
   const [availableSourceStorages, sourceStoragesLoading, sourceStoragesError] = storage.sources;
   const [availableTargetStorages, _targetStoragesLoading, targetStoragesError] = storage.targets;
-  const isStorageMapEmpty = isEmpty(storageMap);
+  const [vmsWithDisks, vmsWithDisksLoading] = vmsWithDisksResult;
+
+  const isLoading = sourceStoragesLoading || vmsWithDisksLoading;
 
   const { other: otherSourceStorages, used: usedSourceStorages } = getSourceStorageValues(
     sourceProvider,
     availableSourceStorages,
-    Object.values(vms),
+    vmsWithDisks as ProviderVirtualMachine[],
   );
   const defaultTargetStorageName = availableTargetStorages?.[0]?.name;
 
@@ -71,7 +69,7 @@ const NewStorageMapFields: FC = () => {
     <Stack hasGutter className="pf-v5-u-ml-lg">
       {error?.root && <Alert variant={AlertVariant.danger} isInline title={error.root.message} />}
 
-      {isEmpty(usedSourceStorages) && !sourceStoragesLoading && (
+      {isEmpty(usedSourceStorages) && !isLoading && (
         <Alert
           variant={AlertVariant.warning}
           isInline
@@ -83,7 +81,7 @@ const NewStorageMapFields: FC = () => {
         targetStorages={availableTargetStorages}
         usedSourceStorages={usedSourceStorages}
         otherSourceStorages={otherSourceStorages}
-        isLoading={sourceStoragesLoading}
+        isLoading={isLoading}
         loadError={sourceStoragesError ?? targetStoragesError}
       />
 
