@@ -3,12 +3,12 @@ import { join } from 'path';
 
 import { test } from '@playwright/test';
 
-const providersPath = join(__dirname, '../../.providers.json');
+const providersPath = join(__dirname, '../../../.providers.json');
 if (!existsSync(providersPath)) {
   throw new Error(`.providers.json file not found at: ${providersPath}`);
 }
 
-import * as providers from '../../.providers.json';
+import * as providers from '../../../.providers.json';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage';
