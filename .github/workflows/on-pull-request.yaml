@@ -116,7 +116,7 @@ jobs:
           timeout 300 bash -c 'until curl -f http://localhost:30080; do sleep 5; done'
 
       - name: Run Playwright tests (upstream only)
-        run: cd testing && npx playwright test playwright/e2e/end-to-end-upstream.spec.ts
+        run: cd testing && npm run test:upstream
         env:
           BASE_ADDRESS: http://localhost:30080
 

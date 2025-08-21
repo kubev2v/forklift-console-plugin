@@ -9,17 +9,17 @@ if (!existsSync(providersPath)) {
 }
 
 import * as providers from '../../.providers.json';
-import { CreatePlanWizardPage } from '../page-objects/CreatePlanWizard/CreatePlanWizardPage';
-import { CreateProviderPage } from '../page-objects/CreateProviderPage';
-import { PlanDetailsPage } from '../page-objects/PlanDetailsPage';
-import { PlansListPage } from '../page-objects/PlansListPage';
-import { ProviderDetailsPage } from '../page-objects/ProviderDetailsPage';
-import { ProvidersListPage } from '../page-objects/ProvidersListPage';
-import { createPlanTestData, type ProviderConfig, type ProviderData } from '../types/test-data';
-import { ResourceManager } from '../utils/ResourceManager';
+import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
+import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
+import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage';
+import { PlansListPage } from '../../page-objects/PlansListPage';
+import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
+import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
+import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
+import { ResourceManager } from '../../utils/ResourceManager';
 
 test.describe.serial(
-  'Plans - Downstream End-to-End Migration',
+  'Plans - Downstream Happy Path Migration',
   {
     tag: '@downstream',
   },
