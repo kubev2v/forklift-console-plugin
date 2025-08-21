@@ -48,7 +48,7 @@ export const NetworkMapPageHeadings: FC<{ name: string; namespace: string }> = (
 
   return (
     <PageHeadings
-      model={NetworkMapModel}
+      model={{ ...NetworkMapModel, label: 'Network map' }}
       obj={obj}
       namespace={namespace}
       actions={<NetworkMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />}

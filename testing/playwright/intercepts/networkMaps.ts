@@ -112,15 +112,17 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     },
   );
 
-  // NetworkMap creation for copying (POST request with new name)
+  // NetworkMap creation (POST request)
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/(?:openshift-mtv|konveyor-forklift)\/networkmaps$/,
     async (route) => {
       if (route.request().method() === 'POST') {
         const requestBody = JSON.parse(route.request().postData() ?? '{}') as {
-          metadata?: { name?: string };
+          metadata?: { name?: string; namespace?: string };
+          spec?: any;
         };
-        const newName = requestBody.metadata?.name ?? 'test-create-plan-networkmap';
+        const newName = requestBody.metadata?.name ?? 'test-create-network-map';
+        const namespace = requestBody.metadata?.namespace ?? 'konveyor-forklift';
 
         await route.fulfill({
           status: 201,
@@ -130,8 +132,10 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
             metadata: {
               ...networkMapData1.metadata,
               name: newName,
+              namespace,
               uid: `test-networkmap-uid-${Date.now()}`,
             },
+            spec: requestBody.spec ?? networkMapData1.spec,
           }),
         });
       } else {
@@ -140,14 +144,20 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     },
   );
 
-  // NetworkMap PATCH request for adding owner references
+  // NetworkMap GET/PATCH requests
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps\/[^/?]*$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/(?:openshift-mtv|konveyor-forklift)\/networkmaps\/[^/?]*$/,
     async (route) => {
-      if (route.request().method() === 'PATCH') {
-        // Extract the name from URL
-        const url = route.request().url();
-        const name = url.split('/').pop();
+      const parseUrl = (url: string) => {
+        const urlParts = url.split('/');
+        const name = urlParts.pop();
+        const namespaceIndex = urlParts.indexOf('namespaces') + 1;
+        const namespace = urlParts[namespaceIndex];
+        return { name, namespace };
+      };
+
+      if (route.request().method() === 'GET') {
+        const { name, namespace } = parseUrl(route.request().url());
 
         await route.fulfill({
           status: 200,
@@ -157,6 +167,23 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
             metadata: {
               ...networkMapData1.metadata,
               name,
+              namespace,
+              uid: `test-networkmap-uid-${name}`,
+            },
+          }),
+        });
+      } else if (route.request().method() === 'PATCH') {
+        const { name, namespace } = parseUrl(route.request().url());
+
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            ...networkMapData1,
+            metadata: {
+              ...networkMapData1.metadata,
+              name,
+              namespace,
               ownerReferences: [
                 {
                   apiVersion: 'forklift.konveyor.io/v1beta1',

@@ -7,8 +7,8 @@ import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 import { validateMapName } from '@utils/validation/mapNameValidation';
 
-import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
-import type { CreateStorageMapFormData } from '../types';
+import { NetworkMapFieldId, networkMapFieldLabels } from '../../constants';
+import type { CreateNetworkMapFormData } from '../types';
 
 const MapNameField: FC = () => {
   const { t } = useForkliftTranslation();
@@ -16,27 +16,29 @@ const MapNameField: FC = () => {
     control,
     formState: { isSubmitting },
     getFieldState,
-  } = useFormContext<CreateStorageMapFormData>();
-  const { error } = getFieldState(StorageMapFieldId.MapName);
+  } = useFormContext<CreateNetworkMapFormData>();
+  const { error } = getFieldState(NetworkMapFieldId.MapName);
 
   return (
     <FormGroupWithErrorText
       isRequired
-      fieldId={StorageMapFieldId.MapName}
-      label={storageMapFieldLabels[StorageMapFieldId.MapName]}
+      fieldId={NetworkMapFieldId.MapName}
+      label={networkMapFieldLabels[NetworkMapFieldId.MapName]}
     >
       <Controller
-        name={StorageMapFieldId.MapName}
+        name={NetworkMapFieldId.MapName}
         control={control}
         render={({ field }) => (
           <TextInput
             {...field}
+            id={NetworkMapFieldId.MapName}
+            data-testid="network-map-name-input"
             isDisabled={isSubmitting}
             validated={getInputValidated(Boolean(error))}
           />
         )}
         rules={{
-          validate: (value) => validateMapName(value, t('Storage map')),
+          validate: (value) => validateMapName(value, t('Network map')),
         }}
       />
     </FormGroupWithErrorText>
