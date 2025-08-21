@@ -1,3 +1,5 @@
+import { getMapFieldId } from '@utils/mapForms/getMapFieldId';
+
 import { StorageMapFieldId, type StorageMapping } from '../constants';
 
 type StorageMappingId = `${StorageMapFieldId.StorageMap}.${number}.${keyof StorageMapping}`;
@@ -7,4 +9,4 @@ type StorageMappingId = `${StorageMapFieldId.StorageMap}.${number}.${keyof Stora
  * Used for form field identification and validation
  */
 export const getStorageMapFieldId = (id: keyof StorageMapping, index: number): StorageMappingId =>
-  `${StorageMapFieldId.StorageMap}.${index}.${id}`;
+  getMapFieldId(StorageMapFieldId.StorageMap, id, index) as StorageMappingId;

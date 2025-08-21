@@ -19,6 +19,7 @@ export default {
     'src/modules/NetworkMaps/views/list/NetworkMapsListPage.tsx',
     'src/modules/NetworkMaps/views/details/NetworkMapDetailsPage.tsx',
     'src/modules/NetworkMaps/yamlTemplates/defaultYamlTemplate.ts',
+    'src/networkMaps/create/NetworkMapCreatePage.tsx',
 
     'src/modules/StorageMaps/views/list/StorageMapsListPage.tsx',
     'src/modules/StorageMaps/views/details/StorageMapDetailsPage.tsx',
