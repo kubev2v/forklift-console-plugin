@@ -1,6 +1,7 @@
 import { createStorageMap } from 'src/storageMaps/create/utils/createStorageMap';
 
 import type { IoK8sApiCoreV1Secret, V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
+import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { isEmpty } from '@utils/helpers';
 
 import { MigrationHookFieldId } from '../steps/migration-hooks/constants';
@@ -18,7 +19,10 @@ import { createPlan } from './createPlan';
  * Handles the migration plan submission process including creation of network map,
  * storage map, encryption secret, hooks, and establishing owner references.
  */
-export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise<void> => {
+export const submitMigrationPlan = async (
+  formData: CreatePlanFormData,
+  trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void,
+): Promise<void> => {
   const {
     diskDecryptionPassPhrases,
     existingNetworkMap,
@@ -63,6 +67,7 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
           sourceProvider,
           targetNamespace: targetProject,
           targetProvider,
+          trackEvent,
         }),
 
     existingStorageMap
@@ -73,6 +78,7 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
           project: planProject,
           sourceProvider,
           targetProvider,
+          trackEvent,
         }),
 
     isEmpty(diskDecryptionPassPhrases) ||
@@ -125,4 +131,17 @@ export const submitMigrationPlan = async (formData: CreatePlanFormData): Promise
     },
     createdPlanRef,
   );
+
+  trackEvent?.(TELEMETRY_EVENTS.PLAN_CREATE_COMPLETED, {
+    creationMethod: CreationMethod.PlanWizard,
+    hasCustomNetworkMap: !existingNetworkMap,
+    hasCustomStorageMap: !existingStorageMap,
+    hasEncryption: Boolean(createdSecret),
+    hasHooks: hasEnabledHooks,
+    migrationType,
+    namespace: planProject,
+    sourceProviderType: sourceProvider?.spec?.type,
+    targetProviderType: targetProvider?.spec?.type,
+    vmCount: Object.keys(vms).length,
+  });
 };

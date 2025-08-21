@@ -12,6 +12,8 @@ import {
   MenuToggle,
   type MenuToggleElement,
 } from '@patternfly/react-core';
+import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 
 const StorageMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
   namespace,
@@ -19,6 +21,7 @@ const StorageMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
+  const { trackEvent } = useForkliftAnalytics();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const storageMapsListUrl = getResourceUrl({
@@ -55,6 +58,10 @@ const StorageMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
         <DropdownItem
           key="form"
           onClick={() => {
+            trackEvent(TELEMETRY_EVENTS.STORAGE_MAP_CREATE_STARTED, {
+              creationMethod: CreationMethod.Form,
+              namespace,
+            });
             navigate(`/k8s/storageMaps/create/form`);
           }}
         >
@@ -64,6 +71,10 @@ const StorageMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
         <DropdownItem
           key="yaml"
           onClick={() => {
+            trackEvent(TELEMETRY_EVENTS.STORAGE_MAP_CREATE_STARTED, {
+              creationMethod: CreationMethod.YamlEditor,
+              namespace,
+            });
             navigate(`${storageMapsListUrl}/~new`);
           }}
         >

@@ -30,7 +30,7 @@ export const useForkliftAnalytics = () => {
       return;
     }
 
-    sendAnalyticsEvent(eventType, properties, { clusterId, segmentKey });
+    sendAnalyticsEvent(`MTV: ${eventType}`, properties, { clusterId, segmentKey });
   };
 
   return { trackEvent };
