@@ -6,19 +6,23 @@ import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 
 import { useCreatePlanFormContext } from './hooks/useCreatePlanFormContext';
+import { useOvirtDisksForVMs } from './hooks/useOvirtDisksForVMs';
 import { useOvirtNicProfiles } from './hooks/useOvirtNicProfiles';
 import { GeneralFormFieldId } from './steps/general-information/constants';
+import { VmFormFieldId } from './steps/virtual-machines/constants';
 import { CreatePlanWizardContext } from './constants';
+import type { ProviderVirtualMachine } from './types';
 
 const CreatePlanWizardContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const { control } = useCreatePlanFormContext();
 
-  const [sourceProvider, targetProvider, targetProject] = useWatch({
+  const [sourceProvider, targetProvider, targetProject, vms] = useWatch({
     control,
     name: [
       GeneralFormFieldId.SourceProvider,
       GeneralFormFieldId.TargetProvider,
       GeneralFormFieldId.TargetProject,
+      VmFormFieldId.Vms,
     ],
   });
 
@@ -28,6 +32,19 @@ const CreatePlanWizardContextProvider: React.FC<PropsWithChildren> = ({ children
   const oVirtNicProfilesResult = useOvirtNicProfiles(sourceProvider);
   const sourceStoragesResult = useSourceStorages(sourceProvider);
   const targetStoragesResult = useTargetStorages(targetProvider, targetProject);
+
+  // Fetch VMs with disk information for oVirt providers
+  const vmList = Object.values(vms || {});
+  const {
+    error: vmsWithDisksError,
+    loading: vmsWithDisksLoading,
+    vmsWithDisks,
+  } = useOvirtDisksForVMs(sourceProvider, vmList);
+
+  const vmsWithDisksResult: [ProviderVirtualMachine[], boolean, Error | null] = useMemo(
+    () => [vmsWithDisks as ProviderVirtualMachine[], vmsWithDisksLoading, vmsWithDisksError],
+    [vmsWithDisks, vmsWithDisksLoading, vmsWithDisksError],
+  );
 
   const value = useMemo(
     () => ({
@@ -40,13 +57,15 @@ const CreatePlanWizardContextProvider: React.FC<PropsWithChildren> = ({ children
         sources: sourceStoragesResult,
         targets: targetStoragesResult,
       },
+      vmsWithDisks: vmsWithDisksResult,
     }),
     [
-      sourceNetworksResult,
-      targetNetworksResult,
       oVirtNicProfilesResult,
+      sourceNetworksResult,
       sourceStoragesResult,
+      targetNetworksResult,
       targetStoragesResult,
+      vmsWithDisksResult,
     ],
   );
 
