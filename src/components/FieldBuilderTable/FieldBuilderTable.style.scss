@@ -1,4 +1,6 @@
 .field-builder-table {
+  table-layout: fixed;
+
   // Remove extra padding from headers and form groups
   .pf-v5-c-table__thead {
     tr:not(.pf-v5-c-table__expandable-row) {

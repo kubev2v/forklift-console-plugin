@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { Button, ButtonVariant, Popover, Text, TextContent } from '@patternfly/react-core';
-import OutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/js/icons/outlined-question-circle-icon';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n.tsx';
 
 const ProjectNameHelp: FC = () => {

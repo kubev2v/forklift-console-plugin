@@ -1,14 +1,14 @@
 import { test } from '@playwright/test';
 
 import { TEST_DATA } from '../fixtures/test-data';
-import { setupCreatePlanIntercepts } from '../intercepts';
+import { setupForkliftIntercepts } from '../intercepts';
 import { CreatePlanWizardPage } from '../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../page-objects/PlanDetailsPage';
 import { PlansListPage } from '../page-objects/PlansListPage';
 
 test.describe('Plans - Critical End-to-End Migration', () => {
   test.beforeEach(async ({ page }) => {
-    await setupCreatePlanIntercepts(page);
+    await setupForkliftIntercepts(page);
     const plansPage = new PlansListPage(page);
     await plansPage.navigateFromMainMenu();
   });
