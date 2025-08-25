@@ -7,24 +7,26 @@ import type {
   V1beta1NetworkMapSpecMapDestination,
   V1beta1NetworkMapSpecMapSource,
 } from '@kubev2v/types';
+import { DEFAULT_NETWORK } from '@utils/constants';
 
-export const convertInventoryNetworkToV1beta1NetworkMapSpecMapSource = (
+export const convertInventoryNetworkToSource = (
   inventoryNetwork: InventoryNetwork,
 ): V1beta1NetworkMapSpecMapSource => {
-  if (inventoryNetwork?.id === 'pod') {
+  if (inventoryNetwork?.id === POD) {
     return { type: POD };
   }
 
   return {
     id: inventoryNetwork?.id,
-    name: inventoryNetwork.name,
-    namespace: inventoryNetwork.namespace,
+    name: inventoryNetwork?.name,
+    namespace: 'namespace' in inventoryNetwork ? inventoryNetwork?.namespace : undefined,
+    type: inventoryNetwork?.providerType,
   };
 };
 
 export const openShiftNetworkAttachmentDefinitionToName = (
   net: OpenShiftNetworkAttachmentDefinition,
-) => (net?.namespace ? `${net?.namespace}/${net?.name}` : (net?.name ?? 'Pod'));
+) => (net?.namespace ? `${net?.namespace}/${net?.name}` : (net?.name ?? DEFAULT_NETWORK));
 
 export const getSourceNetName = (
   networks: InventoryNetwork[],
@@ -46,10 +48,10 @@ export const getDestinationNetName = (
       network?.name === destination?.name && network?.namespace === destination?.namespace,
   );
 
-  return net ? openShiftNetworkAttachmentDefinitionToName(net) : 'Pod';
+  return net ? openShiftNetworkAttachmentDefinitionToName(net) : DEFAULT_NETWORK;
 };
 
-export const convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination = (
+export const convertNetworkToDestination = (
   networkAttachmentDefinition?: OpenShiftNetworkAttachmentDefinition,
 ): V1beta1NetworkMapSpecMapDestination => {
   if (!networkAttachmentDefinition) {
@@ -59,7 +61,7 @@ export const convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecM
   return {
     name: networkAttachmentDefinition.name,
     namespace: networkAttachmentDefinition.namespace,
-    type: networkAttachmentDefinition.type ?? MULTUS,
+    type: MULTUS,
   };
 };
 

@@ -12,7 +12,7 @@ import type {
 } from '@kubev2v/types';
 import { CONDITION_STATUS } from '@utils/constants';
 
-import { IgnoreNetwork, PodNetworkLabel } from '../utils/constants';
+import { DefaultNetworkLabel, IgnoreNetwork } from '../utils/constants';
 import {
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
@@ -128,7 +128,7 @@ export const usePlanMappingsHandlers: UsePlanMappingsHandlers = ({
             current.source &&
           (item.destination.name === current.destination ||
             `${item.destination.namespace}/${item.destination.name}` === current.destination ||
-            (current.destination === PodNetworkLabel.Source && item.destination.type === POD) ||
+            (current.destination === DefaultNetworkLabel.Source && item.destination.type === POD) ||
             (current.destination === IgnoreNetwork.Label &&
               item.destination.type === IgnoreNetwork.Type)),
         newMap,

@@ -55,4 +55,4 @@ export const FEATURE_NAMES = {
   VOLUME_POPULATOR: 'feature_volume_populator',
 } as const;
 
-export const POD_NETWORK = t('Pod network');
+export const DEFAULT_NETWORK = t('Default network');

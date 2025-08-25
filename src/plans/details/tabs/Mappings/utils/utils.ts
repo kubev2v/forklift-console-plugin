@@ -27,7 +27,7 @@ export const getMappingAlerts: (props: getMappingAlertsProps) => string[] = ({
   const alerts = [];
 
   if (targetStoragesEmpty) {
-    // Note: target network can't be missing, we always have Pod network.
+    // Note: target network can't be missing, we always have Default network.
     alerts.push(
       t(
         'The target storage mapping data from the inventory is not available: {{resourcesError}}.',

@@ -1,4 +1,4 @@
-import { PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
+import { DefaultNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
@@ -15,14 +15,30 @@ const getNetworksForVM = (vm: ProviderVirtualMachine) => {
       return vm?.nics?.map((nic) => nic?.profile) ?? [];
     }
     case PROVIDER_TYPES.openshift: {
-      return (
-        vm?.object?.spec?.template?.spec?.networks?.map((network) =>
-          network?.pod ? PodNetworkLabel.Source : network?.multus?.networkName,
-        ) ?? []
+      const networks = vm?.object?.spec?.template?.spec?.networks;
+
+      if (!networks) {
+        return [];
+      }
+
+      return networks.map((network) =>
+        network?.pod ? DefaultNetworkLabel.Source : network?.multus?.networkName,
       );
     }
     case PROVIDER_TYPES.ova: {
-      return vm?.networks?.map((network) => Object?.values(network)[0]) ?? [];
+      const networks = vm?.Networks;
+
+      if (!networks || !Array.isArray(networks)) {
+        return [];
+      }
+
+      return networks.map((network: unknown) => {
+        if (network && typeof network === 'object') {
+          return Object.values(network as Record<string, unknown>)[0];
+        }
+
+        return null;
+      });
     }
     default:
       return [];
