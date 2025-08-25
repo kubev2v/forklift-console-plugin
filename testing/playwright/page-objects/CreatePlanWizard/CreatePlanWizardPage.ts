@@ -120,7 +120,7 @@ export class CreatePlanWizardPage {
         this.resourceManager.addResource({
           namespace: '',
           resourceType: 'projects',
-          resourceName: testData[PlanCreationFields.targetProject].name,
+          resourceName: testData[PlanCreationFields.targetProject].metadata?.name || '',
         });
       }
     }

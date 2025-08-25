@@ -1,7 +1,6 @@
-import { V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
+import type { V1beta1NetworkMap, V1beta1StorageMap, OpenShiftNamespace } from '@kubev2v/types';
 
-export interface TargetProject {
-  name: string;
+export interface TargetProject extends Partial<OpenShiftNamespace> {
   isPreexisting: boolean;
 }
 

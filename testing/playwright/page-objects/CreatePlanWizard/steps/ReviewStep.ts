@@ -63,7 +63,7 @@ export class ReviewStep {
       expectedData[PlanCreationFields.targetProvider],
     );
     await expect(this.page.getByTestId('review-target-project')).toContainText(
-      expectedData[PlanCreationFields.targetProject].name,
+      expectedData[PlanCreationFields.targetProject].metadata?.name || '',
     );
   }
 
