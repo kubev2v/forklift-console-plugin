@@ -2,11 +2,10 @@
   "name": "e2e-tests",
   "version": "1.0.0",
   "scripts": {
-    "test:e2e": "npx playwright test --headed",
-    "test:e2e:headless": "npx playwright test",
+
+    "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
-    "test:downstream": "BASE_ADDRESS=http://localhost:9000 npx playwright test --grep @downstream",
-    "test:downstream:remote": "npx playwright test --grep @downstream",
+    "test:downstream": "npx playwright test --grep @downstream",
     "test:downstream:remote:docker": "bash run-e2e-docker.sh",
     "test:downstream:local": "BASE_ADDRESS=http://localhost:9000 npx playwright test --grep @downstream",
     "test:upstream": "npx playwright test playwright/e2e/upstream/"
