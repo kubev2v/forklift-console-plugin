@@ -25,7 +25,7 @@ const ProjectSelectEmptyState: FC<ProjectSelectEmptyStateProps> = ({
   const { t } = useForkliftTranslation();
 
   if (!emptyStateMessage) {
-    return undefined;
+    return null;
   }
 
   return (
@@ -35,7 +35,11 @@ const ProjectSelectEmptyState: FC<ProjectSelectEmptyStateProps> = ({
       {onCreate ? (
         <EmptyStateFooter>
           <EmptyStateActions>
-            <Button variant={ButtonVariant.link} onClick={onCreate}>
+            <Button
+              variant={ButtonVariant.link}
+              onClick={onCreate}
+              data-testid="create-project-button"
+            >
               {t('Create project')}
             </Button>
           </EmptyStateActions>

@@ -25,6 +25,7 @@ const NamespaceDetailsItem: FC<ResourceDetailsItemProps> = ({
 
   return (
     <DetailsItem
+      testId="project-detail-item"
       title={t('Project')}
       content={
         <ResourceLink

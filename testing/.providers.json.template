@@ -1,0 +1,83 @@
+{
+  "vsphere-6.5": {
+    "type": "vsphere",
+    "endpoint_type": "vcenter",
+    "version": "6.5",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "guest_vm_linux_user": "",
+    "guest_vm_linux_password": "",
+    "guest_vm_win_user": "",
+    "guest_vm_win_password": "",
+    "vddk_init_image": ""
+  },
+  "vsphere-7.0.3": {
+    "type": "vsphere",
+    "endpoint_type": "vcenter",
+    "version": "7.0.3",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "guest_vm_linux_user": "",
+    "guest_vm_linux_password": "",
+    "guest_vm_win_user": "",
+    "guest_vm_win_password": "",
+    "vddk_init_image": ""
+  },
+  "vsphere-8.0.1": {
+    "type": "vsphere",
+    "endpoint_type": "vcenter",
+    "version": "8.0.1",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "guest_vm_linux_user": "",
+    "guest_vm_linux_password": "",
+    "guest_vm_win_user": "",
+    "guest_vm_win_password": "",
+    "vddk_init_image": ""
+  },
+  "ovirt-4.4.9": {
+    "type": "ovirt",
+    "version": "4.4.9",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": ""
+  },
+  "openstack-psi": {
+    "type": "openstack",
+    "version": "psi",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "user_domain_name": "",
+    "region_name": "",
+    "project_name": "",
+    "user_domain_id": "",
+    "project_domain_id": "",
+    "guest_vm_linux_user": "",
+    "guest_vm_linux_password": ""
+  },
+  "openshift-remote": {
+    "type": "openshift",
+    "version": "remote",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": ""
+  },
+  "ova-nfs": {
+    "type": "ova",
+    "version": "nfs",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": ""
+  }
+}

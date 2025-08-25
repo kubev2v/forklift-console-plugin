@@ -1,6 +1,6 @@
 import type { FC, MouseEvent, ReactNode } from 'react';
-import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 
+import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -189,6 +189,7 @@ const ContentField: FC<{
  */
 type DetailsItemProps = {
   title: string;
+  testId?: string;
   helpContent?: ReactNode;
   showHelpIconNextToTitle?: boolean;
   moreInfoLabel?: string;
@@ -208,13 +209,14 @@ export const DetailsItem: FC<DetailsItemProps> = ({
   moreInfoLink,
   onEdit,
   showHelpIconNextToTitle,
+  testId,
   title,
 }) => {
   const contents = ensureArray(content);
   const onEdits = ensureArray(onEdit);
 
   return (
-    <DescriptionListGroup>
+    <DescriptionListGroup data-testid={testId}>
       <DisplayTitle
         title={title}
         helpContent={helpContent}

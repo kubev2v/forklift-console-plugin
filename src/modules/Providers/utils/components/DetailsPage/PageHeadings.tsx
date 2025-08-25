@@ -40,7 +40,7 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
     <div className="pf-v6-c-page__main-section">
       <BreadCrumbs model={model} namespace={namespace} />
       <span className="co-m-pane__heading co-resource-item">
-        <h1 className="pf-v6-c-content--h1" data-testid="plan-details-title">
+        <h1 className="pf-v6-c-content--h1" data-testid="resource-details-title">
           <Split hasGutter>
             <SplitItem>
               <ResourceIcon

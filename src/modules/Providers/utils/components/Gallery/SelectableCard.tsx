@@ -17,6 +17,8 @@ type SelectableCardProps = {
   isCompact?: boolean;
   /** Optional: A string representing a CSS class name. This class will be applied to the card's top-level DOM element, allowing you to style the card with custom CSS. */
   className?: string;
+  /** Optional: A string to use for the `data-testid` attribute. */
+  testId?: string;
 };
 
 /**
@@ -29,6 +31,7 @@ export const SelectableCard: FC<SelectableCardProps> = ({
   isCompact,
   isSelected,
   onChange,
+  testId,
   title,
   titleLogo,
 }) => {
@@ -40,6 +43,7 @@ export const SelectableCard: FC<SelectableCardProps> = ({
 
   return (
     <Card
+      data-testid={testId}
       className={`forklift-selectable-gallery-card ${className}`}
       id="selectable-card"
       onKeyDown={handleClick}

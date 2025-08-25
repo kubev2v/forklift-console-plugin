@@ -66,6 +66,7 @@ const VMwareURLEditItems: FC<VMwareURLEditItemsProps> = ({
         validated={urlValidation.type}
       >
         <TextInput
+          data-testid="provider-url-input"
           spellCheck="false"
           isRequired
           type="text"

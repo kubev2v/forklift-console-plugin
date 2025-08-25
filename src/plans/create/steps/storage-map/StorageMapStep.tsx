@@ -45,6 +45,7 @@ const StorageMapStep = () => {
               <FlexItem>
                 <Stack hasGutter>
                   <Radio
+                    data-testid="use-existing-storage-map-radio"
                     id={StorageMapType.Existing}
                     name={StorageMapType.Existing}
                     label={storageMapTypeLabels[StorageMapType.Existing]}
@@ -73,6 +74,7 @@ const StorageMapStep = () => {
               <FlexItem>
                 <Stack hasGutter>
                   <Radio
+                    data-testid="use-new-storage-map-radio"
                     id={StorageMapType.New}
                     name={StorageMapType.New}
                     label={storageMapTypeLabels[StorageMapType.New]}

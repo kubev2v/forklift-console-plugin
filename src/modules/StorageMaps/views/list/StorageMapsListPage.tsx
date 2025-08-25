@@ -130,7 +130,7 @@ const StorageMapsListPage: FC<{
     <StandardPage<StorageMapData>
       data-testid="network-maps-list"
       {...(permissions.canCreate && {
-        addButton: <StorageMapsAddButton namespace={namespace} testId="add-network-map-button" />,
+        addButton: <StorageMapsAddButton namespace={namespace} testId="add-storage-map-button" />,
       })}
       dataSource={[data || [], StorageMapsLoaded, StorageMapsLoadError]}
       RowMapper={StorageMapRow}

@@ -85,6 +85,7 @@ const ProjectSelectTypeAhead: FC<ProjectSelectProps> = ({
             isInline
             icon={<PlusCircleIcon />}
             onClick={onNewProject}
+            data-testid="create-project-button"
           >
             {t('Create project')}
           </Button>

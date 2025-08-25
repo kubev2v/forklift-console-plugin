@@ -117,7 +117,6 @@ export const getSourceStorageValues = (
   const sourceProviderType = sourceProvider?.spec?.type;
   const storageIdsUsedByVms = getStoragesUsedBySelectedVms(vms);
   const usedStorageIds = new Set(storageIdsUsedByVms);
-
   // For OVA providers, filter storages to only those used by selected VMs
   const relevantStorages =
     sourceProviderType === PROVIDER_TYPES.ova

@@ -105,6 +105,7 @@ const VCenterCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
         validated={userValidation.type}
       >
         <TextInput
+          data-testid="provider-username-input"
           spellCheck="false"
           isRequired
           type="text"
@@ -125,6 +126,7 @@ const VCenterCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
       >
         <InputGroup>
           <TextInput
+            data-testid="provider-password-input"
             spellCheck="false"
             isRequired
             type={passwordHidden ? 'password' : 'text'}

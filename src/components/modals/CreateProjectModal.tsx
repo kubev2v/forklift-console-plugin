@@ -93,6 +93,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
           disabled={inProgress}
           onClick={submit}
           id="confirm-action"
+          data-testid="create-project-modal-create-button"
         >
           {t('Create project')}
         </Button>,
@@ -132,6 +133,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
             }}
             value={name ?? ''}
             required
+            data-testid="project-name-input"
           />
         </FormGroup>
         <FormGroup fieldId="input-display-name" label={t('Display name')}>
@@ -142,6 +144,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
               setDisplayName(value);
             }}
             value={displayName ?? ''}
+            data-testid="project-display-name-input"
           />
         </FormGroup>
         <FormGroup fieldId="input-description" label={t('Description')}>

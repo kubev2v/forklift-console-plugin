@@ -28,6 +28,7 @@ export const CredentialsDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
+      testId="credentials-detail-item"
       title={t('Credentials')}
       content={
         provider?.spec?.secret.name ? (
