@@ -1,6 +1,11 @@
 import { expect, type Page } from '@playwright/test';
 
-import type { NetworkMap, PlanTestData, StorageMap } from '../../../types/test-data';
+import {
+  PlanCreationFields,
+  type NetworkMap,
+  type PlanTestData,
+  type StorageMap,
+} from '../../../types/test-data';
 
 export class ReviewStep {
   private readonly page: Page;
@@ -36,8 +41,8 @@ export class ReviewStep {
   async verifyAllSections(planData: PlanTestData): Promise<void> {
     await this.verifyGeneralSection(planData);
     await this.verifyVirtualMachinesSection();
-    await this.verifyNetworkMapSection(planData.networkMap);
-    await this.verifyStorageMapSection(planData.storageMap);
+    await this.verifyNetworkMapSection(planData[PlanCreationFields.networkMap]);
+    await this.verifyStorageMapSection(planData[PlanCreationFields.storageMap]);
     await this.verifyMigrationTypeSection();
     await this.verifyOtherSettingsSection();
     await this.verifyHooksSection();
@@ -45,18 +50,20 @@ export class ReviewStep {
 
   async verifyGeneralSection(expectedData: PlanTestData): Promise<void> {
     await expect(this.page.getByTestId('review-general-section')).toBeVisible();
-    await expect(this.page.getByTestId('review-plan-name')).toContainText(expectedData.planName);
+    await expect(this.page.getByTestId('review-plan-name')).toContainText(
+      expectedData[PlanCreationFields.planName],
+    );
     await expect(this.page.getByTestId('review-plan-project')).toContainText(
-      expectedData.planProject,
+      expectedData[PlanCreationFields.planProject],
     );
     await expect(this.page.getByTestId('review-source-provider')).toContainText(
-      expectedData.sourceProvider,
+      expectedData[PlanCreationFields.sourceProvider],
     );
     await expect(this.page.getByTestId('review-target-provider')).toContainText(
-      expectedData.targetProvider,
+      expectedData[PlanCreationFields.targetProvider],
     );
     await expect(this.page.getByTestId('review-target-project')).toContainText(
-      expectedData.targetProject.name,
+      expectedData[PlanCreationFields.targetProject].name,
     );
   }
 
@@ -77,14 +84,15 @@ export class ReviewStep {
     await expect(section).toBeVisible();
 
     if (expectedNetworkMap) {
+      const mapName = expectedNetworkMap.metadata?.name;
+      if (!mapName) return;
+
       if (expectedNetworkMap.isPreExisting) {
-        await expect(section.getByTestId('review-network-map')).toContainText(
-          expectedNetworkMap.name,
-        );
+        await expect(section.getByTestId('review-network-map')).toContainText(mapName);
       } else {
         await expect(
           section.locator('.pf-v5-c-description-list__group', { hasText: 'Network map name' }),
-        ).toContainText(expectedNetworkMap.name);
+        ).toContainText(mapName);
       }
     }
   }
@@ -103,14 +111,15 @@ export class ReviewStep {
     const section = this.page.getByTestId('review-storage-map-section');
     await expect(section).toBeVisible();
     if (expectedStorageMap) {
+      const mapName = expectedStorageMap.metadata?.name;
+      if (!mapName) return;
+
       if (expectedStorageMap.isPreExisting) {
-        await expect(section.getByTestId('review-storage-map')).toContainText(
-          expectedStorageMap.name,
-        );
+        await expect(section.getByTestId('review-storage-map')).toContainText(mapName);
       } else {
         await expect(
           section.locator('.pf-v5-c-description-list__group', { hasText: 'Storage map name' }),
-        ).toContainText(expectedStorageMap.name);
+        ).toContainText(mapName);
       }
     }
   }

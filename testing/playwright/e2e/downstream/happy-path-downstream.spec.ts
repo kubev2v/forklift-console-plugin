@@ -15,7 +15,12 @@ import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
-import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
+import {
+  createPlanTestData,
+  PlanCreationFields,
+  type ProviderConfig,
+  type ProviderData,
+} from '../../types/test-data';
 import { ResourceManager } from '../../utils/ResourceManager';
 
 test.describe.serial(
@@ -83,20 +88,24 @@ test.describe.serial(
         const targetProjectName = `test-project-${Date.now()}`;
 
         const testPlanData = createPlanTestData({
-          planName,
-          planProject: 'openshift-mtv',
-          sourceProvider: testProviderData.name,
-          targetProvider: 'host',
-          targetProject: {
+          [PlanCreationFields.planName]: planName,
+          [PlanCreationFields.planProject]: 'openshift-mtv',
+          [PlanCreationFields.sourceProvider]: testProviderData.name,
+          [PlanCreationFields.targetProvider]: 'host',
+          [PlanCreationFields.targetProject]: {
             name: targetProjectName,
             isPreexisting: false,
           },
-          networkMap: {
-            name: `${planName}-network-map`,
+          [PlanCreationFields.networkMap]: {
+            metadata: {
+              name: `${planName}-network-map`,
+            },
             isPreExisting: false,
           },
-          storageMap: {
-            name: `${planName}-storage-map`,
+          [PlanCreationFields.storageMap]: {
+            metadata: {
+              name: `${planName}-storage-map`,
+            },
             isPreExisting: false,
           },
         });

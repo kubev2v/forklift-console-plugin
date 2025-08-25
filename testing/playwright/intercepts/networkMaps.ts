@@ -1,9 +1,10 @@
+import type { V1beta1NetworkMap } from '@kubev2v/types';
 import type { Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
 
 export const setupNetworkMapsIntercepts = async (page: Page) => {
-  const networkMapData1 = {
+  const networkMapData1: V1beta1NetworkMap = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'NetworkMap',
     metadata: {
@@ -45,7 +46,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     },
   };
 
-  const networkMapData2 = {
+  const networkMapData2: V1beta1NetworkMap = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'NetworkMap',
     metadata: {

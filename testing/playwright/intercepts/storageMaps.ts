@@ -1,9 +1,10 @@
+import type { V1beta1StorageMap } from '@kubev2v/types';
 import type { Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
 
 export const setupStorageMapsIntercepts = async (page: Page) => {
-  const storageMapData1 = {
+  const storageMapData1: V1beta1StorageMap = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'StorageMap',
     metadata: {
@@ -46,7 +47,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     },
   };
 
-  const storageMapData2 = {
+  const storageMapData2: V1beta1StorageMap = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'StorageMap',
     metadata: {

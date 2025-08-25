@@ -4,7 +4,7 @@ import { setupCreatePlanIntercepts } from '../../intercepts';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
-import { createPlanTestData } from '../../types/test-data';
+import { createPlanTestData, PlanCreationFields } from '../../types/test-data';
 
 test.describe(
   'Plans - Upstream Happy Path Migration',
@@ -22,13 +22,19 @@ test.describe(
       const planDetailsPage = new PlanDetailsPage(page);
 
       const testData = createPlanTestData({
-        planName: 'test-create-plan',
-        planProject: 'openshift-mtv',
-        sourceProvider: 'test-source-provider',
-        targetProvider: 'test-target-provider',
-        targetProject: { name: 'test-target-project', isPreexisting: true },
-        networkMap: { name: 'test-network-map-1', isPreExisting: true },
-        storageMap: { name: 'test-storage-map-1', isPreExisting: true },
+        [PlanCreationFields.planName]: 'test-create-plan',
+        [PlanCreationFields.planProject]: 'openshift-mtv',
+        [PlanCreationFields.sourceProvider]: 'test-source-provider',
+        [PlanCreationFields.targetProvider]: 'test-target-provider',
+        [PlanCreationFields.targetProject]: { name: 'test-target-project', isPreexisting: true },
+        [PlanCreationFields.networkMap]: {
+          metadata: { name: 'test-network-map-1' },
+          isPreExisting: true,
+        },
+        [PlanCreationFields.storageMap]: {
+          metadata: { name: 'test-storage-map-1' },
+          isPreExisting: true,
+        },
       });
 
       await plansPage.navigateFromMainMenu();

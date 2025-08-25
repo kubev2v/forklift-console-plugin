@@ -1,9 +1,10 @@
+import { V1beta1ProviderList } from '@kubev2v/types';
 import type { Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
 
 export const setupProvidersIntercepts = async (page: Page) => {
-  const providersResponse = {
+  const providersResponse: V1beta1ProviderList = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'ProviderList',
     metadata: {
@@ -61,45 +62,33 @@ export const setupProvidersIntercepts = async (page: Page) => {
     ],
   };
 
-  // Kubernetes API for providers (use API_ENDPOINTS)
-  await page.route(API_ENDPOINTS.providers, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(providersResponse),
-    });
-  });
+  // Single, comprehensive handler for all provider-related API endpoints
+  await page.route('**/api/kubernetes/**/*providers*', async (route) => {
+    const url = route.request().url();
 
-  // Namespaced providers endpoint (handles ?limit=250)
-  await page.route(API_ENDPOINTS.providers, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(providersResponse),
-    });
-  });
+    // Handle GET requests for individual providers
+    if (route.request().method() === 'GET' && !url.includes('?')) {
+      const providerName = url.split('/').pop();
+      const provider = ((providersResponse as any).items ?? []).find(
+        (prov: any) => prov.metadata.name === providerName,
+      );
 
-  // Individual Provider fetch endpoints
-  await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/providers\/[^/?]+$/,
-    async (route) => {
-      if (route.request().method() === 'GET') {
-        const url = route.request().url();
-        const providerName = url.split('/').pop();
-
-        // Try to find matching provider from our mock data
-        const provider = providersResponse.items.find(
-          (prov) => prov.metadata.name === providerName,
-        );
-
-        await route.fulfill({
+      if (provider) {
+        return route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify(provider ?? providersResponse.items[0]),
+          body: JSON.stringify(provider),
         });
       }
-    },
-  );
+    }
+
+    // Default handler for list of providers (and fallback)
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(providersResponse),
+    });
+  });
 
   // Provider inventory connections - make sure each provider can be connected to
   await page.route('**/forklift-inventory/providers/*/test', async (route) => {
@@ -171,13 +160,4 @@ export const setupProvidersIntercepts = async (page: Page) => {
       });
     },
   );
-
-  // Fallback catch-all for any missed provider calls (essential for GitHub Actions)
-  await page.route('**/api/kubernetes/**/*providers*', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(providersResponse),
-    });
-  });
 };

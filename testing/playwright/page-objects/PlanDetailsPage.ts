@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-import type { PlanTestData } from '../types/test-data';
+import { PlanCreationFields, type PlanTestData } from '../types/test-data';
 
 export class PlanDetailsPage {
   protected readonly page: Page;
@@ -10,7 +10,7 @@ export class PlanDetailsPage {
   }
 
   async verifyBasicPlanDetailsPage(planData: PlanTestData) {
-    await this.verifyPlanTitle(planData.planName);
+    await this.verifyPlanTitle(planData[PlanCreationFields.planName]);
     await this.verifyNavigationTabs();
     await this.verifyPlanDetails(planData);
     await this.verifyPlanStatus();
@@ -33,12 +33,19 @@ export class PlanDetailsPage {
   }
 
   async verifyPlanDetails(
-    planData: Pick<PlanTestData, 'planName' | 'planProject' | 'targetProject'>,
+    planData: Pick<
+      PlanTestData,
+      'planName' | 'planProject' | 'targetProject'
+    >,
   ) {
-    await expect(this.page.getByTestId('name-detail-item')).toContainText(planData.planName);
-    await expect(this.page.getByTestId('project-detail-item')).toContainText(planData.planProject);
+    await expect(this.page.getByTestId('name-detail-item')).toContainText(
+      planData[PlanCreationFields.planName],
+    );
+    await expect(this.page.getByTestId('project-detail-item')).toContainText(
+      planData[PlanCreationFields.planProject],
+    );
     await expect(this.page.getByTestId('target-project-detail-item')).toContainText(
-      planData.targetProject.name,
+      planData[PlanCreationFields.targetProject].name,
     );
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');

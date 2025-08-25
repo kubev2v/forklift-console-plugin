@@ -1,13 +1,21 @@
 import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
-import type { EnhancedPlan } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 
-import { PlanModel } from '@kubev2v/types';
+import { PlanModel, V1beta1Plan, V1beta1PlanSpec } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { MigrationTypeValue } from '../steps/migration-type/constants';
 import type { CreatePlanParams } from '../types';
 
 import { buildPlanSpecVms } from './buildPlanSpecVms';
+
+/**
+ * Temporary local type override until it is fixed in @kubev2v/types
+ */
+type EnhancedPlan = V1beta1Plan & {
+  spec: V1beta1PlanSpec & {
+    type: string;
+  };
+};
 
 /**
  * Constructs and creates a Plan custom resource from input params.
@@ -53,7 +61,6 @@ export const createPlan = async ({
       ...(preserveStaticIps && { preserveStaticIPs: preserveStaticIps }),
       ...(transferNetwork && { transferNetwork }),
       targetPowerState,
-      type: migrationType,
       vms: buildPlanSpecVms({ luks, postHook, preHook, rootDevice, vms }),
       warm: migrationType === MigrationTypeValue.Warm,
     },
