@@ -40,15 +40,15 @@ export class GeneralInformationStep {
 
   async selectTargetProject(targetProject: TargetProject) {
     if (targetProject.isPreexisting) {
-      await this.selectProject(targetProject.metadata?.name || '', 'target-project-select', true);
+      await this.selectProject(targetProject.name, 'target-project-select', true);
     } else {
       await this.page.getByTestId('target-project-select').getByRole('button').click();
       await this.page.getByTestId('create-project-button').click();
       const nameTextbox = this.page.getByTestId('project-name-input');
       await nameTextbox.click();
-      await nameTextbox.fill(targetProject.metadata?.name || '');
+      await nameTextbox.fill(targetProject.name);
       const displayNameTextbox = this.page.getByTestId('project-display-name-input');
-      await displayNameTextbox.fill(targetProject.metadata?.name || '');
+      await displayNameTextbox.fill(targetProject.name);
       await displayNameTextbox.click();
       await this.page.getByTestId('create-project-modal-create-button').click();
     }

@@ -45,7 +45,7 @@ export class PlanDetailsPage {
       planData[PlanCreationFields.planProject],
     );
     await expect(this.page.getByTestId('target-project-detail-item')).toContainText(
-      planData[PlanCreationFields.targetProject].metadata?.name || '',
+      planData[PlanCreationFields.targetProject].name,
     );
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');

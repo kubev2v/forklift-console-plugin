@@ -26,7 +26,7 @@ test.describe(
         [PlanCreationFields.planProject]: 'openshift-mtv',
         [PlanCreationFields.sourceProvider]: 'test-source-provider',
         [PlanCreationFields.targetProvider]: 'test-target-provider',
-        [PlanCreationFields.targetProject]: { metadata: { name: 'test-target-project' }, isPreexisting: true },
+        [PlanCreationFields.targetProject]: { name: 'test-target-project', isPreexisting: true },
         [PlanCreationFields.networkMap]: {
           metadata: { name: 'test-network-map-1' },
           isPreExisting: true,
