@@ -72,7 +72,7 @@ type DropdownRendererProps = {
  */
 const getNetworkName = (value: string | number): string => {
   if (!value || typeof value !== 'string') {
-    return 'Default network';
+    return DEFAULT_NETWORK;
   }
 
   const parts = value.split('/');
@@ -108,7 +108,7 @@ const OpenshiftNetworksInputFactory: ({
       <DropdownItem
         value={0}
         key={DEFAULT_NETWORK}
-        description={'Default network'}
+        description={DEFAULT_NETWORK}
         onClick={() => {
           onChange('');
         }}

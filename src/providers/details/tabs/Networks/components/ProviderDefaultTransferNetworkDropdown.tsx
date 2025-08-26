@@ -43,7 +43,7 @@ const ProviderDefaultTransferNetworkDropdown: FC<ProviderDefaultTransferNetworkD
     <DropdownItem
       value={0}
       key={DEFAULT_NETWORK}
-      description={'Default network'}
+      description={DEFAULT_NETWORK}
       onClick={() => {
         onChange('');
       }}

@@ -7,7 +7,7 @@ export const STANDARD = 'standard';
 
 export const DefaultNetworkLabel = {
   Source: DEFAULT_NETWORK,
-  Target: 'Default network',
+  Target: DEFAULT_NETWORK,
 } as const;
 
 export const IgnoreNetwork = {
