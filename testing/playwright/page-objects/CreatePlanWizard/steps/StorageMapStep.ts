@@ -1,7 +1,5 @@
 import { expect, type Page } from '@playwright/test';
 
-import type { StorageMap } from '../../../types/test-data';
-
 export class StorageMapStep {
   private readonly page: Page;
 
@@ -9,18 +7,15 @@ export class StorageMapStep {
     this.page = page;
   }
 
-  async selectStorageMap(storageMap: StorageMap): Promise<void> {
-    const mapName = storageMap.metadata?.name;
-    if (!mapName) throw new Error('Storage map name not provided in test data');
-
+  async selectStorageMap(storageMap: { name: string; isPreExisting: boolean }): Promise<void> {
     const selectElement = this.page.getByTestId('storage-map-select');
     if (storageMap.isPreExisting) {
       await selectElement.click();
-      await this.page.getByRole('option', { name: mapName }).click();
+      await this.page.getByRole('option', { name: storageMap.name }).click();
     } else {
       await this.page.getByTestId('use-new-storage-map-radio').check();
       await this.page.getByRole('textbox').click();
-      await this.page.getByRole('textbox').fill(mapName);
+      await this.page.getByRole('textbox').fill(storageMap.name);
     }
   }
 
