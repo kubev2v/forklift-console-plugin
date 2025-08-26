@@ -51,21 +51,12 @@ export type PlanTestData = Pick<V1beta1Plan, 'metadata'> & {
   storageMap: TestStorageMap;
 };
 
-export enum PlanCreationFields {
-  planName = 'planName',
-  planProject = 'planProject',
-  sourceProvider = 'sourceProvider',
-  targetProvider = 'targetProvider',
-  targetProject = 'targetProject',
-  networkMap = 'networkMap',
-  storageMap = 'storageMap',
-}
-
 /**
  * Helper to create plan test data with proper typing
  */
 export const createPlanTestData = (data: PlanTestData): PlanTestData => ({ ...data });
 
+// used for .provider.json file deserialization
 export interface ProviderConfig {
   type: 'vsphere' | 'ovirt' | 'ova' | 'openstack';
   api_url: string;

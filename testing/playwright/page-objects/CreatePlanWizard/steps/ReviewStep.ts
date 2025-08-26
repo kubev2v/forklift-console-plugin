@@ -1,11 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-import {
-  PlanCreationFields,
-  type NetworkMap,
-  type PlanTestData,
-  type StorageMap,
-} from '../../../types/test-data';
+import type { NetworkMap, PlanTestData, StorageMap } from '../../../types/test-data';
 
 export class ReviewStep {
   private readonly page: Page;
@@ -41,8 +36,8 @@ export class ReviewStep {
   async verifyAllSections(planData: PlanTestData): Promise<void> {
     await this.verifyGeneralSection(planData);
     await this.verifyVirtualMachinesSection();
-    await this.verifyNetworkMapSection(planData[PlanCreationFields.networkMap]);
-    await this.verifyStorageMapSection(planData[PlanCreationFields.storageMap]);
+    await this.verifyNetworkMapSection(planData.networkMap);
+    await this.verifyStorageMapSection(planData.storageMap);
     await this.verifyMigrationTypeSection();
     await this.verifyOtherSettingsSection();
     await this.verifyHooksSection();
@@ -50,20 +45,18 @@ export class ReviewStep {
 
   async verifyGeneralSection(expectedData: PlanTestData): Promise<void> {
     await expect(this.page.getByTestId('review-general-section')).toBeVisible();
-    await expect(this.page.getByTestId('review-plan-name')).toContainText(
-      expectedData[PlanCreationFields.planName],
-    );
+    await expect(this.page.getByTestId('review-plan-name')).toContainText(expectedData.planName);
     await expect(this.page.getByTestId('review-plan-project')).toContainText(
-      expectedData[PlanCreationFields.planProject],
+      expectedData.planProject,
     );
     await expect(this.page.getByTestId('review-source-provider')).toContainText(
-      expectedData[PlanCreationFields.sourceProvider],
+      expectedData.sourceProvider,
     );
     await expect(this.page.getByTestId('review-target-provider')).toContainText(
-      expectedData[PlanCreationFields.targetProvider],
+      expectedData.targetProvider,
     );
     await expect(this.page.getByTestId('review-target-project')).toContainText(
-      expectedData[PlanCreationFields.targetProject].name,
+      expectedData.targetProject.name,
     );
   }
 

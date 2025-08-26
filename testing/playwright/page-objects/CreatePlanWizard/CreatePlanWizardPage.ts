@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-import { PlanCreationFields, type PlanTestData } from '../../types/test-data';
+import type { PlanTestData } from '../../types/test-data';
 import type { ResourceManager } from '../../utils/ResourceManager';
 
 import { GeneralInformationStep } from './steps/GeneralInformationStep';
@@ -46,15 +46,12 @@ export class CreatePlanWizardPage {
 
   async fillAndSubmit(testData: PlanTestData, { skipToReview = true } = {}): Promise<void> {
     // STEP 1: General Information
-    await this.generalInformation.fillPlanName(testData[PlanCreationFields.planName]);
-    await this.generalInformation.selectProject(
-      testData[PlanCreationFields.planProject],
-      'plan-project-select',
-    );
-    await this.generalInformation.selectSourceProvider(testData[PlanCreationFields.sourceProvider]);
-    await this.generalInformation.selectTargetProvider(testData[PlanCreationFields.targetProvider]);
+    await this.generalInformation.fillPlanName(testData.planName);
+    await this.generalInformation.selectProject(testData.planProject, 'plan-project-select');
+    await this.generalInformation.selectSourceProvider(testData.sourceProvider);
+    await this.generalInformation.selectTargetProvider(testData.targetProvider);
     await this.generalInformation.waitForTargetProviderNamespaces();
-    await this.generalInformation.selectTargetProject(testData[PlanCreationFields.targetProject]);
+    await this.generalInformation.selectTargetProject(testData.targetProject);
     await this.clickNext();
 
     // STEP 2: Virtual Machines
@@ -66,13 +63,13 @@ export class CreatePlanWizardPage {
     // STEP 3: Network Map
     await this.networkMap.verifyStepVisible();
     await this.networkMap.waitForData();
-    await this.networkMap.selectNetworkMap(testData[PlanCreationFields.networkMap]);
+    await this.networkMap.selectNetworkMap(testData.networkMap);
     await this.clickNext();
 
     // STEP 4: Storage Map
     await this.storageMap.verifyStepVisible();
     await this.storageMap.waitForData();
-    await this.storageMap.selectStorageMap(testData[PlanCreationFields.storageMap]);
+    await this.storageMap.selectStorageMap(testData.storageMap);
     await this.clickNext();
 
     // Skip to review or go through all steps
@@ -84,43 +81,34 @@ export class CreatePlanWizardPage {
     await this.review.verifyStepVisible();
     await this.review.verifyAllSections(testData);
 
-    if (this.resourceManager && testData[PlanCreationFields.planName]) {
+    if (this.resourceManager && testData.planName) {
       this.resourceManager.addResource({
         namespace: 'openshift-mtv',
         resourceType: 'plans',
-        resourceName: testData[PlanCreationFields.planName],
+        resourceName: testData.planName,
       });
 
-      if (
-        testData[PlanCreationFields.networkMap] &&
-        !testData[PlanCreationFields.networkMap].isPreExisting
-      ) {
+      if (testData.networkMap && !testData.networkMap.isPreExisting) {
         this.resourceManager.addResource({
           namespace: 'openshift-mtv',
           resourceType: 'networkmaps',
-          resourceName: `${testData[PlanCreationFields.planName]}-network-map`,
+          resourceName: `${testData.planName}-network-map`,
         });
       }
 
-      if (
-        testData[PlanCreationFields.storageMap] &&
-        !testData[PlanCreationFields.storageMap].isPreExisting
-      ) {
+      if (testData.storageMap && !testData.storageMap.isPreExisting) {
         this.resourceManager.addResource({
           namespace: 'openshift-mtv',
           resourceType: 'storagemaps',
-          resourceName: `${testData[PlanCreationFields.planName]}-storage-map`,
+          resourceName: `${testData.planName}-storage-map`,
         });
       }
 
-      if (
-        testData[PlanCreationFields.targetProject] &&
-        !testData[PlanCreationFields.targetProject].isPreexisting
-      ) {
+      if (testData.targetProject && !testData.targetProject.isPreexisting) {
         this.resourceManager.addResource({
           namespace: '',
           resourceType: 'projects',
-          resourceName: testData[PlanCreationFields.targetProject].name,
+          resourceName: testData.targetProject.name,
         });
       }
     }
