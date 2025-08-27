@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useOpenShiftNetworks } from 'src/modules/Providers/hooks/useNetworks';
+import { POD } from 'src/plans/details/utils/constants';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { POD_NETWORK } from '@utils/constants';
@@ -21,7 +22,7 @@ const useTargetNetworks = (
     const networksList: TargetNetwork[] = [];
 
     networksList.push({
-      id: 'pod',
+      id: POD,
       isPodNetwork: true,
       name: POD_NETWORK,
     });

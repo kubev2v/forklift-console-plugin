@@ -1,3 +1,4 @@
+import { MULTUS, POD } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { V1beta1NetworkMapSpecMap, V1beta1Provider } from '@kubev2v/types';
@@ -29,8 +30,8 @@ export const buildNetworkMappings = (
     if (isOpenShiftProvider) {
       const baseMapping: V1beta1NetworkMapSpecMap = {
         destination: isPodNetwork
-          ? { type: 'pod' }
-          : { name: targetNetwork.name, namespace: targetNetwork.id, type: 'multus' },
+          ? { type: POD }
+          : { name: targetNetwork.name, namespace: targetNetwork.id, type: MULTUS },
         source: {
           name: sourceNetwork.name.replace(/^\//gu, ''),
         },
@@ -41,8 +42,8 @@ export const buildNetworkMappings = (
     if (!isOpenShiftProvider) {
       const baseMapping: V1beta1NetworkMapSpecMap = {
         destination: isPodNetwork
-          ? { type: 'pod' }
-          : { name: targetNetwork.name, namespace: targetNetwork.id, type: 'multus' },
+          ? { type: POD }
+          : { name: targetNetwork.name, namespace: targetNetwork.id, type: MULTUS },
         source: {
           id: sourceNetwork.id,
         },

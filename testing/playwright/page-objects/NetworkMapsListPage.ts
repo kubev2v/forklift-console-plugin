@@ -10,7 +10,7 @@ export class NetworkMapsListPage {
   }
 
   async clickCreateNetworkMapButton() {
-    await this.page.getByRole('button', { name: 'Create network map' }).click();
+    await this.page.getByRole('button', { name: 'Create network map' }).first().click();
     await this.page.getByTestId('create-network-map-form').click();
   }
 

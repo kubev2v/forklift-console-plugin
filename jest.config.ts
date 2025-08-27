@@ -3,7 +3,7 @@ import type { JestConfigWithTsJest } from 'ts-jest';
 const moduleNameMapper = {
   '@console/*': '<rootDir>/src/__mocks__/dummy.ts',
   '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
-  '\\.(css|less|scss|svg)$': '<rootDir>/src/__mocks__/dummy.ts',
+  '\\.(css|less|scss|svg|png|jpg|jpeg|gif|ico)$': '<rootDir>/src/__mocks__/dummy.ts',
   '^@components/(.*)$': '<rootDir>/src/components/$1',
   '^@test-utils/(.*)$': '<rootDir>/src/test-utils/$1',
   '^@utils/(.*)$': '<rootDir>/src/utils/$1',
