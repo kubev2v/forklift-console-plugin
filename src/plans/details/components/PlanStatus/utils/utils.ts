@@ -1,3 +1,4 @@
+import type { TargetPowerStateValue } from 'src/plans/constants.ts';
 import { isMigrationVirtualMachinePaused } from 'src/plans/details/utils/utils';
 
 import type {
@@ -117,6 +118,9 @@ export const getMigrationVMsStatusCounts = (
 
   return counts;
 };
+
+export const getVmTargetPowerState = (vm: V1beta1PlanSpecVms): TargetPowerStateValue =>
+  vm?.targetPowerState as TargetPowerStateValue;
 
 const getConditions = (plan: V1beta1Plan) =>
   (plan?.status?.conditions ?? [])

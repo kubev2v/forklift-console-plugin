@@ -1,10 +1,11 @@
 import { type FC, useState } from 'react';
-import { TargetPowerStates, type TargetPowerStateValue } from 'src/plans/constants';
+import type { TargetPowerStateValue } from 'src/plans/constants';
+import { getVmTargetPowerState } from 'src/plans/details/components/PlanStatus/utils/utils.ts';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
 import { Stack } from '@patternfly/react-core';
-import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { getPlanTargetPowerState, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { EditPlanProps } from '../../utils/types';
@@ -12,21 +13,22 @@ import type { EditPlanProps } from '../../utils/types';
 import { onConfirmVmTargetPowerState } from './utils/utils';
 import TargetPowerStateDropdown from './TargetPowerStateDropdown';
 
-type EditTargetPowerStateProps = EditPlanProps & {
+type EditVmTargetPowerStateProps = EditPlanProps & {
   index: number;
 };
 
-const EditTargetPowerState: FC<EditTargetPowerStateProps> = ({ index, resource }) => {
+const EditVmTargetPowerState: FC<EditVmTargetPowerStateProps> = ({ index, resource }) => {
   const { t } = useForkliftTranslation();
   const vm = getPlanVirtualMachines(resource)[index];
-  const [value, setValue] = useState<TargetPowerStateValue>(
-    (vm?.targetPowerState as TargetPowerStateValue) ?? TargetPowerStates.AUTO,
-  );
+  const [value, setValue] = useState<TargetPowerStateValue>(getVmTargetPowerState(vm));
+  const planTargetPowerState = getPlanTargetPowerState(resource);
 
   return (
     <ModalForm
       title={t('Edit target power state')}
+      confirmLabel={t('Save target power state')}
       onConfirm={async () => onConfirmVmTargetPowerState(index)({ newValue: value, resource })}
+      isDisabled={value === getVmTargetPowerState(vm)}
     >
       <Stack hasGutter>
         {t(
@@ -34,11 +36,16 @@ const EditTargetPowerState: FC<EditTargetPowerStateProps> = ({ index, resource }
           { vmName: vm?.name ?? t('selected') },
         )}
         <FormGroupWithHelpText label={t('VM target power state')} isRequired>
-          <TargetPowerStateDropdown value={value} onChange={setValue} />
+          <TargetPowerStateDropdown
+            value={value}
+            onChange={setValue}
+            allowInherit
+            planState={planTargetPowerState}
+          />
         </FormGroupWithHelpText>
       </Stack>
     </ModalForm>
   );
 };
 
-export default EditTargetPowerState;
+export default EditVmTargetPowerState;

@@ -21,6 +21,8 @@ const EditTargetPowerState: FC<EditPlanProps> = ({ resource }) => {
   return (
     <ModalForm
       title={t('Edit target power state')}
+      confirmLabel={t('Save target power state')}
+      isDisabled={value === getPlanTargetPowerState(resource)}
       onConfirm={async () => onConfirmTargetPowerState({ newValue: value, resource })}
     >
       <Stack hasGutter>

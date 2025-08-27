@@ -1,13 +1,10 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
-import {
-  getTargetPowerStateLabel,
-  TargetPowerStates,
-  type TargetPowerStateValue,
-} from 'src/plans/constants';
+import { getTargetPowerStateLabel, type TargetPowerStateValue } from 'src/plans/constants';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { getPlanTargetPowerState } from '@utils/crds/plans/selectors';
+import { isEmpty } from '@utils/helpers.ts';
 import { t } from '@utils/i18n';
 
 type VMTargetPowerStateCellRendererProps = {
@@ -20,7 +17,7 @@ export const VMTargetPowerStateCellRenderer: FC<VMTargetPowerStateCellRendererPr
   targetPowerState,
 }) => {
   const planTargetPowerState = getPlanTargetPowerState(plan);
-  if (!targetPowerState || targetPowerState === TargetPowerStates.AUTO) {
+  if (isEmpty(targetPowerState)) {
     return (
       <TableCell>
         {getTargetPowerStateLabel(planTargetPowerState)} {t('(Inherited from plan)')}
