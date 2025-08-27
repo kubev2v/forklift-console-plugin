@@ -56,6 +56,7 @@ const ProviderResourceNameEditItem: FC<ProviderResourceNameEditItemProps> = ({
         validated={providerResourceNameValidation.type}
       >
         <TextInput
+          data-testid="provider-name-input"
           spellCheck="false"
           isRequired
           type="text"

@@ -7,9 +7,16 @@ export class StorageMapStep {
     this.page = page;
   }
 
-  async selectStorageMap(storageMapName: string): Promise<void> {
-    await this.page.getByTestId('storage-map-select').click();
-    await this.page.getByRole('option', { name: storageMapName }).click();
+  async selectStorageMap(storageMap: { name: string; isPreExisting: boolean }): Promise<void> {
+    const selectElement = this.page.getByTestId('storage-map-select');
+    if (storageMap.isPreExisting) {
+      await selectElement.click();
+      await this.page.getByRole('option', { name: storageMap.name }).click();
+    } else {
+      await this.page.getByTestId('use-new-storage-map-radio').check();
+      await this.page.getByRole('textbox').click();
+      await this.page.getByRole('textbox').fill(storageMap.name);
+    }
   }
 
   async verifyStepVisible(): Promise<void> {
@@ -21,11 +28,5 @@ export class StorageMapStep {
     const selectElement = this.page.getByTestId('storage-map-select');
     await expect(selectElement).toBeVisible({ timeout: 10000 });
     await expect(selectElement).toBeEnabled({ timeout: 10000 });
-
-    // Wait for options to be available in the select
-    await selectElement.click();
-    await expect(this.page.getByRole('option').first()).toBeVisible({ timeout: 15000 });
-    // Close the dropdown after checking
-    await selectElement.click();
   }
 }

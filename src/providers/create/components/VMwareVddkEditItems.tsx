@@ -82,6 +82,7 @@ const VMwareVddkEditItems: FC<VMwareVddkEditItemsProps> = ({
             <Checkbox
               id="emptyVddkInitImage"
               name="emptyVddkInitImage"
+              data-testid="provider-empty-vddk-checkbox"
               label={t(
                 'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
               )}
@@ -105,6 +106,7 @@ const VMwareVddkEditItems: FC<VMwareVddkEditItemsProps> = ({
 
               <div>
                 <TextInput
+                  data-testid="provider-vddk-input"
                   spellCheck="false"
                   type="text"
                   id={ProviderFieldsId.VddkInitImage}

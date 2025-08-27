@@ -51,6 +51,7 @@ const ProviderCreateActionsSection: FC<ProviderCreateActionsSectionProps> = ({
       <Flex>
         <FlexItem>
           <Button
+            data-testid="create-provider-button"
             variant={ButtonVariant.primary}
             isDisabled={validationError?.type === ValidationState.Error}
             isLoading={isLoading}
