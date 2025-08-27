@@ -17,8 +17,7 @@ export type TargetPowerState = {
 };
 
 export const defaultTargetPowerStateOption: TargetPowerState = {
-  description: t('Retain source VM power state'),
-  label: t('Auto'),
+  label: t('Retain source VM power state'),
   value: TargetPowerStates.AUTO,
 };
 
