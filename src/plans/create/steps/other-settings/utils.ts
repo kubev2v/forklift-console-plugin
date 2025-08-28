@@ -1,4 +1,4 @@
-import { PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
+import { DefaultNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 
 import { NetworkMapFieldId, type NetworkMapping } from '../network-map/constants';
 
@@ -11,5 +11,5 @@ export const getDiskPassPhraseFieldId = (index: number): DiskPassPhraseId =>
 
 export const isMapToPod = (networkMap: NetworkMapping[]): boolean =>
   networkMap?.some(
-    (entry) => entry[NetworkMapFieldId.TargetNetwork]?.name === PodNetworkLabel.Source,
+    (entry) => entry[NetworkMapFieldId.TargetNetwork]?.name === DefaultNetworkLabel.Source,
   ) ?? false;

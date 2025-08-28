@@ -1,4 +1,4 @@
-import { POD_NETWORK } from '@utils/constants';
+import { DEFAULT_NETWORK } from '@utils/constants';
 import { t } from '@utils/i18n';
 
 import type { MappingValue } from '../../types';
@@ -26,7 +26,7 @@ export type NetworkMapping = {
 
 export const defaultNetMapping: NetworkMapping = {
   [NetworkMapFieldId.SourceNetwork]: { name: '' },
-  [NetworkMapFieldId.TargetNetwork]: { name: POD_NETWORK },
+  [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
 };
 
 export enum NetworkMapType {

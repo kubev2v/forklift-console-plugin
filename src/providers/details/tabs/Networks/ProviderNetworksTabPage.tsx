@@ -12,7 +12,7 @@ import {
 } from '@kubev2v/types';
 import { Button, ButtonVariant, PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { EMPTY_MSG, POD_NETWORK } from '@utils/constants';
+import { DEFAULT_NETWORK, EMPTY_MSG } from '@utils/constants';
 
 import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';
@@ -88,12 +88,12 @@ const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace
               </Tr>
             </Thead>
             <Tbody>
-              <Tr key={POD_NETWORK}>
+              <Tr key={DEFAULT_NETWORK}>
                 <Td>
-                  {POD_NETWORK} {!defaultNetworkName && <DefaultNetworkLabel />}
+                  {DEFAULT_NETWORK} {!defaultNetworkName && <DefaultNetworkLabel />}
                 </Td>
                 <Td>{EMPTY_MSG}</Td>
-                <Td modifier="truncate">{POD_NETWORK}</Td>
+                <Td modifier="truncate">{DEFAULT_NETWORK}</Td>
               </Tr>
               {networksDataList?.map((data) => (
                 <Tr key={data.name}>

@@ -72,8 +72,8 @@ const PreserveStaticIpsField: FC = () => {
               <Stack hasGutter>
                 <StackItem>
                   Your migration plan is set to <strong>preserve static IPs </strong> of VMs and to
-                  use <strong>Pod Network</strong> for target network mapping. This combination
-                  isn't supported, because VM IPs aren't preserved in Pod Network migrations.
+                  use <strong>Default Network</strong> for target network mapping. This combination
+                  isn't supported, because VM IPs aren't preserved in Default Network migrations.
                 </StackItem>
                 <StackItem>
                   If your VMs use static IPs, go back to <strong>Network map</strong> step, and
