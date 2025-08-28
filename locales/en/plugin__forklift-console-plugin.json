@@ -105,6 +105,7 @@
   "All": "All",
   "All changes saved": "All changes saved",
   "All networks detected on the selected VMs require a mapping.": "All networks detected on the selected VMs require a mapping.",
+  "All past migration runs for this plan. This includes both successful and failed attempts, but detailed logs and other data are not available after the migration pods are deleted. If you retry an incomplete migration, only the failed VMs will migrate again.": "All past migration runs for this plan. This includes both successful and failed attempts, but detailed logs and other data are not available after the migration pods are deleted. If you retry an incomplete migration, only the failed VMs will migrate again.",
   "All storages detected on the selected VMs require a mapping.": "All storages detected on the selected VMs require a mapping.",
   "All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.": "All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.",
   "All VMs were migrated": "All VMs were migrated",

@@ -31,7 +31,11 @@ const MigrationsTable: FC<MigrationTableProps> = ({ migrations, plan }) => {
   const { t } = useForkliftTranslation();
 
   if (isEmpty(migrations)) {
-    return <HelpText>{t('The plan has not been executed for migration.')}</HelpText>;
+    return (
+      <HelpText className="pf-v5-u-mt-md">
+        {t('The plan has not been executed for migration.')}
+      </HelpText>
+    );
   }
 
   const planStatus = getPlanStatus(plan);

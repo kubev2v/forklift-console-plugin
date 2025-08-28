@@ -177,7 +177,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
         onUpdate={onUpdate}
         onCancel={onCancel}
       />
-      <DescriptionListDescription className="forklift-page-mapping-list">
+      <DescriptionListDescription className="forklift-page-mapping-list pf-v5-u-mt-md">
         <MappingList
           addMapping={onAdd}
           replaceMapping={onReplace}
