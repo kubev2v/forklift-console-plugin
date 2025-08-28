@@ -1,6 +1,7 @@
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { V1beta1Provider } from '@kubev2v/types';
+import { DEFAULT_NETWORK } from '@utils/constants';
 
 import { NetworkMapFieldId } from '../../../constants';
 import { buildNetworkMappings } from '../buildNetworkMappings';
@@ -32,11 +33,11 @@ const mockNetworkMapping = {
 
 describe('buildNetworkMappings', () => {
   describe('OpenShift provider mappings', () => {
-    it('should create pod network mapping for OpenShift provider with pod target', () => {
+    it('should create default network mapping for OpenShift provider with default target', () => {
       const mappings = [
         {
           ...mockNetworkMapping,
-          [NetworkMapFieldId.TargetNetwork]: { name: 'Pod network' },
+          [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
         },
       ];
 
@@ -82,11 +83,11 @@ describe('buildNetworkMappings', () => {
   });
 
   describe('Non-OpenShift provider mappings', () => {
-    it('should create pod network mapping for VMware provider with pod target', () => {
+    it('should create default network mapping for VMware provider with default target', () => {
       const mappings = [
         {
           ...mockNetworkMapping,
-          [NetworkMapFieldId.TargetNetwork]: { name: 'Pod network' },
+          [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
         },
       ];
 
@@ -167,7 +168,7 @@ describe('buildNetworkMappings', () => {
         mockNetworkMapping,
         {
           [NetworkMapFieldId.SourceNetwork]: { name: 'source-network-2' },
-          [NetworkMapFieldId.TargetNetwork]: { name: 'Pod network' },
+          [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
         },
       ];
 

@@ -2,7 +2,7 @@ import { MULTUS, POD } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { V1beta1NetworkMapSpecMap, V1beta1Provider } from '@kubev2v/types';
-import { POD_NETWORK } from '@utils/constants';
+import { DEFAULT_NETWORK } from '@utils/constants';
 
 import type { NetworkMapping } from '../../constants';
 
@@ -25,7 +25,7 @@ export const buildNetworkMappings = (
     }
 
     const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
-    const isPodNetwork = targetNetwork.name === POD_NETWORK;
+    const isPodNetwork = targetNetwork.name === DEFAULT_NETWORK;
 
     if (isOpenShiftProvider) {
       const baseMapping: V1beta1NetworkMapSpecMap = {

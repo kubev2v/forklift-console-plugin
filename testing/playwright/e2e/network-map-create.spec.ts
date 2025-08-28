@@ -30,7 +30,7 @@ test.describe('Network Map - Create Flow', () => {
       sourceProvider: TEST_DATA.providers.source.name,
       targetProvider: TEST_DATA.providers.target.name,
       sourceNetwork: 'test-vm-network',
-      targetNetwork: 'Pod network',
+      targetNetwork: 'Default network',
     });
 
     // Submit the form
