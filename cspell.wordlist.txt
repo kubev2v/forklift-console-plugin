@@ -94,3 +94,9 @@ XCOPY
 ONTAP
 Primera
 VAAI
+operatorhub
+powerflex
+apiextensions
+customresourcedefinitions
+clusterversion
+clusterversions
