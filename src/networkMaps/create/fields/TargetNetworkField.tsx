@@ -1,18 +1,19 @@
 import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { StorageMappingValue, TargetStorage } from 'src/storageMaps/types';
+import type { NetworkMappingValue } from 'src/networkMaps/types';
+import type { TargetNetwork } from 'src/utils/hooks/useTargetNetworks';
 
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-type TargetStorageFieldProps = {
+type TargetNetworkFieldProps = {
   fieldId: string;
-  targetStorages: TargetStorage[];
+  targetNetworks: TargetNetwork[];
 };
 
-const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorages }) => {
+const TargetNetworkField: FC<TargetNetworkFieldProps> = ({ fieldId, targetNetworks }) => {
   const {
     control,
     formState: { isSubmitting },
@@ -27,22 +28,23 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
         <Select
           ref={field.ref}
           id={fieldId}
+          testId="network-map-target-network-select"
           onSelect={(_, value) => {
             field.onChange(value);
           }}
-          placeholder={t('Select target storage')}
+          placeholder={t('Select target network')}
           isDisabled={isSubmitting}
-          value={(field.value as StorageMappingValue).name}
+          value={(field.value as NetworkMappingValue).name}
         >
           <SelectList>
-            {isEmpty(targetStorages) ? (
+            {isEmpty(targetNetworks) ? (
               <SelectOption key="empty" isDisabled>
-                {t('Select a target provider and project to list available target storages')}
+                {t('Select a target provider and project to list available target networks')}
               </SelectOption>
             ) : (
-              targetStorages.map((targetStorage) => (
-                <SelectOption key={targetStorage.id} value={targetStorage}>
-                  {targetStorage.name}
+              targetNetworks.map((targetNetwork) => (
+                <SelectOption key={targetNetwork.id} value={targetNetwork}>
+                  {targetNetwork.name}
                 </SelectOption>
               ))
             )}
@@ -53,4 +55,4 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
   );
 };
 
-export default TargetStorageField;
+export default TargetNetworkField;
