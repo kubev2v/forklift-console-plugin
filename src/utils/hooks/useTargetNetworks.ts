@@ -3,7 +3,7 @@ import { useOpenShiftNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { POD } from 'src/plans/details/utils/constants';
 
 import type { V1beta1Provider } from '@kubev2v/types';
-import { POD_NETWORK } from '@utils/constants';
+import { DEFAULT_NETWORK } from '@utils/constants';
 
 export type TargetNetwork = {
   id: string;
@@ -24,7 +24,7 @@ const useTargetNetworks = (
     networksList.push({
       id: POD,
       isPodNetwork: true,
-      name: POD_NETWORK,
+      name: DEFAULT_NETWORK,
     });
 
     // Add other networks from the target provider that are in the target project
