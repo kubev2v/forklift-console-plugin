@@ -37,7 +37,7 @@ export class VirtualMachinesStep {
   }
 
   async selectFirstVirtualMachine() {
-    const grid = this.page.getByRole('grid');
+    const grid = this.page.getByRole('treegrid');
     const firstRow = grid.locator('tbody tr').first();
     const checkbox = firstRow.locator('input[type="checkbox"]');
     await expect(checkbox).toBeVisible();
@@ -53,7 +53,7 @@ export class VirtualMachinesStep {
   }
 
   async verifyTableLoaded() {
-    await expect(this.page.getByRole('grid')).toBeVisible();
+    await expect(this.page.getByRole('treegrid')).toBeVisible();
   }
 
   async waitForData(): Promise<void> {

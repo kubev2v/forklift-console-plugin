@@ -37,11 +37,12 @@ export class Table {
   }
 
   getRow(options: Record<string, string>): Locator {
-    // Try both table and grid roles to support different table implementations
+    // Try table/grid/treegrid roles to support different table implementations
     const tableContainer = this.rootLocator
       .getByTestId('table-grid')
       .or(this.rootLocator.getByRole('table'))
-      .or(this.rootLocator.getByRole('grid'));
+      .or(this.rootLocator.getByRole('grid'))
+      .or(this.rootLocator.getByRole('treegrid'));
 
     let rows = tableContainer.locator('tbody tr');
 
