@@ -45,14 +45,17 @@ const ProjectSelectTypeAhead: FC<ProjectSelectProps> = ({
   const projectOptions = useMemo(() => {
     if (!isEmpty(projectNames)) {
       return projectNames
-        .filter((projectName) => showDefaultProjects || !isSystemNamespace(projectName))
+        .filter(
+          (projectName) =>
+            showDefaultProjects || !isSystemNamespace(projectName) || value === projectName,
+        )
         .map((projectName) => ({
           content: projectName,
           value: projectName,
         }));
     }
     return defaultProject ? [{ content: defaultProject, value: defaultProject }] : [];
-  }, [projectNames, defaultProject, showDefaultProjects]);
+  }, [projectNames, defaultProject, showDefaultProjects, value]);
 
   const onProjectCreated = (newProject: K8sResourceCommon) => {
     const projectName = getName(newProject);
@@ -94,10 +97,12 @@ const ProjectSelectTypeAhead: FC<ProjectSelectProps> = ({
       noOptionsMessage={noOptionsMessage}
       toggleProps={toggleProps}
       emptyState={
-        <ProjectSelectEmptyState
-          emptyStateMessage={emptyStateMessage}
-          onCreate={createAllowed ? onNewProject : undefined}
-        />
+        emptyStateMessage ? (
+          <ProjectSelectEmptyState
+            emptyStateMessage={emptyStateMessage}
+            onCreate={createAllowed ? onNewProject : undefined}
+          />
+        ) : null
       }
       filterControls={
         <>

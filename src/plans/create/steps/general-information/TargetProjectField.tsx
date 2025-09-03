@@ -1,13 +1,12 @@
-import { type FC, useMemo } from 'react';
+import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
-import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
-import { getName } from '@utils/crds/common/selectors.ts';
-import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
+import useWatchProjectNames from '@utils/hooks/useWatchProjectNames.ts';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
@@ -24,19 +23,9 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
     formState: { errors },
     setValue,
   } = useCreatePlanFormContext();
-  const targetProvider = useWatch({
-    control,
-    name: GeneralFormFieldId.TargetProvider,
-  });
-  const targetProviderName = getName(targetProvider);
-  const [targetProviderProjects, , , forceRefresh] = useProviderNamespaces(targetProvider);
+  const [targetProjectNames] = useWatchProjectNames();
   const showDefaultProjects =
     useWatch({ control, name: GeneralFormFieldId.ShowDefaultProjects }) ?? false;
-
-  const targetProjectNames = useMemo(
-    () => targetProviderProjects.map((project) => project.name),
-    [targetProviderProjects],
-  );
 
   return (
     <FormGroupWithErrorText
@@ -64,38 +53,18 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
         render={({ field }) => (
           <ProjectSelect
             testId={testId}
-            isDisabled={!targetProvider}
-            placeholder={
-              targetProvider
-                ? t('Select target project')
-                : t('Must choose a target provider to see available target projects')
-            }
+            placeholder={t('Select target project')}
             id={GeneralFormFieldId.TargetProject}
             projectNames={targetProjectNames}
-            emptyStateMessage={
-              targetProviderName ? (
-                <ForkliftTrans>
-                  There are no projects in provider <strong>{targetProviderName}</strong>.
-                  <br />
-                  Create a project or select a different target provider.
-                </ForkliftTrans>
-              ) : null
-            }
             value={field.value}
             onChange={field.onChange}
             onNewValue={(newProjectName) => {
-              forceRefresh();
               setValue(GeneralFormFieldId.TargetProject, newProjectName);
             }}
             showDefaultProjects={Boolean(showDefaultProjects)}
             setShowDefaultProjects={(value) => {
               setValue(GeneralFormFieldId.ShowDefaultProjects, value);
             }}
-            noOptionsMessage={
-              targetProvider
-                ? undefined
-                : t('Select a target provider to list available target projects')
-            }
             toggleProps={{
               id: 'target-project-select',
               status: errors[GeneralFormFieldId.TargetProject] && MenuToggleStatus.danger,
